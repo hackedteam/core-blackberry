@@ -14,11 +14,18 @@ public class UT_Crypto extends TestUnit  {
 		super(name, tests);
 	}
 
+	/**
+	 * Verifica che la classe Rijndael sia conforme alle specifiche dichiarate,
+	 * testando una encryption e una decryption con dei valori noti
+	 * @return
+	 * @throws AssertException
+	 */
 	boolean RijndaelTest() throws AssertException
 	{
 		debug.info("-- RijndaelTest --");
 		Rijndael crypto = new Rijndael();
 		
+		// i valori seguenti sono stati presi dal paper che descriveva il rijandael per aes
 		byte[] key=new byte[]{0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0a,0x0b,0x0c,0x0d,0x0e,0x0f};
 		byte[] plain=new byte[]{0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,
 				(byte) 0x88,(byte) 0x99,(byte) 0xaa,(byte) 0xbb,(byte) 0xcc,
@@ -27,21 +34,28 @@ public class UT_Crypto extends TestUnit  {
 				0xd8,0x6a,0x7b,0x04,0x30,(byte) 0xd8,(byte) 0xcd,(byte) 0xb7,
 				(byte) 0x80,0x70,(byte) 0xb4,(byte) 0xc5,0x5a};
 		
+		// generazione delle chiave
 		crypto.makeKey(key, 128);
-		
+				
+		// cifratura
 		byte[]buffer =new byte[16];
 		crypto.encrypt(plain, buffer);
 		
+		// verifico che la cifratura sia conforme a quanto atteso
 		AssertThat(Arrays.equals(buffer, cyphered),"Rijndael encrypt");
 		
+		// decifro
 		crypto.decrypt(cyphered, buffer);
+		
+		// verifico che la decifratura sia conforme a quanto atteso
 		AssertThat(Arrays.equals(buffer, plain),"Rijndael decrypt");
 		
+		// se arrivo qui e- perche- le assert non sono fallite, quindi restituisco true
 		return true;
 		
 	}
 	
-	public boolean CBCTest() throws AssertException
+	boolean CBCTest() throws AssertException
 	{
 		debug.info("-- CBCTest --");
 		
@@ -71,7 +85,7 @@ public class UT_Crypto extends TestUnit  {
 		return true;
 	}
 	
-	public boolean EncryptTest() throws AssertException
+	boolean EncryptTest() throws AssertException
 	{
 		debug.info("-- EncryptTest --");
 		
@@ -131,7 +145,7 @@ public class UT_Crypto extends TestUnit  {
 		return true;
 	}
 	
-	private void ScrambleTest() throws AssertException {
+	void ScrambleTest() throws AssertException {
 		
 		Encryption crypto =new Encryption();
 		
@@ -160,7 +174,7 @@ public class UT_Crypto extends TestUnit  {
 		AssertEquals(ret,expected,"Scramble 6");
 	}
 	
-	private void MultipleTest() {
+	void MultipleTest() {
 		for(int i = 0; i< 1024; i++)
 		{
 			int n = Encryption.GetNextMultiple(i);
