@@ -84,6 +84,7 @@ final class TestScreen extends MainScreen {
 
 		add(new RichTextField("RCSBlackBerry TEST SUITE"));
 		
+		//Per ogni test presente, lo esegue e aggiunge il risultato
 		Tests test=Tests.getInstance();
 		
 		for(int i=0; i<test.getCount(); i++)
