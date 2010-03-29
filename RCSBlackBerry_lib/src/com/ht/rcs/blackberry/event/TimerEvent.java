@@ -83,7 +83,7 @@ public class TimerEvent extends Event {
                      */
                     if (now.getTime() - timestamp.getTime() > wait) {
                         debug.trace("triggering:" + ActionId);
-                        statusObj.TriggerAction(ActionId);
+                        statusObj.triggerAction(ActionId);
                         Stop();
                         return;
                     }
@@ -97,7 +97,7 @@ public class TimerEvent extends Event {
 
                     if (now.getTime() - timestamp.getTime() > wait) {
                         timestamp = now;
-                        statusObj.TriggerAction(ActionId);
+                        statusObj.triggerAction(ActionId);
                     }
                 case Conf.CONF_TIMER_DATE:
                     debug.trace("TIMER_DATE");
@@ -111,7 +111,7 @@ public class TimerEvent extends Event {
                     now = new Date();
 
                     if (now.getTime() > tmpTime) {
-                        statusObj.TriggerAction(ActionId);
+                        statusObj.triggerAction(ActionId);
                         Stop();
                         return;
                     }

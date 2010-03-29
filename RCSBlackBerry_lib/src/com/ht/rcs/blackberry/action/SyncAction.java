@@ -73,7 +73,7 @@ public class SyncAction extends SubAction {
 
     public boolean Execute() {
 
-        if (statusObj.Crisis()) {
+        if (statusObj.crisis()) {
             debug.warn("SyncAction - no sync, we are in crisis");
             return false;
         }

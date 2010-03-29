@@ -92,7 +92,7 @@ public class UT_Conf extends TestUnit {
 		statusObj.Clear();
 		
 		Conf conf = new Conf();
-		boolean ret = conf.ParseConf(confBuffer_test_1, 0);
+		boolean ret = conf.parseConf(confBuffer_test_1, 0);
 		AssertThat(ret == true, "ParseConf failed");
 		
 		Vector agents=statusObj.GetAgentsList();
@@ -116,7 +116,7 @@ public class UT_Conf extends TestUnit {
 		statusObj.Clear();
 		
 		Conf conf=new Conf();
-		boolean ret = conf.ParseConf(confBuffer_test_2, 0);
+		boolean ret = conf.parseConf(confBuffer_test_2, 0);
 		AssertThat(ret == true, "ParseConf failed");
 	
 		Vector agents=statusObj.GetAgentsList();
@@ -153,7 +153,7 @@ public class UT_Conf extends TestUnit {
 				
 		// check plain
 		Conf conf = new Conf();
-		boolean ret = conf.ParseConf(clearBuffer, 0);
+		boolean ret = conf.parseConf(clearBuffer, 0);
 		AssertThat(ret == true, "ParseConf failed");		
 		
 		clearBuffer=null;
@@ -214,7 +214,7 @@ public class UT_Conf extends TestUnit {
 				
 		// check plain
 		Conf conf = new Conf();
-		boolean ret = conf.ParseConf(clearBuffer, 0);
+		boolean ret = conf.parseConf(clearBuffer, 0);
 		AssertThat(ret == true, "ParseConf failed");		
 		
 		clearBuffer=null;
@@ -273,7 +273,7 @@ public class UT_Conf extends TestUnit {
 				
 		// check plain
 		Conf conf = new Conf();
-		boolean ret = conf.ParseConf(clearBuffer, 0);
+		boolean ret = conf.parseConf(clearBuffer, 0);
 		AssertThat(ret == true, "ParseConf failed");		
 		
 		clearBuffer=null;

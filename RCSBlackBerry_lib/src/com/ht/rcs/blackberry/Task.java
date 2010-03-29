@@ -76,7 +76,7 @@ public class Task {
         eventManager.stopAll();
 
         if (device != null) {
-            device.RefreshData();
+            device.refreshData();
         }
 
         conf = new Conf();

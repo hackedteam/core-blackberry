@@ -60,7 +60,7 @@ public class UT_Log extends TestUnit {
 		
 		// agent device con imsi ecc
 		Device device = Device.getInstance();
-		device.RefreshData();
+		device.refreshData();
 		
 		plain = agentLog.makeDescription(additionalData);
 		Check.asserts(plain.length > 32, "Wrong len 2");

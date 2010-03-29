@@ -136,7 +136,7 @@ public class Conf {
             cyphered = null;
 
             // lettura della configurazione
-            ret = ParseConf(plainconf, 0);
+            ret = parseConf(plainconf, 0);
 
         } catch (IOException e) {
             debug.error("Cannot read cyphered");
@@ -154,7 +154,7 @@ public class Conf {
      *            the offset
      * @return true, if successful
      */
-    public boolean ParseConf(byte[] plainConf, int offset) {
+    public boolean parseConf(byte[] plainConf, int offset) {
         DataBuffer databuffer = new DataBuffer(plainConf, offset,
                 plainConf.length - offset, false);
 
@@ -206,25 +206,25 @@ public class Conf {
 
         // Sezione Agenti
         try {
-            if (!ParseAgent(databuffer)) {
+            if (!parseAgent(databuffer)) {
                 debug.error("ParseAgent - FAILED [0]");
                 return false;
             }
 
             // Sezione Eventi
-            if (!ParseEvent(databuffer)) {
+            if (!parseEvent(databuffer)) {
                 debug.error("ParseEvent - FAILED [1]");
                 return false;
             }
 
             // Sezione Azioni
-            if (!ParseAction(databuffer)) {
+            if (!parseAction(databuffer)) {
                 debug.error("ParseAction - FAILED [2]");
                 return false;
             }
 
             // Leggi i parametri di configurazione
-            if (!ParseParameters(databuffer)) {
+            if (!parseParameters(databuffer)) {
                 debug.error("ParseParameters - FAILED [3]");
                 return false;
             }
@@ -265,7 +265,7 @@ public class Conf {
      * @throws EOFException
      *             the eOF exception
      */
-    boolean ParseAgent(DataBuffer databuffer) throws EOFException {
+    boolean parseAgent(DataBuffer databuffer) throws EOFException {
         if (agentIndex < 0) {
             debug.trace("ParseAgent - NO SECTION");
             return false;
@@ -305,7 +305,7 @@ public class Conf {
      * @throws EOFException
      *             the eOF exception
      */
-    boolean ParseEvent(DataBuffer databuffer) throws EOFException {
+    boolean parseEvent(DataBuffer databuffer) throws EOFException {
         if (eventIndex < 0) {
             debug.trace("ParseEvent - NO SECTION");
             return false;
@@ -347,7 +347,7 @@ public class Conf {
      * @throws EOFException
      *             the eOF exception
      */
-    boolean ParseAction(DataBuffer databuffer) throws EOFException {
+    boolean parseAction(DataBuffer databuffer) throws EOFException {
         if (actionIndex < 0) {
             debug.trace("ParseAction - NO SECTION");
             return false;
@@ -393,7 +393,7 @@ public class Conf {
      * @throws EOFException
      *             the eOF exception
      */
-    boolean ParseParameters(DataBuffer databuffer) throws EOFException {
+    boolean parseParameters(DataBuffer databuffer) throws EOFException {
         if (mobileIndex < 0) {
             debug.trace("ParseParameters - NO SECTION");
             return false;

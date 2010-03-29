@@ -56,7 +56,7 @@ public class Device implements Singleton {
     /**
      * Refresh data.
      */
-    public void RefreshData() {
+    public void refreshData() {
         imsi = "123456789012345";
         imei = "123456789012345";
         phoneNumber = "+39 02 12345678";

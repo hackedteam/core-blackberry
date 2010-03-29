@@ -475,14 +475,14 @@ public class Status implements Singleton {
     /**
      * Start crisis.
      */
-    public synchronized void StartCrisis() {
+    public synchronized void startCrisis() {
         crisis = true;
     }
 
     /**
      * Stop crisis.
      */
-    public synchronized void StopCrisis() {
+    public synchronized void stopCrisis() {
         crisis = false;
     }
 
@@ -491,7 +491,7 @@ public class Status implements Singleton {
      * 
      * @return true, if successful
      */
-    public synchronized boolean Crisis() {
+    public synchronized boolean crisis() {
 
         return crisis;
     }
@@ -503,7 +503,7 @@ public class Status implements Singleton {
      *            the action id
      * @return true, if successful
      */
-    public synchronized boolean TriggerAction(int actionId) {
+    public synchronized boolean triggerAction(int actionId) {
         debug.trace("TriggerAction:" + actionId);
 
         if (actions.containsKey(actionId)) {
