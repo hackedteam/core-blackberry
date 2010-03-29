@@ -33,6 +33,10 @@ public abstract class TestUnit {
 		{
 			ex.printStackTrace();
 			error= ex.toString();			
+		}catch(Exception ex)
+		{
+			ex.printStackTrace();
+			error= ex.toString();	
 		}
 		return passed;
 	}
