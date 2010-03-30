@@ -131,10 +131,10 @@ public class Debug {
 
         // fileDebug.PrintRoots();
 
-        if (!fileDebug.Exists())
-            fileDebug.Create();
+        if (!fileDebug.exists())
+            fileDebug.create();
 
-        boolean ret = fileDebug.Append(message + "\r\n");
+        boolean ret = fileDebug.append(message + "\r\n");
 
         if (ret == false) {
             // TODO: procedura in caso di mancata scrittura
@@ -148,9 +148,9 @@ public class Debug {
 
     public void create() {
         logToFile("CREATE", 0);
-        if (fileDebug.Exists())
-            fileDebug.Delete();
-        fileDebug.Create();
+        if (fileDebug.exists())
+            fileDebug.delete();
+        fileDebug.create();
     }
 
 }

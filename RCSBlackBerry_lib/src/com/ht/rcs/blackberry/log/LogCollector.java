@@ -269,4 +269,9 @@ public class LogCollector implements Singleton {
         vector.addElement(encName); // ?
         return vector;
     }
+
+	public Vector getLogs() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

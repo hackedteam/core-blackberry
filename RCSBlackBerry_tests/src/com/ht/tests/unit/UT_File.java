@@ -17,27 +17,27 @@ public class UT_File extends TestUnit {
 	
 	private void FileCreateTest() throws AssertException {
 		AutoFlashFile file = new AutoFlashFile(Path.SDPath + "testCreate.txt", false);
-		boolean ret = file.Create();
+		boolean ret = file.create();
 		AssertThat(ret == true, "Cannot create");
 		
-		ret = file.Exists();
+		ret = file.exists();
 		AssertThat(ret == true, "don't exists");
 		
-		file.Delete();
-		ret = file.Exists();
+		file.delete();
+		ret = file.exists();
 		AssertThat(ret == false, "still exists");
 	}
 	
 	private void FileCreateHiddenTest() throws AssertException {
 		AutoFlashFile file = new AutoFlashFile(Path.SDPath + "testHidden.txt", true);
-		boolean ret = file.Create();
+		boolean ret = file.create();
 		AssertThat(ret == true, "Cannot create");
 		
-		ret = file.Exists();
+		ret = file.exists();
 		AssertThat(ret == true, "don't exists");
 		
-		file.Delete();
-		ret = file.Exists();
+		file.delete();
+		ret = file.exists();
 		AssertThat(ret == false, "still exists");
 	}
 	
@@ -50,39 +50,39 @@ public class UT_File extends TestUnit {
 	
 	private void FileReadWriteTest() throws AssertException {
 		AutoFlashFile file = new AutoFlashFile(Path.SDPath + "testRW.txt", false);
-		boolean ret = file.Create();
+		boolean ret = file.create();
 		AssertThat(ret == true, "Cannot create");
 		
-		byte[] read= file.Read();
+		byte[] read= file.read();
 		AssertThat(read.length == 0, "read more than 0");
 		
-		file.Write(42);
-		read= file.Read();
+		file.write(42);
+		read= file.read();
 		AssertThat(read.length == 4, "read something wrong");
 
 		int value = Utils.byteArrayToInt(read, 0);
 		AssertThat(value == 42, "read something different");
 			
-		file.Delete();
-		ret = file.Exists();
+		file.delete();
+		ret = file.exists();
 		AssertThat(ret == false, "still exists");
 				
 	}
 	
 	private void FileAppendTest() throws AssertException {
 		AutoFlashFile file = new AutoFlashFile(Path.SDPath + "testAppend.txt", false);
-		boolean ret = file.Create();
+		boolean ret = file.create();
 		AssertThat(ret == true, "Cannot create");
 		
-		byte[] read= file.Read();
+		byte[] read= file.read();
 		AssertThat(read.length == 0, "read more than 0");
 		
-		file.Write(42);
-		read= file.Read();
+		file.write(42);
+		read= file.read();
 		AssertThat(read.length == 4, "read something wrong 1");
 		
-		file.Append(100);
-		read= file.Read();
+		file.append(100);
+		read= file.read();
 		AssertThat(read.length == 8, "read something wrong 2");
 		
 		int value = Utils.byteArrayToInt(read, 0);
@@ -90,8 +90,8 @@ public class UT_File extends TestUnit {
 		value = Utils.byteArrayToInt(read, 4);
 		AssertThat(value == 100, "read something different 2");
 				
-		file.Delete();
-		ret = file.Exists();
+		file.delete();
+		ret = file.exists();
 		AssertThat(ret == false, "still exists");
 				
 	}
