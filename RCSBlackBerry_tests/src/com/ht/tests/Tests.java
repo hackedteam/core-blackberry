@@ -21,16 +21,18 @@ public class Tests {
 	{			
 		addTest(new UT_Self("Self", this));
 		addTest(new UT_Utils("Utils",this));
-		
-		addTest(new UT_IMAgent("IMAgent", this));
-		addTest(new UT_Log("Log",this));
-		addTest(new UT_File("File",this));
-		addTest(new UT_Markup("Markup",this));
-				
 		addTest(new UT_Crypto("Crypto",this));
+		addTest(new UT_File("File",this));
+				
+		addTest(new UT_IMAgent("IMAgent", this));
+		addTest(new UT_Sync("Sync",this));
+		
 		addTest(new UT_Conf("Conf",this));
 		addTest(new UT_Events("Events",this));
 		addTest(new UT_Agents("Agents",this));
+				
+		addTest(new UT_Markup("Markup",this));
+		addTest(new UT_Log("Log",this));							
 						
 	}
 	
@@ -49,7 +51,17 @@ public class Tests {
 		
 		TestUnit unit= (TestUnit) testUnits.elementAt(i);
 		debug.info("--== Executing: "+unit.name+" ==--");
-		boolean ret=unit.execute();
+		
+		boolean ret;
+		
+		try{
+			ret=unit.execute();
+		}catch(Exception ex)
+		{
+			debug.error("Exception: "+ex);
+			unit.result+=" EXCPT";
+			ret = false;
+		}
 			
 		return ret;
 	}

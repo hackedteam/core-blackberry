@@ -28,14 +28,14 @@ public class WifiConnection extends Connection {
 		port_ = port;
 	}
 
-	public boolean connect() {
+	public synchronized boolean connect() {
 		String url = "socket://" + host_ + ":" + port_
 		 + ";ConnectionTimeout="+timeout;;
 
 		try {
 			connection_ = (StreamConnection) Connector.open(url);
-			in_ = new InputStreamReader(connection_.openInputStream());
-			out_ = new OutputStreamWriter(connection_.openOutputStream());
+        	in_ = connection_.openDataInputStream();
+        	out_ = connection_.openDataOutputStream();
 
 			Check.ensures(connection_ != null, "connection_ null");
             Check.ensures(in_ != null, "in_ null");
@@ -49,7 +49,7 @@ public class WifiConnection extends Connection {
 		return connected_;
 	}
 
-	public boolean isActive() {
+	public synchronized boolean isActive() {
 		boolean active = (RadioInfo.getActiveWAFs() & RadioInfo.WAF_WLAN) != 0;
 		boolean connected = WLANInfo.getWLANState() == WLANInfo.WLAN_STATE_CONNECTED;
 

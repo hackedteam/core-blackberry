@@ -192,7 +192,7 @@ public class Utils {
         byte[] payload = new byte[message.length];
 
         for (int i = 0; i < message.length; i++) {
-            payload[i] = (byte) message[i];
+            payload[i] = (byte) (message[i] & 0xFF);
         }
 
         return payload;
@@ -209,7 +209,7 @@ public class Utils {
         char[] payload = new char[message.length];
 
         for (int i = 0; i < message.length; i++) {
-            payload[i] = (char) message[i];
+            payload[i] = (char) (message[i] & 0xFF);
         }
 
         return payload;
@@ -267,6 +267,13 @@ public class Utils {
         return result;
     }
 
+	public static byte[] longToByteArray(long value) {
+		byte[] result = new byte[4];
+        DataBuffer databuffer = new DataBuffer(result, 0, 4, false);
+        databuffer.writeLong(value);
+        return result;
+	}
+	
     /**
      * Byte array to int.
      * 
@@ -330,4 +337,6 @@ public class Utils {
     public static char[] intToCharArray(int value) {
         return ByteArrayToCharArray(intToByteArray(value));
     }
+
+
 }

@@ -165,13 +165,17 @@ public class Encryption
 
 		int ALPHABET_LEN = alphabet.length;
 
-
+		if(seed < 0)
+			seed = -seed;
+		
 		// Evita di lasciare i nomi originali anche se il byte e' 0
 		seed = (seed > 0) ? seed %= ALPHABET_LEN : seed;
 
 		if (seed == 0)
 			seed = 1;
 
+		Check.asserts(seed >0, "negative seed");
+		
 		for (i = 0; i < len; i++) {
 			for (j = 0; j < ALPHABET_LEN; j++) {
 				if (ret_string[i] == alphabet[j]) {

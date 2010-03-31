@@ -34,21 +34,26 @@ public class DirectTcpConnection extends Connection {
         this.port = port;
     }
 
-    public boolean connect() {    	
+    public synchronized boolean connect() {    	
         String url = "socket://" + host + ":" + port
                 + (isDirectTCP ? ";deviceside=true" : "")
                 + ";ConnectionTimeout="+timeout;
 
         try {
             connection_ = (StreamConnection) Connector.open(url);
-            in_ = new InputStreamReader(connection_.openInputStream());
-            out_ = new OutputStreamWriter(connection_.openOutputStream());
-            
-            Check.ensures(connection_ != null, "connection_ null");
-            Check.ensures(in_ != null, "in_ null");
-            Check.ensures(out_ != null, "out_ null");
-            
-            connected_ = true;
+            if(connection_ != null)
+            {
+            	in_ = connection_.openDataInputStream();
+            	out_ = connection_.openDataOutputStream();
+	           	         
+	            if(in_ != null && out_ != null)
+	            {
+	            	connected_ = true;
+	            	Check.ensures(connection_ != null, "connection_ null");
+	 	            Check.ensures(in_ != null, "in_ null");
+	 	            Check.ensures(out_ != null, "out_ null");
+	            }    
+            }
         } catch (IOException e) {
         	connected_ = false;
         }
@@ -56,7 +61,7 @@ public class DirectTcpConnection extends Connection {
         return connected_;
     }
     
-    public boolean isActive() {
+    public synchronized boolean isActive() {
     	return true;
     }
 
