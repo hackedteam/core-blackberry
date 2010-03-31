@@ -51,6 +51,9 @@ public class UT_Sync extends TestUnit {
 	private void TransferTest() throws AssertException {
 
 		Keys.byteChallengeKey = ProtoKey;
+		Keys.BuildID = "RCS_0000000323";
+		Keys.InstanceID = "1234567890123456"; // univoco per device e per utente. (imei?)
+		// sha1(user_id): 40 char
 
 		transfer.init(host, port, false);
 		try {

