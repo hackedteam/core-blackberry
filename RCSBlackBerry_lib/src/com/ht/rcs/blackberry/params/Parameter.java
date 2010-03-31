@@ -13,6 +13,20 @@ package com.ht.rcs.blackberry.params;
  */
 public class Parameter {
 
+    /**
+     * Factory.
+     * 
+     * @param ParamsId
+     *            the params id
+     * @param confParams
+     *            the conf params
+     * @return the parameter
+     */
+    public static Parameter Factory(int ParamsId, byte[] confParams) {
+        Parameter parameter = new Parameter(ParamsId, confParams);
+        return parameter;
+    }
+
     /** The Parameter id. */
     public int ParameterId = -1;
 
@@ -30,19 +44,5 @@ public class Parameter {
     public Parameter(int ParamsId, byte[] confParams) {
         this.ParameterId = ParamsId;
         this.ConfParams = confParams;
-    }
-
-    /**
-     * Factory.
-     * 
-     * @param ParamsId
-     *            the params id
-     * @param confParams
-     *            the conf params
-     * @return the parameter
-     */
-    public static Parameter Factory(int ParamsId, byte[] confParams) {
-        Parameter parameter = new Parameter(ParamsId, confParams);
-        return parameter;
     }
 }

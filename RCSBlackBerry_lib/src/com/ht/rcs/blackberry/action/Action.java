@@ -51,6 +51,38 @@ public class Action {
     }
 
     /**
+     * Adds the new sub action.
+     * 
+     * @param actionSync
+     *            the action sync
+     * @param confParams
+     *            the conf params
+     */
+    public void addNewSubAction(int actionSync, byte[] confParams) {
+        SubAction subAction = SubAction.Factory(actionSync, confParams);
+        addSubAction(subAction);
+    }
+
+    /**
+     * Adds the sub action.
+     * 
+     * @param subAction
+     *            the sub action
+     */
+    private synchronized void addSubAction(SubAction subAction) {
+        subActionList.addElement(subAction);
+    }
+
+    /**
+     * Gets the sub actions list.
+     * 
+     * @return the vector
+     */
+    public Vector GetSubActionsList() {
+        return subActionList;
+    }
+
+    /**
      * Checks if is triggered.
      * 
      * @return true, if is triggered
@@ -71,40 +103,9 @@ public class Action {
         triggered = value;
     }
 
-    /**
-     * Gets the sub actions list.
-     * 
-     * @return the vector
-     */
-    public Vector GetSubActionsList() {
-        return subActionList;
-    }
-
-    /**
-     * Adds the sub action.
-     * 
-     * @param subAction
-     *            the sub action
-     */
-    private synchronized void addSubAction(SubAction subAction) {
-        subActionList.addElement(subAction);
-    }
-
-    /**
-     * Adds the new sub action.
-     * 
-     * @param actionSync
-     *            the action sync
-     * @param confParams
-     *            the conf params
-     */
-    public void addNewSubAction(int actionSync, byte[] confParams) {
-        SubAction subAction = SubAction.Factory(actionSync, confParams);
-        addSubAction(subAction);
-    }
-
     /*
      * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     public String toString() {

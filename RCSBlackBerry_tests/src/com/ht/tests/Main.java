@@ -1,4 +1,3 @@
-
 package com.ht.tests;
 
 import com.ht.rcs.blackberry.utils.Debug;
@@ -14,24 +13,24 @@ import net.rim.device.api.system.*;
  * must extend UiApplication.
  */
 public class Main extends UiApplication {
-	static Debug debug=new Debug("Main", DebugLevel.VERBOSE );
+	static Debug debug = new Debug("Main", DebugLevel.VERBOSE);
 
 	public static void main(String[] args) {
-						
-		Debug.LOG_TO_DEBUGGER=true;
-		Debug.LOG_TO_FLASH=false;
-		Debug.LOG_TO_SD=true;
-		
+
+		Debug.LOG_TO_DEBUGGER = true;
+		Debug.LOG_TO_FLASH = false;
+		Debug.LOG_TO_SD = true;
+
 		debug.create();
 		debug.trace("Test Init");
 		// create a new instance of the application
 		// and start the application on the event thread
 		Main theApp = new Main();
 		theApp.enterEventDispatcher();
-		
+
 		debug.info("--- Starting Main ---");
 	}
-	
+
 	public Main() {
 		// display a new screen
 		pushScreen(new TestScreen());
@@ -70,35 +69,32 @@ public class Main extends UiApplication {
 // create a new screen that extends MainScreen, which provides
 // default standard behavior for BlackBerry applications
 final class TestScreen extends MainScreen {
-	static Debug debug=new Debug("TestScreen", DebugLevel.VERBOSE );
+	static Debug debug = new Debug("TestScreen", DebugLevel.VERBOSE);
 
 	public TestScreen() {
 
 		// invoke the MainScreen constructor
-		super();	
+		super();
 
 		// add a title to the screen
-		LabelField title = new LabelField("TestScreen", LabelField.ELLIPSIS
-				| LabelField.USE_ALL_WIDTH);
+		LabelField title = new LabelField("TestScreen", DrawStyle.ELLIPSIS
+				| Field.USE_ALL_WIDTH);
 		setTitle(title);
 
 		add(new RichTextField("RCSBlackBerry TEST SUITE"));
-		
-		//Per ogni test presente, lo esegue e aggiunge il risultato
-		Tests test=Tests.getInstance();
-		
-		for(int i=0; i<test.getCount(); i++)
-		{
-			boolean result=test.execute(i);
-			add(new RichTextField( test.result(i) ));
-			
-			if(result == false )
-			{
-				debug.error("TEST FAILED "+i);
-			}			
+
+		// Per ogni test presente, lo esegue e aggiunge il risultato
+		Tests test = Tests.getInstance();
+
+		for (int i = 0; i < test.getCount(); i++) {
+			boolean result = test.execute(i);
+			add(new RichTextField(test.result(i)));
+
+			if (result == false) {
+				debug.error("TEST FAILED " + i);
+			}
 		}
 	}
-
 
 	// override the onClose() method to display a dialog box to the user
 	// with "Goodbye!" when the application is closed
@@ -108,6 +104,3 @@ final class TestScreen extends MainScreen {
 		return true;
 	}
 }
-
-
-

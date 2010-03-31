@@ -13,14 +13,14 @@ public class SimChangeEvent extends Event {
         super(Event.EVENT_SIM_CHANGE, actionId, confParams);
     }
 
-    protected boolean Parse(byte[] confParams) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
     protected void EventRun() {
         // TODO Auto-generated method stub
 
+    }
+
+    protected boolean Parse(byte[] confParams) {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }

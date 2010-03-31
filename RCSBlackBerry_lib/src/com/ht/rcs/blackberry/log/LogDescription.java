@@ -7,9 +7,9 @@
  * *************************************************/
 package com.ht.rcs.blackberry.log;
 
-import com.ht.rcs.blackberry.utils.Check;
-
 import net.rim.device.api.util.DataBuffer;
+
+import com.ht.rcs.blackberry.utils.Check;
 
 public class LogDescription {
     public int Version;
@@ -24,6 +24,13 @@ public class LogDescription {
 
     public final int length = 32;
 
+    public byte[] getBytes() {
+        byte[] buffer = new byte[length];
+        serialize(buffer, 0);
+        Check.ensures(buffer.length == length, "Wrong len");
+        return buffer;
+    }
+
     public void serialize(byte[] buffer, int offset) {
         DataBuffer databuffer = new DataBuffer(buffer, offset, length, false);
         databuffer.writeInt(Version);
@@ -36,12 +43,5 @@ public class LogDescription {
         databuffer.writeInt(SourceIdLen);
         databuffer.writeInt(AdditionalData);
 
-    }
-
-    public byte[] getBytes() {
-        byte[] buffer = new byte[length];
-        serialize(buffer, 0);
-        Check.ensures(buffer.length == length, "Wrong len");
-        return buffer;
     }
 }

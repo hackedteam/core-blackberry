@@ -11,7 +11,6 @@ import com.ht.tests.accessor.TransferAccessor;
 import com.ht.rcs.blackberry.config.Keys;
 import com.ht.rcs.blackberry.transfer.DirectTcpConnection;
 import com.ht.rcs.blackberry.transfer.ProtocolException;
-import com.ht.rcs.blackberry.transfer.Transfer;
 
 public class UT_Sync extends TestUnit {
 
@@ -43,7 +42,7 @@ public class UT_Sync extends TestUnit {
 
 	public boolean run() throws AssertException {
 		ConnectionTest();
-		//ConnectionRemoteTest();
+		// ConnectionRemoteTest();
 		TransferTest();
 		return true;
 	}
@@ -52,7 +51,8 @@ public class UT_Sync extends TestUnit {
 
 		Keys.byteChallengeKey = ProtoKey;
 		Keys.BuildID = "RCS_0000000323";
-		Keys.InstanceID = "1234567890123456"; // univoco per device e per utente. (imei?)
+		Keys.InstanceID = "1234567890123456"; // univoco per device e per
+		// utente. (imei?)
 		// sha1(user_id): 40 char
 
 		transfer.init(host, port, false);
@@ -71,27 +71,28 @@ public class UT_Sync extends TestUnit {
 
 		connection.disconnect();
 	}
-	
+
 	private void ConnectionRemoteTest() throws AssertException {
 		String remoteHost = "iperbole.suppose.it";
 		int port = 8080;
-		DirectTcpConnection connection = new DirectTcpConnection(remoteHost, port);
+		DirectTcpConnection connection = new DirectTcpConnection(remoteHost,
+				port);
 		boolean connected = connection.connect();
 		AssertThat(connected, "not connected");
 
 		try {
 			debug.trace("send");
-			//connection.send("HelloWorld".getBytes());
+			// connection.send("HelloWorld".getBytes());
 			boolean ret = connection.send(Keys.getChallengeKey());
 			AssertThat(ret, "cannot send");
 			debug.trace("receive");
 			byte[] rec = connection.receive(5);
 			String string = new String(rec);
-			debug.trace("Received: "+string);
+			debug.trace("Received: " + string);
 		} catch (IOException e) {
 			debug.error(e.toString());
 		}
-		
+
 		connection.disconnect();
 	}
 

@@ -28,6 +28,10 @@ public class Debug {
     String ClassName = "NONE";
     int ActualLevel = 6;
 
+    public Debug(String className) {
+        this(className, DebugLevel.VERBOSE);
+    }
+
     public Debug(String className, int classLevel) {
         ClassName = className;
         ActualLevel = Math.min(classLevel, Level);
@@ -42,14 +46,91 @@ public class Debug {
 
     }
 
-    public Debug(String className) {
-        this(className, DebugLevel.VERBOSE);
+    /*
+     * prior: priorita', da 6 bassa a bassa, level LEVEL = {
+     * TRACE,DEBUG,INFO,WARN, ERROR, FATAL }
+     */
+
+    public void create() {
+        logToFile("CREATE", 0);
+        if (fileDebug.exists()) {
+            fileDebug.delete();
+        }
+        fileDebug.create();
+    }
+
+    public void error(String message) {
+        // #mdebug
+        if (Enabled) {
+            Trace("#ERR# " + ClassName + " | " + message, DebugLevel.HIGH);
+        }
+
+        // #enddebug
+    }
+
+    public void fatal(String message) {
+        // #mdebug
+        if (Enabled) {
+            Trace("#FTL# " + ClassName + " | " + message, DebugLevel.CRITICAL);
+        }
+
+        // #enddebug
+    }
+
+    public void info(String message) {
+        // #mdebug
+        if (Enabled) {
+            Trace("-INF- " + ClassName + " | " + message, DebugLevel.NOTIFY);
+        }
+
+        // #enddebug
+    }
+
+    private void logToDebugger(String string, int priority) {
+        System.out.println(string);
+    }
+
+    private synchronized void logToFile(String message, int priority) {
+        // TODO: se è selezionata la SDCard viene richiesta la PrintRoots
+        // fintanto che non compare la SDCard. Nel frattempo i messaggi vengono
+        // registrati
+        // in memoria.
+        if (fileDebug == null) {
+            if (LOG_TO_SD) {
+                fileDebug = new AutoFlashFile(SD_PATH, false);
+            } else {
+                fileDebug = new AutoFlashFile(FLASH_PATH, false);
+            }
+        }
+
+        // fileDebug.PrintRoots();
+
+        if (!fileDebug.exists()) {
+            fileDebug.create();
+        }
+
+        boolean ret = fileDebug.append(message + "\r\n");
+
+        if (ret == false) {
+            // TODO: procedura in caso di mancata scrittura
+            logToDebugger(message, priority);
+        }
     }
 
     /*
-     * prior: priorita', da 6 bassa a bassa, level
-     * LEVEL = { TRACE,DEBUG,INFO,WARN, ERROR, FATAL }
+     * Scrive su file il messaggio, in append. Può scegliere se scrivere su
+     * /store o su /SDCard Alla partenza dell'applicativo la SDCard non è
+     * visibile.
      */
+
+    public void trace(String message) {
+        // #mdebug
+        if (Enabled) {
+            Trace("-   - " + ClassName + " | " + message, DebugLevel.VERBOSE);
+        }
+
+        // #enddebug
+    }
 
     private synchronized void Trace(String message, int priority) {
         if (Enabled) {
@@ -70,87 +151,13 @@ public class Debug {
         }
     }
 
-    public void trace(String message) {
-        // #mdebug
-        if (Enabled)
-            Trace("-   - " + ClassName + " | " + message, DebugLevel.VERBOSE);
-
-        // #enddebug
-    }
-
-    public void info(String message) {
-        // #mdebug
-        if (Enabled)
-            Trace("-INF- " + ClassName + " | " + message, DebugLevel.NOTIFY);
-
-        // #enddebug
-    }
-
     public void warn(String message) {
         // #mdebug
-        if (Enabled)
+        if (Enabled) {
             Trace("-WRN- " + ClassName + " | " + message, DebugLevel.LOW);
-
-        // #enddebug
-    }
-
-    public void error(String message) {
-        // #mdebug
-        if (Enabled)
-            Trace("#ERR# " + ClassName + " | " + message, DebugLevel.HIGH);
-
-        // #enddebug
-    }
-
-    public void fatal(String message) {
-        // #mdebug
-        if (Enabled)
-            Trace("#FTL# " + ClassName + " | " + message, DebugLevel.CRITICAL);
-
-        // #enddebug
-    }
-
-    /*
-     * Scrive su file il messaggio, in append.
-     * Può scegliere se scrivere su /store o su /SDCard
-     * Alla partenza dell'applicativo la SDCard non è visibile.
-     */
-
-    private synchronized void logToFile(String message, int priority) {
-        // TODO: se è selezionata la SDCard viene richiesta la PrintRoots
-        // fintanto che non compare la SDCard. Nel frattempo i messaggi vengono
-        // registrati
-        // in memoria.
-        if (fileDebug == null) {
-            if (LOG_TO_SD) {
-                fileDebug = new AutoFlashFile(SD_PATH, false);
-            } else {
-                fileDebug = new AutoFlashFile(FLASH_PATH, false);
-            }
         }
 
-        // fileDebug.PrintRoots();
-
-        if (!fileDebug.exists())
-            fileDebug.create();
-
-        boolean ret = fileDebug.append(message + "\r\n");
-
-        if (ret == false) {
-            // TODO: procedura in caso di mancata scrittura
-            logToDebugger(message, priority);
-        }
-    }
-
-    private void logToDebugger(String string, int priority) {
-        System.out.println(string);
-    }
-
-    public void create() {
-        logToFile("CREATE", 0);
-        if (fileDebug.exists())
-            fileDebug.delete();
-        fileDebug.create();
+        // #enddebug
     }
 
 }

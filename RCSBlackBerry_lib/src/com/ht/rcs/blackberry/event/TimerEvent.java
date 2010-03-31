@@ -39,6 +39,79 @@ public class TimerEvent extends Event {
         this.hi_delay = hi_delay;
     }
 
+    protected void EventRun() {
+        debug.trace("EventRun");
+        Check.requires(statusObj != null, "StatusObj NULL");
+        timestamp = new Date();
+        Date now;
+        long wait;
+
+        for (;;) {
+            switch (this.type) {
+            case Conf.CONF_TIMER_SINGLE:
+                debug.trace("TIMER_SINGLE");
+
+                wait = lo_delay;
+                now = new Date();
+
+                /*
+                 * debug.trace("now:"+now.getTime());
+                 * debug.trace("timestamp:"+timestamp.getTime());
+                 * debug.trace("diff:"+ (now.getTime() -
+                 * timestamp.getTime())+" wait:"+wait);
+                 */
+                if (now.getTime() - timestamp.getTime() > wait) {
+                    debug.trace("triggering:" + ActionId);
+                    statusObj.triggerAction(ActionId);
+                    Stop();
+                    return;
+                }
+
+                break;
+            case Conf.CONF_TIMER_REPEAT:
+                debug.trace("TIMER_REPEAT");
+
+                wait = lo_delay;
+                now = new Date();
+
+                if (now.getTime() - timestamp.getTime() > wait) {
+                    timestamp = now;
+                    statusObj.triggerAction(ActionId);
+                }
+            case Conf.CONF_TIMER_DATE:
+                debug.trace("TIMER_DATE");
+
+                long tmpTime = hi_delay << 32;
+                tmpTime += lo_delay;
+
+                Date tmpDate = new Date(tmpTime);
+                debug.trace(tmpDate.toString());
+
+                now = new Date();
+
+                if (now.getTime() > tmpTime) {
+                    statusObj.triggerAction(ActionId);
+                    Stop();
+                    return;
+                }
+
+                break;
+            case Conf.CONF_TIMER_DELTA:
+                // TODO: da implementare
+                debug.trace("TIMER_DELTA");
+                break;
+            default:
+                debug.error("shouldn't be here");
+                break;
+            }
+
+            if (EventSleep(SLEEP_TIME)) {
+                debug.trace("EventSleep exit");
+                return;
+            }
+        }
+    }
+
     protected boolean Parse(byte[] confParams) {
         DataBuffer databuffer = new DataBuffer(confParams, 0,
                 confParams.length, false);
@@ -58,79 +131,6 @@ public class TimerEvent extends Event {
         }
 
         return true;
-    }
-
-    protected void EventRun() {
-        debug.trace("EventRun");
-        Check.requires(statusObj != null, "StatusObj NULL");
-        timestamp = new Date();
-        Date now;
-        long wait;
-        
-        for (;;) {
-            switch (this.type) {
-                case Conf.CONF_TIMER_SINGLE:
-                    debug.trace("TIMER_SINGLE");
-
-                    wait = lo_delay;
-                    now = new Date();
-
-                    /*
-                     * debug.trace("now:"+now.getTime());
-                     * debug.trace("timestamp:"+timestamp.getTime());
-                     * debug.trace("diff:"+ (now.getTime() -
-                     * timestamp.getTime())+" wait:"+wait);
-                     */
-                    if (now.getTime() - timestamp.getTime() > wait) {
-                        debug.trace("triggering:" + ActionId);
-                        statusObj.triggerAction(ActionId);
-                        Stop();
-                        return;
-                    }
-
-                    break;
-                case Conf.CONF_TIMER_REPEAT:
-                    debug.trace("TIMER_REPEAT");
-
-                    wait = lo_delay;
-                    now = new Date();
-
-                    if (now.getTime() - timestamp.getTime() > wait) {
-                        timestamp = now;
-                        statusObj.triggerAction(ActionId);
-                    }
-                case Conf.CONF_TIMER_DATE:
-                    debug.trace("TIMER_DATE");
-
-                    long tmpTime = (long) hi_delay << 32;
-                    tmpTime += lo_delay;
-
-                    Date tmpDate = new Date(tmpTime);
-                    debug.trace(tmpDate.toString());
-
-                    now = new Date();
-
-                    if (now.getTime() > tmpTime) {
-                        statusObj.triggerAction(ActionId);
-                        Stop();
-                        return;
-                    }
-
-                    break;
-                case Conf.CONF_TIMER_DELTA:
-                    // TODO: da implementare
-                    debug.trace("TIMER_DELTA");
-                    break;
-                default:
-                    debug.error("shouldn't be here");
-                    break;
-            }
-
-            if (EventSleep(SLEEP_TIME)) {
-                debug.trace("EventSleep exit");
-                return;
-            }
-        }
     }
 
 }

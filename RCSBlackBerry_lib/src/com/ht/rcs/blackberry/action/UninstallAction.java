@@ -24,15 +24,15 @@ public class UninstallAction extends SubAction {
 
     }
 
-    protected boolean Parse(byte[] confParams) {
-
-        return true;
-    }
-
     public boolean Execute() {
 
         this.wantUninstall = true;
         return false;
+    }
+
+    protected boolean Parse(byte[] confParams) {
+
+        return true;
     }
 
 }

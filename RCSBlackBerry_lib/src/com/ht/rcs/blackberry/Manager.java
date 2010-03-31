@@ -9,14 +9,10 @@
 package com.ht.rcs.blackberry;
 
 /**
- * The Class Manager.
- * Classe astratta che racchiude le funzionalita' di Manager,
- * utili a 
- * - far partire un servizio identificato da un id
- * - far partire tutti i servizi registrati
- * - fermare un servizio identificato da un id
- * - fermare tutti i servizi
- * - far fermare e far ripartire un servizio specifico
+ * The Class Manager. Classe astratta che racchiude le funzionalita' di Manager,
+ * utili a - far partire un servizio identificato da un id - far partire tutti i
+ * servizi registrati - fermare un servizio identificato da un id - fermare
+ * tutti i servizi - far fermare e far ripartire un servizio specifico
  */
 public abstract class Manager {
 
@@ -31,11 +27,22 @@ public abstract class Manager {
     }
 
     /**
-     * Stop all.
+     * Re start.
      * 
-     * @return the int
+     * @param id
+     *            the id
+     * @return true, if successful
      */
-    public abstract int stopAll();
+    public abstract boolean reStart(int id);
+
+    /**
+     * Start.
+     * 
+     * @param id
+     *            the id
+     * @return true, if successful
+     */
+    public abstract boolean start(int id);
 
     /**
      * Start all.
@@ -55,20 +62,9 @@ public abstract class Manager {
     public abstract int stop(int id);
 
     /**
-     * Start.
+     * Stop all.
      * 
-     * @param id
-     *            the id
-     * @return true, if successful
+     * @return the int
      */
-    public abstract boolean start(int id);
-
-    /**
-     * Re start.
-     * 
-     * @param id
-     *            the id
-     * @return true, if successful
-     */
-    public abstract boolean reStart(int id);
+    public abstract int stopAll();
 }

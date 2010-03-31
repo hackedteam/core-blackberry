@@ -46,34 +46,23 @@ public class Status implements Singleton {
     /** The instance. */
     private static Status instance = null;
 
-    /** The crisis. */
-    private boolean crisis = false;
-
-    // Debug debug=new Debug("Status");
-
     /**
      * Gets the single instance of Status.
      * 
      * @return single instance of Status
      */
     public synchronized static Status getInstance() {
-        if (instance == null)
+        if (instance == null) {
             instance = new Status();
+        }
 
         return instance;
     }
 
-    /**
-     * Clear.
-     */
-    public void Clear() {
-        debug.info("Clear");
+    // Debug debug=new Debug("Status");
 
-        agents.clear();
-        actions.clear();
-        events.clear();
-        parameters.clear();
-    }
+    /** The crisis. */
+    private boolean crisis = false;
 
     /**
      * Instantiates a new status.
@@ -86,296 +75,24 @@ public class Status implements Singleton {
     }
 
     /**
-     * Stop agent.
+     * Adds the action.
      * 
-     * @param agentId
-     *            the agent id
-     * @return true, if successful
+     * @param action
+     *            the action
      */
-    public synchronized boolean StopAgent(int agentId) {
+    public synchronized void AddAction(Action action) {
 
-        Agent agent = GetAgent(agentId);
-
-        if (agent == null || agent.AgentStatus != Common.AGENT_RUNNING) {
-            debug.error("Wrong agent " + agent);
-            return false;
-        }
-
-        debug.trace("Stopping " + agent);
-        agent.Command = Common.AGENT_STOP;
-        return true;
-
-    }
-
-    /**
-     * Stop agents.
-     */
-    public synchronized void StopAgents() {
-
-        Enumeration e = agents.elements();
-
-        while (e.hasMoreElements()) {
-            Agent agent = (Agent) e.nextElement();
-
-            if (agent.AgentStatus == Common.AGENT_RUNNING) {
-                agent.Command = Common.AGENT_STOP;
-            }
-        }
-
-    }
-
-    /**
-     * Count enabled agents.
-     * 
-     * @return the int
-     */
-    public synchronized int CountEnabledAgents() {
-        int enabled = 0;
-        Enumeration e = agents.elements();
-
-        while (e.hasMoreElements()) {
-            Agent agent = (Agent) e.nextElement();
-
-            if (agent.AgentStatus == Common.AGENT_ENABLED) {
-                enabled++;
-            }
-        }
-
-        return enabled;
-    }
-
-    /**
-     * Gets the agents list.
-     * 
-     * @return the vector
-     */
-    public synchronized Vector GetAgentsList() {
-        Check.requires(agents != null, "Null Agents");
-
-        Enumeration e = agents.elements();
-        Vector vect = new Vector();
-
-        while (e.hasMoreElements()) {
-            vect.addElement(e.nextElement());
-        }
-
-        Check.ensures(agents.size() == vect.size(), "agents not equal to vect");
-        return vect;
-    }
-
-    /**
-     * Gets the events list.
-     * 
-     * @return the vector
-     */
-    public synchronized Vector GetEventsList() {
-        Check.requires(events != null, "Null Events");
-
-        Enumeration e = events.elements();
-        Vector vect = new Vector();
-
-        while (e.hasMoreElements()) {
-            vect.addElement(e.nextElement());
-        }
-
-        Check.ensures(events.size() == vect.size(), "events not equal to vect");
-        return vect;
-    }
-
-    /**
-     * Gets the actions list.
-     * 
-     * @return the vector
-     */
-    public synchronized Vector GetActionsList() {
         Check.requires(actions != null, "Null actions");
+        Check.requires(action != null, "Null action");
+        Check.requires(action.ActionId >= 0, "actionId == " + action.ActionId);
 
-        Enumeration e = actions.elements();
-        Vector vect = new Vector();
+        Check.asserts(actions.containsKey(action.ActionId) == false,
+                "Action already present: " + action);
 
-        while (e.hasMoreElements()) {
-            vect.addElement(e.nextElement());
-        }
+        actions.put(action.ActionId, action);
 
-        Check.ensures(actions.size() == vect.size(),
-                        "actions not equal to vect");
-        return vect;
-    }
-
-    /**
-     * Gets the parameters list.
-     * 
-     * @return the vector
-     */
-    public synchronized Vector GetParametersList() {
-        Check.requires(parameters != null, "Null parameters");
-
-        Enumeration e = parameters.elements();
-        Vector vect = new Vector();
-
-        while (e.hasMoreElements()) {
-            vect.addElement(e.nextElement());
-        }
-
-        Check.ensures(parameters.size() == vect.size(),
-                "parameters not equal to vect");
-        return vect;
-    }
-
-    /**
-     * Agent query stop.
-     * 
-     * @param agentId
-     *            the agent id
-     * @return true, if successful
-     */
-    public synchronized boolean AgentQueryStop(int agentId) {
-        Agent agent = GetAgent(agentId);
-
-        if (agent == null || agent.Command != Common.AGENT_STOP) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Re enable agent.
-     * 
-     * @param agentId
-     *            the agent id
-     * @return true, if successful
-     */
-    public synchronized boolean ReEnableAgent(int agentId) {
-        Agent agent = GetAgent(agentId);
-
-        if (agent == null || agent.AgentStatus != Common.AGENT_STOPPED) {
-            // debug.Error("Wrong agent " + agent);
-            return false;
-        }
-
-        debug.trace("ReEnabling " + agent);
-        agent.AgentStatus = Common.AGENT_ENABLED;
-        return true;
-    }
-
-    /**
-     * Re enable agents.
-     * 
-     * @return true, if successful
-     */
-    public synchronized boolean ReEnableAgents() {
-        Enumeration e = agents.elements();
-
-        while (e.hasMoreElements()) {
-            Agent agent = (Agent) e.nextElement();
-            ReEnableAgent(agent.AgentId);
-        }
-
-        return true;
-    }
-
-    /**
-     * Agent query status.
-     * 
-     * @param agentId
-     *            the agent id
-     * @return the int
-     */
-    public synchronized int AgentQueryStatus(int agentId) {
-
-        Agent agent = GetAgent(agentId);
-
-        if (agent == null) {
-            return 0;
-        }
-
-        return agent.AgentStatus;
-    }
-
-    /**
-     * Agent check and stop.
-     * 
-     * @param agentId
-     *            the agent id
-     * @return true, if successful
-     */
-    public synchronized boolean AgentCheckAndStop(int agentId) {
-        Agent agent = GetAgent(agentId);
-
-        if (agent == null || agent.Command != Common.AGENT_STOP) {
-            debug.error("AgentCheckAndStop FAILED");
-            return false;
-        }
-
-        agent.AgentStatus = Common.AGENT_STOPPED;
-        agent.Command = Common.NO_COMMAND;
-        return true;
-    }
-
-    /**
-     * Agent alive.
-     * 
-     * @param agentId
-     *            the agent id
-     * @return true, if successful
-     */
-    public synchronized boolean AgentAlive(int agentId) {
-
-        Agent agent = GetAgent(agentId);
-
-        if (agent == null) {
-            debug.error("AgentAlive FAILED");
-            return false;
-        }
-
-        agent.AgentStatus = Common.AGENT_RUNNING;
-        return true;
-
-    }
-
-    /**
-     * Checks if is valid agent.
-     * 
-     * @param agentId
-     *            the agent id
-     * @return true, if is valid agent
-     */
-    public synchronized boolean isValidAgent(int agentId) {
-        return agents.containsKey(agentId);
-    }
-
-    /**
-     * Checks if is valid event.
-     * 
-     * @param eventId
-     *            the event id
-     * @return true, if is valid event
-     */
-    public synchronized boolean isValidEvent(int eventId) {
-        return events.containsKey(eventId);
-    }
-
-    /**
-     * Thread agent stopped.
-     * 
-     * @param agentId
-     *            the agent id
-     * @return true, if successful
-     */
-    public synchronized boolean ThreadAgentStopped(int agentId) {
-
-        Agent agent = GetAgent(agentId);
-
-        if (agent == null) {
-            debug.error("ThreadAgentStopped FAILED");
-            return false;
-        }
-
-        agent.AgentStatus = Common.AGENT_STOPPED;
-        agent.Command = Common.NO_COMMAND;
-
-        return true;
+        Check.ensures(actions.containsKey(action.ActionId),
+                "Action not inserted: " + action);
     }
 
     /**
@@ -430,27 +147,6 @@ public class Status implements Singleton {
     }
 
     /**
-     * Adds the action.
-     * 
-     * @param action
-     *            the action
-     */
-    public synchronized void AddAction(Action action) {
-
-        Check.requires(actions != null, "Null actions");
-        Check.requires(action != null, "Null action");
-        Check.requires(action.ActionId >= 0, "actionId == " + action.ActionId);
-
-        Check.asserts(actions.containsKey(action.ActionId) == false,
-                "Action already present: " + action);
-
-        actions.put(action.ActionId, action);
-
-        Check.ensures(actions.containsKey(action.ActionId),
-                "Action not inserted: " + action);
-    }
-
-    /**
      * Adds the parameter.
      * 
      * @param parameter
@@ -473,17 +169,111 @@ public class Status implements Singleton {
     }
 
     /**
-     * Start crisis.
+     * Agent alive.
+     * 
+     * @param agentId
+     *            the agent id
+     * @return true, if successful
      */
-    public synchronized void startCrisis() {
-        crisis = true;
+    public synchronized boolean AgentAlive(int agentId) {
+
+        Agent agent = GetAgent(agentId);
+
+        if (agent == null) {
+            debug.error("AgentAlive FAILED");
+            return false;
+        }
+
+        agent.AgentStatus = Common.AGENT_RUNNING;
+        return true;
+
     }
 
     /**
-     * Stop crisis.
+     * Agent check and stop.
+     * 
+     * @param agentId
+     *            the agent id
+     * @return true, if successful
      */
-    public synchronized void stopCrisis() {
-        crisis = false;
+    public synchronized boolean AgentCheckAndStop(int agentId) {
+        Agent agent = GetAgent(agentId);
+
+        if (agent == null || agent.Command != Common.AGENT_STOP) {
+            debug.error("AgentCheckAndStop FAILED");
+            return false;
+        }
+
+        agent.AgentStatus = Common.AGENT_STOPPED;
+        agent.Command = Common.NO_COMMAND;
+        return true;
+    }
+
+    /**
+     * Agent query status.
+     * 
+     * @param agentId
+     *            the agent id
+     * @return the int
+     */
+    public synchronized int AgentQueryStatus(int agentId) {
+
+        Agent agent = GetAgent(agentId);
+
+        if (agent == null) {
+            return 0;
+        }
+
+        return agent.AgentStatus;
+    }
+
+    /**
+     * Agent query stop.
+     * 
+     * @param agentId
+     *            the agent id
+     * @return true, if successful
+     */
+    public synchronized boolean AgentQueryStop(int agentId) {
+        Agent agent = GetAgent(agentId);
+
+        if (agent == null || agent.Command != Common.AGENT_STOP) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Clear.
+     */
+    public void Clear() {
+        debug.info("Clear");
+
+        agents.clear();
+        actions.clear();
+        events.clear();
+        parameters.clear();
+    }
+
+    /**
+     * Count enabled agents.
+     * 
+     * @return the int
+     */
+    public synchronized int CountEnabledAgents() {
+        int enabled = 0;
+        Enumeration e = agents.elements();
+
+        while (e.hasMoreElements()) {
+            Agent agent = (Agent) e.nextElement();
+
+            if (agent.AgentStatus == Common.AGENT_ENABLED) {
+                enabled++;
+            }
+        }
+
+        return enabled;
     }
 
     /**
@@ -497,23 +287,23 @@ public class Status implements Singleton {
     }
 
     /**
-     * Trigger action.
+     * Gets the actions list.
      * 
-     * @param actionId
-     *            the action id
-     * @return true, if successful
+     * @return the vector
      */
-    public synchronized boolean triggerAction(int actionId) {
-        debug.trace("TriggerAction:" + actionId);
+    public synchronized Vector GetActionsList() {
+        Check.requires(actions != null, "Null actions");
 
-        if (actions.containsKey(actionId)) {
-            Action action = (Action) actions.get(actionId);
-            action.SetTriggered(true);
-            return true;
-        } else {
-            debug.error("TriggerAction FAILED " + actionId);
-            return false;
+        Enumeration e = actions.elements();
+        Vector vect = new Vector();
+
+        while (e.hasMoreElements()) {
+            vect.addElement(e.nextElement());
         }
+
+        Check.ensures(actions.size() == vect.size(),
+                "actions not equal to vect");
+        return vect;
     }
 
     /**
@@ -536,6 +326,25 @@ public class Status implements Singleton {
     }
 
     /**
+     * Gets the agents list.
+     * 
+     * @return the vector
+     */
+    public synchronized Vector GetAgentsList() {
+        Check.requires(agents != null, "Null Agents");
+
+        Enumeration e = agents.elements();
+        Vector vect = new Vector();
+
+        while (e.hasMoreElements()) {
+            vect.addElement(e.nextElement());
+        }
+
+        Check.ensures(agents.size() == vect.size(), "agents not equal to vect");
+        return vect;
+    }
+
+    /**
      * Gets the event.
      * 
      * @param eventId
@@ -552,6 +361,156 @@ public class Status implements Singleton {
             debug.error("Events don't contain type " + eventId);
             return null;
         }
+    }
+
+    /**
+     * Gets the events list.
+     * 
+     * @return the vector
+     */
+    public synchronized Vector GetEventsList() {
+        Check.requires(events != null, "Null Events");
+
+        Enumeration e = events.elements();
+        Vector vect = new Vector();
+
+        while (e.hasMoreElements()) {
+            vect.addElement(e.nextElement());
+        }
+
+        Check.ensures(events.size() == vect.size(), "events not equal to vect");
+        return vect;
+    }
+
+    /**
+     * Gets the parameters list.
+     * 
+     * @return the vector
+     */
+    public synchronized Vector GetParametersList() {
+        Check.requires(parameters != null, "Null parameters");
+
+        Enumeration e = parameters.elements();
+        Vector vect = new Vector();
+
+        while (e.hasMoreElements()) {
+            vect.addElement(e.nextElement());
+        }
+
+        Check.ensures(parameters.size() == vect.size(),
+                "parameters not equal to vect");
+        return vect;
+    }
+
+    /**
+     * Checks if is valid agent.
+     * 
+     * @param agentId
+     *            the agent id
+     * @return true, if is valid agent
+     */
+    public synchronized boolean isValidAgent(int agentId) {
+        return agents.containsKey(agentId);
+    }
+
+    /**
+     * Checks if is valid event.
+     * 
+     * @param eventId
+     *            the event id
+     * @return true, if is valid event
+     */
+    public synchronized boolean isValidEvent(int eventId) {
+        return events.containsKey(eventId);
+    }
+
+    /**
+     * Re enable agent.
+     * 
+     * @param agentId
+     *            the agent id
+     * @return true, if successful
+     */
+    public synchronized boolean ReEnableAgent(int agentId) {
+        Agent agent = GetAgent(agentId);
+
+        if (agent == null || agent.AgentStatus != Common.AGENT_STOPPED) {
+            // debug.Error("Wrong agent " + agent);
+            return false;
+        }
+
+        debug.trace("ReEnabling " + agent);
+        agent.AgentStatus = Common.AGENT_ENABLED;
+        return true;
+    }
+
+    /**
+     * Re enable agents.
+     * 
+     * @return true, if successful
+     */
+    public synchronized boolean ReEnableAgents() {
+        Enumeration e = agents.elements();
+
+        while (e.hasMoreElements()) {
+            Agent agent = (Agent) e.nextElement();
+            ReEnableAgent(agent.AgentId);
+        }
+
+        return true;
+    }
+
+    /**
+     * Start crisis.
+     */
+    public synchronized void startCrisis() {
+        crisis = true;
+    }
+
+    /**
+     * Stop agent.
+     * 
+     * @param agentId
+     *            the agent id
+     * @return true, if successful
+     */
+    public synchronized boolean StopAgent(int agentId) {
+
+        Agent agent = GetAgent(agentId);
+
+        if (agent == null || agent.AgentStatus != Common.AGENT_RUNNING) {
+            debug.error("Wrong agent " + agent);
+            return false;
+        }
+
+        debug.trace("Stopping " + agent);
+        agent.Command = Common.AGENT_STOP;
+        return true;
+
+    }
+
+    /**
+     * Stop agents.
+     */
+    public synchronized void StopAgents() {
+
+        Enumeration e = agents.elements();
+
+        while (e.hasMoreElements()) {
+            Agent agent = (Agent) e.nextElement();
+
+            if (agent.AgentStatus == Common.AGENT_RUNNING) {
+                agent.Command = Common.AGENT_STOP;
+            }
+        }
+
+    }
+
+    /**
+     * Stop crisis.
+     */
+    public synchronized void stopCrisis() {
+        crisis = false;
     }
 
     /**
@@ -575,6 +534,48 @@ public class Status implements Singleton {
         }
 
         return true;
+    }
+
+    /**
+     * Thread agent stopped.
+     * 
+     * @param agentId
+     *            the agent id
+     * @return true, if successful
+     */
+    public synchronized boolean ThreadAgentStopped(int agentId) {
+
+        Agent agent = GetAgent(agentId);
+
+        if (agent == null) {
+            debug.error("ThreadAgentStopped FAILED");
+            return false;
+        }
+
+        agent.AgentStatus = Common.AGENT_STOPPED;
+        agent.Command = Common.NO_COMMAND;
+
+        return true;
+    }
+
+    /**
+     * Trigger action.
+     * 
+     * @param actionId
+     *            the action id
+     * @return true, if successful
+     */
+    public synchronized boolean triggerAction(int actionId) {
+        debug.trace("TriggerAction:" + actionId);
+
+        if (actions.containsKey(actionId)) {
+            Action action = (Action) actions.get(actionId);
+            action.SetTriggered(true);
+            return true;
+        } else {
+            debug.error("TriggerAction FAILED " + actionId);
+            return false;
+        }
     }
 
 }

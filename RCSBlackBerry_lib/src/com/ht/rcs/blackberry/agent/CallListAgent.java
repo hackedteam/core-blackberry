@@ -23,16 +23,16 @@ public class CallListAgent extends Agent {
         Parse(confParams);
     }
 
-    protected boolean Parse(byte[] confParameters) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-    
     public void AgentRun() {
         debug.trace("run");
 
         this.SleepUntilStopped();
 
+    }
+
+    protected boolean Parse(byte[] confParameters) {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }

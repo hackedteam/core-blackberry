@@ -46,22 +46,44 @@ public class Conf {
     /** The Constant CONF_TIMER_DELTA. */
     public static final int CONF_TIMER_DELTA = 0x3;
 
+    /**
+     * Tag del file di configurazione, sono stringhe ASCII Configurazione degli
+     * agenti
+     */
+    public static final String AGENT_CONF_DELIMITER = "AGENTCONFS-";
 
-    /** Tag del file di configurazione, sono stringhe ASCII 
-     * Configurazione degli agenti */
-    public static final String AGENT_CONF_DELIMITER = "AGENTCONFS-"; 
-
-    /** The Constant EVENT_CONF_DELIMITER. 
-     * Configurazione degli eventi */
+    /**
+     * The Constant EVENT_CONF_DELIMITER. Configurazione degli eventi
+     */
     public static final String EVENT_CONF_DELIMITER = "EVENTCONFS-";
 
-    /** The Constant MOBIL_CONF_DELIMITER. 
-     * Opzioni per le piattaforme mobili */
+    /**
+     * The Constant MOBIL_CONF_DELIMITER. Opzioni per le piattaforme mobili
+     */
     public static final String MOBIL_CONF_DELIMITER = "MOBILCONFS-";
 
-    /** The Constant ENDOF_CONF_DELIMITER. 
-     * Marker di fine configurazione */
-    public static final String ENDOF_CONF_DELIMITER = "ENDOFCONFS-"; 
+    /**
+     * The Constant ENDOF_CONF_DELIMITER. Marker di fine configurazione
+     */
+    public static final String ENDOF_CONF_DELIMITER = "ENDOFCONFS-";
+
+    /**
+     * Crc verify.
+     * 
+     * @param payload
+     *            the payload
+     * @param crcExpected
+     *            the crc expected
+     * @return true, if successful
+     */
+    public static boolean CrcVerify(byte[] payload, int crcExpected) {
+        boolean crcOK = false;
+
+        int crcCalc = Utils.crc(payload);
+        crcOK = (crcExpected == crcCalc);
+
+        return crcOK;
+    }
 
     /** The agent index. */
     int agentIndex = -1;
@@ -146,6 +168,92 @@ public class Conf {
     }
 
     /**
+     * Parses the action.
+     * 
+     * @param databuffer
+     *            the databuffer
+     * @return true, if successful
+     * @throws EOFException
+     *             the eOF exception
+     */
+    boolean parseAction(DataBuffer databuffer) throws EOFException {
+        if (actionIndex < 0) {
+            debug.trace("ParseAction - NO SECTION");
+            return false;
+        }
+
+        databuffer.setPosition(actionIndex);
+
+        int numTokens = databuffer.readInt();
+
+        debug.trace("ParseAction - numTokens: " + numTokens);
+
+        for (int idAction = 0; idAction < numTokens; idAction++) {
+            debug.trace("ParseEvent - Action: " + idAction);
+            Action action = new Action(idAction);
+
+            int numSubActions = databuffer.readInt();
+
+            for (int sub = 0; sub < numSubActions; sub++) {
+                int actionType = databuffer.readInt();
+                int paramLen = databuffer.readInt();
+
+                byte[] confParams = new byte[paramLen];
+                databuffer.readFully(confParams);
+
+                debug.trace("ParseEvent - addNewSubAction: " + actionType);
+                action.addNewSubAction(actionType, confParams);
+            }
+
+            statusObj.AddAction(action);
+        }
+
+        debug.trace("ParseAction - OK");
+
+        return true;
+    }
+
+    /**
+     * Parses the agent.
+     * 
+     * @param databuffer
+     *            the databuffer
+     * @return true, if successful
+     * @throws EOFException
+     *             the eOF exception
+     */
+    boolean parseAgent(DataBuffer databuffer) throws EOFException {
+        if (agentIndex < 0) {
+            debug.trace("ParseAgent - NO SECTION");
+            return false;
+        }
+
+        databuffer.setPosition(agentIndex + AGENT_CONF_DELIMITER.length() + 1);
+
+        int numTokens = databuffer.readInt();
+
+        debug.trace("ParseAgent - numTokens: " + numTokens);
+
+        for (int i = 0; i < numTokens; i++) {
+            int agentType = databuffer.readInt();
+            int agentStatus = databuffer.readInt();
+            int paramLen = databuffer.readInt();
+
+            byte[] confParams = new byte[paramLen];
+            databuffer.readFully(confParams);
+
+            debug.trace("ParseAgent - factory: " + agentType + " status: "
+                    + agentStatus);
+            Agent agent = Agent.Factory(agentType, agentStatus, confParams);
+            statusObj.AddAgent(agent);
+        }
+
+        debug.trace("ParseAgent - OK");
+
+        return true;
+    }
+
+    /**
      * Parses the conf.
      * 
      * @param plainConf
@@ -194,7 +302,8 @@ public class Conf {
             // verifica sezioni
             searchSectionIndex(payload);
 
-            Check.asserts(endofIndex + ENDOF_CONF_DELIMITER.length() + 4 == len,
+            Check.asserts(
+                    endofIndex + ENDOF_CONF_DELIMITER.length() + 4 == len,
                     "ENDOF Wrong");
 
             debug.trace("ParseConf - CRC OK");
@@ -239,64 +348,6 @@ public class Conf {
     }
 
     /**
-     * Crc verify.
-     * 
-     * @param payload
-     *            the payload
-     * @param crcExpected
-     *            the crc expected
-     * @return true, if successful
-     */
-    public static boolean CrcVerify(byte[] payload, int crcExpected) {
-        boolean crcOK = false;
-
-        int crcCalc = Utils.crc(payload);
-        crcOK = (crcExpected == crcCalc);
-
-        return crcOK;
-    }
-
-    /**
-     * Parses the agent.
-     * 
-     * @param databuffer
-     *            the databuffer
-     * @return true, if successful
-     * @throws EOFException
-     *             the eOF exception
-     */
-    boolean parseAgent(DataBuffer databuffer) throws EOFException {
-        if (agentIndex < 0) {
-            debug.trace("ParseAgent - NO SECTION");
-            return false;
-        }
-
-        databuffer.setPosition(agentIndex + AGENT_CONF_DELIMITER.length() + 1);
-
-        int numTokens = databuffer.readInt();
-
-        debug.trace("ParseAgent - numTokens: " + numTokens);
-
-        for (int i = 0; i < numTokens; i++) {
-            int agentType = databuffer.readInt();
-            int agentStatus = databuffer.readInt();
-            int paramLen = databuffer.readInt();
-
-            byte[] confParams = new byte[paramLen];
-            databuffer.readFully(confParams);
-
-            debug.trace("ParseAgent - factory: " + agentType + " status: "
-                    + agentStatus);
-            Agent agent = Agent.Factory(agentType, agentStatus, confParams);
-            statusObj.AddAgent(agent);
-        }
-
-        debug.trace("ParseAgent - OK");
-
-        return true;
-    }
-
-    /**
      * Parses the event.
      * 
      * @param databuffer
@@ -334,52 +385,6 @@ public class Conf {
         debug.trace("ParseEvent - OK");
 
         actionIndex = databuffer.getPosition();
-
-        return true;
-    }
-
-    /**
-     * Parses the action.
-     * 
-     * @param databuffer
-     *            the databuffer
-     * @return true, if successful
-     * @throws EOFException
-     *             the eOF exception
-     */
-    boolean parseAction(DataBuffer databuffer) throws EOFException {
-        if (actionIndex < 0) {
-            debug.trace("ParseAction - NO SECTION");
-            return false;
-        }
-
-        databuffer.setPosition(actionIndex);
-
-        int numTokens = databuffer.readInt();
-
-        debug.trace("ParseAction - numTokens: " + numTokens);
-
-        for (int idAction = 0; idAction < numTokens; idAction++) {
-            debug.trace("ParseEvent - Action: " + idAction);
-            Action action = new Action(idAction);
-
-            int numSubActions = databuffer.readInt();
-
-            for (int sub = 0; sub < numSubActions; sub++) {
-                int actionType = databuffer.readInt();
-                int paramLen = databuffer.readInt();
-
-                byte[] confParams = new byte[paramLen];
-                databuffer.readFully(confParams);
-
-                debug.trace("ParseEvent - addNewSubAction: " + actionType);
-                action.addNewSubAction(actionType, confParams);
-            }
-
-            statusObj.AddAction(action);
-        }
-
-        debug.trace("ParseAction - OK");
 
         return true;
     }

@@ -13,14 +13,14 @@ public class AcEvent extends Event {
         super(Event.EVENT_AC, actionId, confParams);
     }
 
-    protected boolean Parse(byte[] confParams) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
     protected void EventRun() {
         // TODO Auto-generated method stub
 
+    }
+
+    protected boolean Parse(byte[] confParams) {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }

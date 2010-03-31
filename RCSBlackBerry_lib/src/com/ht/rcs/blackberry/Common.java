@@ -102,8 +102,6 @@ public class Common {
     /** Parametri del protocollo (i comandi validi iniziano da 1 in poi). */
     public static final int INVALID_COMMAND = 0x0; // Non usare
 
-   
-
     /** /** Parametri di ritorno della Send(). */
     public static final int SEND_OK = 0x1;
 

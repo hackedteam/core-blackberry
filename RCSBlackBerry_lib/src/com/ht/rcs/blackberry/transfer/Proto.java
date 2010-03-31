@@ -1,7 +1,7 @@
 package com.ht.rcs.blackberry.transfer;
 
 public final class Proto {
-	 /** The Constant OK. */
+    /** The Constant OK. */
     public static final int OK = 0x1; // OK
 
     /** The Constant NO. */

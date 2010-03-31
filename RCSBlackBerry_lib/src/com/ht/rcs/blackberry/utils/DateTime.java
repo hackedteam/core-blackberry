@@ -28,9 +28,15 @@ public class DateTime {
         ticks = millisecs * MILLISEC + TicksFrom1601to1970;
     }
 
-    public int lowDateTime() {
-        int low = (int) (ticks);
-        return low;
+    public Date getDate() {
+        Date date = new Date((ticks - TicksFrom1601to1970) / MILLISEC);
+
+        Check.ensures((new DateTime(date)).getTicks() == ticks, "Wrong date");
+        return date;
+    }
+
+    public long getTicks() {
+        return ticks;
     }
 
     public int hiDateTime() {
@@ -38,15 +44,9 @@ public class DateTime {
         return hi;
     }
 
-    public long getTicks() {
-        return ticks;
-    }
-
-    public Date getDate() {
-        Date date = new Date((ticks - TicksFrom1601to1970) / MILLISEC);
-
-        Check.ensures((new DateTime(date)).getTicks() == ticks, "Wrong date");
-        return date;
+    public int lowDateTime() {
+        int low = (int) (ticks);
+        return low;
     }
 
 }

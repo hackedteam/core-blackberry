@@ -13,14 +13,14 @@ public class BatteryEvent extends Event {
         super(Event.EVENT_BATTERY, actionId, confParams);
     }
 
-    protected boolean Parse(byte[] confParams) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
     protected void EventRun() {
         // TODO Auto-generated method stub
 
+    }
+
+    protected boolean Parse(byte[] confParams) {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }

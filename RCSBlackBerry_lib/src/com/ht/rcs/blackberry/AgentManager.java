@@ -32,7 +32,7 @@ public final class AgentManager extends Manager implements Singleton {
 
     /**
      * Gets the single instance of AgentManager.
-     *
+     * 
      * @return single instance of AgentManager
      */
     public static synchronized AgentManager getInstance() {
@@ -52,24 +52,7 @@ public final class AgentManager extends Manager implements Singleton {
 
     /*
      * (non-Javadoc)
-     * @see com.ht.rcs.blackberry.Manager#Stop(int)
-     */
-    public synchronized int stop(int typeId) {
-        if (!statusObj.StopAgent(typeId)) {
-            debug.trace("StopAgent() Agent already stopped");
-            return Common.AGENT_STOPPED;
-        }
-
-        while (statusObj.AgentQueryStatus(typeId) != Common.AGENT_STOPPED) {
-            Utils.Sleep(SLEEP_CHECKING_STOP);
-        }
-
-        boolean ret = statusObj.ReEnableAgent(typeId);
-        return ret ? 1 : 0;
-    }
-
-    /*
-     * (non-Javadoc)
+     * 
      * @see com.ht.rcs.blackberry.Manager#ReStart(int)
      */
     public synchronized boolean reStart(int agentId) {
@@ -94,6 +77,7 @@ public final class AgentManager extends Manager implements Singleton {
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.ht.rcs.blackberry.Manager#Start(int)
      */
     public synchronized boolean start(int agentId) {
@@ -125,6 +109,7 @@ public final class AgentManager extends Manager implements Singleton {
     // Qui vengono eseguiti gli agenti che funzionano come thread
     /*
      * (non-Javadoc)
+     * 
      * @see com.ht.rcs.blackberry.Manager#StartAll()
      */
     public synchronized boolean startAll() {
@@ -141,9 +126,29 @@ public final class AgentManager extends Manager implements Singleton {
         debug.trace("StartAll() OK");
         return true;
     }
-    
+
     /*
      * (non-Javadoc)
+     * 
+     * @see com.ht.rcs.blackberry.Manager#Stop(int)
+     */
+    public synchronized int stop(int typeId) {
+        if (!statusObj.StopAgent(typeId)) {
+            debug.trace("StopAgent() Agent already stopped");
+            return Common.AGENT_STOPPED;
+        }
+
+        while (statusObj.AgentQueryStatus(typeId) != Common.AGENT_STOPPED) {
+            Utils.Sleep(SLEEP_CHECKING_STOP);
+        }
+
+        boolean ret = statusObj.ReEnableAgent(typeId);
+        return ret ? 1 : 0;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.ht.rcs.blackberry.Manager#StopAll()
      */
     public synchronized int stopAll() {

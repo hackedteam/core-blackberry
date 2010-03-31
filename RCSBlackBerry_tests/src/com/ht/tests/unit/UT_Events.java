@@ -15,42 +15,41 @@ public class UT_Events extends TestUnit {
 
 	public UT_Events(String name, Tests tests) {
 		super(name, tests);
-		
+
 	}
-	
-	public boolean TimerEventTest() throws AssertException
-	{
+
+	public boolean TimerEventTest() throws AssertException {
 		debug.info("-- TimerEventTest --");
-				
+
 		Status status = Status.getInstance();
-		EventManager eventManager=EventManager.getInstance();		
+		EventManager eventManager = EventManager.getInstance();
 		status.Clear();
-		
-		Action action=new Action(0);
+
+		Action action = new Action(0);
 		action.addNewSubAction(SubAction.ACTION_EXECUTE, null);
 		status.AddAction(action);
-		AssertThat( !action.isTriggered() , "action triggered");
-		
+		AssertThat(!action.isTriggered(), "action triggered");
+
 		// creo timer che si esegua una volta dopo 1 secondo
 		TimerEvent event = new TimerEvent(0, Conf.CONF_TIMER_SINGLE, 1000, 0);
 		status.AddEvent(0, event);
-		AssertThat( ! event.isRunning() , "event running");
+		AssertThat(!event.isRunning(), "event running");
 		eventManager.startAll();
-		
+
 		Utils.Sleep(1000);
 		// verifico che l'evento sia partito
-		AssertThat( event.isRunning() , "event not running");
-		
+		AssertThat(event.isRunning(), "event not running");
+
 		Utils.Sleep(1500);
-		AssertThat( action.isTriggered() , "action not triggered");
-				
+		AssertThat(action.isTriggered(), "action not triggered");
+
 		return true;
-		
+
 	}
 
-	public boolean run() throws AssertException {			
+	public boolean run() throws AssertException {
 		TimerEventTest();
-		
+
 		return true;
 	}
 

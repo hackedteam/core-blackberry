@@ -66,9 +66,9 @@ public class Log {
     public static final int LOGTYPE_UNKNOWN = 0xFFFF; // in caso di errore
     public static final int LOGTYPE_FILEOPEN = 0x0000;
     public static final int LOGTYPE_FILECAPTURE = 0x0001; // in realta' e'
-                                                          // 0x0000 e si
-                                                          // distingue tra LOG e
-                                                          // LOGF
+    // 0x0000 e si
+    // distingue tra LOG e
+    // LOGF
     public static final int LOGTYPE_KEYLOG = 0x0040;
     public static final int LOGTYPE_PRINT = 0x0100;
     public static final int LOGTYPE_SNAPSHOT = 0xB9B9;
@@ -112,21 +112,33 @@ public class Log {
 
     private static Debug debug = new Debug("Log", DebugLevel.VERBOSE);
 
-    Date timestamp;
+    public static int ConvertTypeLog(int agentId) {
+        int agentPos = agentId - Agent.AGENT;
+        Check.requires(TYPE_LOG != null, "Null TypeLog");
+        if (agentPos > 0 && agentPos < TYPE_LOG.length) {
+            int typeLog = TYPE_LOG[agentPos];
+            return typeLog;
+        }
 
+        debug.warn("Wrong agentId conversion: " + agentId);
+        return LOGTYPE_UNKNOWN;
+    }
+
+    Date timestamp;
     String logName;
+
     int logType;
 
     String fileName;
-
     FileConnection fconn = null;
-    DataOutputStream os = null;
 
+    DataOutputStream os = null;
     Encryption encryption;
     LogCollector logCollector;
-    LogDescription logDescription;
 
+    LogDescription logDescription;
     Device device;
+
     Agent agent;
 
     int progressive;
@@ -158,67 +170,54 @@ public class Log {
         encryption.makeKey(key);
     }
 
-    public static int ConvertTypeLog(int agentId) {
-        int agentPos = agentId - Agent.AGENT;
-        Check.requires(TYPE_LOG != null, "Null TypeLog");
-        if (agentPos > 0 && agentPos < TYPE_LOG.length) {
-            int typeLog = TYPE_LOG[agentPos];
-            return typeLog;
+    /**
+     * Chiude il file di log. Torna TRUE se il file e' stato chiuso con
+     * successo, FALSE altrimenti. Se bRemove e' impostato a TRUE il file viene
+     * anche cancellato da disco e rimosso dalla coda. Questa funzione NON va
+     * chiamata per i markup perche' la WriteMarkup() e la ReadMarkup() chiudono
+     * automaticamente l'handle.
+     */
+    public boolean close() {
+        boolean ret = true;
+
+        if (os != null) {
+            try {
+                os.close();
+            } catch (IOException e) {
+                ret = false;
+            }
         }
-        
-        debug.warn("Wrong agentId conversion: " + agentId);
-        return LOGTYPE_UNKNOWN;
-    }
 
-    /**
-     * Genera un nome gia' scramblato per un file log, se bAddPath e' TRUE il
-     * nome ritornato
-     * e' completo del path da utilizzare altrimenti viene ritornato soltanto il
-     * nome.
-     * Se la chiamata fallisce la funzione torna una stringa vuota. Il nome
-     * generato
-     * non indica necessariamente un file che gia' non esiste sul filesystem, e'
-     * compito del chiamante
-     * verificare che tale file non sia gia' presente. Se il parametro
-     * facoltativo bStoreToMMC e'
-     * impostato a TRUE viene generato un nome che punta alla prima MMC
-     * disponibile, se esiste.
-     */
-    String makeName(String name, boolean addPath, boolean storeToMMC) {
-        return null;
-    }
+        if (fconn != null) {
+            try {
+                fconn.close();
+            } catch (IOException e) {
+                ret = false;
+            }
+        }
 
-    /**
-     * Override della funzione precedente: invece di generare il nome da una
-     * stringa lo genera
-     * da un numero. Se la chiamata fallisce la funzione torna una stringa
-     * vuota.
-     */
-    String makeName(int agentId, boolean addPath) {
-        return null;
+        return ret;
     }
 
     /**
      * Questa funzione crea un file di log e lascia l'handle aperto. Il file
-     * viene creato con
-     * un nome casuale, la chiamata scrive l'header nel file e poi i dati
-     * addizionali se ce ne
-     * sono. LogType e' il tipo di log che stiamo scrivendo, pAdditionalData e'
-     * un puntatore agli eventuali
+     * viene creato con un nome casuale, la chiamata scrive l'header nel file e
+     * poi i dati addizionali se ce ne sono. LogType e' il tipo di log che
+     * stiamo scrivendo, pAdditionalData e' un puntatore agli eventuali
      * additional data e uAdditionalLen e la lunghezza dei dati addizionali da
-     * scrivere nell'header.
-     * Il parametro facoltativo bStoreToMMC se settato a TRUE fa in modo che il
-     * log venga salvato nella
-     * prima MMC disponibile, se non c'e' la chiama fallisce.
-     * La funzione torna TRUE se va a buon fine, FALSE altrimenti.
+     * scrivere nell'header. Il parametro facoltativo bStoreToMMC se settato a
+     * TRUE fa in modo che il log venga salvato nella prima MMC disponibile, se
+     * non c'e' la chiama fallisce. La funzione torna TRUE se va a buon fine,
+     * FALSE altrimenti.
      */
     public boolean createLog(byte[] additionalData) {
         timestamp = new Date();
 
         int additionalLen = 0;
 
-        if (additionalData != null)
+        if (additionalData != null) {
             additionalLen = additionalData.length;
+        }
 
         Vector tuple = logCollector.MakeNewName(this, agent);
         Check.asserts(tuple.size() == 4, "Wrong tuple size");
@@ -275,16 +274,18 @@ public class Log {
     // pubblico solo per fare i test
     public byte[] makeDescription(byte[] additionalData) {
 
-        if (timestamp == null)
+        if (timestamp == null) {
             timestamp = new Date();
+        }
 
         // Check.requires(timestamp != null, "null timestamp");
         // Check.requires(additionalData != null, "null additionalData");
 
         int additionalLen = 0;
 
-        if (additionalData != null)
+        if (additionalData != null) {
             additionalLen = additionalData.length;
+        }
 
         DateTime datetime = new DateTime(timestamp);
 
@@ -321,15 +322,33 @@ public class Log {
         return plainBuffer;
     }
 
-    public boolean writeLog(String data, boolean endzero) {
-        return writeLog(WChar.getBytes(data, endzero));
+    /**
+     * Override della funzione precedente: invece di generare il nome da una
+     * stringa lo genera da un numero. Se la chiamata fallisce la funzione torna
+     * una stringa vuota.
+     */
+    String makeName(int agentId, boolean addPath) {
+        return null;
+    }
+
+    /**
+     * Genera un nome gia' scramblato per un file log, se bAddPath e' TRUE il
+     * nome ritornato e' completo del path da utilizzare altrimenti viene
+     * ritornato soltanto il nome. Se la chiamata fallisce la funzione torna una
+     * stringa vuota. Il nome generato non indica necessariamente un file che
+     * gia' non esiste sul filesystem, e' compito del chiamante verificare che
+     * tale file non sia gia' presente. Se il parametro facoltativo bStoreToMMC
+     * e' impostato a TRUE viene generato un nome che punta alla prima MMC
+     * disponibile, se esiste.
+     */
+    String makeName(String name, boolean addPath, boolean storeToMMC) {
+        return null;
     }
 
     /**
      * Questa funzione prende i byte puntati da pByte, li cifra e li scrive nel
-     * file di log creato
-     * con CreateLog(). La funzione torna TRUE se va a buon fine, FALSE
-     * altrimenti.
+     * file di log creato con CreateLog(). La funzione torna TRUE se va a buon
+     * fine, FALSE altrimenti.
      */
     public boolean writeLog(byte[] data) {
         if (os == null || fconn == null) {
@@ -350,31 +369,7 @@ public class Log {
         return true;
     }
 
-    /**
-     * Chiude il file di log. Torna TRUE se il file e' stato chiuso con
-     * successo, FALSE altrimenti. Se bRemove e' impostato a TRUE il file viene
-     * anche cancellato da disco e rimosso dalla coda. Questa funzione NON va
-     * chiamata per i
-     * markup perche' la WriteMarkup() e la ReadMarkup() chiudono
-     * automaticamente l'handle.
-     */
-    public boolean close() {
-        boolean ret = true;
-
-        if (os != null)
-            try {
-                os.close();
-            } catch (IOException e) {
-                ret = false;
-            }
-
-        if (fconn != null)
-            try {
-                fconn.close();
-            } catch (IOException e) {
-                ret = false;
-            }
-
-        return ret;
+    public boolean writeLog(String data, boolean endzero) {
+        return writeLog(WChar.getBytes(data, endzero));
     }
 }

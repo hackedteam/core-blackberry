@@ -16,67 +16,63 @@ public class UT_Markup extends TestUnit {
 		super(name, tests);
 	}
 
-	void SimpleMarkupTest() throws AssertException
-	{
-		Markup markup=new Markup(Keys.getAesKey());
+	void SimpleMarkupTest() throws AssertException {
+		Markup markup = new Markup(Keys.getAesKey());
 		int agentId = Agent.AGENT_APPLICATION;
-		
-		if(markup.isMarkup(agentId))
-			markup.removeMarkup(agentId);
-		
+
+		if (markup.isMarkup(agentId))
+			Markup.removeMarkup(agentId);
+
 		// senza markup
-		boolean ret=markup.isMarkup(agentId);
+		boolean ret = markup.isMarkup(agentId);
 		AssertThat(ret == false, "Should Not exist");
-		
+
 		// scrivo un markup vuoto
 		ret = markup.writeMarkup(agentId, null);
 		AssertThat(ret == true, "cannot write null markup");
-		
+
 		// verifico che ci sia
-		ret=markup.isMarkup(agentId);
+		ret = markup.isMarkup(agentId);
 		AssertThat(ret == true, "Should exist");
-		
+
 		// scrivo un numero nel markup
-		byte[] buffer=Utils.intToByteArray(123);
-				
+		byte[] buffer = Utils.intToByteArray(123);
+
 		ret = markup.writeMarkup(agentId, buffer);
 		AssertThat(ret == true, "cannot write markup");
-		
-		//verifico che il numero si legga correttamente
+
+		// verifico che il numero si legga correttamente
 		int value;
 		try {
 			byte[] read = markup.readMarkup(agentId);
-			value = Utils.byteArrayToInt(read,0);
-			
+			value = Utils.byteArrayToInt(read, 0);
+
 		} catch (IOException e) {
 			debug.fatal("Markup read");
 			throw new AssertException();
 		}
-		
-		AssertEquals(value,123,"Wrong read 123");
-		
+
+		AssertEquals(value, 123, "Wrong read 123");
+
 		// cancello il markup
-		markup.removeMarkup(agentId);
-		
+		Markup.removeMarkup(agentId);
+
 		// verifico che sia stato cancellato
-		ret=markup.isMarkup(agentId);
+		ret = markup.isMarkup(agentId);
 		AssertThat(ret == false, "Should Not exist");
-		
-		
+
 	}
-	
+
 	private void DeleteAllMarkupTest() {
-		Markup.removeMarkups();		
+		Markup.removeMarkups();
 	}
-	
+
 	public boolean run() throws AssertException {
-				
+
 		DeleteAllMarkupTest();
 		SimpleMarkupTest();
-		
+
 		return true;
 	}
-
-
 
 }
