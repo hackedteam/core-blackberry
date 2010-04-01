@@ -492,14 +492,24 @@ public class Transfer {
 
         debug.info("syncLogs connected: " + connected + " wifi: " + wifi);
 
-        // snap dei log
-        Vector logs = logCollector.getLogs();
-        for (int i = 0; i < logs.size(); i++) {
-            String logName = (String) logs.elementAt(i);
-            AutoFlashFile file = new AutoFlashFile(logName, false);
-            byte[] content = file.read();
-            sendManagedCommand(Proto.LOG, content, false);
-            logCollector.remove(logName);
+        String basePath = Path.SD_PATH;
+        Vector dirs = logCollector.scanForDirLogs(basePath);
+        for (int i = 0; i < dirs.size(); i++) {
+            String dir = (String) dirs.elementAt(i);
+            Vector logs = logCollector.scanForLogs(basePath, dir);
+            for (int j = 0; j < logs.size(); j++) {
+                String logName = (String) logs.elementAt(j);
+                String fullLogName = basePath + dir + logName;
+                AutoFlashFile file = new AutoFlashFile(fullLogName, false);
+                if (!file.exists()) {
+                    debug.error("File doesn't exist: " + fullLogName);
+                    continue;
+                }
+                byte[] content = file.read();
+                debug.info("Sending file: "+ logCollector.decryptName(logName) + " = " + fullLogName);
+                sendManagedCommand(Proto.LOG, content, false);
+                logCollector.remove(fullLogName);
+            }
         }
 
         sendCommand(Proto.LOG_END);

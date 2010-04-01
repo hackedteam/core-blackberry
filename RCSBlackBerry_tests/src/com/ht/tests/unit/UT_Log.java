@@ -24,8 +24,8 @@ public class UT_Log extends TestUnit {
 
 	public boolean run() throws AssertException {
 
-		Path.makeDirs(true);
-
+		Path.makeDirs(true);	
+		
 		CreatePlainDeviceLog();
 		CreateEncDeviceLog();
 		CreateDeviceAgent();
