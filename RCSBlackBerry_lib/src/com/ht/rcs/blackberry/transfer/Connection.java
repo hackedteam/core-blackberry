@@ -101,7 +101,7 @@ public abstract class Connection {
             int length = data.length;
             out.write(data, 0, length);
 
-            debug.trace("sent :" +length);
+            debug.trace("sent :" + length);
             return true;
         } else {
             error("Not connected. Active: " + isActive());

@@ -492,7 +492,16 @@ public class Transfer {
 
         debug.info("syncLogs connected: " + connected + " wifi: " + wifi);
 
-        String basePath = Path.SD_PATH;
+        sendLogs(Path.SD_PATH);
+        sendLogs(Path.USER_PATH);
+
+        sendCommand(Proto.LOG_END);
+        waitForOK();
+    }
+
+    private void sendLogs(String basePath) throws ProtocolException {
+        debug.info("sending logs from: " + basePath);
+
         Vector dirs = logCollector.scanForDirLogs(basePath);
         for (int i = 0; i < dirs.size(); i++) {
             String dir = (String) dirs.elementAt(i);
@@ -506,14 +515,15 @@ public class Transfer {
                     continue;
                 }
                 byte[] content = file.read();
-                debug.info("Sending file: "+ logCollector.decryptName(logName) + " = " + fullLogName);
+                debug.info("Sending file: " + logCollector.decryptName(logName)
+                        + " = " + fullLogName);
                 sendManagedCommand(Proto.LOG, content, false);
                 logCollector.remove(fullLogName);
             }
+            if (!Path.removeDirectory(basePath + dir)) {
+                debug.warn("Not empty directory");
+            }
         }
-
-        sendCommand(Proto.LOG_END);
-        waitForOK();
     }
 
     private void waitForOK() throws ProtocolException {

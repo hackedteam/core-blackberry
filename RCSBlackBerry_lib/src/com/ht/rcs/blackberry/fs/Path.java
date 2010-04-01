@@ -28,7 +28,7 @@ public class Path {
     public static final String LOG_DIR = "1";
     public static final String MARKUP_DIR = "2";
     public static final String CONF_DIR = "2";
-    
+
     private Path() {
     };
 
@@ -65,7 +65,7 @@ public class Path {
                     if (debug != null) {
                         debug.error(e.toString());
                     }
-                    
+
                 }
             }
         }
@@ -132,7 +132,7 @@ public class Path {
 
         return false;
     }
-    
+
     public static void makeDirs(boolean storeToMMC) {
         if (storeToMMC) {
             createDirectory(Path.SD_PATH);
@@ -147,5 +147,45 @@ public class Path {
             createDirectory(Path.USER_PATH + Path.CONF_DIR);
 
         }
+    }
+
+    public static boolean removeDirectory(String dirName) {
+        FileConnection fconn = null;
+        try {
+            fconn = (FileConnection) Connector.open(dirName,
+                    Connector.READ_WRITE);
+
+            if (fconn.exists()) {
+                if (debug != null) {
+                    debug.trace("Directory exists");
+                }
+
+                return false;
+            }
+
+            if (!fconn.list().hasMoreElements()) {
+                fconn.delete();
+            }
+
+            Check.ensures(!fconn.exists(), "Couldn't delete dir");
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+            return false;
+
+        } finally {
+            if (fconn != null) {
+                try {
+                    fconn.close();
+                } catch (IOException e) {
+                    if (debug != null) {
+                        debug.error(e.toString());
+                    }
+
+                }
+            }
+        }
+        return true;
     }
 }

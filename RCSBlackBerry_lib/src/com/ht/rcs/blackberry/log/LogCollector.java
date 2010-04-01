@@ -300,9 +300,10 @@ public class LogCollector implements Singleton {
         debug.info("Removing file: " + logName);
         AutoFlashFile file = new AutoFlashFile(logName, false);
         if (file.exists()) {
-            file.delete();
+            file.delete();            
         } else {
             debug.warn("File doesn't exists: " + logName);
         }
     }
+
 }

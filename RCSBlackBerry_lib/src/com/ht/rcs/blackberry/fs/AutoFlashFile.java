@@ -188,5 +188,4 @@ public class AutoFlashFile {
         byte[] repr = Utils.intToByteArray(value);
         return write(repr);
     }
-
 }
