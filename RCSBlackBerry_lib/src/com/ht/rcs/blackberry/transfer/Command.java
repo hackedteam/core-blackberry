@@ -4,9 +4,9 @@ public class Command {
     public int id;
     public byte[] payload;
 
-    public Command(int commandId, byte[] payload) {
-        this.id = commandId;
-        this.payload = payload;
+    public Command(int commandId_, byte[] payload_) {
+        this.id = commandId_;
+        this.payload = payload_;
     }
 
     public int size() {

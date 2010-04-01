@@ -6,23 +6,23 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
 public class KeyLogAgent extends Agent {
     static Debug debug = new Debug("KeyLogAgent", DebugLevel.VERBOSE);
 
-    public KeyLogAgent(int AgentStatus) {
-        super(Agent.AGENT_KEYLOG, AgentStatus, true);
+    public KeyLogAgent(int agentStatus) {
+        super(Agent.AGENT_KEYLOG, agentStatus, true);
 
     }
 
-    protected KeyLogAgent(int AgentStatus, byte[] confParams) {
-        this(AgentStatus);
-        Parse(confParams);
+    protected KeyLogAgent(int agentStatus, byte[] confParams) {
+        this(agentStatus);
+        parse(confParams);
     }
 
-    public void AgentRun() {
+    public void agentRun() {
         debug.trace("run");
-        this.SleepUntilStopped();
+        this.sleepUntilStopped();
 
     }
 
-    protected boolean Parse(byte[] confParameters) {
+    protected boolean parse(byte[] confParameters) {
         // TODO Auto-generated method stub
         return false;
     }

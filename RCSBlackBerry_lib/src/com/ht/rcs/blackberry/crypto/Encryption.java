@@ -22,19 +22,19 @@ public class Encryption {
      * Descrambla una stringa, torna il puntatore al nome descramblato. La
      * stringa ritornata va liberata dal chiamante con una free()!!!!
      */
-    public static String DecryptName(String Name, int seed) {
-        return Scramble(Name, seed, false);
+    public static String decryptName(String Name, int seed) {
+        return scramble(Name, seed, false);
     }
 
     /**
      * Scrambla una stringa, torna il puntatore al nome scramblato. La stringa
      * ritornata va liberata dal chiamante con una free()!!!!
      */
-    public static String EncryptName(String Name, int seed) {
-        return Scramble(Name, seed, true);
+    public static String encryptName(String Name, int seed) {
+        return scramble(Name, seed, true);
     }
 
-    public static int GetNextMultiple(int len) {
+    public static int getNextMultiple(int len) {
         Check.requires(len >= 0, "len < 0");
         int newlen = len + (len % 16 == 0 ? 0 : 16 - len % 16);
         Check.ensures(newlen >= len, "newlen < len");
@@ -48,7 +48,7 @@ public class Encryption {
      * secondo UN byte di seed, il terzo se settato a TRUE scrambla, se settato
      * a FALSE descrambla.
      */
-    private static String Scramble(String Name, int seed, boolean enc) {
+    private static String scramble(String Name, int seed, boolean enc) {
         char[] ret_string = Name.toCharArray();
         int len = Name.length();
         int i, j;
@@ -102,15 +102,15 @@ public class Encryption {
         aes = new Rijndael();
     }
 
-    public byte[] DecryptData(byte[] cyphered) {
-        return DecryptData(cyphered, cyphered.length, 0);
+    public byte[] decryptData(byte[] cyphered) {
+        return decryptData(cyphered, cyphered.length, 0);
     }
 
-    public byte[] DecryptData(byte[] cyphered, int offset) {
-        return DecryptData(cyphered, cyphered.length - offset, offset);
+    public byte[] decryptData(byte[] cyphered, int offset) {
+        return decryptData(cyphered, cyphered.length - offset, offset);
     }
 
-    public byte[] DecryptData(byte[] cyphered, int plainlen, int offset) {
+    public byte[] decryptData(byte[] cyphered, int plainlen, int offset) {
         int enclen = cyphered.length - offset;
 
         Check.requires(keyReady, "Key not ready");
@@ -129,16 +129,15 @@ public class Encryption {
 
             aes.decrypt(ct, pt);
             xor(pt, iv);
-            iv = Arrays.copy(ct);
-            ;
+            iv = Arrays.copy(ct);            
 
             if ((i + 1 >= enclen / 16) && (plainlen % 16 != 0)) { // last turn
                 // and remaind
                 int lastBlockLen = plainlen % 16;
                 debug.trace("lastBlockLen: " + lastBlockLen);
-                Utils.Copy(plain, i * 16, pt, 0, lastBlockLen);
+                Utils.copy(plain, i * 16, pt, 0, lastBlockLen);
             } else {
-                Utils.Copy(plain, i * 16, pt, 0, 16);
+                Utils.copy(plain, i * 16, pt, 0, 16);
                 // copyblock(plain, i, pt, 0);
             }
         }
@@ -147,19 +146,19 @@ public class Encryption {
         return plain;
     }
 
-    public byte[] EncryptData(byte[] plain) {
+    public byte[] encryptData(byte[] plain) {
         Check.requires(keyReady, "Key not ready");
 
         int len = plain.length;
-        int clen = GetNextMultiple(len);
+        int clen = getNextMultiple(len);
 
         // TODO: optimize, non creare padplain, considerare caso particolare
         // ultimo blocco
         byte[] padplain = new byte[clen];
-        ;
+        
         byte[] crypted = new byte[clen];
 
-        Utils.Copy(padplain, plain, len);
+        Utils.copy(padplain, plain, len);
 
         byte[] iv = new byte[16]; // iv e' sempre 0
 
@@ -170,7 +169,7 @@ public class Encryption {
             xor(pt, iv);
             aes.encrypt(pt, ct);
 
-            Utils.Copy(crypted, i * 16, ct, 0, 16);
+            Utils.copy(crypted, i * 16, ct, 0, 16);
 
             iv = Arrays.copy(ct);
         }

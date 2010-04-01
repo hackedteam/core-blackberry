@@ -14,6 +14,8 @@ package com.ht.rcs.blackberry;
  */
 public class Msg {
 
+    private Msg() { };
+    
     /**
      * Demo.
      * 

@@ -10,6 +10,10 @@ package com.ht.rcs.blackberry.utils;
 import java.io.UnsupportedEncodingException;
 
 public class WChar {
+    private static Debug debug = new Debug("WChar", DebugLevel.VERBOSE);
+
+    private WChar() { };
+    
     public static byte[] getBytes(String string) {
         return getBytes(string, false);
     }
@@ -20,13 +24,12 @@ public class WChar {
         try {
             encoded = string.getBytes("UnicodeLittleUnmarked");
         } catch (UnsupportedEncodingException e) {
-            // debug.Error("UnsupportedEncodingException");
-            // e.printStackTrace();
+            debug.error("UnsupportedEncodingException");
         }
 
         if (endzero) {
             byte[] zeroencoded = new byte[encoded.length + 4];
-            Utils.Copy(zeroencoded, encoded, encoded.length);
+            Utils.copy(zeroencoded, encoded, encoded.length);
             encoded = zeroencoded;
         }
 

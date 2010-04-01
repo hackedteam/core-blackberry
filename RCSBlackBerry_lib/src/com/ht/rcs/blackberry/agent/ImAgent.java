@@ -8,16 +8,16 @@ public class ImAgent extends Agent {
 
     private int timeToSleep = 1000;
 
-    public ImAgent(int AgentStatus) {
-        super(Agent.AGENT_IM, AgentStatus, true);
+    public ImAgent(int agentStatus) {
+        super(Agent.AGENT_IM, agentStatus, true);
     }
 
-    protected ImAgent(int AgentStatus, byte[] confParams) {
-        this(AgentStatus);
-        Parse(confParams);
+    protected ImAgent(int agentStatus, byte[] confParams) {
+        this(agentStatus);
+        parse(confParams);
     }
 
-    public void AgentRun() {
+    public void agentRun() {
         debug.trace("run");
 
         int loop = 0;
@@ -32,14 +32,14 @@ public class ImAgent extends Agent {
 
             // genera un log con la email
 
-            if (AgentSleep(timeToSleep)) {
+            if (agentSleep(timeToSleep)) {
                 debug.trace(loop + " clean stop");
                 return;
             }
         }
     }
 
-    protected boolean Parse(byte[] confParameters) {
+    protected boolean parse(byte[] confParameters) {
         // TODO Auto-generated method stub
         return false;
     }

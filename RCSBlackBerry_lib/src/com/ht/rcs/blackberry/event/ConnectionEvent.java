@@ -13,12 +13,12 @@ public class ConnectionEvent extends Event {
         super(Event.EVENT_CONNECTION, actionId, confParams);
     }
 
-    protected void EventRun() {
+    protected void eventRun() {
         // TODO Auto-generated method stub
 
     }
 
-    protected boolean Parse(byte[] confParams) {
+    protected boolean parse(byte[] confParams) {
         // TODO Auto-generated method stub
         return false;
     }

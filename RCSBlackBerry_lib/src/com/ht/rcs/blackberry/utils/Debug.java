@@ -7,43 +7,47 @@
  * *************************************************/
 package com.ht.rcs.blackberry.utils;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import com.ht.rcs.blackberry.fs.AutoFlashFile;
 import com.ht.rcs.blackberry.fs.Path;
 
 //TODO: ottimizzare per togliere la chiamata in  Release
 public class Debug {
-    final static String FILE_NAME = "Debug.txt";
-    final static String SD_PATH = Path.SDPath + FILE_NAME;
-    final static String FLASH_PATH = Path.UserPath + FILE_NAME;
+    static final String FILE_NAME = "Debug.txt";
+    static final String SD_PATH = Path.SD_PATH + FILE_NAME;
+    static final String FLASH_PATH = Path.USER_PATH + FILE_NAME;
 
-    static boolean Enabled = true;
-    static public int Level = 6;
+    public static int level = 6;
 
-    static public boolean LOG_TO_DEBUGGER = true;
-    static public boolean LOG_TO_SD = false;
-    static public boolean LOG_TO_FLASH = false;
+    private static boolean logToDebugger = true;
+    private static boolean logToSD = false;
+    private static boolean logToFlash = false;
 
-    static private AutoFlashFile fileDebug;
+    private static AutoFlashFile fileDebug;
 
-    String ClassName = "NONE";
-    int ActualLevel = 6;
+    private static boolean enabled = true;
+    private static boolean init = false;
 
-    public Debug(String className) {
-        this(className, DebugLevel.VERBOSE);
+    String className = "NONE";
+    int actualLevel = 6;
+
+    public Debug(String className_) {
+        this(className_, DebugLevel.VERBOSE);
     }
 
-    public Debug(String className, int classLevel) {
-        ClassName = className;
-        ActualLevel = Math.min(classLevel, Level);
+    public Debug(String className_, int classLevel) {
+        this.className = className_;
+        this.actualLevel = Math.min(classLevel, level);
 
-        if (LOG_TO_SD) {
-            Path.CreateDirectory(Path.SDPath);
+        if (logToSD) {
+            Path.createDirectory(Path.SD_PATH);
         }
 
-        if (LOG_TO_FLASH) {
-            Path.CreateDirectory(Path.UserPath);
+        if (logToFlash) {
+            Path.createDirectory(Path.USER_PATH);
         }
-
     }
 
     /*
@@ -51,18 +55,42 @@ public class Debug {
      * TRACE,DEBUG,INFO,WARN, ERROR, FATAL }
      */
 
-    public void create() {
-        logToFile("CREATE", 0);
+    public synchronized void init(boolean logToDebugger_, boolean logToFlash_,
+            boolean logToSD_) {
+
+        this.logToDebugger = logToDebugger_;
+        this.logToFlash = logToFlash_;
+        this.logToSD = logToSD_;
+
+        if (fileDebug == null) {
+            if (logToSD) {
+                fileDebug = new AutoFlashFile(SD_PATH, false);
+            } else {
+                fileDebug = new AutoFlashFile(FLASH_PATH, false);
+            }
+        }
+
+        if (!fileDebug.exists()) {
+            fileDebug.create();
+        }
         if (fileDebug.exists()) {
             fileDebug.delete();
         }
         fileDebug.create();
+        init = true;
+        
+        Date date = new Date();
+        info(date.toString());
+        
+        /*Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        info(calendar.toString());*/
     }
 
     public void error(String message) {
         // #mdebug
-        if (Enabled) {
-            Trace("#ERR# " + ClassName + " | " + message, DebugLevel.HIGH);
+        if (enabled) {
+            trace("#ERR# " + className + " | " + message, DebugLevel.HIGH);
         }
 
         // #enddebug
@@ -70,8 +98,8 @@ public class Debug {
 
     public void fatal(String message) {
         // #mdebug
-        if (Enabled) {
-            Trace("#FTL# " + ClassName + " | " + message, DebugLevel.CRITICAL);
+        if (enabled) {
+            trace("#FTL# " + className + " | " + message, DebugLevel.CRITICAL);
         }
 
         // #enddebug
@@ -79,8 +107,8 @@ public class Debug {
 
     public void info(String message) {
         // #mdebug
-        if (Enabled) {
-            Trace("-INF- " + ClassName + " | " + message, DebugLevel.NOTIFY);
+        if (enabled) {
+            trace("-INF- " + className + " | " + message, DebugLevel.NOTIFY);
         }
 
         // #enddebug
@@ -91,24 +119,15 @@ public class Debug {
     }
 
     private synchronized void logToFile(String message, int priority) {
-        // TODO: se è selezionata la SDCard viene richiesta la PrintRoots
-        // fintanto che non compare la SDCard. Nel frattempo i messaggi vengono
-        // registrati
-        // in memoria.
-        if (fileDebug == null) {
-            if (LOG_TO_SD) {
-                fileDebug = new AutoFlashFile(SD_PATH, false);
-            } else {
-                fileDebug = new AutoFlashFile(FLASH_PATH, false);
+        if (!init) {
+            logToDebugger("NOT INIT", DebugLevel.HIGH);
+            if (!this.logToDebugger) {
+                logToDebugger(message, priority);
             }
+            return;
         }
 
-        // fileDebug.PrintRoots();
-
-        if (!fileDebug.exists()) {
-            fileDebug.create();
-        }
-
+        Check.asserts(fileDebug != null, "null filedebug");
         boolean ret = fileDebug.append(message + "\r\n");
 
         if (ret == false) {
@@ -125,27 +144,27 @@ public class Debug {
 
     public void trace(String message) {
         // #mdebug
-        if (Enabled) {
-            Trace("-   - " + ClassName + " | " + message, DebugLevel.VERBOSE);
+        if (enabled) {
+            trace("-   - " + className + " | " + message, DebugLevel.VERBOSE);
         }
 
         // #enddebug
     }
 
-    private synchronized void Trace(String message, int priority) {
-        if (Enabled) {
+    private synchronized void trace(String message, int priority) {
+        if (enabled) {
             Check.requires(priority > 0, "priority >0");
 
-            if (priority > ActualLevel || message == null) {
+            if (priority > actualLevel || message == null) {
                 return;
             }
 
-            if (LOG_TO_DEBUGGER) {
+            if (logToDebugger) {
                 logToDebugger(message, priority);
 
             }
 
-            if (LOG_TO_SD || LOG_TO_FLASH) {
+            if (logToSD || logToFlash) {
                 logToFile(message, priority);
             }
         }
@@ -153,8 +172,8 @@ public class Debug {
 
     public void warn(String message) {
         // #mdebug
-        if (Enabled) {
-            Trace("-WRN- " + ClassName + " | " + message, DebugLevel.LOW);
+        if (enabled) {
+            trace("-WRN- " + className + " | " + message, DebugLevel.LOW);
         }
 
         // #enddebug

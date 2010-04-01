@@ -14,9 +14,9 @@ public class LogNode {
 
     public int numElem;
 
-    public LogNode(String dirName, boolean onSD) {
-        this.dirName = dirName;
-        this.onSD = onSD;
+    public LogNode(String dirName_, boolean onSD_) {
+        this.dirName = dirName_;
+        this.onSD = onSD_;
     }
 
     public String toString() {

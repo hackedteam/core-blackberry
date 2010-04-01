@@ -16,33 +16,33 @@ public class Parameter {
     /**
      * Factory.
      * 
-     * @param ParamsId
+     * @param paramsId
      *            the params id
      * @param confParams
      *            the conf params
      * @return the parameter
      */
-    public static Parameter Factory(int ParamsId, byte[] confParams) {
-        Parameter parameter = new Parameter(ParamsId, confParams);
+    public static Parameter factory(int paramsId, byte[] confParams) {
+        Parameter parameter = new Parameter(paramsId, confParams);
         return parameter;
     }
 
     /** The Parameter id. */
-    public int ParameterId = -1;
+    public int parameterId = -1;
 
     /** The Conf params. */
-    byte[] ConfParams;
+    byte[] confParams;
 
     /**
      * Instantiates a new parameter.
      * 
-     * @param ParamsId
+     * @param paramsId
      *            the params id
      * @param confParams
      *            the conf params
      */
-    public Parameter(int ParamsId, byte[] confParams) {
-        this.ParameterId = ParamsId;
-        this.ConfParams = confParams;
+    public Parameter(int parameterId_, byte[] confParams_) {
+        this.parameterId = parameterId_;
+        this.confParams = confParams_;
     }
 }

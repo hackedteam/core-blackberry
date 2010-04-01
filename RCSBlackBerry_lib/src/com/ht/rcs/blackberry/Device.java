@@ -24,13 +24,13 @@ import com.ht.rcs.blackberry.utils.WChar;
 /**
  * The Class Device.
  */
-public class Device implements Singleton {
+public final class Device implements Singleton {
 
     /** The debug. */
     private static Debug debug = new Debug("Device", DebugLevel.VERBOSE);
 
-    public final static int Version = 2010033101;
-    public final static String SubType = "WINMOBILE"; // "BLACKBERRY";
+    public static final int VERSION = 2010033101;
+    public static final String SUBTYPE = "WINMOBILE"; // "BLACKBERRY";
 
     /** The imei. */
     byte[] imei = new byte[0];
@@ -49,7 +49,7 @@ public class Device implements Singleton {
      * 
      * @return single instance of Device
      */
-    public synchronized static Device getInstance() {
+    public static synchronized Device getInstance() {
         if (instance == null) {
             instance = new Device();
         }
@@ -59,13 +59,13 @@ public class Device implements Singleton {
 
     public static byte[] getSubtype() {
 
-        return SubType.getBytes();
+        return SUBTYPE.getBytes();
     }
 
     public static byte[] getVersion() {
-        byte[] version = Utils.intToByteArray(Version);
-        Check.ensures(version.length == 4, "Wrong version len");
-        return version;
+        byte[] versionRet = Utils.intToByteArray(VERSION);
+        Check.ensures(versionRet.length == 4, "Wrong version len");
+        return versionRet;
     }
 
     /**

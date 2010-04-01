@@ -24,6 +24,8 @@ public class Utils {
     /** The debug. */
     private static Debug debug = new Debug("Utils", DebugLevel.VERBOSE);
 
+    private Utils() { };
+    
     /**
      * ASCII.
      * 
@@ -31,7 +33,7 @@ public class Utils {
      *            the c
      * @return the char
      */
-    public static char ASCII(int c) {
+    public static char ascii(int c) {
         return (char) ((c) <= 9 ? (c) + '0' : (c) + 'A' - 0xA);
     }
 
@@ -42,7 +44,7 @@ public class Utils {
      *            the message
      * @return the char[]
      */
-    public static char[] ByteArrayToCharArray(byte[] message) {
+    public static char[] byteArrayToCharArray(byte[] message) {
         char[] payload = new char[message.length];
 
         for (int i = 0; i < message.length; i++) {
@@ -85,7 +87,7 @@ public class Utils {
      *            the message
      * @return the byte[]
      */
-    public static byte[] CharArrayToByteArray(char[] message) {
+    public static byte[] charArrayToByteArray(char[] message) {
         byte[] payload = new byte[message.length];
 
         for (int i = 0; i < message.length; i++) {
@@ -105,8 +107,8 @@ public class Utils {
      * @param len
      *            the len
      */
-    public static void Copy(byte[] dest, byte[] src, int len) {
-        Copy(dest, 0, src, 0, len);
+    public static void copy(byte[] dest, byte[] src, int len) {
+        copy(dest, 0, src, 0, len);
     }
 
     /**
@@ -123,7 +125,7 @@ public class Utils {
      * @param len
      *            the len
      */
-    public static void Copy(byte[] dest, int offsetDest, byte[] src,
+    public static void copy(byte[] dest, int offsetDest, byte[] src,
             int offsetSrc, int len) {
         Check.requires(dest.length >= offsetDest + len, "wrong dest len");
         Check.requires(src.length >= offsetSrc + len, "wrong src len");
@@ -157,27 +159,27 @@ public class Utils {
      */
     public static int crc(byte[] buffer, int start, int len) {
         // CRC
-        int conf_hash;
-        long temp_hash = 0;
+        int confHash;
+        long tempHash = 0;
 
         for (int i = start; i < (len - start); i++) {
-            temp_hash++;
+            tempHash++;
 
             byte b = buffer[i];
 
             if (b != 0) {
-                temp_hash *= b;
+                tempHash *= b;
             }
 
-            conf_hash = (int) (temp_hash >> 32);
+            confHash = (int) (tempHash >> 32);
 
-            temp_hash = temp_hash & 0xFFFFFFFFL;
-            temp_hash ^= conf_hash;
-            temp_hash = temp_hash & 0xFFFFFFFFL;
+            tempHash = tempHash & 0xFFFFFFFFL;
+            tempHash ^= confHash;
+            tempHash = tempHash & 0xFFFFFFFFL;
         }
 
-        conf_hash = (int) temp_hash;
-        return conf_hash;
+        confHash = (int) tempHash;
+        return confHash;
     }
 
     /**
@@ -188,7 +190,7 @@ public class Utils {
      * @return the int
      */
     public static int crc(char[] buffer) {
-        return crc(CharArrayToByteArray(buffer), 0, buffer.length);
+        return crc(charArrayToByteArray(buffer), 0, buffer.length);
     }
 
     /**
@@ -197,7 +199,7 @@ public class Utils {
      * @param e
      *            the e
      */
-    public static void DbgTrace(Exception e) {
+    public static void dbgTrace(Exception e) {
         e.printStackTrace();
     }
 
@@ -256,7 +258,7 @@ public class Utils {
      *            the c
      * @return the int
      */
-    public static int HEX(char c) {
+    public static int hex(char c) {
         int ret = (char) ((c) <= '9' ? (c) - '0' : (c) <= 'F' ? (c) - 'A' + 0xA
                 : (c) - 'a' + 0xA);
         return ret;
@@ -269,7 +271,7 @@ public class Utils {
      *            the wchar
      * @return the byte[]
      */
-    public static byte[] HexStringToByteArray(String wchar) {
+    public static byte[] hexStringToByteArray(String wchar) {
         Check.requires(wchar.length() % 2 == 0, "Odd inputt");
         byte[] ret = new byte[wchar.length() / 2];
 
@@ -316,7 +318,7 @@ public class Utils {
      * @return the char[]
      */
     public static char[] intToCharArray(int value) {
-        return ByteArrayToCharArray(intToByteArray(value));
+        return byteArrayToCharArray(intToByteArray(value));
     }
 
     public static String joinString(Vector nodes) {
@@ -340,11 +342,11 @@ public class Utils {
      * @param millis
      *            the millis
      */
-    public static void Sleep(int millis) {
+    public static void sleep(int millis) {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
-            DbgTrace(e);
+            dbgTrace(e);
         }
     }
 

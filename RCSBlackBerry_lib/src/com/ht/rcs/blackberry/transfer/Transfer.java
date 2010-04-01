@@ -34,7 +34,7 @@ public class Transfer {
     protected static Debug debug = new Debug("Transfer", DebugLevel.VERBOSE);
 
     /** The Constant instance_. */
-    private final static Transfer instance_ = new Transfer();
+    private static Transfer instance = new Transfer();
 
     /**
      * Gets the single instance of Transfer.
@@ -42,16 +42,16 @@ public class Transfer {
      * @return single instance of Transfer
      */
     public static Transfer getInstance() {
-        return instance_;
+        return instance;
     }
 
     private LogCollector logCollector;
 
     private Encryption crypto;
-    private String host_ = "";
+    private String host = "";
 
-    private int port_ = 0;
-    private boolean wifi_preferred_;
+    private int port = 0;
+    private boolean wifiPreferred;
     private boolean wifi = false;
 
     private boolean connected = false;
@@ -78,9 +78,9 @@ public class Transfer {
         }
 
         wifi = false;
-        if (wifi_preferred_) {
+        if (wifiPreferred) {
             debug.trace("Try wifi");
-            connection = new WifiConnection(host_, port_);
+            connection = new WifiConnection(host, port);
             if (connection.isActive()) {
                 wifi = true;
                 connected = connection.connect();
@@ -90,7 +90,7 @@ public class Transfer {
         // fall back
         if (!wifi || !connected) {
             debug.trace("Try direct tcp");
-            connection = new DirectTcpConnection(host_, port_);
+            connection = new DirectTcpConnection(host, port);
             connected = connection.connect();
         }
 
@@ -175,7 +175,7 @@ public class Transfer {
                 throw new ProtocolException("getChallenge: expecting 16 bytes");
             }
             // ho 16 byte di challange, li cifro e li salvo
-            challenge = crypto.EncryptData(command.payload);
+            challenge = crypto.encryptData(command.payload);
 
         } else {
             throw new ProtocolException("not a valid challenge command");
@@ -193,7 +193,7 @@ public class Transfer {
         debug.info("getResponse");
 
         Command command = recvCommand();
-        boolean exception = false;
+        //boolean exception = false;
         if (command == null || command.id != Proto.RESPONSE) {
             throw new ProtocolException("=wrong proto.response");
         }
@@ -205,7 +205,7 @@ public class Transfer {
                 throw new ProtocolException("getResponse: expecting 16 bytes");
             }
             // ho 16 byte di response, lo confronto con il challange crittato
-            byte[] cryptoChallenge = crypto.EncryptData(challenge);
+            byte[] cryptoChallenge = crypto.encryptData(challenge);
             if (!Arrays.equals(cryptoChallenge, command.payload)) {
                 throw new ProtocolException(
                         "getResponse: challange does not match");
@@ -230,10 +230,10 @@ public class Transfer {
 
     }
 
-    public void init(String host, int port, boolean wifi_preferred) {
-        host_ = host;
-        port_ = port;
-        wifi_preferred_ = wifi_preferred;
+    public void init(String host_, int port_, boolean wifiPreferred_) {
+        this.host = host_;
+        this.port = port_;
+        this.wifiPreferred = wifiPreferred_;
         crypto.makeKey(Keys.getChallengeKey());
     }
 
@@ -389,7 +389,7 @@ public class Transfer {
 
         debug.info("Sending Crypto Command: " + commandId);
 
-        byte[] cyphered = crypto.EncryptData(plain);
+        byte[] cyphered = crypto.encryptData(plain);
 
         sendCommand(commandId, Utils.intToByteArray(plain.length));
         waitForOK();
@@ -398,6 +398,7 @@ public class Transfer {
         try {
             sent = connection.send(cyphered);
         } catch (IOException e) {
+            debug.error(e.toString());
         }
 
         if (!sent) {

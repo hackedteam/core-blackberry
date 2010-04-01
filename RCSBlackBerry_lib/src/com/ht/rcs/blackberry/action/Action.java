@@ -37,7 +37,7 @@ public class Action {
     private Vector subActionList = null;
 
     /** The Action id. */
-    public int ActionId = -1;
+    public int actionId = -1;
 
     /**
      * Instantiates a new action.
@@ -45,8 +45,8 @@ public class Action {
      * @param actionId
      *            the action id
      */
-    public Action(int actionId) {
-        ActionId = actionId;
+    public Action(int actionId_) {
+        this.actionId = actionId_;
         subActionList = new Vector();
     }
 
@@ -58,8 +58,8 @@ public class Action {
      * @param confParams
      *            the conf params
      */
-    public void addNewSubAction(int actionSync, byte[] confParams) {
-        SubAction subAction = SubAction.Factory(actionSync, confParams);
+    public final void addNewSubAction(int actionSync, byte[] confParams) {
+        SubAction subAction = SubAction.factory(actionSync, confParams);
         addSubAction(subAction);
     }
 
@@ -78,7 +78,7 @@ public class Action {
      * 
      * @return the vector
      */
-    public Vector GetSubActionsList() {
+    public Vector getSubActionsList() {
         return subActionList;
     }
 
@@ -97,9 +97,9 @@ public class Action {
      * @param value
      *            the value
      */
-    public synchronized void SetTriggered(boolean value) {
+    public synchronized void setTriggered(boolean value) {
 
-        debug.trace(ActionId + " triggered:" + value);
+        debug.trace(actionId + " triggered:" + value);
         triggered = value;
     }
 
@@ -109,6 +109,6 @@ public class Action {
      * @see java.lang.Object#toString()
      */
     public String toString() {
-        return ActionId + " sa:" + subActionList.size();
+        return actionId + " sa:" + subActionList.size();
     }
 }

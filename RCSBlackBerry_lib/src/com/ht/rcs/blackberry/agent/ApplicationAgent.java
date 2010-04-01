@@ -14,23 +14,23 @@ public class ApplicationAgent extends Agent {
     private static Debug debug = new Debug("ApplicationAgent",
             DebugLevel.VERBOSE);
 
-    public ApplicationAgent(int AgentStatus) {
-        super(Agent.AGENT_APPLICATION, AgentStatus, true);
+    public ApplicationAgent(int agentStatus) {
+        super(Agent.AGENT_APPLICATION, agentStatus, true);
     }
 
-    protected ApplicationAgent(int AgentStatus, byte[] confParams) {
-        this(AgentStatus);
-        Parse(confParams);
+    protected ApplicationAgent(int agentStatus, byte[] confParams) {
+        this(agentStatus);
+        parse(confParams);
     }
 
-    public void AgentRun() {
+    public void agentRun() {
 
-        this.SleepUntilStopped();
+        this.sleepUntilStopped();
 
     }
 
-    protected boolean Parse(byte[] confParameters) {
-        // TODO Auto-generated method stub
+    protected boolean parse(byte[] confParameters) {
+        debug.trace("parse");
         return false;
     }
 

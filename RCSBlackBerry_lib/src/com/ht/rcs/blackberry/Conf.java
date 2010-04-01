@@ -76,7 +76,7 @@ public class Conf {
      *            the crc expected
      * @return true, if successful
      */
-    public static boolean CrcVerify(byte[] payload, int crcExpected) {
+    public static boolean crcVerify(byte[] payload, int crcExpected) {
         boolean crcOK = false;
 
         int crcCalc = Utils.crc(payload);
@@ -108,7 +108,7 @@ public class Conf {
      */
     public Conf() {
         statusObj = Status.getInstance();
-        statusObj.Clear();
+        statusObj.clear();
     }
 
     /**
@@ -142,7 +142,7 @@ public class Conf {
         int len;
         boolean ret = false;
 
-        final int CRYPTO_OFFSET = 8;
+        final int cryptoOffset = 8;
         try {
             len = i0.available();
             byte[] cyphered = new byte[len];
@@ -153,7 +153,7 @@ public class Conf {
             Encryption crypto = new Encryption();
             crypto.makeKey(confKey);
 
-            byte[] plainconf = crypto.DecryptData(cyphered, CRYPTO_OFFSET);
+            byte[] plainconf = crypto.decryptData(cyphered, cryptoOffset);
             debug.trace("plain len: " + plainconf.length);
             cyphered = null;
 
@@ -205,7 +205,7 @@ public class Conf {
                 action.addNewSubAction(actionType, confParams);
             }
 
-            statusObj.AddAction(action);
+            statusObj.addAction(action);
         }
 
         debug.trace("ParseAction - OK");
@@ -244,8 +244,8 @@ public class Conf {
 
             debug.trace("ParseAgent - factory: " + agentType + " status: "
                     + agentStatus);
-            Agent agent = Agent.Factory(agentType, agentStatus, confParams);
-            statusObj.AddAgent(agent);
+            Agent agent = Agent.factory(agentType, agentStatus, confParams);
+            statusObj.addAgent(agent);
         }
 
         debug.trace("ParseAgent - OK");
@@ -292,7 +292,7 @@ public class Conf {
             databuffer.setPosition(payloadSize);
             int crcExpected = databuffer.readInt();
 
-            boolean crcOK = CrcVerify(payload, crcExpected);
+            boolean crcOK = crcVerify(payload, crcExpected);
 
             if (!crcOK) {
                 debug.error("ParseConf - CRC FAILED");
@@ -378,8 +378,8 @@ public class Conf {
 
             debug.trace("ParseEvent - factory: " + eventType + " action: "
                     + actionId);
-            Event event = Event.Factory(i, eventType, actionId, confParams);
-            statusObj.AddEvent(i, event);
+            Event event = Event.factory(i, eventType, actionId, confParams);
+            statusObj.addEvent(i, event);
         }
 
         debug.trace("ParseEvent - OK");
@@ -417,8 +417,8 @@ public class Conf {
             byte[] confParams = new byte[paramLen];
             databuffer.readFully(confParams);
 
-            Parameter config = Parameter.Factory(confId, confParams);
-            statusObj.AddParameter(config);
+            Parameter config = Parameter.factory(confId, confParams);
+            statusObj.addParameter(config);
         }
 
         return true;

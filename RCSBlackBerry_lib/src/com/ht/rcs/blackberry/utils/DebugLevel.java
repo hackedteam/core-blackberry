@@ -8,10 +8,13 @@
 package com.ht.rcs.blackberry.utils;
 
 public final class DebugLevel {
-    static public final int CRITICAL = 1;
-    static public final int HIGH = 2;
-    static public final int NORMAL = 3;
-    static public final int LOW = 4;
-    static public final int NOTIFY = 5;
-    static public final int VERBOSE = 6;
+    public static final int CRITICAL = 1;
+    public static final int HIGH = 2;
+    public static final int NORMAL = 3;
+    public static final int LOW = 4;
+    public static final int NOTIFY = 5;
+    public static final int VERBOSE = 6;
+
+    private DebugLevel() {
+    };
 }
