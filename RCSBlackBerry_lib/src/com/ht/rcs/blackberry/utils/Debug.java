@@ -7,7 +7,6 @@
  * *************************************************/
 package com.ht.rcs.blackberry.utils;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import com.ht.rcs.blackberry.fs.AutoFlashFile;
@@ -58,9 +57,9 @@ public class Debug {
     public synchronized void init(boolean logToDebugger_, boolean logToFlash_,
             boolean logToSD_) {
 
-        this.logToDebugger = logToDebugger_;
-        this.logToFlash = logToFlash_;
-        this.logToSD = logToSD_;
+        Debug.logToDebugger = logToDebugger_;
+        Debug.logToFlash = logToFlash_;
+        Debug.logToSD = logToSD_;
 
         if (fileDebug == null) {
             if (logToSD) {
@@ -121,7 +120,7 @@ public class Debug {
     private synchronized void logToFile(String message, int priority) {
         if (!init) {
             logToDebugger("NOT INIT", DebugLevel.HIGH);
-            if (!this.logToDebugger) {
+            if (!Debug.logToDebugger) {
                 logToDebugger(message, priority);
             }
             return;

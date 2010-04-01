@@ -27,7 +27,7 @@ public class Core {
      *            the args
      */
     public static void libMain(final String[] args) {
-        debug.init(true,false,true);        
+        debug.init(true, false, true);
         debug.trace("RCSBlackBerry launching");
 
         Core core = new Core();

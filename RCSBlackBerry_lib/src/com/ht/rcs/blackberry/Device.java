@@ -105,6 +105,14 @@ public final class Device implements Singleton {
         return encoded;
     }
 
+    public void clear() {
+
+        imsi = new byte[0];
+        imei = new byte[0];
+        phoneNumber = "";
+        return;
+    }
+
     /**
      * Refresh data.
      */

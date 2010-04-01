@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
+import com.ht.rcs.blackberry.utils.Utils;
 import com.ht.tests.AssertException;
 import com.ht.tests.TestUnit;
 import com.ht.tests.Tests;
@@ -44,12 +45,35 @@ public class UT_Sync extends TestUnit {
 
 	public boolean run() throws AssertException {
 		ConnectionTest();
+		Utils.sleep(1000);
+		
 		if(remoteTest)
 		{
 			ConnectionRemoteTest();
+			Utils.sleep(1000);
 		}
+		
+		SyncTest();
+		Utils.sleep(1000);
+		
 		TransferTest();
+		Utils.sleep(1000);
 		return true;
+	}
+
+	private void SyncTest() throws AssertException {
+		
+		Keys.byteChallengeKey = ProtoKey;
+		Keys.buildID = "RCS_0000000323";
+		Keys.instanceID = "1234567890123456"; // univoco per device e per
+		// utente. (imei?)
+		// sha1(user_id): 40 char
+
+		transfer.init(host, port, false);
+		
+		boolean ret = transfer.send();
+		AssertThat(ret == true, "Doesn't send transfer");
+				
 	}
 
 	private void TransferTest() throws AssertException {

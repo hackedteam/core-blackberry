@@ -320,7 +320,7 @@ public final class Status implements Singleton {
             Check.ensures(agent.agentId == agentId, "not equal agentId");
             return agent;
         } else {
-            debug.error("Agents don't contain type " + agentId);
+            debug.trace("Agents don't contain type " + agentId);
             return null;
         }
     }

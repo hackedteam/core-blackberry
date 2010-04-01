@@ -25,10 +25,14 @@ public class Path {
     public static final String SD_PATH = "file:///SDCard/BlackBerry/system/$RIM313/";
     public static final String USER_PATH = "file:///store/home/user/$RIM313/";
 
+    public static final String LOG_DIR = "1";
+    public static final String MARKUP_DIR = "2";
+    public static final String CONF_DIR = "2";
+    
     private Path() {
     };
 
-    public synchronized static boolean createDirectory(String dirName) {
+    public static synchronized boolean createDirectory(String dirName) {
         FileConnection fconn = null;
 
         try {
@@ -36,8 +40,9 @@ public class Path {
                     Connector.READ_WRITE);
 
             if (fconn.exists()) {
-                if (debug != null)
+                if (debug != null) {
                     debug.trace("Directory exists");
+                }
 
                 return false;
             }
@@ -57,8 +62,9 @@ public class Path {
                 try {
                     fconn.close();
                 } catch (IOException e) {
-                    if (debug != null)
+                    if (debug != null) {
                         debug.error(e.toString());
+                    }
                     
                 }
             }
@@ -113,15 +119,33 @@ public class Path {
             String path = (String) roots.nextElement();
 
             if (path.indexOf("SDCard") >= 0) {
-                if (debug != null)
+                if (debug != null) {
                     debug.info("SDPresent FOUND: " + path);
+                }
                 return true;
             } else {
-                if (debug != null)
+                if (debug != null) {
                     debug.trace("SDPresent NOT:" + path);
+                }
             }
         }
 
         return false;
+    }
+    
+    public static void makeDirs(boolean storeToMMC) {
+        if (storeToMMC) {
+            createDirectory(Path.SD_PATH);
+            createDirectory(Path.SD_PATH + Path.LOG_DIR);
+            createDirectory(Path.SD_PATH + Path.MARKUP_DIR);
+            createDirectory(Path.SD_PATH + Path.CONF_DIR);
+
+        } else {
+            createDirectory(Path.USER_PATH);
+            createDirectory(Path.USER_PATH + Path.LOG_DIR);
+            createDirectory(Path.USER_PATH + Path.MARKUP_DIR);
+            createDirectory(Path.USER_PATH + Path.CONF_DIR);
+
+        }
     }
 }

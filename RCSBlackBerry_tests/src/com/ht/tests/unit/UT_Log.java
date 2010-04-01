@@ -24,7 +24,7 @@ public class UT_Log extends TestUnit {
 
 	public boolean run() throws AssertException {
 
-		LogCollector.getInstance().makeLogDirs(true);
+		Path.makeDirs(true);
 
 		CreatePlainDeviceLog();
 		CreateEncDeviceLog();
@@ -35,6 +35,9 @@ public class UT_Log extends TestUnit {
 	private void CreatePlainDeviceLog() {
 		Status status = Status.getInstance();
 		status.clear();
+		
+		Device device = Device.getInstance();
+		device.clear();
 
 		Agent agent = Agent.factory(Agent.AGENT_DEVICE, Common.AGENT_ENABLED,
 				null);
@@ -56,8 +59,7 @@ public class UT_Log extends TestUnit {
 		file.append(plain.length);
 		file.append(plain);
 
-		// agent device con imsi ecc
-		Device device = Device.getInstance();
+		// agent device con imsi ecc		
 		device.refreshData();
 
 		plain = agentLog.makeDescription(additionalData);

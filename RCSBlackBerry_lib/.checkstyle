@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <fileset-config file-format-version="1.2.0" simple-config="true">
-  <fileset name="all" enabled="true" check-config-name="Sun Checks" local="false">
+  <fileset name="all" enabled="true" check-config-name="HT" local="false">
     <file-match-pattern match-pattern="." include-pattern="true"/>
   </fileset>
+  <filter name="WriteProtectedFiles" enabled="true"/>
+  <filter name="FilesFromPackage" enabled="true">
+    <filter-data value="src/com/ht/rcs/blackberry/crypto"/>
+    <filter-data value="&lt;recurse=false&gt;"/>
+  </filter>
 </fileset-config>

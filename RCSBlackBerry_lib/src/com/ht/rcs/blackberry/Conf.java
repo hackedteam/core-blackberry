@@ -34,6 +34,8 @@ public class Conf {
     /** The debug. */
     private static Debug debug = new Debug("Conf", DebugLevel.VERBOSE);
 
+    public static final String NEW_CONF = "newconfig.dat";
+
     /** The Constant CONF_TIMER_SINGLE. */
     public static final int CONF_TIMER_SINGLE = 0x0;
 
@@ -117,6 +119,7 @@ public class Conf {
      * @return true, if successful
      */
     public boolean load() {
+        // TODO: verificare che ci sia Conf.NEW_CONF
         InputStream i0 = Conf.class.getResourceAsStream("config/config.bin");
         // InputStream i0 =
         // Conf.class.getResourceAsStream("config/plainconfig.bin");
