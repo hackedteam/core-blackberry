@@ -67,7 +67,10 @@ public class Tests {
 
 	public String result(int i) {
 		TestUnit unit = (TestUnit) testUnits.elementAt(i);
-		String ret = unit.name + ":" + (unit.passed ? "OK" : "KO") + ":"
+		String resUnit = "OK";
+		if(!unit.passed)
+			resUnit = "NOT OK";
+		String ret = unit.name + ":" + resUnit + ":"
 				+ unit.result;
 		return ret;
 	}

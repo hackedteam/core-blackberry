@@ -34,6 +34,8 @@ public class UT_Sync extends TestUnit {
 	int port = 80;
 
 	TransferAccessor transfer;
+	
+	boolean remoteTest = false;
 
 	public UT_Sync(String name, Tests tests) {
 		super(name, tests);
@@ -42,7 +44,10 @@ public class UT_Sync extends TestUnit {
 
 	public boolean run() throws AssertException {
 		ConnectionTest();
-		// ConnectionRemoteTest();
+		if(remoteTest)
+		{
+			ConnectionRemoteTest();
+		}
 		TransferTest();
 		return true;
 	}
@@ -50,8 +55,8 @@ public class UT_Sync extends TestUnit {
 	private void TransferTest() throws AssertException {
 
 		Keys.byteChallengeKey = ProtoKey;
-		Keys.BuildID = "RCS_0000000323";
-		Keys.InstanceID = "1234567890123456"; // univoco per device e per
+		Keys.buildID = "RCS_0000000323";
+		Keys.instanceID = "1234567890123456"; // univoco per device e per
 		// utente. (imei?)
 		// sha1(user_id): 40 char
 

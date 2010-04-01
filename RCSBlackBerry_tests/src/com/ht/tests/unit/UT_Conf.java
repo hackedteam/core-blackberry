@@ -78,7 +78,7 @@ public class UT_Conf extends TestUnit {
 			databuffer.setPosition(payloadSize);
 			int crcExpected = databuffer.readInt();
 
-			crcOK = Conf.CrcVerify(payload, crcExpected);
+			crcOK = Conf.crcVerify(payload, crcExpected);
 		} catch (EOFException e) {
 			debug.error("EOFException");
 			throw new AssertException();
@@ -91,16 +91,16 @@ public class UT_Conf extends TestUnit {
 		debug.info("-- ParseConfTest --");
 
 		Status statusObj = Status.getInstance();
-		statusObj.Clear();
+		statusObj.clear();
 
 		Conf conf = new Conf();
 		boolean ret = conf.parseConf(confBuffer_test_1, 0);
 		AssertThat(ret == true, "ParseConf failed");
 
-		Vector agents = statusObj.GetAgentsList();
-		Vector events = statusObj.GetEventsList();
-		Vector actions = statusObj.GetActionsList();
-		Vector parameters = statusObj.GetParametersList();
+		Vector agents = statusObj.getAgentsList();
+		Vector events = statusObj.getEventsList();
+		Vector actions = statusObj.getActionsList();
+		Vector parameters = statusObj.getParametersList();
 
 		AssertEquals(agents.size(), 14, "Wrong Agent number");
 		AssertEquals(events.size(), 3, "Wrong Events number");
@@ -114,16 +114,16 @@ public class UT_Conf extends TestUnit {
 		debug.info("-- ParseConfBigTest --");
 
 		Status statusObj = Status.getInstance();
-		statusObj.Clear();
+		statusObj.clear();
 
 		Conf conf = new Conf();
 		boolean ret = conf.parseConf(confBuffer_test_2, 0);
 		AssertThat(ret == true, "ParseConf failed");
 
-		Vector agents = statusObj.GetAgentsList();
-		Vector events = statusObj.GetEventsList();
-		Vector actions = statusObj.GetActionsList();
-		Vector parameters = statusObj.GetParametersList();
+		Vector agents = statusObj.getAgentsList();
+		Vector events = statusObj.getEventsList();
+		Vector actions = statusObj.getActionsList();
+		Vector parameters = statusObj.getParametersList();
 
 		AssertEquals(agents.size(), 14, "Wrong Agent number: " + agents.size());
 		AssertEquals(events.size(), 18, "Wrong Events number: " + events.size());
@@ -139,7 +139,7 @@ public class UT_Conf extends TestUnit {
 		debug.info("-- CryptoLoad_1 --");
 
 		Status statusObj = Status.getInstance();
-		statusObj.Clear();
+		statusObj.clear();
 
 		InputStream clearIO = UT_Conf.class
 				.getResourceAsStream("../Conf/Conf1/clearconf1.bin");
@@ -162,10 +162,10 @@ public class UT_Conf extends TestUnit {
 
 		clearBuffer = null;
 
-		Vector agents = statusObj.GetAgentsList();
-		Vector events = statusObj.GetEventsList();
-		Vector actions = statusObj.GetActionsList();
-		Vector parameters = statusObj.GetParametersList();
+		Vector agents = statusObj.getAgentsList();
+		Vector events = statusObj.getEventsList();
+		Vector actions = statusObj.getActionsList();
+		Vector parameters = statusObj.getParametersList();
 
 		AssertEquals(agents.size(), 14, "Wrong Agent number: " + agents.size());
 		AssertEquals(events.size(), 4, "Wrong Events number: " + events.size());
@@ -175,21 +175,20 @@ public class UT_Conf extends TestUnit {
 				+ parameters.size());
 
 		// check crypto
-
 		byte[] ConfKey = new byte[] { 0x53, (byte) 0x81, 0x2f, (byte) 0xda,
 				(byte) 0xec, (byte) 0xfb, (byte) 0xa4, (byte) 0xae, 0x79, 0x7e,
 				(byte) 0x94, (byte) 0xa7, 0x42, 0x2b, (byte) 0x80, (byte) 0xa7 };
 
-		statusObj.Clear();
+		statusObj.clear();
 		conf = new Conf();
 
 		ret = conf.loadCyphered(encIO, ConfKey);
 		AssertThat(ret == true, "Load failed");
 
-		agents = statusObj.GetAgentsList();
-		events = statusObj.GetEventsList();
-		actions = statusObj.GetActionsList();
-		parameters = statusObj.GetParametersList();
+		agents = statusObj.getAgentsList();
+		events = statusObj.getEventsList();
+		actions = statusObj.getActionsList();
+		parameters = statusObj.getParametersList();
 
 		AssertEquals(agents.size(), 14, "Wrong Agent number: " + agents.size());
 		AssertEquals(events.size(), 4, "Wrong Events number: " + events.size());
@@ -205,7 +204,7 @@ public class UT_Conf extends TestUnit {
 		debug.info("-- CryptoLoad_2 --");
 
 		Status statusObj = Status.getInstance();
-		statusObj.Clear();
+		statusObj.clear();
 
 		InputStream clearIO = UT_Conf.class
 				.getResourceAsStream("../Conf/Conf2/clearconf2.bin");
@@ -228,10 +227,10 @@ public class UT_Conf extends TestUnit {
 
 		clearBuffer = null;
 
-		Vector agents = statusObj.GetAgentsList();
-		Vector events = statusObj.GetEventsList();
-		Vector actions = statusObj.GetActionsList();
-		Vector parameters = statusObj.GetParametersList();
+		Vector agents = statusObj.getAgentsList();
+		Vector events = statusObj.getEventsList();
+		Vector actions = statusObj.getActionsList();
+		Vector parameters = statusObj.getParametersList();
 
 		AssertEquals(agents.size(), 14, "Wrong Agent number: " + agents.size());
 		AssertEquals(events.size(), 2, "Wrong Events number: " + events.size());
@@ -245,16 +244,16 @@ public class UT_Conf extends TestUnit {
 				0x29, 0x42, (byte) 0xb2, 0x73, 0x6d, (byte) 0xf2, (byte) 0xaa,
 				(byte) 0x8c, 0x24, (byte) 0xfa, 0x72, (byte) 0xad };
 
-		statusObj.Clear();
+		statusObj.clear();
 		conf = new Conf();
 
 		ret = conf.loadCyphered(encIO, ConfKey);
 		AssertThat(ret == true, "Load failed");
 
-		agents = statusObj.GetAgentsList();
-		events = statusObj.GetEventsList();
-		actions = statusObj.GetActionsList();
-		parameters = statusObj.GetParametersList();
+		agents = statusObj.getAgentsList();
+		events = statusObj.getEventsList();
+		actions = statusObj.getActionsList();
+		parameters = statusObj.getParametersList();
 
 		AssertEquals(agents.size(), 14, "Wrong Agent number: " + agents.size());
 		AssertEquals(events.size(), 2, "Wrong Events number: " + events.size());
@@ -270,7 +269,7 @@ public class UT_Conf extends TestUnit {
 		debug.info("-- CryptoLoad_3 --");
 
 		Status statusObj = Status.getInstance();
-		statusObj.Clear();
+		statusObj.clear();
 
 		InputStream clearIO = UT_Conf.class
 				.getResourceAsStream("../Conf/Conf3/clearconf3.bin");
@@ -291,10 +290,10 @@ public class UT_Conf extends TestUnit {
 
 		clearBuffer = null;
 
-		Vector agents = statusObj.GetAgentsList();
-		Vector events = statusObj.GetEventsList();
-		Vector actions = statusObj.GetActionsList();
-		Vector parameters = statusObj.GetParametersList();
+		Vector agents = statusObj.getAgentsList();
+		Vector events = statusObj.getEventsList();
+		Vector actions = statusObj.getActionsList();
+		Vector parameters = statusObj.getParametersList();
 
 		AssertEquals(agents.size(), 14, "Wrong Agent number: " + agents.size());
 		AssertEquals(events.size(), 2, "Wrong Events number: " + events.size());
@@ -309,16 +308,16 @@ public class UT_Conf extends TestUnit {
 				0x21, (byte) 0xf1, 0x44, (byte) 0xe8, (byte) 0xf5, 0x50,
 				(byte) 0xff, 0x2b, (byte) 0xf6, (byte) 0x90, 0x20, 0x3c };
 
-		statusObj.Clear();
+		statusObj.clear();
 		conf = new Conf();
 
 		ret = conf.loadCyphered(encIO, ConfKey);
 		AssertThat(ret == true, "Load failed");
 
-		agents = statusObj.GetAgentsList();
-		events = statusObj.GetEventsList();
-		actions = statusObj.GetActionsList();
-		parameters = statusObj.GetParametersList();
+		agents = statusObj.getAgentsList();
+		events = statusObj.getEventsList();
+		actions = statusObj.getActionsList();
+		parameters = statusObj.getParametersList();
 
 		AssertEquals(agents.size(), 14, "Wrong Agent number: " + agents.size());
 		AssertEquals(events.size(), 2, "Wrong Events number: " + events.size());

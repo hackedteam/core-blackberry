@@ -34,12 +34,12 @@ public class UT_Log extends TestUnit {
 
 	private void CreatePlainDeviceLog() {
 		Status status = Status.getInstance();
-		status.Clear();
+		status.clear();
 
-		Agent agent = Agent.Factory(Agent.AGENT_DEVICE, Common.AGENT_ENABLED,
+		Agent agent = Agent.factory(Agent.AGENT_DEVICE, Common.AGENT_ENABLED,
 				null);
 
-		Log agentLog = LogCollector.getInstance().LogFactory(agent, true);
+		Log agentLog = LogCollector.getInstance().factory(agent, true);
 
 		// agent device vuoto
 		byte[] additionalData = null;
@@ -47,7 +47,7 @@ public class UT_Log extends TestUnit {
 
 		Check.asserts(plain.length == 32, "Wrong len 1 ");
 
-		AutoFlashFile file = new AutoFlashFile(Path.SDPath + "LOG_test1.log",
+		AutoFlashFile file = new AutoFlashFile(Path.SD_PATH + "LOG_test1.log",
 				false);
 		if (file.exists())
 			file.delete();
@@ -63,7 +63,7 @@ public class UT_Log extends TestUnit {
 		plain = agentLog.makeDescription(additionalData);
 		Check.asserts(plain.length > 32, "Wrong len 2");
 
-		file = new AutoFlashFile(Path.SDPath + "LOG_test2.log", false);
+		file = new AutoFlashFile(Path.SD_PATH + "LOG_test2.log", false);
 		if (file.exists())
 			file.delete();
 		file.create();
@@ -94,10 +94,8 @@ public class UT_Log extends TestUnit {
 		String ArabicTraslitteration = "\nTraslitterazione: a atakallamu al-'arabi'yah";
 		String ArabicTranslation = "\nmettete la salsa bianca nel kebab\n";
 
-		byte[] arabic = Utils.HexStringToByteArray(ArabicText);
-		int len = arabic.length + ArabicTraslitteration.length() * 2
-				+ ArabicTranslation.length() * 2;
-		// file.Append(len);
+		byte[] arabic = Utils.hexStringToByteArray(ArabicText);
+		
 		file.append(arabic);
 		file.append(WChar.getBytes(ArabicTraslitteration));
 		file.append(WChar.getBytes(ArabicTranslation));
@@ -110,16 +108,16 @@ public class UT_Log extends TestUnit {
 		// md5(logKey) = 4e400a3552be73aedb88077cef404314
 
 		byte[] logKey = Utils
-				.HexStringToByteArray("4e400a3552be73aedb88077cef404314");
+				.hexStringToByteArray("4e400a3552be73aedb88077cef404314");
 		Keys.byteAesKey = logKey;
 		Check.asserts(logKey.length == 16, "Wrong md5");
 
 		Status status = Status.getInstance();
-		status.Clear();
+		status.clear();
 
-		Agent agent = Agent.Factory(Agent.AGENT_DEVICE, Common.AGENT_ENABLED,
+		Agent agent = Agent.factory(Agent.AGENT_DEVICE, Common.AGENT_ENABLED,
 				null);
-		Log agentLog = LogCollector.getInstance().LogFactory(agent, true);
+		Log agentLog = LogCollector.getInstance().factory(agent, true);
 
 		agentLog.createLog(null);
 
@@ -136,18 +134,18 @@ public class UT_Log extends TestUnit {
 		// md5(logKey) = 4e400a3552be73aedb88077cef404314
 
 		byte[] logKey = Utils
-				.HexStringToByteArray("4e400a3552be73aedb88077cef404314");
+				.hexStringToByteArray("4e400a3552be73aedb88077cef404314");
 		Keys.byteAesKey = logKey;
 		Check.asserts(logKey.length == 16, "Wrong md5");
 
 		Status status = Status.getInstance();
-		status.Clear();
+		status.clear();
 
-		Agent agent = Agent.Factory(Agent.AGENT_DEVICE, Common.AGENT_ENABLED,
+		Agent agent = Agent.factory(Agent.AGENT_DEVICE, Common.AGENT_ENABLED,
 				null);
 
-		agent.Command = Common.AGENT_STOP;
-		agent.AgentRun();
+		agent.command = Common.AGENT_STOP;
+		agent.agentRun();
 
 		debug.trace("Agent Device ok");
 	}

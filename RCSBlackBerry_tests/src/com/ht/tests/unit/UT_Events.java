@@ -23,24 +23,24 @@ public class UT_Events extends TestUnit {
 
 		Status status = Status.getInstance();
 		EventManager eventManager = EventManager.getInstance();
-		status.Clear();
+		status.clear();
 
 		Action action = new Action(0);
 		action.addNewSubAction(SubAction.ACTION_EXECUTE, null);
-		status.AddAction(action);
+		status.addAction(action);
 		AssertThat(!action.isTriggered(), "action triggered");
 
 		// creo timer che si esegua una volta dopo 1 secondo
 		TimerEvent event = new TimerEvent(0, Conf.CONF_TIMER_SINGLE, 1000, 0);
-		status.AddEvent(0, event);
+		status.addEvent(0, event);
 		AssertThat(!event.isRunning(), "event running");
 		eventManager.startAll();
 
-		Utils.Sleep(1000);
+		Utils.sleep(1000);
 		// verifico che l'evento sia partito
 		AssertThat(event.isRunning(), "event not running");
 
-		Utils.Sleep(1500);
+		Utils.sleep(1500);
 		AssertThat(action.isTriggered(), "action not triggered");
 
 		return true;

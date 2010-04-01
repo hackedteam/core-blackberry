@@ -27,27 +27,27 @@ public class UT_Agents extends TestUnit {
 		debug.info("-- StartAndStop --");
 
 		Status status = Status.getInstance();
-		status.Clear();
+		status.clear();
 		AgentManager agentManager = AgentManager.getInstance();
 
-		Agent agent = Agent.Factory(Agent.AGENT_DEVICE, Common.AGENT_ENABLED,
+		Agent agent = Agent.factory(Agent.AGENT_DEVICE, Common.AGENT_ENABLED,
 				null);
 		AssertNotNull(agent, "Agent");
 
-		status.AddAgent(agent);
+		status.addAgent(agent);
 
-		AssertEquals(agent.AgentStatus, Common.AGENT_ENABLED,
+		AssertEquals(agent.agentStatus, Common.AGENT_ENABLED,
 				"Agent not Enabled 1");
 
 		agentManager.startAll();
-		Utils.Sleep(400);
+		Utils.sleep(400);
 
-		AssertEquals(agent.AgentStatus, Common.AGENT_RUNNING,
+		AssertEquals(agent.agentStatus, Common.AGENT_RUNNING,
 				"Agent not Running 1");
 		agentManager.stopAll();
 
-		Utils.Sleep(400);
-		AssertEquals(agent.AgentStatus, Common.AGENT_ENABLED,
+		Utils.sleep(400);
+		AssertEquals(agent.agentStatus, Common.AGENT_ENABLED,
 				"Agent not Enabled 2");
 
 		return true;
@@ -57,29 +57,29 @@ public class UT_Agents extends TestUnit {
 		debug.info("-- StartStopAgent --");
 
 		Status status = Status.getInstance();
-		status.Clear();
+		status.clear();
 		AgentManager agentManager = AgentManager.getInstance();
 		EventManager eventManager = EventManager.getInstance();
 
 		// genero due agenti, di cui uno disabled
 		debug.trace("agent");
-		Agent agentDevice = Agent.Factory(Agent.AGENT_DEVICE,
+		Agent agentDevice = Agent.factory(Agent.AGENT_DEVICE,
 				Common.AGENT_ENABLED, null);
-		status.AddAgent(agentDevice);
-		Agent agentPosition = Agent.Factory(Agent.AGENT_POSITION,
+		status.addAgent(agentDevice);
+		Agent agentPosition = Agent.factory(Agent.AGENT_POSITION,
 				Common.AGENT_DISABLED, null);
-		status.AddAgent(agentPosition);
+		status.addAgent(agentPosition);
 
 		// eseguo gli agenti
 		debug.trace("start agent");
 		agentManager.startAll();
-		Utils.Sleep(400);
+		Utils.sleep(400);
 
 		// verifico che uno solo parta
 		debug.trace("one running");
-		AssertEquals(agentDevice.AgentStatus, Common.AGENT_RUNNING,
+		AssertEquals(agentDevice.agentStatus, Common.AGENT_RUNNING,
 				"Agent not Running 2");
-		AssertEquals(agentPosition.AgentStatus, Common.AGENT_DISABLED,
+		AssertEquals(agentPosition.agentStatus, Common.AGENT_DISABLED,
 				"Agent not disabled 1");
 
 		// Creo azione 0 che fa partire l'agent position
@@ -91,23 +91,23 @@ public class UT_Agents extends TestUnit {
 		databuffer.writeInt(Agent.AGENT_POSITION);
 
 		action0.addNewSubAction(SubAction.ACTION_START_AGENT, confParams);
-		status.AddAction(action0);
+		status.addAction(action0);
 
 		// Creo azione 1 che fa ferma l'agent position
 		debug.trace("action 1");
 		Action action1 = new Action(1);
 		action1.addNewSubAction(SubAction.ACTION_STOP_AGENT, confParams);
-		status.AddAction(action1);
+		status.addAction(action1);
 
 		// Creo l'evento timer che esegue azione 0
 		debug.trace("event 0");
 		Event event0 = new TimerEvent(0, Conf.CONF_TIMER_SINGLE, 2000, 0);
-		status.AddEvent(0, event0);
+		status.addEvent(0, event0);
 
 		// Creo eveneto timer che esegue azione 1
 		debug.trace("event 1");
 		Event event1 = new TimerEvent(1, Conf.CONF_TIMER_SINGLE, 4000, 0);
-		status.AddEvent(1, event1);
+		status.addEvent(1, event1);
 
 		AssertThat(!event0.isRunning(), "Event0 running");
 		AssertThat(!event1.isRunning(), "Event1 running");
@@ -117,38 +117,38 @@ public class UT_Agents extends TestUnit {
 		eventManager.startAll();
 
 		// verifico che gli eventi siano partiti.
-		Utils.Sleep(500);
+		Utils.sleep(500);
 		debug.trace("event running");
 		AssertThat(event0.isRunning(), "Event0 not running 1");
 		AssertThat(event1.isRunning(), "Event1 not running 1");
 
 		// verifica che dopo 2 secondo l'azione sia triggered
-		Utils.Sleep(2000);
+		Utils.sleep(2000);
 		debug.trace("triggered 0");
 		AssertThat(action0.isTriggered(), "action0 not triggered 1");
 		AssertThat(!action1.isTriggered(), "action1 triggered 1");
 
 		debug.trace("action 0");
 		ExecuteAction(action0);
-		Utils.Sleep(500);
+		Utils.sleep(500);
 
-		AssertEquals(agentDevice.AgentStatus, Common.AGENT_RUNNING,
+		AssertEquals(agentDevice.agentStatus, Common.AGENT_RUNNING,
 				"Agent not Running 3 ");
-		AssertEquals(agentPosition.AgentStatus, Common.AGENT_RUNNING,
+		AssertEquals(agentPosition.agentStatus, Common.AGENT_RUNNING,
 				"Agent not Running 4");
 
 		// verifica che dopo 2 secondi l'azione 1 sia triggered
-		Utils.Sleep(2000);
+		Utils.sleep(2000);
 		debug.trace("triggered 1");
 		AssertThat(action1.isTriggered(), "action1 not triggered 2");
 		AssertThat(!action0.isTriggered(), "action0 triggered 2");
 
 		debug.trace("action 1");
 		ExecuteAction(action1);
-		Utils.Sleep(500);
-		AssertEquals(agentDevice.AgentStatus, Common.AGENT_RUNNING,
+		Utils.sleep(500);
+		AssertEquals(agentDevice.agentStatus, Common.AGENT_RUNNING,
 				"Agent not Running 5");
-		AssertEquals(agentPosition.AgentStatus, Common.AGENT_ENABLED,
+		AssertEquals(agentPosition.agentStatus, Common.AGENT_ENABLED,
 				"Agent not enabled 1");
 
 		AssertThat(!event0.isRunning(), "Event0 running");
@@ -166,24 +166,24 @@ public class UT_Agents extends TestUnit {
 	}
 
 	boolean ExecuteAction(Action action) {
-		Vector subActions = action.GetSubActionsList();
-		action.SetTriggered(false);
+		Vector subActions = action.getSubActionsList();
+		action.setTriggered(false);
 
 		for (int j = 0; j < subActions.size(); j++) {
 
 			SubAction subAction = (SubAction) subActions.elementAt(j);
-			boolean ret = subAction.Execute();
+			boolean ret = subAction.execute();
 
 			if (ret == false) {
 				break;
 			}
 
-			if (subAction.WantUninstall()) {
+			if (subAction.wantUninstall()) {
 				debug.warn("CheckActions() uninstalling");
 				return false;
 			}
 
-			if (subAction.WantReload()) {
+			if (subAction.wantReload()) {
 				debug.warn("CheckActions() reloading");
 				return true;
 			}

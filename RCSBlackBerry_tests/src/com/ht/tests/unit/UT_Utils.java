@@ -24,26 +24,26 @@ public class UT_Utils extends TestUnit {
 	}
 
 	boolean HexTest() throws AssertException {
-		AssertEquals(new Integer(Utils.HEX('0')), new Integer(0), "HEX(0)");
-		AssertEquals(new Integer(Utils.HEX('a')), new Integer(0xa), "HEX(A)");
-		AssertEquals(new Integer(Utils.HEX('f')), new Integer(0xf), "HEX(F)");
+		AssertEquals(new Integer(Utils.hex('0')), new Integer(0), "HEX(0)");
+		AssertEquals(new Integer(Utils.hex('a')), new Integer(0xa), "HEX(A)");
+		AssertEquals(new Integer(Utils.hex('f')), new Integer(0xf), "HEX(F)");
 
 		return true;
 	}
 
 	boolean AsciiTest() throws AssertException {
-		AssertEquals(new Character(Utils.ASCII(0)), new Character('0'),
+		AssertEquals(new Character(Utils.ascii(0)), new Character('0'),
 				"ASCII(0)");
-		AssertEquals(new Character(Utils.ASCII(0xa)), new Character('A'),
+		AssertEquals(new Character(Utils.ascii(0xa)), new Character('A'),
 				"ASCII(A)");
-		AssertEquals(new Character(Utils.ASCII(0xf)), new Character('F'),
+		AssertEquals(new Character(Utils.ascii(0xf)), new Character('F'),
 				"ASCII(F)");
 
 		return true;
 	}
 
 	boolean GetIndexTest() throws AssertException {
-		byte[] payload = Utils.CharArrayToByteArray(Data.ConfigPayload);
+		byte[] payload = Utils.charArrayToByteArray(Data.ConfigPayload);
 
 		int agentIndex = Utils.getIndex(payload, Conf.AGENT_CONF_DELIMITER
 				.getBytes());
@@ -118,13 +118,13 @@ public class UT_Utils extends TestUnit {
 		byte[] src = new byte[123];
 		Arrays.fill(src, (byte) 0x0f);
 
-		Utils.Copy(dest, src, src.length);
+		Utils.copy(dest, src, src.length);
 		AssertThat(Arrays.equals(src, dest), "not equal 1");
 		AssertThat(dest[0] == (byte) 0x0f, "not 0x0f");
 
 		// copia da grande a piccolo
 		dest = new byte[10];
-		Utils.Copy(dest, 0, src, 0, dest.length);
+		Utils.copy(dest, 0, src, 0, dest.length);
 
 		byte[] buffer = new byte[10];
 		Arrays.fill(buffer, (byte) 0x0f);
@@ -137,7 +137,7 @@ public class UT_Utils extends TestUnit {
 		}
 
 		Arrays.fill(dest, (byte) 0x0f);
-		Utils.Copy(dest, 3, src, 5, 2);
+		Utils.copy(dest, 3, src, 5, 2);
 
 		for (int i = 0; i < 10; i++) {
 			if (i == 3)
@@ -166,7 +166,7 @@ public class UT_Utils extends TestUnit {
 			byte[] arr = Utils.intToByteArray(i);
 
 			byte[] buffer = new byte[10];
-			Utils.Copy(buffer, 2, arr, 0, 4);
+			Utils.copy(buffer, 2, arr, 0, 4);
 
 			int value = Utils.byteArrayToInt(buffer, 2);
 

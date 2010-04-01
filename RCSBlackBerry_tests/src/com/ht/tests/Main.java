@@ -17,11 +17,11 @@ public class Main extends UiApplication {
 
 	public static void main(String[] args) {
 
-		Debug.LOG_TO_DEBUGGER = true;
-		Debug.LOG_TO_FLASH = false;
-		Debug.LOG_TO_SD = true;
+		boolean logToDebugger = true;
+		boolean logToFlash = false;
+		boolean logToSD = true;
 
-		debug.create();
+		debug.init(logToDebugger, logToFlash, logToSD);
 		debug.trace("Test Init");
 		// create a new instance of the application
 		// and start the application on the event thread

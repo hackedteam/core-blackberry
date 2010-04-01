@@ -4,6 +4,7 @@ import net.rim.device.api.util.Arrays;
 
 import com.ht.rcs.blackberry.crypto.Encryption;
 import com.ht.rcs.blackberry.crypto.Rijndael;
+import com.ht.rcs.blackberry.utils.Check;
 import com.ht.tests.AssertException;
 import com.ht.tests.TestUnit;
 import com.ht.tests.Tests;
@@ -73,16 +74,16 @@ public class UT_Crypto extends TestUnit {
 
 		enc.makeKey(key);
 
-		byte[] buffer = enc.EncryptData(plain);
+		byte[] buffer = enc.encryptData(plain);
 		AssertThat(Arrays.equals(buffer, cyphered), "Encryption encrypt");
 
-		buffer = enc.DecryptData(cyphered);
+		buffer = enc.decryptData(cyphered);
 		AssertThat(Arrays.equals(buffer, plain), "Encryption decrypt");
 
 		plain = new byte[1024];
-		buffer = enc.EncryptData(plain);
+		buffer = enc.encryptData(plain);
 		AssertThat(!Arrays.equals(buffer, plain), "enc error");
-		buffer = enc.DecryptData(buffer);
+		buffer = enc.decryptData(buffer);
 		AssertThat(Arrays.equals(buffer, plain), "self error");
 
 		return true;
@@ -101,11 +102,11 @@ public class UT_Crypto extends TestUnit {
 		debug.info("1");
 		byte[] plain = new byte[1];
 		Arrays.fill(plain, (byte) 0x0f);
-		byte[] buffer = enc.EncryptData(plain);
+		byte[] buffer = enc.encryptData(plain);
 		AssertThat(!Arrays.equals(buffer, plain), "enc error");
 		AssertThat(buffer.length == 16, "len error 1");
 
-		buffer = enc.DecryptData(buffer, 1, 0);
+		buffer = enc.decryptData(buffer, 1, 0);
 		AssertThat(buffer.length == 1, "len error 2");
 		AssertThat(Arrays.equals(buffer, 0, plain, 0, plain.length),
 				"self error");
@@ -114,11 +115,11 @@ public class UT_Crypto extends TestUnit {
 		debug.info("12");
 		plain = new byte[12];
 		Arrays.fill(plain, (byte) 0x0f);
-		buffer = enc.EncryptData(plain);
+		buffer = enc.encryptData(plain);
 		AssertThat(!Arrays.equals(buffer, plain), "enc error");
 		AssertThat(buffer.length == 16, "len error 1");
 
-		buffer = enc.DecryptData(buffer, plain.length, 0);
+		buffer = enc.decryptData(buffer, plain.length, 0);
 		AssertThat(buffer.length == plain.length, "len error 2");
 		AssertThat(Arrays.equals(buffer, 0, plain, 0, plain.length),
 				"self error");
@@ -127,11 +128,11 @@ public class UT_Crypto extends TestUnit {
 		debug.info("16");
 		plain = new byte[16];
 		Arrays.fill(plain, (byte) 0x0f);
-		buffer = enc.EncryptData(plain);
+		buffer = enc.encryptData(plain);
 		AssertThat(!Arrays.equals(buffer, plain), "enc error");
 		AssertThat(buffer.length == 16, "len error 1");
 
-		buffer = enc.DecryptData(buffer, plain.length, 0);
+		buffer = enc.decryptData(buffer, plain.length, 0);
 		AssertThat(buffer.length == 16, "len error 2");
 		AssertThat(Arrays.equals(buffer, 0, plain, 0, plain.length),
 				"self error");
@@ -140,11 +141,11 @@ public class UT_Crypto extends TestUnit {
 		debug.info("1024");
 		plain = new byte[1024];
 		Arrays.fill(plain, (byte) 0x0f);
-		buffer = enc.EncryptData(plain);
+		buffer = enc.encryptData(plain);
 		AssertThat(!Arrays.equals(buffer, plain), "enc error");
 		AssertThat(buffer.length == plain.length, "len error 1");
 
-		buffer = enc.DecryptData(buffer, plain.length, 0);
+		buffer = enc.decryptData(buffer, plain.length, 0);
 		AssertThat(buffer.length == plain.length, "len error 2");
 		AssertThat(Arrays.equals(buffer, 0, plain, 0, plain.length),
 				"self error");
@@ -154,36 +155,35 @@ public class UT_Crypto extends TestUnit {
 
 	void ScrambleTest() throws AssertException {
 
-		Encryption crypto = new Encryption();
-
-		String ret = Encryption.EncryptName("KiodoGay", 0xb0);
+		String ret = Encryption.encryptName("KiodoGay", 0xb0);
 		String expected = "pKdTdlYz";
 		AssertEquals(ret, expected, "Scramble 1");
 
-		ret = Encryption.EncryptName("BrunelloBrunilde", 0xb0);
+		ret = Encryption.encryptName("BrunelloBrunilde", 0xb0);
 		expected = "RbF5OQQdRbF5KQTO";
 		AssertEquals(ret, expected, "Scramble 2");
 
-		ret = Encryption.EncryptName("Zeno", 0xb0);
+		ret = Encryption.encryptName("Zeno", 0xb0);
 		expected = "kO5d";
 		AssertEquals(ret, expected, "Scramble 3");
 
-		ret = Encryption.EncryptName("Xeno", 0xb0);
+		ret = Encryption.encryptName("Xeno", 0xb0);
 		expected = "8O5d";
 		AssertEquals(ret, expected, "Scramble 4");
 
-		ret = Encryption.EncryptName("10401349w298238402834923.mob", 0xb0);
+		ret = Encryption.encryptName("10401349w298238402834923.mob", 0xb0);
 		expected = "mVHVmoHh9ZhnZonHVZnoHhZo.udD";
 		AssertEquals(ret, expected, "Scramble 5");
 
-		ret = Encryption.EncryptName("*.mob", 0xb0);
+		ret = Encryption.encryptName("*.mob", 0xb0);
 		expected = "*.udD";
 		AssertEquals(ret, expected, "Scramble 6");
 	}
 
 	void MultipleTest() {
 		for (int i = 0; i < 1024; i++) {
-			int n = Encryption.GetNextMultiple(i);
+			int n = Encryption.getNextMultiple(i);
+			Check.asserts(n>=0, "Wrong n");
 		}
 	}
 
