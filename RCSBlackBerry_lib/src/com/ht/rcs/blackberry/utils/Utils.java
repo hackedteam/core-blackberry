@@ -79,6 +79,23 @@ public class Utils {
         return value;
 
     }
+    
+    public static final long byteArrayToLong(byte[] buffer, int offset) {
+
+        Check.requires(buffer.length >= offset + 4, "short buffer");
+
+        DataBuffer databuffer = new DataBuffer(buffer, offset, 8, false);
+        long value = 0;
+
+        try {
+            value = databuffer.readLong();
+        } catch (EOFException e) {
+            debug.error("Cannot read int from buffer at offset:" + offset);
+        }
+
+        return value;
+
+    }
 
     /**
      * Char array to byte array.
