@@ -17,7 +17,7 @@ public class UT_Markup extends TestUnit {
 	}
 
 	void SimpleMarkupTest() throws AssertException {
-		Markup markup = new Markup(Keys.getAesKey());
+		Markup markup = new Markup(Keys.getInstance().getAesKey());
 		int agentId = Agent.AGENT_APPLICATION;
 
 		if (markup.isMarkup(agentId))

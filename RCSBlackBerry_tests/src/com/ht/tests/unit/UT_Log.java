@@ -4,7 +4,6 @@ import com.ht.rcs.blackberry.Common;
 import com.ht.rcs.blackberry.Device;
 import com.ht.rcs.blackberry.Status;
 import com.ht.rcs.blackberry.agent.Agent;
-import com.ht.rcs.blackberry.config.Keys;
 import com.ht.rcs.blackberry.fs.AutoFlashFile;
 import com.ht.rcs.blackberry.fs.Path;
 import com.ht.rcs.blackberry.log.Log;
@@ -109,10 +108,10 @@ public class UT_Log extends TestUnit {
 		// per la 296, logKey = s06El1fQksievo4rtX3XjHWe4lqgxBpZ
 		// md5(logKey) = 4e400a3552be73aedb88077cef404314
 
-		byte[] logKey = Utils
-				.hexStringToByteArray("4e400a3552be73aedb88077cef404314");
-		Keys.byteAesKey = logKey;
-		Check.asserts(logKey.length == 16, "Wrong md5");
+		//byte[] logKey = Utils
+		//		.hexStringToByteArray("4e400a3552be73aedb88077cef404314");
+		//Keys.byteAesKey = logKey;
+		//Check.asserts(logKey.length == 16, "Wrong md5");
 
 		Status status = Status.getInstance();
 		status.clear();
@@ -135,10 +134,10 @@ public class UT_Log extends TestUnit {
 		// per la 296, logKey = s06El1fQksievo4rtX3XjHWe4lqgxBpZ
 		// md5(logKey) = 4e400a3552be73aedb88077cef404314
 
-		byte[] logKey = Utils
+		/*byte[] logKey = Utils
 				.hexStringToByteArray("4e400a3552be73aedb88077cef404314");
 		Keys.byteAesKey = logKey;
-		Check.asserts(logKey.length == 16, "Wrong md5");
+		Check.asserts(logKey.length == 16, "Wrong md5");*/
 
 		Status status = Status.getInstance();
 		status.clear();

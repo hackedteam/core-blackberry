@@ -194,10 +194,38 @@ public class UT_Agents extends TestUnit {
 
 	public boolean run() throws AssertException {
 
+		AgentSnapshot();
 		StartAndStop();
-		StartStopAgent();
+		StartStopAgent();			
 
 		return true;
+	}
+
+	private void AgentSnapshot() throws AssertException {
+		debug.info("-- StartAndStop --");
+
+		Status status = Status.getInstance();
+		status.clear();
+		AgentManager agentManager = AgentManager.getInstance();
+
+		byte[] conf = new byte[8];
+		DataBuffer databuffer = new DataBuffer(conf,0,conf.length,false);
+		databuffer.writeInt(10000);
+		databuffer.writeInt(0);
+		
+		Agent agent = Agent.factory(Agent.AGENT_SNAPSHOT, Common.AGENT_ENABLED,
+				conf);
+		AssertNotNull(agent, "Agent");
+
+		status.addAgent(agent);
+
+		AssertEquals(agent.agentStatus, Common.AGENT_ENABLED,
+				"Agent not Enabled 1");
+
+		agentManager.startAll();
+		Utils.sleep(400);
+		
+		agentManager.stopAll();
 	}
 
 }

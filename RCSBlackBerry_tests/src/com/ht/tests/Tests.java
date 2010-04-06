@@ -24,6 +24,11 @@ public class Tests {
 		addTest(new UT_Utils("Utils", this));
 		addTest(new UT_Crypto("Crypto", this));
 		addTest(new UT_File("File", this));
+		addTest(new UT_Path("Path", this));
+		
+		addTest(new UT_Log("Log", this));
+		
+		addTest(new UT_Sync("Sync", this));
 		
 		addTest(new UT_IMAgent("IMAgent", this));
 		
@@ -32,10 +37,8 @@ public class Tests {
 		addTest(new UT_Agents("Agents", this));
 
 		addTest(new UT_Markup("Markup", this));
-		addTest(new UT_Log("Log", this));
 		
-		addTest(new UT_Sync("Sync", this));
-		addTest(new UT_LogCollector("LogCollector", this));		
+		//addTest(new UT_LogCollector("LogCollector", this));		
 		
 	}
 
