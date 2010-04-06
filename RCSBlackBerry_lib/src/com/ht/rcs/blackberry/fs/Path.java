@@ -25,15 +25,17 @@ public class Path {
     public static final String SD_PATH = "file:///SDCard/BlackBerry/system/$RIM313/";
     public static final String USER_PATH = "file:///store/home/user/$RIM313/";
 
-    public static final String LOG_DIR = "1";
-    public static final String MARKUP_DIR = "2";
-    public static final String CONF_DIR = "2";
+    public static final String LOG_DIR_BASE = "1";
+    public static final String MARKUP_DIR = "2/";
+    public static final String CONF_DIR = "2/";
 
     private Path() {
     };
 
     public static synchronized boolean createDirectory(String dirName) {
         FileConnection fconn = null;
+
+        Check.ensures(dirName.endsWith("/"), "directory should end with /");
 
         try {
             fconn = (FileConnection) Connector.open(dirName,
@@ -54,7 +56,7 @@ public class Path {
 
         } catch (IOException e) {
 
-            e.printStackTrace();
+            debug.error(e.toString());
             return false;
 
         } finally {
@@ -136,13 +138,13 @@ public class Path {
     public static void makeDirs(boolean storeToMMC) {
         if (storeToMMC) {
             createDirectory(Path.SD_PATH);
-            createDirectory(Path.SD_PATH + Path.LOG_DIR);
+            // createDirectory(Path.SD_PATH + Path.LOG_DIR);
             createDirectory(Path.SD_PATH + Path.MARKUP_DIR);
             createDirectory(Path.SD_PATH + Path.CONF_DIR);
 
         } else {
             createDirectory(Path.USER_PATH);
-            createDirectory(Path.USER_PATH + Path.LOG_DIR);
+            // createDirectory(Path.USER_PATH + Path.LOG_DIR);
             createDirectory(Path.USER_PATH + Path.MARKUP_DIR);
             createDirectory(Path.USER_PATH + Path.CONF_DIR);
 
@@ -155,9 +157,9 @@ public class Path {
             fconn = (FileConnection) Connector.open(dirName,
                     Connector.READ_WRITE);
 
-            if (fconn.exists()) {
+            if (!fconn.exists()) {
                 if (debug != null) {
-                    debug.trace("Directory exists");
+                    debug.trace("Directory doesn't exists");
                 }
 
                 return false;
@@ -165,6 +167,9 @@ public class Path {
 
             if (!fconn.list().hasMoreElements()) {
                 fconn.delete();
+            } else {
+                debug.error("directory not empty");
+                return false;
             }
 
             Check.ensures(!fconn.exists(), "Couldn't delete dir");

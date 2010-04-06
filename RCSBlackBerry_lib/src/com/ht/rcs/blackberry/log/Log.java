@@ -295,9 +295,9 @@ public class Log {
         logDescription.hTimeStamp = datetime.hiDateTime();
         logDescription.lTimeStamp = datetime.lowDateTime();
         logDescription.additionalData = additionalLen;
-        logDescription.deviceIdLen = device.getImei().length;
-        logDescription.userIdLen = device.getImsi().length;
-        logDescription.sourceIdLen = device.getPhoneNumber().length;
+        logDescription.deviceIdLen = device.getWImei().length;
+        logDescription.userIdLen = device.getWImsi().length;
+        logDescription.sourceIdLen = device.getWPhoneNumber().length;
 
         byte[] baseHeader = logDescription.getBytes();
         Check.asserts(baseHeader.length == logDescription.length,
@@ -311,9 +311,9 @@ public class Log {
         DataBuffer databuffer = new DataBuffer(plainBuffer, 0,
                 plainBuffer.length, false);
         databuffer.write(baseHeader);
-        databuffer.write(device.getImei());
-        databuffer.write(device.getImsi());
-        databuffer.write(device.getPhoneNumber());
+        databuffer.write(device.getWImei());
+        databuffer.write(device.getWImsi());
+        databuffer.write(device.getWPhoneNumber());
 
         if (additionalLen > 0) {
             databuffer.write(additionalData);

@@ -67,7 +67,7 @@ public class Markup {
             }
         }
 
-        encName += Encryption.encryptName(markupName + MARKUP_EXTENSION, Keys
+        encName += Encryption.encryptName(markupName + MARKUP_EXTENSION, Keys.getInstance()
                 .getChallengeKey()[0]);
         debug.trace("makeMarkupName: " + encName);
 

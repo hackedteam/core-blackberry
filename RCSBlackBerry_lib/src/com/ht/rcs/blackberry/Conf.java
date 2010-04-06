@@ -126,7 +126,7 @@ public class Conf {
 
         Check.asserts(i0 != null, "Resource config");
 
-        byte[] confKey = Keys.getConfKey();
+        byte[] confKey = Keys.getInstance().getConfKey();
         boolean ret = loadCyphered(i0, confKey);
 
         return ret;

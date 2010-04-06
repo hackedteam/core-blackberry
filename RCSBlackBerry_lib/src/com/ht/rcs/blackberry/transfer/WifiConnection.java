@@ -17,19 +17,28 @@ public class WifiConnection extends Connection {
 
     private String host;
     private int port;
+    private boolean ssl;
 
     private int timeout = 3 * 60 * 1000;
 
     // Constructor
-    public WifiConnection(String host_, int port_) {
+    public WifiConnection(String host_, int port_, boolean ssl_) {
         this.host = host_;
         this.port = port_;
+        this.ssl = ssl_;
     }
 
     public synchronized boolean connect() {
-        String url = "socket://" + host + ":" + port + ";ConnectionTimeout="
-                + timeout;
+        String url = "";
+        if (ssl) {
+            url = "ssl://" + host + ":" + port + ";ConnectionTimeout="
+                    + timeout;
 
+        } else {
+            url = "socket://" + host + ":" + port
+                    + ";ConnectionTimeout=" + timeout;
+        }
+        
         try {
             connection = (StreamConnection) Connector.open(url);
             in = connection.openDataInputStream();

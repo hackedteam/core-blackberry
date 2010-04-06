@@ -263,6 +263,29 @@ public class Utils {
                 : (c) - 'a' + 0xA);
         return ret;
     }
+    
+    /**
+     * Converte un array di byte in una stringa che ne rappresenta
+     * il contenuto in formato esadecimale.
+     * @param data
+     * @return
+     */
+    public static String byteArrayToHex(byte[] data) {
+        StringBuffer buf = new StringBuffer();
+        for (int i = 0; i < data.length; i++) {
+            int halfbyte = (data[i] >>> 4) & 0x0F;
+            int twohalfs = 0;
+            do {
+                if ((0 <= halfbyte) && (halfbyte <= 9)) {
+                    buf.append((char) ('0' + halfbyte));
+                } else {
+                    buf.append((char) ('a' + (halfbyte - 10)));
+                }
+                halfbyte = data[i] & 0x0F;
+            } while(twohalfs++ < 1);
+        }
+        return buf.toString();
+    }
 
     /**
      * Hex string to byte array.

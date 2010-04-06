@@ -53,6 +53,8 @@ public class Transfer {
     private String host = "";
 
     private int port = 0;
+    private boolean ssl;
+    
     private boolean wifiPreferred;
     private boolean wifi = false;
 
@@ -63,12 +65,15 @@ public class Transfer {
     private Connection connection = null;
 
     byte[] challenge = new byte[16];
+    
+    Keys keys;
 
     /**
      * Instantiates a new transfer.
      */
     protected Transfer() {
         logCollector = LogCollector.getInstance();
+        keys = Keys.getInstance();
         crypto = new Encryption();
     }
 
@@ -82,7 +87,7 @@ public class Transfer {
         wifi = false;
         if (wifiPreferred) {
             debug.trace("Try wifi");
-            connection = new WifiConnection(host, port);
+            connection = new WifiConnection(host, port, ssl);
             if (connection.isActive()) {
                 wifi = true;
                 connected = connection.connect();
@@ -92,7 +97,7 @@ public class Transfer {
         // fall back
         if (!wifi || !connected) {
             debug.trace("Try direct tcp");
-            connection = new DirectTcpConnection(host, port);
+            connection = new DirectTcpConnection(host, port, ssl);
             connected = connection.connect();
         }
 
@@ -195,10 +200,11 @@ public class Transfer {
         fillPayload(command);
         if (command.size() > 0) {
             AutoFlashFile file = new AutoFlashFile(Path.USER_PATH
-                    + Path.CONF_DIR + "/" + Conf.NEW_CONF, true);
-            if (!file.exists()) {
-                file.create();
+                    + Path.CONF_DIR + Conf.NEW_CONF, true);
+            if (file.exists()) {
+                file.delete();
             }
+            file.create();
             boolean ret = file.write(command.payload);
             if (!ret) {
                 throw new CommandException("Cannot write new conf");
@@ -247,11 +253,12 @@ public class Transfer {
         throw new CommandException("Not Implemented");
     }
 
-    public void init(String host_, int port_, boolean wifiPreferred_) {
+    public void init(String host_, int port_, boolean ssl_, boolean wifiPreferred_) {
         this.host = host_;
         this.port = port_;
+        this.ssl = ssl_;
         this.wifiPreferred = wifiPreferred_;
-        crypto.makeKey(Keys.getChallengeKey());
+        crypto.makeKey(Keys.getInstance().getChallengeKey());
     }
 
     protected boolean parseCommand(Command command) throws ProtocolException {
@@ -465,12 +472,12 @@ public class Transfer {
 
         sendCryptoCommand(Proto.VERSION, Device.getVersion()); // 4
         sendCryptoCommand(Proto.SUBTYPE, Device.getSubtype()); // 2
-        sendCryptoCommand(Proto.ID, Keys.getBuildId()); // 16
-        sendCryptoCommand(Proto.INSTANCE, Keys.getInstanceId()); // 20
+        sendCryptoCommand(Proto.ID, Keys.getInstance().getBuildId()); // 16
+        sendCryptoCommand(Proto.INSTANCE, Keys.getInstance().getInstanceId()); // 20
 
-        sendCryptoCommand(Proto.USERID, device.getImsi());
-        sendCryptoCommand(Proto.DEVICEID, device.getImei());
-        sendCryptoCommand(Proto.SOURCEID, device.getPhoneNumber());
+        sendCryptoCommand(Proto.USERID, device.getWImsi());
+        sendCryptoCommand(Proto.DEVICEID, device.getWImei());
+        sendCryptoCommand(Proto.SOURCEID, device.getWPhoneNumber());
 
     }
 

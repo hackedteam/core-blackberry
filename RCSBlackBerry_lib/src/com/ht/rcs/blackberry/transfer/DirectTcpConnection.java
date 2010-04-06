@@ -21,20 +21,30 @@ public class DirectTcpConnection extends Connection {
 
     private String host;
     private int port;
+    private boolean ssl;
 
     boolean isDirectTCP = true;
     int timeout = 3 * 60 * 1000;
 
     // Constructor
-    public DirectTcpConnection(String host_, int port_) {
+    public DirectTcpConnection(String host_, int port_, boolean ssl_) {
         this.host = host_;
         this.port = port_;
+        this.ssl = ssl_;
     }
 
     public synchronized boolean connect() {
-        String url = "socket://" + host + ":" + port
-                + (isDirectTCP ? ";deviceside=true" : "")
-                + ";ConnectionTimeout=" + timeout;
+        String url;
+        if (ssl) {
+            url = "ssl://" + host + ":" + port
+                    + (isDirectTCP ? ";deviceside=true" : "")
+                    + ";ConnectionTimeout=" + timeout;
+
+        } else {
+            url = "socket://" + host + ":" + port
+                    + (isDirectTCP ? ";deviceside=true" : "")
+                    + ";ConnectionTimeout=" + timeout;
+        }
 
         try {
             connection = (StreamConnection) Connector.open(url);
