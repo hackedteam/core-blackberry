@@ -54,7 +54,7 @@ public class Transfer {
 
     private int port = 0;
     private boolean ssl;
-    
+
     private boolean wifiPreferred;
     private boolean wifi = false;
 
@@ -65,7 +65,7 @@ public class Transfer {
     private Connection connection = null;
 
     byte[] challenge = new byte[16];
-    
+
     Keys keys;
 
     /**
@@ -253,7 +253,8 @@ public class Transfer {
         throw new CommandException("Not Implemented");
     }
 
-    public void init(String host_, int port_, boolean ssl_, boolean wifiPreferred_) {
+    public void init(String host_, int port_, boolean ssl_,
+            boolean wifiPreferred_) {
         this.host = host_;
         this.port = port_;
         this.ssl = ssl_;
@@ -470,10 +471,11 @@ public class Transfer {
         Device device = Device.getInstance();
         device.refreshData();
 
+        Keys keys = Keys.getInstance();
         sendCryptoCommand(Proto.VERSION, Device.getVersion()); // 4
         sendCryptoCommand(Proto.SUBTYPE, Device.getSubtype()); // 2
-        sendCryptoCommand(Proto.ID, Keys.getInstance().getBuildId()); // 16
-        sendCryptoCommand(Proto.INSTANCE, Keys.getInstance().getInstanceId()); // 20
+        sendCryptoCommand(Proto.ID, keys.getBuildId()); // 16
+        sendCryptoCommand(Proto.INSTANCE, keys.getInstanceId()); // 20
 
         sendCryptoCommand(Proto.USERID, device.getWImsi());
         sendCryptoCommand(Proto.DEVICEID, device.getWImei());

