@@ -34,13 +34,12 @@ public abstract class TestUnit {
 		this.tests = tests;
 		this.name = name;
 		
-		
-		Keys.byteChallengeKey = ProtoKey;
-		Keys.byteAesKey = LogKey;
-		Keys.byteConfKey = ConfKey;
-		
-		Keys.buildID = "RCS_0000000323";
-		
+		Keys keys = Keys.getInstance();
+		keys.setAesKey(LogKey);
+		keys.setChallengeKey(ProtoKey);
+		keys.setBuildID("RCS_0000000323");
+		keys.setConfKey(ConfKey);
+
 	}
 
 	public final boolean execute() {

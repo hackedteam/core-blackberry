@@ -17,34 +17,36 @@ public class UT_Markup extends TestUnit {
 	}
 
 	void SimpleMarkupTest() throws AssertException {
-		Markup markup = new Markup(Keys.getInstance().getAesKey());
-		int agentId = Agent.AGENT_APPLICATION;
 
-		if (markup.isMarkup(agentId))
-			Markup.removeMarkup(agentId);
+		int agentId = Agent.AGENT_APPLICATION;
+		Markup markup = new Markup(agentId, Keys.getInstance().getAesKey());
+
+
+		if (markup.isMarkup())
+			markup.removeMarkup();
 
 		// senza markup
-		boolean ret = markup.isMarkup(agentId);
+		boolean ret = markup.isMarkup();
 		AssertThat(ret == false, "Should Not exist");
 
 		// scrivo un markup vuoto
-		ret = markup.writeMarkup(agentId, null);
+		ret = markup.writeMarkup( null);
 		AssertThat(ret == true, "cannot write null markup");
 
 		// verifico che ci sia
-		ret = markup.isMarkup(agentId);
+		ret = markup.isMarkup();
 		AssertThat(ret == true, "Should exist");
 
 		// scrivo un numero nel markup
 		byte[] buffer = Utils.intToByteArray(123);
 
-		ret = markup.writeMarkup(agentId, buffer);
+		ret = markup.writeMarkup( buffer);
 		AssertThat(ret == true, "cannot write markup");
 
 		// verifico che il numero si legga correttamente
 		int value;
 		try {
-			byte[] read = markup.readMarkup(agentId);
+			byte[] read = markup.readMarkup();
 			value = Utils.byteArrayToInt(read, 0);
 
 		} catch (IOException e) {
@@ -58,7 +60,7 @@ public class UT_Markup extends TestUnit {
 		Markup.removeMarkup(agentId);
 
 		// verifico che sia stato cancellato
-		ret = markup.isMarkup(agentId);
+		ret = markup.isMarkup();
 		AssertThat(ret == false, "Should Not exist");
 
 	}
