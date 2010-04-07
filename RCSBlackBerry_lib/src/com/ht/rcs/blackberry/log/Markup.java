@@ -174,11 +174,10 @@ public class Markup {
 	}
 
 	/**
-	 * Legge il file di markup specificato da uAgentId (l'ID dell'agente che
-	 * l'ha generato), torna un puntatore ai dati decifrati che va poi liberato
-	 * dal chiamante e dentro uLen la lunghezza dei byte validi nel blocco. Se
-	 * il file non viene trovato o non e' possibile decifrarlo correttamente la
-	 * funzione torna NULL. La funzione torna NULL anche se il Markup e' vuoto.
+	 * Legge il file di markup specificato dall'AgentId (l'ID dell'agente che
+	 * l'ha generato), torna un array di dati decifrati. 
+	 * Se il file non viene trovato o non e' possibile decifrarlo correttamente,
+	 * torna null. Se il Markup e' vuoto restituisce un byte[0].
 	 * E' possibile creare dei markup vuoti, in questo caso non va usata la
 	 * ReadMarkup() ma semplicemente la IsMarkup() per vedere se e' presente o
 	 * meno.
@@ -204,14 +203,14 @@ public class Markup {
 
 			return plain;
 		} else {
+		    debug.trace("Markup file does not exists");
 			return null;
 		}
 	}
 
 	/**
-	 * Scrive un file di markup per salvare lo stato dell'agente, i parametri
-	 * utilizzati sono: l'ID dell'agente che sta generando il file, il puntatore
-	 * al buffer dati e la lunghezza del buffer. Al termine della scrittura il
+	 * Scrive un file di markup per salvare lo stato dell'agente, il parametro
+	 * e' il buffer di dati. Al termine della scrittura il
 	 * file viene chiuso, non e' possibile fare alcuna Append e un'ulteriore
 	 * chiamata alla WriteMarkup() comportera' la sovrascrittura del vecchio
 	 * markup. La funzione torna TRUE se e' andata a buon fine, FALSE
@@ -224,6 +223,7 @@ public class Markup {
 
 		AutoFlashFile fileRet = new AutoFlashFile(markupName, true);
 
+		// se il file esiste viene azzerato
 		fileRet.create();
 
 		if (data != null) {
@@ -235,4 +235,12 @@ public class Markup {
 
 		return true;
 	}
+	
+	/**
+	 * Crea un markup vuoto.
+	 * @return true if successful
+	 */
+	public boolean createEmptyMarkup() {        
+        return writeMarkup(null);
+    }
 }
