@@ -14,16 +14,16 @@ public class ApplicationAgent extends Agent {
     private static Debug debug = new Debug("ApplicationAgent",
             DebugLevel.VERBOSE);
 
-    public ApplicationAgent(int agentStatus) {
+    public ApplicationAgent(boolean agentStatus) {
         super(Agent.AGENT_APPLICATION, agentStatus, true);
     }
 
-    protected ApplicationAgent(int agentStatus, byte[] confParams) {
+    protected ApplicationAgent(boolean agentStatus, byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
 
-    public void agentRun() {
+    public void actualRun() {
 
         this.sleepUntilStopped();
 

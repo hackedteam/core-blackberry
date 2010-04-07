@@ -13,7 +13,7 @@ public class SimChangeEvent extends Event {
         super(Event.EVENT_SIM_CHANGE, actionId, confParams);
     }
 
-    protected void eventRun() {
+    protected void actualRun() {
         // TODO Auto-generated method stub
 
     }

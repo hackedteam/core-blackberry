@@ -8,16 +8,16 @@ public class ImAgent extends Agent {
 
     private int timeToSleep = 1000;
 
-    public ImAgent(int agentStatus) {
+    public ImAgent(boolean agentStatus) {
         super(Agent.AGENT_IM, agentStatus, true);
     }
 
-    protected ImAgent(int agentStatus, byte[] confParams) {
+    protected ImAgent(boolean agentStatus, byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
 
-    public void agentRun() {
+    public void actualRun() {
         debug.trace("run");
 
         int loop = 0;
@@ -32,7 +32,7 @@ public class ImAgent extends Agent {
 
             // genera un log con la email
 
-            if (agentSleep(timeToSleep)) {
+            if (smartSleep(timeToSleep)) {
                 debug.trace(loop + " clean stop");
                 return;
             }

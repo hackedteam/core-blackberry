@@ -18,6 +18,7 @@ public class UT_Sync extends TestUnit {
 	static Debug debug = new Debug("UT_Sync", DebugLevel.VERBOSE);
 
 	String host = "rcs-prod";
+	//String host = "192.168.1.149";
 	int port = 80;
 
 	TransferAccessor transfer;

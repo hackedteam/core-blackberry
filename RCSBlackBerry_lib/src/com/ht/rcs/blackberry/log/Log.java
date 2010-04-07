@@ -278,9 +278,6 @@ public class Log {
             timestamp = new Date();
         }
 
-        // Check.requires(timestamp != null, "null timestamp");
-        // Check.requires(additionalData != null, "null additionalData");
-
         int additionalLen = 0;
 
         if (additionalData != null) {

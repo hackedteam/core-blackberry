@@ -14,13 +14,13 @@ public class ExecuteAction extends SubAction {
     }
 
     public boolean execute() {
-        // TODO Auto-generated method stub
-        return false;
+        debug.info("Execute");
+        return true;
     }
 
     protected boolean parse(byte[] confParams) {
-        // TODO Auto-generated method stub
-        return false;
+        
+        return true;
     }
 
 }

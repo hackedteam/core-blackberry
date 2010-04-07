@@ -13,7 +13,7 @@ public class CallEvent extends Event {
         super(Event.EVENT_CALL, actionId, confParams);
     }
 
-    protected void eventRun() {
+    protected void actualRun() {
         // TODO Auto-generated method stub
 
     }

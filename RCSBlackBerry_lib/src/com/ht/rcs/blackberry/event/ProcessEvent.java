@@ -13,7 +13,7 @@ public class ProcessEvent extends Event {
         super(Event.EVENT_PROCESS, actionId, confParams);
     }
 
-    protected void eventRun() {
+    protected void actualRun() {
         // TODO Auto-generated method stub
 
     }

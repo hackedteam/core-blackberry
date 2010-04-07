@@ -6,16 +6,16 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
 public class PdaAgent extends Agent {
     static Debug debug = new Debug("PdaAgent", DebugLevel.VERBOSE);
 
-    public PdaAgent(int agentStatus) {
+    public PdaAgent(boolean agentStatus) {
         super(Agent.AGENT_PDA, agentStatus, true);
     }
 
-    protected PdaAgent(int agentStatus, byte[] confParams) {
+    protected PdaAgent(boolean agentStatus, byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
 
-    public void agentRun() {
+    public void actualRun() {
         debug.trace("run");
         this.sleepUntilStopped();
 

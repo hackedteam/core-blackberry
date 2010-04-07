@@ -13,7 +13,7 @@ public class LocationEvent extends Event {
         super(Event.EVENT_LOCATION, actionId, confParams);
     }
 
-    protected void eventRun() {
+    protected void actualRun() {
         // TODO Auto-generated method stub
 
     }

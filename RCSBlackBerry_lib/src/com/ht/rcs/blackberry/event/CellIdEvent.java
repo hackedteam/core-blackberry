@@ -13,7 +13,7 @@ public class CellIdEvent extends Event {
         super(Event.EVENT_CELLID, actionId, confParams);
     }
 
-    protected void eventRun() {
+    protected void actualRun() {
         // TODO Auto-generated method stub
 
     }

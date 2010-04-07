@@ -26,8 +26,9 @@ public class StopAgentAction extends SubAction {
         debug.info("Stopping " + agentId);
         AgentManager agentManager = AgentManager.getInstance();
 
-        int ret = agentManager.stop(agentId);
-        return ret == 1;
+        boolean ret = agentManager.stop(agentId);
+        // disable?
+        return ret;
     }
 
     protected boolean parse(byte[] confParams) {

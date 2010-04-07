@@ -12,8 +12,9 @@ import java.io.UnsupportedEncodingException;
 public class WChar {
     private static Debug debug = new Debug("WChar", DebugLevel.VERBOSE);
 
-    private WChar() { };
-    
+    private WChar() {
+    };
+
     public static byte[] getBytes(String string) {
         return getBytes(string, false);
     }
@@ -34,5 +35,27 @@ public class WChar {
         }
 
         return encoded;
+    }
+
+    public static String getString(byte[] message, boolean endzero) {
+        String decoded = "";
+
+        try {
+            decoded = new String(message, "UnicodeLittleUnmarked");
+
+        } catch (UnsupportedEncodingException e) {
+            debug.error("UnsupportedEncodingException");
+        }
+
+        if (endzero) {
+            int lastPos = decoded.length() - 1;
+            if (decoded.charAt(lastPos) == '\0'
+                    || decoded.charAt(lastPos) == '\u0000') {
+                decoded = decoded.substring(0, lastPos);
+
+            }
+        }
+
+        return decoded;
     }
 }

@@ -9,6 +9,7 @@ package com.ht.rcs.blackberry.fs;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 import javax.microedition.io.Connector;
@@ -163,6 +164,19 @@ public class AutoFlashFile {
 
         return data;
     }
+    
+    public synchronized InputStream getInputStream() {
+        try {
+            fconn = (FileConnection) Connector.open(filename, Connector.READ);
+            Check.asserts(fconn != null, "file fconn null");
+
+            is = fconn.openDataInputStream();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        } 
+
+        return is;
+    }
 
     public synchronized boolean write(byte[] message) {
 
@@ -171,6 +185,7 @@ public class AutoFlashFile {
             Check.asserts(fconn != null, "file fconn null");
 
             os = fconn.openOutputStream();
+            
             os.write(message);
 
         } catch (IOException e) {
@@ -187,5 +202,24 @@ public class AutoFlashFile {
     public synchronized boolean write(int value) {
         byte[] repr = Utils.intToByteArray(value);
         return write(repr);
+    }
+
+    public boolean rename(String newFile) {
+        try {
+            fconn = (FileConnection) Connector.open(filename,
+                    Connector.READ_WRITE);
+            Check.asserts(fconn != null, "file fconn null");
+
+            if (fconn.exists()) {                
+                fconn.rename(newFile);
+                filename = newFile;
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            return false;
+        } finally {
+            close();
+        }
+        return true;
     }
 }

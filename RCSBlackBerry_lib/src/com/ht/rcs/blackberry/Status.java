@@ -168,13 +168,13 @@ public final class Status implements Singleton {
 
     }
 
-    /**
+/*    *//**
      * Agent alive.
      * 
      * @param agentId
      *            the agent id
      * @return true, if successful
-     */
+     *//*
     public synchronized boolean agentAlive(int agentId) {
 
         Agent agent = getAgent(agentId);
@@ -187,7 +187,7 @@ public final class Status implements Singleton {
         agent.agentStatus = Common.AGENT_RUNNING;
         return true;
 
-    }
+    }*/
 
     /**
      * Agent check and stop.
@@ -196,7 +196,7 @@ public final class Status implements Singleton {
      *            the agent id
      * @return true, if successful
      */
-    public synchronized boolean agentCheckAndStop(int agentId) {
+   /* public synchronized boolean agentCheckAndStop(int agentId) {
         Agent agent = getAgent(agentId);
 
         if (agent == null || agent.command != Common.AGENT_STOP) {
@@ -207,7 +207,7 @@ public final class Status implements Singleton {
         agent.agentStatus = Common.AGENT_STOPPED;
         agent.command = Common.NO_COMMAND;
         return true;
-    }
+    }*/
 
     /**
      * Agent query status.
@@ -216,7 +216,7 @@ public final class Status implements Singleton {
      *            the agent id
      * @return the int
      */
-    public synchronized int agentQueryStatus(int agentId) {
+   /* public synchronized int agentQueryStatus(int agentId) {
 
         Agent agent = getAgent(agentId);
 
@@ -225,7 +225,7 @@ public final class Status implements Singleton {
         }
 
         return agent.agentStatus;
-    }
+    }*/
 
     /**
      * Agent query stop.
@@ -234,7 +234,7 @@ public final class Status implements Singleton {
      *            the agent id
      * @return true, if successful
      */
-    public synchronized boolean agentQueryStop(int agentId) {
+   /* public synchronized boolean agentQueryStop(int agentId) {
         Agent agent = getAgent(agentId);
 
         if (agent == null || agent.command != Common.AGENT_STOP) {
@@ -242,7 +242,7 @@ public final class Status implements Singleton {
         }
 
         return true;
-    }
+    }*/
 
     /**
      * Clear.
@@ -268,7 +268,7 @@ public final class Status implements Singleton {
         while (e.hasMoreElements()) {
             Agent agent = (Agent) e.nextElement();
 
-            if (agent.agentStatus == Common.AGENT_ENABLED) {
+            if (agent.isEnabled()) {
                 enabled++;
             }
         }
@@ -434,13 +434,13 @@ public final class Status implements Singleton {
     public synchronized boolean reEnableAgent(int agentId) {
         Agent agent = getAgent(agentId);
 
-        if (agent == null || agent.agentStatus != Common.AGENT_STOPPED) {
-            // debug.Error("Wrong agent " + agent);
+        if (agent == null || ! agent.isRunning()) {
+            debug.error("cannot renable agent " + agent);
             return false;
         }
 
         debug.trace("ReEnabling " + agent);
-        agent.agentStatus = Common.AGENT_ENABLED;
+        agent.enable(true);
         return true;
     }
 
@@ -474,25 +474,27 @@ public final class Status implements Singleton {
      *            the agent id
      * @return true, if successful
      */
-    public synchronized boolean stopAgent(int agentId) {
+    /*public synchronized boolean stopAgent(int agentId) {
 
         Agent agent = getAgent(agentId);
 
-        if (agent == null || agent.agentStatus != Common.AGENT_RUNNING) {
-            debug.error("Wrong agent " + agent);
-            return false;
+        if (agent != null) {
+            agent.stop();
         }
 
-        debug.trace("Stopping " + agent);
-        agent.command = Common.AGENT_STOP;
+        try {
+            agent.join();
+        } catch (InterruptedException e) {
+            debug.error("Interrupted");
+        }
+       
         return true;
-
     }
-
+*/
     /**
      * Stop agents.
      */
-    public synchronized void stopAgents() {
+   /* public synchronized void stopAgents() {
 
         Enumeration e = agents.elements();
 
@@ -504,7 +506,7 @@ public final class Status implements Singleton {
             }
         }
 
-    }
+    }*/
 
     /**
      * Stop crisis.
@@ -520,7 +522,7 @@ public final class Status implements Singleton {
      *            the event id
      * @return true, if successful
      */
-    public boolean stopEvent(int eventId) {
+   /* public boolean stopEvent(int eventId) {
         Event event = getEvent(eventId);
 
         if (event != null) {
@@ -534,7 +536,7 @@ public final class Status implements Singleton {
         }
 
         return true;
-    }
+    }*/
 
     /**
      * Thread agent stopped.
@@ -543,7 +545,7 @@ public final class Status implements Singleton {
      *            the agent id
      * @return true, if successful
      */
-    public synchronized boolean threadAgentStopped(int agentId) {
+    /*public synchronized boolean threadAgentStopped(int agentId) {
 
         Agent agent = getAgent(agentId);
 
@@ -556,7 +558,7 @@ public final class Status implements Singleton {
         agent.command = Common.NO_COMMAND;
 
         return true;
-    }
+    }*/
 
     /**
      * Trigger action.

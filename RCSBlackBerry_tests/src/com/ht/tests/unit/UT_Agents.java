@@ -30,25 +30,33 @@ public class UT_Agents extends TestUnit {
 		status.clear();
 		AgentManager agentManager = AgentManager.getInstance();
 
-		Agent agent = Agent.factory(Agent.AGENT_DEVICE, Common.AGENT_ENABLED,
-				null);
+		Agent agent = Agent.factory(Agent.AGENT_DEVICE, true, null);
 		AssertNotNull(agent, "Agent");
 
 		status.addAgent(agent);
 
-		AssertEquals(agent.agentStatus, Common.AGENT_ENABLED,
-				"Agent not Enabled 1");
+		AssertThat(agent.isEnabled(), "Agent not Enabled 1");
 
+		// start all
 		agentManager.startAll();
 		Utils.sleep(400);
 
-		AssertEquals(agent.agentStatus, Common.AGENT_RUNNING,
-				"Agent not Running 1");
+		AssertThat(agent.isRunning(),"Agent not Running 1");
+		
+		//restart
+		agentManager.reStart(agent.agentId);
+
+		Utils.sleep(400);
+		AssertThat(agent.isEnabled(), "Agent not Enabled 2");
+		AssertThat(agent.isRunning(), "Agent still running");
+		
+		// stop all
 		agentManager.stopAll();
 
 		Utils.sleep(400);
-		AssertEquals(agent.agentStatus, Common.AGENT_ENABLED,
-				"Agent not Enabled 2");
+		AssertThat(agent.isEnabled(), "Agent not Enabled 2");
+		AssertThat(!agent.isRunning(), "Agent still running");
+						
 
 		return true;
 	}
@@ -63,11 +71,9 @@ public class UT_Agents extends TestUnit {
 
 		// genero due agenti, di cui uno disabled
 		debug.trace("agent");
-		Agent agentDevice = Agent.factory(Agent.AGENT_DEVICE,
-				Common.AGENT_ENABLED, null);
+		Agent agentDevice = Agent.factory(Agent.AGENT_DEVICE, true, null);
 		status.addAgent(agentDevice);
-		Agent agentPosition = Agent.factory(Agent.AGENT_POSITION,
-				Common.AGENT_DISABLED, null);
+		Agent agentPosition = Agent.factory(Agent.AGENT_POSITION, false, null);
 		status.addAgent(agentPosition);
 
 		// eseguo gli agenti
@@ -77,10 +83,8 @@ public class UT_Agents extends TestUnit {
 
 		// verifico che uno solo parta
 		debug.trace("one running");
-		AssertEquals(agentDevice.agentStatus, Common.AGENT_RUNNING,
-				"Agent not Running 2");
-		AssertEquals(agentPosition.agentStatus, Common.AGENT_DISABLED,
-				"Agent not disabled 1");
+		AssertThat(agentDevice.isRunning(), "Agent not Running 2");
+		AssertThat(!agentPosition.isEnabled(), "Agent not disabled 1");
 
 		// Creo azione 0 che fa partire l'agent position
 		debug.trace("action 0");
@@ -112,7 +116,7 @@ public class UT_Agents extends TestUnit {
 		AssertThat(!event0.isRunning(), "Event0 running");
 		AssertThat(!event1.isRunning(), "Event1 running");
 
-		// lancio i thread deglie venti
+		// lancio i thread degli eventi
 		debug.trace("start event");
 		eventManager.startAll();
 
@@ -132,10 +136,9 @@ public class UT_Agents extends TestUnit {
 		ExecuteAction(action0);
 		Utils.sleep(500);
 
-		AssertEquals(agentDevice.agentStatus, Common.AGENT_RUNNING,
-				"Agent not Running 3 ");
-		AssertEquals(agentPosition.agentStatus, Common.AGENT_RUNNING,
-				"Agent not Running 4");
+		AssertThat(agentDevice.isRunning(),"Agent not Running 3");
+		AssertThat(agentPosition.isRunning(),"Agent not Running 4");
+
 
 		// verifica che dopo 2 secondi l'azione 1 sia triggered
 		Utils.sleep(2000);
@@ -146,10 +149,10 @@ public class UT_Agents extends TestUnit {
 		debug.trace("action 1");
 		ExecuteAction(action1);
 		Utils.sleep(500);
-		AssertEquals(agentDevice.agentStatus, Common.AGENT_RUNNING,
-				"Agent not Running 5");
-		AssertEquals(agentPosition.agentStatus, Common.AGENT_ENABLED,
-				"Agent not enabled 1");
+
+		AssertThat(agentDevice.isRunning(),"Agent not Running 5");
+		AssertThat(agentPosition.isEnabled(),"Agent not enabled 1");
+
 
 		AssertThat(!event0.isRunning(), "Event0 running");
 		AssertThat(!event1.isRunning(), "Event1 running");
@@ -194,9 +197,10 @@ public class UT_Agents extends TestUnit {
 
 	public boolean run() throws AssertException {
 
-		AgentSnapshot();
 		StartAndStop();
-		StartStopAgent();			
+		StartStopAgent();
+
+		AgentSnapshot();
 
 		return true;
 	}
@@ -209,22 +213,21 @@ public class UT_Agents extends TestUnit {
 		AgentManager agentManager = AgentManager.getInstance();
 
 		byte[] conf = new byte[8];
-		DataBuffer databuffer = new DataBuffer(conf,0,conf.length,false);
+		DataBuffer databuffer = new DataBuffer(conf, 0, conf.length, false);
 		databuffer.writeInt(10000);
 		databuffer.writeInt(0);
-		
-		Agent agent = Agent.factory(Agent.AGENT_SNAPSHOT, Common.AGENT_ENABLED,
+
+		Agent agent = Agent.factory(Agent.AGENT_SNAPSHOT, true,
 				conf);
 		AssertNotNull(agent, "Agent");
 
 		status.addAgent(agent);
 
-		AssertEquals(agent.agentStatus, Common.AGENT_ENABLED,
-				"Agent not Enabled 1");
+		AssertThat(agent.isEnabled(),"Agent not Enabled 1");
 
 		agentManager.startAll();
 		Utils.sleep(400);
-		
+
 		agentManager.stopAll();
 	}
 

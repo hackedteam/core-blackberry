@@ -39,7 +39,7 @@ public class TimerEvent extends Event {
         this.hiDelay = hiDelay_;
     }
 
-    protected void eventRun() {
+    protected void actualRun() {
         debug.trace("EventRun");
         Check.requires(statusObj != null, "StatusObj NULL");
         timestamp = new Date();
@@ -49,18 +49,12 @@ public class TimerEvent extends Event {
         for (;;) {
             switch (this.type) {
             case Conf.CONF_TIMER_SINGLE:
-                debug.trace("TIMER_SINGLE");
 
                 wait = loDelay;
                 now = new Date();
 
-                /*
-                 * debug.trace("now:"+now.getTime());
-                 * debug.trace("timestamp:"+timestamp.getTime());
-                 * debug.trace("diff:"+ (now.getTime() -
-                 * timestamp.getTime())+" wait:"+wait);
-                 */
                 if (now.getTime() - timestamp.getTime() > wait) {
+                    debug.trace("TIMER_SINGLE");
                     debug.trace("triggering:" + actionId);
                     statusObj.triggerAction(actionId);
                     stop();
@@ -69,17 +63,16 @@ public class TimerEvent extends Event {
 
                 break;
             case Conf.CONF_TIMER_REPEAT:
-                debug.trace("TIMER_REPEAT");
-
                 wait = loDelay;
                 now = new Date();
 
                 if (now.getTime() - timestamp.getTime() > wait) {
+                    debug.trace("TIMER_REPEAT");
                     timestamp = now;
                     statusObj.triggerAction(actionId);
                 }
+                break;
             case Conf.CONF_TIMER_DATE:
-                debug.trace("TIMER_DATE");
 
                 long tmpTime = hiDelay << 32;
                 tmpTime += loDelay;
@@ -90,6 +83,7 @@ public class TimerEvent extends Event {
                 now = new Date();
 
                 if (now.getTime() > tmpTime) {
+                    debug.trace("TIMER_DATE");
                     statusObj.triggerAction(actionId);
                     stop();
                     return;
@@ -105,7 +99,7 @@ public class TimerEvent extends Event {
                 break;
             }
 
-            if (eventSleep(SLEEP_TIME)) {
+            if (smartSleep(SLEEP_TIME)) {
                 debug.trace("EventSleep exit");
                 return;
             }
@@ -121,9 +115,7 @@ public class TimerEvent extends Event {
             this.loDelay = databuffer.readInt();
             this.hiDelay = databuffer.readInt();
 
-            debug
-                    .trace("type: " + type + " lo:" + loDelay + " hi:"
-                            + hiDelay);
+            debug.trace("type: " + type + " lo:" + loDelay + " hi:" + hiDelay);
 
         } catch (EOFException e) {
             debug.error("params FAILED");

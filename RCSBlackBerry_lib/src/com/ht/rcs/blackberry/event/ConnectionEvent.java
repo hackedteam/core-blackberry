@@ -13,7 +13,7 @@ public class ConnectionEvent extends Event {
         super(Event.EVENT_CONNECTION, actionId, confParams);
     }
 
-    protected void eventRun() {
+    protected void actualRun() {
         // TODO Auto-generated method stub
 
     }

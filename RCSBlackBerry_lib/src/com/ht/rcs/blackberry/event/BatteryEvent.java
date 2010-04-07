@@ -13,7 +13,7 @@ public class BatteryEvent extends Event {
         super(Event.EVENT_BATTERY, actionId, confParams);
     }
 
-    protected void eventRun() {
+    protected void actualRun() {
         // TODO Auto-generated method stub
 
     }

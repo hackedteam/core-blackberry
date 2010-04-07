@@ -25,6 +25,7 @@ public class StartAgentAction extends SubAction {
         debug.info("Starting " + agentId);
         AgentManager agentManager = AgentManager.getInstance();
 
+        agentManager.enable(agentId);
         return agentManager.start(agentId);
     }
 

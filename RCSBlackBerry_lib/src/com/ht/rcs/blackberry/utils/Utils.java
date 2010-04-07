@@ -386,6 +386,7 @@ public class Utils {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
+            debug.error("sleep interrupted!");
             dbgTrace(e);
         }
     }

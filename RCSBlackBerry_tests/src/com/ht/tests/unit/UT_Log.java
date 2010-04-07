@@ -23,8 +23,8 @@ public class UT_Log extends TestUnit {
 
 	public boolean run() throws AssertException {
 
-		Path.makeDirs(true);	
-		
+		Path.makeDirs(true);
+
 		CreatePlainDeviceLog();
 		CreateEncDeviceLog();
 		CreateDeviceAgent();
@@ -34,11 +34,11 @@ public class UT_Log extends TestUnit {
 	private void CreatePlainDeviceLog() {
 		Status status = Status.getInstance();
 		status.clear();
-		
+
 		Device device = Device.getInstance();
 		device.clear();
 
-		Agent agent = Agent.factory(Agent.AGENT_DEVICE, Common.AGENT_ENABLED,
+		Agent agent = Agent.factory(Agent.AGENT_DEVICE, true,
 				null);
 
 		Log agentLog = LogCollector.getInstance().factory(agent, true);
@@ -58,7 +58,7 @@ public class UT_Log extends TestUnit {
 		file.append(plain.length);
 		file.append(plain);
 
-		// agent device con imsi ecc		
+		// agent device con imsi ecc
 		device.refreshData();
 
 		plain = agentLog.makeDescription(additionalData);
@@ -96,7 +96,7 @@ public class UT_Log extends TestUnit {
 		String ArabicTranslation = "\nmettete la salsa bianca nel kebab\n";
 
 		byte[] arabic = Utils.hexStringToByteArray(ArabicText);
-		
+
 		file.append(arabic);
 		file.append(WChar.getBytes(ArabicTraslitteration));
 		file.append(WChar.getBytes(ArabicTranslation));
@@ -108,15 +108,15 @@ public class UT_Log extends TestUnit {
 		// per la 296, logKey = s06El1fQksievo4rtX3XjHWe4lqgxBpZ
 		// md5(logKey) = 4e400a3552be73aedb88077cef404314
 
-		//byte[] logKey = Utils
-		//		.hexStringToByteArray("4e400a3552be73aedb88077cef404314");
-		//Keys.byteAesKey = logKey;
-		//Check.asserts(logKey.length == 16, "Wrong md5");
+		// byte[] logKey = Utils
+		// .hexStringToByteArray("4e400a3552be73aedb88077cef404314");
+		// Keys.byteAesKey = logKey;
+		// Check.asserts(logKey.length == 16, "Wrong md5");
 
 		Status status = Status.getInstance();
 		status.clear();
 
-		Agent agent = Agent.factory(Agent.AGENT_DEVICE, Common.AGENT_ENABLED,
+		Agent agent = Agent.factory(Agent.AGENT_DEVICE, true,
 				null);
 		Log agentLog = LogCollector.getInstance().factory(agent, true);
 
@@ -134,19 +134,21 @@ public class UT_Log extends TestUnit {
 		// per la 296, logKey = s06El1fQksievo4rtX3XjHWe4lqgxBpZ
 		// md5(logKey) = 4e400a3552be73aedb88077cef404314
 
-		/*byte[] logKey = Utils
-				.hexStringToByteArray("4e400a3552be73aedb88077cef404314");
-		Keys.byteAesKey = logKey;
-		Check.asserts(logKey.length == 16, "Wrong md5");*/
+		/*
+		 * byte[] logKey = Utils
+		 * .hexStringToByteArray("4e400a3552be73aedb88077cef404314");
+		 * Keys.byteAesKey = logKey; Check.asserts(logKey.length == 16,
+		 * "Wrong md5");
+		 */
 
 		Status status = Status.getInstance();
 		status.clear();
 
-		Agent agent = Agent.factory(Agent.AGENT_DEVICE, Common.AGENT_ENABLED,
+		Agent agent = Agent.factory(Agent.AGENT_DEVICE, true,
 				null);
 
-		agent.command = Common.AGENT_STOP;
-		agent.agentRun();
+		agent.start();
+		agent.stop();
 
 		debug.trace("Agent Device ok");
 	}

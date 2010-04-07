@@ -7,7 +7,7 @@
   <Compile OutputCompilerMessages="false" ConvertImages="true" CreateWarningForNoExportedRoutine="true" CompressResources="false" AliasList="">
     <PreprocessorDefines/>
   </Compile>
-  <Packaging OutputFileName="RCSBlackBerry_lib" OutputFolder="deliverables/4.5.0" PreBuildStep="" PostBuildStep="" CleanStep="" GenerateALXFile="false">
+  <Packaging OutputFileName="RCSBlackBerry_lib" OutputFolder="deliverables/4.5.0" PreBuildStep="" PostBuildStep="" CleanStep="" GenerateALXFile="true">
     <AlxFiles/>
   </Packaging>
   <HiddenProperties>

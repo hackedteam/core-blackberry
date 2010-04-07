@@ -68,6 +68,7 @@ public class Task {
         Utils.sleep(1000);
 
         for (;;) {
+            //debug.trace("checkActions");
             Vector actions = this.status.getActionsList();
 
             for (int i = 0; i < actions.size(); i++) {
@@ -149,7 +150,7 @@ public class Task {
             return false;
         }
 
-        debug.trace("TaskInit - agents started");
+        debug.info("TaskInit - agents started");
         return true;
     }
 }

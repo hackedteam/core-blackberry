@@ -14,7 +14,7 @@ public class DeviceInfoAgent extends Agent {
 
     Device device;
 
-    public DeviceInfoAgent(int agentStatus) {
+    public DeviceInfoAgent(boolean agentStatus) {
         super(AGENT_DEVICE, agentStatus, true);
         Check.asserts(Log.convertTypeLog(this.agentId) == Log.LOGTYPE_DEVICE,
                 "Wrong Conversion");
@@ -22,12 +22,12 @@ public class DeviceInfoAgent extends Agent {
         device = Device.getInstance();
     }
 
-    protected DeviceInfoAgent(int agentStatus, byte[] confParams) {
+    protected DeviceInfoAgent(boolean agentStatus, byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
 
-    public void agentRun() {
+    public void actualRun() {
         debug.trace("run");
 
         Check.requires(log != null, "Null log");
