@@ -1,10 +1,20 @@
 package com.ht.tests.unit;
 
+import java.util.Date;
+
+import net.rim.device.api.crypto.AESDecryptorEngine;
+import net.rim.device.api.crypto.AESEncryptorEngine;
+import net.rim.device.api.crypto.AESKey;
+import net.rim.device.api.crypto.CryptoTokenException;
+import net.rim.device.api.crypto.CryptoUnsupportedOperationException;
 import net.rim.device.api.util.Arrays;
 
+import com.ht.rcs.blackberry.crypto.CryptoEngine;
 import com.ht.rcs.blackberry.crypto.Encryption;
 import com.ht.rcs.blackberry.crypto.Rijndael;
+import com.ht.rcs.blackberry.crypto.RimAES;
 import com.ht.rcs.blackberry.utils.Check;
+import com.ht.rcs.blackberry.utils.Utils;
 import com.ht.tests.AssertException;
 import com.ht.tests.TestUnit;
 import com.ht.tests.Tests;
@@ -186,6 +196,113 @@ public class UT_Crypto extends TestUnit {
 			Check.asserts(n>=0, "Wrong n");
 		}
 	}
+	
+	private void SpeedTest() throws AssertException {
+		
+		
+
+		// i valori seguenti sono stati presi dal paper che descriveva il
+		// rijandael per aes
+		byte[] key = new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
+				0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
+		byte[] plain = new byte[] { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66,
+				0x77, (byte) 0x88, (byte) 0x99, (byte) 0xaa, (byte) 0xbb,
+				(byte) 0xcc, (byte) 0xdd, (byte) 0xee, (byte) 0xff };
+		byte[] cyphered = new byte[] { 0x69, (byte) 0xc4, (byte) 0xe0,
+				(byte) 0xd8, 0x6a, 0x7b, 0x04, 0x30, (byte) 0xd8, (byte) 0xcd,
+				(byte) 0xb7, (byte) 0x80, 0x70, (byte) 0xb4, (byte) 0xc5, 0x5a };
+
+
+		// ALGO java
+		CryptoEngine crypto = new Rijndael();
+		// generazione delle chiave
+		crypto.makeKey(key, 128);
+		byte[] buffer = new byte[16];
+		
+		Date before = new Date();
+		
+		
+		for(int i = 0; i < 10000; i++)
+		{					
+			try {
+				// cifratura
+				crypto.encrypt(plain, buffer);
+				// decifro
+				crypto.decrypt(cyphered, buffer);
+			} catch (CryptoTokenException e) {
+				// TODO Auto-generated catch block
+				throw new AssertException();
+			}	
+						
+		}
+		AssertThat(Arrays.equals(buffer, plain), "Encryption decrypt");
+		
+		Date after = new Date();
+		long elapsed_1 = Utils.dateDiff(after,before);
+		
+		
+		// ALGO RimAES
+		crypto = new RimAES();
+		// generazione delle chiave
+		crypto.makeKey(key, 128);
+		buffer = new byte[16];
+		
+		before = new Date();
+		for(int i = 0; i < 10000; i++)
+		{
+			try {
+				// cifratura
+				crypto.encrypt(plain, buffer);
+				// decifro
+				crypto.decrypt(cyphered, buffer);
+			} catch (CryptoTokenException e) {
+				// TODO Auto-generated catch block
+				throw new AssertException();
+			}	
+		}
+		AssertThat(Arrays.equals(buffer, plain), "Encryption decrypt");
+		
+		after = new Date();
+		long elapsed_2 = Utils.dateDiff(after,before);
+		
+		// ALGO rim
+		AESKey aeskey = new AESKey(key,0,128);
+		AESEncryptorEngine aesencrypt;
+		AESDecryptorEngine aesdecrypt;
+		try {
+			aesencrypt = new AESEncryptorEngine(aeskey);
+			aesdecrypt = new AESDecryptorEngine(aeskey);
+
+		} catch (CryptoTokenException e) {
+			throw new AssertException();
+		} catch (CryptoUnsupportedOperationException e) {
+			throw new AssertException();
+		}
+		
+		before = new Date();
+		for(int i = 0; i < 10000; i++)
+		{						
+			try {
+				// cifratura
+				aesencrypt.encrypt(plain, 0, buffer, 0);
+				// decifratura
+				aesdecrypt.decrypt(cyphered, 0, buffer, 0);
+			} catch (CryptoTokenException e) {
+				throw new AssertException();
+			}				
+		}
+		
+		AssertThat(Arrays.equals(buffer, plain), "Encryption decrypt");
+		
+		after = new Date();
+		long elapsed_3 = Utils.dateDiff(after,before);
+		
+		debug.info("JAVA    1: "+ elapsed_1);
+		debug.info("RIMWRAP 2: "+ elapsed_2);
+		debug.info("RIM     3: "+ elapsed_3);
+		debug.trace("end test");
+		
+	}
 
 	public boolean run() throws AssertException {
 		MultipleTest();
@@ -193,7 +310,10 @@ public class UT_Crypto extends TestUnit {
 		CBCTest();
 		EncryptTest();
 		ScrambleTest();
+		SpeedTest();
+		
 		return true;
 	}
 
+	
 }

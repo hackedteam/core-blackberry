@@ -254,7 +254,7 @@ public class UT_Agents extends TestUnit {
 		// restartAgent2
 		agentManager.reStart(agent2.agentId);
 		
-		Utils.sleep(1000);
+		Utils.sleep(2000);
 		
 		AssertEquals(agent1.getRunningLoops(), 0, "Agent1.runningLoops should be 0");
 		AssertEquals(agent2.getRunningLoops(), 2, "Agent2.runningLoops should be 2");
@@ -271,7 +271,7 @@ public class UT_Agents extends TestUnit {
 		// restartAgent3
 		agentManager.reStart(agent3.agentId);
 		
-		Utils.sleep(1000);
+		Utils.sleep(2000);
 		
 		AssertEquals(agent1.getRunningLoops(), 0, "Agent1.runningLoops should be 0");
 		AssertEquals(agent2.getRunningLoops(), 2, "Agent2.runningLoops should be 2");
