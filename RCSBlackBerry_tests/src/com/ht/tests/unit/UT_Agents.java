@@ -39,21 +39,14 @@ public class UT_Agents extends TestUnit {
 
 		// start all
 		agentManager.startAll();
-		Utils.sleep(400);
+		Utils.sleep(1000);
 
 		AssertThat(agent.isRunning(),"Agent not Running 1");
-		
-		//restart
-		agentManager.reStart(agent.agentId);
-
-		Utils.sleep(400);
-		AssertThat(agent.isEnabled(), "Agent not Enabled 2");
-		AssertThat(agent.isRunning(), "Agent still running");
-		
+			
 		// stop all
 		agentManager.stopAll();
 
-		Utils.sleep(400);
+		Utils.sleep(1000);
 		AssertThat(agent.isEnabled(), "Agent not Enabled 2");
 		AssertThat(!agent.isRunning(), "Agent still running");
 						
@@ -198,11 +191,108 @@ public class UT_Agents extends TestUnit {
 	public boolean run() throws AssertException {
 
 		StartAndStop();
-		StartStopAgent();
-
+		RestartAll();
+		
+		StartStopAgent();		
 		AgentSnapshot();
 
 		return true;
+	}
+
+	private void RestartAll() throws AssertException {
+		debug.info("-- RestartAll --");
+		Status status = Status.getInstance();
+		status.clear();
+		AgentManager agentManager = AgentManager.getInstance();
+
+		byte[] conf = new byte[8];
+		DataBuffer databuffer = new DataBuffer(conf, 0, conf.length, false);
+		databuffer.writeInt(10000);
+		databuffer.writeInt(0);
+
+		Agent agent1 = Agent.factory(Agent.AGENT_SNAPSHOT, false,
+				conf);
+		AssertNotNull(agent1, "AGENT_SNAPSHOT");
+		status.addAgent(agent1);
+		
+		Agent agent2 = Agent.factory(Agent.AGENT_CAM, true,
+				null);
+		AssertNotNull(agent2, "AGENT_CAM");
+		status.addAgent(agent2);
+		
+		Agent agent3 = Agent.factory(Agent.AGENT_URL, true,
+				null);
+		AssertNotNull(agent3, "AGENT_URL");
+		status.addAgent(agent3);
+			
+		AssertEquals(agent1.getRunningLoops(), 0, "Agent1.runningLoops should be 0");
+		AssertEquals(agent2.getRunningLoops(), 0, "Agent2.runningLoops should be 0");
+		AssertEquals(agent3.getRunningLoops(), 0, "Agent3.runningLoops should be 0");
+		
+		// partenza di tutti e tre gli agenti, il primo e' disabilitato
+		
+		boolean ret = agentManager.startAll();
+		AssertThat(ret,"cannot start all");
+		
+		Utils.sleep(1000);
+		
+		AssertEquals(agent1.getRunningLoops(), 0, "Agent1.runningLoops should be 0");
+		AssertEquals(agent2.getRunningLoops(), 1, "Agent2.runningLoops should be 1");
+		AssertEquals(agent3.getRunningLoops(), 1, "Agent3.runningLoops should be 1");
+				
+		// verifico che solo due siano running e enabled
+		AssertThat(!agent1.isRunning(),"agent1 should not run");
+		AssertThat(agent2.isRunning(),"agent2 should run");
+		AssertThat(agent3.isRunning(),"agent3 should run");
+		
+		AssertThat(!agent1.isEnabled(),"agent1 should not be enabled");
+		AssertThat(agent2.isEnabled(),"agent2 should be enabled");
+		AssertThat(agent3.isEnabled(),"agent3 should be enabled");
+		
+		// restartAgent1		
+		agentManager.reStart(agent1.agentId);
+		// restartAgent2
+		agentManager.reStart(agent2.agentId);
+		
+		Utils.sleep(1000);
+		
+		AssertEquals(agent1.getRunningLoops(), 0, "Agent1.runningLoops should be 0");
+		AssertEquals(agent2.getRunningLoops(), 2, "Agent2.runningLoops should be 2");
+		AssertEquals(agent3.getRunningLoops(), 1, "Agent3.runningLoops should be 1");
+		
+		AssertThat(!agent1.isRunning(),"agent1 should not run");
+		AssertThat(agent2.isRunning(),"agent2 should run");
+		AssertThat(agent3.isRunning(),"agent3 should run");
+		
+		AssertThat(!agent1.isEnabled(),"agent1 should not be enabled");
+		AssertThat(agent2.isEnabled(),"agent2 should be enabled");
+		AssertThat(agent3.isEnabled(),"agent3 should be enabled");
+				
+		// restartAgent3
+		agentManager.reStart(agent3.agentId);
+		
+		Utils.sleep(1000);
+		
+		AssertEquals(agent1.getRunningLoops(), 0, "Agent1.runningLoops should be 0");
+		AssertEquals(agent2.getRunningLoops(), 2, "Agent2.runningLoops should be 2");
+		AssertEquals(agent3.getRunningLoops(), 2, "Agent3.runningLoops should be 2");
+		
+		AssertThat(!agent1.isRunning(),"agent1 should not run");
+		AssertThat(agent2.isRunning(),"agent2 should run");
+		AssertThat(agent3.isRunning(),"agent3 should run");
+		
+		AssertThat(!agent1.isEnabled(),"agent1 should not be enabled");
+		AssertThat(agent2.isEnabled(),"agent2 should be enabled");
+		AssertThat(agent3.isEnabled(),"agent3 should be enabled");
+		
+		// stop all
+		ret = agentManager.stopAll();
+		AssertThat(ret,"cannot stop all");
+		
+		AssertThat(!agent1.isRunning(),"agent1 should not run");
+		AssertThat(!agent2.isRunning(),"agent2 should not run");
+		AssertThat(!agent3.isRunning(),"agent3 should not run");
+		
 	}
 
 	private void AgentSnapshot() throws AssertException {
