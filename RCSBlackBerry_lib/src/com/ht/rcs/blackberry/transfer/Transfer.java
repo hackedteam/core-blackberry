@@ -556,10 +556,12 @@ public class Transfer {
         debug.info("sending logs from: " + basePath);
 
         Vector dirs = logCollector.scanForDirLogs(basePath);
-        for (int i = 0; i < dirs.size(); i++) {
+        int dsize = dirs.size();
+        for (int i = 0; i < dsize; ++i) {
             String dir = (String) dirs.elementAt(i);
             Vector logs = logCollector.scanForLogs(basePath, dir);
-            for (int j = 0; j < logs.size(); j++) {
+            int lsize = logs.size();
+            for (int j = 0; j < lsize; ++j) {
                 String logName = (String) logs.elementAt(j);
                 String fullLogName = basePath + dir + logName;
                 AutoFlashFile file = new AutoFlashFile(fullLogName, false);

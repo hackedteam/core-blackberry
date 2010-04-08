@@ -111,6 +111,7 @@ public class LogCollector implements Singleton {
         logProgressive++;
         logProgressivePersistent.setContents(new Integer(logProgressive));
 
+        debug.trace("Progressive: "+logProgressive);
         return logProgressive;
     }
 
@@ -164,7 +165,7 @@ public class LogCollector implements Singleton {
         String basePath = onSD ? Path.SD_PATH : Path.USER_PATH;
 
         String blockDir = "_" + (progressive / LOG_PER_DIRECTORY);
-        String fileName = this.makeDateName(timestamp);
+        String fileName = progressive+"!"+this.makeDateName(timestamp);
 
         String encName = Encryption.encryptName(fileName + LOG_EXTENSION, keys
                 .getChallengeKey()[0]);
@@ -188,7 +189,8 @@ public class LogCollector implements Singleton {
         Vector allLogs = new Vector();
 
         Vector dirs = scanForDirLogs(basePath);
-        for (int i = 0; i < dirs.size(); i++) {
+        int size = dirs.size();
+        for (int i = 0; i < size; ++i) {
             String dir = (String) dirs.elementAt(i);
             Vector logs = scanForLogs(basePath, dir);
             allLogs.addElement(logs);

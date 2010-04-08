@@ -10,32 +10,39 @@ package com.ht.rcs.blackberry.utils;
 public class Check {
     private static Debug debug = new Debug("Check", DebugLevel.VERBOSE);
 
-    private Check() { };
-    
+    private Check() {
+    };
+
     public static boolean enabled = true;
 
     public static void asserts(boolean expr, String message) {
+        //#mdebug
         if (enabled == true) {
             if (expr == false) {
                 debug.fatal("ASSERT " + message);
             }
         }
+        //#enddebug
     }
 
     public static void ensures(boolean expr, String message) {
+        //#mdebug
         if (enabled == true) {
             if (expr == false) {
                 debug.fatal("ENSURE " + message);
             }
         }
+        //#enddebug
     }
 
     public static void requires(boolean expr, String message) {
+        //#mdebug
         if (enabled == true) {
             if (expr == false) {
                 debug.fatal("REQUIRE " + message);
             }
         }
+        //#enddebug
     }
 
 }

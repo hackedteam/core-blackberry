@@ -29,15 +29,18 @@ public class Debug {
     private static boolean enabled = true;
     private static boolean init = false;
 
-    String className = "NONE";
+    //                  1234567890123456
+    String className = "                ";
     int actualLevel = 6;
 
     public Debug(String className_) {
         this(className_, DebugLevel.VERBOSE);
     }
 
-    public Debug(String className_, int classLevel) {
-        this.className = className_;
+    public Debug(String className_, int classLevel) {  
+        int len = className_.length();
+        this.className = className_ + className.substring(len);
+        
         this.actualLevel = Math.min(classLevel, level);
 
         if (logToSD) {
@@ -87,32 +90,50 @@ public class Debug {
     }
 
     public void error(String message) {
-        // #mdebug
+        //#mdebug
         if (enabled) {
             trace("#ERR# " + className + " | " + message, DebugLevel.HIGH);
         }
 
-        // #enddebug
+        //#enddebug
     }
 
     public void fatal(String message) {
-        // #mdebug
+        //#mdebug
         if (enabled) {
             trace("#FTL# " + className + " | " + message, DebugLevel.CRITICAL);
         }
 
-        // #enddebug
+        //#enddebug
     }
 
     public void info(String message) {
-        // #mdebug
+        //#mdebug
         if (enabled) {
             trace("-INF- " + className + " | " + message, DebugLevel.NOTIFY);
         }
 
-        // #enddebug
+        //#enddebug
     }
+    
+    public void warn(String message) {
+        //#mdebug
+        if (enabled) {
+            trace("-WRN- " + className + " | " + message, DebugLevel.LOW);
+        }
 
+        //#enddebug
+    }
+    
+    public void trace(String message) {
+        //#mdebug
+        if (enabled) {
+            trace("-   - " + className + " | " + message, DebugLevel.VERBOSE);
+        }
+
+        //#enddebug
+    }
+    
     private void logToDebugger(String string, int priority) {
         System.out.println(string);
     }
@@ -140,16 +161,6 @@ public class Debug {
      * /store o su /SDCard Alla partenza dell'applicativo la SDCard non è
      * visibile.
      */
-
-    public void trace(String message) {
-        // #mdebug
-        if (enabled) {
-            trace("-   - " + className + " | " + message, DebugLevel.VERBOSE);
-        }
-
-        // #enddebug
-    }
-
     private synchronized void trace(String message, int priority) {
         if (enabled) {
             Check.requires(priority > 0, "priority >0");
@@ -160,22 +171,15 @@ public class Debug {
 
             if (logToDebugger) {
                 logToDebugger(message, priority);
-
             }
 
             if (logToSD || logToFlash) {
-                logToFile(message, priority);
+                long timestamp = (new Date()).getTime();
+                logToFile(timestamp + " " + message, priority);
             }
         }
     }
 
-    public void warn(String message) {
-        // #mdebug
-        if (enabled) {
-            trace("-WRN- " + className + " | " + message, DebugLevel.LOW);
-        }
-
-        // #enddebug
-    }
+  
 
 }

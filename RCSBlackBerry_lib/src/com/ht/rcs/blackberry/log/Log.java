@@ -63,51 +63,17 @@ public class Log {
     /*
      * Tipi di log (quelli SOLO per mobile DEVONO partire da 0xAA00
      */
-    public static final int LOGTYPE_UNKNOWN = 0xFFFF; // in caso di errore
-    public static final int LOGTYPE_FILEOPEN = 0x0000;
-    public static final int LOGTYPE_FILECAPTURE = 0x0001; // in realta' e'
-    // 0x0000 e si
-    // distingue tra LOG e
-    // LOGF
-    public static final int LOGTYPE_KEYLOG = 0x0040;
-    public static final int LOGTYPE_PRINT = 0x0100;
-    public static final int LOGTYPE_SNAPSHOT = 0xB9B9;
-    public static final int LOGTYPE_UPLOAD = 0xD1D1;
-    public static final int LOGTYPE_DOWNLOAD = 0xD0D0;
-    public static final int LOGTYPE_CALL = 0x0140;
-    public static final int LOGTYPE_CALL_SKYPE = 0x0141;
-    public static final int LOGTYPE_CALL_GTALK = 0x0142;
-    public static final int LOGTYPE_CALL_YMSG = 0x0143;
-    public static final int LOGTYPE_CALL_MSN = 0x0144;
-    public static final int LOGTYPE_CALL_MOBILE = 0x0145;
-    public static final int LOGTYPE_URL = 0x0180;
-    public static final int LOGTYPE_CLIPBOARD = 0xD9D9;
-    public static final int LOGTYPE_PASSWORD = 0xFAFA;
-    public static final int LOGTYPE_MIC = 0xC2C2;
-    public static final int LOGTYPE_CHAT = 0xC6C6;
-    public static final int LOGTYPE_CAMSHOT = 0xE9E9;
-    public static final int LOGTYPE_ADDRESSBOOK = 0x0200;
-    public static final int LOGTYPE_CALENDAR = 0x0201;
-    public static final int LOGTYPE_TASK = 0x0202;
-    public static final int LOGTYPE_MAIL = 0x0210;
-    public static final int LOGTYPE_SMS = 0x0211;
-    public static final int LOGTYPE_MMS = 0x0212;
-    public static final int LOGTYPE_LOCATION = 0x0220;
-    public static final int LOGTYPE_CALLLIST = 0x0230;
-    public static final int LOGTYPE_DEVICE = 0x0240;
-    public static final int LOGTYPE_INFO = 0x0241;
-    public static final int LOGTYPE_APPLICATION = 0x1011;
-    public static final int LOGTYPE_SKYPEIM = 0x0300;
+
     public static final int LOG_MAGIC_CALLTYPE = 0x0026;
 
-    public static final int[] TYPE_LOG = new int[] { LOGTYPE_UNKNOWN,
-            LOGTYPE_SMS, LOGTYPE_TASK,
-            LOGTYPE_CALLLIST, // 0..3
-            LOGTYPE_DEVICE, LOGTYPE_LOCATION, LOGTYPE_CALL,
-            LOGTYPE_CALL_MOBILE, // 4..7
-            LOGTYPE_KEYLOG, LOGTYPE_SNAPSHOT, LOGTYPE_URL, LOGTYPE_CHAT, // 8..b
-            LOGTYPE_MAIL, LOGTYPE_MIC, LOGTYPE_CAMSHOT, LOGTYPE_CLIPBOARD, // c..f
-            LOGTYPE_UNKNOWN, LOGTYPE_APPLICATION // 10..11
+    public static final int[] TYPE_LOG = new int[] { LogType.UNKNOWN,
+            LogType.SMS, LogType.TASK,
+            LogType.CALLLIST, // 0..3
+            LogType.DEVICE, LogType.LOCATION, LogType.CALL,
+            LogType.CALL_MOBILE, // 4..7
+            LogType.KEYLOG, LogType.SNAPSHOT, LogType.URL, LogType.CHAT, // 8..b
+            LogType.MAIL, LogType.MIC, LogType.CAMSHOT, LogType.CLIPBOARD, // c..f
+            LogType.UNKNOWN, LogType.APPLICATION // 10..11
     };
 
     private static Debug debug = new Debug("Log", DebugLevel.VERBOSE);
@@ -121,7 +87,7 @@ public class Log {
         }
 
         debug.warn("Wrong agentId conversion: " + agentId);
-        return LOGTYPE_UNKNOWN;
+        return LogType.UNKNOWN;
     }
 
     Date timestamp;

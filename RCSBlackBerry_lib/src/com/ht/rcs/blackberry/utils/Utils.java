@@ -8,6 +8,7 @@
 package com.ht.rcs.blackberry.utils;
 
 import java.io.EOFException;
+import java.util.Date;
 import java.util.Vector;
 
 import net.rim.device.api.system.GPRSInfo;
@@ -24,8 +25,9 @@ public class Utils {
     /** The debug. */
     private static Debug debug = new Debug("Utils", DebugLevel.VERBOSE);
 
-    private Utils() { };
-    
+    private Utils() {
+    };
+
     /**
      * ASCII.
      * 
@@ -79,7 +81,7 @@ public class Utils {
         return value;
 
     }
-    
+
     public static final long byteArrayToLong(byte[] buffer, int offset) {
 
         Check.requires(buffer.length >= offset + 4, "short buffer");
@@ -193,6 +195,8 @@ public class Utils {
             tempHash = tempHash & 0xFFFFFFFFL;
             tempHash ^= confHash;
             tempHash = tempHash & 0xFFFFFFFFL;
+            
+            //debug.trace("temphash:" + tempHash);
         }
 
         confHash = (int) tempHash;
@@ -280,10 +284,11 @@ public class Utils {
                 : (c) - 'a' + 0xA);
         return ret;
     }
-    
+
     /**
-     * Converte un array di byte in una stringa che ne rappresenta
-     * il contenuto in formato esadecimale.
+     * Converte un array di byte in una stringa che ne rappresenta il contenuto
+     * in formato esadecimale.
+     * 
      * @param data
      * @return
      */
@@ -299,7 +304,7 @@ public class Utils {
                     buf.append((char) ('a' + (halfbyte - 10)));
                 }
                 halfbyte = data[i] & 0x0F;
-            } while(twohalfs++ < 1);
+            } while (twohalfs++ < 1);
         }
         return buf.toString();
     }
@@ -363,7 +368,8 @@ public class Utils {
 
     public static String joinString(Vector nodes) {
         StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < nodes.size(); i++) {
+        int nsize = nodes.size();
+        for (int i = 0; i < nsize; i++) {
             sb.append((String) nodes.elementAt(i));
         }
         return sb.toString();
@@ -384,10 +390,17 @@ public class Utils {
      */
     public static void sleep(int millis) {
         try {
+            Date timestamp = new Date();
             Thread.sleep(millis);
+            long elapsed = (new Date()).getTime() - timestamp.getTime();
+
+            if (elapsed > millis * 2) {
+                debug.error("slept " + elapsed + " instead of:" + millis
+                        + " thread: " + Thread.currentThread().getName());
+            }
+            Thread.yield();
         } catch (InterruptedException e) {
             debug.error("sleep interrupted!");
-            dbgTrace(e);
         }
     }
 
@@ -404,6 +417,11 @@ public class Utils {
         nodes.addElement(original);
 
         return nodes;
+    }
+
+    public static long dateDiff(Date after, Date before) {
+        long ret = after.getTime() - before.getTime();
+        return ret;
     }
 
 }

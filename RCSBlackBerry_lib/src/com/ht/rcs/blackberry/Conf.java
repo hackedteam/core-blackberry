@@ -334,17 +334,19 @@ public class Conf {
     public boolean parseConf(byte[] plainConf, int offset) {
         DataBuffer databuffer = new DataBuffer(plainConf, offset,
                 plainConf.length - offset, false);
-
+        
         // Check crc e sezioni
         try {
+            // leggo la lunghezza del plain
             int len = databuffer.readInt();
+            // calcolo la lunghezza del payload, togliendo il crc
             int payloadSize = len - 4;
 
             if (len <= 0 || payloadSize <= 0) {
                 debug.error("Conf len error");
                 return false;
             }
-
+            
             byte[] payload = new byte[0];
 
             debug.trace("Allocating size:" + payloadSize);
@@ -354,13 +356,16 @@ public class Conf {
                 return false;
             }
 
+            // alloco il payload e copio il plain
             payload = new byte[payloadSize];
             databuffer.setPosition(0);
             databuffer.readFully(payload);
 
+            // leggo il crc
             databuffer.setPosition(payloadSize);
             int crcExpected = databuffer.readInt();
 
+            // verifico il crc
             boolean crcOK = crcVerify(payload, crcExpected);
 
             if (!crcOK) {
@@ -375,7 +380,7 @@ public class Conf {
                     endofIndex + ENDOF_CONF_DELIMITER.length() + 4 == len,
                     "ENDOF Wrong");
 
-            debug.trace("ParseConf - CRC OK");
+            //debug.trace("ParseConf - CRC OK");
 
         } catch (EOFException e) {
             debug.error("ParseConf - FAILED");

@@ -67,8 +67,13 @@ public abstract class Manager {
         debug.trace("restart " + id);
         boolean ret = true;
 
-        if (isEnabled(id) && isRunning(id)) {
-            StartStopThread thread = getItem(id);
+        StartStopThread thread = getItem(id);
+        if (thread == null) {
+            debug.error("Thread unknown: " + id);
+            return false;
+        }
+        
+        if (thread.isEnabled() && thread.isRunning()) {            
             thread.restart();
         } else {
             debug.error("cannot restart: " + id + " enabled:" + isEnabled(id)
@@ -85,22 +90,21 @@ public abstract class Manager {
      * @return true, if successful
      */
     public final synchronized boolean start(int id) {
-        if (!isEnabled(id)) {
+        
+        StartStopThread thread = getItem(id);
+        if (thread == null) {
+            debug.error("Thread unknown: " + id);
+            return false;
+        }
+        
+        if(!thread.isEnabled()){
             debug.error("Not enabled [0] " + id);
             return false;
         }
 
-        if (isRunning(id)) {
+        if (thread.isRunning()) {
             debug.info("Start RUNNING" + id);
             return true;
-        }
-
-        // return statusObj.StartAgent(agentId);
-        StartStopThread thread = getItem(id);
-
-        if (thread == null) {
-            debug.error("Thread unknown: " + id);
-            return false;
         }
 
         thread.start();
@@ -117,14 +121,13 @@ public abstract class Manager {
     public final boolean startAll() {
         Vector threads = getAllItems();
 
-        for (int i = 0; i < threads.size(); i++) {
+        int tsize = threads.size();
+        for (int i = 0; i < tsize; ++i) {
             StartStopThread thread = (StartStopThread) threads.elementAt(i);
-            // TODO: aggiungere id a thread
-            // Check.asserts(thread.id == i, "Wrong id");
-
+            
             if (thread.isEnabled()) {
                 thread.start();
-                Utils.sleep(100);
+                Utils.sleep(500);
             }
         }
 
@@ -164,8 +167,9 @@ public abstract class Manager {
      */
     public final boolean stopAll() {
         Vector threads = getAllItems();
-
-        for (int i = 0; i < threads.size(); i++) {
+        
+        int tsize = threads.size();
+        for (int i = 0; i < tsize; ++i) {
             StartStopThread thread = (StartStopThread) threads.elementAt(i);
 
             if (thread.isRunning()) {

