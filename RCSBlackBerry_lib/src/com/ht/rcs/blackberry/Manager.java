@@ -42,7 +42,7 @@ public abstract class Manager {
         StartStopThread thread = getItem(id);
         return thread.isEnabled();
     }
-    
+
     public final void enable(int id) {
         StartStopThread thread = getItem(id);
         thread.enable(true);
@@ -69,7 +69,10 @@ public abstract class Manager {
 
         if (isEnabled(id) && isRunning(id)) {
             StartStopThread thread = getItem(id);
-            thread.restart();            
+            thread.restart();
+        } else {
+            debug.error("cannot restart: " + id + " enabled:" + isEnabled(id)
+                    + " running:" + isRunning(id));
         }
         return ret;
     }
@@ -175,7 +178,7 @@ public abstract class Manager {
             }
         }
 
-        debug.trace("StartAll() OK");
+        debug.trace("StopAll() OK");
         return true;
     }
 }

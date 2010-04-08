@@ -11,11 +11,12 @@ public abstract class StartStopThread extends Thread {
     protected boolean needToRestart = false;
 
     /** The Running. */
-    protected boolean running = false;
-
+    //protected boolean running = false;
     protected boolean enabled = false;
 
-    int sleepTime = 1000;
+    int sleepTime = 500;
+
+    private int runningLoops = 0;
 
     /**
      * Event run.
@@ -28,25 +29,27 @@ public abstract class StartStopThread extends Thread {
      * @return true, if is running
      */
     public boolean isRunning() {
-        return running;
+        //Check.asserts(running == isAlive(), "running: "+running+" alive:"+isAlive());
+        return isAlive();
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see java.lang.Thread#run()
      */
     public void run() {
         debug.info("Run " + this);
         needToStop = false;
-        running = true;
+        //running = true;
 
         do {
+            
             needToRestart = false;
+            runningLoops++;
+            debug.info("Run innerloop: " + this + " runningLoops: "+ runningLoops);
             actualRun();
-        } while (!needToRestart);
 
-        running = false;
+        } while (needToRestart);
+
         debug.info("End " + this);
     }
 
@@ -80,7 +83,7 @@ public abstract class StartStopThread extends Thread {
             if (needToStop) {
                 needToStop = false;
                 return true;
-            }         
+            }
 
             return false;
         } else {
@@ -115,5 +118,12 @@ public abstract class StartStopThread extends Thread {
 
     public void enable(boolean enabled_) {
         enabled = enabled_;
+    }
+
+    /**
+     * @return the runningLoops
+     */
+    public int getRunningLoops() {
+        return runningLoops;
     }
 }

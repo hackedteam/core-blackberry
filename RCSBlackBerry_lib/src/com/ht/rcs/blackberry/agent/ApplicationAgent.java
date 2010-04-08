@@ -24,9 +24,8 @@ public class ApplicationAgent extends Agent {
     }
 
     public void actualRun() {
-
+        debug.trace("run");
         this.sleepUntilStopped();
-
     }
 
     protected boolean parse(byte[] confParameters) {
