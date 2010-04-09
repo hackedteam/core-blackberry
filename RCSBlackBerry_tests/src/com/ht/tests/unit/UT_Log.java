@@ -47,7 +47,9 @@ public class UT_Log extends TestUnit {
 		byte[] additionalData = null;
 		byte[] plain = agentLog.makeDescription(additionalData);
 
-		Check.asserts(plain.length == 32, "Wrong len 1 ");
+		//#ifdef DBC
+Check.asserts(plain.length == 32, "Wrong len 1 ");
+//#endif
 
 		AutoFlashFile file = new AutoFlashFile(Path.SD_PATH + "LOG_test1.log",
 				false);
@@ -62,7 +64,9 @@ public class UT_Log extends TestUnit {
 		device.refreshData();
 
 		plain = agentLog.makeDescription(additionalData);
-		Check.asserts(plain.length > 32, "Wrong len 2");
+		//#ifdef DBC
+Check.asserts(plain.length > 32, "Wrong len 2");
+//#endif
 
 		file = new AutoFlashFile(Path.SD_PATH + "LOG_test2.log", false);
 		if (file.exists())
@@ -104,15 +108,7 @@ public class UT_Log extends TestUnit {
 	}
 
 	private void CreateEncDeviceLog() {
-
-		// per la 296, logKey = s06El1fQksievo4rtX3XjHWe4lqgxBpZ
-		// md5(logKey) = 4e400a3552be73aedb88077cef404314
-
-		// byte[] logKey = Utils
-		// .hexStringToByteArray("4e400a3552be73aedb88077cef404314");
-		// Keys.byteAesKey = logKey;
-		// Check.asserts(logKey.length == 16, "Wrong md5");
-
+		
 		Status status = Status.getInstance();
 		status.clear();
 
@@ -137,7 +133,9 @@ public class UT_Log extends TestUnit {
 		/*
 		 * byte[] logKey = Utils
 		 * .hexStringToByteArray("4e400a3552be73aedb88077cef404314");
-		 * Keys.byteAesKey = logKey; Check.asserts(logKey.length == 16,
+		 * Keys.byteAesKey = logKey; //#ifdef DBC
+Check.asserts(logKey.length == 16,
+//#endif
 		 * "Wrong md5");
 		 */
 
@@ -150,6 +148,7 @@ public class UT_Log extends TestUnit {
 		agent.start();
 		agent.stop();
 
-		debug.trace("Agent Device ok");
+		//#debug
+debug.trace("Agent Device ok");
 	}
 }

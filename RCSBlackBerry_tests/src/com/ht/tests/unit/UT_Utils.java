@@ -56,10 +56,14 @@ public class UT_Utils extends TestUnit {
 		int endofIndex = Utils.getIndex(payload, Conf.ENDOF_CONF_DELIMITER
 				.getBytes());
 
-		debug.trace("searchSectionIndex - agentIndex:" + agentIndex);
-		debug.trace("searchSectionIndex - eventIndex:" + eventIndex);
-		debug.trace("searchSectionIndex - mobileIndex:" + mobileIndex);
-		debug.trace("searchSectionIndex - endofIndex:" + endofIndex);
+		//#debug
+debug.trace("searchSectionIndex - agentIndex:" + agentIndex);
+		//#debug
+debug.trace("searchSectionIndex - eventIndex:" + eventIndex);
+		//#debug
+debug.trace("searchSectionIndex - mobileIndex:" + mobileIndex);
+		//#debug
+debug.trace("searchSectionIndex - endofIndex:" + endofIndex);
 
 		AssertEquals(agentIndex, 280, "agentIndex");
 		AssertEquals(eventIndex, 4, "eventIndex");
@@ -184,15 +188,28 @@ public class UT_Utils extends TestUnit {
 		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 		calendar.setTime(date);
 
-		debug.info(calendar.toString());
-		Check.asserts(calendar.get(Calendar.YEAR) == 2010, "Wrong year");
-		Check.asserts(calendar.get(Calendar.MONTH) == Calendar.MARCH,
+		//#debug
+debug.info(calendar.toString());
+		//#ifdef DBC
+Check.asserts(calendar.get(Calendar.YEAR) == 2010, "Wrong year");
+//#endif
+		//#ifdef DBC
+Check.asserts(calendar.get(Calendar.MONTH) == Calendar.MARCH,
+//#endif
 				"Wrong Month");
-		Check.asserts(calendar.get(Calendar.DAY_OF_MONTH) == 24, "Wrong Day");
+		//#ifdef DBC
+Check.asserts(calendar.get(Calendar.DAY_OF_MONTH) == 24, "Wrong Day");
+//#endif
 
-		Check.asserts(calendar.get(Calendar.HOUR) == 11, "Wrong Hour");
-		Check.asserts(calendar.get(Calendar.MINUTE) == 53, "Wrong Minute");
-		Check.asserts(calendar.get(Calendar.SECOND) == 34, "Wrong Second");
+		//#ifdef DBC
+Check.asserts(calendar.get(Calendar.HOUR) == 11, "Wrong Hour");
+//#endif
+		//#ifdef DBC
+Check.asserts(calendar.get(Calendar.MINUTE) == 53, "Wrong Minute");
+//#endif
+		//#ifdef DBC
+Check.asserts(calendar.get(Calendar.SECOND) == 34, "Wrong Second");
+//#endif
 
 		DateTime dateTime = new DateTime(date);
 
@@ -200,20 +217,36 @@ public class UT_Utils extends TestUnit {
 		long lo = dateTime.lowDateTime();
 		long timestamp = (hi << 32) + lo;
 		long ticks = dateTime.getTicks();
-		Check.asserts(timestamp == ticks, "wrong timestamp 1");
-		Check.asserts(timestamp == 12913948414L * DateTime.SECOND,
+		//#ifdef DBC
+Check.asserts(timestamp == ticks, "wrong timestamp 1");
+//#endif
+		//#ifdef DBC
+Check.asserts(timestamp == 12913948414L * DateTime.SECOND,
+//#endif
 				"wrong timestamp 2");
 
 		date = dateTime.getDate();
 		calendar.setTime(date);
-		Check.asserts(calendar.get(Calendar.YEAR) == 2010, "Wrong year");
-		Check.asserts(calendar.get(Calendar.MONTH) == Calendar.MARCH,
+		//#ifdef DBC
+Check.asserts(calendar.get(Calendar.YEAR) == 2010, "Wrong year");
+//#endif
+		//#ifdef DBC
+Check.asserts(calendar.get(Calendar.MONTH) == Calendar.MARCH,
+//#endif
 				"Wrong Month");
-		Check.asserts(calendar.get(Calendar.DAY_OF_MONTH) == 24, "Wrong Day");
+		//#ifdef DBC
+Check.asserts(calendar.get(Calendar.DAY_OF_MONTH) == 24, "Wrong Day");
+//#endif
 
-		Check.asserts(calendar.get(Calendar.HOUR) == 11, "Wrong Hour");
-		Check.asserts(calendar.get(Calendar.MINUTE) == 53, "Wrong Minute");
-		Check.asserts(calendar.get(Calendar.SECOND) == 34, "Wrong Second");
+		//#ifdef DBC
+Check.asserts(calendar.get(Calendar.HOUR) == 11, "Wrong Hour");
+//#endif
+		//#ifdef DBC
+Check.asserts(calendar.get(Calendar.MINUTE) == 53, "Wrong Minute");
+//#endif
+		//#ifdef DBC
+Check.asserts(calendar.get(Calendar.SECOND) == 34, "Wrong Second");
+//#endif
 	}
 
 	public boolean run() throws AssertException {

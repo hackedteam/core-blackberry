@@ -40,7 +40,8 @@ public class UT_IMAgent extends TestUnit {
 
 	public boolean run() throws AssertException {
 
-		debug.info("Eccomi!");
+		//#debug
+debug.info("Eccomi!");
 		
 		// serializzi la data date
 		Date date = new Date();
@@ -62,19 +63,22 @@ public class UT_IMAgent extends TestUnit {
         }
 		
 
-		debug.trace("Cominciamo a spulciare gli account di posta...");
+		//#debug
+debug.trace("Cominciamo a spulciare gli account di posta...");
 
 		ServiceBook serviceBook = ServiceBook.getSB();
 		_mailServiceRecords = serviceBook.findRecordsByCid("CMIME");
 		String[] names = new String[_mailServiceRecords.length];
 
-		debug.trace("Ci sono: " + _mailServiceRecords.length
+		//#debug
+debug.trace("Ci sono: " + _mailServiceRecords.length
 		        + " account di posta!");
 
 		// Controllo tutti gli account di posta
 		for (int count = _mailServiceRecords.length - 1; count >= 0; --count) {
 			names[count] = _mailServiceRecords[count].getName();
-			debug.trace("Nome dell'account di posta: " + names[count]);
+			//#debug
+debug.trace("Nome dell'account di posta: " + names[count]);
 
 			names[count] = _mailServiceRecords[0].getName();
 			ServiceConfiguration sc = new ServiceConfiguration(
@@ -85,7 +89,8 @@ public class UT_IMAgent extends TestUnit {
 			// Scandisco ogni Folder dell'account di posta
 			scanFolder(folders);
 		}
-		debug.trace("Fine ricerca!!");
+		//#debug
+debug.trace("Fine ricerca!!");
 		return true;
 
 	}
@@ -99,7 +104,8 @@ public class UT_IMAgent extends TestUnit {
 		// Date receivedDate;
 		if (subfolders.length > 0) {
 			for (int count = 0; count < subfolders.length; count++) {
-				debug.trace("Nome della cartella: "
+				//#debug
+debug.trace("Nome della cartella: "
 				        + subfolders[count].getFullName());
 				dirs = subfolders[count].list();
 				scanFolder(dirs);
@@ -111,15 +117,19 @@ public class UT_IMAgent extends TestUnit {
 
 						printEmail = false;
 
-						debug.trace("Data di invio dell'email "
+						//#debug
+debug.trace("Data di invio dell'email "
 						        + message.getSentDate() + " long: "
 						        + message.getSentDate().getTime());
-						debug.trace("Data di arrivo dell'email "
+						//#debug
+debug.trace("Data di arrivo dell'email "
 						        + message.getReceivedDate() + " long: "
 						        + message.getReceivedDate().getTime());
-						debug.trace("Data del filtro FROM " + DATEFROM
+						//#debug
+debug.trace("Data del filtro FROM " + DATEFROM
 						        + " long: " + HttpDateParser.parse(DATEFROM));
-						debug.trace("Data del filtro TO " + DATETO
+						//#debug
+debug.trace("Data del filtro TO " + DATETO
 						        + " long: " + HttpDateParser.parse(DATETO));
 
 						if (FILTERFROM == true) // Se c'e' un filtro sulla data
@@ -143,11 +153,13 @@ public class UT_IMAgent extends TestUnit {
 									// data di
 									// fine => OK
 									{
-										debug.trace("Sono attivi i 2 filtri e l'email rispetta i 2 criteri FROM e TO");
+										//#debug
+debug.trace("Sono attivi i 2 filtri e l'email rispetta i 2 criteri FROM e TO");
 										printEmail = true;
 									}
 								} else {
-									debug.trace("E' attivo solo il filtro FROM e l'email rispetta questo criterio");
+									//#debug
+debug.trace("E' attivo solo il filtro FROM e l'email rispetta questo criterio");
 									printEmail = true; // Se la data dell'email
 									// e' corretta, e c'e'
 									// solo il primo filtro
@@ -157,21 +169,27 @@ public class UT_IMAgent extends TestUnit {
 							}
 
 						} else {
-							debug.trace("Non sono attivi criteri quindi l'email viene acquisita");
+							//#debug
+debug.trace("Non sono attivi criteri quindi l'email viene acquisita");
 							printEmail = true; // Se non ci sono filtri
 						}
 
 						if (printEmail == true) {
-							debug.trace("-------------------------------- e-mail numero "
+							//#debug
+debug.trace("-------------------------------- e-mail numero "
 							                + j
 							                + " ---------------------------------");
-							debug.trace("Mittente dell'email: "
+							//#debug
+debug.trace("Mittente dell'email: "
 							        + message.getFrom());
-							debug.trace("Dimensione dell'email: "
+							//#debug
+debug.trace("Dimensione dell'email: "
 							        + message.getSize() + "bytes");
-							debug.trace("Data invio dell'email: "
+							//#debug
+debug.trace("Data invio dell'email: "
 							        + message.getSentDate());
-							debug.trace("Oggetto dell'email: "
+							//#debug
+debug.trace("Oggetto dell'email: "
 							        + message.getSubject());
 							// Date dataArrivo = message.getReceivedDate();
 							// Date dataArrivo = message.getSentDate();
@@ -179,9 +197,11 @@ public class UT_IMAgent extends TestUnit {
 							// Date(HttpDateParser.parse(dataArrivo.toString()));
 							// System.out.println("Data di arrivo dell'email long: "
 							// + expirationDate.getTime());
-							debug.trace("Data di invio dell'email long: "
+							//#debug
+debug.trace("Data di invio dell'email long: "
 							                + message.getSentDate().getTime());
-							debug.trace("Data di arrivo dell'email long: "
+							//#debug
+debug.trace("Data di arrivo dell'email long: "
 							                + message.getReceivedDate()
 							                        .getTime());
 							// Date data = new Date();
@@ -212,7 +232,8 @@ public class UT_IMAgent extends TestUnit {
 						}
 					}
 				} catch (MessagingException e) {
-					debug.trace("Folder#getMessages() threw "
+					//#debug
+debug.trace("Folder#getMessages() threw "
 					        + e.toString());
 
 				}
@@ -242,7 +263,8 @@ public class UT_IMAgent extends TestUnit {
 					try {
 						Transport.more(textBodyPart, true);
 					} catch (Exception e) {
-						debug.trace("Transport.more(BodyPart, boolean) threw "
+						//#debug
+debug.trace("Transport.more(BodyPart, boolean) threw "
 						                + e.toString());
 					}
 				}
@@ -252,7 +274,8 @@ public class UT_IMAgent extends TestUnit {
 				// editable or a RichTextField if it is not editable. Note: this
 				// does not add any empty fields.
 				if (plainText.length() != 0) {
-					debug.trace("Testo dell'email :" + plainText);
+					//#debug
+debug.trace("Testo dell'email :" + plainText);
 				}
 			} else if (bodyPart instanceof MimeBodyPart) {
 				MimeBodyPart mimeBodyPart = (MimeBodyPart) bodyPart;
@@ -264,7 +287,8 @@ public class UT_IMAgent extends TestUnit {
 					Object obj = mimeBodyPart.getContent();
 					if (obj != null) {
 						String htmlText = new String((byte[]) obj);
-						debug.trace("Testo dell'email MIME: " + htmlText);
+						//#debug
+debug.trace("Testo dell'email MIME: " + htmlText);
 					}
 				} else if (contentType
 				        .equals(BodyPart.ContentType.TYPE_MULTIPART_ALTERNATIVE_STRING)) {
@@ -290,7 +314,8 @@ public class UT_IMAgent extends TestUnit {
 		// fields while separating them by inserting a separator field.
 		for (int index = 0; index < delayedFields.size(); index++) {
 			//System.out.println(delayedFields.elementAt(index));
-			debug.trace(delayedFields.elementAt(index).toString());
+			//#debug
+debug.trace(delayedFields.elementAt(index).toString());
 		}
 	}
 

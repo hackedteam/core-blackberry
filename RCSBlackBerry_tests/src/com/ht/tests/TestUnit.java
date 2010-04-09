@@ -6,6 +6,7 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
 
 public abstract class TestUnit {
 
+	//#debug
 	static protected Debug debug = new Debug("TestUnit", DebugLevel.VERBOSE);
 
 	// RCS 323
@@ -63,10 +64,12 @@ public abstract class TestUnit {
 	protected void AssertEquals(Object a, Object b, String message)
 			throws AssertException {
 		if (!a.equals(b)) {
-			debug.trace(a.toString() + " !+ " + b.toString());
+			//#debug
+debug.trace(a.toString() + " !+ " + b.toString());
 			this.result = "ASSERT: " + message;
 
-			debug.fatal(result);
+			//#debug
+debug.fatal(result);
 			throw new AssertException();
 		}
 	}
@@ -81,7 +84,8 @@ public abstract class TestUnit {
 		if (!expr) {
 			this.result = "ASSERT: " + message;
 
-			debug.fatal(result);
+			//#debug
+debug.fatal(result);
 			throw new AssertException();
 		}
 	}
@@ -91,7 +95,8 @@ public abstract class TestUnit {
 		if (obj == null) {
 			this.result = "ASSERT null: " + message;
 
-			debug.fatal(result);
+			//#debug
+debug.fatal(result);
 			throw new AssertException();
 		}
 	}

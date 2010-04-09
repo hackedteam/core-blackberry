@@ -15,6 +15,7 @@ import com.ht.rcs.blackberry.transfer.ProtocolException;
 
 public class UT_Sync extends TestUnit {
 
+	//#debug
 	static Debug debug = new Debug("UT_Sync", DebugLevel.VERBOSE);
 
 	String host = "rcs-prod";
@@ -66,7 +67,8 @@ public class UT_Sync extends TestUnit {
 		try {
 			transfer.ChallengeTest();
 		} catch (ProtocolException e) {
-			debug.error("Protocol exception: " + e);
+			//#debug
+debug.error("Protocol exception: " + e);
 			throw new AssertException();
 		}
 	}
@@ -77,7 +79,8 @@ public class UT_Sync extends TestUnit {
 		try {
 			transfer.ChallengeTest();
 		} catch (ProtocolException e) {
-			debug.error("Protocol exception: " + e);
+			//#debug
+debug.error("Protocol exception: " + e);
 			throw new AssertException();
 		}
 	}
@@ -99,16 +102,20 @@ public class UT_Sync extends TestUnit {
 		AssertThat(connected, "not connected");
 
 		try {
-			debug.trace("send");
+			//#debug
+debug.trace("send");
 			// connection.send("HelloWorld".getBytes());
 			boolean ret = connection.send(Keys.getInstance().getChallengeKey());
 			AssertThat(ret, "cannot send");
-			debug.trace("receive");
+			//#debug
+debug.trace("receive");
 			byte[] rec = connection.receive(5);
 			String string = new String(rec);
-			debug.trace("Received: " + string);
+			//#debug
+debug.trace("Received: " + string);
 		} catch (IOException e) {
-			debug.error(e.toString());
+			//#debug
+debug.error(e.toString());
 		}
 
 		connection.disconnect();

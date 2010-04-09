@@ -13,6 +13,7 @@ import net.rim.device.api.system.*;
  * must extend UiApplication.
  */
 public class Main extends UiApplication {
+	//#debug
 	static Debug debug = new Debug("Main", DebugLevel.VERBOSE);
 
 	public static void main(String[] args) {
@@ -21,13 +22,16 @@ public class Main extends UiApplication {
 		boolean logToFlash = false;
 		boolean logToSD = true;
 
+		// #debug
 		debug.init(logToDebugger, logToFlash, logToSD);
+		// #debug
 		debug.trace("Test Init");
 		// create a new instance of the application
 		// and start the application on the event thread
 		Main theApp = new Main();
 		theApp.enterEventDispatcher();
 
+		// #debug
 		debug.info("--- Starting Main ---");
 	}
 
@@ -69,6 +73,7 @@ public class Main extends UiApplication {
 // create a new screen that extends MainScreen, which provides
 // default standard behavior for BlackBerry applications
 final class TestScreen extends MainScreen {
+	//#debug
 	static Debug debug = new Debug("TestScreen", DebugLevel.VERBOSE);
 
 	public TestScreen() {
@@ -91,6 +96,7 @@ final class TestScreen extends MainScreen {
 			add(new RichTextField(test.result(i)));
 
 			if (result == false) {
+				// #debug
 				debug.error("TEST FAILED " + i);
 			}
 		}

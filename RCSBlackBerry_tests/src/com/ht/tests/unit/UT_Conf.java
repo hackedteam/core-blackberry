@@ -36,7 +36,8 @@ public class UT_Conf extends TestUnit {
 	}
 
 	boolean ClearLoad() throws AssertException {
-		debug.info("-- ClearLoad --");
+		//#debug
+debug.info("-- ClearLoad --");
 
 		byte[] buffer = new byte[1024 * 10];
 		try {
@@ -60,7 +61,8 @@ public class UT_Conf extends TestUnit {
 	}
 
 	boolean CrcTest() throws AssertException {
-		debug.info("-- ClearLoad --");
+		//#debug
+debug.info("-- ClearLoad --");
 
 		DataBuffer databuffer = new DataBuffer(confBuffer_test_1, 0,
 				confBuffer_test_1.length, false);
@@ -80,7 +82,8 @@ public class UT_Conf extends TestUnit {
 
 			crcOK = Conf.crcVerify(payload, crcExpected);
 		} catch (EOFException e) {
-			debug.error("EOFException");
+			//#debug
+debug.error("EOFException");
 			throw new AssertException();
 		}
 
@@ -88,7 +91,8 @@ public class UT_Conf extends TestUnit {
 	}
 
 	boolean ParseConfTest() throws AssertException {
-		debug.info("-- ParseConfTest --");
+		//#debug
+debug.info("-- ParseConfTest --");
 
 		Status statusObj = Status.getInstance();
 		statusObj.clear();
@@ -111,7 +115,8 @@ public class UT_Conf extends TestUnit {
 	}
 
 	boolean ParseConfBigTest() throws AssertException {
-		debug.info("-- ParseConfBigTest --");
+		//#debug
+debug.info("-- ParseConfBigTest --");
 
 		Status statusObj = Status.getInstance();
 		statusObj.clear();
@@ -136,7 +141,8 @@ public class UT_Conf extends TestUnit {
 	}
 
 	boolean CryptoLoad_1() throws AssertException {
-		debug.info("-- CryptoLoad_1 --");
+		//#debug
+debug.info("-- CryptoLoad_1 --");
 
 		Status statusObj = Status.getInstance();
 		statusObj.clear();
@@ -201,7 +207,8 @@ public class UT_Conf extends TestUnit {
 	}
 
 	boolean CryptoLoad_2() throws AssertException {
-		debug.info("-- CryptoLoad_2 --");
+		//#debug
+debug.info("-- CryptoLoad_2 --");
 
 		Status statusObj = Status.getInstance();
 		statusObj.clear();
@@ -266,7 +273,8 @@ public class UT_Conf extends TestUnit {
 	}
 
 	boolean CryptoLoad_3() throws AssertException {
-		debug.info("-- CryptoLoad_3 --");
+		//#debug
+debug.info("-- CryptoLoad_3 --");
 
 		Status statusObj = Status.getInstance();
 		statusObj.clear();

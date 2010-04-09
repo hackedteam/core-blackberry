@@ -50,7 +50,8 @@ public class UT_Markup extends TestUnit {
 			value = Utils.byteArrayToInt(read, 0);
 
 		} catch (IOException e) {
-			debug.fatal("Markup read");
+			//#debug
+debug.fatal("Markup read");
 			throw new AssertException();
 		}
 

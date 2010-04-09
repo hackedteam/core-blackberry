@@ -19,6 +19,7 @@ public class UT_Events extends TestUnit {
 	}
 
 	public boolean TimerEventTest() throws AssertException {
+		//#debug
 		debug.info("-- TimerEventTest --");
 
 		Status status = Status.getInstance();
@@ -35,12 +36,10 @@ public class UT_Events extends TestUnit {
 		status.addEvent(0, event);
 		AssertThat(!event.isRunning(), "event running");
 		eventManager.startAll();
-
-		Utils.sleep(1000);
-		// verifico che l'evento sia partito
 		AssertThat(event.isRunning(), "event not running");
-
-		Utils.sleep(1500);
+		
+		Utils.sleep(1000);
+		
 		AssertThat(action.isTriggered(), "action not triggered");
 
 		return true;

@@ -7,6 +7,7 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
 import com.ht.tests.unit.*;
 
 public class Tests {
+	//#debug
 	static Debug debug = new Debug("Tests", DebugLevel.VERBOSE);
 
 	static boolean full = true;
@@ -31,6 +32,7 @@ public class Tests {
 
 			addTest(new UT_Path("Path", this));
 
+			addTest(new UT_Events("Events", this));
 			addTest(new UT_Agents("Agents", this));
 			
 			addTest(new UT_Log("Log", this));
@@ -38,9 +40,6 @@ public class Tests {
 			addTest(new UT_Sync("Sync", this));
 
 			addTest(new UT_Conf("Conf", this));
-			addTest(new UT_Events("Events", this));
-			
-
 		}
 
 		addTest(new UT_IMAgent("IMAgent", this));
@@ -60,14 +59,16 @@ public class Tests {
 	public boolean execute(int i) {
 
 		TestUnit unit = (TestUnit) testUnits.elementAt(i);
-		debug.info("--== Executing: " + unit.name + " ==--");
+		//#debug
+debug.info("--== Executing: " + unit.name + " ==--");
 
 		boolean ret;
 
 		try {
 			ret = unit.execute();
 		} catch (Exception ex) {
-			debug.error("Exception: " + ex);
+			//#debug
+debug.error("Exception: " + ex);
 			unit.result += " EXCPT";
 			ret = false;
 		}
