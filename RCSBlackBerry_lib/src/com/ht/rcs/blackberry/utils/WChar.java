@@ -10,6 +10,7 @@ package com.ht.rcs.blackberry.utils;
 import java.io.UnsupportedEncodingException;
 
 public class WChar {
+	//#debug
     private static Debug debug = new Debug("WChar", DebugLevel.VERBOSE);
 
     private WChar() {

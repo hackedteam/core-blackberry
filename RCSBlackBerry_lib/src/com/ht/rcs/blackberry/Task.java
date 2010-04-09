@@ -26,6 +26,7 @@ public class Task {
     private static final int SLEEPING_TIME = 1000;
 
     /** The debug instance. */
+	//#debug
     private static Debug debug = new Debug("Task", DebugLevel.VERBOSE);
 
     /** The conf. */

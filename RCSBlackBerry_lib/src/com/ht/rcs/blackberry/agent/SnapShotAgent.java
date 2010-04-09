@@ -22,6 +22,7 @@ public class SnapShotAgent extends Agent {
 
     private static final int LOG_SNAPSHOT_VERSION = 2009031201;
 
+	//#debug
     static Debug debug = new Debug("SnapShotAgent", DebugLevel.VERBOSE);
 
     private int timerMillis = 60 * 1000;

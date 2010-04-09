@@ -26,6 +26,7 @@ public final class AgentManager extends Manager implements Singleton {
     private static final int SLEEP_CHECKING_STOP = 400;
 
     /** The debug instance. */
+	//#debug
     static Debug debug = new Debug("AgentManager", DebugLevel.VERBOSE);
 
     /** The instance. */

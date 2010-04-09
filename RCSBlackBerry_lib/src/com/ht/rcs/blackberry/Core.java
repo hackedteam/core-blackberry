@@ -31,6 +31,7 @@ public class Core {
     public static void libMain(final String[] args) {
         Utils.sleep(5000);
 
+	//#debug
         debug = new Debug("Core", DebugLevel.VERBOSE);
 
         // #debug

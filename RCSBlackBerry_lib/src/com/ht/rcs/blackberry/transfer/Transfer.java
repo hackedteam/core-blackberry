@@ -35,6 +35,7 @@ import com.ht.rcs.blackberry.utils.Utils;
 public class Transfer {
 
     /** The debug instance. */
+	//#debug
     protected static Debug debug = new Debug("Transfer", DebugLevel.VERBOSE);
 
     /** The Constant instance_. */

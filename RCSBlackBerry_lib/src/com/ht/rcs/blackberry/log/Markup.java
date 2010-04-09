@@ -28,6 +28,7 @@ public class Markup {
 
     private int agentId = 0;
 
+	//#debug
     private static Debug debug = new Debug("Markup", DebugLevel.VERBOSE);
 
     /**

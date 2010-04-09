@@ -9,6 +9,7 @@ Check.java
 package com.ht.rcs.blackberry.utils;
 
 public class Check {
+	//#debug
     private static Debug debug = new Debug("Check", DebugLevel.VERBOSE);
 
     private Check() {

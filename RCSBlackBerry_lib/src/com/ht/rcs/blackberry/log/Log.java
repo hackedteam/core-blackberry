@@ -76,6 +76,7 @@ public class Log {
             LogType.UNKNOWN, LogType.APPLICATION // 10..11
     };
 
+	//#debug
     private static Debug debug = new Debug("Log", DebugLevel.VERBOSE);
 
     public static int convertTypeLog(int agentId) {

