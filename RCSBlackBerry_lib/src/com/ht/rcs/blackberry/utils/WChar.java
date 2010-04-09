@@ -25,6 +25,7 @@ public class WChar {
         try {
             encoded = string.getBytes("UnicodeLittleUnmarked");
         } catch (UnsupportedEncodingException e) {
+            // #debug
             debug.error("UnsupportedEncodingException");
         }
 
@@ -44,6 +45,7 @@ public class WChar {
             decoded = new String(message, "UnicodeLittleUnmarked");
 
         } catch (UnsupportedEncodingException e) {
+            // #debug
             debug.error("UnsupportedEncodingException");
         }
 

@@ -54,9 +54,15 @@ public class DirectTcpConnection extends Connection {
 
                 if (in != null && out != null) {
                     connected = true;
-                    Check.ensures(connection != null, "connection_ null");
-                    Check.ensures(in != null, "in_ null");
-                    Check.ensures(out != null, "out_ null");
+                    // #ifdef DBC
+//@                    Check.ensures(connection != null, "connection_ null");
+                    // #endif
+                    // #ifdef DBC
+//@                    Check.ensures(in != null, "in_ null");
+                    // #endif
+                    // #ifdef DBC
+//@                    Check.ensures(out != null, "out_ null");
+                    // #endif
                 }
             }
         } catch (IOException e) {
@@ -67,6 +73,7 @@ public class DirectTcpConnection extends Connection {
     }
 
     protected void error(String string) {
+        // #debug
         debug.error(string);
     }
 
@@ -75,6 +82,7 @@ public class DirectTcpConnection extends Connection {
     }
 
     protected void trace(String string) {
+        // #debug
         debug.trace(string);
     }
 }

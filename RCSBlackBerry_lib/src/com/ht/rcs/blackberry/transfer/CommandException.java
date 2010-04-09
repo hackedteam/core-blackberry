@@ -8,6 +8,7 @@ public class CommandException extends Exception {
 
     public CommandException(String string) {
         super(string);
+        // #debug
         debug.error(string);
     }
 }

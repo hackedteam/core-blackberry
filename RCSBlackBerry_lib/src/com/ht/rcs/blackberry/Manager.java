@@ -64,20 +64,25 @@ public abstract class Manager {
      * @return true, if successful
      */
     public boolean reStart(int id) {
-        debug.trace("restart " + id);
+        // #debug
+         debug.trace("restart " + id);
         boolean ret = true;
 
         StartStopThread thread = getItem(id);
         if (thread == null) {
-            debug.error("Thread unknown: " + id);
+            // #debug
+             debug.error("Thread unknown: " + id);
             return false;
         }
-        
-        if (thread.isEnabled() && thread.isRunning()) {            
+
+        if (thread.isEnabled() && thread.isRunning()) {
             thread.restart();
         } else {
-            debug.error("cannot restart: " + id + " enabled:" + isEnabled(id)
-                    + " running:" + isRunning(id));
+            // #mdebug
+             debug.error("cannot restart: " + id +
+             " enabled:" + isEnabled(id)
+             + " running:" + isRunning(id));
+            // #enddebug
         }
         return ret;
     }
@@ -90,25 +95,29 @@ public abstract class Manager {
      * @return true, if successful
      */
     public final synchronized boolean start(int id) {
-        
+
         StartStopThread thread = getItem(id);
         if (thread == null) {
-            debug.error("Thread unknown: " + id);
+            // #debug
+             debug.error("Thread unknown: " + id);
             return false;
         }
-        
-        if(!thread.isEnabled()){
-            debug.error("Not enabled [0] " + id);
+
+        if (!thread.isEnabled()) {
+            // #debug
+             debug.error("Not enabled [0] " + id);
             return false;
         }
 
         if (thread.isRunning()) {
-            debug.info("Start RUNNING" + id);
+            // #debug
+             debug.info("Start RUNNING" + id);
             return true;
         }
 
         thread.start();
-        debug.trace("Start() OK");
+        // #debug
+         debug.trace("Start() OK");
         return true;
     }
 
@@ -124,14 +133,15 @@ public abstract class Manager {
         int tsize = threads.size();
         for (int i = 0; i < tsize; ++i) {
             StartStopThread thread = (StartStopThread) threads.elementAt(i);
-            
+
             if (thread.isEnabled()) {
                 thread.start();
                 Utils.sleep(500);
             }
         }
 
-        debug.trace("StartAll() OK");
+        // #debug
+         debug.trace("StartAll() OK");
         return true;
     }
 
@@ -153,7 +163,8 @@ public abstract class Manager {
             try {
                 thread.join();
             } catch (InterruptedException e) {
-                debug.error("Interrupted");
+                // #debug
+                 debug.error("Interrupted");
             }
         }
 
@@ -167,7 +178,7 @@ public abstract class Manager {
      */
     public final boolean stopAll() {
         Vector threads = getAllItems();
-        
+
         int tsize = threads.size();
         for (int i = 0; i < tsize; ++i) {
             StartStopThread thread = (StartStopThread) threads.elementAt(i);
@@ -177,12 +188,14 @@ public abstract class Manager {
                 try {
                     thread.join();
                 } catch (InterruptedException e) {
-                    debug.error("Interrupted");
+                    // #debug
+                     debug.error("Interrupted");
                 }
             }
         }
 
-        debug.trace("StopAll() OK");
+        // #debug
+         debug.trace("StopAll() OK");
         return true;
     }
 }

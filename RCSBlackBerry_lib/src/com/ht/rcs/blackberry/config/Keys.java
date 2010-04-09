@@ -35,7 +35,7 @@ public class Keys implements Singleton {
         byteInstanceID = Encryption.SHA1(imei);
         instanceID = Utils.byteArrayToHex(byteInstanceID);
     };
-    
+
     public static synchronized Keys getInstance() {
         if (instance == null) {
             instance = new Keys();

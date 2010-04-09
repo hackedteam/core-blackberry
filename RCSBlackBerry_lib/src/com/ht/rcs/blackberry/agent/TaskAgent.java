@@ -17,6 +17,7 @@ public class TaskAgent extends Agent {
     }
 
     public void actualRun() {
+        // #debug
         debug.trace("run");
 
         this.sleepUntilStopped();

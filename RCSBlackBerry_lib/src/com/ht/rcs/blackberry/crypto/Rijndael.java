@@ -518,12 +518,13 @@ public final class Rijndael implements CryptoEngine {
      * @param direction
      *            cipher direction (DIR_ENCRYPT, DIR_DECRYPT, or DIR_BOTH).
      */
-    public boolean makeKey(byte[] cipherKey, int keyBits, int direction)
-            {
+    public boolean makeKey(byte[] cipherKey, int keyBits, int direction) {
         // check key size:
         if (keyBits != 128 && keyBits != 192 && keyBits != 256) {
-            /*throw new RuntimeException("Invalid AES key size (" + keyBits
-                    + " bits)");*/
+            /*
+             * throw new RuntimeException("Invalid AES key size (" + keyBits +
+             * " bits)");
+             */
             return false;
         }
 
@@ -546,7 +547,7 @@ public final class Rijndael implements CryptoEngine {
                 invertKey();
             }
         }
-        
+
         return true;
     }
 }

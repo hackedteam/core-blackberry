@@ -11,13 +11,11 @@ package com.ht.rcs.blackberry;
 import java.util.Vector;
 
 import com.ht.rcs.blackberry.agent.Agent;
-import com.ht.rcs.blackberry.event.Event;
 import com.ht.rcs.blackberry.interfaces.Singleton;
 import com.ht.rcs.blackberry.utils.Check;
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 import com.ht.rcs.blackberry.utils.StartStopThread;
-import com.ht.rcs.blackberry.utils.Utils;
 
 /**
  * The Class AgentManager.
@@ -27,7 +25,7 @@ public final class AgentManager extends Manager implements Singleton {
     /** Tempo di attesa tra il check di stop. */
     private static final int SLEEP_CHECKING_STOP = 400;
 
-    /** The debug. */
+    /** The debug instance. */
     static Debug debug = new Debug("AgentManager", DebugLevel.VERBOSE);
 
     /** The instance. */
@@ -54,17 +52,22 @@ public final class AgentManager extends Manager implements Singleton {
     }
 
     public Vector getAllItems() {
-        Check.requires(statusObj != null, "Null status");
+        // #ifdef DBC
+//@        Check.requires(statusObj != null, "Null status");
+        // #endif
         Vector agents = statusObj.getAgentsList();
         return agents;
     }
 
     public StartStopThread getItem(int id) {
-        Check.requires(statusObj != null, "Null status");
+        // #ifdef DBC
+//@        Check.requires(statusObj != null, "Null status");
+        // #endif
         Agent agent = statusObj.getAgent(id);
-        Check.ensures(agent.agentId == id, "Wrong id");
+        // #ifdef DBC
+//@        Check.ensures(agent.agentId == id, "Wrong id");
+        // #endif
 
         return agent;
     }
-
 }

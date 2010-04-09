@@ -19,7 +19,8 @@ public class DateTime {
     public static final long DAY = 24 * HOUR;
 
     public static final long DAYS_FROM_1601_TO_1970 = 134774;
-    public static final long TICSK_FROM_1601_TO_1970 = DAYS_FROM_1601_TO_1970 * DAY;
+    public static final long TICSK_FROM_1601_TO_1970 = DAYS_FROM_1601_TO_1970
+            * DAY;
 
     long ticks;
 
@@ -31,7 +32,9 @@ public class DateTime {
     public Date getDate() {
         Date date = new Date((ticks - TICSK_FROM_1601_TO_1970) / MILLISEC);
 
-        Check.ensures((new DateTime(date)).getTicks() == ticks, "Wrong date");
+        // #ifdef DBC
+//@        Check.ensures((new DateTime(date)).getTicks() == ticks, "Wrong date");
+        // #endif
         return date;
     }
 

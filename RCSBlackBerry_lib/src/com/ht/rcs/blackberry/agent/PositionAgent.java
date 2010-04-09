@@ -16,14 +16,17 @@ public class PositionAgent extends Agent {
     }
 
     public void actualRun() {
+        // #debug
         debug.trace("run");
         int loop = 0;
 
         for (;;) {
+            // #debug
             debug.trace("loop:" + loop);
             ++loop;
 
             if (smartSleep(10000)) {
+                // #debug
                 debug.trace(loop + " clean stop");
                 return;
             }

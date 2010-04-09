@@ -21,7 +21,7 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
  */
 public class Action {
 
-    /** The debug. */
+    /** The debug instance. */
     protected static Debug debug = new Debug("Status", DebugLevel.VERBOSE);
 
     /** The Constant ACTION_UNINIT. */
@@ -99,6 +99,7 @@ public class Action {
      */
     public synchronized void setTriggered(boolean value) {
 
+        // #debug
         debug.trace(actionId + " triggered:" + value);
         triggered = value;
     }

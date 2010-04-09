@@ -4,7 +4,7 @@ import java.util.Date;
 
 public abstract class StartStopThread extends Thread {
 
-    /** The debug. */
+    /** The debug instance. */
     private static Debug debug = new Debug("StartStopThread",
             DebugLevel.VERBOSE);
 
@@ -31,8 +31,6 @@ public abstract class StartStopThread extends Thread {
      * @return true, if is running
      */
     public boolean isRunning() {
-        // Check.asserts(running == isAlive(),
-        // "running: "+running+" alive:"+isAlive());
         return isAlive();
     }
 
@@ -40,6 +38,7 @@ public abstract class StartStopThread extends Thread {
      * @see java.lang.Thread#run()
      */
     public void run() {
+        // #debug
         debug.info("Run " + this);
         needToStop = false;
         // running = true;
@@ -48,12 +47,15 @@ public abstract class StartStopThread extends Thread {
 
             needToRestart = false;
             runningLoops++;
+            // #mdebug
             debug.info("Run innerloop: " + this + " runningLoops: "
                     + runningLoops);
+            // #enddebug
             actualRun();
 
         } while (needToRestart);
 
+        // #debug
         debug.info("End " + this);
     }
 
@@ -61,11 +63,13 @@ public abstract class StartStopThread extends Thread {
      * Stop.
      */
     public void stop() {
+        // #debug
         debug.info("Stopping... " + this);
         needToStop = true;
     }
 
     public void restart() {
+        // #debug
         debug.info("Restarting... " + this);
         needToRestart = true;
         needToStop = true;
@@ -98,13 +102,17 @@ public abstract class StartStopThread extends Thread {
 
         long timeUntil = now.getTime() + millisec;
 
+        // #debug
         debug.trace("smartSleep start: " + this.getName() + " for:" + loops);
         while (loops > 0) {
 
             now = new Date();
             long timestamp = now.getTime();
             if (timestamp > timeUntil) {
-                debug.info("Exiting at loop:" + loops + " error: "+ (timestamp - timeUntil));
+                // #mdebug
+                debug.info("Exiting at loop:" + loops + " error: "
+                        + (timestamp - timeUntil));
+                // #enddebug
                 break;
             }
 
@@ -117,6 +125,7 @@ public abstract class StartStopThread extends Thread {
             }
         }
 
+        // #debug
         debug.trace("smartSleep end: " + this.getName());
         return false;
     }
@@ -126,14 +135,17 @@ public abstract class StartStopThread extends Thread {
             sleep(millisec);
             yield();
         } catch (InterruptedException e) {
+            // #debug
             debug.error("Interrupted");
         }
     }
 
     protected boolean sleepUntilStopped() {
+        // #debug
         debug.info("Going forever sleep");
         for (;;) {
             if (smartSleep(sleepTime)) {
+                // #debug
                 debug.trace("CleanStop " + this);
                 return true;
             }

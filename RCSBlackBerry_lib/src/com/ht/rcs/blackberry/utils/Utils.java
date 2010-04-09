@@ -22,7 +22,7 @@ import net.rim.device.api.util.NumberUtilities;
  */
 public class Utils {
 
-    /** The debug. */
+    /** The debug instance. */
     private static Debug debug = new Debug("Utils", DebugLevel.VERBOSE);
 
     private Utils() {
@@ -67,7 +67,9 @@ public class Utils {
      */
     public static final int byteArrayToInt(byte[] buffer, int offset) {
 
-        Check.requires(buffer.length >= offset + 4, "short buffer");
+        // #ifdef DBC
+        //@                Check.requires(buffer.length >= offset + 4, "short buffer");
+        // #endif
 
         DataBuffer databuffer = new DataBuffer(buffer, offset, 4, false);
         int value = 0;
@@ -75,6 +77,7 @@ public class Utils {
         try {
             value = databuffer.readInt();
         } catch (EOFException e) {
+            // #debug
             debug.error("Cannot read int from buffer at offset:" + offset);
         }
 
@@ -84,7 +87,9 @@ public class Utils {
 
     public static final long byteArrayToLong(byte[] buffer, int offset) {
 
-        Check.requires(buffer.length >= offset + 4, "short buffer");
+        // #ifdef DBC
+        //@                Check.requires(buffer.length >= offset + 4, "short buffer");
+        // #endif
 
         DataBuffer databuffer = new DataBuffer(buffer, offset, 8, false);
         long value = 0;
@@ -92,6 +97,7 @@ public class Utils {
         try {
             value = databuffer.readLong();
         } catch (EOFException e) {
+            // #debug
             debug.error("Cannot read int from buffer at offset:" + offset);
         }
 
@@ -146,8 +152,10 @@ public class Utils {
      */
     public static void copy(byte[] dest, int offsetDest, byte[] src,
             int offsetSrc, int len) {
-        Check.requires(dest.length >= offsetDest + len, "wrong dest len");
-        Check.requires(src.length >= offsetSrc + len, "wrong src len");
+        // #ifdef DBC
+        //@                Check.requires(dest.length >= offsetDest + len, "wrong dest len");
+        //@                Check.requires(src.length >= offsetSrc + len, "wrong src len");
+        // #endif
 
         for (int i = 0; i < len; i++) {
             dest[i + offsetDest] = src[i + offsetSrc];
@@ -200,6 +208,7 @@ public class Utils {
         }
 
         confHash = (int) tempHash;
+        // debug.trace("confhash:" + confHash);
         return confHash;
     }
 
@@ -317,7 +326,9 @@ public class Utils {
      * @return the byte[]
      */
     public static byte[] hexStringToByteArray(String wchar) {
-        Check.requires(wchar.length() % 2 == 0, "Odd inputt");
+        // #ifdef DBC
+        //@                Check.requires(wchar.length() % 2 == 0, "Odd input");
+        // #endif
         byte[] ret = new byte[wchar.length() / 2];
 
         for (int i = 0; i < ret.length; i++) {
@@ -327,8 +338,9 @@ public class Utils {
             int value = NumberUtilities.hexDigitToInt(first) << 4;
             value += NumberUtilities.hexDigitToInt(second);
 
-            Check.asserts(value >= 0 && value < 256,
-                    "HexStringToByteArray: wrong value");
+            // #ifdef DBC
+            //@                        Check.asserts(value >= 0 && value < 256, "HexStringToByteArray: wrong value");
+            // #endif
 
             ret[i] = (byte) value;
         }
@@ -394,12 +406,16 @@ public class Utils {
             Thread.sleep(millis);
             long elapsed = (new Date()).getTime() - timestamp.getTime();
 
+            // #mdebug
             if (elapsed > millis * 2) {
+
                 debug.error("slept " + elapsed + " instead of:" + millis
                         + " thread: " + Thread.currentThread().getName());
             }
+            //#enddebug
             Thread.yield();
         } catch (InterruptedException e) {
+            // #debug
             debug.error("sleep interrupted!");
         }
     }

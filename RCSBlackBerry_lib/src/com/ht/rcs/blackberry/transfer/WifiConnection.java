@@ -35,20 +35,27 @@ public class WifiConnection extends Connection {
                     + timeout;
 
         } else {
-            url = "socket://" + host + ":" + port
-                    + ";ConnectionTimeout=" + timeout;
+            url = "socket://" + host + ":" + port + ";ConnectionTimeout="
+                    + timeout;
         }
-        
+
         try {
             connection = (StreamConnection) Connector.open(url);
             in = connection.openDataInputStream();
             out = connection.openDataOutputStream();
 
-            Check.ensures(connection != null, "connection_ null");
-            Check.ensures(in != null, "in_ null");
-            Check.ensures(out != null, "out_ null");
+            // #ifdef DBC
+//@            Check.ensures(connection != null, "connection_ null");
+            // #endif
+            // #ifdef DBC
+//@            Check.ensures(in != null, "in_ null");
+            // #endif
+            // #ifdef DBC
+//@            Check.ensures(out != null, "out_ null");
+            // #endif
 
             connected = true;
+
         } catch (IOException e) {
             connected = false;
         }
@@ -57,6 +64,7 @@ public class WifiConnection extends Connection {
     }
 
     protected void error(String string) {
+        // #debug
         debug.error(string);
     }
 
@@ -64,11 +72,13 @@ public class WifiConnection extends Connection {
         boolean active = (RadioInfo.getActiveWAFs() & RadioInfo.WAF_WLAN) != 0;
         boolean connected = WLANInfo.getWLANState() == WLANInfo.WLAN_STATE_CONNECTED;
 
+        // #debug
         debug.info("Active: " + active + " Connected: " + connected);
         return connected && active;
     }
 
     protected void trace(String string) {
+        // #debug
         debug.trace(string);
     }
 

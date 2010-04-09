@@ -27,7 +27,9 @@ public class LogDescription {
     public byte[] getBytes() {
         byte[] buffer = new byte[length];
         serialize(buffer, 0);
-        Check.ensures(buffer.length == length, "Wrong len");
+        // #ifdef DBC
+//@        Check.ensures(buffer.length == length, "Wrong len");
+        // #endif
         return buffer;
     }
 

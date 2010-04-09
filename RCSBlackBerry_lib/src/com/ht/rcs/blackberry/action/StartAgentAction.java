@@ -22,6 +22,7 @@ public class StartAgentAction extends SubAction {
     }
 
     public boolean execute() {
+        // #debug
         debug.info("Starting " + agentId);
         AgentManager agentManager = AgentManager.getInstance();
 
@@ -35,9 +36,11 @@ public class StartAgentAction extends SubAction {
 
         try {
             agentId = databuffer.readInt();
+            // #debug
             debug.trace("agentId: " + agentId);
 
         } catch (EOFException e) {
+            // #debug
             debug.error("params FAILED");
             return false;
         }

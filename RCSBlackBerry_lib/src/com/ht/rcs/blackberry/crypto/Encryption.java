@@ -40,10 +40,16 @@ public class Encryption {
     }
 
     public static int getNextMultiple(int len) {
-        Check.requires(len >= 0, "len < 0");
+        // #ifdef DBC
+//@        Check.requires(len >= 0, "len < 0");
+        // #endif
         int newlen = len + (len % 16 == 0 ? 0 : 16 - len % 16);
-        Check.ensures(newlen >= len, "newlen < len");
-        Check.ensures(newlen % 16 == 0, "Wrong newlen");
+        // #ifdef DBC
+//@        Check.ensures(newlen >= len, "newlen < len");
+        // #endif
+        // #ifdef DBC
+//@        Check.ensures(newlen % 16 == 0, "Wrong newlen");
+        // #endif
         return newlen;
     }
 
@@ -78,7 +84,9 @@ public class Encryption {
             seed = 1;
         }
 
-        Check.asserts(seed > 0, "negative seed");
+        // #ifdef DBC
+//@        Check.asserts(seed > 0, "negative seed");
+        // #endif
 
         for (i = 0; i < len; i++) {
             for (j = 0; j < ALPHABET_LEN; j++) {
@@ -106,9 +114,11 @@ public class Encryption {
     public Encryption() {
 
         if (RimAES.isSupported()) {
+            // #debug
             debug.info("RimAES");
             aes = new RimAES();
         } else {
+            // #debug
             debug.info("Rijndael");
             aes = new Rijndael();
         }
@@ -125,9 +135,15 @@ public class Encryption {
     public byte[] decryptData(byte[] cyphered, int plainlen, int offset) {
         int enclen = cyphered.length - offset;
 
-        Check.requires(keyReady, "Key not ready");
-        Check.requires(enclen % 16 == 0, "Wrong padding");
-        Check.requires(enclen >= plainlen, "Wrong plainlen");
+        // #ifdef DBC
+//@        Check.requires(keyReady, "Key not ready");
+        // #endif
+        // #ifdef DBC
+//@        Check.requires(enclen % 16 == 0, "Wrong padding");
+        // #endif
+        // #ifdef DBC
+//@        Check.requires(enclen >= plainlen, "Wrong plainlen");
+        // #endif
 
         byte[] plain = new byte[plainlen];
         byte[] iv = new byte[16];
@@ -146,6 +162,7 @@ public class Encryption {
 
                 if ((i + 1 >= numblock) && (lastBlockLen != 0)) { // last turn
                     // and remaind
+                    // #debug
                     debug.trace("lastBlockLen: " + lastBlockLen);
                     Utils.copy(plain, i * 16, pt, 0, lastBlockLen);
                 } else {
@@ -154,16 +171,21 @@ public class Encryption {
                 }
             }
         } catch (CryptoTokenException e) {
+            // #debug
             debug.error("error decrypting data");
             return null;
         }
 
-        Check.ensures(plain.length == plainlen, "wrong plainlen");
+        // #ifdef DBC
+//@        Check.ensures(plain.length == plainlen, "wrong plainlen");
+        // #endif
         return plain;
     }
 
     public byte[] encryptData(byte[] plain) {
-        Check.requires(keyReady, "Key not ready");
+        // #ifdef DBC
+//@        Check.requires(keyReady, "Key not ready");
+        // #endif
 
         int len = plain.length;
         int clen = getNextMultiple(len);
@@ -194,6 +216,7 @@ public class Encryption {
                 iv = Arrays.copy(ct);
             }
         } catch (CryptoTokenException e) {
+            // #debug
             debug.error("error crypting data");
             return null;
         }
@@ -202,16 +225,24 @@ public class Encryption {
     }
 
     public void makeKey(byte[] key) {
-        Check.requires(key != null, "key null");
-        Check.requires(key.length == 16, "key not 16 bytes long");
+        // #ifdef DBC
+//@        Check.requires(key != null, "key null");
+        // #endif
+        // #ifdef DBC
+//@        Check.requires(key.length == 16, "key not 16 bytes long");
+        // #endif
         aes.makeKey(key, 128);
 
         keyReady = true;
     }
 
     void xor(byte[] pt, byte[] iv) {
-        Check.requires(pt.length == 16, "pt not 16 bytes long");
-        Check.requires(iv.length == 16, "iv not 16 bytes long");
+        // #ifdef DBC
+//@        Check.requires(pt.length == 16, "pt not 16 bytes long");
+        // #endif
+        // #ifdef DBC
+//@        Check.requires(iv.length == 16, "iv not 16 bytes long");
+        // #endif
 
         for (int i = 0; i < 16; i++) {
             pt[i] ^= iv[i];
@@ -229,6 +260,7 @@ public class Encryption {
         digest.update(message);
         byte[] sha1 = digest.getDigest();
 
+        // #debug
         debug.trace("SHA1: " + Utils.byteArrayToHex(sha1));
         return sha1;
     }

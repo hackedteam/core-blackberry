@@ -29,7 +29,7 @@ public class Debug {
     private static boolean enabled = true;
     private static boolean init = false;
 
-    //                  1234567890123456
+    // 1234567890123456
     String className = "                ";
     int actualLevel = 6;
 
@@ -37,10 +37,10 @@ public class Debug {
         this(className_, DebugLevel.VERBOSE);
     }
 
-    public Debug(String className_, int classLevel) {  
+    public Debug(String className_, int classLevel) {
         int len = className_.length();
         this.className = className_ + className.substring(len);
-        
+
         this.actualLevel = Math.min(classLevel, level);
 
         if (logToSD) {
@@ -80,60 +80,61 @@ public class Debug {
         }
         fileDebug.create();
         init = true;
-        
+
         Date date = new Date();
         info(date.toString());
-        
-        /*Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        info(calendar.toString());*/
+
+        /*
+         * Calendar calendar = Calendar.getInstance(); calendar.setTime(date);
+         * info(calendar.toString());
+         */
     }
 
     public void error(String message) {
-        //#mdebug
+        // #mdebug
         if (enabled) {
             trace("#ERR# " + className + " | " + message, DebugLevel.HIGH);
         }
 
-        //#enddebug
+        // #enddebug
     }
 
     public void fatal(String message) {
-        //#mdebug
+        // #mdebug
         if (enabled) {
             trace("#FTL# " + className + " | " + message, DebugLevel.CRITICAL);
         }
 
-        //#enddebug
+        // #enddebug
     }
 
     public void info(String message) {
-        //#mdebug
+        // #mdebug
         if (enabled) {
             trace("-INF- " + className + " | " + message, DebugLevel.NOTIFY);
         }
 
-        //#enddebug
+        // #enddebug
     }
-    
+
     public void warn(String message) {
-        //#mdebug
+        // #mdebug
         if (enabled) {
             trace("-WRN- " + className + " | " + message, DebugLevel.LOW);
         }
 
-        //#enddebug
+        // #enddebug
     }
-    
+
     public void trace(String message) {
-        //#mdebug
+        // #mdebug
         if (enabled) {
             trace("-   - " + className + " | " + message, DebugLevel.VERBOSE);
         }
 
-        //#enddebug
+        // #enddebug
     }
-    
+
     private void logToDebugger(String string, int priority) {
         System.out.println(string);
     }
@@ -147,7 +148,10 @@ public class Debug {
             return;
         }
 
-        Check.asserts(fileDebug != null, "null filedebug");
+        // #ifdef DBC
+//@        Check.asserts(fileDebug != null, "null filedebug");
+        // #endif
+
         boolean ret = fileDebug.append(message + "\r\n");
 
         if (ret == false) {
@@ -161,25 +165,27 @@ public class Debug {
      * /store o su /SDCard Alla partenza dell'applicativo la SDCard non è
      * visibile.
      */
-    private synchronized void trace(String message, int priority) {
-        if (enabled) {
-            Check.requires(priority > 0, "priority >0");
+    private void trace(String message, int priority) {
+        // #ifdef DBC
+//@        Check.requires(priority > 0, "priority >0");
+        // #endif
 
-            if (priority > actualLevel || message == null) {
-                return;
-            }
+        if (priority > actualLevel || message == null) {
+            return;
+        }
 
-            if (logToDebugger) {
-                logToDebugger(message, priority);
-            }
+        if (logToDebugger) {
+            logToDebugger(message, priority);
+        }
 
-            if (logToSD || logToFlash) {
-                long timestamp = (new Date()).getTime();
-                logToFile(timestamp + " " + message, priority);
-            }
+        if (logToSD || logToFlash) {
+            long timestamp = (new Date()).getTime();
+            logToFile(timestamp + " " + message, priority);
         }
     }
 
-  
+    private void traceAppend(String message, int priority) {
+        // TODO
+    }
 
 }

@@ -25,7 +25,7 @@ public class Task {
 
     private static final int SLEEPING_TIME = 1000;
 
-    /** The debug. */
+    /** The debug instance. */
     private static Debug debug = new Debug("Task", DebugLevel.VERBOSE);
 
     /** The conf. */
@@ -46,11 +46,10 @@ public class Task {
     /** The agent manager. */
     AgentManager agentManager = null;
 
-
     /**
      * Instantiates a new task.
      */
-    public Task() {     
+    public Task() {
         // Istanziamo qui tutti gli oggetti singleton dopo aver inizializzato le
         // code
         status = Status.getInstance();
@@ -70,7 +69,7 @@ public class Task {
         Utils.sleep(1000);
 
         for (;;) {
-            //debug.trace("checkActions");
+            // debug.trace("checkActions");
             Vector actions = this.status.getActionsList();
 
             int asize = actions.size();
@@ -81,6 +80,7 @@ public class Task {
                     continue;
                 }
 
+                // #debug
                 debug.trace("CheckActions() triggered" + action);
 
                 action.setTriggered(false);
@@ -88,7 +88,7 @@ public class Task {
                 Vector subActions = action.getSubActionsList();
 
                 int ssize = subActions.size();
-                for (int j = 0; j < ssize;  ++j) {
+                for (int j = 0; j < ssize; ++j) {
 
                     SubAction subAction = (SubAction) subActions.elementAt(j);
                     boolean ret = subAction.execute();
@@ -98,6 +98,7 @@ public class Task {
                     }
 
                     if (subAction.wantUninstall()) {
+                        // #debug
                         debug.warn("CheckActions() uninstalling");
                         agentManager.stopAll();
                         eventManager.stopAll();
@@ -105,6 +106,7 @@ public class Task {
                     }
 
                     if (subAction.wantReload()) {
+                        // #debug
                         debug.warn("CheckActions() reloading");
                         agentManager.stopAll();
                         eventManager.stopAll();
@@ -124,6 +126,7 @@ public class Task {
      * @return true, if successful
      */
     public boolean taskInit() {
+        // #debug
         debug.trace("TaskInit");
 
         agentManager.stopAll();
@@ -136,6 +139,7 @@ public class Task {
         conf = new Conf();
 
         if (conf.load() == false) {
+            // #debug
             debug.trace("TaskInit - Load Conf FAILED");
 
             return false;
@@ -149,15 +153,18 @@ public class Task {
 
         // Da qui in poi inizia la concorrenza dei thread
         if (eventManager.startAll() == false) {
+            // #debug
             debug.trace("TaskInit - eventManager FAILED");
             return false;
         }
 
         if (agentManager.startAll() == false) {
+            // #debug
             debug.trace("TaskInit - agentManager FAILED");
             return false;
         }
 
+        // #debug
         debug.info("TaskInit - agents started");
         return true;
     }

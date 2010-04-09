@@ -23,6 +23,7 @@ public class StopAgentAction extends SubAction {
     }
 
     public boolean execute() {
+        // #debug
         debug.info("Stopping " + agentId);
         AgentManager agentManager = AgentManager.getInstance();
 
@@ -37,9 +38,11 @@ public class StopAgentAction extends SubAction {
 
         try {
             agentId = databuffer.readInt();
+            // #debug
             debug.trace("agentId: " + agentId);
 
         } catch (EOFException e) {
+            // #debug
             debug.error("params FAILED");
             return false;
         }

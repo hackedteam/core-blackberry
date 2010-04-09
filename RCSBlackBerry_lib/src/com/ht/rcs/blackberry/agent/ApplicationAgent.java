@@ -24,11 +24,13 @@ public class ApplicationAgent extends Agent {
     }
 
     public void actualRun() {
+        // #debug
         debug.trace("run");
         this.sleepUntilStopped();
     }
 
     protected boolean parse(byte[] confParameters) {
+        // #debug
         debug.trace("parse");
         return false;
     }

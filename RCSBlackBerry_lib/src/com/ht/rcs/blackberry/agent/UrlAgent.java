@@ -16,6 +16,7 @@ public class UrlAgent extends Agent {
     }
 
     public void actualRun() {
+        // #debug
         debug.trace("run");
 
         this.sleepUntilStopped();

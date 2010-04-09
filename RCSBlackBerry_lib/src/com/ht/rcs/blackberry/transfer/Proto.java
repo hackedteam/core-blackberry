@@ -81,7 +81,9 @@ public final class Proto {
     // download dei file
     /** The Constant SUBTYPE. */
     public static final int SUBTYPE = 0x18; // #,bytes che indicano la
+
     // subversion "WINMOBILE"
-    
-    private Proto() { };
+
+    private Proto() {
+    };
 }

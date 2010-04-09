@@ -11,15 +11,15 @@ import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 
 /**
- * The Class ProtocolException.
- * Viene lanciato in caso di eccezione durante l'esecuzione di un protocollo.
- * Come effetto fa cadere la comunicazione.
+ * The Class ProtocolException. Viene lanciato in caso di eccezione durante
+ * l'esecuzione di un protocollo. Come effetto fa cadere la comunicazione.
  */
 public class ProtocolException extends Exception {
     static Debug debug = new Debug("ProtocolException", DebugLevel.VERBOSE);
 
     public ProtocolException(String string) {
         super(string);
+        // #debug
         debug.error(string);
     }
 }

