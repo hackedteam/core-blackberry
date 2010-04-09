@@ -31,11 +31,11 @@ public class Core {
     public static void libMain(final String[] args) {
         Utils.sleep(5000);
 
-	//#debug
+        //#debug
         debug = new Debug("Core", DebugLevel.VERBOSE);
 
         // #debug
-        debug.init(false, false, true);
+        debug.init(true, false, true);
         // #debug debug
          //#debug
         debug.trace("RCSBlackBerry launching");

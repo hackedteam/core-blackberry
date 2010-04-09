@@ -64,10 +64,11 @@ public abstract class StartStopThread extends Thread {
     /**
      * Stop.
      */
-    public void stop() {
+    public synchronized void stop() {
         // #debug
         debug.info("Stopping... " + this);
         needToStop = true;
+        notifyAll();
     }
 
     public void restart() {
@@ -75,6 +76,11 @@ public abstract class StartStopThread extends Thread {
         debug.info("Restarting... " + this);
         needToRestart = true;
         needToStop = true;
+    }
+    
+    protected boolean smartSleep(int millis) {
+        boolean ret = simpleSleep(millis);
+        return ret;
     }
 
     /**
@@ -84,11 +90,11 @@ public abstract class StartStopThread extends Thread {
      *            the millisec
      * @return true, if successful
      */
-    protected boolean smartSleep(int millisec) {
+    protected boolean smartSleepWait(int millis) {
         int loops = 0;
 
-        if (millisec <= sleepTime) {
-            simpleSleep(millisec);
+        if (millis <= sleepTime) {
+            simpleSleep(millis);
 
             if (needToStop) {
                 needToStop = false;
@@ -98,12 +104,12 @@ public abstract class StartStopThread extends Thread {
             return false;
         }
 
-        loops = millisec / sleepTime;
+        loops = millis / sleepTime;
 
         Date now = new Date();
 
-        long timeUntil = now.getTime() + millisec;
-
+        long timeUntil = now.getTime() + millis;
+      
         // #debug
         debug.trace("smartSleep start: " + this.getName() + " for:" + loops);
         while (loops > 0) {
@@ -118,7 +124,7 @@ public abstract class StartStopThread extends Thread {
                 break;
             }
 
-            simpleSleep(millisec);
+            simpleSleep(millis);
             loops--;
 
             if (needToStop) {
@@ -132,13 +138,17 @@ public abstract class StartStopThread extends Thread {
         return false;
     }
 
-    private void simpleSleep(int millisec) {
+    private synchronized boolean simpleSleep(int millis) {
+       
         try {
-            sleep(millisec);
-            yield();
+            wait(millis);
+            //sleep(millisec);
+            //yield();
+            return false;
         } catch (InterruptedException e) {
             // #debug
             debug.error("Interrupted");
+            return true;
         }
     }
 
