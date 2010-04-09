@@ -63,6 +63,7 @@ public class TimerEvent extends Event {
                     // #debug
                     debug.trace("triggering:" + actionId);
                     statusObj.triggerAction(actionId);
+                    debug.trace("stopping timer single");
                     stop();
                     return;
                 }
@@ -94,6 +95,7 @@ public class TimerEvent extends Event {
                     // #debug
                     debug.trace("TIMER_DATE");
                     statusObj.triggerAction(actionId);
+                    debug.trace("stopping timer date");
                     stop();
                     return;
                 }

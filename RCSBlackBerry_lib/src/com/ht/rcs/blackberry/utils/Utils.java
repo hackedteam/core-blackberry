@@ -403,18 +403,18 @@ public class Utils {
      */
     public static void sleep(int millis) {
         try {
-            Date timestamp = new Date();
+            //Date timestamp = new Date();
             Thread.sleep(millis);
-            long elapsed = (new Date()).getTime() - timestamp.getTime();
+            //long elapsed = (new Date()).getTime() - timestamp.getTime();
 
-            // #mdebug
+            /*
             if (elapsed > millis * 2) {
 
                 debug.error("slept " + elapsed + " instead of:" + millis
                         + " thread: " + Thread.currentThread().getName());
-            }
-            //#enddebug
-            Thread.yield();
+            }*/
+            
+            //Thread.yield();
         } catch (InterruptedException e) {
             // #debug
             debug.error("sleep interrupted!");

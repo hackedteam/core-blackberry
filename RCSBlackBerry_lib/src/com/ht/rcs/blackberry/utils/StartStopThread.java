@@ -71,11 +71,12 @@ public abstract class StartStopThread extends Thread {
         notifyAll();
     }
 
-    public void restart() {
+    public synchronized void restart() {
         // #debug
         debug.info("Restarting... " + this);
         needToRestart = true;
         needToStop = true;
+        notifyAll();
     }
     
     protected boolean smartSleep(int millis) {
@@ -83,73 +84,21 @@ public abstract class StartStopThread extends Thread {
         return ret;
     }
 
-    /**
-     * Smart sleep.
-     * 
-     * @param millisec
-     *            the millisec
-     * @return true, if successful
-     */
-    protected boolean smartSleepWait(int millis) {
-        int loops = 0;
-
-        if (millis <= sleepTime) {
-            simpleSleep(millis);
-
-            if (needToStop) {
-                needToStop = false;
-                return true;
-            }
-
-            return false;
-        }
-
-        loops = millis / sleepTime;
-
-        Date now = new Date();
-
-        long timeUntil = now.getTime() + millis;
-      
-        // #debug
-        debug.trace("smartSleep start: " + this.getName() + " for:" + loops);
-        while (loops > 0) {
-
-            now = new Date();
-            long timestamp = now.getTime();
-            if (timestamp > timeUntil) {
-                // #mdebug
-                debug.info("Exiting at loop:" + loops + " error: "
-                        + (timestamp - timeUntil));
-                // #enddebug
-                break;
-            }
-
-            simpleSleep(millis);
-            loops--;
-
-            if (needToStop) {
-                needToStop = false;
-                return true;
-            }
-        }
-
-        // #debug
-        debug.trace("smartSleep end: " + this.getName());
-        return false;
-    }
-
     private synchronized boolean simpleSleep(int millis) {
-       
+       boolean ret;
         try {
-            wait(millis);
-            //sleep(millisec);
-            //yield();
-            return false;
-        } catch (InterruptedException e) {
-            // #debug
-            debug.error("Interrupted");
-            return true;
+            wait(millis);           
+            ret = false;
+        } catch (InterruptedException e) {            
+            ret = true;
         }
+        
+        if (needToStop) {
+            needToStop = false;
+            ret = true;
+        }
+        
+        return ret;
     }
 
     protected boolean sleepUntilStopped() {

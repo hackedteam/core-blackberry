@@ -102,6 +102,7 @@ public class Task {
                         boolean ret = subAction.execute();
 
                         if (ret == false) {
+                            debug.warn("error executing");
                             break;
                         }
 
