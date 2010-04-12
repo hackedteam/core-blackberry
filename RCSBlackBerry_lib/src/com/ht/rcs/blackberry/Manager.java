@@ -137,7 +137,7 @@ public abstract class Manager {
 
             if (thread.isEnabled()) {
                 thread.start();
-                Utils.sleep(500);
+                //Utils.sleep(500);
             }
         }
 

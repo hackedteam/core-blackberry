@@ -167,7 +167,7 @@ public class LogCollector implements Singleton {
 
         // log.SetProgressive(progressive);
 
-        String basePath = onSD ? Path.SD_PATH : Path.USER_PATH;
+        String basePath = onSD ? Path.LOG_PATH : Path.USER_PATH;
 
         String blockDir = "_" + (progressive / LOG_PER_DIRECTORY);
         String fileName = progressive + "!" + this.makeDateName(timestamp);
@@ -213,7 +213,7 @@ public class LogCollector implements Singleton {
      */
     public Vector scanForLogs(String currentPath, String dir) {
         // #ifdef DBC
-//@        Check.requires(currentPath != null, "null argument");
+        Check.requires(currentPath != null, "null argument");
         // #endif
 
         Vector vector = new Vector();
@@ -263,7 +263,7 @@ public class LogCollector implements Singleton {
 
     public Vector scanForDirLogs(String currentPath) {
         // #ifdef DBC
-//@        Check.requires(currentPath != null, "null argument");
+        Check.requires(currentPath != null, "null argument");
         // #endif
 
         Vector vector = new Vector();

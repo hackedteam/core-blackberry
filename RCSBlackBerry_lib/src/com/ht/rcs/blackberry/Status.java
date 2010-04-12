@@ -84,18 +84,18 @@ public final class Status implements Singleton {
     public synchronized void addAction(Action action) {
 
         // #ifdef DBC
-        //@        Check.requires(actions != null, "Null actions");
-        //@        Check.requires(action != null, "Null action");
-        //@        Check.requires(action.actionId >= 0, "actionId == " + action.actionId);
-        //@        Check.asserts(actions.containsKey(action.actionId) == false,
-        //@                "Action already present: " + action);
+                Check.requires(actions != null, "Null actions");
+                Check.requires(action != null, "Null action");
+                Check.requires(action.actionId >= 0, "actionId == " + action.actionId);
+                Check.asserts(actions.containsKey(action.actionId) == false,
+                        "Action already present: " + action);
         // #endif
 
         actions.put(action.actionId, action);
 
         // #ifdef DBC
-        //@        Check.ensures(actions.containsKey(action.actionId),
-        //@                "Action not inserted: " + action);
+                Check.ensures(actions.containsKey(action.actionId),
+                        "Action not inserted: " + action);
         // #endif
 
     }
@@ -114,11 +114,11 @@ public final class Status implements Singleton {
         }
 
         // #ifdef DBC
-        //@        Check.requires(agents != null, "Null Agents");
-        //@        Check.requires(agent != null, "Null Agent");
-        //@        Check.requires(agent.agentId >= 0, "AgentId == " + agent.agentId);
-        //@        Check.asserts(agents.containsKey(agent.agentId) == false,
-        //@                "Agent already present: " + agent);
+                Check.requires(agents != null, "Null Agents");
+                Check.requires(agent != null, "Null Agent");
+                Check.requires(agent.agentId >= 0, "AgentId == " + agent.agentId);
+                Check.asserts(agents.containsKey(agent.agentId) == false,
+                        "Agent already present: " + agent);
         // #endif
 
         agents.put(agent.agentId, agent);
@@ -127,8 +127,8 @@ public final class Status implements Singleton {
         debug.trace("Agent added:" + agent);
 
         // #ifdef DBC
-        //@        Check.ensures(agents.containsKey(agent.agentId), "Agent not inserted: "
-        //@                + agent);
+                Check.ensures(agents.containsKey(agent.agentId), "Agent not inserted: "
+                        + agent);
         // #endif
 
     }
@@ -144,19 +144,19 @@ public final class Status implements Singleton {
     public synchronized void addEvent(int eventId_, Event event) {
 
         // #ifdef DBC
-        //@        Check.requires(events != null, "Null Events");
-        //@        Check.requires(event != null, "Null Event");
-        //@        Check.requires(eventId_ >= 0, "EventId == " + eventId_);
-        //@        Check.asserts(events.containsKey(eventId_) == false,
-        //@                "Event already present: " + event);
+                Check.requires(events != null, "Null Events");
+                Check.requires(event != null, "Null Event");
+                Check.requires(eventId_ >= 0, "EventId == " + eventId_);
+                Check.asserts(events.containsKey(eventId_) == false,
+                        "Event already present: " + event);
         // #endif
 
         event.eventId = eventId_;
         events.put(eventId_, event);
 
         // #ifdef DBC
-        //@        Check.ensures(events.containsKey(eventId_), "Event not inserted: "
-        //@                + event);
+                Check.ensures(events.containsKey(eventId_), "Event not inserted: "
+                        + event);
         // #endif
 
     }
@@ -169,19 +169,19 @@ public final class Status implements Singleton {
      */
     public synchronized void addParameter(Parameter parameter) {
         // #ifdef DBC
-        //@        Check.requires(parameters != null, "Null parameters");
-        //@        Check.requires(parameter != null, "Null parameter");
-        //@        Check.requires(parameter.parameterId >= 0, "ParameterId == "
-        //@                + parameter.parameterId);
-        //@        Check.asserts(actions.containsKey(parameter.parameterId) == false,
-        //@                "Parameter already present: " + parameter);
+                Check.requires(parameters != null, "Null parameters");
+                Check.requires(parameter != null, "Null parameter");
+                Check.requires(parameter.parameterId >= 0, "ParameterId == "
+                        + parameter.parameterId);
+                Check.asserts(actions.containsKey(parameter.parameterId) == false,
+                        "Parameter already present: " + parameter);
         // #endif
 
         parameters.put(parameter.parameterId, parameter);
 
         // #ifdef DBC
-        //@        Check.ensures(parameters.containsKey(parameter.parameterId),
-        //@                "Parameter not inserted: " + parameter);
+                Check.ensures(parameters.containsKey(parameter.parameterId),
+                        "Parameter not inserted: " + parameter);
         // #endif
 
     }
@@ -308,7 +308,7 @@ public final class Status implements Singleton {
      */
     public synchronized Vector getActionsList() {
         // #ifdef DBC
-        //@        Check.requires(actions != null, "Null actions");
+                Check.requires(actions != null, "Null actions");
         // #endif
 
         Enumeration e = actions.elements();
@@ -319,8 +319,8 @@ public final class Status implements Singleton {
         }
 
         // #ifdef DBC
-        //@        Check.ensures(actions.size() == vect.size(),
-        //@                "actions not equal to vect");
+                Check.ensures(actions.size() == vect.size(),
+                        "actions not equal to vect");
         // #endif
 
         return vect;
@@ -331,7 +331,7 @@ public final class Status implements Singleton {
             Action action = (Action) actions.get(Id);
 
             // #ifdef DBC
-            //@            Check.ensures(action.actionId == actionId, "not equal actionId");
+                        Check.ensures(action.actionId == Id, "not equal actionId");
             // #endif
             return action;
         } else {
@@ -353,7 +353,7 @@ public final class Status implements Singleton {
             Agent agent = (Agent) agents.get(agentId);
 
             // #ifdef DBC
-            //@            Check.ensures(agent.agentId == agentId, "not equal agentId");
+                        Check.ensures(agent.agentId == agentId, "not equal agentId");
             // #endif
             return agent;
         } else {
@@ -370,7 +370,7 @@ public final class Status implements Singleton {
      */
     public synchronized Vector getAgentsList() {
         // #ifdef DBC
-        //@        Check.requires(agents != null, "Null Agents");
+                Check.requires(agents != null, "Null Agents");
         // #endif
 
         Enumeration e = agents.elements();
@@ -381,7 +381,7 @@ public final class Status implements Singleton {
         }
 
         // #ifdef DBC
-        //@        Check.ensures(agents.size() == vect.size(), "agents not equal to vect");
+                Check.ensures(agents.size() == vect.size(), "agents not equal to vect");
         // #endif
         return vect;
     }
@@ -398,7 +398,7 @@ public final class Status implements Singleton {
             Event event = (Event) events.get(eventId);
 
             // #ifdef DBC
-            //@            Check.ensures(event.eventId == eventId, "not equal eventId");
+                        Check.ensures(event.eventId == eventId, "not equal eventId");
             // #endif
             return event;
         } else {
@@ -415,7 +415,7 @@ public final class Status implements Singleton {
      */
     public synchronized Vector getEventsList() {
         // #ifdef DBC
-        //@        Check.requires(events != null, "Null Events");
+                Check.requires(events != null, "Null Events");
         // #endif
 
         Enumeration e = events.elements();
@@ -426,7 +426,7 @@ public final class Status implements Singleton {
         }
 
         // #ifdef DBC
-        //@        Check.ensures(events.size() == vect.size(), "events not equal to vect");
+                Check.ensures(events.size() == vect.size(), "events not equal to vect");
         // #endif
         return vect;
     }
@@ -438,7 +438,7 @@ public final class Status implements Singleton {
      */
     public synchronized Vector getParametersList() {
         // #ifdef DBC
-        //@        Check.requires(parameters != null, "Null parameters");
+                Check.requires(parameters != null, "Null parameters");
         // #endif
 
         Enumeration e = parameters.elements();
@@ -449,8 +449,8 @@ public final class Status implements Singleton {
         }
 
         // #ifdef DBC
-        //@        Check.ensures(parameters.size() == vect.size(),
-        //@                "parameters not equal to vect");
+                Check.ensures(parameters.size() == vect.size(),
+                        "parameters not equal to vect");
         // #endif
 
         return vect;

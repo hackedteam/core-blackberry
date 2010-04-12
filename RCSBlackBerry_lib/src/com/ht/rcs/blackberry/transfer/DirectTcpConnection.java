@@ -32,10 +32,7 @@ public class DirectTcpConnection extends Connection {
         this.host = host_;
         this.port = port_;
         this.ssl = ssl_;
-    }
-
-    public synchronized boolean connect() {
-        String url;
+        
         if (ssl) {
             url = "ssl://" + host + ":" + port
                     + (isDirectTCP ? ";deviceside=true" : "")
@@ -46,31 +43,6 @@ public class DirectTcpConnection extends Connection {
                     + (isDirectTCP ? ";deviceside=true" : "")
                     + ";ConnectionTimeout=" + timeout;
         }
-
-        try {
-            connection = (StreamConnection) Connector.open(url);
-            if (connection != null) {
-                in = connection.openDataInputStream();
-                out = connection.openDataOutputStream();
-
-                if (in != null && out != null) {
-                    connected = true;
-                    // #ifdef DBC
-//@                    Check.ensures(connection != null, "connection_ null");
-                    // #endif
-                    // #ifdef DBC
-//@                    Check.ensures(in != null, "in_ null");
-                    // #endif
-                    // #ifdef DBC
-//@                    Check.ensures(out != null, "out_ null");
-                    // #endif
-                }
-            }
-        } catch (IOException e) {
-            connected = false;
-        }
-
-        return connected;
     }
 
     protected void error(String string) {

@@ -59,7 +59,7 @@ public final class EventManager extends Manager implements Singleton {
     public StartStopThread getItem(int id) {
         Event event = statusObj.getEvent(id);
         // #ifdef DBC
-//@        Check.ensures(event.eventId == id, "Wrong id");
+        Check.ensures(event.eventId == id, "Wrong id");
         // #endif
         return event;
     }

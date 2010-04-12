@@ -66,7 +66,7 @@ public final class Device implements Singleton {
     public static byte[] getVersion() {
         byte[] versionRet = Utils.intToByteArray(VERSION);
         // #ifdef DBC
-//@        Check.ensures(versionRet.length == 4, "Wrong version len");
+        Check.ensures(versionRet.length == 4, "Wrong version len");
         // #endif
         return versionRet;
     }
@@ -85,7 +85,7 @@ public final class Device implements Singleton {
     public byte[] getWImei() {
 
         // #ifdef DBC
-//@        Check.ensures(imei != null, "null imei");
+        Check.ensures(imei != null, "null imei");
         // #endif
         return WChar.getBytes(Utils.imeiToString(imei));
     }
@@ -93,7 +93,7 @@ public final class Device implements Singleton {
     public String getImei() {
 
         // #ifdef DBC
-//@        Check.ensures(imei != null, "null imei");
+        Check.ensures(imei != null, "null imei");
         // #endif
         return Utils.imeiToString(imei);
     }
@@ -118,7 +118,7 @@ public final class Device implements Singleton {
      */
     public byte[] getWPhoneNumber() {
         // #ifdef DBC
-//@        Check.ensures(phoneNumber != null, "null phoneNumber");
+        Check.ensures(phoneNumber != null, "null phoneNumber");
         // #endif
         byte[] encoded = WChar.getBytes(phoneNumber);
         return encoded;
@@ -126,7 +126,7 @@ public final class Device implements Singleton {
 
     public String getPhoneNumber() {
         // #ifdef DBC
-//@        Check.ensures(phoneNumber != null, "null phoneNumber");
+        Check.ensures(phoneNumber != null, "null phoneNumber");
         // #endif
         return phoneNumber;
     }

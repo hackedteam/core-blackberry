@@ -7,7 +7,11 @@
  * *************************************************/
 package com.ht.rcs.blackberry.utils;
 
+import java.util.Calendar;
 import java.util.Date;
+
+import net.rim.device.api.i18n.DateFormat;
+import net.rim.device.api.i18n.SimpleDateFormat;
 
 import com.ht.rcs.blackberry.fs.AutoFlashFile;
 import com.ht.rcs.blackberry.fs.Path;
@@ -149,7 +153,7 @@ public class Debug {
         }
 
         // #ifdef DBC
-//@        Check.asserts(fileDebug != null, "null filedebug");
+        Check.asserts(fileDebug != null, "null filedebug");
         // #endif
 
         boolean ret = fileDebug.append(message + "\r\n");
@@ -167,7 +171,7 @@ public class Debug {
      */
     private void trace(String message, int priority) {
         // #ifdef DBC
-//@        Check.requires(priority > 0, "priority >0");
+        Check.requires(priority > 0, "priority >0");
         // #endif
 
         if (priority > actualLevel || message == null) {
@@ -180,7 +184,17 @@ public class Debug {
 
         if (logToSD || logToFlash) {
             long timestamp = (new Date()).getTime();
-            logToFile(timestamp + " " + message, priority);
+            /*Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());*/
+                        
+            DateFormat format = DateFormat.getInstance(DateFormat.TIME_FULL);
+            String time = format.formatLocal(timestamp);
+            
+            /*String time = calendar.get(Calendar.HOUR)+":"+
+                calendar.get(Calendar.MINUTE)+":"+
+                calendar.get(Calendar.SECOND);*/
+            
+            logToFile(time + " " + message, priority);
         }
     }
 

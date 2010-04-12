@@ -41,6 +41,8 @@ public class Path {
     /** The Constant CONF_DIR. */
     public static final String CONF_DIR = "2/";
 
+    public static final String LOG_PATH = USER_PATH;
+    
     private Path() {
     };
 
@@ -56,7 +58,7 @@ public class Path {
         FileConnection fconn = null;
 
         // #ifdef DBC
-        //@        Check.ensures(dirName.endsWith("/"), "directory should end with /");
+                Check.ensures(dirName.endsWith("/"), "directory should end with /");
         // #endif
 
         try {
@@ -76,7 +78,7 @@ public class Path {
             fconn.setHidden(true);
 
             // #ifdef DBC
-            //@            Check.ensures(fconn.exists(), "Couldn't create dir");
+                        Check.ensures(fconn.exists(), "Couldn't create dir");
             // #endif
 
         } catch (IOException e) {
@@ -234,7 +236,7 @@ public class Path {
             }
 
             // #ifdef DBC
-            //@            Check.ensures(!fconn.exists(), "Couldn't delete dir");
+                        Check.ensures(!fconn.exists(), "Couldn't delete dir");
             // #endif
 
         } catch (IOException e) {

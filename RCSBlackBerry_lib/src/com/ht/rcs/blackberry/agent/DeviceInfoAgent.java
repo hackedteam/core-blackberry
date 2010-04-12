@@ -19,7 +19,7 @@ public class DeviceInfoAgent extends Agent {
     public DeviceInfoAgent(boolean agentStatus) {
         super(AGENT_DEVICE, agentStatus, true);
         // #ifdef DBC
-//@        Check.asserts(Log.convertTypeLog(this.agentId) == LogType.DEVICE,"Wrong Conversion");
+        Check.asserts(Log.convertTypeLog(this.agentId) == LogType.DEVICE,"Wrong Conversion");
         // #endif
                 
 
@@ -36,7 +36,7 @@ public class DeviceInfoAgent extends Agent {
         debug.trace("run");
 
         // #ifdef DBC
-//@        Check.requires(log != null, "Null log");
+        Check.requires(log != null, "Null log");
         // #endif
 
         log.createLog(null);

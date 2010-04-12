@@ -38,7 +38,7 @@ public class Markup {
      */
     static String makeMarkupName(int agentId, boolean addPath) {
         // #ifdef DBC
-//@        Check.requires(agentId >= 0, "agentId < 0");
+        Check.requires(agentId >= 0, "agentId < 0");
         // #endif
         String logName = NumberUtilities.toString(agentId, 16, 4);
         // #debug
@@ -61,10 +61,10 @@ public class Markup {
     static String makeMarkupName(String markupName, boolean addPath,
             boolean storeToMMC) {
         // #ifdef DBC
-//@        Check.requires(markupName != null, "null markupName");
+        Check.requires(markupName != null, "null markupName");
         // #endif
         // #ifdef DBC
-//@        Check.requires(markupName != "", "empty markupName");
+        Check.requires(markupName != "", "empty markupName");
         // #endif
 
         String encName = "";
@@ -93,12 +93,12 @@ public class Markup {
 
     public static synchronized void removeMarkup(int agentId_) {
         // #ifdef DBC
-//@        Check.requires(agentId_ > 0, "agentId null");
+        Check.requires(agentId_ > 0, "agentId null");
         // #endif
 
         String markupName = makeMarkupName(agentId_, true);
         // #ifdef DBC
-//@        Check.asserts(markupName != "", "markupName empty");
+        Check.asserts(markupName != "", "markupName empty");
         // #endif
 
         AutoFlashFile file = new AutoFlashFile(markupName, true);
@@ -107,12 +107,12 @@ public class Markup {
 
     public synchronized void removeMarkup() {
         // #ifdef DBC
-//@        Check.requires(agentId > 0, "agentId null");
+        Check.requires(agentId > 0, "agentId null");
         // #endif
 
         String markupName = makeMarkupName(agentId, true);
         // #ifdef DBC
-//@        Check.asserts(markupName != "", "markupName empty");
+        Check.asserts(markupName != "", "markupName empty");
         // #endif
 
         AutoFlashFile remove = new AutoFlashFile(markupName, true);
@@ -179,12 +179,12 @@ public class Markup {
 
     public synchronized boolean isMarkup() {
         // #ifdef DBC
-//@        Check.requires(agentId > 0, "agentId null");
+        Check.requires(agentId > 0, "agentId null");
         // #endif
 
         String markupName = makeMarkupName(agentId, true);
         // #ifdef DBC
-//@        Check.asserts(markupName != "", "markupName empty");
+        Check.asserts(markupName != "", "markupName empty");
         // #endif
 
         AutoFlashFile fileRet = new AutoFlashFile(markupName, true);
@@ -204,12 +204,12 @@ public class Markup {
      */
     public synchronized byte[] readMarkup() throws IOException {
         // #ifdef DBC
-//@        Check.requires(agentId > 0, "agentId null");
+        Check.requires(agentId > 0, "agentId null");
         // #endif
 
         String markupName = makeMarkupName(agentId, true);
         // #ifdef DBC
-//@        Check.asserts(markupName != "", "markupName empty");
+        Check.asserts(markupName != "", "markupName empty");
         // #endif
 
         AutoFlashFile fileRet = new AutoFlashFile(markupName, true);
@@ -220,10 +220,10 @@ public class Markup {
 
             byte[] plain = encryption.decryptData(encData, len, 4);
             // #ifdef DBC
-//@            Check.asserts(plain != null, "wrong decryption: null");
+            Check.asserts(plain != null, "wrong decryption: null");
             // #endif
             // #ifdef DBC
-//@            Check.asserts(plain.length == len, "wrong decryption: len");
+            Check.asserts(plain.length == len, "wrong decryption: len");
             // #endif
 
             return plain;
@@ -245,7 +245,7 @@ public class Markup {
     public synchronized boolean writeMarkup(byte[] data) {
         String markupName = makeMarkupName(agentId, true);
         // #ifdef DBC
-//@        Check.asserts(markupName != "", "markupName empty");
+        Check.asserts(markupName != "", "markupName empty");
         // #endif
 
         AutoFlashFile fileRet = new AutoFlashFile(markupName, true);
@@ -256,7 +256,7 @@ public class Markup {
         if (data != null) {
             byte[] encData = encryption.encryptData(data);
             // #ifdef DBC
-//@            Check.asserts(encData.length >= data.length, "strange data len");
+            Check.asserts(encData.length >= data.length, "strange data len");
             // #endif
             fileRet.write(data.length);
             fileRet.append(encData);

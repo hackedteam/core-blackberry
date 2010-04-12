@@ -23,7 +23,7 @@ public class UninstallAction extends SubAction {
         parse(confParams);
 
         // #ifdef DBC
-//@        Check.requires(actionId == ACTION_UNINSTALL, "ActionId scorretto");
+        Check.requires(actionId == ACTION_UNINSTALL, "ActionId scorretto");
         // #endif
     }
 

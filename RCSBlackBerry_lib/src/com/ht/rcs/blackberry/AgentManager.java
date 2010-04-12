@@ -54,7 +54,7 @@ public final class AgentManager extends Manager implements Singleton {
 
     public Vector getAllItems() {
         // #ifdef DBC
-//@        Check.requires(statusObj != null, "Null status");
+        Check.requires(statusObj != null, "Null status");
         // #endif
         Vector agents = statusObj.getAgentsList();
         return agents;
@@ -62,11 +62,11 @@ public final class AgentManager extends Manager implements Singleton {
 
     public StartStopThread getItem(int id) {
         // #ifdef DBC
-//@        Check.requires(statusObj != null, "Null status");
+        Check.requires(statusObj != null, "Null status");
         // #endif
         Agent agent = statusObj.getAgent(id);
         // #ifdef DBC
-//@        Check.ensures(agent.agentId == id, "Wrong id");
+        Check.ensures(agent.agentId == id, "Wrong id");
         // #endif
 
         return agent;

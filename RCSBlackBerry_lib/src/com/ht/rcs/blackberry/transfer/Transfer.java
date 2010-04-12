@@ -7,6 +7,7 @@
  * *************************************************/
 package com.ht.rcs.blackberry.transfer;
 
+
 import java.io.IOException;
 import java.util.Random;
 import java.util.Vector;
@@ -88,7 +89,7 @@ public class Transfer {
             // #debug
              debug.error("Already connected");
             // #ifdef DBC
-//@            Check.asserts(connection != null, "connection null");
+            Check.asserts(connection != null, "connection null");
             // #endif
             return true;
         }
@@ -99,8 +100,12 @@ public class Transfer {
              debug.trace("Try wifi, ssl:" + ssl);
             connection = new WifiConnection(host, port, ssl);
             if (connection.isActive()) {
+                // #debug
+                debug.trace("wifi connecting...");
                 wifi = true;
                 connected = connection.connect();
+                //#debug
+                debug.trace("wifi connected: "+connected);
             }
         }
 
@@ -142,7 +147,7 @@ public class Transfer {
      */
     protected void fillPayload(Command command) throws ProtocolException {
         // #ifdef DBC
-//@        Check.ensures(command != null, "command null");
+        Check.ensures(command != null, "command null");
         // #endif
 
         try {
@@ -171,10 +176,10 @@ public class Transfer {
     protected void fillPayload(Command command, int len)
             throws ProtocolException {
         // #ifdef DBC
-//@        Check.ensures(command != null, "command null");
+        Check.ensures(command != null, "command null");
         // #endif
         // #ifdef DBC
-//@        Check.ensures(len > 0 && len < 65536, "wrong len: " + len);
+        Check.ensures(len > 0 && len < 65536, "wrong len: " + len);
         // #endif
 
         try {
@@ -350,7 +355,7 @@ public class Transfer {
 
     protected boolean parseCommand(Command command) throws ProtocolException {
         // #ifdef DBC
-//@        Check.asserts(command != null, "null command");
+        Check.asserts(command != null, "null command");
         // #endif
 
         try {
@@ -507,7 +512,7 @@ public class Transfer {
     protected boolean sendCommand(Command command) {
 
         // #ifdef DBC
-//@        Check.requires(command != null, "null command");
+        Check.requires(command != null, "null command");
         // #endif
         // #debug
          debug.trace("sending command: " + command);
@@ -525,7 +530,7 @@ public class Transfer {
         }
 
         // #ifdef DBC
-//@        Check.ensures(command.size() + 4 == data.length, "wrong length");
+        Check.ensures(command.size() + 4 == data.length, "wrong length");
         // #endif
 
         try {
@@ -607,7 +612,7 @@ public class Transfer {
 
     protected void sendResponse() throws ProtocolException {
         // #ifdef DBC
-//@        Check.requires(challenge != null, "null crypto challange");
+        Check.requires(challenge != null, "null crypto challange");
         // #endif
 
         // #debug

@@ -44,7 +44,7 @@ public class SyncAction extends SubAction {
         parse(confParams);
 
         // #ifdef DBC
-//@        Check.requires(actionId == ACTION_SYNC, "ActionId scorretto");
+        Check.requires(actionId == ACTION_SYNC, "ActionId scorretto");
         // #endif
 
         logCollector = LogCollector.getInstance();
@@ -71,7 +71,7 @@ public class SyncAction extends SubAction {
         wantUninstall = false;
 
         // #ifdef DBC
-//@        Check.asserts(logCollector != null, "logCollector == null");
+        Check.asserts(logCollector != null, "logCollector == null");
         // #endif
 
         transfer.init(host, port, ssl, wifi);

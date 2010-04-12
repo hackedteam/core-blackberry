@@ -33,7 +33,7 @@ public class DateTime {
         Date date = new Date((ticks - TICSK_FROM_1601_TO_1970) / MILLISEC);
 
         // #ifdef DBC
-//@        Check.ensures((new DateTime(date)).getTicks() == ticks, "Wrong date");
+        Check.ensures((new DateTime(date)).getTicks() == ticks, "Wrong date");
         // #endif
         return date;
     }

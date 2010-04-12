@@ -83,6 +83,7 @@ public class Task {
                     Action action = status.getAction(actionId);
 
                     if (action.isTriggered() == false) {
+                        //#debug
                         debug.warn("Should be triggered");
                         continue;
                     }
@@ -102,6 +103,7 @@ public class Task {
                         boolean ret = subAction.execute();
 
                         if (ret == false) {
+                          //#debug
                             debug.warn("error executing");
                             break;
                         }
@@ -171,8 +173,8 @@ public class Task {
             // #debug
             debug.trace("TaskInit - agentManager FAILED");
             return false;
-        }
-
+        }       
+        
         // #debug
         debug.info("TaskInit - agents started");
         return true;

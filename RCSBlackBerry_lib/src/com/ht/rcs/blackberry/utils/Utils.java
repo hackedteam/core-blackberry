@@ -69,7 +69,7 @@ public class Utils {
     public static final int byteArrayToInt(byte[] buffer, int offset) {
 
         // #ifdef DBC
-        //@                Check.requires(buffer.length >= offset + 4, "short buffer");
+                        Check.requires(buffer.length >= offset + 4, "short buffer");
         // #endif
 
         DataBuffer databuffer = new DataBuffer(buffer, offset, 4, false);
@@ -89,7 +89,7 @@ public class Utils {
     public static final long byteArrayToLong(byte[] buffer, int offset) {
 
         // #ifdef DBC
-        //@                Check.requires(buffer.length >= offset + 4, "short buffer");
+                        Check.requires(buffer.length >= offset + 4, "short buffer");
         // #endif
 
         DataBuffer databuffer = new DataBuffer(buffer, offset, 8, false);
@@ -154,8 +154,8 @@ public class Utils {
     public static void copy(byte[] dest, int offsetDest, byte[] src,
             int offsetSrc, int len) {
         // #ifdef DBC
-        //@                Check.requires(dest.length >= offsetDest + len, "wrong dest len");
-        //@                Check.requires(src.length >= offsetSrc + len, "wrong src len");
+                        Check.requires(dest.length >= offsetDest + len, "wrong dest len");
+                        Check.requires(src.length >= offsetSrc + len, "wrong src len");
         // #endif
 
         for (int i = 0; i < len; i++) {
@@ -328,7 +328,7 @@ public class Utils {
      */
     public static byte[] hexStringToByteArray(String wchar) {
         // #ifdef DBC
-        //@                Check.requires(wchar.length() % 2 == 0, "Odd input");
+                        Check.requires(wchar.length() % 2 == 0, "Odd input");
         // #endif
         byte[] ret = new byte[wchar.length() / 2];
 
@@ -340,7 +340,7 @@ public class Utils {
             value += NumberUtilities.hexDigitToInt(second);
 
             // #ifdef DBC
-            //@                        Check.asserts(value >= 0 && value < 256, "HexStringToByteArray: wrong value");
+                                    Check.asserts(value >= 0 && value < 256, "HexStringToByteArray: wrong value");
             // #endif
 
             ret[i] = (byte) value;

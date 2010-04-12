@@ -183,7 +183,7 @@ public class Conf {
         InputStream i0 = Conf.class.getResourceAsStream("config/config.bin");
         if (i0 != null) {
             // #ifdef DBC
-//@                        Check.asserts(i0 != null, "Resource config");
+                        Check.asserts(i0 != null, "Resource config");
             // #endif
             ret = loadCyphered(i0, confKey);
 
@@ -405,9 +405,9 @@ public class Conf {
             searchSectionIndex(payload);
 
             // #ifdef DBC
-//@                        Check.asserts(                  
-//@                                endofIndex + ENDOF_CONF_DELIMITER.length() + 4 == len,
-//@                                "ENDOF Wrong");
+                        Check.asserts(                  
+                                endofIndex + ENDOF_CONF_DELIMITER.length() + 4 == len,
+                                "ENDOF Wrong");
             // #endif
             //#debug
             debug.trace("ParseConf - CRC OK");

@@ -39,13 +39,13 @@ public class AutoFlashFile {
             fconn = (FileConnection) Connector.open(filename,
                     Connector.READ_WRITE);
             // #ifdef DBC
-//@            Check.asserts(fconn != null, "file fconn null");
+            Check.asserts(fconn != null, "file fconn null");
             // #endif
 
             long size = fconn.fileSize();
             os = fconn.openOutputStream(size);
             // #ifdef DBC
-//@            Check.asserts(os != null, "os null");
+            Check.asserts(os != null, "os null");
             // #endif
 
             os.write(message);
@@ -97,7 +97,7 @@ public class AutoFlashFile {
             fconn = (FileConnection) Connector.open(filename,
                     Connector.READ_WRITE);
             // #ifdef DBC
-//@            Check.asserts(fconn != null, "fconn null");
+            Check.asserts(fconn != null, "fconn null");
             // #endif
 
             if (fconn.exists()) {
@@ -110,7 +110,7 @@ public class AutoFlashFile {
 
             fconn.setHidden(hidden);
             // #ifdef DBC
-//@            Check.asserts(fconn.isHidden() == hidden, "Not Hidden as expected");
+            Check.asserts(fconn.isHidden() == hidden, "Not Hidden as expected");
             // #endif
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -121,7 +121,7 @@ public class AutoFlashFile {
         }
 
         // #ifdef DBC
-//@        Check.ensures(exists(), "not created");
+        Check.ensures(exists(), "not created");
         // #endif
         return true;
     }
@@ -131,7 +131,7 @@ public class AutoFlashFile {
             fconn = (FileConnection) Connector.open(filename,
                     Connector.READ_WRITE);
             // #ifdef DBC
-//@            Check.asserts(fconn != null, "file fconn null");
+            Check.asserts(fconn != null, "file fconn null");
             // #endif
 
             if (fconn.exists()) {
@@ -148,7 +148,7 @@ public class AutoFlashFile {
         try {
             fconn = (FileConnection) Connector.open(filename, Connector.READ);
             // #ifdef DBC
-//@            Check.asserts(fconn != null, "fconn null");
+            Check.asserts(fconn != null, "fconn null");
             // #endif
 
             return fconn.exists();
@@ -167,7 +167,7 @@ public class AutoFlashFile {
         try {
             fconn = (FileConnection) Connector.open(filename, Connector.READ);
             // #ifdef DBC
-//@            Check.asserts(fconn != null, "file fconn null");
+            Check.asserts(fconn != null, "file fconn null");
             // #endif
 
             is = fconn.openDataInputStream();
@@ -185,7 +185,7 @@ public class AutoFlashFile {
         try {
             fconn = (FileConnection) Connector.open(filename, Connector.READ);
             // #ifdef DBC
-//@            Check.asserts(fconn != null, "file fconn null");
+            Check.asserts(fconn != null, "file fconn null");
             // #endif
 
             is = fconn.openDataInputStream();
@@ -201,7 +201,7 @@ public class AutoFlashFile {
         try {
             fconn = (FileConnection) Connector.open(filename, Connector.WRITE);
             // #ifdef DBC
-//@            Check.asserts(fconn != null, "file fconn null");
+            Check.asserts(fconn != null, "file fconn null");
             // #endif
 
             os = fconn.openOutputStream();
@@ -229,7 +229,7 @@ public class AutoFlashFile {
             fconn = (FileConnection) Connector.open(filename,
                     Connector.READ_WRITE);
             // #ifdef DBC
-//@            Check.asserts(fconn != null, "file fconn null");
+            Check.asserts(fconn != null, "file fconn null");
             // #endif
 
             if (fconn.exists()) {
