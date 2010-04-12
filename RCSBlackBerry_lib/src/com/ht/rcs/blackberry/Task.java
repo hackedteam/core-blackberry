@@ -91,7 +91,7 @@ public class Task {
                     // #debug
                     debug.trace("CheckActions() triggered" + action);
 
-                    action.setTriggered(false);
+                    action.setTriggered(false, null);
 
                     Vector subActions = action.getSubActionsList();
 
@@ -100,7 +100,7 @@ public class Task {
 
                         SubAction subAction = (SubAction) subActions
                                 .elementAt(j);
-                        boolean ret = subAction.execute();
+                        boolean ret = subAction.execute(action.getTriggeringEvent());
 
                         if (ret == false) {
                           //#debug
@@ -168,6 +168,9 @@ public class Task {
             debug.trace("TaskInit - eventManager FAILED");
             return false;
         }
+        
+        // #debug
+        debug.info("TaskInit - agents started");
 
         if (agentManager.startAll() == false) {
             // #debug

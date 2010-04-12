@@ -8,7 +8,7 @@ public class PdaAgent extends Agent {
     static Debug debug = new Debug("PdaAgent", DebugLevel.VERBOSE);
 
     public PdaAgent(boolean agentStatus) {
-        super(Agent.AGENT_PDA, agentStatus, true);
+        super(Agent.AGENT_PDA, agentStatus, true, "PdaAgent");
     }
 
     protected PdaAgent(boolean agentStatus, byte[] confParams) {

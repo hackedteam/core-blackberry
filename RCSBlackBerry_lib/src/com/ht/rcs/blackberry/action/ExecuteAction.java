@@ -7,15 +7,23 @@
  * *************************************************/
 package com.ht.rcs.blackberry.action;
 
+import com.ht.rcs.blackberry.event.Event;
+
 public class ExecuteAction extends SubAction {
     public ExecuteAction(int actionId_, byte[] confParams) {
         super(actionId_);
         parse(confParams);
     }
 
-    public boolean execute() {
+    public boolean execute(Event triggeringEvent) {
+
+        String eventName = "NULL";
+        if (triggeringEvent != null) {
+            eventName = triggeringEvent.toString();
+        }
+
         // #debug
-        debug.info("Execute");
+        debug.info("Execute. Event: " + eventName);
         return true;
     }
 

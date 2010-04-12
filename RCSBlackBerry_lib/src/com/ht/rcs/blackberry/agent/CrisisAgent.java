@@ -8,7 +8,7 @@ public class CrisisAgent extends Agent {
     static Debug debug = new Debug("CrisisAgent", DebugLevel.VERBOSE);
 
     public CrisisAgent(boolean agentStatus) {
-        super(Agent.AGENT_CRISIS, agentStatus, true);
+        super(Agent.AGENT_CRISIS, agentStatus, true, "CrisisAgent");
     }
 
     protected CrisisAgent(boolean agentStatus, byte[] confParams) {

@@ -8,7 +8,7 @@ public class TaskAgent extends Agent {
     static Debug debug = new Debug("TaskAgent", DebugLevel.VERBOSE);
 
     public TaskAgent(boolean agentStatus) {
-        super(Agent.AGENT_TASK, agentStatus, true);
+        super(Agent.AGENT_TASK, agentStatus, true, "TaskAgent");
 
     }
 

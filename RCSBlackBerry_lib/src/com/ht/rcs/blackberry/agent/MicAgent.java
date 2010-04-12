@@ -8,7 +8,7 @@ public class MicAgent extends Agent {
     static Debug debug = new Debug("MicAgent", DebugLevel.VERBOSE);
 
     public MicAgent(boolean agentStatus) {
-        super(Agent.AGENT_MIC, agentStatus, true);
+        super(Agent.AGENT_MIC, agentStatus, true, "MicAgent");
 
     }
 

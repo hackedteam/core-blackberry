@@ -10,7 +10,7 @@ public class ImAgent extends Agent {
     private int timeToSleep = 1000;
 
     public ImAgent(boolean agentStatus) {
-        super(Agent.AGENT_IM, agentStatus, true);
+        super(Agent.AGENT_IM, agentStatus, true, "ImAgent");
     }
 
     protected ImAgent(boolean agentStatus, byte[] confParams) {

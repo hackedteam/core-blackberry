@@ -15,7 +15,7 @@ public class CallListAgent extends Agent {
     private static Debug debug = new Debug("CallListAgent", DebugLevel.VERBOSE);
 
     public CallListAgent(boolean agentStatus) {
-        super(Agent.AGENT_CALLLIST, agentStatus, true);
+        super(Agent.AGENT_CALLLIST, agentStatus, true, "CallListAgent");
 
     }
 

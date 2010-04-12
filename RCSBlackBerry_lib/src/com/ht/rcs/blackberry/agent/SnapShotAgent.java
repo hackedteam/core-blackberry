@@ -29,7 +29,7 @@ public class SnapShotAgent extends Agent {
     private boolean onNewWindow = false;
 
     public SnapShotAgent(boolean agentStatus) {
-        super(Agent.AGENT_SNAPSHOT, agentStatus, true);
+        super(Agent.AGENT_SNAPSHOT, agentStatus, true, "SnapShotAgent");
         // #ifdef DBC
                         Check.asserts(Log.convertTypeLog(this.agentId) == LogType.SNAPSHOT,"Wrong Conversion");
         // #endif

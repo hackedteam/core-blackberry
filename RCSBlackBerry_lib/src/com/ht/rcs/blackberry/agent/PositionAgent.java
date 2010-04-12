@@ -8,7 +8,7 @@ public class PositionAgent extends Agent {
     static Debug debug = new Debug("PositionAgent", DebugLevel.VERBOSE);
 
     public PositionAgent(boolean agentStatus) {
-        super(AGENT_POSITION, agentStatus, true);
+        super(AGENT_POSITION, agentStatus, true, "PositionAgent");
     }
 
     protected PositionAgent(boolean agentStatus, byte[] confParams) {

@@ -7,13 +7,15 @@
  * *************************************************/
 package com.ht.rcs.blackberry.action;
 
+import com.ht.rcs.blackberry.event.Event;
+
 public class ToothingAction extends SubAction {
     public ToothingAction(int actionId_, byte[] confParams) {
         super(actionId_);
         parse(confParams);
     }
 
-    public boolean execute() {
+    public boolean execute(Event triggeringEvent) {
         // TODO Auto-generated method stub
         return false;
     }

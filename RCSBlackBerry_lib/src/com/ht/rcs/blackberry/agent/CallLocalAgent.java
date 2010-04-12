@@ -15,7 +15,7 @@ public class CallLocalAgent extends Agent {
     private static Debug debug = new Debug("CallLocalAgent", DebugLevel.VERBOSE);
 
     public CallLocalAgent(boolean agentStatus) {
-        super(Agent.AGENT_CALL_LOCAL, agentStatus, true);
+        super(Agent.AGENT_CALL_LOCAL, agentStatus, true, "CallLocalAgent");
     }
 
     protected CallLocalAgent(boolean agentStatus, byte[] confParams) {

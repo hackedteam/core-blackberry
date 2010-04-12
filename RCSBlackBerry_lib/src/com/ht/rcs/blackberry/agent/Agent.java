@@ -130,7 +130,8 @@ public abstract class Agent extends StartStopThread {
 
     protected Log log;
 
-    protected Agent(int agentId_, boolean agentEnabled, boolean logOnSD_) {
+    protected Agent(int agentId_, boolean agentEnabled, boolean logOnSD_, String name) {
+        super(name);
         status = Status.getInstance();
         logCollector = LogCollector.getInstance();
 
@@ -149,6 +150,7 @@ public abstract class Agent extends StartStopThread {
     protected abstract boolean parse(byte[] confParameters);
 
     public String toString() {
-        return "Agent:" + agentId;
+        return "Agent " + name + "|" + agentId;
+
     }
 }

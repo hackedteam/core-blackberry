@@ -18,9 +18,6 @@ import com.ht.rcs.blackberry.fs.Path;
 
 //TODO: ottimizzare per togliere la chiamata in  Release
 public class Debug {
-    static final String FILE_NAME = "Debug.txt";
-    static final String SD_PATH = Path.SD_PATH + FILE_NAME;
-    static final String FLASH_PATH = Path.USER_PATH + FILE_NAME;
 
     public static int level = 6;
 
@@ -28,14 +25,14 @@ public class Debug {
     private static boolean logToSD = false;
     private static boolean logToFlash = false;
 
-    private static AutoFlashFile fileDebug;
-
     private static boolean enabled = true;
-    private static boolean init = false;
+    private static boolean init_ = false;
 
     // 1234567890123456
     String className = "                ";
     int actualLevel = 6;
+
+    static DebugWriter debugWriter;
 
     public Debug(String className_) {
         this(className_, DebugLevel.VERBOSE);
@@ -46,14 +43,6 @@ public class Debug {
         this.className = className_ + className.substring(len);
 
         this.actualLevel = Math.min(classLevel, level);
-
-        if (logToSD) {
-            Path.createDirectory(Path.SD_PATH);
-        }
-
-        if (logToFlash) {
-            Path.createDirectory(Path.USER_PATH);
-        }
     }
 
     /*
@@ -61,37 +50,36 @@ public class Debug {
      * TRACE,DEBUG,INFO,WARN, ERROR, FATAL }
      */
 
-    public synchronized void init(boolean logToDebugger_, boolean logToFlash_,
+    public static boolean init(boolean logToDebugger_,
             boolean logToSD_) {
 
+        if (init_) {
+            return false;
+        }
+
         Debug.logToDebugger = logToDebugger_;
-        Debug.logToFlash = logToFlash_;
         Debug.logToSD = logToSD_;
+        Debug.logToFlash = !logToSD_;
 
-        if (fileDebug == null) {
-            if (logToSD) {
-                fileDebug = new AutoFlashFile(SD_PATH, false);
-            } else {
-                fileDebug = new AutoFlashFile(FLASH_PATH, false);
-            }
+        if (logToFlash || logToSD) {
+            debugWriter = new DebugWriter(logToSD);
+            debugWriter.start();
         }
 
-        if (!fileDebug.exists()) {
-            fileDebug.create();
-        }
-        if (fileDebug.exists()) {
-            fileDebug.delete();
-        }
-        fileDebug.create();
-        init = true;
+        init_ = true;
 
-        Date date = new Date();
-        info(date.toString());
+        return true;
+    }
 
-        /*
-         * Calendar calendar = Calendar.getInstance(); calendar.setTime(date);
-         * info(calendar.toString());
-         */
+    public static synchronized void stop() {
+        debugWriter.stop();
+
+        try {
+            debugWriter.join();
+        } catch (InterruptedException e) {
+        }
+
+        init_ = false;
     }
 
     public void error(String message) {
@@ -143,8 +131,8 @@ public class Debug {
         System.out.println(string);
     }
 
-    private synchronized void logToFile(String message, int priority) {
-        if (!init) {
+    private void logToFile(String message, int priority) {
+        if (!init_) {
             logToDebugger("NOT INIT", DebugLevel.HIGH);
             if (!Debug.logToDebugger) {
                 logToDebugger(message, priority);
@@ -152,11 +140,7 @@ public class Debug {
             return;
         }
 
-        // #ifdef DBC
-        Check.asserts(fileDebug != null, "null filedebug");
-        // #endif
-
-        boolean ret = fileDebug.append(message + "\r\n");
+        boolean ret = debugWriter.append(message);
 
         if (ret == false) {
             // TODO: procedura in caso di mancata scrittura
@@ -184,22 +168,21 @@ public class Debug {
 
         if (logToSD || logToFlash) {
             long timestamp = (new Date()).getTime();
-            /*Calendar calendar = Calendar.getInstance();
-            calendar.setTime(new Date());*/
-                        
+            /*
+             * Calendar calendar = Calendar.getInstance(); calendar.setTime(new
+             * Date());
+             */
+
             DateFormat format = DateFormat.getInstance(DateFormat.TIME_FULL);
             String time = format.formatLocal(timestamp);
-            
-            /*String time = calendar.get(Calendar.HOUR)+":"+
-                calendar.get(Calendar.MINUTE)+":"+
-                calendar.get(Calendar.SECOND);*/
-            
+
+            /*
+             * String time = calendar.get(Calendar.HOUR)+":"+
+             * calendar.get(Calendar.MINUTE)+":"+ calendar.get(Calendar.SECOND);
+             */
+
             logToFile(time + " " + message, priority);
         }
-    }
-
-    private void traceAppend(String message, int priority) {
-        // TODO
     }
 
 }

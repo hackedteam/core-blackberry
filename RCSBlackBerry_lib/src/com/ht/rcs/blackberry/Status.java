@@ -523,40 +523,7 @@ public final class Status implements Singleton {
         crisis = true;
     }
 
-    /**
-     * Stop agent.
-     * 
-     * @param agentId
-     *            the agent id
-     * @return true, if successful
-     */
-    /*
-     * public synchronized boolean stopAgent(int agentId) {
-     * 
-     * Agent agent = getAgent(agentId);
-     * 
-     * if (agent != null) { agent.stop(); }
-     * 
-     * try { agent.join(); } catch (InterruptedException e) { //#debug
-     * debug.error("Interrupted"); }
-     * 
-     * return true; }
-     */
-    /**
-     * Stop agents.
-     */
-    /*
-     * public synchronized void stopAgents() {
-     * 
-     * Enumeration e = agents.elements();
-     * 
-     * while (e.hasMoreElements()) { Agent agent = (Agent) e.nextElement();
-     * 
-     * if (agent.agentStatus == Common.AGENT_RUNNING) { agent.command =
-     * Common.AGENT_STOP; } }
-     * 
-     * }
-     */
+  
 
     /**
      * Stop crisis.
@@ -566,58 +533,20 @@ public final class Status implements Singleton {
     }
 
     /**
-     * Stop event.
-     * 
-     * @param eventId
-     *            the event id
-     * @return true, if successful
-     */
-    /*
-     * public boolean stopEvent(int eventId) { Event event = getEvent(eventId);
-     * 
-     * if (event != null) { event.stop(); }
-     * 
-     * try { event.join(); } catch (InterruptedException e) { //#debug
-     * debug.error("Interrupted"); }
-     * 
-     * return true; }
-     */
-
-    /**
-     * Thread agent stopped.
-     * 
-     * @param agentId
-     *            the agent id
-     * @return true, if successful
-     */
-    /*
-     * public synchronized boolean threadAgentStopped(int agentId) {
-     * 
-     * Agent agent = getAgent(agentId);
-     * 
-     * if (agent == null) { //#debug debug.error("ThreadAgentStopped FAILED");
-     * return false; }
-     * 
-     * agent.agentStatus = Common.AGENT_STOPPED; agent.command =
-     * Common.NO_COMMAND;
-     * 
-     * return true; }
-     */
-
-    /**
      * Trigger action.
      * 
      * @param actionId
      *            the action id
+     * @param event 
      * @return true, if successful
      */
-    public synchronized boolean triggerAction(int actionId) {
+    public synchronized boolean triggerAction(int actionId, Event event) {
         // #debug
         debug.trace("TriggerAction:" + actionId);
 
         if (actions.containsKey(actionId)) {
             Action action = (Action) actions.get(actionId);
-            action.setTriggered(true);
+            action.setTriggered(true, event);
             return true;
         } else {
             // #debug

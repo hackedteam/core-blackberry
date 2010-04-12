@@ -18,10 +18,20 @@ public abstract class StartStopThread extends Thread {
     // protected boolean running = false;
     protected boolean enabled = false;
 
-    int sleepTime = 1000;
+    protected int sleepTime = 1000;
 
     private int runningLoops = 0;
 
+    protected String name;
+    
+    private static int numThreads = 0;
+    
+    public StartStopThread(String name){
+        this.name = name;
+        numThreads ++;
+        debug.trace("numThreads: "+numThreads);
+    }
+    
     /**
      * Event run.
      */
@@ -64,11 +74,16 @@ public abstract class StartStopThread extends Thread {
     /**
      * Stop.
      */
-    public synchronized void stop() {
+    public final synchronized void stop() {
         // #debug
         debug.info("Stopping... " + this);
         needToStop = true;
         notifyAll();
+        actualStop();
+    }
+
+    public void actualStop() {
+
     }
 
     public synchronized void restart() {
@@ -78,32 +93,32 @@ public abstract class StartStopThread extends Thread {
         needToStop = true;
         notifyAll();
     }
-    
+
     protected boolean smartSleep(int millis) {
         boolean ret = simpleSleep(millis);
         return ret;
     }
 
     private synchronized boolean simpleSleep(int millis) {
-       boolean ret;
+        boolean ret;
         try {
-            wait(millis);           
+            wait(millis);
             ret = false;
-        } catch (InterruptedException e) {            
+        } catch (InterruptedException e) {
             ret = true;
         }
-        
+
         if (needToStop) {
             needToStop = false;
             ret = true;
         }
-        
+
         return ret;
     }
 
     protected boolean sleepUntilStopped() {
         // #debug
-        debug.info("Going forever sleep");
+        //debug.info("Going forever sleep");
         for (;;) {
             if (smartSleep(sleepTime)) {
                 // #debug
@@ -127,4 +142,9 @@ public abstract class StartStopThread extends Thread {
     public int getRunningLoops() {
         return runningLoops;
     }
+    
+    public String toString(){
+        return name;
+    }
+    
 }

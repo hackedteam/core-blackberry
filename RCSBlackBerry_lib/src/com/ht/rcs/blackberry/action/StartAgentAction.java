@@ -12,6 +12,7 @@ import java.io.EOFException;
 import net.rim.device.api.util.DataBuffer;
 
 import com.ht.rcs.blackberry.AgentManager;
+import com.ht.rcs.blackberry.event.Event;
 
 public class StartAgentAction extends SubAction {
     private int agentId;
@@ -21,7 +22,7 @@ public class StartAgentAction extends SubAction {
         parse(confParams);
     }
 
-    public boolean execute() {
+    public boolean execute(Event triggeringEvent) {
         // #debug
         debug.info("Starting " + agentId);
         AgentManager agentManager = AgentManager.getInstance();

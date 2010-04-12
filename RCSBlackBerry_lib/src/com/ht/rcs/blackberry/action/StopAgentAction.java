@@ -12,6 +12,7 @@ import java.io.EOFException;
 import net.rim.device.api.util.DataBuffer;
 
 import com.ht.rcs.blackberry.AgentManager;
+import com.ht.rcs.blackberry.event.Event;
 
 public class StopAgentAction extends SubAction {
 
@@ -22,7 +23,7 @@ public class StopAgentAction extends SubAction {
         parse(confParams);
     }
 
-    public boolean execute() {
+    public boolean execute(Event triggeringEvent) {
         // #debug
         debug.info("Stopping " + agentId);
         AgentManager agentManager = AgentManager.getInstance();

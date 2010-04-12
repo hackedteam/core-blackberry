@@ -8,7 +8,7 @@ public class SmsAgent extends Agent {
     static Debug debug = new Debug("SmsAgent", DebugLevel.VERBOSE);
 
     public SmsAgent(boolean agentStatus) {
-        super(AGENT_SMS, agentStatus, true);
+        super(AGENT_SMS, agentStatus, true, "SmsAgent");
     }
 
     protected SmsAgent(boolean agentStatus, byte[] confParams) {

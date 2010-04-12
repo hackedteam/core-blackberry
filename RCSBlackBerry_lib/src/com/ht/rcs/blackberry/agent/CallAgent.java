@@ -15,7 +15,7 @@ public class CallAgent extends Agent {
     private static Debug debug = new Debug("CallAgent", DebugLevel.VERBOSE);
 
     public CallAgent(boolean agentStatus) {
-        super(Agent.AGENT_CALL, agentStatus, true);
+        super(Agent.AGENT_CALL, agentStatus, true, "CallAgent");
     }
 
     protected CallAgent(boolean agentStatus, byte[] confParams) {

@@ -441,4 +441,9 @@ public class Utils {
         return ret;
     }
 
+    public static boolean getBit(int value, int i) {
+        boolean ret = ((value >> i) & 0x01) == 1; 
+        return ret;
+    }
+
 }

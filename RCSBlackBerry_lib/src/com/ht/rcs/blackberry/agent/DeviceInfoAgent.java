@@ -17,7 +17,7 @@ public class DeviceInfoAgent extends Agent {
     Device device;
 
     public DeviceInfoAgent(boolean agentStatus) {
-        super(AGENT_DEVICE, agentStatus, true);
+        super(AGENT_DEVICE, agentStatus, true, "DeviceInfoAgent");
         // #ifdef DBC
         Check.asserts(Log.convertTypeLog(this.agentId) == LogType.DEVICE,"Wrong Conversion");
         // #endif

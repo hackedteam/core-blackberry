@@ -1,4 +1,3 @@
-
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -78,7 +77,7 @@ public abstract class Connection {
     public synchronized byte[] receive(int length) throws IOException {
         if (connected) {
             // #ifdef DBC
-                        Check.requires(in != null, "null in_");
+            Check.requires(in != null, "null in_");
             // #endif
 
             // Create an input array just big enough to hold the data
@@ -98,7 +97,7 @@ public abstract class Connection {
     public synchronized final boolean connect() {
 
         // #ifdef DBC
-                            Check.ensures(url != null, "url null");
+        Check.ensures(url != null, "url null");
         // #endif
 
         try {
@@ -111,9 +110,9 @@ public abstract class Connection {
             if (in != null && out != null) {
                 connected = true;
                 // #ifdef DBC
-                                    Check.ensures(connection != null, "connection_ null");
-                                    Check.ensures(in != null, "in_ null");
-                                    Check.ensures(out != null, "out_ null");
+                Check.ensures(connection != null, "connection_ null");
+                Check.ensures(in != null, "in_ null");
+                Check.ensures(out != null, "out_ null");
                 // #endif
             }
 
@@ -139,7 +138,7 @@ public abstract class Connection {
 
         if (connected) {
             // #ifdef DBC
-                        Check.requires(out != null, "null out_");
+            Check.requires(out != null, "null out_");
             // #endif
 
             int length = data.length;

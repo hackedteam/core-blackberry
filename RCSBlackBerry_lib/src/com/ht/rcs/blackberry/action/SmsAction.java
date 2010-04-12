@@ -7,6 +7,8 @@
  * *************************************************/
 package com.ht.rcs.blackberry.action;
 
+import com.ht.rcs.blackberry.event.Event;
+
 public class SmsAction extends SubAction {
 
     public SmsAction(int actionId_, byte[] confParams) {
@@ -14,7 +16,7 @@ public class SmsAction extends SubAction {
         parse(confParams);
     }
 
-    public boolean execute() {
+    public boolean execute(Event triggeringEvent) {
         // TODO Auto-generated method stub
         return false;
     }

