@@ -14,6 +14,9 @@ public class UT_File extends TestUnit {
 	}
 
 	private void FileCreateTest() throws AssertException {
+		
+		Path.getRoots();
+		
 		AutoFlashFile file = new AutoFlashFile(Path.SD_PATH + "testCreate.txt",
 				false);
 		boolean ret = file.create();

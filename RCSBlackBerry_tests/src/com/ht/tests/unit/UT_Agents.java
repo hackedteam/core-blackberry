@@ -23,6 +23,17 @@ public class UT_Agents extends TestUnit {
 		super(name, tests);
 	}
 
+	public boolean run() throws AssertException {
+
+		StartAndStop();
+		RestartAll();
+
+		StartStopAgent();
+		AgentSnapshot();
+
+		return true;
+	}
+	
 	public boolean StartAndStop() throws AssertException {
 		// #debug
 		debug.info("-- StartAndStop --");
@@ -127,8 +138,10 @@ public class UT_Agents extends TestUnit {
 		Utils.sleep(500);
 		// #debug
 		debug.trace("event running");
-		AssertThat(event0.isRunning(), "Event0 not running 1");
-		AssertThat(event1.isRunning(), "Event1 not running 1");
+		AssertThat(event0.isScheduled(), "Event0 not scheduled 1");
+		AssertThat(event1.isScheduled(), "Event1 not scheduled 1");
+		AssertThat(!event0.isRunning(), "Event0 running");
+		AssertThat(!event1.isRunning(), "Event1 running");
 
 		// verifica che dopo 2 secondo l'azione sia triggered
 		Utils.sleep(2000);
@@ -160,8 +173,8 @@ public class UT_Agents extends TestUnit {
 		AssertThat(agentDevice.isRunning(), "Agent not Running 5");
 		AssertThat(agentPosition.isEnabled(), "Agent not enabled 1");
 
-		AssertThat(!event0.isRunning(), "Event0 running");
-		AssertThat(!event1.isRunning(), "Event1 running");
+		AssertThat(event0.isRunning(), "Event0 running");
+		AssertThat(event1.isRunning(), "Event1 running");
 		AssertThat(!action0.isTriggered(), "action0 triggered");
 		AssertThat(!action1.isTriggered(), "action1 triggered");
 
@@ -169,9 +182,12 @@ public class UT_Agents extends TestUnit {
 		// #debug
 		debug.trace("stop event");
 		eventManager.stopAll();
+		
 		AssertThat(!event0.isRunning(), "Event0 running");
 		AssertThat(!event1.isRunning(), "Event1 running");
 
+		agentManager.stopAll();
+		
 		debug.trace("-- StartStopAgent OK --");
 		return true;
 	}
@@ -205,16 +221,7 @@ public class UT_Agents extends TestUnit {
 		return true;
 	}
 
-	public boolean run() throws AssertException {
-
-		StartAndStop();
-		RestartAll();
-
-		StartStopAgent();
-		AgentSnapshot();
-
-		return true;
-	}
+	
 
 	private void RestartAll() throws AssertException {
 		// #debug

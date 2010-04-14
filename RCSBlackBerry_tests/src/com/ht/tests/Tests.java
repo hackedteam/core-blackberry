@@ -31,10 +31,11 @@ public class Tests {
 			addTest(new UT_Markup("Markup", this));
 
 			addTest(new UT_Path("Path", this));
-
-			addTest(new UT_TimerThread("TimerThread", this));
+			
 			addTest(new UT_Events("Events", this));
 			addTest(new UT_Agents("Agents", this));
+			
+			addTest(new UT_TimerThread("TimerThread", this));
 			
 			addTest(new UT_Log("Log", this));
 			addTest(new UT_LogCollector("LogCollector", this));

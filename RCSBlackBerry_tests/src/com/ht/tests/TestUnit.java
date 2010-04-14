@@ -65,7 +65,7 @@ public abstract class TestUnit {
 			throws AssertException {
 		if (!a.equals(b)) {
 			//#debug
-debug.trace(a.toString() + " !+ " + b.toString());
+debug.trace(a.toString() + " != " + b.toString());
 			this.result = "ASSERT: " + message;
 
 			//#debug

@@ -2,6 +2,7 @@ package com.ht.tests;
 
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
+import com.ht.rcs.blackberry.utils.Utils;
 
 import net.rim.device.api.ui.*;
 import net.rim.device.api.ui.component.*;
@@ -22,6 +23,7 @@ public class Main extends UiApplication {
 		boolean logToFlash = false;
 		boolean logToSD = true;
 
+		Utils.sleep(2000);
 		// #mdebug
 		Debug.init(logToDebugger, logToFlash);		
 		debug.trace("Test Init");

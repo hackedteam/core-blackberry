@@ -1,6 +1,7 @@
 package com.ht.tests.unit;
 
-import com.ht.rcs.blackberry.threadpool.Scheduler;
+import java.util.Timer;
+
 import com.ht.rcs.blackberry.threadpool.TimerJob;
 import com.ht.rcs.blackberry.utils.Utils;
 import com.ht.tests.AssertException;
@@ -15,104 +16,125 @@ public class UT_TimerThread extends TestUnit {
 	}
 
 	public boolean run() throws AssertException {
-		SchedulerMulti();
+		
 		TimerThreadCreate();
 		TimerThreadPoolSingle();
-		TimerThreadPoolMulti();
+		SchedulerMulti();
 		
 		return true;
 	}
 
 	private void TimerThreadPoolSingle() throws AssertException {
-		Scheduler scheduler = new Scheduler(1);
+		Timer timer = new Timer();
 
-		TimerJob job = new TestTimerThread("TestTimerThread", 1000);
+		TestJob job = new TestJob("TestTimerThread",0, 1000);
 		job.enable(true);
-		scheduler.add(job);
-
-		scheduler.start();
+		
+		AssertThat(!job.isScheduled(), "scheduled");
+		
+		job.addToTimer(timer);
+		
 		Utils.sleep(5000);
 
-		AssertThat(job.getRunningLoops() > 3, "runningLoop should br > 5");
-		AssertThat(job.getRunningLoops() < 7, "runningLoop should br < 7");
+		AssertThat(job.runned > 3, "runningLoop should br > 5");
+		AssertThat(job.runned < 7, "runningLoop should br < 7");
+		AssertThat(job.started == 1, "started should be 1");
+		AssertThat(job.stopped == 0, "stopped should be 0");
+		
 		AssertThat(job.isEnabled(), "not enabled");
-		AssertThat(job.isRunning(), "not running");
-
-		scheduler.stop();
+		AssertThat(job.isScheduled(), "not scheduled");
+		
+		timer.cancel();
+		job.stop();
+		
 		Utils.sleep(200);
 
-		AssertThat(!job.isRunning(), "still running");
+		AssertThat(job.started == 1, "started should be 1");
+		AssertThat(job.stopped == 1, "stopped should be 0");
+		AssertThat(!job.isScheduled(), "still scheduled");
 	}
-
-	private void TimerThreadPoolMulti() throws AssertException {
-		Scheduler scheduler = new Scheduler(10);
-
-		TimerJob job = new TestTimerThread("TestTimerThread", 1000);
-		job.enable(true);
-		scheduler.add(job);
-
-		scheduler.start();
-		Utils.sleep(5000);
-
-		AssertThat(job.getRunningLoops() > 3, "runningLoop should br > 5");
-		AssertThat(job.getRunningLoops() < 7, "runningLoop should br < 7");
-		AssertThat(job.isEnabled(), "not enabled");
-		// AssertThat(job.isRunning(), "not running");
-
-		scheduler.stop();
-		Utils.sleep(200);
-
-		// AssertThat(!job.isRunning(), "still running");
-	}
+	
 
 	private void SchedulerMulti() throws AssertException {
-		Scheduler scheduler = new Scheduler(10);
-
-		int NUM_JOBS = 50;
+		Timer scheduler = new Timer();
+		
+		int NUM_JOBS = 30;
 		TimerJob[] jobs = new TimerJob[NUM_JOBS];
 
+		long timestamp = Utils.getTime();
+		
 		for (int i = 0; i < NUM_JOBS; i++) {
-			TimerJob job = new TestTimerThread("TestTimerThread", 1000);
+			TimerJob job = new TestJob("Job_"+i,0, 1000);
 			jobs[i] = job;
-			job.enable(true);
-			scheduler.add(job);
-		}
 
-		scheduler.start();
+			job.enable(true);
+			job.addToTimer(scheduler);
+			
+		}
+		
 		Utils.sleep(5000);
 
-		scheduler.stop();
+		for (int i = 0; i < NUM_JOBS; i++) {
+			TestJob job = (TestJob)jobs[i];
+			AssertThat(job.started == 1, "started should be 1");
+			AssertThat(job.stopped == 0, "stopped should be 0");
+			AssertThat(job.isScheduled(), "not scheduled");
+			
+		}
+		
+		scheduler.cancel();
+		for (int i = 0; i < NUM_JOBS; i++) {
+			TestJob job = (TestJob)jobs[i];
+			job.stop();
+		}
+		
+		long elapsed = Utils.getTime() - timestamp;
+		int secs = (int)( elapsed / 1000 );
+		
 		Utils.sleep(200);
 		
 		for (int i = 0; i < NUM_JOBS; i++) {
 			TimerJob job = jobs[i];
-			AssertThat(job.getRunningLoops() > 2, "runningLoop should br > 5");
-			AssertThat(job.getRunningLoops() < 8, "runningLoop should br < 7");
+			AssertThat(job.getRunningLoops() >= 5, "runningLoop should br >= 5");
+			AssertThat(job.getRunningLoops() <= secs + 1, "runningLoop should br <= " + (secs + 1));
 			AssertThat(job.isEnabled(), "not enabled");
+			AssertThat(!job.isScheduled(), "still scheduled");
 		}
 		// AssertThat(job.isRunning(), "not running");
 		// AssertThat(!job.isRunning(), "still running");
 	}
 
 	private void TimerThreadCreate() throws AssertException {
-		TimerJob job = new TestTimerThread("TestTimerThread", 1000);
+		TimerJob job = new TestJob("TestTimerThread",0, 1000);
 
 		AssertThat(job.getRunningLoops() == 0, "runningLoop shold be 0");
 		AssertThat(!job.isEnabled(), "enabled");
-		AssertThat(!job.isRunning(), "running");
+		AssertThat(!job.isScheduled(), "scheduled");
 	}
-
 }
 
-class TestTimerThread extends TimerJob {
+class TestJob extends TimerJob {
 
-	public TestTimerThread(String name, int every) {
+	public int started;
+	public int stopped;
+	public int runned;
+	
+	public TestJob(String name, int delay, int every) {
 		super(name);
-		setEvery(every);
+		setPeriod(every);
+		setDelay(delay);
 	}
 
 	protected void actualRun() {
-		System.out.println("actualRun");
+		runned++;
+	}
+	
+	protected void actualStart() {
+		started++;
+	}
+	
+	protected void actualStop() {
+		stopped++;
 	}
 
 }
