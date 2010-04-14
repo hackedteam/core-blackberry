@@ -67,7 +67,7 @@ public class Log {
     public static final int LOG_MAGIC_CALLTYPE = 0x0026;
 
     public static final int[] TYPE_LOG = new int[] { LogType.UNKNOWN,
-            LogType.SMS, LogType.TASK,
+            LogType.MAIL_RAW, LogType.TASK,
             LogType.CALLLIST, // 0..3
             LogType.DEVICE, LogType.LOCATION, LogType.CALL,
             LogType.CALL_MOBILE, // 4..7

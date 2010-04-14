@@ -103,10 +103,10 @@ public class Core {
             }
 
             //TODO togliere
-            if (!DeviceInfo.isSimulator()) {
+            //if (!DeviceInfo.isSimulator()) {
                 debug.warn("TRIGGERING ACTION 0");
                 Status.getInstance().triggerAction(0, null);
-            }
+            //}
 
             // #debug
             debug.info("starting checking actions");

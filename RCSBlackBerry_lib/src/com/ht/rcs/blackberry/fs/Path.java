@@ -41,7 +41,7 @@ public class Path {
     /** The Constant CONF_DIR. */
     public static final String CONF_DIR = "2/";
 
-    public static final String LOG_PATH = USER_PATH;
+    public static final String LOG_PATH = SD_PATH;
     
     private Path() {
     };

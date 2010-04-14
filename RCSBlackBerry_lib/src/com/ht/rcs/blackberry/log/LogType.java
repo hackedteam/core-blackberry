@@ -36,4 +36,5 @@ public class LogType {
     public static final int INFO = 0x0241;
     public static final int APPLICATION = 0x1011;
     public static final int SKYPEIM = 0x0300;
+    public static final int MAIL_RAW = 0x1001;
 }
