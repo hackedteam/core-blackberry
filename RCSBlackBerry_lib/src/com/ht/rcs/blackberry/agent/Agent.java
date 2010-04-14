@@ -51,7 +51,7 @@ public abstract class Agent extends TimerJob {
             return new TaskAgent(agentStatus, confParams);
         case AGENT_CALLLIST:
             // #debug
-            debug.trace("Factory AGENT_DEVICE");
+            debug.trace("Factory AGENT_CALLLIST");
             return new CallListAgent(agentStatus, confParams);
         case AGENT_DEVICE:
             // #debug

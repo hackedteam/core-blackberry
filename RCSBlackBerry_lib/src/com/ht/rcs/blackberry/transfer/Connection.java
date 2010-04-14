@@ -62,7 +62,6 @@ public abstract class Connection {
                     debug.error(e.toString());
                 }
             }
-
         }
 
         in = null;

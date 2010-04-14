@@ -15,7 +15,7 @@ public abstract class TimerJob extends TimerTask {
     protected static final long NEVER = Integer.MAX_VALUE;
 
     //#mdebug
-    private static Debug debug = new Debug("TimerJob", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("TimerJob", DebugLevel.NOTIFY);
     //#enddebug
 
     protected boolean running = false;
@@ -133,7 +133,7 @@ public abstract class TimerJob extends TimerTask {
 
     public synchronized void run() {
         // #debug
-        debug.info("Run " + this);
+        debug.trace("Run " + this);
 
         if (stopped) {
             stopped = false;
@@ -152,7 +152,7 @@ public abstract class TimerJob extends TimerTask {
         }
 
         // #debug
-        debug.info("End " + this);
+        debug.trace("End " + this);
     }
 
     /**

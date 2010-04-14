@@ -31,7 +31,7 @@ public final class Device implements Singleton {
     private static Debug debug = new Debug("Device", DebugLevel.VERBOSE);
 
     public static final int VERSION = 2010033101;
-    public static final String SUBTYPE = "WINMOBILE"; // "BLACKBERRY";
+    public static final String SUBTYPE = "BLACKBERRY";
 
     /** The imei. */
     byte[] imei = new byte[0];
