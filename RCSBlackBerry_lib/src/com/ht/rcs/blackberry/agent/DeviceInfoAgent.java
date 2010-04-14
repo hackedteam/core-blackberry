@@ -85,7 +85,6 @@ public class DeviceInfoAgent extends Agent {
 
         log.close();
 
-        this.sleepUntilStopped();
     }
 
     protected boolean parse(byte[] confParameters) {

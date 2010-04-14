@@ -20,7 +20,6 @@ public class MicAgent extends Agent {
     public void actualRun() {
         // #debug
         debug.trace("run");
-        this.sleepUntilStopped();
 
     }
 

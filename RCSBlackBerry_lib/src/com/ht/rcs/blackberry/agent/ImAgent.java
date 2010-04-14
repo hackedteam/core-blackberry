@@ -12,7 +12,7 @@ public class ImAgent extends Agent {
     public ImAgent(boolean agentStatus) {
         super(Agent.AGENT_IM, agentStatus, true, "ImAgent");
         loop = 0;
-        setEvery(1000);
+        setPeriod(1000);
     }
 
     protected ImAgent(boolean agentStatus, byte[] confParams) {

@@ -96,8 +96,6 @@ public class SmsEvent extends Event implements MessageListener {
             debug.error(e.toString());
         }
 
-        sleepUntilStopped();
-
         try {
             _mc.close();
         } catch (IOException e) {
@@ -106,30 +104,27 @@ public class SmsEvent extends Event implements MessageListener {
     }
 
     /**
-     * http://www.blackberry.com/knowledgecenterpublic/livelink.exe/fetch/2000/348583/800451/800563/What_Is_-_Different_ways_to_listen_for_SMS_messages.html?nodeid=1357551&vernum=0
+     * http://www.blackberry.com/knowledgecenterpublic/livelink.exe/fetch/2000/
+     * 348583
+     * /800451/800563/What_Is_-_Different_ways_to_listen_for_SMS_messages.html
+     * ?nodeid=1357551&vernum=0
      */
     protected void actualRunDatagram() {
         // #debug
         debug.trace("actualRun");
         try {
             _dc = (DatagramConnection) Connector.open("sms://");
-            for (;;) {
-                if (needToStop) {
-                    debug.trace("needToStop");
-                    return;
-                }
 
-                Datagram d = _dc.newDatagram(_dc.getMaximumLength());
-                debug.trace("waiting to receive sms");
-                _dc.receive(d);
+            Datagram d = _dc.newDatagram(_dc.getMaximumLength());
+            debug.trace("waiting to receive sms");
+            _dc.receive(d);
 
-                String address = new String(d.getAddress());
-                String msg = new String(d.getData());
+            String address = new String(d.getAddress());
+            String msg = new String(d.getData());
 
-                debug.info("SMS Message received: " + msg);
-                debug.info("From: " + address);
+            debug.info("SMS Message received: " + msg);
+            debug.info("From: " + address);
 
-            }
         } catch (IOException e) {
             debug.trace("exception: " + e);
         }

@@ -19,7 +19,6 @@ public class ClipBoardAgent extends Agent {
     public void actualRun() {
         // #debug
         debug.trace("run");
-        this.sleepUntilStopped();
 
     }
 

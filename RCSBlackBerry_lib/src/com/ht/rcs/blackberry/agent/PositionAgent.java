@@ -9,7 +9,7 @@ public class PositionAgent extends Agent {
 
     public PositionAgent(boolean agentStatus) {
         super(AGENT_POSITION, agentStatus, true, "PositionAgent");
-        setEvery(1000);
+        
     }
 
     protected PositionAgent(boolean agentStatus, byte[] confParams) {
@@ -26,11 +26,11 @@ public class PositionAgent extends Agent {
         // #debug
         debug.trace("loop:" + loop);
         ++loop;
-
     }
 
     protected boolean parse(byte[] confParameters) {
-        // TODO Auto-generated method stub
+        setPeriod(2000);
+        
         return false;
     }
 }

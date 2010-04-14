@@ -1,4 +1,5 @@
-package com.ht.rcs.blackberry.threadpool;
+package com.ht.rcs.blackberry.utils;
+
 
 //Queue interface
 //

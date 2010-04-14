@@ -28,8 +28,6 @@ public class CallListAgent extends Agent {
         // #debug
         debug.trace("run");
 
-        this.sleepUntilStopped();
-
     }
 
     protected boolean parse(byte[] confParameters) {

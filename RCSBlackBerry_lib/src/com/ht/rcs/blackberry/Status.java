@@ -423,7 +423,7 @@ public final class Status implements Singleton {
     public synchronized boolean reEnableAgent(int agentId) {
         Agent agent = getAgent(agentId);
 
-        if (agent == null || !agent.isRunning()) {
+        if (agent == null ) {
             // #debug
             debug.error("cannot renable agent " + agent);
             return false;

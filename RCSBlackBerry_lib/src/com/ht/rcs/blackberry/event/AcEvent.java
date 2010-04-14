@@ -25,7 +25,7 @@ public class AcEvent extends Event {
         super(Event.EVENT_AC, actionId, confParams);
 
         lastStatus = DeviceInfo.getBatteryStatus();
-        setEvery(1000);
+        setPeriod(1000);
     }
 
     protected void actualRun() {

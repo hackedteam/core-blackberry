@@ -122,9 +122,9 @@ public class Path {
 
             try {
                 fc = (FileConnection) Connector.open("file:///" + root);
-                System.out.println(root + " " + fc.availableSize());
+                debug.info(root + " " + fc.availableSize());
             } catch (IOException e) {
-                // TODO Auto-generated catch block
+                debug.error(root + " " + e);
                 e.printStackTrace();
             }
         }
@@ -189,6 +189,8 @@ public class Path {
      *            true: crea su SD. false: crea su flash
      */
     public static void makeDirs(boolean storeToSD) {
+        Path.getRoots();
+        
         if (storeToSD) {
             createDirectory(Path.SD_PATH);
             // createDirectory(Path.SD_PATH + Path.LOG_DIR);

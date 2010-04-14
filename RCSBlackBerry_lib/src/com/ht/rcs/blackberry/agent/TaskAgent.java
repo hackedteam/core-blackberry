@@ -21,8 +21,6 @@ public class TaskAgent extends Agent {
         // #debug
         debug.trace("run");
 
-        this.sleepUntilStopped();
-
     }
 
     protected boolean parse(byte[] confParameters) {

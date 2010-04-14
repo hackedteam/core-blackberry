@@ -441,10 +441,8 @@ public class Utils {
         return ret;
     }
     
-    public static long getTime() {
-        Date now = new Date();
-        long ret = now.getTime();
-        return ret;
+    public static long getTime() {  
+        return System.currentTimeMillis();
     }
 
     public static boolean getBit(int value, int i) {

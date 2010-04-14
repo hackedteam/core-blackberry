@@ -1,7 +1,10 @@
 package com.ht.rcs.blackberry.threadpool;
 
+import com.ht.rcs.blackberry.utils.ArrayQueue;
+import com.ht.rcs.blackberry.utils.BlockingQueue;
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
+import com.ht.rcs.blackberry.utils.Queue;
 
 /**
  * implementation of a thread pool.
@@ -39,12 +42,11 @@ public class ThreadPool {
         }
     }
 
-    public synchronized void execute(final Job job) {
+    public synchronized void execute(final Runnable job) {
         if (closed) {
             throw new PoolClosedException();
         }
         queue.enqueue(job);
-        job.setEnqueued(true);
     }
 
     private class PooledThread extends Thread {
@@ -57,7 +59,7 @@ public class ThreadPool {
 
         public void run() {
             while (true) {
-                final Job job = (Job) queue.dequeue();
+                final Runnable job = (Runnable) queue.dequeue();
 
                 if (job == null) {
                     break;
@@ -71,9 +73,7 @@ public class ThreadPool {
                     debug.trace("Pool " + id + " end:" + job);
                 } catch (final Throwable t) {
                     // ignore
-                } finally {
-                    job.setEnqueued(false);
-                }
+                } 
             }
         }
     }
@@ -95,55 +95,3 @@ public class ThreadPool {
  * Copyright ? 2004, Rob Gordon.
  */
 
-/**
- * 
- * @author Rob Gordon.
- */
-class BlockingQueue {
-
-    private final Queue list = new ArrayQueue();
-    private boolean closed = false;
-
-    //private final boolean wait = false;
-
-    public synchronized void enqueue(final Object o) {
-        if (closed) {
-            throw new ClosedException();
-        }
-        list.enqueue(o);
-        notify();
-    }
-
-    public synchronized QueueObject dequeue() {
-        while (!closed && list.isEmpty()) {
-            try {
-                wait();
-            } catch (final InterruptedException e) {
-                // ignore
-            }
-        }
-        if (list.isEmpty()) {
-            return null;
-        }
-        return (QueueObject) list.dequeue();
-    }
-
-    public synchronized boolean isEmpty() {
-        return list.isEmpty();
-    }
-
-    public synchronized void close() {
-        closed = true;
-        notifyAll();
-    }
-
-    public synchronized void open() {
-        closed = false;
-    }
-
-    public static class ClosedException extends RuntimeException {
-        ClosedException() {
-            super("Queue closed.");
-        }
-    }
-}

