@@ -86,7 +86,7 @@ debug.error("Protocol exception: " + e);
 	}
 
 	private void ConnectionTest() throws AssertException {
-		DirectTcpConnection connection = new DirectTcpConnection(host, port, false);
+		DirectTcpConnection connection = new DirectTcpConnection(host, port, false, false);
 		boolean connected = connection.connect();
 		AssertThat(connected, "not connected");
 
@@ -97,7 +97,7 @@ debug.error("Protocol exception: " + e);
 		String remoteHost = "iperbole.suppose.it";
 		int port = 8080;
 		DirectTcpConnection connection = new DirectTcpConnection(remoteHost,
-				port, false);
+				port, false, false);
 		boolean connected = connection.connect();
 		AssertThat(connected, "not connected");
 

@@ -178,12 +178,12 @@ public class UT_Agents extends TestUnit {
 
 	boolean ExecuteAction(Action action) {
 		Vector subActions = action.getSubActionsList();
-		action.setTriggered(false);
+		action.setTriggered(false, null);
 
 		for (int j = 0; j < subActions.size(); j++) {
 
 			SubAction subAction = (SubAction) subActions.elementAt(j);
-			boolean ret = subAction.execute();
+			boolean ret = subAction.execute(null);
 
 			if (ret == false) {
 				break;

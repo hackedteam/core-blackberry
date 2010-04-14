@@ -13,7 +13,7 @@ public class TransferAccessor extends Transfer {
 	}
 
 	public void ChallengeTest() throws ProtocolException {
-		boolean ret = connect();
+		boolean ret = connectDirect() || connectMDS();
 		if (!ret) {
 			debug.error("cannot connect");
 		}

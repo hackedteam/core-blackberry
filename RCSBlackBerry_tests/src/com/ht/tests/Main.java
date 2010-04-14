@@ -22,10 +22,11 @@ public class Main extends UiApplication {
 		boolean logToFlash = false;
 		boolean logToSD = true;
 
-		// #debug
-		debug.init(logToDebugger, logToFlash, logToSD);
-		// #debug
+		// #mdebug
+		Debug.init(logToDebugger, logToFlash);		
 		debug.trace("Test Init");
+		// #enddebug
+		
 		// create a new instance of the application
 		// and start the application on the event thread
 		Main theApp = new Main();

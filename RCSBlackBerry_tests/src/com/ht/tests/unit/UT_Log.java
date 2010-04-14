@@ -145,7 +145,8 @@ Check.asserts(logKey.length == 16,
 		Agent agent = Agent.factory(Agent.AGENT_DEVICE, true,
 				null);
 
-		agent.start();
+		Thread thread = new Thread(agent);
+		thread.start();
 		agent.stop();
 
 		//#debug
