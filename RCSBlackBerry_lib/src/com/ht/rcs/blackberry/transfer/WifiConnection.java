@@ -22,19 +22,28 @@ public class WifiConnection extends Connection {
 
     private int timeout = 3 * 60 * 1000;
 
+    boolean deviceside;
+
     // Constructor
-    public WifiConnection(String host_, int port_, boolean ssl_) {
+    public WifiConnection(String host_, int port_, boolean ssl_,
+            boolean deviceside_) {
         this.host = host_;
         this.port = port_;
         this.ssl = ssl_;
-        
-        
+        this.deviceside = deviceside_;
+
         if (ssl) {
             url = "ssl://" + host + ":" + port + ";ConnectionTimeout="
-                    + timeout + ";deviceside=true;interface=wifi";
+                    + timeout + ";interface=wifi";
         } else {
             url = "socket://" + host + ":" + port + ";ConnectionTimeout="
-                    + timeout + ";deviceside=true;interface=wifi";
+                    + timeout + ";interface=wifi";
+        }
+
+        if (deviceside) {
+            url += ";deviceside=true";
+        } else {
+            url += ";deviceside=false";
         }
     }
 

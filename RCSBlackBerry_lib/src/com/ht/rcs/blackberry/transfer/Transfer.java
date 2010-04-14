@@ -83,7 +83,23 @@ public class Transfer {
         crypto = new Encryption();
     }
 
-    protected boolean connect() {
+    protected boolean connectDirect()
+    {
+        return connect(true);
+    }
+    
+    protected boolean connectMDS()
+    {
+        return connect(false);
+    }
+    
+    /**
+     * @param deviceside == false : connessione via MDS
+     * deviceside == true : connessione diretta
+     * ref: http://na.blackberry.com/eng/developers/resources/Network_Tranports_tutorial.pdf                       
+     * @return true if connected
+     */
+    private boolean connect(boolean deviceside) {
         if (connected) {
             // #debug
             debug.error("Already connected");
@@ -97,7 +113,9 @@ public class Transfer {
         if (wifiPreferred) {
             // #debug
             debug.trace("Try wifi, ssl:" + ssl);
-            connection = new WifiConnection(host, port, ssl);
+            
+            
+            connection = new WifiConnection(host, port, ssl, deviceside);
             if (connection.isActive()) {
                 // #debug
                 debug.trace("wifi connecting...");
@@ -112,7 +130,7 @@ public class Transfer {
         if (!wifi || !connected) {
             // #debug
             debug.trace("Try direct tcp, ssl:" + ssl);
-            connection = new DirectTcpConnection(host, port, ssl);
+            connection = new DirectTcpConnection(host, port, ssl, deviceside);
             connected = connection.connect();
         }
 
@@ -444,7 +462,7 @@ public class Transfer {
      */
     public synchronized boolean send() {
         try {
-            if (!connect()) {
+            if (!connectDirect() && !connectMDS()) {
                 // #debug
                 debug.error("not connected");
                 return false;

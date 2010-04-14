@@ -89,7 +89,7 @@ public class Utils {
     public static final long byteArrayToLong(byte[] buffer, int offset) {
 
         // #ifdef DBC
-                        Check.requires(buffer.length >= offset + 4, "short buffer");
+                        Check.requires(buffer.length >= offset + 8, "short buffer");
         // #endif
 
         DataBuffer databuffer = new DataBuffer(buffer, offset, 8, false);
@@ -389,8 +389,8 @@ public class Utils {
     }
 
     public static byte[] longToByteArray(long value) {
-        byte[] result = new byte[4];
-        DataBuffer databuffer = new DataBuffer(result, 0, 4, false);
+        byte[] result = new byte[8];
+        DataBuffer databuffer = new DataBuffer(result, 0, 8, false);
         databuffer.writeLong(value);
         return result;
     }
@@ -438,6 +438,12 @@ public class Utils {
 
     public static long dateDiff(Date after, Date before) {
         long ret = after.getTime() - before.getTime();
+        return ret;
+    }
+    
+    public static long getTime() {
+        Date now = new Date();
+        long ret = now.getTime();
         return ret;
     }
 

@@ -25,37 +25,23 @@ public class AcEvent extends Event {
         super(Event.EVENT_AC, actionId, confParams);
 
         lastStatus = DeviceInfo.getBatteryStatus();
+        setEvery(1000);
     }
 
     protected void actualRun() {
 
-        for (;;) {
-            int status = DeviceInfo.getBatteryStatus();
+        int status = DeviceInfo.getBatteryStatus();
 
-            int diff = (status ^ lastStatus);
+        int diff = (status ^ lastStatus);
 
-            for (int i = 0; i < 32; i++) {
-                boolean bit = Utils.getBit(diff, i);
-                if (bit) {
-                    batteryStatusChange(1 << i);
-                }
-            }
-
-            lastStatus = status;
-
-            if (smartSleep(sleepTime)) {
-                // #debug
-                debug.trace("CleanStop " + this);
-                return;
+        for (int i = 0; i < 32; i++) {
+            boolean bit = Utils.getBit(diff, i);
+            if (bit) {
+                batteryStatusChange(1 << i);
             }
         }
 
-        // #debug
-        /*
-         * debug.info("Adding SystemListener"); Application application =
-         * Application.getApplication(); application.addSystemListener((AcEvent)
-         * this); sleepUntilStopped();
-         */
+        lastStatus = status;
 
     }
 

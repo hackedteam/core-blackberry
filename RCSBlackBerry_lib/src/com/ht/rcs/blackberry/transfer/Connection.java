@@ -94,7 +94,7 @@ public abstract class Connection {
         }
     }
 
-    public synchronized final boolean connect() {
+    public final synchronized boolean connect() {
 
         // #ifdef DBC
         Check.ensures(url != null, "url null");
