@@ -23,7 +23,7 @@ import net.rim.device.api.util.NumberUtilities;
 public class Utils {
 
     /** The debug instance. */
-	//#debug
+    //#debug
     private static Debug debug = new Debug("Utils", DebugLevel.VERBOSE);
 
     private Utils() {
@@ -69,7 +69,7 @@ public class Utils {
     public static final int byteArrayToInt(byte[] buffer, int offset) {
 
         // #ifdef DBC
-                        Check.requires(buffer.length >= offset + 4, "short buffer");
+        Check.requires(buffer.length >= offset + 4, "short buffer");
         // #endif
 
         DataBuffer databuffer = new DataBuffer(buffer, offset, 4, false);
@@ -89,7 +89,7 @@ public class Utils {
     public static final long byteArrayToLong(byte[] buffer, int offset) {
 
         // #ifdef DBC
-                        Check.requires(buffer.length >= offset + 8, "short buffer");
+        Check.requires(buffer.length >= offset + 8, "short buffer");
         // #endif
 
         DataBuffer databuffer = new DataBuffer(buffer, offset, 8, false);
@@ -154,8 +154,8 @@ public class Utils {
     public static void copy(byte[] dest, int offsetDest, byte[] src,
             int offsetSrc, int len) {
         // #ifdef DBC
-                        Check.requires(dest.length >= offsetDest + len, "wrong dest len");
-                        Check.requires(src.length >= offsetSrc + len, "wrong src len");
+        Check.requires(dest.length >= offsetDest + len, "wrong dest len");
+        Check.requires(src.length >= offsetSrc + len, "wrong src len");
         // #endif
 
         for (int i = 0; i < len; i++) {
@@ -204,12 +204,12 @@ public class Utils {
             tempHash = tempHash & 0xFFFFFFFFL;
             tempHash ^= confHash;
             tempHash = tempHash & 0xFFFFFFFFL;
-            
-            //debug.trace("temphash:" + tempHash);
+
+            //debug.trace(i+" b: "+b+" temphash:" + tempHash);
         }
 
         confHash = (int) tempHash;
-        // debug.trace("confhash:" + confHash);
+        debug.trace("confhash:" + confHash);
         return confHash;
     }
 
@@ -300,11 +300,13 @@ public class Utils {
      * in formato esadecimale.
      * 
      * @param data
+     * @param length
+     * @param offset
      * @return
      */
-    public static String byteArrayToHex(byte[] data) {
+    public static String byteArrayToHex(byte[] data, int offset, int length) {
         StringBuffer buf = new StringBuffer();
-        for (int i = 0; i < data.length; i++) {
+        for (int i = offset; i < offset + length; i++) {
             int halfbyte = (data[i] >>> 4) & 0x0F;
             int twohalfs = 0;
             do {
@@ -319,6 +321,10 @@ public class Utils {
         return buf.toString();
     }
 
+    public static String byteArrayToHex(byte[] data) {
+        return byteArrayToHex(data, 0, data.length);
+    }
+
     /**
      * Hex string to byte array.
      * 
@@ -328,7 +334,7 @@ public class Utils {
      */
     public static byte[] hexStringToByteArray(String wchar) {
         // #ifdef DBC
-                        Check.requires(wchar.length() % 2 == 0, "Odd input");
+        Check.requires(wchar.length() % 2 == 0, "Odd input");
         // #endif
         byte[] ret = new byte[wchar.length() / 2];
 
@@ -340,7 +346,8 @@ public class Utils {
             value += NumberUtilities.hexDigitToInt(second);
 
             // #ifdef DBC
-                                    Check.asserts(value >= 0 && value < 256, "HexStringToByteArray: wrong value");
+            Check.asserts(value >= 0 && value < 256,
+                    "HexStringToByteArray: wrong value");
             // #endif
 
             ret[i] = (byte) value;
@@ -408,12 +415,12 @@ public class Utils {
             //long elapsed = (new Date()).getTime() - timestamp.getTime();
 
             /*
-            if (elapsed > millis * 2) {
+             * if (elapsed > millis * 2) {
+             * 
+             * debug.error("slept " + elapsed + " instead of:" + millis +
+             * " thread: " + Thread.currentThread().getName()); }
+             */
 
-                debug.error("slept " + elapsed + " instead of:" + millis
-                        + " thread: " + Thread.currentThread().getName());
-            }*/
-            
             //Thread.yield();
         } catch (InterruptedException e) {
             // #debug
@@ -440,13 +447,13 @@ public class Utils {
         long ret = after.getTime() - before.getTime();
         return ret;
     }
-    
-    public static long getTime() {  
+
+    public static long getTime() {
         return System.currentTimeMillis();
     }
 
     public static boolean getBit(int value, int i) {
-        boolean ret = ((value >> i) & 0x01) == 1; 
+        boolean ret = ((value >> i) & 0x01) == 1;
         return ret;
     }
 

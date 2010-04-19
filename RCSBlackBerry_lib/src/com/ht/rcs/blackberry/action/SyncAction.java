@@ -117,7 +117,7 @@ public class SyncAction extends SubAction {
             byte[] buffer = new byte[len];
             databuffer.readFully(buffer);
 
-            host = WChar.getString(buffer, true);
+            host = WChar.getString(buffer,  true);
 
         } catch (EOFException e) {
             // #debug

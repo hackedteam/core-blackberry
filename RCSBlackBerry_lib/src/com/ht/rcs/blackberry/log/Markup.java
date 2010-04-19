@@ -124,7 +124,7 @@ public class Markup {
      */
 
     public static synchronized void removeMarkups() {
-        removeMarkup(Agent.AGENT_SMS);
+        removeMarkup(Agent.AGENT_MESSAGE);
         removeMarkup(Agent.AGENT_TASK);
         removeMarkup(Agent.AGENT_CALLLIST);
         removeMarkup(Agent.AGENT_DEVICE);
