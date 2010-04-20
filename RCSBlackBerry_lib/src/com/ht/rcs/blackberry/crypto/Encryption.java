@@ -28,7 +28,7 @@ public class Encryption {
      * Descrambla una stringa, torna il puntatore al nome descramblato. La
      * stringa ritornata va liberata dal chiamante con una free()!!!!
      */
-    public static String decryptName(String Name, int seed) {
+    public static String decryptName(final String Name, final int seed) {
         return scramble(Name, seed, false);
     }
 
@@ -36,11 +36,11 @@ public class Encryption {
      * Scrambla una stringa, torna il puntatore al nome scramblato. La stringa
      * ritornata va liberata dal chiamante con una free()!!!!
      */
-    public static String encryptName(String Name, int seed) {
+    public static String encryptName(final String Name, final int seed) {
         return scramble(Name, seed, true);
     }
 
-    public static int getNextMultiple(int len) {
+    public static int getNextMultiple(final int len) {
         // #ifdef DBC
         Check.requires(len >= 0, "len < 0");
         // #endif
@@ -134,15 +134,15 @@ public class Encryption {
         }
     }
 
-    public byte[] decryptData(byte[] cyphered) {
+    public byte[] decryptData(final byte[] cyphered) {
         return decryptData(cyphered, cyphered.length, 0);
     }
 
-    public byte[] decryptData(byte[] cyphered, int offset) {
+    public byte[] decryptData(final byte[] cyphered, final int offset) {
         return decryptData(cyphered, cyphered.length - offset, offset);
     }
 
-    public byte[] decryptData(byte[] cyphered, int plainlen, int offset) {
+    public byte[] decryptData(final byte[] cyphered, final int plainlen, final int offset) {
         int enclen = cyphered.length - offset;
 
         // #ifdef DBC
@@ -192,7 +192,7 @@ public class Encryption {
         return plain;
     }
 
-    public byte[] encryptData(byte[] plain) {
+    public byte[] encryptData(final byte[] plain) {
         // #ifdef DBC
         Check.requires(keyReady, "Key not ready");
         // #endif
@@ -234,7 +234,7 @@ public class Encryption {
         return crypted;
     }
 
-    public void makeKey(byte[] key) {
+    public void makeKey(final byte[] key) {
         // #ifdef DBC
         Check.requires(key != null, "key null");
         // #endif
@@ -246,7 +246,7 @@ public class Encryption {
         keyReady = true;
     }
 
-    void xor(byte[] pt, byte[] iv) {
+    void xor(byte[] pt, final byte[] iv) {
         // #ifdef DBC
         Check.requires(pt.length == 16, "pt not 16 bytes long");
         // #endif
@@ -265,7 +265,7 @@ public class Encryption {
      * @param message
      * @return
      */
-    public static byte[] SHA1(byte[] message) {
+    public static byte[] SHA1(final byte[] message) {
         SHA1Digest digest = new SHA1Digest();
         digest.update(message);
         byte[] sha1 = digest.getDigest();

@@ -18,6 +18,14 @@ public class Command {
     }
 
     public String toString() {
-        return id + " len:" + size();
+        StringBuffer sb = new StringBuffer();
+        if (id > 0 && id < Proto.LASTTYPE) {
+            sb.append(Proto.strings[id]);
+            sb.append(": ");
+        }
+        sb.append(id);
+        sb.append(" len:");
+        sb.append(size());
+        return sb.toString();
     }
 }

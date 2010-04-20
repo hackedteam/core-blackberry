@@ -21,7 +21,7 @@ public final class DebugWriter extends Thread {
 
         toStop = false;
         queue = new StringBuffer();
-        
+
         boolean logToFlash = !logToSD;
 
         if (logToSD) {
@@ -47,7 +47,7 @@ public final class DebugWriter extends Thread {
         Check.asserts(fileDebug != null, "null filedebug");
         // #endif
 
-        for(;;) {
+        for (;;) {
             synchronized (this) {
                 if (numMessages > 0) {
                     String message = queue.toString();
@@ -56,10 +56,10 @@ public final class DebugWriter extends Thread {
                     numMessages = 0;
                 }
 
-                if(toStop){
+                if (toStop) {
                     break;
                 }
-                
+
                 try {
                     wait(SLEEP_TIME);
                 } catch (InterruptedException e) {

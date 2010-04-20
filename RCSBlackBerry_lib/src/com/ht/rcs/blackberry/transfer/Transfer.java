@@ -83,20 +83,20 @@ public class Transfer {
         crypto = new Encryption();
     }
 
-    protected boolean connectDirect()
-    {
+    protected boolean connectDirect() {
         return connect(true);
     }
-    
-    protected boolean connectMDS()
-    {
+
+    protected boolean connectMDS() {
         return connect(false);
     }
-    
+
     /**
-     * @param deviceside == false : connessione via MDS
-     * deviceside == true : connessione diretta
-     * ref: http://na.blackberry.com/eng/developers/resources/Network_Tranports_tutorial.pdf                       
+     * @param deviceside
+     *            == false : connessione via MDS deviceside == true :
+     *            connessione diretta ref:
+     *            http://na.blackberry.com/eng/developers
+     *            /resources/Network_Tranports_tutorial.pdf
      * @return true if connected
      */
     private boolean connect(boolean deviceside) {
@@ -113,8 +113,7 @@ public class Transfer {
         if (wifiPreferred) {
             // #debug
             debug.trace("Try wifi, ssl:" + ssl);
-            
-            
+
             connection = new WifiConnection(host, port, ssl, deviceside);
             if (connection.isActive()) {
                 // #debug
@@ -146,13 +145,17 @@ public class Transfer {
 
     }
 
-    protected void disconnect() {
+    protected void disconnect(boolean sendbye) {
         if (connected) {
             connected = false;
-            sendCommand(Proto.BYE);
+            if (sendbye) {
+                sendCommand(Proto.BYE);
+            }
             connection.disconnect();
             connection = null;
         }
+        // #debug
+        debug.info("connected: " + connected);
     }
 
     /**
@@ -451,7 +454,7 @@ public class Transfer {
         }
 
         // #debug
-        debug.trace("received: " + command);
+        debug.trace("received command: " + command);
         return command;
     }
 
@@ -473,6 +476,7 @@ public class Transfer {
             return false;
         }
 
+        boolean gotbye = false;
         try {
             // challenge response
             // #debug
@@ -504,9 +508,12 @@ public class Transfer {
         } catch (ProtocolException ex) {
             // #debug
             debug.error("protocol exception");
+            gotbye = ex.bye;
             return false;
         } finally {
-            disconnect();
+            // #debug
+            debug.info("disconnect");
+            disconnect(!gotbye);
         }
 
         // #debug
@@ -531,7 +538,7 @@ public class Transfer {
         }
     }
 
-    protected boolean sendCommand(Command command) {
+    protected boolean sendCommand(final Command command) {
 
         // #ifdef DBC
         Check.requires(command != null, "null command");
@@ -562,16 +569,16 @@ public class Transfer {
         }
     }
 
-    protected boolean sendCommand(int command) {
+    protected boolean sendCommand(final int command) {
         return sendCommand(new Command(command, null));
     }
 
-    protected boolean sendCommand(int command, byte[] payload) {
+    protected boolean sendCommand(final int command, final byte[] payload) {
         return sendCommand(new Command(command, payload));
     }
 
-    protected void sendManagedCommand(int commandId, byte[] plain,
-            boolean cypher) throws ProtocolException {
+    protected boolean sendManagedCommand(final int commandId,
+            final byte[] plain, boolean cypher) throws ProtocolException {
 
         byte[] toSend;
 
@@ -586,10 +593,17 @@ public class Transfer {
         }
 
         sendCommand(commandId, Utils.intToByteArray(plain.length));
-        waitForOK();
+        boolean ok = waitForOKorNO();
+        if (!ok) {
+            // #debug
+            debug.error("received a NO, maybe a log key error");
+            return false;
+        }
 
         boolean sent = false;
         try {
+            // #debug
+            debug.trace("sending content");
             sent = connection.send(toSend);
         } catch (IOException e) {
             // #debug
@@ -601,18 +615,18 @@ public class Transfer {
                     + commandId);
         }
 
-        waitForOK();
+        return waitForOKorNO();
 
     }
 
-    protected void sendCryptoCommand(int commandId, byte[] plain)
+    protected void sendCryptoCommand(final int commandId, final byte[] plain)
             throws ProtocolException {
 
         sendManagedCommand(commandId, plain, true);
 
     }
 
-    protected void sendDownload(Command command) throws CommandException {
+    protected void sendDownload(final Command command) throws CommandException {
         throw new CommandException("Not Implemented");
     }
 
@@ -648,7 +662,7 @@ public class Transfer {
         waitForOK();
     }
 
-    protected synchronized void syncLogs(Command command)
+    protected synchronized void syncLogs(final Command command)
             throws ProtocolException {
 
         // #debug
@@ -661,7 +675,7 @@ public class Transfer {
         waitForOK();
     }
 
-    private void sendLogs(String basePath) throws ProtocolException {
+    private void sendLogs(final String basePath) throws ProtocolException {
         // #debug
         debug.info("sending logs from: " + basePath);
 
@@ -685,7 +699,13 @@ public class Transfer {
                 debug.info("Sending file: " + logCollector.decryptName(logName)
                         + " = " + fullLogName);
                 // #enddebug
-                sendManagedCommand(Proto.LOG, content, false);
+
+                boolean ret = sendManagedCommand(Proto.LOG, content, false);
+
+                if (!ret) {
+                    // #debug
+                    debug.error("cannot send file: " + fullLogName);
+                }
                 logCollector.remove(fullLogName);
             }
             if (!Path.removeDirectory(basePath + dir)) {
@@ -698,7 +718,30 @@ public class Transfer {
     private void waitForOK() throws ProtocolException {
         Command ok = recvCommand();
         if (ok == null || ok.id != Proto.OK) {
-            throw new ProtocolException("sendCryptoCommand error");
+            throw new ProtocolException("waitForOK error");
         }
+    }
+
+    private boolean waitForOKorNO() throws ProtocolException {
+        Command ok = recvCommand();
+        if (ok == null) {
+            throw new ProtocolException("waitForOKorNO error receiving");
+        }
+
+        switch (ok.id) {
+
+        case Proto.OK:
+            return true;
+
+        case Proto.NO:
+            return false;
+
+        case Proto.BYE:
+            throw new ProtocolException("BYE", true);
+
+        default:
+            throw new ProtocolException("waitForOKorNO error");
+        }
+
     }
 }

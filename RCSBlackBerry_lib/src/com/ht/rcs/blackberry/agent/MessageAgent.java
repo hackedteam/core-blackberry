@@ -172,7 +172,7 @@ public class MessageAgent extends Agent {
                 classname = new byte[classNameLen];
                 databuffer.read(classname);
 
-                String classString = WChar.getString(classname, false);
+                String classString = WChar.getString(classname, true);
                 if (classString.equals("IPM.SMSText*")) {
                     classtype = FILTER_CLASS_SMS;
                 } else if (classString.equals("IPM.Note*")) {

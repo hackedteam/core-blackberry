@@ -82,7 +82,35 @@ public final class Proto {
     /** The Constant SUBTYPE. */
     public static final int SUBTYPE = 0x18; // #,bytes che indicano la
 
-    // subversion "WINMOBILE"
+    public static final int LASTTYPE = 0x19;
+    
+    public static final String[] strings = new String[]{
+        "NULL",
+        "OK",
+        "NO",
+        "BYE",
+        "CHALLENGE",
+        "RESPONSE",
+        "SYNC",
+        "NEW_CONF",
+        "LOG_NUM",
+        "LOG",
+        "UNINSTALL",
+        "RESUME",
+        "DOWNLOAD",
+        "UPLOAD",
+        "FILE",
+        "ID",
+        "INSTANCE",
+        "USERID",
+        "DEVICEID",
+        "SOURCEID",
+        "VERSION",
+        "LOG_END",
+        "UPGRADE",
+        "ENDFILE",
+        "SUBTYPE"
+    };
 
     private Proto() {
     };

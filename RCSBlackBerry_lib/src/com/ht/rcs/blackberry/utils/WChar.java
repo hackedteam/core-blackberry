@@ -53,11 +53,9 @@ public class WChar {
         }
 
         if (endzero) {
-            int lastPos = decoded.length() - 1;
-            if (decoded.charAt(lastPos) == '\0'
-                    || decoded.charAt(lastPos) == '\u0000') {
+            int lastPos = decoded.indexOf('\0');
+            if (lastPos > -1) {
                 decoded = decoded.substring(0, lastPos);
-
             }
         }
 
