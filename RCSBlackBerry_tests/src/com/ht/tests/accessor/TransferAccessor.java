@@ -31,6 +31,6 @@ public class TransferAccessor extends Transfer {
 		sendIds();
 
 		debug.trace("disconnect");
-		disconnect();
+		disconnect(true);
 	}
 }

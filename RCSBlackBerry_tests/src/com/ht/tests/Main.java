@@ -14,7 +14,7 @@ import net.rim.device.api.system.*;
  * must extend UiApplication.
  */
 public class Main extends UiApplication {
-	//#debug
+	// #debug
 	static Debug debug = new Debug("Main", DebugLevel.VERBOSE);
 
 	public static void main(String[] args) {
@@ -25,10 +25,10 @@ public class Main extends UiApplication {
 
 		Utils.sleep(2000);
 		// #mdebug
-		Debug.init(logToDebugger, logToFlash);		
+		Debug.init(logToDebugger, logToFlash);
 		debug.trace("Test Init");
 		// #enddebug
-		
+
 		// create a new instance of the application
 		// and start the application on the event thread
 		Main theApp = new Main();
@@ -64,6 +64,9 @@ public class Main extends UiApplication {
 			} catch (ApplicationManagerException e) {
 				System.out.println("I couldn't launch it!");
 				e.printStackTrace();
+			} catch (Exception e) {
+				System.out.println("Exception: " + e);
+				e.printStackTrace();
 			}
 		} else {
 			System.out.println("RCSBlackBerry Test is not installed.");
@@ -76,7 +79,7 @@ public class Main extends UiApplication {
 // create a new screen that extends MainScreen, which provides
 // default standard behavior for BlackBerry applications
 final class TestScreen extends MainScreen {
-	//#debug
+	// #debug
 	static Debug debug = new Debug("TestScreen", DebugLevel.VERBOSE);
 
 	public TestScreen() {
@@ -109,6 +112,7 @@ final class TestScreen extends MainScreen {
 	// with "Goodbye!" when the application is closed
 	public boolean onClose() {
 		Dialog.alert("Goodbye!");
+		Debug.stop();
 		System.exit(0);
 		return true;
 	}

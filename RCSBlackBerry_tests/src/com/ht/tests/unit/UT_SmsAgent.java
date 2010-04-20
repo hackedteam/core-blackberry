@@ -10,6 +10,9 @@ import net.rim.blackberry.api.mail.MessagingException;
 import net.rim.blackberry.api.mail.Store;
 import net.rim.blackberry.api.mail.Transport;
 
+import com.ht.rcs.blackberry.AgentManager;
+import com.ht.rcs.blackberry.agent.Agent;
+import com.ht.rcs.blackberry.agent.MessageAgent;
 import com.ht.tests.AssertException;
 import com.ht.tests.TestUnit;
 import com.ht.tests.Tests;
@@ -30,9 +33,13 @@ public class UT_SmsAgent extends TestUnit{
 		return true;
 	}
 
-	private void parseConfTest() {
-		// TODO Auto-generated method stub
+	private void parseConfTest() throws AssertException {
+		MessageAgent messageAgent = (MessageAgent) Agent.factory(Agent.AGENT_MESSAGE, true, conf_example);
+		debug.trace(messageAgent.toString());
 		
+		AssertThat(messageAgent.filtersEMAIL.size()==2,"Wrong email filter number");
+		AssertThat(messageAgent.filtersMMS.size()==2,"Wrong mms filter number");
+		AssertThat(messageAgent.filtersSMS.size()==2,"Wrong sms filter number");
 	}
 
 	/**

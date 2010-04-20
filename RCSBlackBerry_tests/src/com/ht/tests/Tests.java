@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
+import com.ht.rcs.blackberry.utils.DebugWriter;
 import com.ht.tests.unit.*;
 
 public class Tests {
@@ -27,6 +28,8 @@ public class Tests {
 			addTest(new UT_Self("Self", this));
 			addTest(new UT_Utils("Utils", this));
 			addTest(new UT_Crypto("Crypto", this));
+			addTest(new UT_Conf("Conf", this));
+			
 			addTest(new UT_File("File", this));
 			addTest(new UT_Markup("Markup", this));
 
@@ -41,10 +44,11 @@ public class Tests {
 			addTest(new UT_LogCollector("LogCollector", this));
 			addTest(new UT_Sync("Sync", this));
 
-			addTest(new UT_Conf("Conf", this));
+			addTest(new UT_IMAgent("IMAgent", this));
 		}
-
-		addTest(new UT_IMAgent("IMAgent", this));
+		
+		addTest(new UT_SmsAgent("SmsAgent", this));
+				
 	}
 
 	private void addTest(TestUnit unitTest) {

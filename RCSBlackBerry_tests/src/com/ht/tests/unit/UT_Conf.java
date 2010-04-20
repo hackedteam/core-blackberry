@@ -7,6 +7,7 @@ import java.util.Vector;
 
 import com.ht.rcs.blackberry.Conf;
 import com.ht.rcs.blackberry.Status;
+import com.ht.rcs.blackberry.config.InstanceKeys323;
 import com.ht.tests.AssertException;
 import com.ht.tests.TestUnit;
 import com.ht.tests.Tests;
@@ -21,6 +22,30 @@ public class UT_Conf extends TestUnit {
 
 	byte[] confBuffer_test_1 = new byte[0];
 	byte[] confBuffer_test_2 = new byte[0];
+	
+	boolean BellinoTest() throws AssertException {
+		//#debug
+debug.info("-- BellinoTest --");
+
+		Status statusObj = Status.getInstance();
+		statusObj.clear();
+
+		InputStream encIO = UT_Conf.class
+				.getResourceAsStream("../Conf/config_bellino.bin");
+
+		byte[] clearBuffer = new byte[10 * 1024];
+	
+
+		// check crypto
+		statusObj.clear();
+		Conf conf = new Conf();
+
+		boolean ret = conf.loadCyphered(encIO, InstanceKeys323.confKey);
+		AssertThat(ret == true, "Load failed");
+
+		return true;
+	}
+
 
 	public UT_Conf(String name, Tests tests) {
 		super(name, tests);
@@ -339,6 +364,8 @@ debug.info("-- CryptoLoad_3 --");
 
 	public boolean run() throws AssertException {
 
+		BellinoTest();
+		
 		ClearLoad();
 		CrcTest();
 		ParseConfTest();

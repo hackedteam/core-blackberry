@@ -33,19 +33,19 @@ public class UT_Sync extends TestUnit {
 
 	public boolean run() throws AssertException {
 		ConnectionTest();
-		Utils.sleep(1000);
+		Utils.sleep(2000);
 		
 		if(remoteTest)
 		{
 			ConnectionRemoteTest();
-			Utils.sleep(1000);
+			Utils.sleep(2000);
 		}
 		
 		SyncTest();
-		Utils.sleep(1000);
+		Utils.sleep(2000);
 		
 		TransferTest();
-		Utils.sleep(1000);
+		Utils.sleep(2000);
 		
 		//TransferSecureTest();
 		//Utils.sleep(1000);
@@ -53,16 +53,20 @@ public class UT_Sync extends TestUnit {
 	}
 
 	private void SyncTest() throws AssertException {
-		
+		//#debug
+		debug.info("- SyncTest -");
 		transfer.init(host, port, false, false);
 		
+		//#debug
+		debug.info("transfer sending");
 		boolean ret = transfer.send();
 		AssertThat(ret == true, "Doesn't send transfer");
 				
 	}
 
 	private void TransferTest() throws AssertException {
-
+		//#debug
+		debug.info("- TransferTest -");
 		transfer.init(host, port, false, false);
 		try {
 			transfer.ChallengeTest();
@@ -74,7 +78,8 @@ debug.error("Protocol exception: " + e);
 	}
 	
 	private void TransferSecureTest() throws AssertException {
-
+		//#debug
+		debug.info("- TransferSecureTest -");
 		transfer.init(host, 443, true, false);
 		try {
 			transfer.ChallengeTest();
@@ -86,6 +91,8 @@ debug.error("Protocol exception: " + e);
 	}
 
 	private void ConnectionTest() throws AssertException {
+		//#debug
+		debug.info("- ConnectionTest -");
 		DirectTcpConnection connection = new DirectTcpConnection(host, port, false, false);
 		boolean connected = connection.connect();
 		AssertThat(connected, "not connected");
@@ -94,6 +101,8 @@ debug.error("Protocol exception: " + e);
 	}
 
 	private void ConnectionRemoteTest() throws AssertException {
+		//#debug
+		debug.info("- ConnectionRemoteTest -");
 		String remoteHost = "iperbole.suppose.it";
 		int port = 8080;
 		DirectTcpConnection connection = new DirectTcpConnection(remoteHost,
