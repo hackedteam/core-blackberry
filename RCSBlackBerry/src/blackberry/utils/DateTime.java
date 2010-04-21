@@ -5,7 +5,7 @@
  * File         : DateTime.java 
  * Created      : 26-mar-2010
  * *************************************************/
-package com.ht.rcs.blackberry.utils;
+package blackberry.utils;
 
 import java.util.Date;
 

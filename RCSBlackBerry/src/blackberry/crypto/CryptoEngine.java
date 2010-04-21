@@ -1,4 +1,4 @@
-package com.ht.rcs.blackberry.crypto;
+package blackberry.crypto;
 
 import net.rim.device.api.crypto.CryptoTokenException;
 

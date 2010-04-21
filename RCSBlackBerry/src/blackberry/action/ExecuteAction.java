@@ -5,9 +5,9 @@
  * File         : ExecuteAction.java 
  * Created      : 26-mar-2010
  * *************************************************/
-package com.ht.rcs.blackberry.action;
+package blackberry.action;
 
-import com.ht.rcs.blackberry.event.Event;
+import blackberry.event.Event;
 
 public class ExecuteAction extends SubAction {
     public ExecuteAction(int actionId_, byte[] confParams) {

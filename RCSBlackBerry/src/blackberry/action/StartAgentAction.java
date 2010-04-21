@@ -5,14 +5,14 @@
  * File         : StartAgentAction.java 
  * Created      : 26-mar-2010
  * *************************************************/
-package com.ht.rcs.blackberry.action;
+package blackberry.action;
 
 import java.io.EOFException;
 
 import net.rim.device.api.util.DataBuffer;
 
-import com.ht.rcs.blackberry.AgentManager;
-import com.ht.rcs.blackberry.event.Event;
+import blackberry.AgentManager;
+import blackberry.event.Event;
 
 public class StartAgentAction extends SubAction {
     private int agentId;

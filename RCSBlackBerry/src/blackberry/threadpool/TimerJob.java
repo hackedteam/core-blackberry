@@ -1,12 +1,12 @@
-package com.ht.rcs.blackberry.threadpool;
+package blackberry.threadpool;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.ht.rcs.blackberry.utils.Check;
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
-import com.ht.rcs.blackberry.utils.Utils;
+import blackberry.utils.Check;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
+import blackberry.utils.Utils;
 
 public abstract class TimerJob extends TimerTask {
 

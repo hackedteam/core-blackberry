@@ -1,4 +1,4 @@
-package com.ht.tests.unit;
+package tests.unit;
 
 import java.util.Date;
 
@@ -9,15 +9,15 @@ import net.rim.device.api.crypto.CryptoTokenException;
 import net.rim.device.api.crypto.CryptoUnsupportedOperationException;
 import net.rim.device.api.util.Arrays;
 
-import com.ht.rcs.blackberry.crypto.CryptoEngine;
-import com.ht.rcs.blackberry.crypto.Encryption;
-import com.ht.rcs.blackberry.crypto.Rijndael;
-import com.ht.rcs.blackberry.crypto.RimAES;
-import com.ht.rcs.blackberry.utils.Check;
-import com.ht.rcs.blackberry.utils.Utils;
-import com.ht.tests.AssertException;
-import com.ht.tests.TestUnit;
-import com.ht.tests.Tests;
+import blackberry.crypto.CryptoEngine;
+import blackberry.crypto.Encryption;
+import blackberry.crypto.Rijndael;
+import blackberry.crypto.RimAES;
+import blackberry.utils.Check;
+import blackberry.utils.Utils;
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
 
 public class UT_Crypto extends TestUnit {
 

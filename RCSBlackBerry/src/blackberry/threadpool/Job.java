@@ -1,4 +1,4 @@
-package com.ht.rcs.blackberry.threadpool;
+package blackberry.threadpool;
 
 /*public interface Job extends Runnable, QueueObject {
 

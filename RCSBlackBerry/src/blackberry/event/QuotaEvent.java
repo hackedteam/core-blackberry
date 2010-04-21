@@ -5,7 +5,7 @@
  * File         : QuotaEvent.java 
  * Created      : 26-mar-2010
  * *************************************************/
-package com.ht.rcs.blackberry.event;
+package blackberry.event;
 
 public class QuotaEvent extends Event {
 

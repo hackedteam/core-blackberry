@@ -1,4 +1,4 @@
-package com.ht.tests;
+package tests;
 
 public class AssertException extends Exception {
 	

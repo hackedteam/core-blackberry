@@ -1,0 +1,90 @@
+package tests;
+
+import net.rim.device.api.system.ApplicationDescriptor;
+import net.rim.device.api.system.ApplicationManager;
+import net.rim.device.api.system.ApplicationManagerException;
+import net.rim.device.api.system.CodeModuleManager;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
+import blackberry.utils.Utils;
+
+/*
+ * BlackBerry applications that provide a user interface
+ * must extend UiApplication.
+ */
+public class MainTest {
+    // #debug
+    static Debug debug = new Debug("Main", DebugLevel.VERBOSE);
+
+    public MainTest() {
+
+        final boolean logToDebugger = true;
+        final boolean logToFlash = false;
+        final boolean logToSD = true;
+
+        Utils.sleep(2000);
+        // #mdebug
+        Debug.init(logToDebugger, logToFlash);
+        debug.trace("Test Init");
+        // #enddebug
+
+        // create a new instance of the application
+
+        // #debug
+        debug.info("--- Starting Main ---");
+
+        executeAll();
+    }
+
+    public void executeAll() {
+
+        // Per ogni test presente, lo esegue e aggiunge il risultato
+        final Tests test = Tests.getInstance();
+
+        for (int i = 0; i < test.getCount(); i++) {
+            test.execute(i);
+        }
+
+        debug.info("EXECUTE ALL");
+        debug.info("--------------------------------");
+        for (int i = 0; i < test.getCount(); i++) {
+            final String result = test.result(i);
+
+            debug.info(result);
+        }
+        debug.info("--------------------------------");
+    }
+
+    public void ExecuteApplication(final String appname) {
+        System.out.println("RCSBlackBerry Test launching");
+        final int handle = CodeModuleManager
+                .getModuleHandle("RCSBlackBerry Test");
+        final ApplicationDescriptor[] descriptors = CodeModuleManager
+                .getApplicationDescriptors(handle);
+        if (descriptors.length > 0) {
+            final ApplicationDescriptor descriptor = descriptors[0];
+            try {
+                final ApplicationManager manager = ApplicationManager
+                        .getApplicationManager();
+                while (manager.inStartup()) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (final InterruptedException ie) {
+                        // Ignore.
+                    }
+                }
+                manager.runApplication(descriptor);
+            } catch (final ApplicationManagerException e) {
+                System.out.println("I couldn't launch it!");
+                e.printStackTrace();
+            } catch (final Exception e) {
+                System.out.println("Exception: " + e);
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("RCSBlackBerry Test is not installed.");
+        }
+
+        System.out.println("Goodbye, world!");
+    }
+}

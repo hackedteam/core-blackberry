@@ -1,4 +1,4 @@
-package com.ht.rcs.blackberry.log;
+package blackberry.log;
 
 public class LogType {
     public static final int UNKNOWN = 0xFFFF; // in caso di errore

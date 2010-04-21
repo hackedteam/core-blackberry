@@ -1,4 +1,4 @@
-package com.ht.rcs.blackberry.utils;
+package blackberry.utils;
 
 /**
  * Exception class for access in empty containers

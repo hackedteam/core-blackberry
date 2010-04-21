@@ -1,155 +1,149 @@
-package com.ht.tests.unit;
+package tests.unit;
 
-import com.ht.rcs.blackberry.Common;
-import com.ht.rcs.blackberry.Device;
-import com.ht.rcs.blackberry.Status;
-import com.ht.rcs.blackberry.agent.Agent;
-import com.ht.rcs.blackberry.fs.AutoFlashFile;
-import com.ht.rcs.blackberry.fs.Path;
-import com.ht.rcs.blackberry.log.Log;
-import com.ht.rcs.blackberry.log.LogCollector;
-import com.ht.rcs.blackberry.utils.Check;
-import com.ht.rcs.blackberry.utils.Utils;
-import com.ht.rcs.blackberry.utils.WChar;
-import com.ht.tests.AssertException;
-import com.ht.tests.TestUnit;
-import com.ht.tests.Tests;
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
+import blackberry.Device;
+import blackberry.Status;
+import blackberry.agent.Agent;
+import blackberry.fs.AutoFlashFile;
+import blackberry.fs.Path;
+import blackberry.log.Log;
+import blackberry.log.LogCollector;
+import blackberry.utils.Check;
+import blackberry.utils.Utils;
+import blackberry.utils.WChar;
 
 public class UT_Log extends TestUnit {
 
-	public UT_Log(String name, Tests tests) {
-		super(name, tests);
-	}
+    public UT_Log(final String name, final Tests tests) {
+        super(name, tests);
+    }
 
-	public boolean run() throws AssertException {
+    public boolean run() throws AssertException {
 
-		Path.makeDirs(true);
+        Path.makeDirs(true);
 
-		CreatePlainDeviceLog();
-		CreateEncDeviceLog();
-		CreateDeviceAgent();
-		return true;
-	}
+        CreatePlainDeviceLog();
+        CreateEncDeviceLog();
+        CreateDeviceAgent();
+        return true;
+    }
 
-	private void CreatePlainDeviceLog() {
-		Status status = Status.getInstance();
-		status.clear();
+    private void CreatePlainDeviceLog() {
+        final Status status = Status.getInstance();
+        status.clear();
 
-		Device device = Device.getInstance();
-		device.clear();
+        final Device device = Device.getInstance();
+        device.clear();
 
-		Agent agent = Agent.factory(Agent.AGENT_DEVICE, true,
-				null);
+        final Agent agent = Agent.factory(Agent.AGENT_DEVICE, true, null);
 
-		Log agentLog = LogCollector.getInstance().factory(agent, true);
+        final Log agentLog = LogCollector.getInstance().factory(agent, true);
 
-		// agent device vuoto
-		byte[] additionalData = null;
-		byte[] plain = agentLog.makeDescription(additionalData);
+        // agent device vuoto
+        final byte[] additionalData = null;
+        byte[] plain = agentLog.makeDescription(additionalData);
 
-		//#ifdef DBC
-Check.asserts(plain.length == 32, "Wrong len 1 ");
-//#endif
+        //#ifdef DBC
+        Check.asserts(plain.length == 32, "Wrong len 1 ");
+        //#endif
 
-		AutoFlashFile file = new AutoFlashFile(Path.SD_PATH + "LOG_test1.log",
-				false);
-		if (file.exists())
-			file.delete();
-		file.create();
+        AutoFlashFile file = new AutoFlashFile(Path.SD_PATH + "LOG_test1.log",
+                false);
+        if (file.exists())
+            file.delete();
+        file.create();
 
-		file.append(plain.length);
-		file.append(plain);
+        file.append(plain.length);
+        file.append(plain);
 
-		// agent device con imsi ecc
-		device.refreshData();
+        // agent device con imsi ecc
+        device.refreshData();
 
-		plain = agentLog.makeDescription(additionalData);
-		//#ifdef DBC
-Check.asserts(plain.length > 32, "Wrong len 2");
-//#endif
+        plain = agentLog.makeDescription(additionalData);
+        //#ifdef DBC
+        Check.asserts(plain.length > 32, "Wrong len 2");
+        //#endif
 
-		file = new AutoFlashFile(Path.SD_PATH + "LOG_test2.log", false);
-		if (file.exists())
-			file.delete();
-		file.create();
+        file = new AutoFlashFile(Path.SD_PATH + "LOG_test2.log", false);
+        if (file.exists())
+            file.delete();
+        file.create();
 
-		file.append(plain.length);
-		file.append(plain);
+        file.append(plain.length);
+        file.append(plain);
 
-		String chunk = "Processore: Cray\nMemoria: a paccazzi\nOS: BB\nKiodo: gay\n";
-		byte[] bc = WChar.getBytes(chunk);
+        final String chunk = "Processore: Cray\nMemoria: a paccazzi\nOS: BB\nKiodo: gay\n";
+        final byte[] bc = WChar.getBytes(chunk);
 
-		// chunk, a pezzi
-		file.append(bc);
+        // chunk, a pezzi
+        file.append(bc);
 
-		// resto del chunk: 4*2 + 2
-		byte[] picche = new byte[] { 0x60, 0x26 };
-		byte[] fiori = new byte[] { 0x61, 0x26 };
-		byte[] cuori = new byte[] { 0x62, 0x26 };
-		byte[] quadri = new byte[] { 0x63, 0x26 };
-		file.append(picche);
-		file.append(fiori);
-		file.append(cuori);
-		file.append(quadri);
+        // resto del chunk: 4*2 + 2
+        final byte[] picche = new byte[] { 0x60, 0x26 };
+        final byte[] fiori = new byte[] { 0x61, 0x26 };
+        final byte[] cuori = new byte[] { 0x62, 0x26 };
+        final byte[] quadri = new byte[] { 0x63, 0x26 };
+        file.append(picche);
+        file.append(fiori);
+        file.append(cuori);
+        file.append(quadri);
 
-		file.append(WChar.getBytes("\n"));
+        file.append(WChar.getBytes("\n"));
 
-		// secondo chunk in arabo
-		String ArabicText = "44062706200023064E062A064E0643064E0644064E06510645064F06200027064406520639064E0631064E0628064A064E06510629064E06";
-		String ArabicTraslitteration = "\nTraslitterazione: a atakallamu al-'arabi'yah";
-		String ArabicTranslation = "\nmettete la salsa bianca nel kebab\n";
+        // secondo chunk in arabo
+        final String ArabicText = "44062706200023064E062A064E0643064E0644064E06510645064F06200027064406520639064E0631064E0628064A064E06510629064E06";
+        final String ArabicTraslitteration = "\nTraslitterazione: a atakallamu al-'arabi'yah";
+        final String ArabicTranslation = "\nmettete la salsa bianca nel kebab\n";
 
-		byte[] arabic = Utils.hexStringToByteArray(ArabicText);
+        final byte[] arabic = Utils.hexStringToByteArray(ArabicText);
 
-		file.append(arabic);
-		file.append(WChar.getBytes(ArabicTraslitteration));
-		file.append(WChar.getBytes(ArabicTranslation));
-		file.append(0); // string null terminated
-	}
+        file.append(arabic);
+        file.append(WChar.getBytes(ArabicTraslitteration));
+        file.append(WChar.getBytes(ArabicTranslation));
+        file.append(0); // string null terminated
+    }
 
-	private void CreateEncDeviceLog() {
-		
-		Status status = Status.getInstance();
-		status.clear();
+    private void CreateEncDeviceLog() {
 
-		Agent agent = Agent.factory(Agent.AGENT_DEVICE, true,
-				null);
-		Log agentLog = LogCollector.getInstance().factory(agent, true);
+        final Status status = Status.getInstance();
+        status.clear();
 
-		agentLog.createLog(null);
+        final Agent agent = Agent.factory(Agent.AGENT_DEVICE, true, null);
+        final Log agentLog = LogCollector.getInstance().factory(agent, true);
 
-		String content = "BlackBerry 8300\n128Kb Ram installed";
-		agentLog.writeLog(content, true);
+        agentLog.createLog(null);
 
-		agentLog.close();
+        final String content = "BlackBerry 8300\n128Kb Ram installed";
+        agentLog.writeLog(content, true);
 
-	}
+        agentLog.close();
 
-	private void CreateDeviceAgent() {
+    }
 
-		// per la 296, logKey = s06El1fQksievo4rtX3XjHWe4lqgxBpZ
-		// md5(logKey) = 4e400a3552be73aedb88077cef404314
+    private void CreateDeviceAgent() {
 
-		/*
-		 * byte[] logKey = Utils
-		 * .hexStringToByteArray("4e400a3552be73aedb88077cef404314");
-		 * Keys.byteAesKey = logKey; //#ifdef DBC
-Check.asserts(logKey.length == 16,
-//#endif
-		 * "Wrong md5");
-		 */
+        // per la 296, logKey = s06El1fQksievo4rtX3XjHWe4lqgxBpZ
+        // md5(logKey) = 4e400a3552be73aedb88077cef404314
 
-		Status status = Status.getInstance();
-		status.clear();
+        /*
+         * byte[] logKey = Utils
+         * .hexStringToByteArray("4e400a3552be73aedb88077cef404314");
+         * Keys.byteAesKey = logKey; Check.asserts(logKey.length == 16,
+         * "Wrong md5");
+         */
 
-		Agent agent = Agent.factory(Agent.AGENT_DEVICE, true,
-				null);
+        final Status status = Status.getInstance();
+        status.clear();
 
-		Thread thread = new Thread(agent);
-		thread.start();
-		agent.stop();
+        final Agent agent = Agent.factory(Agent.AGENT_DEVICE, true, null);
 
-		//#debug
-debug.trace("Agent Device ok");
-	}
+        final Thread thread = new Thread(agent);
+        thread.start();
+        agent.stop();
+
+        //#debug
+        debug.trace("Agent Device ok");
+    }
 }

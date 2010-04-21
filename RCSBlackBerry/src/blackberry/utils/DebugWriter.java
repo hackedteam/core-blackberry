@@ -1,7 +1,7 @@
-package com.ht.rcs.blackberry.utils;
+package blackberry.utils;
 
-import com.ht.rcs.blackberry.fs.AutoFlashFile;
-import com.ht.rcs.blackberry.fs.Path;
+import blackberry.fs.AutoFlashFile;
+import blackberry.fs.Path;
 
 public final class DebugWriter extends Thread {
 

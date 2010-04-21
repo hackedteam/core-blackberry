@@ -5,7 +5,7 @@
  * File         : Rijndael.java 
  * Created      : 26-mar-2010
  * *************************************************/
-package com.ht.rcs.blackberry.crypto;
+package blackberry.crypto;
 
 /**
  * Rijndael.java

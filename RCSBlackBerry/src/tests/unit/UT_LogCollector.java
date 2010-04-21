@@ -1,12 +1,12 @@
-package com.ht.tests.unit;
+package tests.unit;
 
 import java.util.Vector;
 
-import com.ht.rcs.blackberry.fs.Path;
-import com.ht.rcs.blackberry.log.LogCollector;
-import com.ht.tests.AssertException;
-import com.ht.tests.TestUnit;
-import com.ht.tests.Tests;
+import blackberry.fs.Path;
+import blackberry.log.LogCollector;
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
 
 public class UT_LogCollector extends TestUnit {
 

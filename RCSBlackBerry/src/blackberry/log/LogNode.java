@@ -5,7 +5,7 @@
  * File         : LogNode.java 
  * Created      : 26-mar-2010
  * *************************************************/
-package com.ht.rcs.blackberry.log;
+package blackberry.log;
 
 public class LogNode {
 

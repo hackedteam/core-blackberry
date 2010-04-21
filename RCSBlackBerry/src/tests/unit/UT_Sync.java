@@ -1,17 +1,17 @@
-package com.ht.tests.unit;
+package tests.unit;
 
 import java.io.IOException;
 
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
-import com.ht.rcs.blackberry.utils.Utils;
-import com.ht.tests.AssertException;
-import com.ht.tests.TestUnit;
-import com.ht.tests.Tests;
-import com.ht.tests.accessor.TransferAccessor;
-import com.ht.rcs.blackberry.config.Keys;
-import com.ht.rcs.blackberry.transfer.DirectTcpConnection;
-import com.ht.rcs.blackberry.transfer.ProtocolException;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
+import blackberry.utils.Utils;
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
+import tests.accessor.TransferAccessor;
+import blackberry.config.Keys;
+import blackberry.transfer.DirectTcpConnection;
+import blackberry.transfer.ProtocolException;
 
 public class UT_Sync extends TestUnit {
 

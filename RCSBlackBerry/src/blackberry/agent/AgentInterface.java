@@ -1,4 +1,4 @@
-package com.ht.rcs.blackberry.agent;
+package blackberry.agent;
 
 public interface AgentInterface {
     boolean run();

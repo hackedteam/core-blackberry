@@ -1,16 +1,16 @@
-package com.ht.tests.unit;
+package tests.unit;
 
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Vector;
 
-import com.ht.rcs.blackberry.Conf;
-import com.ht.rcs.blackberry.Status;
-import com.ht.rcs.blackberry.config.InstanceKeys323;
-import com.ht.tests.AssertException;
-import com.ht.tests.TestUnit;
-import com.ht.tests.Tests;
+import blackberry.Conf;
+import blackberry.Status;
+import blackberry.config.InstanceKeys323;
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
 
 import net.rim.device.api.util.Arrays;
 import net.rim.device.api.util.DataBuffer;

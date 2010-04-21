@@ -1,12 +1,12 @@
-package com.ht.tests.unit;
+package tests.unit;
 
 import java.util.Timer;
 
-import com.ht.rcs.blackberry.threadpool.TimerJob;
-import com.ht.rcs.blackberry.utils.Utils;
-import com.ht.tests.AssertException;
-import com.ht.tests.TestUnit;
-import com.ht.tests.Tests;
+import blackberry.threadpool.TimerJob;
+import blackberry.utils.Utils;
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
 
 public class UT_TimerThread extends TestUnit {
 

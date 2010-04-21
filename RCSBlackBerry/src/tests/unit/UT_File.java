@@ -1,11 +1,11 @@
-package com.ht.tests.unit;
+package tests.unit;
 
-import com.ht.rcs.blackberry.fs.AutoFlashFile;
-import com.ht.rcs.blackberry.fs.Path;
-import com.ht.rcs.blackberry.utils.Utils;
-import com.ht.tests.AssertException;
-import com.ht.tests.TestUnit;
-import com.ht.tests.Tests;
+import blackberry.fs.AutoFlashFile;
+import blackberry.fs.Path;
+import blackberry.utils.Utils;
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
 
 public class UT_File extends TestUnit {
 

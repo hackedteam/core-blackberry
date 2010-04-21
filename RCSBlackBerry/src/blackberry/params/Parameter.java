@@ -5,7 +5,7 @@
  * File         : Parameter.java 
  * Created      : 26-mar-2010
  * *************************************************/
-package com.ht.rcs.blackberry.params;
+package blackberry.params;
 
 // TODO: Auto-generated Javadoc
 /**

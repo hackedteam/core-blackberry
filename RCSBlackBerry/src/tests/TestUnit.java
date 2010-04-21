@@ -1,8 +1,8 @@
-package com.ht.tests;
+package tests;
 
-import com.ht.rcs.blackberry.config.Keys;
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
+import blackberry.config.Keys;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
 
 public abstract class TestUnit {
 

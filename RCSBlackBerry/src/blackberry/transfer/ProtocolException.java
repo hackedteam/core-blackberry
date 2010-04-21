@@ -5,10 +5,10 @@
  * File         : ProtocolException.java 
  * Created      : 6-apr-2010
  * *************************************************/
-package com.ht.rcs.blackberry.transfer;
+package blackberry.transfer;
 
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
 
 /**
  * The Class ProtocolException. Viene lanciato in caso di eccezione durante

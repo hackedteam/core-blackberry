@@ -1,7 +1,7 @@
-package com.ht.tests.unit;
+package tests.unit;
 
-import com.ht.tests.TestUnit;
-import com.ht.tests.Tests;
+import tests.TestUnit;
+import tests.Tests;
 
 public class UT_Self extends TestUnit {
 

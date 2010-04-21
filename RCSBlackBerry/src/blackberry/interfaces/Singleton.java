@@ -5,7 +5,7 @@
  * File         : Singleton.java 
  * Created      : 26-mar-2010
  * *************************************************/
-package com.ht.rcs.blackberry.interfaces;
+package blackberry.interfaces;
 
 /**
  * Interfaccia Singleton, non supportando i generics non puo' essere usata per

@@ -1,5 +1,5 @@
 <Properties ModelVersion="1.1.2">
-  <General Title="" Version="1.0.0" Vendor="BlackBerry Developer" Description=""/>
+  <General Title="" Version="4.5.0" Vendor="Research In Motion" Description=""/>
   <Application Type="BlackBerry Application" MainMIDletName="" MainArgs="" HomeScreenPosition="0" StartupTier="7" IsSystemModule="true" IsAutostartup="false"/>
   <Resources hasTitleResource="false" TitleResourceBundleName="" TitleResourceBundleRelativePath="" TitleResourceBundleClassName="" TitleResourceBundleKey="" DescriptionId="">
     <Icons/>
@@ -14,5 +14,9 @@
     <ClassProtection/>
     <PackageProtection/>
   </HiddenProperties>
-  <AlternateEntryPoints/>
+  <AlternateEntryPoints>
+    <AlternateEntryPoint Title="Test" MainMIDletName="" ArgumentsForMain="Test" HomeScreenPosition="0" StartupTier="7" IsSystemModule="false" IsAutostartup="false" hasTitleResource="false" TitleResourceBundleKey="" TitleResourceBundleName="" TitleResourceBundleClassName="" TitleResourceBundleRelativePath="">
+      <Icons/>
+    </AlternateEntryPoint>
+  </AlternateEntryPoints>
 </Properties>

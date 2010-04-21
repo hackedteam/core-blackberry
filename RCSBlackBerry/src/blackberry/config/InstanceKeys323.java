@@ -1,4 +1,4 @@
-package com.ht.rcs.blackberry.config;
+package blackberry.config;
 
 public class InstanceKeys323 {
     // RCS 323

@@ -1,4 +1,4 @@
-package com.ht.rcs.blackberry;
+package blackberry;
 
 import net.rim.device.api.applicationcontrol.ApplicationPermissions;
 import net.rim.device.api.applicationcontrol.ReasonProvider;

@@ -1,21 +1,21 @@
-package com.ht.tests.unit;
+package tests.unit;
 
 import java.util.Vector;
 
 import net.rim.device.api.util.DataBuffer;
 
-import com.ht.rcs.blackberry.AgentManager;
-import com.ht.rcs.blackberry.Common;
-import com.ht.rcs.blackberry.Conf;
-import com.ht.rcs.blackberry.EventManager;
-import com.ht.rcs.blackberry.Status;
-import com.ht.rcs.blackberry.action.Action;
-import com.ht.rcs.blackberry.action.SubAction;
-import com.ht.rcs.blackberry.agent.Agent;
-import com.ht.rcs.blackberry.event.Event;
-import com.ht.rcs.blackberry.event.TimerEvent;
-import com.ht.rcs.blackberry.utils.Utils;
-import com.ht.tests.*;
+import blackberry.AgentManager;
+import blackberry.Common;
+import blackberry.Conf;
+import blackberry.EventManager;
+import blackberry.Status;
+import blackberry.action.Action;
+import blackberry.action.SubAction;
+import blackberry.agent.Agent;
+import blackberry.event.Event;
+import blackberry.event.TimerEvent;
+import blackberry.utils.Utils;
+import tests.*;
 
 public class UT_Agents extends TestUnit {
 

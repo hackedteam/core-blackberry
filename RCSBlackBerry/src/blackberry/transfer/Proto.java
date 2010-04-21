@@ -1,4 +1,4 @@
-package com.ht.rcs.blackberry.transfer;
+package blackberry.transfer;
 
 public final class Proto {
     /** The Constant OK. */

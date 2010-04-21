@@ -1,4 +1,4 @@
-package com.ht.tests.unit;
+package tests.unit;
 
 import java.util.Calendar;
 
@@ -10,12 +10,12 @@ import net.rim.blackberry.api.mail.MessagingException;
 import net.rim.blackberry.api.mail.Store;
 import net.rim.blackberry.api.mail.Transport;
 
-import com.ht.rcs.blackberry.AgentManager;
-import com.ht.rcs.blackberry.agent.Agent;
-import com.ht.rcs.blackberry.agent.MessageAgent;
-import com.ht.tests.AssertException;
-import com.ht.tests.TestUnit;
-import com.ht.tests.Tests;
+import blackberry.AgentManager;
+import blackberry.agent.Agent;
+import blackberry.agent.MessageAgent;
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
 
 public class UT_SmsAgent extends TestUnit{
 

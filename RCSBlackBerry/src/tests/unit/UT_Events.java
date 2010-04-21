@@ -1,17 +1,17 @@
-package com.ht.tests.unit;
+package tests.unit;
 
 import java.util.Date;
 
-import com.ht.rcs.blackberry.Conf;
-import com.ht.rcs.blackberry.EventManager;
-import com.ht.rcs.blackberry.Status;
-import com.ht.rcs.blackberry.action.Action;
-import com.ht.rcs.blackberry.action.SubAction;
-import com.ht.rcs.blackberry.event.TimerEvent;
-import com.ht.rcs.blackberry.utils.Utils;
-import com.ht.tests.AssertException;
-import com.ht.tests.TestUnit;
-import com.ht.tests.Tests;
+import blackberry.Conf;
+import blackberry.EventManager;
+import blackberry.Status;
+import blackberry.action.Action;
+import blackberry.action.SubAction;
+import blackberry.event.TimerEvent;
+import blackberry.utils.Utils;
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
 
 public class UT_Events extends TestUnit {
 

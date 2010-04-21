@@ -1,15 +1,15 @@
-package com.ht.rcs.blackberry.threadpool;
+package blackberry.threadpool;
 
 import java.util.Vector;
 
 import net.rim.device.api.util.Comparator;
 import net.rim.device.api.util.SimpleSortingVector;
 
-import com.ht.rcs.blackberry.threadpool.ThreadPool.PoolClosedException;
-import com.ht.rcs.blackberry.utils.Check;
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
-import com.ht.rcs.blackberry.utils.Utils;
+import blackberry.threadpool.ThreadPool.PoolClosedException;
+import blackberry.utils.Check;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
+import blackberry.utils.Utils;
 /*
 public class Scheduler extends Thread {
     //#debug

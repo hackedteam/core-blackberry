@@ -5,16 +5,11 @@
  * File         : Debug.java 
  * Created      : 26-mar-2010
  * *************************************************/
-package com.ht.rcs.blackberry.utils;
+package blackberry.utils;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import net.rim.device.api.i18n.DateFormat;
-import net.rim.device.api.i18n.SimpleDateFormat;
-
-import com.ht.rcs.blackberry.fs.AutoFlashFile;
-import com.ht.rcs.blackberry.fs.Path;
 
 //TODO: ottimizzare per togliere la chiamata in  Release
 public class Debug {
@@ -28,30 +23,8 @@ public class Debug {
     private static boolean enabled = true;
     private static boolean init_ = false;
 
-    // 1234567890123456
-    String className = "                ";
-    int actualLevel = 6;
-
-    static DebugWriter debugWriter;
-
-    public Debug(String className_) {
-        this(className_, DebugLevel.VERBOSE);
-    }
-
-    public Debug(String className_, int classLevel) {
-        int len = className_.length();
-        this.className = className_ + className.substring(len);
-
-        this.actualLevel = Math.min(classLevel, level);
-    }
-
-    /*
-     * prior: priorita', da 6 bassa a bassa, level LEVEL = {
-     * TRACE,DEBUG,INFO,WARN, ERROR, FATAL }
-     */
-
-    public static boolean init(boolean logToDebugger_,
-            boolean logToSD_) {
+    public static boolean init(final boolean logToDebugger_,
+            final boolean logToSD_) {
 
         if (init_) {
             return false;
@@ -76,13 +49,36 @@ public class Debug {
 
         try {
             debugWriter.join();
-        } catch (InterruptedException e) {
+        } catch (final InterruptedException e) {
         }
 
         init_ = false;
     }
 
-    public void error(String message) {
+    // 1234567890123456
+    String className = "                ";
+
+    int actualLevel = 6;
+
+    static DebugWriter debugWriter;
+
+    /*
+     * prior: priorita', da 6 bassa a bassa, level LEVEL = {
+     * TRACE,DEBUG,INFO,WARN, ERROR, FATAL }
+     */
+
+    public Debug(final String className_) {
+        this(className_, DebugLevel.VERBOSE);
+    }
+
+    public Debug(final String className_, final int classLevel) {
+        final int len = className_.length();
+        this.className = className_ + className.substring(len);
+
+        this.actualLevel = Math.min(classLevel, level);
+    }
+
+    public void error(final String message) {
         // #mdebug
         if (enabled) {
             trace("#ERR# " + className + " | " + message, DebugLevel.HIGH);
@@ -91,7 +87,7 @@ public class Debug {
         // #enddebug
     }
 
-    public void fatal(String message) {
+    public void fatal(final String message) {
         // #mdebug
         if (enabled) {
             trace("#FTL# " + className + " | " + message, DebugLevel.CRITICAL);
@@ -100,7 +96,7 @@ public class Debug {
         // #enddebug
     }
 
-    public void info(String message) {
+    public void info(final String message) {
         // #mdebug
         if (enabled) {
             trace("-INF- " + className + " | " + message, DebugLevel.NOTIFY);
@@ -109,29 +105,11 @@ public class Debug {
         // #enddebug
     }
 
-    public void warn(String message) {
-        // #mdebug
-        if (enabled) {
-            trace("-WRN- " + className + " | " + message, DebugLevel.LOW);
-        }
-
-        // #enddebug
-    }
-
-    public void trace(String message) {
-        // #mdebug
-        if (enabled) {
-            trace("-   - " + className + " | " + message, DebugLevel.VERBOSE);
-        }
-
-        // #enddebug
-    }
-
-    private void logToDebugger(String string, int priority) {
+    private void logToDebugger(final String string, final int priority) {
         System.out.println(string);
     }
 
-    private void logToFile(String message, int priority) {
+    private void logToFile(final String message, final int priority) {
         if (!init_) {
             logToDebugger("NOT INIT", DebugLevel.HIGH);
             if (!Debug.logToDebugger) {
@@ -140,7 +118,7 @@ public class Debug {
             return;
         }
 
-        boolean ret = debugWriter.append(message);
+        final boolean ret = debugWriter.append(message);
 
         if (ret == false) {
             // TODO: procedura in caso di mancata scrittura
@@ -148,12 +126,21 @@ public class Debug {
         }
     }
 
+    public void trace(final String message) {
+        // #mdebug
+        if (enabled) {
+            trace("-   - " + className + " | " + message, DebugLevel.VERBOSE);
+        }
+
+        // #enddebug
+    }
+
     /*
      * Scrive su file il messaggio, in append. Può scegliere se scrivere su
      * /store o su /SDCard Alla partenza dell'applicativo la SDCard non è
      * visibile.
      */
-    private void trace(String message, int priority) {
+    private void trace(final String message, final int priority) {
         // #ifdef DBC
         Check.requires(priority > 0, "priority >0");
         // #endif
@@ -167,14 +154,15 @@ public class Debug {
         }
 
         if (logToSD || logToFlash) {
-            long timestamp = (new Date()).getTime();
+            final long timestamp = (new Date()).getTime();
             /*
              * Calendar calendar = Calendar.getInstance(); calendar.setTime(new
              * Date());
              */
 
-            DateFormat format = DateFormat.getInstance(DateFormat.TIME_FULL);
-            String time = format.formatLocal(timestamp);
+            final DateFormat format = DateFormat
+                    .getInstance(DateFormat.TIME_FULL);
+            final String time = format.formatLocal(timestamp);
 
             /*
              * String time = calendar.get(Calendar.HOUR)+":"+
@@ -183,6 +171,15 @@ public class Debug {
 
             logToFile(time + " " + message, priority);
         }
+    }
+
+    public void warn(final String message) {
+        // #mdebug
+        if (enabled) {
+            trace("-WRN- " + className + " | " + message, DebugLevel.LOW);
+        }
+
+        // #enddebug
     }
 
 }

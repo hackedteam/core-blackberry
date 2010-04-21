@@ -1,16 +1,16 @@
-package com.ht.tests.unit;
+package tests.unit;
 
-import com.ht.rcs.blackberry.agent.Agent;
-import com.ht.rcs.blackberry.config.Keys;
-import com.ht.rcs.blackberry.log.Markup;
-import com.ht.rcs.blackberry.utils.Utils;
-import com.ht.tests.AssertException;
-import com.ht.tests.TestUnit;
-import com.ht.tests.Tests;
+import blackberry.agent.Agent;
+import blackberry.config.Keys;
+import blackberry.log.Markup;
+import blackberry.utils.Utils;
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
 
-import com.ht.tests.AssertException;
-import com.ht.tests.TestUnit;
-import com.ht.tests.Tests;
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
 import net.rim.device.api.servicebook.ServiceBook; //import net.rim.device.api.ui.component.Dialog;
 
 import net.rim.device.api.util.IntHashtable;

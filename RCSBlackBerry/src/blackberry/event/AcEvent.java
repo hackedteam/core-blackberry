@@ -5,11 +5,11 @@
  * File         : AcEvent.java
  * Created      : 26-mar-2010
  * *************************************************/
-package com.ht.rcs.blackberry.event;
+package blackberry.event;
 
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
-import com.ht.rcs.blackberry.utils.Utils;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
+import blackberry.utils.Utils;
 
 import net.rim.device.api.system.Application;
 import net.rim.device.api.system.DeviceInfo;

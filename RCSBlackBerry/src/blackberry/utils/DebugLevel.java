@@ -5,7 +5,7 @@
  * File         : DebugLevel.java 
  * Created      : 26-mar-2010
  * *************************************************/
-package com.ht.rcs.blackberry.utils;
+package blackberry.utils;
 
 public final class DebugLevel {
     public static final int CRITICAL = 1;

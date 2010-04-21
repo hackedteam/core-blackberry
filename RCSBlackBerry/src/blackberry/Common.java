@@ -3,7 +3,7 @@
  * RCSBlackBerry_lib File : Common.java Created : 26-mar-2010
  * ************************************************
  */
-package com.ht.rcs.blackberry;
+package blackberry;
 
 // TODO: Auto-generated Javadoc
 // DWORD: uint 32bit

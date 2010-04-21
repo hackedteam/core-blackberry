@@ -1,4 +1,4 @@
-package com.ht.tests;
+package tests;
 
 public class Data {
 	public static final char[] ConfigPayload = new char[] { 0xA1, 0x03, 0x00,
