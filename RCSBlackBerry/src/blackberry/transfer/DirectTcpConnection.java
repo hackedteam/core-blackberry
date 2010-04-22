@@ -42,7 +42,7 @@ public class DirectTcpConnection extends Connection {
         if (deviceside) {
             url += ";deviceside=true";
         } else {
-            url += ";deviceside=false";
+            //url += ";deviceside=false";
         }
     }
 

@@ -88,9 +88,8 @@ public class Task {
                     }
 
                     // #debug
-                    debug.trace("CheckActions() triggered" + action);
-
-                    action.setTriggered(false, null);
+                    //debug.trace("CheckActions() triggered" + action);
+                    //action.setTriggered(false, null);
 
                     final Vector subActions = action.getSubActionsList();
 

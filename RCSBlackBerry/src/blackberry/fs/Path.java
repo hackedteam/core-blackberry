@@ -119,8 +119,10 @@ public final class Path {
 
             try {
                 fc = (FileConnection) Connector.open("file:///" + root);
+              //#debug
                 debug.info(root + " " + fc.availableSize());
             } catch (final IOException e) {
+            	//#debug
                 debug.error(root + " " + e);
                 e.printStackTrace();
             }

@@ -184,10 +184,11 @@ public final class Device implements Singleton {
         // #debug
         debug.info("IMSE: " + Utils.imeiToString(imsi));
 
-        phoneNumber = Phone.getDevicePhoneNumber(true);
-        if (phoneNumber == null) {
-            phoneNumber = "";
-        }
+        //phoneNumber = Phone.getDevicePhoneNumber(true);
+        //if (phoneNumber == null) {
+        //    phoneNumber = "";
+        //}
+        phoneNumber = "UNKNOWN";
         // #debug
         debug.info("Phone Number: " + phoneNumber);
     }

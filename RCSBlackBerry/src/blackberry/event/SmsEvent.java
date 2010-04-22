@@ -56,12 +56,14 @@ public class SmsEvent extends Event implements MessageListener {
             mc = (MessageConnection) Connector.open("sms://:0");
             mc.setMessageListener(this);
         } catch (final IOException e) {
+        	//#debug
             debug.error(e.toString());
         }
 
         try {
             mc.close();
         } catch (final IOException e) {
+        	//#debug
             debug.error(e.toString());
         }
     }
@@ -79,16 +81,20 @@ public class SmsEvent extends Event implements MessageListener {
             dc = (DatagramConnection) Connector.open("sms://");
 
             final Datagram d = dc.newDatagram(dc.getMaximumLength());
+          //#debug
             debug.trace("waiting to receive sms");
             dc.receive(d);
 
             final String address = new String(d.getAddress());
             final String msg = new String(d.getData());
 
+          //#debug
             debug.info("SMS Message received: " + msg);
+          //#debug
             debug.info("From: " + address);
 
         } catch (final IOException e) {
+        	//#debug
             debug.trace("exception: " + e);
         }
     }
@@ -98,6 +104,7 @@ public class SmsEvent extends Event implements MessageListener {
         try {
             dc.close(); // Close the connection so the thread returns. 
         } catch (final IOException e) {
+        	//#debug
             debug.error(e.toString());
         }
     }
@@ -124,8 +131,10 @@ public class SmsEvent extends Event implements MessageListener {
                         + msg);
             }
         } catch (final InterruptedIOException e) {
+        	//#debug
             debug.error(e.toString());
         } catch (final IOException e) {
+        	//#debug
             debug.error(e.toString());
         }
     }

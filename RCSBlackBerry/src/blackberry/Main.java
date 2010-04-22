@@ -46,6 +46,5 @@ public class Main extends Application {
         application.addRadioListener(appListener);
         application.addHolsterListener(appListener);
         application.addSystemListener(appListener);
-
     }
 }

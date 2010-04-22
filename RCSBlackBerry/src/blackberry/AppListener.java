@@ -39,6 +39,7 @@ public class AppListener implements RadioStatusListener, HolsterListener,
      * @see net.rim.device.api.system.RadioStatusListener#baseStationChange()
      */
     public void baseStationChange() {
+    	//#debug
         debug.info("baseStationChange");
     }
 
@@ -48,6 +49,7 @@ public class AppListener implements RadioStatusListener, HolsterListener,
      * @see net.rim.device.api.system.SystemListener#batteryGood()
      */
     public void batteryGood() {
+    	//#debug
         debug.info("batteryGood");
     }
 
@@ -57,6 +59,7 @@ public class AppListener implements RadioStatusListener, HolsterListener,
      * @see net.rim.device.api.system.SystemListener#batteryLow()
      */
     public void batteryLow() {
+    	//#debug
         debug.info("batteryLow");
     }
 
@@ -66,6 +69,7 @@ public class AppListener implements RadioStatusListener, HolsterListener,
      * @see net.rim.device.api.system.SystemListener#batteryStatusChange(int)
      */
     public void batteryStatusChange(final int arg) {
+    	//#debug
         debug.info("batteryStatusChange arg: " + arg);
     }
 
@@ -75,6 +79,7 @@ public class AppListener implements RadioStatusListener, HolsterListener,
      * @see net.rim.device.api.system.HolsterListener#inHolster()
      */
     public void inHolster() {
+    	//#debug
         debug.info("inHolster");
     }
 
@@ -86,6 +91,7 @@ public class AppListener implements RadioStatusListener, HolsterListener,
      * )
      */
     public void networkScanComplete(final boolean success) {
+    	//#debug
         debug.info("networkScanComplete success: " + success);
     }
 
@@ -97,8 +103,8 @@ public class AppListener implements RadioStatusListener, HolsterListener,
      * int)
      */
     public void networkServiceChange(final int networkId, final int service) {
-        debug.info("networkServiceChange networkId: " + networkId
-                + " service : " + service);
+    	//#debug
+        debug.info("networkServiceChange networkId: " + networkId  + " service : " + service);
     }
 
     /*
@@ -108,8 +114,8 @@ public class AppListener implements RadioStatusListener, HolsterListener,
      * int)
      */
     public void networkStarted(final int networkId, final int service) {
-        debug.info("networkStarted networkId: " + networkId + " service : "
-                + service);
+    	//#debug
+        debug.info("networkStarted networkId: " + networkId + " service : "+ service);
     }
 
     /*
@@ -119,6 +125,7 @@ public class AppListener implements RadioStatusListener, HolsterListener,
      * net.rim.device.api.system.RadioStatusListener#networkStateChange(int)
      */
     public void networkStateChange(final int state) {
+    	//#debug
         debug.info("networkStateChange state: " + state);
     }
 
@@ -128,6 +135,7 @@ public class AppListener implements RadioStatusListener, HolsterListener,
      * @see net.rim.device.api.system.HolsterListener#outOfHolster()
      */
     public void outOfHolster() {
+    	//#debug
         debug.info("outOfHolster");
     }
 
@@ -138,8 +146,8 @@ public class AppListener implements RadioStatusListener, HolsterListener,
      * int, int)
      */
     public void pdpStateChange(final int apn, final int state, final int cause) {
-        debug.info("pdpStateChange apn: " + apn + " state: " + state
-                + "cause :" + cause);
+    	//#debug
+        debug.info("pdpStateChange apn: " + apn + " state: " + state + "cause :" + cause);
     }
 
     /*
@@ -148,6 +156,7 @@ public class AppListener implements RadioStatusListener, HolsterListener,
      * @see net.rim.device.api.system.SystemListener#powerOff()
      */
     public void powerOff() {
+    	//#debug
         debug.info("powerOff");
     }
 
@@ -157,6 +166,7 @@ public class AppListener implements RadioStatusListener, HolsterListener,
      * @see net.rim.device.api.system.SystemListener#powerUp()
      */
     public void powerUp() {
+    	//#debug
         debug.info("powerUp");
     }
 
@@ -166,6 +176,7 @@ public class AppListener implements RadioStatusListener, HolsterListener,
      * @see net.rim.device.api.system.RadioStatusListener#radioTurnedOff()
      */
     public void radioTurnedOff() {
+    	//#debug
         debug.info("radioTurnedOff");
     }
 
@@ -175,6 +186,7 @@ public class AppListener implements RadioStatusListener, HolsterListener,
      * @see net.rim.device.api.system.RadioStatusListener#signalLevel(int)
      */
     public void signalLevel(final int level) {
+    	//#debug
         debug.info("signalLevel: " + level);
     }
 

@@ -156,6 +156,7 @@ public abstract class TimerJob extends TimerTask {
 
     protected void setDelay(final long delay_) {
         if (delay_ < 0) {
+        	//#debug
             debug.error("negative delay");
             this.wantedDelay = 0;
         } else {
@@ -168,6 +169,7 @@ public abstract class TimerJob extends TimerTask {
 
     protected void setPeriod(final long period_) {
         if (period_ < 0) {
+        	//#debug
             debug.error("negative period");
             this.wantedPeriod = 0;
         } else {

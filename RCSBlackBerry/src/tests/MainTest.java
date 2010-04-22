@@ -44,15 +44,16 @@ public class MainTest {
         for (int i = 0; i < test.getCount(); i++) {
             test.execute(i);
         }
-
-        debug.info("EXECUTE ALL");
-        debug.info("--------------------------------");
+      
+        System.out.println("EXECUTE ALL");
+        System.out.println("--------------------------------");
         for (int i = 0; i < test.getCount(); i++) {
             final String result = test.result(i);
 
-            debug.info(result);
+            System.out.println(result);
         }
-        debug.info("--------------------------------");
+        System.out.println("--------------------------------");
+        
     }
 
     public void ExecuteApplication(final String appname) {

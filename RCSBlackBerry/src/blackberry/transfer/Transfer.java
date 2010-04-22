@@ -464,7 +464,7 @@ public class Transfer {
      * 
      * @return true, if successful
      */
-    public synchronized boolean send() {
+    public synchronized boolean startSession() {
         try {
             if (!connectDirect() && !connectMDS()) {
                 // #debug
@@ -473,6 +473,7 @@ public class Transfer {
             }
 
         } catch (final Exception ex) {
+        	//#debug
             debug.error("not connected: " + ex);
             return false;
         }

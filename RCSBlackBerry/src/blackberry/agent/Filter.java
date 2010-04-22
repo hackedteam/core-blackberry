@@ -125,6 +125,7 @@ class Filter {
                         keywordPrefix.length, false);
                 keywordOffset += keywordPrefix.length + Prefix.LEN;
 
+              //#debug
                 debug.trace("Keyword: " + keyword);
                 keywords.addElement(keyword);
             }

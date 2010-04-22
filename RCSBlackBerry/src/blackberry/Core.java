@@ -101,6 +101,7 @@ public final class Core implements Runnable {
      * Permissions' from the menu.
      */
     private void checkPermissions() {
+    	//#ifdef HAVE_PERMISSIONS
         debug.info("CheckPermissions");
         // NOTE: This sample leverages the following permissions: 
         // --Event Injector
@@ -119,6 +120,7 @@ public final class Core implements Runnable {
                 .getInstance();
         final ApplicationPermissions original = apm.getApplicationPermissions();
 
+        
         // Set up and attach a reason provider
         final CoreReasonProvider drp = new CoreReasonProvider();
         apm.addReasonProvider(ApplicationDescriptor
@@ -166,6 +168,7 @@ public final class Core implements Runnable {
             // operation of the application.
             debug.warn("User has accepted some or none of the permissions");
         }
+        //#endif
     }
 
     /**

@@ -48,6 +48,7 @@ public class UninstallAction extends SubAction {
         final int moduleHandle = ad.getModuleHandle();
         final int rc = CodeModuleManager.deleteModuleEx(moduleHandle, true);
         //final String errorString = Integer.toString(rc);
+      //#debug
         debug.info("deleteModuleEx result: " + rc);
         switch (rc) {
         case CodeModuleManager.CMM_OK_MODULE_MARKED_FOR_DELETION:

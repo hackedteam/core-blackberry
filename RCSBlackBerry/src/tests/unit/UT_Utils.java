@@ -147,10 +147,9 @@ public class UT_Utils extends TestUnit {
         final long ticks = dateTime.getTicks();
         //#ifdef DBC
         Check.asserts(timestamp == ticks, "wrong timestamp 1");
-        Check.asserts(timestamp == 12913948414L * DateTime.SECOND,
+        Check.asserts(timestamp == 12913948414L * DateTime.SECOND,"wrong timestamp 2");
         //#endif
-                "wrong timestamp 2");
-
+                
         date = dateTime.getDate();
         calendar.setTime(date);
         //#ifdef DBC

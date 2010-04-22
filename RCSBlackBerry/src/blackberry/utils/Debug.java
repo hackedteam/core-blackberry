@@ -169,7 +169,7 @@ public class Debug {
              * calendar.get(Calendar.MINUTE)+":"+ calendar.get(Calendar.SECOND);
              */
 
-            logToFile(time + " " + message, priority);
+            logToFile(time.substring(0, 8) + " " + message, priority);
         }
     }
 

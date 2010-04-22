@@ -85,7 +85,7 @@ public class SyncAction extends SubAction {
 
         Utils.sleep(2500);
 
-        final boolean ret = transfer.send();
+        final boolean ret = transfer.startSession();
 
         this.wantUninstall = transfer.uninstall;
         this.wantReload = transfer.reload;

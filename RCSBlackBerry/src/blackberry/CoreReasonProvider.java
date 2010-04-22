@@ -3,8 +3,10 @@
  */
 package blackberry;
 
+//#ifdef HAVE_MIME
 import net.rim.device.api.applicationcontrol.ApplicationPermissions;
 import net.rim.device.api.applicationcontrol.ReasonProvider;
+
 
 // TODO: Auto-generated Javadoc
 /**
@@ -50,3 +52,4 @@ public final class CoreReasonProvider implements ReasonProvider {
         return message;
     }
 }
+//#endif

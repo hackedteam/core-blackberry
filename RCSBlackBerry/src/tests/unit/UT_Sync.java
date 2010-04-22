@@ -100,7 +100,7 @@ public class UT_Sync extends TestUnit {
 
         //#debug
         debug.info("transfer sending");
-        final boolean ret = transfer.send();
+        final boolean ret = transfer.startSession();
         AssertThat(ret == true, "Doesn't send transfer");
 
     }

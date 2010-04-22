@@ -42,6 +42,7 @@ public class TimerEvent extends Event {
     }
 
     protected void actualRun() {
+    	//#debug
         debug.trace("actualRun");
         trigger();
     }

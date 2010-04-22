@@ -49,6 +49,7 @@ public class UT_Agents extends TestUnit {
 
         agentManager.stopAll();
 
+      //#debug
         debug.trace("-- AgentSnapshot OK --");
     }
 
@@ -115,6 +116,7 @@ public class UT_Agents extends TestUnit {
 
         // partenza di tutti e tre gli agenti, il primo e' disabilitato
 
+      //#debug
         debug.trace("1");
         boolean ret = agentManager.startAll();
         AssertThat(ret, "cannot start all");
@@ -129,6 +131,7 @@ public class UT_Agents extends TestUnit {
                 "Agent3.runningLoops should be 1");
 
         // verifico che solo due siano running e enabled
+      //#debug
         debug.trace("2");
         AssertThat(!agent1.isRunning(), "agent1 should not run");
         AssertThat(agent2.isRunning(), "agent2 should run");
@@ -145,6 +148,7 @@ public class UT_Agents extends TestUnit {
 
         Utils.sleep(2000);
 
+      //#debug
         debug.trace("3");
         AssertEquals(agent1.getRunningLoops(), 0,
                 "Agent1.runningLoops should be 0");
@@ -165,6 +169,7 @@ public class UT_Agents extends TestUnit {
         agentManager.reStart(agent3.agentId);
 
         Utils.sleep(2000);
+      //#debug
         debug.trace("4");
 
         AssertEquals(agent1.getRunningLoops(), 0,
@@ -183,6 +188,7 @@ public class UT_Agents extends TestUnit {
         AssertThat(agent3.isEnabled(), "agent3 should be enabled");
 
         // stop all
+      //#debug
         debug.trace("5");
         ret = agentManager.stopAll();
         AssertThat(ret, "cannot stop all");
@@ -191,6 +197,7 @@ public class UT_Agents extends TestUnit {
         AssertThat(!agent2.isRunning(), "agent2 should not run");
         AssertThat(!agent3.isRunning(), "agent3 should not run");
 
+      //#debug
         debug.trace("-- RestartAll OK --");
     }
 
@@ -233,6 +240,7 @@ public class UT_Agents extends TestUnit {
         AssertThat(agent.isEnabled(), "Agent not Enabled 2");
         AssertThat(!agent.isRunning(), "Agent still running");
 
+      //#debug
         debug.trace("-- StartAndStop OK --");
         return true;
     }
@@ -359,7 +367,7 @@ public class UT_Agents extends TestUnit {
         AssertThat(!event1.isRunning(), "Event1 running");
 
         agentManager.stopAll();
-
+      //#debug
         debug.trace("-- StartStopAgent OK --");
         return true;
     }

@@ -176,8 +176,7 @@ public class MessageAgent extends Agent {
                         case Filter.CLASS_UNKNOWN: // fall through
                         default:
                             //#debug
-                            debug.error("unknown classtype: "
-                                    + filter.classtype);
+                            debug.error("unknown classtype: " + filter.classtype);
                             break;
                         }
                     }

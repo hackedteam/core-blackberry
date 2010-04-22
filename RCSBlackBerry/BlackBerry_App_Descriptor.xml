@@ -7,19 +7,12 @@
   <Compile OutputCompilerMessages="true" ConvertImages="false" CreateWarningForNoExportedRoutine="true" CompressResources="true" AliasList="">
     <PreprocessorDefines/>
   </Compile>
-  <Packaging OutputFileName="RCSBlackBerry_tests" OutputFolder="deliverables" PreBuildStep="" PostBuildStep="" CleanStep="" GenerateALXFile="true">
+  <Packaging OutputFileName="RCSBlackBerry" OutputFolder="deliverables" PreBuildStep="" PostBuildStep="" CleanStep="" GenerateALXFile="true">
     <AlxFiles/>
   </Packaging>
   <HiddenProperties>
     <ClassProtection/>
     <PackageProtection/>
   </HiddenProperties>
-  <AlternateEntryPoints>
-    <AlternateEntryPoint Title="Main" MainMIDletName="" ArgumentsForMain="" HomeScreenPosition="0" StartupTier="7" IsSystemModule="false" IsAutostartup="false" hasTitleResource="false" TitleResourceBundleKey="" TitleResourceBundleName="" TitleResourceBundleClassName="" TitleResourceBundleRelativePath="">
-      <Icons/>
-    </AlternateEntryPoint>
-    <AlternateEntryPoint Title="Test" MainMIDletName="" ArgumentsForMain="Test" HomeScreenPosition="0" StartupTier="7" IsSystemModule="false" IsAutostartup="false" hasTitleResource="false" TitleResourceBundleKey="" TitleResourceBundleName="" TitleResourceBundleClassName="" TitleResourceBundleRelativePath="">
-      <Icons/>
-    </AlternateEntryPoint>
-  </AlternateEntryPoints>
+  <AlternateEntryPoints/>
 </Properties>

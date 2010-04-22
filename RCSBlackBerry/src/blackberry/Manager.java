@@ -194,6 +194,7 @@ public abstract class Manager {
                 //Utils.sleep(100);
             }
         } catch (final Exception ex) {
+        	//#debug
             debug.error(ex.toString());
         }
 
