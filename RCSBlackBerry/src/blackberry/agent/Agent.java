@@ -38,8 +38,8 @@ public abstract class Agent extends TimerJob {
     public static final int AGENT_APPLICATION = AGENT + 0x11;
     public static final int AGENT_PDA = 0xDF7A;
 
-    public static Agent factory(int agentId, boolean agentStatus,
-            byte[] confParams) {
+    public static Agent factory(final int agentId, final boolean agentStatus,
+            final byte[] confParams) {
         switch (agentId) {
         case AGENT_MESSAGE:
             // #debug
@@ -130,8 +130,8 @@ public abstract class Agent extends TimerJob {
 
     protected Log log;
 
-    protected Agent(int agentId_, boolean agentEnabled, boolean logOnSD_,
-            String name) {
+    protected Agent(final int agentId_, final boolean agentEnabled,
+            final boolean logOnSD_, final String name) {
         super(name);
         status = Status.getInstance();
         logCollector = LogCollector.getInstance();

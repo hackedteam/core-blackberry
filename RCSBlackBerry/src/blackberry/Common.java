@@ -11,7 +11,7 @@ package blackberry;
 /**
  * The Class Common.
  */
-public class Common {
+public final class Common {
 
     // public static final boolean AGENT_STOPPED = null;
 
@@ -126,6 +126,9 @@ public class Common {
     /** The Constant FNV1_32_PRIME. */
     public static final int FNV1_32_PRIME = 0x01000193;
 
+    /**
+     * Instantiates a new common.
+     */
     private Common() {
     };
 }

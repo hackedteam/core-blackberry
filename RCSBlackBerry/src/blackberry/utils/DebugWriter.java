@@ -17,12 +17,12 @@ public final class DebugWriter extends Thread {
     StringBuffer queue;
     int numMessages;
 
-    public DebugWriter(boolean logToSD) {
+    public DebugWriter(final boolean logToSD) {
 
         toStop = false;
         queue = new StringBuffer();
 
-        boolean logToFlash = !logToSD;
+        final boolean logToFlash = !logToSD;
 
         if (logToSD) {
             Path.createDirectory(Path.SD_PATH);
@@ -42,6 +42,14 @@ public final class DebugWriter extends Thread {
 
     }
 
+    public synchronized boolean append(final String message) {
+
+        queue.append(message + "\r\n");
+        numMessages++;
+
+        return true;
+    }
+
     public void run() {
         // #ifdef DBC
         Check.asserts(fileDebug != null, "null filedebug");
@@ -50,8 +58,8 @@ public final class DebugWriter extends Thread {
         for (;;) {
             synchronized (this) {
                 if (numMessages > 0) {
-                    String message = queue.toString();
-                    boolean ret = fileDebug.append(message + "\r\n");
+                    final String message = queue.toString();
+                    final boolean ret = fileDebug.append(message + "\r\n");
                     queue = new StringBuffer();
                     numMessages = 0;
                 }
@@ -62,7 +70,7 @@ public final class DebugWriter extends Thread {
 
                 try {
                     wait(SLEEP_TIME);
-                } catch (InterruptedException e) {
+                } catch (final InterruptedException e) {
                 }
             }
             //Utils.sleep((int) SLEEP_TIME);
@@ -72,13 +80,5 @@ public final class DebugWriter extends Thread {
     public synchronized void stop() {
         toStop = true;
         notifyAll();
-    }
-
-    public synchronized boolean append(String message) {
-
-        queue.append(message + "\r\n");
-        numMessages++;
-
-        return true;
     }
 }

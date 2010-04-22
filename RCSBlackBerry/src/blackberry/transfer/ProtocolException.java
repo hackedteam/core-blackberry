@@ -20,12 +20,12 @@ public class ProtocolException extends Exception {
 
     public boolean bye;
 
-    public ProtocolException(String string) {
+    public ProtocolException(final String string) {
         this(string, false);
 
     }
 
-    public ProtocolException(String string, boolean bye_) {
+    public ProtocolException(final String string, final boolean bye_) {
         super(string);
         this.bye = bye_;
         // #debug

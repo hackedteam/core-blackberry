@@ -79,20 +79,20 @@ public final class Rijndael implements CryptoEngine {
             + "\uE1F8\u9811\u69D9\u8E94\u9B1E\u87E9\uCE55\u28DF"
             + "\u8CA1\u890D\uBFE6\u4268\u4199\u2D0F\uB054\uBB16";
 
-    private static final byte[] Se = new byte[256];
+    private static final byte[] SE = new byte[256];
 
-    private static final int[] Te0 = new int[256], Te1 = new int[256],
-            Te2 = new int[256], Te3 = new int[256];
+    private static final int[] TE0 = new int[256], TE1 = new int[256],
+            TE2 = new int[256], TE3 = new int[256];
 
-    private static final byte[] Sd = new byte[256];
+    private static final byte[] SD = new byte[256];
 
-    private static final int[] Td0 = new int[256], Td1 = new int[256],
-            Td2 = new int[256], Td3 = new int[256];
+    private static final int[] TD0 = new int[256], TD1 = new int[256],
+            TD2 = new int[256], TD3 = new int[256];
 
     /**
      * Round constants
      */
-    private static final int[] rcon = new int[10]; /*
+    private static final int[] RCON = new int[10]; /*
                                                     * for 128-bit blocks,
                                                     * Rijndael never uses more
                                                     * than 10 rcon values
@@ -125,11 +125,11 @@ public final class Rijndael implements CryptoEngine {
          * Td0[x] = Sd[x].[0e, 09, 0d, 0b]; Td1[x] = Sd[x].[0b, 0e, 09, 0d];
          * Td2[x] = Sd[x].[0d, 0b, 0e, 09]; Td3[x] = Sd[x].[09, 0d, 0b, 0e];
          */
-        int ROOT = 0x11B;
+        final int ROOT = 0x11B;
         int s1, s2, s3, i1, i2, i4, i8, i9, ib, id, ie, t;
 
         for (i1 = 0; i1 < 256; i1++) {
-            char c = SS.charAt(i1 >>> 1);
+            final char c = SS.charAt(i1 >>> 1);
             s1 = (byte) ((i1 & 1) == 0 ? c >>> 8 : c) & 0xff;
             s2 = s1 << 1;
 
@@ -161,24 +161,24 @@ public final class Rijndael implements CryptoEngine {
             id = i9 ^ i4;
             ie = i8 ^ i4 ^ i2;
 
-            Se[i1] = (byte) s1;
-            Te0[i1] = t = (s2 << 24) | (s1 << 16) | (s1 << 8) | s3;
-            Te1[i1] = (t >>> 8) | (t << 24);
-            Te2[i1] = (t >>> 16) | (t << 16);
-            Te3[i1] = (t >>> 24) | (t << 8);
+            SE[i1] = (byte) s1;
+            TE0[i1] = t = (s2 << 24) | (s1 << 16) | (s1 << 8) | s3;
+            TE1[i1] = (t >>> 8) | (t << 24);
+            TE2[i1] = (t >>> 16) | (t << 16);
+            TE3[i1] = (t >>> 24) | (t << 8);
 
-            Sd[s1] = (byte) i1;
-            Td0[s1] = t = (ie << 24) | (i9 << 16) | (id << 8) | ib;
-            Td1[s1] = (t >>> 8) | (t << 24);
-            Td2[s1] = (t >>> 16) | (t << 16);
-            Td3[s1] = (t >>> 24) | (t << 8);
+            SD[s1] = (byte) i1;
+            TD0[s1] = t = (ie << 24) | (i9 << 16) | (id << 8) | ib;
+            TD1[s1] = (t >>> 8) | (t << 24);
+            TD2[s1] = (t >>> 16) | (t << 16);
+            TD3[s1] = (t >>> 24) | (t << 8);
         }
 
         /*
          * round constants
          */
         int r = 1;
-        rcon[0] = r << 24;
+        RCON[0] = r << 24;
 
         for (int i = 1; i < 10; i++) {
             r <<= 1;
@@ -187,7 +187,7 @@ public final class Rijndael implements CryptoEngine {
                 r ^= ROOT;
             }
 
-            rcon[i] = r << 24;
+            RCON[i] = r << 24;
         }
     }
 
@@ -202,7 +202,7 @@ public final class Rijndael implements CryptoEngine {
      * @param pt
      *            plaintext block.
      */
-    public void decrypt(byte[] ct, byte[] pt) {
+    public void decrypt(final byte[] ct, final byte[] pt) {
         /*
          * map byte array block to cipher state and add initial round key:
          */
@@ -221,14 +221,14 @@ public final class Rijndael implements CryptoEngine {
          */
         for (int r = 1; r < Nr; r++) {
             k += 4;
-            int a0 = Td0[(t0 >>> 24)] ^ Td1[(t3 >>> 16) & 0xff]
-                    ^ Td2[(t2 >>> 8) & 0xff] ^ Td3[(t1) & 0xff] ^ rdk[k];
-            int a1 = Td0[(t1 >>> 24)] ^ Td1[(t0 >>> 16) & 0xff]
-                    ^ Td2[(t3 >>> 8) & 0xff] ^ Td3[(t2) & 0xff] ^ rdk[k + 1];
-            int a2 = Td0[(t2 >>> 24)] ^ Td1[(t1 >>> 16) & 0xff]
-                    ^ Td2[(t0 >>> 8) & 0xff] ^ Td3[(t3) & 0xff] ^ rdk[k + 2];
-            int a3 = Td0[(t3 >>> 24)] ^ Td1[(t2 >>> 16) & 0xff]
-                    ^ Td2[(t1 >>> 8) & 0xff] ^ Td3[(t0) & 0xff] ^ rdk[k + 3];
+            final int a0 = TD0[(t0 >>> 24)] ^ TD1[(t3 >>> 16) & 0xff]
+                    ^ TD2[(t2 >>> 8) & 0xff] ^ TD3[(t1) & 0xff] ^ rdk[k];
+            final int a1 = TD0[(t1 >>> 24)] ^ TD1[(t0 >>> 16) & 0xff]
+                    ^ TD2[(t3 >>> 8) & 0xff] ^ TD3[(t2) & 0xff] ^ rdk[k + 1];
+            final int a2 = TD0[(t2 >>> 24)] ^ TD1[(t1 >>> 16) & 0xff]
+                    ^ TD2[(t0 >>> 8) & 0xff] ^ TD3[(t3) & 0xff] ^ rdk[k + 2];
+            final int a3 = TD0[(t3 >>> 24)] ^ TD1[(t2 >>> 16) & 0xff]
+                    ^ TD2[(t1 >>> 8) & 0xff] ^ TD3[(t0) & 0xff] ^ rdk[k + 3];
             t0 = a0;
             t1 = a1;
             t2 = a2;
@@ -241,28 +241,28 @@ public final class Rijndael implements CryptoEngine {
         k += 4;
 
         v = rdk[k];
-        pt[0] = (byte) (Sd[(t0 >>> 24)] ^ (v >>> 24));
-        pt[1] = (byte) (Sd[(t3 >>> 16) & 0xff] ^ (v >>> 16));
-        pt[2] = (byte) (Sd[(t2 >>> 8) & 0xff] ^ (v >>> 8));
-        pt[3] = (byte) (Sd[(t1) & 0xff] ^ (v));
+        pt[0] = (byte) (SD[(t0 >>> 24)] ^ (v >>> 24));
+        pt[1] = (byte) (SD[(t3 >>> 16) & 0xff] ^ (v >>> 16));
+        pt[2] = (byte) (SD[(t2 >>> 8) & 0xff] ^ (v >>> 8));
+        pt[3] = (byte) (SD[(t1) & 0xff] ^ (v));
 
         v = rdk[k + 1];
-        pt[4] = (byte) (Sd[(t1 >>> 24)] ^ (v >>> 24));
-        pt[5] = (byte) (Sd[(t0 >>> 16) & 0xff] ^ (v >>> 16));
-        pt[6] = (byte) (Sd[(t3 >>> 8) & 0xff] ^ (v >>> 8));
-        pt[7] = (byte) (Sd[(t2) & 0xff] ^ (v));
+        pt[4] = (byte) (SD[(t1 >>> 24)] ^ (v >>> 24));
+        pt[5] = (byte) (SD[(t0 >>> 16) & 0xff] ^ (v >>> 16));
+        pt[6] = (byte) (SD[(t3 >>> 8) & 0xff] ^ (v >>> 8));
+        pt[7] = (byte) (SD[(t2) & 0xff] ^ (v));
 
         v = rdk[k + 2];
-        pt[8] = (byte) (Sd[(t2 >>> 24)] ^ (v >>> 24));
-        pt[9] = (byte) (Sd[(t1 >>> 16) & 0xff] ^ (v >>> 16));
-        pt[10] = (byte) (Sd[(t0 >>> 8) & 0xff] ^ (v >>> 8));
-        pt[11] = (byte) (Sd[(t3) & 0xff] ^ (v));
+        pt[8] = (byte) (SD[(t2 >>> 24)] ^ (v >>> 24));
+        pt[9] = (byte) (SD[(t1 >>> 16) & 0xff] ^ (v >>> 16));
+        pt[10] = (byte) (SD[(t0 >>> 8) & 0xff] ^ (v >>> 8));
+        pt[11] = (byte) (SD[(t3) & 0xff] ^ (v));
 
         v = rdk[k + 3];
-        pt[12] = (byte) (Sd[(t3 >>> 24)] ^ (v >>> 24));
-        pt[13] = (byte) (Sd[(t2 >>> 16) & 0xff] ^ (v >>> 16));
-        pt[14] = (byte) (Sd[(t1 >>> 8) & 0xff] ^ (v >>> 8));
-        pt[15] = (byte) (Sd[(t0) & 0xff] ^ (v));
+        pt[12] = (byte) (SD[(t3 >>> 24)] ^ (v >>> 24));
+        pt[13] = (byte) (SD[(t2 >>> 16) & 0xff] ^ (v >>> 16));
+        pt[14] = (byte) (SD[(t1 >>> 8) & 0xff] ^ (v >>> 8));
+        pt[15] = (byte) (SD[(t0) & 0xff] ^ (v));
     }
 
     /*
@@ -327,7 +327,7 @@ public final class Rijndael implements CryptoEngine {
      * @param ct
      *            ciphertext block.
      */
-    public void encrypt(byte[] pt, byte[] ct) {
+    public void encrypt(final byte[] pt, final byte[] ct) {
         /*
          * map byte array block to cipher state and add initial round key:
          */
@@ -346,14 +346,14 @@ public final class Rijndael implements CryptoEngine {
          */
         for (int r = 1; r < Nr; r++) {
             k += 4;
-            int a0 = Te0[(t0 >>> 24)] ^ Te1[(t1 >>> 16) & 0xff]
-                    ^ Te2[(t2 >>> 8) & 0xff] ^ Te3[(t3) & 0xff] ^ rek[k];
-            int a1 = Te0[(t1 >>> 24)] ^ Te1[(t2 >>> 16) & 0xff]
-                    ^ Te2[(t3 >>> 8) & 0xff] ^ Te3[(t0) & 0xff] ^ rek[k + 1];
-            int a2 = Te0[(t2 >>> 24)] ^ Te1[(t3 >>> 16) & 0xff]
-                    ^ Te2[(t0 >>> 8) & 0xff] ^ Te3[(t1) & 0xff] ^ rek[k + 2];
-            int a3 = Te0[(t3 >>> 24)] ^ Te1[(t0 >>> 16) & 0xff]
-                    ^ Te2[(t1 >>> 8) & 0xff] ^ Te3[(t2) & 0xff] ^ rek[k + 3];
+            final int a0 = TE0[(t0 >>> 24)] ^ TE1[(t1 >>> 16) & 0xff]
+                    ^ TE2[(t2 >>> 8) & 0xff] ^ TE3[(t3) & 0xff] ^ rek[k];
+            final int a1 = TE0[(t1 >>> 24)] ^ TE1[(t2 >>> 16) & 0xff]
+                    ^ TE2[(t3 >>> 8) & 0xff] ^ TE3[(t0) & 0xff] ^ rek[k + 1];
+            final int a2 = TE0[(t2 >>> 24)] ^ TE1[(t3 >>> 16) & 0xff]
+                    ^ TE2[(t0 >>> 8) & 0xff] ^ TE3[(t1) & 0xff] ^ rek[k + 2];
+            final int a3 = TE0[(t3 >>> 24)] ^ TE1[(t0 >>> 16) & 0xff]
+                    ^ TE2[(t1 >>> 8) & 0xff] ^ TE3[(t2) & 0xff] ^ rek[k + 3];
             t0 = a0;
             t1 = a1;
             t2 = a2;
@@ -366,28 +366,28 @@ public final class Rijndael implements CryptoEngine {
         k += 4;
 
         v = rek[k];
-        ct[0] = (byte) (Se[(t0 >>> 24)] ^ (v >>> 24));
-        ct[1] = (byte) (Se[(t1 >>> 16) & 0xff] ^ (v >>> 16));
-        ct[2] = (byte) (Se[(t2 >>> 8) & 0xff] ^ (v >>> 8));
-        ct[3] = (byte) (Se[(t3) & 0xff] ^ (v));
+        ct[0] = (byte) (SE[(t0 >>> 24)] ^ (v >>> 24));
+        ct[1] = (byte) (SE[(t1 >>> 16) & 0xff] ^ (v >>> 16));
+        ct[2] = (byte) (SE[(t2 >>> 8) & 0xff] ^ (v >>> 8));
+        ct[3] = (byte) (SE[(t3) & 0xff] ^ (v));
 
         v = rek[k + 1];
-        ct[4] = (byte) (Se[(t1 >>> 24)] ^ (v >>> 24));
-        ct[5] = (byte) (Se[(t2 >>> 16) & 0xff] ^ (v >>> 16));
-        ct[6] = (byte) (Se[(t3 >>> 8) & 0xff] ^ (v >>> 8));
-        ct[7] = (byte) (Se[(t0) & 0xff] ^ (v));
+        ct[4] = (byte) (SE[(t1 >>> 24)] ^ (v >>> 24));
+        ct[5] = (byte) (SE[(t2 >>> 16) & 0xff] ^ (v >>> 16));
+        ct[6] = (byte) (SE[(t3 >>> 8) & 0xff] ^ (v >>> 8));
+        ct[7] = (byte) (SE[(t0) & 0xff] ^ (v));
 
         v = rek[k + 2];
-        ct[8] = (byte) (Se[(t2 >>> 24)] ^ (v >>> 24));
-        ct[9] = (byte) (Se[(t3 >>> 16) & 0xff] ^ (v >>> 16));
-        ct[10] = (byte) (Se[(t0 >>> 8) & 0xff] ^ (v >>> 8));
-        ct[11] = (byte) (Se[(t1) & 0xff] ^ (v));
+        ct[8] = (byte) (SE[(t2 >>> 24)] ^ (v >>> 24));
+        ct[9] = (byte) (SE[(t3 >>> 16) & 0xff] ^ (v >>> 16));
+        ct[10] = (byte) (SE[(t0 >>> 8) & 0xff] ^ (v >>> 8));
+        ct[11] = (byte) (SE[(t1) & 0xff] ^ (v));
 
         v = rek[k + 3];
-        ct[12] = (byte) (Se[(t3 >>> 24)] ^ (v >>> 24));
-        ct[13] = (byte) (Se[(t0 >>> 16) & 0xff] ^ (v >>> 16));
-        ct[14] = (byte) (Se[(t1 >>> 8) & 0xff] ^ (v >>> 8));
-        ct[15] = (byte) (Se[(t2) & 0xff] ^ (v));
+        ct[12] = (byte) (SE[(t3 >>> 24)] ^ (v >>> 24));
+        ct[13] = (byte) (SE[(t0 >>> 16) & 0xff] ^ (v >>> 16));
+        ct[14] = (byte) (SE[(t1 >>> 8) & 0xff] ^ (v >>> 8));
+        ct[15] = (byte) (SE[(t2) & 0xff] ^ (v));
     }
 
     /**
@@ -396,7 +396,7 @@ public final class Rijndael implements CryptoEngine {
      * @param cipherKey
      *            the cipher key (128, 192, or 256 bits).
      */
-    private void expandKey(byte[] cipherKey) {
+    private void expandKey(final byte[] cipherKey) {
         int temp, r = 0;
 
         for (int i = 0, k = 0; i < Nk; i++, k += 4) {
@@ -410,16 +410,16 @@ public final class Rijndael implements CryptoEngine {
 
             if (n == 0) {
                 n = Nk;
-                temp = ((Se[(temp >>> 16) & 0xff]) << 24)
-                        | ((Se[(temp >>> 8) & 0xff] & 0xff) << 16)
-                        | ((Se[(temp) & 0xff] & 0xff) << 8)
-                        | ((Se[(temp >>> 24)] & 0xff));
-                temp ^= rcon[r++];
+                temp = ((SE[(temp >>> 16) & 0xff]) << 24)
+                        | ((SE[(temp >>> 8) & 0xff] & 0xff) << 16)
+                        | ((SE[(temp) & 0xff] & 0xff) << 8)
+                        | ((SE[(temp >>> 24)] & 0xff));
+                temp ^= RCON[r++];
             } else if (Nk == 8 && n == 4) {
-                temp = ((Se[(temp >>> 24)]) << 24)
-                        | ((Se[(temp >>> 16) & 0xff] & 0xff) << 16)
-                        | ((Se[(temp >>> 8) & 0xff] & 0xff) << 8)
-                        | ((Se[(temp) & 0xff] & 0xff));
+                temp = ((SE[(temp >>> 24)]) << 24)
+                        | ((SE[(temp >>> 16) & 0xff] & 0xff) << 16)
+                        | ((SE[(temp >>> 8) & 0xff] & 0xff) << 8)
+                        | ((SE[(temp) & 0xff] & 0xff));
             }
 
             rek[i] = rek[i - Nk] ^ temp;
@@ -467,25 +467,25 @@ public final class Rijndael implements CryptoEngine {
 
         for (int r = 1; r < Nr; r++) {
             w = rek[e];
-            rdk[d] = Td0[Se[(w >>> 24)] & 0xff]
-                    ^ Td1[Se[(w >>> 16) & 0xff] & 0xff]
-                    ^ Td2[Se[(w >>> 8) & 0xff] & 0xff]
-                    ^ Td3[Se[(w) & 0xff] & 0xff];
+            rdk[d] = TD0[SE[(w >>> 24)] & 0xff]
+                    ^ TD1[SE[(w >>> 16) & 0xff] & 0xff]
+                    ^ TD2[SE[(w >>> 8) & 0xff] & 0xff]
+                    ^ TD3[SE[(w) & 0xff] & 0xff];
             w = rek[e + 1];
-            rdk[d + 1] = Td0[Se[(w >>> 24)] & 0xff]
-                    ^ Td1[Se[(w >>> 16) & 0xff] & 0xff]
-                    ^ Td2[Se[(w >>> 8) & 0xff] & 0xff]
-                    ^ Td3[Se[(w) & 0xff] & 0xff];
+            rdk[d + 1] = TD0[SE[(w >>> 24)] & 0xff]
+                    ^ TD1[SE[(w >>> 16) & 0xff] & 0xff]
+                    ^ TD2[SE[(w >>> 8) & 0xff] & 0xff]
+                    ^ TD3[SE[(w) & 0xff] & 0xff];
             w = rek[e + 2];
-            rdk[d + 2] = Td0[Se[(w >>> 24)] & 0xff]
-                    ^ Td1[Se[(w >>> 16) & 0xff] & 0xff]
-                    ^ Td2[Se[(w >>> 8) & 0xff] & 0xff]
-                    ^ Td3[Se[(w) & 0xff] & 0xff];
+            rdk[d + 2] = TD0[SE[(w >>> 24)] & 0xff]
+                    ^ TD1[SE[(w >>> 16) & 0xff] & 0xff]
+                    ^ TD2[SE[(w >>> 8) & 0xff] & 0xff]
+                    ^ TD3[SE[(w) & 0xff] & 0xff];
             w = rek[e + 3];
-            rdk[d + 3] = Td0[Se[(w >>> 24)] & 0xff]
-                    ^ Td1[Se[(w >>> 16) & 0xff] & 0xff]
-                    ^ Td2[Se[(w >>> 8) & 0xff] & 0xff]
-                    ^ Td3[Se[(w) & 0xff] & 0xff];
+            rdk[d + 3] = TD0[SE[(w >>> 24)] & 0xff]
+                    ^ TD1[SE[(w >>> 16) & 0xff] & 0xff]
+                    ^ TD2[SE[(w >>> 8) & 0xff] & 0xff]
+                    ^ TD3[SE[(w) & 0xff] & 0xff];
             d += 4;
             e -= 4;
         }
@@ -504,7 +504,7 @@ public final class Rijndael implements CryptoEngine {
      * @param keyBits
      *            size of the cipher key in bits.
      */
-    public boolean makeKey(byte[] cipherKey, int keyBits) {
+    public boolean makeKey(final byte[] cipherKey, final int keyBits) {
         return makeKey(cipherKey, keyBits, DIR_BOTH);
     }
 
@@ -518,7 +518,8 @@ public final class Rijndael implements CryptoEngine {
      * @param direction
      *            cipher direction (DIR_ENCRYPT, DIR_DECRYPT, or DIR_BOTH).
      */
-    public boolean makeKey(byte[] cipherKey, int keyBits, int direction) {
+    public boolean makeKey(final byte[] cipherKey, final int keyBits,
+            final int direction) {
         // check key size:
         if (keyBits != 128 && keyBits != 192 && keyBits != 256) {
             /*

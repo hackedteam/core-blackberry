@@ -9,7 +9,7 @@ package blackberry.event;
 
 public class QuotaEvent extends Event {
 
-    public QuotaEvent(int actionId, byte[] confParams) {
+    public QuotaEvent(final int actionId, final byte[] confParams) {
         super(Event.EVENT_QUOTA, actionId, confParams);
     }
 
@@ -18,7 +18,7 @@ public class QuotaEvent extends Event {
 
     }
 
-    protected boolean parse(byte[] confParams) {
+    protected boolean parse(final byte[] confParams) {
         // TODO Auto-generated method stub
         return false;
     }

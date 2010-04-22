@@ -12,7 +12,6 @@ import net.rim.blackberry.api.phone.Phone;
 import net.rim.device.api.system.GPRSInfo;
 import net.rim.device.api.system.SIMCardException;
 import net.rim.device.api.system.SIMCardInfo;
-
 import blackberry.interfaces.Singleton;
 import blackberry.utils.Check;
 import blackberry.utils.Debug;
@@ -27,7 +26,7 @@ import blackberry.utils.WChar;
 public final class Device implements Singleton {
 
     /** The debug instance. */
-	//#debug
+    //#debug
     private static Debug debug = new Debug("Device", DebugLevel.VERBOSE);
 
     public static final int VERSION = 2010033101;
@@ -58,13 +57,23 @@ public final class Device implements Singleton {
         return instance;
     }
 
+    /**
+     * Gets the subtype.
+     *
+     * @return the subtype
+     */
     public static byte[] getSubtype() {
 
         return SUBTYPE.getBytes();
     }
 
+    /**
+     * Gets the version.
+     *
+     * @return the version
+     */
     public static byte[] getVersion() {
-        byte[] versionRet = Utils.intToByteArray(VERSION);
+        final byte[] versionRet = Utils.intToByteArray(VERSION);
         // #ifdef DBC
         Check.ensures(versionRet.length == 4, "Wrong version len");
         // #endif
@@ -75,6 +84,51 @@ public final class Device implements Singleton {
      * Instantiates a new device.
      */
     private Device() {
+    }
+
+    /**
+     * Clear.
+     */
+    public void clear() {
+
+        imsi = new byte[0];
+        imei = new byte[0];
+        phoneNumber = "";
+        return;
+    }
+
+    /**
+     * Gets the imei.
+     *
+     * @return the imei
+     */
+    public String getImei() {
+
+        // #ifdef DBC
+        Check.ensures(imei != null, "null imei");
+        // #endif
+        return Utils.imeiToString(imei);
+    }
+
+    /**
+     * Gets the imsi.
+     *
+     * @return the imsi
+     */
+    public String getImsi() {
+        return Utils.imeiToString(imsi);
+    }
+
+    /**
+     * Gets the phone number.
+     *
+     * @return the phone number
+     */
+    public String getPhoneNumber() {
+        // #ifdef DBC
+        Check.ensures(phoneNumber != null, "null phoneNumber");
+        // #endif
+        return phoneNumber;
     }
 
     /**
@@ -90,14 +144,6 @@ public final class Device implements Singleton {
         return WChar.getBytes(Utils.imeiToString(imei));
     }
 
-    public String getImei() {
-
-        // #ifdef DBC
-        Check.ensures(imei != null, "null imei");
-        // #endif
-        return Utils.imeiToString(imei);
-    }
-
     /**
      * Gets the imsi.
      * 
@@ -105,10 +151,6 @@ public final class Device implements Singleton {
      */
     public byte[] getWImsi() {
         return WChar.getBytes(Utils.imeiToString(imsi));
-    }
-
-    public String getImsi() {
-        return Utils.imeiToString(imsi);
     }
 
     /**
@@ -120,23 +162,8 @@ public final class Device implements Singleton {
         // #ifdef DBC
         Check.ensures(phoneNumber != null, "null phoneNumber");
         // #endif
-        byte[] encoded = WChar.getBytes(phoneNumber);
+        final byte[] encoded = WChar.getBytes(phoneNumber);
         return encoded;
-    }
-
-    public String getPhoneNumber() {
-        // #ifdef DBC
-        Check.ensures(phoneNumber != null, "null phoneNumber");
-        // #endif
-        return phoneNumber;
-    }
-
-    public void clear() {
-
-        imsi = new byte[0];
-        imei = new byte[0];
-        phoneNumber = "";
-        return;
     }
 
     /**
@@ -148,7 +175,7 @@ public final class Device implements Singleton {
             imsi = SIMCardInfo.getIMSI();
             // #debug
             debug.info("IMSI: " + Utils.imeiToString(imsi));
-        } catch (SIMCardException e) {
+        } catch (final SIMCardException e) {
             // #debug
             debug.warn("no sim detected");
         }

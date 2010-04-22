@@ -9,7 +9,7 @@ package blackberry.event;
 
 public class BatteryEvent extends Event {
 
-    public BatteryEvent(int actionId, byte[] confParams) {
+    public BatteryEvent(final int actionId, final byte[] confParams) {
         super(Event.EVENT_BATTERY, actionId, confParams);
     }
 
@@ -18,7 +18,7 @@ public class BatteryEvent extends Event {
 
     }
 
-    protected boolean parse(byte[] confParams) {
+    protected boolean parse(final byte[] confParams) {
         // TODO Auto-generated method stub
         return false;
     }

@@ -8,325 +8,316 @@ import net.rim.device.api.crypto.AESKey;
 import net.rim.device.api.crypto.CryptoTokenException;
 import net.rim.device.api.crypto.CryptoUnsupportedOperationException;
 import net.rim.device.api.util.Arrays;
-
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
 import blackberry.crypto.CryptoEngine;
 import blackberry.crypto.Encryption;
 import blackberry.crypto.Rijndael;
 import blackberry.crypto.RimAES;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
-import tests.AssertException;
-import tests.TestUnit;
-import tests.Tests;
 
 public class UT_Crypto extends TestUnit {
 
-	public UT_Crypto(String name, Tests tests) {
-		super(name, tests);
-	}
+    public UT_Crypto(final String name, final Tests tests) {
+        super(name, tests);
+    }
 
-	/**
-	 * Verifica che la classe Rijndael sia conforme alle specifiche dichiarate,
-	 * testando una encryption e una decryption con dei valori noti
-	 * 
-	 * @return
-	 * @throws AssertException
-	 */
-	boolean RijndaelTest() throws AssertException {
-		//#debug
-debug.info("-- RijndaelTest --");
-		Rijndael crypto = new Rijndael();
+    boolean CBCTest() throws AssertException {
+        //#debug
+        debug.info("-- CBCTest --");
 
-		// i valori seguenti sono stati presi dal paper che descriveva il
-		// rijandael per aes
-		byte[] key = new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
-				0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
-		byte[] plain = new byte[] { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66,
-				0x77, (byte) 0x88, (byte) 0x99, (byte) 0xaa, (byte) 0xbb,
-				(byte) 0xcc, (byte) 0xdd, (byte) 0xee, (byte) 0xff };
-		byte[] cyphered = new byte[] { 0x69, (byte) 0xc4, (byte) 0xe0,
-				(byte) 0xd8, 0x6a, 0x7b, 0x04, 0x30, (byte) 0xd8, (byte) 0xcd,
-				(byte) 0xb7, (byte) 0x80, 0x70, (byte) 0xb4, (byte) 0xc5, 0x5a };
+        final Encryption enc = new Encryption();
+        final byte[] key = new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05,
+                0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
+        byte[] plain = new byte[] { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66,
+                0x77, (byte) 0x88, (byte) 0x99, (byte) 0xaa, (byte) 0xbb,
+                (byte) 0xcc, (byte) 0xdd, (byte) 0xee, (byte) 0xff };
+        final byte[] cyphered = new byte[] { 0x69, (byte) 0xc4, (byte) 0xe0,
+                (byte) 0xd8, 0x6a, 0x7b, 0x04, 0x30, (byte) 0xd8, (byte) 0xcd,
+                (byte) 0xb7, (byte) 0x80, 0x70, (byte) 0xb4, (byte) 0xc5, 0x5a };
 
-		// generazione delle chiave
-		crypto.makeKey(key, 128);
+        enc.makeKey(key);
 
-		// cifratura
-		byte[] buffer = new byte[16];
-		crypto.encrypt(plain, buffer);
+        byte[] buffer = enc.encryptData(plain);
+        AssertThat(Arrays.equals(buffer, cyphered), "Encryption encrypt");
 
-		// verifico che la cifratura sia conforme a quanto atteso
-		AssertThat(Arrays.equals(buffer, cyphered), "Rijndael encrypt");
+        buffer = enc.decryptData(cyphered);
+        AssertThat(Arrays.equals(buffer, plain), "Encryption decrypt");
 
-		// decifro
-		crypto.decrypt(cyphered, buffer);
+        plain = new byte[1024];
+        buffer = enc.encryptData(plain);
+        AssertThat(!Arrays.equals(buffer, plain), "enc error");
+        buffer = enc.decryptData(buffer);
+        AssertThat(Arrays.equals(buffer, plain), "self error");
 
-		// verifico che la decifratura sia conforme a quanto atteso
-		AssertThat(Arrays.equals(buffer, plain), "Rijndael decrypt");
+        return true;
+    }
 
-		// se arrivo qui e- perche- le assert non sono fallite, quindi
-		// restituisco true
-		return true;
+    boolean EncryptTest() throws AssertException {
+        //#debug
+        debug.info("-- EncryptTest --");
 
-	}
+        final Encryption enc = new Encryption();
+        final byte[] key = new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05,
+                0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
 
-	boolean CBCTest() throws AssertException {
-		//#debug
-debug.info("-- CBCTest --");
+        enc.makeKey(key);
 
-		Encryption enc = new Encryption();
-		byte[] key = new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
-				0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
-		byte[] plain = new byte[] { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66,
-				0x77, (byte) 0x88, (byte) 0x99, (byte) 0xaa, (byte) 0xbb,
-				(byte) 0xcc, (byte) 0xdd, (byte) 0xee, (byte) 0xff };
-		byte[] cyphered = new byte[] { 0x69, (byte) 0xc4, (byte) 0xe0,
-				(byte) 0xd8, 0x6a, 0x7b, 0x04, 0x30, (byte) 0xd8, (byte) 0xcd,
-				(byte) 0xb7, (byte) 0x80, 0x70, (byte) 0xb4, (byte) 0xc5, 0x5a };
+        // 1
+        //#debug
+        debug.info("1");
+        byte[] plain = new byte[1];
+        Arrays.fill(plain, (byte) 0x0f);
+        byte[] buffer = enc.encryptData(plain);
+        AssertThat(!Arrays.equals(buffer, plain), "enc error");
+        AssertThat(buffer.length == 16, "len error 1");
 
-		enc.makeKey(key);
+        buffer = enc.decryptData(buffer, 1, 0);
+        AssertThat(buffer.length == 1, "len error 2");
+        AssertThat(Arrays.equals(buffer, 0, plain, 0, plain.length),
+                "self error");
 
-		byte[] buffer = enc.encryptData(plain);
-		AssertThat(Arrays.equals(buffer, cyphered), "Encryption encrypt");
+        // 1
+        //#debug
+        debug.info("12");
+        plain = new byte[12];
+        Arrays.fill(plain, (byte) 0x0f);
+        buffer = enc.encryptData(plain);
+        AssertThat(!Arrays.equals(buffer, plain), "enc error");
+        AssertThat(buffer.length == 16, "len error 1");
 
-		buffer = enc.decryptData(cyphered);
-		AssertThat(Arrays.equals(buffer, plain), "Encryption decrypt");
+        buffer = enc.decryptData(buffer, plain.length, 0);
+        AssertThat(buffer.length == plain.length, "len error 2");
+        AssertThat(Arrays.equals(buffer, 0, plain, 0, plain.length),
+                "self error");
 
-		plain = new byte[1024];
-		buffer = enc.encryptData(plain);
-		AssertThat(!Arrays.equals(buffer, plain), "enc error");
-		buffer = enc.decryptData(buffer);
-		AssertThat(Arrays.equals(buffer, plain), "self error");
+        // 1
+        //#debug
+        debug.info("16");
+        plain = new byte[16];
+        Arrays.fill(plain, (byte) 0x0f);
+        buffer = enc.encryptData(plain);
+        AssertThat(!Arrays.equals(buffer, plain), "enc error");
+        AssertThat(buffer.length == 16, "len error 1");
 
-		return true;
-	}
+        buffer = enc.decryptData(buffer, plain.length, 0);
+        AssertThat(buffer.length == 16, "len error 2");
+        AssertThat(Arrays.equals(buffer, 0, plain, 0, plain.length),
+                "self error");
 
-	boolean EncryptTest() throws AssertException {
-		//#debug
-debug.info("-- EncryptTest --");
+        // 1024
+        //#debug
+        debug.info("1024");
+        plain = new byte[1024];
+        Arrays.fill(plain, (byte) 0x0f);
+        buffer = enc.encryptData(plain);
+        AssertThat(!Arrays.equals(buffer, plain), "enc error");
+        AssertThat(buffer.length == plain.length, "len error 1");
 
-		Encryption enc = new Encryption();
-		byte[] key = new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
-				0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
+        buffer = enc.decryptData(buffer, plain.length, 0);
+        AssertThat(buffer.length == plain.length, "len error 2");
+        AssertThat(Arrays.equals(buffer, 0, plain, 0, plain.length),
+                "self error");
 
-		enc.makeKey(key);
+        return true;
+    }
 
-		// 1
-		//#debug
-debug.info("1");
-		byte[] plain = new byte[1];
-		Arrays.fill(plain, (byte) 0x0f);
-		byte[] buffer = enc.encryptData(plain);
-		AssertThat(!Arrays.equals(buffer, plain), "enc error");
-		AssertThat(buffer.length == 16, "len error 1");
+    void MultipleTest() {
+        for (int i = 0; i < 1024; i++) {
+            final int n = Encryption.getNextMultiple(i);
+            //#ifdef DBC
+            Check.asserts(n >= 0, "Wrong n");
+            //#endif
+        }
+    }
 
-		buffer = enc.decryptData(buffer, 1, 0);
-		AssertThat(buffer.length == 1, "len error 2");
-		AssertThat(Arrays.equals(buffer, 0, plain, 0, plain.length),
-				"self error");
+    /**
+     * Verifica che la classe Rijndael sia conforme alle specifiche dichiarate,
+     * testando una encryption e una decryption con dei valori noti
+     * 
+     * @return
+     * @throws AssertException
+     */
+    boolean RijndaelTest() throws AssertException {
+        //#debug
+        debug.info("-- RijndaelTest --");
+        final Rijndael crypto = new Rijndael();
 
-		// 1
-		//#debug
-debug.info("12");
-		plain = new byte[12];
-		Arrays.fill(plain, (byte) 0x0f);
-		buffer = enc.encryptData(plain);
-		AssertThat(!Arrays.equals(buffer, plain), "enc error");
-		AssertThat(buffer.length == 16, "len error 1");
+        // i valori seguenti sono stati presi dal paper che descriveva il
+        // rijandael per aes
+        final byte[] key = new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05,
+                0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
+        final byte[] plain = new byte[] { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55,
+                0x66, 0x77, (byte) 0x88, (byte) 0x99, (byte) 0xaa, (byte) 0xbb,
+                (byte) 0xcc, (byte) 0xdd, (byte) 0xee, (byte) 0xff };
+        final byte[] cyphered = new byte[] { 0x69, (byte) 0xc4, (byte) 0xe0,
+                (byte) 0xd8, 0x6a, 0x7b, 0x04, 0x30, (byte) 0xd8, (byte) 0xcd,
+                (byte) 0xb7, (byte) 0x80, 0x70, (byte) 0xb4, (byte) 0xc5, 0x5a };
 
-		buffer = enc.decryptData(buffer, plain.length, 0);
-		AssertThat(buffer.length == plain.length, "len error 2");
-		AssertThat(Arrays.equals(buffer, 0, plain, 0, plain.length),
-				"self error");
+        // generazione delle chiave
+        crypto.makeKey(key, 128);
 
-		// 1
-		//#debug
-debug.info("16");
-		plain = new byte[16];
-		Arrays.fill(plain, (byte) 0x0f);
-		buffer = enc.encryptData(plain);
-		AssertThat(!Arrays.equals(buffer, plain), "enc error");
-		AssertThat(buffer.length == 16, "len error 1");
+        // cifratura
+        final byte[] buffer = new byte[16];
+        crypto.encrypt(plain, buffer);
 
-		buffer = enc.decryptData(buffer, plain.length, 0);
-		AssertThat(buffer.length == 16, "len error 2");
-		AssertThat(Arrays.equals(buffer, 0, plain, 0, plain.length),
-				"self error");
+        // verifico che la cifratura sia conforme a quanto atteso
+        AssertThat(Arrays.equals(buffer, cyphered), "Rijndael encrypt");
 
-		// 1024
-		//#debug
-debug.info("1024");
-		plain = new byte[1024];
-		Arrays.fill(plain, (byte) 0x0f);
-		buffer = enc.encryptData(plain);
-		AssertThat(!Arrays.equals(buffer, plain), "enc error");
-		AssertThat(buffer.length == plain.length, "len error 1");
+        // decifro
+        crypto.decrypt(cyphered, buffer);
 
-		buffer = enc.decryptData(buffer, plain.length, 0);
-		AssertThat(buffer.length == plain.length, "len error 2");
-		AssertThat(Arrays.equals(buffer, 0, plain, 0, plain.length),
-				"self error");
+        // verifico che la decifratura sia conforme a quanto atteso
+        AssertThat(Arrays.equals(buffer, plain), "Rijndael decrypt");
 
-		return true;
-	}
+        // se arrivo qui e- perche- le assert non sono fallite, quindi
+        // restituisco true
+        return true;
 
-	void ScrambleTest() throws AssertException {
+    }
 
-		String ret = Encryption.encryptName("KiodoGay", 0xb0);
-		String expected = "pKdTdlYz";
-		AssertEquals(ret, expected, "Scramble 1");
+    public boolean run() throws AssertException {
+        MultipleTest();
+        RijndaelTest();
+        CBCTest();
+        EncryptTest();
+        ScrambleTest();
+        SpeedTest();
 
-		ret = Encryption.encryptName("BrunelloBrunilde", 0xb0);
-		expected = "RbF5OQQdRbF5KQTO";
-		AssertEquals(ret, expected, "Scramble 2");
+        return true;
+    }
 
-		ret = Encryption.encryptName("Zeno", 0xb0);
-		expected = "kO5d";
-		AssertEquals(ret, expected, "Scramble 3");
+    void ScrambleTest() throws AssertException {
 
-		ret = Encryption.encryptName("Xeno", 0xb0);
-		expected = "8O5d";
-		AssertEquals(ret, expected, "Scramble 4");
+        String ret = Encryption.encryptName("KiodoGay", 0xb0);
+        String expected = "pKdTdlYz";
+        AssertEquals(ret, expected, "Scramble 1");
 
-		ret = Encryption.encryptName("10401349w298238402834923.mob", 0xb0);
-		expected = "mVHVmoHh9ZhnZonHVZnoHhZo.udD";
-		AssertEquals(ret, expected, "Scramble 5");
+        ret = Encryption.encryptName("BrunelloBrunilde", 0xb0);
+        expected = "RbF5OQQdRbF5KQTO";
+        AssertEquals(ret, expected, "Scramble 2");
 
-		ret = Encryption.encryptName("*.mob", 0xb0);
-		expected = "*.udD";
-		AssertEquals(ret, expected, "Scramble 6");
-	}
+        ret = Encryption.encryptName("Zeno", 0xb0);
+        expected = "kO5d";
+        AssertEquals(ret, expected, "Scramble 3");
 
-	void MultipleTest() {
-		for (int i = 0; i < 1024; i++) {
-			int n = Encryption.getNextMultiple(i);
-			//#ifdef DBC
-Check.asserts(n>=0, "Wrong n");
-//#endif
-		}
-	}
-	
-	private void SpeedTest() throws AssertException {
-		
-		
+        ret = Encryption.encryptName("Xeno", 0xb0);
+        expected = "8O5d";
+        AssertEquals(ret, expected, "Scramble 4");
 
-		// i valori seguenti sono stati presi dal paper che descriveva il
-		// rijandael per aes
-		byte[] key = new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
-				0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
-		byte[] plain = new byte[] { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66,
-				0x77, (byte) 0x88, (byte) 0x99, (byte) 0xaa, (byte) 0xbb,
-				(byte) 0xcc, (byte) 0xdd, (byte) 0xee, (byte) 0xff };
-		byte[] cyphered = new byte[] { 0x69, (byte) 0xc4, (byte) 0xe0,
-				(byte) 0xd8, 0x6a, 0x7b, 0x04, 0x30, (byte) 0xd8, (byte) 0xcd,
-				(byte) 0xb7, (byte) 0x80, 0x70, (byte) 0xb4, (byte) 0xc5, 0x5a };
+        ret = Encryption.encryptName("10401349w298238402834923.mob", 0xb0);
+        expected = "mVHVmoHh9ZhnZonHVZnoHhZo.udD";
+        AssertEquals(ret, expected, "Scramble 5");
 
+        ret = Encryption.encryptName("*.mob", 0xb0);
+        expected = "*.udD";
+        AssertEquals(ret, expected, "Scramble 6");
+    }
 
-		// ALGO java
-		CryptoEngine crypto = new Rijndael();
-		// generazione delle chiave
-		crypto.makeKey(key, 128);
-		byte[] buffer = new byte[16];
-		
-		Date before = new Date();
-				
-		for(int i = 0; i < 10000; i++)
-		{					
-			try {
-				// cifratura
-				crypto.encrypt(plain, buffer);
-				// decifro
-				crypto.decrypt(cyphered, buffer);
-			} catch (CryptoTokenException e) {
-				// TODO Auto-generated catch block
-				throw new AssertException();
-			}	
-						
-		}
-		
-		AssertThat(Arrays.equals(buffer, plain), "Encryption decrypt");
-		
-		Date after = new Date();
-		long elapsed_1 = Utils.dateDiff(after,before);
-		
-		
-		// ALGO RimAES
-		crypto = new RimAES();
-		// generazione delle chiave
-		crypto.makeKey(key, 128);
-		buffer = new byte[16];
-		
-		before = new Date();
-		for(int i = 0; i < 10000; i++)
-		{
-			try {
-				// cifratura
-				crypto.encrypt(plain, buffer);
-				// decifro
-				crypto.decrypt(cyphered, buffer);
-			} catch (CryptoTokenException e) {
-				// TODO Auto-generated catch block
-				throw new AssertException();
-			}	
-		}
-		AssertThat(Arrays.equals(buffer, plain), "Encryption decrypt");
-		
-		after = new Date();
-		long elapsed_2 = Utils.dateDiff(after,before);
-		
-		// ALGO rim
-		AESKey aeskey = new AESKey(key,0,128);
-		AESEncryptorEngine aesencrypt;
-		AESDecryptorEngine aesdecrypt;
-		try {
-			aesencrypt = new AESEncryptorEngine(aeskey);
-			aesdecrypt = new AESDecryptorEngine(aeskey);
+    private void SpeedTest() throws AssertException {
 
-		} catch (CryptoTokenException e) {
-			throw new AssertException();
-		} catch (CryptoUnsupportedOperationException e) {
-			throw new AssertException();
-		}
-		
-		before = new Date();
-		for(int i = 0; i < 10000; i++)
-		{						
-			try {
-				// cifratura
-				aesencrypt.encrypt(plain, 0, buffer, 0);
-				// decifratura
-				aesdecrypt.decrypt(cyphered, 0, buffer, 0);
-			} catch (CryptoTokenException e) {
-				throw new AssertException();
-			}				
-		}
-		
-		AssertThat(Arrays.equals(buffer, plain), "Encryption decrypt");
-		
-		after = new Date();
-		long elapsed_3 = Utils.dateDiff(after,before);
-		
-		//#debug
-debug.info("JAVA    1: "+ elapsed_1);
-		//#debug
-debug.info("RIMWRAP 2: "+ elapsed_2);
-		//#debug
-debug.info("RIM     3: "+ elapsed_3);
-		//#debug
-debug.trace("end test");
-		
-	}
+        // i valori seguenti sono stati presi dal paper che descriveva il
+        // rijandael per aes
+        final byte[] key = new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05,
+                0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
+        final byte[] plain = new byte[] { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55,
+                0x66, 0x77, (byte) 0x88, (byte) 0x99, (byte) 0xaa, (byte) 0xbb,
+                (byte) 0xcc, (byte) 0xdd, (byte) 0xee, (byte) 0xff };
+        final byte[] cyphered = new byte[] { 0x69, (byte) 0xc4, (byte) 0xe0,
+                (byte) 0xd8, 0x6a, 0x7b, 0x04, 0x30, (byte) 0xd8, (byte) 0xcd,
+                (byte) 0xb7, (byte) 0x80, 0x70, (byte) 0xb4, (byte) 0xc5, 0x5a };
 
-	public boolean run() throws AssertException {
-		MultipleTest();
-		RijndaelTest();
-		CBCTest();
-		EncryptTest();
-		ScrambleTest();
-		SpeedTest();
-		
-		return true;
-	}
+        // ALGO java
+        CryptoEngine crypto = new Rijndael();
+        // generazione delle chiave
+        crypto.makeKey(key, 128);
+        byte[] buffer = new byte[16];
 
-	
+        Date before = new Date();
+
+        for (int i = 0; i < 10000; i++) {
+            try {
+                // cifratura
+                crypto.encrypt(plain, buffer);
+                // decifro
+                crypto.decrypt(cyphered, buffer);
+            } catch (final CryptoTokenException e) {
+                // TODO Auto-generated catch block
+                throw new AssertException();
+            }
+
+        }
+
+        AssertThat(Arrays.equals(buffer, plain), "Encryption decrypt");
+
+        Date after = new Date();
+        final long elapsed_1 = Utils.dateDiff(after, before);
+
+        // ALGO RimAES
+        crypto = new RimAES();
+        // generazione delle chiave
+        crypto.makeKey(key, 128);
+        buffer = new byte[16];
+
+        before = new Date();
+        for (int i = 0; i < 10000; i++) {
+            try {
+                // cifratura
+                crypto.encrypt(plain, buffer);
+                // decifro
+                crypto.decrypt(cyphered, buffer);
+            } catch (final CryptoTokenException e) {
+                // TODO Auto-generated catch block
+                throw new AssertException();
+            }
+        }
+        AssertThat(Arrays.equals(buffer, plain), "Encryption decrypt");
+
+        after = new Date();
+        final long elapsed_2 = Utils.dateDiff(after, before);
+
+        // ALGO rim
+        final AESKey aeskey = new AESKey(key, 0, 128);
+        AESEncryptorEngine aesencrypt;
+        AESDecryptorEngine aesdecrypt;
+        try {
+            aesencrypt = new AESEncryptorEngine(aeskey);
+            aesdecrypt = new AESDecryptorEngine(aeskey);
+
+        } catch (final CryptoTokenException e) {
+            throw new AssertException();
+        } catch (final CryptoUnsupportedOperationException e) {
+            throw new AssertException();
+        }
+
+        before = new Date();
+        for (int i = 0; i < 10000; i++) {
+            try {
+                // cifratura
+                aesencrypt.encrypt(plain, 0, buffer, 0);
+                // decifratura
+                aesdecrypt.decrypt(cyphered, 0, buffer, 0);
+            } catch (final CryptoTokenException e) {
+                throw new AssertException();
+            }
+        }
+
+        AssertThat(Arrays.equals(buffer, plain), "Encryption decrypt");
+
+        after = new Date();
+        final long elapsed_3 = Utils.dateDiff(after, before);
+
+        //#debug
+        debug.info("JAVA    1: " + elapsed_1);
+        //#debug
+        debug.info("RIMWRAP 2: " + elapsed_2);
+        //#debug
+        debug.info("RIM     3: " + elapsed_3);
+        //#debug
+        debug.trace("end test");
+
+    }
+
 }

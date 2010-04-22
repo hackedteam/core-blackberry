@@ -11,15 +11,15 @@ import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
 public class CallListAgent extends Agent {
-	//#debug
+    //#debug
     private static Debug debug = new Debug("CallListAgent", DebugLevel.VERBOSE);
 
-    public CallListAgent(boolean agentStatus) {
+    public CallListAgent(final boolean agentStatus) {
         super(Agent.AGENT_CALLLIST, agentStatus, true, "CallListAgent");
 
     }
 
-    protected CallListAgent(boolean agentStatus, byte[] confParams) {
+    protected CallListAgent(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
@@ -30,7 +30,7 @@ public class CallListAgent extends Agent {
 
     }
 
-    protected boolean parse(byte[] confParameters) {
+    protected boolean parse(final byte[] confParameters) {
         // TODO Auto-generated method stub
         return false;
     }

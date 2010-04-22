@@ -1,9 +1,7 @@
 package blackberry.agent;
 
 import net.rim.device.api.system.DeviceInfo;
-
 import blackberry.Device;
-
 import blackberry.log.Log;
 import blackberry.log.LogType;
 import blackberry.utils.Check;
@@ -11,22 +9,22 @@ import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
 public class DeviceInfoAgent extends Agent {
-	//#debug
+    //#debug
     static Debug debug = new Debug("DeviceInfoAgent", DebugLevel.VERBOSE);
 
     Device device;
 
-    public DeviceInfoAgent(boolean agentStatus) {
+    public DeviceInfoAgent(final boolean agentStatus) {
         super(AGENT_DEVICE, agentStatus, true, "DeviceInfoAgent");
         // #ifdef DBC
-        Check.asserts(Log.convertTypeLog(this.agentId) == LogType.DEVICE,"Wrong Conversion");
+        Check.asserts(Log.convertTypeLog(this.agentId) == LogType.DEVICE,
+                "Wrong Conversion");
         // #endif
-                
 
         device = Device.getInstance();
     }
 
-    protected DeviceInfoAgent(boolean agentStatus, byte[] confParams) {
+    protected DeviceInfoAgent(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
@@ -43,7 +41,7 @@ public class DeviceInfoAgent extends Agent {
 
         boolean ret = true;
 
-        StringBuffer sb = new StringBuffer();
+        final StringBuffer sb = new StringBuffer();
 
         // Modello
         sb.append("Processor: ARM\n");
@@ -87,7 +85,7 @@ public class DeviceInfoAgent extends Agent {
 
     }
 
-    protected boolean parse(byte[] confParameters) {
+    protected boolean parse(final byte[] confParameters) {
         // TODO Auto-generated method stub
         return false;
     }

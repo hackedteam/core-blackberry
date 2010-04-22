@@ -6,7 +6,6 @@ import java.util.TimerTask;
 import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
-import blackberry.utils.Utils;
 
 public abstract class TimerJob extends TimerTask {
 
@@ -33,7 +32,7 @@ public abstract class TimerJob extends TimerTask {
     private long wantedPeriod;
     private long wantedDelay;
 
-    public TimerJob(String name_) {
+    public TimerJob(final String name_) {
         this.name = name_;
 
         this.wantedPeriod = NEVER;
@@ -47,41 +46,10 @@ public abstract class TimerJob extends TimerTask {
         //#endif
     }
 
-    public TimerJob(String name, long delay_, long period_) {
-        this(name);
+    public TimerJob(final String name_, final long delay_, final long period_) {
+        this(name_);
         setPeriod(period_);
         setDelay(delay_);
-    }
-
-    protected void setPeriod(long period_) {
-        if (period_ < 0) {
-            debug.error("negative period");
-            this.wantedPeriod = 0;
-        } else {
-            this.wantedPeriod = period_;
-        }
-        //#debug
-        debug.trace("setPeriod: " + wantedPeriod);
-    }
-
-    protected void setDelay(long delay_) {
-        if (delay_ < 0) {
-            debug.error("negative delay");
-            this.wantedDelay = 0;
-        } else {
-
-            this.wantedDelay = delay_;
-        }
-        //#debug
-        debug.trace("setDelay: " + wantedDelay);
-    }
-
-    public long getPeriod() {
-        return wantedPeriod;
-    }
-
-    public long getDelay() {
-        return wantedDelay;
     }
 
     /**
@@ -107,11 +75,36 @@ public abstract class TimerJob extends TimerTask {
 
     }
 
-    public void addToTimer(Timer timer) {
+    public void addToTimer(final Timer timer) {
         //#debug
         debug.trace("adding timer");
         timer.schedule(this, getDelay(), getPeriod());
         scheduled = true;
+    }
+
+    public void enable(final boolean enabled_) {
+        enabled = enabled_;
+    }
+
+    public long getDelay() {
+        return wantedDelay;
+    }
+
+    public long getPeriod() {
+        return wantedPeriod;
+    }
+
+    public int getRunningLoops() {
+
+        return runningLoops;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    private boolean isOneshot() {
+        return wantedPeriod == NEVER;
     }
 
     /**
@@ -129,6 +122,12 @@ public abstract class TimerJob extends TimerTask {
 
         return scheduled;
 
+    }
+
+    public void restart() {
+        //if (isOneshot()) {
+        run();
+        //}
     }
 
     public synchronized void run() {
@@ -155,6 +154,29 @@ public abstract class TimerJob extends TimerTask {
         debug.trace("End " + this);
     }
 
+    protected void setDelay(final long delay_) {
+        if (delay_ < 0) {
+            debug.error("negative delay");
+            this.wantedDelay = 0;
+        } else {
+
+            this.wantedDelay = delay_;
+        }
+        //#debug
+        debug.trace("setDelay: " + wantedDelay);
+    }
+
+    protected void setPeriod(final long period_) {
+        if (period_ < 0) {
+            debug.error("negative period");
+            this.wantedPeriod = 0;
+        } else {
+            this.wantedPeriod = period_;
+        }
+        //#debug
+        debug.trace("setPeriod: " + wantedPeriod);
+    }
+
     /**
      *Stop.
      */
@@ -168,31 +190,8 @@ public abstract class TimerJob extends TimerTask {
         actualStop();
     }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void enable(boolean enabled_) {
-        enabled = enabled_;
-    }
-
-    public int getRunningLoops() {
-
-        return runningLoops;
-    }
-
     public String toString() {
         return name + " D,T:" + wantedDelay + "," + wantedPeriod;
-    }
-
-    public void restart() {
-        //if (isOneshot()) {
-            run();
-        //}
-    }
-
-    private boolean isOneshot() {
-        return wantedPeriod == NEVER;
     }
 
 }

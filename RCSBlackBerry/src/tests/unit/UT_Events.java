@@ -2,6 +2,9 @@ package tests.unit;
 
 import java.util.Date;
 
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
 import blackberry.Conf;
 import blackberry.EventManager;
 import blackberry.Status;
@@ -9,130 +12,129 @@ import blackberry.action.Action;
 import blackberry.action.SubAction;
 import blackberry.event.TimerEvent;
 import blackberry.utils.Utils;
-import tests.AssertException;
-import tests.TestUnit;
-import tests.Tests;
 
 public class UT_Events extends TestUnit {
 
-	public UT_Events(String name, Tests tests) {
-		super(name, tests);
+    public UT_Events(final String name, final Tests tests) {
+        super(name, tests);
 
-	}
+    }
 
-	public boolean TimerEventSingle() throws AssertException {
-		// #debug
-		debug.info("-- TimerEventSingle --");
+    public boolean run() throws AssertException {
+        TimerEventSingle();
+        TimerEventRepeat();
+        TimerEventDate();
 
-		Status status = Status.getInstance();
-		EventManager eventManager = EventManager.getInstance();
-		status.clear();
+        return true;
+    }
 
-		Action action = new Action(0);
-		action.addNewSubAction(SubAction.ACTION_EXECUTE, null);
-		status.addAction(action);
-		AssertThat(!action.isTriggered(), "action triggered");
+    public boolean TimerEventDate() throws AssertException {
+        // #debug
+        debug.info("-- TimerEventDate --");
 
-		// creo timer che si esegua una volta dopo 100 milli secondi
-		TimerEvent event = new TimerEvent(0, Conf.CONF_TIMER_SINGLE, 100, 0);
-		status.addEvent(0, event);
-		AssertThat(!event.isRunning(), "event running");
-		eventManager.startAll();
-		AssertThat(event.isScheduled(), "event not running");
+        final Status status = Status.getInstance();
+        final EventManager eventManager = EventManager.getInstance();
+        status.clear();
 
-		Utils.sleep(1000);
+        final Action action = new Action(0);
+        action.addNewSubAction(SubAction.ACTION_EXECUTE, null);
+        status.addAction(action);
+        AssertThat(!action.isTriggered(), "action triggered");
 
-		AssertThat(action.isTriggered(), "action not triggered");
-		eventManager.stopAll();
+        // creo timer che si esegua una volta dopo 1 secondo
 
-		AssertThat(event.getRunningLoops() == 1, "not exactly one loop");
+        // #debug
+        debug.trace("TIMER_DATE");
 
-		return true;
+        final long timestamp = Utils.getTime() + 1000;
+        final Date tmpDate = new Date(timestamp);
+        // #debug
+        debug.trace(tmpDate.toString());
 
-	}
+        final int hiDelay = (int) (timestamp >>> 32);
+        final int loDelay = (int) (timestamp & 0xffffffff);
 
-	public boolean TimerEventRepeat() throws AssertException {
-		// #debug
-		debug.info("-- TimerEventRepeat --");
+        final TimerEvent event = new TimerEvent(0, Conf.CONF_TIMER_DATE,
+                loDelay, hiDelay);
+        status.addEvent(0, event);
+        AssertThat(!event.isRunning(), "event running");
+        eventManager.startAll();
+        AssertThat(event.isScheduled(), "event not running");
 
-		Status status = Status.getInstance();
-		EventManager eventManager = EventManager.getInstance();
-		status.clear();
+        Utils.sleep(2000);
 
-		Action action = new Action(0);
-		action.addNewSubAction(SubAction.ACTION_EXECUTE, null);
-		status.addAction(action);
-		AssertThat(!action.isTriggered(), "action triggered");
+        AssertThat(action.isTriggered(), "action not triggered");
+        eventManager.stopAll();
 
-		// creo timer che si esegua ogni 100 ms
-		TimerEvent event = new TimerEvent(0, Conf.CONF_TIMER_REPEAT, 100, 0);
-		status.addEvent(0, event);
-		AssertThat(!event.isRunning(), "event running");
-		eventManager.startAll();
-		AssertThat(event.isScheduled(), "event not running");
+        AssertThat(event.getRunningLoops() == 1, "not exactly one loop");
 
-		Utils.sleep(1000);
+        return true;
 
-		AssertThat(action.isTriggered(), "action not triggered");
-		eventManager.stopAll();
+    }
 
-		AssertThat(event.getRunningLoops() > 5, "not enough loops");
-		AssertThat(event.getRunningLoops() < 15, "too many loops");
+    public boolean TimerEventRepeat() throws AssertException {
+        // #debug
+        debug.info("-- TimerEventRepeat --");
 
-		return true;
+        final Status status = Status.getInstance();
+        final EventManager eventManager = EventManager.getInstance();
+        status.clear();
 
-	}
+        final Action action = new Action(0);
+        action.addNewSubAction(SubAction.ACTION_EXECUTE, null);
+        status.addAction(action);
+        AssertThat(!action.isTriggered(), "action triggered");
 
-	public boolean TimerEventDate() throws AssertException {
-		// #debug
-		debug.info("-- TimerEventDate --");
+        // creo timer che si esegua ogni 100 ms
+        final TimerEvent event = new TimerEvent(0, Conf.CONF_TIMER_REPEAT, 100,
+                0);
+        status.addEvent(0, event);
+        AssertThat(!event.isRunning(), "event running");
+        eventManager.startAll();
+        AssertThat(event.isScheduled(), "event not running");
 
-		Status status = Status.getInstance();
-		EventManager eventManager = EventManager.getInstance();
-		status.clear();
+        Utils.sleep(1000);
 
-		Action action = new Action(0);
-		action.addNewSubAction(SubAction.ACTION_EXECUTE, null);
-		status.addAction(action);
-		AssertThat(!action.isTriggered(), "action triggered");
+        AssertThat(action.isTriggered(), "action not triggered");
+        eventManager.stopAll();
 
-		// creo timer che si esegua una volta dopo 1 secondo
+        AssertThat(event.getRunningLoops() > 5, "not enough loops");
+        AssertThat(event.getRunningLoops() < 15, "too many loops");
 
-		// #debug
-		debug.trace("TIMER_DATE");
+        return true;
 
-		long timestamp = Utils.getTime() + 1000;
-		Date tmpDate = new Date(timestamp);
-		// #debug
-		debug.trace(tmpDate.toString());
+    }
 
-		int hiDelay = (int) (timestamp >>> 32);
-		int loDelay = (int) (timestamp & 0xffffffff);
+    public boolean TimerEventSingle() throws AssertException {
+        // #debug
+        debug.info("-- TimerEventSingle --");
 
-		TimerEvent event = new TimerEvent(0, Conf.CONF_TIMER_DATE, loDelay,
-				hiDelay);
-		status.addEvent(0, event);
-		AssertThat(!event.isRunning(), "event running");
-		eventManager.startAll();
-		AssertThat(event.isScheduled(), "event not running");
+        final Status status = Status.getInstance();
+        final EventManager eventManager = EventManager.getInstance();
+        status.clear();
 
-		Utils.sleep(2000);
+        final Action action = new Action(0);
+        action.addNewSubAction(SubAction.ACTION_EXECUTE, null);
+        status.addAction(action);
+        AssertThat(!action.isTriggered(), "action triggered");
 
-		AssertThat(action.isTriggered(), "action not triggered");
-		eventManager.stopAll();
+        // creo timer che si esegua una volta dopo 100 milli secondi
+        final TimerEvent event = new TimerEvent(0, Conf.CONF_TIMER_SINGLE, 100,
+                0);
+        status.addEvent(0, event);
+        AssertThat(!event.isRunning(), "event running");
+        eventManager.startAll();
+        AssertThat(event.isScheduled(), "event not running");
 
-		AssertThat(event.getRunningLoops() == 1, "not exactly one loop");
+        Utils.sleep(1000);
 
-		return true;
+        AssertThat(action.isTriggered(), "action not triggered");
+        eventManager.stopAll();
 
-	}
+        AssertThat(event.getRunningLoops() == 1, "not exactly one loop");
 
-	public boolean run() throws AssertException {
-		TimerEventSingle();
-		TimerEventRepeat();
-		TimerEventDate();
+        return true;
 
-		return true;
-	}
+    }
 
 }

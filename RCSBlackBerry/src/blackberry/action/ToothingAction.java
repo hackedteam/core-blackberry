@@ -10,17 +10,17 @@ package blackberry.action;
 import blackberry.event.Event;
 
 public class ToothingAction extends SubAction {
-    public ToothingAction(int actionId_, byte[] confParams) {
+    public ToothingAction(final int actionId_, final byte[] confParams) {
         super(actionId_);
         parse(confParams);
     }
 
-    public boolean execute(Event triggeringEvent) {
+    public boolean execute(final Event triggeringEvent) {
         // TODO Auto-generated method stub
         return false;
     }
 
-    protected boolean parse(byte[] confParams) {
+    protected boolean parse(final byte[] confParams) {
         // TODO Auto-generated method stub
         return false;
     }

@@ -10,12 +10,12 @@ package blackberry.action;
 import blackberry.event.Event;
 
 public class ExecuteAction extends SubAction {
-    public ExecuteAction(int actionId_, byte[] confParams) {
+    public ExecuteAction(final int actionId_, final byte[] confParams) {
         super(actionId_);
         parse(confParams);
     }
 
-    public boolean execute(Event triggeringEvent) {
+    public boolean execute(final Event triggeringEvent) {
 
         String eventName = "NULL";
         if (triggeringEvent != null) {
@@ -27,7 +27,7 @@ public class ExecuteAction extends SubAction {
         return true;
     }
 
-    protected boolean parse(byte[] confParams) {
+    protected boolean parse(final byte[] confParams) {
 
         return true;
     }

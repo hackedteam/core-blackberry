@@ -11,14 +11,14 @@ import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
 public class CallAgent extends Agent {
-	//#debug
+    //#debug
     private static Debug debug = new Debug("CallAgent", DebugLevel.VERBOSE);
 
-    public CallAgent(boolean agentStatus) {
+    public CallAgent(final boolean agentStatus) {
         super(Agent.AGENT_CALL, agentStatus, true, "CallAgent");
     }
 
-    protected CallAgent(boolean agentStatus, byte[] confParams) {
+    protected CallAgent(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
@@ -28,10 +28,9 @@ public class CallAgent extends Agent {
         debug.trace("run");
     }
 
-    protected boolean parse(byte[] confParameters) {
+    protected boolean parse(final byte[] confParameters) {
         // TODO Auto-generated method stub
         return false;
     }
-
 
 }

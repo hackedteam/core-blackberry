@@ -4,10 +4,10 @@ import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
 public class CommandException extends Exception {
-	//#debug
+    //#debug
     static Debug debug = new Debug("CommandException", DebugLevel.VERBOSE);
 
-    public CommandException(String string) {
+    public CommandException(final String string) {
         super(string);
         // #debug
         debug.error(string);

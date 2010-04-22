@@ -83,34 +83,12 @@ public final class Proto {
     public static final int SUBTYPE = 0x18; // #,bytes che indicano la
 
     public static final int LASTTYPE = 0x19;
-    
-    public static final String[] strings = new String[]{
-        "NULL",
-        "OK",
-        "NO",
-        "BYE",
-        "CHALLENGE",
-        "RESPONSE",
-        "SYNC",
-        "NEW_CONF",
-        "LOG_NUM",
-        "LOG",
-        "UNINSTALL",
-        "RESUME",
-        "DOWNLOAD",
-        "UPLOAD",
-        "FILE",
-        "ID",
-        "INSTANCE",
-        "USERID",
-        "DEVICEID",
-        "SOURCEID",
-        "VERSION",
-        "LOG_END",
-        "UPGRADE",
-        "ENDFILE",
-        "SUBTYPE"
-    };
+
+    public static final String[] STRINGS = new String[] { "NULL", "OK",
+            "NO", "BYE", "CHALLENGE", "RESPONSE", "SYNC", "NEW_CONF",
+            "LOG_NUM", "LOG", "UNINSTALL", "RESUME", "DOWNLOAD", "UPLOAD",
+            "FILE", "ID", "INSTANCE", "USERID", "DEVICEID", "SOURCEID",
+            "VERSION", "LOG_END", "UPGRADE", "ENDFILE", "SUBTYPE" };
 
     private Proto() {
     };

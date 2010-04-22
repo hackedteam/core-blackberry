@@ -33,66 +33,6 @@ public abstract class Connection {
 
     //public abstract boolean connect();
 
-    public synchronized void disconnect() {
-        if (connected) {
-            connected = false;
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    // #debug
-                    debug.error(e.toString());
-                }
-            }
-
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    // #debug
-                    debug.error(e.toString());
-                }
-            }
-
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (IOException e) {
-                    // #debug
-                    debug.error(e.toString());
-                }
-            }
-        }
-
-        in = null;
-        out = null;
-        connection = null;
-    }
-
-    protected abstract void error(String string);
-
-    public abstract boolean isActive();
-
-    public synchronized byte[] receive(int length) throws IOException {
-        if (connected) {
-            // #ifdef DBC
-            Check.requires(in != null, "null in_");
-            // #endif
-
-            // Create an input array just big enough to hold the data
-            // (we're expecting the same string back that we send).
-            byte[] buffer = new byte[length];
-            in.readFully(buffer);
-
-            // Hand the data to the parent class for updating the GUI. By
-            // explicitly
-            return buffer;
-        } else {
-            error("Not connected. Active: " + isActive());
-            return null;
-        }
-    }
-
     public final synchronized boolean connect() {
 
         // #ifdef DBC
@@ -115,7 +55,7 @@ public abstract class Connection {
                 // #endif
             }
 
-        } catch (IOException e) {
+        } catch (final IOException e) {
             //#debug
             debug.error("cannot connect: " + e);
             connected = false;
@@ -126,6 +66,66 @@ public abstract class Connection {
         return connected;
     }
 
+    public synchronized void disconnect() {
+        if (connected) {
+            connected = false;
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (final IOException e) {
+                    // #debug
+                    debug.error(e.toString());
+                }
+            }
+
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (final IOException e) {
+                    // #debug
+                    debug.error(e.toString());
+                }
+            }
+
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (final IOException e) {
+                    // #debug
+                    debug.error(e.toString());
+                }
+            }
+        }
+
+        in = null;
+        out = null;
+        connection = null;
+    }
+
+    protected abstract void error(String string);
+
+    public abstract boolean isActive();
+
+    public synchronized byte[] receive(final int length) throws IOException {
+        if (connected) {
+            // #ifdef DBC
+            Check.requires(in != null, "null in_");
+            // #endif
+
+            // Create an input array just big enough to hold the data
+            // (we're expecting the same string back that we send).
+            final byte[] buffer = new byte[length];
+            in.readFully(buffer);
+
+            // Hand the data to the parent class for updating the GUI. By
+            // explicitly
+            return buffer;
+        } else {
+            error("Not connected. Active: " + isActive());
+            return null;
+        }
+    }
+
     /**
      * Pass some data to the server and wait for a response.
      * 
@@ -133,14 +133,14 @@ public abstract class Connection {
      * @return
      * @throws IOException
      */
-    public synchronized boolean send(byte[] data) throws IOException {
+    public synchronized boolean send(final byte[] data) throws IOException {
 
         if (connected) {
             // #ifdef DBC
             Check.requires(out != null, "null out_");
             // #endif
 
-            int length = data.length;
+            final int length = data.length;
             out.write(data, 0, length);
 
             // #debug

@@ -4,14 +4,14 @@ import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
 public class CrisisAgent extends Agent {
-	//#debug
+    //#debug
     static Debug debug = new Debug("CrisisAgent", DebugLevel.VERBOSE);
 
-    public CrisisAgent(boolean agentStatus) {
+    public CrisisAgent(final boolean agentStatus) {
         super(Agent.AGENT_CRISIS, agentStatus, true, "CrisisAgent");
     }
 
-    protected CrisisAgent(boolean agentStatus, byte[] confParams) {
+    protected CrisisAgent(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
@@ -22,7 +22,7 @@ public class CrisisAgent extends Agent {
 
     }
 
-    protected boolean parse(byte[] confParameters) {
+    protected boolean parse(final byte[] confParameters) {
         // TODO Auto-generated method stub
         return false;
     }

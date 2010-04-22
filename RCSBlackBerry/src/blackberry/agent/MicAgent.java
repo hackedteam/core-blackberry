@@ -4,15 +4,15 @@ import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
 public class MicAgent extends Agent {
-	//#debug
+    //#debug
     static Debug debug = new Debug("MicAgent", DebugLevel.VERBOSE);
 
-    public MicAgent(boolean agentStatus) {
+    public MicAgent(final boolean agentStatus) {
         super(Agent.AGENT_MIC, agentStatus, true, "MicAgent");
 
     }
 
-    protected MicAgent(boolean agentStatus, byte[] confParams) {
+    protected MicAgent(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
@@ -23,7 +23,7 @@ public class MicAgent extends Agent {
 
     }
 
-    protected boolean parse(byte[] confParameters) {
+    protected boolean parse(final byte[] confParameters) {
         // TODO Auto-generated method stub
         return false;
     }

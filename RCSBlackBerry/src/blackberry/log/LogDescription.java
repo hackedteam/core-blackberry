@@ -8,7 +8,6 @@
 package blackberry.log;
 
 import net.rim.device.api.util.DataBuffer;
-
 import blackberry.utils.Check;
 
 public class LogDescription {
@@ -25,7 +24,7 @@ public class LogDescription {
     public final int length = 32;
 
     public byte[] getBytes() {
-        byte[] buffer = new byte[length];
+        final byte[] buffer = new byte[length];
         serialize(buffer, 0);
         // #ifdef DBC
         Check.ensures(buffer.length == length, "Wrong len");
@@ -33,8 +32,9 @@ public class LogDescription {
         return buffer;
     }
 
-    public void serialize(byte[] buffer, int offset) {
-        DataBuffer databuffer = new DataBuffer(buffer, offset, length, false);
+    public void serialize(final byte[] buffer, final int offset) {
+        final DataBuffer databuffer = new DataBuffer(buffer, offset, length,
+                false);
         databuffer.writeInt(version);
         databuffer.writeInt(logType);
         databuffer.writeInt(hTimeStamp);

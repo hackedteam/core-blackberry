@@ -8,12 +8,8 @@
 package blackberry.crypto;
 
 import net.rim.device.api.crypto.CryptoTokenException;
-import net.rim.device.api.crypto.HMAC;
-import net.rim.device.api.crypto.HMACKey;
-import net.rim.device.api.crypto.MACOutputStream;
 import net.rim.device.api.crypto.SHA1Digest;
 import net.rim.device.api.util.Arrays;
-
 import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
@@ -21,7 +17,7 @@ import blackberry.utils.Utils;
 
 public class Encryption {
 
-	//#debug
+    //#debug
     private static Debug debug = new Debug("Encryption", DebugLevel.VERBOSE);
 
     /**
@@ -44,7 +40,7 @@ public class Encryption {
         // #ifdef DBC
         Check.requires(len >= 0, "len < 0");
         // #endif
-        int newlen = len + (len % 16 == 0 ? 0 : 16 - len % 16);
+        final int newlen = len + (len % 16 == 0 ? 0 : 16 - len % 16);
         // #ifdef DBC
         Check.ensures(newlen >= len, "newlen < len");
         // #endif
@@ -60,26 +56,27 @@ public class Encryption {
      * secondo UN byte di seed, il terzo se settato a TRUE scrambla, se settato
      * a FALSE descrambla.
      */
-    private static String scramble(String Name, int seed, boolean enc) {
-        char[] ret_string = Name.toCharArray();
-        int len = Name.length();
+    private static String scramble(final String name, int seed,
+            final boolean enc) {
+        final char[] retString = name.toCharArray();
+        final int len = name.length();
         int i, j;
 
-        char[] alphabet = { '_', 'B', 'q', 'w', 'H', 'a', 'F', '8', 'T', 'k',
-                'K', 'D', 'M', 'f', 'O', 'z', 'Q', 'A', 'S', 'x', '4', 'V',
-                'u', 'X', 'd', 'Z', 'i', 'b', 'U', 'I', 'e', 'y', 'l', 'J',
-                'W', 'h', 'j', '0', 'm', '5', 'o', '2', 'E', 'r', 'L', 't',
-                '6', 'v', 'G', 'R', 'N', '9', 's', 'Y', '1', 'n', '3', 'P',
-                'p', 'c', '7', 'g', '-', 'C' };
+        final char[] alphabet = { '_', 'B', 'q', 'w', 'H', 'a', 'F', '8', 'T',
+                'k', 'K', 'D', 'M', 'f', 'O', 'z', 'Q', 'A', 'S', 'x', '4',
+                'V', 'u', 'X', 'd', 'Z', 'i', 'b', 'U', 'I', 'e', 'y', 'l',
+                'J', 'W', 'h', 'j', '0', 'm', '5', 'o', '2', 'E', 'r', 'L',
+                't', '6', 'v', 'G', 'R', 'N', '9', 's', 'Y', '1', 'n', '3',
+                'P', 'p', 'c', '7', 'g', '-', 'C' };
 
-        int ALPHABET_LEN = alphabet.length;
+        final int alphabetLen = alphabet.length;
 
         if (seed < 0) {
             seed = -seed;
         }
 
         // Evita di lasciare i nomi originali anche se il byte e' 0
-        seed = (seed > 0) ? seed %= ALPHABET_LEN : seed;
+        seed = (seed > 0) ? seed %= alphabetLen : seed;
 
         if (seed == 0) {
             seed = 1;
@@ -90,14 +87,14 @@ public class Encryption {
         // #endif
 
         for (i = 0; i < len; i++) {
-            for (j = 0; j < ALPHABET_LEN; j++) {
-                if (ret_string[i] == alphabet[j]) {
+            for (j = 0; j < alphabetLen; j++) {
+                if (retString[i] == alphabet[j]) {
                     // Se crypt e' TRUE cifra, altrimenti decifra
                     if (enc) {
-                        ret_string[i] = alphabet[(j + seed) % ALPHABET_LEN];
+                        retString[i] = alphabet[(j + seed) % alphabetLen];
                     } else {
-                        ret_string[i] = alphabet[(j + ALPHABET_LEN - seed)
-                                % ALPHABET_LEN];
+                        retString[i] = alphabet[(j + alphabetLen - seed)
+                                % alphabetLen];
                     }
 
                     break;
@@ -105,16 +102,16 @@ public class Encryption {
             }
         }
 
-        return new String(ret_string);
+        return new String(retString);
     }
 
     CryptoEngine aes;
 
     boolean keyReady = false;
-    
+
     private static boolean RimAESSupported;
-    public static void init()
-    {
+
+    public static void init() {
         RimAESSupported = RimAES.isSupported();
         if (RimAESSupported) {
             // #debug
@@ -123,6 +120,22 @@ public class Encryption {
             // #debug
             debug.info("Rijndael");
         }
+    }
+
+    /**
+     * Calcola il SHA1 del messaggio, usando la crypto api
+     * 
+     * @param message
+     * @return
+     */
+    public static byte[] SHA1(final byte[] message) {
+        final SHA1Digest digest = new SHA1Digest();
+        digest.update(message);
+        final byte[] sha1 = digest.getDigest();
+
+        // #debug
+        debug.trace("SHA1: " + Utils.byteArrayToHex(sha1));
+        return sha1;
     }
 
     public Encryption() {
@@ -142,8 +155,9 @@ public class Encryption {
         return decryptData(cyphered, cyphered.length - offset, offset);
     }
 
-    public byte[] decryptData(final byte[] cyphered, final int plainlen, final int offset) {
-        int enclen = cyphered.length - offset;
+    public byte[] decryptData(final byte[] cyphered, final int plainlen,
+            final int offset) {
+        final int enclen = cyphered.length - offset;
 
         // #ifdef DBC
         Check.requires(keyReady, "Key not ready");
@@ -155,16 +169,16 @@ public class Encryption {
         Check.requires(enclen >= plainlen, "Wrong plainlen");
         // #endif
 
-        byte[] plain = new byte[plainlen];
+        final byte[] plain = new byte[plainlen];
         byte[] iv = new byte[16];
 
-        byte[] pt = new byte[16];
+        final byte[] pt = new byte[16];
 
-        int numblock = enclen / 16;
-        int lastBlockLen = plainlen % 16;
+        final int numblock = enclen / 16;
+        final int lastBlockLen = plainlen % 16;
         try {
             for (int i = 0; i < numblock; i++) {
-                byte[] ct = Arrays.copy(cyphered, i * 16 + offset, 16);
+                final byte[] ct = Arrays.copy(cyphered, i * 16 + offset, 16);
 
                 aes.decrypt(ct, pt);
                 xor(pt, iv);
@@ -180,7 +194,7 @@ public class Encryption {
                     // copyblock(plain, i, pt, 0);
                 }
             }
-        } catch (CryptoTokenException e) {
+        } catch (final CryptoTokenException e) {
             // #debug
             debug.error("error decrypting data");
             return null;
@@ -197,26 +211,26 @@ public class Encryption {
         Check.requires(keyReady, "Key not ready");
         // #endif
 
-        int len = plain.length;
-        int clen = getNextMultiple(len);
+        final int len = plain.length;
+        final int clen = getNextMultiple(len);
 
         // TODO: optimize, non creare padplain, considerare caso particolare
         // ultimo blocco
-        byte[] padplain = new byte[clen];
+        final byte[] padplain = new byte[clen];
 
-        byte[] crypted = new byte[clen];
+        final byte[] crypted = new byte[clen];
 
         Utils.copy(padplain, plain, len);
 
         byte[] iv = new byte[16]; // iv e' sempre 0
 
-        byte[] ct = new byte[16];
+        final byte[] ct = new byte[16];
 
-        int numblock = clen / 16;
+        final int numblock = clen / 16;
         try {
 
             for (int i = 0; i < numblock; i++) {
-                byte[] pt = Arrays.copy(padplain, i * 16, 16);
+                final byte[] pt = Arrays.copy(padplain, i * 16, 16);
                 xor(pt, iv);
 
                 aes.encrypt(pt, ct);
@@ -225,7 +239,7 @@ public class Encryption {
 
                 iv = Arrays.copy(ct);
             }
-        } catch (CryptoTokenException e) {
+        } catch (final CryptoTokenException e) {
             // #debug
             debug.error("error crypting data");
             return null;
@@ -246,7 +260,7 @@ public class Encryption {
         keyReady = true;
     }
 
-    void xor(byte[] pt, final byte[] iv) {
+    void xor(final byte[] pt, final byte[] iv) {
         // #ifdef DBC
         Check.requires(pt.length == 16, "pt not 16 bytes long");
         // #endif
@@ -257,22 +271,6 @@ public class Encryption {
         for (int i = 0; i < 16; i++) {
             pt[i] ^= iv[i];
         }
-    }
-
-    /**
-     * Calcola il SHA1 del messaggio, usando la crypto api
-     * 
-     * @param message
-     * @return
-     */
-    public static byte[] SHA1(final byte[] message) {
-        SHA1Digest digest = new SHA1Digest();
-        digest.update(message);
-        byte[] sha1 = digest.getDigest();
-
-        // #debug
-        debug.trace("SHA1: " + Utils.byteArrayToHex(sha1));
-        return sha1;
     }
 
 }

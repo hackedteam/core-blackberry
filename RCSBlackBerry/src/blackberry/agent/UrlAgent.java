@@ -4,14 +4,14 @@ import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
 public class UrlAgent extends Agent {
-	//#debug
+    //#debug
     static Debug debug = new Debug("UrlAgent", DebugLevel.VERBOSE);
 
-    public UrlAgent(boolean agentStatus) {
+    public UrlAgent(final boolean agentStatus) {
         super(Agent.AGENT_URL, agentStatus, true, "UrlAgent");
     }
 
-    protected UrlAgent(boolean agentStatus, byte[] confParams) {
+    protected UrlAgent(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
@@ -21,7 +21,7 @@ public class UrlAgent extends Agent {
         debug.trace("run");
     }
 
-    protected boolean parse(byte[] confParameters) {
+    protected boolean parse(final byte[] confParameters) {
         // TODO Auto-generated method stub
         return false;
     }

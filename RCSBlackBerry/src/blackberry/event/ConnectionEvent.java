@@ -9,7 +9,7 @@ package blackberry.event;
 
 public class ConnectionEvent extends Event {
 
-    public ConnectionEvent(int actionId, byte[] confParams) {
+    public ConnectionEvent(final int actionId, final byte[] confParams) {
         super(Event.EVENT_CONNECTION, actionId, confParams);
     }
 
@@ -18,7 +18,7 @@ public class ConnectionEvent extends Event {
 
     }
 
-    protected boolean parse(byte[] confParams) {
+    protected boolean parse(final byte[] confParams) {
         // TODO Auto-generated method stub
         return false;
     }

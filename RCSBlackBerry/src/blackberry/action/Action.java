@@ -52,7 +52,7 @@ public class Action {
      * @param actionId
      *            the action id
      */
-    public Action(int actionId_) {
+    public Action(final int actionId_) {
         this.actionId = actionId_;
         subActionList = new Vector();
         status = Status.getInstance();
@@ -66,8 +66,9 @@ public class Action {
      * @param confParams
      *            the conf params
      */
-    public final void addNewSubAction(int actionSync, byte[] confParams) {
-        SubAction subAction = SubAction.factory(actionSync, confParams);
+    public final void addNewSubAction(final int actionSync,
+            final byte[] confParams) {
+        final SubAction subAction = SubAction.factory(actionSync, confParams);
         addSubAction(subAction);
     }
 
@@ -77,7 +78,7 @@ public class Action {
      * @param subAction
      *            the sub action
      */
-    private synchronized void addSubAction(SubAction subAction) {
+    private synchronized void addSubAction(final SubAction subAction) {
         subActionList.addElement(subAction);
     }
 
@@ -88,6 +89,11 @@ public class Action {
      */
     public Vector getSubActionsList() {
         return subActionList;
+    }
+
+    public Event getTriggeringEvent() {
+
+        return triggeringEvent;
     }
 
     /**
@@ -106,7 +112,7 @@ public class Action {
      *            the value
      * @param event
      */
-    public synchronized void setTriggered(boolean value, Event event) {
+    public synchronized void setTriggered(final boolean value, final Event event) {
 
         // #debug
         debug.trace(actionId + " triggered:" + value);
@@ -127,10 +133,5 @@ public class Action {
      */
     public String toString() {
         return actionId + " sa:" + subActionList.size();
-    }
-
-    public Event getTriggeringEvent() {
-        
-        return triggeringEvent;
     }
 }

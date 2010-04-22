@@ -16,7 +16,6 @@ import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 
 import net.rim.device.api.util.DataBuffer;
-
 import blackberry.Device;
 import blackberry.agent.Agent;
 import blackberry.crypto.Encryption;
@@ -79,13 +78,13 @@ public class Log {
     //#debug
     private static Debug debug = new Debug("Log", DebugLevel.NOTIFY);
 
-    public static int convertTypeLog(int agentId) {
-        int agentPos = agentId - Agent.AGENT;
+    public static int convertTypeLog(final int agentId) {
+        final int agentPos = agentId - Agent.AGENT;
         // #ifdef DBC
-                        Check.requires(TYPE_LOG != null, "Null TypeLog");
+        Check.requires(TYPE_LOG != null, "Null TypeLog");
         // #endif
         if (agentPos > 0 && agentPos < TYPE_LOG.length) {
-            int typeLog = TYPE_LOG[agentPos];
+            final int typeLog = TYPE_LOG[agentPos];
             return typeLog;
         }
 
@@ -121,7 +120,7 @@ public class Log {
         // timestamp = new Date();
     }
 
-    public Log(Agent agent_, byte[] aesKey) {
+    public Log(final Agent agent_, final byte[] aesKey) {
         this();
 
         this.agent = agent_;
@@ -129,12 +128,12 @@ public class Log {
         encryption.makeKey(aesKey);
     }
 
-    public Log(Agent agent_, String aesKey) {
+    public Log(final Agent agent_, final String aesKey) {
         this();
 
         this.agent = agent_;
 
-        byte[] key = new byte[16];
+        final byte[] key = new byte[16];
         Utils.copy(key, 0, aesKey.getBytes(), 0, 16);
 
         encryption.makeKey(key);
@@ -153,7 +152,7 @@ public class Log {
         if (os != null) {
             try {
                 os.close();
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 ret = false;
             }
         }
@@ -161,7 +160,7 @@ public class Log {
         if (fconn != null) {
             try {
                 fconn.close();
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 ret = false;
             }
         }
@@ -180,7 +179,7 @@ public class Log {
      * non c'e' la chiama fallisce. La funzione torna TRUE se va a buon fine,
      * FALSE altrimenti.
      */
-    public boolean createLog(byte[] additionalData) {
+    public boolean createLog(final byte[] additionalData) {
         timestamp = new Date();
 
         int additionalLen = 0;
@@ -189,22 +188,22 @@ public class Log {
             additionalLen = additionalData.length;
         }
 
-        Vector tuple = logCollector.makeNewName(this, agent);
+        final Vector tuple = logCollector.makeNewName(this, agent);
         // #ifdef DBC
-                        Check.asserts(tuple.size() == 4, "Wrong tuple size");
+        Check.asserts(tuple.size() == 4, "Wrong tuple size");
         // #endif
 
         this.progressive = ((Integer) tuple.elementAt(0)).intValue();
-        String basePath = (String) tuple.elementAt(1);
-        String blockDir = (String) tuple.elementAt(2);
-        String encName = (String) tuple.elementAt(3);
+        final String basePath = (String) tuple.elementAt(1);
+        final String blockDir = (String) tuple.elementAt(2);
+        final String encName = (String) tuple.elementAt(3);
 
-        String dir = basePath + blockDir + "/";
+        final String dir = basePath + blockDir + "/";
         Path.createDirectory(dir);
 
         fileName = dir + encName;
         // #ifdef DBC
-                        Check.asserts(fileName != null, "null fileName");
+        Check.asserts(fileName != null, "null fileName");
         // #endif
 
         try {
@@ -216,18 +215,19 @@ public class Log {
                 return false;
             }
 
-            byte[] plainBuffer = makeDescription(additionalData);
+            final byte[] plainBuffer = makeDescription(additionalData);
             // #ifdef DBC
-                                    Check.asserts(plainBuffer.length >= 32 + additionalLen,"Short plainBuffer");
+            Check.asserts(plainBuffer.length >= 32 + additionalLen,
+                    "Short plainBuffer");
             // #endif
 
             fconn.create();
             os = fconn.openDataOutputStream();
 
-            byte[] encBuffer = encryption.encryptData(plainBuffer);
+            final byte[] encBuffer = encryption.encryptData(plainBuffer);
             // #ifdef DBC
-                                    Check.asserts(encBuffer.length == 
-                                    Encryption.getNextMultiple(plainBuffer.length), "Wrong encBuffer");
+            Check.asserts(encBuffer.length == Encryption
+                    .getNextMultiple(plainBuffer.length), "Wrong encBuffer");
             // #endif
 
             // scriviamo la dimensione dell'header paddato
@@ -237,7 +237,8 @@ public class Log {
             os.flush();
 
             // #ifdef DBC
-                                    Check.asserts(fconn.fileSize() == encBuffer.length + 4,"Wrong filesize");
+            Check.asserts(fconn.fileSize() == encBuffer.length + 4,
+                    "Wrong filesize");
             // #endif
 
             // #debug
@@ -245,7 +246,7 @@ public class Log {
             // #debug
             debug.trace("encBuffer.length: " + encBuffer.length);
 
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             return false;
         }
 
@@ -253,7 +254,7 @@ public class Log {
     }
 
     // pubblico solo per fare i test
-    public byte[] makeDescription(byte[] additionalData) {
+    public byte[] makeDescription(final byte[] additionalData) {
 
         if (timestamp == null) {
             timestamp = new Date();
@@ -265,7 +266,7 @@ public class Log {
             additionalLen = additionalData.length;
         }
 
-        DateTime datetime = new DateTime(timestamp);
+        final DateTime datetime = new DateTime(timestamp);
 
         logDescription = new LogDescription();
         logDescription.version = LOG_VERSION_01;
@@ -277,17 +278,19 @@ public class Log {
         logDescription.userIdLen = device.getWImsi().length;
         logDescription.sourceIdLen = device.getWPhoneNumber().length;
 
-        byte[] baseHeader = logDescription.getBytes();
+        final byte[] baseHeader = logDescription.getBytes();
         // #ifdef DBC
-                        Check.asserts(baseHeader.length == logDescription.length,"Wrong log len");
+        Check.asserts(baseHeader.length == logDescription.length,
+                "Wrong log len");
         // #endif
 
-        int headerLen = baseHeader.length + logDescription.additionalData
+        final int headerLen = baseHeader.length + logDescription.additionalData
                 + logDescription.deviceIdLen + logDescription.userIdLen
                 + logDescription.sourceIdLen;
-        byte[] plainBuffer = new byte[Encryption.getNextMultiple(headerLen)];
+        final byte[] plainBuffer = new byte[Encryption
+                .getNextMultiple(headerLen)];
 
-        DataBuffer databuffer = new DataBuffer(plainBuffer, 0,
+        final DataBuffer databuffer = new DataBuffer(plainBuffer, 0,
                 plainBuffer.length, false);
         databuffer.write(baseHeader);
         databuffer.write(device.getWImei());
@@ -306,7 +309,7 @@ public class Log {
      * stringa lo genera da un numero. Se la chiamata fallisce la funzione torna
      * una stringa vuota.
      */
-    String makeName(int agentId, boolean addPath) {
+    String makeName(final int agentId, final boolean addPath) {
         return null;
     }
 
@@ -320,7 +323,8 @@ public class Log {
      * e' impostato a TRUE viene generato un nome che punta alla prima MMC
      * disponibile, se esiste.
      */
-    String makeName(String name, boolean addPath, boolean storeToMMC) {
+    String makeName(final String name, final boolean addPath,
+            final boolean storeToMMC) {
         return null;
     }
 
@@ -329,27 +333,27 @@ public class Log {
      * file di log creato con CreateLog(). La funzione torna TRUE se va a buon
      * fine, FALSE altrimenti.
      */
-    public boolean writeLog(byte[] data) {
+    public boolean writeLog(final byte[] data) {
         if (os == null || fconn == null) {
             // #debug
             debug.error("fconn or os null");
             return false;
         }
 
-        byte[] encData = encryption.encryptData(data);
+        final byte[] encData = encryption.encryptData(data);
 
         try {
             os.write(Utils.intToByteArray(data.length));
             os.write(encData);
             os.flush();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             return false;
         }
 
         return true;
     }
 
-    public boolean writeLog(String data, boolean endzero) {
+    public boolean writeLog(final String data, final boolean endzero) {
         return writeLog(WChar.getBytes(data, endzero));
     }
 }

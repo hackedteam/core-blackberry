@@ -7,20 +7,20 @@ public class ImAgent extends Agent {
     //#debug
     static Debug debug = new Debug("ImAgent", DebugLevel.VERBOSE);
 
-    private int timeToSleep = 1000;
+    private final int timeToSleep = 1000;
 
-    public ImAgent(boolean agentStatus) {
+    int loop;
+
+    public ImAgent(final boolean agentStatus) {
         super(Agent.AGENT_IM, agentStatus, true, "ImAgent");
         loop = 0;
         setPeriod(1000);
     }
 
-    protected ImAgent(boolean agentStatus, byte[] confParams) {
+    protected ImAgent(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
-
-    int loop;
 
     public void actualRun() {
         // #debug
@@ -36,10 +36,9 @@ public class ImAgent extends Agent {
 
         // genera un log con la email
 
-
     }
 
-    protected boolean parse(byte[] confParameters) {
+    protected boolean parse(final byte[] confParameters) {
         // TODO Auto-generated method stub
         return false;
     }

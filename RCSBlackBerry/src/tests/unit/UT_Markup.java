@@ -2,80 +2,81 @@ package tests.unit;
 
 import java.io.IOException;
 
-import blackberry.log.Markup;
-import blackberry.agent.Agent;
-import blackberry.config.Keys;
-import blackberry.utils.Utils;
 import tests.AssertException;
 import tests.TestUnit;
 import tests.Tests;
+import blackberry.agent.Agent;
+import blackberry.config.Keys;
+import blackberry.log.Markup;
+import blackberry.utils.Utils;
 
 public class UT_Markup extends TestUnit {
 
-	public UT_Markup(String name, Tests tests) {
-		super(name, tests);
-	}
+    public UT_Markup(final String name, final Tests tests) {
+        super(name, tests);
+    }
 
-	void SimpleMarkupTest() throws AssertException {
+    private void DeleteAllMarkupTest() {
+        Markup.removeMarkups();
+    }
 
-		int agentId = Agent.AGENT_APPLICATION;
-		Markup markup = new Markup(agentId, Keys.getInstance().getAesKey());
+    public boolean run() throws AssertException {
 
+        DeleteAllMarkupTest();
+        SimpleMarkupTest();
 
-		if (markup.isMarkup())
-			markup.removeMarkup();
+        return true;
+    }
 
-		// senza markup
-		boolean ret = markup.isMarkup();
-		AssertThat(ret == false, "Should Not exist");
+    void SimpleMarkupTest() throws AssertException {
 
-		// scrivo un markup vuoto
-		ret = markup.writeMarkup( null);
-		AssertThat(ret == true, "cannot write null markup");
+        final int agentId = Agent.AGENT_APPLICATION;
+        final Markup markup = new Markup(agentId, Keys.getInstance()
+                .getAesKey());
 
-		// verifico che ci sia
-		ret = markup.isMarkup();
-		AssertThat(ret == true, "Should exist");
+        if (markup.isMarkup()) {
+            markup.removeMarkup();
+        }
 
-		// scrivo un numero nel markup
-		byte[] buffer = Utils.intToByteArray(123);
+        // senza markup
+        boolean ret = markup.isMarkup();
+        AssertThat(ret == false, "Should Not exist");
 
-		ret = markup.writeMarkup( buffer);
-		AssertThat(ret == true, "cannot write markup");
+        // scrivo un markup vuoto
+        ret = markup.writeMarkup(null);
+        AssertThat(ret == true, "cannot write null markup");
 
-		// verifico che il numero si legga correttamente
-		int value;
-		try {
-			byte[] read = markup.readMarkup();
-			value = Utils.byteArrayToInt(read, 0);
+        // verifico che ci sia
+        ret = markup.isMarkup();
+        AssertThat(ret == true, "Should exist");
 
-		} catch (IOException e) {
-			//#debug
-debug.fatal("Markup read");
-			throw new AssertException();
-		}
+        // scrivo un numero nel markup
+        final byte[] buffer = Utils.intToByteArray(123);
 
-		AssertEquals(value, 123, "Wrong read 123");
+        ret = markup.writeMarkup(buffer);
+        AssertThat(ret == true, "cannot write markup");
 
-		// cancello il markup
-		Markup.removeMarkup(agentId);
+        // verifico che il numero si legga correttamente
+        int value;
+        try {
+            final byte[] read = markup.readMarkup();
+            value = Utils.byteArrayToInt(read, 0);
 
-		// verifico che sia stato cancellato
-		ret = markup.isMarkup();
-		AssertThat(ret == false, "Should Not exist");
+        } catch (final IOException e) {
+            //#debug
+            debug.fatal("Markup read");
+            throw new AssertException();
+        }
 
-	}
+        AssertEquals(value, 123, "Wrong read 123");
 
-	private void DeleteAllMarkupTest() {
-		Markup.removeMarkups();
-	}
+        // cancello il markup
+        Markup.removeMarkup(agentId);
 
-	public boolean run() throws AssertException {
+        // verifico che sia stato cancellato
+        ret = markup.isMarkup();
+        AssertThat(ret == false, "Should Not exist");
 
-		DeleteAllMarkupTest();
-		SimpleMarkupTest();
-
-		return true;
-	}
+    }
 
 }

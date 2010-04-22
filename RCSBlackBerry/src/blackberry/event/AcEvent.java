@@ -7,13 +7,10 @@
  * *************************************************/
 package blackberry.event;
 
+import net.rim.device.api.system.DeviceInfo;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
-
-import net.rim.device.api.system.Application;
-import net.rim.device.api.system.DeviceInfo;
-import net.rim.device.api.system.SystemListener;
 
 public class AcEvent extends Event {
     //#debug
@@ -21,7 +18,7 @@ public class AcEvent extends Event {
 
     private int lastStatus;
 
-    public AcEvent(int actionId, byte[] confParams) {
+    public AcEvent(final int actionId, final byte[] confParams) {
         super(Event.EVENT_AC, actionId, confParams);
 
         lastStatus = DeviceInfo.getBatteryStatus();
@@ -30,12 +27,12 @@ public class AcEvent extends Event {
 
     protected void actualRun() {
 
-        int status = DeviceInfo.getBatteryStatus();
+        final int status = DeviceInfo.getBatteryStatus();
 
-        int diff = (status ^ lastStatus);
+        final int diff = (status ^ lastStatus);
 
         for (int i = 0; i < 32; i++) {
-            boolean bit = Utils.getBit(diff, i);
+            final boolean bit = Utils.getBit(diff, i);
             if (bit) {
                 batteryStatusChange(1 << i);
             }
@@ -50,11 +47,6 @@ public class AcEvent extends Event {
      * debug.info("Removed SystemListener"); }
      */
 
-    protected boolean parse(byte[] confParams) {
-        // TODO Auto-generated method stub
-        return true;
-    }
-
     public void batteryGood() {
         //#debug
         debug.info("batteryGood");
@@ -66,7 +58,7 @@ public class AcEvent extends Event {
 
     }
 
-    public void batteryStatusChange(int arg0) {
+    public void batteryStatusChange(final int arg0) {
         switch (arg0) {
         case DeviceInfo.BSTAT_AC_CONTACTS:
             //#debug
@@ -138,6 +130,11 @@ public class AcEvent extends Event {
             break;
         }
 
+    }
+
+    protected boolean parse(final byte[] confParams) {
+        // TODO Auto-generated method stub
+        return true;
     }
 
     public void powerOff() {

@@ -16,7 +16,6 @@ import blackberry.threadpool.TimerJob;
 import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
-import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -25,7 +24,7 @@ import blackberry.utils.Utils;
 public final class EventManager extends Manager implements Singleton {
 
     /** The debug instance. */
-	//#debug
+    //#debug
     private static Debug debug = new Debug("EventManager", DebugLevel.VERBOSE);
 
     /** The instance. */
@@ -49,15 +48,27 @@ public final class EventManager extends Manager implements Singleton {
      */
     private EventManager() {
         super();
+        //#debug
+        debug.trace("EventManager");
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see blackberry.Manager#getAllItems()
+     */
     public Vector getAllItems() {
-        Vector events = statusObj.getEventsList();
+        final Vector events = statusObj.getEventsList();
         return events;
     }
 
-    public TimerJob getItem(int id) {
-        Event event = statusObj.getEvent(id);
+    /*
+     * (non-Javadoc)
+     * 
+     * @see blackberry.Manager#getItem(int)
+     */
+    public TimerJob getItem(final int id) {
+        final Event event = statusObj.getEvent(id);
         // #ifdef DBC
         Check.ensures(event.eventId == id, "Wrong id");
         // #endif

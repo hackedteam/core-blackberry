@@ -8,43 +8,46 @@ import net.rim.device.api.crypto.CryptoUnsupportedOperationException;
 
 public class RimAES implements CryptoEngine {
 
-    AESKey aeskey;
-    AESEncryptorEngine aesencrypt;
-    AESDecryptorEngine aesdecrypt;
-
     public static boolean isSupported() {
-        AESKey aeskey = new AESKey();
+        final AESKey aeskey = new AESKey();
 
         try {
-            AESEncryptorEngine aesencrypt = new AESEncryptorEngine(aeskey);
-        } catch (CryptoTokenException e) {
+            final AESEncryptorEngine aesencrypt = new AESEncryptorEngine(aeskey);
+        } catch (final CryptoTokenException e) {
             return false;
-        } catch (CryptoUnsupportedOperationException e) {
+        } catch (final CryptoUnsupportedOperationException e) {
             return false;
         }
 
         return true;
     }
 
-    public void decrypt(byte[] ct, byte[] pt) throws CryptoTokenException {
+    AESKey aeskey;
+    AESEncryptorEngine aesencrypt;
+
+    AESDecryptorEngine aesdecrypt;
+
+    public void decrypt(final byte[] ct, final byte[] pt)
+            throws CryptoTokenException {
         aesdecrypt.decrypt(ct, 0, pt, 0);
     }
 
-    public void encrypt(byte[] pt, byte[] ct) throws CryptoTokenException {
+    public void encrypt(final byte[] pt, final byte[] ct)
+            throws CryptoTokenException {
 
         aesencrypt.encrypt(pt, 0, ct, 0);
 
     }
 
-    public boolean makeKey(byte[] cipherKey, int keyBits) {
+    public boolean makeKey(final byte[] cipherKey, final int keyBits) {
         aeskey = new AESKey(cipherKey, 0, keyBits);
         try {
             aesencrypt = new AESEncryptorEngine(aeskey);
             aesdecrypt = new AESDecryptorEngine(aeskey);
 
-        } catch (CryptoTokenException e) {
+        } catch (final CryptoTokenException e) {
             return false;
-        } catch (CryptoUnsupportedOperationException e) {
+        } catch (final CryptoUnsupportedOperationException e) {
             return false;
         }
         return true;

@@ -6,31 +6,32 @@ import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
 public class TransferAccessor extends Transfer {
-	protected static Debug debug = new Debug("TransferAccessor",
-           DebugLevel.VERBOSE);
-	public TransferAccessor() {
-		super();
-	}
+    protected static Debug debug = new Debug("TransferAccessor",
+            DebugLevel.VERBOSE);
 
-	public void ChallengeTest() throws ProtocolException {
-		boolean ret = connectDirect() || connectMDS();
-		if (!ret) {
-			debug.error("cannot connect");
-		}
+    public TransferAccessor() {
+        super();
+    }
 
-		debug.trace("send challange");
-		sendChallenge();
-		getResponse();
+    public void ChallengeTest() throws ProtocolException {
+        final boolean ret = connectDirect() || connectMDS();
+        if (!ret) {
+            debug.error("cannot connect");
+        }
 
-		debug.trace("get challange");
-		getChallenge();
-		sendResponse();
+        debug.trace("send challange");
+        sendChallenge();
+        getResponse();
 
-		debug.trace("both challange OK");
-		// identificazione
-		sendIds();
+        debug.trace("get challange");
+        getChallenge();
+        sendResponse();
 
-		debug.trace("disconnect");
-		disconnect(true);
-	}
+        debug.trace("both challange OK");
+        // identificazione
+        sendIds();
+
+        debug.trace("disconnect");
+        disconnect(true);
+    }
 }

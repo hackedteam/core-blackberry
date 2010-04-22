@@ -1,86 +1,181 @@
+/*
+ * 
+ */
 package blackberry;
 
 import net.rim.device.api.system.HolsterListener;
 import net.rim.device.api.system.RadioStatusListener;
 import net.rim.device.api.system.SystemListener;
-
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The listener interface for receiving app events. The class that is interested
+ * in processing a app event implements this interface, and the object created
+ * with that class is registered with a component using the component's
+ * <code>addAppListener<code> method. When
+ * the app event occurs, that object's appropriate
+ * method is invoked.
+ * 
+ * @see AppEvent
+ */
 public class AppListener implements RadioStatusListener, HolsterListener,
         SystemListener {
 
     //#debug
     static Debug debug = new Debug("AppListener", DebugLevel.VERBOSE);
 
+    /**
+     * Instantiates a new app listener.
+     */
     public AppListener() {
 
     }
 
-    public void testEntryPoint() {
-        debug.info("Test Entry point");
-    }
-
-    public void inHolster() {
-        debug.info("inHolster");
-    }
-
-    public void outOfHolster() {
-        debug.info("outOfHolster");
-    }
-
-    public void batteryGood() {
-        debug.info("batteryGood");
-    }
-
-    public void batteryLow() {
-        debug.info("batteryLow");
-    }
-
-    public void batteryStatusChange(int arg) {
-        debug.info("batteryStatusChange arg: " + arg);
-    }
-
-    public void powerOff() {
-        debug.info("powerOff");
-    }
-
-    public void powerUp() {
-        debug.info("powerUp");
-    }
-
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.rim.device.api.system.RadioStatusListener#baseStationChange()
+     */
     public void baseStationChange() {
         debug.info("baseStationChange");
     }
 
-    public void networkScanComplete(boolean success) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.rim.device.api.system.SystemListener#batteryGood()
+     */
+    public void batteryGood() {
+        debug.info("batteryGood");
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.rim.device.api.system.SystemListener#batteryLow()
+     */
+    public void batteryLow() {
+        debug.info("batteryLow");
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.rim.device.api.system.SystemListener#batteryStatusChange(int)
+     */
+    public void batteryStatusChange(final int arg) {
+        debug.info("batteryStatusChange arg: " + arg);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.rim.device.api.system.HolsterListener#inHolster()
+     */
+    public void inHolster() {
+        debug.info("inHolster");
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * net.rim.device.api.system.RadioStatusListener#networkScanComplete(boolean
+     * )
+     */
+    public void networkScanComplete(final boolean success) {
         debug.info("networkScanComplete success: " + success);
     }
 
-    public void networkServiceChange(int networkId, int service) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * net.rim.device.api.system.RadioStatusListener#networkServiceChange(int,
+     * int)
+     */
+    public void networkServiceChange(final int networkId, final int service) {
         debug.info("networkServiceChange networkId: " + networkId
                 + " service : " + service);
     }
 
-    public void networkStarted(int networkId, int service) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.rim.device.api.system.RadioStatusListener#networkStarted(int,
+     * int)
+     */
+    public void networkStarted(final int networkId, final int service) {
         debug.info("networkStarted networkId: " + networkId + " service : "
                 + service);
     }
 
-    public void networkStateChange(int state) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * net.rim.device.api.system.RadioStatusListener#networkStateChange(int)
+     */
+    public void networkStateChange(final int state) {
         debug.info("networkStateChange state: " + state);
     }
 
-    public void pdpStateChange(int apn, int state, int cause) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.rim.device.api.system.HolsterListener#outOfHolster()
+     */
+    public void outOfHolster() {
+        debug.info("outOfHolster");
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.rim.device.api.system.RadioStatusListener#pdpStateChange(int,
+     * int, int)
+     */
+    public void pdpStateChange(final int apn, final int state, final int cause) {
         debug.info("pdpStateChange apn: " + apn + " state: " + state
                 + "cause :" + cause);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.rim.device.api.system.SystemListener#powerOff()
+     */
+    public void powerOff() {
+        debug.info("powerOff");
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.rim.device.api.system.SystemListener#powerUp()
+     */
+    public void powerUp() {
+        debug.info("powerUp");
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.rim.device.api.system.RadioStatusListener#radioTurnedOff()
+     */
     public void radioTurnedOff() {
         debug.info("radioTurnedOff");
     }
 
-    public void signalLevel(int level) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.rim.device.api.system.RadioStatusListener#signalLevel(int)
+     */
+    public void signalLevel(final int level) {
         debug.info("signalLevel: " + level);
     }
+
 }

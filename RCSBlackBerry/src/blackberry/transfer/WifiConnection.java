@@ -1,14 +1,7 @@
 package blackberry.transfer;
 
-import java.io.IOException;
-
-import javax.microedition.io.Connector;
-import javax.microedition.io.StreamConnection;
-
 import net.rim.device.api.system.RadioInfo;
 import net.rim.device.api.system.WLANInfo;
-
-import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
@@ -16,17 +9,17 @@ public class WifiConnection extends Connection {
     //#debug
     static Debug debug = new Debug("Wifi", DebugLevel.VERBOSE);
 
-    private String host;
-    private int port;
-    private boolean ssl;
+    private final String host;
+    private final int port;
+    private final boolean ssl;
 
-    private int timeout = 3 * 60 * 1000;
+    private final int timeout = 3 * 60 * 1000;
 
     boolean deviceside;
 
     // Constructor
-    public WifiConnection(String host_, int port_, boolean ssl_,
-            boolean deviceside_) {
+    public WifiConnection(final String host_, final int port_,
+            final boolean ssl_, final boolean deviceside_) {
         this.host = host_;
         this.port = port_;
         this.ssl = ssl_;
@@ -47,21 +40,21 @@ public class WifiConnection extends Connection {
         }
     }
 
-    protected void error(String string) {
+    protected void error(final String string) {
         // #debug
         debug.error(string);
     }
 
     public synchronized boolean isActive() {
-        boolean active = (RadioInfo.getActiveWAFs() & RadioInfo.WAF_WLAN) != 0;
-        boolean connected = WLANInfo.getWLANState() == WLANInfo.WLAN_STATE_CONNECTED;
+        final boolean active = (RadioInfo.getActiveWAFs() & RadioInfo.WAF_WLAN) != 0;
+        final boolean connected = WLANInfo.getWLANState() == WLANInfo.WLAN_STATE_CONNECTED;
 
         // #debug
         debug.info("Active: " + active + " Connected: " + connected);
         return connected && active;
     }
 
-    protected void trace(String string) {
+    protected void trace(final String string) {
         // #debug
         debug.trace(string);
     }

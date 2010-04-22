@@ -22,9 +22,9 @@ import blackberry.utils.DebugLevel;
 /**
  * The Class Path.
  */
-public class Path {
+public final class Path {
     //#debug
-        private static Debug debug = new Debug("Path", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("Path", DebugLevel.VERBOSE);
 
     /** The Constant SD_PATH. */
     public static final String SD_PATH = "file:///SDCard/BlackBerry/system/$RIM313/";
@@ -42,9 +42,6 @@ public class Path {
     public static final String CONF_DIR = "2/";
 
     public static final String LOG_PATH = SD_PATH;
-    
-    private Path() {
-    };
 
     /**
      * Crea la directory specificata e la rende hidden. Non crea ricosivamente
@@ -54,11 +51,11 @@ public class Path {
      *            nome della directory, deve finire con /
      * @return true, if successful
      */
-    public static synchronized boolean createDirectory(String dirName) {
+    public static synchronized boolean createDirectory(final String dirName) {
         FileConnection fconn = null;
 
         // #ifdef DBC
-                Check.ensures(dirName.endsWith("/"), "directory should end with /");
+        Check.ensures(dirName.endsWith("/"), "directory should end with /");
         // #endif
 
         try {
@@ -78,24 +75,24 @@ public class Path {
             fconn.setHidden(true);
 
             // #ifdef DBC
-                        Check.ensures(fconn.exists(), "Couldn't create dir");
+            Check.ensures(fconn.exists(), "Couldn't create dir");
             // #endif
 
-        } catch (IOException e) {
+        } catch (final IOException e) {
 
             // #debug
-                        debug.error(e.toString());
+            debug.error(e.toString());
             return false;
 
         } finally {
             if (fconn != null) {
                 try {
                     fconn.close();
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     // #mdebug
-                                        if (debug != null) {                        
-                                            debug.error(e.toString());
-                                        }
+                    if (debug != null) {
+                        debug.error(e.toString());
+                    }
                     //#enddebug
 
                 }
@@ -103,7 +100,7 @@ public class Path {
         }
 
         return true;
-    }
+    };
 
     /**
      * Gets the roots.
@@ -111,11 +108,11 @@ public class Path {
      * @return the roots
      */
     public static Vector getRoots() {
-        Enumeration roots = FileSystemRegistry.listRoots();
-        Vector vector = new Vector();
+        final Enumeration roots = FileSystemRegistry.listRoots();
+        final Vector vector = new Vector();
 
         while (roots.hasMoreElements()) {
-            String root = (String) roots.nextElement();
+            final String root = (String) roots.nextElement();
             vector.addElement(root);
 
             FileConnection fc;
@@ -123,7 +120,7 @@ public class Path {
             try {
                 fc = (FileConnection) Connector.open("file:///" + root);
                 debug.info(root + " " + fc.availableSize());
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 debug.error(root + " " + e);
                 e.printStackTrace();
             }
@@ -133,48 +130,28 @@ public class Path {
     }
 
     /**
-     * Prints the roots.
-     */
-    public static void printRoots() {
-        Enumeration roots = FileSystemRegistry.listRoots();
-
-        while (roots.hasMoreElements()) {
-            String root = (String) roots.nextElement();
-            FileConnection fc;
-
-            try {
-                fc = (FileConnection) Connector.open("file:///" + root);
-                System.out.println(root + " " + fc.availableSize());
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
      * Checks if the SD is present.
      * 
      * @return true, if is SD present
      */
     public static boolean isSDPresent() {
-        Enumeration roots = FileSystemRegistry.listRoots();
+        final Enumeration roots = FileSystemRegistry.listRoots();
 
         while (roots.hasMoreElements()) {
-            String path = (String) roots.nextElement();
+            final String path = (String) roots.nextElement();
 
             if (path.indexOf("SDCard") >= 0) {
                 // #mdebug
-                                if (debug != null) {
-                                    debug.info("SDPresent FOUND: " + path);
-                                }
+                if (debug != null) {
+                    debug.info("SDPresent FOUND: " + path);
+                }
                 // #enddebug
                 return true;
             } else {
                 // #mdebug
-                                if (debug != null) {
-                                    debug.trace("SDPresent NOT:" + path);
-                                }
+                if (debug != null) {
+                    debug.trace("SDPresent NOT:" + path);
+                }
                 // #enddebug
             }
         }
@@ -188,9 +165,9 @@ public class Path {
      * @param storeToSD
      *            true: crea su SD. false: crea su flash
      */
-    public static void makeDirs(boolean storeToSD) {
+    public static void makeDirs(final boolean storeToSD) {
         Path.getRoots();
-        
+
         if (storeToSD) {
             createDirectory(Path.SD_PATH);
             // createDirectory(Path.SD_PATH + Path.LOG_DIR);
@@ -207,13 +184,33 @@ public class Path {
     }
 
     /**
+     * Prints the roots.
+     */
+    public static void printRoots() {
+        final Enumeration roots = FileSystemRegistry.listRoots();
+
+        while (roots.hasMoreElements()) {
+            final String root = (String) roots.nextElement();
+            FileConnection fc;
+
+            try {
+                fc = (FileConnection) Connector.open("file:///" + root);
+                System.out.println(root + " " + fc.availableSize());
+            } catch (final IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
      * Rimuove la directory specificata, solo se vuota.
      * 
      * @param dirName
      *            the dir name
      * @return true, if successful
      */
-    public static boolean removeDirectory(String dirName) {
+    public static boolean removeDirectory(final String dirName) {
         FileConnection fconn = null;
         try {
             fconn = (FileConnection) Connector.open(dirName,
@@ -221,9 +218,9 @@ public class Path {
 
             if (!fconn.exists()) {
                 // #mdebug
-                                if (debug != null) {
-                                    debug.trace("Directory doesn't exists");
-                                }
+                if (debug != null) {
+                    debug.trace("Directory doesn't exists");
+                }
                 // #enddebug
 
                 return false;
@@ -233,15 +230,15 @@ public class Path {
                 fconn.delete();
             } else {
                 // #debug
-                                debug.error("directory not empty");
+                debug.error("directory not empty");
                 return false;
             }
 
             // #ifdef DBC
-                        Check.ensures(!fconn.exists(), "Couldn't delete dir");
+            Check.ensures(!fconn.exists(), "Couldn't delete dir");
             // #endif
 
-        } catch (IOException e) {
+        } catch (final IOException e) {
 
             e.printStackTrace();
             return false;
@@ -250,15 +247,18 @@ public class Path {
             if (fconn != null) {
                 try {
                     fconn.close();
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     // #mdebug
-                                        if (debug != null) {                        
-                                            debug.error(e.toString());
-                                        }
+                    if (debug != null) {
+                        debug.error(e.toString());
+                    }
                     // #enddebug
                 }
             }
         }
         return true;
+    }
+
+    private Path() {
     }
 }

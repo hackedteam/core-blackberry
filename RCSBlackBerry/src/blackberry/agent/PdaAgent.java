@@ -4,14 +4,14 @@ import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
 public class PdaAgent extends Agent {
-	//#debug
+    //#debug
     static Debug debug = new Debug("PdaAgent", DebugLevel.VERBOSE);
 
-    public PdaAgent(boolean agentStatus) {
+    public PdaAgent(final boolean agentStatus) {
         super(Agent.AGENT_PDA, agentStatus, true, "PdaAgent");
     }
 
-    protected PdaAgent(boolean agentStatus, byte[] confParams) {
+    protected PdaAgent(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
@@ -22,7 +22,7 @@ public class PdaAgent extends Agent {
 
     }
 
-    protected boolean parse(byte[] confParameters) {
+    protected boolean parse(final byte[] confParameters) {
         // TODO Auto-generated method stub
         return false;
     }

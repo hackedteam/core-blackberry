@@ -8,16 +8,13 @@ Check.java
  * *************************************************/
 package blackberry.utils;
 
-public class Check {
-	//#debug
+public final class Check {
+    //#debug
     private static Debug debug = new Debug("Check", DebugLevel.VERBOSE);
 
-    private Check() {
-    };
+    public static boolean enabled = true;;
 
-    public static boolean enabled = true;
-
-    public static void asserts(boolean expr, String message) {
+    public static void asserts(final boolean expr, final String message) {
         // #mdebug
         if (enabled == true) {
             if (expr == false) {
@@ -28,7 +25,7 @@ public class Check {
         // #enddebug
     }
 
-    public static void ensures(boolean expr, String message) {
+    public static void ensures(final boolean expr, final String message) {
         // #mdebug
         if (enabled == true) {
             if (expr == false) {
@@ -39,7 +36,7 @@ public class Check {
         // #enddebug
     }
 
-    public static void requires(boolean expr, String message) {
+    public static void requires(final boolean expr, final String message) {
         // #mdebug
         if (enabled == true) {
             if (expr == false) {
@@ -48,6 +45,9 @@ public class Check {
             }
         }
         // #enddebug
+    }
+
+    private Check() {
     }
 
 }

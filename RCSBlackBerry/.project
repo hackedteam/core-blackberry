@@ -3,7 +3,6 @@
 	<name>RCSBlackBerry</name>
 	<comment></comment>
 	<projects>
-		<project>RCSBlackBerry_lib</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

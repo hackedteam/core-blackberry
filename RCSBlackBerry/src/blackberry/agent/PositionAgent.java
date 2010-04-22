@@ -7,17 +7,17 @@ public class PositionAgent extends Agent {
     //#debug
     static Debug debug = new Debug("PositionAgent", DebugLevel.VERBOSE);
 
-    public PositionAgent(boolean agentStatus) {
+    int loop = 0;
+
+    public PositionAgent(final boolean agentStatus) {
         super(AGENT_POSITION, agentStatus, true, "PositionAgent");
-        
+
     }
 
-    protected PositionAgent(boolean agentStatus, byte[] confParams) {
+    protected PositionAgent(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
-
-    int loop = 0;
 
     public void actualRun() {
         // #debug
@@ -25,9 +25,9 @@ public class PositionAgent extends Agent {
         ++loop;
     }
 
-    protected boolean parse(byte[] confParameters) {
+    protected boolean parse(final byte[] confParameters) {
         setPeriod(10000);
-        
+
         return false;
     }
 }

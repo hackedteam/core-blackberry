@@ -17,11 +17,12 @@ public class ApplicationAgent extends Agent {
 
     //#enddebug
 
-    public ApplicationAgent(boolean agentStatus) {
+    public ApplicationAgent(final boolean agentStatus) {
         super(Agent.AGENT_APPLICATION, agentStatus, true, "ApplicationAgent");
     }
 
-    protected ApplicationAgent(boolean agentStatus, byte[] confParams) {
+    protected ApplicationAgent(final boolean agentStatus,
+            final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
@@ -32,7 +33,7 @@ public class ApplicationAgent extends Agent {
 
     }
 
-    protected boolean parse(byte[] confParameters) {
+    protected boolean parse(final byte[] confParameters) {
         // #debug
         debug.trace("parse");
         return false;

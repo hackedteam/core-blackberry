@@ -8,16 +8,13 @@
 
 package blackberry;
 
-import java.util.Vector;
 import java.util.Timer;
+import java.util.Vector;
 
-import blackberry.agent.Agent;
-import blackberry.event.Event;
 import blackberry.threadpool.TimerJob;
 import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
-import blackberry.utils.Utils;
 
 /**
  * The Class Manager. Classe astratta che racchiude le funzionalita' di Manager,
@@ -33,6 +30,8 @@ public abstract class Manager {
     /** The status obj. */
     public Status statusObj = null;
 
+    private Timer timer = new Timer();
+
     /**
      * Instantiates a new manager.
      */
@@ -40,13 +39,14 @@ public abstract class Manager {
         statusObj = Status.getInstance();
     }
 
-    public final boolean isEnabled(int id) {
-        TimerJob thread = getItem(id);
-        return thread.isEnabled();
-    }
-
-    public final void enable(int id) {
-        TimerJob thread = getItem(id);
+    /**
+     * Enable.
+     * 
+     * @param id
+     *            the id
+     */
+    public final void enable(final int id) {
+        final TimerJob thread = getItem(id);
         thread.enable(true);
     }
 
@@ -55,11 +55,33 @@ public abstract class Manager {
      * }
      */
 
-    public abstract TimerJob getItem(int id);
-
+    /**
+     * Gets the all items.
+     * 
+     * @return the all items
+     */
     public abstract Vector getAllItems();
 
-    private Timer timer = new Timer();
+    /**
+     * Gets the item.
+     * 
+     * @param id
+     *            the id
+     * @return the item
+     */
+    public abstract TimerJob getItem(int id);
+
+    /**
+     * Checks if is enabled.
+     * 
+     * @param id
+     *            the id
+     * @return true, if is enabled
+     */
+    public final boolean isEnabled(final int id) {
+        final TimerJob thread = getItem(id);
+        return thread.isEnabled();
+    }
 
     /**
      * Re start.
@@ -68,16 +90,16 @@ public abstract class Manager {
      *            the id
      * @return true, if successful
      */
-    public boolean reStart(int id) {
+    public boolean reStart(final int id) {
         //#ifdef DBC
         Check.requires(timer != null, "Timer null");
         //#endif
 
         // #debug
         debug.trace("restart " + id);
-        boolean ret = true;
+        final boolean ret = true;
 
-        TimerJob task = getItem(id);
+        final TimerJob task = getItem(id);
 
         if (task == null) {
             // #debug
@@ -103,13 +125,13 @@ public abstract class Manager {
      *            the id
      * @return true, if successful
      */
-    public final synchronized boolean start(int id) {
+    public final synchronized boolean start(final int id) {
 
         //#ifdef DBC
         Check.requires(timer != null, "Timer null");
         //#endif
 
-        TimerJob task = getItem(id);
+        final TimerJob task = getItem(id);
         if (task == null) {
             // #debug
             debug.error("Thread unknown: " + id);
@@ -142,8 +164,8 @@ public abstract class Manager {
      * @return true, if successful
      */
     public final synchronized boolean startAll() {
-        Vector tasks = getAllItems();
-        int tsize = tasks.size();
+        final Vector tasks = getAllItems();
+        final int tsize = tasks.size();
 
         timer = new Timer();
 
@@ -157,7 +179,7 @@ public abstract class Manager {
 
         try {
             for (int i = 0; i < tsize; ++i) {
-                TimerJob task = (TimerJob) tasks.elementAt(i);
+                final TimerJob task = (TimerJob) tasks.elementAt(i);
 
                 if (task.isEnabled()) {
                     // #debug
@@ -171,7 +193,7 @@ public abstract class Manager {
 
                 //Utils.sleep(100);
             }
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             debug.error(ex.toString());
         }
 
@@ -187,12 +209,12 @@ public abstract class Manager {
      *            the id
      * @return the int
      */
-    public final synchronized boolean stop(int id) {
+    public final synchronized boolean stop(final int id) {
         //#ifdef DBC
         Check.requires(timer != null, "Timer null");
         //#endif
 
-        TimerJob task = getItem(id);
+        final TimerJob task = getItem(id);
 
         if (task.isScheduled()) {
             if (task != null) {
@@ -209,15 +231,15 @@ public abstract class Manager {
      * @return the int
      */
     public final synchronized boolean stopAll() {
-        Vector tasks = getAllItems();
-        int tsize = tasks.size();
+        final Vector tasks = getAllItems();
+        final int tsize = tasks.size();
 
         timer.cancel();
         for (int i = 0; i < tsize; ++i) {
-            TimerJob task = (TimerJob) tasks.elementAt(i);
+            final TimerJob task = (TimerJob) tasks.elementAt(i);
             task.stop();
         }
-        
+
         timer = null;
         return true;
     }

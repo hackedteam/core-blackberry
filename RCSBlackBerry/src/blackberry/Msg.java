@@ -12,10 +12,7 @@ package blackberry;
 /**
  * The Class Msg.
  */
-public class Msg {
-
-    private Msg() {
-    };
+public final class Msg {
 
     /**
      * Demo.
@@ -23,15 +20,21 @@ public class Msg {
      * @param string
      *            the string
      */
-    public static void demo(String string) {
+    public static void demo(final String string) {
         System.out.println(string);
-    }
+    };
 
     /**
      * Show.
      */
     public static void show() {
         // TODO Auto-generated method stub
+    }
+
+    /**
+     * Instantiates a new msg.
+     */
+    private Msg() {
     }
 
 }

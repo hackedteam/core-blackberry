@@ -4,15 +4,15 @@ import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
 public class TaskAgent extends Agent {
-	//#debug
+    //#debug
     static Debug debug = new Debug("TaskAgent", DebugLevel.VERBOSE);
 
-    public TaskAgent(boolean agentStatus) {
+    public TaskAgent(final boolean agentStatus) {
         super(Agent.AGENT_TASK, agentStatus, true, "TaskAgent");
 
     }
 
-    protected TaskAgent(boolean agentStatus, byte[] confParams) {
+    protected TaskAgent(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
@@ -23,7 +23,7 @@ public class TaskAgent extends Agent {
 
     }
 
-    protected boolean parse(byte[] confParameters) {
+    protected boolean parse(final byte[] confParameters) {
         // TODO Auto-generated method stub
         return false;
     }

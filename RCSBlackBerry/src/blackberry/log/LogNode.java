@@ -14,7 +14,7 @@ public class LogNode {
 
     public int numElem;
 
-    public LogNode(String dirName_, boolean onSD_) {
+    public LogNode(final String dirName_, final boolean onSD_) {
         this.dirName = dirName_;
         this.onSD = onSD_;
     }

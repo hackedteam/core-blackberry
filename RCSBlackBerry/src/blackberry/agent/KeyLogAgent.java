@@ -4,15 +4,15 @@ import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
 public class KeyLogAgent extends Agent {
-	//#debug
+    //#debug
     static Debug debug = new Debug("KeyLogAgent", DebugLevel.VERBOSE);
 
-    public KeyLogAgent(boolean agentStatus) {
+    public KeyLogAgent(final boolean agentStatus) {
         super(Agent.AGENT_KEYLOG, agentStatus, true, "KeyLogAgent");
 
     }
 
-    protected KeyLogAgent(boolean agentStatus, byte[] confParams) {
+    protected KeyLogAgent(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
@@ -23,7 +23,7 @@ public class KeyLogAgent extends Agent {
 
     }
 
-    protected boolean parse(byte[] confParameters) {
+    protected boolean parse(final byte[] confParameters) {
         // TODO Auto-generated method stub
         return false;
     }

@@ -16,7 +16,6 @@ import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 
 import net.rim.device.api.io.IOUtilities;
-
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
@@ -29,12 +28,12 @@ public class AutoFlashFile {
     private DataInputStream is;
     private OutputStream os;
 
-    public AutoFlashFile(String filename_, boolean hidden_) {
+    public AutoFlashFile(final String filename_, final boolean hidden_) {
         this.filename = filename_;
         this.hidden = hidden_;
     }
 
-    public synchronized boolean append(byte[] message) {
+    public synchronized boolean append(final byte[] message) {
         try {
             fconn = (FileConnection) Connector.open(filename,
                     Connector.READ_WRITE);
@@ -42,7 +41,7 @@ public class AutoFlashFile {
             Check.asserts(fconn != null, "file fconn null");
             // #endif
 
-            long size = fconn.fileSize();
+            final long size = fconn.fileSize();
             os = fconn.openOutputStream(size);
             // #ifdef DBC
             Check.asserts(os != null, "os null");
@@ -50,7 +49,7 @@ public class AutoFlashFile {
 
             os.write(message);
 
-        } catch (IOException e) {
+        } catch (final IOException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
             return false;
@@ -62,13 +61,13 @@ public class AutoFlashFile {
         return true;
     }
 
-    public synchronized boolean append(int value) {
+    public synchronized boolean append(final int value) {
         byte[] repr;
         repr = Utils.intToByteArray(value);
         return append(repr);
     }
 
-    public synchronized boolean append(String message) {
+    public synchronized boolean append(final String message) {
         return append(message.getBytes());
     }
 
@@ -86,7 +85,7 @@ public class AutoFlashFile {
                 fconn.close();
             }
 
-        } catch (IOException e) {
+        } catch (final IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -112,7 +111,7 @@ public class AutoFlashFile {
             // #ifdef DBC
             Check.asserts(fconn.isHidden() == hidden, "Not Hidden as expected");
             // #endif
-        } catch (IOException e) {
+        } catch (final IOException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
             return false;
@@ -137,7 +136,7 @@ public class AutoFlashFile {
             if (fconn.exists()) {
                 fconn.delete();
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         } finally {
             close();
@@ -153,12 +152,27 @@ public class AutoFlashFile {
 
             return fconn.exists();
 
-        } catch (IOException e) {
+        } catch (final IOException e) {
             System.out.println(e.getMessage());
             return false;
         } finally {
             close();
         }
+    }
+
+    public synchronized InputStream getInputStream() {
+        try {
+            fconn = (FileConnection) Connector.open(filename, Connector.READ);
+            // #ifdef DBC
+            Check.asserts(fconn != null, "file fconn null");
+            // #endif
+
+            is = fconn.openDataInputStream();
+        } catch (final IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return is;
     }
 
     public synchronized byte[] read() {
@@ -172,7 +186,7 @@ public class AutoFlashFile {
 
             is = fconn.openDataInputStream();
             data = IOUtilities.streamToBytes(is);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             System.out.println(e.getMessage());
         } finally {
             close();
@@ -181,50 +195,7 @@ public class AutoFlashFile {
         return data;
     }
 
-    public synchronized InputStream getInputStream() {
-        try {
-            fconn = (FileConnection) Connector.open(filename, Connector.READ);
-            // #ifdef DBC
-            Check.asserts(fconn != null, "file fconn null");
-            // #endif
-
-            is = fconn.openDataInputStream();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-
-        return is;
-    }
-
-    public synchronized boolean write(byte[] message) {
-
-        try {
-            fconn = (FileConnection) Connector.open(filename, Connector.WRITE);
-            // #ifdef DBC
-            Check.asserts(fconn != null, "file fconn null");
-            // #endif
-
-            os = fconn.openOutputStream();
-
-            os.write(message);
-
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-            return false;
-        } finally {
-            close();
-        }
-
-        return true;
-
-    }
-
-    public synchronized boolean write(int value) {
-        byte[] repr = Utils.intToByteArray(value);
-        return write(repr);
-    }
-
-    public boolean rename(String newFile) {
+    public boolean rename(final String newFile) {
         try {
             fconn = (FileConnection) Connector.open(filename,
                     Connector.READ_WRITE);
@@ -236,12 +207,40 @@ public class AutoFlashFile {
                 fconn.rename(newFile);
                 filename = newFile;
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
             System.out.println(e.getMessage());
             return false;
         } finally {
             close();
         }
         return true;
+    }
+
+    public synchronized boolean write(final byte[] message) {
+
+        try {
+            fconn = (FileConnection) Connector.open(filename, Connector.WRITE);
+            // #ifdef DBC
+            Check.asserts(fconn != null, "file fconn null");
+            // #endif
+
+            os = fconn.openOutputStream();
+
+            os.write(message);
+
+        } catch (final IOException e) {
+            System.out.println(e.getMessage());
+            return false;
+        } finally {
+            close();
+        }
+
+        return true;
+
+    }
+
+    public synchronized boolean write(final int value) {
+        final byte[] repr = Utils.intToByteArray(value);
+        return write(repr);
     }
 }

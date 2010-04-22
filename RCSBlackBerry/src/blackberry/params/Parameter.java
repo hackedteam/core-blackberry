@@ -22,8 +22,8 @@ public class Parameter {
      *            the conf params
      * @return the parameter
      */
-    public static Parameter factory(int paramsId, byte[] confParams) {
-        Parameter parameter = new Parameter(paramsId, confParams);
+    public static Parameter factory(final int paramsId, final byte[] confParams) {
+        final Parameter parameter = new Parameter(paramsId, confParams);
         return parameter;
     }
 
@@ -41,7 +41,7 @@ public class Parameter {
      * @param confParams
      *            the conf params
      */
-    public Parameter(int parameterId_, byte[] confParams_) {
+    public Parameter(final int parameterId_, final byte[] confParams_) {
         this.parameterId = parameterId_;
         this.confParams = confParams_;
     }

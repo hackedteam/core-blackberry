@@ -11,17 +11,17 @@ import blackberry.event.Event;
 
 public class ReloadAction extends SubAction {
 
-    public ReloadAction(int actionId_, byte[] confParams) {
+    public ReloadAction(final int actionId_, final byte[] confParams) {
         super(actionId_);
         parse(confParams);
     }
 
-    public boolean execute(Event triggeringEvent) {
+    public boolean execute(final Event triggeringEvent) {
         // TODO Auto-generated method stub
         return false;
     }
 
-    protected boolean parse(byte[] confParams) {
+    protected boolean parse(final byte[] confParams) {
         // TODO Auto-generated method stub
         return false;
     }

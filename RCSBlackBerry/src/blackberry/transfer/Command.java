@@ -4,7 +4,7 @@ public class Command {
     public int id;
     public byte[] payload;
 
-    public Command(int commandId_, byte[] payload_) {
+    public Command(final int commandId_, final byte[] payload_) {
         this.id = commandId_;
         this.payload = payload_;
     }
@@ -18,9 +18,9 @@ public class Command {
     }
 
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        final StringBuffer sb = new StringBuffer();
         if (id > 0 && id < Proto.LASTTYPE) {
-            sb.append(Proto.strings[id]);
+            sb.append(Proto.STRINGS[id]);
             sb.append(": ");
         }
         sb.append(id);

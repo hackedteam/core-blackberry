@@ -9,7 +9,7 @@ package blackberry.event;
 
 public class SimChangeEvent extends Event {
 
-    public SimChangeEvent(int actionId, byte[] confParams) {
+    public SimChangeEvent(final int actionId, final byte[] confParams) {
         super(Event.EVENT_SIM_CHANGE, actionId, confParams);
     }
 
@@ -18,7 +18,7 @@ public class SimChangeEvent extends Event {
 
     }
 
-    protected boolean parse(byte[] confParams) {
+    protected boolean parse(final byte[] confParams) {
         // TODO Auto-generated method stub
         return false;
     }

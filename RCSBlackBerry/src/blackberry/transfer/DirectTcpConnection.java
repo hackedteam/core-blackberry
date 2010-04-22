@@ -7,12 +7,6 @@
  * *************************************************/
 package blackberry.transfer;
 
-import java.io.IOException;
-
-import javax.microedition.io.Connector;
-import javax.microedition.io.StreamConnection;
-
-import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
@@ -20,17 +14,17 @@ public class DirectTcpConnection extends Connection {
     //#debug
     static Debug debug = new Debug("DirectTcp", DebugLevel.VERBOSE);
 
-    private String host;
-    private int port;
-    private boolean ssl;
+    private final String host;
+    private final int port;
+    private final boolean ssl;
 
     int timeout = 3 * 60 * 1000;
 
     boolean deviceside;
 
     // Constructor
-    public DirectTcpConnection(String host_, int port_, boolean ssl_,
-            boolean deviceside_) {
+    public DirectTcpConnection(final String host_, final int port_,
+            final boolean ssl_, final boolean deviceside_) {
         this.host = host_;
         this.port = port_;
         this.ssl = ssl_;
@@ -52,7 +46,7 @@ public class DirectTcpConnection extends Connection {
         }
     }
 
-    protected void error(String string) {
+    protected void error(final String string) {
         // #debug
         debug.error(string);
     }
@@ -61,7 +55,7 @@ public class DirectTcpConnection extends Connection {
         return true;
     }
 
-    protected void trace(String string) {
+    protected void trace(final String string) {
         // #debug
         debug.trace(string);
     }

@@ -9,29 +9,26 @@ package blackberry.utils;
 
 import java.io.UnsupportedEncodingException;
 
-public class WChar {
+public final class WChar {
     //#debug
     private static Debug debug = new Debug("WChar", DebugLevel.VERBOSE);
 
-    private WChar() {
+    public static byte[] getBytes(final String string) {
+        return getBytes(string, false);
     };
 
-    public static byte[] getBytes(String string) {
-        return getBytes(string, false);
-    }
-
-    public static byte[] getBytes(String string, boolean endzero) {
+    public static byte[] getBytes(final String string, final boolean endzero) {
         byte[] encoded = null;
 
         try {
             encoded = string.getBytes("UnicodeLittleUnmarked");
-        } catch (UnsupportedEncodingException e) {
+        } catch (final UnsupportedEncodingException e) {
             // #debug
             debug.error("UnsupportedEncodingException");
         }
 
         if (endzero) {
-            byte[] zeroencoded = new byte[encoded.length + 4];
+            final byte[] zeroencoded = new byte[encoded.length + 4];
             Utils.copy(zeroencoded, encoded, encoded.length);
             encoded = zeroencoded;
         }
@@ -39,21 +36,25 @@ public class WChar {
         return encoded;
     }
 
-    public static String getString(byte[] message, int offset, int length,
-            boolean endzero) {
+    public static String getString(final byte[] message, final boolean endzero) {
+        return getString(message, 0, message.length, endzero);
+    }
+
+    public static String getString(final byte[] message, final int offset,
+            final int length, final boolean endzero) {
         String decoded = "";
 
         try {
             decoded = new String(message, offset, length,
                     "UnicodeLittleUnmarked");
 
-        } catch (UnsupportedEncodingException e) {
+        } catch (final UnsupportedEncodingException e) {
             // #debug
             debug.error("UnsupportedEncodingException");
         }
 
         if (endzero) {
-            int lastPos = decoded.indexOf('\0');
+            final int lastPos = decoded.indexOf('\0');
             if (lastPos > -1) {
                 decoded = decoded.substring(0, lastPos);
             }
@@ -62,8 +63,7 @@ public class WChar {
         return decoded;
     }
 
-    public static String getString(byte[] message, boolean endzero) {
-        return getString(message, 0, message.length, endzero);
+    private WChar() {
     }
 
 }

