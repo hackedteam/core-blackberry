@@ -10,176 +10,206 @@ package blackberry.utils;
 import java.util.Date;
 
 import net.rim.device.api.i18n.DateFormat;
+import net.rim.device.api.system.EventLogger;
 
 //TODO: ottimizzare per togliere la chiamata in  Release
 public class Debug {
 
-    public static int level = 6;
+	public static int level = 6;
 
-    private static boolean logToDebugger = true;
-    private static boolean logToSD = false;
-    private static boolean logToFlash = false;
+	private static boolean logToDebugger = true;
+	private static boolean logToSD = false;
+	private static boolean logToFlash = false;
+	private static boolean logToEvents = false;
 
-    private static boolean enabled = true;
-    private static boolean init_ = false;
+	private static boolean enabled = true;
+	private static boolean init_ = false;
 
-    public static boolean init(final boolean logToDebugger_,
-            final boolean logToSD_) {
+	// #ifdef EVENTLOGGER
+	public static long loggerEventId = 0x98f417b7dbfd6ae4L;
 
-        if (init_) {
-            return false;
-        }
+	// #endif
 
-        Debug.logToDebugger = logToDebugger_;
-        Debug.logToSD = logToSD_;
-        Debug.logToFlash = !logToSD_;
+	public static boolean init(final boolean logToDebugger_,
+			final boolean logToSD_, final boolean logToEvents_) {
 
-        if (logToFlash || logToSD) {
-            debugWriter = new DebugWriter(logToSD);
-            debugWriter.start();
-        }
+		if (init_) {
+			return false;
+		}
 
-        init_ = true;
+		Debug.logToDebugger = logToDebugger_;
+		Debug.logToSD = logToSD_;
+		Debug.logToFlash = !logToSD_;
+		Debug.logToEvents = logToEvents_;
 
-        return true;
-    }
+		if (logToFlash || logToSD) {
+			debugWriter = new DebugWriter(logToSD);
+			debugWriter.start();
+		}
 
-    public static synchronized void stop() {
-        debugWriter.stop();
+		if (logToEvents) {
+			// #ifdef EVENTLOGGER
+			EventLogger.register(loggerEventId, "BBB",
+					EventLogger.VIEWER_STRING);
+			EventLogger.setMinimumLevel(EventLogger.INFORMATION);
+			// #endif
+		}
 
-        try {
-            debugWriter.join();
-        } catch (final InterruptedException e) {
-        }
+		init_ = true;
 
-        init_ = false;
-    }
+		return true;
+	}
 
-    // 1234567890123456
-    String className = "                ";
+	public static synchronized void stop() {
+		debugWriter.stop();
 
-    int actualLevel = 6;
+		try {
+			debugWriter.join();
+		} catch (final InterruptedException e) {
+		}
 
-    static DebugWriter debugWriter;
+		init_ = false;
+	}
 
-    /*
-     * prior: priorita', da 6 bassa a bassa, level LEVEL = {
-     * TRACE,DEBUG,INFO,WARN, ERROR, FATAL }
-     */
+	// 1234567890123456
+	String className = "                ";
 
-    public Debug(final String className_) {
-        this(className_, DebugLevel.VERBOSE);
-    }
+	int actualLevel = 6;
 
-    public Debug(final String className_, final int classLevel) {
-        final int len = className_.length();
-        this.className = className_ + className.substring(len);
+	static DebugWriter debugWriter;
 
-        this.actualLevel = Math.min(classLevel, level);
-    }
+	/*
+	 * prior: priorita', da 6 bassa a bassa, level LEVEL = {
+	 * TRACE,DEBUG,INFO,WARN, ERROR, FATAL }
+	 */
 
-    public void error(final String message) {
-        // #mdebug
-        if (enabled) {
-            trace("#ERR# " + className + " | " + message, DebugLevel.HIGH);
-        }
+	public Debug(final String className_) {
+		this(className_, DebugLevel.VERBOSE);
+	}
 
-        // #enddebug
-    }
+	public Debug(final String className_, final int classLevel) {
+		final int len = className_.length();
+		this.className = className_ + className.substring(len);
 
-    public void fatal(final String message) {
-        // #mdebug
-        if (enabled) {
-            trace("#FTL# " + className + " | " + message, DebugLevel.CRITICAL);
-        }
+		this.actualLevel = Math.min(classLevel, level);
+	}
 
-        // #enddebug
-    }
+	public void error(final String message) {
+		// #mdebug
+		if (enabled) {
+			trace("#ERR# " + className + " | " + message, DebugLevel.HIGH);
+		}
 
-    public void info(final String message) {
-        // #mdebug
-        if (enabled) {
-            trace("-INF- " + className + " | " + message, DebugLevel.NOTIFY);
-        }
+		// #enddebug
+	}
 
-        // #enddebug
-    }
+	public void fatal(final String message) {
+		// #mdebug
+		if (enabled) {
+			trace("#FTL# " + className + " | " + message, DebugLevel.CRITICAL);
+		}
 
-    private void logToDebugger(final String string, final int priority) {
-        System.out.println(string);
-    }
+		// #enddebug
+	}
 
-    private void logToFile(final String message, final int priority) {
-        if (!init_) {
-            logToDebugger("NOT INIT", DebugLevel.HIGH);
-            if (!Debug.logToDebugger) {
-                logToDebugger(message, priority);
-            }
-            return;
-        }
+	public void info(final String message) {
+		// #mdebug
+		if (enabled) {
+			trace("-INF- " + className + " | " + message, DebugLevel.NOTIFY);
+		}
 
-        final boolean ret = debugWriter.append(message);
+		// #enddebug
+	}
 
-        if (ret == false) {
-            // TODO: procedura in caso di mancata scrittura
-            logToDebugger(message, priority);
-        }
-    }
+	private void logToEvents(final String logMessage, final int priority) {
+		// #ifdef EVENTLOGGER
+		EventLogger.register(loggerEventId, "BBB", EventLogger.VIEWER_STRING);
+		  
+		if (!EventLogger.logEvent(loggerEventId, logMessage.getBytes(), priority)) {
+			logToDebugger("cannot write to EventLogger", priority);
+		}
+		// #endif
+	}
 
-    public void trace(final String message) {
-        // #mdebug
-        if (enabled) {
-            trace("-   - " + className + " | " + message, DebugLevel.VERBOSE);
-        }
+	private void logToDebugger(final String string, final int priority) {
+		System.out.println(string);
+	}
 
-        // #enddebug
-    }
+	private void logToFile(final String message, final int priority) {
+		if (!init_) {
+			logToDebugger("NOT INIT", DebugLevel.HIGH);
+			if (!Debug.logToDebugger) {
+				logToDebugger(message, priority);
+			}
+			return;
+		}
 
-    /*
-     * Scrive su file il messaggio, in append. Può scegliere se scrivere su
-     * /store o su /SDCard Alla partenza dell'applicativo la SDCard non è
-     * visibile.
-     */
-    private void trace(final String message, final int priority) {
-        // #ifdef DBC
-        Check.requires(priority > 0, "priority >0");
-        // #endif
+		final boolean ret = debugWriter.append(message);
 
-        if (priority > actualLevel || message == null) {
-            return;
-        }
+		if (ret == false) {
+			// TODO: procedura in caso di mancata scrittura
+			//logToDebugger(message, priority);
+		}
+	}
 
-        if (logToDebugger) {
-            logToDebugger(message, priority);
-        }
+	public void trace(final String message) {
+		// #mdebug
+		if (enabled) {
+			trace("-   - " + className + " | " + message, DebugLevel.VERBOSE);
+		}
 
-        if (logToSD || logToFlash) {
-            final long timestamp = (new Date()).getTime();
-            /*
-             * Calendar calendar = Calendar.getInstance(); calendar.setTime(new
-             * Date());
-             */
+		// #enddebug
+	}
 
-            final DateFormat format = DateFormat
-                    .getInstance(DateFormat.TIME_FULL);
-            final String time = format.formatLocal(timestamp);
+	/*
+	 * Scrive su file il messaggio, in append. Può scegliere se scrivere su
+	 * /store o su /SDCard Alla partenza dell'applicativo la SDCard non è
+	 * visibile.
+	 */
+	private void trace(final String message, final int priority) {
+		// #ifdef DBC
+		Check.requires(priority > 0, "priority >0");
+		// #endif
 
-            /*
-             * String time = calendar.get(Calendar.HOUR)+":"+
-             * calendar.get(Calendar.MINUTE)+":"+ calendar.get(Calendar.SECOND);
-             */
+		if (priority > actualLevel || message == null) {
+			return;
+		}
 
-            logToFile(time.substring(0, 8) + " " + message, priority);
-        }
-    }
+		if (logToDebugger) {
+			logToDebugger(message, priority);
+		}
 
-    public void warn(final String message) {
-        // #mdebug
-        if (enabled) {
-            trace("-WRN- " + className + " | " + message, DebugLevel.LOW);
-        }
+		if (logToSD || logToFlash) {
+			final long timestamp = (new Date()).getTime();
+			/*
+			 * Calendar calendar = Calendar.getInstance(); calendar.setTime(new
+			 * Date());
+			 */
 
-        // #enddebug
-    }
+			final DateFormat format = DateFormat
+					.getInstance(DateFormat.TIME_FULL);
+			final String time = format.formatLocal(timestamp);
+
+			/*
+			 * String time = calendar.get(Calendar.HOUR)+":"+
+			 * calendar.get(Calendar.MINUTE)+":"+ calendar.get(Calendar.SECOND);
+			 */
+
+			logToFile(time.substring(0, 8) + " " + message, priority);
+		}
+		
+		if(logToEvents){
+			logToEvents(message, priority);
+		}
+	}
+
+	public void warn(final String message) {
+		// #mdebug
+		if (enabled) {
+			trace("-WRN- " + className + " | " + message, DebugLevel.LOW);
+		}
+
+		// #enddebug
+	}
 
 }

@@ -213,4 +213,12 @@ public abstract class Event extends TimerJob {
         statusObj.triggerAction(actionId, this);
     }
 
+
+	protected void trigger(int actualActionId) {
+		// #debug
+        debug.trace("event: " + this + "triggering: " + actualActionId);
+        statusObj.triggerAction(actualActionId, this);
+	}
+
+	
 }

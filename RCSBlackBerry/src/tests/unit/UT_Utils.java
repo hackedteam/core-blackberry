@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 import java.util.TimeZone;
+import java.util.Vector;
 
 import net.rim.device.api.util.Arrays;
 import tests.AssertException;
@@ -14,6 +15,8 @@ import tests.Tests;
 import blackberry.Conf;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
+import blackberry.utils.DoubleStringSortVector;
+import blackberry.utils.StringSortVector;
 import blackberry.utils.Utils;
 
 public class UT_Utils extends TestUnit {
@@ -22,7 +25,41 @@ public class UT_Utils extends TestUnit {
         super(name, tests);
     }
 
+    void StringSortVectorTest()throws AssertException {
+    	// #debug
+        debug.info("-- StringSortVectorTest --");
+
+    	StringSortVector sv = new StringSortVector();
+    	sv.addElement("Uno");
+    	sv.addElement("Due");
+    	sv.addElement("Tre");
+    	
+    	sv.reSort();
+    	AssertEquals(sv.elementAt(0),"Due", "Wrong Sort");
+    	AssertEquals(sv.elementAt(1),"Tre", "Wrong Sort");
+    	AssertEquals(sv.elementAt(2),"Uno", "Wrong Sort"); 	
+    }
+    
+    void DoubleStringSortVectorTest()throws AssertException {
+    	// #debug
+        debug.info("-- StringSortVectorTest --");
+
+        DoubleStringSortVector sv = new DoubleStringSortVector();
+        sv.addElement("2","Due");
+        sv.addElement("3","Tre");
+    	sv.addElement("1","Uno");
+    	    	    	
+    	Vector vector = sv.getValues();
+    	AssertEquals(vector.elementAt(0),"Uno", "Wrong Sort");
+    	AssertEquals(vector.elementAt(1),"Due", "Wrong Sort");
+    	AssertEquals(vector.elementAt(2),"Tre", "Wrong Sort");
+
+    }
+    
     boolean AsciiTest() throws AssertException {
+    	// #debug
+        debug.info("-- AsciiTest --");
+        
         AssertEquals(new Character(Utils.ascii(0)), new Character('0'),
                 "ASCII(0)");
         AssertEquals(new Character(Utils.ascii(0xa)), new Character('A'),
@@ -34,6 +71,9 @@ public class UT_Utils extends TestUnit {
     }
 
     public boolean CopyTest() throws AssertException {
+    	// #debug
+        debug.info("-- CopyTest --");
+        
         // copia di uguali
         byte[] dest = new byte[123];
         final byte[] src = new byte[123];
@@ -74,6 +114,9 @@ public class UT_Utils extends TestUnit {
     }
 
     boolean CrcTest() throws AssertException {
+    	// #debug
+        debug.info("-- CrcTest --");
+        
         byte[] buffer;
         int result, expected;
 
@@ -118,6 +161,9 @@ public class UT_Utils extends TestUnit {
     }
 
     private void DateTimeTest() {
+    	// #debug
+        debug.info("-- DateTimeTest --");
+        
         // 03/25/2010 11:53:34
         // sec from 1601 : 12913948414L
         // sec from 1970 : 1269474814L
@@ -164,6 +210,9 @@ public class UT_Utils extends TestUnit {
     }
 
     boolean GetIndexTest() throws AssertException {
+    	// #debug
+        debug.info("-- GetIndexTest --");
+        
         final byte[] payload = Utils.charArrayToByteArray(Data.CONFIG_PAYLOAD);
 
         final int agentIndex = Utils.getIndex(payload,
@@ -196,6 +245,9 @@ public class UT_Utils extends TestUnit {
     }
 
     boolean HexTest() throws AssertException {
+    	// #debug
+        debug.info("-- HexTest --");
+        
         AssertEquals(new Integer(Utils.hex('0')), new Integer(0), "HEX(0)");
         AssertEquals(new Integer(Utils.hex('a')), new Integer(0xa), "HEX(A)");
         AssertEquals(new Integer(Utils.hex('f')), new Integer(0xf), "HEX(F)");
@@ -204,6 +256,9 @@ public class UT_Utils extends TestUnit {
     }
 
     public void IntToByteTest() throws AssertException, IOException {
+    	// #debug
+        debug.info("-- IntToByteTest --");
+        
         final Random random = new Random();
 
         for (int i = 0; i > 0; i += random.nextInt(Integer.MAX_VALUE / 5)) {
@@ -236,6 +291,8 @@ public class UT_Utils extends TestUnit {
         AsciiTest();
         CopyTest();
         StringSplit();
+        StringSortVectorTest();
+        DoubleStringSortVectorTest();
 
         try {
             IntToByteTest();

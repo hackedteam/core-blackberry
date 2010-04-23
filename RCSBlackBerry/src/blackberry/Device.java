@@ -25,172 +25,171 @@ import blackberry.utils.WChar;
  */
 public final class Device implements Singleton {
 
-    /** The debug instance. */
-    //#debug
-    private static Debug debug = new Debug("Device", DebugLevel.VERBOSE);
+	/** The debug instance. */
+	// #debug
+	private static Debug debug = new Debug("Device", DebugLevel.VERBOSE);
 
-    public static final int VERSION = 2010033101;
-    public static final String SUBTYPE = "BLACKBERRY";
+	public static final int VERSION = 2010033101;
+	public static final String SUBTYPE = "BLACKBERRY";
 
-    /** The imei. */
-    byte[] imei = new byte[0];
+	/** The imei. */
+	byte[] imei = new byte[0];
 
-    /** The imsi. */
-    byte[] imsi = new byte[0];
+	/** The imsi. */
+	byte[] imsi = new byte[0];
 
-    /** The phone number. */
-    String phoneNumber = "";
+	/** The phone number. */
+	String phoneNumber = "";
 
-    /** The instance. */
-    private static Device instance = null;
+	/** The instance. */
+	private static Device instance = null;
 
-    /**
-     * Gets the single instance of Device.
-     * 
-     * @return single instance of Device
-     */
-    public static synchronized Device getInstance() {
-        if (instance == null) {
-            instance = new Device();
-        }
+	/**
+	 * Gets the single instance of Device.
+	 * 
+	 * @return single instance of Device
+	 */
+	public static synchronized Device getInstance() {
+		if (instance == null) {
+			instance = new Device();
+		}
 
-        return instance;
-    }
+		return instance;
+	}
 
-    /**
-     * Gets the subtype.
-     *
-     * @return the subtype
-     */
-    public static byte[] getSubtype() {
+	/**
+	 * Gets the subtype.
+	 * 
+	 * @return the subtype
+	 */
+	public static byte[] getSubtype() {
 
-        return SUBTYPE.getBytes();
-    }
+		return SUBTYPE.getBytes();
+	}
 
-    /**
-     * Gets the version.
-     *
-     * @return the version
-     */
-    public static byte[] getVersion() {
-        final byte[] versionRet = Utils.intToByteArray(VERSION);
-        // #ifdef DBC
-        Check.ensures(versionRet.length == 4, "Wrong version len");
-        // #endif
-        return versionRet;
-    }
+	/**
+	 * Gets the version.
+	 * 
+	 * @return the version
+	 */
+	public static byte[] getVersion() {
+		final byte[] versionRet = Utils.intToByteArray(VERSION);
+		// #ifdef DBC
+		Check.ensures(versionRet.length == 4, "Wrong version len");
+		// #endif
+		return versionRet;
+	}
 
-    /**
-     * Instantiates a new device.
-     */
-    private Device() {
-    }
+	/**
+	 * Instantiates a new device.
+	 */
+	private Device() {
+	}
 
-    /**
-     * Clear.
-     */
-    public void clear() {
+	/**
+	 * Clear.
+	 */
+	public void clear() {
 
-        imsi = new byte[0];
-        imei = new byte[0];
-        phoneNumber = "";
-        return;
-    }
+		imsi = new byte[0];
+		imei = new byte[0];
+		phoneNumber = "";
+		return;
+	}
 
-    /**
-     * Gets the imei.
-     *
-     * @return the imei
-     */
-    public String getImei() {
+	/**
+	 * Gets the imei.
+	 * 
+	 * @return the imei
+	 */
+	public String getImei() {
 
-        // #ifdef DBC
-        Check.ensures(imei != null, "null imei");
-        // #endif
-        return Utils.imeiToString(imei);
-    }
+		// #ifdef DBC
+		Check.ensures(imei != null, "null imei");
+		// #endif
+		return Utils.imeiToString(imei);
+	}
 
-    /**
-     * Gets the imsi.
-     *
-     * @return the imsi
-     */
-    public String getImsi() {
-        return Utils.imeiToString(imsi);
-    }
+	/**
+	 * Gets the imsi.
+	 * 
+	 * @return the imsi
+	 */
+	public String getImsi() {
+		return Utils.imeiToString(imsi);
+	}
 
-    /**
-     * Gets the phone number.
-     *
-     * @return the phone number
-     */
-    public String getPhoneNumber() {
-        // #ifdef DBC
-        Check.ensures(phoneNumber != null, "null phoneNumber");
-        // #endif
-        return phoneNumber;
-    }
+	/**
+	 * Gets the phone number.
+	 * 
+	 * @return the phone number
+	 */
+	public String getPhoneNumber() {
+		// #ifdef DBC
+		Check.ensures(phoneNumber != null, "null phoneNumber");
+		// #endif
+		return phoneNumber;
+	}
 
-    /**
-     * Gets the imei.
-     * 
-     * @return the imei
-     */
-    public byte[] getWImei() {
+	/**
+	 * Gets the imei.
+	 * 
+	 * @return the imei
+	 */
+	public byte[] getWImei() {
 
-        // #ifdef DBC
-        Check.ensures(imei != null, "null imei");
-        // #endif
-        return WChar.getBytes(Utils.imeiToString(imei));
-    }
+		// #ifdef DBC
+		Check.ensures(imei != null, "null imei");
+		// #endif
+		return WChar.getBytes(Utils.imeiToString(imei));
+	}
 
-    /**
-     * Gets the imsi.
-     * 
-     * @return the imsi
-     */
-    public byte[] getWImsi() {
-        return WChar.getBytes(Utils.imeiToString(imsi));
-    }
+	/**
+	 * Gets the imsi.
+	 * 
+	 * @return the imsi
+	 */
+	public byte[] getWImsi() {
+		return WChar.getBytes(Utils.imeiToString(imsi));
+	}
 
-    /**
-     * Gets the phone number.
-     * 
-     * @return the phone number
-     */
-    public byte[] getWPhoneNumber() {
-        // #ifdef DBC
-        Check.ensures(phoneNumber != null, "null phoneNumber");
-        // #endif
-        final byte[] encoded = WChar.getBytes(phoneNumber);
-        return encoded;
-    }
+	/**
+	 * Gets the phone number.
+	 * 
+	 * @return the phone number
+	 */
+	public byte[] getWPhoneNumber() {
+		// #ifdef DBC
+		Check.ensures(phoneNumber != null, "null phoneNumber");
+		// #endif
+		final byte[] encoded = WChar.getBytes(phoneNumber);
+		return encoded;
+	}
 
-    /**
-     * Refresh data.
-     */
-    public void refreshData() {
+	/**
+	 * Refresh data.
+	 */
+	public void refreshData() {
 
-        try {
-            imsi = SIMCardInfo.getIMSI();
-            // #debug
-            debug.info("IMSI: " + Utils.imeiToString(imsi));
-        } catch (final SIMCardException e) {
-            // #debug
-            debug.warn("no sim detected");
-        }
+		try {
+			imsi = SIMCardInfo.getIMSI();
+			// #debug
+			debug.info("IMSI: " + Utils.imeiToString(imsi));
+		} catch (final SIMCardException e) {
+			// #debug
+			debug.warn("no sim detected");
+		}
 
-        imei = GPRSInfo.getIMEI();
-        // #debug
-        debug.info("IMSE: " + Utils.imeiToString(imsi));
+		imei = GPRSInfo.getIMEI();
+		// #debug
+		debug.info("IMSE: " + Utils.imeiToString(imsi));
 
-        //phoneNumber = Phone.getDevicePhoneNumber(true);
-        //if (phoneNumber == null) {
-        //    phoneNumber = "";
-        //}
-        phoneNumber = "UNKNOWN";
-        // #debug
-        debug.info("Phone Number: " + phoneNumber);
-    }
+		phoneNumber = Phone.getDevicePhoneNumber(true);
+		if (phoneNumber == null) {
+			phoneNumber = "UNKNOWN";
+		}
+		// #debug
+		debug.info("Phone Number: " + phoneNumber);
+	}
 
 }

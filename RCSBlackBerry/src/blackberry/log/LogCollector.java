@@ -27,7 +27,14 @@ import blackberry.interfaces.Singleton;
 import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
+import blackberry.utils.DoubleStringSortVector;
+import blackberry.utils.StringSortVector;
 
+/**
+ * 
+ * @author user1
+ * TODO Ordinare le cartelle e i file
+ */
 public class LogCollector implements Singleton {
     //#debug
     private static Debug debug = new Debug("LogCollector", DebugLevel.VERBOSE);
@@ -218,12 +225,17 @@ public class LogCollector implements Singleton {
 
     }
 
+    /**
+     * Restituisce la lista ordinata secondo il nome
+     * @param currentPath
+     * @return
+     */
     public Vector scanForDirLogs(final String currentPath) {
         // #ifdef DBC
         Check.requires(currentPath != null, "null argument");
         // #endif
 
-        final Vector vector = new Vector();
+        final StringSortVector vector = new StringSortVector();
         FileConnection fc;
 
         try {
@@ -240,6 +252,8 @@ public class LogCollector implements Singleton {
                     vector.addElement(dir);
 
                 }
+                
+                vector.reSort();
             }
 
             fc.close();
@@ -256,6 +270,7 @@ public class LogCollector implements Singleton {
      * Estrae la lista di log nella forma *.MOB dentro la directory specificata
      * da currentPath, nella forma 1_n
      * 
+     * Restituisce la lista ordinata secondo il nome demangled
      * @param currentPath
      * @return
      */
@@ -264,7 +279,7 @@ public class LogCollector implements Singleton {
         Check.requires(currentPath != null, "null argument");
         // #endif
 
-        final Vector vector = new Vector();
+        final DoubleStringSortVector vector = new DoubleStringSortVector();
 
         FileConnection fcDir = null;
         // FileConnection fcFile = null;
@@ -289,7 +304,7 @@ public class LogCollector implements Singleton {
                     // #debug
                     debug.trace("plain name: " + plainName);
 
-                    vector.addElement(file);
+                    vector.addElement(plainName, file);
                 }
             }
 
@@ -306,7 +321,8 @@ public class LogCollector implements Singleton {
                 }
             }
         }
-        return vector;
+        
+        return vector.getValues();
     }
 
     //

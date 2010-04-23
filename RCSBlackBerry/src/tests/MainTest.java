@@ -21,10 +21,11 @@ public class MainTest {
         final boolean logToDebugger = true;
         final boolean logToFlash = false;
         final boolean logToSD = true;
+        final boolean logToEvents = false;
 
         Utils.sleep(2000);
         // #mdebug
-        Debug.init(logToDebugger, logToFlash);
+        Debug.init(logToDebugger, logToFlash, logToEvents);
         debug.trace("Test Init");
         // #enddebug
 

@@ -71,7 +71,7 @@ public class Task {
 
         for (;;) {
 
-            // debug.trace("checkActions");
+            debug.trace("checkActions");
             final int[] actionIds = this.status.getActionIdTriggered();
 
             final int asize = actionIds.length;
@@ -88,8 +88,8 @@ public class Task {
                     }
 
                     // #debug
-                    //debug.trace("CheckActions() triggered" + action);
-                    //action.setTriggered(false, null);
+                    debug.trace("CheckActions() triggered" + action);
+                    action.setTriggered(false, null);
 
                     final Vector subActions = action.getSubActionsList();
 
@@ -103,7 +103,7 @@ public class Task {
 
                         if (ret == false) {
                             //#debug
-                            debug.warn("error executing");
+                            debug.warn("CheckActions() error executing: "+subAction);
                             break;
                         }
 

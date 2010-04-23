@@ -1,14 +1,19 @@
 package blackberry;
 
 import net.rim.device.api.system.Application;
+//#mdebug
 import tests.MainTest;
+//#enddebug
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
 /**
  * The Class Main.
+ * 
+ * Antenna defines: DBC,HAVE_PERMISSIONS,HAVE_MIME,EVENTLOGGER
  */
 public class Main extends Application {
+
 
     /**
      * The main method.
@@ -17,17 +22,23 @@ public class Main extends Application {
      *            the arguments
      */
     public static void main(final String[] args) {
+    	//#mdebug
         if (args.length > 0) {
             System.out.println("Test");
             new MainTest();
         } else {
-            new Main().enterEventDispatcher();
+        //#enddebug
+            
+        	new Main().enterEventDispatcher();
+            
+        //#mdebug 
         }
+        //#enddebug
     }
 
     private final Debug debug;
 
-    AppListener appListener = new AppListener();
+    AppListener appListener = AppListener.getInstance();
 
     /**
      * Instantiates a new main.
@@ -46,5 +57,7 @@ public class Main extends Application {
         application.addRadioListener(appListener);
         application.addHolsterListener(appListener);
         application.addSystemListener(appListener);
+        
+       
     }
 }
