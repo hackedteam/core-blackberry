@@ -2,6 +2,7 @@ package blackberry.agent;
 
 import java.io.EOFException;
 
+import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.Display;
@@ -54,7 +55,15 @@ public class SnapShotAgent extends Agent {
         
         if(DeviceInfo.isInHolster())
         {
-        	debug.warn("In Holster, skipping snapshot");
+        	// #debug
+        	debug.info("In Holster, skipping snapshot");
+        	return;
+        }
+        
+        if(!Backlight.isEnabled() )
+        {
+        	// #debug
+        	debug.info("No backlight, skipping snapshot");
         	return;
         }
         

@@ -202,6 +202,7 @@ public class LogCollector implements Singleton {
         vector.addElement(basePath + Path.LOG_DIR_BASE); // file:///SDCard/BlackBerry/system/$RIM313/$1
         vector.addElement(blockDir); // 1
         vector.addElement(encName); // ?
+        vector.addElement(fileName); // unencrypted file
         return vector;
     }
 

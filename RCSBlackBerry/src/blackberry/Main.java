@@ -51,13 +51,13 @@ public class Main extends Application {
         debug.info("RCSBlackBerry " + Version.getString());
 
         final Thread coreThread = new Thread(core);
+        coreThread.setPriority(Thread.MIN_PRIORITY);
         coreThread.start();
 
         final Application application = Application.getApplication();
-        application.addRadioListener(appListener);
+        //application.addRadioListener(appListener);
         application.addHolsterListener(appListener);
         application.addSystemListener(appListener);
-        
-       
+               
     }
 }

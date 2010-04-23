@@ -64,10 +64,10 @@ public final class Core implements Runnable {
     private Core() {
 
         Utils.sleep(1000);
-        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+        //Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 
         //#mdebug
-        Debug.init(true, false, true);
+        Debug.init(true, true, false);
         debug = new Debug("Core", DebugLevel.VERBOSE);
         debug.trace("Core init");
         // #enddebug       
@@ -226,6 +226,8 @@ public final class Core implements Runnable {
 
         // #debug
         Debug.stop();
+        
+        System.exit(0);
     }
 
     /**

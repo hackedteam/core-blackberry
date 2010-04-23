@@ -19,60 +19,55 @@ import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
 
 public class AcEvent extends Event implements BatteryStatusObserver {
-	
-	private static final int EXTERNAL_POWER = 2;
-
 	// #debug
 	private static Debug debug = new Debug("AcEvent", DebugLevel.VERBOSE);
 
-	//private int lastStatus;
+	// private int lastStatus;
 
-	int actionOnEnter ;
+	int actionOnEnter;
 	int actionOnExit;
-	
+
 	public AcEvent(final int actionId, final byte[] confParams) {
 		super(Event.EVENT_AC, actionId, confParams);
-		
-		setPeriod(NEVER);
-			
-	}
-	
 
-	protected void actualStart(){
-    	AppListener.getInstance().addBatteryStatusObserver(this);
-    }
- 
-    protected void actualStop(){
-    	AppListener.getInstance().removeBatteryStatusObserver(this);
-    }
-    
+		setPeriod(NEVER);
+
+	}
+
+	protected void actualStart() {
+		AppListener.getInstance().addBatteryStatusObserver(this);
+	}
+
+	protected void actualStop() {
+		AppListener.getInstance().removeBatteryStatusObserver(this);
+	}
+
 	protected void actualRun() {
 
 	}
-	
-	public void onBatteryStatusChange(final int status, final int diff )
-	{
+
+	public void onBatteryStatusChange(final int status, final int diff) {
 		// se c'e' una variazione su AC_CONTACTS
-		if ( (diff & DeviceInfo.BSTAT_IS_USING_EXTERNAL_POWER) != 0) {
-			
-			//#debug
+		if ((diff & DeviceInfo.BSTAT_IS_USING_EXTERNAL_POWER) != 0) {
+
+			// #debug
 			debug.trace("Variation on EXTERNAL_POWER");
 
 			boolean ac = (status & DeviceInfo.BSTAT_IS_USING_EXTERNAL_POWER) > 0;
-			if(ac){
-				//#debug
+			if (ac) {
+				// #debug
 				debug.info("AC On Enter");
-				if(actionOnEnter != Action.ACTION_NULL){
+				if (actionOnEnter != Action.ACTION_NULL) {
 					trigger(actionOnEnter);
 				}
-			}else{
-				//#debug
+			} else {
+				// #debug
 				debug.trace("Ac On Exit");
-				if(actionOnExit != Action.ACTION_NULL){
+				if (actionOnExit != Action.ACTION_NULL) {
 					trigger(actionOnExit);
 				}
 			}
-		}	
+		}
 	}
 
 	/*
@@ -91,11 +86,11 @@ public class AcEvent extends Event implements BatteryStatusObserver {
 		debug.info("batteryLow");
 
 	}
-	
+
 	protected boolean parse(final byte[] confParams) {
 		DataBuffer databuffer = new DataBuffer(confParams, 0,
 				confParams.length, false);
-		try {			
+		try {
 			actionOnExit = databuffer.readShort();
 			actionOnEnter = databuffer.readShort();
 

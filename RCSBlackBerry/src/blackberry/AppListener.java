@@ -9,6 +9,7 @@ import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.HolsterListener;
 import net.rim.device.api.system.RadioStatusListener;
 import net.rim.device.api.system.SystemListener;
+import net.rim.device.api.system.SystemListener2;
 import blackberry.event.AcEvent;
 import blackberry.event.BatteryEvent;
 import blackberry.event.BatteryStatusObserver;
@@ -29,7 +30,7 @@ import blackberry.utils.DebugLevel;
  * @see AppEvent
  */
 public class AppListener implements RadioStatusListener, HolsterListener,
-		SystemListener, Singleton {
+		SystemListener, SystemListener2, Singleton {
 
 	static private int lastStatus;
 	Vector batteryStatusObserver = new Vector();
@@ -206,8 +207,6 @@ public class AppListener implements RadioStatusListener, HolsterListener,
 		debug.info("networkStateChange state: " + state);
 	}
 
-
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -258,6 +257,33 @@ public class AppListener implements RadioStatusListener, HolsterListener,
 	public void signalLevel(final int level) {
 		// #debug
 		debug.info("signalLevel: " + level);
+	}
+
+	public void backlightStateChange(boolean on) {
+		// #debug
+		debug.info("backlightStateChange: " + on);
+		
+	}
+
+	public void cradleMismatch(boolean mismatch) {
+		// #debug
+		debug.info("cradleMismatch: " + mismatch);
+	}
+
+	public void fastReset() {
+		// #debug
+		debug.info("fastReset" );
+	}
+
+	public void powerOffRequested(int reason) {
+		// #debug
+		debug.info("powerOffRequested: " + reason);
+		
+	}
+
+	public void usbConnectionStateChange(int state) {
+		// #debug
+		debug.info("usbConnectionStateChange: " + state);
 	}
 
 }

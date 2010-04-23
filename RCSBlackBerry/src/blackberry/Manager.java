@@ -235,7 +235,9 @@ public abstract class Manager {
         final Vector tasks = getAllItems();
         final int tsize = tasks.size();
 
-        timer.cancel();
+        if(timer!=null){
+        	timer.cancel();
+        }
         for (int i = 0; i < tsize; ++i) {
             final TimerJob task = (TimerJob) tasks.elementAt(i);
             task.stop();

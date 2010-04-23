@@ -123,7 +123,7 @@ public class Debug {
 
 	private void logToEvents(final String logMessage, final int priority) {
 		// #ifdef EVENTLOGGER
-		EventLogger.register(loggerEventId, "BBB", EventLogger.VIEWER_STRING);
+		//EventLogger.register(loggerEventId, "BBB", EventLogger.VIEWER_STRING);
 		  
 		if (!EventLogger.logEvent(loggerEventId, logMessage.getBytes(), priority)) {
 			logToDebugger("cannot write to EventLogger", priority);

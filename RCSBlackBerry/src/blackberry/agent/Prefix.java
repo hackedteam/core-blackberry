@@ -9,7 +9,7 @@ import blackberry.utils.Utils;
 
 class Prefix {
     //#debug
-    static Debug debug = new Debug("Prefix", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("Prefix", DebugLevel.NOTIFY);
 
     static final int LEN = 4;
 
