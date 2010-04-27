@@ -21,12 +21,12 @@ public class PositionAgent extends Agent {
 
     public void actualRun() {
         // #debug debug
-	debug.trace("loop:" + loop);
+	//debug.trace("loop:" + loop);
         ++loop;
     }
 
     protected boolean parse(final byte[] confParameters) {
-        setPeriod(10000);
+        setPeriod(60000);
 
         return false;
     }

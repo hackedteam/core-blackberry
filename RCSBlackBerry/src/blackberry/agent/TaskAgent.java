@@ -3,6 +3,9 @@ package blackberry.agent;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
+/**
+ * PIM, calendario, appuntamenti
+ */
 public class TaskAgent extends Agent {
     //#debug
     static Debug debug = new Debug("TaskAgent", DebugLevel.VERBOSE);

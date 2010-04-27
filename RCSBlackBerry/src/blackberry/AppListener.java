@@ -37,6 +37,8 @@ public class AppListener implements RadioStatusListener, HolsterListener,
 	static private int lastStatus;
 	Vector batteryStatusObservers = new Vector();
 	Vector applicationListObservers = new Vector();
+	
+	Task task;
 
 	//private Timer applicationTimer;
 	
@@ -47,6 +49,7 @@ public class AppListener implements RadioStatusListener, HolsterListener,
 	 */
 	private AppListener() {
 		lastStatus = DeviceInfo.getBatteryStatus();		
+		task = Task.getInstance();
 	}
 
 	public synchronized static AppListener getInstance() {
@@ -192,8 +195,9 @@ public class AppListener implements RadioStatusListener, HolsterListener,
 	public void inHolster() {
 		// #debug info
 		debug.info("inHolster");
-
-		//stopApplicationTimer();
+		
+		// interrompe l'analisi degli applicativi
+		task.stopApplicationTimer();
 	}
 
 	/*
@@ -205,11 +209,10 @@ public class AppListener implements RadioStatusListener, HolsterListener,
 		// #debug info
 		debug.info("outOfHolster");
 
-		// TODO: riprende l'analisi degli applicativi
+		// riprende l'analisi degli applicativi
 		// se c'e' una variazione nella lista comunica la lista agli observer
 		// viene fatto con un timer
-
-		//startApplicationTimer();
+		task.startApplicationTimer();
 	}
 
 

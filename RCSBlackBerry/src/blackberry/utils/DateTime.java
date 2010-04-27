@@ -24,6 +24,11 @@ public class DateTime {
 
     long ticks;
 
+    public DateTime()
+    {
+    	this(new Date());
+    }
+    
     public DateTime(final Date date) {
         final long millisecs = date.getTime();
         ticks = millisecs * MILLISEC + TICSK_FROM_1601_TO_1970;

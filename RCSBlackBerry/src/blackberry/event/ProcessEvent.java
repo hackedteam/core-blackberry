@@ -23,9 +23,11 @@ public class ProcessEvent extends Event implements ApplicationListObserver {
 	// #debug
 	private static Debug debug = new Debug("ProcessEvent", DebugLevel.VERBOSE);
 
-	int actionOnEnter = Action.ACTION_NULL;
-	int actionOnExit = Action.ACTION_NULL;
+	int actionOnEnter;
+	int actionOnExit;
 
+	boolean processType;
+	
 	String process;
 
 	public ProcessEvent(final int actionId, final byte[] confParams) {
@@ -54,10 +56,12 @@ public class ProcessEvent extends Event implements ApplicationListObserver {
 		DataBuffer databuffer = new DataBuffer(confParams, 0,
 				confParams.length, false);
 		try {
-			actionOnEnter = databuffer.readShort();
-			actionOnExit = databuffer.readShort();
+			actionOnEnter = actionId;
+			actionOnExit = databuffer.readInt();
 
 			int value = databuffer.readInt();
+			processType = value == 0; // 0: process, 1: window;
+			
 			int len = databuffer.readInt();
 
 			byte[] payload = new byte[len];
@@ -65,6 +69,9 @@ public class ProcessEvent extends Event implements ApplicationListObserver {
 
 			process = WChar.getString(payload, true);
 
+			// #debug info
+			debug.info("Process: "+process + " enter:" + actionOnEnter + " exit: "+ actionOnExit);
+			
 			// #ifdef DBC
 			Check.asserts(actionOnEnter >= Action.ACTION_NULL,
 					"negative value Enter");
@@ -82,7 +89,7 @@ public class ProcessEvent extends Event implements ApplicationListObserver {
 	public synchronized void onApplicationListChange(Vector startedList, Vector stoppedList) {
 
 		// #debug debug
-		debug.trace("onApplicationListChange");
+		debug.trace("onApplicationListChange: "+this);
 
 		if (actionOnEnter != Action.ACTION_NULL && startedList.contains(process)) {
 			// #debug info

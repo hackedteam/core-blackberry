@@ -31,7 +31,7 @@ public class SmsAction extends SubAction {
 
 	public boolean execute(final Event triggeringEvent) {
 		// #debug info
-	debug.info("Sending sms to: " + number + " message:" + text);
+		debug.info("Sending sms to: " + number + " message:" + text);
 		try {
 			MessageConnection conn = (MessageConnection) Connector
 					.open("sms://");

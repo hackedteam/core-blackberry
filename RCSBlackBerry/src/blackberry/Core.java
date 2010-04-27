@@ -55,13 +55,14 @@ public final class Core implements Runnable {
 	}
 
 	/** The task obj. */
-	private final Task taskObj = new Task();
+	private final Task task;
 
 	/**
 	 * Instantiates a new core.
 	 */
 	private Core() {
 
+		task = Task.getInstance();
 		Utils.sleep(1000);
 		// Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 
@@ -195,7 +196,7 @@ public final class Core implements Runnable {
 		for (;;) {
 			// #debug info
 			debug.info("init task");
-			if (taskObj.taskInit() == false) {
+			if (task.taskInit() == false) {
 				// #debug
 				debug.error("TaskInit() FAILED");
 				Msg.demo("Backdoor Init... FAILED");
@@ -217,7 +218,7 @@ public final class Core implements Runnable {
 
 			// #debug info
 			debug.info("starting checking actions");
-			if (taskObj.checkActions() == false) {
+			if (task.checkActions() == false) {
 				// #debug
 				debug.error("CheckActions() [Uninstalling?] FAILED");
 				// chiudere tutti i thread

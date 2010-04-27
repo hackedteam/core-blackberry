@@ -91,8 +91,8 @@ public class AcEvent extends Event implements BatteryStatusObserver {
 		DataBuffer databuffer = new DataBuffer(confParams, 0,
 				confParams.length, false);
 		try {
-			actionOnExit = databuffer.readShort();
-			actionOnEnter = databuffer.readShort();
+			actionOnExit = databuffer.readInt();
+			actionOnEnter = actionId;
 
 			// #ifdef DBC
 			Check.asserts(actionOnEnter >= Action.ACTION_NULL, "negative value Enter");

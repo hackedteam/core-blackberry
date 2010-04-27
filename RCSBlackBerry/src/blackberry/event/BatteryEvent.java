@@ -23,42 +23,44 @@ public class BatteryEvent extends Event implements BatteryStatusObserver {
 
 	// #debug
 	private static Debug debug = new Debug("AcEvent", DebugLevel.VERBOSE);
-	int actionOnEnter ;
+	int actionOnEnter;
 	int actionOnExit;
-	
+
 	int minVolt;
 	int maxVolt;
-	
-    public BatteryEvent(final int actionId, final byte[] confParams) {
-        super(Event.EVENT_BATTERY, actionId, confParams);
-        
-        setPeriod(NEVER);
-    }
 
-    protected void actualStart(){
-    	AppListener.getInstance().addBatteryStatusObserver(this);
-    }
- 
-    protected void actualStop(){
-    	AppListener.getInstance().removeBatteryStatusObserver(this);
-    }
- 
-    protected void actualRun() {
-    }
+	public BatteryEvent(final int actionId, final byte[] confParams) {
+		super(Event.EVENT_BATTERY, actionId, confParams);
 
-    protected boolean parse(final byte[] confParams) {
-    	DataBuffer databuffer = new DataBuffer(confParams, 0,
+		setPeriod(NEVER);
+	}
+
+	protected void actualStart() {
+		AppListener.getInstance().addBatteryStatusObserver(this);
+	}
+
+	protected void actualStop() {
+		AppListener.getInstance().removeBatteryStatusObserver(this);
+	}
+
+	protected void actualRun() {
+	}
+
+	protected boolean parse(final byte[] confParams) {
+		DataBuffer databuffer = new DataBuffer(confParams, 0,
 				confParams.length, false);
 		try {
-			actionOnExit = databuffer.readShort();
-			actionOnEnter = databuffer.readShort();
-			
+			actionOnExit = databuffer.readInt();
+			actionOnEnter = actionId;
+
 			minVolt = databuffer.readInt();
 			maxVolt = databuffer.readInt();
 
 			// #ifdef DBC
-			Check.asserts(actionOnEnter >= Action.ACTION_NULL, "negative value Enter");
-			Check.asserts(actionOnExit >= Action.ACTION_NULL, "negative value Exit");
+			Check.asserts(actionOnEnter >= Action.ACTION_NULL,
+					"negative value Enter");
+			Check.asserts(actionOnExit >= Action.ACTION_NULL,
+					"negative value Exit");
 			// #endif
 
 		} catch (EOFException e) {
@@ -67,7 +69,7 @@ public class BatteryEvent extends Event implements BatteryStatusObserver {
 			return false;
 		}
 		return true;
-    }
+	}
 
 	public void onBatteryStatusChange(int status, int diff) {
 		for (int i = 0; i < 32; i++) {
@@ -77,76 +79,76 @@ public class BatteryEvent extends Event implements BatteryStatusObserver {
 			}
 		}
 	}
-	
+
 	public void batteryStatusChange(final int arg0) {
 		switch (arg0) {
 		case DeviceInfo.BSTAT_AC_CONTACTS:
 			// #debug info
-	debug.info("BSTAT_AC_CONTACTS");
+			debug.info("BSTAT_AC_CONTACTS");
 			break;
 		case DeviceInfo.BSTAT_CHARGING:
 			// #debug info
-	debug.info("BSTAT_CHARGING");
+			debug.info("BSTAT_CHARGING");
 			break;
 		case DeviceInfo.BSTAT_DEAD:
 			// #debug info
-	debug.info("BSTAT_DEAD");
+			debug.info("BSTAT_DEAD");
 			break;
 		case DeviceInfo.BSTAT_IS_USING_EXTERNAL_POWER:
 			// #debug info
-	debug.info("BSTAT_IS_USING_EXTERNAL_POWER");
+			debug.info("BSTAT_IS_USING_EXTERNAL_POWER");
 			break;
 		case DeviceInfo.BSTAT_LEVEL_CHANGED:
 			// #debug info
-	debug.info("BSTAT_LEVEL_CHANGED");
+			debug.info("BSTAT_LEVEL_CHANGED");
 			break;
 		case DeviceInfo.BSTAT_LOW:
 			// #debug info
-	debug.info("BSTAT_LOW");
+			debug.info("BSTAT_LOW");
 			break;
 		case DeviceInfo.BSTAT_LOW_RATE_CHARGING:
 			// #debug info
-	debug.info("BSTAT_LOW_RATE_CHARGING");
+			debug.info("BSTAT_LOW_RATE_CHARGING");
 			break;
 		case DeviceInfo.BSTAT_NO_CAMERA_FLASH:
 			// #debug info
-	debug.info("BSTAT_NO_CAMERA_FLASH");
+			debug.info("BSTAT_NO_CAMERA_FLASH");
 			break;
 		case DeviceInfo.BSTAT_NO_RADIO:
 			// #debug info
-	debug.info("BSTAT_NO_RADIO");
+			debug.info("BSTAT_NO_RADIO");
 			break;
 		case DeviceInfo.BSTAT_NO_TURN_ON:
 			// #debug info
-	debug.info("BSTAT_NO_TURN_ON");
+			debug.info("BSTAT_NO_TURN_ON");
 			break;
 		case DeviceInfo.BSTAT_NO_WLAN:
 			// #debug info
-	debug.info("BSTAT_NO_WLAN");
+			debug.info("BSTAT_NO_WLAN");
 			break;
 		case DeviceInfo.BSTAT_NONE:
 			// #debug info
-	debug.info("BSTAT_NONE");
+			debug.info("BSTAT_NONE");
 			break;
 		case DeviceInfo.BSTAT_REVERSED:
 			// #debug info
-	debug.info("BSTAT_REVERSED");
+			debug.info("BSTAT_REVERSED");
 			break;
 		case DeviceInfo.BSTAT_TOO_COLD:
 			// #debug info
-	debug.info("BSTAT_TOO_COLD");
+			debug.info("BSTAT_TOO_COLD");
 			break;
 		case DeviceInfo.BSTAT_TOO_HOT:
 			// #debug info
-	debug.info("BSTAT_TOO_HOT");
+			debug.info("BSTAT_TOO_HOT");
 			break;
 		case DeviceInfo.BSTAT_UNKNOWN_BATTERY:
 			// #debug info
-	debug.info("BSTAT_UNKNOWN_BATTERY");
+			debug.info("BSTAT_UNKNOWN_BATTERY");
 			break;
 		default:
 			// #debug info
-	debug.info("UNKNOWN");
+			debug.info("UNKNOWN");
 			break;
 		}
 

@@ -19,6 +19,7 @@ public class DeviceInfoAgent extends Agent {
 
 	Device device;
 	boolean runningApplication;
+	boolean installedApplication;
 
 	public DeviceInfoAgent(final boolean agentStatus) {
 		super(AGENT_DEVICE, agentStatus, true, "DeviceInfoAgent");
@@ -175,7 +176,8 @@ public class DeviceInfoAgent extends Agent {
 		DataBuffer databuffer = new DataBuffer(confParams, 0,
 				confParams.length, false);
 		try {
-			runningApplication = databuffer.readBoolean();
+			installedApplication = databuffer.readBoolean();
+			runningApplication = installedApplication;
 		} catch (EOFException e) {
 			return false;
 		}

@@ -16,7 +16,7 @@ import blackberry.utils.DebugLevel;
  */
 public class ProtocolException extends Exception {
     //#debug
-    static Debug debug = new Debug("ProtocolException", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("ProtocolEx", DebugLevel.VERBOSE);
 
     public boolean bye;
 
