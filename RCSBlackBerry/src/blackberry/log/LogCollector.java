@@ -108,8 +108,8 @@ public class LogCollector implements Singleton {
         final Object obj = logProgressivePersistent.getContents();
 
         if (obj == null) {
-            // #debug
-            debug.info("First time of logProgressivePersistent");
+            // #debug info
+	debug.info("First time of logProgressivePersistent");
             logProgressivePersistent.setContents(new Integer(1));
         }
 
@@ -162,8 +162,8 @@ public class LogCollector implements Singleton {
         logProgressive++;
         logProgressivePersistent.setContents(new Integer(logProgressive));
 
-        // #debug
-        debug.trace("Progressive: " + logProgressive);
+        // #debug debug
+	debug.trace("Progressive: " + logProgressive);
         return logProgressive;
     }
 
@@ -207,8 +207,8 @@ public class LogCollector implements Singleton {
     }
 
     public void remove(final String logName) {
-        // #debug
-        debug.info("Removing file: " + logName);
+        // #debug info
+	debug.info("Removing file: " + logName);
         final AutoFlashFile file = new AutoFlashFile(logName, false);
         if (file.exists()) {
             file.delete();
@@ -299,11 +299,11 @@ public class LogCollector implements Singleton {
 
                 if (file.endsWith(encLogMask)) {
                     // String encName = fcFile.getName();
-                    // #debug
-                    debug.trace("enc name: " + file);
+                    // #debug debug
+	debug.trace("enc name: " + file);
                     final String plainName = decryptName(file);
-                    // #debug
-                    debug.trace("plain name: " + plainName);
+                    // #debug debug
+	debug.trace("plain name: " + plainName);
 
                     vector.addElement(plainName, file);
                 }

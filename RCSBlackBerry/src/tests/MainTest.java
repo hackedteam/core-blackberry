@@ -20,7 +20,7 @@ public class MainTest {
 
         final boolean logToDebugger = true;
         final boolean logToFlash = false;
-        final boolean logToSD = true;
+        //final boolean logToSD = true;
         final boolean logToEvents = false;
 
         Utils.sleep(2000);
@@ -31,7 +31,7 @@ public class MainTest {
 
         // create a new instance of the application
 
-        // #debug
+        // #debug info        
         debug.info("--- Starting Main ---");
 
         executeAll();

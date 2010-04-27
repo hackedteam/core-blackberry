@@ -4,7 +4,7 @@
   <Resources hasTitleResource="false" TitleResourceBundleName="" TitleResourceBundleRelativePath="" TitleResourceBundleClassName="" TitleResourceBundleKey="" DescriptionId="">
     <Icons/>
   </Resources>
-  <Compile OutputCompilerMessages="true" ConvertImages="false" CreateWarningForNoExportedRoutine="true" CompressResources="true" AliasList="">
+  <Compile OutputCompilerMessages="true" ConvertImages="false" CreateWarningForNoExportedRoutine="true" CompressResources="false" AliasList="">
     <PreprocessorDefines/>
   </Compile>
   <Packaging OutputFileName="RCSBlackBerry" OutputFolder="deliverables" PreBuildStep="" PostBuildStep="" CleanStep="" GenerateALXFile="true">
@@ -15,7 +15,7 @@
     <PackageProtection/>
   </HiddenProperties>
   <AlternateEntryPoints>
-    <AlternateEntryPoint Title="Test" MainMIDletName="" ArgumentsForMain="Test" HomeScreenPosition="0" StartupTier="7" IsSystemModule="false" IsAutostartup="false" hasTitleResource="false" TitleResourceBundleKey="" TitleResourceBundleName="" TitleResourceBundleClassName="" TitleResourceBundleRelativePath="">
+    <AlternateEntryPoint Title="Test" MainMIDletName="" ArgumentsForMain="Test" HomeScreenPosition="0" StartupTier="7" IsSystemModule="true" IsAutostartup="false" hasTitleResource="false" TitleResourceBundleKey="" TitleResourceBundleName="" TitleResourceBundleClassName="" TitleResourceBundleRelativePath="">
       <Icons/>
     </AlternateEntryPoint>
   </AlternateEntryPoints>

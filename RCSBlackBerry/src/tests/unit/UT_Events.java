@@ -29,8 +29,8 @@ public class UT_Events extends TestUnit {
     }
 
     public boolean TimerEventDate() throws AssertException {
-        // #debug
-        debug.info("-- TimerEventDate --");
+        // #debug info
+	debug.info("-- TimerEventDate --");
 
         final Status status = Status.getInstance();
         final EventManager eventManager = EventManager.getInstance();
@@ -43,13 +43,13 @@ public class UT_Events extends TestUnit {
 
         // creo timer che si esegua una volta dopo 1 secondo
 
-        // #debug
-        debug.trace("TIMER_DATE");
+        // #debug debug
+	debug.trace("TIMER_DATE");
 
         final long timestamp = Utils.getTime() + 1000;
         final Date tmpDate = new Date(timestamp);
-        // #debug
-        debug.trace(tmpDate.toString());
+        // #debug debug
+	debug.trace(tmpDate.toString());
 
         final int hiDelay = (int) (timestamp >>> 32);
         final int loDelay = (int) (timestamp & 0xffffffff);
@@ -73,8 +73,8 @@ public class UT_Events extends TestUnit {
     }
 
     public boolean TimerEventRepeat() throws AssertException {
-        // #debug
-        debug.info("-- TimerEventRepeat --");
+        // #debug info
+	debug.info("-- TimerEventRepeat --");
 
         final Status status = Status.getInstance();
         final EventManager eventManager = EventManager.getInstance();
@@ -106,8 +106,8 @@ public class UT_Events extends TestUnit {
     }
 
     public boolean TimerEventSingle() throws AssertException {
-        // #debug
-        debug.info("-- TimerEventSingle --");
+        // #debug info
+	debug.info("-- TimerEventSingle --");
 
         final Status status = Status.getInstance();
         final EventManager eventManager = EventManager.getInstance();

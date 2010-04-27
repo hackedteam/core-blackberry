@@ -238,8 +238,8 @@ public final class Utils {
         }
 
         confHash = (int) tempHash;
-      //#debug
-        debug.trace("confhash:" + confHash);
+      //#debug debug
+	debug.trace("confhash:" + confHash);
         return confHash;
     }
 

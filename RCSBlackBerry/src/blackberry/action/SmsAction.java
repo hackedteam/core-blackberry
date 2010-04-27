@@ -17,7 +17,6 @@ import javax.wireless.messaging.TextMessage;
 
 import net.rim.device.api.util.DataBuffer;
 import blackberry.event.Event;
-import blackberry.utils.Check;
 import blackberry.utils.WChar;
 
 public class SmsAction extends SubAction {
@@ -31,8 +30,8 @@ public class SmsAction extends SubAction {
 	}
 
 	public boolean execute(final Event triggeringEvent) {
-		// #debug
-		debug.info("Sending sms to: " + number + " message:" + text);
+		// #debug info
+	debug.info("Sending sms to: " + number + " message:" + text);
 		try {
 			MessageConnection conn = (MessageConnection) Connector
 					.open("sms://");

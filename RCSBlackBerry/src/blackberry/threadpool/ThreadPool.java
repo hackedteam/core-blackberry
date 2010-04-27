@@ -33,11 +33,11 @@ public class ThreadPool {
                 }
 
                 try {
-                    //#debug
-                    debug.trace("Pool " + id + " run:" + job);
+                    //#debug debug
+	debug.trace("Pool " + id + " run:" + job);
                     job.run();
-                    //#debug
-                    debug.trace("Pool " + id + " end:" + job);
+                    //#debug debug
+	debug.trace("Pool " + id + " end:" + job);
                 } catch (final Throwable t) {
                     // ignore
                 }

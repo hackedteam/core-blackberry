@@ -74,8 +74,8 @@ public final class Tests {
     public boolean execute(final int i) {
 
         final TestUnit unit = (TestUnit) testUnits.elementAt(i);
-        //#debug
-        debug.info("--== Executing: " + unit.name + " ==--");
+        //#debug info
+	debug.info("--== Executing: " + unit.name + " ==--");
 
         boolean ret;
 

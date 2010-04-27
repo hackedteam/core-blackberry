@@ -4,43 +4,37 @@ import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
 public class ImAgent extends Agent {
-    //#debug
-    static Debug debug = new Debug("ImAgent", DebugLevel.VERBOSE);
+	// #debug
+	static Debug debug = new Debug("ImAgent", DebugLevel.VERBOSE);
 
-    private final int timeToSleep = 1000;
+	int loop;
 
-    int loop;
+	public ImAgent(final boolean agentStatus) {
+		super(Agent.AGENT_IM, agentStatus, true, "ImAgent");
+		loop = 0;
+		setPeriod(1000);
+	}
 
-    public ImAgent(final boolean agentStatus) {
-        super(Agent.AGENT_IM, agentStatus, true, "ImAgent");
-        loop = 0;
-        setPeriod(1000);
-    }
+	protected ImAgent(final boolean agentStatus, final byte[] confParams) {
+		this(agentStatus);
+		parse(confParams);
+	}
 
-    protected ImAgent(final boolean agentStatus, final byte[] confParams) {
-        this(agentStatus);
-        parse(confParams);
-    }
+	public void actualRun() {
+		// #debug debug
+		debug.trace("run");
 
-    public void actualRun() {
-        // #debug
-        debug.trace("run");
+		// verifica che ci siano email *nuove* da leggere
 
-        // #debug
-        debug.trace("loop:" + loop);
-        ++loop;
+		// per ogni email da leggere
 
-        // verifica che ci siano email *nuove* da leggere
+		// genera un log con la email
 
-        // per ogni email da leggere
+	}
 
-        // genera un log con la email
-
-    }
-
-    protected boolean parse(final byte[] confParameters) {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	protected boolean parse(final byte[] confParameters) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

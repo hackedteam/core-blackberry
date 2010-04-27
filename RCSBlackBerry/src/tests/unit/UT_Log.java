@@ -41,8 +41,8 @@ public class UT_Log extends TestUnit {
         thread.start();
         agent.stop();
 
-        //#debug
-        debug.trace("Agent Device ok");
+        //#debug debug
+	debug.trace("Agent Device ok");
     }
 
     private void CreateEncDeviceLog() {

@@ -11,8 +11,8 @@ public class UT_Self extends TestUnit {
 
     public boolean run() {
 
-        //#debug
-        debug.info("run " + name);
+        //#debug info
+	debug.info("run " + name);
         return true;
     }
 }

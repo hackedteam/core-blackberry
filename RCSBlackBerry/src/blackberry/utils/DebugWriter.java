@@ -22,7 +22,7 @@ public final class DebugWriter extends Thread {
         toStop = false;
         queue = new StringBuffer();
 
-        final boolean logToFlash = !logToSD;
+        //final boolean logToFlash = !logToSD;
 
         if (logToSD) {
             Path.createDirectory(Path.SD_PATH);

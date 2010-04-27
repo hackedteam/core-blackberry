@@ -22,8 +22,8 @@ public class StartAgentAction extends SubAction {
     }
 
     public boolean execute(final Event triggeringEvent) {
-        // #debug
-        debug.info("Starting " + agentId);
+        // #debug info
+	debug.info("Starting " + agentId);
         final AgentManager agentManager = AgentManager.getInstance();
 
         agentManager.enable(agentId);
@@ -36,8 +36,8 @@ public class StartAgentAction extends SubAction {
 
         try {
             agentId = databuffer.readInt();
-            // #debug
-            debug.trace("agentId: " + agentId);
+            // #debug debug
+	debug.trace("agentId: " + agentId);
 
         } catch (final EOFException e) {
             // #debug

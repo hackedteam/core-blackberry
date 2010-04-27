@@ -190,7 +190,7 @@ public class Log {
 
 		final Vector tuple = logCollector.makeNewName(this, agent);
 		// #ifdef DBC
-		Check.asserts(tuple.size() == 4, "Wrong tuple size");
+		Check.asserts(tuple.size() == 5, "Wrong tuple size");
 		// #endif
 
 		this.progressive = ((Integer) tuple.elementAt(0)).intValue();
@@ -216,8 +216,8 @@ public class Log {
 				return false;
 			}
 
-			// #debug
-			debug.info("Created :" + plainFileName);
+			// #debug info
+	debug.info("Created :" + plainFileName);
 
 			final byte[] plainBuffer = makeDescription(additionalData);
 			// #ifdef DBC
@@ -245,10 +245,10 @@ public class Log {
 					"Wrong filesize");
 			// #endif
 
-			// #debug
-			debug.trace("plainBuffer.length: " + plainBuffer.length);
-			// #debug
-			debug.trace("encBuffer.length: " + encBuffer.length);
+			// #debug debug
+	debug.trace("plainBuffer.length: " + plainBuffer.length);
+			// #debug debug
+	debug.trace("encBuffer.length: " + encBuffer.length);
 
 		} catch (final IOException ex) {
 			// #debug

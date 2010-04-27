@@ -40,8 +40,8 @@ public class Markup {
         Check.requires(agentId >= 0, "agentId < 0");
         // #endif
         final String logName = NumberUtilities.toString(agentId, 16, 4);
-        // #debug
-        debug.trace("makeMarkupName from: " + logName);
+        // #debug debug
+	debug.trace("makeMarkupName from: " + logName);
 
         final String markupName = makeMarkupName(logName, addPath, false);
         return markupName;
@@ -78,8 +78,8 @@ public class Markup {
 
         encName += Encryption.encryptName(markupName + MARKUP_EXTENSION, Keys
                 .getInstance().getChallengeKey()[0]);
-        // #debug
-        debug.trace("makeMarkupName: " + encName);
+        // #debug debug
+	debug.trace("makeMarkupName: " + encName);
 
         return encName;
     }
@@ -222,8 +222,8 @@ public class Markup {
 
             return plain;
         } else {
-            // #debug
-            debug.trace("Markup file does not exists");
+            // #debug debug
+	debug.trace("Markup file does not exists");
             return null;
         }
     }

@@ -147,8 +147,8 @@ public final class Status implements Singleton {
 
         agents.put(agent.agentId, agent);
 
-        // #debug
-        debug.trace("Agent added:" + agent);
+        // #debug debug
+	debug.trace("Agent added:" + agent);
 
         // #ifdef DBC
         Check.ensures(agents.containsKey(agent.agentId), "Agent not inserted: "
@@ -214,8 +214,8 @@ public final class Status implements Singleton {
      * Clear.
      */
     public void clear() {
-        // #debug
-        debug.info("Clear");
+        // #debug info
+	debug.info("Clear");
 
         agents.clear();
         actions.clear();
@@ -269,8 +269,8 @@ public final class Status implements Singleton {
             // #endif
             return action;
         } else {
-            // #debug
-            debug.trace("actions don't contain type " + id);
+            // #debug debug
+	debug.trace("actions don't contain type " + id);
             return null;
         }
     }
@@ -331,8 +331,8 @@ public final class Status implements Singleton {
             // #endif
             return agent;
         } else {
-            // #debug
-            debug.trace("Agents don't contain type " + agentId);
+            // #debug debug
+	debug.trace("Agents don't contain type " + agentId);
             return null;
         }
     }
@@ -468,8 +468,8 @@ public final class Status implements Singleton {
             return false;
         }
 
-        // #debug
-        debug.trace("ReEnabling " + agent);
+        // #debug debug
+	debug.trace("ReEnabling " + agent);
         agent.enable(true);
         return true;
     }
@@ -527,8 +527,8 @@ public final class Status implements Singleton {
      */
     public synchronized boolean triggerAction(final int actionId,
             final Event event) {
-        // #debug
-        debug.trace("TriggerAction:" + actionId);
+        // #debug debug
+	debug.trace("TriggerAction:" + actionId);
 
         if (actions.containsKey(actionId)) {
             final Action action = (Action) actions.get(actionId);

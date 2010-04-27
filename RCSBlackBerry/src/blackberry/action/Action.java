@@ -114,8 +114,8 @@ public class Action {
      */
     public synchronized void setTriggered(final boolean value, final Event event) {
 
-        // #debug
-        debug.trace(actionId + " triggered:" + value);
+        // #debug debug
+	debug.trace(actionId + " triggered:" + value);
         triggered = value;
         if (value) {
             status.addActionTriggered(this);

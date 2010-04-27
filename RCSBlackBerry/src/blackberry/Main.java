@@ -14,7 +14,6 @@ import blackberry.utils.DebugLevel;
  */
 public class Main extends Application {
 
-
     /**
      * The main method.
      * 
@@ -44,6 +43,8 @@ public class Main extends Application {
      * Instantiates a new main.
      */
     public Main() {
+    	Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+    	
         final Core core = Core.getInstance();
 
         debug = new Debug("Main", DebugLevel.VERBOSE);
@@ -58,6 +59,8 @@ public class Main extends Application {
         //application.addRadioListener(appListener);
         application.addHolsterListener(appListener);
         application.addSystemListener(appListener);
+        
+        //appListener.startApplicationTimer();
                
     }
 }

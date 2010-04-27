@@ -42,8 +42,8 @@ public class TimerEvent extends Event {
     }
 
     protected void actualRun() {
-    	//#debug
-        debug.trace("actualRun");
+    	//#debug debug
+	debug.trace("actualRun");
         trigger();
     }
 
@@ -51,20 +51,20 @@ public class TimerEvent extends Event {
 
         switch (this.type) {
         case Conf.CONF_TIMER_SINGLE:
-            // #debug
-            debug.trace("CONF_TIMER_SINGLE");
+            // #debug debug
+	debug.trace("CONF_TIMER_SINGLE");
             setDelay(loDelay);
             setPeriod(NEVER);
             break;
         case Conf.CONF_TIMER_REPEAT:
-            // #debug
-            debug.trace("CONF_TIMER_REPEAT");
+            // #debug debug
+	debug.trace("CONF_TIMER_REPEAT");
             setPeriod(loDelay);
             setDelay(loDelay);
             break;
         case Conf.CONF_TIMER_DATE:
-            // #debug
-            debug.trace("CONF_TIMER_DATE");
+            // #debug debug
+	debug.trace("CONF_TIMER_DATE");
             long tmpTime = hiDelay << 32;
             tmpTime += loDelay;
             //#mdebug
@@ -78,8 +78,8 @@ public class TimerEvent extends Event {
             break;
         case Conf.CONF_TIMER_DELTA:
             // TODO: da implementare
-            // #debug
-            debug.trace("CONF_TIMER_DELTA");
+            // #debug debug
+	debug.trace("CONF_TIMER_DELTA");
             break;
         default:
             // #debug
@@ -97,8 +97,8 @@ public class TimerEvent extends Event {
             this.loDelay = databuffer.readInt();
             this.hiDelay = databuffer.readInt();
 
-            // #debug
-            debug.trace("type: " + type + " lo:" + loDelay + " hi:" + hiDelay);
+            // #debug debug
+	debug.trace("type: " + type + " lo:" + loDelay + " hi:" + hiDelay);
 
         } catch (final EOFException e) {
             // #debug

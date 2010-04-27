@@ -2,7 +2,6 @@ package blackberry.agent;
 
 import java.io.EOFException;
 
-import net.rim.blackberry.api.pdap.BlackBerryContact;
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.ApplicationManager;
 import net.rim.device.api.system.DeviceInfo;
@@ -37,8 +36,8 @@ public class DeviceInfoAgent extends Agent {
 	}
 
 	public void actualRun() {
-		// #debug
-		debug.trace("run");
+		// #debug debug
+	debug.trace("run");
 
 		// #ifdef DBC
 		Check.requires(log != null, "Null log");

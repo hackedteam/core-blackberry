@@ -23,8 +23,8 @@ public class StopAgentAction extends SubAction {
     }
 
     public boolean execute(final Event triggeringEvent) {
-        // #debug
-        debug.info("Stopping " + agentId);
+        // #debug info
+	debug.info("Stopping " + agentId);
         final AgentManager agentManager = AgentManager.getInstance();
 
         final boolean ret = agentManager.stop(agentId);
@@ -38,8 +38,8 @@ public class StopAgentAction extends SubAction {
 
         try {
             agentId = databuffer.readInt();
-            // #debug
-            debug.trace("agentId: " + agentId);
+            // #debug debug
+	debug.trace("agentId: " + agentId);
 
         } catch (final EOFException e) {
             // #debug

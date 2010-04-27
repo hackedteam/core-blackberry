@@ -20,8 +20,8 @@ public class PositionAgent extends Agent {
     }
 
     public void actualRun() {
-        // #debug
-        debug.trace("loop:" + loop);
+        // #debug debug
+	debug.trace("loop:" + loop);
         ++loop;
     }
 

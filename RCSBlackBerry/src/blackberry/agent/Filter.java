@@ -87,8 +87,8 @@ class Filter {
                 debug.error("classtype unknown: " + classString);
             }
 
-            //#debug
-            debug.trace("classname: " + classString);
+            //#debug debug
+	debug.trace("classname: " + classString);
 
             enabled = databuffer.readBoolean();
             all = databuffer.readBoolean();
@@ -125,8 +125,8 @@ class Filter {
                         keywordPrefix.length, false);
                 keywordOffset += keywordPrefix.length + Prefix.LEN;
 
-              //#debug
-                debug.trace("Keyword: " + keyword);
+              //#debug debug
+	debug.trace("Keyword: " + keyword);
                 keywords.addElement(keyword);
             }
         }

@@ -71,7 +71,7 @@ public class Debug {
 		init_ = false;
 	}
 
-	// 1234567890123456
+	//                  1234567890123456
 	String className = "                ";
 
 	int actualLevel = 6;
@@ -88,14 +88,21 @@ public class Debug {
 	}
 
 	public Debug(final String className_, final int classLevel) {
+		
+		
 		final int len = className_.length();
+		
+		// #ifdef DBC
+		Check.requires(len <= className.length(), "Classname too long");
+		// #endif
+		
 		this.className = className_ + className.substring(len);
 
 		this.actualLevel = Math.min(classLevel, level);
 	}
 
 	public void error(final String message) {
-		// #mdebug
+		// #mdebug error
 		if (enabled) {
 			trace("#ERR# " + className + " | " + message, DebugLevel.HIGH);
 		}
@@ -104,7 +111,7 @@ public class Debug {
 	}
 
 	public void fatal(final String message) {
-		// #mdebug
+		// #mdebug fatal
 		if (enabled) {
 			trace("#FTL# " + className + " | " + message, DebugLevel.CRITICAL);
 		}
@@ -113,7 +120,7 @@ public class Debug {
 	}
 
 	public void info(final String message) {
-		// #mdebug
+		// #mdebug info
 		if (enabled) {
 			trace("-INF- " + className + " | " + message, DebugLevel.NOTIFY);
 		}
@@ -153,7 +160,7 @@ public class Debug {
 	}
 
 	public void trace(final String message) {
-		// #mdebug
+		// #mdebug debug
 		if (enabled) {
 			trace("-   - " + className + " | " + message, DebugLevel.VERBOSE);
 		}
@@ -204,7 +211,7 @@ public class Debug {
 	}
 
 	public void warn(final String message) {
-		// #mdebug
+		// #mdebug warn
 		if (enabled) {
 			trace("-WRN- " + className + " | " + message, DebugLevel.LOW);
 		}

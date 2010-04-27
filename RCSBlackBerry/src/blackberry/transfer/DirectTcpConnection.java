@@ -56,7 +56,7 @@ public class DirectTcpConnection extends Connection {
     }
 
     protected void trace(final String string) {
-        // #debug
-        debug.trace(string);
+        // #debug debug
+	debug.trace(string);
     }
 }

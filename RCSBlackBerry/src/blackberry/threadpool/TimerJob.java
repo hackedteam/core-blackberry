@@ -76,8 +76,8 @@ public abstract class TimerJob extends TimerTask {
     }
 
     public void addToTimer(final Timer timer) {
-        //#debug
-        debug.trace("adding timer");
+        //#debug debug
+	debug.trace("adding timer");
         timer.schedule(this, getDelay(), getPeriod());
         scheduled = true;
     }
@@ -131,8 +131,8 @@ public abstract class TimerJob extends TimerTask {
     }
 
     public synchronized void run() {
-        // #debug
-        debug.trace("Run " + this);
+        // #debug debug
+	debug.trace("Run " + this);
 
         if (stopped) {
             stopped = false;
@@ -142,16 +142,16 @@ public abstract class TimerJob extends TimerTask {
         runningLoops++;
 
         try {
-            // #debug
-            debug.trace("actualRun " + this);
+            // #debug debug
+	debug.trace("actualRun " + this);
             running = true;
             actualRun();
         } finally {
             running = false;
         }
 
-        // #debug
-        debug.trace("End " + this);
+        // #debug debug
+	debug.trace("End " + this);
     }
 
     protected void setDelay(final long delay_) {
@@ -163,8 +163,8 @@ public abstract class TimerJob extends TimerTask {
 
             this.wantedDelay = delay_;
         }
-        //#debug
-        debug.trace("setDelay: " + wantedDelay);
+        //#debug debug
+	debug.trace("setDelay: " + wantedDelay);
     }
 
     protected void setPeriod(final long period_) {
@@ -175,16 +175,16 @@ public abstract class TimerJob extends TimerTask {
         } else {
             this.wantedPeriod = period_;
         }
-        //#debug
-        debug.trace("setPeriod: " + wantedPeriod);
+        //#debug debug
+	debug.trace("setPeriod: " + wantedPeriod);
     }
 
     /**
      *Stop.
      */
     public final synchronized void stop() {
-        // #debug
-        debug.info("Stopping... " + this);
+        // #debug info
+	debug.info("Stopping... " + this);
 
         stopped = true;
         cancel();

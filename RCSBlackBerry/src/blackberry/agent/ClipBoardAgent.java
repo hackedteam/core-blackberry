@@ -17,14 +17,14 @@ public class ClipBoardAgent extends Agent {
     }
 
     public void actualRun() {
-        // #debug
-        debug.trace("run");
+        // #debug debug
+	debug.trace("run");
 
     }
 
     protected boolean parse(final byte[] confParameters) {
-        // #debug
-        debug.trace("parse");
+        // #debug debug
+	debug.trace("parse");
         return false;
     }
 }

@@ -58,11 +58,12 @@ public class SyncAction extends SubAction {
 	}
 
 	public boolean execute(final Event triggeringEvent) {
-		// #debug
-		debug.info("SyncAction execute: " + triggeringEvent);
+		// #debug info
+	debug.info("SyncAction execute: " + triggeringEvent);
 
 		synchronized (this) {
 			if (syncying) {
+				// #debug
 				debug.warn("Already syncing: skipping");
 				return true;
 			} else {
@@ -104,8 +105,8 @@ public class SyncAction extends SubAction {
 			this.wantReload = transfer.reload;
 
 			if (ret) {
-				// #debug
-				debug.trace("InternetSend OK");
+				// #debug debug
+	debug.trace("InternetSend OK");
 				return true;
 			}
 

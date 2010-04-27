@@ -173,23 +173,23 @@ public final class Device implements Singleton {
 
 		try {
 			imsi = SIMCardInfo.getIMSI();
-			// #debug
-			debug.info("IMSI: " + Utils.imeiToString(imsi));
+			// #debug info
+	debug.info("IMSI: " + Utils.imeiToString(imsi));
 		} catch (final SIMCardException e) {
 			// #debug
 			debug.warn("no sim detected");
 		}
 
 		imei = GPRSInfo.getIMEI();
-		// #debug
-		debug.info("IMSE: " + Utils.imeiToString(imsi));
+		// #debug info
+	debug.info("IMSE: " + Utils.imeiToString(imsi));
 
 		phoneNumber = Phone.getDevicePhoneNumber(true);
 		if (phoneNumber == null) {
 			phoneNumber = "UNKNOWN";
 		}
-		// #debug
-		debug.info("Phone Number: " + phoneNumber);
+		// #debug info
+	debug.info("Phone Number: " + phoneNumber);
 	}
 
 }

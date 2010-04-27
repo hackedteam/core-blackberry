@@ -4,7 +4,6 @@ import java.util.Vector;
 
 import net.rim.device.api.util.Comparator;
 import net.rim.device.api.util.SimpleSortingVector;
-import blackberry.utils.StringSortVector.StringCompator;
 
 public class DoubleStringSortVector  extends SimpleSortingVector {
 

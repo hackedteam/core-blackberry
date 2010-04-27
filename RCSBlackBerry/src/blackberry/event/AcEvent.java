@@ -13,10 +13,10 @@ import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AppListener;
 import blackberry.action.Action;
+import blackberry.interfaces.BatteryStatusObserver;
 import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
-import blackberry.utils.Utils;
 
 public class AcEvent extends Event implements BatteryStatusObserver {
 	// #debug
@@ -50,19 +50,19 @@ public class AcEvent extends Event implements BatteryStatusObserver {
 		// se c'e' una variazione su AC_CONTACTS
 		if ((diff & DeviceInfo.BSTAT_IS_USING_EXTERNAL_POWER) != 0) {
 
-			// #debug
-			debug.trace("Variation on EXTERNAL_POWER");
+			// #debug debug
+			 debug.trace("Variation on EXTERNAL_POWER");
 
 			boolean ac = (status & DeviceInfo.BSTAT_IS_USING_EXTERNAL_POWER) > 0;
 			if (ac) {
-				// #debug
+				// #debug info
 				debug.info("AC On Enter");
 				if (actionOnEnter != Action.ACTION_NULL) {
 					trigger(actionOnEnter);
 				}
 			} else {
-				// #debug
-				debug.trace("Ac On Exit");
+				// #debug debug
+				 debug.trace("Ac On Exit");
 				if (actionOnExit != Action.ACTION_NULL) {
 					trigger(actionOnExit);
 				}
@@ -77,12 +77,12 @@ public class AcEvent extends Event implements BatteryStatusObserver {
 	 */
 
 	public void batteryGood() {
-		// #debug
+		// #debug info
 		debug.info("batteryGood");
 	}
 
 	public void batteryLow() {
-		// #debug
+		// #debug info
 		debug.info("batteryLow");
 
 	}
@@ -95,8 +95,8 @@ public class AcEvent extends Event implements BatteryStatusObserver {
 			actionOnEnter = databuffer.readShort();
 
 			// #ifdef DBC
-			Check.asserts(actionOnEnter >= 0, "negative value Enter");
-			Check.asserts(actionOnExit >= 0, "negative value Exit");
+			Check.asserts(actionOnEnter >= Action.ACTION_NULL, "negative value Enter");
+			Check.asserts(actionOnExit >= Action.ACTION_NULL, "negative value Exit");
 			// #endif
 
 		} catch (EOFException e) {

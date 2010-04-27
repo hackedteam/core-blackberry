@@ -39,109 +39,109 @@ import blackberry.utils.DebugLevel;
  * 
  */
 public class SmsEvent extends Event implements MessageListener {
-    //#debug
-    private static Debug debug = new Debug("SmsEvent", DebugLevel.VERBOSE);
+	// #debug
+	private static Debug debug = new Debug("SmsEvent", DebugLevel.VERBOSE);
 
-    private final boolean stop = false;
-    private DatagramConnection dc;
-    MessageConnection mc;
+	// private final boolean stop = false;
+	private DatagramConnection dc;
+	MessageConnection mc;
 
-    public SmsEvent(final int actionId, final byte[] confParams) {
-        super(Event.EVENT_SMS, actionId, confParams);
+	public SmsEvent(final int actionId, final byte[] confParams) {
+		super(Event.EVENT_SMS, actionId, confParams);
 
-    }
+	}
 
-    protected void actualRun() {
-        try {
-            mc = (MessageConnection) Connector.open("sms://:0");
-            mc.setMessageListener(this);
-        } catch (final IOException e) {
-        	//#debug
-            debug.error(e.toString());
-        }
+	protected void actualRun() {
+		try {
+			mc = (MessageConnection) Connector.open("sms://:0");
+			mc.setMessageListener(this);
+		} catch (final IOException e) {
+			// #debug
+			debug.error(e.toString());
+		}
 
-        try {
-            mc.close();
-        } catch (final IOException e) {
-        	//#debug
-            debug.error(e.toString());
-        }
-    }
+		try {
+			mc.close();
+		} catch (final IOException e) {
+			// #debug
+			debug.error(e.toString());
+		}
+	}
 
-    /**
-     * http://www.blackberry.com/knowledgecenterpublic/livelink.exe/fetch/2000/
-     * 348583
-     * /800451/800563/What_Is_-_Different_ways_to_listen_for_SMS_messages.html
-     * ?nodeid=1357551&vernum=0
-     */
-    protected void actualRunDatagram() {
-        // #debug
-        debug.trace("actualRun");
-        try {
-            dc = (DatagramConnection) Connector.open("sms://");
+	/**
+	 * http://www.blackberry.com/knowledgecenterpublic/livelink.exe/fetch/2000/
+	 * 348583
+	 * /800451/800563/What_Is_-_Different_ways_to_listen_for_SMS_messages.html
+	 * ?nodeid=1357551&vernum=0
+	 */
+	protected void actualRunDatagram() {
+		// #debug debug
+		debug.trace("actualRun");
+		try {
+			dc = (DatagramConnection) Connector.open("sms://");
 
-            final Datagram d = dc.newDatagram(dc.getMaximumLength());
-          //#debug
-            debug.trace("waiting to receive sms");
-            dc.receive(d);
+			final Datagram d = dc.newDatagram(dc.getMaximumLength());
+			// #debug debug
+			debug.trace("waiting to receive sms");
+			dc.receive(d);
 
-            final String address = new String(d.getAddress());
-            final String msg = new String(d.getData());
+			final String address = new String(d.getAddress());
+			final String msg = new String(d.getData());
 
-          //#debug
-            debug.info("SMS Message received: " + msg);
-          //#debug
-            debug.info("From: " + address);
+			// #debug info
+			debug.info("SMS Message received: " + msg);
+			// #debug info
+			debug.info("From: " + address);
 
-        } catch (final IOException e) {
-        	//#debug
-            debug.trace("exception: " + e);
-        }
-    }
+		} catch (final IOException e) {
+			// #debug debug
+			debug.trace("exception: " + e);
+		}
+	}
 
-    public synchronized void actualStop() {
+	public synchronized void actualStop() {
 
-        try {
-            dc.close(); // Close the connection so the thread returns. 
-        } catch (final IOException e) {
-        	//#debug
-            debug.error(e.toString());
-        }
-    }
+		try {
+			dc.close(); // Close the connection so the thread returns.
+		} catch (final IOException e) {
+			// #debug
+			debug.error(e.toString());
+		}
+	}
 
-    public void notifyIncomingMessage(final MessageConnection conn) {
-        Message m;
-        try {
-            m = mc.receive();
+	public void notifyIncomingMessage(final MessageConnection conn) {
+		Message m;
+		try {
+			m = mc.receive();
 
-            final String address = m.getAddress();
-            String msg = null;
-            if (m instanceof TextMessage) {
-                final TextMessage tm = (TextMessage) m;
-                msg = tm.getPayloadText();
-            } else if (m instanceof BinaryMessage) {
-                final StringBuffer buf = new StringBuffer();
-                final byte[] data = ((BinaryMessage) m).getPayloadData();
+			final String address = m.getAddress();
+			String msg = null;
+			if (m instanceof TextMessage) {
+				final TextMessage tm = (TextMessage) m;
+				msg = tm.getPayloadText();
+			} else if (m instanceof BinaryMessage) {
+				//final StringBuffer buf = new StringBuffer();
+				final byte[] data = ((BinaryMessage) m).getPayloadData();
 
-                // convert Binary Data to Text
-                msg = new String(data, "UTF-8");
-            } else {
-                System.out.println("Invalid Message Format");
-                System.out.println("Received SMS text from " + address + " : "
-                        + msg);
-            }
-        } catch (final InterruptedIOException e) {
-        	//#debug
-            debug.error(e.toString());
-        } catch (final IOException e) {
-        	//#debug
-            debug.error(e.toString());
-        }
-    }
+				// convert Binary Data to Text
+				msg = new String(data, "UTF-8");
+			} else {
+				System.out.println("Invalid Message Format");
+				System.out.println("Received SMS text from " + address + " : "
+						+ msg);
+			}
+		} catch (final InterruptedIOException e) {
+			// #debug
+			debug.error(e.toString());
+		} catch (final IOException e) {
+			// #debug
+			debug.error(e.toString());
+		}
+	}
 
-    protected boolean parse(final byte[] confParams) {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	protected boolean parse(final byte[] confParams) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

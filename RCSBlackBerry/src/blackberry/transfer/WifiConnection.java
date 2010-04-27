@@ -49,14 +49,14 @@ public class WifiConnection extends Connection {
 		final boolean active = (RadioInfo.getActiveWAFs() & RadioInfo.WAF_WLAN) != 0;
 		final boolean connected = WLANInfo.getWLANState() == WLANInfo.WLAN_STATE_CONNECTED;
 
-		// #debug
-		debug.info("Active: " + active + " Connected: " + connected);
+		// #debug info
+	debug.info("Active: " + active + " Connected: " + connected);
 		return connected && active;
 	}
 
 	protected void trace(final String string) {
-		// #debug
-		debug.trace(string);
+		// #debug debug
+	debug.trace(string);
 	}
 
 }

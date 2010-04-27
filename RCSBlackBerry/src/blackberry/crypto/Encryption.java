@@ -114,11 +114,11 @@ public class Encryption {
     public static void init() {
         RimAESSupported = RimAES.isSupported();
         if (RimAESSupported) {
-            // #debug
-            debug.info("RimAES");
+            // #debug info
+	debug.info("RimAES");
         } else {
-            // #debug
-            debug.info("Rijndael");
+            // #debug info
+	debug.info("Rijndael");
         }
     }
 
@@ -133,8 +133,8 @@ public class Encryption {
         digest.update(message);
         final byte[] sha1 = digest.getDigest();
 
-        // #debug
-        debug.trace("SHA1: " + Utils.byteArrayToHex(sha1));
+        // #debug debug
+	debug.trace("SHA1: " + Utils.byteArrayToHex(sha1));
         return sha1;
     }
 
@@ -186,8 +186,8 @@ public class Encryption {
 
                 if ((i + 1 >= numblock) && (lastBlockLen != 0)) { // last turn
                     // and remaind
-                    // #debug
-                    debug.trace("lastBlockLen: " + lastBlockLen);
+                    // #debug debug
+	debug.trace("lastBlockLen: " + lastBlockLen);
                     Utils.copy(plain, i * 16, pt, 0, lastBlockLen);
                 } else {
                     Utils.copy(plain, i * 16, pt, 0, 16);

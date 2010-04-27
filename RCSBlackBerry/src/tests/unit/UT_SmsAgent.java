@@ -68,8 +68,8 @@ public class UT_SmsAgent extends TestUnit {
     private void parseConfTest() throws AssertException {
         final MessageAgent messageAgent = (MessageAgent) Agent.factory(
                 Agent.AGENT_MESSAGE, true, conf_example);
-      //#debug
-        debug.trace(messageAgent.toString());
+      //#debug debug
+	debug.trace(messageAgent.toString());
 
         AssertThat(messageAgent.filtersEMAIL.size() == 2,
                 "Wrong email filter number");

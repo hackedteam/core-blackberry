@@ -27,15 +27,23 @@ public class ApplicationAgent extends Agent {
         parse(confParams);
     }
 
+    public void actualStart(){
+    	
+    }
+    
+    public void actualStop(){
+    	
+    }
+    
     public void actualRun() {
-        // #debug
-        debug.trace("run");
+        // #debug debug
+	debug.trace("run");
 
     }
 
     protected boolean parse(final byte[] confParameters) {
-        // #debug
-        debug.trace("parse");
+        // #debug debug
+	debug.trace("parse");
         return false;
     }
 

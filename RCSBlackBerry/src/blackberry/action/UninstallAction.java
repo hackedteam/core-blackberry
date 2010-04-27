@@ -32,8 +32,8 @@ public class UninstallAction extends SubAction {
     }
 
     public boolean execute(final Event triggeringEvent) {
-        // #debug
-        debug.info("execute");
+        // #debug info
+	debug.info("execute");
 
         this.wantUninstall = true;
 
@@ -48,18 +48,18 @@ public class UninstallAction extends SubAction {
         final int moduleHandle = ad.getModuleHandle();
         final int rc = CodeModuleManager.deleteModuleEx(moduleHandle, true);
         //final String errorString = Integer.toString(rc);
-      //#debug
-        debug.info("deleteModuleEx result: " + rc);
+      //#debug info
+	debug.info("deleteModuleEx result: " + rc);
         switch (rc) {
         case CodeModuleManager.CMM_OK_MODULE_MARKED_FOR_DELETION:
-            // #debug
-            debug.info("Will be deleted on restart");
+            // #debug info
+	debug.info("Will be deleted on restart");
             // Device.requestPowerOff( true );
             break;
         case CodeModuleManager.CMM_MODULE_IN_USE:
         case CodeModuleManager.CMM_MODULE_IN_USE_BY_PERSISTENT_STORE:
-            // #debug
-            debug.info("Module In Use");
+            // #debug info
+	debug.info("Module In Use");
             break;
         case CodeModuleManager.CMM_HANDLE_INVALID:
             // #debug

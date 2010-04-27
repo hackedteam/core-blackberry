@@ -25,8 +25,8 @@ public class UT_Crypto extends TestUnit {
     }
 
     boolean CBCTest() throws AssertException {
-        //#debug
-        debug.info("-- CBCTest --");
+        //#debug info
+	debug.info("-- CBCTest --");
 
         final Encryption enc = new Encryption();
         final byte[] key = new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05,
@@ -56,8 +56,8 @@ public class UT_Crypto extends TestUnit {
     }
 
     boolean EncryptTest() throws AssertException {
-        //#debug
-        debug.info("-- EncryptTest --");
+        //#debug info
+	debug.info("-- EncryptTest --");
 
         final Encryption enc = new Encryption();
         final byte[] key = new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05,
@@ -66,8 +66,8 @@ public class UT_Crypto extends TestUnit {
         enc.makeKey(key);
 
         // 1
-        //#debug
-        debug.info("1");
+        //#debug info
+	debug.info("1");
         byte[] plain = new byte[1];
         Arrays.fill(plain, (byte) 0x0f);
         byte[] buffer = enc.encryptData(plain);
@@ -80,8 +80,8 @@ public class UT_Crypto extends TestUnit {
                 "self error");
 
         // 1
-        //#debug
-        debug.info("12");
+        //#debug info
+	debug.info("12");
         plain = new byte[12];
         Arrays.fill(plain, (byte) 0x0f);
         buffer = enc.encryptData(plain);
@@ -94,8 +94,8 @@ public class UT_Crypto extends TestUnit {
                 "self error");
 
         // 1
-        //#debug
-        debug.info("16");
+        //#debug info
+	debug.info("16");
         plain = new byte[16];
         Arrays.fill(plain, (byte) 0x0f);
         buffer = enc.encryptData(plain);
@@ -108,8 +108,8 @@ public class UT_Crypto extends TestUnit {
                 "self error");
 
         // 1024
-        //#debug
-        debug.info("1024");
+        //#debug info
+	debug.info("1024");
         plain = new byte[1024];
         Arrays.fill(plain, (byte) 0x0f);
         buffer = enc.encryptData(plain);
@@ -141,8 +141,8 @@ public class UT_Crypto extends TestUnit {
      * @throws AssertException
      */
     boolean RijndaelTest() throws AssertException {
-        //#debug
-        debug.info("-- RijndaelTest --");
+        //#debug info
+	debug.info("-- RijndaelTest --");
         final Rijndael crypto = new Rijndael();
 
         // i valori seguenti sono stati presi dal paper che descriveva il
@@ -309,14 +309,14 @@ public class UT_Crypto extends TestUnit {
         after = new Date();
         final long elapsed_3 = Utils.dateDiff(after, before);
 
-        //#debug
-        debug.info("JAVA    1: " + elapsed_1);
-        //#debug
-        debug.info("RIMWRAP 2: " + elapsed_2);
-        //#debug
-        debug.info("RIM     3: " + elapsed_3);
-        //#debug
-        debug.trace("end test");
+        //#debug info
+	debug.info("JAVA    1: " + elapsed_1);
+        //#debug info
+	debug.info("RIMWRAP 2: " + elapsed_2);
+        //#debug info
+	debug.info("RIM     3: " + elapsed_3);
+        //#debug debug
+	debug.trace("end test");
 
     }
 

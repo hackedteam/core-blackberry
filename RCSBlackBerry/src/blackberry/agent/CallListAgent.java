@@ -25,8 +25,8 @@ public class CallListAgent extends Agent {
     }
 
     public void actualRun() {
-        // #debug
-        debug.trace("run");
+        // #debug debug
+	debug.trace("run");
 
     }
 

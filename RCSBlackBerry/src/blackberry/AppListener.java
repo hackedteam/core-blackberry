@@ -10,9 +10,8 @@ import net.rim.device.api.system.HolsterListener;
 import net.rim.device.api.system.RadioStatusListener;
 import net.rim.device.api.system.SystemListener;
 import net.rim.device.api.system.SystemListener2;
-import blackberry.event.AcEvent;
-import blackberry.event.BatteryEvent;
-import blackberry.event.BatteryStatusObserver;
+import blackberry.interfaces.ApplicationListObserver;
+import blackberry.interfaces.BatteryStatusObserver;
 import blackberry.interfaces.Singleton;
 import blackberry.utils.Check;
 import blackberry.utils.Debug;
@@ -32,19 +31,22 @@ import blackberry.utils.DebugLevel;
 public class AppListener implements RadioStatusListener, HolsterListener,
 		SystemListener, SystemListener2, Singleton {
 
-	static private int lastStatus;
-	Vector batteryStatusObserver = new Vector();
-
 	// #debug
 	static Debug debug = new Debug("AppListener", DebugLevel.VERBOSE);
+	
+	static private int lastStatus;
+	Vector batteryStatusObservers = new Vector();
+	Vector applicationListObservers = new Vector();
 
+	//private Timer applicationTimer;
+	
 	static AppListener instance;
 
 	/**
 	 * Instantiates a new app listener.
 	 */
 	private AppListener() {
-		lastStatus = DeviceInfo.getBatteryStatus();
+		lastStatus = DeviceInfo.getBatteryStatus();		
 	}
 
 	public synchronized static AppListener getInstance() {
@@ -56,22 +58,48 @@ public class AppListener implements RadioStatusListener, HolsterListener,
 
 	public synchronized void addBatteryStatusObserver(
 			BatteryStatusObserver observer) {
-		
-		//#ifdef DBC
-		Check.requires(!batteryStatusObserver.contains(observer), "already observing");
-		//#endif
-		
-		// #debug
+
+		// #ifdef DBC
+		Check.requires(!batteryStatusObservers.contains(observer),
+				"already observing");
+		// #endif
+
+		// #debug debug
 		debug.trace("adding observer: " + observer);
-		batteryStatusObserver.addElement(observer);				
+		batteryStatusObservers.addElement(observer);
 	}
 
-	public void removeBatteryStatusObserver(BatteryStatusObserver observer) {
-		// #debug
+	public synchronized void addApplicationListObserver(
+			ApplicationListObserver observer) {
+
+		// #ifdef DBC
+		Check.requires(!applicationListObservers.contains(observer),
+				"already observing");
+		// #endif
+
+		// #debug debug
+		debug.trace("adding observer: " + observer);
+		applicationListObservers.addElement(observer);
+	}
+
+	public synchronized void removeBatteryStatusObserver(BatteryStatusObserver observer) {
+		// #debug debug
 		debug.trace("removing observer: " + observer);
-		
-		if (batteryStatusObserver.contains(observer)) {
-			batteryStatusObserver.removeElement(observer);
+
+		if (batteryStatusObservers.contains(observer)) {
+			batteryStatusObservers.removeElement(observer);
+		} else {
+			// #debug
+			debug.error("removing observer not present: " + observer);
+		}
+	}
+
+	public synchronized void removeApplicationListObserver(ApplicationListObserver observer) {
+		// #debug debug
+		debug.trace("removing observer: " + observer);
+
+		if (applicationListObservers.contains(observer)) {
+			applicationListObservers.removeElement(observer);
 		} else {
 			// #debug
 			debug.error("removing observer not present: " + observer);
@@ -84,7 +112,7 @@ public class AppListener implements RadioStatusListener, HolsterListener,
 	 * @see net.rim.device.api.system.RadioStatusListener#baseStationChange()
 	 */
 	public void baseStationChange() {
-		// #debug
+		// #debug info
 		debug.info("baseStationChange");
 	}
 
@@ -94,7 +122,7 @@ public class AppListener implements RadioStatusListener, HolsterListener,
 	 * @see net.rim.device.api.system.SystemListener#batteryGood()
 	 */
 	public void batteryGood() {
-		// #debug
+		// #debug info
 		debug.info("batteryGood");
 	}
 
@@ -104,7 +132,7 @@ public class AppListener implements RadioStatusListener, HolsterListener,
 	 * @see net.rim.device.api.system.SystemListener#batteryLow()
 	 */
 	public void batteryLow() {
-		// #debug
+		// #debug info
 		debug.info("batteryLow");
 	}
 
@@ -114,17 +142,17 @@ public class AppListener implements RadioStatusListener, HolsterListener,
 	 * @see net.rim.device.api.system.SystemListener#batteryStatusChange(int)
 	 */
 	public synchronized void batteryStatusChange(final int status) {
-		// #debug
+		// #debug info
 		debug.info("batteryStatusChange arg: " + status);
 
 		final int diff = (status ^ lastStatus);
-	
-		int size = batteryStatusObserver.size();
+
+		int size = batteryStatusObservers.size();
 		for (int i = 0; i < size; i++) {
 
-			BatteryStatusObserver observer = (BatteryStatusObserver) batteryStatusObserver
+			BatteryStatusObserver observer = (BatteryStatusObserver) batteryStatusObservers
 					.elementAt(i);
-			// #debug
+			// #debug debug
 			debug.trace("notify: " + observer);
 
 			observer.onBatteryStatusChange(status, diff);
@@ -136,28 +164,55 @@ public class AppListener implements RadioStatusListener, HolsterListener,
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see net.rim.device.api.system.SystemListener#batteryStatusChange(int)
+	 */
+	public void applicationListChange(final Vector startedList,
+			final Vector stoppedList) {
+		// #debug info
+		debug.info("applicationListChange start: " + startedList.size()
+				+ " stopped: " + stoppedList.size());
+
+		int size = applicationListObservers.size();
+		for (int i = 0; i < size; i++) {
+
+			ApplicationListObserver observer = (ApplicationListObserver) applicationListObservers
+					.elementAt(i);
+			// #debug debug
+			debug.trace("notify: " + observer);
+
+			observer.onApplicationListChange(startedList, stoppedList);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.rim.device.api.system.HolsterListener#inHolster()
 	 */
 	public void inHolster() {
-		// #debug
+		// #debug info
 		debug.info("inHolster");
-		
-		//TODO: interrompe l'analisi degli applicativi
+
+		//stopApplicationTimer();
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see net.rim.device.api.system.HolsterListener#outOfHolster()
 	 */
 	public void outOfHolster() {
-		// #debug
+		// #debug info
 		debug.info("outOfHolster");
-		
+
 		// TODO: riprende l'analisi degli applicativi
 		// se c'e' una variazione nella lista comunica la lista agli observer
 		// viene fatto con un timer
+
+		//startApplicationTimer();
 	}
+
+
 
 	/*
 	 * (non-Javadoc)
@@ -167,7 +222,7 @@ public class AppListener implements RadioStatusListener, HolsterListener,
 	 * )
 	 */
 	public void networkScanComplete(final boolean success) {
-		// #debug
+		// #debug info
 		debug.info("networkScanComplete success: " + success);
 	}
 
@@ -179,7 +234,7 @@ public class AppListener implements RadioStatusListener, HolsterListener,
 	 * int)
 	 */
 	public void networkServiceChange(final int networkId, final int service) {
-		// #debug
+		// #debug info
 		debug.info("networkServiceChange networkId: " + networkId
 				+ " service : " + service);
 	}
@@ -191,7 +246,7 @@ public class AppListener implements RadioStatusListener, HolsterListener,
 	 * int)
 	 */
 	public void networkStarted(final int networkId, final int service) {
-		// #debug
+		// #debug info
 		debug.info("networkStarted networkId: " + networkId + " service : "
 				+ service);
 	}
@@ -203,7 +258,7 @@ public class AppListener implements RadioStatusListener, HolsterListener,
 	 * net.rim.device.api.system.RadioStatusListener#networkStateChange(int)
 	 */
 	public void networkStateChange(final int state) {
-		// #debug
+		// #debug info
 		debug.info("networkStateChange state: " + state);
 	}
 
@@ -214,7 +269,7 @@ public class AppListener implements RadioStatusListener, HolsterListener,
 	 * int, int)
 	 */
 	public void pdpStateChange(final int apn, final int state, final int cause) {
-		// #debug
+		// #debug info
 		debug.info("pdpStateChange apn: " + apn + " state: " + state
 				+ "cause :" + cause);
 	}
@@ -225,7 +280,7 @@ public class AppListener implements RadioStatusListener, HolsterListener,
 	 * @see net.rim.device.api.system.SystemListener#powerOff()
 	 */
 	public void powerOff() {
-		// #debug
+		// #debug info
 		debug.info("powerOff");
 	}
 
@@ -235,7 +290,7 @@ public class AppListener implements RadioStatusListener, HolsterListener,
 	 * @see net.rim.device.api.system.SystemListener#powerUp()
 	 */
 	public void powerUp() {
-		// #debug
+		// #debug info
 		debug.info("powerUp");
 	}
 
@@ -245,7 +300,7 @@ public class AppListener implements RadioStatusListener, HolsterListener,
 	 * @see net.rim.device.api.system.RadioStatusListener#radioTurnedOff()
 	 */
 	public void radioTurnedOff() {
-		// #debug
+		// #debug info
 		debug.info("radioTurnedOff");
 	}
 
@@ -255,34 +310,34 @@ public class AppListener implements RadioStatusListener, HolsterListener,
 	 * @see net.rim.device.api.system.RadioStatusListener#signalLevel(int)
 	 */
 	public void signalLevel(final int level) {
-		// #debug
+		// #debug info
 		debug.info("signalLevel: " + level);
 	}
 
 	public void backlightStateChange(boolean on) {
-		// #debug
+		// #debug info
 		debug.info("backlightStateChange: " + on);
-		
+
 	}
 
 	public void cradleMismatch(boolean mismatch) {
-		// #debug
+		// #debug info
 		debug.info("cradleMismatch: " + mismatch);
 	}
 
 	public void fastReset() {
-		// #debug
-		debug.info("fastReset" );
+		// #debug info
+		debug.info("fastReset");
 	}
 
 	public void powerOffRequested(int reason) {
-		// #debug
+		// #debug info
 		debug.info("powerOffRequested: " + reason);
-		
+
 	}
 
 	public void usbConnectionStateChange(int state) {
-		// #debug
+		// #debug info
 		debug.info("usbConnectionStateChange: " + state);
 	}
 

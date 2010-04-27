@@ -24,8 +24,8 @@ public class CallAgent extends Agent {
     }
 
     public void actualRun() {
-        // #debug
-        debug.trace("run");
+        // #debug debug
+	debug.trace("run");
     }
 
     protected boolean parse(final byte[] confParameters) {

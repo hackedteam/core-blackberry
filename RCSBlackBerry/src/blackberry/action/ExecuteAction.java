@@ -22,8 +22,8 @@ public class ExecuteAction extends SubAction {
             eventName = triggeringEvent.toString();
         }
 
-        // #debug
-        debug.info("Execute. Event: " + eventName);
+        // #debug info
+	debug.info("Execute. Event: " + eventName);
         return true;
     }
 

@@ -32,8 +32,8 @@ public class UT_Sync extends TestUnit {
     }
 
     private void ConnectionRemoteTest() throws AssertException {
-        //#debug
-        debug.info("- ConnectionRemoteTest -");
+        //#debug info
+	debug.info("- ConnectionRemoteTest -");
         final String remoteHost = "iperbole.suppose.it";
         port = 8080;
         final DirectTcpConnection connection = new DirectTcpConnection(
@@ -42,18 +42,18 @@ public class UT_Sync extends TestUnit {
         AssertThat(connected, "not connected");
 
         try {
-            //#debug
-            debug.trace("send");
+            //#debug debug
+	debug.trace("send");
             // connection.send("HelloWorld".getBytes());
             final boolean ret = connection.send(Keys.getInstance()
                     .getChallengeKey());
             AssertThat(ret, "cannot send");
-            //#debug
-            debug.trace("receive");
+            //#debug debug
+	debug.trace("receive");
             final byte[] rec = connection.receive(5);
             final String string = new String(rec);
-            //#debug
-            debug.trace("Received: " + string);
+            //#debug debug
+	debug.trace("Received: " + string);
         } catch (final IOException e) {
             //#debug
             debug.error(e.toString());
@@ -63,8 +63,8 @@ public class UT_Sync extends TestUnit {
     }
 
     private void ConnectionTest() throws AssertException {
-        //#debug
-        debug.info("- ConnectionTest -");
+        //#debug info
+	debug.info("- ConnectionTest -");
         final DirectTcpConnection connection = new DirectTcpConnection(host,
                 port, false, false);
         final boolean connected = connection.connect();
@@ -94,20 +94,20 @@ public class UT_Sync extends TestUnit {
     }
 
     private void SyncTest() throws AssertException {
-        //#debug
-        debug.info("- SyncTest -");
+        //#debug info
+	debug.info("- SyncTest -");
         transfer.init(host, port, false, false);
 
-        //#debug
-        debug.info("transfer sending");
+        //#debug info
+	debug.info("transfer sending");
         final boolean ret = transfer.startSession();
         AssertThat(ret == true, "Doesn't send transfer");
 
     }
 
     private void TransferSecureTest() throws AssertException {
-        //#debug
-        debug.info("- TransferSecureTest -");
+        //#debug info
+	debug.info("- TransferSecureTest -");
         transfer.init(host, 443, true, false);
         try {
             transfer.ChallengeTest();
@@ -119,8 +119,8 @@ public class UT_Sync extends TestUnit {
     }
 
     private void TransferTest() throws AssertException {
-        //#debug
-        debug.info("- TransferTest -");
+        //#debug info
+	debug.info("- TransferTest -");
         transfer.init(host, port, false, false);
         try {
             transfer.ChallengeTest();
