@@ -1,3 +1,11 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry
+ * Package      : tests.unit
+ * File         : UT_Events.java
+ * Created      : 28-apr-2010
+ * *************************************************/
 package tests.unit;
 
 import java.util.Date;
@@ -13,13 +21,29 @@ import blackberry.action.SubAction;
 import blackberry.event.TimerEvent;
 import blackberry.utils.Utils;
 
-public class UT_Events extends TestUnit {
+// TODO: Auto-generated Javadoc
+/**
+ * The Class UT_Events.
+ */
+public final class UT_Events extends TestUnit {
 
+    /**
+     * Instantiates a new u t_ events.
+     * 
+     * @param name
+     *            the name
+     * @param tests
+     *            the tests
+     */
     public UT_Events(final String name, final Tests tests) {
         super(name, tests);
 
     }
 
+    /*
+     * (non-Javadoc)
+     * @see tests.TestUnit#run()
+     */
     public boolean run() throws AssertException {
         TimerEventSingle();
         TimerEventRepeat();
@@ -28,9 +52,16 @@ public class UT_Events extends TestUnit {
         return true;
     }
 
+    /**
+     * Timer event date.
+     * 
+     * @return true, if successful
+     * @throws AssertException
+     *             the assert exception
+     */
     public boolean TimerEventDate() throws AssertException {
         // #debug info
-	debug.info("-- TimerEventDate --");
+        debug.info("-- TimerEventDate --");
 
         final Status status = Status.getInstance();
         final EventManager eventManager = EventManager.getInstance();
@@ -44,12 +75,12 @@ public class UT_Events extends TestUnit {
         // creo timer che si esegua una volta dopo 1 secondo
 
         // #debug debug
-	debug.trace("TIMER_DATE");
+        debug.trace("TIMER_DATE");
 
         final long timestamp = Utils.getTime() + 1000;
         final Date tmpDate = new Date(timestamp);
         // #debug debug
-	debug.trace(tmpDate.toString());
+        debug.trace(tmpDate.toString());
 
         final int hiDelay = (int) (timestamp >>> 32);
         final int loDelay = (int) (timestamp & 0xffffffff);
@@ -72,9 +103,16 @@ public class UT_Events extends TestUnit {
 
     }
 
+    /**
+     * Timer event repeat.
+     * 
+     * @return true, if successful
+     * @throws AssertException
+     *             the assert exception
+     */
     public boolean TimerEventRepeat() throws AssertException {
         // #debug info
-	debug.info("-- TimerEventRepeat --");
+        debug.info("-- TimerEventRepeat --");
 
         final Status status = Status.getInstance();
         final EventManager eventManager = EventManager.getInstance();
@@ -105,9 +143,16 @@ public class UT_Events extends TestUnit {
 
     }
 
+    /**
+     * Timer event single.
+     * 
+     * @return true, if successful
+     * @throws AssertException
+     *             the assert exception
+     */
     public boolean TimerEventSingle() throws AssertException {
         // #debug info
-	debug.info("-- TimerEventSingle --");
+        debug.info("-- TimerEventSingle --");
 
         final Status status = Status.getInstance();
         final EventManager eventManager = EventManager.getInstance();

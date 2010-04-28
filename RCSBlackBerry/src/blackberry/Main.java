@@ -1,15 +1,21 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry
+ * Package      : blackberry
+ * File         : Main.java
+ * Created      : 28-apr-2010
+ * *************************************************/
 package blackberry;
 
 import net.rim.device.api.system.Application;
-//#mdebug
 import tests.MainTest;
-//#enddebug
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class Main.
- * 
  * Antenna defines: DBC,HAVE_PERMISSIONS,HAVE_MIME,EVENTLOGGER
  */
 public class Main extends Application {
@@ -21,16 +27,16 @@ public class Main extends Application {
      *            the arguments
      */
     public static void main(final String[] args) {
-    	//#mdebug
+        //#mdebug
         if (args.length > 0) {
             System.out.println("Test");
             new MainTest();
         } else {
-        //#enddebug
-            
-        	new Main().enterEventDispatcher();
-            
-        //#mdebug 
+            //#enddebug
+
+            new Main().enterEventDispatcher();
+
+            //#mdebug 
         }
         //#enddebug
     }
@@ -43,8 +49,8 @@ public class Main extends Application {
      * Instantiates a new main.
      */
     public Main() {
-    	Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-    	
+        Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+
         final Core core = Core.getInstance();
 
         debug = new Debug("Main", DebugLevel.VERBOSE);
@@ -59,8 +65,8 @@ public class Main extends Application {
         //application.addRadioListener(appListener);
         application.addHolsterListener(appListener);
         application.addSystemListener(appListener);
-        
+
         //appListener.startApplicationTimer();
-               
+
     }
 }

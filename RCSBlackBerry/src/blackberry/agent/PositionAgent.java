@@ -1,30 +1,64 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry
+ * Package      : blackberry.agent
+ * File         : PositionAgent.java
+ * Created      : 28-apr-2010
+ * *************************************************/
 package blackberry.agent;
 
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
-public class PositionAgent extends Agent {
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PositionAgent.
+ */
+public final class PositionAgent extends Agent {
     //#debug
     static Debug debug = new Debug("PositionAgent", DebugLevel.VERBOSE);
 
     int loop = 0;
 
+    /**
+     * Instantiates a new position agent.
+     * 
+     * @param agentStatus
+     *            the agent status
+     */
     public PositionAgent(final boolean agentStatus) {
         super(AGENT_POSITION, agentStatus, true, "PositionAgent");
 
     }
 
+    /**
+     * Instantiates a new position agent.
+     * 
+     * @param agentStatus
+     *            the agent status
+     * @param confParams
+     *            the conf params
+     */
     protected PositionAgent(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see blackberry.threadpool.TimerJob#actualRun()
+     */
     public void actualRun() {
         // #debug debug
-	//debug.trace("loop:" + loop);
+        //debug.trace("loop:" + loop);
         ++loop;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see blackberry.agent.Agent#parse(byte[])
+     */
     protected boolean parse(final byte[] confParameters) {
         setPeriod(60000);
 

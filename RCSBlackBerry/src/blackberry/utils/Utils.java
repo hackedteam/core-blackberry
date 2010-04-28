@@ -1,8 +1,8 @@
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
- * Project      : RCS, RCSBlackBerry_lib 
- * File         : Utils.java 
+ * Project      : RCS, RCSBlackBerry_lib
+ * File         : Utils.java
  * Created      : 26-mar-2010
  * *************************************************/
 package blackberry.utils;
@@ -54,6 +54,13 @@ public final class Utils {
         return payload;
     }
 
+    /**
+     * Byte array to hex.
+     * 
+     * @param data
+     *            the data
+     * @return the string
+     */
     public static String byteArrayToHex(final byte[] data) {
         return byteArrayToHex(data, 0, data.length);
     }
@@ -63,9 +70,12 @@ public final class Utils {
      * in formato esadecimale.
      * 
      * @param data
-     * @param length
+     *            the data
      * @param offset
-     * @return
+     *            the offset
+     * @param length
+     *            the length
+     * @return the string
      */
     public static String byteArrayToHex(final byte[] data, final int offset,
             final int length) {
@@ -94,7 +104,7 @@ public final class Utils {
      *            the offset
      * @return the int
      */
-    public static final int byteArrayToInt(final byte[] buffer, final int offset) {
+    public static int byteArrayToInt(final byte[] buffer, final int offset) {
 
         // #ifdef DBC
         Check.requires(buffer.length >= offset + 4, "short buffer");
@@ -114,7 +124,16 @@ public final class Utils {
 
     }
 
-    public static final long byteArrayToLong(final byte[] buffer,
+    /**
+     * Byte array to long.
+     * 
+     * @param buffer
+     *            the buffer
+     * @param offset
+     *            the offset
+     * @return the long
+     */
+    public static long byteArrayToLong(final byte[] buffer,
             final int offset) {
 
         // #ifdef DBC
@@ -238,8 +257,8 @@ public final class Utils {
         }
 
         confHash = (int) tempHash;
-      //#debug debug
-	debug.trace("confhash:" + confHash);
+        //#debug debug
+        debug.trace("confhash:" + confHash);
         return confHash;
     }
 
@@ -254,6 +273,15 @@ public final class Utils {
         return crc(charArrayToByteArray(buffer), 0, buffer.length);
     }
 
+    /**
+     * Date diff.
+     * 
+     * @param after
+     *            the after
+     * @param before
+     *            the before
+     * @return the long
+     */
     public static long dateDiff(final Date after, final Date before) {
         final long ret = after.getTime() - before.getTime();
         return ret;
@@ -269,6 +297,15 @@ public final class Utils {
         e.printStackTrace();
     }
 
+    /**
+     * Gets the bit.
+     * 
+     * @param value
+     *            the value
+     * @param i
+     *            the i
+     * @return the bit
+     */
     public static boolean getBit(final int value, final int i) {
         final boolean ret = ((value >> i) & 0x01) == 1;
         return ret;
@@ -322,6 +359,11 @@ public final class Utils {
         return pos;
     }
 
+    /**
+     * Gets the time.
+     * 
+     * @return the time
+     */
     public static long getTime() {
         return System.currentTimeMillis();
     }
@@ -370,6 +412,13 @@ public final class Utils {
         return ret;
     }
 
+    /**
+     * Imei to string.
+     * 
+     * @param imei
+     *            the imei
+     * @return the string
+     */
     public static String imeiToString(final byte[] imei) {
         final String imeiString = GPRSInfo.imeiToString(imei);
         return imeiString.replace('.', '0');
@@ -382,7 +431,7 @@ public final class Utils {
      *            the value
      * @return the byte[]
      */
-    public static final byte[] intToByteArray(final int value) {
+    public static byte[] intToByteArray(final int value) {
         final byte[] result = new byte[4];
         final DataBuffer databuffer = new DataBuffer(result, 0, 4, false);
         databuffer.writeInt(value);
@@ -400,6 +449,13 @@ public final class Utils {
         return byteArrayToCharArray(intToByteArray(value));
     }
 
+    /**
+     * Join string.
+     * 
+     * @param nodes
+     *            the nodes
+     * @return the string
+     */
     public static String joinString(final Vector nodes) {
         final StringBuffer sb = new StringBuffer();
         final int nsize = nodes.size();
@@ -409,6 +465,13 @@ public final class Utils {
         return sb.toString();
     }
 
+    /**
+     * Long to byte array.
+     * 
+     * @param value
+     *            the value
+     * @return the byte[]
+     */
     public static byte[] longToByteArray(final long value) {
         final byte[] result = new byte[8];
         final DataBuffer databuffer = new DataBuffer(result, 0, 8, false);
@@ -430,7 +493,6 @@ public final class Utils {
 
             /*
              * if (elapsed > millis * 2) {
-             * 
              * debug.error("slept " + elapsed + " instead of:" + millis +
              * " thread: " + Thread.currentThread().getName()); }
              */
@@ -442,6 +504,15 @@ public final class Utils {
         }
     }
 
+    /**
+     * Split string.
+     * 
+     * @param original
+     *            the original
+     * @param separators
+     *            the separators
+     * @return the vector
+     */
     public static Vector splitString(String original, final String separators) {
         final Vector nodes = new Vector();
         // Parse nodes into vector

@@ -1,3 +1,11 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry
+ * Package      : tests.unit
+ * File         : UT_SmsAgent.java
+ * Created      : 28-apr-2010
+ * *************************************************/
 package tests.unit;
 
 import java.util.Calendar;
@@ -15,7 +23,11 @@ import tests.Tests;
 import blackberry.agent.Agent;
 import blackberry.agent.MessageAgent;
 
-public class UT_SmsAgent extends TestUnit {
+// TODO: Auto-generated Javadoc
+/**
+ * The Class UT_SmsAgent.
+ */
+public final class UT_SmsAgent extends TestUnit {
 
     protected static Store _store;
     protected final static int[] HEADER_KEYS = { Message.RecipientType.TO,
@@ -61,6 +73,14 @@ public class UT_SmsAgent extends TestUnit {
             0, 0, 0, -128, 54, -33, -12, 10, -48, -54, 1, 0, 0, 0, 0, 0, -128,
             62, -43, -34, -79, -99, 1, 0, 0, 0, 0, 0, 0, 0, 0 };
 
+    /**
+     * Instantiates a new u t_ sms agent.
+     * 
+     * @param name
+     *            the name
+     * @param tests
+     *            the tests
+     */
     public UT_SmsAgent(final String name, final Tests tests) {
         super(name, tests);
     }
@@ -68,8 +88,8 @@ public class UT_SmsAgent extends TestUnit {
     private void parseConfTest() throws AssertException {
         final MessageAgent messageAgent = (MessageAgent) Agent.factory(
                 Agent.AGENT_MESSAGE, true, conf_example);
-      //#debug debug
-	debug.trace(messageAgent.toString());
+        //#debug debug
+        debug.trace(messageAgent.toString());
 
         AssertThat(messageAgent.filtersEMAIL.size() == 2,
                 "Wrong email filter number");
@@ -79,18 +99,26 @@ public class UT_SmsAgent extends TestUnit {
                 "Wrong sms filter number");
     }
 
+    /*
+     * (non-Javadoc)
+     * @see tests.TestUnit#run()
+     */
     public boolean run() throws AssertException {
         parseConfTest();
         return true;
     }
 
     /**
-     * funzione di test che serve a spedire le email
+     * funzione di test che serve a spedire le email.
      * 
      * @param dest
+     *            the dest
      * @param from
+     *            the from
      * @param subject
+     *            the subject
      * @param body
+     *            the body
      */
     public void sendEmail(final String dest, final String from,
             final String subject, final String body) {

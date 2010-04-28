@@ -1,3 +1,11 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry
+ * Package      : tests.unit
+ * File         : UT_Log.java
+ * Created      : 28-apr-2010
+ * *************************************************/
 package tests.unit;
 
 import tests.AssertException;
@@ -14,8 +22,20 @@ import blackberry.utils.Check;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
-public class UT_Log extends TestUnit {
+// TODO: Auto-generated Javadoc
+/**
+ * The Class UT_Log.
+ */
+public final class UT_Log extends TestUnit {
 
+    /**
+     * Instantiates a new u t_ log.
+     * 
+     * @param name
+     *            the name
+     * @param tests
+     *            the tests
+     */
     public UT_Log(final String name, final Tests tests) {
         super(name, tests);
     }
@@ -42,7 +62,7 @@ public class UT_Log extends TestUnit {
         agent.stop();
 
         //#debug debug
-	debug.trace("Agent Device ok");
+        debug.trace("Agent Device ok");
     }
 
     private void CreateEncDeviceLog() {
@@ -139,6 +159,10 @@ public class UT_Log extends TestUnit {
         file.append(0); // string null terminated
     }
 
+    /*
+     * (non-Javadoc)
+     * @see tests.TestUnit#run()
+     */
     public boolean run() throws AssertException {
 
         Path.makeDirs(true);

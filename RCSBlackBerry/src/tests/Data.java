@@ -1,5 +1,16 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry
+ * Package      : tests
+ * File         : Data.java
+ * Created      : 28-apr-2010
+ * *************************************************/
 package tests;
 
+/**
+ * The Class Data.
+ */
 public final class Data {
     public static final char[] CONFIG_PAYLOAD = new char[] { 0xA1, 0x03, 0x00,
             0x00, 0x45, 0x56, 0x45, 0x4E, 0x54, 0x43, 0x4F, 0x4E, 0x46, 0x53,

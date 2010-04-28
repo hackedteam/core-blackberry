@@ -1,3 +1,11 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry
+ * Package      : tests.unit
+ * File         : UT_Markup.java
+ * Created      : 28-apr-2010
+ * *************************************************/
 package tests.unit;
 
 import java.io.IOException;
@@ -10,8 +18,20 @@ import blackberry.config.Keys;
 import blackberry.log.Markup;
 import blackberry.utils.Utils;
 
-public class UT_Markup extends TestUnit {
+// TODO: Auto-generated Javadoc
+/**
+ * The Class UT_Markup.
+ */
+public final class UT_Markup extends TestUnit {
 
+    /**
+     * Instantiates a new u t_ markup.
+     * 
+     * @param name
+     *            the name
+     * @param tests
+     *            the tests
+     */
     public UT_Markup(final String name, final Tests tests) {
         super(name, tests);
     }
@@ -20,6 +40,10 @@ public class UT_Markup extends TestUnit {
         Markup.removeMarkups();
     }
 
+    /*
+     * (non-Javadoc)
+     * @see tests.TestUnit#run()
+     */
     public boolean run() throws AssertException {
 
         DeleteAllMarkupTest();
@@ -28,6 +52,12 @@ public class UT_Markup extends TestUnit {
         return true;
     }
 
+    /**
+     * Simple markup test.
+     * 
+     * @throws AssertException
+     *             the assert exception
+     */
     void SimpleMarkupTest() throws AssertException {
 
         final int agentId = Agent.AGENT_APPLICATION;

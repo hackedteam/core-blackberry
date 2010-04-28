@@ -1,5 +1,14 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry
+ * Package      : blackberry.utils
+ * File         : Queue.java
+ * Created      : 28-apr-2010
+ * *************************************************/
 package blackberry.utils;
 
+// TODO: Auto-generated Javadoc
 //Queue interface
 //
 // ******************PUBLIC OPERATIONS*********************
@@ -17,12 +26,11 @@ package blackberry.utils;
  * @author Mark Allen Weiss
  */
 public interface Queue {
+
     /**
      * Return and remove the least recently inserted item from the queue.
      * 
      * @return the least recently inserted item in the queue.
-     * @exception UnderflowException
-     *                if the queue is empty.
      */
     Object dequeue();
 
@@ -39,8 +47,6 @@ public interface Queue {
      * queue.
      * 
      * @return the least recently inserted item in the queue.
-     * @exception UnderflowException
-     *                if the queue is empty.
      */
     Object getFront();
 

@@ -1,3 +1,11 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry
+ * Package      : blackberry.agent
+ * File         : Prefix.java
+ * Created      : 28-apr-2010
+ * *************************************************/
 package blackberry.agent;
 
 import java.io.EOFException;
@@ -7,6 +15,10 @@ import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Prefix.
+ */
 class Prefix {
     //#debug
     static Debug debug = new Debug("Prefix", DebugLevel.NOTIFY);
@@ -26,6 +38,14 @@ class Prefix {
 
     private boolean valid;
 
+    /**
+     * Instantiates a new prefix.
+     * 
+     * @param conf
+     *            the conf
+     * @param offset
+     *            the offset
+     */
     public Prefix(final byte[] conf, final int offset) {
         final DataBuffer databuffer = new DataBuffer(conf, offset, conf.length
                 - offset, false);
@@ -54,6 +74,11 @@ class Prefix {
         }
     }
 
+    /**
+     * Checks if is valid.
+     * 
+     * @return true, if is valid
+     */
     public boolean isValid() {
         return valid;
     }

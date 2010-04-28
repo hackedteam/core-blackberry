@@ -1,23 +1,20 @@
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
- * Project      : RCS, RCSBlackBerry_lib 
- * File         : Rijndael.java 
+ * Project      : RCS, RCSBlackBerry_lib
+ * File         : Rijndael.java
  * Created      : 26-mar-2010
  * *************************************************/
 package blackberry.crypto;
 
+// TODO: Auto-generated Javadoc
 /**
  * Rijndael.java
  * 
  * @version 1.0 (May 2001)
- * 
  *          Optimised Java implementation of the Rijndael (AES) block cipher.
- * 
  * @author Paulo Barreto <paulo.barreto@terra.com.br>
- * 
  *         This software is hereby placed in the public domain.
- * 
  *         THIS SOFTWARE IS PROVIDED BY THE AUTHOR ''AS IS'' AND ANY EXPRESS OR
  *         IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  *         WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -121,7 +118,6 @@ public final class Rijndael implements CryptoEngine {
         /*
          * Te0[x] = Se[x].[02, 01, 01, 03]; Te1[x] = Se[x].[03, 02, 01, 01];
          * Te2[x] = Se[x].[01, 03, 02, 01]; Te3[x] = Se[x].[01, 01, 03, 02];
-         * 
          * Td0[x] = Sd[x].[0e, 09, 0d, 0b]; Td1[x] = Sd[x].[0b, 0e, 09, 0d];
          * Td2[x] = Sd[x].[0d, 0b, 0e, 09]; Td3[x] = Sd[x].[09, 0d, 0b, 0e];
          */
@@ -191,6 +187,9 @@ public final class Rijndael implements CryptoEngine {
         }
     }
 
+    /**
+     * Instantiates a new rijndael.
+     */
     public Rijndael() {
     }
 
@@ -272,7 +271,6 @@ public final class Rijndael implements CryptoEngine {
     /*
      * private void expandKey(byte[] cipherKey) { int keyOffset = 0; int i = 0;
      * int temp;
-     * 
      * rek[0] = (cipherKey[ 0] ) << 24 | (cipherKey[ 1] & 0xff) << 16 |
      * (cipherKey[ 2] & 0xff) << 8 | (cipherKey[ 3] & 0xff); rek[1] =
      * (cipherKey[ 4] ) << 24 | (cipherKey[ 5] & 0xff) << 16 | (cipherKey[ 6] &
@@ -431,7 +429,7 @@ public final class Rijndael implements CryptoEngine {
     /**
      * Destroy all sensitive information in this object.
      */
-    protected final void finalize() {
+    protected void finalize() {
         if (rek != null) {
             for (int i = 0; i < rek.length; i++) {
                 rek[i] = 0;
@@ -503,6 +501,7 @@ public final class Rijndael implements CryptoEngine {
      *            the cipher key (128, 192, or 256 bits).
      * @param keyBits
      *            size of the cipher key in bits.
+     * @return true, if successful
      */
     public boolean makeKey(final byte[] cipherKey, final int keyBits) {
         return makeKey(cipherKey, keyBits, DIR_BOTH);
@@ -517,6 +516,7 @@ public final class Rijndael implements CryptoEngine {
      *            size of the cipher key in bits.
      * @param direction
      *            cipher direction (DIR_ENCRYPT, DIR_DECRYPT, or DIR_BOTH).
+     * @return true, if successful
      */
     public boolean makeKey(final byte[] cipherKey, final int keyBits,
             final int direction) {

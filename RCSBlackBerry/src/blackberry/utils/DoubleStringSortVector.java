@@ -1,3 +1,11 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry
+ * Package      : blackberry.utils
+ * File         : DoubleStringSortVector.java
+ * Created      : 28-apr-2010
+ * *************************************************/
 package blackberry.utils;
 
 import java.util.Vector;
@@ -5,49 +13,89 @@ import java.util.Vector;
 import net.rim.device.api.util.Comparator;
 import net.rim.device.api.util.SimpleSortingVector;
 
-public class DoubleStringSortVector  extends SimpleSortingVector {
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DoubleStringSortVector.
+ */
+public final class DoubleStringSortVector extends SimpleSortingVector {
 
-		class StringPair {
-			public String key;
-			public String value;
-			StringPair(String first, String value){
-				this.key=first;
-				this.value=value;				
-			}
-		}
-			
-		class StringCompator implements Comparator {
+    /**
+     * The Class StringCompator.
+     */
+    class StringCompator implements Comparator {
 
-			public int compare(Object o1, Object o2) {
-				StringPair s1 = (StringPair) o1;
-				StringPair s2 = (StringPair) o2;
-				return s1.key.compareTo(s2.key);
-			}
-		}
+        /*
+         * (non-Javadoc)
+         * @see net.rim.device.api.util.Comparator#compare(java.lang.Object,
+         * java.lang.Object)
+         */
+        public int compare(final Object o1, final Object o2) {
+            final StringPair s1 = (StringPair) o1;
+            final StringPair s2 = (StringPair) o2;
+            return s1.key.compareTo(s2.key);
+        }
+    }
 
-		static StringCompator stringCompator = null;
+    /**
+     * The Class StringPair.
+     */
+    class StringPair {
+        public String key;
+        public String value;
 
-		public DoubleStringSortVector() {
-			super();
-			if (stringCompator == null) {
-				stringCompator = this.new StringCompator();
-			}
-			setSortComparator(stringCompator);
-		}
-		
-		public synchronized void addElement(String key, String value){
-			super.addElement(this.new StringPair(key, value));
-		}
-		
-		public synchronized Vector getValues(){
-			reSort();
-			int size = size();
-			Vector values = new Vector(size);
-			for(int i = 0; i< size; i++){
-				StringPair sp = (StringPair)elementAt(i);
-				values.addElement(sp.value);
-			}
-							
-			return values;			
-		}
+        /**
+         * Instantiates a new string pair.
+         * 
+         * @param first
+         *            the first
+         * @param value
+         *            the value
+         */
+        StringPair(final String first, final String value) {
+            key = first;
+            this.value = value;
+        }
+    }
+
+    static StringCompator stringCompator = null;
+
+    /**
+     * Instantiates a new double string sort vector.
+     */
+    public DoubleStringSortVector() {
+        super();
+        if (stringCompator == null) {
+            stringCompator = this.new StringCompator();
+        }
+        setSortComparator(stringCompator);
+    }
+
+    /**
+     * Adds the element.
+     * 
+     * @param key
+     *            the key
+     * @param value
+     *            the value
+     */
+    public synchronized void addElement(final String key, final String value) {
+        super.addElement(this.new StringPair(key, value));
+    }
+
+    /**
+     * Gets the values.
+     * 
+     * @return the values
+     */
+    public synchronized Vector getValues() {
+        reSort();
+        final int size = size();
+        final Vector values = new Vector(size);
+        for (int i = 0; i < size; i++) {
+            final StringPair sp = (StringPair) elementAt(i);
+            values.addElement(sp.value);
+        }
+
+        return values;
+    }
 }

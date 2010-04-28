@@ -1,8 +1,20 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry
+ * Package      : blackberry.utils
+ * File         : DebugWriter.java
+ * Created      : 28-apr-2010
+ * *************************************************/
 package blackberry.utils;
 
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DebugWriter.
+ */
 public final class DebugWriter extends Thread {
 
     static final String FILE_NAME = "Debug.txt";
@@ -17,6 +29,12 @@ public final class DebugWriter extends Thread {
     StringBuffer queue;
     int numMessages;
 
+    /**
+     * Instantiates a new debug writer.
+     * 
+     * @param logToSD
+     *            the log to sd
+     */
     public DebugWriter(final boolean logToSD) {
 
         toStop = false;
@@ -42,6 +60,13 @@ public final class DebugWriter extends Thread {
 
     }
 
+    /**
+     * Append.
+     * 
+     * @param message
+     *            the message
+     * @return true, if successful
+     */
     public synchronized boolean append(final String message) {
 
         queue.append(message + "\r\n");
@@ -50,6 +75,10 @@ public final class DebugWriter extends Thread {
         return true;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Thread#run()
+     */
     public void run() {
         // #ifdef DBC
         Check.asserts(fileDebug != null, "null filedebug");
@@ -77,6 +106,9 @@ public final class DebugWriter extends Thread {
         }
     }
 
+    /**
+     * Stop.
+     */
     public synchronized void stop() {
         toStop = true;
         notifyAll();

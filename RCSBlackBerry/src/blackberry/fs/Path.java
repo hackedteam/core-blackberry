@@ -1,8 +1,8 @@
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
- * Project      : RCS, RCSBlackBerry_lib 
- * File         : Path.java 
+ * Project      : RCS, RCSBlackBerry_lib
+ * File         : Path.java
  * Created      : 26-mar-2010
  * *************************************************/
 package blackberry.fs;
@@ -19,6 +19,7 @@ import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class Path.
  */
@@ -119,10 +120,10 @@ public final class Path {
 
             try {
                 fc = (FileConnection) Connector.open("file:///" + root);
-              //#debug info
-	debug.info(root + " " + fc.availableSize());
+                //#debug info
+                debug.info(root + " " + fc.availableSize());
             } catch (final IOException e) {
-            	//#debug
+                //#debug
                 debug.error(root + " " + e);
                 e.printStackTrace();
             }

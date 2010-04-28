@@ -18,93 +18,135 @@ import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
-public class AcEvent extends Event implements BatteryStatusObserver {
-	// #debug
-	private static Debug debug = new Debug("AcEvent", DebugLevel.VERBOSE);
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AcEvent.
+ */
+public final class AcEvent extends Event implements BatteryStatusObserver {
+    // #debug
+    private static Debug debug = new Debug("AcEvent", DebugLevel.VERBOSE);
 
-	// private int lastStatus;
+    // private int lastStatus;
 
-	int actionOnEnter;
-	int actionOnExit;
+    int actionOnEnter;
+    int actionOnExit;
 
-	public AcEvent(final int actionId, final byte[] confParams) {
-		super(Event.EVENT_AC, actionId, confParams);
+    /**
+     * Instantiates a new ac event.
+     * 
+     * @param actionId
+     *            the action id
+     * @param confParams
+     *            the conf params
+     */
+    public AcEvent(final int actionId, final byte[] confParams) {
+        super(Event.EVENT_AC, actionId, confParams);
 
-		setPeriod(NEVER);
+        setPeriod(NEVER);
 
-	}
+    }
 
-	protected void actualStart() {
-		AppListener.getInstance().addBatteryStatusObserver(this);
-	}
+    /*
+     * (non-Javadoc)
+     * @see blackberry.threadpool.TimerJob#actualRun()
+     */
+    protected void actualRun() {
 
-	protected void actualStop() {
-		AppListener.getInstance().removeBatteryStatusObserver(this);
-	}
+    }
 
-	protected void actualRun() {
+    /*
+     * (non-Javadoc)
+     * @see blackberry.threadpool.TimerJob#actualStart()
+     */
+    protected void actualStart() {
+        AppListener.getInstance().addBatteryStatusObserver(this);
+    }
 
-	}
+    /*
+     * (non-Javadoc)
+     * @see blackberry.threadpool.TimerJob#actualStop()
+     */
+    protected void actualStop() {
+        AppListener.getInstance().removeBatteryStatusObserver(this);
+    }
 
-	public void onBatteryStatusChange(final int status, final int diff) {
-		// se c'e' una variazione su AC_CONTACTS
-		if ((diff & DeviceInfo.BSTAT_IS_USING_EXTERNAL_POWER) != 0) {
+    /**
+     * Battery good.
+     */
+    public void batteryGood() {
+        // #debug info
+        debug.info("batteryGood");
+    }
 
-			// #debug debug
-			 debug.trace("Variation on EXTERNAL_POWER");
+    /*
+     * public void actualStop() { Application application =
+     * Application.getApplication(); application.removeSystemListener(this);
+     * debug.info("Removed SystemListener"); }
+     */
 
-			boolean ac = (status & DeviceInfo.BSTAT_IS_USING_EXTERNAL_POWER) > 0;
-			if (ac) {
-				// #debug info
-				debug.info("AC On Enter");
-				if (actionOnEnter != Action.ACTION_NULL) {
-					trigger(actionOnEnter);
-				}
-			} else {
-				// #debug debug
-				 debug.trace("Ac On Exit");
-				if (actionOnExit != Action.ACTION_NULL) {
-					trigger(actionOnExit);
-				}
-			}
-		}
-	}
+    /**
+     * Battery low.
+     */
+    public void batteryLow() {
+        // #debug info
+        debug.info("batteryLow");
 
-	/*
-	 * public void actualStop() { Application application =
-	 * Application.getApplication(); application.removeSystemListener(this);
-	 * debug.info("Removed SystemListener"); }
-	 */
+    }
 
-	public void batteryGood() {
-		// #debug info
-		debug.info("batteryGood");
-	}
+    /*
+     * (non-Javadoc)
+     * @see
+     * blackberry.interfaces.BatteryStatusObserver#onBatteryStatusChange(int,
+     * int)
+     */
+    public void onBatteryStatusChange(final int status, final int diff) {
+        // se c'e' una variazione su AC_CONTACTS
+        if ((diff & DeviceInfo.BSTAT_IS_USING_EXTERNAL_POWER) != 0) {
 
-	public void batteryLow() {
-		// #debug info
-		debug.info("batteryLow");
+            // #debug debug
+            debug.trace("Variation on EXTERNAL_POWER");
 
-	}
+            final boolean ac = (status & DeviceInfo.BSTAT_IS_USING_EXTERNAL_POWER) > 0;
+            if (ac) {
+                // #debug info
+                debug.info("AC On Enter");
+                if (actionOnEnter != Action.ACTION_NULL) {
+                    trigger(actionOnEnter);
+                }
+            } else {
+                // #debug debug
+                debug.trace("Ac On Exit");
+                if (actionOnExit != Action.ACTION_NULL) {
+                    trigger(actionOnExit);
+                }
+            }
+        }
+    }
 
-	protected boolean parse(final byte[] confParams) {
-		DataBuffer databuffer = new DataBuffer(confParams, 0,
-				confParams.length, false);
-		try {
-			actionOnExit = databuffer.readInt();
-			actionOnEnter = actionId;
+    /*
+     * (non-Javadoc)
+     * @see blackberry.event.Event#parse(byte[])
+     */
+    protected boolean parse(final byte[] confParams) {
+        final DataBuffer databuffer = new DataBuffer(confParams, 0,
+                confParams.length, false);
+        try {
+            actionOnExit = databuffer.readInt();
+            actionOnEnter = actionId;
 
-			// #ifdef DBC
-			Check.asserts(actionOnEnter >= Action.ACTION_NULL, "negative value Enter");
-			Check.asserts(actionOnExit >= Action.ACTION_NULL, "negative value Exit");
-			// #endif
+            // #ifdef DBC
+            Check.asserts(actionOnEnter >= Action.ACTION_NULL,
+                    "negative value Enter");
+            Check.asserts(actionOnExit >= Action.ACTION_NULL,
+                    "negative value Exit");
+            // #endif
 
-		} catch (EOFException e) {
-			actionOnEnter = Action.ACTION_NULL;
-			actionOnExit = Action.ACTION_NULL;
-			return false;
-		}
-		return true;
-	}
+        } catch (final EOFException e) {
+            actionOnEnter = Action.ACTION_NULL;
+            actionOnExit = Action.ACTION_NULL;
+            return false;
+        }
+        return true;
+    }
 
 }

@@ -1,5 +1,14 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry
+ * Package      : blackberry.utils
+ * File         : UnderflowException.java
+ * Created      : 28-apr-2010
+ * *************************************************/
 package blackberry.utils;
 
+// TODO: Auto-generated Javadoc
 /**
  * Exception class for access in empty containers such as stacks, queues, and
  * priority queues.

@@ -1,5 +1,16 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry
+ * Package      : blackberry.transfer
+ * File         : Proto.java
+ * Created      : 28-apr-2010
+ * *************************************************/
 package blackberry.transfer;
 
+/**
+ * The Class Proto.
+ */
 public final class Proto {
     /** The Constant OK. */
     public static final int OK = 0x1; // OK
@@ -84,11 +95,11 @@ public final class Proto {
 
     public static final int LASTTYPE = 0x19;
 
-    public static final String[] STRINGS = new String[] { "NULL", "OK",
-            "NO", "BYE", "CHALLENGE", "RESPONSE", "SYNC", "NEW_CONF",
-            "LOG_NUM", "LOG", "UNINSTALL", "RESUME", "DOWNLOAD", "UPLOAD",
-            "FILE", "ID", "INSTANCE", "USERID", "DEVICEID", "SOURCEID",
-            "VERSION", "LOG_END", "UPGRADE", "ENDFILE", "SUBTYPE" };
+    public static final String[] STRINGS = new String[] { "NULL", "OK", "NO",
+            "BYE", "CHALLENGE", "RESPONSE", "SYNC", "NEW_CONF", "LOG_NUM",
+            "LOG", "UNINSTALL", "RESUME", "DOWNLOAD", "UPLOAD", "FILE", "ID",
+            "INSTANCE", "USERID", "DEVICEID", "SOURCEID", "VERSION", "LOG_END",
+            "UPGRADE", "ENDFILE", "SUBTYPE" };
 
     private Proto() {
     };

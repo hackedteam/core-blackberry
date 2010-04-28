@@ -1,8 +1,8 @@
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
- * Project      : RCS, RCSBlackBerry_lib 
- * File         : TimerEvent.java 
+ * Project      : RCS, RCSBlackBerry_lib
+ * File         : TimerEvent.java
  * Created      : 26-mar-2010
  * *************************************************/
 package blackberry.event;
@@ -16,7 +16,11 @@ import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
 
-public class TimerEvent extends Event {
+// TODO: Auto-generated Javadoc
+/**
+ * The Class TimerEvent.
+ */
+public final class TimerEvent extends Event {
     private static final int SLEEP_TIME = 1000;
 
     //#debug
@@ -28,43 +32,67 @@ public class TimerEvent extends Event {
 
     Date timestamp;
 
+    /**
+     * Instantiates a new timer event.
+     * 
+     * @param actionId
+     *            the action id
+     * @param confParams
+     *            the conf params
+     */
     public TimerEvent(final int actionId, final byte[] confParams) {
         super(Event.EVENT_TIMER, actionId, confParams);
     }
 
+    /**
+     * Instantiates a new timer event.
+     * 
+     * @param actionId_
+     *            the action id_
+     * @param type_
+     *            the type_
+     * @param loDelay_
+     *            the lo delay_
+     * @param hiDelay_
+     *            the hi delay_
+     */
     public TimerEvent(final int actionId_, final int type_, final int loDelay_,
             final int hiDelay_) {
         super(Event.EVENT_TIMER, actionId_, "TimerEvent");
-        this.type = type_;
-        this.loDelay = loDelay_;
-        this.hiDelay = hiDelay_;
+        type = type_;
+        loDelay = loDelay_;
+        hiDelay = hiDelay_;
         init();
     }
 
+    /*
+     * (non-Javadoc)
+     * @see blackberry.threadpool.TimerJob#actualRun()
+     */
     protected void actualRun() {
-    	//#debug debug
-	debug.trace("actualRun");
+        //#debug debug
+        debug.trace("actualRun");
         trigger();
     }
 
     private void init() {
 
-        switch (this.type) {
+        switch (type) {
         case Conf.CONF_TIMER_SINGLE:
             // #debug debug
-	debug.trace("CONF_TIMER_SINGLE");
+            debug.trace("CONF_TIMER_SINGLE");
             setDelay(loDelay);
             setPeriod(NEVER);
             break;
         case Conf.CONF_TIMER_REPEAT:
             // #debug debug
-	debug.trace("CONF_TIMER_REPEAT");
+            debug.trace("CONF_TIMER_REPEAT");
             setPeriod(loDelay);
             setDelay(loDelay);
             break;
         case Conf.CONF_TIMER_DATE:
             // #debug debug
-	debug.trace("CONF_TIMER_DATE");
+            debug.trace("CONF_TIMER_DATE");
             long tmpTime = hiDelay << 32;
             tmpTime += loDelay;
             //#mdebug
@@ -79,7 +107,7 @@ public class TimerEvent extends Event {
         case Conf.CONF_TIMER_DELTA:
             // TODO: da implementare
             // #debug debug
-	debug.trace("CONF_TIMER_DELTA");
+            debug.trace("CONF_TIMER_DELTA");
             break;
         default:
             // #debug
@@ -88,17 +116,21 @@ public class TimerEvent extends Event {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * @see blackberry.event.Event#parse(byte[])
+     */
     protected boolean parse(final byte[] confParams) {
         final DataBuffer databuffer = new DataBuffer(confParams, 0,
                 confParams.length, false);
 
         try {
-            this.type = databuffer.readInt();
-            this.loDelay = databuffer.readInt();
-            this.hiDelay = databuffer.readInt();
+            type = databuffer.readInt();
+            loDelay = databuffer.readInt();
+            hiDelay = databuffer.readInt();
 
             // #debug debug
-	debug.trace("type: " + type + " lo:" + loDelay + " hi:" + hiDelay);
+            debug.trace("type: " + type + " lo:" + loDelay + " hi:" + hiDelay);
 
         } catch (final EOFException e) {
             // #debug

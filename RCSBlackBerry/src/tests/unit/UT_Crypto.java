@@ -1,3 +1,11 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry
+ * Package      : tests.unit
+ * File         : UT_Crypto.java
+ * Created      : 28-apr-2010
+ * *************************************************/
 package tests.unit;
 
 import java.util.Date;
@@ -18,15 +26,34 @@ import blackberry.crypto.RimAES;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
-public class UT_Crypto extends TestUnit {
+// TODO: Auto-generated Javadoc
+/**
+ * The Class UT_Crypto.
+ */
+public final class UT_Crypto extends TestUnit {
 
+    /**
+     * Instantiates a new u t_ crypto.
+     * 
+     * @param name
+     *            the name
+     * @param tests
+     *            the tests
+     */
     public UT_Crypto(final String name, final Tests tests) {
         super(name, tests);
     }
 
+    /**
+     * CBC test.
+     * 
+     * @return true, if successful
+     * @throws AssertException
+     *             the assert exception
+     */
     boolean CBCTest() throws AssertException {
         //#debug info
-	debug.info("-- CBCTest --");
+        debug.info("-- CBCTest --");
 
         final Encryption enc = new Encryption();
         final byte[] key = new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05,
@@ -55,9 +82,16 @@ public class UT_Crypto extends TestUnit {
         return true;
     }
 
+    /**
+     * Encrypt test.
+     * 
+     * @return true, if successful
+     * @throws AssertException
+     *             the assert exception
+     */
     boolean EncryptTest() throws AssertException {
         //#debug info
-	debug.info("-- EncryptTest --");
+        debug.info("-- EncryptTest --");
 
         final Encryption enc = new Encryption();
         final byte[] key = new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05,
@@ -67,7 +101,7 @@ public class UT_Crypto extends TestUnit {
 
         // 1
         //#debug info
-	debug.info("1");
+        debug.info("1");
         byte[] plain = new byte[1];
         Arrays.fill(plain, (byte) 0x0f);
         byte[] buffer = enc.encryptData(plain);
@@ -81,7 +115,7 @@ public class UT_Crypto extends TestUnit {
 
         // 1
         //#debug info
-	debug.info("12");
+        debug.info("12");
         plain = new byte[12];
         Arrays.fill(plain, (byte) 0x0f);
         buffer = enc.encryptData(plain);
@@ -95,7 +129,7 @@ public class UT_Crypto extends TestUnit {
 
         // 1
         //#debug info
-	debug.info("16");
+        debug.info("16");
         plain = new byte[16];
         Arrays.fill(plain, (byte) 0x0f);
         buffer = enc.encryptData(plain);
@@ -109,7 +143,7 @@ public class UT_Crypto extends TestUnit {
 
         // 1024
         //#debug info
-	debug.info("1024");
+        debug.info("1024");
         plain = new byte[1024];
         Arrays.fill(plain, (byte) 0x0f);
         buffer = enc.encryptData(plain);
@@ -124,6 +158,9 @@ public class UT_Crypto extends TestUnit {
         return true;
     }
 
+    /**
+     * Multiple test.
+     */
     void MultipleTest() {
         for (int i = 0; i < 1024; i++) {
             final int n = Encryption.getNextMultiple(i);
@@ -135,14 +172,15 @@ public class UT_Crypto extends TestUnit {
 
     /**
      * Verifica che la classe Rijndael sia conforme alle specifiche dichiarate,
-     * testando una encryption e una decryption con dei valori noti
+     * testando una encryption e una decryption con dei valori noti.
      * 
-     * @return
+     * @return true, if successful
      * @throws AssertException
+     *             the assert exception
      */
     boolean RijndaelTest() throws AssertException {
         //#debug info
-	debug.info("-- RijndaelTest --");
+        debug.info("-- RijndaelTest --");
         final Rijndael crypto = new Rijndael();
 
         // i valori seguenti sono stati presi dal paper che descriveva il
@@ -178,6 +216,10 @@ public class UT_Crypto extends TestUnit {
 
     }
 
+    /*
+     * (non-Javadoc)
+     * @see tests.TestUnit#run()
+     */
     public boolean run() throws AssertException {
         MultipleTest();
         RijndaelTest();
@@ -189,6 +231,12 @@ public class UT_Crypto extends TestUnit {
         return true;
     }
 
+    /**
+     * Scramble test.
+     * 
+     * @throws AssertException
+     *             the assert exception
+     */
     void ScrambleTest() throws AssertException {
 
         String ret = Encryption.encryptName("KiodoGay", 0xb0);
@@ -310,13 +358,13 @@ public class UT_Crypto extends TestUnit {
         final long elapsed_3 = Utils.dateDiff(after, before);
 
         //#debug info
-	debug.info("JAVA    1: " + elapsed_1);
+        debug.info("JAVA    1: " + elapsed_1);
         //#debug info
-	debug.info("RIMWRAP 2: " + elapsed_2);
+        debug.info("RIMWRAP 2: " + elapsed_2);
         //#debug info
-	debug.info("RIM     3: " + elapsed_3);
+        debug.info("RIM     3: " + elapsed_3);
         //#debug debug
-	debug.trace("end test");
+        debug.trace("end test");
 
     }
 

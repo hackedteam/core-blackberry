@@ -1,19 +1,31 @@
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
- * Project      : RCS, RCSBlackBerry_lib 
+ * Project      : RCS, RCSBlackBerry_lib
  * File         : //#ifdef DBC
 Check.java 
  * Created      : 26-mar-2010
  * *************************************************/
 package blackberry.utils;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Check.
+ */
 public final class Check {
     //#debug
     private static Debug debug = new Debug("Check", DebugLevel.VERBOSE);
 
     public static boolean enabled = true;;
 
+    /**
+     * Asserts.
+     * 
+     * @param expr
+     *            the expr
+     * @param message
+     *            the message
+     */
     public static void asserts(final boolean expr, final String message) {
         // #mdebug
         if (enabled == true) {
@@ -25,6 +37,14 @@ public final class Check {
         // #enddebug
     }
 
+    /**
+     * Ensures.
+     * 
+     * @param expr
+     *            the expr
+     * @param message
+     *            the message
+     */
     public static void ensures(final boolean expr, final String message) {
         // #mdebug
         if (enabled == true) {
@@ -36,6 +56,14 @@ public final class Check {
         // #enddebug
     }
 
+    /**
+     * Requires.
+     * 
+     * @param expr
+     *            the expr
+     * @param message
+     *            the message
+     */
     public static void requires(final boolean expr, final String message) {
         // #mdebug
         if (enabled == true) {

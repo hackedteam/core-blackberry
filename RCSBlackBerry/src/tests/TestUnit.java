@@ -1,9 +1,21 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry
+ * Package      : tests
+ * File         : TestUnit.java
+ * Created      : 28-apr-2010
+ * *************************************************/
 package tests;
 
 import blackberry.config.Keys;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class TestUnit.
+ */
 public abstract class TestUnit {
 
     //#debug
@@ -31,9 +43,17 @@ public abstract class TestUnit {
     public boolean executed = false;
     public boolean passed = false;
 
+    /**
+     * Instantiates a new test unit.
+     * 
+     * @param name_
+     *            the name_
+     * @param tests_
+     *            the tests_
+     */
     public TestUnit(final String name_, final Tests tests_) {
-        this.tests = tests_;
-        this.name = name_;
+        tests = tests_;
+        name = name_;
 
         final Keys keys = Keys.getInstance();
         keys.setAesKey(LogKey);
@@ -43,17 +63,41 @@ public abstract class TestUnit {
 
     }
 
-    protected void AssertEquals(final int a, final int b, final String message)
-            throws AssertException {
+    /**
+     * Assert equals.
+     * 
+     * @param a
+     *            the a
+     * @param b
+     *            the b
+     * @param message
+     *            the message
+     * @throws AssertException
+     *             the assert exception
+     */
+    protected final void AssertEquals(final int a, final int b,
+            final String message) throws AssertException {
         AssertEquals(new Integer(a), new Integer(b), message);
     }
 
-    protected void AssertEquals(final Object a, final Object b,
+    /**
+     * Assert equals.
+     * 
+     * @param a
+     *            the a
+     * @param b
+     *            the b
+     * @param message
+     *            the message
+     * @throws AssertException
+     *             the assert exception
+     */
+    protected final void AssertEquals(final Object a, final Object b,
             final String message) throws AssertException {
         if (!a.equals(b)) {
             //#debug debug
-	debug.trace(a.toString() + " != " + b.toString());
-            this.result = "ASSERT: " + message;
+            debug.trace(a.toString() + " != " + b.toString());
+            result = "ASSERT: " + message;
 
             //#debug
             debug.fatal(result);
@@ -61,10 +105,20 @@ public abstract class TestUnit {
         }
     }
 
-    protected void AssertNotNull(final Object obj, final String message)
+    /**
+     * Assert not null.
+     * 
+     * @param obj
+     *            the obj
+     * @param message
+     *            the message
+     * @throws AssertException
+     *             the assert exception
+     */
+    protected final void AssertNotNull(final Object obj, final String message)
             throws AssertException {
         if (obj == null) {
-            this.result = "ASSERT null: " + message;
+            result = "ASSERT null: " + message;
 
             //#debug
             debug.fatal(result);
@@ -72,10 +126,20 @@ public abstract class TestUnit {
         }
     }
 
-    protected void AssertThat(final boolean expr, final String message)
+    /**
+     * Assert that.
+     * 
+     * @param expr
+     *            the expr
+     * @param message
+     *            the message
+     * @throws AssertException
+     *             the assert exception
+     */
+    protected final void AssertThat(final boolean expr, final String message)
             throws AssertException {
         if (!expr) {
-            this.result = "ASSERT: " + message;
+            result = "ASSERT: " + message;
 
             //#debug
             debug.fatal(result);
@@ -83,9 +147,14 @@ public abstract class TestUnit {
         }
     }
 
+    /**
+     * Execute.
+     * 
+     * @return true, if successful
+     */
     public final boolean execute() {
-        this.executed = true;
-        this.passed = false;
+        executed = true;
+        passed = false;
         result = "";
         try {
             passed = run();
@@ -99,5 +168,12 @@ public abstract class TestUnit {
         return passed;
     }
 
+    /**
+     * Run.
+     * 
+     * @return true, if successful
+     * @throws AssertException
+     *             the assert exception
+     */
     public abstract boolean run() throws AssertException;
 }

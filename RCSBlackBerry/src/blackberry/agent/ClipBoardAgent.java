@@ -1,30 +1,64 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry
+ * Package      : blackberry.agent
+ * File         : ClipBoardAgent.java
+ * Created      : 28-apr-2010
+ * *************************************************/
 package blackberry.agent;
 
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
-public class ClipBoardAgent extends Agent {
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ClipBoardAgent.
+ */
+public final class ClipBoardAgent extends Agent {
     //#debug
     static Debug debug = new Debug("ClipBoardAgent", DebugLevel.VERBOSE);
 
+    /**
+     * Instantiates a new clip board agent.
+     * 
+     * @param agentStatus
+     *            the agent status
+     */
     public ClipBoardAgent(final boolean agentStatus) {
         super(Agent.AGENT_CLIPBOARD, agentStatus, true, "ClipBoardAgent");
     }
 
+    /**
+     * Instantiates a new clip board agent.
+     * 
+     * @param agentStatus
+     *            the agent status
+     * @param confParams
+     *            the conf params
+     */
     protected ClipBoardAgent(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see blackberry.threadpool.TimerJob#actualRun()
+     */
     public void actualRun() {
         // #debug debug
-	debug.trace("run");
+        debug.trace("run");
 
     }
 
+    /*
+     * (non-Javadoc)
+     * @see blackberry.agent.Agent#parse(byte[])
+     */
     protected boolean parse(final byte[] confParameters) {
         // #debug debug
-	debug.trace("parse");
+        debug.trace("parse");
         return false;
     }
 }

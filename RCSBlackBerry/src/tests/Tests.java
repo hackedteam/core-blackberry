@@ -1,3 +1,11 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry
+ * Package      : tests
+ * File         : Tests.java
+ * Created      : 28-apr-2010
+ * *************************************************/
 package tests;
 
 import java.util.Vector;
@@ -20,6 +28,10 @@ import tests.unit.UT_Utils;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Tests.
+ */
 public final class Tests {
     //#debug
     static Debug debug = new Debug("Tests", DebugLevel.VERBOSE);
@@ -28,6 +40,11 @@ public final class Tests {
 
     private static Tests instance = null;
 
+    /**
+     * Gets the single instance of Tests.
+     * 
+     * @return single instance of Tests
+     */
     public static synchronized Tests getInstance() {
         if (instance == null) {
             instance = new Tests();
@@ -71,11 +88,18 @@ public final class Tests {
         testUnits.addElement(unitTest);
     }
 
+    /**
+     * Execute.
+     * 
+     * @param i
+     *            the i
+     * @return true, if successful
+     */
     public boolean execute(final int i) {
 
         final TestUnit unit = (TestUnit) testUnits.elementAt(i);
         //#debug info
-	debug.info("--== Executing: " + unit.name + " ==--");
+        debug.info("--== Executing: " + unit.name + " ==--");
 
         boolean ret;
 
@@ -91,11 +115,23 @@ public final class Tests {
         return ret;
     }
 
+    /**
+     * Gets the count.
+     * 
+     * @return the count
+     */
     public int getCount() {
 
         return testUnits.size();
     }
 
+    /**
+     * Result.
+     * 
+     * @param i
+     *            the i
+     * @return the string
+     */
     public String result(final int i) {
         final TestUnit unit = (TestUnit) testUnits.elementAt(i);
         String resUnit = "OK";

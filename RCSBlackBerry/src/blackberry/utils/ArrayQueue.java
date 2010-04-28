@@ -1,5 +1,14 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry
+ * Package      : blackberry.utils
+ * File         : ArrayQueue.java
+ * Created      : 28-apr-2010
+ * *************************************************/
 package blackberry.utils;
 
+// TODO: Auto-generated Javadoc
 //ArrayQueue class
 //
 // CONSTRUCTION: with no initializer
@@ -18,7 +27,7 @@ package blackberry.utils;
  * 
  * @author Mark Allen Weiss
  */
-public class ArrayQueue implements Queue {
+public final class ArrayQueue implements Queue {
     private Object[] theArray;
 
     private int currentSize;
@@ -41,8 +50,6 @@ public class ArrayQueue implements Queue {
      * Return and remove the least recently inserted item from the queue.
      * 
      * @return the least recently inserted item in the queue.
-     * @throws UnderflowException
-     *             if the queue is empty.
      */
     public synchronized Object dequeue() {
         if (isEmpty()) {
@@ -93,8 +100,6 @@ public class ArrayQueue implements Queue {
      * queue.
      * 
      * @return the least recently inserted item in the queue.
-     * @throws UnderflowException
-     *             if the queue is empty.
      */
     public synchronized Object getFront() {
         if (isEmpty()) {

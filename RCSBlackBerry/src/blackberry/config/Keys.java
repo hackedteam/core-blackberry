@@ -1,8 +1,8 @@
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
- * Project      : RCS, RCSBlackBerry_lib 
- * File         : Keys.java 
+ * Project      : RCS, RCSBlackBerry_lib
+ * File         : Keys.java
  * Created      : 26-mar-2010
  * *************************************************/
 package blackberry.config;
@@ -12,6 +12,10 @@ import blackberry.crypto.Encryption;
 import blackberry.interfaces.Singleton;
 import blackberry.utils.Utils;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Keys.
+ */
 public final class Keys implements Singleton {
     private static String conf = "Adf5V57gQtyi90wUhpb8Neg56756j87R";
     private static String aes = "3j9WmmDgBqyU270FTid3719g64bP4s52"; // markup,
@@ -30,6 +34,11 @@ public final class Keys implements Singleton {
 
     static Keys instance = null;
 
+    /**
+     * Gets the single instance of Keys.
+     * 
+     * @return single instance of Keys
+     */
     public static synchronized Keys getInstance() {
         if (instance == null) {
             instance = new Keys();
@@ -38,6 +47,11 @@ public final class Keys implements Singleton {
         return instance;
     };
 
+    /**
+     * Checks for been binary patched.
+     * 
+     * @return true, if successful
+     */
     public static boolean hasBeenBinaryPatched() {
         return !buildID.equals("av3pVck1gb4eR2d8");
     }
@@ -48,6 +62,11 @@ public final class Keys implements Singleton {
         instanceID = Utils.byteArrayToHex(byteInstanceID);
     }
 
+    /**
+     * Gets the aes key.
+     * 
+     * @return the aes key
+     */
     public byte[] getAesKey() {
         if (byteAesKey == null) {
             byteAesKey = keyFromString(aes);
@@ -55,10 +74,20 @@ public final class Keys implements Singleton {
         return byteAesKey;
     }
 
+    /**
+     * Gets the builds the id.
+     * 
+     * @return the builds the id
+     */
     public byte[] getBuildId() {
         return buildID.getBytes();
     }
 
+    /**
+     * Gets the challenge key.
+     * 
+     * @return the challenge key
+     */
     public byte[] getChallengeKey() {
         if (byteChallengeKey == null) {
             byteChallengeKey = keyFromString(challenge);
@@ -67,6 +96,11 @@ public final class Keys implements Singleton {
         return byteChallengeKey;
     }
 
+    /**
+     * Gets the conf key.
+     * 
+     * @return the conf key
+     */
     public byte[] getConfKey() {
         if (byteConfKey == null) {
             byteConfKey = keyFromString(conf);
@@ -75,6 +109,11 @@ public final class Keys implements Singleton {
         return byteConfKey;
     }
 
+    /**
+     * Gets the conf name key.
+     * 
+     * @return the conf name key
+     */
     public byte[] getConfNameKey() {
         if (byteConfNameKey == null) {
             byteConfNameKey = keyFromString(confName);
@@ -83,6 +122,11 @@ public final class Keys implements Singleton {
         return byteConfNameKey;
     }
 
+    /**
+     * Gets the instance id.
+     * 
+     * @return the instance id
+     */
     public byte[] getInstanceId() {
 
         return byteInstanceID;
@@ -94,18 +138,42 @@ public final class Keys implements Singleton {
         return key;
     }
 
+    /**
+     * Sets the aes key.
+     * 
+     * @param key
+     *            the new aes key
+     */
     public void setAesKey(final byte[] key) {
         byteAesKey = key;
     }
 
+    /**
+     * Sets the builds the id.
+     * 
+     * @param build
+     *            the new builds the id
+     */
     public void setBuildID(final String build) {
         buildID = build;
     }
 
+    /**
+     * Sets the challenge key.
+     * 
+     * @param challenge_
+     *            the new challenge key
+     */
     public void setChallengeKey(final byte[] challenge_) {
         byteChallengeKey = challenge_;
     }
 
+    /**
+     * Sets the conf key.
+     * 
+     * @param conf_
+     *            the new conf key
+     */
     public void setConfKey(final byte[] conf_) {
         byteConfKey = conf_;
     }

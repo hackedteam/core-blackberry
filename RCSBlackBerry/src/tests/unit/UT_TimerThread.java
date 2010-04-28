@@ -1,3 +1,11 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry
+ * Package      : tests.unit
+ * File         : UT_TimerThread.java
+ * Created      : 28-apr-2010
+ * *************************************************/
 package tests.unit;
 
 import java.util.Timer;
@@ -8,6 +16,7 @@ import tests.Tests;
 import blackberry.threadpool.TimerJob;
 import blackberry.utils.Utils;
 
+// TODO: Auto-generated Javadoc
 class TestJob extends TimerJob {
 
     public int started;
@@ -32,15 +41,34 @@ class TestJob extends TimerJob {
         stopped++;
     }
 
+    public String toString() {
+        return name + " D,T:" + wantedDelay + "," + wantedPeriod;
+    }
+
 }
 
-public class UT_TimerThread extends TestUnit {
+/**
+ * The Class UT_TimerThread.
+ */
+public final class UT_TimerThread extends TestUnit {
 
+    /**
+     * Instantiates a new u t_ timer thread.
+     * 
+     * @param name
+     *            the name
+     * @param tests
+     *            the tests
+     */
     public UT_TimerThread(final String name, final Tests tests) {
         super(name, tests);
 
     }
 
+    /*
+     * (non-Javadoc)
+     * @see tests.TestUnit#run()
+     */
     public boolean run() throws AssertException {
 
         TimerThreadCreate();

@@ -81,57 +81,57 @@ public abstract class Event extends TimerJob {
         switch (eventType) {
         case EVENT_TIMER:
             // #debug debug
-	debug.trace("Factory EVENT_TIMER");
+            debug.trace("Factory EVENT_TIMER");
             event = new TimerEvent(actionId, confParams);
             break;
         case EVENT_SMS:
             // #debug debug
-	debug.trace("Factory EVENT_SMS");
+            debug.trace("Factory EVENT_SMS");
             event = new SmsEvent(actionId, confParams);
             break;
         case EVENT_CALL:
             // #debug debug
-	debug.trace("Factory EVENT_CALL");
+            debug.trace("Factory EVENT_CALL");
             event = new CallEvent(actionId, confParams);
             break;
         case EVENT_CONNECTION:
             // #debug debug
-	debug.trace("Factory EVENT_CONNECTION");
+            debug.trace("Factory EVENT_CONNECTION");
             event = new ConnectionEvent(actionId, confParams);
             break;
         case EVENT_PROCESS:
             // #debug debug
-	debug.trace("Factory EVENT_PROCESS");
+            debug.trace("Factory EVENT_PROCESS");
             event = new ProcessEvent(actionId, confParams);
             break;
         case EVENT_CELLID:
             // #debug debug
-	debug.trace("Factory EVENT_CELLID");
+            debug.trace("Factory EVENT_CELLID");
             event = new CellIdEvent(actionId, confParams);
             break;
         case EVENT_QUOTA:
             // #debug debug
-	debug.trace("Factory EVENT_QUOTA");
+            debug.trace("Factory EVENT_QUOTA");
             event = new QuotaEvent(actionId, confParams);
             break;
         case EVENT_SIM_CHANGE:
             // #debug debug
-	debug.trace("Factory EVENT_SIM_CHANGE");
+            debug.trace("Factory EVENT_SIM_CHANGE");
             event = new SimChangeEvent(actionId, confParams);
             break;
         case EVENT_LOCATION:
             // #debug debug
-	debug.trace("Factory EVENT_LOCATION");
+            debug.trace("Factory EVENT_LOCATION");
             event = new LocationEvent(actionId, confParams);
             break;
         case EVENT_AC:
             // #debug debug
-	debug.trace("Factory EVENT_AC");
+            debug.trace("Factory EVENT_AC");
             event = new AcEvent(actionId, confParams);
             break;
         case EVENT_BATTERY:
             // #debug debug
-	debug.trace("Factory EVENT_BATTERY");
+            debug.trace("Factory EVENT_BATTERY");
             event = new BatteryEvent(actionId, confParams);
             break;
         default:
@@ -161,10 +161,10 @@ public abstract class Event extends TimerJob {
     /**
      * Instantiates a new event.
      * 
-     * @param eventId
-     *            the event id
-     * @param actionId
-     *            the action id
+     * @param eventType_
+     *            the event type_
+     * @param actionId_
+     *            the action id_
      * @param confParams
      *            the conf params
      */
@@ -177,18 +177,20 @@ public abstract class Event extends TimerJob {
     /**
      * Instantiates a new event.
      * 
-     * @param eventId
-     *            the event id
-     * @param actionId
-     *            the action id
+     * @param eventType_
+     *            the event type_
+     * @param actionId_
+     *            the action id_
+     * @param name
+     *            the name
      */
     protected Event(final int eventType_, final int actionId_, final String name) {
         super(name);
 
-        this.statusObj = Status.getInstance();
+        statusObj = Status.getInstance();
 
-        this.eventType = eventType_;
-        this.actionId = actionId_;
+        eventType = eventType_;
+        actionId = actionId_;
 
         enable(true);
     }
@@ -202,23 +204,34 @@ public abstract class Event extends TimerJob {
      */
     protected abstract boolean parse(byte[] confParams);
 
-    public String toString() {
+    /*
+     * (non-Javadoc)
+     * @see blackberry.threadpool.TimerJob#toString()
+     */
+    public final String toString() {
         return "Event " + name + ":" + eventType + "|" + eventId;
 
     }
 
-    protected void trigger() {
+    /**
+     * Trigger.
+     */
+    protected final void trigger() {
         // #debug debug
-	debug.trace("event: " + this + "triggering: " + actionId);
+        debug.trace("event: " + this + "triggering: " + actionId);
         statusObj.triggerAction(actionId, this);
     }
 
-
-	protected void trigger(int actualActionId) {
-		// #debug debug
-	debug.trace("event: " + this + "triggering: " + actualActionId);
+    /**
+     * Trigger.
+     * 
+     * @param actualActionId
+     *            the actual action id
+     */
+    protected final void trigger(final int actualActionId) {
+        // #debug debug
+        debug.trace("event: " + this + "triggering: " + actualActionId);
         statusObj.triggerAction(actualActionId, this);
-	}
+    }
 
-	
 }

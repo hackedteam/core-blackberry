@@ -1,12 +1,16 @@
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
- * Project      : RCS, RCSBlackBerry_lib 
- * File         : LogNode.java 
+ * Project      : RCS, RCSBlackBerry_lib
+ * File         : LogNode.java
  * Created      : 26-mar-2010
  * *************************************************/
 package blackberry.log;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class LogNode.
+ */
 public class LogNode {
 
     String dirName;
@@ -14,12 +18,24 @@ public class LogNode {
 
     public int numElem;
 
+    /**
+     * Instantiates a new log node.
+     * 
+     * @param dirName_
+     *            the dir name_
+     * @param onSD_
+     *            the on s d_
+     */
     public LogNode(final String dirName_, final boolean onSD_) {
-        this.dirName = dirName_;
-        this.onSD = onSD_;
+        dirName = dirName_;
+        onSD = onSD_;
     }
 
-    public String toString() {
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    public final String toString() {
         return dirName + ": " + numElem;
     }
 }

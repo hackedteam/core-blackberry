@@ -1,8 +1,8 @@
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
- * Project      : RCS, RCSBlackBerry_lib 
- * File         : AutoFlashFile.java 
+ * Project      : RCS, RCSBlackBerry_lib
+ * File         : AutoFlashFile.java
  * Created      : 26-mar-2010
  * *************************************************/
 package blackberry.fs;
@@ -19,7 +19,11 @@ import net.rim.device.api.io.IOUtilities;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
-public class AutoFlashFile {
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AutoFlashFile.
+ */
+public final class AutoFlashFile {
     String filename;
     boolean hidden;
     boolean autoclose;
@@ -28,11 +32,26 @@ public class AutoFlashFile {
     private DataInputStream is;
     private OutputStream os;
 
+    /**
+     * Instantiates a new auto flash file.
+     * 
+     * @param filename_
+     *            the filename_
+     * @param hidden_
+     *            the hidden_
+     */
     public AutoFlashFile(final String filename_, final boolean hidden_) {
-        this.filename = filename_;
-        this.hidden = hidden_;
+        filename = filename_;
+        hidden = hidden_;
     }
 
+    /**
+     * Append.
+     * 
+     * @param message
+     *            the message
+     * @return true, if successful
+     */
     public synchronized boolean append(final byte[] message) {
         try {
             fconn = (FileConnection) Connector.open(filename,
@@ -61,12 +80,26 @@ public class AutoFlashFile {
         return true;
     }
 
+    /**
+     * Append.
+     * 
+     * @param value
+     *            the value
+     * @return true, if successful
+     */
     public synchronized boolean append(final int value) {
         byte[] repr;
         repr = Utils.intToByteArray(value);
         return append(repr);
     }
 
+    /**
+     * Append.
+     * 
+     * @param message
+     *            the message
+     * @return true, if successful
+     */
     public synchronized boolean append(final String message) {
         return append(message.getBytes());
     }
@@ -90,6 +123,11 @@ public class AutoFlashFile {
         }
     }
 
+    /**
+     * Creates the.
+     * 
+     * @return true, if successful
+     */
     public synchronized boolean create() {
         try {
 
@@ -125,6 +163,9 @@ public class AutoFlashFile {
         return true;
     }
 
+    /**
+     * Delete.
+     */
     public synchronized void delete() {
         try {
             fconn = (FileConnection) Connector.open(filename,
@@ -143,6 +184,11 @@ public class AutoFlashFile {
         }
     }
 
+    /**
+     * Exists.
+     * 
+     * @return true, if successful
+     */
     public synchronized boolean exists() {
         try {
             fconn = (FileConnection) Connector.open(filename, Connector.READ);
@@ -160,6 +206,11 @@ public class AutoFlashFile {
         }
     }
 
+    /**
+     * Gets the input stream.
+     * 
+     * @return the input stream
+     */
     public synchronized InputStream getInputStream() {
         try {
             fconn = (FileConnection) Connector.open(filename, Connector.READ);
@@ -175,6 +226,11 @@ public class AutoFlashFile {
         return is;
     }
 
+    /**
+     * Read.
+     * 
+     * @return the byte[]
+     */
     public synchronized byte[] read() {
         byte[] data = null;
 
@@ -195,6 +251,13 @@ public class AutoFlashFile {
         return data;
     }
 
+    /**
+     * Rename.
+     * 
+     * @param newFile
+     *            the new file
+     * @return true, if successful
+     */
     public boolean rename(final String newFile) {
         try {
             fconn = (FileConnection) Connector.open(filename,
@@ -216,6 +279,13 @@ public class AutoFlashFile {
         return true;
     }
 
+    /**
+     * Write.
+     * 
+     * @param message
+     *            the message
+     * @return true, if successful
+     */
     public synchronized boolean write(final byte[] message) {
 
         try {
@@ -239,6 +309,13 @@ public class AutoFlashFile {
 
     }
 
+    /**
+     * Write.
+     * 
+     * @param value
+     *            the value
+     * @return true, if successful
+     */
     public synchronized boolean write(final int value) {
         final byte[] repr = Utils.intToByteArray(value);
         return write(repr);

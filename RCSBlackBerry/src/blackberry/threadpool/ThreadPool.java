@@ -1,16 +1,33 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry
+ * Package      : blackberry.threadpool
+ * File         : ThreadPool.java
+ * Created      : 28-apr-2010
+ * *************************************************/
 package blackberry.threadpool;
 
 import blackberry.utils.BlockingQueue;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
+// TODO: Auto-generated Javadoc
 /**
  * implementation of a thread pool.
  * 
  * @author thanks to: Rob Gordon.
  */
-public class ThreadPool {
+public final class ThreadPool {
+
+    /**
+     * The Class PoolClosedException.
+     */
     static class PoolClosedException extends RuntimeException {
+
+        /**
+         * Instantiates a new pool closed exception.
+         */
         PoolClosedException() {
             super("Pool closed.");
         }
@@ -34,10 +51,10 @@ public class ThreadPool {
 
                 try {
                     //#debug debug
-	debug.trace("Pool " + id + " run:" + job);
+                    debug.trace("Pool " + id + " run:" + job);
                     job.run();
                     //#debug debug
-	debug.trace("Pool " + id + " end:" + job);
+                    debug.trace("Pool " + id + " end:" + job);
                 } catch (final Throwable t) {
                     // ignore
                 }
@@ -54,15 +71,30 @@ public class ThreadPool {
 
     private int poolSize;
 
+    /**
+     * Instantiates a new thread pool.
+     * 
+     * @param numThreads
+     *            the num threads
+     */
     public ThreadPool(final int numThreads) {
         poolSize = numThreads;
     }
 
+    /**
+     * Close.
+     */
     public void close() {
         closed = true;
         queue.close();
     }
 
+    /**
+     * Execute.
+     * 
+     * @param job
+     *            the job
+     */
     public synchronized void execute(final Runnable job) {
         if (closed) {
             throw new PoolClosedException();
@@ -70,14 +102,28 @@ public class ThreadPool {
         queue.enqueue(job);
     }
 
+    /**
+     * Gets the pool size.
+     * 
+     * @return the pool size
+     */
     public int getPoolSize() {
         return poolSize;
     }
 
+    /**
+     * Sets the pool size.
+     * 
+     * @param poolSize_
+     *            the new pool size
+     */
     public void setPoolSize(final int poolSize_) {
-        this.poolSize = poolSize_;
+        poolSize = poolSize_;
     }
 
+    /**
+     * Start.
+     */
     public synchronized void start() {
         if (!closed) {
             throw new IllegalStateException("Pool already started.");

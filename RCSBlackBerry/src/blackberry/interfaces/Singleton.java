@@ -1,8 +1,8 @@
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
- * Project      : RCS, RCSBlackBerry_lib 
- * File         : Singleton.java 
+ * Project      : RCS, RCSBlackBerry_lib
+ * File         : Singleton.java
  * Created      : 26-mar-2010
  * *************************************************/
 package blackberry.interfaces;

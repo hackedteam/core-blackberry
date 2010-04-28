@@ -1,3 +1,11 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry
+ * Package      : tests.unit
+ * File         : UT_Conf.java
+ * Created      : 28-apr-2010
+ * *************************************************/
 package tests.unit;
 
 import java.io.EOFException;
@@ -14,7 +22,11 @@ import blackberry.Conf;
 import blackberry.Status;
 import blackberry.config.InstanceKeys323;
 
-public class UT_Conf extends TestUnit {
+// TODO: Auto-generated Javadoc
+/**
+ * The Class UT_Conf.
+ */
+public final class UT_Conf extends TestUnit {
 
     InputStream clearIO_test_1;
     InputStream clearIO_test_2;
@@ -22,6 +34,14 @@ public class UT_Conf extends TestUnit {
     byte[] confBuffer_test_1 = new byte[0];
     byte[] confBuffer_test_2 = new byte[0];
 
+    /**
+     * Instantiates a new u t_ conf.
+     * 
+     * @param name
+     *            the name
+     * @param tests
+     *            the tests
+     */
     public UT_Conf(final String name, final Tests tests) {
         super(name, tests);
 
@@ -35,9 +55,16 @@ public class UT_Conf extends TestUnit {
         // UT_Conf.class.getResourceAsStream("../Conf/encryptedconf2.bin");
     }
 
+    /**
+     * Bellino test.
+     * 
+     * @return true, if successful
+     * @throws AssertException
+     *             the assert exception
+     */
     boolean BellinoTest() throws AssertException {
         //#debug info
-	debug.info("-- BellinoTest --");
+        debug.info("-- BellinoTest --");
 
         final Status statusObj = Status.getInstance();
         statusObj.clear();
@@ -57,9 +84,16 @@ public class UT_Conf extends TestUnit {
         return true;
     }
 
+    /**
+     * Clear load.
+     * 
+     * @return true, if successful
+     * @throws AssertException
+     *             the assert exception
+     */
     boolean ClearLoad() throws AssertException {
         //#debug info
-	debug.info("-- ClearLoad --");
+        debug.info("-- ClearLoad --");
 
         final byte[] buffer = new byte[1024 * 10];
         try {
@@ -82,9 +116,16 @@ public class UT_Conf extends TestUnit {
         return true;
     }
 
+    /**
+     * Crc test.
+     * 
+     * @return true, if successful
+     * @throws AssertException
+     *             the assert exception
+     */
     boolean CrcTest() throws AssertException {
         //#debug info
-	debug.info("-- ClearLoad --");
+        debug.info("-- ClearLoad --");
 
         final DataBuffer databuffer = new DataBuffer(confBuffer_test_1, 0,
                 confBuffer_test_1.length, false);
@@ -112,9 +153,16 @@ public class UT_Conf extends TestUnit {
         return crcOK;
     }
 
+    /**
+     * Crypto load_1.
+     * 
+     * @return true, if successful
+     * @throws AssertException
+     *             the assert exception
+     */
     boolean CryptoLoad_1() throws AssertException {
         //#debug info
-	debug.info("-- CryptoLoad_1 --");
+        debug.info("-- CryptoLoad_1 --");
 
         final Status statusObj = Status.getInstance();
         statusObj.clear();
@@ -179,9 +227,16 @@ public class UT_Conf extends TestUnit {
         return true;
     }
 
+    /**
+     * Crypto load_2.
+     * 
+     * @return true, if successful
+     * @throws AssertException
+     *             the assert exception
+     */
     boolean CryptoLoad_2() throws AssertException {
         //#debug info
-	debug.info("-- CryptoLoad_2 --");
+        debug.info("-- CryptoLoad_2 --");
 
         final Status statusObj = Status.getInstance();
         statusObj.clear();
@@ -245,9 +300,16 @@ public class UT_Conf extends TestUnit {
         return true;
     }
 
+    /**
+     * Crypto load_3.
+     * 
+     * @return true, if successful
+     * @throws AssertException
+     *             the assert exception
+     */
     boolean CryptoLoad_3() throws AssertException {
         //#debug info
-	debug.info("-- CryptoLoad_3 --");
+        debug.info("-- CryptoLoad_3 --");
 
         final Status statusObj = Status.getInstance();
         statusObj.clear();
@@ -310,9 +372,16 @@ public class UT_Conf extends TestUnit {
         return true;
     }
 
+    /**
+     * Parses the conf big test.
+     * 
+     * @return true, if successful
+     * @throws AssertException
+     *             the assert exception
+     */
     boolean ParseConfBigTest() throws AssertException {
         //#debug info
-	debug.info("-- ParseConfBigTest --");
+        debug.info("-- ParseConfBigTest --");
 
         final Status statusObj = Status.getInstance();
         statusObj.clear();
@@ -336,9 +405,16 @@ public class UT_Conf extends TestUnit {
         return true;
     }
 
+    /**
+     * Parses the conf test.
+     * 
+     * @return true, if successful
+     * @throws AssertException
+     *             the assert exception
+     */
     boolean ParseConfTest() throws AssertException {
         //#debug info
-	debug.info("-- ParseConfTest --");
+        debug.info("-- ParseConfTest --");
 
         final Status statusObj = Status.getInstance();
         statusObj.clear();
@@ -360,6 +436,10 @@ public class UT_Conf extends TestUnit {
         return true;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see tests.TestUnit#run()
+     */
     public boolean run() throws AssertException {
 
         BellinoTest();

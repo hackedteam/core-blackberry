@@ -1,27 +1,61 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry
+ * Package      : blackberry.agent
+ * File         : PdaAgent.java
+ * Created      : 28-apr-2010
+ * *************************************************/
 package blackberry.agent;
 
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
-public class PdaAgent extends Agent {
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PdaAgent.
+ */
+public final class PdaAgent extends Agent {
     //#debug
     static Debug debug = new Debug("PdaAgent", DebugLevel.VERBOSE);
 
+    /**
+     * Instantiates a new pda agent.
+     * 
+     * @param agentStatus
+     *            the agent status
+     */
     public PdaAgent(final boolean agentStatus) {
         super(Agent.AGENT_PDA, agentStatus, true, "PdaAgent");
     }
 
+    /**
+     * Instantiates a new pda agent.
+     * 
+     * @param agentStatus
+     *            the agent status
+     * @param confParams
+     *            the conf params
+     */
     protected PdaAgent(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see blackberry.threadpool.TimerJob#actualRun()
+     */
     public void actualRun() {
         // #debug debug
-	debug.trace("run");
+        debug.trace("run");
 
     }
 
+    /*
+     * (non-Javadoc)
+     * @see blackberry.agent.Agent#parse(byte[])
+     */
     protected boolean parse(final byte[] confParameters) {
         // TODO Auto-generated method stub
         return false;

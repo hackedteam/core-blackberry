@@ -1,8 +1,8 @@
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
- * Project      : RCS, RCSBlackBerry_lib 
- * File         : Parameter.java 
+ * Project      : RCS, RCSBlackBerry_lib
+ * File         : Parameter.java
  * Created      : 26-mar-2010
  * *************************************************/
 package blackberry.params;
@@ -42,7 +42,7 @@ public class Parameter {
      *            the conf params
      */
     public Parameter(final int parameterId_, final byte[] confParams_) {
-        this.parameterId = parameterId_;
-        this.confParams = confParams_;
+        parameterId = parameterId_;
+        confParams = confParams_;
     }
 }

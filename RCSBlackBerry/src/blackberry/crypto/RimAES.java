@@ -1,3 +1,11 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry
+ * Package      : blackberry.crypto
+ * File         : RimAES.java
+ * Created      : 28-apr-2010
+ * *************************************************/
 package blackberry.crypto;
 
 import net.rim.device.api.crypto.AESDecryptorEngine;
@@ -6,8 +14,17 @@ import net.rim.device.api.crypto.AESKey;
 import net.rim.device.api.crypto.CryptoTokenException;
 import net.rim.device.api.crypto.CryptoUnsupportedOperationException;
 
-public class RimAES implements CryptoEngine {
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RimAES.
+ */
+public final class RimAES implements CryptoEngine {
 
+    /**
+     * Checks if is supported.
+     * 
+     * @return true, if is supported
+     */
     public static boolean isSupported() {
         final AESKey aeskey = new AESKey();
 
@@ -27,11 +44,19 @@ public class RimAES implements CryptoEngine {
 
     AESDecryptorEngine aesdecrypt;
 
+    /*
+     * (non-Javadoc)
+     * @see blackberry.crypto.CryptoEngine#decrypt(byte[], byte[])
+     */
     public void decrypt(final byte[] ct, final byte[] pt)
             throws CryptoTokenException {
         aesdecrypt.decrypt(ct, 0, pt, 0);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see blackberry.crypto.CryptoEngine#encrypt(byte[], byte[])
+     */
     public void encrypt(final byte[] pt, final byte[] ct)
             throws CryptoTokenException {
 
@@ -39,6 +64,10 @@ public class RimAES implements CryptoEngine {
 
     }
 
+    /*
+     * (non-Javadoc)
+     * @see blackberry.crypto.CryptoEngine#makeKey(byte[], int)
+     */
     public boolean makeKey(final byte[] cipherKey, final int keyBits) {
         aeskey = new AESKey(cipherKey, 0, keyBits);
         try {

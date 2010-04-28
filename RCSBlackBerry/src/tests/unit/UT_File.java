@@ -1,3 +1,11 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry
+ * Package      : tests.unit
+ * File         : UT_File.java
+ * Created      : 28-apr-2010
+ * *************************************************/
 package tests.unit;
 
 import tests.AssertException;
@@ -7,8 +15,20 @@ import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
 import blackberry.utils.Utils;
 
-public class UT_File extends TestUnit {
+// TODO: Auto-generated Javadoc
+/**
+ * The Class UT_File.
+ */
+public final class UT_File extends TestUnit {
 
+    /**
+     * Instantiates a new u t_ file.
+     * 
+     * @param name
+     *            the name
+     * @param tests
+     *            the tests
+     */
     public UT_File(final String name, final Tests tests) {
         super(name, tests);
     }
@@ -100,6 +120,10 @@ public class UT_File extends TestUnit {
 
     }
 
+    /*
+     * (non-Javadoc)
+     * @see tests.TestUnit#run()
+     */
     public boolean run() throws AssertException {
         FileCreateTest();
         FileCreateHiddenTest();

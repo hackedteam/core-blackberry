@@ -1,3 +1,11 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry
+ * Package      : tests.accessor
+ * File         : TransferAccessor.java
+ * Created      : 28-apr-2010
+ * *************************************************/
 package tests.accessor;
 
 import blackberry.transfer.ProtocolException;
@@ -5,14 +13,27 @@ import blackberry.transfer.Transfer;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
-public class TransferAccessor extends Transfer {
+// TODO: Auto-generated Javadoc
+/**
+ * The Class TransferAccessor.
+ */
+public final class TransferAccessor extends Transfer {
     protected static Debug debug = new Debug("TransferAccessor",
             DebugLevel.VERBOSE);
 
+    /**
+     * Instantiates a new transfer accessor.
+     */
     public TransferAccessor() {
         super();
     }
 
+    /**
+     * Challenge test.
+     * 
+     * @throws ProtocolException
+     *             the protocol exception
+     */
     public void ChallengeTest() throws ProtocolException {
         final boolean ret = connectDirect() || connectMDS();
         if (!ret) {

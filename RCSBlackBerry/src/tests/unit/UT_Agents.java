@@ -1,3 +1,11 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry
+ * Package      : tests.unit
+ * File         : UT_Agents.java
+ * Created      : 28-apr-2010
+ * *************************************************/
 package tests.unit;
 
 import java.util.Vector;
@@ -17,15 +25,27 @@ import blackberry.event.Event;
 import blackberry.event.TimerEvent;
 import blackberry.utils.Utils;
 
-public class UT_Agents extends TestUnit {
+// TODO: Auto-generated Javadoc
+/**
+ * The Class UT_Agents.
+ */
+public final class UT_Agents extends TestUnit {
 
+    /**
+     * Instantiates a new u t_ agents.
+     * 
+     * @param name
+     *            the name
+     * @param tests
+     *            the tests
+     */
     public UT_Agents(final String name, final Tests tests) {
         super(name, tests);
     }
 
     private void AgentSnapshot() throws AssertException {
         // #debug info
-	debug.info("-- AgentSnapshot --");
+        debug.info("-- AgentSnapshot --");
 
         final Status status = Status.getInstance();
         status.clear();
@@ -49,10 +69,17 @@ public class UT_Agents extends TestUnit {
 
         agentManager.stopAll();
 
-      //#debug debug
-	debug.trace("-- AgentSnapshot OK --");
+        //#debug debug
+        debug.trace("-- AgentSnapshot OK --");
     }
 
+    /**
+     * Execute action.
+     * 
+     * @param action
+     *            the action
+     * @return true, if successful
+     */
     boolean ExecuteAction(final Action action) {
         final Vector subActions = action.getSubActionsList();
         action.setTriggered(false, null);
@@ -84,7 +111,7 @@ public class UT_Agents extends TestUnit {
 
     private void RestartAll() throws AssertException {
         // #debug info
-	debug.info("-- RestartAll --");
+        debug.info("-- RestartAll --");
         final Status status = Status.getInstance();
         status.clear();
         final AgentManager agentManager = AgentManager.getInstance();
@@ -116,8 +143,8 @@ public class UT_Agents extends TestUnit {
 
         // partenza di tutti e tre gli agenti, il primo e' disabilitato
 
-      //#debug debug
-	debug.trace("1");
+        //#debug debug
+        debug.trace("1");
         boolean ret = agentManager.startAll();
         AssertThat(ret, "cannot start all");
 
@@ -131,8 +158,8 @@ public class UT_Agents extends TestUnit {
                 "Agent3.runningLoops should be 1");
 
         // verifico che solo due siano running e enabled
-      //#debug debug
-	debug.trace("2");
+        //#debug debug
+        debug.trace("2");
         AssertThat(!agent1.isRunning(), "agent1 should not run");
         AssertThat(agent2.isRunning(), "agent2 should run");
         AssertThat(agent3.isRunning(), "agent3 should run");
@@ -148,8 +175,8 @@ public class UT_Agents extends TestUnit {
 
         Utils.sleep(2000);
 
-      //#debug debug
-	debug.trace("3");
+        //#debug debug
+        debug.trace("3");
         AssertEquals(agent1.getRunningLoops(), 0,
                 "Agent1.runningLoops should be 0");
         AssertEquals(agent2.getRunningLoops(), 2,
@@ -169,8 +196,8 @@ public class UT_Agents extends TestUnit {
         agentManager.reStart(agent3.agentId);
 
         Utils.sleep(2000);
-      //#debug debug
-	debug.trace("4");
+        //#debug debug
+        debug.trace("4");
 
         AssertEquals(agent1.getRunningLoops(), 0,
                 "Agent1.runningLoops should be 0");
@@ -188,8 +215,8 @@ public class UT_Agents extends TestUnit {
         AssertThat(agent3.isEnabled(), "agent3 should be enabled");
 
         // stop all
-      //#debug debug
-	debug.trace("5");
+        //#debug debug
+        debug.trace("5");
         ret = agentManager.stopAll();
         AssertThat(ret, "cannot stop all");
 
@@ -197,10 +224,14 @@ public class UT_Agents extends TestUnit {
         AssertThat(!agent2.isRunning(), "agent2 should not run");
         AssertThat(!agent3.isRunning(), "agent3 should not run");
 
-      //#debug debug
-	debug.trace("-- RestartAll OK --");
+        //#debug debug
+        debug.trace("-- RestartAll OK --");
     }
 
+    /*
+     * (non-Javadoc)
+     * @see tests.TestUnit#run()
+     */
     public boolean run() throws AssertException {
 
         StartAndStop();
@@ -212,9 +243,16 @@ public class UT_Agents extends TestUnit {
         return true;
     }
 
+    /**
+     * Start and stop.
+     * 
+     * @return true, if successful
+     * @throws AssertException
+     *             the assert exception
+     */
     public boolean StartAndStop() throws AssertException {
         // #debug info
-	debug.info("-- StartAndStop --");
+        debug.info("-- StartAndStop --");
 
         final Status status = Status.getInstance();
         status.clear();
@@ -240,14 +278,21 @@ public class UT_Agents extends TestUnit {
         AssertThat(agent.isEnabled(), "Agent not Enabled 2");
         AssertThat(!agent.isRunning(), "Agent still running");
 
-      //#debug debug
-	debug.trace("-- StartAndStop OK --");
+        //#debug debug
+        debug.trace("-- StartAndStop OK --");
         return true;
     }
 
+    /**
+     * Start stop agent.
+     * 
+     * @return true, if successful
+     * @throws AssertException
+     *             the assert exception
+     */
     public boolean StartStopAgent() throws AssertException {
         // #debug info
-	debug.info("-- StartStopAgent --");
+        debug.info("-- StartStopAgent --");
 
         final Status status = Status.getInstance();
         status.clear();
@@ -256,7 +301,7 @@ public class UT_Agents extends TestUnit {
 
         // genero due agenti, di cui uno disabled
         // #debug debug
-	debug.trace("agent");
+        debug.trace("agent");
         final Agent agentDevice = Agent.factory(Agent.AGENT_DEVICE, true, null);
         status.addAgent(agentDevice);
         final Agent agentPosition = Agent.factory(Agent.AGENT_POSITION, false,
@@ -265,19 +310,19 @@ public class UT_Agents extends TestUnit {
 
         // eseguo gli agenti
         // #debug debug
-	debug.trace("start agent");
+        debug.trace("start agent");
         agentManager.startAll();
         Utils.sleep(400);
 
         // verifico che uno solo parta
         // #debug debug
-	debug.trace("one running");
+        debug.trace("one running");
         AssertThat(agentDevice.isRunning(), "Agent not Running 2");
         AssertThat(!agentPosition.isEnabled(), "Agent not disabled 1");
 
         // Creo azione 0 che fa partire l'agent position
         // #debug debug
-	debug.trace("action 0");
+        debug.trace("action 0");
         final Action action0 = new Action(0);
         final byte[] confParams = new byte[4];
         final DataBuffer databuffer = new DataBuffer(confParams, 0,
@@ -289,20 +334,20 @@ public class UT_Agents extends TestUnit {
 
         // Creo azione 1 che fa ferma l'agent position
         // #debug debug
-	debug.trace("action 1");
+        debug.trace("action 1");
         final Action action1 = new Action(1);
         action1.addNewSubAction(SubAction.ACTION_STOP_AGENT, confParams);
         status.addAction(action1);
 
         // Creo l'evento timer che esegue azione 0
         // #debug debug
-	debug.trace("event 0");
+        debug.trace("event 0");
         final Event event0 = new TimerEvent(0, Conf.CONF_TIMER_SINGLE, 2000, 0);
         status.addEvent(0, event0);
 
         // Creo eveneto timer che esegue azione 1
         // #debug debug
-	debug.trace("event 1");
+        debug.trace("event 1");
         final Event event1 = new TimerEvent(1, Conf.CONF_TIMER_SINGLE, 4000, 0);
         status.addEvent(1, event1);
 
@@ -311,13 +356,13 @@ public class UT_Agents extends TestUnit {
 
         // lancio i thread degli eventi
         // #debug debug
-	debug.trace("start event");
+        debug.trace("start event");
         eventManager.startAll();
 
         // verifico che gli eventi siano partiti.
         Utils.sleep(500);
         // #debug debug
-	debug.trace("event running");
+        debug.trace("event running");
         AssertThat(event0.isScheduled(), "Event0 not scheduled 1");
         AssertThat(event1.isScheduled(), "Event1 not scheduled 1");
         AssertThat(!event0.isRunning(), "Event0 running");
@@ -326,12 +371,12 @@ public class UT_Agents extends TestUnit {
         // verifica che dopo 2 secondo l'azione sia triggered
         Utils.sleep(2000);
         // #debug debug
-	debug.trace("triggered 0");
+        debug.trace("triggered 0");
         AssertThat(action0.isTriggered(), "action0 not triggered 1");
         AssertThat(!action1.isTriggered(), "action1 triggered 1");
 
         // #debug debug
-	debug.trace("action 0");
+        debug.trace("action 0");
         ExecuteAction(action0);
         Utils.sleep(500);
 
@@ -341,12 +386,12 @@ public class UT_Agents extends TestUnit {
         // verifica che dopo 2 secondi l'azione 1 sia triggered
         Utils.sleep(2000);
         // #debug debug
-	debug.trace("triggered 1");
+        debug.trace("triggered 1");
         AssertThat(action1.isTriggered(), "action1 not triggered 2");
         AssertThat(!action0.isTriggered(), "action0 triggered 2");
 
         // #debug debug
-	debug.trace("action 1");
+        debug.trace("action 1");
         ExecuteAction(action1);
         Utils.sleep(500);
 
@@ -360,15 +405,15 @@ public class UT_Agents extends TestUnit {
 
         // fermo gli eventi
         // #debug debug
-	debug.trace("stop event");
+        debug.trace("stop event");
         eventManager.stopAll();
 
         AssertThat(!event0.isRunning(), "Event0 running");
         AssertThat(!event1.isRunning(), "Event1 running");
 
         agentManager.stopAll();
-      //#debug debug
-	debug.trace("-- StartStopAgent OK --");
+        //#debug debug
+        debug.trace("-- StartStopAgent OK --");
         return true;
     }
 

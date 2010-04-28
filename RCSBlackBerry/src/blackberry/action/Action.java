@@ -2,9 +2,9 @@
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
  * 
- * Project      : RCS, RCSBlackBerry_lib 
+ * Project      : RCS, RCSBlackBerry_lib
  * 
- * File         : Action.java 
+ * File         : Action.java
  * Created      : 26-mar-2010
  * *************************************************/
 
@@ -49,11 +49,11 @@ public class Action {
     /**
      * Instantiates a new action.
      * 
-     * @param actionId
-     *            the action id
+     * @param actionId_
+     *            the action id_
      */
     public Action(final int actionId_) {
-        this.actionId = actionId_;
+        actionId = actionId_;
         subActionList = new Vector();
         status = Status.getInstance();
     }
@@ -87,11 +87,16 @@ public class Action {
      * 
      * @return the vector
      */
-    public Vector getSubActionsList() {
+    public final Vector getSubActionsList() {
         return subActionList;
     }
 
-    public Event getTriggeringEvent() {
+    /**
+     * Gets the triggering event.
+     * 
+     * @return the triggering event
+     */
+    public final Event getTriggeringEvent() {
 
         return triggeringEvent;
     }
@@ -101,7 +106,7 @@ public class Action {
      * 
      * @return true, if is triggered
      */
-    public synchronized boolean isTriggered() {
+    public final synchronized boolean isTriggered() {
         return triggered;
     }
 
@@ -111,11 +116,13 @@ public class Action {
      * @param value
      *            the value
      * @param event
+     *            the event
      */
-    public synchronized void setTriggered(final boolean value, final Event event) {
+    public final synchronized void setTriggered(final boolean value,
+            final Event event) {
 
         // #debug debug
-	debug.trace(actionId + " triggered:" + value);
+        debug.trace(actionId + " triggered:" + value);
         triggered = value;
         if (value) {
             status.addActionTriggered(this);
@@ -128,10 +135,9 @@ public class Action {
 
     /*
      * (non-Javadoc)
-     * 
      * @see java.lang.Object#toString()
      */
-    public String toString() {
+    public final String toString() {
         return actionId + " sa:" + subActionList.size();
     }
 }

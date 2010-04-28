@@ -1,5 +1,16 @@
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry
+ * Package      : blackberry.log
+ * File         : LogType.java
+ * Created      : 28-apr-2010
+ * *************************************************/
 package blackberry.log;
 
+/**
+ * The Class LogType.
+ */
 public final class LogType {
     public static final int UNKNOWN = 0xFFFF; // in caso di errore
     public static final int FILEOPEN = 0x0000;
