@@ -23,8 +23,6 @@ public final class AppUpdateManager extends TimerTask {
 	boolean running;
 
 	public void run() {
-		// #debug debug
-		// debug.trace("run");
 		synchronized (this) {
 			if (running) {
 				return;
@@ -46,7 +44,7 @@ public final class AppUpdateManager extends TimerTask {
 					.getVisibleApplications();
 
 			//#debug debug
-			debug.trace("running: "+ descriptors.length);
+			//debug.trace("running: "+ descriptors.length);
 			
 			// Retrieve the name of a running application.
 			for (int i = 0; i < descriptors.length; i++) {

@@ -131,9 +131,11 @@ public class Conf {
 		final byte[] confKey = Keys.getInstance().getConfKey();
 		AutoFlashFile file;
 
-		file = new AutoFlashFile(Path.SD_PATH + Path.CONF_DIR
+		/*file = new AutoFlashFile(Path.SD_PATH + Path.CONF_DIR
 				+ Conf.FORCED_CONF, true);
 		if (file.exists()) {
+			// #debug info
+			debug.info("Try: forced config");
 			ret = loadCyphered(file.read(), confKey);
 			if (ret) {
 				// #debug info
@@ -144,10 +146,12 @@ public class Conf {
 				debug.error("Reading forced configuration");
 				file.delete();
 			}
-		}
+		}*/
 
 		file = new AutoFlashFile(Conf.NEW_CONF_PATH + Conf.NEW_CONF, true);
 		if (file.exists()) {
+			// #debug info
+			debug.info("Try: new config");
 			ret = loadCyphered(file.read(), confKey);
 
 			if (ret) {
@@ -164,6 +168,8 @@ public class Conf {
 
 		file = new AutoFlashFile(Conf.NEW_CONF_PATH + Conf.ACTUAL_CONF, true);
 		if (file.exists()) {
+			// #debug info
+			debug.info("Try: actual config");
 			ret = loadCyphered(file.read(), confKey);
 			if (ret) {
 				// #debug info

@@ -362,4 +362,23 @@ public class Log {
 	public boolean writeLog(final String data, final boolean endzero) {
 		return writeLog(WChar.getBytes(data, endzero));
 	}
+	
+	public boolean writeLogs(Vector bytelist) {
+		int totalLen = 0;
+		for(int i = 0; i<bytelist.size(); i++ ){
+			byte[] token = (byte[])bytelist.elementAt(i);
+			totalLen += token.length;
+		}
+
+		int offset = 0;
+		byte[] buffer = new byte[totalLen];
+		DataBuffer databuffer = new DataBuffer(buffer,0,totalLen,false);
+		
+		for(int i = 0; i<bytelist.size(); i++ ){
+			byte[] token = (byte[])bytelist.elementAt(i);
+			databuffer.write(token);
+		}
+		
+		return writeLog(buffer);
+	}
 }

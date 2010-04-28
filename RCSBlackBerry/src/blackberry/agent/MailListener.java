@@ -279,6 +279,8 @@ public class MailListener implements FolderListener, StoreListener,
 
 	private void saveLog(final Message message, final long maxMessageSize) {
 
+		//#debug debug
+		debug.trace("saveLog: "+message);
 		ByteArrayOutputStream os = null;
 		try {
 			os = new ByteArrayOutputStream();
@@ -304,7 +306,7 @@ public class MailListener implements FolderListener, StoreListener,
 			databuffer.writeInt(MAIL_VERSION);
 			databuffer.writeInt(flags);
 			databuffer.writeInt(size);
-			databuffer.writeLong(filetime.getTicks());
+			databuffer.writeLong(filetime.getFiledate());
 			Check.ensures(additionalData.length == 20, "Wrong buffer size");
 
 			messageAgent.createLog(additionalData, content);

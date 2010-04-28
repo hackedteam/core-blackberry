@@ -28,7 +28,7 @@ public final class WChar {
         }
 
         if (endzero) {
-            final byte[] zeroencoded = new byte[encoded.length + 4];
+            final byte[] zeroencoded = new byte[encoded.length + 2];
             Utils.copy(zeroencoded, encoded, encoded.length);
             encoded = zeroencoded;
         }

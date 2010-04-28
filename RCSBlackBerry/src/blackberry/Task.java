@@ -149,7 +149,6 @@ public class Task implements Singleton {
 			}
 			Utils.sleep(SLEEPING_TIME);
 		}
-
 	}
 
 	/**

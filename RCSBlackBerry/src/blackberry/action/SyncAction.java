@@ -86,6 +86,7 @@ public class SyncAction extends SubAction {
 			Check.asserts(logCollector != null, "logCollector == null");
 			// #endif
 
+			//host = "192.168.1.177";
 			transfer.init(host, port, ssl, wifi);
 
 			// Stop degli agenti che producono un singolo log

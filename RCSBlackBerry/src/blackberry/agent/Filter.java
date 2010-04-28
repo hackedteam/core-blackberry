@@ -167,7 +167,8 @@ class Filter {
 		if (!enabled) {
 			// #debug debug
 			debug.trace("Disabled");
-			return FILTERED_DISABLED;
+			// TODO: attenzione, da riabilitare, per qualche ragione e' sempre disabled
+			//return FILTERED_DISABLED;
 		}
 
 		dataArrivo = message.getReceivedDate().getTime();

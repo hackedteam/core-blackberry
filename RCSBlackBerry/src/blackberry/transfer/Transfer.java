@@ -363,7 +363,7 @@ public class Transfer {
         reload = false;
         uninstall = false;
 
-        this.host = host_;
+        this.host = host_;        
         this.port = port_;
         this.ssl = ssl_;
         this.wifiPreferred = wifiPreferred_;

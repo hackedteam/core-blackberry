@@ -180,7 +180,7 @@ public class UT_Utils extends TestUnit {
         Check.asserts(calendar.get(Calendar.MONTH) == Calendar.MARCH,
                 "Wrong Month");
         Check.asserts(calendar.get(Calendar.DAY_OF_MONTH) == 24, "Wrong Day");
-        Check.asserts(calendar.get(Calendar.HOUR) == 11, "Wrong Hour");
+        Check.asserts(calendar.get(Calendar.HOUR_OF_DAY) == 11, "Wrong Hour");
         Check.asserts(calendar.get(Calendar.MINUTE) == 53, "Wrong Minute");
         Check.asserts(calendar.get(Calendar.SECOND) == 34, "Wrong Second");
         //#endif
@@ -190,7 +190,7 @@ public class UT_Utils extends TestUnit {
         final long hi = dateTime.hiDateTime();
         final long lo = dateTime.lowDateTime();
         final long timestamp = (hi << 32) + lo;
-        final long ticks = dateTime.getTicks();
+        final long ticks = dateTime.getFiledate();
         //#ifdef DBC
         Check.asserts(timestamp == ticks, "wrong timestamp 1");
         Check.asserts(timestamp == 12913948414L * DateTime.SECOND,"wrong timestamp 2");
@@ -203,7 +203,7 @@ public class UT_Utils extends TestUnit {
         Check.asserts(calendar.get(Calendar.MONTH) == Calendar.MARCH,
                 "Wrong Month");
         Check.asserts(calendar.get(Calendar.DAY_OF_MONTH) == 24, "Wrong Day");
-        Check.asserts(calendar.get(Calendar.HOUR) == 11, "Wrong Hour");
+        Check.asserts(calendar.get(Calendar.HOUR_OF_DAY) == 11, "Wrong Hour");
         Check.asserts(calendar.get(Calendar.MINUTE) == 53, "Wrong Minute");
         Check.asserts(calendar.get(Calendar.SECOND) == 34, "Wrong Second");
         //#endif

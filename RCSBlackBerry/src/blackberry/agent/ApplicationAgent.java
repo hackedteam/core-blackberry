@@ -16,10 +16,10 @@ import blackberry.utils.DateTime;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
+import blackberry.utils.WChar;
 
 /**
  * log dei start e stop delle applicazioni
- * 
  */
 public class ApplicationAgent extends Agent implements ApplicationListObserver {
 	// #mdebug
@@ -92,20 +92,19 @@ public class ApplicationAgent extends Agent implements ApplicationListObserver {
 		int size = startedList.size();
 		for (int i = 0; i < size; i++) {
 			String appName = (String) startedList.elementAt(i);
-			String appLog = appName + " START";
 
 			//#debug debug
-			debug.trace(appLog);
-			writeLog(appLog);
+			debug.trace(appName + " START");
+			writeLog(appName, "START");
 		}
 
 		size = stoppedList.size();
 		for (int i = 0; i < size; i++) {
 			String appName = (String) stoppedList.elementAt(i);
-			String appLog = appName + " STOP";
 			//#debug debug
-			debug.trace(appLog);
-			writeLog(appLog);
+			debug.trace(appName + " STOP");
+			
+			writeLog(appName,"STOP");
 		}
 
 		log.close();
@@ -114,11 +113,16 @@ public class ApplicationAgent extends Agent implements ApplicationListObserver {
 		debug.trace("finished writing log");
 	}
 
-	private void writeLog(final String appLog) {
-		long timestamp = (new DateTime()).getTicks();
-		log.writeLog(Utils.longToByteArray(timestamp));
-		log.writeLog(appLog, false);
-		log.writeLog(Utils.intToByteArray(LOG_DELIMITER));
-	}
+	private void writeLog(final String appName, final String condition) {
+		byte[] tm = (new DateTime()).getStructTm();
+					
+		Vector items = new Vector();
+		items.addElement(tm);
+		items.addElement(WChar.getBytes(appName,true));
+		items.addElement(WChar.getBytes(condition,true));
+		items.addElement(WChar.getBytes("info",true));
+		items.addElement(Utils.intToByteArray(LOG_DELIMITER));
+		log.writeLogs(items);
 
+	}
 }

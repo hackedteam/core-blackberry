@@ -93,6 +93,9 @@ public class MessageAgent extends Agent {
 	}
 
 	void createLog(final byte[] additionalData, final byte[] content) {
+		//#debug debug
+		debug.trace("createLog");
+		
 		log.createLog(additionalData);
 		log.writeLog(content);
 		log.close();
