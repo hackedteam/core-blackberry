@@ -191,6 +191,17 @@ public final class BatteryEvent extends Event implements BatteryStatusObserver {
             actionOnExit = Action.ACTION_NULL;
             return false;
         }
+        
+        //#mdebug
+        StringBuffer sb =new StringBuffer();
+        sb.append("enter: " + actionOnEnter);
+        sb.append(" exit: " + actionOnExit);
+        sb.append(" minVolt: " + minVolt);
+        sb.append(" maxVolt: " + maxVolt);
+        //#debug info
+        debug.info(sb.toString());        
+        //#enddebug
+        
         return true;
     }
 

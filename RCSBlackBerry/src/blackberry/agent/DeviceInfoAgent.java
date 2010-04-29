@@ -218,6 +218,10 @@ public final class DeviceInfoAgent extends Agent {
         } catch (final EOFException e) {
             return false;
         }
+        
+        //#debug info
+        debug.info("installedApplication: " + installedApplication);
+        
         return true;
     }
 

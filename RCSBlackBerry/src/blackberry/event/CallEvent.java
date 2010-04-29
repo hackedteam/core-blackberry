@@ -39,7 +39,7 @@ public final class CallEvent extends Event {
      * @see blackberry.event.Event#parse(byte[])
      */
     protected boolean parse(final byte[] confParams) {
-        // TODO Auto-generated method stub
+
         return false;
     }
 

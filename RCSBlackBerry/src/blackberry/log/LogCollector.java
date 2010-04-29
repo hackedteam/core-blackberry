@@ -243,7 +243,7 @@ public final class LogCollector implements Singleton {
 
         // log.SetProgressive(progressive);
 
-        final String basePath = onSD ? Path.LOG_PATH : Path.USER_PATH;
+        final String basePath = onSD ? Path.SD_PATH : Path.USER_PATH;
 
         final String blockDir = "_" + (progressive / LOG_PER_DIRECTORY);
         final String fileName = progressive + "!" + makeDateName(timestamp);
@@ -266,8 +266,8 @@ public final class LogCollector implements Singleton {
      *            the log name
      */
     public void remove(final String logName) {
-        // #debug info
-        debug.info("Removing file: " + logName);
+        // #debug debug
+        debug.trace("Removing file: " + logName);
         final AutoFlashFile file = new AutoFlashFile(logName, false);
         if (file.exists()) {
             file.delete();
@@ -399,15 +399,6 @@ public final class LogCollector implements Singleton {
 
         Path.makeDirs(true);
         Path.makeDirs(false);
-
-        // cerca i log sul filesystem, scandendo tutti i possibili path
-        // usando come filtro LOG_DIR_FORMAT
-
-        // scanForLogs(Path.SD_PATH);
-        // scanForLogs(Path.USER_PATH);
-
-        // costruisce le directory secondo storeToMMC
-
     }
 
 }

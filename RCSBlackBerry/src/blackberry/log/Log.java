@@ -233,7 +233,13 @@ public final class Log {
         final String plainFileName = (String) tuple.elementAt(4);
 
         final String dir = basePath + blockDir + "/";
-        Path.createDirectory(dir);
+        boolean ret = Path.createDirectory(dir);
+
+        if (!ret) {
+            //#debug error
+            debug.error("Dir not created: " + dir);
+            return false;
+        }
 
         fileName = dir + encName;
         // #ifdef DBC
@@ -398,9 +404,15 @@ public final class Log {
      * @return true, if successful
      */
     public boolean writeLog(final byte[] data) {
-        if (os == null || fconn == null) {
+        if (os == null ) {
             // #debug
-            debug.error("fconn or os null");
+            debug.error("os null");
+            return false;
+        }
+        
+        if(fconn == null){
+            // #debug
+            debug.error("fconn null");
             return false;
         }
 

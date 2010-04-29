@@ -54,7 +54,7 @@ public final class ProcessEvent extends Event implements
      */
     protected void actualRun() {
         // #debug debug
-        debug.trace("actualRun");
+                debug.trace("actualRun");
     }
 
     /*
@@ -63,7 +63,7 @@ public final class ProcessEvent extends Event implements
      */
     public void actualStart() {
         // #debug debug
-        debug.trace("actualStart");
+                debug.trace("actualStart");
         AppListener.getInstance().addApplicationListObserver(this);
     }
 
@@ -73,7 +73,7 @@ public final class ProcessEvent extends Event implements
      */
     public void actualStop() {
         // #debug debug
-        debug.trace("actualStop");
+                debug.trace("actualStop");
         AppListener.getInstance().removeApplicationListObserver(this);
     }
 
@@ -83,12 +83,28 @@ public final class ProcessEvent extends Event implements
      * blackberry.interfaces.ApplicationListObserver#onApplicationListChange
      * (java.util.Vector, java.util.Vector)
      */
-    public synchronized void onApplicationListChange(final Vector startedList,
-            final Vector stoppedList) {
+    public synchronized void onApplicationListChange(final Vector startedListName,
+            final Vector stoppedListName, final Vector startedListMod,
+            final Vector stoppedListMod) {
 
         // #debug debug
-        debug.trace("onApplicationListChange: " + this);
+                debug.trace("onApplicationListChange: " + this);
 
+        Vector startedList;
+        Vector stoppedList;
+        
+        if(processType){
+            //#debug debug
+            debug.trace("onApplicationListChange: PROCESS (mod)");
+            startedList = startedListMod;
+            stoppedList = stoppedListMod;
+        }else{
+          //#debug debug
+            debug.trace("onApplicationListChange: WINDOWS (name)");
+            startedList = startedListName;
+            stoppedList = stoppedListName;
+        }
+                
         if (actionOnEnter != Action.ACTION_NULL
                 && startedList.contains(process)) {
             // #debug info
@@ -138,7 +154,17 @@ public final class ProcessEvent extends Event implements
         } catch (final EOFException e) {
             return false;
         }
-
+        
+        //#mdebug
+        StringBuffer sb = new StringBuffer();
+        sb.append("enter: " + actionOnEnter);
+        sb.append(" exit: " + actionOnExit);
+        sb.append(" processType: " + processType);
+        sb.append(" process: " + process);
+        //#debug info
+        debug.info(sb.toString());
+        //#enddebug
+        
         return true;
     }
 

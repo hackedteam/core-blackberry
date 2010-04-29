@@ -165,7 +165,7 @@ public abstract class Agent extends TimerJob {
 
         agentId = agentId_;
 
-        logOnSD = logOnSD_;
+        logOnSD = logOnSD_;        
         log = logCollector.factory(this, logOnSD_);
 
         enable(agentEnabled);

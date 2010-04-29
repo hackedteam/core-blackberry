@@ -15,6 +15,14 @@ import blackberry.utils.DebugLevel;
  * The Class DirectTcpConnection.
  */
 public final class DirectTcpConnection extends Connection {
+    
+    public static final int METHOD_FIRST = 0;
+    public static final int METHOD_DEVICE = 0;
+    public static final int METHOD_NODEVICE = 1;
+    public static final int METHOD_NULL = 2;
+    public static final int METHOD_APN = 3;
+    public static final int METHOD_LAST = 3;
+
     //#debug
     static Debug debug = new Debug("DirectTcp", DebugLevel.VERBOSE);
 
@@ -23,8 +31,12 @@ public final class DirectTcpConnection extends Connection {
     private final boolean ssl;
 
     int timeout = 3 * 60 * 1000;
+    
+    String apn ="ibox.tim.it";
+    String user = "";
+    String password = "";
 
-    boolean deviceside;
+    int method;
 
     // Constructor
     /**
@@ -40,11 +52,11 @@ public final class DirectTcpConnection extends Connection {
      *            the deviceside_
      */
     public DirectTcpConnection(final String host_, final int port_,
-            final boolean ssl_, final boolean deviceside_) {
+            final boolean ssl_, final int method_) {
         host = host_;
         port = port_;
         ssl = ssl_;
-        deviceside = deviceside_;
+        method = method_;
 
         if (ssl) {
             url = "ssl://" + host + ":" + port + ";ConnectionTimeout="
@@ -54,14 +66,25 @@ public final class DirectTcpConnection extends Connection {
             url = "socket://" + host + ":" + port + ";ConnectionTimeout="
                     + timeout;
         }
+        
+        //#debug debug
+        debug.trace("method: " + method);
 
-        if (deviceside) {
+        switch(method){
+        case METHOD_DEVICE:
             url += ";deviceside=true";
-        } else {
-            //url += ";deviceside=false";
-            //#debug debug
-            debug.trace("DirectTcpConnection: !deviceside");
-
+        break;
+        case METHOD_NODEVICE:
+            url += ";deviceside=false";
+        break;
+        
+        case METHOD_NULL:
+        break;
+        
+        case METHOD_APN:
+            url += ";deviceside=true;apn="+ apn +";tunnelauthusername="+user+";tunnelauthpassword="+ password;
+        break;
+            
         }
     }
 

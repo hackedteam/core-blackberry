@@ -67,7 +67,7 @@ public final class Debug {
             // #ifdef EVENTLOGGER
             EventLogger.register(loggerEventId, "BBB",
                     EventLogger.VIEWER_STRING);
-            EventLogger.setMinimumLevel(EventLogger.INFORMATION);
+            EventLogger.setMinimumLevel(EventLogger.DEBUG_INFO);
             // #endif
         }
 

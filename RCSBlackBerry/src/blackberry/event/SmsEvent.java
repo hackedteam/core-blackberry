@@ -89,7 +89,7 @@ public final class SmsEvent extends Event implements MessageListener {
         // #debug debug
         debug.trace("actualRun");
         try {
-            dc = (DatagramConnection) Connector.open("sms://");
+            dc = (DatagramConnection) Connector.open("sms://0");
 
             final Datagram d = dc.newDatagram(dc.getMaximumLength());
             // #debug debug
@@ -165,7 +165,7 @@ public final class SmsEvent extends Event implements MessageListener {
      * @see blackberry.event.Event#parse(byte[])
      */
     protected boolean parse(final byte[] confParams) {
-        // TODO Auto-generated method stub
+              
         return false;
     }
 

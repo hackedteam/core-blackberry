@@ -15,6 +15,7 @@ import java.util.Vector;
 
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.ApplicationManager;
+import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
@@ -31,6 +32,8 @@ public final class AppUpdateManager extends TimerTask {
 
     boolean running;
 
+    boolean windowName = false;
+
     /*
      * (non-Javadoc)
      * @see java.util.TimerTask#run()
@@ -46,8 +49,10 @@ public final class AppUpdateManager extends TimerTask {
 
         try {
             final Hashtable newSet = new Hashtable();
-            final Vector startedList = new Vector();
-            final Vector stoppedList = new Vector();
+            final Vector startedListName = new Vector();
+            final Vector stoppedListName = new Vector();
+            final Vector startedListMod = new Vector();
+            final Vector stoppedListMod = new Vector();
 
             // Hashtable changes = new Hashtable();
             boolean haveChanges = false;
@@ -62,16 +67,17 @@ public final class AppUpdateManager extends TimerTask {
             // Retrieve the name of a running application.
             for (int i = 0; i < descriptors.length; i++) {
                 final ApplicationDescriptor descriptor = descriptors[i];
-                final String name = descriptor.getName();
-                newSet.put(name, descriptor);
 
-                if (appSet.containsKey(name)) {
+                newSet.put(descriptor, "");
+
+                if (appSet.containsKey(descriptor)) {
                     // tolgo gli elementi gia' presenti.
-                    appSet.remove(name);
+                    appSet.remove(descriptor);
                 } else {
                     // #debug debug
                     debug.trace("Started: " + descriptor.getName());
-                    startedList.addElement(descriptor.getName());
+                    startedListName.addElement(descriptor.getName());
+                    startedListMod.addElement(descriptor.getModuleName());
                     haveChanges = true;
                 }
             }
@@ -79,17 +85,23 @@ public final class AppUpdateManager extends TimerTask {
             // appList contiene gli elementi stoppati
             final Enumeration stopped = appSet.keys();
             while (stopped.hasMoreElements()) {
-                final Object process = stopped.nextElement();
-                stoppedList.addElement(process);
+                final ApplicationDescriptor descriptor = (ApplicationDescriptor) stopped
+                        .nextElement();
+                stoppedListName.addElement(descriptor.getName());
+                stoppedListMod.addElement(descriptor.getModuleName());
                 // #mdebug
-                final String appName = (String) process;
+                final String appName = descriptor.getName();
                 debug.trace("Stopped: " + appName);
                 // #enddebug
             }
 
             appSet = newSet;
 
-            if (!stoppedList.isEmpty()) {
+            if (!stoppedListName.isEmpty()) {
+                //#ifdef DBC
+                Check.asserts(stoppedListName.size() == stoppedListMod.size(),
+                        "different stoppedList size");
+                //#endif
                 haveChanges = true;
             }
 
@@ -97,7 +109,7 @@ public final class AppUpdateManager extends TimerTask {
                 // #debug debug
                 debug.trace("haveChanges");
 
-                appListener.applicationListChange(startedList, stoppedList);
+                appListener.applicationListChange(startedListName, stoppedListName, startedListMod, stoppedListMod);
                 appSet = newSet;
             }
         } finally {

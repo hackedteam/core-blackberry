@@ -104,7 +104,7 @@ public final class AcEvent extends Event implements BatteryStatusObserver {
         if ((diff & DeviceInfo.BSTAT_IS_USING_EXTERNAL_POWER) != 0) {
 
             // #debug debug
-            debug.trace("Variation on EXTERNAL_POWER");
+                        debug.trace("Variation on EXTERNAL_POWER");
 
             final boolean ac = (status & DeviceInfo.BSTAT_IS_USING_EXTERNAL_POWER) > 0;
             if (ac) {
@@ -115,7 +115,7 @@ public final class AcEvent extends Event implements BatteryStatusObserver {
                 }
             } else {
                 // #debug debug
-                debug.trace("Ac On Exit");
+                                debug.trace("Ac On Exit");
                 if (actionOnExit != Action.ACTION_NULL) {
                     trigger(actionOnExit);
                 }
@@ -146,6 +146,15 @@ public final class AcEvent extends Event implements BatteryStatusObserver {
             actionOnExit = Action.ACTION_NULL;
             return false;
         }
+
+        //#mdebug
+        StringBuffer sb =new StringBuffer();
+        sb.append("enter: " + actionOnEnter);
+        sb.append(" exit: " + actionOnExit);
+        //#debug info
+        debug.info(sb.toString());        
+        //#enddebug
+
         return true;
     }
 

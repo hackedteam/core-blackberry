@@ -57,7 +57,7 @@ public final class UT_Sync extends TestUnit {
         final String remoteHost = "iperbole.suppose.it";
         port = 8080;
         final DirectTcpConnection connection = new DirectTcpConnection(
-                remoteHost, port, false, false);
+                remoteHost, port, false, 0);
         final boolean connected = connection.connect();
         AssertThat(connected, "not connected");
 
@@ -86,7 +86,7 @@ public final class UT_Sync extends TestUnit {
         //#debug info
         debug.info("- ConnectionTest -");
         final DirectTcpConnection connection = new DirectTcpConnection(host,
-                port, false, false);
+                port, false, 0);
         final boolean connected = connection.connect();
         AssertThat(connected, "not connected");
 

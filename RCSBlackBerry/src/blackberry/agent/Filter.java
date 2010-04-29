@@ -159,8 +159,8 @@ class Filter {
                         keywordPrefix.length, false);
                 keywordOffset += keywordPrefix.length + Prefix.LEN;
 
-                // #debug debug
-                debug.trace("Keyword: " + keyword);
+                //#debug info
+                debug.info("Keyword: " + keyword);
                 keywords.addElement(keyword);
             }
         }
@@ -204,8 +204,7 @@ class Filter {
         dataArrivo = message.getReceivedDate().getTime();
         if (dataArrivo < lastcheck) {
             // #debug debug
-            debug.trace("dataArrivo < lastcheck :" + dataArrivo + " < "
-                    + lastcheck);
+            debug.trace("dataArrivo < lastcheck :" + dataArrivo + " < " + lastcheck);
             return FILTERED_LASTCHECK;
         }
 

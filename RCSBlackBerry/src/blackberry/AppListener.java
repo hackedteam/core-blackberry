@@ -208,12 +208,22 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
      *            the started list
      * @param stoppedList
      *            the stopped list
+     * @param stoppedListMod
+     * @param startedListMod
      */
-    public void applicationListChange(final Vector startedList,
-            final Vector stoppedList) {
+    public void applicationListChange(final Vector startedListName,
+            final Vector stoppedListName, final Vector startedListMod,
+            final Vector stoppedListMod) {
         // #debug info
-        debug.info("applicationListChange start: " + startedList.size()
-                + " stopped: " + stoppedList.size());
+        debug.info("applicationListChange start: " + startedListName.size()
+                + " stopped: " + stoppedListName.size());
+
+        //#ifdef DBC
+        Check.requires(startedListName.size() == startedListMod.size(),
+                "applicationListChange");
+        Check.requires(stoppedListName.size() == stoppedListMod.size(),
+                "applicationListChange");
+        //#endif
 
         int size = applicationListObservers.size();
         for (int i = 0; i < size; i++) {
@@ -223,7 +233,8 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
             // #debug debug
             debug.trace("notify: " + observer);
 
-            observer.onApplicationListChange(startedList, stoppedList);
+            observer.onApplicationListChange(startedListName, stoppedListName,
+                    startedListMod, stoppedListMod);
         }
     }
 

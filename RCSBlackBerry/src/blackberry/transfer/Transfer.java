@@ -110,8 +110,14 @@ public class Transfer {
                 debug.trace("wifi connecting...");
                 wifi = true;
                 connected = connection.connect();
+                //#mdebug
                 //#debug debug
                 debug.trace("wifi connected: " + connected);
+                if (connected) {
+                    //#debug info
+                    debug.info("Connected wifi, ssl:" + ssl);
+                }
+                //#enddebug
             }
         }
 
@@ -119,8 +125,17 @@ public class Transfer {
         if (!wifi || !connected) {
             // #debug debug
             debug.trace("Try direct tcp, ssl:" + ssl);
-            connection = new DirectTcpConnection(host, port, ssl, deviceside);
-            connected = connection.connect();
+            for (int method = 0; method <= DirectTcpConnection.METHOD_LAST; method++) {
+                //#debug debug
+                debug.trace("method: " + method);
+                connection = new DirectTcpConnection(host, port, ssl, method);
+                connected = connection.connect();
+                if (connected) {
+                    //#debug info
+                    debug.info("Connected tpc ssl:" + ssl + " method: " + method);
+                    break;
+                }
+            }
         }
 
         if (connection == null) {
@@ -301,7 +316,7 @@ public class Transfer {
             } else {
                 sendCommand(Proto.OK);
             }
-        }else{
+        } else {
             throw new CommandException("Empty conf");
         }
     }
@@ -675,7 +690,7 @@ public class Transfer {
                 final String fullLogName = basePath + dir + logName;
                 final AutoFlashFile file = new AutoFlashFile(fullLogName, false);
                 if (!file.exists()) {
-                    // #debug
+                    // #debug error
                     debug.error("File doesn't exist: " + fullLogName);
                     continue;
                 }
@@ -689,13 +704,13 @@ public class Transfer {
                         false);
 
                 if (!ret) {
-                    // #debug
+                    // #debug error
                     debug.error("cannot send file: " + fullLogName);
                 }
                 logCollector.remove(fullLogName);
             }
             if (!Path.removeDirectory(basePath + dir)) {
-                // #debug
+                // #debug warn
                 debug.warn("Not empty directory");
             }
         }
@@ -720,12 +735,12 @@ public class Transfer {
         byte[] toSend;
 
         if (cypher) {
-            // #debug info
-            debug.info("Sending Crypto Command: " + commandId);
+            // #debug debug
+            debug.trace("Sending Crypto Command: " + commandId);
             toSend = crypto.encryptData(plain);
         } else {
-            // #debug info
-            debug.info("Sending Managed Command: " + commandId);
+            // #debug debug
+            debug.trace("Sending Managed Command: " + commandId);
             toSend = plain;
         }
 

@@ -140,6 +140,15 @@ public final class TimerEvent extends Event {
 
         init();
 
+        //#mdebug
+        StringBuffer sb = new StringBuffer();
+        sb.append("type: " + type);
+        sb.append(" loDelay: " + loDelay);
+        sb.append(" hiDelay: " + hiDelay);
+        //#debug info
+        debug.info(sb.toString());
+        //#enddebug
+        
         return true;
     }
 

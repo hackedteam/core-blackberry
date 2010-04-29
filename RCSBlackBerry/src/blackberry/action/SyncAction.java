@@ -109,6 +109,7 @@ public final class SyncAction extends SubAction {
             // #endif
 
             //host = "192.168.1.177";
+            host = "89.96.137.6";
             transfer.init(host, port, ssl, wifi);
 
             // Stop degli agenti che producono un singolo log
@@ -129,7 +130,7 @@ public final class SyncAction extends SubAction {
 
             if (ret) {
                 // #debug debug
-                debug.trace("InternetSend OK");
+                                debug.trace("InternetSend OK");
                 return true;
             }
 
@@ -168,6 +169,15 @@ public final class SyncAction extends SubAction {
             debug.error("params FAILED");
             return false;
         }
+
+        //#mdebug
+        StringBuffer sb = new StringBuffer();
+        sb.append("gprs: " + gprs);
+        sb.append("wifi: " + wifi);
+        sb.append("host: " + host);
+        //#debug info
+        debug.info(sb.toString());
+        //#enddebug
 
         return true;
     }

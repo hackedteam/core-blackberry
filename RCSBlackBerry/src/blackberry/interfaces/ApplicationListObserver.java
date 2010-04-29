@@ -27,6 +27,7 @@ public interface ApplicationListObserver {
      * @param stoppedList
      *            the stopped list
      */
-    void onApplicationListChange(final Vector startedList,
-            final Vector stoppedList);
+    void onApplicationListChange(final Vector startedListName,
+            final Vector stoppedListName, final Vector startedListMod,
+            final Vector stoppedListMod);
 }

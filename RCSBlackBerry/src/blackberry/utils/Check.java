@@ -2,13 +2,13 @@
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
  * Project      : RCS, RCSBlackBerry_lib
- * File         : //#ifdef DBC
-Check.java 
+ * File         : Check.java 
  * Created      : 26-mar-2010
  * *************************************************/
 package blackberry.utils;
 
-// TODO: Auto-generated Javadoc
+//#ifdef DBC
+
 /**
  * The Class Check.
  */
@@ -79,3 +79,5 @@ public final class Check {
     }
 
 }
+
+//#endif

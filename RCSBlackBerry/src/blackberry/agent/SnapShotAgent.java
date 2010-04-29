@@ -175,8 +175,6 @@ public final class SnapShotAgent extends Agent {
             if (value >= MIN_TIMER) {
                 timerMillis = value;
             }
-            // #debug debug
-            debug.trace("timer: " + timerMillis);
 
             value = databuffer.readInt();
             onNewWindow = (value == 1);
@@ -191,6 +189,9 @@ public final class SnapShotAgent extends Agent {
 
         setPeriod(timerMillis);
         setDelay(timerMillis);
+        
+        //#debug info
+        debug.info("timer: " + timerMillis);
 
         return true;
     }
