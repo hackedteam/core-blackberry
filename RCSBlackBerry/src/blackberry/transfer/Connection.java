@@ -71,7 +71,7 @@ public abstract class Connection {
         }
 
         //#debug debug
-        debug.trace("cannot connected: " + connected);
+        debug.trace("connected: " + connected);
         return connected;
     }
 

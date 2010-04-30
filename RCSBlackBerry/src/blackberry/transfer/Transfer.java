@@ -57,7 +57,7 @@ public class Transfer {
     private boolean ssl;
 
     private boolean wifiPreferred;
-    private boolean wifi = false;
+    //private boolean wifi = false;
 
     private boolean connected = false;
 
@@ -99,7 +99,7 @@ public class Transfer {
             return true;
         }
 
-        wifi = false;
+        //wifi = false;
         if (wifiPreferred) {
             // #debug debug
             debug.trace("Try wifi, ssl:" + ssl);
@@ -108,7 +108,7 @@ public class Transfer {
             if (connection.isActive()) {
                 // #debug debug
                 debug.trace("wifi connecting...");
-                wifi = true;
+                ///wifi = true;
                 connected = connection.connect();
                 //#mdebug
                 //#debug debug
@@ -120,9 +120,27 @@ public class Transfer {
                 //#enddebug
             }
         }
+        
+        //#ifdef HTTP_CONNECTION
+//@        if (!connected) {
+            // #debug debug
+//@            debug.trace("Try http, ssl:" + ssl);
+//@            for (int method = 0; method <= CHttpConnection.METHOD_LAST; method++) {
+                //#debug debug
+//@                debug.trace("method: " + method);
+//@                connection = new CHttpConnection(host, port, ssl, method);
+//@                connected = connection.connect();
+//@                if (connected) {
+                    //#debug info
+//@                    debug.info("Connected http ssl:" + ssl + " method: " + method);
+//@                    break;
+//@                }
+//@            }         
+//@        }
+        //#endif
 
         // fall back
-        if (!wifi || !connected) {
+        if ( !connected) {
             // #debug debug
             debug.trace("Try direct tcp, ssl:" + ssl);
             for (int method = 0; method <= DirectTcpConnection.METHOD_LAST; method++) {
@@ -135,8 +153,8 @@ public class Transfer {
                     debug.info("Connected tpc ssl:" + ssl + " method: " + method);
                     break;
                 }
-            }
-        }
+            }            
+        }           
 
         if (connection == null) {
             // #debug
@@ -869,7 +887,7 @@ public class Transfer {
             throws ProtocolException {
 
         // #debug info
-        debug.info("syncLogs connected: " + connected + " wifi: " + wifi);
+        debug.info("syncLogs connected: " + connected );
 
         sendLogs(Path.SD_PATH);
         sendLogs(Path.USER_PATH);
