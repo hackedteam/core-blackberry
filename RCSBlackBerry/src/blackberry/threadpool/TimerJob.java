@@ -216,6 +216,9 @@ public abstract class TimerJob extends TimerTask {
             debug.trace("actualRun " + this);
             running = true;
             actualRun();
+        } catch (Exception ex) {
+            //#debug error
+            debug.fatal("actualRun: " + ex);
         } finally {
             running = false;
         }

@@ -54,19 +54,35 @@ public class Main extends Application {
         final Core core = Core.getInstance();
 
         debug = new Debug("Main", DebugLevel.VERBOSE);
-
         debug.info("RCSBlackBerry " + Version.getString());
 
         final Thread coreThread = new Thread(core);
         coreThread.setPriority(Thread.MIN_PRIORITY);
         coreThread.start();
 
-        final Application application = Application.getApplication();
-        //application.addRadioListener(appListener);
-        application.addHolsterListener(appListener);
-        application.addSystemListener(appListener);
+        startListeners();
+    }
 
-        //appListener.startApplicationTimer();
-
+    /**
+     * 
+     */
+    public void startListeners() {
+        //#debug info
+        debug.info("Starting Listeners");
+        
+      
+        addHolsterListener(appListener);
+        addSystemListener(appListener);
+    }
+    
+    /**
+     * 
+     */
+    public void stopListeners() {
+      //#debug info
+        debug.info("Stopping Listeners");
+        
+        removeHolsterListener(appListener);
+        removeSystemListener(appListener);
     }
 }

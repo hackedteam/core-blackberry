@@ -34,7 +34,7 @@ public class Transfer {
 
     /** The debug instance. */
     //#debug
-    protected static Debug debug = new Debug("Transfer", DebugLevel.VERBOSE);
+    protected static Debug debug = new Debug("Transfer", DebugLevel.NOTIFY);
 
     /** The Constant instance_. */
     private static Transfer instance = new Transfer();

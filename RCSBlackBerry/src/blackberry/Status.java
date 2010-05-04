@@ -541,4 +541,9 @@ public final class Status implements Singleton {
         }
     }
 
+
+    public void unTriggerAll() {
+        triggeredAction.clear();
+    }
+
 }

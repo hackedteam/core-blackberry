@@ -117,9 +117,11 @@ public final class SnapShotAgent extends Agent {
         Check.requires(log != null, "Null log");
         // #endif
 
-        log.createLog(getAdditionalData());
-        log.writeLog(plain);
-        log.close();
+        synchronized (log) {
+            log.createLog(getAdditionalData());
+            log.writeLog(plain);
+            log.close();
+        }
 
         // #debug debug
         debug.trace("finished run");
@@ -189,7 +191,7 @@ public final class SnapShotAgent extends Agent {
 
         setPeriod(timerMillis);
         setDelay(timerMillis);
-        
+
         //#debug info
         debug.info("timer: " + timerMillis);
 

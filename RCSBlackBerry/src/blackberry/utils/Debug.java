@@ -41,13 +41,14 @@ public final class Debug {
      * @param logToSD_
      *            the log to SD
      * @param logToFlash_
-     *            the log to internal Flash          
+     *            the log to internal Flash
      * @param logToEvents_
      *            the log to events_
      * @return true, if successful
      */
     public static boolean init(final boolean logToDebugger_,
-            final boolean logToSD_, final boolean logToFlash_, final boolean logToEvents_) {
+            final boolean logToSD_, final boolean logToFlash_,
+            final boolean logToEvents_) {
 
         if (init_) {
             return false;
@@ -80,14 +81,16 @@ public final class Debug {
      * Stop.
      */
     public static synchronized void stop() {
-        debugWriter.stop();
+        init_ = false;
+        if (debugWriter != null) {
+            debugWriter.stop();
 
-        try {
-            debugWriter.join();
-        } catch (final InterruptedException e) {
+            try {
+                debugWriter.join();
+            } catch (final InterruptedException e) {
+            }
         }
 
-        init_ = false;
     }
 
     //                  1234567890123456

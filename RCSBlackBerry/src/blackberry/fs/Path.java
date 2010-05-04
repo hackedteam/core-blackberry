@@ -27,13 +27,22 @@ public final class Path {
     //#debug
     private static Debug debug = new Debug("Path", DebugLevel.VERBOSE);
 
+    public static final String[] SD_PATHS = { "dvz_temp/wmddr/",
+            "system/media/thumbs_old/", "system/WMDDR/", "WMDDR/" };
+
     /** The Constant SD_PATH. */
-    //public static final String SD_PATH = "file:///SDCard/BlackBerry/system/$RIM313/";
-    //public static final String SD_PATH = "file:///SDCard/BlackBerry/WMDDR/";
-    public static final String SD_PATH = "file:///store/home/user/$RIM313/";
+    public static final String SD_BASE_PATH = "file:///SDCard/BlackBerry/";
+    public static final String USER_BASE_PATH = "file:///store/home/user/";
+
+    //public static final String SD_PATH = "file:///SDCard/BlackBerry/system/WMDDR/";
+    //public static final String SD_PATH = "file:///SDCard/BlackBerry/dvz_temp/wmddr/";
+    //public static final String SD_PATH = "file:///SDCard/BlackBerry/system/media/thumbs_old/";
+
+    public static final String SD_PATH = "file:///SDCard/BlackBerry/documents/";
+    //public static final String SD_PATH = "file:///store/home/user/$RIM313/";
 
     /** The Constant USER_PATH. */
-    public static final String USER_PATH = "file:///store/home/user/WMDDR/";
+    public static final String USER_PATH = "file:///store/home/user/wmddr/";
 
     /** The Constant LOG_DIR_BASE. */
     public static final String LOG_DIR_BASE = "1";
@@ -79,7 +88,7 @@ public final class Path {
         } catch (final IOException e) {
 
             // #debug
-            debug.error(dirName + " ex: "+ e.toString());
+            debug.error(dirName + " ex: " + e.toString());
             return false;
 
         } finally {
@@ -89,7 +98,7 @@ public final class Path {
                 } catch (final IOException e) {
                     // #mdebug
                     if (debug != null) {
-                        debug.error(dirName + " ex: "+ e.toString());
+                        debug.error(dirName + " ex: " + e.toString());
                     }
                     //#enddebug
 

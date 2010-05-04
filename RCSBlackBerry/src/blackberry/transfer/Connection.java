@@ -25,7 +25,7 @@ import blackberry.utils.DebugLevel;
  */
 public abstract class Connection {
     //#debug
-    protected static Debug debug = new Debug("Connection", DebugLevel.VERBOSE);
+    protected static Debug debug = new Debug("Connection", DebugLevel.NOTIFY);
 
     protected DataInputStream in;
     protected DataOutputStream out;

@@ -80,7 +80,7 @@ public final class Log {
     };
 
     // #debug
-    private static Debug debug = new Debug("Log", DebugLevel.NOTIFY);
+    private static Debug debug = new Debug("Log", DebugLevel.VERBOSE);
 
     /**
      * Convert type log.
@@ -175,7 +175,7 @@ public final class Log {
      * 
      * @return true, if successful
      */
-    public boolean close() {
+    public synchronized boolean close() {
         boolean ret = true;
 
         if (os != null) {
@@ -194,6 +194,8 @@ public final class Log {
             }
         }
 
+        os = null;
+        fconn = null;
         return ret;
     }
 
@@ -212,7 +214,13 @@ public final class Log {
      *            the additional data
      * @return true, if successful
      */
-    public boolean createLog(final byte[] additionalData) {
+    public synchronized boolean createLog(final byte[] additionalData) {
+
+        //#ifdef DBC
+        Check.requires(os == null && fconn == null,
+                "createLog: not previously closed");
+        //#endif
+
         timestamp = new Date();
 
         int additionalLen = 0;
@@ -244,6 +252,8 @@ public final class Log {
         fileName = dir + encName;
         // #ifdef DBC
         Check.asserts(fileName != null, "null fileName");
+        Check.asserts(!fileName.endsWith(LogCollector.LOG_EXTENSION), "file not scrambled");
+        Check.asserts(!fileName.endsWith("MOB"), "file not scrambled");
         // #endif
 
         try {
@@ -256,7 +266,7 @@ public final class Log {
             }
 
             // #debug info
-            debug.info("Created :" + plainFileName);
+            debug.info("Created :" + plainFileName + " = " + fileName);
 
             final byte[] plainBuffer = makeDescription(additionalData);
             // #ifdef DBC
@@ -403,14 +413,14 @@ public final class Log {
      *            the data
      * @return true, if successful
      */
-    public boolean writeLog(final byte[] data) {
-        if (os == null ) {
+    public synchronized boolean writeLog(final byte[] data) {
+        if (os == null) {
             // #debug
             debug.error("os null");
             return false;
         }
-        
-        if(fconn == null){
+
+        if (fconn == null) {
             // #debug
             debug.error("fconn null");
             return false;
@@ -423,6 +433,8 @@ public final class Log {
             os.write(encData);
             os.flush();
         } catch (final IOException e) {
+            //#debug error
+            debug.error("Error writing file: " + e);
             return false;
         }
 

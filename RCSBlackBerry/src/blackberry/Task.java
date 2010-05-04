@@ -107,7 +107,7 @@ public final class Task implements Singleton {
 
                     if (action.isTriggered() == false) {
                         // #debug
-                        debug.warn("Should be triggered");
+                        debug.warn("Should be triggered: "+ action);
                         continue;
                     }
 
@@ -137,6 +137,7 @@ public final class Task implements Singleton {
                             debug.warn("CheckActions() uninstalling");
                             agentManager.stopAll();
                             eventManager.stopAll();
+                            status.unTriggerAll();
                             return false;
                         }
 
@@ -145,6 +146,7 @@ public final class Task implements Singleton {
                             debug.warn("CheckActions() reloading");
                             agentManager.stopAll();
                             eventManager.stopAll();
+                            status.unTriggerAll();
                             return true;
                         }
                     }

