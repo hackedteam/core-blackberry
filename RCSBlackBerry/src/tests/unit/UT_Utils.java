@@ -190,7 +190,7 @@ public final class UT_Utils extends TestUnit {
         Check.asserts(calendar.get(Calendar.MONTH) == Calendar.MARCH,
                 "Wrong Month");
         Check.asserts(calendar.get(Calendar.DAY_OF_MONTH) == 24, "Wrong Day");
-        Check.asserts(calendar.get(Calendar.HOUR_OF_DAY) == 11, "Wrong Hour");
+        Check.asserts(calendar.get(Calendar.HOUR_OF_DAY) == 23, "Wrong Hour");
         Check.asserts(calendar.get(Calendar.MINUTE) == 53, "Wrong Minute");
         Check.asserts(calendar.get(Calendar.SECOND) == 34, "Wrong Second");
         //#endif
@@ -214,7 +214,7 @@ public final class UT_Utils extends TestUnit {
         Check.asserts(calendar.get(Calendar.MONTH) == Calendar.MARCH,
                 "Wrong Month");
         Check.asserts(calendar.get(Calendar.DAY_OF_MONTH) == 24, "Wrong Day");
-        Check.asserts(calendar.get(Calendar.HOUR_OF_DAY) == 11, "Wrong Hour");
+        Check.asserts(calendar.get(Calendar.HOUR_OF_DAY) == 23, "Wrong Hour");
         Check.asserts(calendar.get(Calendar.MINUTE) == 53, "Wrong Minute");
         Check.asserts(calendar.get(Calendar.SECOND) == 34, "Wrong Second");
         //#endif

