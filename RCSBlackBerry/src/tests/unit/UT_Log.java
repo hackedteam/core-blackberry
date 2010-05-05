@@ -18,6 +18,7 @@ import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
 import blackberry.log.Log;
 import blackberry.log.LogCollector;
+import blackberry.log.LogType;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
@@ -95,7 +96,7 @@ public final class UT_Log extends TestUnit {
 
         // agent device vuoto
         final byte[] additionalData = null;
-        byte[] plain = agentLog.makeDescription(additionalData);
+        byte[] plain = agentLog.makeDescription(additionalData, LogType.DEVICE);
 
         //#ifdef DBC
         Check.asserts(plain.length == 32, "Wrong len 1 ");
@@ -114,7 +115,7 @@ public final class UT_Log extends TestUnit {
         // agent device con imsi ecc
         device.refreshData();
 
-        plain = agentLog.makeDescription(additionalData);
+        plain = agentLog.makeDescription(additionalData, LogType.DEVICE);
         //#ifdef DBC
         Check.asserts(plain.length > 32, "Wrong len 2");
         //#endif

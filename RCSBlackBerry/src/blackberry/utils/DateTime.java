@@ -73,7 +73,7 @@ public final class DateTime {
     /**
      * Gets the filedate.
      * 
-     * @return the filedate
+     * @return the filedate, 100 ns starting from 1601
      */
     public long getFiledate() {
         return ticks;

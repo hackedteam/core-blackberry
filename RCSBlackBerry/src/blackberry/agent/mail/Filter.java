@@ -6,7 +6,7 @@
  * File         : Filter.java
  * Created      : 28-apr-2010
  * *************************************************/
-package blackberry.agent;
+package blackberry.agent.mail;
 
 import java.io.EOFException;
 import java.util.Date;
@@ -18,6 +18,7 @@ import net.rim.blackberry.api.mail.Message;
 import net.rim.blackberry.api.mail.MessagingException;
 import net.rim.blackberry.api.mail.event.FolderEvent;
 import net.rim.device.api.util.DataBuffer;
+import blackberry.agent.Prefix;
 import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
@@ -27,7 +28,7 @@ import blackberry.utils.WChar;
 /**
  * The Class Filter.
  */
-class Filter {
+public class Filter {
     // #debug
     static Debug debug = new Debug("Filter", DebugLevel.VERBOSE);
 
