@@ -1,6 +1,6 @@
 package blackberry.utils;
 
-/*public final class StringPair {
+public final class StringPair {
 
     public String first;
     public String second;
@@ -9,4 +9,4 @@ package blackberry.utils;
         this.first = first;
         this.second = second;
     }
-}*/
+}

