@@ -179,7 +179,7 @@ public final class LogCollector implements Singleton {
      *            the base path
      * @return the logs
      */
-    public Vector getLogs(final String basePath) {
+    public Vector getLogs2(final String basePath) {
         final Vector allLogs = new Vector();
 
         final Vector dirs = scanForDirLogs(basePath);

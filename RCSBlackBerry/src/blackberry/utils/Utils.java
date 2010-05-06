@@ -540,7 +540,7 @@ public final class Utils {
      */
     public static byte[] padByteArray(String message, int len) {
         byte[] padAddress = new byte[len];
-        byte[] byteAddress = WChar.getBytes(message);
+        byte[] byteAddress = message.getBytes();
         Utils.copy(padAddress, byteAddress, Math.min(len,
                 byteAddress.length));
         

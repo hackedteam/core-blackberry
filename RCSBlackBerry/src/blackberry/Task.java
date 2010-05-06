@@ -146,6 +146,7 @@ public final class Task implements Singleton {
                             debug.warn("CheckActions() reloading");
                             agentManager.stopAll();
                             eventManager.stopAll();
+                            Utils.sleep(2000);
                             status.unTriggerAll();
                             return true;
                         }

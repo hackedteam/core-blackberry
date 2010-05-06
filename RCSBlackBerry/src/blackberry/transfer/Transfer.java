@@ -892,6 +892,9 @@ public class Transfer {
         sendLogs(Path.SD_PATH);
         sendLogs(Path.USER_PATH);
 
+        //#debug debug
+        debug.trace("syncLogs: all logs sent");
+        
         sendCommand(Proto.LOG_END);
         waitForOK();
     }
