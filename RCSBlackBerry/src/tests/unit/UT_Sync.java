@@ -86,7 +86,7 @@ public final class UT_Sync extends TestUnit {
         //#debug info
         debug.info("- ConnectionTest -");
         final DirectTcpConnection connection = new DirectTcpConnection(host,
-                port, false, 0);
+                port, false, DirectTcpConnection.METHOD_NODEVICE);
         final boolean connected = connection.connect();
         AssertThat(connected, "not connected");
 

@@ -126,11 +126,11 @@ public final class UT_Agents extends TestUnit {
         AssertNotNull(agent1, "AGENT_SNAPSHOT");
         status.addAgent(agent1);
 
-        final Agent agent2 = Agent.factory(Agent.AGENT_CAM, true, null);
+        final Agent agent2 = Agent.factory(Agent.AGENT_CAM, true, new byte[]{});
         AssertNotNull(agent2, "AGENT_CAM");
         status.addAgent(agent2);
 
-        final Agent agent3 = Agent.factory(Agent.AGENT_URL, true, null);
+        final Agent agent3 = Agent.factory(Agent.AGENT_URL, true, new byte[]{});
         AssertNotNull(agent3, "AGENT_URL");
         status.addAgent(agent3);
 
@@ -258,7 +258,7 @@ public final class UT_Agents extends TestUnit {
         status.clear();
         final AgentManager agentManager = AgentManager.getInstance();
 
-        final Agent agent = Agent.factory(Agent.AGENT_DEVICE, true, null);
+        final Agent agent = Agent.factory(Agent.AGENT_DEVICE, true, Utils.intToByteArray(1));
         AssertNotNull(agent, "Agent");
 
         status.addAgent(agent);
@@ -302,10 +302,10 @@ public final class UT_Agents extends TestUnit {
         // genero due agenti, di cui uno disabled
         // #debug debug
         debug.trace("agent");
-        final Agent agentDevice = Agent.factory(Agent.AGENT_DEVICE, true, null);
+        final Agent agentDevice = Agent.factory(Agent.AGENT_DEVICE, true, Utils.intToByteArray(0));
         status.addAgent(agentDevice);
         final Agent agentPosition = Agent.factory(Agent.AGENT_POSITION, false,
-                null);
+                new byte[]{});
         status.addAgent(agentPosition);
 
         // eseguo gli agenti

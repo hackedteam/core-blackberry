@@ -9,6 +9,7 @@ package blackberry.fs;
 
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.Random;
 import java.util.Vector;
 
 import javax.microedition.io.Connector;
@@ -27,6 +28,9 @@ public final class Path {
     //#debug
     private static Debug debug = new Debug("Path", DebugLevel.VERBOSE);
 
+    public static final int SD = 0;
+    public static final int USER = 1;
+    
     public static final String[] SD_PATHS = { "dvz_temp/wmddr/",
             "system/media/thumbs_old/", "system/WMDDR/", "WMDDR/" };
 
@@ -38,11 +42,10 @@ public final class Path {
     //public static final String SD_PATH = "file:///SDCard/BlackBerry/dvz_temp/wmddr/";
     //public static final String SD_PATH = "file:///SDCard/BlackBerry/system/media/thumbs_old/";
 
-    public static final String SD_PATH = "file:///SDCard/BlackBerry/documents/";
-    //public static final String SD_PATH = "file:///store/home/user/$RIM313/";
+    public static String SD_PATH = SD_BASE_PATH + "thumbs/";
 
     /** The Constant USER_PATH. */
-    public static final String USER_PATH = "file:///store/home/user/wmddr/";
+    public static final String USER_PATH = USER_BASE_PATH + "wmddr/";
 
     /** The Constant LOG_DIR_BASE. */
     public static final String LOG_DIR_BASE = "1";
@@ -171,25 +174,36 @@ public final class Path {
     /**
      * Crea le directory iniziali.
      * 
-     * @param storeToSD
+     * @param sd 
      *            true: crea su SD. false: crea su flash
+     * @return true se riesce a scrivere le directory, false altrimenti
      */
-    public static void makeDirs(final boolean storeToSD) {
+    public static boolean makeDirs(final int sd ) {
         Path.getRoots();
 
-        if (storeToSD) {
-            createDirectory(Path.SD_PATH);
-            // createDirectory(Path.SD_PATH + Path.LOG_DIR);
-            createDirectory(Path.SD_PATH + Path.MARKUP_DIR);
-            createDirectory(Path.SD_PATH + Path.CONF_DIR);
+        boolean ret = true;
+        final Random random = new Random();
+        String base;
+        if (sd == SD) {
+            base = Path.SD_PATH;
 
         } else {
-            createDirectory(Path.USER_PATH);
-            // createDirectory(Path.USER_PATH + Path.LOG_DIR);
-            createDirectory(Path.USER_PATH + Path.MARKUP_DIR);
-            createDirectory(Path.USER_PATH + Path.CONF_DIR);
-
+            base = Path.USER_PATH;
         }
+
+        ret &= createDirectory(base);
+        // createDirectory(Path.SD_PATH + Path.LOG_DIR);
+        ret &= createDirectory(base + Path.MARKUP_DIR);
+        ret &= createDirectory(base + Path.CONF_DIR);
+
+        long rnd = Math.abs(random.nextLong());
+        
+        if (ret) {
+            ret &= createDirectory(base + rnd + "/");
+            ret &= removeDirectory(base + rnd + "/");
+        }
+
+        return ret;
     }
 
     /**

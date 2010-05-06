@@ -455,8 +455,16 @@ public final class LogCollector implements Singleton {
     public void scanLogs() {
         clear();
 
-        Path.makeDirs(true);
-        Path.makeDirs(false);
+        if(Path.isSDPresent() && Path.makeDirs(Path.SD)){
+            //#debug info
+            debug.info("SD available and writable");
+        }else{
+            //#debug warn
+            debug.warn("SD is not available or writable");
+            Path.SD_PATH = Path.USER_PATH;
+        }
+        
+        Path.makeDirs(Path.USER);
     }
 
 }

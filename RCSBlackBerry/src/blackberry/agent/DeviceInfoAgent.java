@@ -209,7 +209,7 @@ public final class DeviceInfoAgent extends Agent {
      * (non-Javadoc)
      * @see blackberry.agent.Agent#parse(byte[])
      */
-    protected boolean parse(final byte[] confParams) {
+    protected boolean parse(final byte[] confParams) {               
         final DataBuffer databuffer = new DataBuffer(confParams, 0,
                 confParams.length, false);
         try {

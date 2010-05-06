@@ -48,8 +48,8 @@ public final class DirectTcpConnection extends Connection {
      *            the port_
      * @param ssl_
      *            the ssl_
-     * @param deviceside_
-     *            the deviceside_
+     * @param method_
+     *            the method
      */
     public DirectTcpConnection(final String host_, final int port_,
             final boolean ssl_, final int method_) {

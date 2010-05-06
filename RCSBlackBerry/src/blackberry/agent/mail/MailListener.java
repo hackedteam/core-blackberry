@@ -130,9 +130,13 @@ public final class MailListener implements FolderListener, StoreListener,
             final int filtered = realtimeFilter.filterMessage(message,
                     messageAgent.lastcheck);
             if (filtered == Filter.FILTERED_OK) {
-                saveLog(message, realtimeFilter.maxMessageSize);
+                boolean ret = saveLog(message, realtimeFilter.maxMessageSize);
+                //#mdebug
+                if(ret){
                 //#debug debug
                 debug.trace("messagesAdded: " + message.getFolder().getName());
+                }
+                //#enddebug
             }
 
         } catch (final MessagingException ex) {
@@ -200,7 +204,7 @@ public final class MailListener implements FolderListener, StoreListener,
         messageAgent.updateMarkup();
     }
 
-    private synchronized void saveLog(final Message message,
+    private synchronized boolean saveLog(final Message message,
             final long maxMessageSize) {
 
         //#debug debug
@@ -233,6 +237,7 @@ public final class MailListener implements FolderListener, StoreListener,
         } catch (final Exception ex) {
             //#debug error
             debug.error("saveLog message: " + ex);
+            return false;
 
         } finally {
             if (os != null) {
@@ -242,6 +247,8 @@ public final class MailListener implements FolderListener, StoreListener,
                 }
             }
         }
+        
+        return true;
     }
 
     /**
