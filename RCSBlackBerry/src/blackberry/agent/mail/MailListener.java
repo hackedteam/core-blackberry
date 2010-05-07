@@ -232,7 +232,7 @@ public final class MailListener implements FolderListener, StoreListener,
             //#debug debug
             debug.trace("saveLog: " + mail);
 
-            messageAgent.createLog(additionalData, WChar.getBytes(mail), LogType.MAIL_RAW);
+            messageAgent.createLog(additionalData, mail.getBytes(), LogType.MAIL_RAW);
 
         } catch (final Exception ex) {
             //#debug error
