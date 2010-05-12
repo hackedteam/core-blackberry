@@ -83,7 +83,7 @@ public final class Debug {
     public static synchronized void stop() {
         init_ = false;
         if (debugWriter != null) {
-            debugWriter.stop();
+            debugWriter.requestStop();
 
             try {
                 debugWriter.join();

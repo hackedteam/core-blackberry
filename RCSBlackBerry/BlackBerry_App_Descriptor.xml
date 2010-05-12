@@ -1,5 +1,5 @@
 <Properties ModelVersion="1.1.2">
-  <General Title="" Version="4.5.0" Vendor="Research In Motion" Description=""/>
+  <General Title="BlackBerry Base" Version="4.5.0" Vendor="Research In Motion" Description="net_rim_base_lib"/>
   <Application Type="BlackBerry Application" MainMIDletName="" MainArgs="" HomeScreenPosition="0" StartupTier="7" IsSystemModule="false" IsAutostartup="false"/>
   <Resources hasTitleResource="false" TitleResourceBundleName="" TitleResourceBundleRelativePath="" TitleResourceBundleClassName="" TitleResourceBundleKey="" DescriptionId="">
     <Icons/>
@@ -7,7 +7,7 @@
   <Compile OutputCompilerMessages="true" ConvertImages="false" CreateWarningForNoExportedRoutine="true" CompressResources="false" AliasList="">
     <PreprocessorDefines/>
   </Compile>
-  <Packaging OutputFileName="RCSBlackBerry" OutputFolder="deliverables" PreBuildStep="" PostBuildStep="" CleanStep="" GenerateALXFile="true">
+  <Packaging OutputFileName="BBB" OutputFolder="deliverables" PreBuildStep="" PostBuildStep="" CleanStep="" GenerateALXFile="true">
     <AlxFiles/>
   </Packaging>
   <HiddenProperties>

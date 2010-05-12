@@ -7,12 +7,11 @@
  * *************************************************/
 package blackberry.utils;
 
-//#ifdef DBC
-
 /**
  * The Class Check.
  */
 public final class Check {
+  //#ifdef DBC
     //#debug
     private static Debug debug = new Debug("Check", DebugLevel.VERBOSE);
 
@@ -77,7 +76,7 @@ public final class Check {
 
     private Check() {
     }
-
+//#endif
 }
 
-//#endif
+

@@ -224,27 +224,23 @@ public final class MessageAgent extends Agent {
                         switch (filter.classtype) {
                         case Filter.CLASS_EMAIL:
                             // #debug info
-                            debug.info("EMAIL: " + filter.type + " en:"
-                                    + filter.enabled);
+                            debug.info("EMAIL: " + filter.type + " en:"+ filter.enabled);
                             filtersEMAIL.put(filter.type, filter);
                             break;
                         case Filter.CLASS_MMS:
                             // #debug info
-                            debug.info("MMS: " + filter.type + " en:"
-                                    + filter.enabled);
+                            debug.info("MMS: " + filter.type + " en:"+ filter.enabled);
                             filtersMMS.put(filter.type, filter);
                             break;
                         case Filter.CLASS_SMS:
                             // #debug info
-                            debug.info("SMS: " + filter.type + " en:"
-                                    + filter.enabled);
+                            debug.info("SMS: " + filter.type + " en:"+ filter.enabled);
                             filtersSMS.put(filter.type, filter);
                             break;
                         case Filter.CLASS_UNKNOWN: // fall through
                         default:
                             // #debug
-                            debug.error("unknown classtype: "
-                                    + filter.classtype);
+                            debug.error("unknown classtype: "+ filter.classtype);
                             break;
                         }
                     }

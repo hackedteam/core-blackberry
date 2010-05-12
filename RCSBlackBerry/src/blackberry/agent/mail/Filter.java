@@ -89,9 +89,10 @@ public class Filter {
         final int headerSize = 116;
         final int classNameLen = 32;
         final int confSize = conf.length - offset;
-
+        //#ifdef DBC
         Check.requires(confSize >= headerSize, "conf smaller than needed");
-
+        //#endif
+        
         final Prefix headerPrefix = new Prefix(conf, offset);
 
         if (!headerPrefix.isValid()) {
@@ -251,8 +252,7 @@ public class Filter {
         dataArrivo = message.getReceivedDate().getTime();
         if (dataArrivo < lastcheck) {
             // #debug info
-            debug.info("dataArrivo < lastcheck :" + dataArrivo + " < "
-                    + lastcheck);
+            debug.info("dataArrivo < lastcheck :" + dataArrivo + " < "+ lastcheck);
             return FILTERED_LASTCHECK;
         }
    

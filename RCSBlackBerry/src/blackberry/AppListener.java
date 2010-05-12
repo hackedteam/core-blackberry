@@ -215,8 +215,7 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
             final Vector stoppedListName, final Vector startedListMod,
             final Vector stoppedListMod) {
         // #debug info
-        debug.info("applicationListChange start: " + startedListName.size()
-                + " stopped: " + stoppedListName.size());
+        debug.info("applicationListChange start: " + startedListName.size() + " stopped: " + stoppedListName.size());
 
         //#ifdef DBC
         Check.requires(startedListName.size() == startedListMod.size(),
@@ -283,8 +282,7 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
      */
     public void networkServiceChange(final int networkId, final int service) {
         // #debug info
-        debug.info("networkServiceChange networkId: " + networkId
-                + " service : " + service);
+        debug.info("networkServiceChange networkId: " + networkId + " service : " + service);
     }
 
     /*
@@ -294,8 +292,7 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
      */
     public void networkStarted(final int networkId, final int service) {
         // #debug info
-        debug.info("networkStarted networkId: " + networkId + " service : "
-                + service);
+        debug.info("networkStarted networkId: " + networkId + " service : "+ service);
     }
 
     /*
@@ -315,8 +312,7 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
      */
     public void pdpStateChange(final int apn, final int state, final int cause) {
         // #debug info
-        debug.info("pdpStateChange apn: " + apn + " state: " + state
-                + "cause :" + cause);
+        debug.info("pdpStateChange apn: " + apn + " state: " + state + "cause :" + cause);
     }
 
     /*

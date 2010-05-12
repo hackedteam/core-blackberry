@@ -141,8 +141,7 @@ public final class ProcessEvent extends Event implements
             process = WChar.getString(payload, true);
 
             // #debug info
-            debug.info("Process: " + process + " enter:" + actionOnEnter
-                    + " exit: " + actionOnExit);
+            debug.info("Process: " + process + " enter:" + actionOnEnter+ " exit: " + actionOnExit);
 
             // #ifdef DBC
             Check.asserts(actionOnEnter >= Action.ACTION_NULL,

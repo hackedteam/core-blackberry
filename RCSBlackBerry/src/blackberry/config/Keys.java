@@ -19,7 +19,7 @@ import blackberry.utils.Utils;
 public final class Keys implements Singleton {
     private static String conf = "Adf5V57gQtyi90wUhpb8Neg56756j87R";
     private static String aes = "3j9WmmDgBqyU270FTid3719g64bP4s52"; // markup,
-    // log
+    // logjava
     private static String instanceID = "bg5etG87q20Kg52W5Fg1";
     private static String buildID = "av3pVck1gb4eR2d8";
 

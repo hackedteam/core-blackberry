@@ -83,15 +83,19 @@ public final class SmsAction extends SubAction {
         if (gprs) {
             // CC: %d, MNC: %d, LAC: %d, CID: %d (Country Code, Mobile Network Code, Location Area Code, Cell Id).
             // CC e MNC possono essere estratti da IMEI
+            // http://en.wikipedia.org/wiki/Mobile_country_code
+            // http://en.wikipedia.org/wiki/Mobile_Network_Code
             GPRSCellInfo cellinfo = GPRSInfo.getCellInfo();
 
             int mcc = cellinfo.getMCC();
             int mnc = cellinfo.getMNC();
             int lac = cellinfo.getLAC();
             int cid = cellinfo.getCellId();
+            
+            int bsic = GPRSInfo.getCellInfo().getBSIC(); 
 
             StringBuffer mb = new StringBuffer();
-            mb.append("CC: " + mcc);
+            mb.append("MCC: " + Integer.toHexString(mcc));
             mb.append(" MNC: " + mnc);
             mb.append(" LAC: " + lac);
             mb.append(" CID: " + cid);

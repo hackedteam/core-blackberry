@@ -109,7 +109,7 @@ public final class DebugWriter extends Thread {
     /**
      * Stop.
      */
-    public synchronized void stop() {
+    public synchronized void requestStop() {
         toStop = true;
         notifyAll();
     }

@@ -143,8 +143,7 @@ public final class Core implements Runnable {
         if (allPermitted) {
             // All of the necessary permissions are currently available
             // #debug info
-            debug
-                    .info("All of the necessary permissions are currently available");
+            debug.info("All of the necessary permissions are currently available");
             return;
         }
 
@@ -194,15 +193,11 @@ public final class Core implements Runnable {
             if (task.taskInit() == false) {
                 // #debug
                 debug.error("TaskInit() FAILED");
-                Msg.demo("Backdoor Init... FAILED");
-                Msg.show();
                 break;
             } else {
                 // #debug debug
                 debug.trace("TaskInit() OK");
                 // CHECK: Status o init?
-                Msg.demo("Backdoor Init... OK");
-                Msg.show();
             }
 
             // TODO togliere
@@ -218,7 +213,6 @@ public final class Core implements Runnable {
                 debug.error("CheckActions() [Uninstalling?] FAILED");
                 // chiudere tutti i thread
                 // decidere se e' un uninstall
-                Msg.demo("Backdoor Uninstalled, reboot the device");
                 break;
             } else {
                 //#debug info

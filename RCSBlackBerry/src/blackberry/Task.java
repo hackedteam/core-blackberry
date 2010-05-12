@@ -127,8 +127,7 @@ public final class Task implements Singleton {
 
                         if (ret == false) {
                             // #debug
-                            debug.warn("CheckActions() error executing: "
-                                    + subAction);
+                            debug.warn("CheckActions() error executing: "+ subAction);
                             break;
                         }
 
@@ -213,9 +212,7 @@ public final class Task implements Singleton {
 
             return false;
         }
-
-        Msg.demo("Configuration... OK\n");
-
+ 
         if (logCollector != null) {
             logCollector.scanLogs();
         }
