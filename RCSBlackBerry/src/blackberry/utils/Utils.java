@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -23,8 +24,9 @@ import net.rim.device.api.util.NumberUtilities;
 public final class Utils {
 
     /** The debug instance. */
-    //#debug
+    //#ifdef DEBUG
     private static Debug debug = new Debug("Utils", DebugLevel.VERBOSE);
+    //#endif
 
     /**
      * ASCII.
@@ -106,9 +108,9 @@ public final class Utils {
      */
     public static int byteArrayToInt(final byte[] buffer, final int offset) {
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(buffer.length >= offset + 4, "short buffer");
-        // #endif
+        //#endif
 
         final DataBuffer databuffer = new DataBuffer(buffer, offset, 4, false);
         int value = 0;
@@ -116,8 +118,9 @@ public final class Utils {
         try {
             value = databuffer.readInt();
         } catch (final EOFException e) {
-            // #debug
+            //#ifdef DEBUG
             debug.error("Cannot read int from buffer at offset:" + offset);
+            //#endif
         }
 
         return value;
@@ -136,9 +139,9 @@ public final class Utils {
     public static long byteArrayToLong(final byte[] buffer,
             final int offset) {
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(buffer.length >= offset + 8, "short buffer");
-        // #endif
+        //#endif
 
         final DataBuffer databuffer = new DataBuffer(buffer, offset, 8, false);
         long value = 0;
@@ -146,8 +149,9 @@ public final class Utils {
         try {
             value = databuffer.readLong();
         } catch (final EOFException e) {
-            // #debug
+            //#ifdef DEBUG
             debug.error("Cannot read int from buffer at offset:" + offset);
+            //#endif
         }
 
         return value;
@@ -201,10 +205,10 @@ public final class Utils {
      */
     public static void copy(final byte[] dest, final int offsetDest,
             final byte[] src, final int offsetSrc, final int len) {
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(dest.length >= offsetDest + len, "wrong dest len");
         Check.requires(src.length >= offsetSrc + len, "wrong src len");
-        // #endif
+        //#endif
 
         for (int i = 0; i < len; i++) {
             dest[i + offsetDest] = src[i + offsetSrc];
@@ -257,8 +261,9 @@ public final class Utils {
         }
 
         confHash = (int) tempHash;
-        //#debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("confhash:" + confHash);
+        //#endif
         return confHash;
     }
 
@@ -312,7 +317,7 @@ public final class Utils {
     }
 
     /**
-     * Gets the index.
+     * Gets the index of the token.
      * 
      * @param buffer
      *            the buffer
@@ -389,9 +394,9 @@ public final class Utils {
      * @return the byte[]
      */
     public static byte[] hexStringToByteArray(final String wchar) {
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(wchar.length() % 2 == 0, "Odd input");
-        // #endif
+        //#endif
         final byte[] ret = new byte[wchar.length() / 2];
 
         for (int i = 0; i < ret.length; i++) {
@@ -401,10 +406,10 @@ public final class Utils {
             int value = NumberUtilities.hexDigitToInt(first) << 4;
             value += NumberUtilities.hexDigitToInt(second);
 
-            // #ifdef DBC
+            //#ifdef DBC
             Check.asserts(value >= 0 && value < 256,
                     "HexStringToByteArray: wrong value");
-            // #endif
+            //#endif
 
             ret[i] = (byte) value;
         }
@@ -499,8 +504,9 @@ public final class Utils {
 
             //Thread.yield();
         } catch (final InterruptedException e) {
-            // #debug
+            //#ifdef DEBUG
             debug.error("sleep interrupted!");
+            //#endif
         }
     }
 

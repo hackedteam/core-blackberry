@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -25,8 +26,9 @@ import blackberry.utils.WChar;
  */
 public final class ProcessEvent extends Event implements
         ApplicationListObserver {
-    // #debug
+    //#ifdef DEBUG
     private static Debug debug = new Debug("ProcessEvent", DebugLevel.VERBOSE);
+    //#endif
 
     int actionOnEnter;
     int actionOnExit;
@@ -53,8 +55,9 @@ public final class ProcessEvent extends Event implements
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     protected void actualRun() {
-        // #debug debug
-                debug.trace("actualRun");
+        //#ifdef DEBUG_TRACE
+        debug.trace("actualRun");
+        //#endif
     }
 
     /*
@@ -62,8 +65,9 @@ public final class ProcessEvent extends Event implements
      * @see blackberry.threadpool.TimerJob#actualStart()
      */
     public void actualStart() {
-        // #debug debug
-                debug.trace("actualStart");
+        //#ifdef DEBUG_TRACE
+        debug.trace("actualStart");
+        //#endif
         AppListener.getInstance().addApplicationListObserver(this);
     }
 
@@ -72,8 +76,9 @@ public final class ProcessEvent extends Event implements
      * @see blackberry.threadpool.TimerJob#actualStop()
      */
     public void actualStop() {
-        // #debug debug
-                debug.trace("actualStop");
+        //#ifdef DEBUG_TRACE
+        debug.trace("actualStop");
+        //#endif
         AppListener.getInstance().removeApplicationListObserver(this);
     }
 
@@ -83,38 +88,43 @@ public final class ProcessEvent extends Event implements
      * blackberry.interfaces.ApplicationListObserver#onApplicationListChange
      * (java.util.Vector, java.util.Vector)
      */
-    public synchronized void onApplicationListChange(final Vector startedListName,
-            final Vector stoppedListName, final Vector startedListMod,
-            final Vector stoppedListMod) {
+    public synchronized void onApplicationListChange(
+            final Vector startedListName, final Vector stoppedListName,
+            final Vector startedListMod, final Vector stoppedListMod) {
 
-        // #debug debug
-                debug.trace("onApplicationListChange: " + this);
+        //#ifdef DEBUG_TRACE
+        debug.trace("onApplicationListChange: " + this);
+        //#endif
 
         Vector startedList;
         Vector stoppedList;
-        
-        if(processType){
-            //#debug debug
+
+        if (processType) {
+            //#ifdef DEBUG_TRACE
             debug.trace("onApplicationListChange: PROCESS (mod)");
+            //#endif
             startedList = startedListMod;
             stoppedList = stoppedListMod;
-        }else{
-          //#debug debug
+        } else {
+            //#ifdef DEBUG_TRACE
             debug.trace("onApplicationListChange: WINDOWS (name)");
+            //#endif
             startedList = startedListName;
             stoppedList = stoppedListName;
         }
-                
+
         if (actionOnEnter != Action.ACTION_NULL
                 && startedList.contains(process)) {
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("triggering enter: " + process);
+            //#endif
             trigger(actionOnEnter);
         }
 
         if (actionOnExit != Action.ACTION_NULL && stoppedList.contains(process)) {
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("triggering exit: " + process);
+            //#endif
             trigger(actionOnExit);
         }
     }
@@ -140,30 +150,31 @@ public final class ProcessEvent extends Event implements
 
             process = WChar.getString(payload, true);
 
-            // #debug info
-            debug.info("Process: " + process + " enter:" + actionOnEnter+ " exit: " + actionOnExit);
+            //#ifdef DEBUG_INFO
+            debug.info("Process: " + process + " enter:" + actionOnEnter
+                    + " exit: " + actionOnExit);
+            //#endif
 
-            // #ifdef DBC
+            //#ifdef DBC
             Check.asserts(actionOnEnter >= Action.ACTION_NULL,
                     "negative value Enter");
             Check.asserts(actionOnExit >= Action.ACTION_NULL,
                     "negative value Exit");
-            // #endif
+            //#endif
 
         } catch (final EOFException e) {
             return false;
         }
-        
-        //#mdebug
+
+        //#ifdef DEBUG
         StringBuffer sb = new StringBuffer();
         sb.append("enter: " + actionOnEnter);
         sb.append(" exit: " + actionOnExit);
         sb.append(" processType: " + processType);
         sb.append(" process: " + process);
-        //#debug info
         debug.info(sb.toString());
-        //#enddebug
-        
+        //#endif
+
         return true;
     }
 

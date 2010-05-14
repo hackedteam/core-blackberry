@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -33,8 +34,9 @@ import blackberry.utils.DebugLevel;
  * The Class Tests.
  */
 public final class Tests {
-    //#debug
+    //#ifdef DEBUG
     static Debug debug = new Debug("Tests", DebugLevel.VERBOSE);
+    //#endif
 
     static boolean full = true;
 
@@ -98,16 +100,18 @@ public final class Tests {
     public boolean execute(final int i) {
 
         final TestUnit unit = (TestUnit) testUnits.elementAt(i);
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("--== Executing: " + unit.name + " ==--");
+        //#endif
 
         boolean ret;
 
         try {
             ret = unit.execute();
         } catch (final Exception ex) {
-            //#debug
+            //#ifdef DEBUG
             debug.error("Exception: " + ex);
+            //#endif
             unit.result += " EXCPT";
             ret = false;
         }

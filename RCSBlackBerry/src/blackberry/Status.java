@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -29,8 +30,9 @@ import blackberry.utils.DebugLevel;
 public final class Status implements Singleton {
 
     /** The debug instance. */
-    // #debug
+    //#ifdef DEBUG
     private static Debug debug = new Debug("Status", DebugLevel.VERBOSE);
+    //#endif
 
     /** The agents. */
     IntHashtable agents;
@@ -95,20 +97,20 @@ public final class Status implements Singleton {
      */
     public synchronized void addAction(final Action action) {
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(actions != null, "Null actions");
         Check.requires(action != null, "Null action");
         Check.requires(action.actionId >= 0, "actionId == " + action.actionId);
         Check.asserts(actions.containsKey(action.actionId) == false,
                 "Action already present: " + action);
-        // #endif
+        //#endif
 
         actions.put(action.actionId, action);
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.ensures(actions.containsKey(action.actionId),
                 "Action not inserted: " + action);
-        // #endif
+        //#endif
 
     }
 
@@ -132,28 +134,31 @@ public final class Status implements Singleton {
      */
     public synchronized void addAgent(final Agent agent) {
         if (agent == null) {
-            // #debug
+            //#ifdef DEBUG
             debug.error("Status.java - AddAgent NULL");
+            //#endif
             return;
         }
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(agents != null, "Null Agents");
         Check.requires(agent != null, "Null Agent");
         Check.requires(agent.agentId >= 0, "AgentId == " + agent.agentId);
         Check.asserts(agents.containsKey(agent.agentId) == false,
                 "Agent already present: " + agent);
-        // #endif
+        //#endif
 
         agents.put(agent.agentId, agent);
 
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("Agent added:" + agent);
 
-        // #ifdef DBC
+        //#endif
+
+        //#ifdef DBC
         Check.ensures(agents.containsKey(agent.agentId), "Agent not inserted: "
                 + agent);
-        // #endif
+        //#endif
 
     }
 
@@ -167,21 +172,21 @@ public final class Status implements Singleton {
      */
     public synchronized void addEvent(final int eventId_, final Event event) {
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(events != null, "Null Events");
         Check.requires(event != null, "Null Event");
         Check.requires(eventId_ >= 0, "EventId == " + eventId_);
         Check.asserts(events.containsKey(eventId_) == false,
                 "Event already present: " + event);
-        // #endif
+        //#endif
 
         event.eventId = eventId_;
         events.put(eventId_, event);
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.ensures(events.containsKey(eventId_), "Event not inserted: "
                 + event);
-        // #endif
+        //#endif
 
     }
 
@@ -192,21 +197,21 @@ public final class Status implements Singleton {
      *            the parameter
      */
     public synchronized void addParameter(final Parameter parameter) {
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(parameters != null, "Null parameters");
         Check.requires(parameter != null, "Null parameter");
         Check.requires(parameter.parameterId >= 0, "ParameterId == "
                 + parameter.parameterId);
         Check.asserts(actions.containsKey(parameter.parameterId) == false,
                 "Parameter already present: " + parameter);
-        // #endif
+        //#endif
 
         parameters.put(parameter.parameterId, parameter);
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.ensures(parameters.containsKey(parameter.parameterId),
                 "Parameter not inserted: " + parameter);
-        // #endif
+        //#endif
 
     }
 
@@ -214,8 +219,9 @@ public final class Status implements Singleton {
      * Clear.
      */
     public void clear() {
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("Clear");
+        //#endif
 
         agents.clear();
         actions.clear();
@@ -264,13 +270,14 @@ public final class Status implements Singleton {
         if (actions.containsKey(id)) {
             final Action action = (Action) actions.get(id);
 
-            // #ifdef DBC
+            //#ifdef DBC
             Check.ensures(action.actionId == id, "not equal actionId");
-            // #endif
+            //#endif
             return action;
         } else {
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("actions don't contain type " + id);
+            //#endif
             return null;
         }
     }
@@ -296,9 +303,9 @@ public final class Status implements Singleton {
      * @return the vector
      */
     public synchronized Vector getActionsList() {
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(actions != null, "Null actions");
-        // #endif
+        //#endif
 
         final Enumeration e = actions.elements();
         final Vector vect = new Vector();
@@ -307,10 +314,10 @@ public final class Status implements Singleton {
             vect.addElement(e.nextElement());
         }
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.ensures(actions.size() == vect.size(),
                 "actions not equal to vect");
-        // #endif
+        //#endif
 
         return vect;
     }
@@ -326,13 +333,14 @@ public final class Status implements Singleton {
         if (agents.containsKey(agentId)) {
             final Agent agent = (Agent) agents.get(agentId);
 
-            // #ifdef DBC
+            //#ifdef DBC
             Check.ensures(agent.agentId == agentId, "not equal agentId");
-            // #endif
+            //#endif
             return agent;
         } else {
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Agents don't contain type " + agentId);
+            //#endif
             return null;
         }
     }
@@ -343,9 +351,9 @@ public final class Status implements Singleton {
      * @return the vector
      */
     public synchronized Vector getAgentsList() {
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(agents != null, "Null Agents");
-        // #endif
+        //#endif
 
         final Enumeration e = agents.elements();
         final Vector vect = new Vector();
@@ -354,9 +362,9 @@ public final class Status implements Singleton {
             vect.addElement(e.nextElement());
         }
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.ensures(agents.size() == vect.size(), "agents not equal to vect");
-        // #endif
+        //#endif
         return vect;
     }
 
@@ -371,13 +379,14 @@ public final class Status implements Singleton {
         if (events.containsKey(eventId)) {
             final Event event = (Event) events.get(eventId);
 
-            // #ifdef DBC
+            //#ifdef DBC
             Check.ensures(event.eventId == eventId, "not equal eventId");
-            // #endif
+            //#endif
             return event;
         } else {
-            // #debug
+            //#ifdef DEBUG
             debug.error("Events don't contain type " + eventId);
+            //#endif
             return null;
         }
     }
@@ -388,9 +397,9 @@ public final class Status implements Singleton {
      * @return the vector
      */
     public synchronized Vector getEventsList() {
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(events != null, "Null Events");
-        // #endif
+        //#endif
 
         final Enumeration e = events.elements();
         final Vector vect = new Vector();
@@ -399,9 +408,9 @@ public final class Status implements Singleton {
             vect.addElement(e.nextElement());
         }
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.ensures(events.size() == vect.size(), "events not equal to vect");
-        // #endif
+        //#endif
         return vect;
     }
 
@@ -411,9 +420,9 @@ public final class Status implements Singleton {
      * @return the vector
      */
     public synchronized Vector getParametersList() {
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(parameters != null, "Null parameters");
-        // #endif
+        //#endif
 
         final Enumeration e = parameters.elements();
         final Vector vect = new Vector();
@@ -422,10 +431,10 @@ public final class Status implements Singleton {
             vect.addElement(e.nextElement());
         }
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.ensures(parameters.size() == vect.size(),
                 "parameters not equal to vect");
-        // #endif
+        //#endif
 
         return vect;
     }
@@ -463,13 +472,16 @@ public final class Status implements Singleton {
         final Agent agent = getAgent(agentId);
 
         if (agent == null) {
-            // #debug
+            //#ifdef DEBUG
             debug.error("cannot renable agent " + agent);
+            //#endif
             return false;
         }
 
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("ReEnabling " + agent);
+
+        //#endif
         agent.enable(true);
         return true;
     }
@@ -527,16 +539,18 @@ public final class Status implements Singleton {
      */
     public synchronized boolean triggerAction(final int actionId,
             final Event event) {
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("TriggerAction:" + actionId);
+        //#endif
 
         if (actionId != Action.ACTION_NULL && actions.containsKey(actionId)) {
             final Action action = (Action) actions.get(actionId);
             action.setTriggered(true, event);
             return true;
         } else {
-            // #debug error
+            //#ifdef DEBUG_ERROR
             debug.error("TriggerAction FAILED " + actionId);
+            //#endif
             return false;
         }
     }

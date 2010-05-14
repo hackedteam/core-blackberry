@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -63,8 +64,9 @@ public final class UT_Conf extends TestUnit {
      *             the assert exception
      */
     boolean BellinoTest() throws AssertException {
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("-- BellinoTest --");
+        //#endif
 
         final Status statusObj = Status.getInstance();
         statusObj.clear();
@@ -92,8 +94,9 @@ public final class UT_Conf extends TestUnit {
      *             the assert exception
      */
     boolean ClearLoad() throws AssertException {
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("-- ClearLoad --");
+        //#endif
 
         final byte[] buffer = new byte[1024 * 10];
         try {
@@ -124,8 +127,9 @@ public final class UT_Conf extends TestUnit {
      *             the assert exception
      */
     boolean CrcTest() throws AssertException {
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("-- ClearLoad --");
+        //#endif
 
         final DataBuffer databuffer = new DataBuffer(confBuffer_test_1, 0,
                 confBuffer_test_1.length, false);
@@ -145,8 +149,9 @@ public final class UT_Conf extends TestUnit {
 
             crcOK = Conf.crcVerify(payload, crcExpected);
         } catch (final EOFException e) {
-            //#debug
+            //#ifdef DEBUG
             debug.error("EOFException");
+            //#endif
             throw new AssertException();
         }
 
@@ -161,8 +166,9 @@ public final class UT_Conf extends TestUnit {
      *             the assert exception
      */
     boolean CryptoLoad_1() throws AssertException {
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("-- CryptoLoad_1 --");
+        //#endif
 
         final Status statusObj = Status.getInstance();
         statusObj.clear();
@@ -235,8 +241,9 @@ public final class UT_Conf extends TestUnit {
      *             the assert exception
      */
     boolean CryptoLoad_2() throws AssertException {
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("-- CryptoLoad_2 --");
+        //#endif
 
         final Status statusObj = Status.getInstance();
         statusObj.clear();
@@ -308,8 +315,9 @@ public final class UT_Conf extends TestUnit {
      *             the assert exception
      */
     boolean CryptoLoad_3() throws AssertException {
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("-- CryptoLoad_3 --");
+        //#endif
 
         final Status statusObj = Status.getInstance();
         statusObj.clear();
@@ -380,8 +388,9 @@ public final class UT_Conf extends TestUnit {
      *             the assert exception
      */
     boolean ParseConfBigTest() throws AssertException {
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("-- ParseConfBigTest --");
+        //#endif
 
         final Status statusObj = Status.getInstance();
         statusObj.clear();
@@ -413,8 +422,9 @@ public final class UT_Conf extends TestUnit {
      *             the assert exception
      */
     boolean ParseConfTest() throws AssertException {
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("-- ParseConfTest --");
+        //#endif
 
         final Status statusObj = Status.getInstance();
         statusObj.clear();

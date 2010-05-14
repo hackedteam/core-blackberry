@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -16,8 +17,9 @@ import blackberry.utils.DebugLevel;
  * The Class PdaAgent.
  */
 public final class PdaAgent extends Agent {
-    //#debug
+    //#ifdef DEBUG
     static Debug debug = new Debug("PdaAgent", DebugLevel.VERBOSE);
+    //#endif
 
     /**
      * Instantiates a new pda agent.
@@ -47,8 +49,9 @@ public final class PdaAgent extends Agent {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualRun() {
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("run");
+        //#endif
 
     }
 

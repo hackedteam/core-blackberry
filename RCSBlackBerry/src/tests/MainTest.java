@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -25,8 +26,9 @@ import blackberry.utils.Utils;
  * The Class MainTest.
  */
 public final class MainTest {
-    // #debug
+    //#ifdef DEBUG
     static Debug debug = new Debug("Main", DebugLevel.VERBOSE);
+    //#endif
 
     /**
      * Instantiates a new main test.
@@ -39,15 +41,17 @@ public final class MainTest {
         final boolean logToEvents = false;
 
         Utils.sleep(2000);
-        // #mdebug
+        //#ifdef DEBUG
         Debug.init(logToDebugger, logToSD, logToFlash, logToEvents);
         debug.trace("Test Init");
-        // #enddebug
+        //#endif
 
         // create a new instance of the application
 
-        // #debug info        
+        //#ifdef DEBUG_INFO        
         debug.info("--- Starting Main ---");
+
+        //#endif
 
         executeAll();
     }
@@ -96,8 +100,9 @@ public final class MainTest {
                     try {
                         Thread.sleep(1000);
                     } catch (final InterruptedException e) {
-                        //#debug error
+                        //#ifdef DEBUG_ERROR
                         debug.error("ExecuteApplication: " + e);
+                        //#endif
                     }
                 }
                 manager.runApplication(descriptor);

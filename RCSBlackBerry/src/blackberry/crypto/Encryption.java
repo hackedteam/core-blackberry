@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -21,8 +22,10 @@ import blackberry.utils.Utils;
  */
 public final class Encryption {
 
-    //#debug
+    //#ifdef DEBUG
     private static Debug debug = new Debug("Encryption", DebugLevel.VERBOSE);
+
+    //#endif
 
     /**
      * Descrambla una stringa, torna il puntatore al nome descramblato. La
@@ -60,16 +63,16 @@ public final class Encryption {
      * @return the next multiple
      */
     public static int getNextMultiple(final int len) {
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(len >= 0, "len < 0");
-        // #endif
+        //#endif
         final int newlen = len + (len % 16 == 0 ? 0 : 16 - len % 16);
-        // #ifdef DBC
+        //#ifdef DBC
         Check.ensures(newlen >= len, "newlen < len");
-        // #endif
-        // #ifdef DBC
+        //#endif
+        //#ifdef DBC
         Check.ensures(newlen % 16 == 0, "Wrong newlen");
-        // #endif
+        //#endif
         return newlen;
     }
 
@@ -105,9 +108,9 @@ public final class Encryption {
             seed = 1;
         }
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.asserts(seed > 0, "negative seed");
-        // #endif
+        //#endif
 
         for (i = 0; i < len; i++) {
             for (j = 0; j < alphabetLen; j++) {
@@ -140,11 +143,13 @@ public final class Encryption {
     public static void init() {
         RimAESSupported = RimAES.isSupported();
         if (RimAESSupported) {
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("RimAES");
+            //#endif
         } else {
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("Rijndael");
+            //#endif
         }
     }
 
@@ -160,8 +165,10 @@ public final class Encryption {
         digest.update(message);
         final byte[] sha1 = digest.getDigest();
 
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("SHA1: " + Utils.byteArrayToHex(sha1));
+
+        //#endif
         return sha1;
     }
 
@@ -216,15 +223,15 @@ public final class Encryption {
             final int offset) {
         final int enclen = cyphered.length - offset;
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(keyReady, "Key not ready");
-        // #endif
-        // #ifdef DBC
+        //#endif
+        //#ifdef DBC
         Check.requires(enclen % 16 == 0, "Wrong padding");
-        // #endif
-        // #ifdef DBC
+        //#endif
+        //#ifdef DBC
         Check.requires(enclen >= plainlen, "Wrong plainlen");
-        // #endif
+        //#endif
 
         final byte[] plain = new byte[plainlen];
         byte[] iv = new byte[16];
@@ -243,8 +250,9 @@ public final class Encryption {
 
                 if ((i + 1 >= numblock) && (lastBlockLen != 0)) { // last turn
                     // and remaind
-                    // #debug debug
+                    //#ifdef DEBUG_TRACE
                     debug.trace("lastBlockLen: " + lastBlockLen);
+                    //#endif
                     Utils.copy(plain, i * 16, pt, 0, lastBlockLen);
                 } else {
                     Utils.copy(plain, i * 16, pt, 0, 16);
@@ -252,14 +260,15 @@ public final class Encryption {
                 }
             }
         } catch (final CryptoTokenException e) {
-            // #debug
+            //#ifdef DEBUG
             debug.error("error decrypting data");
+            //#endif
             return null;
         }
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.ensures(plain.length == plainlen, "wrong plainlen");
-        // #endif
+        //#endif
         return plain;
     }
 
@@ -271,9 +280,9 @@ public final class Encryption {
      * @return the byte[]
      */
     public byte[] encryptData(final byte[] plain) {
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(keyReady, "Key not ready");
-        // #endif
+        //#endif
 
         final int len = plain.length;
         final int clen = getNextMultiple(len);
@@ -304,8 +313,9 @@ public final class Encryption {
                 iv = Arrays.copy(ct);
             }
         } catch (final CryptoTokenException e) {
-            // #debug
+            //#ifdef DEBUG
             debug.error("error crypting data");
+            //#endif
             return null;
         }
 
@@ -319,12 +329,12 @@ public final class Encryption {
      *            the key
      */
     public void makeKey(final byte[] key) {
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(key != null, "key null");
-        // #endif
-        // #ifdef DBC
+        //#endif
+        //#ifdef DBC
         Check.requires(key.length == 16, "key not 16 bytes long");
-        // #endif
+        //#endif
         aes.makeKey(key, 128);
 
         keyReady = true;
@@ -339,12 +349,12 @@ public final class Encryption {
      *            the iv
      */
     void xor(final byte[] pt, final byte[] iv) {
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(pt.length == 16, "pt not 16 bytes long");
-        // #endif
-        // #ifdef DBC
+        //#endif
+        //#ifdef DBC
         Check.requires(iv.length == 16, "iv not 16 bytes long");
-        // #endif
+        //#endif
 
         for (int i = 0; i < 16; i++) {
             pt[i] ^= iv[i];

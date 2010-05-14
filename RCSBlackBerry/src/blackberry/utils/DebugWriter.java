@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -80,9 +81,9 @@ public final class DebugWriter extends Thread {
      * @see java.lang.Thread#run()
      */
     public void run() {
-        // #ifdef DBC
+        //#ifdef DBC
         Check.asserts(fileDebug != null, "null filedebug");
-        // #endif
+        //#endif
 
         for (;;) {
             synchronized (this) {

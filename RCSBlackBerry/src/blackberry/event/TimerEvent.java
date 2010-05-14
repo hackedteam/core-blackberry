@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -23,8 +24,10 @@ import blackberry.utils.Utils;
 public final class TimerEvent extends Event {
     private static final int SLEEP_TIME = 1000;
 
-    //#debug
+    //#ifdef DEBUG
     private static Debug debug = new Debug("TimerEvent", DebugLevel.VERBOSE);
+
+    //#endif
 
     int type;
     long loDelay;
@@ -70,8 +73,9 @@ public final class TimerEvent extends Event {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     protected void actualRun() {
-        //#debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("actualRun");
+        //#endif
         trigger();
     }
 
@@ -79,26 +83,29 @@ public final class TimerEvent extends Event {
 
         switch (type) {
         case Conf.CONF_TIMER_SINGLE:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("CONF_TIMER_SINGLE");
+            //#endif
             setDelay(loDelay);
             setPeriod(NEVER);
             break;
         case Conf.CONF_TIMER_REPEAT:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("CONF_TIMER_REPEAT");
+            //#endif
             setPeriod(loDelay);
             setDelay(loDelay);
             break;
         case Conf.CONF_TIMER_DATE:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("CONF_TIMER_DATE");
+            //#endif
             long tmpTime = hiDelay << 32;
             tmpTime += loDelay;
-            //#mdebug
+            //#ifdef DEBUG
             final Date date = new Date(tmpTime);
             debug.trace("TimerDate: " + date);
-            //#enddebug
+            //#endif
 
             setPeriod(NEVER);
             final long now = Utils.getTime();
@@ -106,12 +113,14 @@ public final class TimerEvent extends Event {
             break;
         case Conf.CONF_TIMER_DELTA:
             // TODO: da implementare
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("CONF_TIMER_DELTA");
+            //#endif
             break;
         default:
-            // #debug
+            //#ifdef DEBUG
             debug.error("shouldn't be here");
+            //#endif
             break;
         }
     }
@@ -129,25 +138,27 @@ public final class TimerEvent extends Event {
             loDelay = databuffer.readInt();
             hiDelay = databuffer.readInt();
 
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("type: " + type + " lo:" + loDelay + " hi:" + hiDelay);
 
+            //#endif
+
         } catch (final EOFException e) {
-            // #debug
+            //#ifdef DEBUG
             debug.error("params FAILED");
+            //#endif
             return false;
         }
 
         init();
 
-        //#mdebug
+        //#ifdef DEBUG
         StringBuffer sb = new StringBuffer();
         sb.append("type: " + type);
         sb.append(" loDelay: " + loDelay);
         sb.append(" hiDelay: " + hiDelay);
-        //#debug info
         debug.info(sb.toString());
-        //#enddebug
+        //#endif
         
         return true;
     }

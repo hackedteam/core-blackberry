@@ -1,3 +1,4 @@
+//#preprocess
 package blackberry.location;
 
 import javax.microedition.location.LocationListener;

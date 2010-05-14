@@ -1,0 +1,31 @@
+<loader version="1.0">
+	<application id="BBB">
+		<name >
+			BlackBerry Base
+		</name>
+		<description >
+			net_rim_base_lib
+		</description>
+		<version >
+			4.5.0
+		</version>
+		<vendor >
+			Research In Motion
+		</vendor>
+		<copyright >
+			Copyright (c) 2010 Research In Motion
+		</copyright>
+		<fileset Java="1.49" _blackberryVersion="[4.5.0)">
+			<directory >
+				4.5.0
+			</directory>
+			<files >
+				BBB.cod
+
+			</files>
+
+		</fileset>
+
+	</application>
+
+</loader>

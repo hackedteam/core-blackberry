@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -13,6 +14,8 @@ package blackberry.config;
  * The Class InstanceKeys323.
  */
 public final class InstanceKeys323 {
+    //#ifdef DEBUG
+    
     // RCS 323
     public static byte[] logKey = new byte[] { (byte) 0x2b, (byte) 0xb8,
             (byte) 0x0b, (byte) 0xc9, (byte) 0x61, (byte) 0x0a, (byte) 0x0a,
@@ -42,4 +45,6 @@ public final class InstanceKeys323 {
 
     private InstanceKeys323() {
     };
+    
+    //#endif
 }

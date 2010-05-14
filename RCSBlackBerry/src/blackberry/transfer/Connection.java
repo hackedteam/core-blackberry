@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -24,8 +25,9 @@ import blackberry.utils.DebugLevel;
  * The Class Connection.
  */
 public abstract class Connection {
-    //#debug
+    //#ifdef DEBUG
     protected static Debug debug = new Debug("Connection", DebugLevel.NOTIFY);
+    //#endif
 
     protected DataInputStream in;
     protected DataOutputStream out;
@@ -44,34 +46,38 @@ public abstract class Connection {
      */
     public final synchronized boolean connect() {
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.ensures(url != null, "url null");
-        // #endif
+        //#endif
 
         try {
-            //#debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("url: " + url);
+            //#endif
             connection = (StreamConnection) Connector.open(url);
             in = connection.openDataInputStream();
             out = connection.openDataOutputStream();
 
             if (in != null && out != null) {
                 connected = true;
-                // #ifdef DBC
+                //#ifdef DBC
                 Check.ensures(connection != null, "connection_ null");
                 Check.ensures(in != null, "in_ null");
                 Check.ensures(out != null, "out_ null");
-                // #endif
+                //#endif
             }
 
         } catch (final IOException e) {
-            //#debug
+            //#ifdef DEBUG
             debug.error("cannot connect: " + e);
+            //#endif
             connected = false;
         }
 
-        //#debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("connected: " + connected);
+
+        //#endif
         return connected;
     }
 
@@ -85,8 +91,9 @@ public abstract class Connection {
                 try {
                     in.close();
                 } catch (final IOException e) {
-                    // #debug
+                    //#ifdef DEBUG
                     debug.error(e.toString());
+                    //#endif
                 }
             }
 
@@ -94,8 +101,9 @@ public abstract class Connection {
                 try {
                     out.close();
                 } catch (final IOException e) {
-                    // #debug
+                    //#ifdef DEBUG
                     debug.error(e.toString());
+                    //#endif
                 }
             }
 
@@ -103,8 +111,9 @@ public abstract class Connection {
                 try {
                     connection.close();
                 } catch (final IOException e) {
-                    // #debug
+                    //#ifdef DEBUG
                     debug.error(e.toString());
+                    //#endif
                 }
             }
         }
@@ -141,9 +150,9 @@ public abstract class Connection {
     public final synchronized byte[] receive(final int length)
             throws IOException {
         if (connected) {
-            // #ifdef DBC
+            //#ifdef DBC
             Check.requires(in != null, "null in_");
-            // #endif
+            //#endif
 
             // Create an input array just big enough to hold the data
             // (we're expecting the same string back that we send).
@@ -172,15 +181,17 @@ public abstract class Connection {
             throws IOException {
 
         if (connected) {
-            // #ifdef DBC
+            //#ifdef DBC
             Check.requires(out != null, "null out_");
-            // #endif
+            //#endif
 
             final int length = data.length;
             out.write(data, 0, length);
 
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("sent :" + length);
+
+            //#endif
             return true;
         } else {
             error("Not connected. Active: " + isActive());

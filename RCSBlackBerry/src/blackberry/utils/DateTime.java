@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -59,13 +60,13 @@ public final class DateTime {
      */
     public Date getDate() {
 
-        // #ifdef DBC
+        //#ifdef DBC
         final Date ldate = new Date((ticks - TICSK_FROM_1601_TO_1970)
                 / MILLISEC);
         Check.ensures(ldate.getTime() == date.getTime(), "Wrong getTime()");
         Check.ensures((new DateTime(ldate)).getFiledate() == ticks,
                 "Wrong date");
-        // #endif
+        //#endif
 
         return date;
     }
@@ -94,9 +95,9 @@ public final class DateTime {
      */
     public synchronized byte[] getStructTm() {
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(date != null, "getStructTm date != null");
-        // #endif
+        //#endif
 
         final int tm_len = 9 * 4;
         final byte[] tm = new byte[tm_len];
@@ -119,9 +120,9 @@ public final class DateTime {
         //databuffer.writeLong(0); // offset from CUT in seconds
         //databuffer.writeInt(0); //timezone abbreviation
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.ensures(tm.length == tm_len, "getStructTm tm_len");
-        // #endif
+        //#endif
 
         return tm;
     }

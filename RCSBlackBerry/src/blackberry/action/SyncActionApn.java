@@ -1,3 +1,4 @@
+//#preprocess
 package blackberry.action;
 
 import blackberry.AgentManager;
@@ -12,9 +13,9 @@ public class SyncActionApn extends SyncAction {
         super(actionId_);
         parse(confParams);
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(actionId == ACTION_SYNC, "ActionId scorretto");
-        // #endif
+        //#endif
 
         logCollector = LogCollector.getInstance();
         agentManager = AgentManager.getInstance();

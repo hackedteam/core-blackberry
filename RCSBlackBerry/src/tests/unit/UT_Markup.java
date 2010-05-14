@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -93,8 +94,9 @@ public final class UT_Markup extends TestUnit {
             value = Utils.byteArrayToInt(read, 0);
 
         } catch (final IOException e) {
-            //#debug
+            //#ifdef DEBUG
             debug.fatal("Markup read");
+            //#endif
             throw new AssertException();
         }
 

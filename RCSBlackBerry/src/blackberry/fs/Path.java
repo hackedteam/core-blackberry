@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -25,8 +26,9 @@ import blackberry.utils.DebugLevel;
  * The Class Path.
  */
 public final class Path {
-    //#debug
+    //#ifdef DEBUG
     private static Debug debug = new Debug("Path", DebugLevel.VERBOSE);
+    //#endif
 
     public static final int SD = 0;
     public static final int USER = 1;
@@ -69,9 +71,9 @@ public final class Path {
     public static synchronized boolean createDirectory(final String dirName) {
         FileConnection fconn = null;
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.ensures(dirName.endsWith("/"), "directory should end with /");
-        // #endif
+        //#endif
 
         try {
             fconn = (FileConnection) Connector.open(dirName,
@@ -84,14 +86,16 @@ public final class Path {
             fconn.mkdir();
             fconn.setHidden(true);
 
-            // #ifdef DBC
+            //#ifdef DBC
             Check.ensures(fconn.exists(), "Couldn't create dir");
-            // #endif
+            //#endif
 
         } catch (final IOException e) {
 
-            // #debug
+            //#ifdef DEBUG
             debug.error(dirName + " ex: " + e.toString());
+
+            //#endif
             return false;
 
         } finally {
@@ -99,11 +103,11 @@ public final class Path {
                 try {
                     fconn.close();
                 } catch (final IOException e) {
-                    // #mdebug
+                    //#ifdef DEBUG
                     if (debug != null) {
                         debug.error(dirName + " ex: " + e.toString());
                     }
-                    //#enddebug
+                    //#endif
 
                 }
             }
@@ -129,11 +133,13 @@ public final class Path {
 
             try {
                 fc = (FileConnection) Connector.open("file:///" + root);
-                //#debug info
+                //#ifdef DEBUG_INFO
                 debug.info(root + " " + fc.availableSize());
+                //#endif
             } catch (final IOException e) {
-                //#debug
+                //#ifdef DEBUG
                 debug.error(root + " " + e);
+                //#endif
                 e.printStackTrace();
             }
         }
@@ -153,18 +159,18 @@ public final class Path {
             final String path = (String) roots.nextElement();
 
             if (path.indexOf("SDCard") >= 0) {
-                // #mdebug
+                //#ifdef DEBUG
                 if (debug != null) {
                     debug.info("SDPresent FOUND: " + path);
                 }
-                // #enddebug
+                //#endif
                 return true;
             } else {
-                // #mdebug
+                //#ifdef DEBUG
                 if (debug != null) {
                     debug.trace("SDPresent NOT:" + path);
                 }
-                // #enddebug
+                //#endif
             }
         }
 
@@ -240,11 +246,11 @@ public final class Path {
                     Connector.READ_WRITE);
 
             if (!fconn.exists()) {
-                // #mdebug
+                //#ifdef DEBUG
                 if (debug != null) {
                     debug.trace("Directory doesn't exists");
                 }
-                // #enddebug
+                //#endif
 
                 return false;
             }
@@ -252,14 +258,15 @@ public final class Path {
             if (!fconn.list().hasMoreElements()) {
                 fconn.delete();
             } else {
-                // #debug
+                //#ifdef DEBUG
                 debug.error("directory not empty");
+                //#endif
                 return false;
             }
 
-            // #ifdef DBC
+            //#ifdef DBC
             Check.ensures(!fconn.exists(), "Couldn't delete dir");
-            // #endif
+            //#endif
 
         } catch (final IOException e) {
 
@@ -271,11 +278,11 @@ public final class Path {
                 try {
                     fconn.close();
                 } catch (final IOException e) {
-                    // #mdebug
+                    //#ifdef DEBUG
                     if (debug != null) {
                         debug.error(e.toString());
                     }
-                    // #enddebug
+                    //#endif
                 }
             }
         }

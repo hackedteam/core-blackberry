@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -24,8 +25,9 @@ import blackberry.utils.DebugLevel;
 public final class AgentManager extends Manager implements Singleton {
 
     /** The debug instance. */
-    //#debug
+    //#ifdef DEBUG
     static Debug debug = new Debug("AgentManager", DebugLevel.VERBOSE);
+    //#endif
 
     /** The instance. */
     static AgentManager instance = null;
@@ -55,9 +57,9 @@ public final class AgentManager extends Manager implements Singleton {
      * @see blackberry.Manager#getAllItems()
      */
     public Vector getAllItems() {
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(statusObj != null, "Null status");
-        // #endif
+        //#endif
         final Vector agents = statusObj.getAgentsList();
         return agents;
     }
@@ -67,13 +69,13 @@ public final class AgentManager extends Manager implements Singleton {
      * @see blackberry.Manager#getItem(int)
      */
     public TimerJob getItem(final int id) {
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(statusObj != null, "Null status");
-        // #endif
+        //#endif
         final Agent agent = statusObj.getAgent(id);
-        // #ifdef DBC
+        //#ifdef DBC
         Check.ensures(agent.agentId == id, "Wrong id");
-        // #endif
+        //#endif
 
         return agent;
     }

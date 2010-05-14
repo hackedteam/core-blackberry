@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -45,8 +46,10 @@ public final class ExecuteAction extends SubAction {
             eventName = triggeringEvent.toString();
         }
 
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("Execute. Event: " + eventName);
+
+        //#endif
         return true;
     }
 
@@ -69,8 +72,10 @@ public final class ExecuteAction extends SubAction {
             return false;
         }
         
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("command: " + command);
+        
+        //#endif
         return true;
     }
 

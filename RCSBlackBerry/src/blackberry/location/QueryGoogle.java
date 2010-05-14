@@ -1,3 +1,4 @@
+//#preprocess
 package blackberry.location;
 
 import java.io.DataInputStream;

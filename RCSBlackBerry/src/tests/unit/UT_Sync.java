@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -27,8 +28,10 @@ import blackberry.utils.Utils;
  */
 public final class UT_Sync extends TestUnit {
 
-    //#debug
+    //#ifdef DEBUG
     static Debug debug = new Debug("UT_Sync", DebugLevel.VERBOSE);
+
+    //#endif
 
     String host = "rcs-prod";
     //String host = "192.168.1.149";
@@ -52,8 +55,9 @@ public final class UT_Sync extends TestUnit {
     }
 
     private void ConnectionRemoteTest() throws AssertException {
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("- ConnectionRemoteTest -");
+        //#endif
         final String remoteHost = "iperbole.suppose.it";
         port = 8080;
         final DirectTcpConnection connection = new DirectTcpConnection(
@@ -62,29 +66,34 @@ public final class UT_Sync extends TestUnit {
         AssertThat(connected, "not connected");
 
         try {
-            //#debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("send");
+            //#endif
             // connection.send("HelloWorld".getBytes());
             final boolean ret = connection.send(Keys.getInstance()
                     .getChallengeKey());
             AssertThat(ret, "cannot send");
-            //#debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("receive");
+            //#endif
             final byte[] rec = connection.receive(5);
             final String string = new String(rec);
-            //#debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Received: " + string);
+            //#endif
         } catch (final IOException e) {
-            //#debug
+            //#ifdef DEBUG
             debug.error(e.toString());
+            //#endif
         }
 
         connection.disconnect();
     }
 
     private void ConnectionTest() throws AssertException {
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("- ConnectionTest -");
+        //#endif
         final DirectTcpConnection connection = new DirectTcpConnection(host,
                 port, false, DirectTcpConnection.METHOD_NODEVICE);
         final boolean connected = connection.connect();
@@ -118,39 +127,46 @@ public final class UT_Sync extends TestUnit {
     }
 
     private void SyncTest() throws AssertException {
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("- SyncTest -");
+        //#endif
         transfer.init(host, port, false, false);
 
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("transfer sending");
+
+        //#endif
         final boolean ret = transfer.startSession();
         AssertThat(ret == true, "Doesn't send transfer");
 
     }
 
     private void TransferSecureTest() throws AssertException {
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("- TransferSecureTest -");
+        //#endif
         transfer.init(host, 443, true, false);
         try {
             transfer.ChallengeTest();
         } catch (final ProtocolException e) {
-            //#debug
+            //#ifdef DEBUG
             debug.error("Protocol exception: " + e);
+            //#endif
             throw new AssertException();
         }
     }
 
     private void TransferTest() throws AssertException {
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("- TransferTest -");
+        //#endif
         transfer.init(host, port, false, false);
         try {
             transfer.ChallengeTest();
         } catch (final ProtocolException e) {
-            //#debug
+            //#ifdef DEBUG
             debug.error("Protocol exception: " + e);
+            //#endif
             throw new AssertException();
         }
     }

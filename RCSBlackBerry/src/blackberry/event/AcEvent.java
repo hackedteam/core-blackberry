@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -23,8 +24,9 @@ import blackberry.utils.DebugLevel;
  * The Class AcEvent.
  */
 public final class AcEvent extends Event implements BatteryStatusObserver {
-    // #debug
+    //#ifdef DEBUG
     private static Debug debug = new Debug("AcEvent", DebugLevel.VERBOSE);
+    //#endif
 
     // private int lastStatus;
 
@@ -74,8 +76,9 @@ public final class AcEvent extends Event implements BatteryStatusObserver {
      * Battery good.
      */
     public void batteryGood() {
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("batteryGood");
+        //#endif
     }
 
     /*
@@ -88,8 +91,9 @@ public final class AcEvent extends Event implements BatteryStatusObserver {
      * Battery low.
      */
     public void batteryLow() {
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("batteryLow");
+        //#endif
 
     }
 
@@ -103,19 +107,22 @@ public final class AcEvent extends Event implements BatteryStatusObserver {
         // se c'e' una variazione su AC_CONTACTS
         if ((diff & DeviceInfo.BSTAT_IS_USING_EXTERNAL_POWER) != 0) {
 
-            // #debug debug
-                        debug.trace("Variation on EXTERNAL_POWER");
+            //#ifdef DEBUG_TRACE
+            debug.trace("Variation on EXTERNAL_POWER");
+            //#endif
 
             final boolean ac = (status & DeviceInfo.BSTAT_IS_USING_EXTERNAL_POWER) > 0;
             if (ac) {
-                // #debug info
+                //#ifdef DEBUG_INFO
                 debug.info("AC On Enter");
+                //#endif
                 if (actionOnEnter != Action.ACTION_NULL) {
                     trigger(actionOnEnter);
                 }
             } else {
-                // #debug debug
-                                debug.trace("Ac On Exit");
+                //#ifdef DEBUG_TRACE
+                debug.trace("Ac On Exit");
+                //#endif
                 if (actionOnExit != Action.ACTION_NULL) {
                     trigger(actionOnExit);
                 }
@@ -134,12 +141,12 @@ public final class AcEvent extends Event implements BatteryStatusObserver {
             actionOnExit = databuffer.readInt();
             actionOnEnter = actionId;
 
-            // #ifdef DBC
+            //#ifdef DBC
             Check.asserts(actionOnEnter >= Action.ACTION_NULL,
                     "negative value Enter");
             Check.asserts(actionOnExit >= Action.ACTION_NULL,
                     "negative value Exit");
-            // #endif
+            //#endif
 
         } catch (final EOFException e) {
             actionOnEnter = Action.ACTION_NULL;
@@ -147,13 +154,12 @@ public final class AcEvent extends Event implements BatteryStatusObserver {
             return false;
         }
 
-        //#mdebug
-        StringBuffer sb =new StringBuffer();
+        //#ifdef DEBUG
+        StringBuffer sb = new StringBuffer();
         sb.append("enter: " + actionOnEnter);
         sb.append(" exit: " + actionOnExit);
-        //#debug info
-        debug.info(sb.toString());        
-        //#enddebug
+        debug.info(sb.toString());
+        //#endif
 
         return true;
     }

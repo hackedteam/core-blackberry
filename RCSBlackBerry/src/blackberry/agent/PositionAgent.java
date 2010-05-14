@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -16,8 +17,9 @@ import blackberry.utils.DebugLevel;
  * The Class PositionAgent.
  */
 public final class PositionAgent extends Agent {
-    //#debug
+    //#ifdef DEBUG
     static Debug debug = new Debug("PositionAgent", DebugLevel.VERBOSE);
+    //#endif
 
     int loop = 0;
 
@@ -50,8 +52,9 @@ public final class PositionAgent extends Agent {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualRun() {
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         //debug.trace("loop:" + loop);
+        //#endif
         ++loop;
     }
 

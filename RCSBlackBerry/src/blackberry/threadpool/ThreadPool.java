@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -50,11 +51,13 @@ public final class ThreadPool {
                 }
 
                 try {
-                    //#debug debug
+                    //#ifdef DEBUG_TRACE
                     debug.trace("Pool " + id + " run:" + job);
+                    //#endif
                     job.run();
-                    //#debug debug
+                    //#ifdef DEBUG_TRACE
                     debug.trace("Pool " + id + " end:" + job);
+                    //#endif
                 } catch (final Throwable t) {
                     // ignore
                 }
@@ -62,8 +65,10 @@ public final class ThreadPool {
         }
     }
 
-    //#debug
+    //#ifdef DEBUG
     static Debug debug = new Debug("ThreadPool", DebugLevel.VERBOSE);
+
+    //#endif
 
     protected final BlockingQueue queue = new BlockingQueue();
 

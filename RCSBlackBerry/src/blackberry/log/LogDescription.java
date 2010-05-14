@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -35,9 +36,9 @@ public final class LogDescription {
     public byte[] getBytes() {
         final byte[] buffer = new byte[length];
         serialize(buffer, 0);
-        // #ifdef DBC
+        //#ifdef DBC
         Check.ensures(buffer.length == length, "Wrong len");
-        // #endif
+        //#endif
         return buffer;
     }
 

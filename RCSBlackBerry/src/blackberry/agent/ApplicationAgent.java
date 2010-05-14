@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -26,10 +27,10 @@ import blackberry.utils.WChar;
  */
 public final class ApplicationAgent extends Agent implements
         ApplicationListObserver {
-    // #mdebug
+    //#ifdef DEBUG
     private static Debug debug = new Debug("ApplicationAgent",
             DebugLevel.VERBOSE);
-    // #enddebug
+    //#endif
 
     public int LOG_DELIMITER = 0xABADC0DE;
 
@@ -64,8 +65,9 @@ public final class ApplicationAgent extends Agent implements
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualRun() {
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("run");
+        //#endif
 
     }
 
@@ -74,8 +76,9 @@ public final class ApplicationAgent extends Agent implements
      * @see blackberry.threadpool.TimerJob#actualStart()
      */
     public void actualStart() {
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("actualStart");
+        //#endif
         firstRun = true;
         AppListener.getInstance().addApplicationListObserver(this);
     }
@@ -85,8 +88,9 @@ public final class ApplicationAgent extends Agent implements
      * @see blackberry.threadpool.TimerJob#actualStop()
      */
     public void actualStop() {
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("actualStop");
+        //#endif
         AppListener.getInstance().removeApplicationListObserver(this);
     }
 
@@ -100,23 +104,24 @@ public final class ApplicationAgent extends Agent implements
             final Vector stoppedListName, final Vector startedListMod,
             final Vector stoppedListMod) {
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(startedListName != null, "startedListName != null");
         Check.requires(stoppedListName != null, "stoppedListName != null");
         Check.requires(startedListMod != null, "startedListMod != null");
         Check.requires(stoppedListMod != null, "stoppedListMod != null");
-        // #endif
+        //#endif
 
         if (firstRun) {
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("skipping first run");
+            //#endif
 
-            // #ifdef DBC
+            //#ifdef DBC
             Check.asserts(startedListName.size() > 0, "startedList.size() > 0");
             Check.asserts(stoppedListName.size() == 0, "stoppedList.size() == 0");
             Check.asserts(startedListMod.size() > 0, "startedList.size() > 0");
             Check.asserts(stoppedListMod.size() == 0, "stoppedList.size() == 0");
-            // #endif
+            //#endif
 
             firstRun = false;
             return;
@@ -128,8 +133,9 @@ public final class ApplicationAgent extends Agent implements
         for (int i = 0; i < size; i++) {
             String name = (String) startedListName.elementAt(i);
             String mod = (String) startedListMod.elementAt(i);
-            //#debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace(name + " START");
+            //#endif
             writeLog(name, "START", mod);
         }
 
@@ -137,15 +143,18 @@ public final class ApplicationAgent extends Agent implements
         for (int i = 0; i < size; i++) {
             String name = (String) stoppedListName.elementAt(i);
             String mod = (String) stoppedListMod.elementAt(i);
-            //#debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace(name + " STOP");
+            //#endif
             writeLog(name, "STOP", mod);
         }
 
         log.close();
 
-        //#debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("finished writing log");
+
+        //#endif
     }
     
     public synchronized void onApplicationListChangeMod(final Vector startedList,
@@ -158,14 +167,14 @@ public final class ApplicationAgent extends Agent implements
      * @see blackberry.agent.Agent#parse(byte[])
      */
     protected boolean parse(final byte[] confParameters) {
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("parse");
+        //#endif
         
-        //#mdebug
+        //#ifdef DEBUG
         StringBuffer sb = new StringBuffer();
-        //#debug info
         debug.info(sb.toString());
-        //#enddebug
+        //#endif
         
         return false;
     }

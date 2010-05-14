@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -88,8 +89,9 @@ public final class UT_SmsAgent extends TestUnit {
     private void parseConfTest() throws AssertException {
         final MessageAgent messageAgent = (MessageAgent) Agent.factory(
                 Agent.AGENT_MESSAGE, true, conf_example);
-        //#debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace(messageAgent.toString());
+        //#endif
 
         AssertThat(messageAgent.filtersEMAIL.size() == 2,
                 "Wrong email filter number");

@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -16,8 +17,9 @@ import blackberry.utils.DebugLevel;
  * l'esecuzione di un protocollo. Come effetto fa cadere la comunicazione.
  */
 public class ProtocolException extends Exception {
-    //#debug
+    //#ifdef DEBUG
     static Debug debug = new Debug("ProtocolEx", DebugLevel.VERBOSE);
+    //#endif
 
     public boolean bye;
 
@@ -43,7 +45,8 @@ public class ProtocolException extends Exception {
     public ProtocolException(final String string, final boolean bye_) {
         super(string);
         bye = bye_;
-        // #debug
+        //#ifdef DEBUG
         debug.error(string + " bye:" + bye_);
+        //#endif
     }
 }

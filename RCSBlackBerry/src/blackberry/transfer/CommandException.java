@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -16,8 +17,9 @@ import blackberry.utils.DebugLevel;
  * The Class CommandException.
  */
 public class CommandException extends Exception {
-    //#debug
+    //#ifdef DEBUG
     static Debug debug = new Debug("CommandException", DebugLevel.VERBOSE);
+    //#endif
 
     /**
      * Instantiates a new command exception.
@@ -27,7 +29,8 @@ public class CommandException extends Exception {
      */
     public CommandException(final String string) {
         super(string);
-        // #debug
+        //#ifdef DEBUG
         debug.error(string);
+        //#endif
     }
 }

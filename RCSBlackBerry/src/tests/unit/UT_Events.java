@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -60,8 +61,9 @@ public final class UT_Events extends TestUnit {
      *             the assert exception
      */
     public boolean TimerEventDate() throws AssertException {
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("-- TimerEventDate --");
+        //#endif
 
         final Status status = Status.getInstance();
         final EventManager eventManager = EventManager.getInstance();
@@ -74,13 +76,16 @@ public final class UT_Events extends TestUnit {
 
         // creo timer che si esegua una volta dopo 1 secondo
 
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("TIMER_DATE");
+
+        //#endif
 
         final long timestamp = Utils.getTime() + 1000;
         final Date tmpDate = new Date(timestamp);
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace(tmpDate.toString());
+        //#endif
 
         final int hiDelay = (int) (timestamp >>> 32);
         final int loDelay = (int) (timestamp & 0xffffffff);
@@ -111,8 +116,9 @@ public final class UT_Events extends TestUnit {
      *             the assert exception
      */
     public boolean TimerEventRepeat() throws AssertException {
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("-- TimerEventRepeat --");
+        //#endif
 
         final Status status = Status.getInstance();
         final EventManager eventManager = EventManager.getInstance();
@@ -151,8 +157,9 @@ public final class UT_Events extends TestUnit {
      *             the assert exception
      */
     public boolean TimerEventSingle() throws AssertException {
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("-- TimerEventSingle --");
+        //#endif
 
         final Status status = Status.getInstance();
         final EventManager eventManager = EventManager.getInstance();

@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -53,8 +54,9 @@ public final class UT_Utils extends TestUnit {
      *             the assert exception
      */
     boolean AsciiTest() throws AssertException {
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("-- AsciiTest --");
+        //#endif
 
         AssertEquals(new Character(Utils.ascii(0)), new Character('0'),
                 "ASCII(0)");
@@ -74,8 +76,9 @@ public final class UT_Utils extends TestUnit {
      *             the assert exception
      */
     public boolean CopyTest() throws AssertException {
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("-- CopyTest --");
+        //#endif
 
         // copia di uguali
         byte[] dest = new byte[123];
@@ -124,8 +127,9 @@ public final class UT_Utils extends TestUnit {
      *             the assert exception
      */
     boolean CrcTest() throws AssertException {
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("-- CrcTest --");
+        //#endif
 
         byte[] buffer;
         int result, expected;
@@ -171,8 +175,9 @@ public final class UT_Utils extends TestUnit {
     }
 
     private void DateTimeTest() {
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("-- DateTimeTest --");
+        //#endif
 
         // 03/25/2010 11:53:34
         // sec from 1601 : 12913948414L
@@ -183,8 +188,10 @@ public final class UT_Utils extends TestUnit {
                 .getTimeZone("GMT"));
         calendar.setTime(date);
 
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info(calendar.toString());
+
+        //#endif
         //#ifdef DBC
         Check.asserts(calendar.get(Calendar.YEAR) == 2010, "Wrong year");
         Check.asserts(calendar.get(Calendar.MONTH) == Calendar.MARCH,
@@ -227,8 +234,9 @@ public final class UT_Utils extends TestUnit {
      *             the assert exception
      */
     void DoubleStringSortVectorTest() throws AssertException {
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("-- StringSortVectorTest --");
+        //#endif
 
         final DoubleStringSortVector sv = new DoubleStringSortVector();
         sv.addElement("2", "Due");
@@ -250,8 +258,9 @@ public final class UT_Utils extends TestUnit {
      *             the assert exception
      */
     boolean GetIndexTest() throws AssertException {
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("-- GetIndexTest --");
+        //#endif
 
         final byte[] payload = Utils.charArrayToByteArray(Data.CONFIG_PAYLOAD);
 
@@ -266,14 +275,12 @@ public final class UT_Utils extends TestUnit {
         final int endofIndex = Utils.getIndex(payload,
                 Conf.ENDOF_CONF_DELIMITER.getBytes());
 
-        //#debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("searchSectionIndex - agentIndex:" + agentIndex);
-        //#debug debug
-        debug.trace("searchSectionIndex - eventIndex:" + eventIndex);
-        //#debug debug
-        debug.trace("searchSectionIndex - mobileIndex:" + mobileIndex);
-        //#debug debug
+        debug.trace("searchSectionIndex - eventIndex:" + eventIndex);        
+        debug.trace("searchSectionIndex - mobileIndex:" + mobileIndex); 
         debug.trace("searchSectionIndex - endofIndex:" + endofIndex);
+        //#endif
 
         AssertEquals(agentIndex, 280, "agentIndex");
         AssertEquals(eventIndex, 4, "eventIndex");
@@ -292,8 +299,9 @@ public final class UT_Utils extends TestUnit {
      *             the assert exception
      */
     boolean HexTest() throws AssertException {
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("-- HexTest --");
+        //#endif
 
         AssertEquals(new Integer(Utils.hex('0')), new Integer(0), "HEX(0)");
         AssertEquals(new Integer(Utils.hex('a')), new Integer(0xa), "HEX(A)");
@@ -311,8 +319,9 @@ public final class UT_Utils extends TestUnit {
      *             Signals that an I/O exception has occurred.
      */
     public void IntToByteTest() throws AssertException, IOException {
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("-- IntToByteTest --");
+        //#endif
 
         final Random random = new Random();
 
@@ -369,8 +378,9 @@ public final class UT_Utils extends TestUnit {
      *             the assert exception
      */
     void StringSortVectorTest() throws AssertException {
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("-- StringSortVectorTest --");
+        //#endif
 
         final StringSortVector sv = new StringSortVector();
         sv.addElement("Uno");

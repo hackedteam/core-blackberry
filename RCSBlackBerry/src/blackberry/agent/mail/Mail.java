@@ -1,3 +1,4 @@
+//#preprocess
 package blackberry.agent.mail;
 
 public class Mail {

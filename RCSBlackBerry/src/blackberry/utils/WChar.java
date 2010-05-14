@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -14,8 +15,9 @@ import java.io.UnsupportedEncodingException;
  * The Class WChar.
  */
 public final class WChar {
-    //#debug
+    //#ifdef DEBUG
     private static Debug debug = new Debug("WChar", DebugLevel.VERBOSE);
+    //#endif
 
     /**
      * Gets the bytes.
@@ -43,8 +45,9 @@ public final class WChar {
         try {
             encoded = string.getBytes("UnicodeLittleUnmarked");
         } catch (final UnsupportedEncodingException e) {
-            // #debug
+            //#ifdef DEBUG
             debug.error("UnsupportedEncodingException");
+            //#endif
         }
 
         if (endzero) {
@@ -91,8 +94,9 @@ public final class WChar {
                     "UnicodeLittleUnmarked");
 
         } catch (final UnsupportedEncodingException e) {
-            // #debug
+            //#ifdef DEBUG
             debug.error("UnsupportedEncodingException");
+            //#endif
         }
 
         if (endzero) {

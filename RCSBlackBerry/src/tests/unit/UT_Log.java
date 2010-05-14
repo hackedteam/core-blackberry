@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -62,8 +63,10 @@ public final class UT_Log extends TestUnit {
         thread.start();
         agent.stop();
 
-        //#debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("Agent Device ok");
+
+        //#endif
     }
 
     private void CreateEncDeviceLog() {

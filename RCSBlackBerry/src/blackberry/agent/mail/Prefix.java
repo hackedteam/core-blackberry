@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -20,8 +21,9 @@ import blackberry.utils.Utils;
  * The Class Prefix.
  */
 public class Prefix {
-    //#debug
+    //#ifdef DEBUG
     static Debug debug = new Debug("Prefix", DebugLevel.NOTIFY);
+    //#endif
 
     static final int LEN = 4;
 
@@ -62,14 +64,15 @@ public class Prefix {
 
             payloadStart = offset + LEN;
 
-            //#mdebug
+            //#ifdef DEBUG
             debug.trace("Token type: " + type + " len: " + length + " payload:"
                     + Utils.byteArrayToHex(conf, payloadStart, length));
-            //#enddebug
+            //#endif
             valid = true;
         } catch (final EOFException e) {
-            //#debug
+            //#ifdef DEBUG
             debug.error("cannot parse Token: " + e);
+            //#endif
             valid = false;
         }
     }

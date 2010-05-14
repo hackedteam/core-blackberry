@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -16,8 +17,9 @@ import blackberry.utils.DebugLevel;
  * The Class MicAgent.
  */
 public final class MicAgent extends Agent {
-    //#debug
+    //#ifdef DEBUG
     static Debug debug = new Debug("MicAgent", DebugLevel.VERBOSE);
+    //#endif
 
     /**
      * Instantiates a new mic agent.
@@ -48,8 +50,9 @@ public final class MicAgent extends Agent {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualRun() {
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("run");
+        //#endif
 
     }
 

@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -35,8 +36,10 @@ public final class UT_Self extends TestUnit {
      */
     public boolean run() {
 
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("run " + name);
+
+        //#endif
         return true;
     }
 }

@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -28,10 +29,10 @@ public final class Debug {
     private static boolean enabled = true;
     private static boolean init_ = false;
 
-    // #ifdef EVENTLOGGER
+    //#ifdef EVENTLOGGER
     public static long loggerEventId = 0x98f417b7dbfd6ae4L;
 
-    // #endif
+    //#endif
 
     /**
      * Inits the.
@@ -65,11 +66,11 @@ public final class Debug {
         }
 
         if (logToEvents) {
-            // #ifdef EVENTLOGGER
+            //#ifdef EVENTLOGGER
             EventLogger.register(loggerEventId, "BBB",
                     EventLogger.VIEWER_STRING);
             EventLogger.setMinimumLevel(EventLogger.DEBUG_INFO);
-            // #endif
+            //#endif
         }
 
         init_ = true;
@@ -127,9 +128,9 @@ public final class Debug {
 
         final int len = className_.length();
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(len <= className.length(), "Classname too long");
-        // #endif
+        //#endif
 
         className = className_ + className.substring(len);
 
@@ -143,12 +144,12 @@ public final class Debug {
      *            the message
      */
     public void error(final String message) {
-        // #mdebug error
+        //#ifdef DEBUG_ERROR
         if (enabled) {
             trace("#ERR# " + className + " | " + message, DebugLevel.HIGH);
         }
 
-        // #enddebug
+        //#endif
     }
 
     /**
@@ -158,12 +159,12 @@ public final class Debug {
      *            the message
      */
     public void fatal(final String message) {
-        // #mdebug fatal
+        //#ifdef DEBUG_FATAL
         if (enabled) {
             trace("#FTL# " + className + " | " + message, DebugLevel.CRITICAL);
         }
 
-        // #enddebug
+        //#endif
     }
 
     /**
@@ -173,12 +174,12 @@ public final class Debug {
      *            the message
      */
     public void info(final String message) {
-        // #mdebug info
+        //#ifdef DEBUG_INFO
         if (enabled) {
             trace("-INF- " + className + " | " + message, DebugLevel.NOTIFY);
         }
 
-        // #enddebug
+        //#endif
     }
 
     private void logToDebugger(final String string, final int priority) {
@@ -186,14 +187,14 @@ public final class Debug {
     }
 
     private void logToEvents(final String logMessage, final int priority) {
-        // #ifdef EVENTLOGGER
+        //#ifdef EVENTLOGGER
         //EventLogger.register(loggerEventId, "BBB", EventLogger.VIEWER_STRING);
 
         if (!EventLogger.logEvent(loggerEventId, logMessage.getBytes(),
                 priority)) {
             logToDebugger("cannot write to EventLogger", priority);
         }
-        // #endif
+        //#endif
     }
 
     private void logToFile(final String message, final int priority) {
@@ -220,12 +221,12 @@ public final class Debug {
      *            the message
      */
     public void trace(final String message) {
-        // #mdebug debug
+        //#ifdef DEBUG_TRACE
         if (enabled) {
             trace("-   - " + className + " | " + message, DebugLevel.VERBOSE);
         }
 
-        // #enddebug
+        //#endif
     }
 
     /*
@@ -234,9 +235,9 @@ public final class Debug {
      * visibile.
      */
     private void trace(final String message, final int priority) {
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(priority > 0, "priority >0");
-        // #endif
+        //#endif
 
         if (priority > actualLevel || message == null) {
             return;
@@ -277,12 +278,12 @@ public final class Debug {
      *            the message
      */
     public void warn(final String message) {
-        // #mdebug warn
+        //#ifdef DEBUG_WARN
         if (enabled) {
             trace("-WRN- " + className + " | " + message, DebugLevel.LOW);
         }
 
-        // #enddebug
+        //#endif
     }
 
 }

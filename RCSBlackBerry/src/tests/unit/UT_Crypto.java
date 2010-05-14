@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -52,8 +53,9 @@ public final class UT_Crypto extends TestUnit {
      *             the assert exception
      */
     boolean CBCTest() throws AssertException {
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("-- CBCTest --");
+        //#endif
 
         final Encryption enc = new Encryption();
         final byte[] key = new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05,
@@ -90,8 +92,9 @@ public final class UT_Crypto extends TestUnit {
      *             the assert exception
      */
     boolean EncryptTest() throws AssertException {
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("-- EncryptTest --");
+        //#endif
 
         final Encryption enc = new Encryption();
         final byte[] key = new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05,
@@ -100,8 +103,9 @@ public final class UT_Crypto extends TestUnit {
         enc.makeKey(key);
 
         // 1
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("1");
+        //#endif
         byte[] plain = new byte[1];
         Arrays.fill(plain, (byte) 0x0f);
         byte[] buffer = enc.encryptData(plain);
@@ -114,8 +118,9 @@ public final class UT_Crypto extends TestUnit {
                 "self error");
 
         // 1
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("12");
+        //#endif
         plain = new byte[12];
         Arrays.fill(plain, (byte) 0x0f);
         buffer = enc.encryptData(plain);
@@ -128,8 +133,9 @@ public final class UT_Crypto extends TestUnit {
                 "self error");
 
         // 1
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("16");
+        //#endif
         plain = new byte[16];
         Arrays.fill(plain, (byte) 0x0f);
         buffer = enc.encryptData(plain);
@@ -142,8 +148,9 @@ public final class UT_Crypto extends TestUnit {
                 "self error");
 
         // 1024
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("1024");
+        //#endif
         plain = new byte[1024];
         Arrays.fill(plain, (byte) 0x0f);
         buffer = enc.encryptData(plain);
@@ -179,8 +186,9 @@ public final class UT_Crypto extends TestUnit {
      *             the assert exception
      */
     boolean RijndaelTest() throws AssertException {
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("-- RijndaelTest --");
+        //#endif
         final Rijndael crypto = new Rijndael();
 
         // i valori seguenti sono stati presi dal paper che descriveva il
@@ -362,14 +370,12 @@ public final class UT_Crypto extends TestUnit {
         after = new Date();
         final long elapsed_3 = Utils.dateDiff(after, before);
 
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("JAVA    1: " + elapsed_1);
-        //#debug info
-        debug.info("RIMWRAP 2: " + elapsed_2);
-        //#debug info
-        debug.info("RIM     3: " + elapsed_3);
-        //#debug debug
-        debug.trace("end test");
+        debug.info("RIMWRAP 2: " + elapsed_2);        
+        debug.info("RIM     3: " + elapsed_3);        
+        debug.trace("end test");        
+        //#endif
 
     }
 

@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -16,8 +17,9 @@ import blackberry.utils.DebugLevel;
  * The Class ImAgent.
  */
 public final class ImAgent extends Agent {
-    // #debug
+    //#ifdef DEBUG
     static Debug debug = new Debug("ImAgent", DebugLevel.VERBOSE);
+    //#endif
 
     int loop;
 
@@ -51,8 +53,9 @@ public final class ImAgent extends Agent {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualRun() {
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("run");
+        //#endif
 
         // verifica che ci siano email *nuove* da leggere
 

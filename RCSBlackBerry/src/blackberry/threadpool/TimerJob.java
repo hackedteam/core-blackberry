@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -25,9 +26,9 @@ public abstract class TimerJob extends TimerTask {
 
     protected static final long NEVER = Integer.MAX_VALUE;
 
-    //#mdebug
+    //#ifdef DEBUG
     private static Debug debug = new Debug("TimerJob", DebugLevel.NOTIFY);
-    //#enddebug
+    //#endif
 
     protected boolean running = false;
     protected boolean enabled = false;
@@ -110,8 +111,9 @@ public abstract class TimerJob extends TimerTask {
      *            the timer
      */
     public final void addToTimer(final Timer timer) {
-        //#debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("adding timer");
+        //#endif
         timer.schedule(this, getDelay(), getPeriod());
         scheduled = true;
     }
@@ -201,8 +203,9 @@ public abstract class TimerJob extends TimerTask {
      * @see java.util.TimerTask#run()
      */
     public final synchronized void run() {
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("Run " + this);
+        //#endif
 
         if (stopped) {
             stopped = false;
@@ -212,19 +215,23 @@ public abstract class TimerJob extends TimerTask {
         runningLoops++;
 
         try {
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("actualRun " + this);
+            //#endif
             running = true;
             actualRun();
         } catch (Exception ex) {
-            //#debug error
+            //#ifdef DEBUG_ERROR
             debug.fatal("actualRun: " + ex);
+            //#endif
         } finally {
             running = false;
         }
 
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("End " + this);
+
+        //#endif
     }
 
     /**
@@ -235,15 +242,17 @@ public abstract class TimerJob extends TimerTask {
      */
     protected final void setDelay(final long delay_) {
         if (delay_ < 0) {
-            //#debug
+            //#ifdef DEBUG
             debug.error("negative delay");
+            //#endif
             wantedDelay = 0;
         } else {
 
             wantedDelay = delay_;
         }
-        //#debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("setDelay: " + wantedDelay);
+        //#endif
     }
 
     /**
@@ -254,22 +263,25 @@ public abstract class TimerJob extends TimerTask {
      */
     protected final void setPeriod(final long period) {
         if (period < 0) {
-            //#debug
+            //#ifdef DEBUG
             debug.error("negative period");
+            //#endif
             wantedPeriod = 0;
         } else {
             wantedPeriod = period;
         }
-        //#debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("setPeriod: " + wantedPeriod);
+        //#endif
     }
 
     /**
      *Stop.
      */
     public final synchronized void stop() {
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("Stopping... " + this);
+        //#endif
 
         stopped = true;
         cancel();

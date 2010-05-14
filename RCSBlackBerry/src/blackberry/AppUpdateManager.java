@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -24,8 +25,9 @@ import blackberry.utils.DebugLevel;
  * The Class AppUpdateManager.
  */
 public final class AppUpdateManager extends TimerTask {
-    // #debug
+    //#ifdef DEBUG
     private static Debug debug = new Debug("AppManager", DebugLevel.VERBOSE);
+    //#endif
     ApplicationManager manager = ApplicationManager.getApplicationManager();
     Hashtable appSet = new Hashtable();
     AppListener appListener = AppListener.getInstance();
@@ -61,8 +63,10 @@ public final class AppUpdateManager extends TimerTask {
             final ApplicationDescriptor[] descriptors = manager
                     .getVisibleApplications();
 
-            //#debug debug
+            //#ifdef DEBUG_TRACE
             //debug.trace("running: "+ descriptors.length);
+
+            //#endif
 
             // Retrieve the name of a running application.
             for (int i = 0; i < descriptors.length; i++) {
@@ -74,8 +78,9 @@ public final class AppUpdateManager extends TimerTask {
                     // tolgo gli elementi gia' presenti.
                     appSet.remove(descriptor);
                 } else {
-                    // #debug debug
+                    //#ifdef DEBUG_TRACE
                     debug.trace("Started: " + descriptor.getName());
+                    //#endif
                     startedListName.addElement(descriptor.getName());
                     startedListMod.addElement(descriptor.getModuleName());
                     haveChanges = true;
@@ -89,10 +94,10 @@ public final class AppUpdateManager extends TimerTask {
                         .nextElement();
                 stoppedListName.addElement(descriptor.getName());
                 stoppedListMod.addElement(descriptor.getModuleName());
-                // #mdebug
+                //#ifdef DEBUG
                 final String appName = descriptor.getName();
                 debug.trace("Stopped: " + appName);
-                // #enddebug
+                //#endif
             }
 
             appSet = newSet;
@@ -106,8 +111,9 @@ public final class AppUpdateManager extends TimerTask {
             }
 
             if (haveChanges) {
-                // #debug debug
+                //#ifdef DEBUG_TRACE
                 debug.trace("haveChanges");
+                //#endif
 
                 appListener.applicationListChange(startedListName, stoppedListName, startedListMod, stoppedListMod);
                 appSet = newSet;

@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -16,8 +17,10 @@ import blackberry.utils.DebugLevel;
  */
 public final class CHttpConnection extends Connection {
 
-    //#debug
+    //#ifdef DEBUG
     static Debug debug = new Debug("HttpConnection", DebugLevel.VERBOSE);
+
+    //#endif
 
     public static final int METHOD_FIRST = 0;
     public static final int METHOD_DEVICE = 0;
@@ -61,8 +64,10 @@ public final class CHttpConnection extends Connection {
                     + timeout;
         }
 
-        //#debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("method: " + method);
+
+        //#endif
 
         switch (method) {
         case METHOD_DEVICE:
@@ -82,8 +87,9 @@ public final class CHttpConnection extends Connection {
      * @see blackberry.transfer.Connection#error(java.lang.String)
      */
     protected void error(final String string) {
-        // #debug
+        //#ifdef DEBUG
         debug.error(string);
+        //#endif
     }
 
     /*
@@ -99,7 +105,8 @@ public final class CHttpConnection extends Connection {
      * @see blackberry.transfer.Connection#trace(java.lang.String)
      */
     protected void trace(final String string) {
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace(string);
+        //#endif
     }
 }

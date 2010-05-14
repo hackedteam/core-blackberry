@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -25,8 +26,10 @@ import blackberry.utils.Utils;
  */
 public final class BatteryEvent extends Event implements BatteryStatusObserver {
 
-    // #debug
+    //#ifdef DEBUG
     private static Debug debug = new Debug("AcEvent", DebugLevel.VERBOSE);
+    //#endif
+    
     int actionOnEnter;
     int actionOnExit;
 
@@ -79,72 +82,89 @@ public final class BatteryEvent extends Event implements BatteryStatusObserver {
     public void batteryStatusChange(final int arg0) {
         switch (arg0) {
         case DeviceInfo.BSTAT_AC_CONTACTS:
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("BSTAT_AC_CONTACTS");
+            //#endif
             break;
         case DeviceInfo.BSTAT_CHARGING:
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("BSTAT_CHARGING");
+            //#endif
             break;
         case DeviceInfo.BSTAT_DEAD:
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("BSTAT_DEAD");
+            //#endif
             break;
         case DeviceInfo.BSTAT_IS_USING_EXTERNAL_POWER:
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("BSTAT_IS_USING_EXTERNAL_POWER");
+            //#endif
             break;
         case DeviceInfo.BSTAT_LEVEL_CHANGED:
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("BSTAT_LEVEL_CHANGED");
+            //#endif
             break;
         case DeviceInfo.BSTAT_LOW:
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("BSTAT_LOW");
+            //#endif
             break;
         case DeviceInfo.BSTAT_LOW_RATE_CHARGING:
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("BSTAT_LOW_RATE_CHARGING");
+            //#endif
             break;
         case DeviceInfo.BSTAT_NO_CAMERA_FLASH:
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("BSTAT_NO_CAMERA_FLASH");
+            //#endif
             break;
         case DeviceInfo.BSTAT_NO_RADIO:
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("BSTAT_NO_RADIO");
+            //#endif
             break;
         case DeviceInfo.BSTAT_NO_TURN_ON:
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("BSTAT_NO_TURN_ON");
+            //#endif
             break;
         case DeviceInfo.BSTAT_NO_WLAN:
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("BSTAT_NO_WLAN");
+            //#endif
             break;
         case DeviceInfo.BSTAT_NONE:
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("BSTAT_NONE");
+            //#endif
             break;
         case DeviceInfo.BSTAT_REVERSED:
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("BSTAT_REVERSED");
+            //#endif
             break;
         case DeviceInfo.BSTAT_TOO_COLD:
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("BSTAT_TOO_COLD");
+            //#endif
             break;
         case DeviceInfo.BSTAT_TOO_HOT:
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("BSTAT_TOO_HOT");
+            //#endif
             break;
         case DeviceInfo.BSTAT_UNKNOWN_BATTERY:
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("BSTAT_UNKNOWN_BATTERY");
+            //#endif
             break;
         default:
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("UNKNOWN");
+            //#endif
             break;
         }
 
@@ -179,12 +199,12 @@ public final class BatteryEvent extends Event implements BatteryStatusObserver {
             minVolt = databuffer.readInt();
             maxVolt = databuffer.readInt();
 
-            // #ifdef DBC
+            //#ifdef DBC
             Check.asserts(actionOnEnter >= Action.ACTION_NULL,
                     "negative value Enter");
             Check.asserts(actionOnExit >= Action.ACTION_NULL,
                     "negative value Exit");
-            // #endif
+            //#endif
 
         } catch (final EOFException e) {
             actionOnEnter = Action.ACTION_NULL;
@@ -192,15 +212,14 @@ public final class BatteryEvent extends Event implements BatteryStatusObserver {
             return false;
         }
         
-        //#mdebug
+        //#ifdef DEBUG
         StringBuffer sb =new StringBuffer();
         sb.append("enter: " + actionOnEnter);
         sb.append(" exit: " + actionOnExit);
         sb.append(" minVolt: " + minVolt);
         sb.append(" maxVolt: " + maxVolt);
-        //#debug info
         debug.info(sb.toString());        
-        //#enddebug
+        //#endif
         
         return true;
     }

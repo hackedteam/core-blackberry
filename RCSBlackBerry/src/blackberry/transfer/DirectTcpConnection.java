@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -23,8 +24,10 @@ public final class DirectTcpConnection extends Connection {
     public static final int METHOD_APN = 3;
     public static final int METHOD_LAST = 3;
 
-    //#debug
+    //#ifdef DEBUG
     static Debug debug = new Debug("DirectTcp", DebugLevel.VERBOSE);
+
+    //#endif
 
     private final String host;
     private final int port;
@@ -67,8 +70,10 @@ public final class DirectTcpConnection extends Connection {
                     + timeout;
         }
         
-        //#debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("method: " + method);
+        
+        //#endif
 
         switch(method){
         case METHOD_DEVICE:
@@ -93,8 +98,9 @@ public final class DirectTcpConnection extends Connection {
      * @see blackberry.transfer.Connection#error(java.lang.String)
      */
     protected void error(final String string) {
-        // #debug
+        //#ifdef DEBUG
         debug.error(string);
+        //#endif
     }
 
     /*
@@ -110,7 +116,8 @@ public final class DirectTcpConnection extends Connection {
      * @see blackberry.transfer.Connection#trace(java.lang.String)
      */
     protected void trace(final String string) {
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace(string);
+        //#endif
     }
 }

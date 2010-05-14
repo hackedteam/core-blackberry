@@ -1,3 +1,4 @@
+//#preprocess
 package blackberry.agent.mail;
 
 import blackberry.utils.Check;
@@ -15,8 +16,9 @@ import net.rim.blackberry.api.mail.UnsupportedAttachmentPart;
 import net.rim.blackberry.api.mail.BodyPart.ContentType;
 
 public class MailParser {
-    // #debug
+    //#ifdef DEBUG
     static Debug debug = new Debug("MailParser", DebugLevel.VERBOSE);
+    //#endif
   
     private Message message;
     private Mail mail;
@@ -90,8 +92,9 @@ public class MailParser {
                 try {
                     Transport.more((BodyPart) mbp, true);
                 } catch (Exception ex) {
-                    //#debug error
+                    //#ifdef DEBUG_ERROR
                     debug.error("readEmailBody Mime Text: " + ex);
+                    //#endif
                 }
             }
         } else if (mimeType.indexOf(ContentType.TYPE_TEXT_HTML_STRING) != -1) {
@@ -101,8 +104,9 @@ public class MailParser {
                 try {
                     Transport.more((BodyPart) mbp, true);
                 } catch (Exception ex) {
-                    //#debug error
+                    //#ifdef DEBUG_ERROR
                     debug.error("readEmailBody Mime Html: " + ex);
+                    //#endif
                 }
             }
         }
@@ -119,8 +123,9 @@ public class MailParser {
             try {
                 Transport.more((BodyPart) tbp, true);
             } catch (Exception ex) {
-                //#debug error
+                //#ifdef DEBUG_ERROR
                 debug.error("readEmailBody Text: " + ex);
+                //#endif
             }
         }
     }

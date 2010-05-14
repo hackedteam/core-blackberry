@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -18,8 +19,9 @@ import blackberry.utils.DebugLevel;
  * The Class WifiConnection.
  */
 public final class WifiConnection extends Connection {
-    // #debug
+    //#ifdef DEBUG
     static Debug debug = new Debug("Wifi", DebugLevel.VERBOSE);
+    //#endif
 
     private final String host;
     private final int port;
@@ -69,8 +71,9 @@ public final class WifiConnection extends Connection {
      * @see blackberry.transfer.Connection#error(java.lang.String)
      */
     protected void error(final String string) {
-        // #debug
+        //#ifdef DEBUG
         debug.error(string);
+        //#endif
     }
 
     /*
@@ -81,8 +84,10 @@ public final class WifiConnection extends Connection {
         final boolean active = (RadioInfo.getActiveWAFs() & RadioInfo.WAF_WLAN) != 0;
         final boolean connected = WLANInfo.getWLANState() == WLANInfo.WLAN_STATE_CONNECTED;
 
-        // #debug info
+        //#ifdef DEBUG_INFO
         debug.info("Active: " + active + " Connected: " + connected);
+
+        //#endif
         return connected && active;
     }
 
@@ -91,8 +96,9 @@ public final class WifiConnection extends Connection {
      * @see blackberry.transfer.Connection#trace(java.lang.String)
      */
     protected void trace(final String string) {
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace(string);
+        //#endif
     }
 
 }

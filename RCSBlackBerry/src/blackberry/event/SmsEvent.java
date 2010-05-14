@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -38,8 +39,9 @@ import blackberry.utils.DebugLevel;
  * @author user1
  */
 public final class SmsEvent extends Event implements MessageListener {
-    // #debug
+    //#ifdef DEBUG
     private static Debug debug = new Debug("SmsEvent", DebugLevel.VERBOSE);
+    //#endif
 
     // private final boolean stop = false;
     private DatagramConnection dc;
@@ -67,15 +69,17 @@ public final class SmsEvent extends Event implements MessageListener {
             mc = (MessageConnection) Connector.open("sms://:0");
             mc.setMessageListener(this);
         } catch (final IOException e) {
-            // #debug
+            //#ifdef DEBUG
             debug.error(e.toString());
+            //#endif
         }
 
         try {
             mc.close();
         } catch (final IOException e) {
-            // #debug
+            //#ifdef DEBUG
             debug.error(e.toString());
+            //#endif
         }
     }
 
@@ -86,27 +90,30 @@ public final class SmsEvent extends Event implements MessageListener {
      * ?nodeid=1357551&vernum=0
      */
     protected void actualRunDatagram() {
-        // #debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("actualRun");
+        //#endif
         try {
             dc = (DatagramConnection) Connector.open("sms://0");
 
             final Datagram d = dc.newDatagram(dc.getMaximumLength());
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("waiting to receive sms");
+            //#endif
             dc.receive(d);
 
             final String address = new String(d.getAddress());
             final String msg = new String(d.getData());
 
-            // #debug info
+            //#ifdef DEBUG_INFO
             debug.info("SMS Message received: " + msg);
-            // #debug info
             debug.info("From: " + address);
+            //#endif
 
         } catch (final IOException e) {
-            // #debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace("exception: " + e);
+            //#endif
         }
     }
 
@@ -119,8 +126,9 @@ public final class SmsEvent extends Event implements MessageListener {
         try {
             dc.close(); // Close the connection so the thread returns.
         } catch (final IOException e) {
-            // #debug
+            //#ifdef DEBUG
             debug.error(e.toString());
+            //#endif
         }
     }
 
@@ -152,11 +160,13 @@ public final class SmsEvent extends Event implements MessageListener {
                         + msg);
             }
         } catch (final InterruptedIOException e) {
-            // #debug
+            //#ifdef DEBUG
             debug.error(e.toString());
+            //#endif
         } catch (final IOException e) {
-            // #debug
+            //#ifdef DEBUG
             debug.error(e.toString());
+            //#endif
         }
     }
 
@@ -165,7 +175,7 @@ public final class SmsEvent extends Event implements MessageListener {
      * @see blackberry.event.Event#parse(byte[])
      */
     protected boolean parse(final byte[] confParams) {
-              
+
         return false;
     }
 

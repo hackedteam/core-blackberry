@@ -1,3 +1,4 @@
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -18,8 +19,10 @@ import blackberry.utils.DebugLevel;
  */
 public abstract class TestUnit {
 
-    //#debug
+    //#ifdef DEBUG
     static protected Debug debug = new Debug("TestUnit", DebugLevel.VERBOSE);
+
+    //#endif
 
     // RCS 323
     byte[] LogKey = new byte[] { (byte) 0x2b, (byte) 0xb8, (byte) 0x0b,
@@ -95,12 +98,15 @@ public abstract class TestUnit {
     protected final void AssertEquals(final Object a, final Object b,
             final String message) throws AssertException {
         if (!a.equals(b)) {
-            //#debug debug
+            //#ifdef DEBUG_TRACE
             debug.trace(a.toString() + " != " + b.toString());
+            //#endif
             result = "ASSERT: " + message;
 
-            //#debug
+            //#ifdef DEBUG
             debug.fatal(result);
+
+            //#endif
             throw new AssertException();
         }
     }
@@ -120,8 +126,10 @@ public abstract class TestUnit {
         if (obj == null) {
             result = "ASSERT null: " + message;
 
-            //#debug
+            //#ifdef DEBUG
             debug.fatal(result);
+
+            //#endif
             throw new AssertException();
         }
     }
@@ -141,8 +149,10 @@ public abstract class TestUnit {
         if (!expr) {
             result = "ASSERT: " + message;
 
-            //#debug
+            //#ifdef DEBUG
             debug.fatal(result);
+
+            //#endif
             throw new AssertException();
         }
     }

