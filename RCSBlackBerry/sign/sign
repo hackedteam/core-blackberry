@@ -13,8 +13,7 @@ KEYSDIR="Keys"
 PWD="KUZ93HQ1"
 
 echo "Sign"
-#echo java -jar $RIM/$SIGNTOOL $RIM null -p $PWD -a -c $VER/$COD
 
-java -jar $RIM/$SIGNTOOL -p $PWD -a -c $1
+echo java -jar $RIM/$SIGNTOOL -p $PWD -a -c $1
 
  

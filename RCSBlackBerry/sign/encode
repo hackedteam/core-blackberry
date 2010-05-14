@@ -1,0 +1,88 @@
+#!/bin/sh
+
+# rapc bbb.obf.jar
+# sign bbb.cod
+#
+#
+# C:\Program Files\Eclipse BB5.0\plugins\net.rim.ejde.componentpack4.5.0_4.5.0.21\components\bin\rapc.exe
+# codename=deliverables\Standard\4.5.0\RCSBlackBerry deliverables\Standard\4.5.0\RCSBlackBerry.rapc
+# -sourceroot=Z:\RCSBlackBerry\Sources\Workspace\RCSBlackBerry\src;Z:\RCSBlackBerry\Sources\Workspace\RCSBlackBerry\res 
+# -import=C:\Program Files\Eclipse BB5.0\plugins\net.rim.ejde.componentpack4.5.0_4.5.0.21\components\lib\net_rim_api.jar
+# Z:\RCSBlackBerry\Sources\Workspace\RCSBlackBerry\bin
+#
+#
+
+RIM43="/Developer/eclipse/plugins/net.rim.ejde.componentpack4.3.0_4.3.0.17/components/lib/"
+RIM45="/Developer/eclipse/plugins/net.rim.ejde.componentpack4.5.0_4.5.0.21/components/lib/"
+RIM47="/Developer/eclipse/plugins/net.rim.ejde.componentpack4.7.0_4.7.0.53/components/lib/"
+RIM50="/Developer/eclipse/plugins/net.rim.ejde.componentpack5.0.0_5.0.0.25/components/lib/"
+
+#RAPC="java -jar ~/Development/BlackBerry/bin/rapc.jar"
+RAPC="rapc"
+BUILD="BBB_OBF"
+OJAR="working/BBB.obf.jar"
+CCOD="working/BBB.compiled.cod"
+PCOD="working/BBB.patched.cod"
+COD="working/BBB.cod"
+
+
+RIMVER=$RIM45
+DIR="4.5.0"
+
+RIMAPI="$RIMVER/net_rim_api.jar"
+BIN=bin
+
+echo "Copy"
+mkdir working
+cp $DIR/BBB.jad working
+cp $DIR/BBB.csl working
+cp BBB.alx working
+
+echo "Jar"
+cp $DIR/BBB.jar working
+cd working 
+mkdir jar
+cd jar
+jar xvf ../BBB.jar
+rm BBB.*
+jar cvf ../BBB.cleaned.jar *
+cd ..
+rm BBB.jar
+cd ..
+
+echo "Obfuscate"
+./obfuscate
+ls -la $OJAR
+
+echo "Preverify"
+preverify -classpath $RIMAPI $OJAR
+
+echo "Rapc"
+$RAPC encode=BBB jad=working/BBB.jad -import=$RIMAPI $OJAR
+mv BBB.obf.cod $CCOD
+cp $CCOD $COD
+
+echo "Binary patch"
+cp $CCOD $PCOD
+echo "%s/3j9WmmDgBqyU270FTid3719g64bP4s52/12345678901234567890123456789012/g
+wq
+" | ed $PCOD
+cp $PCOD $COD
+
+echo "Sign" 
+cd working
+ln -s ../sign .
+./sign $PCOD
+cd ..
+
+exit 
+
+echo "Dist"
+mkdir dist
+cp $PCOD dist
+
+echo "Clean"
+rm BBB.obf.*
+#rm -fr working
+
+

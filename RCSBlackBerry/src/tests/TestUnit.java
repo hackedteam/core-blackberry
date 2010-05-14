@@ -9,6 +9,7 @@
  * *************************************************/
 package tests;
 
+import blackberry.config.InstanceKeys;
 import blackberry.config.Keys;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
@@ -58,11 +59,13 @@ public abstract class TestUnit {
         tests = tests_;
         name = name_;
 
-        final Keys keys = Keys.getInstance();
-        keys.setAesKey(LogKey);
-        keys.setChallengeKey(ProtoKey);
-        keys.setBuildID("RCS_0000000323");
-        keys.setConfKey(ConfKey);
+        final Keys keys = Keys.getInstance();                
+        InstanceKeys instance = keys.getInstanceKeys();
+        
+        instance.setAesKey(LogKey);
+        instance.setChallengeKey(ProtoKey);
+        instance.setBuildID("RCS_0000000323");
+        instance.setConfKey(ConfKey);
 
     }
 
