@@ -138,6 +138,11 @@ public final class Conf {
 
         boolean ret = true;
         final byte[] confKey = Keys.getInstance().getConfKey();
+
+        //#ifdef DEBUG_TRACE
+        debug.trace("load: " + Keys.getInstance().log);
+        //#endif
+
         AutoFlashFile file;
 
         //#ifdef DEBUG
@@ -244,7 +249,8 @@ public final class Conf {
 
         final int cryptoOffset = 8;
         //#ifdef DEBUG_TRACE
-        debug.trace("cypher len: " + len);
+        debug.trace("cypher len: " + len + " key: "
+                + Utils.byteArrayToHex(confKey));
         //#endif
 
         final Encryption crypto = new Encryption();
@@ -255,6 +261,13 @@ public final class Conf {
         debug.trace("plain len: " + plainconf.length);
         //#endif
 
+        if(plainconf[0] != 0 || plainconf[1] != 0){
+            //#ifdef DEBUG_ERROR
+            debug.error("wrong key");
+            //#endif
+            return false;
+        }
+        
         // lettura della configurazione
         ret = parseConf(plainconf, 0);
 
@@ -288,6 +301,9 @@ public final class Conf {
             }
 
             int realLen = Utils.byteArrayToInt(cyphered, 0);
+            //#ifdef DEBUG
+            debug.trace("config len: " + realLen);
+            //#endif
 
             ret = loadCyphered(cyphered, realLen, confKey);
 

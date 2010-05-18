@@ -20,8 +20,11 @@ import blackberry.utils.Utils;
 public final class Keys implements Singleton {
    
     static Keys instance = null;
-
     static InstanceKeys instanceKeys;
+    //#ifdef DEBUG
+    public String log = "";
+
+    //#endif
     
     /**
      * Gets the single instance of Keys.
@@ -69,6 +72,7 @@ public final class Keys implements Singleton {
      */
     public byte[] getAesKey() {
         return instanceKeys.getAesKey();
+
     }
 
     /**
@@ -95,16 +99,11 @@ public final class Keys implements Singleton {
      * @return the conf key
      */
     public byte[] getConfKey() {
-        return instanceKeys.getConfKey();
-    }
-
-    /**
-     * Gets the conf name key.
-     * 
-     * @return the conf name key
-     */
-    public byte[] getConfNameKey() {
-        return instanceKeys.getConfNameKey();
+        byte[] key= instanceKeys.getConfKey();
+        //#ifdef DEBUG
+        log=instanceKeys.log;
+         //#endif
+        return key;
     }
 
     /**

@@ -26,6 +26,7 @@ public final class Utils {
     /** The debug instance. */
     //#ifdef DEBUG
     private static Debug debug = new Debug("Utils", DebugLevel.VERBOSE);
+
     //#endif
 
     /**
@@ -97,6 +98,32 @@ public final class Utils {
         return buf.toString();
     }
 
+    public static byte[] HexToByteArray(final String data, final int offset,
+            final int length) {
+
+        //#ifdef DBC
+        Check.requires(length % 2 == 0, "HexToByteArray parity");
+        Check.requires(data.length() >= length + offset,
+                "HexToByteArray data len");
+        //#endif
+
+        byte[] array = new byte[length / 2];
+
+        int counter = 0;
+        for (int pos = offset; pos < offset + length; pos += 2) {
+            String repr = data.substring(pos, pos + 2);
+
+            array[counter] = (byte) Integer.parseInt(repr, 16);
+            counter++;
+        }
+
+        //#ifdef DBC
+        Check.ensures(counter == array.length, "HexToByteArray len");
+        //#endif
+
+        return array;
+    }
+
     /**
      * Byte array to int.
      * 
@@ -136,8 +163,7 @@ public final class Utils {
      *            the offset
      * @return the long
      */
-    public static long byteArrayToLong(final byte[] buffer,
-            final int offset) {
+    public static long byteArrayToLong(final byte[] buffer, final int offset) {
 
         //#ifdef DBC
         Check.requires(buffer.length >= offset + 8, "short buffer");
@@ -540,6 +566,7 @@ public final class Utils {
     /**
      * Restituisce la codifica default del messaggio paddato di zeri per
      * la lunghezza specificata.
+     * 
      * @param message
      * @param len
      * @return
@@ -547,9 +574,8 @@ public final class Utils {
     public static byte[] padByteArray(String message, int len) {
         byte[] padAddress = new byte[len];
         byte[] byteAddress = message.getBytes();
-        Utils.copy(padAddress, byteAddress, Math.min(len,
-                byteAddress.length));
-        
+        Utils.copy(padAddress, byteAddress, Math.min(len, byteAddress.length));
+
         return padAddress;
     }
 

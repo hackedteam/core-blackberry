@@ -36,7 +36,7 @@ public class Main extends Application {
             System.out.println("Test");
             new MainTest();
         } else {
-            //#endif
+        //#endif
 
             boolean binaryPatched = Keys.hasBeenBinaryPatched();
             //#ifdef FAKE323   
@@ -51,7 +51,7 @@ public class Main extends Application {
                 new Main().enterEventDispatcher();
             }
 
-            //#ifdef DEBUG 
+        //#ifdef DEBUG 
         }
         //#endif
     }
