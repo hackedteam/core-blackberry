@@ -1,0 +1,18 @@
+<Properties ModelVersion="1.1.2">
+  <General Title="" Version="4.5.0" Vendor="BlackBerry Developer" Description=""/>
+  <Application Type="Library" MainMIDletName="" MainArgs="" HomeScreenPosition="0" StartupTier="7" IsSystemModule="true" IsAutostartup="false"/>
+  <Resources hasTitleResource="false" TitleResourceBundleName="" TitleResourceBundleRelativePath="" TitleResourceBundleClassName="" TitleResourceBundleKey="" DescriptionId="">
+    <Icons/>
+  </Resources>
+  <Compile OutputCompilerMessages="true" ConvertImages="false" CreateWarningForNoExportedRoutine="true" CompressResources="true" AliasList="">
+    <PreprocessorDefines/>
+  </Compile>
+  <Packaging OutputFileName="net_rim_bb_lib_base" OutputFolder="deliverables" PreBuildStep="" PostBuildStep="" CleanStep="" GenerateALXFile="true">
+    <AlxFiles/>
+  </Packaging>
+  <HiddenProperties>
+    <ClassProtection/>
+    <PackageProtection/>
+  </HiddenProperties>
+  <AlternateEntryPoints/>
+</Properties>
