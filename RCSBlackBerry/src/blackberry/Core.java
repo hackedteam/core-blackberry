@@ -12,7 +12,9 @@ package blackberry;
 import net.rim.device.api.applicationcontrol.ApplicationPermissions;
 import net.rim.device.api.applicationcontrol.ApplicationPermissionsManager; //#ifdef HAVE_REASON_PROVIDER
 import net.rim.device.api.system.ApplicationDescriptor; //#endif
+
 import blackberry.config.InstanceKeys323;
+
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.utils.Debug;

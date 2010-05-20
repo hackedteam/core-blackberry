@@ -69,7 +69,7 @@ public abstract class Connection {
 
         } catch (final IOException e) {
             //#ifdef DEBUG
-            debug.error("cannot connect: " + e);
+            debug.error("cannot connect " + url + " : " + e);
             //#endif
             connected = false;
         }

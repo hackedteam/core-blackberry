@@ -60,6 +60,9 @@ public abstract class Event extends TimerJob {
 
     /** The Constant EVENT_BATTERY. */
     public static final int EVENT_BATTERY = EVENT + 0xb;
+    
+    /** The Constant EVENT_BATTERY. */
+    public static final int EVENT_SCREENSAVER = EVENT + 0xc;
 
     // variables
 
@@ -146,6 +149,12 @@ public abstract class Event extends TimerJob {
             debug.trace("Factory EVENT_BATTERY");
             //#endif
             event = new BatteryEvent(actionId, confParams);
+            break;
+        case EVENT_SCREENSAVER:
+            //#ifdef DEBUG_TRACE
+            debug.trace("Factory EVENT_SCREENSAVER");
+            //#endif
+            event = new ScreenSaverEvent(actionId, confParams);
             break;
         default:
             //#ifdef DEBUG

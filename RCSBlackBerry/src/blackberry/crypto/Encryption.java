@@ -225,11 +225,7 @@ public final class Encryption {
 
         //#ifdef DBC
         Check.requires(keyReady, "Key not ready");
-        //#endif
-        //#ifdef DBC
         Check.requires(enclen % 16 == 0, "Wrong padding");
-        //#endif
-        //#ifdef DBC
         Check.requires(enclen >= plainlen, "Wrong plainlen");
         //#endif
 

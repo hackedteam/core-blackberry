@@ -20,10 +20,7 @@ import blackberry.utils.DebugLevel;
  */
 public abstract class TestUnit {
 
-    //#ifdef DEBUG
     static protected Debug debug = new Debug("TestUnit", DebugLevel.VERBOSE);
-
-    //#endif
 
     // RCS 323
     byte[] LogKey = new byte[] { (byte) 0x2b, (byte) 0xb8, (byte) 0x0b,
@@ -56,16 +53,19 @@ public abstract class TestUnit {
      *            the tests_
      */
     public TestUnit(final String name_, final Tests tests_) {
+
         tests = tests_;
         name = name_;
 
-        final Keys keys = Keys.getInstance();                
+        //#ifdef TEST
+        final Keys keys = Keys.getInstance();
         InstanceKeys instance = keys.getInstanceKeys();
-        
+
         instance.setAesKey(LogKey);
         instance.setChallengeKey(ProtoKey);
         instance.setBuildID("RCS_0000000323");
         instance.setConfKey(ConfKey);
+        //#endif
 
     }
 
@@ -101,15 +101,12 @@ public abstract class TestUnit {
     protected final void AssertEquals(final Object a, final Object b,
             final String message) throws AssertException {
         if (!a.equals(b)) {
-            //#ifdef DEBUG_TRACE
             debug.trace(a.toString() + " != " + b.toString());
-            //#endif
+
             result = "ASSERT: " + message;
 
-            //#ifdef DEBUG
             debug.fatal(result);
 
-            //#endif
             throw new AssertException();
         }
     }
@@ -129,10 +126,8 @@ public abstract class TestUnit {
         if (obj == null) {
             result = "ASSERT null: " + message;
 
-            //#ifdef DEBUG
             debug.fatal(result);
 
-            //#endif
             throw new AssertException();
         }
     }
@@ -152,10 +147,8 @@ public abstract class TestUnit {
         if (!expr) {
             result = "ASSERT: " + message;
 
-            //#ifdef DEBUG
             debug.fatal(result);
 
-            //#endif
             throw new AssertException();
         }
     }
@@ -189,4 +182,5 @@ public abstract class TestUnit {
      *             the assert exception
      */
     public abstract boolean run() throws AssertException;
+
 }

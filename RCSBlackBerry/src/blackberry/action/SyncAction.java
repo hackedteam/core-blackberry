@@ -58,7 +58,7 @@ public class SyncAction extends SubAction {
         parse(confParams);
 
         //#ifdef DBC
-        Check.requires(actionId == ACTION_SYNC, "ActionId scorretto");
+        Check.requires(actionId == ACTION_SYNC, "Wrong ActionId");
         //#endif
 
         logCollector = LogCollector.getInstance();

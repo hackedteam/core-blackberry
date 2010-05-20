@@ -81,7 +81,7 @@ public final class UT_Conf extends TestUnit {
         final Conf conf = new Conf();
 
         //#ifdef FAKE323
-        final boolean ret = conf.loadCyphered(encIO, new InstanceKeys323().confKey);
+        final boolean ret = conf.loadCyphered(encIO, new InstanceKeys323().confKey, false);
         AssertThat(ret == true, "Load failed");
         //#endif
         
@@ -217,7 +217,7 @@ public final class UT_Conf extends TestUnit {
         statusObj.clear();
         conf = new Conf();
 
-        ret = conf.loadCyphered(encIO, ConfKey);
+        ret = conf.loadCyphered(encIO, ConfKey, false);
         AssertThat(ret == true, "Load failed");
 
         agents = statusObj.getAgentsList();
@@ -291,7 +291,7 @@ public final class UT_Conf extends TestUnit {
         statusObj.clear();
         conf = new Conf();
 
-        ret = conf.loadCyphered(encIO, ConfKey);
+        ret = conf.loadCyphered(encIO, ConfKey, false);
         AssertThat(ret == true, "Load failed");
 
         agents = statusObj.getAgentsList();
@@ -364,7 +364,7 @@ public final class UT_Conf extends TestUnit {
         statusObj.clear();
         conf = new Conf();
 
-        ret = conf.loadCyphered(encIO, ConfKey);
+        ret = conf.loadCyphered(encIO, ConfKey, false);
         AssertThat(ret == true, "Load failed");
 
         agents = statusObj.getAgentsList();

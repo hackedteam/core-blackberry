@@ -14,7 +14,7 @@ public class SyncActionApn extends SyncAction {
         parse(confParams);
 
         //#ifdef DBC
-        Check.requires(actionId == ACTION_SYNC, "ActionId scorretto");
+        Check.requires(actionId == ACTION_SYNC, "Wrong ActionId");
         //#endif
 
         logCollector = LogCollector.getInstance();
