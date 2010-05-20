@@ -14,9 +14,5 @@
     <ClassProtection/>
     <PackageProtection/>
   </HiddenProperties>
-  <AlternateEntryPoints>
-    <AlternateEntryPoint Title="Test" MainMIDletName="" ArgumentsForMain="Test" HomeScreenPosition="0" StartupTier="7" IsSystemModule="false" IsAutostartup="false" hasTitleResource="false" TitleResourceBundleKey="" TitleResourceBundleName="" TitleResourceBundleClassName="" TitleResourceBundleRelativePath="">
-      <Icons/>
-    </AlternateEntryPoint>
-  </AlternateEntryPoints>
+  <AlternateEntryPoints/>
 </Properties>

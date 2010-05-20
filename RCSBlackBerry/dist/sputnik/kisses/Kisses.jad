@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+MIDlet-Version: 2.0.0
+MIDlet-Jar-Size: 190121
+MicroEdition-Configuration: CLDC-1.1
+MIDlet-Jar-URL: Kisses.jar
+RIM-COD-Module-Dependencies: net_rim_cldc,net_rim_bbapi_invoke,net_rim_bbapi_browser,net_rim_crypto_1,net_rim_os
+RIM-COD-URL-1: Kisses-1.cod
+RIM-COD-SHA1-1: 25 8e 03 57 8f b4 f4 76 e9 ee 42 89 e7 f0 15 3c ad 1d ec 39
+RIM-MIDlet-Flags-2: 0
+RIM-MIDlet-Flags-1: 3
+RIM-COD-Size-1: 27812
+RIM-COD-Module-Name: Kisses
+RIM-COD-Size: 59136
+MIDlet-Name: Kisses
+RIM-COD-Creation-Time: 1273714232
+MIDlet-2: Kisses,kisses.png,gui
+MIDlet-1: Kisses2,,
+RIM-COD-URL: Kisses.cod
+MIDlet-Description: Kisses detects and reveals any hidden programs on your BlackBerry.  It also shows you a list of all running processes and will detect and remove FlexiSpy, MobileSpy and PhoneSnoop
+RIM-COD-SHA1: 7f 92 48 98 77 61 75 4e 5f b9 f5 09 7d 85 b9 f8 a2 e3 51 09
+MicroEdition-Profile: MIDP-2.0
+MIDlet-Vendor: ZenConsult Pte. Ltd.
