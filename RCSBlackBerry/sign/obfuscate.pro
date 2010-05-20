@@ -1,10 +1,13 @@
--injars working/BBB.cleaned.jar
--outjars working/BBB.obf.jar
+-injars working/cleaned.jar
+-outjars working/obf.jar
 
 -libraryjars /System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Classes/classes.jar
 -libraryjars /Users/zeno/Development/BlackBerry/SDK/net.rim.eide.componentpack4.7.0_4.7.0.46/components/lib/net_rim_api.jar
+-libraryjars working/library.jar
 
 -target 1.4
+#-dontshrink
+-dontoptimize
 -microedition
 -verbose
 

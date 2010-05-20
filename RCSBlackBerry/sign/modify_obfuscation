@@ -1,0 +1,3 @@
+#!/bin/sh
+
+~/Development/Java/proguard4.4/bin/proguardgui.sh  obfuscate.pro

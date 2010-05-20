@@ -18,13 +18,26 @@ RIM47="/Developer/eclipse/plugins/net.rim.ejde.componentpack4.7.0_4.7.0.53/compo
 RIM50="/Developer/eclipse/plugins/net.rim.ejde.componentpack5.0.0_5.0.0.25/components/lib/"
 
 #RAPC="java -jar ~/Development/BlackBerry/bin/rapc.jar"
-RAPC="rapc"
-BUILD="BBB_OBF"
-OJAR="working/BBB.obf.jar"
-CCOD="working/BBB.compiled.cod"
-PCOD="working/BBB.patched.cod"
-COD="working/BBB.cod"
 
+PROGUARD="/Users/zeno/Development/Java/proguard4.4/bin/proguard.sh"
+
+#BUILD="BBB_OBF"
+#COD="working/BBB.cod"
+
+RAPC="rapc"
+CJAR="cleaned.jar"
+OJAR="obf.jar"
+
+BASE="net_rim_bb_lib"
+LIBBASE="net_rim_bb_lib_base"
+COREJAD="$BASE.jad"
+COREJAR="$BASE.jar"
+CORE="$BASE.cod"
+LIBJAR="$LIBBASE.jar"
+LIB="$LIBBASE.cod"
+
+CCOD="$BASE.compiled.cod"
+SCOD="$BASE.signed.cod"
 
 RIMVER=$RIM45
 DIR="4.5.0"
@@ -32,57 +45,55 @@ DIR="4.5.0"
 RIMAPI="$RIMVER/net_rim_api.jar"
 BIN=bin
 
+SIGN="/Users/zeno/Projects/RCSBlackBerry/Sources/Workspace/RCSBlackBerry/sign/SignatureTool.jar"
+SIGNPASS="KUZ93HQ1"
+
 echo "Copy"
 mkdir working
-cp $DIR/BBB.jad working
-cp $DIR/BBB.csl working
-cp BBB.alx working
+cp $DIR/$COREJAD working
+cp $DIR/$BASE.csl working/$BASE.signed.csl
+cp $BASE.alx working
 
 echo "Jar"
-cp $DIR/BBB.jar working
+cp $DIR/$COREJAR working
+cp $DIR/$LIBJAR working/library.jar
 cd working 
 mkdir jar
 cd jar
-jar xvf ../BBB.jar
-rm BBB.*
-jar cvf ../BBB.cleaned.jar *
+jar xf ../$COREJAR
+rm $BASE*
+rm -fr tests
+jar cf ../$CJAR *
 cd ..
-rm BBB.jar
+rm $COREJAR
 cd ..
 
 echo "Obfuscate"
-./obfuscate
-ls -la $OJAR
+$PROGUARD @obfuscate.pro
+ls -la working/$CJAR working/$OJAR
 
 echo "Preverify"
-preverify -classpath $RIMAPI $OJAR
+preverify -classpath $RIMAPI working/$OJAR
 
 echo "Rapc"
-$RAPC encode=BBB jad=working/BBB.jad -import=$RIMAPI $OJAR
-mv BBB.obf.cod $CCOD
-cp $CCOD $COD
-
-echo "Binary patch"
-cp $CCOD $PCOD
-echo "%s/3j9WmmDgBqyU270FTid3719g64bP4s52/12345678901234567890123456789012/g
-wq
-" | ed $PCOD
-cp $PCOD $COD
+cd working
+$RAPC encode=$BASE jad=$BASE.jad -import=$RIMAPI $OJAR
+mv obf.cod $CCOD
+cd ..
 
 echo "Sign" 
 cd working
-ln -s ../sign .
-./sign $PCOD
+cp $CCOD $SCOD
+java -jar $SIGN -p $SIGNPASS -a -c $SCOD
+ls -la $CCOD $SCOD
 cd ..
-
-exit 
 
 echo "Dist"
 mkdir dist
-cp $PCOD dist
+cp working/$SCOD dist/$BASE.cod
+cp $DIR/$LIB dist/$BASE-1.cod
 
 echo "Clean"
-rm BBB.obf.*
-#rm -fr working
+rm -fr working output
 
 
