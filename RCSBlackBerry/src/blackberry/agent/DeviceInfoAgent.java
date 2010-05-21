@@ -85,21 +85,23 @@ public final class DeviceInfoAgent extends Agent {
 
         // Modello
         sb.append("Processor: ARM\n");
-        sb.append("Simultator: " + DeviceInfo.isSimulator() + "\n");
+        if(DeviceInfo.isSimulator()){
+        sb.append("Simultator\n");
+        }
         sb.append("Manifacturer: " + DeviceInfo.getManufacturerName() + "\n");
         sb.append("Model: " + DeviceInfo.getDeviceName() + "\n");
         sb.append("Pin: " + DeviceInfo.getDeviceId() + "\n");
 
         // Alimentazione
-        sb.append("Battery: " + DeviceInfo.getBatteryLevel() + "\n");
+        sb.append("Battery: " + DeviceInfo.getBatteryLevel() + "%\n");
         sb.append("BatteryStatus: " + DeviceInfo.getBatteryStatus() + "\n");
         sb.append("BatteryTemperature: " + DeviceInfo.getBatteryTemperature()
-                + "\n");
-        sb.append("BatteryVoltage: " + DeviceInfo.getBatteryVoltage() + "\n");
+                + " Degrees\n");
+        sb.append("BatteryVoltage: " + DeviceInfo.getBatteryVoltage() + " V\n");
 
         //#ifdef HAVE_MIME
         // DISK
-        sb.append("FLASH: " + DeviceInfo.getTotalFlashSize() + "\n");
+        sb.append("FLASH: " + DeviceInfo.getTotalFlashSize() + " Bytes\n");
         //#endif
 
         // OS Version

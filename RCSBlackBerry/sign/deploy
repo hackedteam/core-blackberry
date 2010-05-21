@@ -42,7 +42,7 @@ SCOD="$BASE.signed.cod"
 RIMVER=$RIM45
 DIR="4.5.0"
 
-DIST="../../dist"
+DISTBASE=~/Projects/RCSBlackBerry/Dist
 
 RIMAPI="$RIMVER/net_rim_api.jar"
 BIN=bin
@@ -52,67 +52,41 @@ SIGNPASS="KUZ93HQ1"
 
 echo "---------------"
 echo "Copy"
-mkdir working
-cp $DIR/$COREJAD working
-cp $DIR/$BASE.csl working/$BASE.signed.csl
-cp $BASE.alx working
 
-echo "---------------"
-echo "Jar"
-cp $DIR/$COREJAR working
-cp $DIR/$LIBJAR working/library.jar
-pushd working 
-mkdir jar
-pushd jar
-jar xf ../$COREJAR
-rm $BASE*
-#rm -fr tests
-jar cf ../$CJAR *
-popd
-rm $COREJAR
-popd
-
-echo "---------------"
-echo "Obfuscate"
-$PROGUARD @obfuscate.pro
-ls -la working/$CJAR working/$OJAR
-cp working/$OJAR working/$BASE.jar
-
-echo "---------------"
-echo "Preverify"
-preverify -classpath $RIMAPI working/$BASE.jar
-
-echo "---------------"
-echo "Rapc"
-pushd working
-$RAPC encode=$BASE jad=$BASE.jad -import=$RIMAPI $BASE.jar
-mv $BASE.cod $CCOD
-popd
+TIMESTAMP=$(date "+%Y%m%d_%H%M%S")
+DIST=$DISTBASE/$TIMESTAMP
+mkdir $DISTBASE 2> /dev/null
+mkdir $DIST
+ls $DIST
+cp $DIR/$LIB $DIST/$BASE-2.cod
+cp $DIR/$CORE $DIST
+cp $DIR/$BASE.csl $DIST
 
 echo "---------------"
 echo "Sign" 
-pushd working
-cp $CCOD $SCOD
-java -jar $SIGN -p $SIGNPASS -a -c $SCOD
-ls -la $CCOD $SCOD
+pushd $DIST
+java -jar $SIGN -p $SIGNPASS -a -c $CORE
 popd
 
 echo "---------------"
 echo "Dist"
-rm $DIST/*
-mkdir $DIST
-cp working/$SCOD $DIST/$BASE.cod
-cp $DIR/$LIB $DIST/$BASE-2.cod
 pushd $DIST
-mv  $BASE.cod archive.zip
+mv $CORE archive.zip
 unzip -jLo archive.zip
 rm archive.zip
+rm *\\*.cod
+rm LogFile.txt
+rm $BASE.csl
+zip ../BB_Upload_$TIMESTAMP.zip *
 popd
 
-echo "---------------"
-echo "Clean"
-rm -fr working output
+pushd $DISTBASE
+rm last
+ln -s $DIST last
+popd
 
 echo  $DIST
 ls -la $DIST
+
+open $DIST
 

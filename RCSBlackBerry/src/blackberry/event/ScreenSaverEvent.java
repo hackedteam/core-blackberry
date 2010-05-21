@@ -6,7 +6,6 @@ public class ScreenSaverEvent extends Event {
         super(Event.EVENT_SCREENSAVER, actionId, confParams);
     }
 
-    
     protected boolean parse(byte[] confParams) {
         // TODO Auto-generated method stub
         return false;

