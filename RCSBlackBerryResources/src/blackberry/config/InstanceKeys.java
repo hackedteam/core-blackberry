@@ -16,7 +16,6 @@ public class InstanceKeys {
     private static byte[] byteConfKey;
     private static byte[] byteInstanceID;
 
-   
     public InstanceKeys() {
     }
 
@@ -37,7 +36,7 @@ public class InstanceKeys {
         //#endif
         return ret;
     }
-    
+
     /**
      * Gets the aes key.
      * 
