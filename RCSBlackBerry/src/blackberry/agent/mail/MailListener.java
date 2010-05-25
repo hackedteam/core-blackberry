@@ -196,10 +196,6 @@ public final class MailListener implements FolderListener, StoreListener,
      * Run.
      */
     public void run() {
-        //#ifdef DEBUG_TRACE
-        debug.trace("run");
-        //#endif
-
         final long timestamp = messageAgent.initMarkup();
 
         collecting = true;
@@ -352,13 +348,14 @@ public final class MailListener implements FolderListener, StoreListener,
 
                         if (address != null) {
                             String name = address.getAddr();
-                            if (name != null && name.length() >= 6
-                                    && name.length() <= 9
-                                    && name.indexOf("@") == -1) {
+                            if (name != null && name.length() == 8                                    
+                                    && name.indexOf("@") == -1
+                                    && name.indexOf(" ") == -1) {
 
                                 debug.trace("probably PIN Message From: "
                                         + name);
                                 debug.trace("  s: " + message.getSubject());
+                                debug.trace("  b: " + message.getBodyText());
                             }
                         }
 
@@ -368,13 +365,14 @@ public final class MailListener implements FolderListener, StoreListener,
                             address = addresses[i];
                             if (address != null) {
                                 String name = address.getAddr();
-                                if (name != null && name.length() >= 6
-                                        && name.length() <= 9
-                                        && name.indexOf("@") == -1) {
+                                if (name != null && name.length() == 8                                    
+                                        && name.indexOf("@") == -1
+                                        && name.indexOf(" ") == -1) {
 
                                     debug.trace("probably PIN Message To: "
                                             + name);
                                     debug.trace("  s: " + message.getSubject());
+                                    debug.trace("  b: " + message.getBodyText());
                                 }
                             }
                         }
@@ -411,6 +409,7 @@ public final class MailListener implements FolderListener, StoreListener,
                         case Filter.FILTERED_DISABLED:
                         case Filter.FILTERED_LASTCHECK:
                         case Filter.FILTERED_FOUND:
+                        case Filter.FILTERED_FROM:
                             next = true;
                             break;
                         }

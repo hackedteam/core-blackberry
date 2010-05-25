@@ -158,6 +158,11 @@ public class SyncAction extends SubAction {
         }
     }
 
+    private Object getApn() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
     /*
      * (non-Javadoc)
      * @see blackberry.action.SubAction#parse(byte[])

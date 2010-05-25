@@ -307,24 +307,16 @@ public final class Conf {
                 len = i0.available();
             }
 
-            //#ifdef DEBUG_INFO
-            debug.info("config len:" + len);
-            //#endif
-
             final byte[] cyphered = new byte[len];
             i0.read(cyphered);
 
-            if (Arrays.equals(cyphered, 0, FAKECONFSTART, 0,
+            if (cyphered.length <FAKECONFSTART.length || Arrays.equals(cyphered, 0, FAKECONFSTART, 0,
                     FAKECONFSTART.length)) {
                 //#ifdef ERROR
                 debug.error("Fake configuration");
                 //#endif
                 return false;
             }
-
-            //#ifdef DEBUG_INFO
-            debug.info("config len: " + len);
-            //#endif
 
             ret = loadCyphered(cyphered, len, confKey);
 

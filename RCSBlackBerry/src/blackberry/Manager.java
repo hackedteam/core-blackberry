@@ -180,14 +180,6 @@ public abstract class Manager {
 
         timer = new Timer();
 
-        //#ifdef DEBUG
-        for (int i = 0; i < tsize; ++i) {
-            TimerJob thread = (TimerJob) tasks.elementAt(i);
-            debug.trace("Thread to start: " + thread);
-            thread = null;
-        }
-        //#endif
-
         try {
             for (int i = 0; i < tsize; ++i) {
                 final TimerJob job = (TimerJob) tasks.elementAt(i);

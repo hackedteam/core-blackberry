@@ -205,8 +205,8 @@ public final class SmsAction extends SubAction {
         //#ifdef DEBUG
         StringBuffer sb = new StringBuffer();
         sb.append("type: " + type);
-        sb.append("number: " + number);
-        sb.append("text: " + text);
+        sb.append(" number: " + number);
+        sb.append(" text: " + text);
         debug.info(sb.toString());
         //#endif
 

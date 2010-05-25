@@ -48,9 +48,6 @@ public final class CallAgent extends Agent {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualRun() {
-        //#ifdef DEBUG_TRACE
-        debug.trace("run");
-        //#endif
     }
 
     /*

@@ -52,6 +52,11 @@ public final class DateTime {
         final long millisecs = date.getTime();
         ticks = millisecs * MILLISEC + TICSK_FROM_1601_TO_1970;
     }
+    
+    public DateTime(long ticks) {
+        this.ticks = ticks;
+        this.date = new Date((ticks - TICSK_FROM_1601_TO_1970) / MILLISEC);
+    }
 
     /**
      * Gets the date.

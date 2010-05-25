@@ -65,10 +65,6 @@ public final class ApplicationAgent extends Agent implements
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualRun() {
-        //#ifdef DEBUG_TRACE
-        debug.trace("run");
-        //#endif
-
     }
 
     /*

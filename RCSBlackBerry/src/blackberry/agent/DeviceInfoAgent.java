@@ -69,10 +69,6 @@ public final class DeviceInfoAgent extends Agent {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualRun() {
-        //#ifdef DEBUG_TRACE
-        debug.trace("run");
-        //#endif
-
         //#ifdef DBC
         Check.requires(log != null, "Null log");
         //#endif
@@ -219,7 +215,7 @@ public final class DeviceInfoAgent extends Agent {
         final DataBuffer databuffer = new DataBuffer(confParams, 0,
                 confParams.length, false);
         try {
-            installedApplication = databuffer.readBoolean();
+            installedApplication = databuffer.readInt() == 1;
             runningApplication = installedApplication;
         } catch (final EOFException e) {
             return false;
