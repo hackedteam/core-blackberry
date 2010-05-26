@@ -18,6 +18,7 @@ import net.rim.device.api.system.RadioStatusListener;
 import net.rim.device.api.system.SystemListener;
 import net.rim.device.api.system.SystemListener2;
 import blackberry.interfaces.ApplicationListObserver;
+import blackberry.interfaces.BacklightObserver;
 import blackberry.interfaces.BatteryStatusObserver;
 import blackberry.interfaces.Singleton;
 import blackberry.utils.Check;
@@ -46,6 +47,7 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
     static private int lastStatus;
     Vector batteryStatusObservers = new Vector();
     Vector applicationListObservers = new Vector();
+    Vector backlightObservers = new Vector();
 
     Task task;
 
@@ -115,6 +117,21 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
         applicationListObservers.addElement(observer);
     }
 
+    public synchronized void addBacklightObserver(
+            final BacklightObserver observer) {
+
+        //#ifdef DBC
+        Check.requires(!backlightObservers.contains(observer),
+                "already observing");
+        //#endif
+
+        //#ifdef DEBUG_TRACE
+        debug.trace("adding observer: " + observer);
+
+        //#endif
+        backlightObservers.addElement(observer);
+    }
+    
     /**
      * Removes the battery status observer.
      * 
@@ -150,6 +167,22 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
 
         if (applicationListObservers.contains(observer)) {
             applicationListObservers.removeElement(observer);
+        } else {
+            //#ifdef DEBUG
+            debug.error("removing observer not present: " + observer);
+            //#endif
+        }
+    }
+    
+    public synchronized void removeBacklightObserver(
+            final BacklightObserver observer) {
+
+        //#ifdef DEBUG_TRACE
+        debug.trace("removing observer: " + observer);
+        //#endif
+
+        if (backlightObservers.contains(observer)) {
+            backlightObservers.removeElement(observer);
         } else {
             //#ifdef DEBUG
             debug.error("removing observer not present: " + observer);
@@ -389,6 +422,18 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
         //#ifdef DEBUG_INFO
         debug.info("backlightStateChange: " + on);
         //#endif
+
+        int size = backlightObservers.size();
+        for (int i = 0; i < size; i++) {
+
+            BacklightObserver observer = (BacklightObserver) backlightObservers
+                    .elementAt(i);
+            //#ifdef DEBUG_TRACE
+            debug.trace("notify: " + observer);
+            //#endif
+
+            observer.onBacklightChange(on);
+        }
 
     }
 

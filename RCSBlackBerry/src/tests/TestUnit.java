@@ -59,12 +59,12 @@ public abstract class TestUnit {
 
         //#ifdef TEST
         final Keys keys = Keys.getInstance();
-        InstanceKeys instance = keys.getInstanceKeys();
+       /* InstanceKeys instance = keys.getInstanceKeys();
 
         instance.setAesKey(LogKey);
         instance.setChallengeKey(ProtoKey);
         instance.setBuildID("RCS_0000000323");
-        instance.setConfKey(ConfKey);
+        instance.setConfKey(ConfKey);*/
         //#endif
 
     }

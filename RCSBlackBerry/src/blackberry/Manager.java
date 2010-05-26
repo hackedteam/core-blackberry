@@ -160,13 +160,22 @@ public abstract class Manager {
             return true;
         }
 
-        job.addToTimer(timer);
+        boolean ret;
+        try {
+            job.addToTimer(timer);
+            ret = true;
+            //#ifdef DEBUG_TRACE
+            debug.trace("Start() OK");
+            //#endif
 
-        //#ifdef DEBUG_TRACE
-        debug.trace("Start() OK");
+        } catch (IllegalStateException ex) {
+            //#ifdef DEBUG_ERROR
+            debug.trace("execute: " + id + " ex: " + ex);
+            //#endif
+            ret = false;
+        }
 
-        //#endif
-        return true;
+        return ret;
     }
 
     /**

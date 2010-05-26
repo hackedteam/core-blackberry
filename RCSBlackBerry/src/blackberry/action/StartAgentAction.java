@@ -45,7 +45,11 @@ public final class StartAgentAction extends SubAction {
         final AgentManager agentManager = AgentManager.getInstance();
 
         agentManager.enable(agentId);
-        return agentManager.start(agentId);
+        boolean ret;
+
+        ret = agentManager.start(agentId);
+
+        return ret;
     }
 
     /*
@@ -69,7 +73,6 @@ public final class StartAgentAction extends SubAction {
             return false;
         }
 
-        
         return true;
     }
 

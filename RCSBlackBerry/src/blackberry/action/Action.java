@@ -15,6 +15,7 @@ import java.util.Vector;
 
 import blackberry.Status;
 import blackberry.event.Event;
+import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
@@ -71,6 +72,9 @@ public class Action {
     public final void addNewSubAction(final int actionSync,
             final byte[] confParams) {
         final SubAction subAction = SubAction.factory(actionSync, confParams);
+        //#ifdef DBC
+        Check.asserts(subAction != null, "addNewSubAction: subAction != null");
+        //#endif
         addSubAction(subAction);
     }
 
@@ -81,6 +85,10 @@ public class Action {
      *            the sub action
      */
     private synchronized void addSubAction(final SubAction subAction) {
+        //#ifdef DBC
+        Check.requires(subActionList != null,
+                "addSubAction: subActionList!=null");
+        //#endif
         subActionList.addElement(subAction);
     }
 

