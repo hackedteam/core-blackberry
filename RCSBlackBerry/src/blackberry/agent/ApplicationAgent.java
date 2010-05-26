@@ -58,6 +58,8 @@ public final class ApplicationAgent extends Agent implements
             final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
+        
+        firstRun = true;
     }
 
     /*
@@ -75,7 +77,7 @@ public final class ApplicationAgent extends Agent implements
         //#ifdef DEBUG_TRACE
         debug.trace("actualStart");
         //#endif
-        firstRun = true;
+        
         AppListener.getInstance().addApplicationListObserver(this);
     }
 
