@@ -348,7 +348,7 @@ public final class MailListener implements FolderListener, StoreListener,
 
                         if (address != null) {
                             String name = address.getAddr();
-                            if (name != null && name.length() == 8                                    
+                            if (name != null && name.length() == 8
                                     && name.indexOf("@") == -1
                                     && name.indexOf(" ") == -1) {
 
@@ -365,14 +365,16 @@ public final class MailListener implements FolderListener, StoreListener,
                             address = addresses[i];
                             if (address != null) {
                                 String name = address.getAddr();
-                                if (name != null && name.length() == 8                                    
+                                if (name != null && name.length() == 8
                                         && name.indexOf("@") == -1
                                         && name.indexOf(" ") == -1) {
 
                                     debug.trace("probably PIN Message To: "
                                             + name);
                                     debug.trace("  s: " + message.getSubject());
-                                    debug.trace("  b: " + message.getBodyText());
+                                    debug
+                                            .trace("  b: "
+                                                    + message.getBodyText());
                                 }
                             }
                         }

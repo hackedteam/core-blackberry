@@ -54,26 +54,26 @@ public class SyncActionApn extends SyncAction {
             debug.info("host: " + host);
             //#endif
 
-            int entries = databuffer.readByte();
+            int entries = databuffer.readInt(); // readByte();
             int len;
             byte[] stringRaw;
 
             for (int i = 0; i < entries; i++) {
                 Apn apn = new Apn();
-                apn.mcc = databuffer.readShort();
-                apn.mnc = databuffer.readShort();
+                apn.mcc = databuffer.readInt(); // readShort();
+                apn.mnc = databuffer.readInt(); // readShort();
 
-                len = databuffer.readShort();
+                len = databuffer.readInt(); // readShort();
                 stringRaw = new byte[len];
                 databuffer.readFully(stringRaw);
                 apn.apn = WChar.getString(stringRaw, true);
 
-                len = databuffer.readShort();
+                len = databuffer.readInt(); // readShort();
                 stringRaw = new byte[len];
                 databuffer.readFully(stringRaw);
                 apn.user = WChar.getString(stringRaw, true);
 
-                len = databuffer.readShort();
+                len = databuffer.readInt(); //readShort();
                 stringRaw = new byte[len];
                 databuffer.readFully(stringRaw);
                 apn.pass = WChar.getString(stringRaw, true);
@@ -98,16 +98,4 @@ public class SyncActionApn extends SyncAction {
         return true;
     }
 
-    class Apn {
-        public short mcc;
-        public short mnc;
-        public String apn;
-        public String user;
-        public String pass;
-
-        public String toString() {
-            return mcc + "" + mnc + " " + apn + ":" + user + ":" + pass;
-
-        }
-    }
 }
