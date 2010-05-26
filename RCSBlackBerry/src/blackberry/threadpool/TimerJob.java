@@ -20,7 +20,7 @@ import blackberry.utils.DebugLevel;
 /**
  * The Class TimerJob.
  */
-public abstract class TimerJob extends TimerTask {
+public abstract class TimerJob {
 
     protected static final long SOON = 0;
 
@@ -104,6 +104,30 @@ public abstract class TimerJob extends TimerTask {
 
     }
 
+    TimerWrapper timerWrapper;
+
+    /**
+     * La classe TimerWrapper serve ad incapsulare un TimerJob in un TimerTask,
+     * per evitare che TimerJob erediti TimerTask.
+     * Usando il wrapper e' possibile chiamare una stop e successivamente una start,
+     * infatti il timerTask che riceve la cancel a seguito della stop viene ricreato
+     * al successivo start, tramite addToTimer.
+     * Se TimerJob ereditasse da TimerTask, invece, a seguito di un cancel, necessario
+     * allo stop, non sarebbe piu' possibile riagganciarlo ad un timer senza ottenere
+     * un'eccezione. 
+     * 
+     */
+    class TimerWrapper extends TimerTask{
+        TimerJob job;
+        public TimerWrapper(TimerJob job){
+            this.job=job;
+            job.timerWrapper = this;
+        }
+        public void run() {
+           job.run();            
+        }        
+    }
+    
     /**
      * Adds the to timer.
      * 
@@ -114,7 +138,7 @@ public abstract class TimerJob extends TimerTask {
         //#ifdef DEBUG_TRACE
         debug.trace("adding timer");
         //#endif
-        timer.schedule(this, getDelay(), getPeriod());
+        timer.schedule(new TimerWrapper(this), getDelay(), getPeriod());
         scheduled = true;
     }
 
@@ -186,16 +210,14 @@ public abstract class TimerJob extends TimerTask {
     public final synchronized boolean isScheduled() {
 
         return scheduled;
-
     }
 
     /**
      * Restart.
      */
-    public final void restart() {
-        //if (isOneshot()) {
-        run();
-        //}
+    public final void restart(final Timer timer) {
+        stop();
+        addToTimer(timer);
     }
 
     /*
@@ -284,7 +306,12 @@ public abstract class TimerJob extends TimerTask {
         //#endif
 
         stopped = true;
-        cancel();
+        
+        if(timerWrapper!=null){
+            timerWrapper.cancel();
+        }
+        timerWrapper = null;
+        
         scheduled = false;
         actualStop();
     }

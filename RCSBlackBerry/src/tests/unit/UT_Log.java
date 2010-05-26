@@ -59,8 +59,7 @@ public final class UT_Log extends TestUnit {
 
         final Agent agent = Agent.factory(Agent.AGENT_DEVICE, true, Utils.intToByteArray(0));
 
-        final Thread thread = new Thread(agent);
-        thread.start();
+       
         agent.stop();
 
         //#ifdef DEBUG_TRACE

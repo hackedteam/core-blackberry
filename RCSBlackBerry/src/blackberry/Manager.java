@@ -60,9 +60,9 @@ public abstract class Manager {
      */
 
     /**
-     * Gets the all items.
+     * Gets the all the TimerJob items.
      * 
-     * @return the all items
+     * @return the TimerJob items
      */
     public abstract Vector getAllItems();
 
@@ -95,6 +95,10 @@ public abstract class Manager {
      * @return true, if successful
      */
     public final boolean reStart(final int id) {
+        if(timer==null){
+            timer = new Timer();
+        }
+        
         //#ifdef DBC
         Check.requires(timer != null, "Timer null");
         //#endif
@@ -115,7 +119,7 @@ public abstract class Manager {
         }
 
         if (job.isEnabled() && job.isScheduled()) {
-            job.restart();
+            job.restart(timer);
         } else {
             //#ifdef DEBUG
             debug.warn("cannot restart: " + id + " enabled:" + job.isEnabled()
@@ -134,6 +138,10 @@ public abstract class Manager {
      */
     public final synchronized boolean start(final int id) {
 
+        if(timer==null){
+            timer = new Timer();
+        }
+        
         //#ifdef DBC
         Check.requires(timer != null, "Timer null");
         //#endif

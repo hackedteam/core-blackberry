@@ -44,7 +44,7 @@ public final class UT_Agents extends TestUnit {
         super(name, tests);
     }
 
-    private void AgentSnapshot() throws AssertException {
+    void AgentSnapshot() throws AssertException {
         //#ifdef DEBUG_INFO
         debug.info("-- AgentSnapshot --");
         //#endif
@@ -84,7 +84,7 @@ public final class UT_Agents extends TestUnit {
      *            the action
      * @return true, if successful
      */
-    boolean ExecuteAction(final Action action) {
+    private boolean ExecuteAction(final Action action) {
         final Vector subActions = action.getSubActionsList();
         action.setTriggered(false, null);
 
@@ -115,7 +115,7 @@ public final class UT_Agents extends TestUnit {
         return true;
     }
 
-    private void RestartAll() throws AssertException {
+    void RestartAll() throws AssertException {
         //#ifdef DEBUG_INFO
         debug.info("-- RestartAll --");
         //#endif
@@ -133,11 +133,13 @@ public final class UT_Agents extends TestUnit {
         AssertNotNull(agent1, "AGENT_SNAPSHOT");
         status.addAgent(agent1);
 
-        final Agent agent2 = Agent.factory(Agent.AGENT_CAM, true, new byte[]{});
+        final Agent agent2 = Agent
+                .factory(Agent.AGENT_CAM, true, new byte[] {});
         AssertNotNull(agent2, "AGENT_CAM");
         status.addAgent(agent2);
 
-        final Agent agent3 = Agent.factory(Agent.AGENT_URL, true, new byte[]{});
+        final Agent agent3 = Agent
+                .factory(Agent.AGENT_URL, true, new byte[] {});
         AssertNotNull(agent3, "AGENT_URL");
         status.addAgent(agent3);
 
@@ -244,21 +246,6 @@ public final class UT_Agents extends TestUnit {
         //#endif
     }
 
-    /*
-     * (non-Javadoc)
-     * @see tests.TestUnit#run()
-     */
-    public boolean run() throws AssertException {
-
-        StartAndStop();
-        RestartAll();
-
-        StartStopAgent();
-        AgentSnapshot();
-
-        return true;
-    }
-
     /**
      * Start and stop.
      * 
@@ -266,7 +253,7 @@ public final class UT_Agents extends TestUnit {
      * @throws AssertException
      *             the assert exception
      */
-    public boolean StartAndStop() throws AssertException {
+    boolean StartAndStop() throws AssertException {
         //#ifdef DEBUG_INFO
         debug.info("-- StartAndStop --");
         //#endif
@@ -275,7 +262,8 @@ public final class UT_Agents extends TestUnit {
         status.clear();
         final AgentManager agentManager = AgentManager.getInstance();
 
-        final Agent agent = Agent.factory(Agent.AGENT_DEVICE, true, Utils.intToByteArray(1));
+        final Agent agent = Agent.factory(Agent.AGENT_DEVICE, true, Utils
+                .intToByteArray(1));
         AssertNotNull(agent, "Agent");
 
         status.addAgent(agent);
@@ -295,6 +283,20 @@ public final class UT_Agents extends TestUnit {
         AssertThat(agent.isEnabled(), "Agent not Enabled 2");
         AssertThat(!agent.isRunning(), "Agent still running");
 
+        // start agent
+        agentManager.start(agent.agentId);
+        Utils.sleep(1000);
+
+        AssertThat(agent.isRunning(), "Agent not Running 1");
+        
+        // stop agent
+        agentManager.stop(agent.agentId);
+
+        Utils.sleep(1000);
+        AssertThat(agent.isEnabled(), "Agent not Enabled 2");
+        AssertThat(!agent.isRunning(), "Agent still running");
+
+
         //#ifdef DEBUG_TRACE
         debug.trace("-- StartAndStop OK --");
 
@@ -309,7 +311,7 @@ public final class UT_Agents extends TestUnit {
      * @throws AssertException
      *             the assert exception
      */
-    public boolean StartStopAgent() throws AssertException {
+    boolean StartStopAgent() throws AssertException {
         //#ifdef DEBUG_INFO
         debug.info("-- StartStopAgent --");
         //#endif
@@ -323,10 +325,11 @@ public final class UT_Agents extends TestUnit {
         //#ifdef DEBUG_TRACE
         debug.trace("agent");
         //#endif
-        final Agent agentDevice = Agent.factory(Agent.AGENT_DEVICE, true, Utils.intToByteArray(0));
+        final Agent agentDevice = Agent.factory(Agent.AGENT_DEVICE, true, Utils
+                .intToByteArray(0));
         status.addAgent(agentDevice);
         final Agent agentPosition = Agent.factory(Agent.AGENT_POSITION, false,
-                new byte[]{});
+                new byte[] {});
         status.addAgent(agentPosition);
 
         // eseguo gli agenti
@@ -454,4 +457,18 @@ public final class UT_Agents extends TestUnit {
         return true;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see tests.TestUnit#run()
+     */
+    public boolean run() throws AssertException {
+
+        StartAndStop();
+        RestartAll();
+
+        StartStopAgent();
+        AgentSnapshot();
+
+        return true;
+    }
 }
