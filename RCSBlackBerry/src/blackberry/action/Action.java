@@ -136,12 +136,12 @@ public class Action {
         //#endif
         triggered = value;
         if (value) {
-            status.addActionTriggered(this);
-            triggeringEvent = event;
+            status.addActionTriggered(this);            
         } else {
             status.removeActionTriggered(this);
-            triggeringEvent = null;
         }
+        
+        triggeringEvent = event;
     }
 
     /*
