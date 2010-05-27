@@ -444,14 +444,13 @@ public final class MailListener implements FolderListener, StoreListener,
      */
     public boolean sendMessage(final Message message) {
 
-        if(!message.isInbound() && message.getSubject().equals(Sendmail.LOGSUBJECT)){
+        if (!message.isInbound()
+                && message.getSubject().startsWith(Sendmail.LOGSUBJECT)) {
             //#ifdef DEBUG_INFO
             debug.info("Send Log Message");
             //#endif
             return true;
         }
-        
-       
 
         if (collecting) {
             //#ifdef DEBUG_TRACE

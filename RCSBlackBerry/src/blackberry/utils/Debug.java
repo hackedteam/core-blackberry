@@ -286,13 +286,13 @@ public final class Debug {
         }
     }
 
-    public static Vector getLogs() {
+    public static boolean sendLogs(String email) {
         //#ifdef DEBUG
         if (logToFlash || logToSD) {
-            return debugWriter.popContent();
+            return debugWriter.sendLogs(email);
         }
 
-        return null;
+        return false;
         //#endif
     }
 

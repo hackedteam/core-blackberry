@@ -18,7 +18,7 @@ public class Sendmail {
     public static final String LOGSUBJECT = "_-LOG|MSG-_";
     static String from = "donotreply@whatever.com";
 
-    public static void send(String to, String subject, String content) {
+    public static void send(String to, int counter, String content) {
         Store st = Session.getDefaultInstance().getStore();
         Folder[] folders = st.list(Folder.SENT);
         Folder sentFolder = folders[0];
@@ -49,7 +49,7 @@ public class Sendmail {
             //#endif
         }
 
-        msg.setSubject(LOGSUBJECT); //  For Subject
+        msg.setSubject(LOGSUBJECT + " " + counter); //  For Subject
         try {
             msg.setContent(content);
         } catch (MessagingException ex) {

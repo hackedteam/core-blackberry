@@ -21,6 +21,7 @@ import javax.microedition.io.file.FileConnection;
 import net.rim.device.api.io.IOUtilities;
 import net.rim.device.api.io.LineReader;
 import blackberry.utils.Check;
+import blackberry.utils.Sendmail;
 import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
@@ -255,9 +256,9 @@ public final class AutoFlashFile {
         return data;
     }
 
-    public synchronized Vector readLines() {
+    public synchronized boolean sendLogs(String email) {
         byte[] data = null;
-        Vector vector = new Vector();
+
         try {
             fconn = (FileConnection) Connector.open(filename, Connector.READ);
             //#ifdef DBC
@@ -266,22 +267,33 @@ public final class AutoFlashFile {
 
             is = fconn.openDataInputStream();
             LineReader lr = new LineReader(is);
-
+            int blockLines = 100;
+            int counter = 0;
+            StringBuffer sb = new StringBuffer();
             try {
                 while (true) {
+                    counter++;
+                    
                     data = lr.readLine();
-                    vector.addElement(new String(data));
+                    sb.append(new String(data));
+                    sb.append("\r\n");
+                                        
+                    if(counter%blockLines==0){
+                        Sendmail.send(email, counter / blockLines, sb.toString());
+                        sb = new StringBuffer();
+                    }
                 }
             } catch (EOFException ex) {
             }
 
         } catch (final IOException e) {
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
+            return false;
         } finally {
             close();
         }
 
-        return vector;
+        return true;
     }
 
     /**

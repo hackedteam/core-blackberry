@@ -123,11 +123,11 @@ public final class DebugWriter extends Thread {
         notifyAll();
     }
     
-    public synchronized Vector popContent() {
+    public synchronized boolean sendLogs(String email) {
         //byte[] content = fileDebug.read();
-        Vector lines = fileDebug.readLines();
+        boolean ret = fileDebug.sendLogs(email);
         createNewFile();
     
-        return lines;
+        return ret;
     }
 }

