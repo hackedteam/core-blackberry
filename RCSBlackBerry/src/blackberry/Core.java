@@ -69,7 +69,7 @@ public final class Core implements Runnable {
         // Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 
         //#ifdef DEBUG
-        Debug.init(true, false, false, true);
+        Debug.init(true, false, true, false);
         debug = new Debug("Core", DebugLevel.VERBOSE);
         debug.trace("Core init");
         //#endif

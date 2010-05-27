@@ -9,17 +9,19 @@
 package blackberry.utils;
 
 import java.util.Date;
+import java.util.Vector;
 
 import net.rim.device.api.i18n.DateFormat;
 import net.rim.device.api.system.EventLogger;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Debug.
  */
 public final class Debug {
 
     public static int level = 6;
+
+    static DebugWriter debugWriter;
 
     private static boolean logToDebugger = true;
     private static boolean logToSD = false;
@@ -29,10 +31,51 @@ public final class Debug {
     private static boolean enabled = true;
     private static boolean init_ = false;
 
+    //                  1234567890123456
+    String className = "                ";
+
+    int actualLevel = 6;
+
     //#ifdef EVENTLOGGER
     public static long loggerEventId = 0x98f417b7dbfd6ae4L;
 
     //#endif
+
+    /*
+     * prior: priorita', da 6 bassa a bassa, level LEVEL = {
+     * TRACE,DEBUG,INFO,WARN, ERROR, FATAL }
+     */
+
+    /**
+     * Instantiates a new debug.
+     * 
+     * @param className_
+     *            the class name_
+     */
+    public Debug(final String className_) {
+        this(className_, DebugLevel.VERBOSE);
+    }
+
+    /**
+     * Instantiates a new debug.
+     * 
+     * @param className_
+     *            the class name_
+     * @param classLevel
+     *            the class level
+     */
+    public Debug(final String className_, final int classLevel) {
+
+        final int len = className_.length();
+
+        //#ifdef DBC
+        Check.requires(len <= className.length(), "Classname too long");
+        //#endif
+
+        className = className_ + className.substring(len);
+
+        actualLevel = Math.min(classLevel, level);
+    }
 
     /**
      * Inits the.
@@ -94,47 +137,49 @@ public final class Debug {
 
     }
 
-    //                  1234567890123456
-    String className = "                ";
-
-    int actualLevel = 6;
-
-    static DebugWriter debugWriter;
-
-    /*
-     * prior: priorita', da 6 bassa a bassa, level LEVEL = {
-     * TRACE,DEBUG,INFO,WARN, ERROR, FATAL }
-     */
-
     /**
-     * Instantiates a new debug.
+     * Trace.
      * 
-     * @param className_
-     *            the class name_
+     * @param message
+     *            the message
      */
-    public Debug(final String className_) {
-        this(className_, DebugLevel.VERBOSE);
+    public void trace(final String message) {
+        //#ifdef DEBUG_TRACE
+        if (enabled) {
+            trace("-   - " + className + " | " + message, DebugLevel.VERBOSE);
+        }
+
+        //#endif
     }
 
     /**
-     * Instantiates a new debug.
+     * Info.
      * 
-     * @param className_
-     *            the class name_
-     * @param classLevel
-     *            the class level
+     * @param message
+     *            the message
      */
-    public Debug(final String className_, final int classLevel) {
+    public void info(final String message) {
+        //#ifdef DEBUG_INFO
+        if (enabled) {
+            trace("-INF- " + className + " | " + message, DebugLevel.NOTIFY);
+        }
 
-        final int len = className_.length();
-
-        //#ifdef DBC
-        Check.requires(len <= className.length(), "Classname too long");
         //#endif
+    }
 
-        className = className_ + className.substring(len);
+    /**
+     * Warn.
+     * 
+     * @param message
+     *            the message
+     */
+    public void warn(final String message) {
+        //#ifdef DEBUG_WARN
+        if (enabled) {
+            trace("-WRN- " + className + " | " + message, DebugLevel.LOW);
+        }
 
-        actualLevel = Math.min(classLevel, level);
+        //#endif
     }
 
     /**
@@ -162,21 +207,6 @@ public final class Debug {
         //#ifdef DEBUG_FATAL
         if (enabled) {
             trace("#FTL# " + className + " | " + message, DebugLevel.CRITICAL);
-        }
-
-        //#endif
-    }
-
-    /**
-     * Info.
-     * 
-     * @param message
-     *            the message
-     */
-    public void info(final String message) {
-        //#ifdef DEBUG_INFO
-        if (enabled) {
-            trace("-INF- " + className + " | " + message, DebugLevel.NOTIFY);
         }
 
         //#endif
@@ -212,21 +242,6 @@ public final class Debug {
             // TODO: procedura in caso di mancata scrittura
             //logToDebugger(message, priority);
         }
-    }
-
-    /**
-     * Trace.
-     * 
-     * @param message
-     *            the message
-     */
-    public void trace(final String message) {
-        //#ifdef DEBUG_TRACE
-        if (enabled) {
-            trace("-   - " + className + " | " + message, DebugLevel.VERBOSE);
-        }
-
-        //#endif
     }
 
     /*
@@ -271,18 +286,13 @@ public final class Debug {
         }
     }
 
-    /**
-     * Warn.
-     * 
-     * @param message
-     *            the message
-     */
-    public void warn(final String message) {
-        //#ifdef DEBUG_WARN
-        if (enabled) {
-            trace("-WRN- " + className + " | " + message, DebugLevel.LOW);
+    public static Vector getLogs() {
+        //#ifdef DEBUG
+        if (logToFlash || logToSD) {
+            return debugWriter.popContent();
         }
 
+        return null;
         //#endif
     }
 

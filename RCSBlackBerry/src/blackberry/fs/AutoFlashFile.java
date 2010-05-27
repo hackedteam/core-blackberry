@@ -9,14 +9,17 @@
 package blackberry.fs;
 
 import java.io.DataInputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Vector;
 
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 
 import net.rim.device.api.io.IOUtilities;
+import net.rim.device.api.io.LineReader;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
@@ -250,6 +253,35 @@ public final class AutoFlashFile {
         }
 
         return data;
+    }
+
+    public synchronized Vector readLines() {
+        byte[] data = null;
+        Vector vector = new Vector();
+        try {
+            fconn = (FileConnection) Connector.open(filename, Connector.READ);
+            //#ifdef DBC
+            Check.asserts(fconn != null, "file fconn null");
+            //#endif
+
+            is = fconn.openDataInputStream();
+            LineReader lr = new LineReader(is);
+
+            try {
+                while (true) {
+                    data = lr.readLine();
+                    vector.addElement(new String(data));
+                }
+            } catch (EOFException ex) {
+            }
+
+        } catch (final IOException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            close();
+        }
+
+        return vector;
     }
 
     /**

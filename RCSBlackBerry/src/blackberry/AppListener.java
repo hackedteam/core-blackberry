@@ -260,7 +260,7 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
      * @param stoppedListMod
      * @param startedListMod
      */
-    public void applicationListChange(final Vector startedListName,
+    public synchronized void applicationListChange(final Vector startedListName,
             final Vector stoppedListName, final Vector startedListMod,
             final Vector stoppedListMod) {
         //#ifdef DEBUG_INFO

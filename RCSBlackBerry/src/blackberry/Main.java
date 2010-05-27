@@ -45,6 +45,10 @@ public class Main extends Application {
 
         if (binaryPatched) {
             new Main().enterEventDispatcher();
+        }else{
+            //#ifdef DEBUG
+            System.out.println("Not binary patched, bailing out!");
+            //#endif
         }
     }
 
