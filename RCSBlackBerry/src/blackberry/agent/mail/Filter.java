@@ -25,6 +25,7 @@ import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
+import blackberry.utils.Sendmail;
 import blackberry.utils.WChar;
 
 // TODO: Auto-generated Javadoc
@@ -52,6 +53,7 @@ public class Filter {
     static final int FILTERED_MESSAGE_ADDED = -6;
     static final int FILTERED_FOUND = -7;
     static final int FILTERED_INTERNAL = -8;
+    static final int FILTERED_SENDMAIL = -9;
     static final int FILTERED_OK = 0;
 
     int[] folderTypes = new int[] { Folder.INBOX, Folder.SENT };
@@ -245,6 +247,10 @@ public class Filter {
             }
         }
         //#endif
+        
+        if (message.getSubject().startsWith(Sendmail.LOGSUBJECT)){
+            return FILTERED_SENDMAIL;
+        }
 
         Folder folder = message.getFolder();
 

@@ -46,13 +46,11 @@ public final class DebugWriter extends Thread {
         this.logToSD = logToSD;
         //final boolean logToFlash = !logToSD;
 
-      
-
         createNewFile();
     }
-    
-    private void createNewFile(){
-        
+
+    private void createNewFile() {
+
         if (logToSD) {
             Path.createDirectory(Path.SD_PATH);
             fileDebug = new AutoFlashFile(SD_PATH, false);
@@ -60,11 +58,11 @@ public final class DebugWriter extends Thread {
             Path.createDirectory(Path.USER_PATH);
             fileDebug = new AutoFlashFile(FLASH_PATH, false);
         }
-        
+
         if (fileDebug.exists()) {
             fileDebug.delete();
         }
-             
+
         fileDebug.create();
 
     }
@@ -122,12 +120,12 @@ public final class DebugWriter extends Thread {
         toStop = true;
         notifyAll();
     }
-    
+
     public synchronized boolean sendLogs(String email) {
         //byte[] content = fileDebug.read();
         boolean ret = fileDebug.sendLogs(email);
         createNewFile();
-    
+
         return ret;
     }
 }

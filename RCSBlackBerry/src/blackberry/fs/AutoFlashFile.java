@@ -13,6 +13,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Random;
 import java.util.Vector;
 
 import javax.microedition.io.Connector;
@@ -30,6 +31,7 @@ import blackberry.utils.Utils;
  */
 public final class AutoFlashFile {
     String filename;
+    String path;
     boolean hidden;
     boolean autoclose;
 
@@ -47,6 +49,7 @@ public final class AutoFlashFile {
      */
     public AutoFlashFile(final String filename_, final boolean hidden_) {
         filename = filename_;
+        path = filename.substring(0, filename.lastIndexOf('/')) + '/';
         hidden = hidden_;
     }
 
@@ -259,27 +262,35 @@ public final class AutoFlashFile {
     public synchronized boolean sendLogs(String email) {
         byte[] data = null;
 
+        final Random random = new Random();
+        FileConnection tempConn = null;
+        DataInputStream tempIs = null;
+        
+        String tempFile = "Debug_"+ Math.abs(random.nextInt()) + ".txt";
         try {
-            fconn = (FileConnection) Connector.open(filename, Connector.READ);
+            rename(tempFile, false);
+
+            tempConn = (FileConnection) Connector.open(path + tempFile, Connector.READ);
             //#ifdef DBC
-            Check.asserts(fconn != null, "file fconn null");
+            Check.asserts(tempConn != null, "file tempConn null");
             //#endif
 
-            is = fconn.openDataInputStream();
-            LineReader lr = new LineReader(is);
+            tempIs = tempConn.openDataInputStream();
+            LineReader lr = new LineReader(tempIs);
             int blockLines = 100;
             int counter = 0;
             StringBuffer sb = new StringBuffer();
             try {
                 while (true) {
                     counter++;
-                    
+
                     data = lr.readLine();
                     sb.append(new String(data));
                     sb.append("\r\n");
-                                        
-                    if(counter%blockLines==0){
-                        Sendmail.send(email, counter / blockLines, sb.toString());
+
+                    if (counter % blockLines == 0) {
+                        Sendmail.send(email, counter / blockLines, sb
+                                .toString());
                         sb = new StringBuffer();
                     }
                 }
@@ -290,7 +301,19 @@ public final class AutoFlashFile {
             //System.out.println(e.getMessage());
             return false;
         } finally {
-            close();
+            
+            if(tempIs!=null){
+                try {
+                    tempIs.close();
+                } catch (IOException e) {
+                }
+            }
+            if (tempConn!=null){
+                try {
+                    tempConn.close();
+                } catch (IOException e) {
+                }
+            }
         }
 
         return true;
@@ -303,7 +326,7 @@ public final class AutoFlashFile {
      *            the new file
      * @return true, if successful
      */
-    public boolean rename(final String newFile) {
+    public boolean rename(final String newFile, boolean openNewname) {
         try {
             fconn = (FileConnection) Connector.open(filename,
                     Connector.READ_WRITE);
@@ -313,7 +336,9 @@ public final class AutoFlashFile {
 
             if (fconn.exists()) {
                 fconn.rename(newFile);
-                filename = newFile;
+                if(openNewname){
+                    filename = path+newFile;
+                }
             }
         } catch (final IOException e) {
             System.out.println(e.getMessage());

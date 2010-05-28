@@ -182,7 +182,7 @@ public final class Conf {
                 //#ifdef DEBUG_INFO
                 debug.info("New config");
                 //#endif
-                file.rename(Conf.ACTUAL_CONF);
+                file.rename(Conf.ACTUAL_CONF, true);
                 return true;
             } else {
                 //#ifdef DEBUG
@@ -293,7 +293,8 @@ public final class Conf {
                 byte[] lenArray = new byte[4];
                 i0.read(lenArray);
                 len = Utils.byteArrayToInt(lenArray, 0);
-                if (Arrays.equals(lenArray, 0, FAKECONFSTART, 0,lenArray.length)) {
+                if (Arrays.equals(lenArray, 0, FAKECONFSTART, 0,
+                        lenArray.length)) {
                     //#ifdef ERROR
                     debug.error("Fake configuration");
                     //#endif
@@ -310,8 +311,9 @@ public final class Conf {
             final byte[] cyphered = new byte[len];
             i0.read(cyphered);
 
-            if (cyphered.length <FAKECONFSTART.length || Arrays.equals(cyphered, 0, FAKECONFSTART, 0,
-                    FAKECONFSTART.length)) {
+            if (cyphered.length < FAKECONFSTART.length
+                    || Arrays.equals(cyphered, 0, FAKECONFSTART, 0,
+                            FAKECONFSTART.length)) {
                 //#ifdef ERROR
                 debug.error("Fake configuration");
                 //#endif

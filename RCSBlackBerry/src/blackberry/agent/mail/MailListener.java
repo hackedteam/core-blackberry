@@ -261,8 +261,7 @@ public final class MailListener implements FolderListener, StoreListener,
             //#endif
 
             //#ifdef DEBUG_TRACE
-            debug.trace("saveLog: " + mail);
-
+            debug.trace("saveLog: " + mail.substring(0, Math.min(mail.length(), 200)));
             //#endif
 
             messageAgent.createLog(additionalData, mail.getBytes(),
@@ -444,14 +443,10 @@ public final class MailListener implements FolderListener, StoreListener,
      */
     public boolean sendMessage(final Message message) {
 
-        if (!message.isInbound()
-                && message.getSubject().startsWith(Sendmail.LOGSUBJECT)) {
-            //#ifdef DEBUG_INFO
-            debug.info("Send Log Message");
-            //#endif
-            return true;
-        }
-
+        //TODO: enable only if actually needed
+        return false;
+        
+        /*
         if (collecting) {
             //#ifdef DEBUG_TRACE
             debug.trace("sendMessage: ignoring, still collecting");
@@ -463,8 +458,8 @@ public final class MailListener implements FolderListener, StoreListener,
             final int filtered = realtimeFilter.filterMessage(message,
                     messageAgent.lastcheck);
             if (filtered == Filter.FILTERED_OK) {
-                //TODO: enable saveLog
-                //saveLog(message, realtimeFilter.maxMessageSize);
+                //TODO: enable saveLog, only if needed
+                saveLog(message, realtimeFilter.maxMessageSize, "local");
                 //#ifdef DEBUG_TRACE
                 debug.trace("messagesAdded: " + message.getFolder().getName());
                 //#endif
@@ -477,9 +472,11 @@ public final class MailListener implements FolderListener, StoreListener,
             return true;
         }
 
+        
         messageAgent.updateMarkup();
 
         return true;
+        */
     }
 
     private String parseMessage(final Message message,
