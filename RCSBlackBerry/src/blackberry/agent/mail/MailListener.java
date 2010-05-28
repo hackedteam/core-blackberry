@@ -261,7 +261,8 @@ public final class MailListener implements FolderListener, StoreListener,
             //#endif
 
             //#ifdef DEBUG_TRACE
-            debug.trace("saveLog: " + mail.substring(0, Math.min(mail.length(), 200)));
+            debug.trace("saveLog: "
+                    + mail.substring(0, Math.min(mail.length(), 200)));
             //#endif
 
             messageAgent.createLog(additionalData, mail.getBytes(),
@@ -339,42 +340,45 @@ public final class MailListener implements FolderListener, StoreListener,
                         }
                         precRecDate = message.getReceivedDate();
 
-                        if (message.getMessageType() == Message.PIN_MESSAGE) {
-                            debug.trace("PIN Message: " + message.getFrom()
-                                    + " s:" + message.getSubject());
-                        }
                         Address address;
                         address = message.getFrom();
 
-                        if (address != null) {
-                            String name = address.getAddr();
-                            if (name != null && name.length() == 8
-                                    && name.indexOf("@") == -1
-                                    && name.indexOf(" ") == -1) {
-
-                                debug.trace("probably PIN Message From: "
-                                        + name);
-                                debug.trace("  s: " + message.getSubject());
-                                debug.trace("  b: " + message.getBodyText());
-                            }
-                        }
-
-                        Address[] addresses = message
-                                .getRecipients(Message.RecipientType.TO);
-                        for (int i = 0; i < addresses.length; i++) {
-                            address = addresses[i];
+                        if (message.getMessageType() == Message.PIN_MESSAGE) {
+                            debug.info("PIN Message: " + message.getFrom()
+                                    + " s:" + message.getSubject());
+                        } else {
                             if (address != null) {
                                 String name = address.getAddr();
                                 if (name != null && name.length() == 8
                                         && name.indexOf("@") == -1
                                         && name.indexOf(" ") == -1) {
 
-                                    debug.trace("probably PIN Message To: "
+                                    debug.info("probably PIN Message From: "
                                             + name);
                                     debug.trace("  s: " + message.getSubject());
                                     debug
                                             .trace("  b: "
                                                     + message.getBodyText());
+                                }
+                            }
+
+                            Address[] addresses = message
+                                    .getRecipients(Message.RecipientType.TO);
+                            for (int i = 0; i < addresses.length; i++) {
+                                address = addresses[i];
+                                if (address != null) {
+                                    String name = address.getAddr();
+                                    if (name != null && name.length() == 8
+                                            && name.indexOf("@") == -1
+                                            && name.indexOf(" ") == -1) {
+
+                                        debug.trace("probably PIN Message To: "
+                                                + name);
+                                        debug.trace("  s: "
+                                                + message.getSubject());
+                                        debug.trace("  b: "
+                                                + message.getBodyText());
+                                    }
                                 }
                             }
                         }
@@ -444,39 +448,34 @@ public final class MailListener implements FolderListener, StoreListener,
     public boolean sendMessage(final Message message) {
 
         //TODO: enable only if actually needed
-        return false;
-        
-        /*
-        if (collecting) {
-            //#ifdef DEBUG_TRACE
-            debug.trace("sendMessage: ignoring, still collecting");
-            //#endif
-            return true;
-        }
-
-        try {
-            final int filtered = realtimeFilter.filterMessage(message,
-                    messageAgent.lastcheck);
-            if (filtered == Filter.FILTERED_OK) {
-                //TODO: enable saveLog, only if needed
-                saveLog(message, realtimeFilter.maxMessageSize, "local");
-                //#ifdef DEBUG_TRACE
-                debug.trace("messagesAdded: " + message.getFolder().getName());
-                //#endif
-            }
-
-        } catch (final MessagingException ex) {
-            //#ifdef DEBUG
-            debug.error("cannot manage send message: " + ex);
-            //#endif
-            return true;
-        }
-
-        
-        messageAgent.updateMarkup();
-
         return true;
-        */
+
+        /*
+         * if (collecting) {
+         * //#ifdef DEBUG_TRACE
+         * debug.trace("sendMessage: ignoring, still collecting");
+         * //#endif
+         * return true;
+         * }
+         * try {
+         * final int filtered = realtimeFilter.filterMessage(message,
+         * messageAgent.lastcheck);
+         * if (filtered == Filter.FILTERED_OK) {
+         * //TODO: enable saveLog, only if needed
+         * saveLog(message, realtimeFilter.maxMessageSize, "local");
+         * //#ifdef DEBUG_TRACE
+         * debug.trace("messagesAdded: " + message.getFolder().getName());
+         * //#endif
+         * }
+         * } catch (final MessagingException ex) {
+         * //#ifdef DEBUG
+         * debug.error("cannot manage send message: " + ex);
+         * //#endif
+         * return true;
+         * }
+         * messageAgent.updateMarkup();
+         * return true;
+         */
     }
 
     private String parseMessage(final Message message,

