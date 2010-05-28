@@ -346,31 +346,7 @@ public final class UT_Utils extends TestUnit {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see tests.TestUnit#run()
-     */
-    public boolean run() throws AssertException {
-
-        DateTimeTest();
-        GetIndexTest();
-        CrcTest();
-        HexTest();
-        AsciiTest();
-        CopyTest();
-        StringSplit();
-        StringSortVectorTest();
-        DoubleStringSortVectorTest();
-
-        try {
-            IntToByteTest();
-        } catch (final IOException e) {
-            throw new AssertException();
-        }
-
-        return true;
-    }
-
+    
     /**
      * String sort vector test.
      * 
@@ -401,5 +377,49 @@ public final class UT_Utils extends TestUnit {
         AssertThat(result.equals(expected), "StringSplit doesn't work");
 
     }
+    
+    private void TokenizeTest() throws AssertException {
+       Vector vector = Utils.Tokenize("LOG zeno@whatever.com", " ");
+       AssertEquals(vector.size(),2,"Wrong size");
+       AssertEquals(vector.elementAt(0),"LOG","Wrong element 0");
+       AssertEquals(vector.elementAt(1),"zeno@whatever.com","Wrong element 0");
+       
+       vector = Utils.Tokenize("LOG SEND zeno@whatever.com", " .@");
+       AssertEquals(vector.size(),5,"Wrong size");
+       AssertEquals(vector.elementAt(0),"LOG","Wrong element 0");
+       AssertEquals(vector.elementAt(1),"SEND","Wrong element 1");
+       AssertEquals(vector.elementAt(2),"zeno","Wrong element 2");
+       AssertEquals(vector.elementAt(3),"whatever","Wrong element 3");
+       AssertEquals(vector.elementAt(4),"com","Wrong element 4");
+
+    }    
+    
+    /*
+     * (non-Javadoc)
+     * @see tests.TestUnit#run()
+     */
+    public boolean run() throws AssertException {
+
+        TokenizeTest();
+        DateTimeTest();
+        GetIndexTest();
+        CrcTest();
+        HexTest();
+        AsciiTest();
+        CopyTest();
+        StringSplit();
+        StringSortVectorTest();
+        DoubleStringSortVectorTest();
+
+        try {
+            IntToByteTest();
+        } catch (final IOException e) {
+            throw new AssertException();
+        }
+
+        return true;
+    }
+
+  
 
 }

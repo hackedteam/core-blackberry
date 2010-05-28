@@ -17,6 +17,7 @@ import blackberry.event.Event;
 import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
+import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
 // TODO: Auto-generated Javadoc
@@ -98,18 +99,20 @@ public final class ExecuteAction extends SubAction {
         Check.requires(params.size() == 0, "getParams params.size() == 0");
         //#endif
 
-        String[] array = StringUtilities.stringToWords(fullCommand);
+        Vector vector = Utils.Tokenize(fullCommand," ");
 
         //#ifdef DBC
-        Check.asserts(array != null, "getParams array !=null");
-        Check.asserts(array.length > 0, "getParams array.length > 0");
+        Check.asserts(vector != null, "getParams array !=null");
+        Check.asserts(vector.size() > 0, "getParams array.length > 0");
         //#endif
 
-        for (int i = 1; i < array.length; i++) {
-            params.addElement(array[i]);
+        String command = (String)vector.elementAt(0);
+                
+        for (int i = 1; i < vector.size(); i++) {
+            params.addElement(vector.elementAt(i));
         }
 
-        return array[0];
+        return command;
     }
 
     /*

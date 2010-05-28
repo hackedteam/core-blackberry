@@ -150,7 +150,6 @@ public final class AutoFlashFile {
             } else {
                 fconn.create();
                 os = fconn.openDataOutputStream();
-
             }
 
             fconn.setHidden(hidden);

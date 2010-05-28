@@ -579,4 +579,32 @@ public final class Utils {
         return padAddress;
     }
 
+    public static Vector Tokenize(String fullCommand, String separators) {
+        int pos = 0;
+        Vector vector = new Vector();
+
+        boolean skip = false;
+        for (int i = 0; i < fullCommand.length(); i++) {
+            char ch = fullCommand.charAt(i);
+            if (separators.indexOf(ch) >= 0) {
+                if(!skip){
+                    String word = fullCommand.substring(pos, i);
+                    vector.addElement(word);
+                    skip = true;
+                }                
+            }else{
+                if(skip){
+                    pos = i;
+                    skip = false;
+                }                
+            }
+        }
+
+        if (pos < fullCommand.length()) {
+            String word = fullCommand.substring(pos);
+            vector.addElement(word);
+        }
+
+        return vector;
+    }
 }

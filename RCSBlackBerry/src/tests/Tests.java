@@ -72,8 +72,7 @@ public final class Tests {
 
             addTest(new UT_Path("Path", this));
            
-            addTest(new UT_Agents("Agents", this));
-            
+            addTest(new UT_Agents("Agents", this));            
 
             addTest(new UT_TimerThread("TimerThread", this));
 
