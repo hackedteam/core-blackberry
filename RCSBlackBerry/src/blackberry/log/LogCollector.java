@@ -41,7 +41,7 @@ import blackberry.utils.StringSortVector;
  */
 public final class LogCollector implements Singleton {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("LogCollector", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("LogCollector", DebugLevel.INFORMATION);
     //#endif
 
     static LogCollector instance = null;

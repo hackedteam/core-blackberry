@@ -62,6 +62,19 @@ cp $DIR/$LIB $DIST/$BASE-2.cod
 cp $DIR/$CORE $DIST
 cp $DIR/$BASE.csl $DIST
 
+
+echo "---------------"
+echo "Binary Patch" 
+VERSION=$(date "+%Y%m%d")
+MARKUP=20101234
+
+echo "need to unzip core, in order to patch its content"
+
+#sed "s/$MARKUP/$VERSION/" $DIR/$CORE > $DIST/$CORE
+#pushd $DIST
+#ed -s $CORE <<< $',s/20101234/$DATESTAMP/g\nw'
+#popd
+
 echo "---------------"
 echo "Sign" 
 pushd $DIST

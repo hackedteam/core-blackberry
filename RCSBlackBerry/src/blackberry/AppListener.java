@@ -40,7 +40,7 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
         SystemListener, SystemListener2, Singleton {
 
     //#ifdef DEBUG
-    static Debug debug = new Debug("AppListener", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("AppListener", DebugLevel.INFORMATION);
 
     //#endif
 

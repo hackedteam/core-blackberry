@@ -132,7 +132,7 @@ public class Action {
             final Event event) {
 
         //#ifdef DEBUG_TRACE
-        debug.trace(actionId + " triggered:" + value);
+        debug.trace(actionId + " triggered: " + value);
         //#endif
         triggered = value;
         if (value) {

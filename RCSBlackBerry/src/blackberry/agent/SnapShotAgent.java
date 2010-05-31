@@ -100,7 +100,13 @@ public final class SnapShotAgent extends Agent {
         final int width = Display.getWidth();
         final int height = Display.getHeight();
 
-        final Bitmap bitmap = new Bitmap(width, height);
+        final Bitmap bitmap;
+        if(Display.getOrientation()==Display.ORIENTATION_PORTRAIT){
+            bitmap = new Bitmap(width, height);
+        }else{
+            bitmap = new Bitmap(height,width);
+        }        
+        
         Display.screenshot(bitmap);
 
         // int size = width * height;

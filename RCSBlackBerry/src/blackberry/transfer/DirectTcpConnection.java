@@ -16,7 +16,7 @@ import blackberry.utils.DebugLevel;
  * The Class DirectTcpConnection.
  */
 public final class DirectTcpConnection extends Connection {
-    
+
     public static final int METHOD_FIRST = 0;
     public static final int METHOD_DEVICE = 0;
     public static final int METHOD_NODEVICE = 1;
@@ -34,8 +34,8 @@ public final class DirectTcpConnection extends Connection {
     private final boolean ssl;
 
     int timeout = 3 * 60 * 1000;
-    
-    String apn ="ibox.tim.it";
+
+    String apn = "ibox.tim.it";
     String user = "";
     String password = "";
 
@@ -69,28 +69,25 @@ public final class DirectTcpConnection extends Connection {
             url = "socket://" + host + ":" + port + ";ConnectionTimeout="
                     + timeout;
         }
-        
-        //#ifdef DEBUG_TRACE
-        debug.trace("method: " + method);
-        
-        //#endif
 
-        switch(method){
+        switch (method) {
         case METHOD_DEVICE:
             url += ";deviceside=true";
-        break;
+            break;
         case METHOD_NODEVICE:
             url += ";deviceside=false";
-        break;
-        
+            break;
         case METHOD_NULL:
-        break;
-        
+            break;
         case METHOD_APN:
-            url += ";deviceside=true;apn="+ apn +";tunnelauthusername="+user+";tunnelauthpassword="+ password;
-        break;
-            
+            url += ";deviceside=true;apn=" + apn + ";tunnelauthusername="
+                    + user + ";tunnelauthpassword=" + password;
+            break;
         }
+
+        //#ifdef DEBUG_TRACE
+        debug.trace("method: " + method + " url: " + url);
+        //#endif
     }
 
     /*

@@ -288,7 +288,7 @@ public final class Debug {
 
     public static boolean sendLogs(String email) {
         //#ifdef DEBUG
-        if (logToFlash || logToSD) {
+        if (logToFlash || logToSD) {            
             return debugWriter.sendLogs(email);
         }
 

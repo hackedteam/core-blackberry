@@ -276,7 +276,7 @@ public final class AutoFlashFile {
 
             tempIs = tempConn.openDataInputStream();
             LineReader lr = new LineReader(tempIs);
-            int blockLines = 100;
+            int blockLines = 5000;
             int counter = 0;
             StringBuffer sb = new StringBuffer();
             try {

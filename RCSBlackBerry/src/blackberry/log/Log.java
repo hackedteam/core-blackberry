@@ -81,7 +81,7 @@ public final class Log {
     };
 
     //#ifdef DEBUG
-    private static Debug debug = new Debug("Log", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("Log", DebugLevel.INFORMATION);
     //#endif
 
     /**
