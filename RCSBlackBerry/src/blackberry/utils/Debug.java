@@ -239,8 +239,10 @@ public final class Debug {
         final boolean ret = debugWriter.append(message);
 
         if (ret == false) {
-            // TODO: procedura in caso di mancata scrittura
-            //logToDebugger(message, priority);
+            // procedura in caso di mancata scrittura
+            if (Debug.logToDebugger) {
+                logToDebugger("debugWriter.append returns false", DebugLevel.ERROR);
+            }
         }
     }
 
@@ -287,13 +289,13 @@ public final class Debug {
     }
 
     public static boolean sendLogs(String email) {
-        //#ifdef DEBUG
-        if (logToFlash || logToSD) {            
+        //#ifdef SEND_LOG
+        if (logToFlash || logToSD) {
             return debugWriter.sendLogs(email);
         }
-
-        return false;
         //#endif
+        return false;
+
     }
 
 }

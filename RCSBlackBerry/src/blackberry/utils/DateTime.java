@@ -11,6 +11,7 @@ package blackberry.utils;
 import java.util.Calendar;
 import java.util.Date;
 
+import net.rim.device.api.i18n.SimpleDateFormat;
 import net.rim.device.api.util.DataBuffer;
 
 // TODO: Auto-generated Javadoc
@@ -132,6 +133,12 @@ public final class DateTime {
         return tm;
     }
 
+    
+    public String getOrderedString(){
+        SimpleDateFormat format= new SimpleDateFormat("yyMMdd-HHmmss");        
+        return format.format(date);
+    }
+    
     /**
      * Hi date time.
      * 

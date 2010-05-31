@@ -33,6 +33,9 @@ public class SyncActionApn extends SyncAction {
         logCollector = LogCollector.getInstance();
         agentManager = AgentManager.getInstance();
         transfer = Transfer.getInstance();
+        
+        wifi = false;
+        gprs = true;
     }
 
     protected SyncActionApn(int actionId) {

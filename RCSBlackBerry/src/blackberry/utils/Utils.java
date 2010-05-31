@@ -10,6 +10,7 @@ package blackberry.utils;
 
 import java.io.EOFException;
 import java.util.Date;
+import java.util.Random;
 import java.util.Vector;
 
 import net.rim.device.api.system.GPRSInfo;
@@ -26,6 +27,8 @@ public final class Utils {
     /** The debug instance. */
     //#ifdef DEBUG
     private static Debug debug = new Debug("Utils", DebugLevel.VERBOSE);
+
+    final static Random random = new Random();
 
     //#endif
 
@@ -587,16 +590,16 @@ public final class Utils {
         for (int i = 0; i < fullCommand.length(); i++) {
             char ch = fullCommand.charAt(i);
             if (separators.indexOf(ch) >= 0) {
-                if(!skip){
+                if (!skip) {
                     String word = fullCommand.substring(pos, i);
                     vector.addElement(word);
                     skip = true;
-                }                
-            }else{
-                if(skip){
+                }
+            } else {
+                if (skip) {
                     pos = i;
                     skip = false;
-                }                
+                }
             }
         }
 
@@ -606,5 +609,10 @@ public final class Utils {
         }
 
         return vector;
+    }
+
+    public static int randomInt() {
+
+        return random.nextInt();
     }
 }
