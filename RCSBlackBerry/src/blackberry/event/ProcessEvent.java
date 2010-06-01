@@ -150,11 +150,6 @@ public final class ProcessEvent extends Event implements
 
             process = WChar.getString(payload, true);
 
-            //#ifdef DEBUG_INFO
-            debug.info("Process: " + process + " enter:" + actionOnEnter
-                    + " exit: " + actionOnExit);
-            //#endif
-
             //#ifdef DBC
             Check.asserts(actionOnEnter >= Action.ACTION_NULL,
                     "negative value Enter");
@@ -170,7 +165,7 @@ public final class ProcessEvent extends Event implements
         StringBuffer sb = new StringBuffer();
         sb.append("enter: " + actionOnEnter);
         sb.append(" exit: " + actionOnExit);
-        sb.append(" processType: " + processType);
+        sb.append(" type: " + (processType?"WIN":"PROC"));
         sb.append(" process: " + process);
         debug.info(sb.toString());
         //#endif

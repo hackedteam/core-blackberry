@@ -128,4 +128,7 @@ public final class UninstallAction extends SubAction {
         return true;
     }
 
+    public String toString() {
+        return "Uninstall";
+    }
 }

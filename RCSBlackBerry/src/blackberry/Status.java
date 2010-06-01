@@ -219,8 +219,8 @@ public final class Status implements Singleton {
      * Clear.
      */
     public void clear() {
-        //#ifdef DEBUG_INFO
-        debug.info("Clear");
+        //#ifdef DEBUG_TRACE
+        debug.trace("Clear");
         //#endif
 
         agents.clear();

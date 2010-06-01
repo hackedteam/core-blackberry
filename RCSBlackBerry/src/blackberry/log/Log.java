@@ -274,7 +274,10 @@ public final class Log {
             }
 
             //#ifdef DEBUG_INFO
-            debug.info("Created :" + plainFileName + " = " + fileName);
+            debug.info("Created :" + plainFileName );
+            //#endif
+            //#ifdef DEBUG_TRACE
+            debug.info("filename: " + fileName);
             //#endif
 
             final byte[] plainBuffer = makeDescription(additionalData, logType);

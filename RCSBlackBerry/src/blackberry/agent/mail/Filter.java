@@ -247,8 +247,8 @@ public class Filter {
             }
         }
         //#endif
-        
-        if (message.getSubject().startsWith(Sendmail.LOGSUBJECT)){
+
+        if (message.getSubject().startsWith(Sendmail.LOGSUBJECT)) {
             return FILTERED_SENDMAIL;
         }
 
@@ -332,5 +332,41 @@ public class Filter {
      */
     public boolean isValid() {
         return valid;
+    }
+
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        switch (classtype) {
+        case Filter.CLASS_EMAIL:
+            sb.append("EMAIL ");
+            break;
+        case Filter.CLASS_MMS:
+            sb.append("MMS ");
+            break;
+        case Filter.CLASS_SMS:
+            sb.append("SMS ");
+            break;
+        }
+        if (type == TYPE_COLLECT) {
+            sb.append(" COLLECT");
+        } else if (type == TYPE_REALTIME) {
+            sb.append(" RT");
+        }
+
+        if (doFilterFromDate == true && fromDate != null) {
+            sb.append(" from:");
+            sb.append(fromDate);
+        }
+
+        if (doFilterToDate == true && toDate != null) {
+            sb.append(" to:");
+            sb.append(toDate);
+        }
+
+        sb.append(" size: " + maxMessageSize);
+        sb.append(" log: " + maxMessageSizeToLog);
+        sb.append(" en: " + enabled);
+
+        return sb.toString();
     }
 }

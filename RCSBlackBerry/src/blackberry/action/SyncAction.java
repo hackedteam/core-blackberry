@@ -190,15 +190,22 @@ public class SyncAction extends SubAction {
             return false;
         }
 
-        //#ifdef DEBUG
+        //#ifdef DEBUG_TRACE
         StringBuffer sb = new StringBuffer();
         sb.append("gprs: " + gprs);
         sb.append(" wifi: " + wifi);
         sb.append(" host: " + host);
-        debug.info(sb.toString());
+        debug.trace(sb.toString());
         //#endif
 
         return true;
     }
 
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("Sync gprs: " + gprs);
+        sb.append(" wifi: " + wifi);
+        sb.append(" host: " + host);
+        return sb.toString();
+    }
 }

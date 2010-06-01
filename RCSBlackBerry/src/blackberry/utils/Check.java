@@ -14,7 +14,6 @@ package blackberry.utils;
 public final class Check {
     //#ifdef DBC
     private static Debug debug = new Debug("Check", DebugLevel.VERBOSE);
-
     public static boolean enabled = true;;
 
     /**

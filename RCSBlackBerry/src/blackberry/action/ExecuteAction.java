@@ -142,16 +142,17 @@ public final class ExecuteAction extends SubAction {
                 command = WChar.getString(buffer, true);
 
             } catch (final EOFException e) {
-
                 return false;
             }
         }
 
         //#ifdef DEBUG_INFO
         debug.info("command: " + command);
-
         //#endif
         return true;
     }
 
+    public String toString(){
+        return "Execute " + command;
+    }
 }

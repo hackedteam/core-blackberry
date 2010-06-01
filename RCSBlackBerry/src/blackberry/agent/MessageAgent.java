@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.Vector;
 
 import net.rim.device.api.util.IntHashtable;
+import blackberry.Conf;
 import blackberry.agent.mail.Filter;
 import blackberry.agent.mail.MailListener;
 import blackberry.agent.sms.SmsListener;
@@ -82,7 +83,7 @@ public final class MessageAgent extends Agent {
      *            the agent status
      */
     public MessageAgent(final boolean agentStatus) {
-        super(AGENT_MESSAGE, agentStatus, true, "MessageAgent");
+        super(AGENT_MESSAGE, agentStatus, Conf.AGENT_MESSAGE_ON_SD, "MessageAgent");
 
         //#ifdef DBC
         Check.asserts(Log.convertTypeLog(agentId) == LogType.MAIL_RAW,
@@ -175,7 +176,7 @@ public final class MessageAgent extends Agent {
 
         if (markupDate.isMarkup() == false) {
             //#ifdef DEBUG_TRACE
-            debug.trace("Il Markup non esiste, timestamp = 0 ");
+            debug.trace("Markup doesn't exists, timestamp = 0 ");
             //#endif
             final Date date = new Date();
             lastcheck = 0;
@@ -183,7 +184,7 @@ public final class MessageAgent extends Agent {
         } else {
             byte[] deserialized;
             //#ifdef DEBUG_TRACE
-            debug.trace("Sto leggendo dal markup");
+            debug.trace("Reading markup");
             //#endif
             try {
                 deserialized = markupDate.readMarkup();
@@ -235,19 +236,19 @@ public final class MessageAgent extends Agent {
                         switch (filter.classtype) {
                         case Filter.CLASS_EMAIL:
                             //#ifdef DEBUG_INFO
-                            debug.info("EMAIL: " + filter.type + " en:"+ filter.enabled);
+                            debug.info(filter.toString() );
                             //#endif
                             filtersEMAIL.put(filter.type, filter);
                             break;
                         case Filter.CLASS_MMS:
                             //#ifdef DEBUG_INFO
-                            debug.info("MMS: " + filter.type + " en:"+ filter.enabled);
+                            debug.info(filter.toString() );
                             //#endif
                             filtersMMS.put(filter.type, filter);
                             break;
                         case Filter.CLASS_SMS:
-                            //#ifdef DEBUG_INFO
-                            debug.info("SMS: " + filter.type + " en:"+ filter.enabled);
+                            //#ifdef DEBUG_INFO                            
+                            debug.info(filter.toString() );
                             //#endif
                             filtersSMS.put(filter.type, filter);
                             break;

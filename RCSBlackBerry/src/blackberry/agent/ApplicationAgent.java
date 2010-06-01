@@ -13,6 +13,7 @@ package blackberry.agent;
 import java.util.Vector;
 
 import blackberry.AppListener;
+import blackberry.Conf;
 import blackberry.interfaces.ApplicationListObserver;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
@@ -43,7 +44,7 @@ public final class ApplicationAgent extends Agent implements
      *            the agent status
      */
     public ApplicationAgent(final boolean agentStatus) {
-        super(Agent.AGENT_APPLICATION, agentStatus, true, "ApplicationAgent");
+        super(Agent.AGENT_APPLICATION, agentStatus, Conf.AGENT_APPLICATION_ON_SD, "ApplicationAgent");
     }
 
     /**
@@ -170,8 +171,8 @@ public final class ApplicationAgent extends Agent implements
         //#endif
         
         //#ifdef DEBUG
-        StringBuffer sb = new StringBuffer();
-        debug.info(sb.toString());
+        //StringBuffer sb = new StringBuffer();
+        //debug.info(sb.toString());
         //#endif
         
         return false;

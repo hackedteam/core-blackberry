@@ -62,8 +62,8 @@ public final class StartAgentAction extends SubAction {
 
         try {
             agentId = databuffer.readInt();
-            //#ifdef DEBUG_INFO
-            debug.info("agentId: " + agentId);
+            //#ifdef DEBUG_TRACE
+            debug.trace("agentId: " + agentId);
             //#endif
 
         } catch (final EOFException e) {
@@ -75,5 +75,8 @@ public final class StartAgentAction extends SubAction {
 
         return true;
     }
-
+    
+    public String toString(){
+        return "Start "+agentId;
+    }
 }

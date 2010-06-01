@@ -76,6 +76,10 @@ public class Action {
         Check.asserts(subAction != null, "addNewSubAction: subAction != null");
         //#endif
         addSubAction(subAction);
+
+        //#ifdef DEBUG_INF        
+        debug.info("Action " + actionId + ": " + subAction);
+        //#endif
     }
 
     /**
@@ -136,11 +140,11 @@ public class Action {
         //#endif
         triggered = value;
         if (value) {
-            status.addActionTriggered(this);            
+            status.addActionTriggered(this);
         } else {
             status.removeActionTriggered(this);
         }
-        
+
         triggeringEvent = event;
     }
 

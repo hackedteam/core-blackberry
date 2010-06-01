@@ -46,5 +46,9 @@ public final class ToothingAction extends SubAction {
         // TODO Auto-generated method stub
         return false;
     }
+    
+    public String toString() {
+        return "Toothing";
+    }
 
 }

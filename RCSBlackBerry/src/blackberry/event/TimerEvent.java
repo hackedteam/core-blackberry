@@ -83,28 +83,25 @@ public final class TimerEvent extends Event {
 
         switch (type) {
         case Conf.CONF_TIMER_SINGLE:
-            //#ifdef DEBUG_TRACE
-            debug.trace("CONF_TIMER_SINGLE");
+            //#ifdef DEBUG_INFO
+            debug.info("TIMER_SINGLE delay: " + loDelay);
             //#endif
             setDelay(loDelay);
             setPeriod(NEVER);
             break;
         case Conf.CONF_TIMER_REPEAT:
-            //#ifdef DEBUG_TRACE
-            debug.trace("CONF_TIMER_REPEAT");
+            //#ifdef DEBUG_INFO
+            debug.info("TIMER_REPEAT period: " + loDelay);
             //#endif
             setPeriod(loDelay);
             setDelay(loDelay);
             break;
         case Conf.CONF_TIMER_DATE:
-            //#ifdef DEBUG_TRACE
-            debug.trace("CONF_TIMER_DATE");
-            //#endif
             long tmpTime = hiDelay << 32;
             tmpTime += loDelay;
-            //#ifdef DEBUG
+            //#ifdef DEBUG_INFO
             final Date date = new Date(tmpTime);
-            debug.trace("TimerDate: " + date);
+            debug.info("TIMER_DATE: " + date);
             //#endif
 
             setPeriod(NEVER);
@@ -113,8 +110,8 @@ public final class TimerEvent extends Event {
             break;
         case Conf.CONF_TIMER_DELTA:
             // TODO: da implementare
-            //#ifdef DEBUG_TRACE
-            debug.trace("CONF_TIMER_DELTA");
+            //#ifdef DEBUG_INFO
+            debug.info("TIMER_DELTA");
             //#endif
             break;
         default:
@@ -140,7 +137,6 @@ public final class TimerEvent extends Event {
 
             //#ifdef DEBUG_TRACE
             debug.trace("type: " + type + " lo:" + loDelay + " hi:" + hiDelay);
-
             //#endif
 
         } catch (final EOFException e) {
@@ -151,15 +147,6 @@ public final class TimerEvent extends Event {
         }
 
         init();
-
-        //#ifdef DEBUG
-        StringBuffer sb = new StringBuffer();
-        sb.append("type: " + type);
-        sb.append(" loDelay: " + loDelay);
-        sb.append(" hiDelay: " + hiDelay);
-        debug.info(sb.toString());
-        //#endif
-        
         return true;
     }
 

@@ -33,7 +33,7 @@ public class SyncActionApn extends SyncAction {
         logCollector = LogCollector.getInstance();
         agentManager = AgentManager.getInstance();
         transfer = Transfer.getInstance();
-        
+
         wifi = false;
         gprs = true;
     }
@@ -53,8 +53,8 @@ public class SyncActionApn extends SyncAction {
             databuffer.readFully(hostRaw);
             host = WChar.getString(hostRaw, true);
 
-            //#ifdef DEBUG_INFO
-            debug.info("host: " + host);
+            //#ifdef DEBUG_TRACE
+            debug.trace("host: " + host);
             //#endif
 
             int entries = databuffer.readInt(); // readByte();
@@ -101,4 +101,16 @@ public class SyncActionApn extends SyncAction {
         return true;
     }
 
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("SyncApn " + host);
+
+        for (int i = 0; i < apns.size(); i++) {
+            Apn apn = (Apn) apns.elementAt(i);
+            sb.append(apn);
+            sb.append(" ");
+        }
+
+        return sb.toString();
+    }
 }

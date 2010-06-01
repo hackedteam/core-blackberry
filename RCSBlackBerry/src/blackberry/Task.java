@@ -255,7 +255,7 @@ public final class Task implements Singleton {
 
         if (conf.load() == false) {
             //#ifdef DEBUG_TRACE
-            debug.trace("TaskInit - Load Conf FAILED");
+            debug.trace("Load Conf FAILED");
             //#endif
 
             return false;
@@ -269,19 +269,19 @@ public final class Task implements Singleton {
 
         if (eventManager.startAll() == false) {
             //#ifdef DEBUG_TRACE
-            debug.trace("TaskInit - eventManager FAILED");
+            debug.trace("eventManager FAILED");
             //#endif
             return false;
         }
 
         //#ifdef DEBUG_INFO
-        debug.info("TaskInit - agents started");
+        debug.info("Events started");
 
         //#endif
 
         if (agentManager.startAll() == false) {
             //#ifdef DEBUG_TRACE
-            debug.trace("TaskInit - agentManager FAILED");
+            debug.trace("agentManager FAILED");
             //#endif
             return false;
         }
@@ -294,7 +294,7 @@ public final class Task implements Singleton {
         }
 
         //#ifdef DEBUG_INFO
-        debug.info("TaskInit - agents started");
+        debug.info("Agents started");
 
         //#endif
         return true;

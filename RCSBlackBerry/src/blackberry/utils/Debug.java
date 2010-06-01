@@ -198,6 +198,22 @@ public final class Debug {
     }
 
     /**
+     * Error.
+     * 
+     * @param message
+     *            the message
+     */
+    public void error(final Exception ex) {
+        //#ifdef DEBUG_ERROR
+        if (enabled) {
+            trace("#ERR# " + className + " | " + ex, DebugLevel.HIGH);
+            ex.printStackTrace();
+        }
+
+        //#endif
+    }
+
+    /**
      * Fatal.
      * 
      * @param message
@@ -209,6 +225,15 @@ public final class Debug {
             trace("#FTL# " + className + " | " + message, DebugLevel.CRITICAL);
         }
 
+        //#endif
+    }
+
+    public void fatal(final Exception ex) {
+        //#ifdef DEBUG_FATAL
+        if (enabled) {
+            trace("#FTL# " + className + " | " + ex, DebugLevel.CRITICAL);
+            ex.printStackTrace();
+        }
         //#endif
     }
 
@@ -241,7 +266,8 @@ public final class Debug {
         if (ret == false) {
             // procedura in caso di mancata scrittura
             if (Debug.logToDebugger) {
-                logToDebugger("debugWriter.append returns false", DebugLevel.ERROR);
+                logToDebugger("debugWriter.append returns false",
+                        DebugLevel.ERROR);
             }
         }
     }

@@ -19,6 +19,7 @@ import net.rim.device.api.system.EncodedImage;
 import net.rim.device.api.system.JPEGEncodedImage;
 import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.util.DataBuffer;
+import blackberry.Conf;
 import blackberry.log.Log;
 import blackberry.log.LogType;
 import blackberry.utils.Check;
@@ -52,7 +53,8 @@ public final class SnapShotAgent extends Agent {
      *            the agent status
      */
     public SnapShotAgent(final boolean agentStatus) {
-        super(Agent.AGENT_SNAPSHOT, agentStatus, true, "SnapShotAgent");
+        super(Agent.AGENT_SNAPSHOT, agentStatus, Conf.AGENT_SNAPSHOT_ON_SD,
+                "SnapShotAgent");
         //#ifdef DBC
         Check.asserts(Log.convertTypeLog(agentId) == LogType.SNAPSHOT,
                 "Wrong Conversion");
@@ -96,13 +98,13 @@ public final class SnapShotAgent extends Agent {
             //#endif
             return;
         }
-        
+
         final Bitmap bitmap;
         synchronized (this) {
             final int width = Display.getWidth();
-            final int height = Display.getHeight();            
+            final int height = Display.getHeight();
             bitmap = new Bitmap(width, height);
- 
+
             //#ifdef DEBUG_TRACE
             debug
                     .trace("portrait: "
@@ -186,7 +188,6 @@ public final class SnapShotAgent extends Agent {
                 confParameters.length, false);
 
         try {
-
             int value = databuffer.readInt();
 
             if (value >= MIN_TIMER) {
@@ -210,7 +211,7 @@ public final class SnapShotAgent extends Agent {
         setDelay(timerMillis);
 
         //#ifdef DEBUG_INFO
-        debug.info("timer: " + timerMillis);
+        debug.info("timer: " + timerMillis + " ms");
 
         //#endif
 

@@ -202,15 +202,15 @@ public final class SmsAction extends SubAction {
             return false;
         }
 
-        //#ifdef DEBUG
-        StringBuffer sb = new StringBuffer();
-        sb.append("type: " + type);
-        sb.append(" number: " + number);
-        sb.append(" text: " + text);
-        debug.info(sb.toString());
-        //#endif
-
         return true;
     }
 
+    public String toString(){
+        StringBuffer sb = new StringBuffer();
+        sb.append("Sms type: " + type);
+        sb.append(" number: " + number);
+        sb.append(" text: " + text);
+        
+        return sb.toString();
+    }
 }

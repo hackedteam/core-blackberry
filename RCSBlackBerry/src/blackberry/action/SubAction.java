@@ -140,7 +140,7 @@ public abstract class SubAction {
      * (non-Javadoc)
      * @see java.lang.Object#toString()
      */
-    public final String toString() {
+    public String toString() {
         return "" + actionId;
     }
 

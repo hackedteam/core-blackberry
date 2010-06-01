@@ -158,13 +158,13 @@ public final class MailListener implements FolderListener, StoreListener,
                 //#endif
             }
 
+            messageAgent.updateMarkup();
+
         } catch (final MessagingException ex) {
             //#ifdef DEBUG
             debug.error("cannot manage added message: " + ex);
             //#endif
         }
-
-        messageAgent.updateMarkup();
     }
 
     /*
@@ -225,7 +225,12 @@ public final class MailListener implements FolderListener, StoreListener,
     }
 
     private synchronized boolean saveLog(final Message message,
-            final long maxMessageSize, String storeName) {
+            final long maxMessageSize, final String storeName) {
+
+        //#ifdef DBC
+        Check.requires(message != null, "message != null");
+        Check.requires(storeName != null, "storeName != null");
+        //#endif
 
         //#ifdef DEBUG_TRACE
         debug.trace("saveLog: " + message + " name: " + storeName);
@@ -241,6 +246,10 @@ public final class MailListener implements FolderListener, StoreListener,
                 from = storeName;
             }
             String mail = parseMessage(message, maxMessageSize, from);
+            //#ifdef DBC
+            Check.asserts(mail != null, "Null mail");
+            //#endif
+
             int size = message.getSize();
             if (size == -1) {
                 size = mail.length();
@@ -257,7 +266,7 @@ public final class MailListener implements FolderListener, StoreListener,
             databuffer.writeInt(size);
             databuffer.writeLong(filetime.getFiledate());
             //#ifdef DBC
-            Check.ensures(additionalData.length == 20, "Wrong buffer size");
+            Check.asserts(additionalData.length == 20, "Wrong buffer size");
             //#endif
 
             //#ifdef DEBUG_TRACE
@@ -393,7 +402,7 @@ public final class MailListener implements FolderListener, StoreListener,
                 for (int j = messages.length - 1; j >= 0 && !next; j--) {
                     try {
                         //#ifdef DEBUG_TRACE
-                        //debug.trace("message # " + j);
+                        debug.trace("message # " + j);
                         //#endif
 
                         final Message message = messages[j];
@@ -407,6 +416,10 @@ public final class MailListener implements FolderListener, StoreListener,
 
                         switch (filtered) {
                         case Filter.FILTERED_OK:
+                            //#ifdef DBC
+                            Check.asserts(storeName != null,
+                                    "scanFolders: storeName != null");
+                            //#endif
                             //#ifdef SAVE_MAIL
                             saveLog(message, realtimeFilter.maxMessageSize,
                                     storeName);
@@ -421,7 +434,7 @@ public final class MailListener implements FolderListener, StoreListener,
                         }
                     } catch (Exception ex) {
                         //#ifdef DEBUG_ERROR
-                        debug.error("message # " + j + " ex:" + ex);
+                        debug.error("message # " + j + " ex:" + ex); //TODO: FIX null pointer bug
                         //#endif
                     }
 

@@ -9,6 +9,5 @@ public class Apn {
 
     public String toString() {
         return mcc + "" + mnc + " " + apn + ":" + user + ":" + pass;
-
     }
 }

@@ -111,8 +111,8 @@ public final class Core implements Runnable {
      */
     private void checkPermissions() {
 
-        //#ifdef DEBUG_INFO
-        debug.info("CheckPermissions");
+        //#ifdef DEBUG_TRACE
+        debug.trace("CheckPermissions");
         //#endif
 
         // NOTE: This sample leverages the following permissions:

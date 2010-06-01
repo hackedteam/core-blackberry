@@ -10,9 +10,11 @@
 package blackberry;
 
 import net.rim.blackberry.api.phone.Phone;
+import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.GPRSInfo;
 import net.rim.device.api.system.SIMCardException;
 import net.rim.device.api.system.SIMCardInfo;
+import net.rim.device.api.util.NumberUtilities;
 import blackberry.interfaces.Singleton;
 import blackberry.utils.Check;
 import blackberry.utils.Debug;
@@ -172,7 +174,10 @@ public final class Device implements Singleton {
      * Refresh data.
      */
     public void refreshData() {
-
+        //#ifdef DEBUG_INFO
+        debug.info("PIN: " + getPin());
+        //#endif
+        
         try {
             imsi = SIMCardInfo.getIMSI();
             //#ifdef DEBUG_INFO
@@ -186,7 +191,7 @@ public final class Device implements Singleton {
 
         imei = GPRSInfo.getIMEI();
         //#ifdef DEBUG_INFO
-        debug.info("IMSE: " + Utils.imeiToString(imsi));
+        debug.info("IMEI: " + Utils.imeiToString(imei));
         //#endif
 
         phoneNumber = Phone.getDevicePhoneNumber(true);
@@ -196,6 +201,11 @@ public final class Device implements Singleton {
         //#ifdef DEBUG_INFO
         debug.info("Phone Number: " + phoneNumber);
         //#endif
+    }
+
+    public static String getPin() {
+
+        return NumberUtilities.toString(DeviceInfo.getDeviceId(), 16);
     }
 
 }
