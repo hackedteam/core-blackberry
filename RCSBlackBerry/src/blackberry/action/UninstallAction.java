@@ -64,7 +64,7 @@ public final class UninstallAction extends SubAction {
 
         wantUninstall = true;
 
-        Main main = (Main) Application.getApplication();
+        final Main main = (Main) Application.getApplication();
         main.stopListeners();
 
         AgentManager.getInstance().stopAll();

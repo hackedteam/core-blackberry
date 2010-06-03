@@ -18,6 +18,7 @@ import blackberry.utils.DebugLevel;
 public final class CallLocalAgent extends Agent {
     //#ifdef DEBUG
     private static Debug debug = new Debug("CallLocalAgent", DebugLevel.VERBOSE);
+
     //#endif
 
     /**

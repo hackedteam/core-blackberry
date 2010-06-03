@@ -288,14 +288,13 @@ public final class UT_Agents extends TestUnit {
         Utils.sleep(1000);
 
         AssertThat(agent.isRunning(), "Agent not Running 1");
-        
+
         // stop agent
         agentManager.stop(agent.agentId);
 
         Utils.sleep(1000);
         AssertThat(agent.isEnabled(), "Agent not Enabled 2");
         AssertThat(!agent.isRunning(), "Agent still running");
-
 
         //#ifdef DEBUG_TRACE
         debug.trace("-- StartAndStop OK --");

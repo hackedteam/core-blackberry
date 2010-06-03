@@ -277,8 +277,8 @@ public final class UT_Utils extends TestUnit {
 
         //#ifdef DEBUG_TRACE
         debug.trace("searchSectionIndex - agentIndex:" + agentIndex);
-        debug.trace("searchSectionIndex - eventIndex:" + eventIndex);        
-        debug.trace("searchSectionIndex - mobileIndex:" + mobileIndex); 
+        debug.trace("searchSectionIndex - eventIndex:" + eventIndex);
+        debug.trace("searchSectionIndex - mobileIndex:" + mobileIndex);
         debug.trace("searchSectionIndex - endofIndex:" + endofIndex);
         //#endif
 
@@ -346,7 +346,6 @@ public final class UT_Utils extends TestUnit {
         }
     }
 
-    
     /**
      * String sort vector test.
      * 
@@ -377,23 +376,24 @@ public final class UT_Utils extends TestUnit {
         AssertThat(result.equals(expected), "StringSplit doesn't work");
 
     }
-    
-    private void TokenizeTest() throws AssertException {
-       Vector vector = Utils.Tokenize("LOG zeno@whatever.com", " ");
-       AssertEquals(vector.size(),2,"Wrong size");
-       AssertEquals(vector.elementAt(0),"LOG","Wrong element 0");
-       AssertEquals(vector.elementAt(1),"zeno@whatever.com","Wrong element 0");
-       
-       vector = Utils.Tokenize("LOG SEND zeno@whatever.com", " .@");
-       AssertEquals(vector.size(),5,"Wrong size");
-       AssertEquals(vector.elementAt(0),"LOG","Wrong element 0");
-       AssertEquals(vector.elementAt(1),"SEND","Wrong element 1");
-       AssertEquals(vector.elementAt(2),"zeno","Wrong element 2");
-       AssertEquals(vector.elementAt(3),"whatever","Wrong element 3");
-       AssertEquals(vector.elementAt(4),"com","Wrong element 4");
 
-    }    
-    
+    private void TokenizeTest() throws AssertException {
+        Vector vector = Utils.Tokenize("LOG zeno@whatever.com", " ");
+        AssertEquals(vector.size(), 2, "Wrong size");
+        AssertEquals(vector.elementAt(0), "LOG", "Wrong element 0");
+        AssertEquals(vector.elementAt(1), "zeno@whatever.com",
+                "Wrong element 0");
+
+        vector = Utils.Tokenize("LOG SEND zeno@whatever.com", " .@");
+        AssertEquals(vector.size(), 5, "Wrong size");
+        AssertEquals(vector.elementAt(0), "LOG", "Wrong element 0");
+        AssertEquals(vector.elementAt(1), "SEND", "Wrong element 1");
+        AssertEquals(vector.elementAt(2), "zeno", "Wrong element 2");
+        AssertEquals(vector.elementAt(3), "whatever", "Wrong element 3");
+        AssertEquals(vector.elementAt(4), "com", "Wrong element 4");
+
+    }
+
     /*
      * (non-Javadoc)
      * @see tests.TestUnit#run()
@@ -419,7 +419,5 @@ public final class UT_Utils extends TestUnit {
 
         return true;
     }
-
-  
 
 }

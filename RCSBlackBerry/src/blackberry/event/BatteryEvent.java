@@ -29,7 +29,7 @@ public final class BatteryEvent extends Event implements BatteryStatusObserver {
     //#ifdef DEBUG
     private static Debug debug = new Debug("AcEvent", DebugLevel.VERBOSE);
     //#endif
-    
+
     int actionOnEnter;
     int actionOnExit;
 
@@ -211,16 +211,16 @@ public final class BatteryEvent extends Event implements BatteryStatusObserver {
             actionOnExit = Action.ACTION_NULL;
             return false;
         }
-        
+
         //#ifdef DEBUG
-        StringBuffer sb =new StringBuffer();
+        final StringBuffer sb = new StringBuffer();
         sb.append("enter: " + actionOnEnter);
         sb.append(" exit: " + actionOnExit);
         sb.append(" minVolt: " + minVolt);
         sb.append(" maxVolt: " + maxVolt);
-        debug.info(sb.toString());        
+        debug.info(sb.toString());
         //#endif
-        
+
         return true;
     }
 

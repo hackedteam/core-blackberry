@@ -18,6 +18,7 @@ import blackberry.utils.DebugLevel;
 public final class CallListAgent extends Agent {
     //#ifdef DEBUG
     private static Debug debug = new Debug("CallListAgent", DebugLevel.VERBOSE);
+
     //#endif
 
     /**

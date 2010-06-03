@@ -5,17 +5,20 @@ public class Mail {
     public boolean hasSupportedAttachment = false;
     public boolean hasUnsupportedAttachment = false;
 
-    public  String plainTextMessage;
-    public  String htmlMessage;
-    public boolean isMultipart() {
-        
+    public String plainTextMessage;
+    public String htmlMessage;
+
+    public final boolean isMultipart() {
+
         return hasText() && hasHtml();
     }
-    public boolean hasText() {        
+
+    public final boolean hasText() {
         return plainTextMessage != null;
     }
-    public boolean hasHtml() {        
+
+    public final boolean hasHtml() {
         return htmlMessage != null;
     }
-    
+
 }

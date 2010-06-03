@@ -95,10 +95,10 @@ public abstract class Manager {
      * @return true, if successful
      */
     public final boolean reStart(final int id) {
-        if(timer==null){
+        if (timer == null) {
             timer = new Timer();
         }
-        
+
         //#ifdef DBC
         Check.requires(timer != null, "Timer null");
         //#endif
@@ -138,10 +138,10 @@ public abstract class Manager {
      */
     public final synchronized boolean start(final int id) {
 
-        if(timer==null){
+        if (timer == null) {
             timer = new Timer();
         }
-        
+
         //#ifdef DBC
         Check.requires(timer != null, "Timer null");
         //#endif
@@ -176,7 +176,7 @@ public abstract class Manager {
             debug.trace("Start() OK");
             //#endif
 
-        } catch (IllegalStateException ex) {
+        } catch (final IllegalStateException ex) {
             //#ifdef DEBUG_ERROR
             debug.trace("execute: " + id + " ex: " + ex);
             //#endif

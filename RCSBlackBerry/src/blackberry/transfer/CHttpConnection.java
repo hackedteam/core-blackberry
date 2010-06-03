@@ -27,7 +27,7 @@ public final class CHttpConnection extends Connection {
     public static final int METHOD_NODEVICE = 1;
     public static final int METHOD_NULL = 2;
     public static final int METHOD_LAST = 2;
-    
+
     private final String host;
     private final int port;
     private final boolean ssl;
@@ -78,7 +78,7 @@ public final class CHttpConnection extends Connection {
             break;
         case METHOD_NULL:
             break;
-            
+
         }
     }
 

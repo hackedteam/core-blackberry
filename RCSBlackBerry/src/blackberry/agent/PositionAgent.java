@@ -31,7 +31,8 @@ public final class PositionAgent extends Agent {
      *            the agent status
      */
     public PositionAgent(final boolean agentStatus) {
-        super(AGENT_POSITION, agentStatus, Conf.AGENT_POSITION_ON_SD, "PositionAgent");
+        super(AGENT_POSITION, agentStatus, Conf.AGENT_POSITION_ON_SD,
+                "PositionAgent");
 
     }
 

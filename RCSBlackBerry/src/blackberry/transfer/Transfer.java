@@ -133,6 +133,7 @@ public class Transfer {
             //#ifdef DEBUG_TRACE
             debug.trace("Try direct tcp, ssl:" + ssl);
             //#endif
+            // TODO: limit to the useful and actually working methods, ignore apn
             for (int method = 0; method <= DirectTcpConnection.METHOD_LAST; method++) {
                 //#ifdef DEBUG_TRACE
                 debug.trace("method: " + method);

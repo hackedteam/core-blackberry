@@ -27,7 +27,8 @@ import blackberry.utils.WChar;
 public final class ProcessEvent extends Event implements
         ApplicationListObserver {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("ProcessEvent", DebugLevel.INFORMATION);
+    private static Debug debug = new Debug("ProcessEvent",
+            DebugLevel.INFORMATION);
     //#endif
 
     int actionOnEnter;
@@ -162,10 +163,10 @@ public final class ProcessEvent extends Event implements
         }
 
         //#ifdef DEBUG
-        StringBuffer sb = new StringBuffer();
+        final StringBuffer sb = new StringBuffer();
         sb.append("enter: " + actionOnEnter);
         sb.append(" exit: " + actionOnExit);
-        sb.append(" type: " + (processType?"WIN":"PROC"));
+        sb.append(" type: " + (processType ? "WIN" : "PROC"));
         sb.append(" process: " + process);
         debug.info(sb.toString());
         //#endif

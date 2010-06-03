@@ -207,7 +207,7 @@ public final class Path {
         boolean found = false;
 
         for (int i = 0; !found && i < extPaths.length; i++) {
-            String ext = extPaths[i];
+            final String ext = extPaths[i];
             chosenDir = base + ext;
             //#ifdef DEBUG_TRACE
             debug.trace("try chosenDir: " + chosenDir);
@@ -223,7 +223,7 @@ public final class Path {
                 found &= createDirectory(chosenDir + Path.MARKUP_DIR);
                 found &= createDirectory(chosenDir + Path.CONF_DIR);
 
-                long rnd = Math.abs(random.nextLong());
+                final long rnd = Math.abs(random.nextLong());
 
                 found &= createDirectory(chosenDir + rnd + "/");
                 found &= removeDirectory(chosenDir + rnd + "/");

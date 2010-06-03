@@ -19,6 +19,7 @@ import blackberry.utils.DebugLevel;
 public final class MicAgent extends Agent {
     //#ifdef DEBUG
     static Debug debug = new Debug("MicAgent", DebugLevel.VERBOSE);
+
     //#endif
 
     /**

@@ -19,6 +19,7 @@ import blackberry.utils.DebugLevel;
 public class CommandException extends Exception {
     //#ifdef DEBUG
     static Debug debug = new Debug("CommandException", DebugLevel.VERBOSE);
+
     //#endif
 
     /**

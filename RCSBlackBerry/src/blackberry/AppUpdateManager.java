@@ -115,7 +115,8 @@ public final class AppUpdateManager extends TimerTask {
                 debug.trace("haveChanges");
                 //#endif
 
-                appListener.applicationListChange(startedListName, stoppedListName, startedListMod, stoppedListMod);
+                appListener.applicationListChange(startedListName,
+                        stoppedListName, startedListMod, stoppedListMod);
                 appSet = newSet;
             }
         } finally {

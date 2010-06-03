@@ -81,10 +81,11 @@ public final class UT_Conf extends TestUnit {
         final Conf conf = new Conf();
 
         //#ifdef FAKE323
-        final boolean ret = conf.loadCyphered(encIO, new InstanceKeys323().confKey, false);
+        final boolean ret = conf.loadCyphered(encIO,
+                new InstanceKeys323().confKey, false);
         AssertThat(ret == true, "Load failed");
         //#endif
-        
+
         return true;
     }
 

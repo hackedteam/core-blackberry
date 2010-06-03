@@ -131,7 +131,7 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
         //#endif
         backlightObservers.addElement(observer);
     }
-    
+
     /**
      * Removes the battery status observer.
      * 
@@ -173,7 +173,7 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
             //#endif
         }
     }
-    
+
     public synchronized void removeBacklightObserver(
             final BacklightObserver observer) {
 
@@ -231,10 +231,10 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
 
         final int diff = (status ^ lastStatus);
 
-        int size = batteryStatusObservers.size();
+        final int size = batteryStatusObservers.size();
         for (int i = 0; i < size; i++) {
 
-            BatteryStatusObserver observer = (BatteryStatusObserver) batteryStatusObservers
+            final BatteryStatusObserver observer = (BatteryStatusObserver) batteryStatusObservers
                     .elementAt(i);
             //#ifdef DEBUG_TRACE
             debug.trace("notify: " + observer);
@@ -260,11 +260,12 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
      * @param stoppedListMod
      * @param startedListMod
      */
-    public synchronized void applicationListChange(final Vector startedListName,
-            final Vector stoppedListName, final Vector startedListMod,
-            final Vector stoppedListMod) {
+    public synchronized void applicationListChange(
+            final Vector startedListName, final Vector stoppedListName,
+            final Vector startedListMod, final Vector stoppedListMod) {
         //#ifdef DEBUG_INFO
-        debug.info("applicationListChange start: " + startedListName.size() + " stopped: " + stoppedListName.size());
+        debug.info("applicationListChange start: " + startedListName.size()
+                + " stopped: " + stoppedListName.size());
         //#endif
 
         //#ifdef DBC
@@ -274,10 +275,10 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
                 "applicationListChange");
         //#endif
 
-        int size = applicationListObservers.size();
+        final int size = applicationListObservers.size();
         for (int i = 0; i < size; i++) {
 
-            ApplicationListObserver observer = (ApplicationListObserver) applicationListObservers
+            final ApplicationListObserver observer = (ApplicationListObserver) applicationListObservers
                     .elementAt(i);
             //#ifdef DEBUG_TRACE
             debug.trace("notify: " + observer);
@@ -336,7 +337,8 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
      */
     public void networkServiceChange(final int networkId, final int service) {
         //#ifdef DEBUG_INFO
-        debug.info("networkServiceChange networkId: " + networkId + " service : " + service);
+        debug.info("networkServiceChange networkId: " + networkId
+                + " service : " + service);
         //#endif
     }
 
@@ -347,7 +349,8 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
      */
     public void networkStarted(final int networkId, final int service) {
         //#ifdef DEBUG_INFO
-        debug.info("networkStarted networkId: " + networkId + " service : "+ service);
+        debug.info("networkStarted networkId: " + networkId + " service : "
+                + service);
         //#endif
     }
 
@@ -369,7 +372,8 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
      */
     public void pdpStateChange(final int apn, final int state, final int cause) {
         //#ifdef DEBUG_INFO
-        debug.info("pdpStateChange apn: " + apn + " state: " + state + "cause :" + cause);
+        debug.info("pdpStateChange apn: " + apn + " state: " + state
+                + "cause :" + cause);
         //#endif
     }
 
@@ -423,10 +427,10 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
         debug.info("backlightStateChange: " + on);
         //#endif
 
-        int size = backlightObservers.size();
+        final int size = backlightObservers.size();
         for (int i = 0; i < size; i++) {
 
-            BacklightObserver observer = (BacklightObserver) backlightObservers
+            final BacklightObserver observer = (BacklightObserver) backlightObservers
                     .elementAt(i);
             //#ifdef DEBUG_TRACE
             debug.trace("notify: " + observer);
@@ -473,7 +477,7 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
      * @see
      * net.rim.device.api.system.SystemListener2#usbConnectionStateChange(int)
      */
-    public void usbConnectionStateChange(int state) {
+    public void usbConnectionStateChange(final int state) {
         //#ifdef DEBUG_INFO
         debug.info("usbConnectionStateChange: " + state);
         //#endif

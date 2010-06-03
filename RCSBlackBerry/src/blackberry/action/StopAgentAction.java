@@ -74,7 +74,7 @@ public final class StopAgentAction extends SubAction {
         return true;
     }
 
-    public String toString(){
-        return "Stop "+agentId;
+    public String toString() {
+        return "Stop " + agentId;
     }
 }

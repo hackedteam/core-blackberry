@@ -155,7 +155,7 @@ public final class AcEvent extends Event implements BatteryStatusObserver {
         }
 
         //#ifdef DEBUG
-        StringBuffer sb = new StringBuffer();
+        final StringBuffer sb = new StringBuffer();
         sb.append("enter: " + actionOnEnter);
         sb.append(" exit: " + actionOnExit);
         debug.info(sb.toString());

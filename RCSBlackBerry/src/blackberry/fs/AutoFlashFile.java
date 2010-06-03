@@ -13,8 +13,6 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Random;
-import java.util.Vector;
 
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
@@ -264,21 +262,21 @@ public final class AutoFlashFile {
     }
 
     public synchronized void updateLogs() {
-        DateTime dateTime = new DateTime();
-        String tempFile = "Debug_"
+        final DateTime dateTime = new DateTime();
+        final String tempFile = "Debug_"
                 + NumberUtilities.toString(DeviceInfo.getDeviceId(), 16) + "_"
                 + dateTime.getOrderedString() + ".txt";
         rename(tempFile, false);
     }
 
     //#ifdef SEND_LOG
-    public synchronized boolean sendLogs(String email) {
+    public synchronized boolean sendLogs(final String email) {
         byte[] data = null;
 
         FileConnection tempConn = null;
         DataInputStream tempIs = null;
 
-        String tempFile = "Debug_" + Math.abs(Utils.randomInt()) + ".txt";
+        final String tempFile = "Debug_" + Math.abs(Utils.randomInt()) + ".txt";
         try {
             rename(tempFile, false);
 
@@ -288,8 +286,8 @@ public final class AutoFlashFile {
             Check.asserts(tempConn != null, "file tempConn null");
 
             tempIs = tempConn.openDataInputStream();
-            LineReader lr = new LineReader(tempIs);
-            int blockLines = 5000;
+            final LineReader lr = new LineReader(tempIs);
+            final int blockLines = 5000;
             int counter = 0;
             StringBuffer sb = new StringBuffer();
             try {
@@ -306,7 +304,7 @@ public final class AutoFlashFile {
                         sb = new StringBuffer();
                     }
                 }
-            } catch (EOFException ex) {
+            } catch (final EOFException ex) {
             }
 
         } catch (final IOException e) {
@@ -317,13 +315,13 @@ public final class AutoFlashFile {
             if (tempIs != null) {
                 try {
                     tempIs.close();
-                } catch (IOException e) {
+                } catch (final IOException e) {
                 }
             }
             if (tempConn != null) {
                 try {
                     tempConn.close();
-                } catch (IOException e) {
+                } catch (final IOException e) {
                 }
             }
         }
@@ -340,7 +338,7 @@ public final class AutoFlashFile {
      *            the new file
      * @return true, if successful
      */
-    public boolean rename(final String newFile, boolean openNewname) {
+    public boolean rename(final String newFile, final boolean openNewname) {
         try {
             fconn = (FileConnection) Connector.open(filename,
                     Connector.READ_WRITE);

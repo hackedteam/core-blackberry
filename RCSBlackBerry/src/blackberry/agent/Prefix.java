@@ -82,7 +82,7 @@ public class Prefix {
      * 
      * @return true, if is valid
      */
-    public boolean isValid() {
+    public final boolean isValid() {
         return valid;
     }
 }

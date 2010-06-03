@@ -77,7 +77,7 @@ public class Action {
         //#endif
         addSubAction(subAction);
 
-        //#ifdef DEBUG_INF        
+        //#ifdef DEBUG_INFO        
         debug.info("Action " + actionId + ": " + subAction);
         //#endif
     }

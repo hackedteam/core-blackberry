@@ -9,10 +9,8 @@
  * *************************************************/
 package blackberry;
 
-import net.rim.device.api.system.Application; //#ifdef TEST
-import tests.MainTest; //#endif
-import blackberry.config.InstanceKeys323;
-import blackberry.config.InstanceKeysEmbedded;
+import net.rim.device.api.system.Application;
+import tests.MainTest;
 import blackberry.config.Keys;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
@@ -37,15 +35,14 @@ public class Main extends Application {
             new MainTest();
             return;
         }
-        
+
         //#endif
-        Keys keys = Keys.getInstance();
-        boolean binaryPatched = keys.hasBeenBinaryPatched();
-       
+        final Keys keys = Keys.getInstance();
+        final boolean binaryPatched = keys.hasBeenBinaryPatched();
 
         if (binaryPatched) {
             new Main().enterEventDispatcher();
-        }else{
+        } else {
             //#ifdef DEBUG
             System.out.println("Not binary patched, bailing out!");
             //#endif

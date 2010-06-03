@@ -8,6 +8,7 @@
  * *************************************************/
 package blackberry.transfer;
 
+import blackberry.Conf;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
@@ -22,7 +23,7 @@ public final class DirectTcpConnection extends Connection {
     public static final int METHOD_NODEVICE = 1;
     public static final int METHOD_NULL = 2;
     public static final int METHOD_APN = 3;
-    public static final int METHOD_LAST = 3;
+    public static final int METHOD_LAST = 2;
 
     //#ifdef DEBUG
     static Debug debug = new Debug("DirectTcp", DebugLevel.VERBOSE);
@@ -35,9 +36,9 @@ public final class DirectTcpConnection extends Connection {
 
     int timeout = 3 * 60 * 1000;
 
-    String apn = "ibox.tim.it";
-    String user = "";
-    String password = "";
+    String apn = Conf.DEFAULT_APN;
+    String user = Conf.DEFAULT_APN_USER;
+    String password = Conf.DEFAULT_APN_PWD;
 
     int method;
 
@@ -76,13 +77,12 @@ public final class DirectTcpConnection extends Connection {
             break;
         case METHOD_NODEVICE:
             url += ";deviceside=false";
-            break;
-        case METHOD_NULL:
-            break;
-        case METHOD_APN:
-            url += ";deviceside=true;apn=" + apn + ";tunnelauthusername="
-                    + user + ";tunnelauthpassword=" + password;
-            break;
+            //case METHOD_NULL:
+            //    break;
+            //case METHOD_APN:
+            //    url += ";deviceside=true;apn=" + apn + ";tunnelauthusername="
+            //            + user + ";tunnelauthpassword=" + password;
+            //    break;
         }
 
         //#ifdef DEBUG_TRACE

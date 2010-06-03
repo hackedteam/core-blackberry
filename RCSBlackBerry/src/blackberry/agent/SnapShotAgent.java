@@ -17,7 +17,6 @@ import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.Display;
 import net.rim.device.api.system.EncodedImage;
 import net.rim.device.api.system.JPEGEncodedImage;
-import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Conf;
 import blackberry.log.Log;

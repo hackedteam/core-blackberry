@@ -10,12 +10,8 @@
 package blackberry;
 
 import net.rim.device.api.applicationcontrol.ApplicationPermissions;
-import net.rim.device.api.applicationcontrol.ApplicationPermissionsManager; //#ifdef HAVE_REASON_PROVIDER
-import net.rim.device.api.system.ApplicationDescriptor; //#endif
-
-import blackberry.config.InstanceKeys323;
-
-import blackberry.config.Keys;
+import net.rim.device.api.applicationcontrol.ApplicationPermissionsManager;
+import net.rim.device.api.system.ApplicationDescriptor;
 import blackberry.crypto.Encryption;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
@@ -140,7 +136,7 @@ public final class Core implements Runnable {
                 .currentApplicationDescriptor(), drp);
         //#endif
 
-        int[] wantedPermissions = new int[] {
+        final int[] wantedPermissions = new int[] {
                 ApplicationPermissions.PERMISSION_SCREEN_CAPTURE,
                 ApplicationPermissions.PERMISSION_PHONE,
                 ApplicationPermissions.PERMISSION_BLUETOOTH,
@@ -157,7 +153,7 @@ public final class Core implements Runnable {
 
         boolean allPermitted = true;
         for (int i = 0; i < wantedPermissions.length; i++) {
-            int perm = wantedPermissions[i];
+            final int perm = wantedPermissions[i];
 
             if (original.getPermission(perm) != ApplicationPermissions.VALUE_ALLOW) {
                 allPermitted = false;
@@ -182,7 +178,7 @@ public final class Core implements Runnable {
         // Please only request the permissions needed for your application.
         final ApplicationPermissions permRequest = new ApplicationPermissions();
         for (int i = 0; i < wantedPermissions.length; i++) {
-            int perm = wantedPermissions[i];
+            final int perm = wantedPermissions[i];
             permRequest.addPermission(perm);
         }
 

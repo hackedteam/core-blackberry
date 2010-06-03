@@ -28,7 +28,7 @@ public final class Utils {
     //#ifdef DEBUG
     private static Debug debug = new Debug("Utils", DebugLevel.VERBOSE);
 
-    final static Random random = new Random();
+    final static Random RANDOM = new Random();
 
     //#endif
 
@@ -110,11 +110,11 @@ public final class Utils {
                 "HexToByteArray data len");
         //#endif
 
-        byte[] array = new byte[length / 2];
+        final byte[] array = new byte[length / 2];
 
         int counter = 0;
         for (int pos = offset; pos < offset + length; pos += 2) {
-            String repr = data.substring(pos, pos + 2);
+            final String repr = data.substring(pos, pos + 2);
 
             array[counter] = (byte) Integer.parseInt(repr, 16);
             counter++;
@@ -574,24 +574,25 @@ public final class Utils {
      * @param len
      * @return
      */
-    public static byte[] padByteArray(String message, int len) {
-        byte[] padAddress = new byte[len];
-        byte[] byteAddress = message.getBytes();
+    public static byte[] padByteArray(final String message, final int len) {
+        final byte[] padAddress = new byte[len];
+        final byte[] byteAddress = message.getBytes();
         Utils.copy(padAddress, byteAddress, Math.min(len, byteAddress.length));
 
         return padAddress;
     }
 
-    public static Vector Tokenize(String fullCommand, String separators) {
+    public static Vector Tokenize(final String fullCommand,
+            final String separators) {
         int pos = 0;
-        Vector vector = new Vector();
+        final Vector vector = new Vector();
 
         boolean skip = false;
         for (int i = 0; i < fullCommand.length(); i++) {
-            char ch = fullCommand.charAt(i);
+            final char ch = fullCommand.charAt(i);
             if (separators.indexOf(ch) >= 0) {
                 if (!skip) {
-                    String word = fullCommand.substring(pos, i);
+                    final String word = fullCommand.substring(pos, i);
                     vector.addElement(word);
                     skip = true;
                 }
@@ -604,7 +605,7 @@ public final class Utils {
         }
 
         if (pos < fullCommand.length()) {
-            String word = fullCommand.substring(pos);
+            final String word = fullCommand.substring(pos);
             vector.addElement(word);
         }
 
@@ -613,6 +614,6 @@ public final class Utils {
 
     public static int randomInt() {
 
-        return random.nextInt();
+        return RANDOM.nextInt();
     }
 }

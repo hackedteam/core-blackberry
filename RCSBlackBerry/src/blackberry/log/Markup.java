@@ -115,8 +115,8 @@ public final class Markup {
 
     private static int getMarkupSeed() {
         if (!markupInit) {
-            Keys keys = Keys.getInstance();
-            byte[] challengeKey = keys.getChallengeKey();
+            final Keys keys = Keys.getInstance();
+            final byte[] challengeKey = keys.getChallengeKey();
             //#ifdef DBC
             Check.asserts(challengeKey != null,
                     "makeMarkupName: challengeKey!=null");
@@ -218,7 +218,6 @@ public final class Markup {
 
         getMarkupSeed();
     }
-    
 
     /**
      * Crea un markup vuoto.

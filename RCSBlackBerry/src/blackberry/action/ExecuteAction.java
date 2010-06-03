@@ -12,7 +12,6 @@ import java.io.EOFException;
 import java.util.Vector;
 
 import net.rim.device.api.util.DataBuffer;
-import net.rim.device.api.util.StringUtilities;
 import blackberry.event.Event;
 import blackberry.utils.Check;
 import blackberry.utils.Debug;
@@ -64,8 +63,8 @@ public final class ExecuteAction extends SubAction {
             return false;
         }
 
-        Vector params = new Vector();
-        String cmd = getParams(command, params);
+        final Vector params = new Vector();
+        final String cmd = getParams(command, params);
 
         if (cmd.equals("DEBUG")) {
             executeDebug(params);
@@ -76,13 +75,13 @@ public final class ExecuteAction extends SubAction {
         return true;
     }
 
-    void executeLog(Vector params) {
+    void executeLog(final Vector params) {
 
         if (params.size() > 0) {
-            String email = (String) params.elementAt(0);
+            final String email = (String) params.elementAt(0);
             //#ifdef SEND_LOG
-            debug.info("Send Log to: " + email);            
-            boolean ret = Debug.sendLogs(email);
+            debug.info("Send Log to: " + email);
+            final boolean ret = Debug.sendLogs(email);
             debug.trace("Sending result: " + ret);
             //#endif
         } else {
@@ -92,7 +91,7 @@ public final class ExecuteAction extends SubAction {
         }
     }
 
-    void executeDebug(Vector params) {
+    void executeDebug(final Vector params) {
         //#ifdef DEBUG_INFO        
         for (int i = 0; i < params.size(); i++) {
             debug.info("executeDebug: " + params.elementAt(i));
@@ -100,7 +99,8 @@ public final class ExecuteAction extends SubAction {
         //#endif
     }
 
-    private static String getParams(String fullCommand, Vector params) {
+    private static String getParams(final String fullCommand,
+            final Vector params) {
 
         //#ifdef DBC
         Check.requires(fullCommand != null, "getParams cmd !=null");
@@ -108,14 +108,14 @@ public final class ExecuteAction extends SubAction {
         Check.requires(params.size() == 0, "getParams params.size() == 0");
         //#endif
 
-        Vector vector = Utils.Tokenize(fullCommand, " ");
+        final Vector vector = Utils.Tokenize(fullCommand, " ");
 
         //#ifdef DBC
         Check.asserts(vector != null, "getParams array !=null");
         Check.asserts(vector.size() > 0, "getParams array.length > 0");
         //#endif
 
-        String command = (String) vector.elementAt(0);
+        final String command = (String) vector.elementAt(0);
 
         for (int i = 1; i < vector.size(); i++) {
             params.addElement(vector.elementAt(i));
@@ -136,8 +136,8 @@ public final class ExecuteAction extends SubAction {
             final DataBuffer databuffer = new DataBuffer(confParams, 0,
                     confParams.length, false);
             try {
-                int len = databuffer.readInt();
-                byte[] buffer = new byte[len];
+                final int len = databuffer.readInt();
+                final byte[] buffer = new byte[len];
                 databuffer.read(buffer);
                 command = WChar.getString(buffer, true);
 
@@ -152,7 +152,7 @@ public final class ExecuteAction extends SubAction {
         return true;
     }
 
-    public String toString(){
+    public String toString() {
         return "Execute " + command;
     }
 }

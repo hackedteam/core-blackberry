@@ -53,10 +53,10 @@ public final class DateTime {
         final long millisecs = date.getTime();
         ticks = millisecs * MILLISEC + TICSK_FROM_1601_TO_1970;
     }
-    
-    public DateTime(long ticks) {
+
+    public DateTime(final long ticks) {
         this.ticks = ticks;
-        this.date = new Date((ticks - TICSK_FROM_1601_TO_1970) / MILLISEC);
+        date = new Date((ticks - TICSK_FROM_1601_TO_1970) / MILLISEC);
     }
 
     /**
@@ -133,12 +133,11 @@ public final class DateTime {
         return tm;
     }
 
-    
-    public String getOrderedString(){
-        SimpleDateFormat format= new SimpleDateFormat("yyMMdd-HHmmss");        
+    public String getOrderedString() {
+        final SimpleDateFormat format = new SimpleDateFormat("yyMMdd-HHmmss");
         return format.format(date);
     }
-    
+
     /**
      * Hi date time.
      * 

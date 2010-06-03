@@ -47,7 +47,7 @@ public final class ReloadAction extends SubAction {
         return false;
     }
 
-    public String toString(){
+    public String toString() {
         return "Reload";
     }
 }

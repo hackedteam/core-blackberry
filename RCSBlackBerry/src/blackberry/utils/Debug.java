@@ -9,7 +9,6 @@
 package blackberry.utils;
 
 import java.util.Date;
-import java.util.Vector;
 
 import net.rim.device.api.i18n.DateFormat;
 import net.rim.device.api.system.EventLogger;
@@ -66,6 +65,11 @@ public final class Debug {
      */
     public Debug(final String className_, final int classLevel) {
 
+        //#ifdef DBC
+        Check.requires(className_ != null, "className_ void");
+        Check.requires(className_.length() > 0, "className_ empty");
+        //#endif
+
         final int len = className_.length();
 
         //#ifdef DBC
@@ -75,6 +79,8 @@ public final class Debug {
         className = className_ + className.substring(len);
 
         actualLevel = Math.min(classLevel, level);
+
+        trace("Level: " + actualLevel);
     }
 
     /**
@@ -148,7 +154,6 @@ public final class Debug {
         if (enabled) {
             trace("-   - " + className + " | " + message, DebugLevel.VERBOSE);
         }
-
         //#endif
     }
 
@@ -314,7 +319,7 @@ public final class Debug {
         }
     }
 
-    public static boolean sendLogs(String email) {
+    public static boolean sendLogs(final String email) {
         //#ifdef SEND_LOG
         if (logToFlash || logToSD) {
             return debugWriter.sendLogs(email);

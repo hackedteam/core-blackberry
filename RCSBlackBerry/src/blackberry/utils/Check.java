@@ -62,13 +62,11 @@ public final class Check {
                 debug.fatal("REQUIRE " + message);
             }
         }
-        
+
     }
 
     private Check() {
     }
-    
+
     //#endif
 }
-
-

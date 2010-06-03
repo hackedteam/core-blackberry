@@ -19,6 +19,7 @@ import blackberry.utils.DebugLevel;
 public final class TaskAgent extends Agent {
     //#ifdef DEBUG
     static Debug debug = new Debug("TaskAgent", DebugLevel.VERBOSE);
+
     //#endif
 
     /**

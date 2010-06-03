@@ -57,9 +57,9 @@ public final class UT_Log extends TestUnit {
         final Status status = Status.getInstance();
         status.clear();
 
-        final Agent agent = Agent.factory(Agent.AGENT_DEVICE, true, Utils.intToByteArray(0));
+        final Agent agent = Agent.factory(Agent.AGENT_DEVICE, true, Utils
+                .intToByteArray(0));
 
-       
         agent.stop();
 
         //#ifdef DEBUG_TRACE
@@ -73,7 +73,8 @@ public final class UT_Log extends TestUnit {
         final Status status = Status.getInstance();
         status.clear();
 
-        final Agent agent = Agent.factory(Agent.AGENT_DEVICE, true, Utils.intToByteArray(0));
+        final Agent agent = Agent.factory(Agent.AGENT_DEVICE, true, Utils
+                .intToByteArray(0));
         final Log agentLog = LogCollector.getInstance().factory(agent, true);
 
         agentLog.createLog(null);
@@ -92,7 +93,8 @@ public final class UT_Log extends TestUnit {
         final Device device = Device.getInstance();
         device.clear();
 
-        final Agent agent = Agent.factory(Agent.AGENT_DEVICE, true, Utils.intToByteArray(0));
+        final Agent agent = Agent.factory(Agent.AGENT_DEVICE, true, Utils
+                .intToByteArray(0));
 
         final Log agentLog = LogCollector.getInstance().factory(agent, true);
 

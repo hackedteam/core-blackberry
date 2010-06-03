@@ -24,7 +24,7 @@ class SMSINListener implements MessageListener, Runnable {
     private int messages;
     private final SmsListener smsListener;
     private final MessageConnection conn;
-    
+
     boolean requestStop;
 
     public SMSINListener(final MessageConnection conn,
@@ -38,8 +38,8 @@ class SMSINListener implements MessageListener, Runnable {
         messages++;
         notifyAll();
     }
-    
-    public void stop(){
+
+    public void stop() {
         requestStop = true;
     }
 

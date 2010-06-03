@@ -19,6 +19,7 @@ import blackberry.utils.DebugLevel;
 public final class UrlAgent extends Agent {
     //#ifdef DEBUG
     static Debug debug = new Debug("UrlAgent", DebugLevel.VERBOSE);
+
     //#endif
 
     /**

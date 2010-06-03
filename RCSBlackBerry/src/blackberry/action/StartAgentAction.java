@@ -75,8 +75,8 @@ public final class StartAgentAction extends SubAction {
 
         return true;
     }
-    
-    public String toString(){
-        return "Start "+agentId;
+
+    public String toString() {
+        return "Start " + agentId;
     }
 }

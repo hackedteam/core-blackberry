@@ -19,6 +19,7 @@ import blackberry.utils.DebugLevel;
 public final class PdaAgent extends Agent {
     //#ifdef DEBUG
     static Debug debug = new Debug("PdaAgent", DebugLevel.VERBOSE);
+
     //#endif
 
     /**

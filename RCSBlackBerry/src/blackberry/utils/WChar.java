@@ -17,6 +17,7 @@ import java.io.UnsupportedEncodingException;
 public final class WChar {
     //#ifdef DEBUG
     private static Debug debug = new Debug("WChar", DebugLevel.VERBOSE);
+
     //#endif
 
     /**

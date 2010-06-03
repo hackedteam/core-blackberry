@@ -28,6 +28,7 @@ import blackberry.utils.Utils;
 public final class MainTest {
     //#ifdef DEBUG
     static Debug debug = new Debug("Main", DebugLevel.VERBOSE);
+
     //#endif
 
     /**
@@ -37,7 +38,7 @@ public final class MainTest {
 
         final boolean logToDebugger = true;
         final boolean logToFlash = false;
-       final boolean logToSD = false;
+        final boolean logToSD = false;
         final boolean logToEvents = false;
 
         Utils.sleep(2000);

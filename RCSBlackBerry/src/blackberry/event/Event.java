@@ -60,7 +60,7 @@ public abstract class Event extends TimerJob {
 
     /** The Constant EVENT_BATTERY. */
     public static final int EVENT_BATTERY = EVENT + 0xb;
-    
+
     /** The Constant EVENT_BATTERY. */
     public static final int EVENT_SCREENSAVER = EVENT + 0xc;
 

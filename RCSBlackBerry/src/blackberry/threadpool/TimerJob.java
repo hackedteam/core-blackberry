@@ -109,25 +109,30 @@ public abstract class TimerJob {
     /**
      * La classe TimerWrapper serve ad incapsulare un TimerJob in un TimerTask,
      * per evitare che TimerJob erediti TimerTask.
-     * Usando il wrapper e' possibile chiamare una stop e successivamente una start,
-     * infatti il timerTask che riceve la cancel a seguito della stop viene ricreato
+     * Usando il wrapper e' possibile chiamare una stop e successivamente una
+     * start,
+     * infatti il timerTask che riceve la cancel a seguito della stop viene
+     * ricreato
      * al successivo start, tramite addToTimer.
-     * Se TimerJob ereditasse da TimerTask, invece, a seguito di un cancel, necessario
-     * allo stop, non sarebbe piu' possibile riagganciarlo ad un timer senza ottenere
-     * un'eccezione. 
-     * 
+     * Se TimerJob ereditasse da TimerTask, invece, a seguito di un cancel,
+     * necessario
+     * allo stop, non sarebbe piu' possibile riagganciarlo ad un timer senza
+     * ottenere
+     * un'eccezione.
      */
-    class TimerWrapper extends TimerTask{
+    class TimerWrapper extends TimerTask {
         TimerJob job;
-        public TimerWrapper(TimerJob job){
-            this.job=job;
+
+        public TimerWrapper(final TimerJob job) {
+            this.job = job;
             job.timerWrapper = this;
         }
+
         public void run() {
-           job.run();            
-        }        
+            job.run();
+        }
     }
-    
+
     /**
      * Adds the to timer.
      * 
@@ -242,7 +247,7 @@ public abstract class TimerJob {
             //#endif
             running = true;
             actualRun();
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             //#ifdef DEBUG_ERROR
             debug.fatal("actualRun: " + ex);
             //#endif
@@ -306,12 +311,12 @@ public abstract class TimerJob {
         //#endif
 
         stopped = true;
-        
-        if(timerWrapper!=null){
+
+        if (timerWrapper != null) {
             timerWrapper.cancel();
         }
         timerWrapper = null;
-        
+
         scheduled = false;
         actualStop();
     }

@@ -270,7 +270,7 @@ public final class UT_Crypto extends TestUnit {
         ret = Encryption.encryptName("*.mob", 0xb0);
         expected = "*.udD";
         AssertEquals(ret, expected, "Scramble 6");
-        
+
         //zepUU!DDDDUfWWDWZ44Bzz.MOB not scrambled: 23411!0000157707966b22.mob
         //ret = Encryption.encryptName("23411!0000157707966b22.mob", (byte) 0xb0);
         //expected = "zepUU!DDDDUfWWDWZ44Bzz.MOB";
@@ -372,9 +372,9 @@ public final class UT_Crypto extends TestUnit {
 
         //#ifdef DEBUG_INFO
         debug.info("JAVA    1: " + elapsed_1);
-        debug.info("RIMWRAP 2: " + elapsed_2);        
-        debug.info("RIM     3: " + elapsed_3);        
-        debug.trace("end test");        
+        debug.info("RIMWRAP 2: " + elapsed_2);
+        debug.info("RIM     3: " + elapsed_3);
+        debug.trace("end test");
         //#endif
 
     }
