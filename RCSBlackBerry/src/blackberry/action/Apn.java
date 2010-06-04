@@ -16,6 +16,6 @@ public class Apn {
     public String pass;
 
     public String toString() {
-        return mcc + "" + mnc + " " + apn + ":" + user + ":" + pass;
+        return "Mcc/Mnc " +mcc + "/" + mnc + " " + apn + ":" + user + ":" + pass;
     }
 }

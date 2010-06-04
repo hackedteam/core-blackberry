@@ -29,7 +29,7 @@ import blackberry.utils.Utils;
 public final class Task implements Singleton {
 
     private static final int SLEEPING_TIME = 1000;
-    private static final long APP_TIMER_PERIOD = 2000;
+    private static final long APP_TIMER_PERIOD = 1000;
 
     /** The debug instance. */
     //#ifdef DEBUG

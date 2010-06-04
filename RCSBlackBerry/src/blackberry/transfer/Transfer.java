@@ -109,7 +109,7 @@ public class Transfer {
             //TODO: forza up di wifi
         }
 
-        if (wifiAdmitted) {
+        if (wifiAdmitted && deviceside == true) {
             //#ifdef DEBUG_TRACE
             debug.trace("Try wifi, ssl:" + ssl);
             //#endif
@@ -153,7 +153,7 @@ public class Transfer {
                     }
                 }
 
-            } else {
+            } else if (deviceside == true) {
                 for (int i = 0; i < apns.size(); i++) {
                     Apn apn = (Apn) apns.elementAt(i);
                     //#ifdef DEBUG_TRACE

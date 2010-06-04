@@ -256,9 +256,6 @@ public final class Log {
             additionalLen = additionalData.length;
         }
 
-        //#ifdef DEBUG_TRACE
-        debug.trace("createLog: makenewName");
-        //#endif
         final Vector tuple = logCollector.makeNewName(this, agent);
         //#ifdef DBC
         Check.asserts(tuple.size() == 5, "Wrong tuple size");

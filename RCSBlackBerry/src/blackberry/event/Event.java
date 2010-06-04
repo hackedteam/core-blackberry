@@ -241,7 +241,7 @@ public abstract class Event extends TimerJob {
      */
     protected final void trigger() {
         //#ifdef DEBUG_TRACE
-        debug.trace("event: " + this + "triggering: " + actionId);
+        debug.trace("event: " + this + " triggering: " + actionId);
         //#endif
         statusObj.triggerAction(actionId, this);
     }
@@ -254,7 +254,7 @@ public abstract class Event extends TimerJob {
      */
     protected final void trigger(final int actualActionId) {
         //#ifdef DEBUG_TRACE
-        debug.trace("event: " + this + "triggering: " + actualActionId);
+        debug.trace("event: " + this + " triggering: " + actualActionId);
         //#endif
         statusObj.triggerAction(actualActionId, this);
     }

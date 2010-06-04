@@ -250,11 +250,6 @@ public final class LogCollector implements Singleton {
      * @return the vector
      */
     public synchronized Vector makeNewName(final Log log, final Agent agent) {
-
-        //#ifdef DEBUG_TRACE
-        debug.trace("makeNewName");
-        //#endif
-
         final boolean onSD = agent.onSD();
         final Date timestamp = log.timestamp;
         final int progressive = getNewProgressive();
