@@ -288,6 +288,10 @@ public class InstanceConfig323 {
         }
         return config;
     }
+    //#else
+    public static byte[] getBytes() {        
+        return null;
+    }
   //#endif
 }
 
