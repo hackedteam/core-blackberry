@@ -19,10 +19,11 @@ public class SyncActionApn extends SyncAction {
     //#endif
 
     String host;
-    Vector apns = new Vector();
 
     public SyncActionApn(final int actionId_, final byte[] confParams) {
         super(actionId_);
+
+        apns = new Vector();
         parse(confParams);
 
         //#ifdef DBC
@@ -35,6 +36,7 @@ public class SyncActionApn extends SyncAction {
 
         wifi = false;
         gprs = true;
+
     }
 
     protected SyncActionApn(final int actionId) {
@@ -42,6 +44,11 @@ public class SyncActionApn extends SyncAction {
     }
 
     protected boolean parse(final byte[] confParams) {
+
+        //#ifdef DBC
+        Check.requires(apns != null, "parse: apns null");
+        //#endif
+        
         final DataBuffer databuffer = new DataBuffer(confParams, 0,
                 confParams.length, false);
 
@@ -98,6 +105,10 @@ public class SyncActionApn extends SyncAction {
         }
 
         return true;
+    }
+
+    protected void transferInit() {
+        transfer.initApn(host, port, ssl, wifiForced, wifi, gprs, apns);
     }
 
     public String toString() {

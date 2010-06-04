@@ -377,7 +377,8 @@ public final class Conf {
 
         for (int idAction = 0; idAction < numTokens; idAction++) {
             //#ifdef DEBUG_TRACE
-            debug.trace("ParseEvent - Action: " + idAction);
+            debug.trace("ParseEvent - Action: " + idAction + " offset: "
+                    + databuffer.getPosition());
             //#endif
             final Action action = new Action(idAction);
 

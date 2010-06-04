@@ -9,6 +9,8 @@
 package blackberry.transfer;
 
 import blackberry.Conf;
+import blackberry.action.Apn;
+import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
@@ -36,9 +38,12 @@ public final class DirectTcpConnection extends Connection {
 
     int timeout = 3 * 60 * 1000;
 
-    String apn = Conf.DEFAULT_APN;
-    String user = Conf.DEFAULT_APN_USER;
-    String password = Conf.DEFAULT_APN_PWD;
+    /*
+     * String apn = Conf.DEFAULT_APN;
+     * String user = Conf.DEFAULT_APN_USER;
+     * String password = Conf.DEFAULT_APN_PWD;
+     */
+    Apn apn;
 
     int method;
 
@@ -62,6 +67,30 @@ public final class DirectTcpConnection extends Connection {
         ssl = ssl_;
         method = method_;
 
+        //#ifdef DBC
+        Check.requires(method_ != DirectTcpConnection.METHOD_APN,
+                "DirectTcpConnection");
+        //#endif
+        setUrl();
+    }
+
+    public DirectTcpConnection(final String host_, final int port_,
+            final boolean ssl_, final Apn apn_) {
+
+        host = host_;
+        port = port_;
+        ssl = ssl_;
+        method = DirectTcpConnection.METHOD_APN;
+
+        apn = apn_;
+
+        setUrl();
+    }
+
+    /**
+     * 
+     */
+    private void setUrl() {
         if (ssl) {
             url = "ssl://" + host + ":" + port + ";ConnectionTimeout="
                     + timeout;
@@ -77,12 +106,22 @@ public final class DirectTcpConnection extends Connection {
             break;
         case METHOD_NODEVICE:
             url += ";deviceside=false";
-            //case METHOD_NULL:
-            //    break;
-            //case METHOD_APN:
-            //    url += ";deviceside=true;apn=" + apn + ";tunnelauthusername="
-            //            + user + ";tunnelauthpassword=" + password;
-            //    break;
+        case METHOD_NULL:
+            break;
+        case METHOD_APN:
+            if (apn != null) {
+                url += ";deviceside=true;apn=" + apn.apn
+                        + ";tunnelauthusername=" + apn.user
+                        + ";tunnelauthpassword=" + apn.pass;
+            } else {
+                //#ifdef DEBUG_WARN
+                debug.trace("setUrl: apn default");
+                //#endif
+                url += ";deviceside=true;apn=" + Conf.DEFAULT_APN
+                + ";tunnelauthusername=" + Conf.DEFAULT_APN_USER
+                + ";tunnelauthpassword=" + Conf.DEFAULT_APN_PWD;
+            }
+            break;
         }
 
         //#ifdef DEBUG_TRACE

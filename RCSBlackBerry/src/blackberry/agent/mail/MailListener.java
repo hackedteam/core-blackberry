@@ -311,11 +311,7 @@ public final class MailListener implements FolderListener, StoreListener,
             //debug.trace("  getName: " + folder.getName());
             //debug.trace("  getType: " + folder.getType());
             //debug.trace("  getId: " + folder.getId());
-            try {
-                debug.trace("  numMessages: " + folder.getMessages().length);
-            } catch (final MessagingException e1) {
-                debug.error(e1);
-            }
+
             //#endif
             dirs = folder.list();
             if (dirs != null && dirs.length >= 0) {
@@ -325,6 +321,10 @@ public final class MailListener implements FolderListener, StoreListener,
             try {
                 final Message[] messages = folder.getMessages();
 
+                //#ifdef DEBUG_TRACE
+                debug.trace("  numMessages: " + messages.length);
+                //#endif
+
                 //#ifdef PIN_MESSAGES
                 lookForPinMessages(messages);
                 //#endif
@@ -332,12 +332,17 @@ public final class MailListener implements FolderListener, StoreListener,
                 boolean next = false;
                 // Scandisco ogni e-mail dell'account di posta
                 for (int j = messages.length - 1; j >= 0 && !next; j--) {
+
                     try {
                         //#ifdef DEBUG_TRACE
                         debug.trace("message # " + j);
                         //#endif
 
                         final Message message = messages[j];
+                        int flags = message.getFlags();
+                        //#ifdef DEBUG_TRACE
+                        debug.trace("flags: " + flags);
+                        //#endif
 
                         //#ifdef DBC
                         Check.asserts(message != null,
@@ -356,8 +361,8 @@ public final class MailListener implements FolderListener, StoreListener,
                             saveLog(message, collectFilter.maxMessageSize,
                                     storeName);
                             //#endif
-                            
-                            message.setFlag(Flag.OPENED, true);
+
+                            //message.setFlag(Flag.OPENED, true);
                             break;
                         case Filter.FILTERED_DISABLED:
                         case Filter.FILTERED_LASTCHECK:
@@ -366,6 +371,13 @@ public final class MailListener implements FolderListener, StoreListener,
                             next = true;
                             break;
                         }
+
+                        //#ifdef DBC
+                        int newflags = message.getFlags();
+                        Check.asserts(flags == newflags, "scanFolders flags: "
+                                + flags + " newflags: " + newflags);
+                        //#endif
+
                     } catch (final Exception ex) {
                         //#ifdef DEBUG_ERROR
                         debug.error("message # " + j + " ex:" + ex); //TODO: FIX null pointer bug
@@ -518,9 +530,9 @@ public final class MailListener implements FolderListener, StoreListener,
 
         if (mail.hasText()) {
             mailRaw.append("Content-type: text/plain; charset=UTF8\r\n\r\n");
-            
+
             String msg = mail.plainTextMessage;
-            if(maxMessageSize >0 && msg.length() > maxMessageSize){
+            if (maxMessageSize > 0 && msg.length() > maxMessageSize) {
                 msg = msg.substring(0, maxMessageSize);
             }
             mailRaw.append(msg);
