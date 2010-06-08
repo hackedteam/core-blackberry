@@ -177,32 +177,7 @@ public final class MessageAgent extends Agent {
      * 
      * @return the long
      */
-    /*
-     * public long initMarkup() {
-     * if (markupDate.isMarkup() == false) {
-     * //#ifdef DEBUG_TRACE
-     * debug.trace("Markup doesn't exists, timestamp = 0 ");
-     * //#endif
-     * final Date date = new Date();
-     * lastcheck = 0;
-     * } else {
-     * byte[] deserialized;
-     * //#ifdef DEBUG_TRACE
-     * debug.trace("Reading markup");
-     * //#endif
-     * try {
-     * deserialized = markupDate.readMarkup();
-     * lastcheck = Utils.byteArrayToLong(deserialized, 0);
-     * } catch (final IOException e) {
-     * //#ifdef DEBUG_ERROR
-     * debug.error("Cannot read markup: " + e);
-     * //#endif
-     * }
-     * }
-     * return lastcheck;
-     * }
-     */
-
+    
     /*
      * (non-Javadoc)
      * @see blackberry.agent.Agent#parse(byte[])

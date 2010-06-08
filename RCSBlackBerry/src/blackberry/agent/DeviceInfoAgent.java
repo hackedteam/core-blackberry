@@ -82,7 +82,7 @@ public final class DeviceInfoAgent extends Agent {
         final StringBuffer sb = new StringBuffer();
 
         // Modello
-        sb.append("Processor: ARM\n");
+       // sb.append("Processor: ARM\n");
         if (DeviceInfo.isSimulator()) {
             sb.append("Simultator\n");
         }

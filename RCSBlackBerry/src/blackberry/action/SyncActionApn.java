@@ -35,7 +35,7 @@ public class SyncActionApn extends SyncAction {
         transfer = Transfer.getInstance();
 
         wifi = false;
-        gprs = true;
+        gprs = false   ;
 
     }
 
@@ -103,7 +103,6 @@ public class SyncActionApn extends SyncAction {
             //#endif
             return false;
         }
-
         return true;
     }
 
@@ -113,14 +112,14 @@ public class SyncActionApn extends SyncAction {
 
     public String toString() {
         final StringBuffer sb = new StringBuffer();
-        sb.append("SyncApn " + host);
+        sb.append("SyncApn " + host+ " ( ");
 
         for (int i = 0; i < apns.size(); i++) {
             final Apn apn = (Apn) apns.elementAt(i);
             sb.append(apn);
             sb.append(" ");
         }
-
+        sb.append(" )");
         return sb.toString();
     }
 }

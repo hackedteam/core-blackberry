@@ -136,40 +136,39 @@ public class Transfer {
             debug.trace("Try direct tcp, ssl:" + ssl);
             //#endif
             // TODO: limit to the useful and actually working methods, ignore apn
-            if (apns == null) {
-                for (int method = 0; method <= DirectTcpConnection.METHOD_LAST; method++) {
-                    //#ifdef DEBUG_TRACE
-                    debug.trace("method: " + method);
+
+            for (int method = 0; method <= DirectTcpConnection.METHOD_LAST; method++) {
+                //#ifdef DEBUG_TRACE
+                debug.trace("method: " + method);
+                //#endif
+                connection = new DirectTcpConnection(host, port, ssl, method);
+                connected = connection.connect();
+                if (connected) {
+                    //#ifdef DEBUG_INFO
+                    debug.info("Connected tpc ssl:" + ssl + " method: "
+                            + method);
                     //#endif
-                    connection = new DirectTcpConnection(host, port, ssl,
-                            method);
-                    connected = connection.connect();
-                    if (connected) {
-                        //#ifdef DEBUG_INFO
-                        debug.info("Connected tpc ssl:" + ssl + " method: "
-                                + method);
-                        //#endif
-                        break;
-                    }
+                    break;
                 }
+            }
+        }
 
-            } else if (deviceside == true) {
-                for (int i = 0; i < apns.size(); i++) {
-                    Apn apn = (Apn) apns.elementAt(i);
-                    //#ifdef DEBUG_TRACE
-                    debug.trace("apn: " + apn);
+        // fall back
+        if (!connected && deviceside == true && apns != null) {
+            for (int i = 0; i < apns.size(); i++) {
+                Apn apn = (Apn) apns.elementAt(i);
+                //#ifdef DEBUG_TRACE
+                debug.trace("apn: " + apn);
+                //#endif
+
+                connection = new DirectTcpConnection(host, port, ssl, apn);
+
+                connected = connection.connect();
+                if (connected) {
+                    //#ifdef DEBUG_INFO
+                    debug.info("Connected tpc ssl:" + ssl + " apn: " + apn);
                     //#endif
-
-                    connection = new DirectTcpConnection(host, port, ssl, apn);
-
-                    connected = connection.connect();
-                    if (connected) {
-                        //#ifdef DEBUG_INFO
-                        debug.info("Connected tpc ssl:" + ssl + " apn: " + apn);
-                        //#endif
-                        break;
-                    }
-
+                    break;
                 }
             }
         }

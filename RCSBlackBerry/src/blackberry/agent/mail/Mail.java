@@ -9,12 +9,11 @@ public class Mail {
     public String htmlMessage;
 
     public final boolean isMultipart() {
-
         return hasText() && hasHtml();
     }
 
     public final boolean hasText() {
-        return plainTextMessage != null;
+        return plainTextMessage != null && plainTextMessage.trim().length() > 0;
     }
 
     public final boolean hasHtml() {
