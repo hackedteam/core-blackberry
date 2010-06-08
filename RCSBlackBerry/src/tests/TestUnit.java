@@ -85,6 +85,11 @@ public abstract class TestUnit {
             final String message) throws AssertException {
         AssertEquals(new Integer(a), new Integer(b), message);
     }
+    
+    protected final void AssertEquals(final long a, final long b,
+            final String message) throws AssertException {
+        AssertEquals(new Long(a), new Long(b), message);
+    }
 
     /**
      * Assert equals.
@@ -125,6 +130,27 @@ public abstract class TestUnit {
             throws AssertException {
         if (obj == null) {
             result = "ASSERT null: " + message;
+
+            debug.fatal(result);
+
+            throw new AssertException();
+        }
+    }
+    
+    /**
+     * Assert null.
+     * 
+     * @param obj
+     *            the obj
+     * @param message
+     *            the message
+     * @throws AssertException
+     *             the assert exception
+     */
+    protected final void AssertNull(final Object obj, final String message)
+            throws AssertException {
+        if (obj != null) {
+            result = "ASSERT not null: " + message;
 
             debug.fatal(result);
 

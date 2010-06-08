@@ -26,7 +26,7 @@ import blackberry.utils.Utils;
 /**
  * The Class Markup.
  */
-public final class Markup {
+public class Markup {
 
     public static final String MARKUP_EXTENSION = ".qmm";
     public static byte markupSeed;

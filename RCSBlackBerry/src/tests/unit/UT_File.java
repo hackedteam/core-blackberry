@@ -78,7 +78,7 @@ public final class UT_File extends TestUnit {
 
     private void FileCreateTest() throws AssertException {
 
-        Path.getRoots();
+       
 
         final AutoFlashFile file = new AutoFlashFile(Path.SD_PATH
                 + "testCreate.txt", false);
@@ -126,6 +126,9 @@ public final class UT_File extends TestUnit {
      * @see tests.TestUnit#run()
      */
     public boolean run() throws AssertException {
+        Path.makeDirs(Path.SD);
+        Path.makeDirs(Path.USER);
+        
         FileCreateTest();
         FileCreateHiddenTest();
         FileReadWriteTest();

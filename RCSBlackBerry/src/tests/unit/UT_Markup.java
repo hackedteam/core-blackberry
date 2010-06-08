@@ -10,12 +10,14 @@
 package tests.unit;
 
 import java.io.IOException;
+import java.util.Date;
 
 import tests.AssertException;
 import tests.TestUnit;
 import tests.Tests;
 import blackberry.agent.Agent;
 import blackberry.config.Keys;
+import blackberry.log.TimestampMarkup;
 import blackberry.log.Markup;
 import blackberry.utils.Utils;
 
@@ -49,8 +51,64 @@ public final class UT_Markup extends TestUnit {
 
         DeleteAllMarkupTest();
         SimpleMarkupTest();
+        DictMarkupTest();
 
         return true;
+    }
+
+    private void DictMarkupTest() throws AssertException {
+        final int agentId = Agent.AGENT_APPLICATION;
+        final TimestampMarkup markup = new TimestampMarkup(agentId, Keys
+                .getInstance().getAesKey());
+
+        AssertThat(markup.isMarkup(), "isMarkup");
+        AssertNull(markup.get("FIRST"), "get");
+
+        // aggiunta
+        Date now = new Date();
+        markup.put("FIRST", now);
+        Date fetch = markup.get("FIRST");
+        AssertEquals(now.getTime(), fetch.getTime(), "differents getTime 1");
+
+        // sostituzione
+        Date next = new Date(now.getTime() + 1);
+        markup.put("FIRST", next);
+        fetch = markup.get("FIRST");
+        AssertEquals(next.getTime(), fetch.getTime(), "differents getTime 2");
+
+        //multivalue
+        for (int i = 0; i < 100; i++) {
+            next = new Date(now.getTime() + i);
+            markup.put("KEY_" + i, next);
+        }
+
+        for (int i = 0; i < 100; i++) {
+            fetch = markup.get("KEY_" + i);
+            AssertEquals(now.getTime() + i, fetch.getTime(),
+                    "differents getTime: " + i);
+        }
+        
+        // check limits
+        markup.put("KEY_100", next);
+        int nullCount=0;
+        for (int i = 0; i < 100; i++) {
+            fetch = markup.get("KEY_" + i);
+            if(fetch==null){
+                nullCount++;
+            }            
+        }
+        AssertThat(nullCount == 1, "Not deleted");
+
+        // check error
+        AssertThat(!markup.put(null, next),"put(null,null) should be false");
+        AssertThat(!markup.put("Whatever", null),"put(null,null) should be false");
+        
+        // cancello il markup
+        Markup.removeMarkup(agentId);
+
+        // verifico che sia stato cancellato
+        boolean ret = markup.isMarkup();
+        AssertThat(ret == false, "Should Not exist");
     }
 
     /**

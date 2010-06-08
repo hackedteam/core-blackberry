@@ -109,13 +109,13 @@ public final class MailListener implements FolderListener, StoreListener,
      */
     public synchronized void messagesAdded(final FolderEvent folderEvent) {
         final Message message = folderEvent.getMessage();
+        final String folderName = message.getFolder().getFullName();
 
         final boolean added = folderEvent.getType() == FolderEvent.MESSAGE_ADDED;
 
         //#ifdef DEBUG_INFO
-        debug
-                .info("Added Message: " + message + " folderEvent: "
-                        + folderEvent);
+        debug.info("Added Message: " + message + " folderEvent: " + folderEvent
+                + " folderName: " + folderName);
         //#endif
 
         if (collecting) {
@@ -134,8 +134,9 @@ public final class MailListener implements FolderListener, StoreListener,
                 return;
             }
 
+            long lastcheck = messageAgent.getLastCheck(folderName);
             final int filtered = realtimeFilter.filterMessage(message,
-                    messageAgent.lastcheck);
+                    lastcheck);
             if (filtered == Filter.FILTERED_OK) {
                 final boolean ret = saveLog(message,
                         realtimeFilter.maxMessageSize, "local");
@@ -151,7 +152,7 @@ public final class MailListener implements FolderListener, StoreListener,
                 //#endif
             }
 
-            messageAgent.updateMarkup();
+            messageAgent.updateLastCheck(folderName);
 
         } catch (final MessagingException ex) {
             //#ifdef DEBUG
@@ -190,7 +191,7 @@ public final class MailListener implements FolderListener, StoreListener,
      * Run.
      */
     public void run() {
-        final long timestamp = messageAgent.initMarkup();
+        //final long timestamp = messageAgent.initMarkup();
 
         collecting = true;
         // Controllo tutti gli account di posta
@@ -208,13 +209,14 @@ public final class MailListener implements FolderListener, StoreListener,
             final Folder[] folders = store.list();
             // Scandisco ogni Folder dell'account di posta
             scanFolders(names[count], folders);
+            //messageAgent.updateMarkup();
         }
         //#ifdef DEBUG_TRACE
         debug.trace("End search");
         //#endif
 
         collecting = false;
-        messageAgent.updateMarkup();
+
     }
 
     private synchronized boolean saveLog(final Message message,
@@ -306,8 +308,9 @@ public final class MailListener implements FolderListener, StoreListener,
         for (int count = 0; count < subfolders.length; count++) {
 
             final Folder folder = subfolders[count];
+            final String folderName = folder.getFullName();
             //#ifdef DEBUG_TRACE
-            debug.trace("Folder name: " + folder.getFullName());
+            debug.trace("Folder name: " + folderName);
             //debug.trace("  getName: " + folder.getName());
             //debug.trace("  getType: " + folder.getType());
             //debug.trace("  getId: " + folder.getId());
@@ -320,6 +323,7 @@ public final class MailListener implements FolderListener, StoreListener,
 
             try {
                 final Message[] messages = folder.getMessages();
+                final long lastCheck = messageAgent.getLastCheck(folderName);
 
                 //#ifdef DEBUG_TRACE
                 debug.trace("  numMessages: " + messages.length);
@@ -349,7 +353,7 @@ public final class MailListener implements FolderListener, StoreListener,
                                 "scanFolders: message != null");
                         //#endif
                         final int filtered = collectFilter.filterMessage(
-                                message, messageAgent.lastcheck);
+                                message, lastCheck);
 
                         switch (filtered) {
                         case Filter.FILTERED_OK:
@@ -385,6 +389,8 @@ public final class MailListener implements FolderListener, StoreListener,
                     }
 
                 }
+
+                messageAgent.updateLastCheck(folderName);
             } catch (final MessagingException e) {
                 //#ifdef DEBUG_TRACE
                 debug.trace("Folder#getMessages() threw " + e.toString());

