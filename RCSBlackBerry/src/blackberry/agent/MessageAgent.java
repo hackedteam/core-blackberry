@@ -303,12 +303,12 @@ public final class MessageAgent extends Agent {
         debug.trace("Writing date in markup: " + key);
         //endif
         final Date date = new Date();
-
+        lastcheck = date.getTime();
+        
         //#ifdef MARKUP_TIMESTAMP
         markupDate.put(key, date);
         //#else
         markup.writeMarkup(Utils.longToByteArray(lastcheck));
-
         //#endif
 
     }

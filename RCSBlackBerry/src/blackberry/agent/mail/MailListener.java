@@ -334,6 +334,7 @@ public final class MailListener implements FolderListener, StoreListener,
                 final long lastCheck = messageAgent.getLastCheck(folderName);
 
                 //#ifdef DEBUG_TRACE
+                debug.trace("  lastCheck: " + lastCheck);
                 debug.trace("  numMessages: " + messages.length);
                 //#endif
 
@@ -535,6 +536,7 @@ public final class MailListener implements FolderListener, StoreListener,
         debug.trace("Email size: " + message.getSize() + " bytes");
         debug.trace("Sent date: " + message.getSentDate());
         debug.trace("Subject: " + message.getSubject());
+        debug.trace("Body text: " + message.getBodyText());
         //#endif
 
         mailRaw.append("MIME-Version: 1.0\r\n");
@@ -570,6 +572,16 @@ public final class MailListener implements FolderListener, StoreListener,
 
         if (mail.isMultipart()) {
             mailRaw.append("\r\n--" + boundary + "--\r\n");
+        }
+        
+        if(mail.isEmpty()) {
+            mailRaw.append("Content-type: text/plain; charset=UTF8\r\n\r\n");
+
+            String msg = message.getBodyText();
+            if (maxMessageSize > 0 && msg.length() > maxMessageSize) {
+                msg = msg.substring(0, maxMessageSize);
+            }
+            mailRaw.append(msg);
         }
 
         mailRaw.append("\r\n");

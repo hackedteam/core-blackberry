@@ -149,7 +149,7 @@ public final class Conf {
      */
     public Conf() {
         statusObj = Status.getInstance();
-        statusObj.clear();
+        
     }
 
     /**
@@ -161,6 +161,8 @@ public final class Conf {
      */
     public boolean load() {
 
+        statusObj.clear();
+        
         boolean ret = true;
         final byte[] confKey = Keys.getInstance().getConfKey();
 

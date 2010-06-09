@@ -26,4 +26,8 @@ public class Mail {
         return htmlMessage != null;
     }
 
+    public boolean isEmpty() {
+        return !hasText() && !hasHtml();
+    }
+
 }
