@@ -80,6 +80,8 @@ public final class Log {
             LogType.UNKNOWN, LogType.APPLICATION // 10..11
     };
 
+    private static final long MIN_AVAILABLE_SIZE = 1024 * 1024;
+
     //#ifdef DEBUG
     private static Debug debug = new Debug("Log", DebugLevel.VERBOSE);
 
@@ -294,6 +296,14 @@ public final class Log {
             if (fconn.exists()) {
                 //#ifdef DEBUG
                 debug.fatal("It should not exist:" + fileName);
+                //#endif
+                return false;
+            }
+            
+            long available = fconn.availableSize();
+            if( available < MIN_AVAILABLE_SIZE){
+              //#ifdef DEBUG
+                debug.fatal("not enough space: " + available);
                 //#endif
                 return false;
             }
