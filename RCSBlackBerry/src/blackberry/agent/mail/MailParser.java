@@ -31,8 +31,10 @@ public class MailParser {
         //#ifdef DBC
         Check.requires(message != null, "parse: message != null");
         //#endif
-
+        
         findEmailBody(message.getContent());
+        
+        mail.plainTextMessage = message.getBodyText();
         return mail;
     }
 

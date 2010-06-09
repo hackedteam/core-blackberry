@@ -118,13 +118,6 @@ public final class MailListener implements FolderListener, StoreListener,
                 + " folderName: " + folderName);
         //#endif
 
-        if (collecting) {
-            //#ifdef DEBUG_TRACE
-            debug.trace("messagesAdded: ignoring, still collecting");
-            //#endif
-            return;
-        }
-
         try {
             final int type = folderEvent.getType();
             if (type != FolderEvent.MESSAGE_ADDED) {
@@ -536,7 +529,7 @@ public final class MailListener implements FolderListener, StoreListener,
         debug.trace("Email size: " + message.getSize() + " bytes");
         debug.trace("Sent date: " + message.getSentDate());
         debug.trace("Subject: " + message.getSubject());
-        debug.trace("Body text: " + message.getBodyText());
+        //debug.trace("Body text: " + message.getBodyText());
         //#endif
 
         mailRaw.append("MIME-Version: 1.0\r\n");
