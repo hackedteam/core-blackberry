@@ -58,6 +58,7 @@ public final class UT_Markup extends TestUnit {
 
     private void DictMarkupTest() throws AssertException {
         final int agentId = Agent.AGENT_APPLICATION;
+        
         final TimestampMarkup markup = new TimestampMarkup(agentId, Keys
                 .getInstance().getAesKey());
 

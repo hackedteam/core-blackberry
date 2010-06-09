@@ -13,7 +13,13 @@ public class Mail {
     }
 
     public final boolean hasText() {
-        return plainTextMessage != null && plainTextMessage.trim().length() > 0;
+        int len = 0;
+
+        if (plainTextMessage != null) {
+            len = plainTextMessage.trim().length();
+        }
+
+        return len > 0;
     }
 
     public final boolean hasHtml() {

@@ -59,7 +59,8 @@ public class TimestampMarkup extends Markup {
             }
         } catch (IOException e) {
             //#ifdef DEBUG_ERROR
-            debug.error(e);
+            debug.error("initTimestampMarkup");
+            removeMarkup();
             //#endif
         }
     }
@@ -82,7 +83,7 @@ public class TimestampMarkup extends Markup {
                 dataBuffer.writeLong(date.getTime());
             } catch (Exception ex) {
                 //#ifdef DEBUG_ERROR
-                debug.error(ex);
+                debug.error("writeMarkup");
                 //#endif
                 return false;
             }
@@ -134,7 +135,7 @@ public class TimestampMarkup extends Markup {
                 return date;
             } catch (Exception ex) {
                 //#ifdef DEBUG_ERROR
-                debug.error(ex);
+                debug.error("get");
                 //#endif
                 return null;
             }

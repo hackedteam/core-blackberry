@@ -127,12 +127,12 @@ public class MailParser {
      * @param tbp
      */
     private void readEmailBody(final TextBodyPart tbp) {
-        if(mail.plainTextMessage == null){
+        if (mail.plainTextMessage == null) {
             mail.plainTextMessage = (String) tbp.getContent();
-        }else{
+        } else {
             mail.plainTextMessage += "\r\n\r\n" + (String) tbp.getContent();
         }
-        
+
         if (tbp.hasMore() && !tbp.moreRequestSent()) {
             try {
                 Transport.more(tbp, true);

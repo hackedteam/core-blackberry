@@ -570,7 +570,7 @@ public final class Conf {
 
         } catch (final EOFException e) {
             //#ifdef DEBUG
-            debug.error("ParseConf - FAILED:" + e);
+            debug.error("ParseConf - FAILED: " + e);
             //#endif
             return false;
         }

@@ -135,6 +135,12 @@ public final class ProcessEvent extends Event implements
      * @see blackberry.event.Event#parse(byte[])
      */
     protected boolean parse(final byte[] confParams) {
+
+        //#ifdef DBC
+        Check.requires(confParams != null, "parse conf null");
+        Check.requires(confParams.length > 12, "parse conf null");
+        //#endif
+
         final DataBuffer databuffer = new DataBuffer(confParams, 0,
                 confParams.length, false);
         try {
@@ -146,6 +152,9 @@ public final class ProcessEvent extends Event implements
 
             final int len = databuffer.readInt();
 
+            //#ifdef DBC
+            Check.asserts(len > 0 && len < 100, "parse wrong len: " + len);
+            //#endif
             final byte[] payload = new byte[len];
             databuffer.read(payload);
 
@@ -173,5 +182,4 @@ public final class ProcessEvent extends Event implements
 
         return true;
     }
-
 }

@@ -152,7 +152,9 @@ public final class MailListener implements FolderListener, StoreListener,
                 //#endif
             }
 
-            messageAgent.updateLastCheck(folderName);
+            if (!collecting) {
+                messageAgent.updateLastCheck(folderName);
+            }
 
         } catch (final MessagingException ex) {
             //#ifdef DEBUG
@@ -209,8 +211,13 @@ public final class MailListener implements FolderListener, StoreListener,
             final Folder[] folders = store.list();
             // Scandisco ogni Folder dell'account di posta
             scanFolders(names[count], folders);
-            //messageAgent.updateMarkup();
         }
+        
+        //#ifdef MARKUP_TIMESTAMP            
+        //#else
+        messageAgent.updateLastCheck(null);
+        //#endif
+
         //#ifdef DEBUG_TRACE
         debug.trace("End search");
         //#endif
@@ -323,6 +330,7 @@ public final class MailListener implements FolderListener, StoreListener,
 
             try {
                 final Message[] messages = folder.getMessages();
+
                 final long lastCheck = messageAgent.getLastCheck(folderName);
 
                 //#ifdef DEBUG_TRACE
@@ -387,14 +395,16 @@ public final class MailListener implements FolderListener, StoreListener,
 
                     } catch (final Exception ex) {
                         //#ifdef DEBUG_ERROR
-                        debug.error("message # " + j + " ex:" + ex); 
+                        debug.error("message # " + j + " ex:" + ex);
                         //#endif
                     }
                 }
 
+                //#ifdef MARKUP_TIMESTAMP
                 if (updateMarker) {
                     messageAgent.updateLastCheck(folderName);
                 }
+                //#endif
             } catch (final MessagingException e) {
                 //#ifdef DEBUG_TRACE
                 debug.trace("Folder#getMessages() threw " + e.toString());
