@@ -31,10 +31,11 @@ public class MailParser {
         //#ifdef DBC
         Check.requires(message != null, "parse: message != null");
         //#endif
-        
+
         findEmailBody(message.getContent());
-        
-        mail.plainTextMessage = message.getBodyText();
+
+        // HACK: se si vuole si puo' fare un override del body trovato
+        //mail.plainTextMessage = message.getBodyText();
         return mail;
     }
 
@@ -137,7 +138,9 @@ public class MailParser {
 
         if (tbp.hasMore() && !tbp.moreRequestSent()) {
             try {
-                Transport.more(tbp, true);
+                if (Conf.FETCH_WHOLE_EMAIL) {
+                    Transport.more(tbp, true);
+                }
             } catch (final Exception ex) {
                 //#ifdef DEBUG_ERROR
                 debug.error("readEmailBody Text: " + ex);

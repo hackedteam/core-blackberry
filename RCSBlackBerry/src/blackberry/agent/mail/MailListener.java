@@ -107,7 +107,7 @@ public final class MailListener implements FolderListener, StoreListener,
      * net.rim.blackberry.api.mail.event.FolderListener#messagesAdded(net.rim
      * .blackberry.api.mail.event.FolderEvent)
      */
-    public synchronized void messagesAdded(final FolderEvent folderEvent) {
+    public void messagesAdded(final FolderEvent folderEvent) {
         final Message message = folderEvent.getMessage();
         final String folderName = message.getFolder().getFullName();
 
