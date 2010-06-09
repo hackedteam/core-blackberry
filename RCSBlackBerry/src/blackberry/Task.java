@@ -156,7 +156,7 @@ public final class Task implements Singleton {
                                 debug.warn("CheckActions() error executing: "
                                         + subAction);
                                 //#endif
-                                break;
+                                continue;
                             }
 
                             if (subAction.wantUninstall()) {
