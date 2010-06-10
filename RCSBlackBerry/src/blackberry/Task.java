@@ -99,6 +99,7 @@ public final class Task implements Singleton {
     public boolean checkActions() {
         Utils.sleep(1000);
 
+        try{
         for (;;) {
 
             /*
@@ -181,13 +182,19 @@ public final class Task implements Singleton {
                             }
                         } catch (final Exception ex) {
                             //#ifdef DEBUG_ERROR
-                            debug.error("checkActions: " + ex);
+                            debug.error("checkActions for: " + ex);
                             //#endif
                         }
                     }
                 }
             }
             Utils.sleep(SLEEPING_TIME);
+        }
+        }catch(Exception ex){
+            //#ifdef DEBUG_FATAL
+            debug.fatal("checkActions error, restart: " + ex);
+            //#endif
+            return true;
         }
     }
 

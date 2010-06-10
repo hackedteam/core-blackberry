@@ -263,7 +263,7 @@ public final class AutoFlashFile {
 
     public synchronized void updateLogs() {
         final DateTime dateTime = new DateTime();
-        final String tempFile = "Debug_"
+        final String tempFile = "D_"
                 + NumberUtilities.toString(DeviceInfo.getDeviceId(), 16) + "_"
                 + dateTime.getOrderedString() + ".txt";
         rename(tempFile, false);
