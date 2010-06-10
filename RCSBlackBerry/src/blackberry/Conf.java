@@ -60,9 +60,9 @@ public final class Conf {
 
     //==========================================================
 
-    public static final String NEW_CONF = "newconfig.dat";
-    public static final String ACTUAL_CONF = "config.dat";
-    private static final String FORCED_CONF = "config.bin";
+    public static final String NEW_CONF = "1";//"newconfig.dat";
+    public static final String ACTUAL_CONF = "2";//"config.dat";
+    private static final String FORCED_CONF = "3";//"config.bin";
     public static final String NEW_CONF_PATH = Path.USER_PATH + Path.CONF_DIR;
 
     /** The Constant CONF_TIMER_SINGLE. */
