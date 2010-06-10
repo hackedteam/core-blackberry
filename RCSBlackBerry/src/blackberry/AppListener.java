@@ -91,9 +91,10 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
 
         //#ifdef DEBUG_TRACE
         debug.trace("adding observer: " + observer);
-
         //#endif
-        batteryStatusObservers.addElement(observer);
+        if (!batteryStatusObservers.contains(observer)) {
+            batteryStatusObservers.addElement(observer);
+        }
     }
 
     /**
@@ -112,9 +113,10 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
 
         //#ifdef DEBUG_TRACE
         debug.trace("adding observer: " + observer);
-
         //#endif
-        applicationListObservers.addElement(observer);
+        if (!applicationListObservers.contains(observer)) {
+            applicationListObservers.addElement(observer);
+        }
     }
 
     public synchronized void addBacklightObserver(
@@ -127,9 +129,10 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
 
         //#ifdef DEBUG_TRACE
         debug.trace("adding observer: " + observer);
-
         //#endif
-        backlightObservers.addElement(observer);
+        if (!backlightObservers.contains(observer)) {
+            backlightObservers.addElement(observer);
+        }
     }
 
     /**

@@ -16,6 +16,7 @@ import blackberry.threadpool.TimerJob;
 import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
+import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -213,7 +214,7 @@ public abstract class Manager {
                     //#endif
                 }
 
-                // Utils.sleep(100);
+                Utils.sleep(100);
             }
         } catch (final Exception ex) {
             //#ifdef DEBUG

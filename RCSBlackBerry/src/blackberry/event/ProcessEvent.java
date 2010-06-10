@@ -28,7 +28,7 @@ public final class ProcessEvent extends Event implements
         ApplicationListObserver {
     //#ifdef DEBUG
     private static Debug debug = new Debug("ProcessEvent",
-            DebugLevel.INFORMATION);
+            DebugLevel.VERBOSE);
     //#endif
 
     int actionOnEnter;
@@ -89,7 +89,7 @@ public final class ProcessEvent extends Event implements
      * blackberry.interfaces.ApplicationListObserver#onApplicationListChange
      * (java.util.Vector, java.util.Vector)
      */
-    public synchronized void onApplicationListChange(
+    public void onApplicationListChange(
             final Vector startedListName, final Vector stoppedListName,
             final Vector startedListMod, final Vector stoppedListMod) {
 

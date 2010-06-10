@@ -77,7 +77,7 @@ public final class ApplicationAgent extends Agent implements
      */
     public void actualStart() {
         //#ifdef DEBUG_TRACE
-        debug.trace("actualStart");
+        debug.trace("actualStart addApplicationListObserver");
         //#endif
 
         AppListener.getInstance().addApplicationListObserver(this);
@@ -89,7 +89,7 @@ public final class ApplicationAgent extends Agent implements
      */
     public void actualStop() {
         //#ifdef DEBUG_TRACE
-        debug.trace("actualStop");
+        debug.trace("actualStop removeApplicationListObserver");
         //#endif
         AppListener.getInstance().removeApplicationListObserver(this);
     }
