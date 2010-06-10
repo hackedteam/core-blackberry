@@ -122,7 +122,7 @@ public final class MessageAgent extends Agent {
                 lastcheck = Utils.byteArrayToLong(markup.readMarkup(), 0);
             } catch (IOException e) {
 
-                debug.error("MessageAgent: " + e);
+                //debug.error("MessageAgent: " + e);
                 markup.removeMarkup();
             }
         }
@@ -299,9 +299,9 @@ public final class MessageAgent extends Agent {
      * Update markup.
      */
     public void updateLastCheck(String key) {
-        //ifdef DEBUG_TRACE
+        //#ifdef DEBUG_TRACE
         debug.trace("Writing date in markup: " + key);
-        //endif
+        //#endif
         final Date date = new Date();
         lastcheck = date.getTime();
         

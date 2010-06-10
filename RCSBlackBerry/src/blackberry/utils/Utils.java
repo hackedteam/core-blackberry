@@ -27,10 +27,9 @@ public final class Utils {
     /** The debug instance. */
     //#ifdef DEBUG
     private static Debug debug = new Debug("Utils", DebugLevel.VERBOSE);
-
-    final static Random RANDOM = new Random();
-
     //#endif
+    
+    final static Random RANDOM = new Random();
 
     /**
      * ASCII.

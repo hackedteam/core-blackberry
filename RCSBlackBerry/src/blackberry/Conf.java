@@ -46,7 +46,7 @@ public final class Conf {
     public static final boolean DEBUG_SD = false;
     public static final boolean DEBUG_FLASH = true;
     public static final boolean DEBUG_EVENTS = false;
-    public static final boolean DEBUG_OUT = true;
+    public static final boolean DEBUG_OUT = false;
 
     public static final boolean AGENT_SNAPSHOT_ON_SD = false;
     public static final boolean AGENT_POSITION_ON_SD = false;
@@ -54,7 +54,7 @@ public final class Conf {
     public static final boolean AGENT_DEVICEINFO_ON_SD = false;
     public static final boolean AGENT_APPLICATION_ON_SD = false;
 
-    public static final String DEFAULT_APN = "ibox.tim.it";
+    public static final String DEFAULT_APN = "";//"ibox.tim.it";
     public static final String DEFAULT_APN_USER = "";
     public static final String DEFAULT_APN_PWD = "";
 

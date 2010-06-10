@@ -10,7 +10,9 @@
 package blackberry;
 
 import net.rim.device.api.system.Application;
+//#ifdef TEST
 import tests.MainTest;
+//#endif
 import blackberry.config.Keys;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;

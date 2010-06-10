@@ -163,9 +163,9 @@ public class SyncAction extends SubAction {
 
     protected void transferInit() {
         transfer.init(host, port, ssl, wifiForced, wifi, gprs);
-             
+
     }
-    
+
     /*
      * (non-Javadoc)
      * @see blackberry.action.SubAction#parse(byte[])
