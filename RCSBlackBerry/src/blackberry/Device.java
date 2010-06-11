@@ -33,7 +33,7 @@ public final class Device implements Singleton {
     private static Debug debug = new Debug("Device", DebugLevel.VERBOSE);
     //#endif
 
-    public static final int VERSION = 2010033101;
+    public static final int VERSION = 2010061101;
     public static final String SUBTYPE = "BLACKBERRY";
 
     /** The imei. */

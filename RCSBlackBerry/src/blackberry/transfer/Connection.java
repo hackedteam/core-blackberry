@@ -156,18 +156,19 @@ public abstract class Connection {
             Check.requires(in != null, "null in_");
             //#endif                       
 
+            //#ifdef CONNECT_WAIT_AVAILABLE
             int steps = 10;
             while (steps > 0) {
                 if (in.available() == 0) {
-                    //#ifdef DEBUG_TRACE
                     debug.trace("nothing available, waiting: " + steps);
-                    //#endif
+
                     Utils.sleep(1000);
                     steps--;
                 } else {
                     steps = 0;
                 }
             }
+            //#endif
 
             //#ifdef DEBUG_TRACE
             debug.trace("receive in.available(): " + in.available());
