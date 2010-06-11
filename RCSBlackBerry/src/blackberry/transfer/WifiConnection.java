@@ -84,8 +84,8 @@ public final class WifiConnection extends Connection {
         final boolean active = (RadioInfo.getActiveWAFs() & RadioInfo.WAF_WLAN) != 0;
         final boolean connected = WLANInfo.getWLANState() == WLANInfo.WLAN_STATE_CONNECTED;
 
-        //#ifdef DEBUG_INFO
-        debug.info("Active: " + active + " Connected: " + connected);
+        //#ifdef DEBUG_TRACE
+        debug.trace("Active: " + active + " Connected: " + connected);
 
         //#endif
         return connected && active;

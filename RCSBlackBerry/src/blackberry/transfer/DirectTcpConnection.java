@@ -23,8 +23,8 @@ public final class DirectTcpConnection extends Connection {
     public static final int METHOD_FIRST = 0;
     public static final int METHOD_DEVICE = 0;
     public static final int METHOD_NODEVICE = 1;
-    public static final int METHOD_NULL = 2;
-    public static final int METHOD_APN = 3;
+    //public static final int METHOD_NULL = 2;
+    public static final int METHOD_APN = 2;
     public static final int METHOD_LAST = 2;
 
     //#ifdef DEBUG
@@ -36,7 +36,7 @@ public final class DirectTcpConnection extends Connection {
     private final int port;
     private final boolean ssl;
 
-    int timeout = 3 * 60 * 1000;
+    int timeout = 5 * 60 * 1000;
 
     /*
      * String apn = Conf.DEFAULT_APN;
@@ -106,8 +106,9 @@ public final class DirectTcpConnection extends Connection {
             break;
         case METHOD_NODEVICE:
             url += ";deviceside=false";
-        case METHOD_NULL:
             break;
+        //case METHOD_NULL:
+        //    break;
         case METHOD_APN:
             if (apn != null) {
                 url += ";deviceside=true;apn=" + apn.apn
