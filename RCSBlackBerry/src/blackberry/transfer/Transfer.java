@@ -757,8 +757,8 @@ public class Transfer {
         sendCryptoCommand(Proto.ID, keys.getBuildId()); // 16
         sendCryptoCommand(Proto.INSTANCE, keys.getInstanceId()); // 20
 
-        sendCryptoCommand(Proto.USERID, device.getWImsi());
-        sendCryptoCommand(Proto.DEVICEID, device.getWImei());
+        sendCryptoCommand(Proto.USERID, device.getWUserId());
+        sendCryptoCommand(Proto.DEVICEID, device.getWDeviceId());
         sendCryptoCommand(Proto.SOURCEID, device.getWPhoneNumber());
 
     }

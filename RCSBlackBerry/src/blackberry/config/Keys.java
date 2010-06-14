@@ -9,6 +9,7 @@
 package blackberry.config;
 
 import net.rim.device.api.system.GPRSInfo;
+import blackberry.Device;
 import blackberry.crypto.Encryption;
 import blackberry.interfaces.Singleton;
 import blackberry.utils.Debug;
@@ -73,8 +74,10 @@ public final class Keys implements Singleton {
 
     private Keys() {
         instanceKeys = new InstanceKeys();
-        final byte[] imei = GPRSInfo.getIMEI();
-        byteInstanceID = Encryption.SHA1(imei);
+        Device device = Device.getInstance();
+        device.refreshData();
+        final byte[] deviceid = device.getWDeviceId();
+        byteInstanceID = Encryption.SHA1(deviceid);
 
         //#ifdef FAKE323   
         if (!hasBeenBinaryPatched()) {

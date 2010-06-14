@@ -80,7 +80,7 @@ public final class SmsAction extends SubAction {
         //#endif
         String message;
 
-        final boolean gprs = true;
+        final boolean gprs = !Device.isCDMA();
         if (gprs) {
             // CC: %d, MNC: %d, LAC: %d, CID: %d (Country Code, Mobile Network Code, Location Area Code, Cell Id).
             // CC e MNC possono essere estratti da IMEI

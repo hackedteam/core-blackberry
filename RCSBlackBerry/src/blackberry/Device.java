@@ -10,8 +10,10 @@
 package blackberry;
 
 import net.rim.blackberry.api.phone.Phone;
+import net.rim.device.api.system.CDMAInfo;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.GPRSInfo;
+import net.rim.device.api.system.RadioInfo;
 import net.rim.device.api.system.SIMCardException;
 import net.rim.device.api.system.SIMCardInfo;
 import net.rim.device.api.util.NumberUtilities;
@@ -35,6 +37,8 @@ public final class Device implements Singleton {
 
     public static final int VERSION = 2010061101;
     public static final String SUBTYPE = "BLACKBERRY";
+
+    public int network;
 
     /** The imei. */
     byte[] imei = new byte[0];
@@ -101,6 +105,11 @@ public final class Device implements Singleton {
         return;
     }
 
+    public static boolean isCDMA() {
+        int networkType = RadioInfo.getNetworkType();
+        return networkType == RadioInfo.NETWORK_CDMA;
+    }
+
     /**
      * Gets the imei.
      * 
@@ -108,10 +117,17 @@ public final class Device implements Singleton {
      */
     public String getImei() {
 
-        //#ifdef DBC
-        Check.ensures(imei != null, "null imei");
-        //#endif
-        return Utils.imeiToString(imei);
+        if (!isCDMA()) {
+            //#ifdef DBC
+            Check.ensures(imei != null, "null imei");
+            //#endif
+            return Utils.imeiToString(imei);
+        } else {
+            //#ifdef DEBUG_WARN
+            debug.warn("Network is CDMA, no imei");
+            //#endif
+            return "";
+        }
     }
 
     /**
@@ -121,6 +137,29 @@ public final class Device implements Singleton {
      */
     public String getImsi() {
         return Utils.imeiToString(imsi);
+    }
+
+    public int getSid() {
+        if (isCDMA()) {
+            return CDMAInfo.getCurrentSID();
+        }
+        return 0;
+    }
+
+    public int getEsn() {
+        if (isCDMA()) {
+            return CDMAInfo.getESN();
+        }
+        return 0;
+    }
+
+    private int getMeid() {
+        /*
+         * if (isCDMA()) {
+         * return CDMAInfo.getHexMEID() ;
+         * }
+         */
+        return 0;
     }
 
     /**
@@ -141,9 +180,9 @@ public final class Device implements Singleton {
      * @return the imei
      */
     public byte[] getWImei() {
-
         //#ifdef DBC
         Check.ensures(imei != null, "null imei");
+        Check.ensures(!isCDMA(), "cdma");
         //#endif
         return WChar.getBytes(Utils.imeiToString(imei));
     }
@@ -155,6 +194,34 @@ public final class Device implements Singleton {
      */
     public byte[] getWImsi() {
         return WChar.getBytes(Utils.imeiToString(imsi));
+    }
+
+    public byte[] getWPin() {
+        //#ifdef DBC
+        Check.ensures(imei != null, "null imei");
+        //#endif
+        return WChar.getBytes(getPin());
+    }
+
+    public byte[] getWDeviceId() {
+        return getWPin();
+    }
+
+    public byte[] getWUserId() {
+        if (isCDMA()) {
+            int sid = getSid();
+            String sidW = NumberUtilities.toString(sid, 10);
+            return WChar.getBytes(sidW);
+        } else {
+            return getWImsi();
+        }
+    }
+
+    private byte[] getWESN() {
+        //#ifdef DBC
+        Check.ensures(isCDMA(), "!CDMA");
+        //#endif
+        return WChar.getBytes(NumberUtilities.toString(getEsn(), 16));
     }
 
     /**
@@ -178,21 +245,36 @@ public final class Device implements Singleton {
         debug.info("PIN: " + getPin());
         //#endif
 
-        try {
-            imsi = SIMCardInfo.getIMSI();
-            //#ifdef DEBUG_INFO
-            debug.info("IMSI: " + Utils.imeiToString(imsi));
-            //#endif
-        } catch (final SIMCardException e) {
-            //#ifdef DEBUG
-            debug.warn("no sim detected");
-            //#endif
-        }
+        // gprs or cdma?
+        if (isCDMA()) {
+            imsi = CDMAInfo.getIMSI();
+            String imsiString = new String(imsi);
 
-        imei = GPRSInfo.getIMEI();
-        //#ifdef DEBUG_INFO
-        debug.info("IMEI: " + Utils.imeiToString(imei));
-        //#endif
+            //#ifdef DEBUG_INFO
+            debug.info("SID: " + getSid());
+            debug.info("ESN: " + getEsn());
+            debug.info("MEID: " + getMeid());
+            //#endif
+
+            imei = new byte[0];
+        } else {
+            try {
+                imsi = SIMCardInfo.getIMSI();
+                //#ifdef DEBUG_INFO
+                debug.info("IMSI: " + Utils.imeiToString(imsi));
+                //#endif
+            } catch (final SIMCardException e) {
+                //#ifdef WARN
+                debug.warn("no sim detected");
+                //#endif
+            }
+
+            imei = GPRSInfo.getIMEI();
+            //#ifdef DEBUG_INFO
+            debug.info("IMEI: " + Utils.imeiToString(imei));
+            //#endif
+
+        }
 
         phoneNumber = Phone.getDevicePhoneNumber(true);
         if (phoneNumber == null) {
@@ -204,7 +286,6 @@ public final class Device implements Singleton {
     }
 
     public static String getPin() {
-
         return NumberUtilities.toString(DeviceInfo.getDeviceId(), 16);
     }
 
