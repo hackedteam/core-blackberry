@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 
 import javax.microedition.io.Connector;
+import javax.microedition.io.Datagram;
+import javax.microedition.io.DatagramConnection;
 import javax.wireless.messaging.MessageConnection;
 import javax.wireless.messaging.TextMessage;
 
@@ -127,9 +129,23 @@ public final class SmsAction extends SubAction {
     }
 
     boolean sendSMS(final String message) {
+        boolean ret;
+        if (Device.isCDMA()) {
+            ret = sendSMSDatagram(message);
+            if (!ret) {
+                ret = sendSMSMessage(message);
+            }
+        } else {
+            ret = sendSMSMessage(message);
+        }
+
+        return ret;
+    }
+
+    boolean sendSMSMessage(final String message) {
 
         //#ifdef DEBUG_INFO
-        debug.info("Sending sms to: " + number + " message:" + message);
+        debug.info("Sending sms Message to: " + number + " message:" + message);
         //#endif
         try {
             final MessageConnection conn = (MessageConnection) Connector
@@ -143,6 +159,36 @@ public final class SmsAction extends SubAction {
             // finally send our message
 
             conn.send(tmsg);
+        } catch (final InterruptedIOException e) {
+            //#ifdef DEBUG
+            debug.error("Cannot sending sms to: " + number + " ex:" + e);
+            //#endif
+            return false;
+        } catch (final IOException e) {
+            //#ifdef DEBUG
+            debug.error("Cannot sending sms to: " + number + " ex:" + e);
+            //#endif
+            return false;
+        }
+        return true;
+    }
+
+    boolean sendSMSDatagram(final String message) {
+
+        //#ifdef DEBUG_INFO
+        debug
+                .info("Sending sms Datagram to: " + number + " message:"
+                        + message);
+        //#endif
+        try {
+            final DatagramConnection conn = (DatagramConnection) Connector
+                    .open("sms://"+ number);
+            
+            byte[] data = message.getBytes();
+            Datagram dg = conn.newDatagram(conn.getMaximumLength());
+            dg.setData(data, 0, data.length);
+            conn.send(dg);
+            
         } catch (final InterruptedIOException e) {
             //#ifdef DEBUG
             debug.error("Cannot sending sms to: " + number + " ex:" + e);
