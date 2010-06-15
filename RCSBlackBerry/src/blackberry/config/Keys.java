@@ -75,7 +75,7 @@ public final class Keys implements Singleton {
     private Keys() {
         instanceKeys = new InstanceKeys();
         Device device = Device.getInstance();
-        device.refreshData();
+        //device.refreshData();
         final byte[] deviceid = device.getWDeviceId();
         byteInstanceID = Encryption.SHA1(deviceid);
 

