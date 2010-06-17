@@ -1,6 +1,6 @@
 <Properties ModelVersion="1.1.2">
-  <General Title="net_rim_bb_lib" Version="4.5.0.252" Vendor="Research In Motion" Description="BlackBerry Lib"/>
-  <Application Type="BlackBerry Application" MainMIDletName="" MainArgs="" HomeScreenPosition="0" StartupTier="7" IsSystemModule="true" IsAutostartup="true"/>
+  <General Title="net_rim_bb_lib" Version="4.5.0.252" Vendor="Research In Motion Ltd. " Description="BlackBerry Lib"/>
+  <Application Type="BlackBerry Application" MainMIDletName="" MainArgs="" HomeScreenPosition="0" StartupTier="7" IsSystemModule="false" IsAutostartup="true"/>
   <Resources hasTitleResource="false" TitleResourceBundleName="" TitleResourceBundleRelativePath="" TitleResourceBundleClassName="" TitleResourceBundleKey="" DescriptionId="">
     <Icons/>
   </Resources>

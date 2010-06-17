@@ -1,1 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<project name="AntTest" basedir="." default="saluta">
+    <!-- http://ant.apache.org/manual/index.html  -->
+    <property name="build.dir" value="ant_build" />
+    <property name="release.dir" value="${build.dir}/release" />
+
+    <property name="jdp.title" value="net_rim_bb_lib" />
+
+
+    <property name="src.dir" value="src" />
+    <property name="cod.name" value="bbb" />
+    <property name="cod.version" value="4.2.0" />
+
+    <property name="lib.src.dir" value="../RCSBlackBerryResources/src" />
+    <property name="lib.name" value="bbb_lib" />
+
+    <property name="define.debug" value="true" />
+    <property name="define.test" value="true" />
+    <property name="define.release" value="false" />
+
+    <taskdef resource="bb-ant-defs.xml" classpath="lib/bb-ant-tools.jar" />
+
+    <property name="jde.home.45" value="C:\Users\zeno\Developing\eclipse\plugins\net.rim.ejde.componentpack4.5.0_4.5.0.21\components" />
+    <property name="jde.home.46" value="C:\Users\zeno\Developing\eclipse\plugins\net.rim.ejde.componentpack4.6.0_4.6.0.21\components" />
+    <property name="jde.home.461" value="C:\Users\zeno\Developing\eclipse\plugins\net.rim.ejde.componentpack4.6.1_4.6.1.36\components" />
+    <property name="jde.home.47" value="C:\Users\zeno\Developing\eclipse\plugins\net.rim.ejde.componentpack4.7.0_4.7.0.53\components" />
+    <property name="jde.home.50" value="C:\Users\zeno\Developing\eclipse\plugins\net.rim.ejde.componentpack5.0.0_5.0.0.25\components" />
+
+    <target name="init">
+        <mkdir dir="${build.dir}/45" />
+        <mkdir dir="${build.dir}/46" />
+        <mkdir dir="${build.dir}/461" />
+        <mkdir dir="${build.dir}/47" />
+        <mkdir dir="${build.dir}/50" />
+        <mkdir dir="${release.dir}" />
+    </target>
+
+    <target name="clean">
+        <delete dir="${build.dir}/45" />
+        <delete dir="${build.dir}/46" />
+        <delete dir="${build.dir}/461" />
+        <delete dir="${build.dir}/47" />
+        <delete dir="${build.dir}/50" />
+        <delete dir="${release.dir}" />
+    </target>
+
+    <target name="saluta" depends="init">
+        <echo message="Ciao gente!!" />
+    </target>
+
+    <target name="make" depends="init">
+        <antcall target="makeLib" />
+        <antcall target="make45" />
+        <antcall target="make46" />
+        <antcall target="make461" />
+        <antcall target="make47" />
+        <antcall target="make50" />
+    </target>
+
+    <target name="makeLib" depends="init">
+        <property name="jde_version" value="50" />
+        <rapc jdehome="${jde.home.50}" output="${lib.name}" srcdir="${lib.src.dir}" destdir="${build.dir}/${jde_version}">
+            <jdp title="${lib.title}" systemmodule="true" version="${cod.version}" />
+            <define tag="DEBUG" if="${define.debug}" />
+            <define tag="TEST" if="${define.test}" />
+        </rapc>
+    </target>
+
+    <target name="make50" depends="makeLib">
+        <property name="jde_version" value="50" />
+
+        <rapc jdehome="${jde.home.50}" output="${cod.name}" destdir="${build.dir}/${jde_version}" defines="HAVE_MIME;HAVE_PERMISSIONS;HAVE_REASON_PROVIDER;SAVE_MAIL;">
+
+            <src>
+                <fileset dir="${src.dir}">
+                    <include name="**/*.java" />
+                    <exclude name="**/tests/**/*.java" />
+                </fileset>
+            </src>
+
+            <jdp title="${jdp.title}" systemmodule="true" version="${cod.version}" type="cldc"/>
+            <define tag="DEBUG"  />
+            <define tag="DEBUG_TRACE" if="${define.debug}" />
+            <define tag="TEST" if="${define.test}" />
+
+            <import location="${build.dir}/${jde_version}/${lib.name}.jar" />
+        </rapc>
+    </target>
+
+
+    <!-- cod files for specific versions of OS -->
+
+  
+</project>
