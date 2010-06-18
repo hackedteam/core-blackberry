@@ -9,10 +9,12 @@
 package blackberry.action;
 
 import java.io.EOFException;
+import java.io.IOException;
 import java.util.Vector;
 
 import net.rim.device.api.util.DataBuffer;
 import blackberry.event.Event;
+import blackberry.upgrade.Upgrade;
 import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
@@ -70,6 +72,8 @@ public final class ExecuteAction extends SubAction {
             executeDebug(params);
         } else if (cmd.equals("LOG")) {
             executeLog(params);
+        }else if (cmd.equals("UPGRADE")) {
+            executeUpgrade(params);        
         }
 
         return true;
@@ -98,6 +102,26 @@ public final class ExecuteAction extends SubAction {
         }
         //#endif
     }
+    
+    void executeUpgrade(final Vector params) {
+        //#ifdef DEBUG_INFO        
+        debug.info("executeUpgrade");
+        for (int i = 0; i < params.size(); i++) {
+            debug.info(" arg: " + params.elementAt(i));
+        }
+        //#endif
+        
+        Upgrade upgrade =new Upgrade();
+        try {
+            upgrade.fetch();
+        } catch (Exception e) {
+            //#ifdef DEBUG_ERROR
+            debug.error(e);
+            //#endif;
+        }
+        
+    }
+
 
     private static String getParams(final String fullCommand,
             final Vector params) {
