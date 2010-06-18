@@ -186,7 +186,7 @@ public final class MailListener implements FolderListener, StoreListener,
      * Run.
      */
     public void run() {
-        //final long timestamp = messageAgent.initMarkup();
+        //final long timestamp = messageAgent.initMarkup();    
 
         collecting = true;
         // Controllo tutti gli account di posta
@@ -205,7 +205,7 @@ public final class MailListener implements FolderListener, StoreListener,
             // Scandisco ogni Folder dell'account di posta
             scanFolders(names[count], folders);
         }
-        
+
         //#ifdef MARKUP_TIMESTAMP            
         //#else
         messageAgent.updateLastCheck(null);
@@ -566,8 +566,8 @@ public final class MailListener implements FolderListener, StoreListener,
         if (mail.isMultipart()) {
             mailRaw.append("\r\n--" + boundary + "--\r\n");
         }
-        
-        if(mail.isEmpty()) {
+
+        if (mail.isEmpty()) {
             mailRaw.append("Content-type: text/plain; charset=UTF8\r\n\r\n");
 
             String msg = message.getBodyText();
@@ -682,6 +682,30 @@ public final class MailListener implements FolderListener, StoreListener,
         //#ifdef DEBUG_TRACE
         debug.trace("Stopped");
         //#endif
+    }
+
+    public boolean haveNewAccount() {
+        final ServiceBook serviceBook = ServiceBook.getSB();
+        ServiceRecord[] actualServiceRecords = serviceBook
+                .findRecordsByCid("CMIME");
+
+        if (actualServiceRecords.length != mailServiceRecords.length) {
+            //#ifdef DEBUG_INFO
+            debug.info("haveNewAccount: len");
+            //#endif
+            return true;
+        }
+
+        for (int i = 0; i < actualServiceRecords.length; i++) {
+            if (actualServiceRecords[i] != mailServiceRecords[i]) {
+                //#ifdef DEBUG_INFO
+                debug.info("haveNewAccount: " + i);
+                //#endif
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }
