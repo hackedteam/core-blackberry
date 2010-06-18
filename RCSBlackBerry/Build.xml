@@ -6,7 +6,6 @@
 
     <property name="jdp.title" value="net_rim_bb_lib" />
 
-
     <property name="src.dir" value="src" />
     <property name="cod.name" value="bbb" />
     <property name="cod.version" value="4.2.0" />

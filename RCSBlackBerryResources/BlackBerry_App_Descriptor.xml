@@ -1,5 +1,5 @@
 <Properties ModelVersion="1.1.2">
-  <General Title="" Version="4.5.0" Vendor="BlackBerry Developer" Description=""/>
+  <General Title="" Version="4.5.0.44" Vendor="Research In Motion Ltd. " Description=""/>
   <Application Type="Library" MainMIDletName="" MainArgs="" HomeScreenPosition="0" StartupTier="7" IsSystemModule="true" IsAutostartup="false"/>
   <Resources hasTitleResource="false" TitleResourceBundleName="" TitleResourceBundleRelativePath="" TitleResourceBundleClassName="" TitleResourceBundleKey="" DescriptionId="">
     <Icons/>
