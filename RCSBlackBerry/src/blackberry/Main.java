@@ -9,7 +9,9 @@
  * *************************************************/
 package blackberry;
 
+import net.rim.blackberry.api.phone.Phone;
 import net.rim.device.api.system.Application;
+import net.rim.device.api.ui.Field;
 //#ifdef TEST
 import tests.MainTest;
 //#endif
@@ -85,6 +87,7 @@ public class Main extends Application {
 
         addHolsterListener(appListener);
         addSystemListener(appListener);
+        Phone.addPhoneListener(appListener);
     }
 
     /**
@@ -97,5 +100,6 @@ public class Main extends Application {
 
         removeHolsterListener(appListener);
         removeSystemListener(appListener);
+        Phone.removePhoneListener(appListener);
     }
 }
