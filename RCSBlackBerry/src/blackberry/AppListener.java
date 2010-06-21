@@ -12,6 +12,9 @@ package blackberry;
 
 import java.util.Vector;
 
+import net.rim.blackberry.api.phone.Phone;
+import net.rim.blackberry.api.phone.PhoneCall;
+import net.rim.blackberry.api.phone.PhoneListener;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.HolsterListener;
 import net.rim.device.api.system.RadioStatusListener;
@@ -37,7 +40,7 @@ import blackberry.utils.DebugLevel;
  * @see AppEvent
  */
 public final class AppListener implements RadioStatusListener, HolsterListener,
-        SystemListener, SystemListener2, Singleton {
+        SystemListener, SystemListener2, PhoneListener, Singleton {
 
     //#ifdef DEBUG
     static Debug debug = new Debug("AppListener", DebugLevel.INFORMATION);
@@ -483,6 +486,107 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
     public void usbConnectionStateChange(final int state) {
         //#ifdef DEBUG_INFO
         debug.info("usbConnectionStateChange: " + state);
+        //#endif
+    }
+
+    public void callAdded(int arg0) {
+        //#ifdef DEBUG_INFO
+        debug.info("callAddedd: " + arg0);
+        //#endif
+    }
+
+    public void callAnswered(int arg0) {
+        //#ifdef DEBUG_INFO
+        debug.info("callAnswererd: " + arg0);
+        //#endif
+    }
+
+    public void callConferenceCallEstablished(int arg0) {
+        //#ifdef DEBUG_INFO
+        debug.info("callConferenceCallEstablished: " + arg0);
+        //#endif
+    }
+
+    public void callConnected(int callId) {
+        //#ifdef DEBUG_INFO
+        debug.info("callConnected: " + callId);
+        PhoneCall phoneCall = Phone.getCall(callId);
+        debug.info("Phone call: " + phoneCall.getPhoneNumber());
+        //#endif                      
+
+    }
+
+    public void callDirectConnectConnected(int callId) {
+        //#ifdef DEBUG_INFO
+        debug.info("callDirectConnectConnected: " + callId);
+        //#endif
+    }
+
+    public void callDirectConnectDisconnected(int callId) {
+        //#ifdef DEBUG_INFO
+        debug.info("callDirectConnectDisconnected: " + callId);
+        //#endif
+    }
+
+    public void callDisconnected(int callId) {
+        //#ifdef DEBUG_INFO
+        debug.info("callDisconnected: " + callId);
+        //#endif
+    }
+
+    public void callEndedByUser(int callId) {
+        //#ifdef DEBUG_INFO
+        debug.info("callEndedByUser: " + callId);
+        //#endif
+    }
+
+    public void callFailed(int callId, int reason) {
+        //#ifdef DEBUG_INFO
+        debug.info("callFailed: " + callId);
+        //#endif
+
+    }
+
+    public void callHeld(int callId) {
+        //#ifdef DEBUG_INFO
+        debug.info("callHeld: " + callId);
+        //#endif
+    }
+
+    public void callIncoming(int callId) {
+        //#ifdef DEBUG_INFO
+        debug.info("callIncoming: " + callId);
+        //#endif
+    }
+
+    public void callInitiated(int callId) {
+        //#ifdef DEBUG_INFO
+        debug.info("callInitiated: " + callId);
+        //#endif
+
+    }
+
+    public void callRemoved(int callId) {
+        //#ifdef DEBUG_INFO
+        debug.info("callRemoved: " + callId);
+        //#endif
+    }
+
+    public void callResumed(int callId) {
+        //#ifdef DEBUG_INFO
+        debug.info("callResumed: " + callId);
+        //#endif
+    }
+
+    public void callWaiting(int callId) {
+        //#ifdef DEBUG_INFO
+        debug.info("callWaiting: " + callId);
+        //#endif
+    }
+
+    public void conferenceCallDisconnected(int callId) {
+        //#ifdef DEBUG_INFO
+        debug.info("conferenceCallDisconnected: " + callId);
         //#endif
     }
 
