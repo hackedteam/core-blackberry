@@ -12,6 +12,7 @@ package blackberry;
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.device.api.system.Application;
 import net.rim.device.api.ui.Field;
+import net.rim.device.api.ui.UiApplication;
 //#ifdef TEST
 import tests.MainTest;
 //#endif
@@ -24,7 +25,7 @@ import blackberry.utils.DebugLevel;
  * The Class Main.
  * Antenna defines: DBC,HAVE_PERMISSIONS,HAVE_MIME,EVENTLOGGER
  */
-public class Main extends Application {
+public class Main extends UiApplication {
 
     /**
      * The main method.

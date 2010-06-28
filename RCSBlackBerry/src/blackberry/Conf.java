@@ -37,7 +37,7 @@ public final class Conf {
 
     /** The debug instance. */
     //#ifdef DEBUG
-    private static Debug debug = new Debug("Conf", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("Conf", DebugLevel.INFORMATION);
     //#endif
 
     //==========================================================

