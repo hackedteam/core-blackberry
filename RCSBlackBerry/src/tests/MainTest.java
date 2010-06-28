@@ -9,6 +9,7 @@
  * *************************************************/
 package tests;
 
+import net.rim.device.api.system.Application;
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.ApplicationManager;
 import net.rim.device.api.system.ApplicationManagerException;
@@ -25,7 +26,7 @@ import blackberry.utils.Utils;
 /**
  * The Class MainTest.
  */
-public final class MainTest {
+public final class MainTest extends Application {
     //#ifdef DEBUG
     static Debug debug = new Debug("Main", DebugLevel.VERBOSE);
 
@@ -34,7 +35,7 @@ public final class MainTest {
     /**
      * Instantiates a new main test.
      */
-    public MainTest() {
+    public MainTest()  {
 
         final boolean logToDebugger = true;
         final boolean logToFlash = false;

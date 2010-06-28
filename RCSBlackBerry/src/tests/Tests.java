@@ -16,11 +16,13 @@ import tests.unit.UT_Conf;
 import tests.unit.UT_Crypto;
 import tests.unit.UT_Events;
 import tests.unit.UT_File;
-import tests.unit.UT_IMAgent;
+import tests.unit.UT_MicAgent;
 import tests.unit.UT_Log;
 import tests.unit.UT_LogCollector;
 import tests.unit.UT_Markup;
 import tests.unit.UT_Path;
+import tests.unit.UT_PersistentInternal;
+import tests.unit.UT_Recorder;
 import tests.unit.UT_Self;
 import tests.unit.UT_SmsAgent;
 import tests.unit.UT_Sync;
@@ -38,7 +40,7 @@ public final class Tests {
     static Debug debug = new Debug("Tests", DebugLevel.VERBOSE);
     //#endif
 
-    static boolean full = true;
+    static boolean full = false;
 
     private static Tests instance = null;
 
@@ -60,6 +62,7 @@ public final class Tests {
     private Tests() {
 
         if (full) {
+
             addTest(new UT_Self("Self", this));
             addTest(new UT_Utils("Utils", this));
             addTest(new UT_Crypto("Crypto", this));
@@ -80,11 +83,17 @@ public final class Tests {
             addTest(new UT_LogCollector("LogCollector", this));
             addTest(new UT_Sync("Sync", this));
 
-            addTest(new UT_IMAgent("IMAgent", this));
+            addTest(new UT_Recorder("Recorder", this));  
+            
+            addTest(new UT_SmsAgent("SmsAgent", this));
+            addTest(new UT_PersistentInternal("PersistentInternal", this));
+ 
+            
         }
-
-        addTest(new UT_SmsAgent("SmsAgent", this));
-
+        addTest(new UT_Recorder("Recorder", this));  
+        addTest(new UT_MicAgent("MicAgent", this));
+        //addTest(new UT_Sync("Sync", this));
+                      
     }
 
     private void addTest(final TestUnit unitTest) {

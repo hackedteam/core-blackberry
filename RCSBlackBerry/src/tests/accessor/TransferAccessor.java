@@ -36,7 +36,7 @@ public final class TransferAccessor extends Transfer {
      *             the protocol exception
      */
     public void ChallengeTest() throws ProtocolException {
-        final boolean ret = connectDirect() || connectMDS();
+        final boolean ret = connect();
         if (!ret) {
             debug.error("cannot connect");
         }
