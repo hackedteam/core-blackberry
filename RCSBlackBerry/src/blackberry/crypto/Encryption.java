@@ -268,6 +268,9 @@ public final class Encryption {
         return plain;
     }
 
+    public byte[] encryptData(final byte[] plain) {
+        return encryptData(plain,0);
+    }
     /**
      * Encrypt data.
      * 
@@ -275,12 +278,12 @@ public final class Encryption {
      *            the plain
      * @return the byte[]
      */
-    public byte[] encryptData(final byte[] plain) {
+    public byte[] encryptData(final byte[] plain, int offset) {
         //#ifdef DBC
         Check.requires(keyReady, "Key not ready");
         //#endif
 
-        final int len = plain.length;
+        final int len = plain.length - offset;
         final int clen = getNextMultiple(len);
 
         // TODO: optimize, non creare padplain, considerare caso particolare
@@ -289,7 +292,7 @@ public final class Encryption {
 
         final byte[] crypted = new byte[clen];
 
-        Utils.copy(padplain, plain, len);
+        Utils.copy(padplain, 0,  plain, offset, len);
 
         byte[] iv = new byte[16]; // iv e' sempre 0
 
