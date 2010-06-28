@@ -242,6 +242,31 @@ public final class Utils {
             dest[i + offsetDest] = src[i + offsetSrc];
         }
     }
+    
+    /**
+     * Verifica l'uguaglianza di una porzione di array
+     * @param first primo array
+     * @param offsetFirst offset da cui cominciare la verifica
+     * @param second secondo array
+     * @param offsetSecond offset da cui cominciare la verifica
+     * @param len lunghezza della porzione da verificare
+     * @return
+     */
+    public static boolean equals(final byte[] first, final int offsetFirst,
+            final byte[] second, final int offsetSecond, final int len) {
+        //#ifdef DBC
+        Check.requires(first!=null,"first null");
+        Check.requires(second!=null,"second null");
+        Check.requires(first.length >= offsetFirst + len, "wrong first len");
+        Check.requires(second.length >= offsetSecond + len, "wrong second  len");
+        //#endif
+        
+        for (int i = 0; i < len; i++) {
+            if( first[i + offsetFirst] != second[i + offsetSecond])
+                return false;
+        }
+        return true;
+    }
 
     /**
      * Crc.
