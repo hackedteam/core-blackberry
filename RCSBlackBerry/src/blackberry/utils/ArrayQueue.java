@@ -95,14 +95,14 @@ public final class ArrayQueue implements Queue {
         theArray[back] = x;
         currentSize++;
     }
-
+    
     /**
      * Get the least recently inserted item in the queue. Does not alter the
      * queue.
      * 
      * @return the least recently inserted item in the queue.
      */
-    public synchronized Object getFront() {
+    public synchronized Object getFront() {        
         if (isEmpty()) {
             throw new UnderflowException("ArrayQueue getFront");
         }

@@ -53,12 +53,6 @@ public final class ImAgent extends Agent {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualRun() {
-        // verifica che ci siano messaggi *nuovi* da leggere
-
-        // per ogni email da leggere
-
-        // genera un log con la email
-
     }
 
     /*

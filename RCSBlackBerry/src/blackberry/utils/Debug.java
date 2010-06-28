@@ -80,7 +80,7 @@ public final class Debug {
 
         actualLevel = Math.min(classLevel, level);
 
-        trace("Level: " + actualLevel);
+        //trace("Level: " + actualLevel);
     }
 
     /**

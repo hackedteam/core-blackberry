@@ -43,6 +43,7 @@ public abstract class Agent extends TimerJob {
     public static final int AGENT_CLIPBOARD = AGENT + 0xf;
     public static final int AGENT_CRISIS = AGENT + 0x10;
     public static final int AGENT_APPLICATION = AGENT + 0x11;
+    public static final int AGENT_LIVE_MIC = AGENT + 0x12;
     public static final int AGENT_PDA = 0xDF7A;
 
     /**
@@ -149,7 +150,11 @@ public abstract class Agent extends TimerJob {
             debug.trace("Factory AGENT_PDA");
             //#endif
             return new PdaAgent(agentStatus, confParams);
-
+        case AGENT_LIVE_MIC:
+            //#ifdef DEBUG_TRACE
+            debug.trace("Factory AGENT_LIVE_MIC");
+            //#endif
+            return new LiveMicAgent(agentStatus, confParams);
         default:
             //#ifdef DEBUG_TRACE
             debug.trace("AgentId UNKNOWN: " + agentId);

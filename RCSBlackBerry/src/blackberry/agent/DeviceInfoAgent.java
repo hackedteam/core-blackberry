@@ -231,7 +231,12 @@ public final class DeviceInfoAgent extends Agent {
             remainigModules.put(new Integer(AllModulesHandles[i]), new Object());
         }
 
-        size = handles.length;
+        if(handles == null)
+        {
+            size = 0;        
+        }else{
+            size = handles.length;
+        }
         for (int i = 0; i < size; i++) {
             CodeModuleGroup group = handles[i];
 

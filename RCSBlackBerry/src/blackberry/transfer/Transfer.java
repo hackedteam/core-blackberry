@@ -94,7 +94,7 @@ public class Transfer {
      *            /resources/Network_Tranports_tutorial.pdf
      * @return true if connected
      */
-    private boolean connect() {
+    protected boolean connect() {
         if (connected) {
             //#ifdef DEBUG
             debug.error("Already connected");
