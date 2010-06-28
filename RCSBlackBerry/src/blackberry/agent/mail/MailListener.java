@@ -309,8 +309,8 @@ public final class MailListener implements FolderListener, StoreListener,
 
             final Folder folder = subfolders[count];
             final String folderName = folder.getFullName();
-            //#ifdef DEBUG_TRACE
-            debug.trace("Folder name: " + folderName);
+            //#ifdef DEBUG_INFO
+            debug.info("Folder name: " + folderName);
             //debug.trace("  getName: " + folder.getName());
             //debug.trace("  getType: " + folder.getType());
             //debug.trace("  getId: " + folder.getId());
@@ -326,9 +326,10 @@ public final class MailListener implements FolderListener, StoreListener,
 
                 final long lastCheck = messageAgent.getLastCheck(folderName);
 
-                //#ifdef DEBUG_TRACE
-                debug.trace("  lastCheck: " + lastCheck);
-                debug.trace("  numMessages: " + messages.length);
+                //#ifdef DEBUG_INFO
+                Date date = new Date(lastCheck);
+                debug.info("  lastCheck: " + date);
+                debug.info("  numMessages: " + messages.length);
                 //#endif
 
                 //#ifdef PIN_MESSAGES

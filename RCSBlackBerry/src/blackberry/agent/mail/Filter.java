@@ -32,7 +32,7 @@ import blackberry.utils.WChar;
  */
 public class Filter {
     //#ifdef DEBUG
-    static Debug debug = new Debug("Filter", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("Filter", DebugLevel.INFORMATION);
     //#endif
 
     public static final int TYPE_REALTIME = 0;
