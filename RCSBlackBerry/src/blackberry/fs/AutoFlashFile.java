@@ -70,7 +70,15 @@ public final class AutoFlashFile {
             Check.asserts(fconn != null, "file fconn null");
             //#endif
 
+            boolean exists = fconn.exists();
+            if(!exists){
+                return false;
+            }
+            
             final long size = fconn.fileSize();
+            if(size == -1){
+                return false;
+            }
 
             os = fconn.openOutputStream(size);
             //#ifdef DBC
@@ -377,7 +385,6 @@ public final class AutoFlashFile {
             //#endif
 
             os = fconn.openOutputStream();
-
             os.write(message);
 
         } catch (final IOException e) {
