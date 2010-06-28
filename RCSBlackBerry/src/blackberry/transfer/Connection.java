@@ -28,7 +28,7 @@ import blackberry.utils.Utils;
  */
 public abstract class Connection {
     //#ifdef DEBUG
-    protected static Debug debug = new Debug("Connection", DebugLevel.VERBOSE);
+    protected static Debug debug = new Debug("Connection", DebugLevel.INFORMATION);
     //#endif
 
     protected DataInputStream in;

