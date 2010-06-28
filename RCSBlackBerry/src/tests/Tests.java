@@ -21,7 +21,6 @@ import tests.unit.UT_Log;
 import tests.unit.UT_LogCollector;
 import tests.unit.UT_Markup;
 import tests.unit.UT_Path;
-import tests.unit.UT_PersistentInternal;
 import tests.unit.UT_Recorder;
 import tests.unit.UT_Self;
 import tests.unit.UT_SmsAgent;
@@ -86,8 +85,6 @@ public final class Tests {
             addTest(new UT_Recorder("Recorder", this));  
             
             addTest(new UT_SmsAgent("SmsAgent", this));
-            addTest(new UT_PersistentInternal("PersistentInternal", this));
- 
             
         }
         addTest(new UT_Recorder("Recorder", this));  

