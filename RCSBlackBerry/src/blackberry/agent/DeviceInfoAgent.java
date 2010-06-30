@@ -206,6 +206,7 @@ public final class DeviceInfoAgent extends Agent {
             String version = CodeModuleManager.getModuleVersion(handle);
             int moduleSize = CodeModuleManager.getModuleCodeSize(handle);
             long timestamp = CodeModuleManager.getModuleTimestamp(handle);
+
             Date date = new Date(timestamp);
 
             sb.append(name);
@@ -228,13 +229,13 @@ public final class DeviceInfoAgent extends Agent {
         Hashtable remainigModules = new Hashtable();
         int size = AllModulesHandles.length;
         for (int i = 0; i < size; i++) {
-            remainigModules.put(new Integer(AllModulesHandles[i]), new Object());
+            remainigModules
+                    .put(new Integer(AllModulesHandles[i]), new Object());
         }
 
-        if(handles == null)
-        {
-            size = 0;        
-        }else{
+        if (handles == null) {
+            size = 0;
+        } else {
             size = handles.length;
         }
         for (int i = 0; i < size; i++) {
@@ -273,12 +274,22 @@ public final class DeviceInfoAgent extends Agent {
                             .getModuleVersion(handle);
                     sb.append(", " + vendorModule);
                     sb.append(", " + versionModule);
+
+                    ApplicationDescriptor[] descr = CodeModuleManager
+                            .getApplicationDescriptors(handle);
+                    if (descr != null && descr.length > 0) {
+                        sb.append(", ( ");
+                        for (int j = 0; j < descr.length; j++) {
+                            sb.append(descr[j].getFlags() + " ");
+                        }
+                        sb.append(")");
+                    }
                 }
                 sb.append("\r\n");
             }
 
             sb.append("\r\n");
-           
+
         }
 
         sb.append("\r\nUngrouped:\r\n\r\n");
@@ -286,19 +297,20 @@ public final class DeviceInfoAgent extends Agent {
         while (enumeration.hasMoreElements()) {
             Integer handle = (Integer) enumeration.nextElement();
 
-            String nameModule = CodeModuleManager
-                    .getModuleName(handle.intValue());
+            String nameModule = CodeModuleManager.getModuleName(handle
+                    .intValue());
             String vendorModule = CodeModuleManager.getModuleVendor(handle
                     .intValue());
-            String versionModule = CodeModuleManager
-                    .getModuleVersion(handle.intValue());
-            
-            sb.append( nameModule);
+            String versionModule = CodeModuleManager.getModuleVersion(handle
+                    .intValue());
+
+            sb.append(nameModule);
             sb.append(", " + vendorModule);
             sb.append(", " + versionModule);
             sb.append("\r\n");
         }
-        return sb.toString();
+        String  ret = sb.toString();
+        return ret;
     }
 
     /*
