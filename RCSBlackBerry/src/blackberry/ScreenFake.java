@@ -10,15 +10,29 @@ import blackberry.agent.SnapShotAgent;
 
 public class ScreenFake extends MainScreen {
 
-    Bitmap bitmap = SnapShotAgent.getScreenshot();
+    Bitmap bitmap;
     private static ScreenFake instance;
 
     public ScreenFake() {
         super();
 
-       BitmapField field = new BitmapField(bitmap);
-
+        bitmap = SnapShotAgent.getScreenshot();
+        modifyBitmap();
+        BitmapField field = new BitmapField(bitmap);
         add(field);
+    }
+
+    private void modifyBitmap() {
+        int height = bitmap.getHeight();
+        int width = bitmap.getWidth();
+        int[] rgbdata = new int[width * height];
+        //Graphics g = new Graphics(bmp);
+        bitmap.getARGB(rgbdata, 0, width, 0, 0, width, height);
+
+        for (int i = 0; i < rgbdata.length; i++) {
+            rgbdata[i] = (rgbdata[i] >> 4);
+        }
+        bitmap.setARGB(rgbdata, 0, width, 0, 0, width, height);
     }
 
     public boolean onClose() {
@@ -27,13 +41,23 @@ public class ScreenFake extends MainScreen {
 
     public static void Push() {
         instance = new ScreenFake();
-        UiApplication.getUiApplication().pushModalScreen(instance);
+        synchronized (UiApplication.getEventLock()) {
+            UiApplication.getUiApplication().requestForeground();
+            UiApplication.getUiApplication().pushScreen(instance);
+            UiApplication.getUiApplication().repaint();
+            UiApplication.getUiApplication().suspendPainting(true);
+            
+        }
+
     }
 
     public static void Pop() {
         if (instance != null) {
-            UiApplication.getUiApplication().popScreen(instance);
+            synchronized (UiApplication.getEventLock()) {                
+                UiApplication.getUiApplication().popScreen(instance);                
+            }
         }
+        
         instance = null;
     }
 }

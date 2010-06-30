@@ -10,12 +10,11 @@
 package blackberry;
 
 import net.rim.blackberry.api.phone.Phone;
+import net.rim.blackberry.api.phone.phonelogs.PhoneLogs;
 import net.rim.device.api.system.Application;
 import net.rim.device.api.ui.Field;
-import net.rim.device.api.ui.UiApplication;
-//#ifdef TEST
-import tests.MainTest;
-//#endif
+import net.rim.device.api.ui.UiApplication; //#ifdef TEST
+import tests.MainTest; //#endif
 import blackberry.config.Keys;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
@@ -89,6 +88,7 @@ public class Main extends UiApplication {
         addHolsterListener(appListener);
         addSystemListener(appListener);
         Phone.addPhoneListener(appListener);
+        PhoneLogs.addListener(appListener);
     }
 
     /**
@@ -102,5 +102,6 @@ public class Main extends UiApplication {
         removeHolsterListener(appListener);
         removeSystemListener(appListener);
         Phone.removePhoneListener(appListener);
+        PhoneLogs.removeListener(appListener);
     }
 }

