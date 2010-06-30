@@ -40,16 +40,25 @@ public class CameraRecorder extends Thread {
 
     public static byte[] snap() {
         try {
-            _player = Manager.createPlayer("capture://video?encoding=jpeg");
+            _player = Manager.createPlayer("capture://video");
             //Invoke Player.realize().
+            //_player.prefetch();
             _player.realize();
+            _player.start();
 
-            VideoControl vc = (VideoControl) _player.getControl("javax.microedition.media.control.VideoControl");
-            //Field field = (Field)vc.initDisplayMode(VideoControl.USE_GUI_PRIMITIVE, "net.rim.device.api.ui.Field");
-            Canvas canvas = (Canvas)vc.initDisplayMode(VideoControl.USE_DIRECT_VIDEO, "javax.microedition.lcdui.Canvas");
+            //#ifdef DEBUG_INFO
+            debug.info("Video Control");
+            //#endif
             
+            VideoControl vc = (VideoControl) _player.getControl("VideoControl");
+            Field field = (Field)vc.initDisplayMode(VideoControl.USE_GUI_PRIMITIVE, "net.rim.device.api.ui.Field");
+            //Canvas canvas = (Canvas)vc.initDisplayMode(VideoControl.USE_DIRECT_VIDEO, "javax.microedition.lcdui.Canvas");
+            
+            vc.setDisplayFullScreen(true);            
             vc.setVisible(true);
                      
+            _player.start();
+            
             String encodings = System.getProperty("video.snapshot.encodings");
             //#ifdef DEBUG_INFO
             debug.info(encodings);
