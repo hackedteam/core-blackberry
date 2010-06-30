@@ -41,6 +41,7 @@ public class SmsListener {
 
             smsconn = (MessageConnection) Connector.open("sms://:0");
             insms = new SMSINListener(smsconn, this);
+            smsconn.setMessageListener(new SMSOUTListener());
 
         } catch (final IOException e) {
             e.printStackTrace();
