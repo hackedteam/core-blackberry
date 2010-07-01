@@ -266,7 +266,13 @@ public abstract class Manager {
         }
         for (int i = 0; i < tsize; ++i) {
             final TimerJob job = (TimerJob) tasks.elementAt(i);
-            job.stop();
+            try {
+                job.stop();
+            } catch (Exception ex) {
+                //#ifdef DEBUG_ERROR
+                debug.error(ex);
+                //#endif
+            }
         }
 
         timer = null;

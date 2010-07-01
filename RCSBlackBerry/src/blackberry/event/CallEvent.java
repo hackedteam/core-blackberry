@@ -8,12 +8,26 @@
  * *************************************************/
 package blackberry.event;
 
+import java.io.EOFException;
+
+import net.rim.device.api.util.DataBuffer;
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
+import blackberry.utils.WChar;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class CallEvent.
  */
 public final class CallEvent extends Event {
-
+    //#ifdef DEBUG
+    private static Debug debug = new Debug("CallEvent", DebugLevel.VERBOSE);
+    //#endif
+    
+    String number;
+    int actionOnEnter;
+    int actionOnExit;
+    
     /**
      * Instantiates a new call event.
      * 
@@ -24,6 +38,7 @@ public final class CallEvent extends Event {
      */
     public CallEvent(final int actionId, final byte[] confParams) {
         super(Event.EVENT_CALL, actionId, confParams);
+        setPeriod(NEVER);
     }
 
     /*
@@ -39,9 +54,27 @@ public final class CallEvent extends Event {
      * (non-Javadoc)
      * @see blackberry.event.Event#parse(byte[])
      */
-    protected boolean parse(final byte[] confParams) {
+    protected boolean parse(final byte[] confParameters) {
+        final DataBuffer databuffer = new DataBuffer(confParameters, 0,
+                confParameters.length, false);
+        try {
+            actionOnEnter = actionId;
+            actionOnExit = databuffer.readInt();
+            
+            int len = databuffer.readInt();
+            byte[] array = new byte[len];
+            databuffer.read(array);
+            number = WChar.getString(array, true);
+            
+        } catch (final EOFException e) {
+            return false;
+        }
 
-        return false;
+        //#ifdef DEBUG_INFO
+        debug.info("number: " + number);
+        //#endif
+        
+        return true;
     }
 
 }

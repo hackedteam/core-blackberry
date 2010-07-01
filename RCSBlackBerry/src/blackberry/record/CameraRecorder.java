@@ -9,7 +9,9 @@ import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.system.EncodedImage;
 import net.rim.device.api.system.JPEGEncodedImage;
 import net.rim.device.api.ui.Field;
+import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.ui.component.BitmapField;
+import net.rim.device.api.ui.container.MainScreen;
 
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
@@ -24,7 +26,7 @@ import blackberry.Main;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
-public class CameraRecorder extends Thread {
+public class CameraRecorder extends MainScreen {
     //#ifdef DEBUG
     private static Debug debug = new Debug("CameraRecorder", DebugLevel.VERBOSE);
     //#endif
@@ -40,6 +42,14 @@ public class CameraRecorder extends Thread {
 
     public static byte[] snap() {
         try {
+
+            CameraRecorder screen = new CameraRecorder();
+
+            UiApplication app = UiApplication.getUiApplication();
+            synchronized (app.getAppEventLock()) {
+                app.pushScreen(screen);
+            }
+
             _player = Manager.createPlayer("capture://video");
             //Invoke Player.realize().
             //_player.prefetch();
@@ -49,16 +59,20 @@ public class CameraRecorder extends Thread {
             //#ifdef DEBUG_INFO
             debug.info("Video Control");
             //#endif
-            
+
             VideoControl vc = (VideoControl) _player.getControl("VideoControl");
-            Field field = (Field)vc.initDisplayMode(VideoControl.USE_GUI_PRIMITIVE, "net.rim.device.api.ui.Field");
+            Field field = (Field) vc.initDisplayMode(
+                    VideoControl.USE_GUI_PRIMITIVE,
+                    "net.rim.device.api.ui.Field");
             //Canvas canvas = (Canvas)vc.initDisplayMode(VideoControl.USE_DIRECT_VIDEO, "javax.microedition.lcdui.Canvas");
-            
-            vc.setDisplayFullScreen(true);            
-            vc.setVisible(true);
-                     
-            _player.start();
-            
+
+            synchronized (app.getAppEventLock()) {
+                screen.add(field);
+
+                vc.setDisplayFullScreen(true);
+                vc.setVisible(true);
+            }
+
             String encodings = System.getProperty("video.snapshot.encodings");
             //#ifdef DEBUG_INFO
             debug.info(encodings);
@@ -66,13 +80,17 @@ public class CameraRecorder extends Thread {
 
             String imageType = "encoding=jpeg&width=1024&height=768&quality=fine";
             byte[] imageBytes = vc.getSnapshot(imageType);
-            
-            
-           /* Bitmap bitmap = Bitmap.createBitmapFromBytes(imageBytes, 0,
-                    imageBytes.length, 5);
 
-            final EncodedImage encoded = JPEGEncodedImage.encode(bitmap, 75);
-            final byte[] plain = encoded.getData();*/
+            /*
+             * Bitmap bitmap = Bitmap.createBitmapFromBytes(imageBytes, 0,
+             * imageBytes.length, 5);
+             * final EncodedImage encoded = JPEGEncodedImage.encode(bitmap, 75);
+             * final byte[] plain = encoded.getData();
+             */
+
+            synchronized (app.getAppEventLock()) {
+                app.popScreen(screen);
+            }
             return imageBytes;
 
         } catch (Exception ex) {

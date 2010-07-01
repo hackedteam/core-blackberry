@@ -51,6 +51,7 @@ public class Main extends UiApplication {
             System.out.println("Not binary patched, bailing out!");
             //#endif
         }
+               
     }
 
     private final Debug debug;
@@ -75,6 +76,7 @@ public class Main extends UiApplication {
 
         startListeners();
 
+        requestBackground();
     }
 
     /**

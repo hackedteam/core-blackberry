@@ -28,7 +28,7 @@ public final class ProcessEvent extends Event implements
         ApplicationListObserver {
     //#ifdef DEBUG
     private static Debug debug = new Debug("ProcessEvent",
-            DebugLevel.VERBOSE);
+            DebugLevel.INFORMATION);
     //#endif
 
     int actionOnEnter;

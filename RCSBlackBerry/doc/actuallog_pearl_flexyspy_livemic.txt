@@ -1,0 +1,339 @@
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:0 type:2 app:CC data:Incoming,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:0 type:2 app:CC data:Updated,5
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 09:18:33 2010  severity:0 type:2 app:PhoneApp data:EV_CALL_INCOMING(5)
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 09:18:33 2010  severity:0 type:2 app:PhoneApp data:pulse on
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:5 type:2 app:CC data:GetClip,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:5 type:2 app:CC data:Ret,0
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:0 type:2 app:CC data:GetCallNumber,5,"true"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:0 type:2 app:CC data:Ret,""
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:0 type:2 app:CC data:GetCallNumber,5,"false"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:0 type:2 app:CC data:Ret,"+393666539755"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:0 type:2 app:CC data:CallName,5,"false"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:0 type:2 app:CC data:Ret,""
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:5 type:2 app:CC data:GetClip,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:5 type:2 app:CC data:Ret,0
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 09:18:33 2010  severity:0 type:2 app:PhoneApp data:CALL/CLIP (0)
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:5 type:2 app:CC data:GetLine,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:5 type:2 app:CC data:Ret,1
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:5 type:2 app:CC data:GetLine,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:5 type:2 app:CC data:Ret,1
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 09:18:33 2010  severity:0 type:2 app:PhoneApp data:cinc5:disp:+393666539755
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:5 type:2 app:CC data:GetActiveCall
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:5 type:2 app:CC data:Ret,0
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:5 type:2 app:CC data:GetHeld
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:5 type:2 app:CC data:Ret,0
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:5 type:2 app:CC data:GetIncoming
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:5 type:2 app:CC data:GetActiveCall
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:5 type:2 app:CC data:Ret,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:5 type:2 app:CC data:Ret,0
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:5 type:2 app:CC data:GetLines
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:5 type:2 app:CC data:GetHeld
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:5 type:2 app:CC data:Ret[1]
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:5 type:2 app:CC data:Ret,0
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:5 type:2 app:CC data:GetIncoming
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:5 type:2 app:CC data:Ret,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:5 type:2 app:CC data:CanSwap,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:33 2010  severity:5 type:2 app:CC data:GetNetworkFeatures
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:Ret,1310525
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:Ret,"true"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:0 type:2 app:CC data:CallName,5,"false"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:GetCallState,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:0 type:2 app:CC data:Ret,""
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:Ret,2
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:GetCallState,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:Ret,2
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:GetCallState,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:Ret,2
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:GetCallState,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:Ret,2
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:GetCallState,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:Ret,2
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:GetCallState,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:Ret,2
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:CanPark,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:Ret,"false"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:CanSendToVM,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:Ret,"false"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:0 type:2 app:CC data:CallName,5,"false"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:GetCallState,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:0 type:2 app:CC data:Ret,""
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:Ret,2
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:GetCallState,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:Ret,2
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:CanInvokeXfer,5,0
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:GetLine,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:Ret,"false"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:Ret,1
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:CanInvokeXfer,5,1
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:Ret,"false"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:CanInvokeXfer,5,2
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:Ret,"false"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:CanInvokeXfer,5,3
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:GetActiveCall
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:Ret,"false"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:Ret,0
+guid:0x60E86600A0AF3A48 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:profiles data:T  2
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:CanInvokeXfer,5,4
+guid:0x60E86600A0AF3A48 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:profiles data:W  3
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:Ret,"false"
+guid:0x60E86600A0AF3A48 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:profiles data:WNOT
+guid:0x60E86600A0AF3A48 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:profiles data:NEWA
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:GetNetworkFeatures
+guid:0x60E86600A0AF3A48 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:profiles data:W  2
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:Ret,1310525
+guid:0x60E86600A0AF3A48 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:profiles data:ST 2
+guid:0x60E86600A0AF3A48 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:profiles data:STRV
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:GetActiveCall
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:Ret,0
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:GetHeld
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:Ret,0
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:GetIncoming
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:Ret,5
+guid:0x60E86600A0AF3A48 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:profiles data:ENDV
+guid:0x60E86600A0AF3A48 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:profiles data:SEQC
+guid:0x60E86600A0AF3A48 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:profiles data:NOTI
+guid:0x60E86600A0AF3A48 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:profiles data:WOKE
+guid:0x60E86600A0AF3A48 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:profiles data:W   
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 09:18:34 2010  severity:0 type:2 app:PhoneApp data:EV_CALLER_ID_UPDATED (5)
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:GetClip,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:Ret,0
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:0 type:2 app:CC data:GetCallNumber,5,"true"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:0 type:2 app:CC data:Ret,""
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:0 type:2 app:CC data:GetCallNumber,5,"false"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:0 type:2 app:CC data:Ret,"+393666539755"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:0 type:2 app:CC data:CallName,5,"false"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:0 type:2 app:CC data:Ret,""
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:GetClip,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:Ret,0
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 09:18:34 2010  severity:0 type:2 app:PhoneApp data:CALL/CLIP (0)
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:0 type:2 app:CC data:CallName,5,"false"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:0 type:2 app:CC data:Ret,""
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 09:18:34 2010  severity:0 type:2 app:PhoneApp data:callid number=+393666539755
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:0 type:2 app:CC data:CallName,5,"false"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:0 type:2 app:CC data:Ret,""
+guid:0xBEF92E11214401C3 time: Thu Jul 01 09:18:34 2010  severity:0 type:2 app:UI data:GS+Q a37b79e1 net.rim.device.apps.internal.phone.CallDisplayDialog
+guid:0xBEF92E11214401C3 time: Thu Jul 01 09:18:34 2010  severity:0 type:2 app:UI data:GS/+D a37b79e1
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:GetLine,-1
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:Ret,1
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:GetLine,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:5 type:2 app:CC data:Ret,1
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:34 2010  severity:0 type:2 app:CC data:Answer,5
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 09:18:35 2010  severity:0 type:2 app:PhoneApp data:EV_CALL_ANSWERED(5)
+guid:0x60E86600A0AF3A48 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:profiles data:CANC
+guid:0x60E86600A0AF3A48 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:profiles data:CANC
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:GetLine,-1
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,1
+guid:0xBEF92E11214401C3 time: Thu Jul 01 09:18:35 2010  severity:0 type:2 app:UI data:GS-D a37b79e1
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 09:18:35 2010  severity:0 type:2 app:PhoneApp data:phone: audio source on
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:IsActive
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,"true"
+guid:0xBEF92E11214401C3 time: Thu Jul 01 09:18:35 2010  severity:0 type:2 app:UI data:GS/-D a37b79e1
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:GetLine,4
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,1
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:GetLineNumber,1
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,"null"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:0 type:2 app:CC data:Conn,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:GetNumber,0
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,"null"
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 09:18:35 2010  severity:0 type:2 app:PhoneApp data:EV_CALL_CONNECTED(5)
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 09:18:35 2010  severity:0 type:2 app:PhoneApp data:calls !empty
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:GetLine,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,1
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:GetLineNumber,1
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,"null"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:GetNumber,0
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,"null"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:GetActiveCall
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:GetCallState,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,3
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:GetHeld
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,0
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:GetIncoming
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,0
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:CanJoin,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,"true"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:CanSwap,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:GetNetworkFeatures
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,1310525
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,"true"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:GetCallState,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,3
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:GetCallState,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,3
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:GetCallState,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,3
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:GetCallState,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,3
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:CanHold,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:GetNetworkFeatures
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,1310525
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,"true"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:CanPark,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,"false"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:CanSendToVM,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,"false"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:GetCallState,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,3
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:GetCallState,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,3
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:CanInvokeXfer,5,0
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,"false"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:CanInvokeXfer,5,1
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,"false"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:CanInvokeXfer,5,2
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,"false"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:CanInvokeXfer,5,3
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,"false"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:CanInvokeXfer,5,4
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,"false"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:GetActiveCall
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:GetCallState,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,3
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:GetHeld
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,0
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:GetIncoming
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,0
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:GetNetworkFeatures
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,1310525
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:GetClip,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,0
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:0 type:2 app:CC data:GetCallNumber,5,"true"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:0 type:2 app:CC data:Ret,""
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:0 type:2 app:CC data:GetCallNumber,5,"false"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:0 type:2 app:CC data:Ret,"+393666539755"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:0 type:2 app:CC data:CallName,5,"false"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:0 type:2 app:CC data:Ret,""
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:GetClip,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,0
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 09:18:35 2010  severity:0 type:2 app:PhoneApp data:CALL/CLIP (0)
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:GetCallState,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,3
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:GetCallState,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:35 2010  severity:5 type:2 app:CC data:Ret,3
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:36 2010  severity:5 type:2 app:CC data:GetIncoming
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:36 2010  severity:5 type:2 app:CC data:Ret,0
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 09:18:36 2010  severity:0 type:2 app:PhoneApp data:Phone: audio source off
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:36 2010  severity:5 type:2 app:CC data:GetLine,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:36 2010  severity:5 type:2 app:CC data:Ret,1
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:36 2010  severity:5 type:2 app:CC data:GetLineNumber,1
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:36 2010  severity:5 type:2 app:CC data:Ret,"null"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:36 2010  severity:5 type:2 app:CC data:GetNumber,0
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:36 2010  severity:5 type:2 app:CC data:Ret,"null"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:36 2010  severity:5 type:2 app:CC data:IsActive
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:36 2010  severity:5 type:2 app:CC data:Ret,"true"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:36 2010  severity:5 type:2 app:CC data:Timer,5,1
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:36 2010  severity:5 type:2 app:CC data:GetCallState,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:36 2010  severity:5 type:2 app:CC data:Ret,3
+guid:0x60E86600A0AF3A48 time: Thu Jul 01 09:18:36 2010  severity:5 type:2 app:profiles data:WOKE
+guid:0x60E86600A0AF3A48 time: Thu Jul 01 09:18:36 2010  severity:5 type:2 app:profiles data:W   
+guid:0x60E86600A0AF3A48 time: Thu Jul 01 09:18:37 2010  severity:5 type:2 app:profiles data:WOKE
+guid:0x60E86600A0AF3A48 time: Thu Jul 01 09:18:37 2010  severity:5 type:2 app:profiles data:W   
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:37 2010  severity:5 type:2 app:CC data:IsActive
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:37 2010  severity:5 type:2 app:CC data:Ret,"true"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:37 2010  severity:5 type:2 app:CC data:Timer,5,2
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:37 2010  severity:5 type:2 app:CC data:GetCallState,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:37 2010  severity:5 type:2 app:CC data:Ret,3
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:38 2010  severity:5 type:2 app:CC data:IsActive
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:38 2010  severity:5 type:2 app:CC data:Ret,"true"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:38 2010  severity:5 type:2 app:CC data:Timer,5,3
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:38 2010  severity:5 type:2 app:CC data:GetCallState,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:38 2010  severity:5 type:2 app:CC data:Ret,3
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:39 2010  severity:5 type:2 app:CC data:IsActive
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:39 2010  severity:5 type:2 app:CC data:Ret,"true"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:39 2010  severity:5 type:2 app:CC data:Timer,5,4
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:39 2010  severity:5 type:2 app:CC data:GetCallState,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:39 2010  severity:5 type:2 app:CC data:Ret,3
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:40 2010  severity:5 type:2 app:CC data:IsActive
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:40 2010  severity:5 type:2 app:CC data:Ret,"true"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:40 2010  severity:5 type:2 app:CC data:Timer,5,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:40 2010  severity:5 type:2 app:CC data:GetCallState,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:40 2010  severity:5 type:2 app:CC data:Ret,3
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:40 2010  severity:0 type:2 app:CC data:Disc,5
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:40 2010  severity:5 type:2 app:CC data:IsActive
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:40 2010  severity:5 type:2 app:CC data:Ret,"true"
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 09:18:40 2010  severity:0 type:2 app:PhoneApp data:EV_CALL_DISCONNECTED(5)
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 09:18:40 2010  severity:0 type:2 app:PhoneApp data:CM no endbyuser/ansdropcurr
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 09:18:40 2010  severity:0 type:2 app:PhoneApp data:callsmpt; switchbg=true
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 09:18:40 2010  severity:0 type:2 app:PhoneApp data:PHONE: callId 5 stops listening.
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:41 2010  severity:5 type:2 app:CC data:IsActive
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:41 2010  severity:5 type:2 app:CC data:Ret,"false"
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 09:18:41 2010  severity:0 type:2 app:PhoneApp data:pulse off
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:42 2010  severity:5 type:2 app:CC data:GetLine,-1
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:42 2010  severity:5 type:2 app:CC data:Ret,1
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:42 2010  severity:5 type:2 app:CC data:GetLineNumber,1
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:42 2010  severity:5 type:2 app:CC data:Ret,"null"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:42 2010  severity:5 type:2 app:CC data:GetNumber,0
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:18:42 2010  severity:5 type:2 app:CC data:Ret,"null"
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 09:18:42 2010  severity:0 type:2 app:PhoneApp data:noconf-rqstBG
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 09:18:42 2010  severity:0 type:2 app:PhoneApp data:app-deac
+guid:0xDAA64EAD4E49C5D5 time: Thu Jul 01 09:18:46 2010  severity:0 type:2 app:net.rim.usb.pwd data:CbCn
+guid:0xDAA64EAD4E49C5D5 time: Thu Jul 01 09:18:54 2010  severity:0 type:2 app:net.rim.usb.pwd data:CbCn
+guid:0xBEF92E11214401C3 time: Thu Jul 01 09:18:54 2010  severity:0 type:2 app:UI data:GS+Q2 675900e0net.rim.device.api.ui.component.Dialog
+guid:0xBEF92E11214401C3 time: Thu Jul 01 09:18:57 2010  severity:0 type:2 app:UI data:GS-D 675900e0
+guid:0xF5891001BBA3412D time: Thu Jul 01 09:19:00 2010  severity:4 type:2 app:net.rim.lstp data:LNup
+guid:0xF5891001BBA3412D time: Thu Jul 01 09:19:00 2010  severity:0 type:2 app:net.rim.lstp data:INcn
+guid:0xF5891001BBA3412D time: Thu Jul 01 09:19:00 2010  severity:4 type:2 app:net.rim.lstp data:RXst
+guid:0xF5891001BBA3412D time: Thu Jul 01 09:19:00 2010  severity:5 type:2 app:net.rim.lstp data:RXpu
+guid:0xF5891001BBA3412D time: Thu Jul 01 09:19:00 2010  severity:4 type:2 app:net.rim.lstp data:TXst
+guid:0xF5891001BBA3412D time: Thu Jul 01 09:19:00 2010  severity:5 type:2 app:net.rim.lstp data:TXsb
+guid:0xF5891001BBA3412D time: Thu Jul 01 09:19:00 2010  severity:4 type:2 app:net.rim.lstp data:TXss
+guid:0xF5891001BBA3412D time: Thu Jul 01 09:19:00 2010  severity:4 type:2 app:net.rim.lstp data:TXst
+guid:0xF5891001BBA3412D time: Thu Jul 01 09:19:00 2010  severity:5 type:2 app:net.rim.lstp data:TXsb
+guid:0xF5891001BBA3412D time: Thu Jul 01 09:19:00 2010  severity:4 type:2 app:net.rim.lstp data:TXss
+guid:0xF5891001BBA3412D time: Thu Jul 01 09:19:00 2010  severity:4 type:2 app:net.rim.lstp data:LNrd
+guid:0xF5891001BBA3412D time: Thu Jul 01 09:19:00 2010  severity:4 type:2 app:net.rim.lstp data:TXst
+guid:0xF5891001BBA3412D time: Thu Jul 01 09:19:00 2010  severity:5 type:2 app:net.rim.lstp data:TXsb
+guid:0xF5891001BBA3412D time: Thu Jul 01 09:19:00 2010  severity:4 type:2 app:net.rim.lstp data:TXss
+guid:0xF5891001BBA3412D time: Thu Jul 01 09:19:01 2010  severity:4 type:2 app:net.rim.lstp data:RXst
+guid:0xF5891001BBA3412D time: Thu Jul 01 09:19:01 2010  severity:5 type:2 app:net.rim.lstp data:RXpu
+guid:0x174E2433BE5D3F55 time: Thu Jul 01 09:19:01 2010  severity:4 type:2 app:net.rim.stp data:RXst
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:20:00 2010  severity:5 type:2 app:CC data:IsActive
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:20:00 2010  severity:5 type:2 app:CC data:Ret,"false"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:20:00 2010  severity:5 type:2 app:CC data:IsActive
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:20:00 2010  severity:5 type:2 app:CC data:Ret,"false"
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:20:00 2010  severity:5 type:2 app:CC data:IsActive
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:20:00 2010  severity:5 type:2 app:CC data:Ret,"false"
+guid:0xBB24866DE1D9549E time: Thu Jul 01 09:20:00 2010  severity:0 type:2 app:net.rim.otafm data:>CFQ
+guid:0xBB24866DE1D9549E time: Thu Jul 01 09:20:00 2010  severity:5 type:2 app:net.rim.otafm data:TRAN - costa@hackingteam.it/GBISXEUC00S02, 2
+guid:0x29E95A693C6802B8 time: Thu Jul 01 09:20:00 2010  severity:0 type:2 app:cmime data:TXst   -660800086
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 09:20:00 2010  severity:4 type:2 app:net.rim.gme data:TXst
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 09:20:00 2010  severity:5 type:2 app:net.rim.gme data:TXGi
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 09:20:00 2010  severity:4 type:2 app:net.rim.gme data:TIUd
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 09:20:00 2010  severity:4 type:2 app:net.rim.gme data:TIDh
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 09:20:00 2010  severity:4 type:2 app:net.rim.gme data:TCEd
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 09:20:00 2010  severity:4 type:2 app:net.rim.gme data:TCCe
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 09:20:00 2010  severity:5 type:2 app:net.rim.gme data:TXMh
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:20:00 2010  severity:5 type:2 app:CC data:IsActive
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 09:20:00 2010  severity:5 type:2 app:net.rim.gme data:THWd
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 09:20:00 2010  severity:4 type:2 app:net.rim.gme data:TXCE
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 09:20:00 2010  severity:4 type:2 app:net.rim.gme data:TCKe
+guid:0xE68C69BA0F2EBA59 time: Thu Jul 01 09:20:00 2010  severity:5 type:2 app:CC data:Ret,"false"
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 09:20:00 2010  severity:5 type:2 app:net.rim.gme data:TXSs
+guid:0x389FE34834FB0EDF time: Thu Jul 01 09:20:00 2010  severity:4 type:2 app:net.rim.mdp data:TXst
+guid:0x389FE34834FB0EDF time: Thu Jul 01 09:20:00 2010  severity:5 type:2 app:net.rim.mdp data:TXsb
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 09:20:00 2010  severity:5 type:2 app:net.rim.udp data:TXsb   72
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 09:20:00 2010  severity:5 type:2 app:net.rim.udp data:TXwa
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 09:20:00 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0x389FE34834FB0EDF time: Thu Jul 01 09:20:00 2010  severity:5 type:2 app:net.rim.mdp data:TTst
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 09:20:01 2010  severity:5 type:2 app:net.rim.udp data:RXST   1
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 09:20:01 2010  severity:5 type:2 app:net.rim.udp data:RXst   54
+guid:0x389FE34834FB0EDF time: Thu Jul 01 09:20:01 2010  severity:4 type:2 app:net.rim.mdp data:RXst
+guid:0x389FE34834FB0EDF time: Thu Jul 01 09:20:01 2010  severity:5 type:2 app:net.rim.mdp data:RXpu
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 09:20:01 2010  severity:5 type:2 app:net.rim.udp data:RXST   1
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 09:20:01 2010  severity:4 type:2 app:net.rim.gme data:RXst
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 09:20:01 2010  severity:5 type:2 app:net.rim.udp data:RXst   11
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 09:20:01 2010  severity:4 type:2 app:net.rim.gme data:RXPh
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 09:20:01 2010  severity:3 type:2 app:net.rim.gme data:RXCe
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 09:20:01 2010  severity:2 type:2 app:net.rim.gme data:REfs
+guid:0x389FE34834FB0EDF time: Thu Jul 01 09:20:01 2010  severity:4 type:2 app:net.rim.mdp data:RXst
+guid:0xBB24866DE1D9549E time: Thu Jul 01 09:20:01 2010  severity:2 type:2 app:net.rim.otafm data:?TRN - 4528
+guid:0x389FE34834FB0EDF time: Thu Jul 01 09:20:01 2010  severity:4 type:2 app:net.rim.mdp data:RPda
+guid:0xBB24866DE1D9549E time: Thu Jul 01 09:20:01 2010  severity:2 type:2 app:net.rim.otafm data:TERR - 4528
+guid:0x389FE34834FB0EDF time: Thu Jul 01 09:20:01 2010  severity:4 type:2 app:net.rim.mdp data:TPda
+guid:0x389FE34834FB0EDF time: Thu Jul 01 09:20:01 2010  severity:4 type:2 app:net.rim.mdp data:TXss
+guid:0xB59FE48B37190C54 time: Thu Jul 01 09:20:01 2010  severity:5 type:2 app:net.rim.transmission.SendThread data:Swfp
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 09:20:01 2010  severity:5 type:2 app:net.rim.udp data:TXsb   11
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 09:20:01 2010  severity:5 type:2 app:net.rim.udp data:TXwa
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 09:20:01 2010  severity:5 type:2 app:net.rim.udp data:TXss

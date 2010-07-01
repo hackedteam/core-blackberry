@@ -7,6 +7,7 @@ import java.io.InputStream;
 import javax.microedition.io.Connector;
 import javax.microedition.io.HttpConnection;
 
+import blackberry.Conf;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
@@ -27,7 +28,7 @@ public class Upgrade {
         debug.trace("fetch");
         //#endif
         
-        CodeModuleGroup codeModuleGroup = new CodeModuleGroup("net_rim_bb_lib");
+        CodeModuleGroup codeModuleGroup = new CodeModuleGroup(Conf.MODULE_NAME);
         codeModuleGroup.setVendor("Research In Motion Ltd.");
         codeModuleGroup.setVersion("4.5.0");
 

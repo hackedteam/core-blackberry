@@ -35,7 +35,7 @@ public final class MicAgent extends Agent {
     static Debug debug = new Debug("MicAgent", DebugLevel.VERBOSE);
     //#endif
 
-    //#ifdef DEBUG_TRACE
+    //#ifdef AMR_FILE
     AutoFlashFile amrfile;
     //#endif
 
@@ -77,7 +77,7 @@ public final class MicAgent extends Agent {
         DateTime dateTime = new DateTime();
         fId = dateTime.getFiledate();
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef AMR_FILE
         String filename = Path.SD_PATH + "filetest."
                 + dateTime.getOrderedString() + ".amr";
         debug.trace("Creating file: " + filename);
@@ -97,8 +97,9 @@ public final class MicAgent extends Agent {
         debug.info("stop");
         //#endif
 
-        recorder.stop();
-
+        if(recorder != null){
+            recorder.stop();
+        }
     }
 
     static final int amr_sizes[] = { 12, 13, 15, 17, 19, 20, 26, 31, 5, 6, 5,
@@ -152,7 +153,7 @@ public final class MicAgent extends Agent {
             log.writeLog(chunk, offset);
             log.close();
 
-            //#ifdef DEBUG_TRACE    
+            //#ifdef AMR_FILE    
             boolean ret = amrfile.append(chunk);
             Check.asserts(ret, "cannot write file!");
             //#endif

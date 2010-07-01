@@ -1,0 +1,1307 @@
+guid:0x97C9F5F641D25E5F time: Thu Jan 01 01:00:00 1970  severity:0 type:2 app:System data:JVM:INFOp=21a72274,a='5.0.0.509',o='5.2.0.47',h=8c000f03
+guid:0x97C9F5F641D25E5F time: Thu Jul 01 11:52:36 2010  severity:0 type:2 app:System data:VM:-GCnet_rim_app_manager RX=7.8M,RF=27.3M,FF=140.4M,OF=581.2K,OS=7.7M,ON=93.7K,OR=0,FR=0,TR=4.1K,RR=0,IS=8.4K RA=11.5M,RS=7.7M,RN=61.1K TA=28.8K,TS=0,TN=230 PA=0,PS=0,PN=13K R0=55.6M,1=800.2K,2=15K,3=102.4K,4=1M,7=317.3K,8=3K,9=9.2M,10=17.5K,11=47.1K,12=325K,13=15.6K,15=358.6K,16=84.3K,20=4.7K,21=524,22=67.7K,23=135.5K,24=22K
+guid:0x97C9F5F641D25E5F time: Thu Jul 01 11:52:36 2010  severity:0 type:2 app:System data:-GCt=139,b=0,r=0,g=p,w=28,u=0,c=0
+guid:0x97C9F5F641D25E5F time: Thu Jul 01 11:52:37 2010  severity:0 type:2 app:System data:VM:+RR!net_rim_app_manager RX=18.5M,RF=27.3M,FF=140.4M,OF=581.2K,OS=7.7M,ON=93.7K,OR=0,FR=0,TR=4.1K,RR=0,IS=8.4K RA=11.5M,RS=7.7M,RN=61.1K TA=28.8K,TS=0,TN=230 PA=0,PS=0,PN=13K R0=55.6M,1=800.2K,2=15K,3=102.4K,4=1M,7=317.3K,8=3K,9=9.2M,10=17.8K,11=47.7K,12=325K,13=15.6K,15=358.6K,16=84.3K,20=4.7K,21=524,22=67.7K,23=135.5K,24=22K
+guid:0x97C9F5F641D25E5F time: Thu Jul 01 11:52:37 2010  severity:0 type:2 app:System data:VM:-RRnet_rim_app_manager RX=18.5M,RF=27.7M,FF=140M,OF=581.2K,OS=7.4M,ON=93.7K,OR=0,FR=0,TR=4.1K,RR=0,IS=8.4K RA=11.1M,RS=7.4M,RN=57.6K TA=381.2K,TS=0,TN=3.7K PA=0,PS=0,PN=13K R0=55.6M,1=800.2K,2=15K,3=102.4K,4=1M,7=317.3K,8=3K,9=8.8M,10=17.8K,11=47.7K,12=325K,13=15.6K,15=358.6K,16=84.3K,20=4.7K,21=524,22=67.7K,23=135.5K,24=22K
+guid:0xCA21F57375A6221A time: Thu Jul 01 11:52:37 2010  severity:5 type:2 app:RIMGmail data:GCL init,srID=44 flag=false new sz=1
+guid:0xCA21F57375A6221A time: Thu Jul 01 11:52:38 2010  severity:5 type:2 app:RIMGmail data:init ConList for 44
+guid:0xCA21F57375A6221A time: Thu Jul 01 11:52:38 2010  severity:5 type:2 app:RIMGmail data:ConvList 44 has items 1
+guid:0x97C9F5F641D25E5F time: Thu Jul 01 11:52:38 2010  severity:0 type:2 app:System data:POWER_UP
+guid:0xF519C95FCF4EF56E time: Thu Jul 01 11:52:38 2010  severity:0 type:2 app:Device Lock Command data:DSPU
+guid:0xC1A90F9B4F904C57 time: Thu Jul 01 11:52:38 2010  severity:5 type:2 app:App Perms data:d SlideshowToGo47:12
+guid:0x647E5DBBC34B5549 time: Thu Jul 01 11:52:38 2010  severity:0 type:2 app:net.rim.clock data:RSPr
+guid:0x53ACA9B21D15F33E time: Thu Jul 01 11:52:38 2010  severity:0 type:2 app:net.rim.otaupgrade data:FNSp   0
+guid:0x97C9F5F641D25E5F time: Thu Jul 01 11:52:38 2010  severity:0 type:2 app:System data:OnOffMgr: powerUp
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:52:38 2010  severity:0 type:2 app:PhoneApp data:Updating SIM line labels
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:38 2010  severity:5 type:2 app:CC data:GetLine,-1,1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:38 2010  severity:0 type:2 app:CC data:FeatureReady
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:38 2010  severity:5 type:2 app:CC data:GetLines[1]
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:38 2010  severity:5 type:2 app:CC data:GetLineNumber,1,"null"
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:38 2010  severity:5 type:2 app:CC data:GetNumber,0,"null"
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:38 2010  severity:5 type:2 app:CC data:GetLines[1]
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:38 2010  severity:5 type:2 app:CC data:IsLineAvailable,1,"true"
+guid:0xACE9E8DA6EF5AAAE time: Thu Jul 01 11:52:38 2010  severity:5 type:2 app:net.rim.device.internal.deviceoptions.AutoOnOff data:Get the on time using the alternative schedule.
+guid:0xACE9E8DA6EF5AAAE time: Thu Jul 01 11:52:38 2010  severity:5 type:2 app:net.rim.device.internal.deviceoptions.AutoOnOff data:Get the off time using the alternative schedule.
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:38 2010  severity:0 type:2 app:CC data:FeatureReady
+guid:0xC1A90F9B4F904C57 time: Thu Jul 01 11:52:38 2010  severity:5 type:2 app:App Perms data:d SheetToGo47:12
+guid:0x646E9F884851A306 time: Thu Jul 01 11:52:38 2010  severity:0 type:2 app:net.rim.vad32 data:USEV 0x6aa
+guid:0xC1A90F9B4F904C57 time: Thu Jul 01 11:52:38 2010  severity:5 type:2 app:App Perms data:d WordToGo47:12
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:38 2010  severity:5 type:2 app:CC data:GetLines[1]
+guid:0x646E9F884851A306 time: Thu Jul 01 11:52:38 2010  severity:0 type:2 app:net.rim.vad32 data:UHVE 0x6aa
+guid:0xC1A90F9B4F904C57 time: Thu Jul 01 11:52:38 2010  severity:5 type:2 app:App Perms data:d SlideshowToGo47:13
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:38 2010  severity:5 type:2 app:CC data:GetLines[1]
+guid:0x53ACA9B21D15F33E time: Thu Jul 01 11:52:38 2010  severity:0 type:2 app:net.rim.otaupgrade data:OTAU:capable
+firmware=true, service=true, disabled=false
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:52:38 2010  severity:0 type:2 app:PhoneApp data:SSMgr CFU = false
+guid:0x5869CC572B2B7053 time: Thu Jul 01 11:52:38 2010  severity:0 type:2 app:net.rim.appcenter data:ACSB null
+guid:0xF045F8C76BBDBC4E time: Thu Jul 01 11:52:38 2010  severity:5 type:2 app:net.rim.browserpush data:Ppns
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:38 2010  severity:5 type:2 app:CC data:GetLines[1]
+guid:0xFBED62F0FCC4B0EA time: Thu Jul 01 11:52:38 2010  severity:0 type:2 app:Geolocation data:Sync will occur in 5 min
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:38 2010  severity:5 type:2 app:CC data:GetLines[1]
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:52:38 2010  severity:0 type:2 app:PhoneApp data:SSMgr CFU = false
+guid:0x5869CC572B2B7053 time: Thu Jul 01 11:52:38 2010  severity:0 type:2 app:net.rim.appcenter data:SSrv UID GPMDSEU01 Type 1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:39 2010  severity:0 type:2 app:CC data:LineChanged,1
+guid:0xC1A90F9B4F904C57 time: Thu Jul 01 11:52:39 2010  severity:5 type:2 app:App Perms data:d SheetToGo47:13
+guid:0xC1A90F9B4F904C57 time: Thu Jul 01 11:52:39 2010  severity:5 type:2 app:App Perms data:d WordToGo47:13
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:39 2010  severity:5 type:2 app:CC data:GetLine,-1,1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:39 2010  severity:5 type:2 app:CC data:GetLines[1]
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:39 2010  severity:5 type:2 app:CC data:GetLineNumber,1,"null"
+guid:0xF045F8C76BBDBC4E time: Thu Jul 01 11:52:39 2010  severity:5 type:2 app:net.rim.browserpush data:Ppda
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:39 2010  severity:5 type:2 app:CC data:GetNumber,0,"null"
+guid:0x97C9F5F641D25E5F time: Thu Jul 01 11:52:39 2010  severity:0 type:2 app:System data:Process net_rim_bb_lib(177) queue overflow; oldest event dropped
+guid:0x3656909D38609B2A time: Thu Jul 01 11:52:39 2010  severity:0 type:2 app:Key Store Manager data:CPwS
+guid:0x646E9F884851A306 time: Thu Jul 01 11:52:39 2010  severity:0 type:2 app:net.rim.vad32 data:USEV 0x6aa
+guid:0xF045F8C76BBDBC4E time: Thu Jul 01 11:52:39 2010  severity:5 type:2 app:net.rim.browserpush data:Ppda
+guid:0x40201E6E4F7246BE time: Thu Jul 01 11:52:39 2010  severity:4 type:2 app:net.rim.vpn data:Wait-logged out
+guid:0x646E9F884851A306 time: Thu Jul 01 11:52:39 2010  severity:0 type:2 app:net.rim.vad32 data:UHVE 0x6aa
+guid:0x60714307F914D8D5 time: Thu Jul 01 11:52:39 2010  severity:5 type:2 app:net.rim.wlan.scan data:Wait-idle
+guid:0x3656909D38609B2A time: Thu Jul 01 11:52:39 2010  severity:0 type:2 app:Key Store Manager data:CPwF
+guid:0x223F4E92C3F46135 time: Thu Jul 01 11:52:39 2010  severity:5 type:2 app:net.rim.wlan.scan.discovery data:Wait-idle
+guid:0x5D41D4729582C2DA time: Thu Jul 01 11:52:39 2010  severity:0 type:2 app:RootRegister data:usbConnectionStateChange:4
+guid:0xDAA64EAD4E49C5D5 time: Thu Jul 01 11:52:39 2010  severity:0 type:2 app:net.rim.usb.pwd data:CbDs
+guid:0x5D41D4729582C2DA time: Thu Jul 01 11:52:39 2010  severity:0 type:2 app:RootRegister data:Switch Mode to MS on disconnect
+guid:0x60714307F914D8D5 time: Thu Jul 01 11:52:39 2010  severity:5 type:2 app:net.rim.wlan.scan data:Evnt-mode
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:39 2010  severity:5 type:2 app:CC data:GetLines[1]
+guid:0x631E5BCD6DC16354 time: Thu Jul 01 11:52:39 2010  severity:4 type:2 app:net.rim.sms data:UCti
+guid:0x60714307F914D8D5 time: Thu Jul 01 11:52:39 2010  severity:5 type:2 app:net.rim.wlan.scan data:Actn-init
+guid:0x60714307F914D8D5 time: Thu Jul 01 11:52:39 2010  severity:5 type:2 app:net.rim.wlan.scan data:Wait-delay
+guid:0x5D41D4729582C2DA time: Thu Jul 01 11:52:39 2010  severity:0 type:2 app:RootRegister data:EXPANSION_INSERTED
+guid:0x5D41D4729582C2DA time: Thu Jul 01 11:52:39 2010  severity:0 type:2 app:RootRegister data:UMT1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:39 2010  severity:5 type:2 app:CC data:GetNumber,0,"null"
+guid:0x72BC2218B0A6112D time: Thu Jul 01 11:52:39 2010  severity:5 type:2 app:net.rim.deviceagent data:UPDO   67108864
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:52:39 2010  severity:0 type:2 app:PhoneApp data:SIM line 1: 
+guid:0xE9E9618B950856BD time: Thu Jul 01 11:52:39 2010  severity:5 type:2 app:net.rim.simat data:atSetupMenu
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:39 2010  severity:0 type:2 app:CC data:LineChanged,1
+guid:0x60714307F914D8D5 time: Thu Jul 01 11:52:39 2010  severity:0 type:2 app:net.rim.wlan.scan data:RAOn
+guid:0x60714307F914D8D5 time: Thu Jul 01 11:52:39 2010  severity:5 type:2 app:net.rim.wlan.scan data:Evnt-radio on
+guid:0x60714307F914D8D5 time: Thu Jul 01 11:52:39 2010  severity:5 type:2 app:net.rim.wlan.scan data:Actn-init
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:39 2010  severity:5 type:2 app:CC data:GetLine,-1,1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:39 2010  severity:5 type:2 app:CC data:GetLines[1]
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:39 2010  severity:5 type:2 app:CC data:GetLineNumber,1,"null"
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:39 2010  severity:5 type:2 app:CC data:GetNumber,0,"null"
+guid:0x60714307F914D8D5 time: Thu Jul 01 11:52:39 2010  severity:5 type:2 app:net.rim.wlan.scan data:Wait-delay
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:52:39 2010  severity:0 type:2 app:net.rim.rcp data:CNdc
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:52:39 2010  severity:4 type:2 app:net.rim.rcp data:CNsr
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:52:39 2010  severity:0 type:2 app:net.rim.rcp data:CNdc
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:52:39 2010  severity:4 type:2 app:net.rim.rcp data:CNsr
+guid:0x287F0A38583E7BC6 time: Thu Jul 01 11:52:39 2010  severity:4 type:2 app:net.rim.networkapi data:Twsc
+guid:0x21A5D236D4761C13 time: Thu Jul 01 11:52:39 2010  severity:0 type:2 app:net.rim.otasync data:DN+
+guid:0xC1A90F9B4F904C57 time: Thu Jul 01 11:52:39 2010  severity:5 type:2 app:App Perms data:d SlideshowToGo47:29
+guid:0xC1A90F9B4F904C57 time: Thu Jul 01 11:52:40 2010  severity:5 type:2 app:App Perms data:d SlideshowToGo47:34
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:40 2010  severity:5 type:2 app:CC data:GetNumber,0,"null"
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:40 2010  severity:3 type:2 app:net.rim.hrtRT data:NoPN
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:40 2010  severity:0 type:2 app:net.rim.hrtRT data:ESim 0x0
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:40 2010  severity:5 type:2 app:net.rim.hrtRT data:CNon
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:40 2010  severity:0 type:2 app:net.rim.hrtRT data:ENpc 0x22200130
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:40 2010  severity:5 type:2 app:net.rim.hrtRT data:CNew
+guid:0xC1A90F9B4F904C57 time: Thu Jul 01 11:52:40 2010  severity:5 type:2 app:App Perms data:d SheetToGo47:29
+guid:0xC1A90F9B4F904C57 time: Thu Jul 01 11:52:40 2010  severity:5 type:2 app:App Perms data:d WordToGo47:29
+guid:0x287F0A38583E7BC6 time: Thu Jul 01 11:52:40 2010  severity:4 type:2 app:net.rim.networkapi data:Tsrc
+guid:0x1295B4AADE149AFC time: Thu Jul 01 11:52:40 2010  severity:5 type:2 app:net.rim.timesync data:SynR
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:40 2010  severity:0 type:2 app:net.rim.hrtRT data:EHr!
+guid:0x9B1D534EFCE2875F time: Thu Jul 01 11:52:40 2010  severity:3 type:2 app:net.rim.autotimezone data:Sync 2 1278021160180 1277977960180
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:40 2010  severity:5 type:2 app:net.rim.hrtRT data:CDrp
+guid:0xC1A90F9B4F904C57 time: Thu Jul 01 11:52:40 2010  severity:5 type:2 app:App Perms data:d SheetToGo47:34
+guid:0xC1A90F9B4F904C57 time: Thu Jul 01 11:52:40 2010  severity:5 type:2 app:App Perms data:d WordToGo47:34
+guid:0x5D41D4729582C2DA time: Thu Jul 01 11:52:40 2010  severity:0 type:2 app:RootRegister data:mount 1 SDCard/ rc=0
+guid:0x5D41D4729582C2DA time: Thu Jul 01 11:52:40 2010  severity:0 type:2 app:RootRegister data:MNT1
+guid:0x37B669626F50FB66 time: Thu Jul 01 11:52:40 2010  severity:3 type:2 app:FileIndexService data:file:///SDCard/BlackBerry/system/media/: net.rim.device.api.io.file.FileIOException: File not found
+guid:0xA9D098450BA333E9 time: Thu Jul 01 11:52:41 2010  severity:0 type:2 app:net.rim.ribbon data:Set BG: null 320x240
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:52:41 2010  severity:0 type:2 app:UI data:GS-D c81fabd0
+guid:0x60714307F914D8D5 time: Thu Jul 01 11:52:41 2010  severity:5 type:2 app:net.rim.wlan.scan data:Evnt-timeout
+guid:0x60714307F914D8D5 time: Thu Jul 01 11:52:41 2010  severity:5 type:2 app:net.rim.wlan.scan data:Actn-start
+guid:0x60714307F914D8D5 time: Thu Jul 01 11:52:41 2010  severity:5 type:2 app:net.rim.wlan.scan data:Wait-idle
+guid:0x5D41D4729582C2DA time: Thu Jul 01 11:52:42 2010  severity:0 type:2 app:RootRegister data:UNL1
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 11:52:42 2010  severity:0 type:2 app:net.rim.gme data:INcn
+guid:0x1295B4AADE149AFC time: Thu Jul 01 11:52:42 2010  severity:0 type:2 app:net.rim.timesync data:Send
+guid:0x5D41D4729582C2DA time: Thu Jul 01 11:52:42 2010  severity:0 type:2 app:RootRegister data:mount 1 SDCard/ rc=19
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:42 2010  severity:4 type:2 app:net.rim.mdp data:TXst
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:42 2010  severity:5 type:2 app:net.rim.mdp data:TXsb
+guid:0x7808F255A1DB10C4 time: Thu Jul 01 11:52:42 2010  severity:3 type:2 app:net.rim.gpak data:TEfa
+guid:0x7808F255A1DB10C4 time: Thu Jul 01 11:52:42 2010  severity:0 type:2 app:net.rim.gpak data:open gpak:;packetType=DATA
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:42 2010  severity:0 type:2 app:net.rim.udp data:open udpsocket://:19060;apn=blackberry.net;internalPool=true;classification=blackberry
+guid:0x3B91E1630F0745BC time: Thu Jul 01 11:52:42 2010  severity:0 type:2 app:net.rim.tunnel data:Open-blackberry.net
+guid:0x3B91E1630F0745BC time: Thu Jul 01 11:52:42 2010  severity:0 type:2 app:net.rim.tunnel data:STnc-00000000
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:52:42 2010  severity:0 type:2 app:UI data:GS+Q0 553196b1net.rim.device.internal.crypto.fips.SelfTestsStartupDialog
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:42 2010  severity:5 type:2 app:CC data:GetLine,-1,1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:42 2010  severity:5 type:2 app:CC data:GetLines[1]
+guid:0x3B91E1630F0745BC time: Thu Jul 01 11:52:42 2010  severity:0 type:2 app:net.rim.tunnel data:EAct   1
+guid:0x43D4C8AA264559F0 time: Thu Jul 01 11:52:42 2010  severity:0 type:2 app:BBM data:ATLG
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:42 2010  severity:0 type:2 app:net.rim.hrtRT data:EPdp 0x1
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:42 2010  severity:0 type:2 app:net.rim.hrtRT data:PUpI
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:42 2010  severity:5 type:2 app:net.rim.hrtRT data:CNon
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:42 2010  severity:5 type:2 app:net.rim.udp data:OPEN
+guid:0x7808F255A1DB10C4 time: Thu Jul 01 11:52:43 2010  severity:5 type:2 app:net.rim.gpak data:OPEN
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:43 2010  severity:5 type:2 app:net.rim.udp data:TXsb   90
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:43 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:43 2010  severity:5 type:2 app:net.rim.mdp data:TTst
+guid:0x7808F255A1DB10C4 time: Thu Jul 01 11:52:43 2010  severity:0 type:2 app:net.rim.gpak data:open gpak:;packetType=GCMP
+guid:0x7808F255A1DB10C4 time: Thu Jul 01 11:52:43 2010  severity:5 type:2 app:net.rim.gpak data:OPEN
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:43 2010  severity:5 type:2 app:net.rim.udp data:RXST   1
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:43 2010  severity:5 type:2 app:net.rim.udp data:RXst   44
+guid:0xE8C5006FD91C5EBD time: Thu Jul 01 11:52:43 2010  severity:0 type:2 app:net.rim.gcmp data:GCRc
+guid:0xE8C5006FD91C5EBD time: Thu Jul 01 11:52:43 2010  severity:0 type:2 app:net.rim.gcmp data:GCSc
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:43 2010  severity:5 type:2 app:net.rim.udp data:TXsb   68
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:43 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0x60714307F914D8D5 time: Thu Jul 01 11:52:44 2010  severity:5 type:2 app:net.rim.wlan.scan data:Evnt-net found
+guid:0x60714307F914D8D5 time: Thu Jul 01 11:52:44 2010  severity:5 type:2 app:net.rim.wlan.scan data:Actn-found
+guid:0x60714307F914D8D5 time: Thu Jul 01 11:52:44 2010  severity:5 type:2 app:net.rim.wlan.scan data:NKBg
+guid:0x60714307F914D8D5 time: Thu Jul 01 11:52:44 2010  severity:5 type:2 app:net.rim.wlan.scan data:NKFn
+guid:0x38E29AD8D1B8DE63 time: Thu Jul 01 11:52:44 2010  severity:5 type:2 app:net.rim.wlan.link data:NKSt
+guid:0x60714307F914D8D5 time: Thu Jul 01 11:52:44 2010  severity:5 type:2 app:net.rim.wlan.scan data:Wait-idle
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:44 2010  severity:5 type:2 app:net.rim.udp data:RXST   1
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:44 2010  severity:5 type:2 app:net.rim.udp data:RXst   37
+guid:0x38E29AD8D1B8DE63 time: Thu Jul 01 11:52:44 2010  severity:4 type:2 app:net.rim.wlan.link data:Evnt-found
+guid:0x38E29AD8D1B8DE63 time: Thu Jul 01 11:52:44 2010  severity:4 type:2 app:net.rim.wlan.link data:Actn-start
+guid:0xE8C5006FD91C5EBD time: Thu Jul 01 11:52:44 2010  severity:0 type:2 app:net.rim.gcmp data:GCRc
+guid:0x38E29AD8D1B8DE63 time: Thu Jul 01 11:52:44 2010  severity:0 type:2 app:net.rim.wlan.link data:CNSc
+guid:0x38E29AD8D1B8DE63 time: Thu Jul 01 11:52:44 2010  severity:0 type:2 app:net.rim.wlan.link data:Strt
+guid:0x38E29AD8D1B8DE63 time: Thu Jul 01 11:52:44 2010  severity:4 type:2 app:net.rim.wlan.link data:Wait-wait
+guid:0x38E29AD8D1B8DE63 time: Thu Jul 01 11:52:45 2010  severity:0 type:2 app:net.rim.wlan.link data:NKCn
+guid:0x40201E6E4F7246BE time: Thu Jul 01 11:52:45 2010  severity:0 type:2 app:net.rim.vpn data:VPls
+guid:0x40201E6E4F7246BE time: Thu Jul 01 11:52:45 2010  severity:3 type:2 app:net.rim.vpn data:Inet
+guid:0x40201E6E4F7246BE time: Thu Jul 01 11:52:45 2010  severity:3 type:2 app:net.rim.vpn data:VPnp
+guid:0x49A44D2C2C0BFEE5 time: Thu Jul 01 11:52:45 2010  severity:4 type:2 app:net.rim.srp.prime data:Wlan
+guid:0x49A44D2C2C0BFEE5 time: Thu Jul 01 11:52:45 2010  severity:3 type:2 app:net.rim.srp.prime data:Inet
+guid:0x38E29AD8D1B8DE63 time: Thu Jul 01 11:52:45 2010  severity:4 type:2 app:net.rim.wlan.link data:Evnt-connected
+guid:0x40201E6E4F7246BE time: Thu Jul 01 11:52:45 2010  severity:4 type:2 app:net.rim.vpn data:Evnt-log-out
+guid:0x49A44D2C2C0BFEE5 time: Thu Jul 01 11:52:45 2010  severity:3 type:2 app:net.rim.srp.prime data:DaUv
+guid:0x38E29AD8D1B8DE63 time: Thu Jul 01 11:52:45 2010  severity:4 type:2 app:net.rim.wlan.link data:Actn-connected
+guid:0x40201E6E4F7246BE time: Thu Jul 01 11:52:45 2010  severity:4 type:2 app:net.rim.vpn data:Actn-stop
+guid:0x38E29AD8D1B8DE63 time: Thu Jul 01 11:52:45 2010  severity:0 type:2 app:net.rim.wlan.link data:Data   1
+guid:0x40201E6E4F7246BE time: Thu Jul 01 11:52:45 2010  severity:3 type:2 app:net.rim.vpn data:VPvl
+guid:0x3B91E1630F0745BC time: Thu Jul 01 11:52:45 2010  severity:0 type:2 app:net.rim.tunnel data:Open-MagicRudyAPN.rim
+guid:0x40201E6E4F7246BE time: Thu Jul 01 11:52:45 2010  severity:3 type:2 app:net.rim.vpn data:VPNd
+guid:0x3B91E1630F0745BC time: Thu Jul 01 11:52:45 2010  severity:0 type:2 app:net.rim.tunnel data:STac-MagicRudyAPN.rim
+guid:0x40201E6E4F7246BE time: Thu Jul 01 11:52:45 2010  severity:4 type:2 app:net.rim.vpn data:Wait-logged out
+guid:0x38E29AD8D1B8DE63 time: Thu Jul 01 11:52:45 2010  severity:0 type:2 app:net.rim.wlan.link data:Tunn
+guid:0x38E29AD8D1B8DE63 time: Thu Jul 01 11:52:45 2010  severity:0 type:2 app:net.rim.wlan.link data:Strt
+guid:0x38E29AD8D1B8DE63 time: Thu Jul 01 11:52:45 2010  severity:0 type:2 app:net.rim.wlan.link data:NkUp-4e6b5570
+guid:0x38E29AD8D1B8DE63 time: Thu Jul 01 11:52:45 2010  severity:0 type:2 app:net.rim.wlan.link data:PRid-953657906
+guid:0x38E29AD8D1B8DE63 time: Thu Jul 01 11:52:45 2010  severity:4 type:2 app:net.rim.wlan.link data:Wait-active
+guid:0x31C71AB2B9FEABD4 time: Thu Jul 01 11:52:45 2010  severity:5 type:2 app:net.rim.wlan.cpd data:CPKD
+guid:0xDCC3165DB06A81D6 time: Thu Jul 01 11:52:45 2010  severity:5 type:2 app:net.rim.wlan.cm data:IICA   1
+guid:0xDCC3165DB06A81D6 time: Thu Jul 01 11:52:45 2010  severity:0 type:2 app:net.rim.wlan.cm data:CMIC
+guid:0x40201E6E4F7246BE time: Thu Jul 01 11:52:45 2010  severity:3 type:2 app:net.rim.vpn data:PrEr
+guid:0x40201E6E4F7246BE time: Thu Jul 01 11:52:45 2010  severity:3 type:2 app:net.rim.vpn data:VPnp
+guid:0x49A44D2C2C0BFEE5 time: Thu Jul 01 11:52:45 2010  severity:4 type:2 app:net.rim.srp.prime data:Wlan
+guid:0x49A44D2C2C0BFEE5 time: Thu Jul 01 11:52:45 2010  severity:4 type:2 app:net.rim.srp.prime data:DaAv
+guid:0x40201E6E4F7246BE time: Thu Jul 01 11:52:45 2010  severity:4 type:2 app:net.rim.vpn data:Evnt-log-out
+guid:0x40201E6E4F7246BE time: Thu Jul 01 11:52:45 2010  severity:4 type:2 app:net.rim.vpn data:Actn-stop
+guid:0x40201E6E4F7246BE time: Thu Jul 01 11:52:45 2010  severity:3 type:2 app:net.rim.vpn data:VPvl
+guid:0x40201E6E4F7246BE time: Thu Jul 01 11:52:45 2010  severity:3 type:2 app:net.rim.vpn data:VPNd
+guid:0x40201E6E4F7246BE time: Thu Jul 01 11:52:45 2010  severity:4 type:2 app:net.rim.vpn data:Wait-logged out
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:52:45 2010  severity:0 type:2 app:net.rim.rcp data:CNdc
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:52:45 2010  severity:4 type:2 app:net.rim.rcp data:CNsr
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:52:45 2010  severity:0 type:2 app:net.rim.rcp data:CNrc   45709
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:52:45 2010  severity:0 type:2 app:UI data:GS-D 553196b1
+guid:0x37B669626F50FB66 time: Thu Jul 01 11:52:45 2010  severity:4 type:2 app:FileIndexService data:FScan(ms): 7444
+guid:0x37B669626F50FB66 time: Thu Jul 01 11:52:46 2010  severity:4 type:2 app:FileIndexService data:FScan(ms): 103
+guid:0x37B669626F50FB66 time: Thu Jul 01 11:52:46 2010  severity:4 type:2 app:FileIndexService data:FScan(ms): 123 Q:50
+guid:0x37B669626F50FB66 time: Thu Jul 01 11:52:46 2010  severity:4 type:2 app:FileIndexService data:FScan(ms): 125 Q:50
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:52:47 2010  severity:0 type:2 app:UI data:GS-D a8de9883
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:47 2010  severity:0 type:2 app:net.rim.hrtRT data:ETot
+guid:0x3B91E1630F0745BC time: Thu Jul 01 11:52:47 2010  severity:0 type:2 app:net.rim.tunnel data:Open-blackberry.net
+guid:0x3B91E1630F0745BC time: Thu Jul 01 11:52:48 2010  severity:0 type:2 app:net.rim.tunnel data:STac-blackberry.net
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:48 2010  severity:5 type:2 app:net.rim.hrtRT data:TReg 0x1
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:48 2010  severity:5 type:2 app:net.rim.hrtRT data:TUp 
+guid:0xE8C5006FD91C5EBD time: Thu Jul 01 11:52:48 2010  severity:0 type:2 app:net.rim.gcmp data:GCNr
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:48 2010  severity:0 type:2 app:net.rim.hrtRT data:XSys
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:48 2010  severity:5 type:2 app:net.rim.hrtRT data:XmtG
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:48 2010  severity:4 type:2 app:net.rim.mdp data:TTex
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:48 2010  severity:4 type:2 app:net.rim.mdp data:TPtm
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:48 2010  severity:3 type:2 app:net.rim.mdp data:TXrp
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:48 2010  severity:5 type:2 app:net.rim.mdp data:TTss
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:48 2010  severity:5 type:2 app:net.rim.mdp data:TXsb
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:48 2010  severity:5 type:2 app:net.rim.udp data:TXsb   90
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:48 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:48 2010  severity:5 type:2 app:net.rim.mdp data:TTst
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:48 2010  severity:5 type:2 app:net.rim.mdp data:TTrs   15
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:48 2010  severity:5 type:2 app:net.rim.udp data:RXST   1
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:48 2010  severity:5 type:2 app:net.rim.udp data:RXst   11
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:48 2010  severity:4 type:2 app:net.rim.mdp data:RXst
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:48 2010  severity:4 type:2 app:net.rim.mdp data:RPda
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:48 2010  severity:4 type:2 app:net.rim.mdp data:TXss
+guid:0x1295B4AADE149AFC time: Thu Jul 01 11:52:48 2010  severity:0 type:2 app:net.rim.timesync data:Send
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:48 2010  severity:4 type:2 app:net.rim.mdp data:TXst
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:48 2010  severity:5 type:2 app:net.rim.mdp data:TXsb
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:48 2010  severity:5 type:2 app:net.rim.udp data:TXsb   90
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:48 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:48 2010  severity:5 type:2 app:net.rim.mdp data:TTst
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:48 2010  severity:5 type:2 app:net.rim.udp data:RXST   1
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:48 2010  severity:5 type:2 app:net.rim.udp data:RXst   87
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:48 2010  severity:4 type:2 app:net.rim.mdp data:RXst
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:48 2010  severity:5 type:2 app:net.rim.mdp data:RXpu
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:48 2010  severity:0 type:2 app:net.rim.mdp data:TPpr
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 11:52:48 2010  severity:0 type:2 app:net.rim.gme data:RXCo
+guid:0x1295B4AADE149AFC time: Thu Jul 01 11:52:48 2010  severity:0 type:2 app:net.rim.timesync data:Recv
+guid:0x1295B4AADE149AFC time: Thu Jul 01 11:52:48 2010  severity:3 type:2 app:net.rim.timesync data:BadI
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:48 2010  severity:4 type:2 app:net.rim.mdp data:TPpa
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:48 2010  severity:5 type:2 app:net.rim.udp data:TXsb   13
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:48 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:48 2010  severity:5 type:2 app:net.rim.udp data:TXsb   12
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:48 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:49 2010  severity:5 type:2 app:net.rim.udp data:RXST   1
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:49 2010  severity:5 type:2 app:net.rim.udp data:RXst   39
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:49 2010  severity:4 type:2 app:net.rim.mdp data:RXst
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:49 2010  severity:0 type:2 app:net.rim.mdp data:RPpr
+guid:0xF045F8C76BBDBC4E time: Thu Jul 01 11:52:49 2010  severity:5 type:2 app:net.rim.browserpush data:Ppps
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:49 2010  severity:5 type:2 app:net.rim.udp data:RXST   1
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:49 2010  severity:5 type:2 app:net.rim.udp data:RXst   11
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:49 2010  severity:4 type:2 app:net.rim.mdp data:RXst
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:49 2010  severity:4 type:2 app:net.rim.mdp data:RPda
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:49 2010  severity:4 type:2 app:net.rim.mdp data:TXss
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:49 2010  severity:5 type:2 app:net.rim.udp data:RXST   1
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:49 2010  severity:5 type:2 app:net.rim.udp data:RXst   87
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:49 2010  severity:4 type:2 app:net.rim.mdp data:RXst
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:49 2010  severity:5 type:2 app:net.rim.mdp data:RXpu
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 11:52:49 2010  severity:0 type:2 app:net.rim.gme data:RXCo
+guid:0x1295B4AADE149AFC time: Thu Jul 01 11:52:49 2010  severity:0 type:2 app:net.rim.timesync data:Recv
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:49 2010  severity:4 type:2 app:net.rim.mdp data:TPda
+guid:0x60714307F914D8D5 time: Thu Jul 01 11:52:49 2010  severity:0 type:2 app:net.rim.wlan.scan data:PrEv   25698
+guid:0x40201E6E4F7246BE time: Thu Jul 01 11:52:49 2010  severity:3 type:2 app:net.rim.vpn data:PrEr
+guid:0x40201E6E4F7246BE time: Thu Jul 01 11:52:49 2010  severity:3 type:2 app:net.rim.vpn data:VPnp
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:49 2010  severity:5 type:2 app:net.rim.udp data:TXsb   11
+guid:0x60714307F914D8D5 time: Thu Jul 01 11:52:49 2010  severity:5 type:2 app:net.rim.wlan.scan data:Evnt-profile
+guid:0x7D52B2987EC80054 time: Thu Jul 01 11:52:49 2010  severity:5 type:2 app:net.rim.fd data:FDOf   304441810   387273
+guid:0xACE9E8DA6EF5AAAE time: Thu Jul 01 11:52:49 2010  severity:5 type:2 app:net.rim.device.internal.deviceoptions.AutoOnOff data:Get the on time using the alternative schedule.
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:49 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0x40201E6E4F7246BE time: Thu Jul 01 11:52:49 2010  severity:4 type:2 app:net.rim.vpn data:Evnt-log-out
+guid:0x60714307F914D8D5 time: Thu Jul 01 11:52:49 2010  severity:5 type:2 app:net.rim.wlan.scan data:Actn-init
+guid:0xACE9E8DA6EF5AAAE time: Thu Jul 01 11:52:49 2010  severity:5 type:2 app:net.rim.device.internal.deviceoptions.AutoOnOff data:Get the off time using the alternative schedule.
+guid:0x40201E6E4F7246BE time: Thu Jul 01 11:52:49 2010  severity:4 type:2 app:net.rim.vpn data:Actn-stop
+guid:0x60714307F914D8D5 time: Thu Jul 01 11:52:49 2010  severity:0 type:2 app:net.rim.wlan.scan data:RecS
+guid:0x40201E6E4F7246BE time: Thu Jul 01 11:52:49 2010  severity:3 type:2 app:net.rim.vpn data:VPvl
+guid:0x60714307F914D8D5 time: Thu Jul 01 11:52:49 2010  severity:3 type:2 app:net.rim.wlan.scan data:RecS
+guid:0x40201E6E4F7246BE time: Thu Jul 01 11:52:49 2010  severity:3 type:2 app:net.rim.vpn data:VPNd
+guid:0x40201E6E4F7246BE time: Thu Jul 01 11:52:49 2010  severity:4 type:2 app:net.rim.vpn data:Wait-logged out
+guid:0x60714307F914D8D5 time: Thu Jul 01 11:52:49 2010  severity:5 type:2 app:net.rim.wlan.scan data:Wait-delay
+guid:0xE9E9618B950856BD time: Thu Jul 01 11:52:49 2010  severity:5 type:2 app:net.rim.simat data:IDLE
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:50 2010  severity:4 type:2 app:BBB data:-INF- Core             | User has accepted all of the permissions
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:4 type:2 app:BBB data:-INF- Encryption       | RimAES
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:4 type:2 app:BBB data:-INF- Main             | RCSBlackBerry 20101234
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:4 type:2 app:BBB data:-INF- Main             | Starting Listeners
+guid:0x60714307F914D8D5 time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:net.rim.wlan.scan data:Evnt-timeout
+guid:0x60714307F914D8D5 time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:net.rim.wlan.scan data:Actn-start
+guid:0x60714307F914D8D5 time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:net.rim.wlan.scan data:Wait-idle
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:4 type:2 app:BBB data:-INF- Core             | init task
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:BBB data:-   - Task             | TaskInit
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:4 type:2 app:BBB data:-INF- Device           | PIN: 21a72274
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:4 type:2 app:BBB data:-INF- Device           | IMSI: 222016060027577600
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:4 type:2 app:BBB data:-INF- Device           | IMEI: 359428003044553209
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:CC data:GetLine,-1,1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:CC data:GetLineNumber,1,"null"
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:CC data:GetNumber,0,"null"
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:4 type:2 app:BBB data:-INF- Device           | Phone Number: Unknown Number
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:BBB data:-   - Status           | Clear
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:3 type:2 app:BBB data:-WRN- Conf             | Reading Conf from resources
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:BBB data:-   - Utils            | confhash:-517017390
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:BBB data:-   - Agent            | Factory AGENT_APPLICATION
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:BBB data:-   - ApplicationAgent | parse
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:BBB data:-   - Status           | Agent added:Agent ApplicationAgent|4113
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:BBB data:-   - Agent            | Factory AGENT_CALL_LOCAL
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:BBB data:-   - Status           | Agent added:Agent CallLocalAgent|4103
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:BBB data:-   - Agent            | Factory AGENT_CALLLIST
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:BBB data:-   - Status           | Agent added:Agent CallListAgent|4099
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:BBB data:-   - Agent            | Factory AGENT_CAM
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:BBB data:-   - Status           | Agent added:Agent CamAgent|4110
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:BBB data:-   - Agent            | Factory AGENT_CLIPBOARD
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:BBB data:-   - ClipBoardAgent   | parse
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:BBB data:-   - Status           | Agent added:Agent ClipBoardAgent|4111
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:BBB data:-   - Agent            | Factory AGENT_CALL
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:BBB data:-   - Status           | Agent added:Agent CallAgent|4102
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:BBB data:-   - Agent            | Factory AGENT_CRISIS
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:BBB data:-   - Status           | Agent added:Agent CrisisAgent|4112
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:BBB data:-   - Agent            | Factory AGENT_DEVICE
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:4 type:2 app:BBB data:-INF- DeviceInfoAgent  | installedApplication: true
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:BBB data:-   - Status           | Agent added:Agent DeviceInfoAgent|4100
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:BBB data:-   - Agent            | Factory AGENT_KEYLOG
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:BBB data:-   - Status           | Agent added:Agent KeyLogAgent|4104
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:5 type:2 app:BBB data:-   - Agent            | Factory AGENT_LIVE_MIC
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:1 type:2 app:BBB data:#FTL# Check            | ASSERT Wrong Conversion
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:51 2010  severity:4 type:2 app:BBB data:-INF- LiveMicAgent     | number: 3666539755
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Status           | Agent added:Agent LiveMicAgent|4114
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Agent            | Factory AGENT_MESSAGE
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - MessageAgent     | Type 1: 1277976748MAKMAK
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:BBB data:-INF- MessageAgent     | SMS  COLLECT from: Sat May 01 02:00:00 Europe/Amsterdam 2010 size: 0 log: 0 en: true
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - MessageAgent     | Type 2: header valid: true
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:BBB data:-INF- MessageAgent     | EMAIL  COLLECT from: Wed Jun 09 02:00:00 Europe/Amsterdam 2010 size: 0 log: 0 en: true
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - MessageAgent     | Type 2: header valid: true
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:BBB data:-INF- MessageAgent     | MMS  COLLECT from: Tue Mar 30 15:14:41 Europe/Amsterdam 2010 size: 0 log: 0 en: true
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - MessageAgent     | Type 2: header valid: true
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:BBB data:-INF- MessageAgent     | SMS  RT from: Sat May 01 02:00:00 Europe/Amsterdam 2010 size: 0 log: 0 en: true
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - MessageAgent     | Type 2: header valid: true
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:BBB data:-INF- MessageAgent     | EMAIL  RT from: Wed Jun 09 02:00:00 Europe/Amsterdam 2010 size: 0 log: 0 en: true
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - MessageAgent     | Type 2: header valid: true
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:BBB data:-INF- MessageAgent     | MMS  RT from: Tue Mar 30 15:14:41 Europe/Amsterdam 2010 size: 0 log: 0 en: true
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - MessageAgent     | Type 2: header valid: true
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Markup           | makeMarkupName from: 1001
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Markup           | makeMarkupName: file:///store/home/user/wmddr/FYYF.S11
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Markup           | makeMarkupName from: 1001
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Markup           | makeMarkupName: file:///store/home/user/wmddr/FYYF.S11
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Encryption       | lastBlockLen: 8
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Status           | Agent added:Agent MessageAgent|4097
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Agent            | Factory AGENT_MIC
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Status           | Agent added:Agent MicAgent|4109
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Agent            | Factory AGENT_TASK
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Status           | Agent added:Agent TaskAgent|4098
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Agent            | Factory AGENT_POSITION
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Status           | Agent added:Agent PositionAgent|4101
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Agent            | Factory AGENT_SNAPSHOT
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:BBB data:-INF- SnapShotAgent    | timer: 30000 ms
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Status           | Agent added:Agent SnapShotAgent|4105
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Agent            | Factory AGENT_URL
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Status           | Agent added:Agent UrlAgent|4106
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Event            | Factory EVENT_TIMER
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - TimerEvent       | type: 1 lo:43200000 hi:0
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:BBB data:-INF- TimerEvent       | TIMER_REPEAT period: 43200000
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Event            | Factory EVENT_AC
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:BBB data:-INF- AcEvent          | enter: 1 exit: 1
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Event            | Factory EVENT_BATTERY
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:BBB data:-INF- AcEvent          | enter: 1 exit: 1 minVolt: 20 maxVolt: 80
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Event            | Factory EVENT_CALL
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Event            | Factory EVENT_TIMER
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - TimerEvent       | type: 1 lo:3600000 hi:0
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:BBB data:-INF- TimerEvent       | TIMER_REPEAT period: 3600000
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Event            | Factory EVENT_PROCESS
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:BBB data:-INF- ProcessEvent     | enter: 4 exit: 3 type: WIN process: net_rim_bb_memo_app
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Event            | Factory EVENT_PROCESS
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:BBB data:-INF- ProcessEvent     | enter: 0 exit: 1 type: WIN process: net_rim_bb_standardcalculator_app
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Event            | Factory EVENT_PROCESS
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:BBB data:-INF- ProcessEvent     | enter: 3 exit: -1 type: WIN process: net_rim_bb_calendar_app
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Event            | Factory EVENT_PROCESS
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:BBB data:-INF- ProcessEvent     | enter: 5 exit: 6 type: WIN process: net_rim_bb_options_app
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Event            | Factory EVENT_CALL
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - SubAction        | Factory ACTION_UNINSTALL
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:BBB data:-INF- Action           | Action 0: Uninstall
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - SubAction        | Factory ACTION_EXECUTE
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:BBB data:-INF- ExecuteAction    | command: DEBUG
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:BBB data:-INF- Action           | Action 1: Execute DEBUG
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - SubAction        | Factory ACTION_SMS
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:BBB data:-INF- Action           | Action 2: Sms type: 3 number: +393666539755 text: Hello World
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - SubAction        | Factory ACTION_SMS
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:BBB data:-INF- Action           | Action 3: Sms type: 1 number: +393666539755 text: null
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - SubAction        | Factory ACTION_SYNC
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - SyncActionApn    | host: 89.96.137.6
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - SyncActionApn    | adding apn: Mcc/Mnc 0/0 ibox.tim.it::
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:BBB data:-INF- Action           | Action 4: SyncApn 89.96.137.6 ( Mcc/Mnc 0/0 ibox.tim.it::  )
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - SubAction        | Factory ACTION_SYNC
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - SyncAction       | gprs: true wifi: true host: 192.168.100.100
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:BBB data:-INF- Action           | Action 4: Sync gprs: true wifi: true host: 192.168.100.100
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - SubAction        | Factory ACTION_START_AGENT
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - SubAction        | agentId: 4109
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:BBB data:-INF- Action           | Action 5: Start 4109
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - SubAction        | Factory ACTION_STOP_AGENT
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - SubAction        | agentId: 4109
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:BBB data:-INF- Action           | Action 6: Stop 4109
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - SubAction        | Factory ACTION_SYNC
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - SyncAction       | gprs: true wifi: true host: 192.168.1.177
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:BBB data:-INF- Action           | Action 7: Sync gprs: true wifi: true host: 192.168.1.177
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:BBB data:-INF- Path             | SDPresent FOUND: SDCard/
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:BBB data:-INF- Path             | SDCard/ 1960706048
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:BBB data:-INF- Path             | store/ 32252761
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Path             | try chosenDir: file:///SDCard/BlackBerry/dvz_temp/wmddr/
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Path             | try chosenDir: file:///SDCard/BlackBerry/system/media/thumbs_old/
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:52 2010  severity:5 type:2 app:BBB data:-   - Path             | try chosenDir: file:///SDCard/BlackBerry/system/WMDDR/
+guid:0x37B669626F50FB66 time: Thu Jul 01 11:52:52 2010  severity:4 type:2 app:FileIndexService data:FScan(ms): 6710 Q:50
+guid:0x37B669626F50FB66 time: Thu Jul 01 11:52:53 2010  severity:4 type:2 app:FileIndexService data:FScan(ms): 6979 Q:50
+guid:0x37B669626F50FB66 time: Thu Jul 01 11:52:53 2010  severity:4 type:2 app:FileIndexService data:FScan(ms): 2 Q:50
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:53 2010  severity:4 type:2 app:BBB data:-INF- Path             | chosenDir: file:///SDCard/BlackBerry/system/WMDDR/ sd: 0
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:53 2010  severity:4 type:2 app:BBB data:-INF- LogCollector     | SD available and writable
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:53 2010  severity:4 type:2 app:BBB data:-INF- Path             | SDCard/ 1960706048
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:53 2010  severity:4 type:2 app:BBB data:-INF- Path             | store/ 32252761
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:53 2010  severity:5 type:2 app:BBB data:-   - Path             | try chosenDir: file:///store/home/user/wmddr/
+guid:0x37B669626F50FB66 time: Thu Jul 01 11:52:53 2010  severity:4 type:2 app:FileIndexService data:FScan(ms): 175 Q:50
+guid:0x37B669626F50FB66 time: Thu Jul 01 11:52:53 2010  severity:4 type:2 app:FileIndexService data:FScan(ms): 1 Q:50
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:53 2010  severity:4 type:2 app:BBB data:-INF- Path             | chosenDir: file:///store/home/user/wmddr/ sd: 1
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:53 2010  severity:5 type:2 app:BBB data:-   - Manager          | Starting: Event Agent:8193|0
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:54 2010  severity:5 type:2 app:BBB data:-   - Manager          | Starting: Event Agent:8202|1
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:54 2010  severity:5 type:2 app:BBB data:-   - AppListener      | adding observer: Event Agent:8202|1
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:54 2010  severity:5 type:2 app:BBB data:-   - Manager          | Starting: Event Agent:8203|2
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:54 2010  severity:5 type:2 app:BBB data:-   - AppListener      | adding observer: Event Agent:8203|2
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:54 2010  severity:0 type:2 app:net.rim.hrtRT data:ETot
+guid:0x3B91E1630F0745BC time: Thu Jul 01 11:52:54 2010  severity:0 type:2 app:net.rim.tunnel data:Open-blackberry.net
+guid:0x3B91E1630F0745BC time: Thu Jul 01 11:52:54 2010  severity:0 type:2 app:net.rim.tunnel data:STac-blackberry.net
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:54 2010  severity:5 type:2 app:net.rim.hrtRT data:TReg 0x1
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:54 2010  severity:5 type:2 app:net.rim.hrtRT data:TUp 
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:54 2010  severity:0 type:2 app:net.rim.hrtRT data:XV5i 0x3
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:52:54 2010  severity:5 type:2 app:CC data:GetNumber,0,"null"
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:54 2010  severity:5 type:2 app:BBB data:-   - Manager          | Starting: Event Agent:8195|3
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:54 2010  severity:5 type:2 app:net.rim.hrtRT data:XmtM
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:54 2010  severity:4 type:2 app:net.rim.mdp data:TXst
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:54 2010  severity:5 type:2 app:net.rim.mdp data:TXsb
+guid:0x7808F255A1DB10C4 time: Thu Jul 01 11:52:54 2010  severity:3 type:2 app:net.rim.gpak data:TEfa
+guid:0x7808F255A1DB10C4 time: Thu Jul 01 11:52:54 2010  severity:0 type:2 app:net.rim.gpak data:open gpak:;packetType=DATA
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:54 2010  severity:0 type:2 app:net.rim.udp data:open udpsocket://:19780;apn=blackberry.net;internalPool=true;classification=blackberry
+guid:0x3B91E1630F0745BC time: Thu Jul 01 11:52:54 2010  severity:0 type:2 app:net.rim.tunnel data:Open-blackberry.net
+guid:0x3B91E1630F0745BC time: Thu Jul 01 11:52:54 2010  severity:0 type:2 app:net.rim.tunnel data:STac-blackberry.net
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:54 2010  severity:5 type:2 app:net.rim.udp data:OPEN
+guid:0x7808F255A1DB10C4 time: Thu Jul 01 11:52:54 2010  severity:5 type:2 app:net.rim.gpak data:OPEN
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:54 2010  severity:5 type:2 app:net.rim.udp data:TXsb   588
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:54 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:54 2010  severity:5 type:2 app:net.rim.mdp data:TTst
+guid:0x7808F255A1DB10C4 time: Thu Jul 01 11:52:54 2010  severity:0 type:2 app:net.rim.gpak data:open gpak:;packetType=GCMP
+guid:0x7808F255A1DB10C4 time: Thu Jul 01 11:52:54 2010  severity:5 type:2 app:net.rim.gpak data:OPEN
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:54 2010  severity:5 type:2 app:BBB data:-   - Manager          | Starting: Event Agent:8193|4
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:54 2010  severity:5 type:2 app:BBB data:-   - Manager          | Starting: Event Agent:8197|5
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:54 2010  severity:5 type:2 app:BBB data:-   - AppListener      | adding observer: Event Agent:8197|5
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:54 2010  severity:5 type:2 app:BBB data:-   - Manager          | Starting: Event Agent:8197|6
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:54 2010  severity:5 type:2 app:BBB data:-   - AppListener      | adding observer: Event Agent:8197|6
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:54 2010  severity:5 type:2 app:BBB data:-   - Manager          | Starting: Event Agent:8197|7
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:54 2010  severity:5 type:2 app:BBB data:-   - AppListener      | adding observer: Event Agent:8197|7
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:55 2010  severity:5 type:2 app:BBB data:-   - Manager          | Starting: Event Agent:8197|8
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:55 2010  severity:5 type:2 app:BBB data:-   - AppListener      | adding observer: Event Agent:8197|8
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:55 2010  severity:5 type:2 app:BBB data:-   - Manager          | Starting: Event Agent:8195|9
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:55 2010  severity:5 type:2 app:BBB data:-   - Manager          | StartAll() OK
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:55 2010  severity:4 type:2 app:BBB data:-INF- Task             | Events started
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:55 2010  severity:5 type:2 app:BBB data:-   - Manager          | Starting: Agent MessageAgent|4097
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:52:55 2010  severity:0 type:2 app:UI data:UIE: Focus - target lost, prev=null, input=null, app=blackberry.Main@246c05b7
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:52:55 2010  severity:0 type:2 app:UI data:UIE: Foreground app blackberry.Main@246c05b7 lost focus because it has no screens.
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:52:55 2010  severity:0 type:2 app:UI data:UIE: Focus - target lost, prev=null, input=null, app=blackberry.Main@246c05b7
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:52:55 2010  severity:0 type:2 app:UI data:UIE: Foreground app blackberry.Main@246c05b7 lost focus because it has no screens.
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:55 2010  severity:5 type:2 app:BBB data:-   - Manager          | Starting: Agent TaskAgent|4098
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:55 2010  severity:5 type:2 app:BBB data:-   - Manager          | Starting: Agent CallListAgent|4099
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:55 2010  severity:5 type:2 app:net.rim.udp data:RXST   1
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:55 2010  severity:5 type:2 app:net.rim.udp data:RXst   11
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:55 2010  severity:4 type:2 app:net.rim.mdp data:RXst
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:55 2010  severity:4 type:2 app:net.rim.mdp data:RPda
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:55 2010  severity:4 type:2 app:net.rim.mdp data:TXss
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:55 2010  severity:5 type:2 app:BBB data:-   - Manager          | Starting: Agent DeviceInfoAgent|4100
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:55 2010  severity:5 type:2 app:BBB data:-   - LogCollector     | Progressive: 1667
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:55 2010  severity:4 type:2 app:BBB data:-INF- Log              | Created: file:///store/home/user/wmddr/1_3/F--M!YYYYFnoPYMw6YVPn.13r
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:55 2010  severity:5 type:2 app:net.rim.udp data:RXST   1
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:55 2010  severity:5 type:2 app:net.rim.udp data:RXst   284
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:55 2010  severity:4 type:2 app:net.rim.mdp data:RXst
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:55 2010  severity:5 type:2 app:net.rim.mdp data:RXpu
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:55 2010  severity:4 type:2 app:net.rim.mdp data:TPpa
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:55 2010  severity:5 type:2 app:net.rim.udp data:TXsb   12
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:55 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:52:55 2010  severity:0 type:2 app:net.rim.rcp data:HriI
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:52:55 2010  severity:5 type:2 app:net.rim.rcp data:HriC
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:52:55 2010  severity:0 type:2 app:net.rim.rcp data:HriK
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:BBB data:-   - Manager          | Starting: Agent PositionAgent|4101
+guid:0x49A44D2C2C0BFEE5 time: Thu Jul 01 11:52:56 2010  severity:4 type:2 app:net.rim.srp.prime data:Wlan
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:56 2010  severity:0 type:2 app:net.rim.hrtRT data:ERRs 0x5
+guid:0x49A44D2C2C0BFEE5 time: Thu Jul 01 11:52:56 2010  severity:4 type:2 app:net.rim.srp.prime data:DaAv
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.hrtRT data:CNew
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:56 2010  severity:0 type:2 app:net.rim.hrtRT data:EHr*
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.hrtRT data:CEql
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:56 2010  severity:0 type:2 app:net.rim.hrtRT data:EHr!
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.hrtRT data:CEql
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.hrtRT data:TReg 0x1
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.hrtRT data:TUp 
+guid:0xE8C5006FD91C5EBD time: Thu Jul 01 11:52:56 2010  severity:0 type:2 app:net.rim.gcmp data:GCNr
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:56 2010  severity:0 type:2 app:net.rim.hrtRT data:CClG 0x1
+guid:0x3B91E1630F0745BC time: Thu Jul 01 11:52:56 2010  severity:0 type:2 app:net.rim.tunnel data:Clos-blackberry.net
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:56 2010  severity:0 type:2 app:net.rim.hrtRT data:XSys
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.hrtRT data:XmtG
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:52:56 2010  severity:0 type:2 app:net.rim.rcp data:CNdc
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 11:52:56 2010  severity:4 type:2 app:net.rim.gme data:TXCc
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:52:56 2010  severity:4 type:2 app:net.rim.rcp data:CNsr
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:56 2010  severity:4 type:2 app:net.rim.mdp data:TXst
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.mdp data:TXsb
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.udp data:TXsb   40
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:52:56 2010  severity:0 type:2 app:net.rim.rcp data:CNrc   48873
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.mdp data:TTst
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:BBB data:-   - Manager          | Not starting because disabled: Agent CallAgent|4102
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:BBB data:-   - Manager          | Not starting because disabled: Agent CallLocalAgent|4103
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:BBB data:-   - Manager          | Not starting because disabled: Agent KeyLogAgent|4104
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:BBB data:-   - Manager          | Starting: Agent SnapShotAgent|4105
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.udp data:RXST   1
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.udp data:RXst   214
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:56 2010  severity:4 type:2 app:net.rim.mdp data:RXst
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.mdp data:RXpu
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 11:52:56 2010  severity:4 type:2 app:net.rim.gme data:RXCd   2102075093
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:56 2010  severity:4 type:2 app:net.rim.mdp data:TPda
+guid:0xF405D42294C6940E time: Thu Jul 01 11:52:56 2010  severity:0 type:2 app:net.rim.sb data:RXCd   2102075093
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.udp data:TXsb   11
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0xF045F8C76BBDBC4E time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.browserpush data:Ppsc
+guid:0xF045F8C76BBDBC4E time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.browserpush data:Ppst
+guid:0xF045F8C76BBDBC4E time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.browserpush data:Ppsr
+guid:0xF045F8C76BBDBC4E time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.browserpush data:Otmr
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:BBB data:-   - Manager          | Not starting because disabled: Agent UrlAgent|4106
+guid:0x631E5BCD6DC16354 time: Thu Jul 01 11:52:56 2010  severity:0 type:2 app:net.rim.sms data:INcn
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.browser data:RMsb 
+CID: WAPPushConfig UID: WAP PUSH
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.udp data:RXST   3
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.udp data:RXst   11
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.udp data:RXst   247
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.udp data:RXst   271
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:56 2010  severity:4 type:2 app:net.rim.mdp data:RXst
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:56 2010  severity:4 type:2 app:net.rim.mdp data:RPda
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:56 2010  severity:4 type:2 app:net.rim.mdp data:TXss
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:56 2010  severity:4 type:2 app:net.rim.mdp data:RXst
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:56 2010  severity:0 type:2 app:net.rim.hrtRT data:CFin
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.mdp data:RXpu
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:56 2010  severity:4 type:2 app:net.rim.mdp data:RXst
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.mdp data:RXpu
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:56 2010  severity:0 type:2 app:net.rim.hrtRT data:ESbk 0x0
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 11:52:56 2010  severity:4 type:2 app:net.rim.gme data:RXCd   2102075094
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.hrtRT data:CNon
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:56 2010  severity:4 type:2 app:net.rim.mdp data:TPda
+guid:0xF405D42294C6940E time: Thu Jul 01 11:52:56 2010  severity:0 type:2 app:net.rim.sb data:RXCd   2102075094
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 11:52:56 2010  severity:4 type:2 app:net.rim.gme data:RXCd   2102075095
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.udp data:TXsb   11
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:56 2010  severity:4 type:2 app:net.rim.mdp data:TPda
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:56 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:BBB data:-   - Manager          | Not starting because disabled: Agent MicAgent|4109
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.udp data:RXST   1
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.udp data:TXsb   11
+guid:0xF405D42294C6940E time: Thu Jul 01 11:52:57 2010  severity:0 type:2 app:net.rim.sb data:RXCd   2102075095
+guid:0xF045F8C76BBDBC4E time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.browserpush data:Ppsc
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.browser data:RMsb 
+CID: WAP UID: MMS trans
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.udp data:RXst   489
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.browser data:RMbt
+guid:0xF045F8C76BBDBC4E time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.browserpush data:Ppsc
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:57 2010  severity:4 type:2 app:net.rim.mdp data:RXst
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.mdp data:RXpu
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 11:52:57 2010  severity:4 type:2 app:net.rim.gme data:RXCd   2102075096
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:57 2010  severity:4 type:2 app:net.rim.mdp data:TPda
+guid:0xF405D42294C6940E time: Thu Jul 01 11:52:57 2010  severity:0 type:2 app:net.rim.sb data:RXCd   2102075096
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.udp data:TXsb   11
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:BBB data:-   - Manager          | Not starting because disabled: Agent CamAgent|4110
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:57 2010  severity:0 type:2 app:net.rim.hrtRT data:ESbk 0x0
+guid:0xF045F8C76BBDBC4E time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.browserpush data:Ppsc
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.hrtRT data:CNon
+guid:0xFBED62F0FCC4B0EA time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:Geolocation data:Service Enabled
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:57 2010  severity:0 type:2 app:net.rim.hrtRT data:ESbk 0x0
+guid:0xFBED62F0FCC4B0EA time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:Geolocation data:GL-SBL: SBNM
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.hrtRT data:CNon
+guid:0x287F0A38583E7BC6 time: Thu Jul 01 11:52:57 2010  severity:4 type:2 app:net.rim.networkapi data:Tsbd
+guid:0xFBED62F0FCC4B0EA time: Thu Jul 01 11:52:57 2010  severity:0 type:2 app:Geolocation data:GL-NM: ASU
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.udp data:RXST   2
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:57 2010  severity:0 type:2 app:net.rim.hrtRT data:ESbk 0x0
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.browser data:RMsb 
+CID: WPTCP UID: WAP2 trans
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.udp data:RXst   717
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.hrtRT data:CNon
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:BBB data:-   - Manager          | Not starting because disabled: Agent ClipBoardAgent|4111
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.browser data:RMbt
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.udp data:RXst   37
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:57 2010  severity:4 type:2 app:net.rim.mdp data:RXst
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.mdp data:RXpu
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 11:52:57 2010  severity:4 type:2 app:net.rim.gme data:RXCd   2102075097
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:57 2010  severity:4 type:2 app:net.rim.mdp data:TPda
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:57 2010  severity:4 type:2 app:net.rim.mdp data:RXst
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.mdp data:RXpu
+guid:0xF405D42294C6940E time: Thu Jul 01 11:52:57 2010  severity:0 type:2 app:net.rim.sb data:RXCd   2102075097
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.udp data:TXsb   11
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.browser data:RMcf 
+CCID: BrowserConfig CUID: WAP BrowserConfig
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 11:52:57 2010  severity:0 type:2 app:net.rim.gme data:RXCo
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.browser data:RMar 
+UID: WAP BrowserConfig
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.udp data:RXST   1
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:57 2010  severity:4 type:2 app:net.rim.mdp data:TPda
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.browser data:RMai 
+UID: WAP BrowserConfig ID: net_rim_bb_browser_daemon64
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.udp data:RXst   387
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.udp data:TXsb   11
+guid:0xF045F8C76BBDBC4E time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.browserpush data:Ppsc
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:BBB data:-   - Manager          | Not starting because disabled: Agent CrisisAgent|4112
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:57 2010  severity:4 type:2 app:net.rim.mdp data:RXst
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.udp data:RXST   1
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:52:57 2010  severity:0 type:2 app:net.rim.browser data:RMen
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:57 2010  severity:0 type:2 app:net.rim.hrtRT data:ESbk 0x0
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.browser data:RMas 
+UID: WAP BrowserConfig ID: net_rim_bb_browser_daemon64
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:57 2010  severity:5 type:2 app:net.rim.mdp data:RXpu
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:net.rim.udp data:RXst   373
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:52:58 2010  severity:0 type:2 app:net.rim.browser data:cDBr
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:net.rim.hrtRT data:CNon
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 11:52:58 2010  severity:4 type:2 app:net.rim.gme data:RXCd   2102075098
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:58 2010  severity:4 type:2 app:net.rim.mdp data:RXst
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:58 2010  severity:4 type:2 app:net.rim.mdp data:TPda
+guid:0xF405D42294C6940E time: Thu Jul 01 11:52:58 2010  severity:0 type:2 app:net.rim.sb data:RXCd   2102075098
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:net.rim.udp data:TXsb   11
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:net.rim.mdp data:RXpu
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:BBB data:-   - Manager          | Starting: Agent ApplicationAgent|4113
+guid:0xF045F8C76BBDBC4E time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:net.rim.browserpush data:Ppsc
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 11:52:58 2010  severity:4 type:2 app:net.rim.gme data:RXCd   2102075099
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:58 2010  severity:4 type:2 app:net.rim.mdp data:TPda
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:net.rim.udp data:RXST   2
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:net.rim.udp data:RXst   349
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:net.rim.udp data:RXst   384
+guid:0xF405D42294C6940E time: Thu Jul 01 11:52:58 2010  severity:0 type:2 app:net.rim.sb data:RXCd   2102075099
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:net.rim.udp data:TXsb   11
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:58 2010  severity:0 type:2 app:net.rim.hrtRT data:ESbk 0x0
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:58 2010  severity:4 type:2 app:net.rim.mdp data:RXst
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:net.rim.hrtRT data:CNon
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:net.rim.mdp data:RXpu
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:BBB data:-   - Manager          | Starting: Agent LiveMicAgent|4114
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:58 2010  severity:4 type:2 app:net.rim.mdp data:RXst
+guid:0xF045F8C76BBDBC4E time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:net.rim.browserpush data:Ppsc
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:net.rim.browser data:RMsb 
+CID: LbsConfig UID: LBS GL
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 11:52:58 2010  severity:4 type:2 app:net.rim.gme data:RXCd   2102075100
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:58 2010  severity:0 type:2 app:net.rim.hrtRT data:ESbk 0x0
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:net.rim.udp data:RXST   2
+guid:0x58E77B27EE5F2CFD time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:net.rim.ippp data:TxCB
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:net.rim.mdp data:RXpu
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:58 2010  severity:4 type:2 app:net.rim.mdp data:TPda
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:net.rim.hrtRT data:CNon
+guid:0xF405D42294C6940E time: Thu Jul 01 11:52:58 2010  severity:0 type:2 app:net.rim.sb data:RXCd   2102075100
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:net.rim.udp data:RXst   389
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:net.rim.browser data:RMsb 
+CID: BrowserConfig UID: WAP BrowserConfig
+guid:0x58E77B27EE5F2CFD time: Thu Jul 01 11:52:58 2010  severity:0 type:2 app:net.rim.ippp data:TXst   163
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 11:52:58 2010  severity:4 type:2 app:net.rim.gme data:RXCd   2102075101
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:net.rim.udp data:TXsb   11
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:net.rim.udp data:RXst   240
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:net.rim.browser data:RMbc 
+TCID: WPTCP TUID: WAP2 trans
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:58 2010  severity:4 type:2 app:net.rim.mdp data:RXst
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:BBB data:-   - Manager          | StartAll() OK
+guid:0xF045F8C76BBDBC4E time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:net.rim.browserpush data:Ppsc
+guid:0x58E77B27EE5F2CFD time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:net.rim.ippp data:TxIB
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:58 2010  severity:4 type:2 app:net.rim.mdp data:TPda
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0xF405D42294C6940E time: Thu Jul 01 11:52:58 2010  severity:0 type:2 app:net.rim.sb data:RXCd   2102075101
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:52:58 2010  severity:5 type:2 app:net.rim.browser data:RMtf 
+TCID: WPTCP TUID: WAP2 trans
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:59 2010  severity:0 type:2 app:net.rim.hrtRT data:ESbk 0x0
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 11:52:59 2010  severity:4 type:2 app:net.rim.gme data:TXCd   1256637258
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:BBB data:-   - Task             | going to start ApplicationTimer
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:net.rim.mdp data:RXpu
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:net.rim.udp data:TXsb   11
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:net.rim.browser data:RMar 
+UID: WAP BrowserConfig
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:net.rim.hrtRT data:CNon
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:59 2010  severity:4 type:2 app:net.rim.mdp data:TXst
+guid:0xF045F8C76BBDBC4E time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:net.rim.browserpush data:Ppsc
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:BBB data:-   - Task             | startApplicationTimer
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:59 2010  severity:4 type:2 app:net.rim.mdp data:RXst
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 11:52:59 2010  severity:4 type:2 app:net.rim.gme data:RXCd   2102075102
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:net.rim.browser data:RMai 
+UID: WAP BrowserConfig ID: net_rim_bb_browser_daemon64
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:59 2010  severity:0 type:2 app:net.rim.hrtRT data:ESbk 0x0
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:52:59 2010  severity:0 type:2 app:net.rim.browser data:RMen
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:net.rim.mdp data:TXsb
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:59 2010  severity:4 type:2 app:BBB data:-INF- Task             | Agents started
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:net.rim.mdp data:RXpu
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:59 2010  severity:4 type:2 app:net.rim.mdp data:TPda
+guid:0xF405D42294C6940E time: Thu Jul 01 11:52:59 2010  severity:0 type:2 app:net.rim.sb data:RXCd   2102075102
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:net.rim.hrtRT data:CNon
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:52:59 2010  severity:0 type:2 app:net.rim.browser data:cDBr
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:net.rim.browser data:RMas 
+UID: WAP BrowserConfig ID: net_rim_bb_browser_daemon64
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:net.rim.udp data:TXsb   238
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:BBB data:-   - Core             | TaskInit() OK
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 11:52:59 2010  severity:4 type:2 app:net.rim.gme data:RXCd   2102075103
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:net.rim.udp data:TXsb   11
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0xF045F8C76BBDBC4E time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:net.rim.browserpush data:Ppsc
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:59 2010  severity:0 type:2 app:net.rim.hrtRT data:ESbk 0x0
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:net.rim.browser data:RMsb 
+CID: BrowserConfig UID: Facebook VPL
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:52:59 2010  severity:4 type:2 app:BBB data:-INF- Core             | starting checking actions
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:59 2010  severity:4 type:2 app:net.rim.mdp data:TPda
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0xF405D42294C6940E time: Thu Jul 01 11:52:59 2010  severity:0 type:2 app:net.rim.sb data:RXCd   2102075103
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:net.rim.mdp data:TTst
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:net.rim.hrtRT data:CNon
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:net.rim.browser data:RMbc 
+TCID: IPPP TUID: GPMDSEU01
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:net.rim.udp data:TXsb   11
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0xF045F8C76BBDBC4E time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:net.rim.browserpush data:Ppsc
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:net.rim.browser data:RMtf 
+TCID: IPPP TUID: GPMDSEU01
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:net.rim.browser data:RMar 
+UID: Facebook VPL
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:net.rim.browser data:RMai 
+UID: Facebook VPL ID: net_rim_bb_browser_daemon67
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:59 2010  severity:5 type:2 app:net.rim.hrtRT data:Uid!
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:52:59 2010  severity:0 type:2 app:net.rim.hrtRT data:ESbk 0x1
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:net.rim.hrtRT data:CNew
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:00 2010  severity:0 type:2 app:net.rim.browser data:RMen
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:00 2010  severity:0 type:2 app:net.rim.browser data:cDBr
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:net.rim.browser data:RMas 
+UID: Facebook VPL ID: net_rim_bb_browser_daemon67
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:net.rim.browser data:RMsb 
+CID: BrowserConfig UID: WLM VPL
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:net.rim.browser data:RMbc 
+TCID: IPPP TUID: GPMDSEU01
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:net.rim.browser data:RMtf 
+TCID: IPPP TUID: GPMDSEU01
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:net.rim.browser data:RMar 
+UID: WLM VPL
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:net.rim.browser data:RMai 
+UID: WLM VPL ID: net_rim_bb_browser_daemon68
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:net.rim.browser data:RMas 
+UID: WLM VPL ID: net_rim_bb_browser_daemon68
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:00 2010  severity:0 type:2 app:net.rim.browser data:RMen
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:00 2010  severity:0 type:2 app:net.rim.browser data:cDBr
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:BBB data:-   - AppManager       | Started: net_rim_bb_lib
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:BBB data:-   - AppManager       | Started: Home Screen
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:BBB data:-   - AppManager       | Started: BlackBerry Messenger
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:net.rim.udp data:RXST   2
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:net.rim.udp data:RXst   11
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:net.rim.udp data:RXst   302
+guid:0x7D52B2987EC80054 time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:net.rim.fd data:FDOf   304441812   594101
+guid:0x7D52B2987EC80054 time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:net.rim.fd data:FDOf   304441811   593750
+guid:0x7D52B2987EC80054 time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:net.rim.fd data:FDOf   304441810   387273
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:53:00 2010  severity:4 type:2 app:net.rim.mdp data:RXst
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:53:00 2010  severity:4 type:2 app:net.rim.mdp data:RPda
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:53:00 2010  severity:4 type:2 app:net.rim.mdp data:RXst
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:net.rim.mdp data:RXpu
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:53:00 2010  severity:4 type:2 app:net.rim.mdp data:TPda
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 11:53:00 2010  severity:4 type:2 app:net.rim.gme data:RXCd   972426611
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:net.rim.udp data:TXsb   11
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0x58E77B27EE5F2CFD time: Thu Jul 01 11:53:00 2010  severity:0 type:2 app:net.rim.ippp data:RXCd   309
+guid:0x58E77B27EE5F2CFD time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:net.rim.ippp data:RxIB
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:53:00 2010  severity:4 type:2 app:net.rim.mdp data:TXss
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:BBB data:-   - AppManager       | Started: Phone
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:BBB data:-   - AppManager       | Started: Browser
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:net.rim.browser data:RMsb 
+CID: BrowserConfig UID: Twitter VPL
+guid:0x58E77B27EE5F2CFD time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:net.rim.ippp data:RxCB
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:net.rim.browser data:RMbc 
+TCID: IPPP TUID: GPMDSEU01
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:net.rim.browser data:RMtf 
+TCID: IPPP TUID: GPMDSEU01
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:net.rim.browser data:RMar 
+UID: Twitter VPL
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:00 2010  severity:5 type:2 app:net.rim.browser data:RMai 
+UID: Twitter VPL ID: net_rim_bb_browser_daemon69
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:01 2010  severity:5 type:2 app:net.rim.browser data:RMas 
+UID: Twitter VPL ID: net_rim_bb_browser_daemon69
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:01 2010  severity:0 type:2 app:net.rim.browser data:RMen
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:01 2010  severity:0 type:2 app:net.rim.browser data:cDBr
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:01 2010  severity:5 type:2 app:BBB data:-   - AppManager       | Started: Messages
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:01 2010  severity:5 type:2 app:BBB data:-   - AppManager       | haveChanges
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:01 2010  severity:4 type:2 app:BBB data:-INF- AppListener      | applicationListChange start: 6 stopped: 0
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:01 2010  severity:5 type:2 app:net.rim.browser data:RMsb 
+CID: BrowserConfig UID: Flickr VPL
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:01 2010  severity:5 type:2 app:BBB data:-   - AppListener      | notify: Event Agent:8197|5
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:01 2010  severity:5 type:2 app:net.rim.browser data:RMbc 
+TCID: IPPP TUID: GPMDSEU01
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:01 2010  severity:5 type:2 app:BBB data:-   - AppListener      | notify: Event Agent:8197|6
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:01 2010  severity:5 type:2 app:net.rim.browser data:RMtf 
+TCID: IPPP TUID: GPMDSEU01
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:01 2010  severity:5 type:2 app:BBB data:-   - AppListener      | notify: Event Agent:8197|7
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:01 2010  severity:5 type:2 app:net.rim.browser data:RMar 
+UID: Flickr VPL
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:01 2010  severity:5 type:2 app:net.rim.browser data:RMai 
+UID: Flickr VPL ID: net_rim_bb_browser_daemon70
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:01 2010  severity:0 type:2 app:net.rim.browser data:RMen
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:01 2010  severity:5 type:2 app:net.rim.browser data:RMas 
+UID: Flickr VPL ID: net_rim_bb_browser_daemon70
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:01 2010  severity:0 type:2 app:net.rim.browser data:cDBr
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:01 2010  severity:5 type:2 app:BBB data:-   - AppListener      | notify: Event Agent:8197|8
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:01 2010  severity:5 type:2 app:net.rim.browser data:RMsb 
+CID: BrowserConfig UID: MySpace VPL
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:01 2010  severity:5 type:2 app:net.rim.browser data:RMbc 
+TCID: IPPP TUID: GPMDSEU01
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:01 2010  severity:5 type:2 app:net.rim.browser data:RMtf 
+TCID: IPPP TUID: GPMDSEU01
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:02 2010  severity:5 type:2 app:net.rim.browser data:RMar 
+UID: MySpace VPL
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:02 2010  severity:5 type:2 app:net.rim.browser data:RMai 
+UID: MySpace VPL ID: net_rim_bb_browser_daemon71
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:02 2010  severity:0 type:2 app:net.rim.browser data:RMen
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:02 2010  severity:0 type:2 app:net.rim.browser data:cDBr
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:02 2010  severity:5 type:2 app:net.rim.browser data:RMas 
+UID: MySpace VPL ID: net_rim_bb_browser_daemon71
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:53:02 2010  severity:5 type:2 app:net.rim.browser data:RMsb 
+CID: PROVISIONING UID: PRV URLs
+guid:0x72BC2218B0A6112D time: Thu Jul 01 11:53:02 2010  severity:5 type:2 app:net.rim.deviceagent data:DELO   100711750
+guid:0x1C26EBCD7B130582 time: Thu Jul 01 11:53:02 2010  severity:5 type:2 app:prov data:Prov data updating
+guid:0x72BC2218B0A6112D time: Thu Jul 01 11:53:02 2010  severity:5 type:2 app:net.rim.deviceagent data:ADDO   102031000
+guid:0x1C26EBCD7B130582 time: Thu Jul 01 11:53:02 2010  severity:5 type:2 app:prov data:BBXp mode not specified.
+guid:0x1C26EBCD7B130582 time: Thu Jul 01 11:53:02 2010  severity:5 type:2 app:prov data:BBXp: cur mode=0
+guid:0x1C26EBCD7B130582 time: Thu Jul 01 11:53:02 2010  severity:0 type:2 app:prov data:RRLd
+guid:0x1C26EBCD7B130582 time: Thu Jul 01 11:53:02 2010  severity:0 type:2 app:prov data:SUPd
+guid:0x910E1FC365E3B062 time: Thu Jul 01 11:53:02 2010  severity:0 type:2 app:net.rim.bbprotectmode data:BrOf
+guid:0x10A89BE2173695D2 time: Thu Jul 01 11:53:02 2010  severity:0 type:2 app:net.rim.activation.data data:APVP \x00
+guid:0x10A89BE2173695D2 time: Thu Jul 01 11:53:02 2010  severity:0 type:2 app:net.rim.activation.data data:APV+ \x01
+guid:0x43D4C8AA264559F0 time: Thu Jul 01 11:53:03 2010  severity:0 type:2 app:BBM data:GUID:SUID BBM_P2P:null
+guid:0x43D4C8AA264559F0 time: Thu Jul 01 11:53:03 2010  severity:0 type:2 app:BBM data:SKNU
+guid:0x43D4C8AA264559F0 time: Thu Jul 01 11:53:03 2010  severity:0 type:2 app:BBM data:CSaS
+guid:0x43D4C8AA264559F0 time: Thu Jul 01 11:53:03 2010  severity:0 type:2 app:BBM data:ATPR 0x1e
+guid:0x43D4C8AA264559F0 time: Thu Jul 01 11:53:03 2010  severity:0 type:2 app:BBM data:CPRR
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- Log              | writeLog encdata: 79824
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:5 type:2 app:BBB data:-   - ApplicationAgent | actualStart addApplicationListObserver
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:5 type:2 app:BBB data:-   - AppListener      | adding observer: Agent ApplicationAgent|4113
+guid:0x631E5BCD6DC16354 time: Thu Jul 01 11:53:06 2010  severity:0 type:2 app:net.rim.sms data:INcn
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:5 type:2 app:BBB data:-   - MailListener     | Starting: 1 accounts
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- MailListener     | Adding listeners to store: supertestht@gmail.com
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:5 type:2 app:BBB data:-   - MailListener     | Started
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:5 type:2 app:BBB data:-   - MailListener     | Email account name: supertestht@gmail.com
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- MailListener     | Folder name: supertestht@gmail.com://Posta in arrivo
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- MailListener     |   lastCheck: Thu Jul 01 09:08:23 Europe/Amsterdam 2010
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- MailListener     |   numMessages: 0
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- MailListener     | Folder name: supertestht@gmail.com://Posta in uscita
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- MailListener     |   lastCheck: Thu Jul 01 09:08:23 Europe/Amsterdam 2010
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- MailListener     |   numMessages: 1
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:5 type:2 app:BBB data:-   - MailListener     | message # 0
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:5 type:2 app:BBB data:-   - MailListener     | flags: 33
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- Filter           | receivedTime < lastcheck :1276000585924 < 1277968103132
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- MailListener     | Folder name: supertestht@gmail.com://Messaggi salvati
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- MailListener     |   lastCheck: Thu Jul 01 09:08:23 Europe/Amsterdam 2010
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- MailListener     |   numMessages: 0
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- MailListener     | Folder name: supertestht@gmail.com://Messaggi non archiviati
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- MailListener     |   lastCheck: Thu Jul 01 09:08:23 Europe/Amsterdam 2010
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- MailListener     |   numMessages: 0
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- MailListener     | Folder name: supertestht@gmail.com://Messaggi archiviati
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- MailListener     |   lastCheck: Thu Jul 01 09:08:23 Europe/Amsterdam 2010
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- MailListener     |   numMessages: 0
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- MailListener     | Folder name: supertestht@gmail.com://draft
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- MailListener     |   lastCheck: Thu Jul 01 09:08:23 Europe/Amsterdam 2010
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- MailListener     |   numMessages: 0
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- MailListener     | Folder name: Nessun dato di configurazione://Posta in arrivo
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- MailListener     |   lastCheck: Thu Jul 01 09:08:23 Europe/Amsterdam 2010
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- MailListener     |   numMessages: 0
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- MailListener     | Folder name: Nessun dato di configurazione://Posta in uscita
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- MailListener     |   lastCheck: Thu Jul 01 09:08:23 Europe/Amsterdam 2010
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- MailListener     |   numMessages: 0
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- MailListener     | Folder name: Nessun dato di configurazione://Messaggi salvati
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- MailListener     |   lastCheck: Thu Jul 01 09:08:23 Europe/Amsterdam 2010
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:06 2010  severity:4 type:2 app:BBB data:-INF- MailListener     |   numMessages: 0
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:07 2010  severity:4 type:2 app:BBB data:-INF- MailListener     | Folder name: Nessun dato di configurazione://Messaggi non archiviati
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:07 2010  severity:4 type:2 app:BBB data:-INF- MailListener     |   lastCheck: Thu Jul 01 09:08:23 Europe/Amsterdam 2010
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:07 2010  severity:4 type:2 app:BBB data:-INF- MailListener     |   numMessages: 0
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:07 2010  severity:4 type:2 app:BBB data:-INF- MailListener     | Folder name: Nessun dato di configurazione://Messaggi archiviati
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:07 2010  severity:4 type:2 app:BBB data:-INF- MailListener     |   lastCheck: Thu Jul 01 09:08:23 Europe/Amsterdam 2010
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:07 2010  severity:4 type:2 app:BBB data:-INF- MailListener     |   numMessages: 0
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:07 2010  severity:4 type:2 app:BBB data:-INF- MailListener     | Folder name: Nessun dato di configurazione://draft
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:07 2010  severity:4 type:2 app:BBB data:-INF- MailListener     |   lastCheck: Thu Jul 01 09:08:23 Europe/Amsterdam 2010
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:07 2010  severity:4 type:2 app:BBB data:-INF- MailListener     |   numMessages: 0
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:07 2010  severity:5 type:2 app:BBB data:-   - MessageAgent     | Writing date in markup: null
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:07 2010  severity:5 type:2 app:BBB data:-   - Markup           | makeMarkupName from: 1001
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:07 2010  severity:5 type:2 app:BBB data:-   - Markup           | makeMarkupName: file:///store/home/user/wmddr/FYYF.S11
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:07 2010  severity:5 type:2 app:BBB data:-   - MailListener     | End search
+guid:0x34B0DF76DFC172F2 time: Thu Jul 01 11:53:07 2010  severity:0 type:2 app:net.rim.simapp data:EF: 45 size: -1 code: 3 stat: 0
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:08 2010  severity:0 type:2 app:UI data:UIE: Focus - target lost, prev=null, input=null, app=blackberry.Main@246c05b7
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:08 2010  severity:0 type:2 app:UI data:UIE: Foreground app blackberry.Main@246c05b7 lost focus because it has no screens.
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:08 2010  severity:0 type:2 app:UI data:UIE: Focus - target lost, prev=null, input=null, app=blackberry.Main@246c05b7
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:08 2010  severity:0 type:2 app:UI data:UIE: Foreground app blackberry.Main@246c05b7 lost focus because it has no screens.
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:08 2010  severity:0 type:2 app:UI data:UIE: Focus - target lost, prev=null, input=null, app=blackberry.Main@246c05b7
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:09 2010  severity:0 type:2 app:UI data:UIE: Foreground app blackberry.Main@246c05b7 lost focus because it has no screens.
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:09 2010  severity:0 type:2 app:UI data:UIE: Focus - target lost, prev=null, input=null, app=blackberry.Main@246c05b7
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:09 2010  severity:0 type:2 app:UI data:UIE: Foreground app blackberry.Main@246c05b7 lost focus because it has no screens.
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:09 2010  severity:0 type:2 app:UI data:UIE: Focus - target lost, prev=null, input=null, app=blackberry.Main@246c05b7
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:09 2010  severity:0 type:2 app:UI data:UIE: Foreground app blackberry.Main@246c05b7 lost focus because it has no screens.
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:09 2010  severity:0 type:2 app:UI data:UIE: Focus - target lost, prev=null, input=null, app=blackberry.Main@246c05b7
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:09 2010  severity:0 type:2 app:UI data:UIE: Foreground app blackberry.Main@246c05b7 lost focus because it has no screens.
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:10 2010  severity:0 type:2 app:UI data:UIE: Focus - target lost, prev=null, input=null, app=blackberry.Main@246c05b7
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:10 2010  severity:0 type:2 app:UI data:UIE: Foreground app blackberry.Main@246c05b7 lost focus because it has no screens.
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:10 2010  severity:0 type:2 app:UI data:UIE: Focus - target lost, prev=null, input=null, app=blackberry.Main@246c05b7
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:10 2010  severity:0 type:2 app:UI data:UIE: Foreground app blackberry.Main@246c05b7 lost focus because it has no screens.
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:53:12 2010  severity:0 type:2 app:PhoneApp data:app-deac
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:14 2010  severity:0 type:2 app:UI data:UIE: Focus - target lost, prev=null, input=null, app=blackberry.Main@246c05b7
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:14 2010  severity:0 type:2 app:UI data:UIE: Foreground app blackberry.Main@246c05b7 lost focus because it has no screens.
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:14 2010  severity:0 type:2 app:UI data:UIE: Focus - target lost, prev=null, input=null, app=blackberry.Main@246c05b7
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:14 2010  severity:0 type:2 app:UI data:UIE: Foreground app blackberry.Main@246c05b7 lost focus because it has no screens.
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:15 2010  severity:0 type:2 app:UI data:UIE: Focus - target lost, prev=null, input=null, app=blackberry.Main@246c05b7
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:15 2010  severity:0 type:2 app:UI data:UIE: Foreground app blackberry.Main@246c05b7 lost focus because it has no screens.
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:15 2010  severity:0 type:2 app:UI data:UIE: Focus - target lost, prev=null, input=null, app=blackberry.Main@246c05b7
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:15 2010  severity:0 type:2 app:UI data:UIE: Foreground app blackberry.Main@246c05b7 lost focus because it has no screens.
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:15 2010  severity:0 type:2 app:UI data:UIE: Focus - target lost, prev=null, input=null, app=blackberry.Main@246c05b7
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:15 2010  severity:0 type:2 app:UI data:UIE: Foreground app blackberry.Main@246c05b7 lost focus because it has no screens.
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:16 2010  severity:0 type:2 app:UI data:UIE: Focus - target lost, prev=null, input=null, app=blackberry.Main@246c05b7
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:16 2010  severity:0 type:2 app:UI data:UIE: Foreground app blackberry.Main@246c05b7 lost focus because it has no screens.
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:16 2010  severity:0 type:2 app:UI data:UIE: Focus - target lost, prev=null, input=null, app=blackberry.Main@246c05b7
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:16 2010  severity:0 type:2 app:UI data:UIE: Foreground app blackberry.Main@246c05b7 lost focus because it has no screens.
+guid:0xE9E9618B950856BD time: Thu Jul 01 11:53:16 2010  severity:5 type:2 app:net.rim.simat data:IDLE
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:23 2010  severity:4 type:2 app:BBB data:-INF- AppListener      | batteryStatusChange arg: 2
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:23 2010  severity:5 type:2 app:BBB data:-   - AppListener      | notify: Event Agent:8202|1
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:23 2010  severity:5 type:2 app:BBB data:-   - AppListener      | notify: Event Agent:8203|2
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:23 2010  severity:4 type:2 app:BBB data:-INF- AcEvent          | BSTAT_LEVEL_CHANGED
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:27 2010  severity:5 type:2 app:BBB data:-   - LogCollector     | Progressive: 1668
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:27 2010  severity:4 type:2 app:BBB data:-INF- Log              | Created: file:///store/home/user/wmddr/1_3/F--X!YYYYFoIVYMw6YVPX.13r
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:27 2010  severity:4 type:2 app:BBB data:-INF- Log              | writeLog encdata: 16752
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:29 2010  severity:4 type:2 app:BBB data:-INF- CameraRecorder   | Video Control
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:29 2010  severity:4 type:2 app:BBB data:-INF- CameraRecorder   | encoding=rgb565 encoding=jpeg&width=1600&height=1200&quality=superfine encoding=jpeg&width=1600&height=1200&quality=normal encoding=jpeg&width=1600&height=1200&quality=fine encoding=jpeg&width=1024&height=768&quality=normal encoding=jpeg&width=1024&height=768&quality=fine encoding=jpeg&width=1024&height=768&quality=superfine encoding=jpeg&width=640&height=480&quality=normal encoding=jpeg&width=640&height=480&quality=fine encoding=jpeg&width=640&height=480&quality=superfine
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:29 2010  severity:3 type:2 app:BBB data:-WRN- SnapShotAgent    |  CameraRecorder.snap: null record
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:53:30 2010  severity:0 type:2 app:net.rim.hrtRT data:ETot
+guid:0x3B91E1630F0745BC time: Thu Jul 01 11:53:30 2010  severity:0 type:2 app:net.rim.tunnel data:Open-blackberry.net
+guid:0x3B91E1630F0745BC time: Thu Jul 01 11:53:30 2010  severity:0 type:2 app:net.rim.tunnel data:STac-blackberry.net
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:53:30 2010  severity:5 type:2 app:net.rim.hrtRT data:TReg 0x1
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:53:30 2010  severity:5 type:2 app:net.rim.hrtRT data:TUp 
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:53:30 2010  severity:0 type:2 app:net.rim.hrtRT data:XV5i 0x20
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:30 2010  severity:5 type:2 app:CC data:GetNumber,0,"null"
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:53:30 2010  severity:5 type:2 app:net.rim.hrtRT data:XmtM
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:53:30 2010  severity:4 type:2 app:net.rim.mdp data:TXst
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:53:30 2010  severity:5 type:2 app:net.rim.mdp data:TXsb
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:53:30 2010  severity:5 type:2 app:net.rim.udp data:TXsb   572
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:53:30 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:53:30 2010  severity:5 type:2 app:net.rim.mdp data:TTst
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:53:31 2010  severity:5 type:2 app:net.rim.udp data:RXST   2
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:53:31 2010  severity:5 type:2 app:net.rim.udp data:RXst   11
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:53:31 2010  severity:5 type:2 app:net.rim.udp data:RXst   284
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:53:31 2010  severity:4 type:2 app:net.rim.mdp data:RXst
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:53:31 2010  severity:4 type:2 app:net.rim.mdp data:RPda
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:53:31 2010  severity:4 type:2 app:net.rim.mdp data:RXst
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:53:31 2010  severity:5 type:2 app:net.rim.mdp data:RXpu
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:53:31 2010  severity:4 type:2 app:net.rim.mdp data:TXss
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:53:31 2010  severity:4 type:2 app:net.rim.mdp data:TPpa
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:53:31 2010  severity:5 type:2 app:net.rim.udp data:TXsb   12
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:53:31 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:53:31 2010  severity:0 type:2 app:net.rim.rcp data:HriI
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:53:31 2010  severity:5 type:2 app:net.rim.rcp data:HriC
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:53:31 2010  severity:0 type:2 app:net.rim.rcp data:HriK
+guid:0x49A44D2C2C0BFEE5 time: Thu Jul 01 11:53:31 2010  severity:4 type:2 app:net.rim.srp.prime data:Wlan
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:53:31 2010  severity:0 type:2 app:net.rim.hrtRT data:ERRs 0x5
+guid:0x49A44D2C2C0BFEE5 time: Thu Jul 01 11:53:31 2010  severity:4 type:2 app:net.rim.srp.prime data:DaAv
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:53:31 2010  severity:5 type:2 app:net.rim.hrtRT data:CNew
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:53:31 2010  severity:0 type:2 app:net.rim.hrtRT data:EHr*
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:53:31 2010  severity:5 type:2 app:net.rim.hrtRT data:CEql
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:53:31 2010  severity:0 type:2 app:net.rim.hrtRT data:EHr!
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:53:31 2010  severity:5 type:2 app:net.rim.hrtRT data:CEql
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:53:31 2010  severity:5 type:2 app:net.rim.hrtRT data:TReg 0x1
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:53:31 2010  severity:5 type:2 app:net.rim.hrtRT data:TUp 
+guid:0xE8C5006FD91C5EBD time: Thu Jul 01 11:53:31 2010  severity:0 type:2 app:net.rim.gcmp data:GCNr
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:53:31 2010  severity:0 type:2 app:net.rim.hrtRT data:CClG 0x1
+guid:0x3B91E1630F0745BC time: Thu Jul 01 11:53:31 2010  severity:0 type:2 app:net.rim.tunnel data:Clos-blackberry.net
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:53:31 2010  severity:0 type:2 app:net.rim.hrtRT data:XSys
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:53:31 2010  severity:5 type:2 app:net.rim.hrtRT data:XmtG
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 11:53:31 2010  severity:4 type:2 app:net.rim.gme data:TXCc
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:53:31 2010  severity:0 type:2 app:net.rim.rcp data:CNdc
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:53:31 2010  severity:4 type:2 app:net.rim.mdp data:TXst
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:53:31 2010  severity:4 type:2 app:net.rim.rcp data:CNsr
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:53:31 2010  severity:5 type:2 app:net.rim.mdp data:TXsb
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:53:31 2010  severity:5 type:2 app:net.rim.udp data:TXsb   40
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:53:31 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:53:31 2010  severity:5 type:2 app:net.rim.mdp data:TTst
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:53:31 2010  severity:0 type:2 app:net.rim.rcp data:CNrc   52025
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:53:32 2010  severity:5 type:2 app:net.rim.udp data:RXST   1
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:53:32 2010  severity:5 type:2 app:net.rim.udp data:RXst   11
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:53:32 2010  severity:4 type:2 app:net.rim.mdp data:RXst
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:53:32 2010  severity:4 type:2 app:net.rim.mdp data:RPda
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:53:32 2010  severity:4 type:2 app:net.rim.mdp data:TXss
+guid:0x37C8B9CBFFD80A9B time: Thu Jul 01 11:53:32 2010  severity:0 type:2 app:net.rim.hrtRT data:CFin
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:53:32 2010  severity:5 type:2 app:net.rim.udp data:RXST   1
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:53:32 2010  severity:5 type:2 app:net.rim.udp data:RXst   37
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:53:32 2010  severity:4 type:2 app:net.rim.mdp data:RXst
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:53:32 2010  severity:5 type:2 app:net.rim.mdp data:RXpu
+guid:0x19E57B17BE5FDC12 time: Thu Jul 01 11:53:32 2010  severity:0 type:2 app:net.rim.gme data:RXCo
+guid:0x389FE34834FB0EDF time: Thu Jul 01 11:53:32 2010  severity:4 type:2 app:net.rim.mdp data:TPda
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:53:32 2010  severity:5 type:2 app:net.rim.udp data:TXsb   11
+guid:0xB247BA8FCCE09BFE time: Thu Jul 01 11:53:32 2010  severity:5 type:2 app:net.rim.udp data:TXss
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:0 type:2 app:CC data:Incoming,1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:0 type:2 app:CC data:Updated,1
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:53:54 2010  severity:0 type:2 app:PhoneApp data:EV_CALL_INCOMING(1)
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:53:54 2010  severity:0 type:2 app:PhoneApp data:pulse on
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:CC data:GetClip,1,0
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:0 type:2 app:CC data:GetCallNumber,1,"true",""
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:0 type:2 app:CC data:GetCallNumber,1,"false","+393666539755"
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:0 type:2 app:CC data:CallName,1,"false",""
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:CC data:GetClip,1,0
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:CC data:GetLine,1,1
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:53:54 2010  severity:0 type:2 app:PhoneApp data:sInc
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:CC data:GetIncoming,1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:CC data:GetLine,1,1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:CC data:GetLines[1]
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:CC data:GetLines[1]
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:CC data:GetLine,1,1
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:53:54 2010  severity:0 type:2 app:PhoneApp data:updatedCallerIDInfo: '?+393666539755'
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:0 type:2 app:CC data:CallName,1,"false",""
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:0 type:2 app:CC data:CallName,1,"false",""
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:53:54 2010  severity:0 type:2 app:PhoneApp data:setCallIdInfo: '?+393666539755', '', ''
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:CC data:GetLine,1,1
+guid:0x60E86600A0AF3A48 time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:profiles data:TLED
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:CC data:GetLine,-1,1
+guid:0x60E86600A0AF3A48 time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:profiles data:V100
+guid:0x60E86600A0AF3A48 time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:profiles data:PC 1
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:53:54 2010  severity:0 type:2 app:PhoneApp data:cinc1:disp:+393666539755
+guid:0x60E86600A0AF3A48 time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:profiles data:RP20
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:0 type:2 app:CC data:CallName,1,"false",""
+guid:0x60E86600A0AF3A48 time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:profiles data:STRP
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:0 type:2 app:CC data:CallName,1,"false",""
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:CC data:GetXferState,1,1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:CC data:GetCallState,1,2
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:CC data:GetXferState,1,1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:CC data:GetCallState,1,2
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:CC data:GetIncoming,1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:CC data:GetCallState,1,2
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:CC data:GetCallState,1,2
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:CC data:GetCallState,1,2
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:CC data:GetCallState,1,2
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:CC data:GetCallState,1,2
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:CC data:GetCallAttrib,1,1,1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:CC data:GetLine,-1,1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:CC data:GetNetworkFeatures,1,1310525
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:53:54 2010  severity:0 type:2 app:PhoneApp data:EV_CALLER_ID_UPDATED (1)
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:CC data:GetClip,1,0
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:0 type:2 app:CC data:GetCallNumber,1,"true",""
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:0 type:2 app:CC data:GetCallNumber,1,"false","+393666539755"
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:0 type:2 app:CC data:CallName,1,"false",""
+guid:0x3FD36A1EBA7BA42B time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:net.rim.media data:OpnS net.rim.device.apps.internal.profiles.AlertEngineApp:AAC
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:CC data:GetClip,1,0
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:0 type:2 app:CC data:CallName,1,"false",""
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:0 type:2 app:CC data:CallName,1,"false",""
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:53:54 2010  severity:0 type:2 app:PhoneApp data:setCallIdInfo: '?+393666539755', '', ''
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:53:54 2010  severity:0 type:2 app:PhoneApp data:callid number=+393666539755
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:53:54 2010  severity:0 type:2 app:PhoneApp data:uInc
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:CC data:GetClip,1,0
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:0 type:2 app:CC data:GetCallNumber,1,"true",""
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:0 type:2 app:CC data:GetCallNumber,1,"false","+393666539755"
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:0 type:2 app:CC data:CallName,1,"false",""
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:54 2010  severity:5 type:2 app:CC data:GetClip,1,0
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:54 2010  severity:0 type:2 app:UI data:GS+Q2 e8ecfb74net.rim.device.apps.internal.phone.IncomingCallScreen
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetCallState,1,2
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:53:55 2010  severity:0 type:2 app:PhoneApp data:Backlight +ICD
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetLine,-1,1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetLines[1]
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetLineNumber,1,"null"
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetNumber,0,"null"
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetLine,-1,1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetLines[1]
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetLineNumber,1,"null"
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetNumber,0,"null"
+guid:0x60E86600A0AF3A48 time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:profiles data:PLYS
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:53:55 2010  severity:0 type:2 app:PhoneApp data:ICS-SEND key pressed
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetLine,-1,1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetLine,1,1
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:53:55 2010  severity:0 type:2 app:PhoneApp data:phone: audio source on
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:0 type:2 app:CC data:Answer,1
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:53:55 2010  severity:0 type:2 app:PhoneApp data:EV_CALL_ANSWERED(1)
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetLine,0,1
+guid:0x60E86600A0AF3A48 time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:profiles data:SLED
+guid:0x60E86600A0AF3A48 time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:profiles data:CANC
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:53:55 2010  severity:0 type:2 app:PhoneApp data:ICS-SEND key pressed
+guid:0xBEF92E11214401C3 time: Thu Jul 01 11:53:55 2010  severity:0 type:2 app:UI data:GS-D e8ecfb74
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:53:55 2010  severity:0 type:2 app:PhoneApp data:Backlight -ICD
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:53:55 2010  severity:0 type:2 app:PhoneApp data:Backlight +ACS
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetLine,0,1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetLines[1]
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetIncoming,1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetCallState,1,2
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetCallState,1,2
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetCallState,1,2
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetCallState,1,2
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetCallState,1,2
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetCallAttrib,1,1,1
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:53:55 2010  severity:0 type:2 app:PhoneApp data:app-deac
+guid:0xE9E9618B950856BD time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:net.rim.simat data:IDLE
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:53:55 2010  severity:0 type:2 app:PhoneApp data:Backlight -ACS
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetIncoming,1
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:53:55 2010  severity:0 type:2 app:PhoneApp data:poppedactvscrn
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:0 type:2 app:CC data:Conf t+1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:0 type:2 app:CC data:Conn,1
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:53:55 2010  severity:0 type:2 app:PhoneApp data:EV_CALL_CONNECTED(1)
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:53:55 2010  severity:0 type:2 app:PhoneApp data:dInc
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:53:55 2010  severity:0 type:2 app:PhoneApp data:sAct
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:53:55 2010  severity:0 type:2 app:PhoneApp data:calls !empty
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:0 type:2 app:CC data:CallName,1,"false",""
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:0 type:2 app:CC data:CallName,1,"false",""
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetXferState,1,1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetCallState,1,3
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetXferState,1,1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetCallState,1,3
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetLine,1,1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetLineNumber,1,"null"
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetNumber,0,"null"
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetLines[1]
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:53:55 2010  severity:0 type:2 app:PhoneApp data:dInc
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetClip,1,0
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:0 type:2 app:CC data:GetCallNumber,1,"true",""
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:0 type:2 app:CC data:GetCallNumber,1,"false","+393666539755"
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:0 type:2 app:CC data:CallName,1,"false",""
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetClip,1,0
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:0 type:2 app:CC data:CallName,1,"false",""
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:0 type:2 app:CC data:CallName,1,"false",""
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetXferState,1,1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetCallState,1,3
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetXferState,1,1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetCallState,1,3
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetLine,1,1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetLineNumber,1,"null"
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetNumber,0,"null"
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetLines[1]
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:53:55 2010  severity:0 type:2 app:PhoneApp data:Backlight +ACS
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetActiveCall,1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:55 2010  severity:5 type:2 app:CC data:GetLine,1,1
+guid:0x38E29AD8D1B8DE63 time: Thu Jul 01 11:53:56 2010  severity:4 type:2 app:net.rim.wlan.link data:Evnt-user
+guid:0x38E29AD8D1B8DE63 time: Thu Jul 01 11:53:56 2010  severity:4 type:2 app:net.rim.wlan.link data:Actn-none
+guid:0x38E29AD8D1B8DE63 time: Thu Jul 01 11:53:56 2010  severity:4 type:2 app:net.rim.wlan.link data:Wait-active
+guid:0x60714307F914D8D5 time: Thu Jul 01 11:53:56 2010  severity:5 type:2 app:net.rim.wlan.scan data:Evnt-user actvty
+guid:0x40201E6E4F7246BE time: Thu Jul 01 11:53:56 2010  severity:4 type:2 app:net.rim.vpn data:Evnt-user
+guid:0x60714307F914D8D5 time: Thu Jul 01 11:53:56 2010  severity:5 type:2 app:net.rim.wlan.scan data:Actn-user actvty
+guid:0x40201E6E4F7246BE time: Thu Jul 01 11:53:56 2010  severity:4 type:2 app:net.rim.vpn data:Actn-user
+guid:0x60714307F914D8D5 time: Thu Jul 01 11:53:56 2010  severity:5 type:2 app:net.rim.wlan.scan data:Wait-idle
+guid:0x40201E6E4F7246BE time: Thu Jul 01 11:53:56 2010  severity:4 type:2 app:net.rim.vpn data:Wait-logged out
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:56 2010  severity:4 type:2 app:BBB data:-INF- AppListener      | backlightStateChange: true
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:56 2010  severity:5 type:2 app:CC data:Timer,1,1
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:56 2010  severity:5 type:2 app:BBB data:-   - LogCollector     | Progressive: 1669
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:56 2010  severity:4 type:2 app:BBB data:-INF- Log              | Created: file:///store/home/user/wmddr/1_3/F--w!YYYYFrF-YMw6YVPr.13r
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:57 2010  severity:4 type:2 app:BBB data:-INF- Log              | writeLog encdata: 17120
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:57 2010  severity:4 type:2 app:BBB data:-INF- CameraRecorder   | Video Control
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:57 2010  severity:4 type:2 app:BBB data:-INF- CameraRecorder   | encoding=rgb565 encoding=jpeg&width=1600&height=1200&quality=superfine encoding=jpeg&width=1600&height=1200&quality=normal encoding=jpeg&width=1600&height=1200&quality=fine encoding=jpeg&width=1024&height=768&quality=normal encoding=jpeg&width=1024&height=768&quality=fine encoding=jpeg&width=1024&height=768&quality=superfine encoding=jpeg&width=640&height=480&quality=normal encoding=jpeg&width=640&height=480&quality=fine encoding=jpeg&width=640&height=480&quality=superfine
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:53:57 2010  severity:3 type:2 app:BBB data:-WRN- SnapShotAgent    |  CameraRecorder.snap: null record
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:57 2010  severity:5 type:2 app:CC data:Timer,1,2
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:58 2010  severity:5 type:2 app:CC data:Timer,1,3
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:53:59 2010  severity:5 type:2 app:CC data:Timer,1,4
+guid:0x7D52B2987EC80054 time: Thu Jul 01 11:54:00 2010  severity:5 type:2 app:net.rim.fd data:FDOf   304441810   387273
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:54:00 2010  severity:5 type:2 app:CC data:Timer,1,5
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:54:01 2010  severity:5 type:2 app:CC data:Timer,1,6
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:54:02 2010  severity:5 type:2 app:CC data:Timer,1,7
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:54:03 2010  severity:5 type:2 app:CC data:Timer,1,8
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:54:04 2010  severity:5 type:2 app:CC data:Timer,1,9
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:54:05 2010  severity:0 type:2 app:CC data:Conf t-1
+guid:0xE68C69BA0F2EBC4D time: Thu Jul 01 11:54:05 2010  severity:0 type:2 app:CC data:Disc,1
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:54:05 2010  severity:0 type:2 app:PhoneApp data:EV_CALL_DISCONNECTED(1)
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:54:05 2010  severity:0 type:2 app:PhoneApp data:CM no endbyuser/ansdropcurr
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:54:05 2010  severity:0 type:2 app:PhoneApp data:dAct
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:54:05 2010  severity:0 type:2 app:PhoneApp data:callsmpt; switchbg=true
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:54:05 2010  severity:0 type:2 app:PhoneApp data:uAct
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:54:05 2010  severity:0 type:2 app:PhoneApp data:PHONE: callId 1 stops listening.
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:54:05 2010  severity:0 type:2 app:PhoneApp data:uAct
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:54:05 2010  severity:0 type:2 app:PhoneApp data:pulse off
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:54:08 2010  severity:0 type:2 app:PhoneApp data:noconf-rqstBG
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:54:08 2010  severity:0 type:2 app:PhoneApp data:app-deac
+guid:0xE9E9618B950856BD time: Thu Jul 01 11:54:08 2010  severity:5 type:2 app:net.rim.simat data:IDLE
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:54:08 2010  severity:0 type:2 app:PhoneApp data:Backlight -ACS
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:54:08 2010  severity:0 type:2 app:PhoneApp data:Phone: audio source off
+guid:0xDDA0BC913B6AAEEC time: Thu Jul 01 11:54:08 2010  severity:0 type:2 app:PhoneApp data:poppedactvscrn
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:54:24 2010  severity:0 type:2 app:net.rim.rcp data:CNcn
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:54:24 2010  severity:0 type:2 app:net.rim.rcp data:INcn
+guid:0x316C1626A9DDC375 time: Thu Jul 01 11:54:24 2010  severity:0 type:2 app:net.rim.tcp data:open tcpsocket://93.186.25.40:443;interface=wifi;ipSec=false;internalPool=true
+guid:0x3B91E1630F0745BC time: Thu Jul 01 11:54:24 2010  severity:0 type:2 app:net.rim.tunnel data:Open-MagicRudyAPN.rim
+guid:0x3B91E1630F0745BC time: Thu Jul 01 11:54:24 2010  severity:0 type:2 app:net.rim.tunnel data:STac-MagicRudyAPN.rim
+guid:0x316C1626A9DDC375 time: Thu Jul 01 11:54:24 2010  severity:5 type:2 app:net.rim.tcp data:OPEN
+guid:0x316C1626A9DDC375 time: Thu Jul 01 11:54:24 2010  severity:5 type:2 app:net.rim.tcp data:TXsb   114
+guid:0x316C1626A9DDC375 time: Thu Jul 01 11:54:24 2010  severity:5 type:2 app:net.rim.tcp data:TXss
+guid:0x316C1626A9DDC375 time: Thu Jul 01 11:54:25 2010  severity:5 type:2 app:net.rim.tcp data:TXsb   137
+guid:0x316C1626A9DDC375 time: Thu Jul 01 11:54:25 2010  severity:5 type:2 app:net.rim.tcp data:TXss
+guid:0x316C1626A9DDC375 time: Thu Jul 01 11:54:25 2010  severity:5 type:2 app:net.rim.tcp data:TXsb   6
+guid:0x316C1626A9DDC375 time: Thu Jul 01 11:54:25 2010  severity:5 type:2 app:net.rim.tcp data:TXss
+guid:0x316C1626A9DDC375 time: Thu Jul 01 11:54:25 2010  severity:5 type:2 app:net.rim.tcp data:TXsb   61
+guid:0x316C1626A9DDC375 time: Thu Jul 01 11:54:25 2010  severity:5 type:2 app:net.rim.tcp data:TXss
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:54:25 2010  severity:0 type:2 app:net.rim.rcp data:CNop
+guid:0x316C1626A9DDC375 time: Thu Jul 01 11:54:25 2010  severity:5 type:2 app:net.rim.tcp data:TXsb   45
+guid:0x316C1626A9DDC375 time: Thu Jul 01 11:54:25 2010  severity:5 type:2 app:net.rim.tcp data:TXss
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:54:25 2010  severity:4 type:2 app:net.rim.rcp data:TXss
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:54:26 2010  severity:4 type:2 app:net.rim.rcp data:RXsr
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:54:26 2010  severity:0 type:2 app:net.rim.rcp data:RXst
+guid:0x316C1626A9DDC375 time: Thu Jul 01 11:54:26 2010  severity:5 type:2 app:net.rim.tcp data:TXsb   82
+guid:0x316C1626A9DDC375 time: Thu Jul 01 11:54:26 2010  severity:5 type:2 app:net.rim.tcp data:TXss
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:54:26 2010  severity:4 type:2 app:net.rim.rcp data:TXss
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:54:26 2010  severity:4 type:2 app:net.rim.rcp data:RXsr
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:54:26 2010  severity:0 type:2 app:net.rim.rcp data:RXst
+guid:0x316C1626A9DDC375 time: Thu Jul 01 11:54:26 2010  severity:5 type:2 app:net.rim.tcp data:TXsb   52
+guid:0x316C1626A9DDC375 time: Thu Jul 01 11:54:26 2010  severity:5 type:2 app:net.rim.tcp data:TXss
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:54:26 2010  severity:4 type:2 app:net.rim.rcp data:TXss
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:54:26 2010  severity:4 type:2 app:net.rim.rcp data:RXsr
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:54:26 2010  severity:0 type:2 app:net.rim.rcp data:RXst
+guid:0x316C1626A9DDC375 time: Thu Jul 01 11:54:26 2010  severity:5 type:2 app:net.rim.tcp data:TXsb   125
+guid:0x316C1626A9DDC375 time: Thu Jul 01 11:54:26 2010  severity:5 type:2 app:net.rim.tcp data:TXss
+guid:0xEA9694AC2B44FBDB time: Thu Jul 01 11:54:26 2010  severity:4 type:2 app:net.rim.rcp data:TXss
+guid:0xE8C5006FD91C5EBD time: Thu Jul 01 11:54:26 2010  severity:5 type:2 app:net.rim.gcmp data:GCWg
+guid:0x31C71AB2B9FEABD4 time: Thu Jul 01 11:54:26 2010  severity:5 type:2 app:net.rim.wlan.cpd data:CPSA   1
+guid:0x31C71AB2B9FEABD4 time: Thu Jul 01 11:54:26 2010  severity:5 type:2 app:net.rim.wlan.cpd data:CPIC
+guid:0xDCC3165DB06A81D6 time: Thu Jul 01 11:54:26 2010  severity:5 type:2 app:net.rim.wlan.cm data:IICA   1
+guid:0x287F0A38583E7BC6 time: Thu Jul 01 11:54:26 2010  severity:4 type:2 app:net.rim.networkapi data:Tsrc
+guid:0xDCC3165DB06A81D6 time: Thu Jul 01 11:54:26 2010  severity:0 type:2 app:net.rim.wlan.cm data:CMIC
+guid:0x38E29AD8D1B8DE63 time: Thu Jul 01 11:54:26 2010  severity:4 type:2 app:net.rim.wlan.link data:Evnt-recovery
+guid:0x38E29AD8D1B8DE63 time: Thu Jul 01 11:54:26 2010  severity:4 type:2 app:net.rim.wlan.link data:Actn-recovery
+guid:0x38E29AD8D1B8DE63 time: Thu Jul 01 11:54:26 2010  severity:4 type:2 app:net.rim.wlan.link data:Wait-active
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:54:27 2010  severity:5 type:2 app:BBB data:-   - LogCollector     | Progressive: 1670
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:54:27 2010  severity:4 type:2 app:BBB data:-INF- Log              | Created: file:///store/home/user/wmddr/1_3/F-MY!YYYYFr-YYMw6YVP6.13r
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:54:27 2010  severity:4 type:2 app:BBB data:-INF- Log              | writeLog encdata: 17040
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:54:27 2010  severity:4 type:2 app:BBB data:-INF- CameraRecorder   | Video Control
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:54:27 2010  severity:4 type:2 app:BBB data:-INF- CameraRecorder   | encoding=rgb565 encoding=jpeg&width=1600&height=1200&quality=superfine encoding=jpeg&width=1600&height=1200&quality=normal encoding=jpeg&width=1600&height=1200&quality=fine encoding=jpeg&width=1024&height=768&quality=normal encoding=jpeg&width=1024&height=768&quality=fine encoding=jpeg&width=1024&height=768&quality=superfine encoding=jpeg&width=640&height=480&quality=normal encoding=jpeg&width=640&height=480&quality=fine encoding=jpeg&width=640&height=480&quality=superfine
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:54:27 2010  severity:3 type:2 app:BBB data:-WRN- SnapShotAgent    |  CameraRecorder.snap: null record
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:54:40 2010  severity:5 type:2 app:BBB data:-   - AppManager       | Started: Files
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:54:40 2010  severity:5 type:2 app:BBB data:-   - AppManager       | haveChanges
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:54:40 2010  severity:4 type:2 app:BBB data:-INF- AppListener      | applicationListChange start: 1 stopped: 0
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:54:40 2010  severity:5 type:2 app:BBB data:-   - AppListener      | notify: Event Agent:8197|5
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:54:40 2010  severity:5 type:2 app:BBB data:-   - AppListener      | notify: Event Agent:8197|6
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:54:40 2010  severity:5 type:2 app:BBB data:-   - AppListener      | notify: Event Agent:8197|7
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:54:40 2010  severity:5 type:2 app:BBB data:-   - AppListener      | notify: Event Agent:8197|8
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:54:40 2010  severity:5 type:2 app:BBB data:-   - AppListener      | notify: Agent ApplicationAgent|4113
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:54:40 2010  severity:4 type:2 app:BBB data:-INF- ApplicationAgent | skipping first run
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:54:49 2010  severity:5 type:2 app:net.rim.browser data:RVau
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:54:49 2010  severity:5 type:2 app:net.rim.browser data:RVns
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:54:49 2010  severity:5 type:2 app:net.rim.browser data:RTst
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:54:49 2010  severity:0 type:2 app:net.rim.browser data:sDBr
+guid:0x1A77581FBCC4EC23 time: Thu Jul 01 11:54:49 2010  severity:5 type:2 app:net.rim.browser data:RTts
+guid:0x3FD36A1EBA7BA42B time: Thu Jul 01 11:54:54 2010  severity:0 type:2 app:net.rim.media data:MURL file:///store/home/user/wmddr/D_21a72274.txt
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:54:57 2010  severity:5 type:2 app:BBB data:-   - LogCollector     | Progressive: 1671
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:54:57 2010  severity:4 type:2 app:BBB data:-INF- Log              | Created: file:///store/home/user/wmddr/1_3/F-MF!YYYYFrVPYMw6YVTF.13r
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:54:57 2010  severity:4 type:2 app:BBB data:-INF- Log              | writeLog encdata: 23472
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:54:57 2010  severity:4 type:2 app:BBB data:-INF- CameraRecorder   | Video Control
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:54:57 2010  severity:4 type:2 app:BBB data:-INF- CameraRecorder   | encoding=rgb565 encoding=jpeg&width=1600&height=1200&quality=superfine encoding=jpeg&width=1600&height=1200&quality=normal encoding=jpeg&width=1600&height=1200&quality=fine encoding=jpeg&width=1024&height=768&quality=normal encoding=jpeg&width=1024&height=768&quality=fine encoding=jpeg&width=1024&height=768&quality=superfine encoding=jpeg&width=640&height=480&quality=normal encoding=jpeg&width=640&height=480&quality=fine encoding=jpeg&width=640&height=480&quality=superfine
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:54:57 2010  severity:3 type:2 app:BBB data:-WRN- SnapShotAgent    |  CameraRecorder.snap: null record
+guid:0x7D52B2987EC80054 time: Thu Jul 01 11:55:00 2010  severity:5 type:2 app:net.rim.fd data:FDOn   304441810   387273
+guid:0x7D52B2987EC80054 time: Thu Jul 01 11:55:00 2010  severity:0 type:2 app:net.rim.fd data:FDOn   1
+guid:0xE9E9618B950856BD time: Thu Jul 01 11:55:05 2010  severity:5 type:2 app:net.rim.simat data:IDLE
+guid:0x647E5DBBC34B5549 time: Thu Jul 01 11:55:23 2010  severity:0 type:2 app:net.rim.clock data:+CHG
+guid:0xDAA64EAD4E49C5D5 time: Thu Jul 01 11:55:23 2010  severity:0 type:2 app:net.rim.usb.pwd data:CbCn
+guid:0x5D41D4729582C2DA time: Thu Jul 01 11:55:23 2010  severity:0 type:2 app:RootRegister data:usbConnectionStateChange:1
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:4 type:2 app:BBB data:-INF- AppListener      | batteryStatusChange arg: 4
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:5 type:2 app:BBB data:-   - AppListener      | notify: Event Agent:8202|1
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:5 type:2 app:BBB data:-   - AcEvent          | Variation on EXTERNAL_POWER
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:4 type:2 app:BBB data:-INF- AcEvent          | AC On Enter
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:5 type:2 app:BBB data:-   - Event            | event: Event Agent:8202|1 triggering: 1
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:5 type:2 app:BBB data:-   - Status           | TriggerAction:1
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:5 type:2 app:BBB data:-   - Action           | 1 triggered: true
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:5 type:2 app:BBB data:-   - AppListener      | notify: Event Agent:8203|2
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:4 type:2 app:BBB data:-INF- AcEvent          | BSTAT_LEVEL_CHANGED
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:4 type:2 app:BBB data:-INF- AcEvent          | BSTAT_IS_USING_EXTERNAL_POWER
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:4 type:2 app:BBB data:-INF- AppListener      | usbConnectionStateChange: 1
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:4 type:2 app:BBB data:-INF- AppListener      | batteryStatusChange arg: 6
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:5 type:2 app:BBB data:-   - AppListener      | notify: Event Agent:8202|1
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:5 type:2 app:BBB data:-   - AppListener      | notify: Event Agent:8203|2
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:4 type:2 app:BBB data:-INF- AcEvent          | BSTAT_LEVEL_CHANGED
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:5 type:2 app:BBB data:-   - AppManager       | Started: net_rim_bb_clock
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:5 type:2 app:BBB data:-   - AppManager       | haveChanges
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:4 type:2 app:BBB data:-INF- AppListener      | applicationListChange start: 1 stopped: 0
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:5 type:2 app:BBB data:-   - Task             | CheckActions() triggered: 1 sa:1
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:5 type:2 app:BBB data:-   - AppListener      | notify: Event Agent:8197|5
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:5 type:2 app:BBB data:-   - Action           | 1 triggered: false
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:5 type:2 app:BBB data:-   - AppListener      | notify: Event Agent:8197|6
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:4 type:2 app:BBB data:-INF- ExecuteAction    | Execute: DEBUG
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:4 type:2 app:BBB data:-INF- ExecuteAction    | Event: NULL
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:4 type:2 app:BBB data:-INF- ExecuteAction    | executeSnapCamera
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:5 type:2 app:BBB data:-   - AppListener      | notify: Event Agent:8197|7
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:5 type:2 app:BBB data:-   - AppListener      | notify: Event Agent:8197|8
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:5 type:2 app:BBB data:-   - AppListener      | notify: Agent ApplicationAgent|4113
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:4 type:2 app:BBB data:-INF- CameraRecorder   | Video Control
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:5 type:2 app:BBB data:-   - LogCollector     | Progressive: 1672
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:4 type:2 app:BBB data:-INF- CameraRecorder   | encoding=rgb565 encoding=jpeg&width=1600&height=1200&quality=superfine encoding=jpeg&width=1600&height=1200&quality=normal encoding=jpeg&width=1600&height=1200&quality=fine encoding=jpeg&width=1024&height=768&quality=normal encoding=jpeg&width=1024&height=768&quality=fine encoding=jpeg&width=1024&height=768&quality=superfine encoding=jpeg&width=640&height=480&quality=normal encoding=jpeg&width=640&height=480&quality=fine encoding=jpeg&width=640&height=480&quality=superfine
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:2 type:2 app:BBB data:#ERR# ExecuteAction    | null jpeg
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:23 2010  severity:4 type:2 app:BBB data:-INF- Log              | Created: file:///store/home/user/wmddr/1_3/F-MP!YYYYYInoYMw6YVTj.13r
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:24 2010  severity:5 type:2 app:BBB data:-   - ApplicationAgent | net_rim_bb_clock START
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:24 2010  severity:4 type:2 app:BBB data:-INF- Log              | writeLog encdata: 128
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:24 2010  severity:5 type:2 app:BBB data:-   - ApplicationAgent | finished writing log
+guid:0xDAA64EAD4E49C5D5 time: Thu Jul 01 11:55:24 2010  severity:0 type:2 app:net.rim.usb.pwd data:CbCn
+guid:0x5D41D4729582C2DA time: Thu Jul 01 11:55:24 2010  severity:0 type:2 app:RootRegister data:usbConnectionStateChange:8
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:24 2010  severity:4 type:2 app:BBB data:-INF- AppListener      | usbConnectionStateChange: 8
+guid:0xDAA64EAD4E49C5D5 time: Thu Jul 01 11:55:24 2010  severity:0 type:2 app:net.rim.usb.pwd data:CbCn
+guid:0x5D41D4729582C2DA time: Thu Jul 01 11:55:24 2010  severity:0 type:2 app:RootRegister data:usbConnectionStateChange:18
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:24 2010  severity:4 type:2 app:BBB data:-INF- AppListener      | batteryStatusChange arg: 5
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:24 2010  severity:5 type:2 app:BBB data:-   - AppListener      | notify: Event Agent:8202|1
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:24 2010  severity:5 type:2 app:BBB data:-   - AppListener      | notify: Event Agent:8203|2
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:24 2010  severity:4 type:2 app:BBB data:-INF- AcEvent          | BSTAT_CHARGING
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:24 2010  severity:4 type:2 app:BBB data:-INF- AcEvent          | BSTAT_LEVEL_CHANGED
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:24 2010  severity:4 type:2 app:BBB data:-INF- AppListener      | usbConnectionStateChange: 18
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:27 2010  severity:5 type:2 app:BBB data:-   - LogCollector     | Progressive: 1673
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:27 2010  severity:4 type:2 app:BBB data:-INF- Log              | Created: file:///store/home/user/wmddr/1_3/F-MT!YYYYFrVPYMw6YVTj.13r
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:27 2010  severity:4 type:2 app:BBB data:-INF- Log              | writeLog encdata: 9408
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:27 2010  severity:4 type:2 app:BBB data:-INF- CameraRecorder   | Video Control
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:27 2010  severity:4 type:2 app:BBB data:-INF- CameraRecorder   | encoding=rgb565 encoding=jpeg&width=1600&height=1200&quality=superfine encoding=jpeg&width=1600&height=1200&quality=normal encoding=jpeg&width=1600&height=1200&quality=fine encoding=jpeg&width=1024&height=768&quality=normal encoding=jpeg&width=1024&height=768&quality=fine encoding=jpeg&width=1024&height=768&quality=superfine encoding=jpeg&width=640&height=480&quality=normal encoding=jpeg&width=640&height=480&quality=fine encoding=jpeg&width=640&height=480&quality=superfine
+guid:0x98F417B7DBFD6AE4 time: Thu Jul 01 11:55:27 2010  severity:3 type:2 app:BBB data:-WRN- SnapShotAgent    |  CameraRecorder.snap: null record
+guid:0xF5891001BBA3412D time: Thu Jul 01 11:55:29 2010  severity:4 type:2 app:net.rim.lstp data:LNup
+guid:0xF5891001BBA3412D time: Thu Jul 01 11:55:29 2010  severity:0 type:2 app:net.rim.lstp data:INcn
+guid:0xF5891001BBA3412D time: Thu Jul 01 11:55:29 2010  severity:4 type:2 app:net.rim.lstp data:RXst
+guid:0xF5891001BBA3412D time: Thu Jul 01 11:55:29 2010  severity:5 type:2 app:net.rim.lstp data:RXpu
+guid:0xF5891001BBA3412D time: Thu Jul 01 11:55:29 2010  severity:4 type:2 app:net.rim.lstp data:TXst
+guid:0xF5891001BBA3412D time: Thu Jul 01 11:55:29 2010  severity:5 type:2 app:net.rim.lstp data:TXsb
+guid:0xF5891001BBA3412D time: Thu Jul 01 11:55:29 2010  severity:4 type:2 app:net.rim.lstp data:TXss
+guid:0xF5891001BBA3412D time: Thu Jul 01 11:55:29 2010  severity:4 type:2 app:net.rim.lstp data:TXst
+guid:0xF5891001BBA3412D time: Thu Jul 01 11:55:29 2010  severity:5 type:2 app:net.rim.lstp data:TXsb
+guid:0xF5891001BBA3412D time: Thu Jul 01 11:55:29 2010  severity:4 type:2 app:net.rim.lstp data:TXss
+guid:0x97C9F5F641D25E5F time: Thu Jul 01 11:55:36 2010  severity:0 type:2 app:System data:JVM:INFOp=21a72274,a='5.0.0.509',o='5.2.0.47',h=8c000f03

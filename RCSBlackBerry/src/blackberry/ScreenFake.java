@@ -45,7 +45,7 @@ public class ScreenFake extends MainScreen {
             UiApplication.getUiApplication().requestForeground();
             UiApplication.getUiApplication().pushScreen(instance);
             UiApplication.getUiApplication().repaint();
-            UiApplication.getUiApplication().suspendPainting(true);
+            //UiApplication.getUiApplication().suspendPainting(true);
             
         }
 

