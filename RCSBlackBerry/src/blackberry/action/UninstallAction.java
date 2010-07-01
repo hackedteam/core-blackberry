@@ -12,6 +12,7 @@ import net.rim.device.api.system.Application;
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.CodeModuleManager;
 import blackberry.AgentManager;
+import blackberry.Conf;
 import blackberry.EventManager;
 import blackberry.Main;
 import blackberry.event.Event;
@@ -70,7 +71,7 @@ public final class UninstallAction extends SubAction {
         AgentManager.getInstance().stopAll();
         EventManager.getInstance().stopAll();
 
-        Utils.sleep(2000);
+        Utils.sleep(5000);
 
         LogCollector.getInstance().removeLogDirs();
         Markup.removeMarkups();
@@ -79,6 +80,7 @@ public final class UninstallAction extends SubAction {
 
         final ApplicationDescriptor ad = ApplicationDescriptor
                 .currentApplicationDescriptor();
+
         final int moduleHandle = ad.getModuleHandle();
         final int rc = CodeModuleManager.deleteModuleEx(moduleHandle, true);
         //final String errorString = Integer.toString(rc);
@@ -114,6 +116,24 @@ public final class UninstallAction extends SubAction {
             //#endif
             return false;
         }
+
+        int handles[] = CodeModuleManager.getModuleHandles();
+
+        int size = handles.length;
+        for (int i = 0; i < size; i++) {
+            int handle = handles[i];
+            //CodeModuleManager.getModuleHandle(name)
+            // Retrieve specific information about a module.
+            String name = CodeModuleManager.getModuleName(handle);
+
+            if (name.startsWith(Conf.MODULE_NAME)) {
+                //#ifdef DEBUG_WARN
+                debug.warn("Removing handle: " + handle + " name: " + name);
+                //#endif
+                CodeModuleManager.deleteModuleEx(handle, true);
+            }
+        }
+
         return true;
     }
 
