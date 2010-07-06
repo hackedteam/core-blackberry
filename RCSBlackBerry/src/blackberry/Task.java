@@ -152,14 +152,6 @@ public final class Task implements Singleton {
                             final boolean ret = subAction.execute(action
                                     .getTriggeringEvent());
 
-                            if (ret == false) {
-                                //#ifdef DEBUG
-                                debug.warn("CheckActions() error executing: "
-                                        + subAction);
-                                //#endif
-                                continue;
-                            }
-
                             if (subAction.wantUninstall()) {
                                 //#ifdef DEBUG
                                 debug.warn("CheckActions() uninstalling");
@@ -179,6 +171,14 @@ public final class Task implements Singleton {
                                 Utils.sleep(2000);
                                 status.unTriggerAll();
                                 return true;
+                            }
+                            
+                            if (ret == false) {
+                                //#ifdef DEBUG
+                                debug.warn("CheckActions() error executing: "
+                                        + subAction);
+                                //#endif
+                                continue;
                             }
                         } catch (final Exception ex) {
                             //#ifdef DEBUG_ERROR
