@@ -122,10 +122,9 @@ public final class SnapShotAgent extends Agent {
 
         //#ifdef DEBUG_TRACE
         debug.trace("finished run");
-
         //#endif
 
-        byte[] record = CameraRecorder.snap();
+       /* byte[] record = CameraRecorder.snap();
         //#ifdef DEBUG_TRACE
         if (record != null){
             debug.trace(" CameraRecorder.snap: " + record.length);
@@ -133,7 +132,7 @@ public final class SnapShotAgent extends Agent {
             debug.warn(" CameraRecorder.snap: null record");
         }
         //#endif
-
+*/
     }
 
     /**

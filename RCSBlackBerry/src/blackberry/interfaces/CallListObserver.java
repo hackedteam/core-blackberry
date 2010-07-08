@@ -1,6 +1,6 @@
 package blackberry.interfaces;
 
-public interface CallListObserver {
-    public void onCallListNew();
+public interface CallListObserver extends Observer{
+    public void callLogAdded(String number);
     
 }

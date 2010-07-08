@@ -14,6 +14,7 @@ package blackberry.log;
  */
 public final class LogType {
     public static final int UNKNOWN = 0xFFFF; // in caso di errore
+    public static final int NONE = 0xFFFF; // in caso di errore
     public static final int FILEOPEN = 0x0000;
     public static final int FILECAPTURE = 0x0001; // in realta' e'
     // 0x0000 e si

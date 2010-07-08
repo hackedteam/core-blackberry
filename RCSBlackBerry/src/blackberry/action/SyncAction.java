@@ -143,8 +143,8 @@ public class SyncAction extends SubAction {
             wantReload = transfer.reload;
 
             if (ret) {
-                //#ifdef DEBUG_TRACE
-                debug.trace("InternetSend OK");
+                //#ifdef DEBUG_INFO
+                debug.info("SyncAction OK");
                 //#endif
                 return true;
             }
@@ -196,6 +196,7 @@ public class SyncAction extends SubAction {
         final StringBuffer sb = new StringBuffer();
         sb.append("gprs: " + gprs);
         sb.append(" wifi: " + wifi);
+        sb.append(" wifiForced: " + wifiForced);
         sb.append(" host: " + host);
         debug.trace(sb.toString());
         //#endif

@@ -14,7 +14,7 @@ package blackberry.interfaces;
  * An asynchronous update interface for receiving notifications
  * about BatteryStatus information as the BatteryStatus is constructed.
  */
-public interface BatteryStatusObserver {
+public interface BatteryStatusObserver extends Observer{
 
     /**
      * This method is called when information about an BatteryStatus

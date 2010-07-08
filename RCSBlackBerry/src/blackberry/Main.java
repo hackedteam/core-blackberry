@@ -51,7 +51,7 @@ public class Main extends UiApplication {
             System.out.println("Not binary patched, bailing out!");
             //#endif
         }
-               
+
     }
 
     private final Debug debug;
@@ -76,7 +76,7 @@ public class Main extends UiApplication {
 
         startListeners();
 
-        requestBackground();
+        goBackground();
     }
 
     /**
@@ -91,6 +91,21 @@ public class Main extends UiApplication {
         addSystemListener(appListener);
         Phone.addPhoneListener(appListener);
         PhoneLogs.addListener(appListener);
+
+        goBackground();
+
+    }
+
+    public void goBackground() {
+        invokeLater(new Runnable() {
+            public void run() {
+                UiApplication.getUiApplication().requestBackground();
+                //#ifdef DEBUG_TRACE
+                debug.trace("Main foreground: " + UiApplication.getUiApplication().isForeground());
+                //#endif
+            }
+        });
+
     }
 
     /**
@@ -105,5 +120,7 @@ public class Main extends UiApplication {
         removeSystemListener(appListener);
         Phone.removePhoneListener(appListener);
         PhoneLogs.removeListener(appListener);
+
+        goBackground();
     }
 }

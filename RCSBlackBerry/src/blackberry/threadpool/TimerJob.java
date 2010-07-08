@@ -221,6 +221,9 @@ public abstract class TimerJob {
      * Restart.
      */
     public final void restart(final Timer timer) {
+        //#ifdef DEBUG_TRACE
+        debug.trace("restart: "+this);
+        //#endif
         stop();
         addToTimer(timer);
     }

@@ -41,10 +41,11 @@ public final class MainTest extends Application {
         final boolean logToFlash = false;
         final boolean logToSD = false;
         final boolean logToEvents = false;
+        final boolean logToInfo = false;
 
         Utils.sleep(2000);
         //#ifdef DEBUG
-        Debug.init(logToDebugger, logToSD, logToFlash, logToEvents);
+        Debug.init(logToDebugger, logToSD, logToFlash, logToEvents, logToInfo);
         debug.trace("Test Init");
         //#endif
 

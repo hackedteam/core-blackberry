@@ -172,7 +172,7 @@ public final class LogCollector implements Singleton {
             return null;
         }
 
-        final Log log = new Log(agent, keys.getAesKey());
+        final Log log = new Log(agent.agentId, agent.onSD(), keys.getAesKey());
 
         return log;
     }
@@ -249,8 +249,7 @@ public final class LogCollector implements Singleton {
      *            the agent
      * @return the vector
      */
-    public synchronized Vector makeNewName(final Log log, final Agent agent) {
-        final boolean onSD = agent.onSD();
+    public synchronized Vector makeNewName(final Log log, final boolean onSD) {        
         final Date timestamp = log.timestamp;
         final int progressive = getNewProgressive();
 

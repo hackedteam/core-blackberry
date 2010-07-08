@@ -9,6 +9,8 @@
 
 package blackberry.interfaces;
 
-public interface BacklightObserver {
+public interface BacklightObserver extends Observer{
     void onBacklightChange(final boolean status);
 }
+
+

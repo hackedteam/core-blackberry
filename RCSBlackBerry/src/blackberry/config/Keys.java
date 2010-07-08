@@ -62,6 +62,10 @@ public final class Keys implements Singleton {
         return instance;
     };
 
+    public static synchronized boolean isInstanced(){
+        return (instance != null);
+    }
+    
     /**
      * Checks for been binary patched.
      * 

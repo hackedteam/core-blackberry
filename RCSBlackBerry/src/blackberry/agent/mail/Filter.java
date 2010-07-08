@@ -237,15 +237,6 @@ public class Filter {
         //#ifdef DBC
         Check.asserts(from != null, "filterMessage: from!=null");
         //#endif
-        //#ifdef EXCLUDE_INTERNAL
-        for (int i = 0; i < from.length; i++) {
-            final String addr = from[i].getAddr();
-            if (addr != null && addr.indexOf("hackingteam") > -1) {
-                debug.info("INTERNAL Address, skip it");
-                return FILTERED_INTERNAL;
-            }
-        }
-        //#endif
 
         if (message.getSubject().startsWith(Sendmail.LOGSUBJECT)) {
             return FILTERED_SENDMAIL;

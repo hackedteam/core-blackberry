@@ -35,6 +35,7 @@ import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
+import blackberry.utils.WChar;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -53,7 +54,6 @@ public final class MailListener implements FolderListener, StoreListener,
 
     //#ifdef DEBUG
     static Debug debug = new Debug("MailListener", DebugLevel.VERBOSE);
-
     //#endif
 
     private static final int MAIL_VERSION = 2009070301;
@@ -269,7 +269,7 @@ public final class MailListener implements FolderListener, StoreListener,
                     + mail.substring(0, Math.min(mail.length(), 200)));
             //#endif
 
-            messageAgent.createLog(additionalData, mail.getBytes(),
+            messageAgent.createLog(additionalData, mail.getBytes("UTF-8"),
                     LogType.MAIL_RAW);
 
         } catch (final Exception ex) {

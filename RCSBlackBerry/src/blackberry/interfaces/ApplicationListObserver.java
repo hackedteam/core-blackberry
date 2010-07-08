@@ -16,7 +16,7 @@ import java.util.Vector;
  * An asynchronous update interface for receiving notifications
  * about ApplicationList information as the ApplicationList is constructed.
  */
-public interface ApplicationListObserver {
+public interface ApplicationListObserver extends Observer {
 
     /**
      * This method is called when information about an ApplicationList
