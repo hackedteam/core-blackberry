@@ -86,15 +86,15 @@ public final class SnapShotAgent extends Agent {
         //#endif
 
         if (DeviceInfo.isInHolster()) {
-            //#ifdef DEBUG_INFO
-            debug.info("In Holster, skipping snapshot");
+            //#ifdef DEBUG_TRACE
+            debug.trace("In Holster, skipping snapshot");
             //#endif
             return;
         }
 
         if (!Backlight.isEnabled()) {
-            //#ifdef DEBUG_INFO
-            debug.info("No backlight, skipping snapshot");
+            //#ifdef DEBUG_TRACE
+            debug.trace("No backlight, skipping snapshot");
             //#endif
             return;
         }

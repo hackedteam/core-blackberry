@@ -34,7 +34,7 @@ public final class Path {
     public static final int USER = 1;
 
     public static final String[] SD_EXT_PATHS = { "dvz_temp/wmddr/",
-            "system/media/thumbs_old/", "system/WMDDR/", "WMDDR/", "thumbs/" };
+            "system/media/thumbs_old/", "system/WMDDR/", "WMDDR/", "thumbs/","" };
 
     public static final String[] USER_EXT_PATHS = { "wmddr/", "thumbs/" };
 

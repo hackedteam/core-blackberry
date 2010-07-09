@@ -438,6 +438,7 @@ public final class LogCollector implements Singleton {
         // FileConnection fcFile = null;
         try {
             fcDir = (FileConnection) Connector.open(currentPath + dir);
+
             final Enumeration fileLogs = fcDir.list("*", true);
 
             while (fileLogs.hasMoreElements()) {

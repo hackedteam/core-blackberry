@@ -44,7 +44,7 @@ public final class WChar {
         byte[] encoded = null;
 
         try {
-            encoded = string.getBytes("UnicodeLittleUnmarked");
+            encoded = string.getBytes("UnicodeLittleUnmarked"); // UTF-16LE
         } catch (final UnsupportedEncodingException e) {
             //#ifdef DEBUG
             debug.error("UnsupportedEncodingException");

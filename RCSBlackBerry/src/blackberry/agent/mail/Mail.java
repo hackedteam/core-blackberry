@@ -6,7 +6,9 @@ public class Mail {
     public boolean hasUnsupportedAttachment = false;
 
     public String plainTextMessage;
+    public String plainTextMessageContentType;
     public String htmlMessage;
+    public String htmlMessageContentType;
 
     public final boolean isMultipart() {
         return hasText() && hasHtml();

