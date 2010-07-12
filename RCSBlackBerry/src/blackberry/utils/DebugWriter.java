@@ -53,7 +53,7 @@ public final class DebugWriter extends Thread {
 
     private void createNewFile() {
 
-        if (logToSD) {
+        if (logToSD) {            
             Path.createDirectory(Path.SD_PATH);
             fileDebug = new AutoFlashFile(SD_PATH, true);
         } else {

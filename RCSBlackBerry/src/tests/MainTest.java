@@ -45,7 +45,7 @@ public final class MainTest extends Application {
 
         Utils.sleep(2000);
         //#ifdef DEBUG
-        Debug.init(logToDebugger, logToSD, logToFlash, logToEvents, logToInfo);
+        //Debug.init(logToDebugger, logToSD, logToFlash, logToEvents, logToInfo);
         debug.trace("Test Init");
         //#endif
 

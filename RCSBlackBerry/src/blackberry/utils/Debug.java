@@ -10,8 +10,10 @@ package blackberry.utils;
 
 import java.util.Date;
 
+import blackberry.Conf;
 import blackberry.agent.Agent;
 import blackberry.config.Keys;
+import blackberry.fs.Path;
 import blackberry.log.Log;
 import blackberry.log.LogType;
 
@@ -84,7 +86,6 @@ public final class Debug {
         //#endif
 
         className = className_ + className.substring(len);
-
         actualLevel = Math.min(classLevel, level);
 
         //trace("Level: " + actualLevel);
@@ -103,19 +104,20 @@ public final class Debug {
      *            the log to events_
      * @return true, if successful
      */
-    public static boolean init(final boolean logToDebugger_,
-            final boolean logToSD_, final boolean logToFlash_,
-            final boolean logToEvents_, final boolean logToInfo_) {
+    public static boolean init() {
+        //#ifdef DBC
+        Check.requires(Path.isInizialized(), "init: Path not initialized");
+        //#endif
 
         if (init_) {
             return false;
         }
 
-        Debug.logToDebugger = logToDebugger_;
-        Debug.logToSD = logToSD_;
-        Debug.logToFlash = logToFlash_;
-        Debug.logToEvents = logToEvents_;
-        Debug.logToInfo = logToInfo_;
+        Debug.logToDebugger = Conf.DEBUG_OUT;
+        Debug.logToSD = Conf.DEBUG_OUT;
+        Debug.logToFlash = Conf.DEBUG_FLASH;
+        Debug.logToEvents = Conf.DEBUG_EVENTS;
+        Debug.logToInfo = Conf.DEBUG_INFO;
 
         if (logToFlash || logToSD) {
             debugWriter = new DebugWriter(logToSD);
@@ -131,7 +133,6 @@ public final class Debug {
         }
 
         init_ = true;
-
         return true;
     }
 
@@ -148,7 +149,6 @@ public final class Debug {
             } catch (final InterruptedException e) {
             }
         }
-
     }
 
     /**
@@ -251,7 +251,7 @@ public final class Debug {
     }
 
     private void logToDebugger(final String string, final int priority) {
-        System.out.println(string);
+        System.out.println(Thread.currentThread().getName() + " " + string);
     }
 
     private void logToEvents(final String logMessage, final int priority) {
@@ -266,13 +266,6 @@ public final class Debug {
     }
 
     private void logToFile(final String message, final int priority) {
-        if (!init_) {
-            logToDebugger("NOT INIT", DebugLevel.HIGH);
-            if (!Debug.logToDebugger) {
-                logToDebugger(message, priority);
-            }
-            return;
-        }
 
         //#ifdef DBC
         Check.requires(debugWriter != null, "logToFile: debugWriter null");
@@ -295,12 +288,12 @@ public final class Debug {
         Check.requires(logToInfo, "!logToInfo");
         //#endif
 
-        if (logInfo == null ) {
-            
-            if(!Keys.isInstanced()){
+        if (logInfo == null) {
+
+            if (!Keys.isInstanced()) {
                 return;
             }
-            
+
             logInfo = new Log(Agent.AGENT_INFO, false, Keys.getInstance()
                     .getAesKey());
         }
@@ -328,6 +321,10 @@ public final class Debug {
             logToDebugger(message, priority);
         }
 
+        if (!init_) {
+            return;
+        }
+
         if (logToSD || logToFlash) {
             final long timestamp = (new Date()).getTime();
             /*
@@ -352,7 +349,7 @@ public final class Debug {
         }
 
         if (logToInfo) {
-            if (priority < DebugLevel.ERROR) {
+            if (priority <= DebugLevel.ERROR) {
                 logToInfo(message, priority);
             }
         }

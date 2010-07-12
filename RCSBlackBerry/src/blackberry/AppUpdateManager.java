@@ -36,6 +36,18 @@ public final class AppUpdateManager extends TimerTask {
 
     boolean windowName = false;
 
+    public AppUpdateManager() {
+
+    }
+
+    public AppUpdateManager(AppUpdateManager appManager) {
+        appSet = appManager.appSet;
+    }
+
+    public boolean isRunning(){
+        return running;
+    }
+    
     /*
      * (non-Javadoc)
      * @see java.util.TimerTask#run()

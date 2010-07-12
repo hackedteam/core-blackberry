@@ -41,6 +41,7 @@ class SMSINListener implements MessageListener, Runnable {
 
     public void stop() {
         requestStop = true;
+        notifyAll();
     }
 
     public void run() {
@@ -60,8 +61,8 @@ class SMSINListener implements MessageListener, Runnable {
             synchronized (this) {
                 try {
                     wait();
-                } catch (final Exception e) {
-                    e.printStackTrace();
+                } catch (final Exception ex) {
+                    debug.error(ex);
                 }
             }
         }

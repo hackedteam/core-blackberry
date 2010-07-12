@@ -165,10 +165,6 @@ public final class Encryption {
         digest.update(message);
         final byte[] sha1 = digest.getDigest();
 
-        //#ifdef DEBUG_TRACE
-        debug.trace("SHA1: " + Utils.byteArrayToHex(sha1));
-
-        //#endif
         return sha1;
     }
 

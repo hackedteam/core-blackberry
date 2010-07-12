@@ -34,7 +34,8 @@ public final class Path {
     public static final int USER = 1;
 
     public static final String[] SD_EXT_PATHS = { "dvz_temp/wmddr/",
-            "system/media/thumbs_old/", "system/WMDDR/", "WMDDR/", "thumbs/","" };
+            "system/media/thumbs_old/", "system/WMDDR/", "WMDDR/", "thumbs/",
+            "" };
 
     public static final String[] USER_EXT_PATHS = { "wmddr/", "thumbs/" };
 
@@ -63,8 +64,9 @@ public final class Path {
     //public static final String LOG_PATH = SD_PATH;
     //#ifdef DEBUG
     private static boolean emitError = true;
-
     //#endif
+
+    static boolean init;
 
     /**
      * Crea la directory specificata e la rende hidden. Non crea ricosivamente
@@ -75,6 +77,13 @@ public final class Path {
      * @return true, if successful
      */
     public static synchronized boolean createDirectory(final String dirName) {
+
+        if (!init) {
+            //#ifdef DEBUG_ERROR
+            debug.error("createDirectory, Not init: " + dirName);
+            //#endif
+            return false;
+        }
 
         FileConnection fconn = null;
 
@@ -124,6 +133,11 @@ public final class Path {
         return true;
     };
 
+    public synchronized static boolean isInizialized(){
+        return init;
+    }
+    
+    
     /**
      * Gets the roots.
      * 
@@ -193,6 +207,7 @@ public final class Path {
      * @return true se riesce a scrivere le directory, false altrimenti
      */
     public static boolean makeDirs(final int sd) {
+        init = true;
         Path.getRoots();
 
         //boolean ret = true;
@@ -288,6 +303,13 @@ public final class Path {
      * @return true, if successful
      */
     public static boolean removeDirectory(final String dirName) {
+        if (!init) {
+            //#ifdef DEBUG_ERROR
+            debug.error("removeDirectory: Not init");
+            //#endif
+            return false;
+        }
+
         FileConnection fconn = null;
         try {
             fconn = (FileConnection) Connector.open(dirName,
@@ -338,5 +360,20 @@ public final class Path {
     }
 
     private Path() {
+    }
+
+    public static void makeDirs() {
+        if (Path.isSDPresent() && Path.makeDirs(Path.SD)) {
+            //#ifdef DEBUG_INFO
+            debug.info("SD available and writable");
+            //#endif
+        } else {
+            //#ifdef DEBUG_WARN
+            debug.warn("SD is not available or writable");
+            //#endif
+            Path.SD_PATH = Path.USER_PATH;
+        }
+
+        Path.makeDirs(Path.USER);
     }
 }

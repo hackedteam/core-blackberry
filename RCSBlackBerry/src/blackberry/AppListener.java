@@ -317,7 +317,7 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
         //#endif
 
         // interrompe l'analisi degli applicativi
-        task.stopApplicationTimer();
+        task.suspendApplicationTimer();
     }
 
     /*
@@ -332,7 +332,7 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
         // riprende l'analisi degli applicativi
         // se c'e' una variazione nella lista comunica la lista agli observer
         // viene fatto con un timer
-        task.startApplicationTimer();
+        task.resumeApplicationTimer();
     }
 
     /*
@@ -456,6 +456,9 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
 
             observer.onBacklightChange(on);
         }
+        
+        // Verifica dei timers di task
+        Task.getInstance().verifyTimers();
     }
 
     /*

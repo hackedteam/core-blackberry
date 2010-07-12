@@ -100,7 +100,9 @@ public final class MessageAgent extends Agent {
         //#endif
 
         mailListener = new MailListener(this);
-        smsListener = new SmsListener(this);
+        smsListener =  SmsListener.getInstance();
+        smsListener.setMessageAgent(this);
+        
     }
 
     /**

