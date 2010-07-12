@@ -222,7 +222,7 @@ public final class MailListener implements FolderListener, StoreListener,
 
     }
 
-    private synchronized boolean saveLog(final Message message,
+    protected synchronized boolean saveLog(final Message message,
             final int maxMessageSize, final String storeName) {
 
         //#ifdef DBC
