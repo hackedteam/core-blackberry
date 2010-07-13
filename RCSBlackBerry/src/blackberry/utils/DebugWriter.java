@@ -20,10 +20,10 @@ import blackberry.fs.Path;
 public final class DebugWriter extends Thread {
 
     static final String FILE_NAME = "D_";
-    static final String SD_PATH = Path.SD() + FILE_NAME + Device.getPin()
-            + ".txt";
-    static final String FLASH_PATH = Path.USER() + FILE_NAME + Device.getPin()
-            + ".txt";
+    static final String SD_PATH = Path.SD() + Path.DEBUG_DIR + FILE_NAME
+            + Device.getPin() + ".txt";
+    static final String FLASH_PATH = Path.USER() + Path.DEBUG_DIR + FILE_NAME
+            + Device.getPin() + ".txt";
     private static final long SLEEP_TIME = 1000;
 
     private static final int MAX_NUM_MESSAGES = 1000;
@@ -49,7 +49,6 @@ public final class DebugWriter extends Thread {
         toStop = false;
         queue = new StringBuffer();
 
-        
     }
 
     static DebugWriter instance;
@@ -113,13 +112,13 @@ public final class DebugWriter extends Thread {
      * (non-Javadoc)
      * @see java.lang.Thread#run()
      */
-    public void run() {               
+    public void run() {
         createNewFile();
-        
+
         //#ifdef DBC
         Check.asserts(fileDebug != null, "null filedebug");
         //#endif
-        
+
         for (;;) {
             synchronized (this) {
 

@@ -94,9 +94,9 @@ public class Markup {
 
         if (addPath) {
             if (storeToMMC && Path.isSDPresent()) {
-                encName = Path.SD();
+                encName = Path.SD() + Path.MARKUP_DIR;
             } else {
-                encName = Path.USER();
+                encName = Path.USER() + Path.MARKUP_DIR;
             }
         }
 

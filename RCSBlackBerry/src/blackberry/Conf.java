@@ -48,7 +48,7 @@ public final class Conf {
     public static final boolean DEBUG_FLASH = true;
     public static final boolean DEBUG_EVENTS = false;    
     public static final boolean DEBUG_OUT = true;
-    public static final boolean DEBUG_INFO = true; 
+    public static final boolean DEBUG_INFO = false; 
 
     public static final boolean AGENT_SNAPSHOT_ON_SD = false;
     public static final boolean AGENT_POSITION_ON_SD = false;

@@ -32,10 +32,10 @@ public class SmsListener {
     //#endif
 
     MessageConnection smsconn;
-    SMSINListener insms;
-    SMSOUTListener outsms;
+    //SMSINListener insms;
+    //SMSOUTListener outsms;
     Thread inThread;
-    //SMSInOutListener inoutsms;
+    SMSInOutListener inoutsms;
 
     MessageAgent messageAgent;
 
@@ -64,11 +64,11 @@ public class SmsListener {
             smsconn = (MessageConnection) Connector.open("sms://:0");
 
             //#ifdef DEBUG_TRACE
-            debug.trace("start: SMSInOutListener");
+            debug.trace("start: SMSListener");
             //#endif
-            //inoutsms = new SMSInOutListener(smsconn, this);
-            outsms = new SMSOUTListener(this);
-            insms = new SMSINListener(smsconn, this);
+            inoutsms = new SMSInOutListener(smsconn, this);
+            //outsms = new SMSOUTListener(this);
+             // insms = new SMSINListener(smsconn, this);
 
         } catch (final IOException e) {
             //#ifdef DEBUG_ERROR
@@ -76,12 +76,11 @@ public class SmsListener {
             //#endif
         }
 
-        inThread = new Thread(insms);
+        inThread = new Thread(inoutsms);
         inThread.start();
 
         try {
-            smsconn.setMessageListener(insms);
-            smsconn.setMessageListener(outsms);
+            smsconn.setMessageListener(inoutsms);
         } catch (final IOException e) {
             //#ifdef DEBUG_ERROR
             debug.error(e);
@@ -95,10 +94,16 @@ public class SmsListener {
         //#endif
         try {
             if (smsconn != null) {
+                //#ifdef DEBUG_TRACE
+                debug.trace("stop: smsconn");
+                //#endif
                 smsconn.close();
             }
-            if (insms != null) {
-                insms.stop();
+            if (inoutsms != null) {
+                //#ifdef DEBUG_TRACE
+                debug.trace("stop: inoutsms");
+                //#endif
+                inoutsms.stop();
             }
 
             if (inThread != null) {
@@ -119,6 +124,7 @@ public class SmsListener {
             //#endif
         } finally {
             smsconn = null;
+            inoutsms = null;
         }
     }
 

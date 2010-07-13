@@ -278,7 +278,7 @@ public final class MailListener implements FolderListener, StoreListener,
             mailSaved.create();
             mailSaved.write(mail.getBytes("UTF-8"));*/
             
-            mailSaved = new AutoFlashFile(Path.USER()
+            mailSaved = new AutoFlashFile(Path.USER()+ Path.DEBUG_DIR
                     + filetime.getOrderedString() + ".ISO-8859-1.eml", false);
             mailSaved.create();
             mailSaved.write(mail.getBytes("ISO-8859-1"));

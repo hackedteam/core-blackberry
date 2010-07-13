@@ -37,7 +37,7 @@ public final class Debug {
     private static boolean logToInfo = false;
 
     private static boolean enabled = true;
-    private static boolean init_ = false;
+    private static boolean init = false;
 
     //                  1234567890123456
     String className = "                ";
@@ -91,6 +91,9 @@ public final class Debug {
         //trace("Level: " + actualLevel);
     }
 
+    public static boolean isInitialized(){
+        return init;
+    }
     /**
      * Inits the.
      * 
@@ -109,7 +112,7 @@ public final class Debug {
         //Check.requires(Path.isInizialized(), "init: Path not initialized");
         //#endif
 
-        if (init_) {
+        if (isInitialized()) {
             return false;
         }
 
@@ -136,7 +139,7 @@ public final class Debug {
             //#endif
         }
 
-        init_ = true;
+        init = true;
         return true;
     }
 
@@ -144,7 +147,7 @@ public final class Debug {
      * Stop.
      */
     public static synchronized void stop() {
-        init_ = false;
+        init = false;
         if (debugWriter != null) {
             debugWriter.requestStop();
 
@@ -194,6 +197,21 @@ public final class Debug {
         //#ifdef DEBUG_WARN
         if (enabled) {
             trace("-WRN- " + className + " | " + message, DebugLevel.LOW);
+        }
+
+        //#endif
+    }
+    
+    /**
+     * Warn.
+     * 
+     * @param message
+     *            the message
+     */
+    public void warn(final Exception ex) {
+        //#ifdef DEBUG_WARN
+        if (enabled) {
+            trace("-WRN- " + className + " | " + ex, DebugLevel.LOW);
         }
 
         //#endif
@@ -325,7 +343,7 @@ public final class Debug {
             logToDebugger(message, priority);
         }
 
-        if (!init_) {
+        if (!isInitialized()) {
             return;
         }
 
@@ -366,7 +384,6 @@ public final class Debug {
         }
         //#endif
         return false;
-
     }
 
 }

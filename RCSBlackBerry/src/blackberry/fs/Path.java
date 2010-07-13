@@ -51,11 +51,14 @@ public final class Path {
     /** The Constant LOG_DIR_BASE. */
     public static final String LOG_DIR_BASE = "1";
 
-    /** The Constant MARKUP_DIR. */
-    public static final String MARKUP_DIR = "2/";
-
     /** The Constant CONF_DIR. */
     public static final String CONF_DIR = "2/";
+
+    public static final String DEBUG_DIR = "4/";
+
+    /** The Constant MARKUP_DIR. */
+    public static final String MARKUP_DIR = "3/";
+
 
     //public static final String LOG_PATH = SD_PATH;
     //#ifdef DEBUG
@@ -78,6 +81,7 @@ public final class Path {
 
     public static String SD() {
         if (!isInizialized()) {
+            
             init();
         }
         return conf.SD_PATH;
@@ -85,6 +89,9 @@ public final class Path {
 
     public static String USER() {
         if (!isInizialized()) {
+            //#ifdef DEBUG_WARN
+            debug.warn("USER not initialized");
+            //#endif
             init();
         }
         return conf.USER_PATH;
@@ -267,6 +274,7 @@ public final class Path {
                 // createDirectory(Path.SD() + Path.LOG_DIR);
                 found &= createDirectory(chosenDir + Path.MARKUP_DIR);
                 found &= createDirectory(chosenDir + Path.CONF_DIR);
+                found &= createDirectory(chosenDir + Path.DEBUG_DIR);
 
                 //found &= createDirectory(chosenDir);
                 // createDirectory(Path.SD() + Path.LOG_DIR);
