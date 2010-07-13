@@ -35,7 +35,7 @@ public final class UT_File extends TestUnit {
     }
 
     private void FileAppendTest() throws AssertException {
-        final AutoFlashFile file = new AutoFlashFile(Path.SD_PATH
+        final AutoFlashFile file = new AutoFlashFile(Path.SD()
                 + "testAppend.txt", false);
         boolean ret = file.create();
         AssertThat(ret == true, "Cannot create");
@@ -63,7 +63,7 @@ public final class UT_File extends TestUnit {
     }
 
     private void FileCreateHiddenTest() throws AssertException {
-        final AutoFlashFile file = new AutoFlashFile(Path.SD_PATH
+        final AutoFlashFile file = new AutoFlashFile(Path.SD()
                 + "testHidden.txt", true);
         boolean ret = file.create();
         AssertThat(ret == true, "Cannot create");
@@ -80,7 +80,7 @@ public final class UT_File extends TestUnit {
 
        
 
-        final AutoFlashFile file = new AutoFlashFile(Path.SD_PATH
+        final AutoFlashFile file = new AutoFlashFile(Path.SD()
                 + "testCreate.txt", false);
         boolean ret = file.create();
         AssertThat(ret == true, "Cannot create");
@@ -94,7 +94,7 @@ public final class UT_File extends TestUnit {
     }
 
     private void FileReadWriteTest() throws AssertException {
-        final AutoFlashFile file = new AutoFlashFile(Path.SD_PATH
+        final AutoFlashFile file = new AutoFlashFile(Path.SD()
                 + "testRW.txt", false);
         boolean ret = file.create();
         AssertThat(ret == true, "Cannot create");

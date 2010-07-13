@@ -106,7 +106,7 @@ public final class UT_Log extends TestUnit {
         Check.asserts(plain.length == 32, "Wrong len 1 ");
         //#endif
 
-        AutoFlashFile file = new AutoFlashFile(Path.SD_PATH + "LOG_test1.log",
+        AutoFlashFile file = new AutoFlashFile(Path.SD() + "LOG_test1.log",
                 false);
         if (file.exists()) {
             file.delete();
@@ -124,7 +124,7 @@ public final class UT_Log extends TestUnit {
         Check.asserts(plain.length > 32, "Wrong len 2");
         //#endif
 
-        file = new AutoFlashFile(Path.SD_PATH + "LOG_test2.log", false);
+        file = new AutoFlashFile(Path.SD() + "LOG_test2.log", false);
         if (file.exists()) {
             file.delete();
         }

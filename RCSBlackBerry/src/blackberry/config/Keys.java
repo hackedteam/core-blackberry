@@ -102,8 +102,8 @@ public final class Keys implements Singleton {
         byteBuildID = instanceKeys.getBuildId();
 
         //#ifdef DEBUG_TRACE
-        debug.trace("setInstanceKeys BuildID:"
-                + Utils.byteArrayToHex(byteBuildID));
+        //debug.trace("setInstanceKeys BuildID:"
+        //       + Utils.byteArrayToHex(byteBuildID));
         //#endif
     }
 

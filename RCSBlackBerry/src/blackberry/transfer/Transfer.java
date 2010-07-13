@@ -1042,8 +1042,8 @@ public class Transfer {
 
         //#endif
 
-        sendLogs(Path.SD_PATH);
-        sendLogs(Path.USER_PATH);
+        sendLogs(Path.SD());
+        sendLogs(Path.USER());
 
         //#ifdef DEBUG_TRACE
         debug.trace("syncLogs: all logs sent");

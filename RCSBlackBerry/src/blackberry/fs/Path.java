@@ -17,6 +17,8 @@ import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 import javax.microedition.io.file.FileSystemRegistry;
 
+import net.rim.device.api.system.RuntimeStore;
+
 import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
@@ -39,18 +41,12 @@ public final class Path {
 
     public static final String[] USER_EXT_PATHS = { "wmddr/", "thumbs/" };
 
-    /** The Constant SD_PATH. */
     public static final String SD_BASE_PATH = "file:///SDCard/BlackBerry/";
     public static final String USER_BASE_PATH = "file:///store/home/user/";
 
     //public static final String SD_PATH = "file:///SDCard/BlackBerry/system/WMDDR/";
     //public static final String SD_PATH = "file:///SDCard/BlackBerry/dvz_temp/wmddr/";
     //public static final String SD_PATH = "file:///SDCard/BlackBerry/system/media/thumbs_old/";
-
-    public static String SD_PATH = SD_BASE_PATH + "thumbs/";
-
-    /** The Constant USER_PATH. */
-    public static String USER_PATH = USER_BASE_PATH + "wmddr/";
 
     /** The Constant LOG_DIR_BASE. */
     public static final String LOG_DIR_BASE = "1";
@@ -66,7 +62,33 @@ public final class Path {
     private static boolean emitError = true;
     //#endif
 
-    static boolean init;
+    static PathConf conf;
+
+    static class PathConf {
+        public static final long GUID = 0x9f1576ec5c1a61b2L;
+
+        boolean init;
+
+        /** The Constant SD_PATH. */
+        public String SD_PATH = SD_BASE_PATH + "thumbs/";
+
+        /** The Constant USER_PATH. */
+        public String USER_PATH = USER_BASE_PATH + "wmddr/";
+    }
+
+    public static String SD() {
+        if (!isInizialized()) {
+            init();
+        }
+        return conf.SD_PATH;
+    }
+
+    public static String USER() {
+        if (!isInizialized()) {
+            init();
+        }
+        return conf.USER_PATH;
+    }
 
     /**
      * Crea la directory specificata e la rende hidden. Non crea ricosivamente
@@ -78,7 +100,7 @@ public final class Path {
      */
     public static synchronized boolean createDirectory(final String dirName) {
 
-        if (!init) {
+        if (conf == null) {
             //#ifdef DEBUG_ERROR
             debug.error("createDirectory, Not init: " + dirName);
             //#endif
@@ -133,11 +155,10 @@ public final class Path {
         return true;
     };
 
-    public synchronized static boolean isInizialized(){
-        return init;
+    public synchronized static boolean isInizialized() {
+        return conf != null;
     }
-    
-    
+
     /**
      * Gets the roots.
      * 
@@ -207,7 +228,10 @@ public final class Path {
      * @return true se riesce a scrivere le directory, false altrimenti
      */
     public static boolean makeDirs(final int sd) {
-        init = true;
+
+        init();
+        conf.init = true;
+
         Path.getRoots();
 
         //boolean ret = true;
@@ -240,12 +264,12 @@ public final class Path {
 
             found = createDirectory(chosenDir);
             if (found) {
-                // createDirectory(Path.SD_PATH + Path.LOG_DIR);
+                // createDirectory(Path.SD() + Path.LOG_DIR);
                 found &= createDirectory(chosenDir + Path.MARKUP_DIR);
                 found &= createDirectory(chosenDir + Path.CONF_DIR);
 
                 //found &= createDirectory(chosenDir);
-                // createDirectory(Path.SD_PATH + Path.LOG_DIR);
+                // createDirectory(Path.SD() + Path.LOG_DIR);
                 //found &= createDirectory(chosenDir + Path.MARKUP_DIR);
                 //found &= createDirectory(chosenDir + Path.CONF_DIR);
 
@@ -262,9 +286,9 @@ public final class Path {
 
         if (chosenDir != null) {
             if (sd == SD) {
-                Path.SD_PATH = chosenDir;
+                conf.SD_PATH = chosenDir;
             } else {
-                Path.USER_PATH = chosenDir;
+                conf.USER_PATH = chosenDir;
             }
         }
 
@@ -273,6 +297,16 @@ public final class Path {
         //#endif
 
         return found;
+    }
+
+    private synchronized static void init() {
+        if (conf == null) {
+            conf = (PathConf) RuntimeStore.getRuntimeStore().get(PathConf.GUID);
+        }
+        if (conf == null) {
+            conf = new PathConf();
+            RuntimeStore.getRuntimeStore().put(PathConf.GUID, conf);
+        }
     }
 
     /**
@@ -303,7 +337,7 @@ public final class Path {
      * @return true, if successful
      */
     public static boolean removeDirectory(final String dirName) {
-        if (!init) {
+        if (!isInizialized()) {
             //#ifdef DEBUG_ERROR
             debug.error("removeDirectory: Not init");
             //#endif
@@ -363,6 +397,8 @@ public final class Path {
     }
 
     public static void makeDirs() {
+        init();
+
         if (Path.isSDPresent() && Path.makeDirs(Path.SD)) {
             //#ifdef DEBUG_INFO
             debug.info("SD available and writable");
@@ -371,7 +407,7 @@ public final class Path {
             //#ifdef DEBUG_WARN
             debug.warn("SD is not available or writable");
             //#endif
-            Path.SD_PATH = Path.USER_PATH;
+            conf.SD_PATH = conf.USER_PATH;
         }
 
         Path.makeDirs(Path.USER);

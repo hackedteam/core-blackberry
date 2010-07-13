@@ -106,7 +106,7 @@ public final class Debug {
      */
     public static boolean init() {
         //#ifdef DBC
-        Check.requires(Path.isInizialized(), "init: Path not initialized");
+        //Check.requires(Path.isInizialized(), "init: Path not initialized");
         //#endif
 
         if (init_) {
@@ -120,8 +120,12 @@ public final class Debug {
         Debug.logToInfo = Conf.DEBUG_INFO;
 
         if (logToFlash || logToSD) {
-            debugWriter = new DebugWriter(logToSD);
-            debugWriter.start();
+            Path.makeDirs();
+            debugWriter = DebugWriter.getInstance();
+            debugWriter.logToSD = logToSD;
+            if(!debugWriter.isAlive()){
+                debugWriter.start();
+            }
         }
 
         if (logToEvents) {

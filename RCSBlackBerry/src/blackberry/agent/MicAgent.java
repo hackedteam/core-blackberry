@@ -78,7 +78,7 @@ public final class MicAgent extends Agent {
         fId = dateTime.getFiledate();
 
         //#ifdef AMR_FILE
-        String filename = Path.SD_PATH + "filetest."
+        String filename = Path.SD() + "filetest."
                 + dateTime.getOrderedString() + ".amr";
         debug.trace("Creating file: " + filename);
         amrfile = new AutoFlashFile(filename, false);

@@ -258,7 +258,7 @@ public final class LogCollector implements Singleton {
         //#endif
 
         final Vector vector = new Vector();
-        final String basePath = onSD ? Path.SD_PATH : Path.USER_PATH;
+        final String basePath = onSD ? Path.SD() : Path.USER();
 
         final String blockDir = "_" + (progressive / LOG_PER_DIRECTORY);
 
@@ -320,8 +320,8 @@ public final class LogCollector implements Singleton {
         //#ifdef DEBUG_INFO
         debug.info("removeLogDirs");
         //#endif
-        removeLogRecursive(Path.SD_PATH, false);
-        removeLogRecursive(Path.USER_PATH, false);
+        removeLogRecursive(Path.SD(), false);
+        removeLogRecursive(Path.USER(), false);
     }
 
     private void removeLogRecursive(final String basePath, final boolean delete) {

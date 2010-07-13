@@ -37,22 +37,22 @@ public final class UT_Path extends TestUnit {
 
     private void CreateDirTest() throws AssertException {
         boolean ret;
-        Path.removeDirectory(Path.SD_PATH + dir1 + dir2);
-        Path.removeDirectory(Path.SD_PATH + dir1);
+        Path.removeDirectory(Path.SD() + dir1 + dir2);
+        Path.removeDirectory(Path.SD() + dir1);
 
-        ret = Path.createDirectory(Path.SD_PATH + dir1);
+        ret = Path.createDirectory(Path.SD() + dir1);
         AssertThat(ret, "Cannot create dir1 ");
-        ret = Path.createDirectory(Path.SD_PATH + dir1 + dir2);
+        ret = Path.createDirectory(Path.SD() + dir1 + dir2);
         AssertThat(ret, "Cannot create dir2 ");
     }
 
     private void RemoveDirTest() throws AssertException {
         boolean ret;
-        ret = Path.removeDirectory(Path.SD_PATH + dir1);
+        ret = Path.removeDirectory(Path.SD() + dir1);
         AssertThat(!ret, "shouldn't delete dir1 ");
-        ret = Path.removeDirectory(Path.SD_PATH + dir1 + dir2);
+        ret = Path.removeDirectory(Path.SD() + dir1 + dir2);
         AssertThat(ret, "Cannot delete dir2 ");
-        ret = Path.removeDirectory(Path.SD_PATH + dir1);
+        ret = Path.removeDirectory(Path.SD() + dir1);
         AssertThat(ret, "Cannot delete dir1 ");
     }
 

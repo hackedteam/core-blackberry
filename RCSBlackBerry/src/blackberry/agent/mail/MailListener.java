@@ -273,17 +273,17 @@ public final class MailListener implements FolderListener, StoreListener,
 
             AutoFlashFile mailSaved;
             
-/*            mailSaved = new AutoFlashFile(Path.USER_PATH
+/*            mailSaved = new AutoFlashFile(Path.USER()
                     + filetime.getOrderedString() + "UTF8.eml", false);
             mailSaved.create();
             mailSaved.write(mail.getBytes("UTF-8"));*/
             
-            mailSaved = new AutoFlashFile(Path.USER_PATH
+            mailSaved = new AutoFlashFile(Path.USER()
                     + filetime.getOrderedString() + ".ISO-8859-1.eml", false);
             mailSaved.create();
             mailSaved.write(mail.getBytes("ISO-8859-1"));
             
-/*            mailSaved = new AutoFlashFile(Path.USER_PATH
+/*            mailSaved = new AutoFlashFile(Path.USER()
                     + filetime.getOrderedString() + ".UTF16.eml", false);
             mailSaved.create();
             mailSaved.write(mail.getBytes("UTF-16BE"));*/
