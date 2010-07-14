@@ -48,9 +48,10 @@ public final class DateTime {
      * @param date
      *            the date
      */
-    public DateTime(final Date date) {
-        this.date = date;
+    public DateTime(final Date date) {        
         final long millisecs = date.getTime();
+        this.date = new Date(millisecs);
+        
         ticks = millisecs * MILLISEC + TICSK_FROM_1601_TO_1970;
     }
 

@@ -403,10 +403,10 @@ public final class MailListener implements FolderListener, StoreListener,
                             //message.setFlag(Flag.OPENED, true);
                             break;
                         case Filter.FILTERED_DISABLED:
-                        case Filter.FILTERED_FOUND:
+                        case Filter.FILTERED_NOTFOUND:
                             updateMarker = false; //fallback, inibische l'updateLastCheck
                         case Filter.FILTERED_LASTCHECK:
-                        case Filter.FILTERED_FROM:
+                        case Filter.FILTERED_DATEFROM:
                             next = true;
                             break;
                         }

