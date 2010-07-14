@@ -194,35 +194,19 @@ public class SmsListener {
                 address = address.substring(prefix.length());
             }
 
-            Date date;
-            TimeZone timezone = TimeZone.getDefault();
+            Date date = new Date();
+            ;
 
             if (incoming) {
                 from = address;
                 to = getMyAddress();
-                long time = message.getTimestamp().getTime();
-
-                time -= timezone.getRawOffset();
-                time -= timezone.useDaylightTime() ? 3600000 : 0;
-
-                date = new Date(time);
-                //#ifdef DEBUG_TRACE
-                debug.trace("saveLog, incoming: " + message.getTimestamp()
-                        + " UTC: " + date);
-                //#endif
 
             } else {
                 from = getMyAddress();
                 to = address;
-                date = new Date();
             }
 
             filetime = new DateTime(date);
-            //#ifdef DEBUG_TRACE
-            debug.trace("saveLog, date: " + date + " filetime:" + filetime
-                    + " timezone: " + timezone.getRawOffset() + " daylight: "
-                    + timezone.useDaylightTime());
-            //#endif
 
             //#ifdef DBC
             Check.asserts(filetime != null, "saveLog: null filetime");
