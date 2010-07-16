@@ -119,13 +119,15 @@ public abstract class Manager {
             return false;
         }
 
-        if (job.isEnabled() && job.isScheduled()) {
-            job.restart(timer);
-        } else {
-            //#ifdef DEBUG
-            debug.warn("cannot restart: " + id + " enabled:" + job.isEnabled()
-                    + " scheduled:" + job.isScheduled());
-            //#endif
+        if (job.isEnabled()) {
+            if (job.isScheduled()) {
+                job.restart(timer);
+            } else {
+                //#ifdef DEBUG
+                debug.warn("cannot restart: " + job + " enabled:"
+                        + job.isEnabled() + " scheduled:" + job.isScheduled());
+                //#endif
+            }
         }
         return ret;
     }

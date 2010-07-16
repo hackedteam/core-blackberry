@@ -81,14 +81,14 @@ public abstract class TestUnit {
      * @throws AssertException
      *             the assert exception
      */
-    protected final void AssertEquals(final int a, final int b,
+    protected final void AssertEqual(final int a, final int b,
             final String message) throws AssertException {
-        AssertEquals(new Integer(a), new Integer(b), message);
+        AssertEqual(new Integer(a), new Integer(b), message);
     }
     
-    protected final void AssertEquals(final long a, final long b,
+    protected final void AssertEqual(final long a, final long b,
             final String message) throws AssertException {
-        AssertEquals(new Long(a), new Long(b), message);
+        AssertEqual(new Long(a), new Long(b), message);
     }
 
     /**
@@ -103,10 +103,23 @@ public abstract class TestUnit {
      * @throws AssertException
      *             the assert exception
      */
-    protected final void AssertEquals(final Object a, final Object b,
+    protected final void AssertEqual(final Object a, final Object b,
             final String message) throws AssertException {
         if (!a.equals(b)) {
             debug.trace(a.toString() + " != " + b.toString());
+
+            result = "ASSERT: " + message;
+
+            debug.fatal(result);
+
+            throw new AssertException();
+        }
+    }
+    
+    protected final void AssertNotEqual(final Object a, final Object b,
+            final String message) throws AssertException {
+        if (a.equals(b)) {
+            debug.trace(a.toString() + " == " + b.toString());
 
             result = "ASSERT: " + message;
 

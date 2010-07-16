@@ -249,32 +249,32 @@ public final class UT_Crypto extends TestUnit {
 
         String ret = Encryption.encryptName("KiodoGay", 0xb0);
         String expected = "pKdTdlYz";
-        AssertEquals(ret, expected, "Scramble 1");
+        AssertEqual(ret, expected, "Scramble 1");
 
         ret = Encryption.encryptName("BrunelloBrunilde", 0xb0);
         expected = "RbF5OQQdRbF5KQTO";
-        AssertEquals(ret, expected, "Scramble 2");
+        AssertEqual(ret, expected, "Scramble 2");
 
         ret = Encryption.encryptName("Zeno", 0xb0);
         expected = "kO5d";
-        AssertEquals(ret, expected, "Scramble 3");
+        AssertEqual(ret, expected, "Scramble 3");
 
         ret = Encryption.encryptName("Xeno", 0xb0);
         expected = "8O5d";
-        AssertEquals(ret, expected, "Scramble 4");
+        AssertEqual(ret, expected, "Scramble 4");
 
         ret = Encryption.encryptName("10401349w298238402834923.mob", 0xb0);
         expected = "mVHVmoHh9ZhnZonHVZnoHhZo.udD";
-        AssertEquals(ret, expected, "Scramble 5");
+        AssertEqual(ret, expected, "Scramble 5");
 
         ret = Encryption.encryptName("*.mob", 0xb0);
         expected = "*.udD";
-        AssertEquals(ret, expected, "Scramble 6");
+        AssertEqual(ret, expected, "Scramble 6");
 
         //zepUU!DDDDUfWWDWZ44Bzz.MOB not scrambled: 23411!0000157707966b22.mob
         //ret = Encryption.encryptName("23411!0000157707966b22.mob", (byte) 0xb0);
         //expected = "zepUU!DDDDUfWWDWZ44Bzz.MOB";
-        //AssertEquals(ret, expected, "Scramble 7");
+        //AssertEqual(ret, expected, "Scramble 7");
     }
 
     private void SpeedTest() throws AssertException {

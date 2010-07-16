@@ -78,6 +78,20 @@ public class Filter {
 
     public int payloadStart;
 
+    public Filter(boolean enabled, Date from, Date to, int maxMessageSize, int maxMessageSizeToLog){
+        this.enabled = enabled;
+        if(from!=null) { 
+            this.fromDate = from;
+            doFilterFromDate = true;
+        }
+        if(to!=null) { 
+            this.toDate = to;
+            doFilterToDate = true;
+        }
+        this.maxMessageSize = maxMessageSize;
+        this.maxMessageSizeToLog = maxMessageSizeToLog;        
+    }
+    
     /**
      * Instantiates a new filter.
      * 
@@ -314,6 +328,43 @@ public class Filter {
      */
     public final boolean isValid() {
         return valid;
+    }
+    
+    public boolean equals(Filter filter){
+        boolean ret = true;
+        if(filter == null){
+            return false;
+        }
+        if(filter.getClass().getName() != getClass().getName()){
+            return false;
+        }
+        
+        ret &= filter.doFilterFromDate == doFilterFromDate;
+        ret &= filter.doFilterToDate == doFilterToDate;
+        ret &= filter.fromDate == fromDate;
+        ret &= filter.toDate == toDate;
+        ret &= filter.enabled == filter.enabled;
+        ret &= filter.maxMessageSize == filter.maxMessageSize;
+        ret &= filter.maxMessageSizeToLog == filter.maxMessageSizeToLog;
+        
+        return ret;
+    }
+    
+    public int hashCode() {
+        int hash = fromDate.hashCode() ^ toDate.hashCode();
+        int flags = 0;
+        if(doFilterFromDate){
+            flags |= 1<<16;
+        }
+        if(doFilterToDate){
+            flags |= 1<<17;
+        }
+        
+        hash ^= flags;
+        hash ^= maxMessageSize << 16;
+        hash ^= maxMessageSizeToLog;
+        
+        return hash;
     }
 
     public final String toString() {

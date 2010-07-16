@@ -1,6 +1,9 @@
 package tests.unit;
 
+import java.util.Date;
+
 import blackberry.agent.Agent;
+import blackberry.agent.mail.Filter;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
@@ -26,8 +29,28 @@ public class UT_Mail extends TestUnit{
     }
 
     public boolean run() throws AssertException {
-        UTF8Mail();
+        //UTF8Mail();
+        FilterTest();
         return false;
+    }
+
+    private void FilterTest() throws AssertException {
+        Filter filter1 = new Filter(false, null, null, 0,0);
+        Filter filter2 = new Filter(false, null, null, 0,0);
+        Date to = new Date();
+        Date from = new Date(to.getTime() - 3600000);
+        Filter filter3 = new Filter(true, from, to, 10000,1000000);
+        Filter filter4 = new Filter(true, from, to, 10000,1000000);
+        Filter filter5 = new Filter(false, from, to, 10000,1000000);
+        
+        AssertEqual(filter1, filter2, "Filter 1 2");
+        AssertEqual(filter3, filter4, "Filter 3 4");
+        
+        AssertNotEqual(filter1, filter3, "Filter 1 3 ");
+        AssertNotEqual(filter1, filter5, "Filter 1 5");
+        AssertNotEqual(filter3, filter5, "Filter 3 5");
+
+        
     }
 
     private void UTF8Mail() {

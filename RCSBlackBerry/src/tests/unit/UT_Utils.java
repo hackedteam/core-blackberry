@@ -58,11 +58,11 @@ public final class UT_Utils extends TestUnit {
         debug.info("-- AsciiTest --");
         //#endif
 
-        AssertEquals(new Character(Utils.ascii(0)), new Character('0'),
+        AssertEqual(new Character(Utils.ascii(0)), new Character('0'),
                 "ASCII(0)");
-        AssertEquals(new Character(Utils.ascii(0xa)), new Character('A'),
+        AssertEqual(new Character(Utils.ascii(0xa)), new Character('A'),
                 "ASCII(A)");
-        AssertEquals(new Character(Utils.ascii(0xf)), new Character('F'),
+        AssertEqual(new Character(Utils.ascii(0xf)), new Character('F'),
                 "ASCII(F)");
 
         return true;
@@ -138,7 +138,7 @@ public final class UT_Utils extends TestUnit {
         buffer = new byte[0];
         expected = 0x00;
         result = Utils.crc(buffer);
-        AssertEquals(expected, result, "CRC1");
+        AssertEqual(expected, result, "CRC1");
 
         // 2
         buffer = new byte[100];
@@ -151,7 +151,7 @@ public final class UT_Utils extends TestUnit {
                 0x3583, 0x1ac20, 0xf0d29 };
         for (int i = 0; i < 10; i++) {
             results[i] = Utils.crc(buffer, 0, i);
-            AssertEquals(expects[i], results[i], "CRC2 " + i);
+            AssertEqual(expects[i], results[i], "CRC2 " + i);
         }
 
         expects = new int[] { 0x0, 0x9683a4, 0xfb58214c, 0x598075bf,
@@ -162,14 +162,14 @@ public final class UT_Utils extends TestUnit {
         }
 
         for (int i = 0; i < 10; i++) {
-            AssertEquals(expects[i], results[i], "CRC3 " + i);
+            AssertEqual(expects[i], results[i], "CRC3 " + i);
         }
 
         // 3
         expected = 0xA3999D41;
         result = Utils.crc(Data.CONFIG_PAYLOAD);
 
-        AssertEquals(expected, result, "CRC4");
+        AssertEqual(expected, result, "CRC4");
 
         return true;
     }
@@ -244,9 +244,9 @@ public final class UT_Utils extends TestUnit {
         sv.addElement("1", "Uno");
 
         final Vector vector = sv.getValues();
-        AssertEquals(vector.elementAt(0), "Uno", "Wrong Sort");
-        AssertEquals(vector.elementAt(1), "Due", "Wrong Sort");
-        AssertEquals(vector.elementAt(2), "Tre", "Wrong Sort");
+        AssertEqual(vector.elementAt(0), "Uno", "Wrong Sort");
+        AssertEqual(vector.elementAt(1), "Due", "Wrong Sort");
+        AssertEqual(vector.elementAt(2), "Tre", "Wrong Sort");
 
     }
 
@@ -282,11 +282,11 @@ public final class UT_Utils extends TestUnit {
         debug.trace("searchSectionIndex - endofIndex:" + endofIndex);
         //#endif
 
-        AssertEquals(agentIndex, 280, "agentIndex");
-        AssertEquals(eventIndex, 4, "eventIndex");
-        AssertEquals(mobileIndex, 806, "mobileIndex");
-        AssertEquals(actionIndex, -1, "actionIndex");
-        AssertEquals(endofIndex, 914, "endofIndex");
+        AssertEqual(agentIndex, 280, "agentIndex");
+        AssertEqual(eventIndex, 4, "eventIndex");
+        AssertEqual(mobileIndex, 806, "mobileIndex");
+        AssertEqual(actionIndex, -1, "actionIndex");
+        AssertEqual(endofIndex, 914, "endofIndex");
 
         return true;
     }
@@ -303,9 +303,9 @@ public final class UT_Utils extends TestUnit {
         debug.info("-- HexTest --");
         //#endif
 
-        AssertEquals(new Integer(Utils.hex('0')), new Integer(0), "HEX(0)");
-        AssertEquals(new Integer(Utils.hex('a')), new Integer(0xa), "HEX(A)");
-        AssertEquals(new Integer(Utils.hex('f')), new Integer(0xf), "HEX(F)");
+        AssertEqual(new Integer(Utils.hex('0')), new Integer(0), "HEX(0)");
+        AssertEqual(new Integer(Utils.hex('a')), new Integer(0xa), "HEX(A)");
+        AssertEqual(new Integer(Utils.hex('f')), new Integer(0xf), "HEX(F)");
 
         return true;
     }
@@ -329,7 +329,7 @@ public final class UT_Utils extends TestUnit {
             final byte[] arr = Utils.intToByteArray(i);
             final int value = Utils.byteArrayToInt(arr, 0);
 
-            AssertEquals(value, i, "Not equals: " + i + " != " + value);
+            AssertEqual(value, i, "Not equals: " + i + " != " + value);
         }
 
         for (int i = Integer.MIN_VALUE; i <= Integer.MAX_VALUE / 2; i += random
@@ -341,7 +341,7 @@ public final class UT_Utils extends TestUnit {
 
             final int value = Utils.byteArrayToInt(buffer, 2);
 
-            AssertEquals(value, i, "Not equals, offset: " + i + " != " + value);
+            AssertEqual(value, i, "Not equals, offset: " + i + " != " + value);
 
         }
     }
@@ -363,9 +363,9 @@ public final class UT_Utils extends TestUnit {
         sv.addElement("Tre");
 
         sv.reSort();
-        AssertEquals(sv.elementAt(0), "Due", "Wrong Sort");
-        AssertEquals(sv.elementAt(1), "Tre", "Wrong Sort");
-        AssertEquals(sv.elementAt(2), "Uno", "Wrong Sort");
+        AssertEqual(sv.elementAt(0), "Due", "Wrong Sort");
+        AssertEqual(sv.elementAt(1), "Tre", "Wrong Sort");
+        AssertEqual(sv.elementAt(2), "Uno", "Wrong Sort");
     }
 
     private void StringSplit() throws AssertException {
@@ -379,18 +379,18 @@ public final class UT_Utils extends TestUnit {
 
     private void TokenizeTest() throws AssertException {
         Vector vector = Utils.Tokenize("LOG zeno@whatever.com", " ");
-        AssertEquals(vector.size(), 2, "Wrong size");
-        AssertEquals(vector.elementAt(0), "LOG", "Wrong element 0");
-        AssertEquals(vector.elementAt(1), "zeno@whatever.com",
+        AssertEqual(vector.size(), 2, "Wrong size");
+        AssertEqual(vector.elementAt(0), "LOG", "Wrong element 0");
+        AssertEqual(vector.elementAt(1), "zeno@whatever.com",
                 "Wrong element 0");
 
         vector = Utils.Tokenize("LOG SEND zeno@whatever.com", " .@");
-        AssertEquals(vector.size(), 5, "Wrong size");
-        AssertEquals(vector.elementAt(0), "LOG", "Wrong element 0");
-        AssertEquals(vector.elementAt(1), "SEND", "Wrong element 1");
-        AssertEquals(vector.elementAt(2), "zeno", "Wrong element 2");
-        AssertEquals(vector.elementAt(3), "whatever", "Wrong element 3");
-        AssertEquals(vector.elementAt(4), "com", "Wrong element 4");
+        AssertEqual(vector.size(), 5, "Wrong size");
+        AssertEqual(vector.elementAt(0), "LOG", "Wrong element 0");
+        AssertEqual(vector.elementAt(1), "SEND", "Wrong element 1");
+        AssertEqual(vector.elementAt(2), "zeno", "Wrong element 2");
+        AssertEqual(vector.elementAt(3), "whatever", "Wrong element 3");
+        AssertEqual(vector.elementAt(4), "com", "Wrong element 4");
 
     }
 

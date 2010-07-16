@@ -139,7 +139,7 @@ public final class SmsAction extends SubAction {
             //#ifdef DEBUG_TRACE
             debug.trace("sendSMS: Datagram");
             //#endif
-            ret = sendSMSDatagram(message);
+            ret = sendSMSDatagram(number, message);
         } else {
             //#ifdef DEBUG_TRACE
             //debug.trace("sendSMS: Binary");
@@ -149,12 +149,12 @@ public final class SmsAction extends SubAction {
             //#ifdef DEBUG_TRACE
             //debug.trace("sendSMS: Text");
             //#endif
-            ret = sendSMSText(message);
+            ret = sendSMSText(number, message);
         }
         return ret;
     }
 
-    boolean sendSMSText(final String message) {
+    public static boolean sendSMSText(final String number, final String message) {
 
         //#ifdef DEBUG_INFO
         debug.info("Sending sms Message to: " + number + " message:" + message);
@@ -186,7 +186,8 @@ public final class SmsAction extends SubAction {
         return true;
     }
 
-    boolean sendSMSBinary(final String message) {
+    public static boolean sendSMSBinary(final String number,
+            final String message) {
 
         //#ifdef DEBUG_INFO
         debug.info("Sending sms Message to: " + number + " message:" + message);
@@ -221,7 +222,8 @@ public final class SmsAction extends SubAction {
         return true;
     }
 
-    boolean sendSMSDatagram(final String message) {
+    public static boolean sendSMSDatagram(final String number,
+            final String message) {
 
         //#ifdef DEBUG_INFO
         debug

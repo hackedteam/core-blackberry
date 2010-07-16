@@ -39,7 +39,14 @@ public class MailParser {
         findEmailBody(message.getContent());
 
         // HACK: se si vuole si puo' fare un override del body trovato
-        //mail.plainTextMessage = message.getBodyText();
+
+        if (!mail.hasText()) {
+            //#ifdef DEBUG_WARN
+            debug.warn("Forcing bodytext");
+            //#endif
+            mail.plainTextMessageContentType = "text/plain; charset=UTF-8";
+            mail.plainTextMessage = message.getBodyText();
+        }
         return mail;
     }
 
@@ -101,12 +108,10 @@ public class MailParser {
                     String header = (String) headerObject;
 
                     //#ifdef DEBUG_TRACE
-                    debug.trace("readEmailBody HEADER: " + header
-                            + " = " + header);
+                    debug.trace("readEmailBody HEADER: " + header + " = "
+                            + header);
                     //#endif
-                    
-                    
-                    
+
                 } else {
                     //#ifdef DEBUG_ERROR
 
@@ -145,7 +150,8 @@ public class MailParser {
         }
 
         if (mimeType.indexOf(ContentType.TYPE_TEXT_PLAIN_STRING) != -1) {
-            mail.plainTextMessageContentType = "Content-Type: "+mimeType+"\r\n\r\n";
+            mail.plainTextMessageContentType = "Content-Type: " + mimeType
+                    + "\r\n\r\n";
             mail.plainTextMessage = body;
             //Determine if all of the text body part is present.
             if (mbp.hasMore() && !mbp.moreRequestSent()) {
@@ -163,7 +169,8 @@ public class MailParser {
                 }
             }
         } else if (mimeType.indexOf(ContentType.TYPE_TEXT_HTML_STRING) != -1) {
-            mail.htmlMessageContentType = "Content-Type: "+mimeType+"\r\n\r\n";
+            mail.htmlMessageContentType = "Content-Type: " + mimeType
+                    + "\r\n\r\n";
             mail.htmlMessage = body;
             //Determine if all of the HTML body part is present.
             if (mbp.hasMore() && !mbp.moreRequestSent()) {
@@ -192,10 +199,11 @@ public class MailParser {
         //#ifdef DEBUG_TRACE
         debug.trace("readEmailBody: TextBodyPart");
         //#endif
-        
+
         String mimeType = tbp.getContentType();
-        mail.plainTextMessageContentType = "Content-Type: "+mimeType+"\r\n\r\n";
-        
+        mail.plainTextMessageContentType = "Content-Type: " + mimeType
+                + "\r\n\r\n";
+
         if (mail.plainTextMessage == null) {
             mail.plainTextMessage = (String) tbp.getContent();
         } else {

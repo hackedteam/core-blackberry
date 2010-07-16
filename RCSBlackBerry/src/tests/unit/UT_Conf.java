@@ -202,11 +202,11 @@ public final class UT_Conf extends TestUnit {
         Vector actions = statusObj.getActionsList();
         Vector parameters = statusObj.getParametersList();
 
-        AssertEquals(agents.size(), 14, "Wrong Agent number: " + agents.size());
-        AssertEquals(events.size(), 4, "Wrong Events number: " + events.size());
-        AssertEquals(actions.size(), 2, "Wrong Actions number: "
+        AssertEqual(agents.size(), 14, "Wrong Agent number: " + agents.size());
+        AssertEqual(events.size(), 4, "Wrong Events number: " + events.size());
+        AssertEqual(actions.size(), 2, "Wrong Actions number: "
                 + actions.size());
-        AssertEquals(parameters.size(), 4, "Wrong Parameters number: "
+        AssertEqual(parameters.size(), 4, "Wrong Parameters number: "
                 + parameters.size());
 
         // check crypto
@@ -226,11 +226,11 @@ public final class UT_Conf extends TestUnit {
         actions = statusObj.getActionsList();
         parameters = statusObj.getParametersList();
 
-        AssertEquals(agents.size(), 14, "Wrong Agent number: " + agents.size());
-        AssertEquals(events.size(), 4, "Wrong Events number: " + events.size());
-        AssertEquals(actions.size(), 2, "Wrong Actions number: "
+        AssertEqual(agents.size(), 14, "Wrong Agent number: " + agents.size());
+        AssertEqual(events.size(), 4, "Wrong Events number: " + events.size());
+        AssertEqual(actions.size(), 2, "Wrong Actions number: "
                 + actions.size());
-        AssertEquals(parameters.size(), 4, "Wrong Parameters number: "
+        AssertEqual(parameters.size(), 4, "Wrong Parameters number: "
                 + parameters.size());
 
         return true;
@@ -277,11 +277,11 @@ public final class UT_Conf extends TestUnit {
         Vector actions = statusObj.getActionsList();
         Vector parameters = statusObj.getParametersList();
 
-        AssertEquals(agents.size(), 14, "Wrong Agent number: " + agents.size());
-        AssertEquals(events.size(), 2, "Wrong Events number: " + events.size());
-        AssertEquals(actions.size(), 2, "Wrong Actions number: "
+        AssertEqual(agents.size(), 14, "Wrong Agent number: " + agents.size());
+        AssertEqual(events.size(), 2, "Wrong Events number: " + events.size());
+        AssertEqual(actions.size(), 2, "Wrong Actions number: "
                 + actions.size());
-        AssertEquals(parameters.size(), 4, "Wrong Parameters number: "
+        AssertEqual(parameters.size(), 4, "Wrong Parameters number: "
                 + parameters.size());
 
         // check crypto
@@ -300,11 +300,11 @@ public final class UT_Conf extends TestUnit {
         actions = statusObj.getActionsList();
         parameters = statusObj.getParametersList();
 
-        AssertEquals(agents.size(), 14, "Wrong Agent number: " + agents.size());
-        AssertEquals(events.size(), 2, "Wrong Events number: " + events.size());
-        AssertEquals(actions.size(), 2, "Wrong Actions number: "
+        AssertEqual(agents.size(), 14, "Wrong Agent number: " + agents.size());
+        AssertEqual(events.size(), 2, "Wrong Events number: " + events.size());
+        AssertEqual(actions.size(), 2, "Wrong Actions number: "
                 + actions.size());
-        AssertEquals(parameters.size(), 4, "Wrong Parameters number: "
+        AssertEqual(parameters.size(), 4, "Wrong Parameters number: "
                 + parameters.size());
 
         return true;
@@ -349,11 +349,11 @@ public final class UT_Conf extends TestUnit {
         Vector actions = statusObj.getActionsList();
         Vector parameters = statusObj.getParametersList();
 
-        AssertEquals(agents.size(), 14, "Wrong Agent number: " + agents.size());
-        AssertEquals(events.size(), 2, "Wrong Events number: " + events.size());
-        AssertEquals(actions.size(), 2, "Wrong Actions number: "
+        AssertEqual(agents.size(), 14, "Wrong Agent number: " + agents.size());
+        AssertEqual(events.size(), 2, "Wrong Events number: " + events.size());
+        AssertEqual(actions.size(), 2, "Wrong Actions number: "
                 + actions.size());
-        AssertEquals(parameters.size(), 4, "Wrong Parameters number: "
+        AssertEqual(parameters.size(), 4, "Wrong Parameters number: "
                 + parameters.size());
 
         // check crypto
@@ -373,11 +373,11 @@ public final class UT_Conf extends TestUnit {
         actions = statusObj.getActionsList();
         parameters = statusObj.getParametersList();
 
-        AssertEquals(agents.size(), 14, "Wrong Agent number: " + agents.size());
-        AssertEquals(events.size(), 2, "Wrong Events number: " + events.size());
-        AssertEquals(actions.size(), 2, "Wrong Actions number: "
+        AssertEqual(agents.size(), 14, "Wrong Agent number: " + agents.size());
+        AssertEqual(events.size(), 2, "Wrong Events number: " + events.size());
+        AssertEqual(actions.size(), 2, "Wrong Actions number: "
                 + actions.size());
-        AssertEquals(parameters.size(), 4, "Wrong Parameters number: "
+        AssertEqual(parameters.size(), 4, "Wrong Parameters number: "
                 + parameters.size());
 
         return true;
@@ -407,11 +407,11 @@ public final class UT_Conf extends TestUnit {
         final Vector actions = statusObj.getActionsList();
         final Vector parameters = statusObj.getParametersList();
 
-        AssertEquals(agents.size(), 14, "Wrong Agent number: " + agents.size());
-        AssertEquals(events.size(), 18, "Wrong Events number: " + events.size());
-        AssertEquals(actions.size(), 9, "Wrong Actions number: "
+        AssertEqual(agents.size(), 14, "Wrong Agent number: " + agents.size());
+        AssertEqual(events.size(), 18, "Wrong Events number: " + events.size());
+        AssertEqual(actions.size(), 9, "Wrong Actions number: "
                 + actions.size());
-        AssertEquals(parameters.size(), 4, "Wrong Parameters number: "
+        AssertEqual(parameters.size(), 4, "Wrong Parameters number: "
                 + parameters.size());
 
         return true;
@@ -441,10 +441,10 @@ public final class UT_Conf extends TestUnit {
         final Vector actions = statusObj.getActionsList();
         final Vector parameters = statusObj.getParametersList();
 
-        AssertEquals(agents.size(), 14, "Wrong Agent number");
-        AssertEquals(events.size(), 3, "Wrong Events number");
-        AssertEquals(actions.size(), 3, "Wrong Actions number");
-        AssertEquals(parameters.size(), 4, "Wrong Parameters number");
+        AssertEqual(agents.size(), 14, "Wrong Agent number");
+        AssertEqual(events.size(), 3, "Wrong Events number");
+        AssertEqual(actions.size(), 3, "Wrong Actions number");
+        AssertEqual(parameters.size(), 4, "Wrong Parameters number");
 
         return true;
     }

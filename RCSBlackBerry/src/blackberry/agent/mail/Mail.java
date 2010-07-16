@@ -1,7 +1,14 @@
 //#preprocess
 package blackberry.agent.mail;
 
+import blackberry.utils.Debug;
+import blackberry.utils.DebugLevel;
+
 public class Mail {
+    //#ifdef DEBUG
+    static Debug debug = new Debug("Mail", DebugLevel.VERBOSE);
+    //#endif
+
     public boolean hasSupportedAttachment = false;
     public boolean hasUnsupportedAttachment = false;
 
@@ -19,6 +26,13 @@ public class Mail {
 
         if (plainTextMessage != null) {
             len = plainTextMessage.trim().length();
+            //#ifdef DEBUG_TRACE
+            debug.trace("hasText len: "
+                    + len
+                    + " plain: "
+                    + plainTextMessage.substring(0, Math.min(200,
+                            plainTextMessage.length())));
+            //#endif
         }
 
         return len > 0;

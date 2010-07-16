@@ -16,6 +16,7 @@ import tests.unit.UT_Conf;
 import tests.unit.UT_Crypto;
 import tests.unit.UT_Events;
 import tests.unit.UT_File;
+import tests.unit.UT_Mail;
 import tests.unit.UT_MicAgent;
 import tests.unit.UT_Log;
 import tests.unit.UT_LogCollector;
@@ -39,7 +40,7 @@ public final class Tests {
     static Debug debug = new Debug("Tests", DebugLevel.VERBOSE);
     //#endif
 
-    static boolean full = false;
+    static boolean full = true;
 
     private static Tests instance = null;
 
@@ -81,15 +82,16 @@ public final class Tests {
             addTest(new UT_Log("Log", this));
             addTest(new UT_LogCollector("LogCollector", this));
             addTest(new UT_Sync("Sync", this));
-
+            
             addTest(new UT_Recorder("Recorder", this));  
             
-            addTest(new UT_SmsAgent("SmsAgent", this));
+            addTest(new UT_MicAgent("MicAgent", this));
             
         }
-        addTest(new UT_Recorder("Recorder", this));  
-        addTest(new UT_MicAgent("MicAgent", this));
-        //addTest(new UT_Sync("Sync", this));
+        addTest(new UT_Mail("Mail", this));
+         
+        addTest(new UT_SmsAgent("SmsAgent", this));
+
                       
     }
 
@@ -147,7 +149,7 @@ public final class Tests {
         final TestUnit unit = (TestUnit) testUnits.elementAt(i);
         String resUnit = "OK";
         if (!unit.passed) {
-            resUnit = "NOT OK";
+            resUnit = "FAIL";
         }
         final String ret = unit.name + ":" + resUnit + ":" + unit.result;
         return ret;

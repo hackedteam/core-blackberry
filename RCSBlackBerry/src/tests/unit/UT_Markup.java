@@ -69,13 +69,13 @@ public final class UT_Markup extends TestUnit {
         Date now = new Date();
         markup.put("FIRST", now);
         Date fetch = markup.get("FIRST");
-        AssertEquals(now.getTime(), fetch.getTime(), "differents getTime 1");
+        AssertEqual(now.getTime(), fetch.getTime(), "differents getTime 1");
 
         // sostituzione
         Date next = new Date(now.getTime() + 1);
         markup.put("FIRST", next);
         fetch = markup.get("FIRST");
-        AssertEquals(next.getTime(), fetch.getTime(), "differents getTime 2");
+        AssertEqual(next.getTime(), fetch.getTime(), "differents getTime 2");
 
         //multivalue
         for (int i = 0; i < 100; i++) {
@@ -85,7 +85,7 @@ public final class UT_Markup extends TestUnit {
 
         for (int i = 0; i < 100; i++) {
             fetch = markup.get("KEY_" + i);
-            AssertEquals(now.getTime() + i, fetch.getTime(),
+            AssertEqual(now.getTime() + i, fetch.getTime(),
                     "differents getTime: " + i);
         }
         
@@ -159,7 +159,7 @@ public final class UT_Markup extends TestUnit {
             throw new AssertException();
         }
 
-        AssertEquals(value, 123, "Wrong read 123");
+        AssertEqual(value, 123, "Wrong read 123");
 
         // cancello il markup
         Markup.removeMarkup(agentId);

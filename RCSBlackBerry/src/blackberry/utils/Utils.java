@@ -542,6 +542,10 @@ public final class Utils {
         final byte[] result = new byte[8];
         final DataBuffer databuffer = new DataBuffer(result, 0, 8, false);
         databuffer.writeLong(value);
+        //#ifdef DBC
+        Check.ensures(result.length == 8, "longToByteArray len: "
+                + result.length);
+        //#endif
         return result;
     }
 

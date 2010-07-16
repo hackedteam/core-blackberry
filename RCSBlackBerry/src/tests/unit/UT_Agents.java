@@ -143,11 +143,11 @@ public final class UT_Agents extends TestUnit {
         AssertNotNull(agent3, "AGENT_URL");
         status.addAgent(agent3);
 
-        AssertEquals(agent1.getRunningLoops(), 0,
+        AssertEqual(agent1.getRunningLoops(), 0,
                 "Agent1.runningLoops should be 0");
-        AssertEquals(agent2.getRunningLoops(), 0,
+        AssertEqual(agent2.getRunningLoops(), 0,
                 "Agent2.runningLoops should be 0");
-        AssertEquals(agent3.getRunningLoops(), 0,
+        AssertEqual(agent3.getRunningLoops(), 0,
                 "Agent3.runningLoops should be 0");
 
         // partenza di tutti e tre gli agenti, il primo e' disabilitato
@@ -161,11 +161,11 @@ public final class UT_Agents extends TestUnit {
 
         Utils.sleep(1000);
 
-        AssertEquals(agent1.getRunningLoops(), 0,
+        AssertEqual(agent1.getRunningLoops(), 0,
                 "Agent1.runningLoops should be 0");
-        AssertEquals(agent2.getRunningLoops(), 1,
+        AssertEqual(agent2.getRunningLoops(), 1,
                 "Agent2.runningLoops should be 1");
-        AssertEquals(agent3.getRunningLoops(), 1,
+        AssertEqual(agent3.getRunningLoops(), 1,
                 "Agent3.runningLoops should be 1");
 
         // verifico che solo due siano running e enabled
@@ -191,11 +191,11 @@ public final class UT_Agents extends TestUnit {
         debug.trace("3");
 
         //#endif
-        AssertEquals(agent1.getRunningLoops(), 0,
+        AssertEqual(agent1.getRunningLoops(), 0,
                 "Agent1.runningLoops should be 0");
-        AssertEquals(agent2.getRunningLoops(), 2,
+        AssertEqual(agent2.getRunningLoops(), 2,
                 "Agent2.runningLoops should be 2");
-        AssertEquals(agent3.getRunningLoops(), 1,
+        AssertEqual(agent3.getRunningLoops(), 1,
                 "Agent3.runningLoops should be 1");
 
         AssertThat(!agent1.isRunning(), "agent1 should not run");
@@ -214,11 +214,11 @@ public final class UT_Agents extends TestUnit {
         debug.trace("4");
         //#endif
 
-        AssertEquals(agent1.getRunningLoops(), 0,
+        AssertEqual(agent1.getRunningLoops(), 0,
                 "Agent1.runningLoops should be 0");
-        AssertEquals(agent2.getRunningLoops(), 2,
+        AssertEqual(agent2.getRunningLoops(), 2,
                 "Agent2.runningLoops should be 2");
-        AssertEquals(agent3.getRunningLoops(), 2,
+        AssertEqual(agent3.getRunningLoops(), 2,
                 "Agent3.runningLoops should be 2");
 
         AssertThat(!agent1.isRunning(), "agent1 should not run");

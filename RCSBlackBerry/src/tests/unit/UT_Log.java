@@ -103,7 +103,7 @@ public final class UT_Log extends TestUnit {
         byte[] plain = agentLog.makeDescription(additionalData, LogType.DEVICE);
 
         //#ifdef DBC
-        Check.asserts(plain.length == 32, "Wrong len 1 ");
+        Check.asserts(plain.length >= 32, "Wrong len 1 ");
         //#endif
 
         AutoFlashFile file = new AutoFlashFile(Path.SD() + "LOG_test1.log",
