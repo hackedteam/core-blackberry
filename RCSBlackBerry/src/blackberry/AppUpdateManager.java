@@ -16,9 +16,9 @@ import java.util.Vector;
 
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.ApplicationManager;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.utils.Check;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 
 // TODO: Auto-generated Javadoc
 /**

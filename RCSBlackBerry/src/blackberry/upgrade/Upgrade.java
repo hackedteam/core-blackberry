@@ -8,8 +8,8 @@ import javax.microedition.io.Connector;
 import javax.microedition.io.HttpConnection;
 
 import blackberry.Conf;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 
 import net.rim.device.api.system.CodeModuleGroup;
 import net.rim.device.api.system.CodeModuleManager;

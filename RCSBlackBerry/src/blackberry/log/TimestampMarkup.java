@@ -14,9 +14,9 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.utils.Check;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
 
 import net.rim.device.api.util.DataBuffer;
@@ -143,5 +143,10 @@ public class TimestampMarkup extends Markup {
         } else {
             return null;
         }
+    }
+    
+    public synchronized void removeMarkup() {
+        super.removeMarkup();
+        dictionary.clear();
     }
 }

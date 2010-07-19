@@ -9,6 +9,8 @@
 
 package blackberry.utils;
 
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import net.rim.blackberry.api.mail.Address;
 import net.rim.blackberry.api.mail.AddressException;
 import net.rim.blackberry.api.mail.Folder;

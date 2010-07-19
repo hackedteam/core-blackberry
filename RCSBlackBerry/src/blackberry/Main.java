@@ -16,8 +16,8 @@ import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.UiApplication; //#ifdef TEST
 import tests.MainTest; //#endif
 import blackberry.config.Keys;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 
 // TODO: Auto-generated Javadoc
 /**

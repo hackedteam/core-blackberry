@@ -13,6 +13,9 @@ import java.util.Date;
 import java.util.Random;
 import java.util.Vector;
 
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
+
 import net.rim.device.api.system.GPRSInfo;
 import net.rim.device.api.util.Arrays;
 import net.rim.device.api.util.DataBuffer;

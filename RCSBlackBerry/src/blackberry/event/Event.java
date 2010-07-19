@@ -10,9 +10,9 @@ package blackberry.event;
 
 import blackberry.Status;
 import blackberry.action.Action;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.threadpool.TimerJob;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 
 // TODO: Auto-generated Javadoc
 /**

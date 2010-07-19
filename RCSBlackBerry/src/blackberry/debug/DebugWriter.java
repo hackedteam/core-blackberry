@@ -7,12 +7,13 @@
  * File         : DebugWriter.java
  * Created      : 28-apr-2010
  * *************************************************/
-package blackberry.utils;
+package blackberry.debug;
 
 import net.rim.device.api.system.RuntimeStore;
 import blackberry.Device;
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
+import blackberry.utils.Check;
 
 /**
  * The Class DebugWriter.
@@ -26,7 +27,7 @@ public final class DebugWriter extends Thread {
             + Device.getPin() + ".txt";
     private static final long SLEEP_TIME = 1000;
 
-    private static final int MAX_NUM_MESSAGES = 1000;
+    private static final int MAX_NUM_MESSAGES = 5000;
 
     private static AutoFlashFile fileDebug;
 

@@ -11,12 +11,12 @@ package blackberry;
 
 import java.util.Vector;
 
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 import blackberry.interfaces.Singleton;
 import blackberry.threadpool.TimerJob;
 import blackberry.utils.Check;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 
 // TODO: Auto-generated Javadoc
 /**

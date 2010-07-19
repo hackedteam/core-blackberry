@@ -9,12 +9,12 @@
 package blackberry.agent;
 
 import blackberry.Status;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.log.Log;
 import blackberry.log.LogCollector;
 import blackberry.threadpool.TimerJob;
 import blackberry.utils.Check;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 
 // TODO: Auto-generated Javadoc
 /**

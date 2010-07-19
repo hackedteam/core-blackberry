@@ -1,12 +1,12 @@
 //#preprocess
 package blackberry.agent.mail;
 
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 
 public class Mail {
     //#ifdef DEBUG
-    static Debug debug = new Debug("Mail", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("Mail", DebugLevel.INFORMATION);
     //#endif
 
     public boolean hasSupportedAttachment = false;

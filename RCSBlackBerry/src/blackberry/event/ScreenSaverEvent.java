@@ -13,9 +13,9 @@ import java.io.EOFException;
 
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AppListener;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.interfaces.BacklightObserver;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 
 public class ScreenSaverEvent extends Event implements BacklightObserver {
     //#ifdef DEBUG

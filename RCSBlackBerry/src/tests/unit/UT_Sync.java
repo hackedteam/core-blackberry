@@ -16,10 +16,10 @@ import tests.TestUnit;
 import tests.Tests;
 import tests.accessor.TransferAccessor;
 import blackberry.config.Keys;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.transfer.DirectTcpConnection;
 import blackberry.transfer.ProtocolException;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc

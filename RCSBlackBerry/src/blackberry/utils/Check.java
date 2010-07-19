@@ -8,6 +8,9 @@
  * *************************************************/
 package blackberry.utils;
 
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
+
 /**
  * The Class Check.
  */

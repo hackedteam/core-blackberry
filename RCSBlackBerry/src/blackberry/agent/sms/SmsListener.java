@@ -17,11 +17,11 @@ import net.rim.blackberry.api.phone.Phone;
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.agent.MessageAgent;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.log.LogType;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 

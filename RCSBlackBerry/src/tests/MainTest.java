@@ -14,8 +14,8 @@ import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.ApplicationManager;
 import net.rim.device.api.system.ApplicationManagerException;
 import net.rim.device.api.system.CodeModuleManager;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc

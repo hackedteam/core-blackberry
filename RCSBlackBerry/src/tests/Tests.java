@@ -28,8 +28,8 @@ import tests.unit.UT_SmsAgent;
 import tests.unit.UT_Sync;
 import tests.unit.UT_TimerThread;
 import tests.unit.UT_Utils;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 
 // TODO: Auto-generated Javadoc
 /**

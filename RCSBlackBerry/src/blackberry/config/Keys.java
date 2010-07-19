@@ -11,9 +11,9 @@ package blackberry.config;
 import net.rim.device.api.system.GPRSInfo;
 import blackberry.Device;
 import blackberry.crypto.Encryption;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.interfaces.Singleton;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc

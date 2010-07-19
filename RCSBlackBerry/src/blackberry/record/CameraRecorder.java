@@ -23,8 +23,8 @@ import javax.microedition.media.control.RecordControl;
 
 import blackberry.AppListener;
 import blackberry.Main;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 
 public class CameraRecorder extends MainScreen {
     //#ifdef DEBUG

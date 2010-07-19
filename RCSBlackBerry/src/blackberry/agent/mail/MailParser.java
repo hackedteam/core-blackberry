@@ -14,9 +14,9 @@ import net.rim.blackberry.api.mail.Transport;
 import net.rim.blackberry.api.mail.UnsupportedAttachmentPart;
 import net.rim.blackberry.api.mail.BodyPart.ContentType;
 import blackberry.Conf;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.utils.Check;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 
 public class MailParser {
     //#ifdef DEBUG
@@ -44,7 +44,7 @@ public class MailParser {
             //#ifdef DEBUG_WARN
             debug.warn("Forcing bodytext");
             //#endif
-            mail.plainTextMessageContentType = "text/plain; charset=UTF-8";
+            mail.plainTextMessageContentType = "text/plain; charset=UTF-8\r\n\r\n";
             mail.plainTextMessage = message.getBodyText();
         }
         return mail;

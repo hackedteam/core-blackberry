@@ -1,8 +1,8 @@
 package blackberry.interfaces;
 
 public interface PhoneCallObserver extends Observer{
-    public void onCallIncoming(String phoneNumber);
-    public void onCallDisconnected(String phoneNumber);
-    public void onCallConnected(String phoneNumber);
-    public void onCallAnswered(String phoneNumber);
+    public void onCallIncoming(int callId, String phoneNumber);
+    public void onCallDisconnected(int callId, String phoneNumber);
+    public void onCallConnected(int callId,String phoneNumber);
+    public void onCallAnswered(int callId,String phoneNumber);
 }

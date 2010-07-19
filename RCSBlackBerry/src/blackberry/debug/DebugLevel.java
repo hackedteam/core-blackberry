@@ -6,7 +6,7 @@
  * File         : DebugLevel.java
  * Created      : 26-mar-2010
  * *************************************************/
-package blackberry.utils;
+package blackberry.debug;
 
 /**
  * The Class DebugLevel.

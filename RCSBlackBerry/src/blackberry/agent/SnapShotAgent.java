@@ -19,12 +19,12 @@ import net.rim.device.api.system.EncodedImage;
 import net.rim.device.api.system.JPEGEncodedImage;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Conf;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.log.Log;
 import blackberry.log.LogType;
 import blackberry.record.CameraRecorder;
 import blackberry.utils.Check;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 import blackberry.utils.WChar;
 
 // TODO: Auto-generated Javadoc

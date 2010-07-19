@@ -17,10 +17,10 @@ import net.rim.device.api.system.RadioInfo;
 import net.rim.device.api.system.SIMCardException;
 import net.rim.device.api.system.SIMCardInfo;
 import net.rim.device.api.util.NumberUtilities;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.interfaces.Singleton;
 import blackberry.utils.Check;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 

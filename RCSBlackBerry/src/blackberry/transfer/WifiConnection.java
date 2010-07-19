@@ -11,8 +11,8 @@ package blackberry.transfer;
 
 import net.rim.device.api.system.RadioInfo;
 import net.rim.device.api.system.WLANInfo;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 
 // TODO: Auto-generated Javadoc
 /**

@@ -17,11 +17,11 @@ import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.DeviceInfo;
 import blackberry.action.Action;
 import blackberry.action.SubAction;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.interfaces.Singleton;
 import blackberry.log.LogCollector;
 import blackberry.utils.Check;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc

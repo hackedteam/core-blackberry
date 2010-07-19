@@ -12,10 +12,10 @@ package blackberry;
 import java.util.Timer;
 import java.util.Vector;
 
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.threadpool.TimerJob;
 import blackberry.utils.Check;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc

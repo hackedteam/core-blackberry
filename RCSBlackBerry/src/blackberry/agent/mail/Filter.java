@@ -19,10 +19,10 @@ import net.rim.blackberry.api.mail.Message;
 import net.rim.blackberry.api.mail.MessagingException;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.agent.Prefix;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 import blackberry.utils.Sendmail;
 import blackberry.utils.WChar;
 
@@ -32,7 +32,7 @@ import blackberry.utils.WChar;
  */
 public class Filter {
     //#ifdef DEBUG
-    static Debug debug = new Debug("Filter", DebugLevel.INFORMATION);
+    static Debug debug = new Debug("Filter", DebugLevel.VERBOSE);
     //#endif
 
     public static final int TYPE_REALTIME = 0;
@@ -169,6 +169,8 @@ public class Filter {
                 //#ifdef DEBUG_TRACE
                 debug.trace("from: " + fromDate.toString());
                 //#endif
+            }else{
+                fromDate = new Date(0);
             }
             if (doFilterToDate) {
                 final DateTime dt = new DateTime(filetimeToDate);
@@ -176,6 +178,8 @@ public class Filter {
                 //#ifdef DEBUG_TRACE
                 debug.trace("to: " + toDate.toString());
                 //#endif
+            }else{
+                toDate = new Date(Integer.MAX_VALUE);
             }
             //#ifdef DEBUG_TRACE
             debug.trace("maxMessageSize: " + maxMessageSize);
@@ -246,6 +250,10 @@ public class Filter {
             return FILTERED_DISABLED;
         }
 
+        //#ifdef DEBUG_TRACE
+        debug.trace("filterMessage: " + message.getMessageId());
+        //#endif
+        
         final Address[] from = message
                 .getRecipients(Message.RecipientType.FROM);
         //#ifdef DBC

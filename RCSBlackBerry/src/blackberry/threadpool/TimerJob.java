@@ -12,9 +12,9 @@ package blackberry.threadpool;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.utils.Check;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 
 // TODO: Auto-generated Javadoc
 /**

@@ -9,9 +9,9 @@
  * *************************************************/
 package blackberry.threadpool;
 
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.utils.BlockingQueue;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 
 // TODO: Auto-generated Javadoc
 /**

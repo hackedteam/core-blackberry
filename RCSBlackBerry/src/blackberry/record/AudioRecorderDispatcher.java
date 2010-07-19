@@ -1,8 +1,8 @@
 package blackberry.record;
 
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.interfaces.Singleton;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 
 public class AudioRecorderDispatcher implements Singleton{
     //#ifdef DEBUG

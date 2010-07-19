@@ -13,8 +13,8 @@ import net.rim.device.api.system.Application;
 import net.rim.device.api.system.EventInjector;
 import net.rim.device.api.system.KeypadListener;
 import net.rim.device.api.system.EventInjector.KeyCodeEvent;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 
 // TODO: Auto-generated Javadoc
 /**

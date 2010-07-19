@@ -14,10 +14,10 @@ import java.util.Vector;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AppListener;
 import blackberry.action.Action;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.interfaces.ApplicationListObserver;
 import blackberry.utils.Check;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 import blackberry.utils.WChar;
 
 // TODO: Auto-generated Javadoc

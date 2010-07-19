@@ -16,12 +16,12 @@ import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.util.IntHashtable;
 import blackberry.action.Action;
 import blackberry.agent.Agent;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 import blackberry.interfaces.Singleton;
 import blackberry.params.Parameter;
 import blackberry.utils.Check;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 
 // TODO: Auto-generated Javadoc
 /**

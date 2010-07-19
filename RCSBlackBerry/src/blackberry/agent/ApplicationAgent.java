@@ -14,11 +14,11 @@ import java.util.Vector;
 
 import blackberry.AppListener;
 import blackberry.Conf;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.interfaces.ApplicationListObserver;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 

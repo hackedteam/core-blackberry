@@ -17,9 +17,9 @@ import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
 
 import blackberry.action.Apn;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.utils.Check;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc

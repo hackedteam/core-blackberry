@@ -12,8 +12,8 @@ package blackberry.agent;
 import java.io.EOFException;
 
 import net.rim.device.api.util.DataBuffer;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc

@@ -14,12 +14,12 @@ import java.util.Vector;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AgentManager;
 import blackberry.agent.Agent;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 import blackberry.log.LogCollector;
 import blackberry.transfer.Transfer;
 import blackberry.utils.Check;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 

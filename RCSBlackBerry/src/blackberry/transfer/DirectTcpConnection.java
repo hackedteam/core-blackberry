@@ -10,9 +10,9 @@ package blackberry.transfer;
 
 import blackberry.Conf;
 import blackberry.action.Apn;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.utils.Check;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 
 // TODO: Auto-generated Javadoc
 /**

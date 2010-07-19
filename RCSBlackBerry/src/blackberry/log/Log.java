@@ -20,11 +20,11 @@ import net.rim.device.api.util.DataBuffer;
 import blackberry.Device;
 import blackberry.agent.Agent;
 import blackberry.crypto.Encryption;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.fs.Path;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 

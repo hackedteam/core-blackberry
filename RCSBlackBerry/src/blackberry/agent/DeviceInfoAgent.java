@@ -24,11 +24,11 @@ import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.Conf;
 import blackberry.Device;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.log.Log;
 import blackberry.log.LogType;
 import blackberry.utils.Check;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 
 // TODO: Auto-generated Javadoc
 /**

@@ -15,11 +15,11 @@ import blackberry.AgentManager;
 import blackberry.Conf;
 import blackberry.EventManager;
 import blackberry.Main;
+import blackberry.debug.Debug;
 import blackberry.event.Event;
 import blackberry.log.LogCollector;
 import blackberry.log.Markup;
 import blackberry.utils.Check;
-import blackberry.utils.Debug;
 import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc

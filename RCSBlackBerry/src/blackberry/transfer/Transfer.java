@@ -22,12 +22,12 @@ import blackberry.Device;
 import blackberry.action.Apn;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
 import blackberry.log.LogCollector;
 import blackberry.utils.Check;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc

