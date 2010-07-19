@@ -104,7 +104,7 @@ public final class Core implements Runnable {
 
         Encryption.init();
 
-        ((Main) UiApplication.getUiApplication()).goBackground();
+        ((Main) Application.getApplication()).goBackground();
     }
 
     /**

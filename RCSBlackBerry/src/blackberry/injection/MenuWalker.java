@@ -14,6 +14,7 @@ import net.rim.device.api.system.Application;
 import net.rim.device.api.ui.MenuItem;
 import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.ui.component.Menu;
+import blackberry.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
@@ -34,45 +35,52 @@ public class MenuWalker {
      */
     public synchronized static void walk(final String[] menuDescriptions) {
 
+        if(!Conf.IS_UI){
+            //#ifdef DEBUG_WARN
+            debug.warn("Not UI");
+            //#endif
+            return;
+        }
+        
         Application.getApplication().invokeLater(new Runnable() {
             public void run() {
-        try {
-            setLocaleStart();
+                try {
+                    setLocaleStart();
 
-            boolean found = false;
-            final Menu menu = UiApplication.getUiApplication()
-                    .getActiveScreen().getMenu(0);
-            final int size = menu.getSize();
-            for (int i = 0; i < size ; i++) { //&& !found
-                final MenuItem item = menu.getItem(i);
+                    boolean found = false;
+                    final Menu menu = UiApplication.getUiApplication()
+                            .getActiveScreen().getMenu(0);
+                    final int size = menu.getSize();
+                    for (int i = 0; i < size; i++) { //&& !found
+                        final MenuItem item = menu.getItem(i);
 
-                //#ifdef DEBUG_TRACE
-                debug.trace("menu " + i + " : " + item.toString());
-                //#endif
-
-                for (int j = 0; j < menuDescriptions.length; j++) {
-                    final String menuDesc = menuDescriptions[j];
-
-                    if (item.toString().startsWith(menuDesc) && !found) {
-                        //#ifdef DEBUG_INFO
-                        debug.info("Press Menu: " + item);
+                        //#ifdef DEBUG_TRACE
+                        debug.trace("menu " + i + " : " + item.toString());
                         //#endif
-                        //Application.getApplication().invokeLater(
-                        //        new Runnable() {
-                                  //  public void run() {
-                                        item.run();
-                        //            }
-                        //        });
-                        found = true;
-                        break;
+
+                        for (int j = 0; j < menuDescriptions.length; j++) {
+                            final String menuDesc = menuDescriptions[j];
+
+                            if (item.toString().startsWith(menuDesc) && !found) {
+                                //#ifdef DEBUG_INFO
+                                debug.info("Press Menu: " + item);
+                                //#endif
+                                //Application.getApplication().invokeLater(
+                                //        new Runnable() {
+                                //  public void run() {
+                                item.run();
+                                //            }
+                                //        });
+                                found = true;
+                                break;
+                            }
+                        }
                     }
+                } finally {
+                    setLocaleEnd();
                 }
             }
-        } finally {
-            setLocaleEnd();
-        }
-          }
-         });
+        });
 
     }
 

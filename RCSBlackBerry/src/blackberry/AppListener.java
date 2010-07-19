@@ -10,6 +10,7 @@
 
 package blackberry;
 
+import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.microedition.lcdui.Image;
@@ -617,6 +618,10 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
             }
         }
 
+        synchronized (callingHistory) {
+            callingHistory.put(new Integer(callId), phoneNumber);
+        }
+
     }
 
     public void callConnected(int callId) {
@@ -673,6 +678,8 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
 
     }
 
+    Hashtable callingHistory = new Hashtable();
+
     public void callDisconnected(int callId) {
         init();
         boolean outgoing = false;
@@ -682,15 +689,25 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
 
         PhoneCall phoneCall = Phone.getCall(callId);
         String phoneNumber = null;
-        
+
         if (phoneCall != null) {
 
             phoneNumber = phoneCall.getDisplayPhoneNumber();
             outgoing = phoneCall.isOutgoing();
 
         } else {
+           
+
+            synchronized (callingHistory) {
+                if (callingHistory.containsKey(new Integer(callId))) {
+                    phoneNumber = (String) callingHistory.get(new Integer(
+                            callId));
+                    callingHistory.remove(new Integer(callId));
+                }
+            }
+            
             //#ifdef DEBUG_TRACE
-            debug.trace("callDisconnected: null phoneCall");
+            debug.trace("callDisconnected phoneNumber: " + phoneNumber);
             //#endif
         }
 
@@ -723,28 +740,55 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
             PhoneCallLog phoneCallLog = (PhoneCallLog) callLog;
             PhoneCallLogID logID = phoneCallLog.getParticipant();
             //#ifdef DEBUG_TRACE
-            //debug.trace("date: " + callLog.getDate() + " number: "
-            //        + logID.getNumber());
+            debug.trace("date: " + callLog.getDate() + " number: "
+                    + logID.getNumber());
             //#endif 
-        }
-
-        int num = phoneLogs.numberOfCalls(PhoneLogs.FOLDER_NORMAL_CALLS);
-        for (int i = 0; i < num; i++) {
-            CallLog log = phoneLogs.callAt(i, PhoneLogs.FOLDER_NORMAL_CALLS);
-
-            if (callLog.getDate().getTime() == log.getDate().getTime()) {
-                //#ifdef DEBUG_TRACE
-                debug.trace("deleting date: " + log.getDate());
-                //#endif 
-                phoneLogs.deleteCall(i, PhoneLogs.FOLDER_NORMAL_CALLS);
-                break;
+            
+            int type= phoneCallLog.getType();
+            int status = callLog.getStatus();
+            
+            String phoneNumber = "";
+            String phoneName = "";
+            PhoneCallLogID partecipant =  phoneCallLog.getParticipant();
+            if(partecipant!=null){
+                phoneNumber=partecipant.getNumber();
+                phoneName= partecipant.getName();
             }
-        }
+            
+            //#ifdef DEBUG_INFO
+            debug.info("number: " + phoneNumber + " type: " + type + " status: "+status);
+            //#endif
+            
+            boolean outgoing=false;
+            boolean missed=false;
+            
+            if(type == PhoneCallLog.TYPE_PLACED_CALL){
+                outgoing = true;                
+            }else if(type == PhoneCallLog.TYPE_RECEIVED_CALL){
+                outgoing = false;                
+            }
+            
+            if(type == PhoneCallLog.TYPE_MISSED_CALL_OPENED ||  type == PhoneCallLog.TYPE_MISSED_CALL_UNOPENED){
+                outgoing = true;
+                missed = true;
+            }
 
-        int newnum = phoneLogs.numberOfCalls(PhoneLogs.FOLDER_NORMAL_CALLS);
-        //#ifdef DEBUG_TRACE
-        //debug.trace("num: " + num + " after delete:" + newnum);
-        //#endif
+            final int size = callListObservers.size();
+            for (int i = 0; i < size; i++) {
+
+                final CallListObserver observer = (CallListObserver) callListObservers
+                        .elementAt(i);
+                //#ifdef DEBUG_TRACE
+                debug.trace("notify: " + observer);
+                //#endif
+
+                observer.callLogAdded(
+                        phoneNumber, phoneName, callLog
+                                .getDate(), phoneCallLog.getDuration(), outgoing, missed);
+
+            }
+
+        }
 
     }
 

