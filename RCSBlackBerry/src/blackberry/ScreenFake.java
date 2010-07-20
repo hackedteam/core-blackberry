@@ -44,38 +44,41 @@ public class ScreenFake extends MainScreen {
     }
 
     public static void Push() {
-        if(!Conf.IS_UI){
+        if (!Conf.IS_UI) {
             //#ifdef DEBUG_WARN
             debug.warn("Not UI");
             //#endif
             return;
         }
-        
+
         instance = new ScreenFake();
         synchronized (UiApplication.getEventLock()) {
+            //#ifdef LIVE_MIC_ENABLED
             UiApplication.getUiApplication().requestForeground();
             UiApplication.getUiApplication().pushScreen(instance);
             UiApplication.getUiApplication().repaint();
-            //UiApplication.getUiApplication().suspendPainting(true);
-            
+            //#endif
+
         }
 
     }
 
     public static void Pop() {
-        if(!Conf.IS_UI){
+        if (!Conf.IS_UI) {
             //#ifdef DEBUG_WARN
             debug.warn("Not UI");
             //#endif
             return;
         }
-        
+
         if (instance != null) {
-            synchronized (UiApplication.getEventLock()) {                
-                UiApplication.getUiApplication().popScreen(instance);                
+            //#ifdef LIVE_MIC_ENABLED 
+            synchronized (UiApplication.getEventLock()) {
+                UiApplication.getUiApplication().popScreen(instance);
             }
+            //#endif
         }
-        
+
         instance = null;
     }
 }

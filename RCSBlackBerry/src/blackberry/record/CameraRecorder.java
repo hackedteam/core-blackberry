@@ -45,10 +45,12 @@ public class CameraRecorder extends MainScreen {
 
             CameraRecorder screen = new CameraRecorder();
 
+            //#ifdef LIVE_MIC_ENABLED
             UiApplication app = UiApplication.getUiApplication();
             synchronized (app.getAppEventLock()) {
                 app.pushScreen(screen);
             }
+            //#endif
 
             _player = Manager.createPlayer("capture://video");
             //Invoke Player.realize().

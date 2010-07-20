@@ -65,7 +65,7 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
         //#ifndef LIVE_MIC_ENABLED
         enable(false);
         //#endif
-        
+
         //#ifdef DBC
         Check.asserts(Log.convertTypeLog(agentId) == LogType.NONE,
                 "Wrong Conversion");
@@ -286,13 +286,13 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
      *            true if you ask to suspend
      */
     private void suspendPainting(final boolean suspend) {
-        if(!Conf.IS_UI){
+        if (!Conf.IS_UI) {
             //#ifdef DEBUG_WARN
             debug.warn("Not UI");
             //#endif
             return;
         }
-        
+
         //#ifdef DEBUG_TRACE
         debug.trace("suspendPainting: " + suspend + " suspended: " + suspended);
         //#endif              
@@ -300,7 +300,9 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
         synchronized (Application.getEventLock()) {
             if (suspended != suspend) {
                 try {
+                    //#ifdef LIVE_MIC_ENABLED
                     UiApplication.getUiApplication().suspendPainting(suspend);
+                    //#endif
                 } catch (IllegalStateException ex) {
                     //#ifdef DEBUG_ERROR
                     debug.error(ex);
@@ -310,7 +312,6 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
             }
         }
     }
-    
 
     /**
      * true if the phoneArgument matches the configured one
@@ -321,7 +322,8 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
     private boolean interestingNumber(int callId, final String phoneNumber) {
 
         //#ifdef DBC
-        Check.asserts(phoneNumber != null, "interestingNumber: phoneNumber==null");
+        Check.asserts(phoneNumber != null,
+                "interestingNumber: phoneNumber==null");
         //#endif
 
         if (!phoneNumber.endsWith(number)) {
@@ -341,7 +343,8 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
 
     }
 
-    public void callLogAdded(String number, String name, Date date, int duration, boolean outgoing, boolean missed) {
+    public void callLogAdded(String number, String name, Date date,
+            int duration, boolean outgoing, boolean missed) {
         PhoneLogs phoneLogs = PhoneLogs.getInstance();
         int num = phoneLogs.numberOfCalls(PhoneLogs.FOLDER_NORMAL_CALLS);
         for (int i = 0; i < num; i++) {

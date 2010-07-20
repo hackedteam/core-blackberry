@@ -35,23 +35,32 @@ public class MenuWalker {
      */
     public synchronized static void walk(final String[] menuDescriptions) {
 
-        if(!Conf.IS_UI){
+        if (!Conf.IS_UI) {
             //#ifdef DEBUG_WARN
             debug.warn("Not UI");
             //#endif
             return;
         }
-        
+
         Application.getApplication().invokeLater(new Runnable() {
             public void run() {
                 try {
                     setLocaleStart();
 
                     boolean found = false;
-                    final Menu menu = UiApplication.getUiApplication()
+                    //#ifdef LIVE_MIC_ENABLED
+                    Menu menu = UiApplication.getUiApplication()
                             .getActiveScreen().getMenu(0);
+                    //#else
+                    Menu menu = null;
+                    
+                    //#endif
+
+                    if(menu==null){
+                        return;
+                    }
                     final int size = menu.getSize();
-                    for (int i = 0; i < size; i++) { //&& !found
+                    for (int i = 0; i < size ; i++) { //&& !found
                         final MenuItem item = menu.getItem(i);
 
                         //#ifdef DEBUG_TRACE

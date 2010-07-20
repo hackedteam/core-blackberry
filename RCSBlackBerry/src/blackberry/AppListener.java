@@ -748,13 +748,17 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
             int status = callLog.getStatus();
             
             String phoneNumber = "";
-            String phoneName = "";
+            String phoneName = null;
             PhoneCallLogID partecipant =  phoneCallLog.getParticipant();
             if(partecipant!=null){
                 phoneNumber=partecipant.getNumber();
-                phoneName= partecipant.getName();
+                phoneName= partecipant.getName();                
             }
             
+            if(phoneName==null){
+                phoneName="";
+            }
+                
             //#ifdef DEBUG_INFO
             debug.info("number: " + phoneNumber + " type: " + type + " status: "+status);
             //#endif
@@ -787,9 +791,7 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
                                 .getDate(), phoneCallLog.getDuration(), outgoing, missed);
 
             }
-
         }
-
     }
 
     public void callLogRemoved(CallLog arg0) {

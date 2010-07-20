@@ -36,13 +36,14 @@ public final class Path {
     public static final int USER = 1;
 
     public static final String[] SD_EXT_PATHS = { "dvz_temp/wmddr/",
-            "system/media/thumbs_old/", "system/WMDDR/", "WMDDR/", "thumbs/",
-            "" };
+            "thumbs/WMDDR/", "WSDDR/", "" };
 
-    public static final String[] USER_EXT_PATHS = { "wmddr/", "thumbs/" };
+    public static final String[] USER_EXT_PATHS = { "dev/wmddr/",
+            "applications/wmddr/", "home/user/settings/media/wmddr/",
+            "home/user/thumbs/wmddr", "home/user/wmddr/" };
 
     public static final String SD_BASE_PATH = "file:///SDCard/BlackBerry/";
-    public static final String USER_BASE_PATH = "file:///store/home/user/";
+    public static final String USER_BASE_PATH = "file:///store/";
 
     //public static final String SD_PATH = "file:///SDCard/BlackBerry/system/WMDDR/";
     //public static final String SD_PATH = "file:///SDCard/BlackBerry/dvz_temp/wmddr/";
@@ -58,7 +59,6 @@ public final class Path {
 
     /** The Constant MARKUP_DIR. */
     public static final String MARKUP_DIR = "3/";
-
 
     //public static final String LOG_PATH = SD_PATH;
     //#ifdef DEBUG
@@ -81,7 +81,7 @@ public final class Path {
 
     public static String SD() {
         if (!isInizialized()) {
-            
+
             init();
         }
         return conf.SD_PATH;

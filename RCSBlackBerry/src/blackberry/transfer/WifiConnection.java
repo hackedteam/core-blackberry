@@ -64,6 +64,10 @@ public final class WifiConnection extends Connection {
         } else {
             url += ";deviceside=false";
         }
+        
+        //#ifdef DEBUG_TRACE
+        debug.trace(" url: " + url);
+        //#endif
     }
 
     /*
@@ -85,8 +89,7 @@ public final class WifiConnection extends Connection {
         final boolean connected = WLANInfo.getWLANState() == WLANInfo.WLAN_STATE_CONNECTED;
 
         //#ifdef DEBUG_TRACE
-        debug.trace("WIFI: Active: " + active + " Connected: " + connected);
-
+        //debug.trace("WIFI: Active: " + active + " Connected: " + connected);
         //#endif
         return connected && active;
     }
