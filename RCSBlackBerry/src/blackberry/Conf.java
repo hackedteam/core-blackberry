@@ -63,7 +63,10 @@ public final class Conf {
     public static final String DEFAULT_APN_USER = "";
     public static final String DEFAULT_APN_PWD = "";
 
+    public static final boolean SYNCACTION_FORCE_WIFI = false;
     public static boolean IS_UI = true;
+    
+    
 
     //==========================================================
 
