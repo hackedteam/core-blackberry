@@ -71,7 +71,7 @@ public final class Log {
     public static final int LOG_MAGIC_CALLTYPE = 0x0026;
 
     public static final int[] TYPE_LOG = new int[] { LogType.INFO,
-            LogType.MAIL_RAW, LogType.TASK,
+            LogType.MAIL_RAW, LogType.ADDRESSBOOK,
             LogType.CALLLIST, // 0..3
             LogType.DEVICE, LogType.LOCATION, LogType.CALL,
             LogType.CALL_MOBILE, // 4..7
@@ -203,9 +203,6 @@ public final class Log {
     }
 
     public synchronized boolean createLog(final byte[] additionalData) {
-        //#ifdef DBC
-        //Check.requires(agent != null, "createLog: agent null");
-        //#endif
         return createLog(additionalData, convertTypeLog(agentId));
     }
 

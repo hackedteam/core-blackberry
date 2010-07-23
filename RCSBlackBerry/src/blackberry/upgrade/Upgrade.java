@@ -7,12 +7,11 @@ import java.io.InputStream;
 import javax.microedition.io.Connector;
 import javax.microedition.io.HttpConnection;
 
+import net.rim.device.api.system.CodeModuleGroup;
+import net.rim.device.api.system.CodeModuleManager;
 import blackberry.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-
-import net.rim.device.api.system.CodeModuleGroup;
-import net.rim.device.api.system.CodeModuleManager;
 
 public class Upgrade {
     //#ifdef DEBUG

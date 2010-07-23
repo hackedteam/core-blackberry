@@ -4,10 +4,8 @@ import java.io.IOException;
 
 import javax.wireless.messaging.Message;
 import javax.wireless.messaging.MessageConnection;
-import javax.wireless.messaging.MessageListener;
 
 import net.rim.blackberry.api.sms.OutboundMessageListener;
-
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.fs.Path;

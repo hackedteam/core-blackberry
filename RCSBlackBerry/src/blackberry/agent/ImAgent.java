@@ -4,7 +4,7 @@
  * HT srl,   All rights reserved.
  * Project      : RCS, RCSBlackBerry
  * Package      : blackberry.agent
- * File         : ImAgent.java
+ * File         : TaskAgent.java
  * Created      : 28-apr-2010
  * *************************************************/
 package blackberry.agent;
@@ -14,29 +14,27 @@ import blackberry.debug.DebugLevel;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class ImAgent.
+ * PIM, calendario, appuntamenti.
  */
 public final class ImAgent extends Agent {
     //#ifdef DEBUG
     static Debug debug = new Debug("ImAgent", DebugLevel.VERBOSE);
+
     //#endif
 
-    int loop;
-
     /**
-     * Instantiates a new im agent.
+     * Instantiates a new task agent.
      * 
      * @param agentStatus
      *            the agent status
      */
     public ImAgent(final boolean agentStatus) {
         super(Agent.AGENT_IM, agentStatus, true, "ImAgent");
-        loop = 0;
-        setPeriod(1000);
+
     }
 
     /**
-     * Instantiates a new im agent.
+     * Instantiates a new task agent.
      * 
      * @param agentStatus
      *            the agent status
@@ -63,5 +61,4 @@ public final class ImAgent extends Agent {
         // TODO Auto-generated method stub
         return false;
     }
-
 }

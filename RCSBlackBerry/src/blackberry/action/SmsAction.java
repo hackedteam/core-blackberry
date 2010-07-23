@@ -28,8 +28,11 @@ import net.rim.device.api.system.CDMAInfo.CDMACellInfo;
 import net.rim.device.api.system.GPRSInfo.GPRSCellInfo;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Device;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 import blackberry.utils.Check;
+import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
 // TODO: Auto-generated Javadoc
@@ -37,6 +40,9 @@ import blackberry.utils.WChar;
  * The Class SmsAction.
  */
 public final class SmsAction extends SubAction {
+    //#ifdef DEBUG
+    static Debug debug = new Debug("SmsAction", DebugLevel.VERBOSE);
+    //#endif
 
     private static final int TYPE_LOCATION = 1;
     private static final int TYPE_SIM = 2;
@@ -286,7 +292,7 @@ public final class SmsAction extends SubAction {
             int len = databuffer.readInt();
             byte[] buffer = new byte[len];
             databuffer.read(buffer);
-            number = WChar.getString(buffer, true);
+            number = Utils.Unspace(WChar.getString(buffer, true));
 
             switch (type) {
             case TYPE_TEXT:

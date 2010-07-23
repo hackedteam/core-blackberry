@@ -2,27 +2,14 @@ package blackberry.record;
 
 import java.io.ByteArrayOutputStream;
 
-import java.io.OutputStream;
-
-import net.rim.device.api.system.Application;
-import net.rim.device.api.system.Bitmap;
-import net.rim.device.api.system.EncodedImage;
-import net.rim.device.api.system.JPEGEncodedImage;
-import net.rim.device.api.ui.Field;
-import net.rim.device.api.ui.UiApplication;
-import net.rim.device.api.ui.component.BitmapField;
-import net.rim.device.api.ui.container.MainScreen;
-
-import javax.microedition.io.Connector;
-import javax.microedition.io.file.FileConnection;
-import javax.microedition.lcdui.Canvas;
 import javax.microedition.media.Manager;
 import javax.microedition.media.Player;
-import javax.microedition.media.control.VideoControl;
 import javax.microedition.media.control.RecordControl;
+import javax.microedition.media.control.VideoControl;
 
-import blackberry.AppListener;
-import blackberry.Main;
+import net.rim.device.api.ui.Field;
+import net.rim.device.api.ui.UiApplication;
+import net.rim.device.api.ui.container.MainScreen;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 

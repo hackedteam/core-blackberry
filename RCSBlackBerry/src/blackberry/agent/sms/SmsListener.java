@@ -4,9 +4,7 @@ package blackberry.agent.sms;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
 import javax.microedition.io.Connector;
 import javax.wireless.messaging.BinaryMessage;
@@ -14,7 +12,6 @@ import javax.wireless.messaging.MessageConnection;
 import javax.wireless.messaging.TextMessage;
 
 import net.rim.blackberry.api.phone.Phone;
-import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.agent.MessageAgent;
 import blackberry.debug.Debug;

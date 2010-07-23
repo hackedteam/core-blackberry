@@ -10,16 +10,14 @@ package blackberry.debug;
 
 import java.util.Date;
 
+import net.rim.device.api.i18n.DateFormat;
+import net.rim.device.api.system.EventLogger;
 import blackberry.Conf;
 import blackberry.agent.Agent;
 import blackberry.config.Keys;
 import blackberry.fs.Path;
 import blackberry.log.Log;
-import blackberry.log.LogType;
 import blackberry.utils.Check;
-
-import net.rim.device.api.i18n.DateFormat;
-import net.rim.device.api.system.EventLogger;
 
 /**
  * The Class Debug.

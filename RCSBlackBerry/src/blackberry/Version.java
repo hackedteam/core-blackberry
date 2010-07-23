@@ -13,7 +13,7 @@ package blackberry;
  * The Class Version.
  */
 public final class Version {
-    public static final String VERSION = "20101234";
+    public static final String VERSION = "20100002";
 
     /**
      * Gets the string.

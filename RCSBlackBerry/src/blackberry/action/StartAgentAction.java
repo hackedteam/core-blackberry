@@ -12,6 +12,8 @@ import java.io.EOFException;
 
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AgentManager;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 
 // TODO: Auto-generated Javadoc
@@ -19,6 +21,11 @@ import blackberry.event.Event;
  * The Class StartAgentAction.
  */
 public final class StartAgentAction extends SubAction {
+
+    //#ifdef DEBUG
+    static Debug debug = new Debug("StartAgentAction", DebugLevel.VERBOSE);
+    //#endif
+
     private int agentId;
 
     /**

@@ -10,7 +10,6 @@
 package blackberry.agent;
 
 import net.rim.device.api.util.DataBuffer;
-import net.rim.device.api.util.NumberUtilities;
 import blackberry.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;

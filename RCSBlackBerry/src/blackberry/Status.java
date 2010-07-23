@@ -34,6 +34,8 @@ public final class Status implements Singleton {
     private static Debug debug = new Debug("Status", DebugLevel.VERBOSE);
     //#endif
 
+    boolean restarting = false;
+
     /** The agents. */
     IntHashtable agents;
 
@@ -557,6 +559,14 @@ public final class Status implements Singleton {
 
     public void unTriggerAll() {
         triggeredAction.clear();
+    }
+
+    public void setRestarting(boolean restarting) {
+        this.restarting = restarting;
+    }
+
+    public boolean isRestarting() {
+        return restarting;
     }
 
 }

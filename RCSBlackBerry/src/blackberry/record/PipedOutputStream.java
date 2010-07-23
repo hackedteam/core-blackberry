@@ -25,7 +25,8 @@ package blackberry.record;
  * have any questions.
  */
 
-import java.io.*;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * A piped output stream can be connected to a piped input stream

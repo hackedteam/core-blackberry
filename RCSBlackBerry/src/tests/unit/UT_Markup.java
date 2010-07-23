@@ -17,8 +17,8 @@ import tests.TestUnit;
 import tests.Tests;
 import blackberry.agent.Agent;
 import blackberry.config.Keys;
-import blackberry.log.TimestampMarkup;
 import blackberry.log.Markup;
+import blackberry.log.TimestampMarkup;
 import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc

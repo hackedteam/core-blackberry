@@ -1,6 +1,7 @@
 package blackberry.record;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 
 import blackberry.utils.Check;
 

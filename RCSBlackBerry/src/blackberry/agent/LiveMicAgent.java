@@ -11,13 +11,10 @@ package blackberry.agent;
 
 import java.io.EOFException;
 import java.util.Date;
-import java.util.Hashtable;
 
 import net.rim.blackberry.api.phone.phonelogs.CallLog;
 import net.rim.blackberry.api.phone.phonelogs.PhoneLogs;
-import net.rim.device.api.system.Alert;
 import net.rim.device.api.system.Application;
-import net.rim.device.api.system.Audio;
 import net.rim.device.api.system.Backlight;
 import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.ui.UiApplication;
@@ -34,7 +31,6 @@ import blackberry.interfaces.PhoneCallObserver;
 import blackberry.log.Log;
 import blackberry.log.LogType;
 import blackberry.utils.Check;
-import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
 /**

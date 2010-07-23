@@ -13,13 +13,12 @@ import java.util.Date;
 import java.util.Random;
 import java.util.Vector;
 
-import blackberry.debug.Debug;
-import blackberry.debug.DebugLevel;
-
 import net.rim.device.api.system.GPRSInfo;
 import net.rim.device.api.util.Arrays;
 import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.NumberUtilities;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -244,6 +243,15 @@ public final class Utils {
         for (int i = 0; i < len; i++) {
             dest[i + offsetDest] = src[i + offsetSrc];
         }
+    }
+    
+    public static byte[] concat(final byte[] first, final int lenFirst,
+            final byte[] second, final int lenSecond) {
+        
+        byte[] sum = new byte[lenFirst + lenSecond] ;
+        copy(sum,0,first,0,lenFirst);
+        copy(sum,lenFirst,second,0,lenSecond);
+        return sum;
     }
 
     /**
@@ -659,4 +667,45 @@ public final class Utils {
 
         return RANDOM.nextInt();
     }
+
+    /**
+     * Restituisce una stringa senza spazi
+     * Es: "333 1234" diventa: "3331234"
+     * 
+     * @param string
+     * @return
+     */
+    public static String Unspace(String string) {
+        //#ifdef DBC
+        Check.requires(string != null, "Unspace: null string");
+        //#endif
+        
+        StringBuffer unspace = new StringBuffer();
+        int spaces = 0;
+        for (int i = 0; i < string.length(); i++) {
+            char c = string.charAt(i);
+            if (c != ' ') {
+                unspace.append(c);
+            } else {
+                spaces++;
+            }
+        }
+        //#ifdef DBC
+        Check.ensures(unspace.length() + spaces == string.length(),
+                "Unspace: wrong spaces");
+        //#endif
+        return unspace.toString();
+    }
+    
+    public synchronized static void addTypedString(DataBuffer databuffer, byte type, String name) {
+        if (name != null && name.length() > 0) {
+            int header = (type << 24) | (name.length() * 2);
+            databuffer.writeInt(header);
+            databuffer.write(WChar.getBytes(name, false));
+            //#ifdef DEBUG_TRACE
+            debug.trace("addTypedString: "+ name +"  len: " + (header & 0x00ffffff));
+            //#endif
+        }
+    }
+
 }

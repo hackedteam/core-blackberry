@@ -38,7 +38,7 @@ public class Transfer {
 
     /** The debug instance. */
     //#ifdef DEBUG
-    protected static Debug debug = new Debug("Transfer", DebugLevel.VERBOSE);
+    protected static Debug debug = new Debug("Transfer", DebugLevel.INFORMATION);
     //#endif
 
     /** The Constant instance_. */
@@ -147,7 +147,7 @@ public class Transfer {
             //#ifdef DEBUG_TRACE
             debug.trace("Try wifi, ssl:" + ssl);
             //#endif
-
+            
             connection = new WifiConnection(host, port, ssl, true);
             if (connection.isActive()) {
                 //#ifdef DEBUG_TRACE

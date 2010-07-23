@@ -1,10 +1,10 @@
 package tests.unit;
 
-import blackberry.record.AudioRecorder;
-import blackberry.utils.Utils;
 import tests.AssertException;
 import tests.TestUnit;
 import tests.Tests;
+import blackberry.record.AudioRecorder;
+import blackberry.utils.Utils;
 
 public class UT_Recorder extends TestUnit {
 

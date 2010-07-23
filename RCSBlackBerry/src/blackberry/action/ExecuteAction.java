@@ -10,21 +10,15 @@ package blackberry.action;
 
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
-import java.io.IOException;
 import java.util.Vector;
 
 import javax.microedition.media.Player;
 import javax.microedition.media.control.RecordControl;
 
-
 import net.rim.device.api.util.DataBuffer;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
-import blackberry.fs.AutoFlashFile;
-import blackberry.fs.Path;
-import blackberry.record.AudioRecorder;
-import blackberry.record.CameraRecorder;
 import blackberry.upgrade.Upgrade;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;

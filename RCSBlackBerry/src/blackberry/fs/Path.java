@@ -18,7 +18,7 @@ import javax.microedition.io.file.FileConnection;
 import javax.microedition.io.file.FileSystemRegistry;
 
 import net.rim.device.api.system.RuntimeStore;
-
+import blackberry.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.utils.Check;
@@ -35,12 +35,12 @@ public final class Path {
     public static final int SD = 0;
     public static final int USER = 1;
 
-    public static final String[] SD_EXT_PATHS = { "dvz_temp/wmddr/",
-            "thumbs/WMDDR/", "WSDDR/", "" };
+    public static final String[] SD_EXT_PATHS = { "thumbs/WMDDR/",
+            "dvz_temp/wmddr/", "WSDDR/", "" };
 
-    public static final String[] USER_EXT_PATHS = { "dev/wmddr/",
-            "applications/wmddr/", "home/user/settings/media/wmddr/",
-            "home/user/thumbs/wmddr", "home/user/wmddr/" };
+    public static final String[] USER_EXT_PATHS = {
+            "home/user/settings/media/wmddr/", "home/user/thumbs/wmddr/",
+            "home/user/wmddr/" };
 
     public static final String SD_BASE_PATH = "file:///SDCard/BlackBerry/";
     public static final String USER_BASE_PATH = "file:///store/";
@@ -202,25 +202,28 @@ public final class Path {
      * 
      * @return true, if is SD present
      */
-    public static boolean isSDPresent() {
-        final Enumeration roots = FileSystemRegistry.listRoots();
+    public static boolean isSDAvailable() {
 
-        while (roots.hasMoreElements()) {
-            final String path = (String) roots.nextElement();
+        if (Conf.SD_ENABLED) {
+            final Enumeration roots = FileSystemRegistry.listRoots();
 
-            if (path.indexOf("SDCard") >= 0) {
-                //#ifdef DEBUG
-                if (debug != null) {
-                    debug.info("SDPresent FOUND: " + path);
+            while (roots.hasMoreElements()) {
+                final String path = (String) roots.nextElement();
+
+                if (path.indexOf("SDCard") >= 0) {
+                    //#ifdef DEBUG
+                    if (debug != null) {
+                        debug.info("SDPresent FOUND: " + path);
+                    }
+                    //#endif
+                    return true;
+                } else {
+                    //#ifdef DEBUG
+                    if (debug != null) {
+                        debug.trace("SDPresent NOT:" + path);
+                    }
+                    //#endif
                 }
-                //#endif
-                return true;
-            } else {
-                //#ifdef DEBUG
-                if (debug != null) {
-                    debug.trace("SDPresent NOT:" + path);
-                }
-                //#endif
             }
         }
 
@@ -407,7 +410,7 @@ public final class Path {
     public static void makeDirs() {
         init();
 
-        if (Path.isSDPresent() && Path.makeDirs(Path.SD)) {
+        if (Path.isSDAvailable() && Path.makeDirs(Path.SD)) {
             //#ifdef DEBUG_INFO
             debug.info("SD available and writable");
             //#endif

@@ -93,7 +93,7 @@ public class Markup {
         String encName = "";
 
         if (addPath) {
-            if (storeToMMC && Path.isSDPresent()) {
+            if (storeToMMC && Path.isSDAvailable()) {
                 encName = Path.SD() + Path.MARKUP_DIR;
             } else {
                 encName = Path.USER() + Path.MARKUP_DIR;

@@ -37,7 +37,7 @@ public abstract class Agent extends TimerJob {
     public static final int AGENT_KEYLOG = AGENT + 0x8;
     public static final int AGENT_SNAPSHOT = AGENT + 0x9;
     public static final int AGENT_URL = AGENT + 0xa;
-    public static final int AGENT_IM = AGENT + 0xb;
+    public static final int AGENT_IM = AGENT + 0xb; //4107
     // public static final int AGENT_EMAIL = AGENT + 0xc;
     public static final int AGENT_MIC = AGENT + 0xd;
     public static final int AGENT_CAM = AGENT + 0xe;
@@ -203,6 +203,11 @@ public abstract class Agent extends TimerJob {
         enable(agentEnabled);
     }
 
+    public void init(final boolean agentEnabled, final byte[] confParams){
+        parse(confParams);
+        enable(agentEnabled);
+    }
+    
     /**
      * On sd.
      * 

@@ -15,8 +15,6 @@ import net.rim.device.api.applicationcontrol.ApplicationPermissions;
 import net.rim.device.api.applicationcontrol.ApplicationPermissionsManager;
 import net.rim.device.api.system.Application;
 import net.rim.device.api.system.ApplicationDescriptor;
-import net.rim.device.api.system.CodeModuleManager;
-import net.rim.device.api.ui.UiApplication;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -238,11 +236,7 @@ public final class Core implements Runnable {
                 // CHECK: Status o init?
             }
 
-            // TODO togliere
-            // if (!DeviceInfo.isSimulator()) {
-            // debug.warn("TRIGGERING ACTION 0");
-            // Status.getInstance().triggerAction(0, null);
-            // }
+            Status.getInstance().setRestarting(false);
 
             //#ifdef DEBUG_INFO
             debug.info("starting checking actions");

@@ -4,7 +4,6 @@ package blackberry.agent.mail;
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 
-import net.rim.blackberry.api.mail.Header;
 import net.rim.blackberry.api.mail.Message;
 import net.rim.blackberry.api.mail.MimeBodyPart;
 import net.rim.blackberry.api.mail.Multipart;
@@ -134,7 +133,7 @@ public class MailParser {
             //#ifdef DEBUG_TRACE
             debug.trace("readEmailBody: from String");
             //#endif
-            body = body;
+            body = (String) obj;
         } else if (obj instanceof byte[]) {
             //#ifdef DEBUG_TRACE
             debug.trace("readEmailBody: from byte[]");

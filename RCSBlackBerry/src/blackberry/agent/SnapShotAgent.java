@@ -23,7 +23,6 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.log.Log;
 import blackberry.log.LogType;
-import blackberry.record.CameraRecorder;
 import blackberry.utils.Check;
 import blackberry.utils.WChar;
 

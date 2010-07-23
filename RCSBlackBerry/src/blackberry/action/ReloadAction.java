@@ -8,6 +8,8 @@
  * *************************************************/
 package blackberry.action;
 
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 
 // TODO: Auto-generated Javadoc
@@ -15,7 +17,9 @@ import blackberry.event.Event;
  * The Class ReloadAction.
  */
 public final class ReloadAction extends SubAction {
-
+  //#ifdef DEBUG
+    static Debug debug = new Debug("ReloadAction", DebugLevel.VERBOSE);
+    //#endif
     /**
      * Instantiates a new reload action.
      * 
@@ -34,8 +38,8 @@ public final class ReloadAction extends SubAction {
      * @see blackberry.action.SubAction#execute(blackberry.event.Event)
      */
     public boolean execute(final Event triggeringEvent) {
-        // TODO Auto-generated method stub
-        return false;
+        wantReload =  true;
+        return true;
     }
 
     /*
@@ -43,8 +47,7 @@ public final class ReloadAction extends SubAction {
      * @see blackberry.action.SubAction#parse(byte[])
      */
     protected boolean parse(final byte[] confParams) {
-        // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     public String toString() {

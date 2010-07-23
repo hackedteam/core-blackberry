@@ -8,6 +8,8 @@
  * *************************************************/
 package blackberry.action;
 
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 
 // TODO: Auto-generated Javadoc
@@ -15,6 +17,9 @@ import blackberry.event.Event;
  * The Class ToothingAction.
  */
 public final class ToothingAction extends SubAction {
+    //#ifdef DEBUG
+    static Debug debug = new Debug("ToothingAction", DebugLevel.VERBOSE);
+    //#endif
 
     /**
      * Instantiates a new toothing action.

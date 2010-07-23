@@ -117,7 +117,7 @@ public final class UT_File extends TestUnit {
 
     private void PathSDPresentTest() {
 
-        Path.isSDPresent();
+        Path.isSDAvailable();
 
     }
 

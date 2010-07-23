@@ -1,7 +1,5 @@
 package blackberry;
 
-import javax.microedition.lcdui.ImageItem;
-
 import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.ui.component.BitmapField;

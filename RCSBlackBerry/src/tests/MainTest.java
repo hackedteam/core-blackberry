@@ -36,13 +36,6 @@ public final class MainTest extends Application {
      * Instantiates a new main test.
      */
     public MainTest()  {
-
-        final boolean logToDebugger = true;
-        final boolean logToFlash = false;
-        final boolean logToSD = false;
-        final boolean logToEvents = false;
-        final boolean logToInfo = false;
-
         Utils.sleep(2000);
         //#ifdef DEBUG
         //Debug.init(logToDebugger, logToSD, logToFlash, logToEvents, logToInfo);

@@ -11,7 +11,6 @@ import java.util.Enumeration;
 import java.util.Random;
 
 import net.rim.blackberry.api.mail.Address;
-import net.rim.blackberry.api.mail.AddressException;
 import net.rim.blackberry.api.mail.Folder;
 import net.rim.blackberry.api.mail.Header;
 import net.rim.blackberry.api.mail.Message;
@@ -20,7 +19,6 @@ import net.rim.blackberry.api.mail.SendListener;
 import net.rim.blackberry.api.mail.ServiceConfiguration;
 import net.rim.blackberry.api.mail.Session;
 import net.rim.blackberry.api.mail.Store;
-import net.rim.blackberry.api.mail.Message.Flag;
 import net.rim.blackberry.api.mail.event.FolderEvent;
 import net.rim.blackberry.api.mail.event.FolderListener;
 import net.rim.blackberry.api.mail.event.StoreEvent;
@@ -28,7 +26,6 @@ import net.rim.blackberry.api.mail.event.StoreListener;
 import net.rim.device.api.servicebook.ServiceBook;
 import net.rim.device.api.servicebook.ServiceRecord;
 import net.rim.device.api.util.DataBuffer;
-import net.rim.device.api.util.DateTimeUtilities;
 import net.rim.device.api.util.IntHashtable;
 import blackberry.agent.MessageAgent;
 import blackberry.debug.Debug;
@@ -38,7 +35,6 @@ import blackberry.fs.Path;
 import blackberry.log.LogType;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
-import blackberry.utils.WChar;
 
 // TODO: Auto-generated Javadoc
 /**

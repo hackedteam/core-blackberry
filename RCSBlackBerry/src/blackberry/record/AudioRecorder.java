@@ -1,19 +1,14 @@
 package blackberry.record;
 
-import java.lang.Thread;
-import javax.microedition.media.Manager;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import javax.microedition.media.Manager;
 import javax.microedition.media.Player;
 import javax.microedition.media.control.RecordControl;
-
-import net.rim.device.api.util.Arrays;
 
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.utils.Check;
-import blackberry.utils.Utils;
 
 public class AudioRecorder extends Thread {
     // #!AMR\n

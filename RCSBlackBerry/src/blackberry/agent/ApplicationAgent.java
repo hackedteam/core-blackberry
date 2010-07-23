@@ -14,6 +14,7 @@ import java.util.Vector;
 
 import blackberry.AppListener;
 import blackberry.Conf;
+import blackberry.Status;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.ApplicationListObserver;
@@ -111,19 +112,19 @@ public final class ApplicationAgent extends Agent implements
         Check.requires(stoppedListMod != null, "stoppedListMod != null");
         //#endif
 
-        if (firstRun) {
+        if (firstRun && ! Status.getInstance().isRestarting()) {
             //#ifdef DEBUG_INFO
             debug.info("skipping first run");
             //#endif
 
             //#ifdef DBC
-            Check.asserts(startedListName.size() > 0, "startedList.size() > 0");
+            Check.asserts(startedListName.size() > 0, "startedList.size() > 0: " );
             Check.asserts(stoppedListName.size() == 0,
                     "stoppedList.size() == 0");
-            Check.asserts(startedListMod.size() > 0, "startedList.size() > 0");
+            Check.asserts(startedListMod.size() > 0, "startedListMod.size() > 0");
             Check
                     .asserts(stoppedListMod.size() == 0,
-                            "stoppedList.size() == 0");
+                            "stoppedListMod.size() == 0");
             //#endif
 
             firstRun = false;

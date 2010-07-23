@@ -2,16 +2,16 @@ package tests.unit;
 
 import java.util.Date;
 
+import net.rim.blackberry.api.mail.Message;
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
+import tests.accessor.TransferAccessor;
 import blackberry.agent.Agent;
 import blackberry.agent.mail.Filter;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.utils.Utils;
-import tests.AssertException;
-import tests.TestUnit;
-import tests.Tests;
-import tests.accessor.TransferAccessor;
-import net.rim.blackberry.api.mail.Message;
 
 public class UT_Mail extends TestUnit{
 

@@ -164,6 +164,7 @@ public final class Task implements Singleton {
                                 }
 
                                 if (subAction.wantReload()) {
+                                    status.setRestarting(true);
                                     //#ifdef DEBUG
                                     debug.warn("CheckActions() reloading");
                                     //#endif
@@ -341,8 +342,8 @@ public final class Task implements Singleton {
         debug.trace("TaskInit");
         //#endif
 
-        agentManager.stopAll();
-        eventManager.stopAll();
+        //agentManager.stopAll();
+        //eventManager.stopAll();
 
         if (device != null) {
             device.refreshData();
