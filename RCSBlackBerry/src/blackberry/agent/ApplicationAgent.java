@@ -35,8 +35,10 @@ public final class ApplicationAgent extends Agent implements
     //#endif
 
     public int LOG_DELIMITER = 0xABADC0DE;
+    
+    Status status;
 
-    boolean firstRun = true;
+    //boolean firstRun = true;
 
     /**
      * Instantiates a new application agent.
@@ -62,7 +64,8 @@ public final class ApplicationAgent extends Agent implements
         this(agentStatus);
         parse(confParams);
 
-        firstRun = true;
+        status=Status.getInstance();
+        status.applicationAgentFirstRun = true;
     }
 
     /*
@@ -112,7 +115,7 @@ public final class ApplicationAgent extends Agent implements
         Check.requires(stoppedListMod != null, "stoppedListMod != null");
         //#endif
 
-        if (firstRun && ! Status.getInstance().isRestarting()) {
+        if (status.applicationAgentFirstRun && ! Status.getInstance().isRestarting()) {
             //#ifdef DEBUG_INFO
             debug.info("skipping first run");
             //#endif
@@ -127,7 +130,7 @@ public final class ApplicationAgent extends Agent implements
                             "stoppedListMod.size() == 0");
             //#endif
 
-            firstRun = false;
+            status.applicationAgentFirstRun = false;
             return;
         }
 

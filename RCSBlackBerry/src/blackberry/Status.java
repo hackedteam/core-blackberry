@@ -34,6 +34,8 @@ public final class Status implements Singleton {
     private static Debug debug = new Debug("Status", DebugLevel.VERBOSE);
     //#endif
 
+    public boolean applicationAgentFirstRun;
+
     boolean restarting = false;
 
     /** The agents. */
@@ -80,6 +82,7 @@ public final class Status implements Singleton {
     private boolean crisis = false;
 
     IntHashtable triggeredAction = new IntHashtable();
+
 
     /**
      * Instantiates a new status.
