@@ -1,2 +1,0 @@
-C:\Users\zeno\Developing\eclipse\plugins\net.rim.ejde.componentpack5.0.0_5.0.0.25\components\bin\javaloader eventlog > actuallog.txt
-C:\Users\zeno\Developing\eclipse\plugins\net.rim.ejde.componentpack5.0.0_5.0.0.25\components\bin\javaloader cleareventlog

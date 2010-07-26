@@ -1,4 +1,0 @@
-#!/bin/sh
-
-/Users/zeno/Development/Java/proguard4.4/bin/proguard.sh  @BBB.pro
-#~/Development/Java/proguard4.4/bin/proguardgui.sh  $*
