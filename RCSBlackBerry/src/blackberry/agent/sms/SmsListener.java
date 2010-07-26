@@ -210,7 +210,9 @@ public class SmsListener {
             }
 
             if (address.indexOf(":") > 0) {
+                //#ifdef DEBUG_WARN
                 debug.warn("Probably a MMS");
+                //#endif
                 return false;
             }
 
@@ -249,10 +251,12 @@ public class SmsListener {
                     + filetime.toString());
             //#endif
 
+            //#ifdef DBC
             Check.ensures(databuffer.getLength() == additionalDataLen,
                     "SMS Wrong databuffer size: " + databuffer.getLength());
             Check.ensures(additionalData.length == additionalDataLen,
                     "SMS Wrong buffer size: " + additionalData.length);
+            //#endif
 
             // Creating log
             if (dataMsg != null) {

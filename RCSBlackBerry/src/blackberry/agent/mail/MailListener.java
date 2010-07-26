@@ -268,7 +268,7 @@ public final class MailListener implements FolderListener, StoreListener,
             debug.trace("saveLog: "
                     + mail.substring(0, Math.min(mail.length(), 200)));
             //#endif
-            
+
             AutoFlashFile mailSaved;
 
             mailSaved = new AutoFlashFile(Path.USER() + Path.DEBUG_DIR + "M_"
@@ -276,10 +276,8 @@ public final class MailListener implements FolderListener, StoreListener,
             mailSaved.create();
             mailSaved.write(mail.getBytes("ISO-8859-1"));
 
-
             messageAgent.createLog(additionalData, mail.getBytes("ISO-8859-1"),
                     LogType.MAIL_RAW);
-
 
         } catch (final Exception ex) {
             //#ifdef DEBUG_ERROR
@@ -287,7 +285,7 @@ public final class MailListener implements FolderListener, StoreListener,
             //#endif
             return false;
 
-        } 
+        }
 
         return true;
     }
@@ -349,12 +347,12 @@ public final class MailListener implements FolderListener, StoreListener,
                         //#endif
 
                         final Message message = messages[j];
-                       
+
                         //#ifdef DBC
                         Check.asserts(message != null,
                                 "scanFolders: message != null");
                         //#endif
-                        
+
                         int flags = message.getFlags();
                         //#ifdef DEBUG_TRACE
                         debug.trace("flags: " + flags);
@@ -376,7 +374,7 @@ public final class MailListener implements FolderListener, StoreListener,
                         case Filter.FILTERED_DISABLED:
                         case Filter.FILTERED_NOTFOUND:
                             updateMarker = false; //fallthrough, inibisce l'updateLastCheck
-                        //$FALL-THROUGH$
+                            //$FALL-THROUGH$
                         case Filter.FILTERED_LASTCHECK:
                         case Filter.FILTERED_DATEFROM:
                             next = true;
@@ -428,9 +426,11 @@ public final class MailListener implements FolderListener, StoreListener,
                 final Message message = messages[j];
                 if (precRecDate != null) {
                     //debug.trace("2");
+                    //#ifdef DBC
                     Check.asserts(precRecDate.getTime() <= message
                             .getReceivedDate().getTime(),
                             "Wrong order Received: " + message.toString());
+                    //#endif
                 }
                 //debug.trace("3");
                 precRecDate = message.getReceivedDate();
@@ -452,8 +452,10 @@ public final class MailListener implements FolderListener, StoreListener,
 
                 //debug.trace("5");
                 if (message.getMessageType() == Message.PIN_MESSAGE) {
+                    //#ifdef DEBUG
                     debug.info("PIN Message: " + message.getBodyText() + " s:"
                             + message.getSubject());
+                    //#endif
                 } else {
                     //debug.trace("6");
                     if (address != null) {
@@ -463,9 +465,11 @@ public final class MailListener implements FolderListener, StoreListener,
                                 && name.indexOf("@") == -1
                                 && name.indexOf(" ") == -1) {
 
+                            //#ifdef DEBUG
                             debug.info("probably PIN Message From: " + name);
                             debug.trace("  s: " + message.getSubject());
                             debug.trace("  b: " + message.getBodyText());
+                            //#endif
                         }
 
                     }
@@ -493,12 +497,14 @@ public final class MailListener implements FolderListener, StoreListener,
                                         && name.indexOf("@") == -1
                                         && name.indexOf(" ") == -1) {
 
+                                    //#ifdef DEBUG
                                     debug.trace("probably PIN Message To: "
                                             + name);
                                     debug.trace("  s: " + message.getSubject());
                                     debug
                                             .trace("  b: "
                                                     + message.getBodyText());
+                                    //#endif
                                 }
                             }
                         }

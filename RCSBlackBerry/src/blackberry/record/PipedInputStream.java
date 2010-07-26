@@ -1,3 +1,4 @@
+//#preprocess
 package blackberry.record;
 
 import java.io.IOException;
