@@ -1,0 +1,118 @@
+#!/bin/sh
+
+# rapc bbb.obf.jar
+# sign bbb.cod
+#
+#
+# C:\Program Files\Eclipse BB5.0\plugins\net.rim.ejde.componentpack4.5.0_4.5.0.21\components\bin\rapc.exe
+# codename=deliverables\Standard\4.5.0\RCSBlackBerry deliverables\Standard\4.5.0\RCSBlackBerry.rapc
+# -sourceroot=Z:\RCSBlackBerry\Sources\Workspace\RCSBlackBerry\src;Z:\RCSBlackBerry\Sources\Workspace\RCSBlackBerry\res 
+# -import=C:\Program Files\Eclipse BB5.0\plugins\net.rim.ejde.componentpack4.5.0_4.5.0.21\components\lib\net_rim_api.jar
+# Z:\RCSBlackBerry\Sources\Workspace\RCSBlackBerry\bin
+#
+#
+
+RIM43="/Developer/eclipse/plugins/net.rim.ejde.componentpack4.3.0_4.3.0.17/components/lib/"
+RIM45="/Developer/eclipse/plugins/net.rim.ejde.componentpack4.5.0_4.5.0.21/components/lib/"
+RIM47="/Developer/eclipse/plugins/net.rim.ejde.componentpack4.7.0_4.7.0.53/components/lib/"
+RIM50="/Developer/eclipse/plugins/net.rim.ejde.componentpack5.0.0_5.0.0.25/components/lib/"
+
+#RAPC="java -jar ~/Development/BlackBerry/bin/rapc.jar"
+
+PROGUARD="/Users/zeno/Development/Java/proguard4.4/bin/proguard.sh"
+
+#BUILD="BBB_OBF"
+#COD="working/BBB.cod"
+
+RAPC="rapc"
+CJAR="cleaned.jar"
+
+BASE="net_rim_bb_lib"
+LIBBASE="net_rim_bb_lib_base"
+COREJAD="$BASE.jad"
+COREJAR="$BASE.jar"
+CORE="$BASE.cod"
+LIBJAR="$LIBBASE.jar"
+LIB="$LIBBASE.cod"
+OJAR="obf.jar"
+
+CCOD="$BASE.compiled.cod"
+SCOD="$BASE.signed.cod"
+
+RIMVER=$RIM45
+DIR="4.5.0"
+
+DIST="../../dist"
+
+RIMAPI="$RIMVER/net_rim_api.jar"
+BIN=bin
+
+SIGN="/Users/zeno/Projects/RCSBlackBerry/Sources/Workspace/RCSBlackBerry/sign/SignatureTool.jar"
+SIGNPASS="KUZ93HQ1"
+
+echo "---------------"
+echo "Copy"
+mkdir working
+cp $DIR/$COREJAD working
+cp $DIR/$BASE.csl working/$BASE.signed.csl
+cp $BASE.alx working
+
+echo "---------------"
+echo "Jar"
+cp $DIR/$COREJAR working
+cp $DIR/$LIBJAR working/library.jar
+pushd working 
+mkdir jar
+pushd jar
+jar xf ../$COREJAR
+rm $BASE*
+#rm -fr tests
+jar cf ../$CJAR *
+popd
+rm $COREJAR
+popd
+
+echo "---------------"
+echo "Obfuscate"
+$PROGUARD @obfuscate.pro
+ls -la working/$CJAR working/$OJAR
+cp working/$OJAR working/$BASE.jar
+
+echo "---------------"
+echo "Preverify"
+preverify -classpath $RIMAPI working/$BASE.jar
+
+echo "---------------"
+echo "Rapc"
+pushd working
+$RAPC encode=$BASE jad=$BASE.jad -import=$RIMAPI $BASE.jar
+mv $BASE.cod $CCOD
+popd
+
+echo "---------------"
+echo "Sign" 
+pushd working
+cp $CCOD $SCOD
+java -jar $SIGN -p $SIGNPASS -a -c $SCOD
+ls -la $CCOD $SCOD
+popd
+
+echo "---------------"
+echo "Dist"
+rm $DIST/*
+mkdir $DIST
+cp working/$SCOD $DIST/$BASE.cod
+cp $DIR/$LIB $DIST/$BASE-2.cod
+pushd $DIST
+mv  $BASE.cod archive.zip
+unzip -jLo archive.zip
+rm archive.zip
+popd
+
+echo "---------------"
+echo "Clean"
+rm -fr working output
+
+echo  $DIST
+ls -la $DIST
+

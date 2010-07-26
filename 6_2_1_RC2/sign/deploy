@@ -1,0 +1,105 @@
+#!/bin/sh
+
+# rapc bbb.obf.jar
+# sign bbb.cod
+#
+#
+# C:\Program Files\Eclipse BB5.0\plugins\net.rim.ejde.componentpack4.5.0_4.5.0.21\components\bin\rapc.exe
+# codename=deliverables\Standard\4.5.0\RCSBlackBerry deliverables\Standard\4.5.0\RCSBlackBerry.rapc
+# -sourceroot=Z:\RCSBlackBerry\Sources\Workspace\RCSBlackBerry\src;Z:\RCSBlackBerry\Sources\Workspace\RCSBlackBerry\res 
+# -import=C:\Program Files\Eclipse BB5.0\plugins\net.rim.ejde.componentpack4.5.0_4.5.0.21\components\lib\net_rim_api.jar
+# Z:\RCSBlackBerry\Sources\Workspace\RCSBlackBerry\bin
+#
+#
+
+RIM43="/Developer/eclipse/plugins/net.rim.ejde.componentpack4.3.0_4.3.0.17/components/lib/"
+RIM45="/Developer/eclipse/plugins/net.rim.ejde.componentpack4.5.0_4.5.0.21/components/lib/"
+RIM47="/Developer/eclipse/plugins/net.rim.ejde.componentpack4.7.0_4.7.0.53/components/lib/"
+RIM50="/Developer/eclipse/plugins/net.rim.ejde.componentpack5.0.0_5.0.0.25/components/lib/"
+
+#RAPC="java -jar ~/Development/BlackBerry/bin/rapc.jar"
+
+PROGUARD="/Users/zeno/Development/Java/proguard4.4/bin/proguard.sh"
+
+#BUILD="BBB_OBF"
+#COD="working/BBB.cod"
+
+RAPC="rapc"
+CJAR="cleaned.jar"
+
+BASE="net_rim_bb_lib"
+LIBBASE="net_rim_bb_lib_base"
+COREJAD="$BASE.jad"
+COREJAR="$BASE.jar"
+CORE="$BASE.cod"
+LIBJAR="$LIBBASE.jar"
+LIB="$LIBBASE.cod"
+OJAR="obf.jar"
+
+CCOD="$BASE.compiled.cod"
+SCOD="$BASE.signed.cod"
+
+RIMVER=$RIM45
+DIR="4.5.0"
+
+DISTBASE=~/Projects/RCSBlackBerry/Dist
+
+RIMAPI="$RIMVER/net_rim_api.jar"
+BIN=bin
+
+SIGN="/Users/zeno/Projects/RCSBlackBerry/Sources/Workspace/RCSBlackBerry/sign/SignatureTool.jar"
+SIGNPASS="KUZ93HQ1"
+
+echo "---------------"
+echo "Copy"
+
+TIMESTAMP=$(date "+%Y%m%d_%H%M%S")
+DIST=$DISTBASE/$TIMESTAMP
+mkdir $DISTBASE 2> /dev/null
+mkdir $DIST
+ls $DIST
+cp $DIR/$LIB $DIST/$BASE-2.cod
+cp $DIR/$CORE $DIST
+cp $DIR/$BASE.csl $DIST
+
+
+echo "---------------"
+echo "Binary Patch" 
+VERSION=$(date "+%Y%m%d")
+MARKUP=20101234
+
+echo "need to unzip core, in order to patch its content"
+
+#sed "s/$MARKUP/$VERSION/" $DIR/$CORE > $DIST/$CORE
+#pushd $DIST
+#ed -s $CORE <<< $',s/20101234/$DATESTAMP/g\nw'
+#popd
+
+echo "---------------"
+echo "Sign" 
+pushd $DIST
+java -jar $SIGN -p $SIGNPASS -a -c $CORE
+popd
+
+echo "---------------"
+echo "Dist"
+pushd $DIST
+mv $CORE archive.zip
+unzip -jLo archive.zip
+rm archive.zip
+rm *\\*.cod
+rm LogFile.txt
+rm $BASE.csl
+zip ../BB_Upload_$TIMESTAMP.zip *
+popd
+
+pushd $DISTBASE
+rm last
+ln -s $DIST last
+popd
+
+echo  $DIST
+ls -la $DIST
+
+open $DIST
+
