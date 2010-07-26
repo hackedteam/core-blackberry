@@ -35,8 +35,8 @@ public final class Device implements Singleton {
     private static Debug debug = new Debug("Device", DebugLevel.VERBOSE);
     //#endif
 
-    public static final int VERSION = 2010061101;
-    public static final String SUBTYPE = "BLACKBERRY";
+   
+    
 
     public int network;
 
@@ -72,7 +72,7 @@ public final class Device implements Singleton {
      */
     public static byte[] getSubtype() {
 
-        return SUBTYPE.getBytes();
+        return Version.SUBTYPE.getBytes();
     }
 
     /**
@@ -81,7 +81,7 @@ public final class Device implements Singleton {
      * @return the version
      */
     public static byte[] getVersion() {
-        final byte[] versionRet = Utils.intToByteArray(VERSION);
+        final byte[] versionRet = Utils.intToByteArray(Version.VERSION);
         //#ifdef DBC
         Check.ensures(versionRet.length == 4, "Wrong version len");
         //#endif

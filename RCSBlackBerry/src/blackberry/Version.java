@@ -13,17 +13,12 @@ package blackberry;
  * The Class Version.
  */
 public final class Version {
-    public static final String VERSION = "20100002";
-
-    /**
-     * Gets the string.
-     * 
-     * @return the string
-     */
-    public static String getString() {
-        return VERSION;
-    }
-
+    
+    //public static final int VERSION = 2010061101; // 6.2
+    public static final int VERSION = 2010073101; // 6.2.1
+    
+    public static final String SUBTYPE = "BLACKBERRY";
+    
     /**
      * Instantiates a new version.
      */
