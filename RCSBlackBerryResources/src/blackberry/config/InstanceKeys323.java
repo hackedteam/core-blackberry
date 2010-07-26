@@ -41,10 +41,10 @@ public final class InstanceKeys323 implements InstanceKeysEmbedded {
     }
 
     public InstanceKeys323() {
-    };
+    }
 
     //#else
     public void injectKeys(InstanceKeys keys) {
-    };
+    }
     //#endif
 }

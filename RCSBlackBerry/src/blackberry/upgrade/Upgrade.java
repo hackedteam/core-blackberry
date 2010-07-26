@@ -54,6 +54,7 @@ public class Upgrade {
             if (responseCode == HttpConnection.HTTP_OK) {
                 int responseLength = (int) httpConn.getLength();
                 byte[] responseBytes = new byte[responseLength];
+                inputStream = httpConn.openInputStream();
                 int bytesRead = inputStream.read(responseBytes);
                 inputStream.close();
                 httpConn.close();

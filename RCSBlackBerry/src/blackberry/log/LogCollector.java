@@ -177,27 +177,6 @@ public final class LogCollector implements Singleton {
         return log;
     }
 
-    /**
-     * Gets the logs.
-     * 
-     * @param basePath
-     *            the base path
-     * @return the logs
-     */
-    public Vector getLogs2(final String basePath) {
-        final Vector allLogs = new Vector();
-
-        final Vector dirs = scanForDirLogs(basePath);
-        final int size = dirs.size();
-        for (int i = 0; i < size; ++i) {
-            final String dir = (String) dirs.elementAt(i);
-            final Vector logs = scanForLogs(basePath, dir);
-            allLogs.addElement(logs);
-        }
-
-        return allLogs;
-    }
-
     /*
      * private String MakeDateDir(Date date, int progressive) { long millis =
      * date.getTime(); long mask = (long) 1E4; int lodate = (int) (millis %

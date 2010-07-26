@@ -4,7 +4,6 @@
  */
 package blackberry;
 
-//#ifdef HAVE_MIME
 import net.rim.device.api.applicationcontrol.ApplicationPermissions;
 import net.rim.device.api.applicationcontrol.ReasonProvider;
 
@@ -52,4 +51,3 @@ public final class CoreReasonProvider implements ReasonProvider {
         return message;
     }
 }
-//#endif

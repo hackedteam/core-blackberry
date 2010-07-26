@@ -103,5 +103,5 @@ public final class Proto {
             "UPGRADE", "ENDFILE", "SUBTYPE" };
 
     private Proto() {
-    };
+    }
 }

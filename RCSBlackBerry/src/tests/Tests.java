@@ -40,7 +40,7 @@ public final class Tests {
     static Debug debug = new Debug("Tests", DebugLevel.VERBOSE);
     //#endif
 
-    static boolean full = true;
+    static boolean full = false;
 
     private static Tests instance = null;
 
@@ -68,15 +68,14 @@ public final class Tests {
             addTest(new UT_Crypto("Crypto", this));
             addTest(new UT_Conf("Conf", this));
 
-            addTest(new UT_Events("Events", this));
+            
 
             addTest(new UT_File("File", this));
             addTest(new UT_Markup("Markup", this));
 
             addTest(new UT_Path("Path", this));
 
-            addTest(new UT_Agents("Agents", this));
-
+            
             addTest(new UT_TimerThread("TimerThread", this));
 
             addTest(new UT_Log("Log", this));
@@ -86,12 +85,14 @@ public final class Tests {
             addTest(new UT_Recorder("Recorder", this));  
             
             addTest(new UT_MicAgent("MicAgent", this));
+            addTest(new UT_SmsAgent("SmsAgent", this));
             
-        }
-        addTest(new UT_Mail("Mail", this));
-         
-        addTest(new UT_SmsAgent("SmsAgent", this));
+            addTest(new UT_Events("Events", this));
+            addTest(new UT_Agents("Agents", this));
 
+        }
+
+        addTest(new UT_Mail("Mail", this));                
                       
     }
 

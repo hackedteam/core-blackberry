@@ -377,7 +377,7 @@ public final class Debug {
     }
 
     public static boolean sendLogs(final String email) {
-        //#ifdef SEND_LOG
+        //#ifdef SEND_LOG_BY_EMAIL
         if (logToFlash || logToSD) {
             return debugWriter.sendLogs(email);
         }

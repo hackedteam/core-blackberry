@@ -22,8 +22,10 @@ import blackberry.Status;
 import blackberry.action.Action;
 import blackberry.action.SubAction;
 import blackberry.agent.Agent;
+import blackberry.debug.Debug;
 import blackberry.event.Event;
 import blackberry.event.TimerEvent;
+import blackberry.fs.Path;
 import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
@@ -42,6 +44,7 @@ public final class UT_Agents extends TestUnit {
      */
     public UT_Agents(final String name, final Tests tests) {
         super(name, tests);
+        Debug.init();
     }
 
     void AgentSnapshot() throws AssertException {

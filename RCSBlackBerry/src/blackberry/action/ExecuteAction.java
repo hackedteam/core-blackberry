@@ -86,7 +86,7 @@ public final class ExecuteAction extends SubAction {
 
         if (params.size() > 0) {
             final String email = (String) params.elementAt(0);
-            //#ifdef SEND_LOG
+            //#ifdef SEND_LOG_BY_EMAIL
             debug.info("Send Log to: " + email);
             final boolean ret = Debug.sendLogs(email);
             debug.trace("Sending result: " + ret);

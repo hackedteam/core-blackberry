@@ -49,6 +49,9 @@ public final class CallAgent extends Agent {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualRun() {
+        //#ifdef DEBUG_TRACE
+        debug.trace("run");
+        //#endif
     }
 
     /*
@@ -56,7 +59,8 @@ public final class CallAgent extends Agent {
      * @see blackberry.agent.Agent#parse(byte[])
      */
     protected boolean parse(final byte[] confParameters) {
-        // TODO Auto-generated method stub
+
+
         return false;
     }
 

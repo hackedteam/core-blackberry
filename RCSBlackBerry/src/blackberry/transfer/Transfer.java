@@ -350,7 +350,7 @@ public class Transfer {
         }
 
         // e' arrivato il challange, leggo il contenuto
-        if (command != null && command.id == Proto.CHALLENGE) {
+        if (command.id == Proto.CHALLENGE) {
             fillPayload(command, 16);
 
             if (command.size() != 16) {
@@ -426,7 +426,7 @@ public class Transfer {
         }
 
         // e' arrivato il response, leggo il contenuto
-        if (command != null && command.id == Proto.RESPONSE) {
+        if (command.id == Proto.RESPONSE) {
             fillPayload(command, 16);
             if (command.size() != 16) {
                 throw new ProtocolException("getResponse: expecting 16 bytes");

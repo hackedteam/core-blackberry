@@ -22,7 +22,6 @@ import blackberry.debug.DebugLevel;
 // TODO: Auto-generated Javadoc
 /**
  * The Class Main.
- * Antenna defines: DBC,HAVE_PERMISSIONS,HAVE_MIME,EVENTLOGGER
  */
 
 //#ifdef LIVE_MIC_ENABLED

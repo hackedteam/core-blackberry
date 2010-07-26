@@ -17,7 +17,7 @@ import blackberry.debug.DebugLevel;
 public final class Check {
     //#ifdef DBC
     private static Debug debug = new Debug("Check", DebugLevel.VERBOSE);
-    public static boolean enabled = true;;
+    public static boolean enabled = true;
 
     /**
      * Asserts.

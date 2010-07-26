@@ -157,7 +157,7 @@ public final class DebugWriter extends Thread {
         notifyAll();
     }
 
-    //#ifdef SEND_LOG
+    //#ifdef SEND_LOG_BY_EMAIL
     public synchronized boolean sendLogs(final String email) {
         //byte[] content = fileDebug.read();
         final boolean ret = fileDebug.sendLogs(email);

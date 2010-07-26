@@ -78,20 +78,21 @@ public class Filter {
 
     public int payloadStart;
 
-    public Filter(boolean enabled, Date from, Date to, int maxMessageSize, int maxMessageSizeToLog){
+    public Filter(boolean enabled, Date from, Date to, int maxMessageSize,
+            int maxMessageSizeToLog) {
         this.enabled = enabled;
-        if(from!=null) { 
+        if (from != null) {
             this.fromDate = from;
             doFilterFromDate = true;
         }
-        if(to!=null) { 
+        if (to != null) {
             this.toDate = to;
             doFilterToDate = true;
         }
         this.maxMessageSize = maxMessageSize;
-        this.maxMessageSizeToLog = maxMessageSizeToLog;        
+        this.maxMessageSizeToLog = maxMessageSizeToLog;
     }
-    
+
     /**
      * Instantiates a new filter.
      * 
@@ -169,7 +170,7 @@ public class Filter {
                 //#ifdef DEBUG_TRACE
                 debug.trace("from: " + fromDate.toString());
                 //#endif
-            }else{
+            } else {
                 fromDate = new Date(0);
             }
             if (doFilterToDate) {
@@ -178,7 +179,7 @@ public class Filter {
                 //#ifdef DEBUG_TRACE
                 debug.trace("to: " + toDate.toString());
                 //#endif
-            }else{
+            } else {
                 toDate = new Date(Integer.MAX_VALUE);
             }
             //#ifdef DEBUG_TRACE
@@ -253,7 +254,7 @@ public class Filter {
         //#ifdef DEBUG_TRACE
         debug.trace("filterMessage: " + message.getMessageId());
         //#endif
-        
+
         final Address[] from = message
                 .getRecipients(Message.RecipientType.FROM);
         //#ifdef DBC
@@ -266,6 +267,11 @@ public class Filter {
 
         final Folder folder = message.getFolder();
 
+        //#ifdef DEBUG_INFO
+        String foldername = "NO_FOLDER";
+        int foldertype = -1;
+        //#endif
+
         boolean found = false;
         if (folder != null) {
             final int folderType = folder.getType();
@@ -277,12 +283,16 @@ public class Filter {
                     break;
                 }
             }
+            //#ifdef DEBUG_INFO
+            foldername = folder.getName();
+            foldertype = folder.getType();
+            //#endif
         }
 
         if (!found) {
             //#ifdef DEBUG_INFO
-            debug.info("filterMessage: FILTERED_FOUND: " + folder.getName()
-                    + " type: " + folder.getType());
+            debug.info("filterMessage: FILTERED_NOTFOUND: " + foldername
+                    + " type: " + foldertype);
             //#endif
             return FILTERED_NOTFOUND;
         }
@@ -337,41 +347,44 @@ public class Filter {
     public final boolean isValid() {
         return valid;
     }
-    
-    public boolean equals(Filter filter){
+
+    public boolean equals(Object obj) {
         boolean ret = true;
-        if(filter == null){
+        if (obj == null) {
             return false;
         }
-        if(filter.getClass().getName() != getClass().getName()){
+        
+        if(! (obj instanceof Filter )){
             return false;
         }
+        
+        Filter filter = (Filter) obj;
         
         ret &= filter.doFilterFromDate == doFilterFromDate;
         ret &= filter.doFilterToDate == doFilterToDate;
         ret &= filter.fromDate == fromDate;
         ret &= filter.toDate == toDate;
-        ret &= filter.enabled == filter.enabled;
-        ret &= filter.maxMessageSize == filter.maxMessageSize;
-        ret &= filter.maxMessageSizeToLog == filter.maxMessageSizeToLog;
-        
+        ret &= filter.enabled == enabled;
+        ret &= filter.maxMessageSize == maxMessageSize;
+        ret &= filter.maxMessageSizeToLog == maxMessageSizeToLog;
+
         return ret;
     }
-    
+
     public int hashCode() {
         int hash = fromDate.hashCode() ^ toDate.hashCode();
         int flags = 0;
-        if(doFilterFromDate){
-            flags |= 1<<16;
+        if (doFilterFromDate) {
+            flags |= 1 << 16;
         }
-        if(doFilterToDate){
-            flags |= 1<<17;
+        if (doFilterToDate) {
+            flags |= 1 << 17;
         }
-        
+
         hash ^= flags;
         hash ^= maxMessageSize << 16;
         hash ^= maxMessageSizeToLog;
-        
+
         return hash;
     }
 

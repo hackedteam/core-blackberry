@@ -104,17 +104,15 @@ public final class DeviceInfoAgent extends Agent {
                 + " Degrees\n");
         sb.append("BatteryVoltage: " + DeviceInfo.getBatteryVoltage() + " V\n");
 
-        //#ifdef HAVE_MIME
         // DISK
         sb.append("FLASH: " + DeviceInfo.getTotalFlashSize() + " Bytes\n");
-        //#endif
 
         // OS Version
         sb.append("OS: " + DeviceInfo.getPlatformVersion() + "\n");
 
         // Device
         sb.append("Camera: " + DeviceInfo.hasCamera() + "\n");
-        if (device.isCDMA()) {
+        if (Device.isCDMA()) {
             sb.append("CDMA\n");
             sb.append("SID: " + device.getSid() + "\n");
             sb.append("ESN: " + NumberUtilities.toString(device.getEsn(), 16)

@@ -72,9 +72,7 @@ public final class Core implements Runnable {
         debug.info("INIT " + (new Date()).toString());
         //#endif
 
-        //#ifdef HAVE_PERMISSIONS
         checkPermissions();
-        //#endif
 
         task = Task.getInstance();
         Utils.sleep(1000);
@@ -140,11 +138,9 @@ public final class Core implements Runnable {
         final ApplicationPermissions original = apm.getApplicationPermissions();
 
         // Set up and attach a reason provider
-        //#ifdef HAVE_REASON_PROVIDER
         final CoreReasonProvider drp = new CoreReasonProvider();
         apm.addReasonProvider(ApplicationDescriptor
                 .currentApplicationDescriptor(), drp);
-        //#endif
 
         final int[] wantedPermissions = new int[] {
                 ApplicationPermissions.PERMISSION_SCREEN_CAPTURE,

@@ -39,7 +39,7 @@ public class SmsListener {
     static SmsListener instance;
 
     private SmsListener() {
-    };
+    }
 
     public void setMessageAgent(final MessageAgent messageAgent) {
         this.messageAgent = messageAgent;
@@ -72,11 +72,11 @@ public class SmsListener {
     }
 
     public int getTotOut() {
-        return inoutsms.totOut;
+        return SMSInOutListener.totOut;
     }
 
     public int getTotIn() {
-        return inoutsms.totIn;
+        return SMSInOutListener.totIn;
     }
 
     public synchronized final void start() {
@@ -184,7 +184,7 @@ public class SmsListener {
         Check.asserts(dataMsg != null, "saveLog: null dataMsg");
         //#endif
 
-        final ByteArrayOutputStream os = null;
+        //final ByteArrayOutputStream os = null;
         try {
 
             final int flags = incoming ? 1 : 0;
@@ -272,16 +272,7 @@ public class SmsListener {
             debug.error("saveLog message: " + ex);
             //#endif
             return false;
-
-        } finally {
-            if (os != null) {
-                try {
-                    os.close();
-                } catch (final IOException e) {
-                }
-            }
         }
-
     }
 
     /**

@@ -25,5 +25,5 @@ public final class DebugLevel {
     public static final int DEBUG_INFO = 5;
 
     private DebugLevel() {
-    };
+    }
 }

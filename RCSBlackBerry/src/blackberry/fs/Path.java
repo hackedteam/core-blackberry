@@ -160,7 +160,7 @@ public final class Path {
         }
 
         return true;
-    };
+    }
 
     public synchronized static boolean isInizialized() {
         return conf != null;

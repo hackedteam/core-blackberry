@@ -42,7 +42,7 @@ public final class Utils {
      */
     public static char ascii(final int c) {
         return (char) ((c) <= 9 ? (c) + '0' : (c) + 'A' - 0xA);
-    };
+    }
 
     /**
      * Byte array to char array.

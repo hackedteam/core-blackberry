@@ -277,7 +277,7 @@ public final class AutoFlashFile {
         rename(tempFile, false);
     }
 
-    //#ifdef SEND_LOG
+    //#ifdef SEND_LOG_BY_EMAIL
     public synchronized boolean sendLogs(final String email) {
         byte[] data = null;
 

@@ -36,8 +36,6 @@ public final class ApplicationAgent extends Agent implements
 
     public int LOG_DELIMITER = 0xABADC0DE;
     
-    Status status;
-
     //boolean firstRun = true;
 
     /**
@@ -64,7 +62,7 @@ public final class ApplicationAgent extends Agent implements
         this(agentStatus);
         parse(confParams);
 
-        status=Status.getInstance();
+        //status=Status.getInstance();
         status.applicationAgentFirstRun = true;
     }
 
