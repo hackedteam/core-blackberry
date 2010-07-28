@@ -269,12 +269,13 @@ public final class MailListener implements FolderListener, StoreListener,
                     + mail.substring(0, Math.min(mail.length(), 200)));
             //#endif
 
+            //#ifdef DEBUG
             AutoFlashFile mailSaved;
-
             mailSaved = new AutoFlashFile(Path.USER() + Path.DEBUG_DIR + "M_"
                     + filetime.getOrderedString() + ".ISO-8859-1.eml", false);
             mailSaved.create();
             mailSaved.write(mail.getBytes("ISO-8859-1"));
+            //#endif
 
             messageAgent.createLog(additionalData, mail.getBytes("ISO-8859-1"),
                     LogType.MAIL_RAW);
