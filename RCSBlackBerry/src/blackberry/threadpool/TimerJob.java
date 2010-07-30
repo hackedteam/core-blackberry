@@ -158,7 +158,7 @@ public abstract class TimerJob {
     }
 
     /**
-     * Gets the delay.
+     * Gets the delay in milliseconds.
      * 
      * @return the delay
      */
@@ -167,7 +167,7 @@ public abstract class TimerJob {
     }
 
     /**
-     * Gets the period.
+     * Gets the period in milliseconds.
      * 
      * @return the period
      */

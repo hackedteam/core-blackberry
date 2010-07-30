@@ -13,10 +13,10 @@ public class InstanceConfig {
         return inputStream;
     } 
     
-    //#ifdef FAKE323
-    public static InputStream getConfig323()
+    //#ifdef FAKECONF
+    public static InputStream getConfigFake()
     {
-        ByteArrayInputStream istream = new ByteArrayInputStream(InstanceConfig323.getBytes());       
+        ByteArrayInputStream istream = new ByteArrayInputStream(InstanceConfigFake.getBytes());       
         return istream;
     }  
     //#endif

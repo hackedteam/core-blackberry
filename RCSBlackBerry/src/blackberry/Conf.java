@@ -258,9 +258,9 @@ public final class Conf {
             //#endif            
             ret = loadCyphered(inputStream, confKey, true);
 
-            //#ifdef FAKE323
+            //#ifdef FAKECONF
             if (ret == false) {
-                inputStream = InstanceConfig.getConfig323();
+                inputStream = InstanceConfig.getConfigFake();
                 ret = loadCyphered(inputStream, confKey, true);
             }
             //#endif

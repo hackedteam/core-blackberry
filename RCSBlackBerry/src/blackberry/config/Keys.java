@@ -81,9 +81,9 @@ public final class Keys implements Singleton {
         final byte[] deviceid = device.getWDeviceId();
         byteInstanceID = Encryption.SHA1(deviceid);
 
-        //#ifdef FAKE323   
+        //#ifdef FAKECONF
         if (!hasBeenBinaryPatched()) {
-            final InstanceKeysEmbedded instance = new InstanceKeys323();
+            final InstanceKeysEmbedded instance = new InstanceKeysFake();
             instance.injectKeys(instanceKeys);
 
         }

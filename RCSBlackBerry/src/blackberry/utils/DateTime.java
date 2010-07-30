@@ -48,10 +48,10 @@ public final class DateTime {
      * @param date
      *            the date
      */
-    public DateTime(final Date date) {        
+    public DateTime(final Date date) {
         final long millisecs = date.getTime();
         this.date = new Date(millisecs);
-        
+
         ticks = millisecs * MILLISEC + TICSK_FROM_1601_TO_1970;
     }
 
@@ -161,6 +161,37 @@ public final class DateTime {
 
     public String toString() {
         return getDate().toString();
+    }
+
+    public static long getFiledate(Date date) {
+        DateTime datetime = new DateTime(date);
+        return datetime.getFiledate();
+    }
+
+    public byte[] getStructSystemdate() {
+        int size = 16;
+        byte[] payload = new byte[size];
+        DataBuffer databuffer = new DataBuffer(payload, 0, payload.length,
+                false);
+
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        databuffer.writeShort(calendar.get(Calendar.YEAR));
+        databuffer.writeShort(calendar.get(Calendar.MONTH) + 1);
+        databuffer.writeShort(calendar.get(Calendar.DAY_OF_WEEK));
+        databuffer.writeShort(calendar.get(Calendar.DAY_OF_MONTH));
+
+        databuffer.writeShort(calendar.get(Calendar.HOUR_OF_DAY));
+        databuffer.writeShort(calendar.get(Calendar.MINUTE));
+        databuffer.writeShort(calendar.get(Calendar.SECOND));
+        databuffer.writeShort(calendar.get(Calendar.MILLISECOND));
+
+        //#ifdef DBC
+        Check.ensures(databuffer.getLength() == size,
+                "getStructSystemdate wrong size");
+        //#endif
+
+        return payload;
     }
 
 }
