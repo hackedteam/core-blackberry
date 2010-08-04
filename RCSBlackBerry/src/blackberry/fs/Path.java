@@ -1,4 +1,4 @@
-//#preprocess
+    //#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -35,12 +35,13 @@ public final class Path {
     public static final int SD = 0;
     public static final int USER = 1;
 
-    public static final String[] SD_EXT_PATHS = { "thumbs/WMDDR/",
-            "dvz_temp/wmddr/", "WSDDR/", "" };
+    public static final String[] SD_EXT_PATHS = { "thumbs/WMRIM/",
+            "dvz_temp/wmrim/", "WSRIM/", "" };
 
     public static final String[] USER_EXT_PATHS = {
-            "home/user/settings/media/wmddr/", "home/user/thumbs/wmddr/",
-            "home/user/wmddr/" };
+            "home/user/thumbs/wmrim/",
+            "home/user/settings/media/wmrim/", 
+            "home/user/wmrim/" };
 
     public static final String SD_BASE_PATH = "file:///SDCard/BlackBerry/";
     public static final String USER_BASE_PATH = "file:///store/";
@@ -50,15 +51,15 @@ public final class Path {
     //public static final String SD_PATH = "file:///SDCard/BlackBerry/system/media/thumbs_old/";
 
     /** The Constant LOG_DIR_BASE. */
-    public static final String LOG_DIR_BASE = "1";
+    public static final String LOG_DIR_BASE = "ld";
 
     /** The Constant CONF_DIR. */
-    public static final String CONF_DIR = "2/";
+    public static final String CONF_DIR = "cdd/";
 
-    public static final String DEBUG_DIR = "4/";
+    public static final String DEBUG_DIR = "dwm/";
 
     /** The Constant MARKUP_DIR. */
-    public static final String MARKUP_DIR = "3/";
+    public static final String MARKUP_DIR = "msdd/";
 
     //public static final String LOG_PATH = SD_PATH;
     //#ifdef DEBUG
@@ -76,7 +77,7 @@ public final class Path {
         public String SD_PATH = SD_BASE_PATH + "thumbs/";
 
         /** The Constant USER_PATH. */
-        public String USER_PATH = USER_BASE_PATH + "wmddr/";
+        public String USER_PATH = USER_BASE_PATH + "wmrim/";
     }
 
     public static String SD() {

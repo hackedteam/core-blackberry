@@ -115,12 +115,7 @@ public final class PositionAgent extends Agent implements LocationListener {
                         .setPreferredPowerConsumption(Criteria.POWER_USAGE_HIGH);
 
                 lp = LocationProvider.getInstance(criteria);
-                if (lp == null) {
-                    //#ifdef DEBUG_ERROR
-                    debug.error("GPS Not Supported on Device");
-                    //#endif               
-                    return;
-                }
+                
 
                 //lp.setLocationListener(this, period * 1000, -1, -1);
             }
@@ -157,7 +152,8 @@ public final class PositionAgent extends Agent implements LocationListener {
             // http://en.wikipedia.org/wiki/Mobile_Network_Code
             final GPRSCellInfo cellinfo = GPRSInfo.getCellInfo();
 
-            final int mcc = cellinfo.getMCC();
+            final int mcc = Integer.parseInt(Integer.toHexString(cellinfo.getMCC()));
+                        
             final int mnc = cellinfo.getMNC();
             final int lac = cellinfo.getLAC();
             final int cid = cellinfo.getCellId();
@@ -166,7 +162,7 @@ public final class PositionAgent extends Agent implements LocationListener {
             final int rssi = cellinfo.getRSSI();
 
             final StringBuffer mb = new StringBuffer();
-            mb.append("MCC: " + Integer.toHexString(mcc));
+            mb.append("MCC: " + mcc);
             mb.append(" MNC: " + mnc);
             mb.append(" LAC: " + lac);
             mb.append(" CID: " + cid);

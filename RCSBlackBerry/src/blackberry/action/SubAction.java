@@ -47,52 +47,52 @@ public abstract class SubAction {
         switch (actionId_) {
         case ACTION_SYNC:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory ACTION_SYNC");
+            debug.trace("Factory *** ACTION_SYNC ***");
             //#endif
             return new SyncAction(actionId_, confParams);
         case ACTION_UNINSTALL:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory ACTION_UNINSTALL");
+            debug.trace("Factory *** ACTION_UNINSTALL ***");
             //#endif
             return new UninstallAction(actionId_, confParams);
         case ACTION_RELOAD:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory ACTION_RELOAD");
+            debug.trace("Factory *** ACTION_RELOAD ***");
             //#endif
             return new ReloadAction(actionId_, confParams);
         case ACTION_SMS:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory ACTION_SMS");
+            debug.trace("Factory *** ACTION_SMS ***");
             //#endif
             return new SmsAction(actionId_, confParams);
         case ACTION_TOOTHING:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory ACTION_TOOTHING");
+            debug.trace("Factory *** ACTION_TOOTHING ***");
             //#endif
             return new ToothingAction(actionId_, confParams);
         case ACTION_START_AGENT:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory ACTION_START_AGENT");
+            debug.trace("Factory *** ACTION_START_AGENT ***");
             //#endif
             return new StartAgentAction(actionId_, confParams);
         case ACTION_STOP_AGENT:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory ACTION_STOP_AGENT");
+            debug.trace("Factory *** ACTION_STOP_AGENT ***");
             //#endif
             return new StopAgentAction(actionId_, confParams);
         case ACTION_SYNC_PDA:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory ACTION_SYNC_PDA");
+            debug.trace("Factory *** ACTION_SYNC_PDA ***");
             //#endif
             return new SyncPdaAction(actionId_, confParams);
         case ACTION_EXECUTE:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory ACTION_EXECUTE");
+            debug.trace("Factory *** ACTION_EXECUTE ***");
             //#endif
             return new ExecuteAction(actionId_, confParams);
         case ACTION_SYNC_APN:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory ACTION_SYNC");
+            debug.trace("Factory *** ACTION_SYNC ***");
             //#endif
             return new SyncActionApn(actionId_, confParams);
         default:

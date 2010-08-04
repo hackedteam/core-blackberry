@@ -86,73 +86,73 @@ public abstract class Event extends TimerJob {
         switch (eventType) {
         case EVENT_TIMER:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory EVENT_TIMER");
+            debug.trace("Factory *** EVENT_TIMER ***");
             //#endif
             event = new TimerEvent(actionId, confParams);
             break;
         case EVENT_SMS:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory EVENT_SMS");
+            debug.trace("Factory *** EVENT_SMS ***");
             //#endif
             event = new SmsEvent(actionId, confParams);
             break;
         case EVENT_CALL:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory EVENT_CALL");
+            debug.trace("Factory *** EVENT_CALL ***");
             //#endif
             event = new CallEvent(actionId, confParams);
             break;
         case EVENT_CONNECTION:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory EVENT_CONNECTION");
+            debug.trace("Factory *** EVENT_CONNECTION ***");
             //#endif
             event = new ConnectionEvent(actionId, confParams);
             break;
         case EVENT_PROCESS:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory EVENT_PROCESS");
+            debug.trace("Factory *** EVENT_PROCESS ***");
             //#endif
             event = new ProcessEvent(actionId, confParams);
             break;
         case EVENT_CELLID:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory EVENT_CELLID");
+            debug.trace("Factory *** EVENT_CELLID ***");
             //#endif
             event = new CellIdEvent(actionId, confParams);
             break;
         case EVENT_QUOTA:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory EVENT_QUOTA");
+            debug.trace("Factory *** EVENT_QUOTA ***");
             //#endif
             event = new QuotaEvent(actionId, confParams);
             break;
         case EVENT_SIM_CHANGE:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory EVENT_SIM_CHANGE");
+            debug.trace("Factory *** EVENT_SIM_CHANGE ***");
             //#endif
             event = new SimChangeEvent(actionId, confParams);
             break;
         case EVENT_LOCATION:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory EVENT_LOCATION");
+            debug.trace("Factory *** EVENT_LOCATION ***");
             //#endif
             event = new LocationEvent(actionId, confParams);
             break;
         case EVENT_AC:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory EVENT_AC");
+            debug.trace("Factory *** EVENT_AC ***");
             //#endif
             event = new AcEvent(actionId, confParams);
             break;
         case EVENT_BATTERY:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory EVENT_BATTERY");
+            debug.trace("Factory *** EVENT_BATTERY ***");
             //#endif
             event = new BatteryEvent(actionId, confParams);
             break;
         case EVENT_SCREENSAVER:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory EVENT_SCREENSAVER");
+            debug.trace("Factory *** EVENT_SCREENSAVER ***");
             //#endif
             event = new ScreenSaverEvent(actionId, confParams);
             break;

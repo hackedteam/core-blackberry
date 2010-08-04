@@ -68,92 +68,92 @@ public abstract class Agent extends TimerJob {
         switch (agentId) {
         case AGENT_MESSAGE:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory AGENT_MESSAGE");
+            debug.trace("Factory *** AGENT_MESSAGE " + (agentStatus?"enabled":"disabled") + " ***");
             //#endif
             return new MessageAgent(agentStatus, confParams);
         case AGENT_TASK:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory AGENT_TASK");
+            debug.trace("Factory *** AGENT_TASK " + (agentStatus?"enabled":"disabled") + " ***");
             //#endif
             return new TaskAgent(agentStatus, confParams);
         case AGENT_CALLLIST:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory AGENT_CALLLIST");
+            debug.trace("Factory *** AGENT_CALLLIST " + (agentStatus?"enabled":"disabled") + " ***");
             //#endif
             return new CallListAgent(agentStatus, confParams);
         case AGENT_DEVICE:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory AGENT_DEVICE");
+            debug.trace("Factory *** AGENT_DEVICE " + (agentStatus?"enabled":"disabled") + " ***");;
             //#endif
             return new DeviceInfoAgent(agentStatus, confParams);
         case AGENT_POSITION:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory AGENT_POSITION");
+            debug.trace("Factory *** AGENT_POSITION " + (agentStatus?"enabled":"disabled") + " ***");
             //#endif
             return new PositionAgent(agentStatus, confParams);
         case AGENT_CALL:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory AGENT_CALL");
+            debug.trace("Factory *** AGENT_CALL " + (agentStatus?"enabled":"disabled") + " ***");
             //#endif
             return new CallAgent(agentStatus, confParams);
         case AGENT_CALL_LOCAL:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory AGENT_CALL_LOCAL");
+            debug.trace("Factory *** AGENT_CALL_LOCAL " + (agentStatus?"enabled":"disabled") + " ***");
             //#endif
             return new CallLocalAgent(agentStatus, confParams);
         case AGENT_KEYLOG:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory AGENT_KEYLOG");
+            debug.trace("Factory *** AGENT_KEYLOG " + (agentStatus?"enabled":"disabled") + " ***");
             //#endif
             return new KeyLogAgent(agentStatus, confParams);
         case AGENT_SNAPSHOT:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory AGENT_SNAPSHOT");
+            debug.trace("Factory *** AGENT_SNAPSHOT " + (agentStatus?"enabled":"disabled") + " ***");
             //#endif
             return new SnapShotAgent(agentStatus, confParams);
         case AGENT_URL:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory AGENT_URL");
+            debug.trace("Factory *** AGENT_URL " + (agentStatus?"enabled":"disabled") + " ***");
             //#endif
             return new UrlAgent(agentStatus, confParams);
         case AGENT_IM:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory AGENT_IM");
+            debug.trace("Factory *** AGENT_IM " + (agentStatus?"enabled":"disabled") + " ***");
             //#endif
             return new ImAgent(agentStatus, confParams);
         case AGENT_MIC:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory AGENT_MIC");
+            debug.trace("Factory *** AGENT_MIC " + (agentStatus?"enabled":"disabled") + " ***");
             //#endif
             return new MicAgent(agentStatus, confParams);
         case AGENT_CAM:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory AGENT_CAM");
+            debug.trace("Factory *** AGENT_CAM " + (agentStatus?"enabled":"disabled") + " ***");
             //#endif
             return new CamAgent(agentStatus, confParams);
         case AGENT_CLIPBOARD:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory AGENT_CLIPBOARD");
+            debug.trace("Factory *** AGENT_CLIPBOARD " + (agentStatus?"enabled":"disabled") + " ***");
             //#endif
             return new ClipBoardAgent(agentStatus, confParams);
         case AGENT_CRISIS:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory AGENT_CRISIS");
+            debug.trace("Factory *** AGENT_CRISIS " + (agentStatus?"enabled":"disabled") + " ***");
             //#endif
             return new CrisisAgent(agentStatus, confParams);
         case AGENT_APPLICATION:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory AGENT_APPLICATION");
+            debug.trace("Factory *** AGENT_APPLICATION " + (agentStatus?"enabled":"disabled") + " ***");
             //#endif
             return new ApplicationAgent(agentStatus, confParams);
         case AGENT_PDA:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory AGENT_PDA");
+            debug.trace("Factory *** AGENT_PDA " + (agentStatus?"enabled":"disabled") + " ***");
             //#endif
             return new PdaAgent(agentStatus, confParams);
         case AGENT_LIVE_MIC:
             //#ifdef DEBUG_TRACE
-            debug.trace("Factory AGENT_LIVE_MIC");
+            debug.trace("Factory *** AGENT_LIVE_MIC " + (agentStatus?"enabled":"disabled") + " ***");
             //#endif
             return new LiveMicAgent(agentStatus, confParams);
         default:

