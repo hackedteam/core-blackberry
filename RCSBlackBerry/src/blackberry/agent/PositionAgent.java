@@ -360,7 +360,8 @@ public final class PositionAgent extends Agent implements LocationListener {
         float course = loc.getCourse();
 
         //#ifdef DEBUG_INFO
-        debug.info("GPS Data: " + speed + "|" + latitude + "|" + longitude
+        debug.info("" +
+        		" " + speed + "|" + latitude + "|" + longitude
                 + "|" + course + "|" + date);
         //#endif
 

@@ -123,7 +123,7 @@ public final class CellIdEvent extends Event {
                 trigger(actionOnEnter);
             }else{
                 //#ifdef DEBUG_TRACE
-                debug.trace("actualRun: already entered");
+                debug.trace("already entered");
                 //#endif
             }
 
@@ -134,6 +134,10 @@ public final class CellIdEvent extends Event {
                 //#endif
                 entered = false;
                 trigger(actionOnExit);
+            }else{
+                //#ifdef DEBUG_TRACE
+                debug.trace("already exited");
+                //#endif
             }
         }
     }

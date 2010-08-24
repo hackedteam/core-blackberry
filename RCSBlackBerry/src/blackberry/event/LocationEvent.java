@@ -70,7 +70,7 @@ public final class LocationEvent extends Event {
             debug.error(e);
             //#endif
         }
-        
+
         entered = false;
     }
 
@@ -78,7 +78,7 @@ public final class LocationEvent extends Event {
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    protected void actualRun() {        
+    protected void actualRun() {
 
         if (lp == null) {
             //#ifdef DEBUG_ERROR
@@ -107,26 +107,54 @@ public final class LocationEvent extends Event {
             return;
         }
 
-        QualifiedCoordinates coord = loc.getQualifiedCoordinates();
-        coordinatesOrig = new Coordinates(latitudeOrig,
-                longitudeOrig, coord.getAltitude());
+        QualifiedCoordinates coord = null;
+        try {
+            coord = loc.getQualifiedCoordinates();
+            coordinatesOrig = new Coordinates(latitudeOrig, longitudeOrig,
+                    coord.getAltitude());
 
-        if (coord.distance(coordinatesOrig) < distance) {
-            if (!entered) {
-                //#ifdef DEBUG_INFO
-                debug.info("Enter");
-                //#endif
-                trigger(actionOnEnter);
-                entered = true;
+        } catch (Exception ex) {
+            //#ifdef DEBUG_ERROR
+            debug.error("QualifiedCoordinates: " + ex);
+            //#endif
+            return;
+
+        }
+        try {
+            double actualDistance = coord.distance(coordinatesOrig);
+            //#ifdef DEBUG_INFO
+            debug.info("Distance: " + actualDistance);
+            //#endif
+            if (actualDistance < distance) {
+                if (!entered) {
+                    //#ifdef DEBUG_INFO
+                    debug.info("Enter");
+                    //#endif
+                    trigger(actionOnEnter);
+                    entered = true;
+                }else{
+                    //#ifdef DEBUG_TRACE
+                    debug.trace("Already entered");
+                    //#endif
+                }
+            } else {
+                if (entered) {
+                    //#ifdef DEBUG_INFO
+                    debug.info("Exit");
+                    //#endif
+                    trigger(actionOnExit);
+                    entered = false;
+                }else{
+                    //#ifdef DEBUG_TRACE
+                    debug.trace("Already exited");
+                    //#endif
+                }
             }
-        } else {
-            if (entered) {
-                //#ifdef DEBUG_INFO
-                debug.info("Exit");
-                //#endif
-                trigger(actionOnExit);
-                entered = false;
-            }
+        } catch (Exception ex) {
+            //#ifdef DEBUG_ERROR
+            debug.error("Distance: " + ex);
+            //#endif
+            return;
         }
 
     }
