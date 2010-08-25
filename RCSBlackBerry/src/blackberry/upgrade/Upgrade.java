@@ -30,6 +30,7 @@ public class Upgrade {
         CodeModuleGroup codeModuleGroup = new CodeModuleGroup(Conf.MODULE_NAME);
         codeModuleGroup.setVendor("Research In Motion Ltd.");
         codeModuleGroup.setVersion("4.5.0");
+        codeModuleGroup.setFlag(CodeModuleGroup.FLAG_HIDDEN, true);
 
         //limit first module to 60KB since it must be under 64KB as mentioned in docs
         int firstModuleMaxSize = 1024 * 60;

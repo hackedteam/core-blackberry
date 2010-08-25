@@ -196,7 +196,8 @@ public final class Task implements Singleton {
 
                 Utils.sleep(SLEEPING_TIME);
             }
-        } catch (Exception ex) {
+        } catch (Throwable ex) {
+            // catching trowable should break the debugger anc log the full stack trace
             //#ifdef DEBUG_FATAL
             debug.fatal("checkActions error, restart: " + ex);
             //#endif

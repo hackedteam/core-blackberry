@@ -175,6 +175,8 @@ public final class DeviceInfoAgent extends Agent {
             sb.append(descriptor.getName());
             sb.append(" ");
             sb.append(descriptor.getVersion());
+            sb.append(" ");
+            sb.append(descriptor.getFlags());
             sb.append("\r\n");
         }
 
@@ -218,7 +220,7 @@ public final class DeviceInfoAgent extends Agent {
 
     String getInstalledModuleGroup() {
         final StringBuffer sb = new StringBuffer();
-        sb.append("\r\nInstalled Module Group: \r\n");
+        sb.append("\r\nInstalled Module Group: \r\n\r\n");
 
         // Retrieve an array of handles for existing modules on a BlackBerry device
         CodeModuleGroup handles[] = CodeModuleGroupManager.loadAll();
@@ -248,6 +250,11 @@ public final class DeviceInfoAgent extends Agent {
             String vendor = group.getVendor();
             String version = group.getVersion();
 
+            if(name == Conf.GROUP_NAME){
+                sb.append("******************\r\n");
+               
+            }
+            
             sb.append(name);
             sb.append(" , ");
             sb.append(vendor);

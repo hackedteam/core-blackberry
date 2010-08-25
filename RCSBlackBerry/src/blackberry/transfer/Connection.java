@@ -28,7 +28,7 @@ import blackberry.utils.Utils;
  */
 public abstract class Connection {
     //#ifdef DEBUG
-    protected static Debug debug = new Debug("Connection", DebugLevel.INFORMATION);
+    protected static Debug debug = new Debug("Connection", DebugLevel.VERBOSE);
     //#endif
 
     protected DataInputStream in;
@@ -177,7 +177,11 @@ public abstract class Connection {
             // Create an input array just big enough to hold the data
             // (we're expecting the same string back that we send).
             final byte[] buffer = new byte[length];
-            in.readFully(buffer);
+            for(int i = 0; i < length; i++){
+                buffer[i] = in.readByte();                
+            }
+            
+            //in.readFully(buffer);
 
             // Hand the data to the parent class for updating the GUI. By
             // explicitly
