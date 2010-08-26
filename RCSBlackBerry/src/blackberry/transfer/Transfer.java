@@ -693,7 +693,6 @@ public class Transfer {
                 debug.info("UPGRADE");
                 //#endif
                 getUpgrade(command);
-                reload = true;
                 break;
 
             case Proto.BYE:
