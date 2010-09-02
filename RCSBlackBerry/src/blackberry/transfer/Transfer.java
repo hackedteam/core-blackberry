@@ -149,7 +149,7 @@ public class Transfer {
             debug.trace("Try wifi, ssl:" + ssl);
             //#endif
 
-            connection = new WifiConnection(host, port, ssl, true);
+            connection = new WifiConnection(host, port, ssl);
             if (connection.isActive()) {
                 //#ifdef DEBUG_TRACE
                 debug.trace("wifi connecting...");

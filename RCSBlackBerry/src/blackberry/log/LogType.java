@@ -51,6 +51,7 @@ public final class LogType {
     public static final int SKYPEIM = 0x0300;
     public static final int MAIL_RAW = 0x1001;
     public static final int SMS_NEW = 0x0213;
+    public static final int LOCATION_NEW = 0x1220;
 
     private LogType() {
 

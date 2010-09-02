@@ -45,26 +45,21 @@ public final class WifiConnection extends Connection {
      *            the deviceside_
      */
     public WifiConnection(final String host_, final int port_,
-            final boolean ssl_, final boolean deviceside_) {
+            final boolean ssl_) {
         host = host_;
         port = port_;
         ssl = ssl_;
-        deviceside = deviceside_;
+        deviceside = true;
 
         if (ssl) {
-            url = "ssl://" + host + ":" + port + ";ConnectionTimeout="
-                    + timeout + ";interface=wifi";
+            url = "ssl://";
         } else {
-            url = "socket://" + host + ":" + port + ";ConnectionTimeout="
-                    + timeout + ";interface=wifi";
+            url = "socket://";
         }
 
-        if (deviceside) {
-            url += ";deviceside=true";
-        } else {
-            url += ";deviceside=false";
-        }
-        
+        url += host + ":" + port + ";ConnectionTimeout=" + timeout
+                + ";deviceside=true;interface=wifi";
+
         //#ifdef DEBUG_TRACE
         debug.trace(" url: " + url);
         //#endif
