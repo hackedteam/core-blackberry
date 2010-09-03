@@ -458,6 +458,28 @@ public final class Utils {
         return ret;
     }
 
+    public static byte[] hexStringToByteArray(final String wchar, int offset, int len) {
+
+        final byte[] ret = new byte[len / 2];
+
+        for (int i = 0; i < ret.length; i++) {
+            final char first = wchar.charAt(offset + (i * 2));
+            final char second = wchar.charAt(offset + (i * 2 + 1));
+
+            int value = NumberUtilities.hexDigitToInt(first) << 4;
+            value += NumberUtilities.hexDigitToInt(second);
+
+            //#ifdef DBC
+            Check.asserts(value >= 0 && value < 256,
+                    "HexStringToByteArray: wrong value");
+            //#endif
+
+            ret[i] = (byte) value;
+        }
+
+        return ret;
+    
+    }
     /**
      * Hex string to byte array.
      * 

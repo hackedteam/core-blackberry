@@ -28,7 +28,7 @@ import blackberry.utils.Utils;
  */
 public abstract class Connection {
     //#ifdef DEBUG
-    protected static Debug debug = new Debug("Connection", DebugLevel.VERBOSE);
+    protected static Debug debug = new Debug("Connection", DebugLevel.INFORMATION);
     //#endif
 
     protected DataInputStream in;
@@ -160,7 +160,7 @@ public abstract class Connection {
             int steps = 10;
             while (steps > 0) {
                 if (in.available() == 0) {
-                    debug.trace("nothing available, waiting: " + steps);
+                    //debug.trace("nothing available, waiting: " + steps);
 
                     Utils.sleep(1000);
                     steps--;

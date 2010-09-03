@@ -71,6 +71,13 @@ public final class LocationEvent extends Event {
             //#endif
         }
 
+        if (lp == null) {
+            //#ifdef DEBUG_ERROR
+            debug.error("GPS Not Supported on Device");
+            //#endif               
+            setPeriod(NEVER);
+        }
+        
         entered = false;
     }
 

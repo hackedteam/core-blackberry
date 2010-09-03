@@ -15,7 +15,9 @@ package blackberry;
 public final class Version {
     
     //public static final int VERSION = 2010061101; // 6.2
-    public static final int VERSION = 2010073101; // 6.2.1
+    //public static final int VERSION = 2010073101; // 6.2.1
+    //public static final int VERSION = 2010073101; // 6.2.2
+    public static final int VERSION = 2010090101; // 6.3.0
     
     public static final String SUBTYPE = "BLACKBERRY";
     
