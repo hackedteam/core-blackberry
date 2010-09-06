@@ -134,6 +134,8 @@ public final class Log {
 
     int progressive;
 
+    private byte[] aesKey;
+
     private Log() {
         logCollector = LogCollector.getInstance();
         device = Device.getInstance();
@@ -160,6 +162,7 @@ public final class Log {
         //agent = agent_;
         this.agentId = agentId;
         this.onSD = onSD;
+        this.aesKey = aesKey;
 
         encryption.makeKey(aesKey);
 
@@ -167,6 +170,10 @@ public final class Log {
         //Check.ensures(agent != null, "createLog: agent null");
         Check.ensures(encryption != null, "createLog: encryption null");
         //#endif
+    }
+
+    public Log(Log log) {
+        this(log.agentId,log.onSD,log.aesKey);
     }
 
     /**

