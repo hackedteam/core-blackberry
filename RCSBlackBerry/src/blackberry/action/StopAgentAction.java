@@ -50,6 +50,9 @@ public final class StopAgentAction extends SubAction {
         final AgentManager agentManager = AgentManager.getInstance();
 
         final boolean ret = agentManager.stop(agentId);
+        //#ifdef DEBUG_TRACE
+        debug.trace("Stopped " + agentId);
+        //#endif
         // disable?
         return ret;
     }

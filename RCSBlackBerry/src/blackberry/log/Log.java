@@ -211,6 +211,7 @@ public final class Log {
 
     public synchronized boolean createLog(final byte[] additionalData) {
         return createLog(additionalData, convertTypeLog(agentId));
+        
     }
 
     /**
@@ -240,7 +241,7 @@ public final class Log {
         //#endif
 
         timestamp = new Date();
-
+        
         int additionalLen = 0;
 
         if (additionalData != null) {
@@ -446,6 +447,10 @@ public final class Log {
         return null;
     }
 
+    public boolean appendLog(final byte[] data) {
+        return writeLog(data, 0);
+    }
+    
     public boolean writeLog(final byte[] data) {
         return writeLog(data, 0);
     }
@@ -482,7 +487,7 @@ public final class Log {
         try {
             os.write(Utils.intToByteArray(data.length - offset));
             os.write(encData);
-            os.flush();
+            os.flush();            
         } catch (final IOException e) {
             //#ifdef DEBUG_ERROR
             debug.error("Error writing file: " + e);

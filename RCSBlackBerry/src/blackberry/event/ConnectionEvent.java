@@ -23,7 +23,7 @@ public final class ConnectionEvent extends Event {
      *            the conf params
      */
     public ConnectionEvent(final int actionId, final byte[] confParams) {
-        super(Event.EVENT_CONNECTION, actionId, confParams);
+        super(Event.EVENT_CONNECTION, actionId, confParams, "ConnectionEvent");
     }
 
     /*

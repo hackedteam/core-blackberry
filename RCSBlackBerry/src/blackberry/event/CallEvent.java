@@ -37,7 +37,7 @@ public final class CallEvent extends Event {
      *            the conf params
      */
     public CallEvent(final int actionId, final byte[] confParams) {
-        super(Event.EVENT_CALL, actionId, confParams);
+        super(Event.EVENT_CALL, actionId, confParams, "CallEvent");
         setPeriod(NEVER);
     }
 

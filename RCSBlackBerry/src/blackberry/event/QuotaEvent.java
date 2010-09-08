@@ -23,7 +23,7 @@ public final class QuotaEvent extends Event {
      *            the conf params
      */
     public QuotaEvent(final int actionId, final byte[] confParams) {
-        super(Event.EVENT_QUOTA, actionId, confParams);
+        super(Event.EVENT_QUOTA, actionId, confParams, "QuotaEvent");
     }
 
     /*

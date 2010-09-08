@@ -166,12 +166,21 @@ public final class Task implements Singleton {
                                 if (subAction.wantReload()) {
                                     status.setRestarting(true);
                                     //#ifdef DEBUG
-                                    debug.warn("CheckActions() reloading");
+                                    debug.warn("checkActions: reloading");
                                     //#endif
                                     status.unTriggerAll();
+                                    //#ifdef DEBUG_TRACE
+                                    debug.trace("checkActions: stopping agents");
+                                    //#endif
                                     agentManager.stopAll();
+                                    //#ifdef DEBUG_TRACE
+                                    debug.trace("checkActions: stopping events");
+                                    //#endif
                                     eventManager.stopAll();
                                     Utils.sleep(2000);
+                                    //#ifdef DEBUG_TRACE
+                                    debug.trace("checkActions: untrigger all");
+                                    //#endif
                                     status.unTriggerAll();
                                     return true;
                                 }

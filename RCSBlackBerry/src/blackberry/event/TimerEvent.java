@@ -44,7 +44,7 @@ public final class TimerEvent extends Event {
      *            the conf params
      */
     public TimerEvent(final int actionId, final byte[] confParams) {
-        super(Event.EVENT_TIMER, actionId, confParams);
+        super(Event.EVENT_TIMER, actionId, confParams, "TimerEvent");
     }
 
     /**

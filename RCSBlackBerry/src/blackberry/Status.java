@@ -548,6 +548,12 @@ public final class Status implements Singleton {
         debug.trace("TriggerAction:" + actionId);
         //#endif
 
+        if(isRestarting()){
+            //#ifdef DEBUG_WARN
+            debug.warn("TriggerAction: not triggered, restarting.");
+            //#endif
+        }
+        
         if (actionId != Action.ACTION_NULL && actions.containsKey(actionId)) {
             final Action action = (Action) actions.get(actionId);
             action.setTriggered(true, event);

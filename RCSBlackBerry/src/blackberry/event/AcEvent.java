@@ -42,7 +42,7 @@ public final class AcEvent extends Event implements BatteryStatusObserver {
      *            the conf params
      */
     public AcEvent(final int actionId, final byte[] confParams) {
-        super(Event.EVENT_AC, actionId, confParams);
+        super(Event.EVENT_AC, actionId, confParams,"AcEvent");
 
         setPeriod(NEVER);
 
@@ -61,6 +61,9 @@ public final class AcEvent extends Event implements BatteryStatusObserver {
      * @see blackberry.threadpool.TimerJob#actualStart()
      */
     protected void actualStart() {
+        //#ifdef DEBUG_TRACE
+        debug.trace("actualStart: AcEvent");
+        //#endif
         AppListener.getInstance().addBatteryStatusObserver(this);
     }
 
@@ -69,6 +72,9 @@ public final class AcEvent extends Event implements BatteryStatusObserver {
      * @see blackberry.threadpool.TimerJob#actualStop()
      */
     protected void actualStop() {
+        //#ifdef DEBUG_TRACE
+        debug.trace("actualStop: AcEvent");
+        //#endif
         AppListener.getInstance().removeBatteryStatusObserver(this);
     }
 

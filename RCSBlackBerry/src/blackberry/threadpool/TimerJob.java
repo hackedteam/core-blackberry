@@ -322,6 +322,9 @@ public abstract class TimerJob {
 
         scheduled = false;
         actualStop();
+        //#ifdef DEBUG_TRACE
+        debug.trace("Stopped: " + this);
+        //#endif
     }
 
     /*

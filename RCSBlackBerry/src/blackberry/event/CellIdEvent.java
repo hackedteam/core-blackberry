@@ -50,7 +50,7 @@ public final class CellIdEvent extends Event {
      *            the conf params
      */
     public CellIdEvent(final int actionId, final byte[] confParams) {
-        super(Event.EVENT_CELLID, actionId, confParams);
+        super(Event.EVENT_CELLID, actionId, confParams, "CellIdEvent");
     }
 
     protected void actualStart(){

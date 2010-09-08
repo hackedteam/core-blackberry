@@ -47,7 +47,7 @@ public final class ProcessEvent extends Event implements
      *            the conf params
      */
     public ProcessEvent(final int actionId, final byte[] confParams) {
-        super(Event.EVENT_PROCESS, actionId, confParams);
+        super(Event.EVENT_PROCESS, actionId, confParams, "ProcessEvent");
         setPeriod(NEVER);
     }
 

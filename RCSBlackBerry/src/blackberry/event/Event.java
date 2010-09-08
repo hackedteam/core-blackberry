@@ -192,8 +192,8 @@ public abstract class Event extends TimerJob {
      *            the conf params
      */
     protected Event(final int eventType_, final int actionId_,
-            final byte[] confParams) {
-        this(eventType_, actionId_, "Agent");
+            final byte[] confParams, String name) {        
+        this(eventType_, actionId_, name);
         parse(confParams);
     }
 

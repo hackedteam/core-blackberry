@@ -23,7 +23,7 @@ public final class SimChangeEvent extends Event {
      *            the conf params
      */
     public SimChangeEvent(final int actionId, final byte[] confParams) {
-        super(Event.EVENT_SIM_CHANGE, actionId, confParams);
+        super(Event.EVENT_SIM_CHANGE, actionId, confParams, "SimChangeEvent");
     }
 
     /*
