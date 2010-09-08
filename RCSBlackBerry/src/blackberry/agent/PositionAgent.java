@@ -157,10 +157,7 @@ public final class PositionAgent extends Agent implements LocationListener {
             }
         }
         if(wifiEnabled){
-          //#ifdef DEBUG_TRACE
-            debug.trace("actualStart: logWifi.createLog");
-            //#endif
-            logWifi.createLog(getAdditionalData(1, LOG_TYPE_WIFI), LogType.LOCATION_NEW);            
+            // i log wifi sono uno solo
         }
 
     }
@@ -211,10 +208,7 @@ public final class PositionAgent extends Agent implements LocationListener {
             logCell.close();
         }
         if (wifiEnabled) {
-            //#ifdef DEBUG_TRACE
-            debug.trace("actualStop: closing logWifi");
-            //#endif
-            logWifi.close();
+           // i wifi sono uno solo
         }
 
     }
@@ -228,9 +222,9 @@ public final class PositionAgent extends Agent implements LocationListener {
             byte[] payload = getWifiPayload(wifi.getBSSID(), wifi.getSSID(),
                     wifi.getSignalLevel());
 
-            //logWifi.createLog(getAdditionalData(1, LOG_TYPE_WIFI), LogType.LOCATION_NEW);
+            logWifi.createLog(getAdditionalData(1, LOG_TYPE_WIFI), LogType.LOCATION_NEW);
             logWifi.writeLog(payload);
-            //logWifi.close();
+            logWifi.close();
         } else {
             //#ifdef DEBUG_WARN
             debug.warn("Wifi disabled");

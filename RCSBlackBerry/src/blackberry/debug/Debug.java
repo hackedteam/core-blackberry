@@ -304,7 +304,7 @@ public final class Debug {
         }
     }
 
-    private void logToInfo(final String message, final int priority) {
+    public static void logToInfo(final String message, final int priority) {
         //#ifdef DBC
         Check.requires(logToInfo, "!logToInfo");
         //#endif

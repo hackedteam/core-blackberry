@@ -81,7 +81,7 @@ public final class ApplicationAgent extends Agent implements
         //#ifdef DEBUG_TRACE
         debug.trace("actualStart addApplicationListObserver");
         //#endif
-
+        log.createLog(null);
         AppListener.getInstance().addApplicationListObserver(this);
     }
 
@@ -94,6 +94,7 @@ public final class ApplicationAgent extends Agent implements
         debug.trace("actualStop removeApplicationListObserver");
         //#endif
         AppListener.getInstance().removeApplicationListObserver(this);
+        log.close();
     }
 
     /*
@@ -130,9 +131,7 @@ public final class ApplicationAgent extends Agent implements
 
             status.applicationAgentFirstRun = false;
             return;
-        }
-
-        log.createLog(null);
+        }       
 
         int size = startedListName.size();
         for (int i = 0; i < size; i++) {
@@ -153,9 +152,7 @@ public final class ApplicationAgent extends Agent implements
             //#endif
             writeLog(name, "STOP", mod);
         }
-
-        log.close();
-
+        
         //#ifdef DEBUG_TRACE
         debug.trace("finished writing log");
 

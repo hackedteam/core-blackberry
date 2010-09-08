@@ -129,7 +129,7 @@ public class SyncAction extends SubAction {
 
             // Stop degli agenti che producono un singolo log
             agentManager.reStart(Agent.AGENT_POSITION);
-            // agentManager.reStart(Agent.AGENT_APPLICATION);
+            agentManager.reStart(Agent.AGENT_APPLICATION);
             //agentManager.reStart(Agent.AGENT_CLIPBOARD);
             //agentManager.reStart(Agent.AGENT_URL);
             agentManager.reStart(Agent.AGENT_DEVICE);

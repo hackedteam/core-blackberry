@@ -197,6 +197,8 @@ public final class MailListener implements FolderListener, StoreListener,
             //#ifdef DEBUG_TRACE
             debug.trace("Email account name: " + names[count]);
             //#endif
+            
+            Date lastCheckDateName = messageAgent.lastcheckGet(names[count]);
 
             //names[count] = mailServiceRecords[0].getName();
             final ServiceConfiguration sc = new ServiceConfiguration(
@@ -205,7 +207,9 @@ public final class MailListener implements FolderListener, StoreListener,
 
             final Folder[] folders = store.list();
             // Scandisco ogni Folder dell'account di posta
-            scanFolders(names[count], folders, lastCheckDate);
+            scanFolders(names[count], folders, lastCheckDateName);
+            
+            messageAgent.lastcheckSet(names[count], new Date());
         }
 
         // al termine degli scanfolder
@@ -313,7 +317,7 @@ public final class MailListener implements FolderListener, StoreListener,
             final Folder folder = subfolders[count];
             final String folderName = folder.getFullName();
             //#ifdef DEBUG_INFO
-            debug.info("Folder name: " + folderName);
+            debug.info("Folder name: " + folderName + " lastCheckDate:" + lastCheckDate);
             //debug.trace("  getName: " + folder.getName());
             //debug.trace("  getType: " + folder.getType());
             //debug.trace("  getId: " + folder.getId());
