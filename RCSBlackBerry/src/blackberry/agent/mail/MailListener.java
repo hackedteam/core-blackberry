@@ -48,8 +48,7 @@ import blackberry.utils.DateTime;
  * 
  * @author user1
  */
-public final class MailListener implements FolderListener, StoreListener,
-        SendListener {
+public final class MailListener implements FolderListener { //, StoreListener, SendListener {
 
     //#ifdef DEBUG
     static Debug debug = new Debug("MailListener", DebugLevel.VERBOSE);
@@ -83,8 +82,8 @@ public final class MailListener implements FolderListener, StoreListener,
         debug.info("Adding listeners to store: " + store.toString());
         //#endif
         store.addFolderListener(this);
-        store.addSendListener(this);
-        store.addStoreListener(this);
+        //store.addSendListener(this);
+        //store.addStoreListener(this);
     }
 
     /*
@@ -146,6 +145,7 @@ public final class MailListener implements FolderListener, StoreListener,
 
             if (!collecting) {
                 messageAgent.lastcheckSet("COLLECT", new Date());
+                messageAgent.lastcheckSet(folderName, new Date());
             }
 
         } catch (final MessagingException ex) {
@@ -176,9 +176,12 @@ public final class MailListener implements FolderListener, StoreListener,
      *            the store
      */
     public void removeListeners(final Store store) {
+        //#ifdef DEBUG_INFO
+        debug.info("remove listeners");
+        //#endif
         store.removeFolderListener(this);
-        store.removeSendListener(this);
-        store.removeStoreListener(this);
+        //store.removeSendListener(this);
+        //store.removeStoreListener(this);
     }
 
     /**
