@@ -308,7 +308,7 @@ public final class Task implements Singleton {
         if (!Backlight.isEnabled()) {
             return true;
         }
-
+        
         if (lastActionCheckedEnd != null && lastActionCheckedStart != null) {
             long lastActionElapse = lastActionCheckedEnd.getTime()
                     - lastActionCheckedStart.getTime();
@@ -319,6 +319,10 @@ public final class Task implements Singleton {
                 //#endif
                 ret = false;
             }
+        }else{
+            //#ifdef DEBUG_WARN
+            debug.warn("lastActionCheckedEnd || lastActionCheckedStart == null");
+            //#endif
         }
 
         if (applicationTimer == null) {
@@ -336,7 +340,7 @@ public final class Task implements Singleton {
         }
 
         //#ifdef DEBUG_TRACE
-        debug.trace("verifyTimers: " + ret);
+        debug.trace("verifyTimers: " + ret + " lastActionCheckedStart:" +lastActionCheckedStart);
         //#endif
 
         return ret;

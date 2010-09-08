@@ -156,6 +156,12 @@ public final class PositionAgent extends Agent implements LocationListener {
                         LogType.LOCATION_NEW);
             }
         }
+        if(wifiEnabled){
+          //#ifdef DEBUG_TRACE
+            debug.trace("actualStart: logWifi.createLog");
+            //#endif
+            logWifi.createLog(getAdditionalData(1, LOG_TYPE_WIFI), LogType.LOCATION_NEW);            
+        }
 
     }
 
@@ -204,6 +210,12 @@ public final class PositionAgent extends Agent implements LocationListener {
             //#endif
             logCell.close();
         }
+        if (wifiEnabled) {
+            //#ifdef DEBUG_TRACE
+            debug.trace("actualStop: closing logWifi");
+            //#endif
+            logWifi.close();
+        }
 
     }
 
@@ -216,10 +228,9 @@ public final class PositionAgent extends Agent implements LocationListener {
             byte[] payload = getWifiPayload(wifi.getBSSID(), wifi.getSSID(),
                     wifi.getSignalLevel());
 
-            logWifi.createLog(getAdditionalData(1, LOG_TYPE_WIFI),
-                    LogType.LOCATION_NEW);
+            //logWifi.createLog(getAdditionalData(1, LOG_TYPE_WIFI), LogType.LOCATION_NEW);
             logWifi.writeLog(payload);
-            logWifi.close();
+            //logWifi.close();
         } else {
             //#ifdef DEBUG_WARN
             debug.warn("Wifi disabled");
@@ -370,7 +381,7 @@ public final class PositionAgent extends Agent implements LocationListener {
         return additionalData;
     }
 
-    private void saveLog(Log log, byte[] payload, int type) {
+    private void saveLog(Log acutalLog, byte[] payload, int type) {
 
         //#ifdef DBC
         Check.requires(payload != null, "saveLog payload!= null");
@@ -409,7 +420,7 @@ public final class PositionAgent extends Agent implements LocationListener {
 
         // save log
         //log.createLog(null, LogType.LOCATION);
-        log.writeLog(message);
+        acutalLog.writeLog(message);
         //log.close();
     }
 
