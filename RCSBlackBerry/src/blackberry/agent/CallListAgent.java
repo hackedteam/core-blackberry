@@ -81,7 +81,7 @@ public final class CallListAgent extends Agent implements CallListObserver {
             int duration, boolean outgoing, boolean missed) {
         //#ifdef DEBUG_INFO
         debug.info("number: " + number + " date: " + date + " duration: "
-                + duration);
+                + duration + " outgoing: " + outgoing + " missed: " + missed);
         //#endif
 
         String nametype = "u";

@@ -759,10 +759,11 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
 
             if (type == PhoneCallLog.TYPE_MISSED_CALL_OPENED
                     || type == PhoneCallLog.TYPE_MISSED_CALL_UNOPENED) {
-                outgoing = true;
-                missed = true;
+                outgoing = false;
             }
 
+            missed = phoneCallLog.getDuration() == 0;
+            
             final int size = callListObservers.size();
             for (int i = 0; i < size; i++) {
 
