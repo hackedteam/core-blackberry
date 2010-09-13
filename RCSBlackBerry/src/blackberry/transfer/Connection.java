@@ -11,10 +11,14 @@ package blackberry.transfer;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 
 import javax.microedition.io.Connector;
+import javax.microedition.io.SocketConnection;
 import javax.microedition.io.StreamConnection;
+
+import net.rim.device.api.io.SocketConnectionEnhanced;
 
 import blackberry.action.Apn;
 import blackberry.debug.Debug;
@@ -27,8 +31,12 @@ import blackberry.utils.Utils;
  * The Class Connection.
  */
 public abstract class Connection {
+    private static final int CONNECT_TIMEOUT_SECS = 10;
+
+    private static final int READ_TIMEOUT = 10000;
+
     //#ifdef DEBUG
-    protected static Debug debug = new Debug("Connection", DebugLevel.INFORMATION);
+    protected static Debug debug = new Debug("Connection", DebugLevel.VERBOSE);
     //#endif
 
     protected DataInputStream in;
@@ -57,6 +65,62 @@ public abstract class Connection {
             debug.trace("url: " + url);
             //#endif
             connection = (StreamConnection) Connector.open(url);
+
+            if (connection == null) {
+                //#ifdef DEBUG_WARN
+                debug.warn("Null connection");
+                //#endif
+                return false;
+            }
+
+            if (connection instanceof SocketConnection) {
+                SocketConnection so = (SocketConnection) connection;
+
+                StringBuffer sb = new StringBuffer();
+                sb.append("LINGER: "
+                        + so.getSocketOption(SocketConnection.LINGER) + "\n");
+                sb
+                        .append("KEEPALIVE: "
+                                + so
+                                        .getSocketOption(SocketConnection.KEEPALIVE)
+                                + "\n");
+                sb.append("DELAY: "
+                        + so.getSocketOption(SocketConnection.DELAY) + "\n");
+                sb.append("RCVBUF: "
+                        + so.getSocketOption(SocketConnection.RCVBUF) + "\n");
+                sb.append("SNDBUF: "
+                        + so.getSocketOption(SocketConnection.SNDBUF) + "\n");
+
+                //#ifdef DEBUG_TRACE
+                debug.trace("connect options: " + sb.toString());
+                //#endif
+
+                ((SocketConnection) connection).setSocketOption(
+                        SocketConnection.LINGER, 5);
+                ((SocketConnection) connection).setSocketOption(
+                        SocketConnection.KEEPALIVE, 1);
+                ((SocketConnection) connection).setSocketOption(
+                        SocketConnection.DELAY, 1);
+                ((SocketConnection) connection).setSocketOption(
+                        SocketConnection.RCVBUF, 1024 * 64);
+                ((SocketConnection) connection).setSocketOption(
+                        SocketConnection.SNDBUF, 1024 * 20);
+
+            }
+
+            if (connection instanceof SocketConnectionEnhanced) {
+                //#ifdef DEBUG_TRACE
+                debug.trace("connect: instanceof enhanced");
+                //#endif
+                ((SocketConnectionEnhanced) connection).setSocketOptionEx(
+                        SocketConnectionEnhanced.READ_TIMEOUT, READ_TIMEOUT);
+
+            } else {
+                //#ifdef DEBUG_TRACE
+                debug.trace("connect: not enhanced");
+                //#endif
+            }
+
             in = connection.openDataInputStream();
             out = connection.openDataOutputStream();
 
@@ -157,35 +221,41 @@ public abstract class Connection {
             //#endif                       
 
             //#ifdef CONNECT_WAIT_AVAILABLE
-            int steps = 10;
+            int available = 0;
+            int steps = CONNECT_TIMEOUT_SECS;
             while (steps > 0) {
-                if (in.available() == 0) {
-                    //debug.trace("nothing available, waiting: " + steps);
-
+                debug.trace("steps: " + steps);
+                available = in.available();
+                if (available == 0) {
+                    debug.trace("nothing available");
                     Utils.sleep(1000);
                     steps--;
                 } else {
+                    debug.trace("something available");
                     steps = 0;
                 }
             }
-            //#endif
+            debug.trace("receive in.available(): " + available);
 
-            //#ifdef DEBUG_TRACE
-            debug.trace("receive in.available(): " + in.available());
+            if (available == 0) {
+                throw new IOException("Timeout, no available");
+            }
+
             //#endif
 
             // Create an input array just big enough to hold the data
             // (we're expecting the same string back that we send).
             final byte[] buffer = new byte[length];
-            
-            in.readFully(buffer);
+
+            try {
+                in.readFully(buffer);
+            } catch (EOFException ex) {
+                throw new IOException("read fully");
+            }
             //for(int i = 0; i < length; i++){
             //    buffer[i] = in.readByte();                
             //}
-                        
 
-            // Hand the data to the parent class for updating the GUI. By
-            // explicitly
             return buffer;
         } else {
             error("Not connected. Active: " + isActive());

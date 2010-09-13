@@ -31,6 +31,8 @@ public class AudioRecorder extends Thread {
 
     boolean started;
 
+    private boolean wanttostop;
+
     public AudioRecorder() {
         started = false;
     }
@@ -126,8 +128,19 @@ public class AudioRecorder extends Thread {
             _player.realize();
             initRecord();
             _player.start();
+            
+            //#ifdef DEBUG_TRACE
+            debug.trace("Started");
+            //#endif
 
             started = true;
+            
+            if(wanttostop){
+                //#ifdef DEBUG_TRACE
+                debug.trace("run: want to stop");
+                //#endif
+                stop();
+            }
             //In a catch block, specify actions to perform if an exception occurs.
         } catch (final Exception e) {
             //#ifdef DEBUG_ERROR
@@ -153,6 +166,15 @@ public class AudioRecorder extends Thread {
     //Create a try block in your implementation of the stop method, and then invoke RecordControl.commit() to stop recording audio.
     public void stop() {
         try {
+            if(!started){
+                //#ifdef DEBUG_TRACE
+                debug.trace("stop: want to");
+                //#endif
+                wanttostop = true;
+                return;
+            }
+            
+            wanttostop = false;
             started = false;
 
             //#ifdef DEBUG_TRACEs

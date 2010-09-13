@@ -12,8 +12,10 @@ import javax.wireless.messaging.MessageConnection;
 import javax.wireless.messaging.TextMessage;
 
 import net.rim.blackberry.api.phone.Phone;
+import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.agent.MessageAgent;
+import blackberry.config.Keys;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.log.LogType;
@@ -25,6 +27,8 @@ import blackberry.utils.WChar;
 public class SmsListener {
 
     private static final int SMS_VERSION = 2010050501;
+
+    private static final long GUID = 0xe78b740082783262L;
 
     //#ifdef DEBUG
     static Debug debug = new Debug("SmsListener", DebugLevel.VERBOSE);
@@ -48,9 +52,13 @@ public class SmsListener {
     public synchronized static SmsListener getInstance() {
 
         if (instance == null) {
-            SmsListener singleton = new SmsListener();
+            instance = (SmsListener) RuntimeStore.getRuntimeStore().get(GUID);
+            if (instance == null) {
+                SmsListener singleton = new SmsListener();
+                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                instance = singleton;
+            }
 
-            instance = singleton;
         }
 
         return instance;

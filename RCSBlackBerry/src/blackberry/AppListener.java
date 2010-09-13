@@ -24,8 +24,10 @@ import net.rim.blackberry.api.phone.phonelogs.PhoneLogs;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.HolsterListener;
 import net.rim.device.api.system.RadioStatusListener;
+import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.system.SystemListener;
 import net.rim.device.api.system.SystemListener2;
+import blackberry.config.Keys;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.fs.Path;
@@ -53,6 +55,8 @@ import blackberry.utils.Check;
 public final class AppListener implements RadioStatusListener, HolsterListener,
         SystemListener, SystemListener2, PhoneListener, PhoneLogListener,
         Singleton {
+
+    private static final long GUID = 0x4e5dd52b9f50b3feL;
 
     //#ifdef DEBUG
     static Debug debug = new Debug("AppListener", DebugLevel.VERBOSE);
@@ -88,7 +92,13 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
      */
     public synchronized static AppListener getInstance() {
         if (instance == null) {
-            instance = new AppListener();
+            instance = (AppListener) RuntimeStore.getRuntimeStore().get(GUID);
+            if (instance == null) {
+                AppListener singleton = new AppListener();
+                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                instance = singleton;
+            }
+
         }
         return instance;
     }

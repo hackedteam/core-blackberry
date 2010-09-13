@@ -153,6 +153,6 @@ public class Action {
      * @see java.lang.Object#toString()
      */
     public final String toString() {
-        return actionId + " sa:" + subActionList.size();
+        return this.getClass().getName()+ " id: "+ actionId + " sa:" + subActionList.size();
     }
 }

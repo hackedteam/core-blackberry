@@ -161,4 +161,41 @@ public abstract class SubAction {
     public final boolean wantUninstall() {
         return wantUninstall;
     }
+
+    public boolean protectedExecute(final Event triggeringEvent) {
+
+        final Object lock = new Object();
+
+        Runnable r = new Runnable() {
+            public void run() {
+                execute(triggeringEvent);
+                try {
+                    lock.notify();
+                } catch (IllegalMonitorStateException ex) {
+
+                }
+            }
+        };
+        Thread t = new Thread(r);
+        t.run();
+
+        try {
+            lock.wait(1000);
+
+            if (t.isAlive()) {
+                //#ifdef DEBUG_WARN
+                debug.warn("killing thread after wait");
+                //#endif
+                t.interrupt();
+            }
+
+            //#ifdef DEBUG_TRACE
+            debug.trace("protectedExecute, out of wait ");
+            //#endif
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
+    }
 }

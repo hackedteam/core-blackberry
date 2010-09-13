@@ -14,9 +14,11 @@ import net.rim.device.api.system.CDMAInfo;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.GPRSInfo;
 import net.rim.device.api.system.RadioInfo;
+import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.system.SIMCardException;
 import net.rim.device.api.system.SIMCardInfo;
 import net.rim.device.api.util.NumberUtilities;
+import blackberry.config.Keys;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.Singleton;
@@ -30,13 +32,12 @@ import blackberry.utils.WChar;
  */
 public final class Device implements Singleton {
 
+    private static final long GUID = 0x88075bba9b4048c4L;
+
     /** The debug instance. */
     //#ifdef DEBUG
     private static Debug debug = new Debug("Device", DebugLevel.VERBOSE);
-    //#endif
-
-   
-    
+    //#endif       
 
     public int network;
 
@@ -59,7 +60,13 @@ public final class Device implements Singleton {
      */
     public static synchronized Device getInstance() {
         if (instance == null) {
-            instance = new Device();
+            instance = (Device) RuntimeStore.getRuntimeStore().get(GUID);
+            if (instance == null) {
+                Device singleton = new Device();
+                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                instance = singleton;
+            }
+
         }
 
         return instance;
