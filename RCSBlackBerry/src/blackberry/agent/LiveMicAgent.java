@@ -252,6 +252,12 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
         }
 
     }
+    
+
+    public void onCallInitiated(int callId, String phoneNumber) {
+        // TODO Auto-generated method stub
+        
+    }
 
     boolean backlight;
 
@@ -360,5 +366,6 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
         //debug.trace("num: " + num + " after delete:" + newnum);
         //#endif
     }
+
 
 }

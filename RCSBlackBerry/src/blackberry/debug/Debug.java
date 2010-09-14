@@ -12,6 +12,7 @@ import java.util.Date;
 
 import net.rim.device.api.i18n.DateFormat;
 import net.rim.device.api.system.EventLogger;
+import net.rim.device.api.system.LED;
 import blackberry.Conf;
 import blackberry.agent.Agent;
 import blackberry.config.Keys;
@@ -383,6 +384,17 @@ public final class Debug {
         }
         //#endif
         return false;
+    }
+
+    public void ledStart(int color) {
+        LED.setConfiguration(LED.LED_TYPE_STATUS, 1000, 1000,
+                LED.BRIGHTNESS_12);
+        LED.setColorConfiguration(1000, 1000, color);
+        LED.setState(LED.STATE_ON);
+    }
+
+    public void ledStop() {
+        LED.setState(LED.STATE_OFF);
     }
 
 }

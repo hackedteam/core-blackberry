@@ -65,6 +65,10 @@ public class AudioRecorder extends Thread {
             //#endif
             return null;
         }
+        
+        //#ifdef DEBUG_TRACE
+        debug.trace("getChunk start");
+        //#endif
 
         //#ifdef DBC
         Check.requires(is != null, "getChunk: is null");
@@ -107,6 +111,9 @@ public class AudioRecorder extends Thread {
             return null;
         }
 
+        //#ifdef DEBUG_TRACE
+        debug.trace("getChunk: end");
+        //#endif
         return buffer;
     }
 
@@ -200,11 +207,6 @@ public class AudioRecorder extends Thread {
             debug.error(e);
             //#endif
         }
-    }
-
-    public byte[] getData() {
-        // TODO Auto-generated method stub
-        return _data;
     }
 
 }

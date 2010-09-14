@@ -107,4 +107,9 @@ public final class CallEvent extends Event implements PhoneCallObserver {
 
     }
 
+    public void onCallInitiated(int callId, String phoneNumber) {
+        // TODO Auto-generated method stub
+        
+    }
+
 }

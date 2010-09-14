@@ -561,7 +561,26 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
         //#ifdef DEBUG_INFO
         debug.info("callInitiated: " + callId);
         //#endif
+        
+        init();
+      
+        PhoneCall phoneCall = Phone.getCall(callId);
+        String phoneNumber = phoneCall.getDisplayPhoneNumber().trim();
+        boolean outgoing = phoneCall.isOutgoing();
 
+        if (outgoing) {
+            final int size = phoneCallObservers.size();
+            for (int i = 0; i < size; i++) {
+
+                final PhoneCallObserver observer = (PhoneCallObserver) phoneCallObservers
+                        .elementAt(i);
+                //#ifdef DEBUG_TRACE
+                debug.trace("notify: " + observer);
+                //#endif
+
+                observer.onCallInitiated(callId, phoneNumber);
+            }
+        }
     }
 
     public void callRemoved(int callId) {
@@ -800,13 +819,11 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
     }
 
     public void callLogUpdated(CallLog arg0, CallLog arg1) {
-        // TODO Auto-generated method stub
 
     }
 
     public void reset() {
         Log.info("Reset", DebugLevel.INFORMATION);
-        // TODO Auto-generated method stub
     }
 
     private synchronized void init() {

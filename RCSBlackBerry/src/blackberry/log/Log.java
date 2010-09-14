@@ -479,6 +479,11 @@ public final class Log {
             //#endif
             return false;
         }
+        
+        //#ifdef DEBUG
+        // yellow
+        debug.ledStart(0x00FFDC4C);
+        //#endif
 
         final byte[] encData = encryption.encryptData(data, offset);
         //#ifdef DEBUG_INFO
@@ -494,6 +499,10 @@ public final class Log {
             debug.error("Error writing file: " + e);
             //#endif
             return false;
+        }finally{
+            //#ifdef DEBUG
+            debug.ledStop();
+            //#endif
         }
 
         return true;
