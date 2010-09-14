@@ -93,8 +93,9 @@ public class Main extends Application {
         //#endif
 
         addHolsterListener(appListener);
+        
         addSystemListener(appListener);
-        Phone.addPhoneListener(appListener);
+        
         PhoneLogs.addListener(appListener);
 
         goBackground();

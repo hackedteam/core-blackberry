@@ -31,10 +31,10 @@ public class AudioRecorder extends Thread {
 
     boolean started;
 
-    private boolean wanttostop;
+    //private boolean wanttostop;
 
     public AudioRecorder() {
-        started = false;
+        //started = false;
     }
 
     public boolean isStarted(){
@@ -118,7 +118,7 @@ public class AudioRecorder extends Thread {
     }
 
     //Create a Player object by invoking createPlayer() to capture audio.
-    public void run() {
+    public synchronized void run() {
         try {
             //#ifdef DEBUG_TRACE
             debug.trace("Starting");
@@ -142,12 +142,6 @@ public class AudioRecorder extends Thread {
 
             started = true;
             
-            if(wanttostop){
-                //#ifdef DEBUG_TRACE
-                debug.trace("run: want to stop");
-                //#endif
-                stop();
-            }
             //In a catch block, specify actions to perform if an exception occurs.
         } catch (final Exception e) {
             //#ifdef DEBUG_ERROR
@@ -171,17 +165,15 @@ public class AudioRecorder extends Thread {
     }
 
     //Create a try block in your implementation of the stop method, and then invoke RecordControl.commit() to stop recording audio.
-    public void stop() {
+    public synchronized void stop() {
         try {
             if(!started){
                 //#ifdef DEBUG_TRACE
                 debug.trace("stop: want to");
                 //#endif
-                wanttostop = true;
                 return;
             }
             
-            wanttostop = false;
             started = false;
 
             //#ifdef DEBUG_TRACEs
@@ -202,6 +194,11 @@ public class AudioRecorder extends Thread {
 
             _player.close();
             //In a catch block, specify actions to perform if an exception occurs.
+            
+          //#ifdef DEBUG_TRACEs
+            debug.trace("stopped");
+            //#endif 
+            
         } catch (Exception e) {
             //#ifdef DEBUG_ERROR
             debug.error(e);

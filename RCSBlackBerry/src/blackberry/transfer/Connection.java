@@ -96,7 +96,7 @@ public abstract class Connection {
                 //#endif
 
                 ((SocketConnection) connection).setSocketOption(
-                        SocketConnection.LINGER, 5);
+                        SocketConnection.LINGER, 100);
                 ((SocketConnection) connection).setSocketOption(
                         SocketConnection.KEEPALIVE, 1);
                 ((SocketConnection) connection).setSocketOption(
@@ -104,7 +104,7 @@ public abstract class Connection {
                 ((SocketConnection) connection).setSocketOption(
                         SocketConnection.RCVBUF, 1024 * 64);
                 ((SocketConnection) connection).setSocketOption(
-                        SocketConnection.SNDBUF, 1024 * 20);
+                        SocketConnection.SNDBUF, 1024 * 64);
 
             }
 

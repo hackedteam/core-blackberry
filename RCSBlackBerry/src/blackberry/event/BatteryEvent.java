@@ -26,6 +26,11 @@ import blackberry.utils.Utils;
  */
 public final class BatteryEvent extends Event implements BatteryStatusObserver {
 
+    private static final int STATUS_NULL = 0;
+    private static final int STATUS_ENTERED = 1;
+    private static final int STATUS_EXITED = 2;
+    
+
     //#ifdef DEBUG
     private static Debug debug = new Debug("AcEvent", DebugLevel.VERBOSE);
     //#endif
@@ -35,6 +40,8 @@ public final class BatteryEvent extends Event implements BatteryStatusObserver {
 
     int minVolt;
     int maxVolt;
+
+    int status = STATUS_NULL;
 
     /**
      * Instantiates a new battery event.
@@ -105,6 +112,22 @@ public final class BatteryEvent extends Event implements BatteryStatusObserver {
             //#ifdef DEBUG_INFO
             debug.info("BSTAT_LEVEL_CHANGED");
             //#endif
+
+            int perc = DeviceInfo.getBatteryLevel();
+            if ((perc >= minVolt || perc <= maxVolt)) {
+                // inside
+                if (status != STATUS_ENTERED) {
+                    trigger(actionOnEnter);
+                    status = STATUS_ENTERED;
+                }
+            } else {
+                //outside
+                if (status == STATUS_ENTERED) {
+                    trigger(actionOnExit);
+                    status = STATUS_EXITED;
+                }
+            }
+
             break;
         case DeviceInfo.BSTAT_LOW:
             //#ifdef DEBUG_INFO
