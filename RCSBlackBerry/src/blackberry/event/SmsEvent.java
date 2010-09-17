@@ -161,9 +161,11 @@ public final class SmsEvent extends Event implements MessageListener {
                 // convert Binary Data to Text
                 msg = new String(data, "UTF-8");
             } else {
+            	//#ifdef DEBUG 
                 System.out.println("Invalid Message Format");
                 System.out.println("Received SMS text from " + address + " : "
                         + msg);
+                //#endif
             }
         } catch (final InterruptedIOException e) {
             //#ifdef DEBUG

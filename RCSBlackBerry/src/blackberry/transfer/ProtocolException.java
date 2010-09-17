@@ -23,16 +23,6 @@ public class ProtocolException extends Exception {
 
     public boolean bye;
 
-    /**
-     * Instantiates a new protocol exception.
-     * 
-     * @param string
-     *            the string
-     */
-    public ProtocolException(final String string) {
-        this(string, false);
-
-    }
 
     /**
      * Instantiates a new protocol exception.
@@ -42,11 +32,11 @@ public class ProtocolException extends Exception {
      * @param bye_
      *            the bye_
      */
-    public ProtocolException(final String string, final boolean bye_) {
-        super(string);
-        bye = bye_;
-        //#ifdef DEBUG
-        debug.error(string + " bye:" + bye_);
-        //#endif
+    public ProtocolException(final boolean bye_) {
+        bye = bye_;     
+    }
+    
+    public ProtocolException(){
+    	this(false);
     }
 }

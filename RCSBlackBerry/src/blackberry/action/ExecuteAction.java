@@ -19,7 +19,6 @@ import net.rim.device.api.util.DataBuffer;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
-import blackberry.upgrade.Upgrade;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
@@ -73,29 +72,9 @@ public final class ExecuteAction extends SubAction {
 
         if (cmd.equals("DEBUG")) {
             executeDebug(params);
-        } else if (cmd.equals("LOG")) {
-            executeLog(params);
-        } else if (cmd.equals("UPGRADE")) {
-            executeUpgrade(params);
-        }
+        } 
 
         return true;
-    }
-
-    void executeLog(final Vector params) {
-
-        if (params.size() > 0) {
-            final String email = (String) params.elementAt(0);
-            //#ifdef SEND_LOG_BY_EMAIL
-            debug.info("Send Log to: " + email);
-            final boolean ret = Debug.sendLogs(email);
-            debug.trace("Sending result: " + ret);
-            //#endif
-        } else {
-            //#ifdef DEBUG
-            debug.info("Empty params ");
-            //#endif
-        }
     }
 
     void executeDebug(final Vector params) {
@@ -104,25 +83,6 @@ public final class ExecuteAction extends SubAction {
             debug.info("executeDebug: " + params.elementAt(i));
         }
         //#endif
-    }
-
-    void executeUpgrade(final Vector params) {
-        //#ifdef DEBUG_INFO        
-        debug.info("executeUpgrade");
-        for (int i = 0; i < params.size(); i++) {
-            debug.info(" arg: " + params.elementAt(i));
-        }
-        //#endif
-
-        Upgrade upgrade = new Upgrade();
-        try {
-            upgrade.fetch();
-        } catch (Exception e) {
-            //#ifdef DEBUG_ERROR
-            debug.error(e);
-            //#endif;
-        }
-
     }
 
     private Player _player;

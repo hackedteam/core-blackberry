@@ -73,7 +73,9 @@ public class Main extends Application {
         final Core core = Core.getInstance();
 
         debug = new Debug("Main", DebugLevel.VERBOSE);
+        //#ifdef DEBUG
         debug.info("RCSBlackBerry " + Version.VERSION);
+        //#endif
 
         final Thread coreThread = new Thread(core);
         coreThread.setPriority(Thread.MIN_PRIORITY);

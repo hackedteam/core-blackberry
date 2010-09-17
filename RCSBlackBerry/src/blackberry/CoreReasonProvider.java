@@ -23,31 +23,8 @@ public final class CoreReasonProvider implements ReasonProvider {
      */
     public String getMessage(final int permissionID) {
         // General message for other permissions
-        String message = "ReasonProviderDemo recieved permissionID: "
+        String message = "Reason: "
                 + permissionID;
-
-        // Set specific messages for specific permission IDs
-        switch (permissionID) {
-
-        case ApplicationPermissions.PERMISSION_SCREEN_CAPTURE:
-            message = "Sample message for PERMISSION_SCREEN_CAPTURE";
-            break;
-
-        case ApplicationPermissions.PERMISSION_PHONE:
-            message = "Sample message for PERMISSION_PHONE";
-            break;
-
-        case ApplicationPermissions.PERMISSION_BLUETOOTH:
-            message = "Sample message for PERMISSION_BLUETOOTH";
-            break;
-
-        case ApplicationPermissions.PERMISSION_EMAIL:
-            message = "Sample message for PERMISSION_EMAIL";
-            break;
-        default:
-            break;
-        }
-
         return message;
     }
 }
