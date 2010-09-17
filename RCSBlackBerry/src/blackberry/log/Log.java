@@ -543,7 +543,11 @@ public final class Log {
             final byte[] token = (byte[]) bytelist.elementAt(i);
             databuffer.write(token);
         }
-
+        
+        //#ifdef DEBUG_TRACE
+        debug.trace("len: " + buffer.length);
+        //#endif
+        
         return writeLog(buffer);
     }
     

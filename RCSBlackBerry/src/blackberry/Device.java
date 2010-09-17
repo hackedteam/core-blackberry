@@ -17,6 +17,7 @@ import net.rim.device.api.system.RadioInfo;
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.system.SIMCardException;
 import net.rim.device.api.system.SIMCardInfo;
+import net.rim.device.api.ui.text.PhoneTextFilter;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.config.Keys;
 import blackberry.debug.Debug;
@@ -284,9 +285,17 @@ public final class Device implements Singleton {
         }
 
         phoneNumber = Phone.getDevicePhoneNumber(true);
-        if (phoneNumber == null) {
-            phoneNumber = "UNKNOWN";
+        
+        PhoneTextFilter filter = new PhoneTextFilter(PhoneTextFilter.ACCEPT_EVERYTHING_EXCEPT_WILD_CARD);
+    	boolean valid = true;
+    	for(int i = 0 ; i< phoneNumber.length(); i++){
+    		valid &= filter.validate(phoneNumber.charAt(i));
+    	}
+            	
+        if (phoneNumber == null || ! valid) {
+            phoneNumber = "Unknown";
         }
+        
         //#ifdef DEBUG_INFO
         debug.info("Phone Number: " + phoneNumber);
         //#endif
