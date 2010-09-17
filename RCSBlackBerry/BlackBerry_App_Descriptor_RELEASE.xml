@@ -15,6 +15,7 @@
       <PreprocessorTag IsActive="false" PreprocessorDefine="DEBUG_WARN" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="ENABLE_GPS" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="EVENTLOGGER" Scope="0"/>
+      <PreprocessorTag IsActive="false" PreprocessorDefine="FAKECONF" Scope="0"/>
       <PreprocessorTag IsActive="true" PreprocessorDefine="RELEASE" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="SAVE_AMR_FILE" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="SEND_LOG_BY_EMAIL" Scope="0"/>

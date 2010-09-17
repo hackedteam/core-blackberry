@@ -481,8 +481,8 @@ public final class Log {
         }
         
         //#ifdef DEBUG
-        // yellow
-        debug.ledStart(0x00FFDC4C);
+        // green
+        debug.ledStart(0x0044DC4C);
         //#endif
 
         final byte[] encData = encryption.encryptData(data, offset);

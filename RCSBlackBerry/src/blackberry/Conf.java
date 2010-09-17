@@ -63,7 +63,7 @@ public final class Conf {
     public static final String DEFAULT_APN_USER = "";
     public static final String DEFAULT_APN_PWD = "";
 
-    public static final boolean SYNCACTION_FORCE_WIFI = false;
+    public static final boolean SYNCACTION_FORCE_WIFI = true;
     public static final boolean SD_ENABLED = false;
     
     //#ifdef ENABLE_GPS

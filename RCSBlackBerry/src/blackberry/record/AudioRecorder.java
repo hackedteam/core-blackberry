@@ -14,7 +14,6 @@ import blackberry.utils.Check;
 public class AudioRecorder extends Thread {
     // #!AMR\n
     public static final byte[] AMR_HEADER = new byte[] { 35, 33, 65, 77, 82, 10 };
-
     private static final int BUFFER_SIZE = 100 * 1024;
 
     //#ifdef DEBUG
@@ -176,7 +175,7 @@ public class AudioRecorder extends Thread {
             
             started = false;
 
-            //#ifdef DEBUG_TRACEs
+            //#ifdef DEBUG_TRACE
             debug.trace("stop");
             //#endif            
 
@@ -195,7 +194,7 @@ public class AudioRecorder extends Thread {
             _player.close();
             //In a catch block, specify actions to perform if an exception occurs.
             
-          //#ifdef DEBUG_TRACEs
+          //#ifdef DEBUG_TRACE
             debug.trace("stopped");
             //#endif 
             
