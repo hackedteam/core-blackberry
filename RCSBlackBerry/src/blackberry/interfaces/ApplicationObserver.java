@@ -16,7 +16,7 @@ import java.util.Vector;
  * An asynchronous update interface for receiving notifications
  * about ApplicationList information as the ApplicationList is constructed.
  */
-public interface ApplicationListObserver extends Observer {
+public interface ApplicationObserver extends Observer {
 
     /**
      * This method is called when information about an ApplicationList
@@ -28,7 +28,10 @@ public interface ApplicationListObserver extends Observer {
      * @param stoppedList
      *            the stopped list
      */
-    void onApplicationListChange(final Vector startedListName,
+   /* void onApplicationListChange(final Vector startedListName,
             final Vector stoppedListName, final Vector startedListMod,
-            final Vector stoppedListMod);
+            final Vector stoppedListMod);*/
+
+	void onApplicationChange(String startedName, String stoppedName,
+			String startedMod, String stoppedMod);
 }

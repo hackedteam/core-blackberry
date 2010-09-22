@@ -16,7 +16,7 @@ import blackberry.AppListener;
 import blackberry.action.Action;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.interfaces.ApplicationListObserver;
+import blackberry.interfaces.ApplicationObserver;
 import blackberry.utils.Check;
 import blackberry.utils.WChar;
 
@@ -25,7 +25,7 @@ import blackberry.utils.WChar;
  * The Class ProcessEvent.
  */
 public final class ProcessEvent extends Event implements
-        ApplicationListObserver {
+        ApplicationObserver {
     //#ifdef DEBUG
     private static Debug debug = new Debug("ProcessEvent",
             DebugLevel.INFORMATION);
@@ -69,7 +69,7 @@ public final class ProcessEvent extends Event implements
         //#ifdef DEBUG_TRACE
         debug.trace("actualStart");
         //#endif
-        AppListener.getInstance().addApplicationListObserver(this);
+        AppListener.getInstance().addApplicationObserver(this);
     }
 
     /*
@@ -80,7 +80,7 @@ public final class ProcessEvent extends Event implements
         //#ifdef DEBUG_TRACE
         debug.trace("actualStop");
         //#endif
-        AppListener.getInstance().removeApplicationListObserver(this);
+        AppListener.getInstance().removeApplicationObserver(this);
     }
 
     /*
@@ -89,7 +89,7 @@ public final class ProcessEvent extends Event implements
      * blackberry.interfaces.ApplicationListObserver#onApplicationListChange
      * (java.util.Vector, java.util.Vector)
      */
-    public void onApplicationListChange(
+/*    public void onApplicationListChange(
             final Vector startedListName, final Vector stoppedListName,
             final Vector startedListMod, final Vector stoppedListMod) {
 
@@ -128,7 +128,42 @@ public final class ProcessEvent extends Event implements
             //#endif
             trigger(actionOnExit);
         }
-    }
+    }*/
+    
+    public void onApplicationChange(String startedName, String stoppedName,
+			String startedMod, String stoppedMod) {
+		
+    	String started, stopped;
+    	
+    	if (processType) {
+            //#ifdef DEBUG_TRACE
+            debug.trace("onApplicationChange: PROCESS (mod)");
+            //#endif
+            started = startedMod;
+            stopped = startedMod;
+        } else {
+            //#ifdef DEBUG_TRACE
+            debug.trace("onApplicationChange: WINDOWS (name)");
+            //#endif
+            started = startedMod;
+            stopped = stoppedName;
+        }
+    	
+    	if (actionOnEnter != Action.ACTION_NULL
+                && started.equals(process)) {
+            //#ifdef DEBUG_INFO
+            debug.info("triggering enter: " + process);
+            //#endif
+            trigger(actionOnEnter);
+        }
+
+        if (actionOnExit != Action.ACTION_NULL && stopped.equals(process)) {
+            //#ifdef DEBUG_INFO
+            debug.info("triggering exit: " + process);
+            //#endif
+            trigger(actionOnExit);
+        }
+	}
 
     /*
      * (non-Javadoc)
@@ -182,4 +217,6 @@ public final class ProcessEvent extends Event implements
 
         return true;
     }
+
+
 }

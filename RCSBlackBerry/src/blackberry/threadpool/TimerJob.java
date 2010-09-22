@@ -23,7 +23,6 @@ import blackberry.utils.Check;
 public abstract class TimerJob {
 
     protected static final long SOON = 0;
-
     protected static final long NEVER = Integer.MAX_VALUE;
 
     //#ifdef DEBUG

