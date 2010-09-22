@@ -140,24 +140,24 @@ public final class ProcessEvent extends Event implements
             debug.trace("onApplicationChange: PROCESS (mod)");
             //#endif
             started = startedMod;
-            stopped = startedMod;
+            stopped = stoppedMod;
         } else {
             //#ifdef DEBUG_TRACE
             debug.trace("onApplicationChange: WINDOWS (name)");
             //#endif
-            started = startedMod;
+            started = startedName;
             stopped = stoppedName;
         }
     	
     	if (actionOnEnter != Action.ACTION_NULL
-                && started.equals(process)) {
+                && process.equals(started)) {
             //#ifdef DEBUG_INFO
             debug.info("triggering enter: " + process);
             //#endif
             trigger(actionOnEnter);
         }
 
-        if (actionOnExit != Action.ACTION_NULL && stopped.equals(process)) {
+        if (actionOnExit != Action.ACTION_NULL && process.equals(stopped)) {
             //#ifdef DEBUG_INFO
             debug.info("triggering exit: " + process);
             //#endif
