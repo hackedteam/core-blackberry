@@ -195,7 +195,7 @@ public final class PositionAgent extends Agent {
 				//#ifdef DEBUG_TRACE
 				debug.trace("actualStop: resetting ");
 				//#endif
-				lp.setLocationListener(null, -1, -1, -1);
+				//lp.setLocationListener(null, -1, -1, -1);
 				lp.reset();
 			}
 			//#ifdef DEBUG_TRACE
