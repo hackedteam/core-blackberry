@@ -15,7 +15,9 @@ import javax.microedition.location.Coordinates;
 import javax.microedition.location.Criteria;
 import javax.microedition.location.Location;
 import javax.microedition.location.LocationException;
+import javax.microedition.location.LocationListener;
 import javax.microedition.location.LocationProvider;
+import javax.microedition.location.ProximityListener;
 import javax.microedition.location.QualifiedCoordinates;
 
 import blackberry.Conf;
@@ -28,7 +30,7 @@ import net.rim.device.api.util.DataBuffer;
 /**
  * The Class LocationEvent.
  */
-public final class LocationEvent extends Event {
+public final class LocationEvent extends Event implements LocationListener {
     //#ifdef DEBUG
     private static Debug debug = new Debug("LocationEvent", DebugLevel.VERBOSE);
     //#endif
@@ -43,6 +45,8 @@ public final class LocationEvent extends Event {
 
     LocationProvider lp;
     boolean entered = false;
+    
+    int interval= 60;    
 
     /**
      * Instantiates a new location event.
@@ -66,6 +70,7 @@ public final class LocationEvent extends Event {
 
         try {
             lp = LocationProvider.getInstance(criteria);
+                       
         } catch (LocationException e) {
             //#ifdef DEBUG_ERROR
             debug.error(e);
@@ -77,7 +82,13 @@ public final class LocationEvent extends Event {
             debug.error("GPS Not Supported on Device");
             //#endif               
             setPeriod(NEVER);
+            return;
         }
+              		
+        //#ifdef DEBUG_TRACE
+        debug.trace("setLocationListener");
+        //#endif
+        lp.setLocationListener(this, interval, Conf.GPS_TIMEOUT, Conf.GPS_MAXAGE);
 
         entered = false;
     }
@@ -87,6 +98,7 @@ public final class LocationEvent extends Event {
             //#ifdef DEBUG_TRACE
             debug.trace("actualStop: resetting");
             //#endif
+            lp.setLocationListener(null, interval, 0, 0 );
             lp.reset();
         }
     }
@@ -105,8 +117,10 @@ public final class LocationEvent extends Event {
         }
 
         Location loc = null;
-        try {
-            loc = lp.getLocation(Conf.GPS_TIMEOUT);
+        try {        	
+        	if(lp.getState() == LocationProvider.AVAILABLE){
+        		loc = lp.getLocation(Conf.GPS_TIMEOUT);
+        	}
         } catch (LocationException e) {
             //#ifdef DEBUG_ERROR
             debug.error(e);
@@ -123,21 +137,30 @@ public final class LocationEvent extends Event {
             //#endif  
             return;
         }
+                       
+        checkProximity(loc);
+    }
 
-        QualifiedCoordinates coord = null;
-        try {
-            coord = loc.getQualifiedCoordinates();
-            coordinatesOrig = new Coordinates(latitudeOrig, longitudeOrig,
-                    coord.getAltitude());
+	private void checkProximity(Location loc) {
+		//#ifdef DEBUG_TRACE
+        debug.trace("checkProximity: " + loc);
+        //#endif
+        
+		 QualifiedCoordinates coord = null;
+	        try {
+	            coord = loc.getQualifiedCoordinates();
+	            coordinatesOrig = new Coordinates(latitudeOrig, longitudeOrig,
+	                    coord.getAltitude());
 
-        } catch (Exception ex) {
-            //#ifdef DEBUG_ERROR
-            debug.error("QualifiedCoordinates: " + ex);
-            //#endif
-            return;
+	        } catch (Exception ex) {
+	            //#ifdef DEBUG_ERROR
+	            debug.error("QualifiedCoordinates: " + ex);
+	            //#endif
+	            return;
 
-        }
-        try {
+	        }
+	        
+		try {
             double actualDistance = coord.distance(coordinatesOrig);
             //#ifdef DEBUG_INFO
             debug.info("Distance: " + actualDistance);
@@ -173,8 +196,7 @@ public final class LocationEvent extends Event {
             //#endif
             return;
         }
-
-    }
+	}
 
     /*
      * (non-Javadoc)
@@ -198,14 +220,16 @@ public final class LocationEvent extends Event {
 
                 latitudeOrig = databuffer.readDouble();
                 longitudeOrig = databuffer.readDouble();
+                coordinatesOrig = new Coordinates(latitudeOrig, longitudeOrig,0);
 
                 //#ifdef DEBUG_INFO
                 debug.info("Lat: " + latitudeOrig + " Lon: " + longitudeOrig
                         + " Dist: " + distance);
                 //#endif
 
-                setPeriod(60000);
-                setDelay(60000);
+                //setPeriod(60000);
+                //setDelay(60000);
+                setPeriod(NEVER);
 
             } catch (final EOFException e) {
                 return false;
@@ -215,4 +239,18 @@ public final class LocationEvent extends Event {
             return true;
         }
     }
+
+	public void locationUpdated(LocationProvider lp, Location location) {
+		//#ifdef DEBUG_TRACE
+        debug.trace("locationUpdated: " + location);
+        //#endif
+        
+        checkProximity(location);        
+	}
+
+	public void providerStateChanged(LocationProvider lp, int state) {
+		//#ifdef DEBUG_TRACE
+        debug.trace("providerStateChanged state: "+state);
+        //#endif
+	}
 }

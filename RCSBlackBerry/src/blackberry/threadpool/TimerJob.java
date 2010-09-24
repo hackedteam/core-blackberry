@@ -288,7 +288,7 @@ public abstract class TimerJob {
      * Sets the period.
      * 
      * @param period_
-     *            the new period
+     *            the new period, in milliseconds
      */
     protected final void setPeriod(final long period) {
         if (period < 0) {

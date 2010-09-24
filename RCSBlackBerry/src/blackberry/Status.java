@@ -83,6 +83,8 @@ public final class Status implements Singleton {
 
     IntHashtable triggeredAction = new IntHashtable();
 
+	public boolean synced;
+
 
     /**
      * Instantiates a new status.
