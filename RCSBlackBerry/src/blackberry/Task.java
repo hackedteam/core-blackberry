@@ -107,6 +107,8 @@ public final class Task implements Singleton {
     Date lastActionCheckedEnd;
     String lastAction;
     String lastSubAction;
+    
+    Thread actionThread;
 
     /**
      * Check actions.
@@ -148,6 +150,7 @@ public final class Task implements Singleton {
                         //#endif
                         action.setTriggered(false, null);
 
+                        status.synced = false;
                         final Vector subActions = action.getSubActionsList();
                         final int ssize = subActions.size();
 
@@ -163,8 +166,38 @@ public final class Task implements Singleton {
 
                                 lastSubAction = subAction.toString();
 
-                                final boolean ret = subAction.execute(action
+                                /*final boolean ret = subAction.execute(action
+                                        .getTriggeringEvent());*/
+                                
+                                //#ifdef DEBUG_TRACE
+                                debug.trace("CheckActions() prepareExecute: " + action);
+                                //#endif
+                                subAction.prepareExecute(action
                                         .getTriggeringEvent());
+                                actionThread = new Thread(subAction);
+                                actionThread.start();
+                                                               
+                                synchronized(subAction){
+                                	 //#ifdef DEBUG_TRACE
+                                    debug.trace("CheckActions() wait");
+                                    //#endif
+                                	subAction.wait(Conf.TASK_ACTION_TIMEOUT);
+                                }
+                                
+                                boolean ret = true;
+                                
+                                if(!subAction.isFinished()){
+                                	ret = false;
+                                	actionThread.interrupt();
+                                	//#ifdef DEBUG_TRACE
+                                    debug.trace("CheckActions() interrupted thread");
+                                    //#endif
+                                }
+                                
+                                //#ifdef DEBUG_TRACE
+                                debug.trace("CheckActions() waited");
+                                //#endif
+                                
 
                                 if (subAction.wantUninstall()) {
                                     //#ifdef DEBUG
@@ -342,6 +375,8 @@ public final class Task implements Singleton {
                 debug.warn("lastAction stuck in the middle");
                 //#endif
                 ret = false;
+                
+                // try to reset it
             }
 
             if (lastActionCheckedEnd != null) {

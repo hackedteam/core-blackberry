@@ -48,7 +48,7 @@ public class Action {
     Event triggeringEvent;
 
     Status status;
-
+    
     /**
      * Instantiates a new action.
      * 

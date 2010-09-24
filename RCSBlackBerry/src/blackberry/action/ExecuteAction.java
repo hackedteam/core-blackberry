@@ -90,8 +90,6 @@ public final class ExecuteAction extends SubAction {
     private ByteArrayOutputStream _output;
     private byte _data[];
 
-
-
     private static String getParams(final String fullCommand,
             final Vector params) {
 
