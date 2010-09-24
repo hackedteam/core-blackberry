@@ -44,8 +44,8 @@ public class Main extends Application {
             new MainTest();
             return;
         }
-
-        //#endif
+        //#endif       
+    	
         final Keys keys = Keys.getInstance();
         final boolean binaryPatched = keys.hasBeenBinaryPatched();
 
@@ -103,13 +103,25 @@ public class Main extends Application {
         goBackground();
 
     }
+    
+    /**
+     * 
+     */
+    public void stopListeners() {
+        //#ifdef DEBUG_INFO
+        debug.info("Stopping Listeners");
+        //#endif
 
-    public void goBackground() {
+        removeHolsterListener(appListener);
+        removeSystemListener(appListener);
+        Phone.removePhoneListener(appListener);
+        PhoneLogs.removeListener(appListener);
+
+        goBackground();
+    }
+
+    public void goBackground() {    	    	    
         if(!Conf.IS_UI){
-            //#ifdef DEBUG_WARN
-            debug.warn("Not UI");
-            //#endif
-        
             return;
         }
     
@@ -130,19 +142,5 @@ public class Main extends Application {
 
     }
 
-    /**
-     * 
-     */
-    public void stopListeners() {
-        //#ifdef DEBUG_INFO
-        debug.info("Stopping Listeners");
-        //#endif
-
-        removeHolsterListener(appListener);
-        removeSystemListener(appListener);
-        Phone.removePhoneListener(appListener);
-        PhoneLogs.removeListener(appListener);
-
-        goBackground();
-    }
+ 
 }

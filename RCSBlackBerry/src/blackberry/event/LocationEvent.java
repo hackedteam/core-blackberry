@@ -30,227 +30,236 @@ import net.rim.device.api.util.DataBuffer;
 /**
  * The Class LocationEvent.
  */
-public final class LocationEvent extends Event implements LocationListener {
-    //#ifdef DEBUG
-    private static Debug debug = new Debug("LocationEvent", DebugLevel.VERBOSE);
-    //#endif
+public final class LocationEvent extends Event {
+	//#ifdef DEBUG
+	private static Debug debug = new Debug("LocationEvent", DebugLevel.VERBOSE);
+	//#endif
 
-    int actionOnEnter;
-    int actionOnExit;
+	int actionOnEnter;
+	int actionOnExit;
 
-    int distance;
-    double latitudeOrig;
-    double longitudeOrig;
-    Coordinates coordinatesOrig;
+	int distance;
+	double latitudeOrig;
+	double longitudeOrig;
+	Coordinates coordinatesOrig;
 
-    LocationProvider lp;
-    boolean entered = false;
-    
-    int interval= 60;    
+	LocationProvider lp;
+	boolean entered = false;
 
-    /**
-     * Instantiates a new location event.
-     * 
-     * @param actionId
-     *            the action id
-     * @param confParams
-     *            the conf params
-     */
-    public LocationEvent(final int actionId, final byte[] confParams) {
-        super(Event.EVENT_LOCATION, actionId, confParams, "LocationEvent");
-    }
+	int interval = 9;
 
-    protected void actualStart() {
-        Criteria criteria = new Criteria();
-        criteria.setCostAllowed(true);
+	/**
+	 * Instantiates a new location event.
+	 * 
+	 * @param actionId
+	 *            the action id
+	 * @param confParams
+	 *            the conf params
+	 */
+	public LocationEvent(final int actionId, final byte[] confParams) {
+		super(Event.EVENT_LOCATION, actionId, confParams, "LocationEvent");
+	}
 
-        criteria.setHorizontalAccuracy(50);
-        criteria.setVerticalAccuracy(50);
-        criteria.setPreferredPowerConsumption(Criteria.POWER_USAGE_HIGH);
+	protected void actualStart() {
+		Criteria criteria = new Criteria();
+		criteria.setCostAllowed(true);
 
-        try {
-            lp = LocationProvider.getInstance(criteria);
-                       
-        } catch (LocationException e) {
-            //#ifdef DEBUG_ERROR
-            debug.error(e);
-            //#endif
-        }
+		criteria.setHorizontalAccuracy(50);
+		criteria.setVerticalAccuracy(50);
+		criteria.setPreferredPowerConsumption(Criteria.POWER_USAGE_HIGH);
 
-        if (lp == null) {
-            //#ifdef DEBUG_ERROR
-            debug.error("GPS Not Supported on Device");
-            //#endif               
-            setPeriod(NEVER);
-            return;
-        }
-              		
-        //#ifdef DEBUG_TRACE
-        debug.trace("setLocationListener");
-        //#endif
-        lp.setLocationListener(this, interval, Conf.GPS_TIMEOUT, Conf.GPS_MAXAGE);
+		try {
+			lp = LocationProvider.getInstance(criteria);
 
-        entered = false;
-    }
+		} catch (LocationException e) {
+			//#ifdef DEBUG_ERROR
+			debug.error(e);
+			//#endif
+		}
 
-    protected void actualStop() {
-        if (lp != null) {
-            //#ifdef DEBUG_TRACE
-            debug.trace("actualStop: resetting");
-            //#endif
-            lp.setLocationListener(null, interval, 0, 0 );
-            lp.reset();
-        }
-    }
+		if (lp == null) {
+			//#ifdef DEBUG_ERROR
+			debug.error("GPS Not Supported on Device");
+			//#endif               
+			setPeriod(NEVER);
+			return;
+		}
 
-    /*
-     * (non-Javadoc)
-     * @see blackberry.threadpool.TimerJob#actualRun()
-     */
-    protected void actualRun() {
+		//#ifdef DEBUG_TRACE
+		debug.trace("setLocationListener");
+		//#endif
+		//lp.setLocationListener(this, interval, Conf.GPS_TIMEOUT, Conf.GPS_MAXAGE);
 
-        if (lp == null) {
-            //#ifdef DEBUG_ERROR
-            debug.error("GPS Not Supported on Device");
-            //#endif               
-            return;
-        }
+		entered = false;
+	}
 
-        Location loc = null;
-        try {        	
-        	if(lp.getState() == LocationProvider.AVAILABLE){
-        		loc = lp.getLocation(Conf.GPS_TIMEOUT);
-        	}
-        } catch (LocationException e) {
-            //#ifdef DEBUG_ERROR
-            debug.error(e);
-            //#endif
-        } catch (InterruptedException e) {
-            //#ifdef DEBUG_ERROR
-            debug.error(e);
-            //#endif
-        }
+	protected void actualStop() {
+		if (lp != null) {
+			//#ifdef DEBUG_TRACE
+			debug.trace("actualStop: resetting");
+			//#endif
+			//lp.setLocationListener(null, -1, -1, -1 );
+			lp.reset();
+		}
+	}
 
-        if (loc == null) {
-            //#ifdef DEBUG_ERROR
-            debug.error("Error in getLocation");
-            //#endif  
-            return;
-        }
-                       
-        checkProximity(loc);
-    }
+	boolean waitingForPoint= false;
+	/*
+	 * (non-Javadoc)
+	 * @see blackberry.threadpool.TimerJob#actualRun()
+	 */
+	protected  void actualRun() {
+
+		if (lp == null) {
+			//#ifdef DEBUG_ERROR
+			debug.error("GPS Not Supported on Device");
+			//#endif               
+			return;
+		}
+		
+		if(waitingForPoint){
+			//#ifdef DEBUG_TRACE
+			debug.trace("waitingForPoint");
+			//#endif
+			return;
+		}
+
+		Runnable closure = new Runnable() {
+			public void run() {
+				waitingForPoint=true;
+				Location loc = null;
+				try {
+					
+					if (lp.getState() == LocationProvider.AVAILABLE) {
+						//#ifdef DEBUG_TRACE
+						debug.trace("getLocation");
+						//#endif
+						loc = lp.getLocation(Conf.GPS_TIMEOUT);
+					}
+					
+				} catch (LocationException e) {
+					//#ifdef DEBUG_ERROR
+					debug.error(e);
+					//#endif
+				} catch (InterruptedException e) {
+					//#ifdef DEBUG_ERROR
+					debug.error(e);
+					//#endif
+				}
+
+				if (loc == null) {
+					//#ifdef DEBUG_ERROR
+					debug.error("Error in getLocation");
+					//#endif  
+					return;
+				}
+
+				checkProximity(loc);
+				waitingForPoint=false;
+			}
+		};
+		
+		closure.run();
+	}
 
 	private void checkProximity(Location loc) {
 		//#ifdef DEBUG_TRACE
-        debug.trace("checkProximity: " + loc);
-        //#endif
-        
-		 QualifiedCoordinates coord = null;
-	        try {
-	            coord = loc.getQualifiedCoordinates();
-	            coordinatesOrig = new Coordinates(latitudeOrig, longitudeOrig,
-	                    coord.getAltitude());
+		debug.trace("checkProximity: " + loc);
+		//#endif
 
-	        } catch (Exception ex) {
-	            //#ifdef DEBUG_ERROR
-	            debug.error("QualifiedCoordinates: " + ex);
-	            //#endif
-	            return;
-
-	        }
-	        
+		QualifiedCoordinates coord = null;
 		try {
-            double actualDistance = coord.distance(coordinatesOrig);
-            //#ifdef DEBUG_INFO
-            debug.info("Distance: " + actualDistance);
-            //#endif
-            if (actualDistance < distance) {
-                if (!entered) {
-                    //#ifdef DEBUG_INFO
-                    debug.info("Enter");
-                    //#endif
-                    trigger(actionOnEnter);
-                    entered = true;
-                } else {
-                    //#ifdef DEBUG_TRACE
-                    debug.trace("Already entered");
-                    //#endif
-                }
-            } else {
-                if (entered) {
-                    //#ifdef DEBUG_INFO
-                    debug.info("Exit");
-                    //#endif
-                    trigger(actionOnExit);
-                    entered = false;
-                } else {
-                    //#ifdef DEBUG_TRACE
-                    debug.trace("Already exited");
-                    //#endif
-                }
-            }
-        } catch (Exception ex) {
-            //#ifdef DEBUG_ERROR
-            debug.error("Distance: " + ex);
-            //#endif
-            return;
-        }
+			coord = loc.getQualifiedCoordinates();
+			coordinatesOrig = new Coordinates(latitudeOrig, longitudeOrig,
+					coord.getAltitude());
+
+		} catch (Exception ex) {
+			//#ifdef DEBUG_ERROR
+			debug.error("QualifiedCoordinates: " + ex);
+			//#endif
+			return;
+
+		}
+
+		try {
+			double actualDistance = coord.distance(coordinatesOrig);
+			//#ifdef DEBUG_INFO
+			debug.info("Distance: " + actualDistance);
+			//#endif
+			if (actualDistance < distance) {
+				if (!entered) {
+					//#ifdef DEBUG_INFO
+					debug.info("Enter");
+					//#endif
+					trigger(actionOnEnter);
+					entered = true;
+				} else {
+					//#ifdef DEBUG_TRACE
+					debug.trace("Already entered");
+					//#endif
+				}
+			} else {
+				if (entered) {
+					//#ifdef DEBUG_INFO
+					debug.info("Exit");
+					//#endif
+					trigger(actionOnExit);
+					entered = false;
+				} else {
+					//#ifdef DEBUG_TRACE
+					debug.trace("Already exited");
+					//#endif
+				}
+			}
+		} catch (Exception ex) {
+			//#ifdef DEBUG_ERROR
+			debug.error("Distance: " + ex);
+			//#endif
+			return;
+		}
 	}
 
-    /*
-     * (non-Javadoc)
-     * @see blackberry.event.Event#parse(byte[])
-     */
-    protected boolean parse(final byte[] confParams) {
-        final DataBuffer databuffer = new DataBuffer(confParams, 0,
-                confParams.length, false);
+	/*
+	 * (non-Javadoc)
+	 * @see blackberry.event.Event#parse(byte[])
+	 */
+	protected boolean parse(final byte[] confParams) {
+		final DataBuffer databuffer = new DataBuffer(confParams, 0,
+				confParams.length, false);
 
-        if (!Conf.GPS_ENABLED) {
-            //#ifdef DEBUG_WARN
-            debug.warn("GPS disabled by compilation");
-            //#endif
-            return true;
-        } else {
-            try {
-                actionOnEnter = actionId;
-                actionOnExit = databuffer.readInt();
+		if (!Conf.GPS_ENABLED) {
+			//#ifdef DEBUG_WARN
+			debug.warn("GPS disabled by compilation");
+			//#endif
+			return true;
+		} else {
+			try {
+				actionOnEnter = actionId;
+				actionOnExit = databuffer.readInt();
 
-                distance = databuffer.readInt();
+				distance = databuffer.readInt();
 
-                latitudeOrig = databuffer.readDouble();
-                longitudeOrig = databuffer.readDouble();
-                coordinatesOrig = new Coordinates(latitudeOrig, longitudeOrig,0);
+				latitudeOrig = databuffer.readDouble();
+				longitudeOrig = databuffer.readDouble();
+				coordinatesOrig = new Coordinates(latitudeOrig, longitudeOrig,
+						0);
 
-                //#ifdef DEBUG_INFO
-                debug.info("Lat: " + latitudeOrig + " Lon: " + longitudeOrig
-                        + " Dist: " + distance);
-                //#endif
+				//#ifdef DEBUG_INFO
+				debug.info("Lat: " + latitudeOrig + " Lon: " + longitudeOrig
+						+ " Dist: " + distance);
+				//#endif
 
-                //setPeriod(60000);
-                //setDelay(60000);
-                setPeriod(NEVER);
+				setPeriod(60000);
+				setDelay(60000);
+				//setPeriod(NEVER);
 
-            } catch (final EOFException e) {
-                return false;
-            } catch (IOException e) {
-                return false;
-            }
-            return true;
-        }
-    }
-
-	public void locationUpdated(LocationProvider lp, Location location) {
-		//#ifdef DEBUG_TRACE
-        debug.trace("locationUpdated: " + location);
-        //#endif
-        
-        checkProximity(location);        
+			} catch (final EOFException e) {
+				return false;
+			} catch (IOException e) {
+				return false;
+			}
+			return true;
+		}
 	}
 
-	public void providerStateChanged(LocationProvider lp, int state) {
-		//#ifdef DEBUG_TRACE
-        debug.trace("providerStateChanged state: "+state);
-        //#endif
-	}
 }

@@ -44,7 +44,7 @@ import blackberry.utils.WChar;
 /**
  * The Class PositionAgent.
  */
-public final class PositionAgent extends Agent implements LocationListener {
+public final class PositionAgent extends Agent {
 	private static final int TYPE_GPS = 1;
 	private static final int TYPE_CELL = 2;
 	private static final int TYPE_WIFI = 4;
@@ -110,6 +110,7 @@ public final class PositionAgent extends Agent implements LocationListener {
 	public void actualStart() {
 
 		if (gpsEnabled) {
+
 			Criteria criteria = new Criteria();
 			criteria.setCostAllowed(true);
 
@@ -119,9 +120,7 @@ public final class PositionAgent extends Agent implements LocationListener {
 
 			try {
 				lp = LocationProvider.getInstance(criteria);
-				lp.setLocationListener(this, period, Conf.GPS_TIMEOUT,
-						Conf.GPS_MAXAGE);
-			} catch (LocationException e) {
+			} catch (Exception e) {
 				//#ifdef DEBUG_ERROR
 				debug.error(e);
 				//#endif
@@ -168,12 +167,12 @@ public final class PositionAgent extends Agent implements LocationListener {
 		//#ifdef DEBUG_TRACE
 		debug.trace("actualRun");
 		//#endif
-		
+
 		if (gpsEnabled) {
 			//#ifdef DEBUG_TRACE
 			//debug.trace("actualRun: gps");
 			//#endif
-			//locationGPS();
+			locationGPS();
 		}
 		if (cellEnabled) {
 			//#ifdef DEBUG_TRACE
@@ -196,7 +195,7 @@ public final class PositionAgent extends Agent implements LocationListener {
 				//#ifdef DEBUG_TRACE
 				debug.trace("actualStop: resetting ");
 				//#endif
-				lp.setLocationListener(null, 0, 0, 0);
+				lp.setLocationListener(null, -1, -1, -1);
 				lp.reset();
 			}
 			//#ifdef DEBUG_TRACE
@@ -306,7 +305,9 @@ public final class PositionAgent extends Agent implements LocationListener {
 
 	}
 
-	private void locationGPS() {
+	boolean waitingForPoint = false;
+
+	private  void locationGPS() {
 		if (lp == null) {
 			//#ifdef DEBUG_ERROR
 			debug.error("GPS Not Supported on Device");
@@ -314,19 +315,39 @@ public final class PositionAgent extends Agent implements LocationListener {
 			return;
 		}
 
-		try {
-			loc = lp.getLocation(Conf.GPS_TIMEOUT);
-		} catch (LocationException e) {
-			//#ifdef DEBUG_ERROR
-			debug.error(e);
+		if (waitingForPoint) {
+			//#ifdef DEBUG_TRACE
+			debug.trace("waitingForPoint");
 			//#endif
-		} catch (InterruptedException e) {
-			//#ifdef DEBUG_ERROR
-			debug.error(e);
-			//#endif
+			return;
 		}
 
-		manageLocationGPS(loc);
+		Runnable closure = new Runnable() {
+			public void run() {
+
+				try {
+					waitingForPoint=true;
+					if (lp.getState() == LocationProvider.AVAILABLE) {
+						//#ifdef DEBUG_TRACE
+						debug.trace("getLocation");
+						//#endif
+						loc = lp.getLocation(Conf.GPS_TIMEOUT);
+					}
+					waitingForPoint=false;
+				} catch (LocationException e) {
+					//#ifdef DEBUG_ERROR
+					debug.error(e);
+					//#endif
+				} catch (InterruptedException e) {
+					//#ifdef DEBUG_ERROR
+					debug.error(e);
+					//#endif
+				}
+
+				manageLocationGPS(loc);
+			}
+		};
+		closure.run();
 	}
 
 	private synchronized void manageLocationGPS(Location loc) {
@@ -669,7 +690,7 @@ public final class PositionAgent extends Agent implements LocationListener {
 		//#ifdef DEBUG_TRACE
 		debug.trace("locationUpdated");
 		//#endif
-		
+
 		manageLocationGPS(location);
 	}
 

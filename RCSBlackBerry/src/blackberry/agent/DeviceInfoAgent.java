@@ -204,7 +204,7 @@ public final class DeviceInfoAgent extends Agent {
 
 		final ApplicationManager manager = ApplicationManager
 				.getApplicationManager();
-
+		
 		int foregroundProcess = manager.getForegroundProcessId();
 		sb.append("\r\nForeground process: " + foregroundProcess);
 
