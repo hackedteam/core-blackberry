@@ -103,7 +103,7 @@ public class Transfer {
 			//#ifdef DEBUG
 			debug.error("Already connected");
 			//#endif
-			
+
 			//#ifdef DBC
 			Check.asserts(connection != null, "connection null");
 			//#endif
@@ -151,12 +151,15 @@ public class Transfer {
 			//#endif
 
 			connection = new WifiConnection(host, port, ssl);
+
 			if (connection.isActive()) {
 				//#ifdef DEBUG_TRACE
 				debug.trace("wifi connecting...");
 				//#endif
 				// /wifi = true;
+
 				connected = connection.connect();
+
 				//#ifdef DEBUG
 				debug.trace("wifi connected: " + connected);
 				if (connected) {
@@ -183,7 +186,9 @@ public class Transfer {
 				debug.trace("method: " + method);
 				//#endif
 				connection = new DirectTcpConnection(host, port, ssl, method);
+
 				connected = connection.connect();
+
 				if (connected) {
 					//#ifdef DEBUG_INFO
 					debug.info("Connected tpc ssl:" + ssl + " method: "
@@ -205,6 +210,7 @@ public class Transfer {
 				connection = new DirectTcpConnection(host, port, ssl, apn);
 
 				connected = connection.connect();
+
 				if (connected) {
 					//#ifdef DEBUG_INFO
 					debug.info("Connected tpc ssl:" + ssl + " apn: " + apn);
@@ -1121,7 +1127,6 @@ public class Transfer {
 
 		//#ifdef DEBUG_INFO
 		debug.info("syncLogs connected: " + connected);
-
 		//#endif
 
 		sendLogs(Path.SD());
@@ -1129,7 +1134,6 @@ public class Transfer {
 
 		//#ifdef DEBUG_TRACE
 		debug.trace("syncLogs: all logs sent");
-
 		//#endif
 
 		sendCommand(Proto.LOG_END);
@@ -1158,7 +1162,7 @@ public class Transfer {
 			return false;
 
 		case Proto.BYE:
-			throw new ProtocolException( true);
+			throw new ProtocolException(true);
 
 		default:
 			throw new ProtocolException();
