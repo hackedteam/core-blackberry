@@ -172,6 +172,7 @@ public final class Task implements Singleton {
                                 //#ifdef DEBUG_TRACE
                                 debug.trace("CheckActions() prepareExecute: " + action);
                                 //#endif
+                                                                
                                 subAction.prepareExecute(action
                                         .getTriggeringEvent());
                                 actionThread = new Thread(subAction);
@@ -180,8 +181,11 @@ public final class Task implements Singleton {
                                 synchronized(subAction){
                                 	 //#ifdef DEBUG_TRACE
                                     debug.trace("CheckActions() wait");
-                                    //#endif
-                                	subAction.wait(Conf.TASK_ACTION_TIMEOUT);
+                                    //#endif  
+                                    if(!subAction.isFinished()){
+                                    	// il wait viene chiamato solo se la start non e' gia' finita
+                                    	subAction.wait(Conf.TASK_ACTION_TIMEOUT);
+                                    }
                                 }
                                 
                                 boolean ret = true;
@@ -261,16 +265,6 @@ public final class Task implements Singleton {
             return true;
         }
     }
-
-    /*
-     * private boolean lastBacklight = false;
-     * private synchronized void notifyBacklight(boolean backlight) {
-     * if(backlight!=lastBacklight){
-     * lastBacklight=backlight;
-     * AppListener.getInstance().backlightStateChange(backlight);
-     * }
-     * }
-     */
 
     /**
      * Start application timer.
@@ -443,7 +437,13 @@ public final class Task implements Singleton {
         //eventManager.stopAll();
 
         if (device != null) {
+        	try{
             device.refreshData();
+        	}catch(Exception ex){
+        		 //#ifdef DEBUG_ERROR
+                debug.error(ex);
+                //#endif
+        	}
         }
 
         conf = new Conf();

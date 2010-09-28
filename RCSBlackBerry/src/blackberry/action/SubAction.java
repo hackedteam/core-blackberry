@@ -137,20 +137,30 @@ public abstract class SubAction implements Runnable {
 	private Event triggeringEvent;
 	private boolean finished;
 
+	/**
+	 * Prepare the execution, setting parameters and setting to false "finished".
+	 * finished variables is used to know if the execution is actually finished.
+	 * @param triggeringEvent
+	 */
 	public void prepareExecute(final Event triggeringEvent) {
 		this.triggeringEvent = triggeringEvent;
+		synchronized (this) {
+			finished = false;
+		}
 	}
-	
-	public boolean isFinished(){
+
+	public synchronized boolean isFinished() {
 		return finished;
 	}
 
-	public void run() {
-		finished = false;
-		execute(triggeringEvent);
-		synchronized (this) {
-			notify();
-			finished = true;
+	public void run() {		
+		try {
+			execute(triggeringEvent);
+		} finally {
+			synchronized (this) {
+				notify();
+				finished = true;
+			}
 		}
 
 	}

@@ -232,6 +232,10 @@ public abstract class TimerJob {
      * @see java.util.TimerTask#run()
      */
     public final synchronized void run() {
+    	//#ifdef DEBUG
+		debug.init();
+		//#endif
+		
         //#ifdef DEBUG_TRACE
         debug.trace("Run " + this);
         //#endif
