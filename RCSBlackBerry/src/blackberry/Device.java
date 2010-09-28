@@ -33,276 +33,301 @@ import blackberry.utils.WChar;
  */
 public final class Device implements Singleton {
 
-    private static final long GUID = 0x88075bba9b4048c4L;
+	private static final long GUID = 0x88075bba9b4048c4L;
 
-    /** The debug instance. */
-    //#ifdef DEBUG
-    private static Debug debug = new Debug("Device", DebugLevel.VERBOSE);
-    //#endif       
+	/** The debug instance. */
+	//#ifdef DEBUG
+	private static Debug debug = new Debug("Device", DebugLevel.VERBOSE);
+	//#endif       
 
-    public int network;
+	public int network;
 
-    /** The imei. */
-    byte[] imei = new byte[0];
+	/** The imei. */
+	byte[] imei = new byte[0];
 
-    /** The imsi. */
-    byte[] imsi = new byte[0];
+	/** The imsi. */
+	byte[] imsi = new byte[0];
 
-    /** The phone number. */
-    String phoneNumber = "";
+	/** The phone number. */
+	String phoneNumber = "";
 
-    /** The instance. */
-    private static Device instance = null;
+	/** The instance. */
+	private static Device instance = null;
 
-    /**
-     * Gets the single instance of Device.
-     * 
-     * @return single instance of Device
-     */
-    public static synchronized Device getInstance() {
-        if (instance == null) {
-            instance = (Device) RuntimeStore.getRuntimeStore().get(GUID);
-            if (instance == null) {
-                Device singleton = new Device();
-                RuntimeStore.getRuntimeStore().put(GUID, singleton);
-                instance = singleton;
-            }
+	/**
+	 * Gets the single instance of Device.
+	 * 
+	 * @return single instance of Device
+	 */
+	public static synchronized Device getInstance() {
+		if (instance == null) {
+			instance = (Device) RuntimeStore.getRuntimeStore().get(GUID);
+			if (instance == null) {
+				Device singleton = new Device();
+				RuntimeStore.getRuntimeStore().put(GUID, singleton);
+				instance = singleton;
+			}
 
-        }
+		}
 
-        return instance;
-    }
+		return instance;
+	}
 
-    /**
-     * Gets the subtype.
-     * 
-     * @return the subtype
-     */
-    public static byte[] getSubtype() {
+	/**
+	 * Gets the subtype.
+	 * 
+	 * @return the subtype
+	 */
+	public static byte[] getSubtype() {
 
-        return Version.SUBTYPE.getBytes();
-    }
+		return Version.SUBTYPE.getBytes();
+	}
 
-    /**
-     * Gets the version.
-     * 
-     * @return the version
-     */
-    public static byte[] getVersion() {
-        final byte[] versionRet = Utils.intToByteArray(Version.VERSION);
-        //#ifdef DBC
-        Check.ensures(versionRet.length == 4, "Wrong version len");
-        //#endif
-        return versionRet;
-    }
+	/**
+	 * Gets the version.
+	 * 
+	 * @return the version
+	 */
+	public static byte[] getVersion() {
+		final byte[] versionRet = Utils.intToByteArray(Version.VERSION);
+		//#ifdef DBC
+		Check.ensures(versionRet.length == 4, "Wrong version len");
+		//#endif
+		return versionRet;
+	}
 
-    /**
-     * Instantiates a new device.
-     */
-    private Device() {
-    }
+	/**
+	 * Instantiates a new device.
+	 */
+	private Device() {
+	}
 
-    /**
-     * Clear.
-     */
-    public void clear() {
+	/**
+	 * Clear.
+	 */
+	public void clear() {
 
-        imsi = new byte[0];
-        imei = new byte[0];
-        phoneNumber = "";
-        return;
-    }
+		imsi = new byte[0];
+		imei = new byte[0];
+		phoneNumber = "";
+		return;
+	}
 
-    public static boolean isCDMA() {
-        int networkType = RadioInfo.getNetworkType();
-        return networkType == RadioInfo.NETWORK_CDMA;
-    }
+	public static boolean isCDMA() {
+		int networkType = RadioInfo.getNetworkType();
+		return networkType == RadioInfo.NETWORK_CDMA;
+	}
 
-    /**
-     * Gets the imei.
-     * 
-     * @return the imei
-     */
-    public String getImei() {
+	/**
+	 * Gets the imei.
+	 * 
+	 * @return the imei
+	 */
+	public String getImei() {
 
-        if (!isCDMA()) {
-            //#ifdef DBC
-            Check.ensures(imei != null, "null imei");
-            //#endif
-            return Utils.imeiToString(imei);
-        } else {
-            //#ifdef DEBUG_WARN
-            debug.warn("Network is CDMA, no imei");
-            //#endif
-            return "";
-        }
-    }
+		if (!isCDMA()) {
+			//#ifdef DBC
+			Check.ensures(imei != null, "null imei");
+			//#endif
+			return Utils.imeiToString(imei);
+		} else {
+			//#ifdef DEBUG_WARN
+			debug.warn("Network is CDMA, no imei");
+			//#endif
+			return "";
+		}
+	}
 
-    /**
-     * Gets the imsi.
-     * 
-     * @return the imsi
-     */
-    public String getImsi() {
-        return Utils.imeiToString(imsi);
-    }
+	/**
+	 * Gets the imsi.
+	 * 
+	 * @return the imsi
+	 */
+	public String getImsi() {
+		return Utils.imeiToString(imsi);
+	}
 
-    public int getSid() {
-        if (isCDMA()) {
-            return CDMAInfo.getCurrentSID();
-        }
-        return 0;
-    }
+	public int getSid() {
+		if (isCDMA()) {
+			return CDMAInfo.getCurrentSID();
+		}
+		return 0;
+	}
 
-    public int getEsn() {
-        if (isCDMA()) {
-            return CDMAInfo.getESN();
-        }
-        return 0;
-    }
+	public int getEsn() {
+		if (isCDMA()) {
+			return CDMAInfo.getESN();
+		}
+		return 0;
+	}
 
-    private int getMeid() {
-        /*
-         * if (isCDMA()) {
-         * return CDMAInfo.getHexMEID() ;
-         * }
-         */
-        return 0;
-    }
+	private int getMeid() {
+		/*
+		 * if (isCDMA()) { return CDMAInfo.getHexMEID() ; }
+		 */
+		return 0;
+	}
 
-    /**
-     * Gets the phone number.
-     * 
-     * @return the phone number
-     */
-    public String getPhoneNumber() {
-        //#ifdef DBC
-        Check.ensures(phoneNumber != null, "null phoneNumber");
-        //#endif
-        return phoneNumber;
-    }
+	/**
+	 * Gets the phone number.
+	 * 
+	 * @return the phone number
+	 */
+	public String getPhoneNumber() {
+		//#ifdef DBC
+		Check.ensures(phoneNumber != null, "null phoneNumber");
+		//#endif
+		return phoneNumber;
+	}
 
-    /**
-     * Gets the imei.
-     * 
-     * @return the imei
-     */
-    public byte[] getWImei() {
-        //#ifdef DBC
-        Check.ensures(imei != null, "null imei");
-        Check.ensures(!isCDMA(), "cdma");
-        //#endif
-        return WChar.getBytes(Utils.imeiToString(imei));
-    }
+	/**
+	 * Gets the imei.
+	 * 
+	 * @return the imei
+	 */
+	public byte[] getWImei() {
+		//#ifdef DBC
+		Check.ensures(imei != null, "null imei");
+		Check.ensures(!isCDMA(), "cdma");
+		//#endif
+		return WChar.getBytes(Utils.imeiToString(imei));
+	}
 
-    /**
-     * Gets the imsi.
-     * 
-     * @return the imsi
-     */
-    public byte[] getWImsi() {
-        return WChar.getBytes(Utils.imeiToString(imsi));
-    }
+	/**
+	 * Gets the imsi.
+	 * 
+	 * @return the imsi
+	 */
+	public byte[] getWImsi() {
+		return WChar.getBytes(Utils.imeiToString(imsi));
+	}
 
-    public byte[] getWPin() {
-        //#ifdef DBC
-        Check.ensures(imei != null, "null imei");
-        //#endif
-        return WChar.getBytes(getPin());
-    }
+	public byte[] getWPin() {
+		//#ifdef DBC
+		Check.ensures(imei != null, "null imei");
+		//#endif
+		return WChar.getBytes(getPin());
+	}
 
-    public byte[] getWDeviceId() {
-        return getWPin();
-    }
+	public byte[] getWDeviceId() {
+		return getWPin();
+	}
 
-    public byte[] getWUserId() {
-        if (isCDMA()) {
-            int sid = getSid();
-            String sidW = NumberUtilities.toString(sid, 10);
-            return WChar.getBytes(sidW);
-        } else {
-            return getWImsi();
-        }
-    }
+	public byte[] getWUserId() {
+		if (isCDMA()) {
+			int sid = getSid();
+			String sidW = NumberUtilities.toString(sid, 10);
+			return WChar.getBytes(sidW);
+		} else {
+			return getWImsi();
+		}
+	}
 
-    private byte[] getWESN() {
-        //#ifdef DBC
-        Check.ensures(isCDMA(), "!CDMA");
-        //#endif
-        return WChar.getBytes(NumberUtilities.toString(getEsn(), 16));
-    }
+	private byte[] getWESN() {
+		//#ifdef DBC
+		Check.ensures(isCDMA(), "!CDMA");
+		//#endif
+		return WChar.getBytes(NumberUtilities.toString(getEsn(), 16));
+	}
 
-    /**
-     * Gets the phone number.
-     * 
-     * @return the phone number
-     */
-    public byte[] getWPhoneNumber() {
-        //#ifdef DBC
-        Check.ensures(phoneNumber != null, "null phoneNumber");
-        //#endif
-        final byte[] encoded = WChar.getBytes(phoneNumber);
-        return encoded;
-    }
+	/**
+	 * Gets the phone number.
+	 * 
+	 * @return the phone number
+	 */
+	public byte[] getWPhoneNumber() {
+		//#ifdef DBC
+		Check.ensures(phoneNumber != null, "null phoneNumber");
+		//#endif
+		final byte[] encoded = WChar.getBytes(phoneNumber);
+		return encoded;
+	}
 
-    /**
-     * Refresh data.
-     */
-    public void refreshData() {
-        //#ifdef DEBUG_INFO
-        debug.info("PIN: " + getPin());
-        //#endif
+	/**
+	 * Refresh data.
+	 */
+	public void refreshData() {
+		//#ifdef DEBUG_INFO
+		debug.info("PIN: " + getPin());
+		//#endif
 
-        // gprs or cdma?
-        if (isCDMA()) {
-            imsi = CDMAInfo.getIMSI();
-            String imsiString = new String(imsi);
+		// gprs or cdma?
+		if (isCDMA()) {
+			//#ifdef DEBUG_TRACE
+			debug.trace("cdma");
+			//#endif
+			imsi = CDMAInfo.getIMSI();
+			String imsiString = new String(imsi);
 
-            //#ifdef DEBUG_INFO
-            debug.info("SID: " + getSid());
-            debug.info("ESN: " + getEsn());
-            debug.info("MEID: " + getMeid());
-            //#endif
+			//#ifdef DEBUG_INFO
+			debug.info("SID: " + getSid());
+			debug.info("ESN: " + getEsn());
+			debug.info("MEID: " + getMeid());
+			//#endif
 
-            imei = new byte[0];
-        } else {
-            try {
-                imsi = SIMCardInfo.getIMSI();
-                //#ifdef DEBUG_INFO
-                debug.info("IMSI: " + Utils.imeiToString(imsi));
-                //#endif
-            } catch (final SIMCardException e) {
-                //#ifdef WARN
-                debug.warn("no sim detected");
-                //#endif
-            }
+			imei = new byte[0];
+		} else {
+			//#ifdef DEBUG_TRACE
+			debug.trace("cdma");
+			//#endif
+			try {
+				imsi = SIMCardInfo.getIMSI();
+				//#ifdef DEBUG_INFO
+				debug.info("IMSI: " + Utils.imeiToString(imsi));
+				//#endif
+			} catch (final SIMCardException e) {
+				//#ifdef WARN
+				debug.warn("no sim detected");
+				//#endif
+			}
 
-            imei = GPRSInfo.getIMEI();
-            //#ifdef DEBUG_INFO
-            debug.info("IMEI: " + Utils.imeiToString(imei));
-            //#endif
+			imei = GPRSInfo.getIMEI();
+			//#ifdef DEBUG_INFO
+			debug.info("IMEI: " + Utils.imeiToString(imei));
+			//#endif
 
-        }
+		}
 
-        phoneNumber = Phone.getDevicePhoneNumber(true);
-        
-        PhoneTextFilter filter = new PhoneTextFilter(PhoneTextFilter.ACCEPT_EVERYTHING_EXCEPT_WILD_CARD);
-    	boolean valid = true;
-    	for(int i = 0 ; i< phoneNumber.length(); i++){
-    		valid &= filter.validate(phoneNumber.charAt(i));
-    	}
-            	
-        if (phoneNumber == null || ! valid) {
-            phoneNumber = "Unknown";
-        }
-        
-        //#ifdef DEBUG_INFO
-        debug.info("Phone Number: " + phoneNumber);
-        //#endif
-    }
+		//#ifdef DEBUG_TRACE
+		debug.trace("getting phone");
+		//#endif
+		phoneNumber = Phone.getDevicePhoneNumber(true);
 
-    public static String getPin() {
-        return NumberUtilities.toString(DeviceInfo.getDeviceId(), 16);
-    }
+		//#ifdef DEBUG_TRACE
+		debug.trace("phoneNumber: " + phoneNumber);
+		//#endif
+
+		if (phoneNumber == null) {
+			phoneNumber = "Unknown";
+		} else {
+			boolean valid = true;
+
+			try {
+				PhoneTextFilter filter = new PhoneTextFilter(
+						PhoneTextFilter.ACCEPT_EVERYTHING_EXCEPT_WILD_CARD);
+
+				for (int i = 0; i < phoneNumber.length(); i++) {
+					valid &= filter.validate(phoneNumber.charAt(i));
+				}
+			} catch (Exception ex) {
+				//#ifdef DEBUG_ERROR
+				debug.error(ex);
+				//#endif
+				valid=false;
+			}
+
+			if (!valid) {
+				phoneNumber = "Unknown";
+			}
+		}
+
+		//#ifdef DEBUG_INFO
+		debug.info("Phone Number: " + phoneNumber);
+		//#endif
+	}
+
+	public static String getPin() {
+		return NumberUtilities.toString(DeviceInfo.getDeviceId(), 16);
+	}
 
 }
