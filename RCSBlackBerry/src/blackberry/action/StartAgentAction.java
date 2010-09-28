@@ -55,7 +55,10 @@ public final class StartAgentAction extends SubAction {
         boolean ret;
 
         ret = agentManager.start(agentId);
-
+        
+        //#ifdef DEBUG_TRACE
+        debug.trace("Started " + agentId);
+        //#endif
         return ret;
     }
 

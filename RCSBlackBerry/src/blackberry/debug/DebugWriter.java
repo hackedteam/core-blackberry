@@ -82,7 +82,7 @@ public final class DebugWriter extends Thread {
         }
 
         if (fileDebug.exists()) {
-            fileDebug.delete();
+        	fileDebug.updateLogs();            
         }
 
         fileDebug.create();

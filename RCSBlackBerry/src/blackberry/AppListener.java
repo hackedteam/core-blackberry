@@ -59,7 +59,7 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
 	private static final long GUID = 0x4e5dd52b9f50b3feL;
 
 	//#ifdef DEBUG
-	static Debug debug = new Debug("AppListener", DebugLevel.VERBOSE);
+	static Debug debug = new Debug("AppListener", DebugLevel.INFORMATION);
 	//#endif
 
 	static private int lastStatus;

