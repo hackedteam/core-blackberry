@@ -371,6 +371,17 @@ public final class Task implements Singleton {
                 ret = false;
                 
                 // try to reset it
+                try{
+                	actionThread.interrupt();
+                	//#ifdef DEBUG_TRACE
+                    debug.trace("verifyTimers() interrupted thread");
+                    //#endif
+                }catch(Exception ex){
+                	//#ifdef DEBUG_ERROR
+                    debug.error(ex);
+                    //#endif
+                }
+                
             }
 
             if (lastActionCheckedEnd != null) {
