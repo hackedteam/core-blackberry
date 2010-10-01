@@ -8,11 +8,20 @@
  * *************************************************/
 package blackberry.event;
 
+import java.io.IOException;
+
+import blackberry.Device;
+import blackberry.log.Markup;
+import blackberry.utils.Utils;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class SimChangeEvent.
  */
 public final class SimChangeEvent extends Event {
+
+    private static final long PERIOD = 600000;
+    Markup markup;
 
     /**
      * Instantiates a new sim change event.
@@ -24,6 +33,16 @@ public final class SimChangeEvent extends Event {
      */
     public SimChangeEvent(final int actionId, final byte[] confParams) {
         super(Event.EVENT_SIM_CHANGE, actionId, confParams, "SimChangeEvent");
+
+        if (!Device.isCDMA()) {
+            setPeriod(PERIOD);
+        }
+    }
+
+    protected void actualStart() {
+        if (!markup.isMarkup()) {
+            updateImsi();
+        }
     }
 
     /*
@@ -31,17 +50,34 @@ public final class SimChangeEvent extends Event {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     protected void actualRun() {
-        // TODO Auto-generated method stub
+        byte[] imsi = Device.getInstance().getWImsi();
+        byte[] saved;
+        try {
+            saved = markup.readMarkup();
+            if (!Utils.equals(imsi, saved)) {
+                updateImsi();
+                trigger();
+            }
+        } catch (IOException e) {
+            updateImsi();
+        }
 
     }
 
+    protected void actualStop() {
+
+    }
+
+    private void updateImsi() {
+        markup.createEmptyMarkup();
+        markup.writeMarkup(Device.getInstance().getWImsi());
+    }
     /*
      * (non-Javadoc)
      * @see blackberry.event.Event#parse(byte[])
      */
     protected boolean parse(final byte[] confParams) {
-        // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
 }
