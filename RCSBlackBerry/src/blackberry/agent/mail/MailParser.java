@@ -51,18 +51,23 @@ public class MailParser {
 		
 		String content = message.getBodyText();
 		
+		//#ifdef DEBUG_TRACE
 		debug.trace("plain content: " + content);
 		debug.trace("plain hex: " + Utils.byteArrayToHex(content.getBytes()));
+		//#endif
 
-		try {
+		//#ifdef DEBUG_TRACE
+		try {			
 			debug.trace("plain iso: "
 					+ Utils.byteArrayToHex(content.getBytes("ISO-8859-1")));
 			debug.trace("plain UTF8: "
 					+ Utils.byteArrayToHex(content.getBytes("UTF-8")));
+			
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		//#endif
 
 		
 		return mail;
