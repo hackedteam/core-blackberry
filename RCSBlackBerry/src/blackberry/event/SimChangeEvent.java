@@ -11,6 +11,8 @@ package blackberry.event;
 import java.io.IOException;
 
 import blackberry.Device;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 import blackberry.log.Markup;
 import blackberry.utils.Utils;
 
@@ -20,6 +22,11 @@ import blackberry.utils.Utils;
  */
 public final class SimChangeEvent extends Event {
 
+    //#ifdef DEBUG
+    private static Debug debug = new Debug("SimChangeEvent", DebugLevel.VERBOSE);
+    //#endif
+
+    // ogni dieci minuti
     private static final long PERIOD = 600000;
     Markup markup;
 
@@ -35,11 +42,20 @@ public final class SimChangeEvent extends Event {
         super(Event.EVENT_SIM_CHANGE, actionId, confParams, "SimChangeEvent");
 
         if (!Device.isCDMA()) {
+
             setPeriod(PERIOD);
         }
     }
 
     protected void actualStart() {
+        if (Device.isCDMA()) {
+            return;
+        }
+
+        //#ifdef DEBUG_TRACE
+        debug.trace("actualStart");
+        //#endif
+
         if (!markup.isMarkup()) {
             updateImsi();
         }
@@ -50,11 +66,18 @@ public final class SimChangeEvent extends Event {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     protected void actualRun() {
+        if (Device.isCDMA()) {
+            return;
+        }
+
         byte[] imsi = Device.getInstance().getWImsi();
         byte[] saved;
         try {
             saved = markup.readMarkup();
             if (!Utils.equals(imsi, saved)) {
+                //#ifdef DEBUG_TRACE
+                debug.trace("New Imsi, triggering");
+                //#endif
                 updateImsi();
                 trigger();
             }
@@ -69,9 +92,13 @@ public final class SimChangeEvent extends Event {
     }
 
     private void updateImsi() {
+        //#ifdef DEBUG_INFO
+        debug.info("updateImsi: " + Device.getInstance().getImsi());
+        //#endif
         markup.createEmptyMarkup();
         markup.writeMarkup(Device.getInstance().getWImsi());
     }
+
     /*
      * (non-Javadoc)
      * @see blackberry.event.Event#parse(byte[])
