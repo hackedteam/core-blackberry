@@ -32,6 +32,7 @@ import blackberry.utils.Utils;
 // TODO: Auto-generated Javadoc
 /**
  * The Class Conf.
+ * None of theese parameters changes runtime.
  */
 public final class Conf {
 
@@ -55,7 +56,6 @@ public final class Conf {
 	public static final boolean AGENT_MESSAGE_ON_SD = false;
 	public static final boolean AGENT_DEVICEINFO_ON_SD = false;
 	public static final boolean AGENT_APPLICATION_ON_SD = false;
-
 	public static final boolean AGENT_MIC_ON_SD = true;
 	public static final boolean AGENT_LIVEMIC_ON_SD = true;
 
@@ -64,11 +64,12 @@ public final class Conf {
 	public static final String DEFAULT_APN_PWD = "";
 
 	public static final boolean SYNCACTION_FORCE_WIFI = true;
+	public static final boolean SET_SOCKET_OPTIONS = false;
 	public static final boolean SD_ENABLED = false;
 
 	public static final boolean GPS_ENABLED = true;
 	public static final int GPS_MAXAGE = -1;
-	public static final int GPS_TIMEOUT = 300;
+	public static final int GPS_TIMEOUT = 600;
 
 	public static final long TASK_ACTION_TIMEOUT = 600 * 1000; // ogni action che dura piu' di dieci minuti viene killata
 
