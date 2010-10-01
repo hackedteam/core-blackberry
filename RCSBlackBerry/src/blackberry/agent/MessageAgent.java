@@ -365,7 +365,7 @@ public final class MessageAgent extends Agent {
 		Check.requires(markupDate != null, "lastcheckGet markupDate==null");
 		//#endif
 
-		Date date = MessageAgent.getInstance().markupDate.get(key);
+		Date date = markupDate.get(key);
 
 		//#ifdef DEBUG_TRACE
 		debug.trace("getLastCheck: " + key + " = " + date);
@@ -379,7 +379,7 @@ public final class MessageAgent extends Agent {
 	}
 
 	public synchronized void lastcheckReset() {
-		MessageAgent.getInstance().markupDate.removeMarkup();
+		markupDate.removeMarkup();
 
 		//lastcheck = new Date(0); 
 	}
