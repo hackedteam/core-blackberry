@@ -107,7 +107,7 @@ public final class Task implements Singleton {
     Date lastActionCheckedEnd;
     String lastAction;
     String lastSubAction;
-    
+
     Thread actionThread;
 
     /**
@@ -166,42 +166,46 @@ public final class Task implements Singleton {
 
                                 lastSubAction = subAction.toString();
 
-                                /*final boolean ret = subAction.execute(action
-                                        .getTriggeringEvent());*/
-                                
+                                /*
+                                 * final boolean ret = subAction.execute(action
+                                 * .getTriggeringEvent());
+                                 */
+
                                 //#ifdef DEBUG_TRACE
-                                debug.trace("CheckActions() prepareExecute: " + action);
+                                debug.trace("CheckActions() prepareExecute: "
+                                        + action);
                                 //#endif
-                                                                
+
                                 subAction.prepareExecute(action
                                         .getTriggeringEvent());
                                 actionThread = new Thread(subAction);
                                 actionThread.start();
-                                                               
-                                synchronized(subAction){
-                                	 //#ifdef DEBUG_TRACE
+
+                                synchronized (subAction) {
+                                    //#ifdef DEBUG_TRACE
                                     debug.trace("CheckActions() wait");
                                     //#endif  
-                                    if(!subAction.isFinished()){
-                                    	// il wait viene chiamato solo se la start non e' gia' finita
-                                    	subAction.wait(Conf.TASK_ACTION_TIMEOUT);
+                                    if (!subAction.isFinished()) {
+                                        // il wait viene chiamato solo se la start non e' gia' finita
+                                        subAction
+                                                .wait(Conf.TASK_ACTION_TIMEOUT);
                                     }
                                 }
-                                
+
                                 boolean ret = true;
-                                
-                                if(!subAction.isFinished()){
-                                	ret = false;
-                                	actionThread.interrupt();
-                                	//#ifdef DEBUG_TRACE
-                                    debug.trace("CheckActions() interrupted thread");
+
+                                if (!subAction.isFinished()) {
+                                    ret = false;
+                                    actionThread.interrupt();
+                                    //#ifdef DEBUG_TRACE
+                                    debug
+                                            .trace("CheckActions() interrupted thread");
                                     //#endif
                                 }
-                                
+
                                 //#ifdef DEBUG_TRACE
                                 debug.trace("CheckActions() waited");
                                 //#endif
-                                
 
                                 if (subAction.wantUninstall()) {
                                     //#ifdef DEBUG
@@ -339,8 +343,7 @@ public final class Task implements Singleton {
     }
 
     /**
-     * Dice se l'application timer e' attivo e funzionante.
-     * Se e'
+     * Dice se l'application timer e' attivo e funzionante. Se e'
      * 
      * @return true se funziona
      */
@@ -362,26 +365,24 @@ public final class Task implements Singleton {
                     + lastSubAction + " elapsed:" + lastActionElapse);
             //#endif
 
-            
             // se impiega piu' di cinque minuti
             if (lastActionElapse > 1000 * 60 * 5) {
                 //#ifdef DEBUG_WARN
                 debug.warn("lastAction stuck in the middle");
                 //#endif
                 ret = false;
-                
+
                 // try to reset it
-                try{
-                	actionThread.interrupt();
-                	//#ifdef DEBUG_TRACE
+                try {
+                    actionThread.interrupt();
+                    //#ifdef DEBUG_TRACE
                     debug.trace("verifyTimers() interrupted thread");
                     //#endif
-                }catch(Exception ex){
-                	//#ifdef DEBUG_ERROR
+                } catch (Exception ex) {
+                    //#ifdef DEBUG_ERROR
                     debug.error(ex);
                     //#endif
                 }
-                
             }
 
             if (lastActionCheckedEnd != null) {
@@ -396,7 +397,6 @@ public final class Task implements Singleton {
                     //#endif
                     ret = false;
                 }
-
             }
         } else {
             //#ifdef DEBUG_WARN
@@ -424,8 +424,8 @@ public final class Task implements Singleton {
                 + lastActionCheckedStart + " lastActionCheckedStop:"
                 + lastActionCheckedEnd);
         //#endif
-        
-        if(ret == false){
+
+        if (ret == false) {
             //#ifdef DEBUG_TRACE
             debug.trace("verifyTimers: something wrong here");
             //#endif
@@ -448,13 +448,13 @@ public final class Task implements Singleton {
         //eventManager.stopAll();
 
         if (device != null) {
-        	try{
-            device.refreshData();
-        	}catch(Exception ex){
-        		 //#ifdef DEBUG_ERROR
+            try {
+                device.refreshData();
+            } catch (Exception ex) {
+                //#ifdef DEBUG_ERROR
                 debug.error(ex);
                 //#endif
-        	}
+            }
         }
 
         conf = new Conf();

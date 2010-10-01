@@ -170,7 +170,7 @@ public final class PositionAgent extends Agent {
 
 		if (gpsEnabled) {
 			//#ifdef DEBUG_TRACE
-			//debug.trace("actualRun: gps");
+			debug.trace("actualRun: gps");
 			//#endif
 			locationGPS();
 		}
@@ -338,8 +338,8 @@ public final class PositionAgent extends Agent {
 						debug.trace("getLocation");
 						//#endif
 						loc = lp.getLocation(Conf.GPS_TIMEOUT);
+						manageLocationGPS(loc);
 					}
-					waitingForPoint = false;
 				} catch (LocationException e) {
 					//#ifdef DEBUG_ERROR
 					debug.error(e);
@@ -348,15 +348,19 @@ public final class PositionAgent extends Agent {
 					//#ifdef DEBUG_ERROR
 					debug.error(e);
 					//#endif
-				}
-
-				manageLocationGPS(loc);
+				}finally{
+					waitingForPoint = false;
+				}				
 			}
 		};
 		closure.run();
 	}
 
 	private synchronized void manageLocationGPS(Location loc) {
+		//#ifdef DEBUG_TRACE
+		debug.trace("manageLocationGPS");
+		//#endif
+		
 		if (loc == null) {
 			//#ifdef DEBUG_ERROR
 			debug.error("Error in getLocation");

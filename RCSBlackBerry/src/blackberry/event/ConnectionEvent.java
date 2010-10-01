@@ -8,12 +8,24 @@
  * *************************************************/
 package blackberry.event;
 
+import java.io.EOFException;
+
+import net.rim.device.api.util.DataBuffer;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class ConnectionEvent.
  */
 public final class ConnectionEvent extends Event {
-
+    //#ifdef DEBUG
+    private static Debug debug = new Debug("ConnectionEvent",
+            DebugLevel.VERBOSE);
+    //#endif
+    
+    int actionOnEnter;
+    int actionOnExit;
     /**
      * Instantiates a new connection event.
      * 
@@ -40,8 +52,15 @@ public final class ConnectionEvent extends Event {
      * @see blackberry.event.Event#parse(byte[])
      */
     protected boolean parse(final byte[] confParams) {
-        // TODO Auto-generated method stub
-        return false;
+        final DataBuffer databuffer = new DataBuffer(confParams, 0,
+                confParams.length, false);
+        try {
+            actionOnEnter = actionId;
+            actionOnExit = databuffer.readInt();
+        } catch (final EOFException e) {
+            return false;
+        }
+        return true;
     }
 
 }
