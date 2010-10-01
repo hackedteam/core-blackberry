@@ -20,6 +20,7 @@ import javax.microedition.io.StreamConnection;
 
 import net.rim.device.api.io.SocketConnectionEnhanced;
 
+import blackberry.Conf;
 import blackberry.action.Apn;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -36,7 +37,8 @@ public abstract class Connection {
 	private static final int READ_TIMEOUT = 10000;
 
 	//#ifdef DEBUG
-	protected static Debug debug = new Debug("Connection", DebugLevel.INFORMATION);
+	protected static Debug debug = new Debug("Connection",
+			DebugLevel.INFORMATION);
 	//#endif
 
 	protected DataInputStream in;
@@ -50,21 +52,25 @@ public abstract class Connection {
 	//public abstract boolean connect();
 
 	public final synchronized boolean connect() {
-		boolean exception = false;
+		boolean withoutoptions = true;
 		boolean connected = false;
-		try {
-			//#ifdef DEBUG_TRACE
-			debug.trace("try connect with socket optimization");
-			//#endif
-			connected = connect(true);
-		} catch (IOException e) {
-			//#ifdef DEBUG_ERROR
-			debug.error(e);
-			//#endif
-			exception = true;
+
+		// se la Conf lo prevede, si prova a settare le socket con le opzioni		
+		if (Conf.SET_SOCKET_OPTIONS) {
+			try {
+				//#ifdef DEBUG_TRACE
+				debug.trace("try connect with socket optimization");
+				//#endif
+				connected = connect(true);
+				withoutoptions = false;
+			} catch (IOException e) {
+				//#ifdef DEBUG_ERROR
+				debug.error(e);
+				//#endif				
+			}
 		}
 
-		if (exception) {
+		if (withoutoptions) {
 			try {
 				//#ifdef DEBUG_TRACE
 				debug.trace("try connect without");
@@ -136,7 +142,7 @@ public abstract class Connection {
 
 		}
 
-		if (connection instanceof SocketConnectionEnhanced) {
+		if (connection instanceof SocketConnectionEnhanced && setSocket) {
 			//#ifdef DEBUG_TRACE
 			debug.trace("connect: instanceof enhanced");
 			//#endif
