@@ -52,7 +52,7 @@ import blackberry.utils.Check;
  * 
  * @see AppEvent
  */
-public final class AppListener implements RadioStatusListener, HolsterListener,
+public final class AppListener extends Listener  implements RadioStatusListener, HolsterListener,
 		SystemListener, SystemListener2, PhoneListener, PhoneLogListener,
 		Singleton {
 
@@ -102,53 +102,7 @@ public final class AppListener implements RadioStatusListener, HolsterListener,
 		}
 		return instance;
 	}
-
-	/**
-	 * Adds the observer.
-	 * 
-	 * @param observers
-	 *            Vector of observers
-	 * @param observer
-	 *            the observer
-	 */
-	public synchronized void addObserver(final Vector observers,
-			final Observer observer) {
-
-		//#ifdef DBC
-		Check.requires(!observers.contains(observer), "already observing");
-		//#endif
-
-		//#ifdef DEBUG_TRACE
-		debug.trace("adding observer: " + observer);
-		//#endif
-		if (!observers.contains(observer)) {
-			observers.addElement(observer);
-		}
-	}
-
-	/**
-	 * Removes observer.
-	 * 
-	 * @param observers
-	 *            Vector of observers
-	 * @param observer
-	 *            the observer
-	 */
-	public synchronized void removeObserver(final Vector observers,
-			final Observer observer) {
-		//#ifdef DEBUG_TRACE
-		debug.trace("removing observer: " + observer);
-		//#endif
-
-		if (observers.contains(observer)) {
-			observers.removeElement(observer);
-		} else {
-			//#ifdef DEBUG
-			//debug.error("removing observer not present: " + observer);
-			//#endif
-		}
-	}
-
+	
 	public synchronized void addBatteryStatusObserver(
 			final BatteryStatusObserver observer) {
 		addObserver(batteryStatusObservers, observer);

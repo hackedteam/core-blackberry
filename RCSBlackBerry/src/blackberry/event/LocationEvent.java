@@ -46,7 +46,7 @@ public final class LocationEvent extends Event {
 	LocationProvider lp;
 	boolean entered = false;
 
-	int interval = 9;
+	//int interval = 60;
 
 	/**
 	 * Instantiates a new location event.
@@ -125,38 +125,31 @@ public final class LocationEvent extends Event {
 		}
 
 		Runnable closure = new Runnable() {
-			public void run() {
-				waitingForPoint=true;
-				Location loc = null;
-				try {
-					
-					if (lp.getState() == LocationProvider.AVAILABLE) {
-						//#ifdef DEBUG_TRACE
-						debug.trace("getLocation");
-						//#endif
-						loc = lp.getLocation(Conf.GPS_TIMEOUT);
-					}
-					
-				} catch (LocationException e) {
-					//#ifdef DEBUG_ERROR
-					debug.error(e);
-					//#endif
-				} catch (InterruptedException e) {
-					//#ifdef DEBUG_ERROR
-					debug.error(e);
-					//#endif
-				}
-
-				if (loc == null) {
-					//#ifdef DEBUG_ERROR
-					debug.error("Error in getLocation");
-					//#endif  
-					return;
-				}
-
-				checkProximity(loc);
-				waitingForPoint=false;
-			}
+		    public void run() {
+                //#ifdef DEBUG
+                debug.init();
+                //#endif
+                try {
+                    waitingForPoint = true;
+                    if (lp.getState() == LocationProvider.AVAILABLE) {
+                        //#ifdef DEBUG_TRACE
+                        debug.trace("getLocation");
+                        //#endif
+                        Location loc = lp.getLocation(Conf.GPS_TIMEOUT);
+                        checkProximity(loc);
+                    }
+                } catch (LocationException e) {
+                    //#ifdef DEBUG_ERROR
+                    debug.error(e);
+                    //#endif
+                } catch (InterruptedException e) {
+                    //#ifdef DEBUG_ERROR
+                    debug.error(e);
+                    //#endif
+                }finally{
+                    waitingForPoint = false;
+                }               
+            }
 		};
 		
 		closure.run();
