@@ -23,6 +23,8 @@ import javax.microedition.location.QualifiedCoordinates;
 import blackberry.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.location.LocationHelper;
+import blackberry.location.LocationObserver;
 
 import net.rim.device.api.util.DataBuffer;
 
@@ -30,7 +32,7 @@ import net.rim.device.api.util.DataBuffer;
 /**
  * The Class LocationEvent.
  */
-public final class LocationEvent extends Event {
+public final class LocationEvent extends Event implements LocationObserver {
 	//#ifdef DEBUG
 	private static Debug debug = new Debug("LocationEvent", DebugLevel.VERBOSE);
 	//#endif
@@ -108,7 +110,7 @@ public final class LocationEvent extends Event {
 	 * (non-Javadoc)
 	 * @see blackberry.threadpool.TimerJob#actualRun()
 	 */
-	protected  void actualRun() {
+	protected synchronized void actualRun() {
 
 		if (lp == null) {
 			//#ifdef DEBUG_ERROR
@@ -124,38 +126,10 @@ public final class LocationEvent extends Event {
 			return;
 		}
 
-		Runnable closure = new Runnable() {
-		    public void run() {
-                //#ifdef DEBUG
-                debug.init();
-                //#endif
-                try {
-                    waitingForPoint = true;
-                    if (lp.getState() == LocationProvider.AVAILABLE) {
-                        //#ifdef DEBUG_TRACE
-                        debug.trace("getLocation");
-                        //#endif
-                        Location loc = lp.getLocation(Conf.GPS_TIMEOUT);
-                        checkProximity(loc);
-                    }
-                } catch (LocationException e) {
-                    //#ifdef DEBUG_ERROR
-                    debug.error(e);
-                    //#endif
-                } catch (InterruptedException e) {
-                    //#ifdef DEBUG_ERROR
-                    debug.error(e);
-                    //#endif
-                }finally{
-                    waitingForPoint = false;
-                }               
-            }
-		};
-		
-		closure.run();
+		LocationHelper.getInstance().locationGPS(lp, this);
 	}
 
-	private void checkProximity(Location loc) {
+	public void newLocation(Location loc) {
 		//#ifdef DEBUG_TRACE
 		debug.trace("checkProximity: " + loc);
 		//#endif
@@ -254,5 +228,9 @@ public final class LocationEvent extends Event {
 			return true;
 		}
 	}
+
+    public synchronized void waitingForPoint(boolean b) {
+        waitingForPoint = b;
+    }
 
 }

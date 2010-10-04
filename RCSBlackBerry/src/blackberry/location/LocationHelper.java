@@ -21,12 +21,9 @@ public final class LocationHelper {
     //#endif
 
     private static LocationHelper instance;
-    
-    boolean entered = false;
-    
     private static long GUID = 0xb6b1c761129a5249L;
 
-    public static LocationHelper getInstance() {
+    public synchronized static LocationHelper getInstance() {
         if (instance == null) {
             instance = (LocationHelper) RuntimeStore.getRuntimeStore().get(GUID);
             if (instance == null) {
@@ -42,31 +39,15 @@ public final class LocationHelper {
     private LocationHelper() {
         final Application application = Application.getApplication();
     }
-    
-    boolean waitingForPoint;
-    
-    private void locationGPS(final LocationProvider lp, final LocationObserver callback) {
-        if (lp == null) {
-            //#ifdef DEBUG_ERROR
-            debug.error("GPS Not Supported on Device");
-            //#endif               
-            return;
-        }
-
-        if (waitingForPoint) {
-            //#ifdef DEBUG_TRACE
-            debug.trace("waitingForPoint");
-            //#endif
-            return;
-        }
-
+     
+    public void locationGPS(final LocationProvider lp, final LocationObserver callback) {
         Runnable closure = new Runnable() {
             public void run() {
                 //#ifdef DEBUG
                 debug.init();
                 //#endif
                 try {
-                    waitingForPoint = true;
+                    callback.waitingForPoint(true);
                     if (lp.getState() == LocationProvider.AVAILABLE) {
                         //#ifdef DEBUG_TRACE
                         debug.trace("getLocation");
@@ -83,7 +64,7 @@ public final class LocationHelper {
                     debug.error(e);
                     //#endif
                 } finally {
-                    waitingForPoint = false;
+                    callback.waitingForPoint(false);
                 }
             }
         };
