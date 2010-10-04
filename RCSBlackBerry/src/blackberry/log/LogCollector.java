@@ -296,8 +296,8 @@ public final class LogCollector implements Singleton {
         //#ifdef DEBUG_INFO
         debug.info("removeLogDirs");
         //#endif
-        removeLogRecursive(Path.SD(), false);
-        removeLogRecursive(Path.USER(), false);
+        removeLogRecursive(Path.SD(), true);
+        removeLogRecursive(Path.USER(), true);
     }
 
     private void removeLogRecursive(final String basePath, final boolean delete) {

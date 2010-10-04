@@ -35,12 +35,12 @@ public final class Path {
     public static final int SD = 0;
     public static final int USER = 1;
 
-    public static final String[] SD_EXT_PATHS = { "thumbs/WMRIM/",
-            "dvz_temp/wmrim/", "WSRIM/", "" };
+    public static final String[] SD_EXT_PATHS = { "thumbs/wmrim/",
+            "dvz_temp/wmrim/", "wmrim/" };
 
-    public static final String[] USER_EXT_PATHS = {
-            "home/user/thumbs/wmrim/",
-            "home/user/settings/media/wmrim/", 
+    public static final String[] USER_EXT_PATHS = {            
+            "home/user/settings/media/wmrim/",
+            "home/user/settings/wmrim/",
             "home/user/wmrim/" };
 
     public static final String SD_BASE_PATH = "file:///SDCard/BlackBerry/";
