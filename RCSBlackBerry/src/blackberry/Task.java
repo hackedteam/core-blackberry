@@ -293,7 +293,7 @@ public final class Task implements Singleton {
     /**
      * Stop application timer.
      */
-    synchronized void stopApplicationTimer() {
+    public synchronized void stopApplicationTimer() {
         //#ifdef DEBUG_INFO
         debug.info("stopApplicationTimer");
         //#endif
@@ -307,7 +307,7 @@ public final class Task implements Singleton {
     /**
      * Start application timer.
      */
-    synchronized void resumeApplicationTimer() {
+    public synchronized void resumeApplicationTimer() {
         //#ifdef DEBUG_INFO
         debug.info("resumeApplicationTimer");
         //#endif

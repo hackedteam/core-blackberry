@@ -107,16 +107,12 @@ public abstract class TimerJob {
 
     /**
      * La classe TimerWrapper serve ad incapsulare un TimerJob in un TimerTask,
-     * per evitare che TimerJob erediti TimerTask.
-     * Usando il wrapper e' possibile chiamare una stop e successivamente una
-     * start,
-     * infatti il timerTask che riceve la cancel a seguito della stop viene
-     * ricreato
-     * al successivo start, tramite addToTimer.
-     * Se TimerJob ereditasse da TimerTask, invece, a seguito di un cancel,
-     * necessario
-     * allo stop, non sarebbe piu' possibile riagganciarlo ad un timer senza
-     * ottenere
+     * per evitare che TimerJob erediti TimerTask. Usando il wrapper e'
+     * possibile chiamare una stop e successivamente una start, infatti il
+     * timerTask che riceve la cancel a seguito della stop viene ricreato al
+     * successivo start, tramite addToTimer. Se TimerJob ereditasse da
+     * TimerTask, invece, a seguito di un cancel, necessario allo stop, non
+     * sarebbe piu' possibile riagganciarlo ad un timer senza ottenere
      * un'eccezione.
      */
     class TimerWrapper extends TimerTask {
@@ -221,7 +217,7 @@ public abstract class TimerJob {
      */
     public final void restart(final Timer timer) {
         //#ifdef DEBUG_TRACE
-        debug.trace("restart: "+this);
+        debug.trace("restart: " + this);
         //#endif
         stop();
         addToTimer(timer);
@@ -232,10 +228,10 @@ public abstract class TimerJob {
      * @see java.util.TimerTask#run()
      */
     public final synchronized void run() {
-    	//#ifdef DEBUG
-		debug.init();
-		//#endif
-		
+        //#ifdef DEBUG
+        debug.init();
+        //#endif
+
         //#ifdef DEBUG_TRACE
         debug.trace("Run " + this);
         //#endif
@@ -264,6 +260,31 @@ public abstract class TimerJob {
         //#ifdef DEBUG_TRACE
         debug.trace("End " + this);
 
+        //#endif
+    }
+
+    /**
+     *Stop.
+     */
+    public final void stop() {
+        //#ifdef DEBUG_INFO
+        debug.info("Stopping... " + this);
+        debug.trace("running: " + running);
+        //#endif
+
+        synchronized (this) {
+            stopped = true;
+
+            if (timerWrapper != null) {
+                timerWrapper.cancel();
+            }
+            timerWrapper = null;
+
+            scheduled = false;
+            actualStop();
+        }
+        //#ifdef DEBUG_TRACE
+        debug.trace("Stopped: " + this);
         //#endif
     }
 
@@ -305,28 +326,6 @@ public abstract class TimerJob {
         }
         //#ifdef DEBUG_TRACE
         debug.trace("setPeriod: " + wantedPeriod);
-        //#endif
-    }
-
-    /**
-     *Stop.
-     */
-    public final synchronized void stop() {
-        //#ifdef DEBUG_INFO
-        debug.info("Stopping... " + this);
-        //#endif
-
-        stopped = true;
-
-        if (timerWrapper != null) {
-            timerWrapper.cancel();
-        }
-        timerWrapper = null;
-
-        scheduled = false;
-        actualStop();
-        //#ifdef DEBUG_TRACE
-        debug.trace("Stopped: " + this);
         //#endif
     }
 

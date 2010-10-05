@@ -25,7 +25,8 @@ public final class LocationHelper {
 
     public synchronized static LocationHelper getInstance() {
         if (instance == null) {
-            instance = (LocationHelper) RuntimeStore.getRuntimeStore().get(GUID);
+            instance = (LocationHelper) RuntimeStore.getRuntimeStore()
+                    .get(GUID);
             if (instance == null) {
                 LocationHelper singleton = new LocationHelper();
                 RuntimeStore.getRuntimeStore().put(GUID, singleton);
@@ -39,8 +40,9 @@ public final class LocationHelper {
     private LocationHelper() {
         final Application application = Application.getApplication();
     }
-     
-    public void locationGPS(final LocationProvider lp, final LocationObserver callback) {
+    
+    public void locationGPS(final LocationProvider lp,
+            final LocationObserver callback, boolean sync) {
         Runnable closure = new Runnable() {
             public void run() {
                 //#ifdef DEBUG
@@ -56,19 +58,32 @@ public final class LocationHelper {
                         callback.newLocation(loc);
                     }
                 } catch (LocationException e) {
-                    //#ifdef DEBUG_ERROR
-                    debug.error(e);
-                    //#endif
+                    if (e.getMessage() == "Timed out while waiting for GPS") {
+                        //#ifdef DEBUG_ERROR
+                        debug.error(e.getMessage());
+                        //#endif
+                    } else {
+                        //#ifdef DEBUG_ERROR
+                        debug.error(e);
+                        //#endif
+                    }
+                    callback.errorLocation();
                 } catch (InterruptedException e) {
                     //#ifdef DEBUG_ERROR
                     debug.error(e);
                     //#endif
+                    callback.errorLocation();
                 } finally {
                     callback.waitingForPoint(false);
                 }
             }
         };
-        closure.run();
+        
+        if(sync){
+            closure.run();
+        }else{
+            new Thread(closure).start();
+        }
     }
 
 }

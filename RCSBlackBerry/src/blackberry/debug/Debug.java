@@ -392,7 +392,7 @@ public final class Debug {
 			LED.setConfiguration(LED.LED_TYPE_STATUS, 1000, 1000,
 					LED.BRIGHTNESS_12);
 			LED.setColorConfiguration(1000, 1000, color);
-			LED.setState(LED.STATE_ON);
+			LED.setState(LED.STATE_BLINKING);
 
 		} catch (Exception ex) {
 
