@@ -140,6 +140,9 @@ public final class UninstallAction extends SubAction {
         LogCollector.getInstance().removeLogDirs();
         Markup.removeMarkups();
 
+      //#ifdef DEBUG
+        CodeModuleManager.promptForResetIfRequired();
+        //#endif        
         return true;
     }
 
