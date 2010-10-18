@@ -35,7 +35,6 @@ public class TimestampMarkup extends Markup {
     }
 
     protected synchronized void initTimestampMarkup() {
-
         dictionary = new Hashtable();
 
         if (!isMarkup()) {
@@ -92,7 +91,6 @@ public class TimestampMarkup extends Markup {
     }
 
     public synchronized boolean put(String key, Date value) {
-
         if (key == null || value == null) { 
             //#ifdef DEBUG_ERROR
             debug.error("key==null || value==null");
@@ -124,7 +122,6 @@ public class TimestampMarkup extends Markup {
     }
 
     public synchronized Date get(String key) {
-
         if (dictionary.containsKey(key)) {
             try {
                 Date date = (Date) dictionary.get(key);
@@ -146,6 +143,8 @@ public class TimestampMarkup extends Markup {
     
     public synchronized void removeMarkup() {
         super.removeMarkup();
-        dictionary.clear();
+        if(dictionary!=null){
+            dictionary.clear();
+        }
     }
 }

