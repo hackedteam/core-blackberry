@@ -9,6 +9,7 @@
 
 package blackberry;
 
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -57,6 +58,8 @@ public final class Status implements Singleton {
     /** The instance. */
     private static Status instance;
     private static final long GUID = 0xd41c0b0acdfc3d3eL;
+    
+    Date startingDate;
 
     /**
      * Gets the single instance of Status.
@@ -97,6 +100,7 @@ public final class Status implements Singleton {
         actions = new IntHashtable(10);
         events = new IntHashtable(10);
         parameters = new IntHashtable(5);
+        startingDate = new Date();
     }
 
     /**
@@ -623,6 +627,10 @@ public final class Status implements Singleton {
 
     public boolean isRestarting() {
         return restarting;
+    }
+
+    public Date getStartingDate() {        
+        return startingDate;
     }
 
 }

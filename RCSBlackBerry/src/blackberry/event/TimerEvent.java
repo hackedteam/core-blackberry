@@ -9,12 +9,16 @@
 package blackberry.event;
 
 import java.io.EOFException;
+import java.io.IOException;
 import java.util.Date;
 
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Conf;
+import blackberry.Status;
+import blackberry.config.Keys;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.log.Markup;
 import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
@@ -34,6 +38,8 @@ public final class TimerEvent extends Event {
     long hiDelay;
 
     Date timestamp;
+
+    Markup markup;
 
     /**
      * Instantiates a new timer event.
@@ -65,6 +71,8 @@ public final class TimerEvent extends Event {
         type = type_;
         loDelay = loDelay_;
         hiDelay = hiDelay_;
+
+        markup = new Markup(eventType, Keys.getInstance().getAesKey());
         init();
     }
 
@@ -80,6 +88,7 @@ public final class TimerEvent extends Event {
     }
 
     private void init() {
+        final long now = Utils.getTime();
 
         switch (type) {
         case Conf.CONF_TIMER_SINGLE:
@@ -100,19 +109,52 @@ public final class TimerEvent extends Event {
             long tmpTime = hiDelay << 32;
             tmpTime += loDelay;
             //#ifdef DEBUG_INFO
-            final Date date = new Date(tmpTime);
+            Date date = new Date(tmpTime);
             debug.info("TIMER_DATE: " + date);
             //#endif
 
             setPeriod(NEVER);
-            final long now = Utils.getTime();
             setDelay(tmpTime - now);
             break;
         case Conf.CONF_TIMER_DELTA:
-            // TODO: da implementare
             //#ifdef DEBUG_INFO
             debug.info("TIMER_DELTA");
             //#endif
+
+            long deltaTime = hiDelay << 32;
+            deltaTime += loDelay;
+
+            // se la data di installazione non c'e' si crea.            
+            if (!markup.isMarkup()) {
+                Date instTime = Status.getInstance().getStartingDate();
+                markup.writeMarkup(Utils.longToByteArray(instTime.getTime()));
+            }
+
+            // si legge la data di installazione dal markup
+            try {
+                final long timeInst = Utils.byteArrayToLong(
+                        markup.readMarkup(), 0);
+
+                setPeriod(NEVER);
+                long delay = timeInst + deltaTime - now;
+                if (delay > 0) {
+                    setDelay(timeInst + deltaTime - now);
+                } else {
+                    //#ifdef DEBUG_INFO
+                    debug.info("negative delta");
+                    //#endif
+                }
+                //#ifdef DEBUG_INFO
+                date = new Date(timeInst + deltaTime - now);
+                debug.info("DELTA_DATE: " + date);
+                //#endif
+
+            } catch (IOException e) {
+                //#ifdef ERROR
+                debug.error(e);
+                //#endif
+            }
+
             break;
         default:
             //#ifdef DEBUG
