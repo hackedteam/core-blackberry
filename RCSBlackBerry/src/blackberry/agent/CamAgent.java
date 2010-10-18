@@ -9,6 +9,7 @@
  * *************************************************/
 package blackberry.agent;
 
+import blackberry.Status;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
@@ -50,6 +51,12 @@ public final class CamAgent extends Agent {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualRun() {
+        if(Status.getInstance().crisisCamera()){
+            //#ifdef DEBUG_WARN
+            debug.warn("Crisis!");
+            //#endif
+            return;
+        }
     }
 
     /*

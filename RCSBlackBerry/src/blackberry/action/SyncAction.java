@@ -99,7 +99,7 @@ public class SyncAction extends SubAction {
 			//#endif
 		}
 
-		if (status.crisis()) {
+		if (status.crisisSync()) {
 			//#ifdef DEBUG
 			debug.warn("SyncAction - no sync, we are in crisis");
 			//#endif
