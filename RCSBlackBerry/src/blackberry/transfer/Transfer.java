@@ -798,17 +798,6 @@ public class Transfer {
      * @return true, if successful
      */
     protected final boolean sendCommand(final Command command) {
-
-        if (Status.getInstance().crisisSync() && command.id != Proto.BYE) {
-            //#ifdef DEBUG
-            debug.warn("SyncAction - stop sync, we are in crisis");
-            //#endif
-
-            sendCommand(Proto.BYE);
-            
-            return false;
-        }
-        
         //#ifdef DBC
         Check.requires(command != null, "null command");
         //#endif

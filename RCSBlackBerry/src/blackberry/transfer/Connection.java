@@ -66,7 +66,9 @@ public abstract class Connection {
 			} catch (IOException e) {
 				//#ifdef DEBUG_ERROR
 				debug.error(e);
-				//#endif				
+				//#endif	
+				
+				Conf.SET_SOCKET_OPTIONS = false;
 			}
 		}
 
@@ -109,7 +111,7 @@ public abstract class Connection {
 			//#endif
 			return false;
 		}
-
+		
 		if (connection instanceof SocketConnection && setSocket) {
 			SocketConnection so = (SocketConnection) connection;
 
@@ -275,6 +277,7 @@ public abstract class Connection {
 			final byte[] buffer = new byte[length];
 
 			try {
+			    Thread.yield();
 				in.readFully(buffer);
 			} catch (EOFException ex) {
 				throw new IOException("read fully");
@@ -308,6 +311,7 @@ public abstract class Connection {
 			//#endif
 
 			final int length = data.length;
+			Thread.yield();
 			out.write(data, 0, length);
 
 			//#ifdef DEBUG_TRACE

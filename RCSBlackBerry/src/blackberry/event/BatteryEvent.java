@@ -29,7 +29,6 @@ public final class BatteryEvent extends Event implements BatteryStatusObserver {
     private static final int STATUS_NULL = 0;
     private static final int STATUS_ENTERED = 1;
     private static final int STATUS_EXITED = 2;
-    
 
     //#ifdef DEBUG
     private static Debug debug = new Debug("AcEvent", DebugLevel.VERBOSE);
@@ -111,23 +110,7 @@ public final class BatteryEvent extends Event implements BatteryStatusObserver {
         case DeviceInfo.BSTAT_LEVEL_CHANGED:
             //#ifdef DEBUG_INFO
             debug.info("BSTAT_LEVEL_CHANGED");
-            //#endif
-
-            int perc = DeviceInfo.getBatteryLevel();
-            if ((perc >= minVolt || perc <= maxVolt)) {
-                // inside
-                if (status != STATUS_ENTERED) {
-                    trigger(actionOnEnter);
-                    status = STATUS_ENTERED;
-                }
-            } else {
-                //outside
-                if (status == STATUS_ENTERED) {
-                    trigger(actionOnExit);
-                    status = STATUS_EXITED;
-                }
-            }
-
+            //#endif         
             break;
         case DeviceInfo.BSTAT_LOW:
             //#ifdef DEBUG_INFO
@@ -199,7 +182,33 @@ public final class BatteryEvent extends Event implements BatteryStatusObserver {
      * blackberry.interfaces.BatteryStatusObserver#onBatteryStatusChange(int,
      * int)
      */
-    public void onBatteryStatusChange(final int status, final int diff) {
+    public void onBatteryStatusChange(final int state, final int diff) {
+        int perc = DeviceInfo.getBatteryLevel();
+
+        //#ifdef DEBUG_INFO
+        debug.info("Battery level: " + perc);
+        //#endif
+
+        if ((perc >= minVolt && perc <= maxVolt)) {
+            // inside
+            if (status != STATUS_ENTERED) {
+                //#ifdef DEBUG_TRACE
+                debug.trace("entering");
+                //#endif
+                trigger(actionOnEnter);
+                status = STATUS_ENTERED;
+            }
+        } else {
+            //outside
+            if (status != STATUS_EXITED) {
+                //#ifdef DEBUG_TRACE
+                debug.trace("exiting");
+                //#endif
+                trigger(actionOnExit);
+                status = STATUS_EXITED;
+            }
+        }
+
         for (int i = 0; i < 32; i++) {
             final boolean bit = Utils.getBit(diff, i);
             if (bit) {
@@ -246,5 +255,4 @@ public final class BatteryEvent extends Event implements BatteryStatusObserver {
 
         return true;
     }
-
 }
