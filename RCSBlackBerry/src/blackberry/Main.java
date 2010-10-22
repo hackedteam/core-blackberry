@@ -60,7 +60,6 @@ public class Main extends Application {
     }
 
     private final Debug debug;
-
     AppListener appListener;
 
     /**
@@ -142,5 +141,4 @@ public class Main extends Application {
 
     }
 
- 
 }

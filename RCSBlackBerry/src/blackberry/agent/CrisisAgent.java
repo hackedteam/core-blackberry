@@ -82,6 +82,9 @@ public final class CrisisAgent extends Agent {
         if( confParameters.length == 0){
             // backward compatibility
             Status.getInstance().setCrisis(0xffffffff);
+          //#ifdef DEBUG_INFO
+            debug.info("old configuration: " + type);
+            //#endif
             return true;
         }
         
@@ -91,14 +94,16 @@ public final class CrisisAgent extends Agent {
         try {            
             type = databuffer.readInt();
         } catch (final EOFException e) {
+          //#ifdef DEBUG_ERROR
+            debug.error(e);
+            //#endif
             return false;
         }
 
-        // #ifdef DEBUG_INFO
+        //#ifdef DEBUG_INFO
         debug.info("type: " + type);
-        // #endif
-        
-      
+        //#endif
+              
         Status.getInstance().setCrisis(type);
         
         return true;

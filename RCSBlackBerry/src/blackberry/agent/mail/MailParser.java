@@ -21,7 +21,7 @@ import blackberry.utils.Utils;
 
 public class MailParser {
 	//#ifdef DEBUG
-	static Debug debug = new Debug("MailParser", DebugLevel.VERBOSE);
+	static Debug debug = new Debug("MailParser", DebugLevel.INFORMATION);
 	//#endif
 
 	private final Message message;

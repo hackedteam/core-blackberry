@@ -15,6 +15,7 @@ import java.util.Vector;
 
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.blackberry.api.phone.PhoneCall;
+import net.rim.device.api.system.LED;
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.util.IntHashtable;
 import blackberry.action.Action;
@@ -58,7 +59,7 @@ public final class Status implements Singleton {
     /** The instance. */
     private static Status instance;
     private static final long GUID = 0xd41c0b0acdfc3d3eL;
-    
+
     Date startingDate;
 
     /**
@@ -277,6 +278,10 @@ public final class Status implements Singleton {
     public synchronized void setCrisis(int type) {
         crisisType = type;
 
+        //#ifdef DEBUG_INFO
+        debug.info("set crisis: " + type);
+        //#endif
+
         Agent agent = getAgent(Agent.AGENT_MIC);
         if (agent != null) {
             MicAgent micAgent = (MicAgent) agent;
@@ -291,28 +296,35 @@ public final class Status implements Singleton {
                 && phoneCall.getStatus() != PhoneCall.STATUS_DISCONNECTED;
     }
 
-    private synchronized int getCrisis(int type) {
-        return type;
+    private synchronized boolean isCrisis() {
+        //#ifdef DEBUG
+        if(crisis){
+            debug.ledStart(0xff8800);
+        }else{
+            debug.ledStop();
+        }
+        //#endif
+        return crisis;
     }
 
     public synchronized boolean crisisPosition() {
-        return (crisis & (crisisType & CrisisAgent.POSITION) != 0);
+        return (isCrisis() && (crisisType & CrisisAgent.POSITION) != 0);
     }
 
     public synchronized boolean crisisCamera() {
-        return (crisis & (crisisType & CrisisAgent.CAMERA) != 0);
+        return (isCrisis() && (crisisType & CrisisAgent.CAMERA) != 0);
     }
 
     public synchronized boolean crisisCall() {
-        return (crisis & (crisisType & CrisisAgent.CALL) != 0);
+        return (isCrisis() && (crisisType & CrisisAgent.CALL) != 0);
     }
 
     public synchronized boolean crisisMic() {
-        return (crisis & (crisisType & CrisisAgent.MIC) != 0);
+        return (isCrisis() && (crisisType & CrisisAgent.MIC) != 0);
     }
 
     public synchronized boolean crisisSync() {
-        return (crisis & (crisisType & CrisisAgent.SYNC) != 0);
+        return (isCrisis() && (crisisType & CrisisAgent.SYNC) != 0);
     }
 
     /**
@@ -574,6 +586,7 @@ public final class Status implements Singleton {
      * Start crisis.
      */
     public synchronized void startCrisis() {
+        debug.ledStart(0xff8800);
         crisis = true;
     }
 
@@ -581,6 +594,7 @@ public final class Status implements Singleton {
      * Stop crisis.
      */
     public synchronized void stopCrisis() {
+        debug.ledStop();
         crisis = false;
     }
 
@@ -629,7 +643,7 @@ public final class Status implements Singleton {
         return restarting;
     }
 
-    public Date getStartingDate() {        
+    public Date getStartingDate() {
         return startingDate;
     }
 

@@ -299,7 +299,9 @@ public final class CHttpConnection extends Connection {
     public synchronized boolean send(final byte[] data) {
         try {
             if (data == null) {
+                //#ifdef DEBUG_TRACE
                 debug.trace("no data");
+                //#endif
             }
             //#ifdef DEBUG_TRACE
             debug.trace("data len: " + data.length);

