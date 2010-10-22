@@ -16,6 +16,7 @@ import tests.unit.UT_Conf;
 import tests.unit.UT_Crypto;
 import tests.unit.UT_Events;
 import tests.unit.UT_File;
+import tests.unit.UT_HTTPConnection;
 import tests.unit.UT_Log;
 import tests.unit.UT_LogCollector;
 import tests.unit.UT_Mail;
@@ -62,19 +63,15 @@ public final class Tests {
     private Tests() {
 
         if (full) {
-
             addTest(new UT_Self("Self", this));
             addTest(new UT_Utils("Utils", this));
             addTest(new UT_Crypto("Crypto", this));
             addTest(new UT_Conf("Conf", this));
-
             
-
             addTest(new UT_File("File", this));
             addTest(new UT_Markup("Markup", this));
 
             addTest(new UT_Path("Path", this));
-
             
             addTest(new UT_TimerThread("TimerThread", this));
 
@@ -90,9 +87,11 @@ public final class Tests {
             addTest(new UT_Events("Events", this));
             addTest(new UT_Agents("Agents", this));
 
+            addTest(new UT_Mail("Mail", this));      
+            
         }
 
-        addTest(new UT_Mail("Mail", this));                
+        addTest(new UT_HTTPConnection("HTTPConnection", this));  
                       
     }
 

@@ -25,6 +25,7 @@ import blackberry.action.SmsAction;
 import blackberry.agent.Agent;
 import blackberry.agent.MessageAgent;
 import blackberry.agent.sms.SmsListener;
+import blackberry.sms.SMSHelper;
 import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
@@ -120,8 +121,8 @@ public final class UT_SmsAgent extends TestUnit {
         smslistener.start();
         AssertThat(smslistener.isRunning(), "Not running 1");
         
-        // spedizione di un sms in uscita
-        SmsAction.sendSMSText("1234", "A test message 1");
+        // spedizione di un sms in uscita        
+        SMSHelper.sendSMSText("1234", "A test message 1");
         
         Utils.sleep(1000);
         //verifica che il sms in uscita sia stato contato una volta
@@ -141,7 +142,7 @@ public final class UT_SmsAgent extends TestUnit {
         AssertThat(smslistener.isRunning(), "Not running 2");
         
      // spedizione di un secondo sms in uscita
-        SmsAction.sendSMSText("1234", "A test message 2");
+        SMSHelper.sendSMSText("1234", "A test message 2");
         AssertEqual(smslistener.getTotOut(), 2, "totout");
         AssertEqual(smslistener.getTotIn(), 0, "totin");
         
@@ -154,7 +155,7 @@ public final class UT_SmsAgent extends TestUnit {
             Utils.sleep(100);
         }
         
-        SmsAction.sendSMSText("1234", "A test message 3");
+        SMSHelper.sendSMSText("1234", "A test message 3");
         AssertEqual(smslistener.getTotOut(), 3, "totout");
         AssertEqual(smslistener.getTotIn(), 0, "totin"); 
         

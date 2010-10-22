@@ -1,6 +1,6 @@
 <Properties ModelVersion="1.1.2">
   <General Title="Rim Library" Version="4.5.0.44" Vendor="Research In Motion Ltd. " Description="BlackBerry Lib"/>
-  <Application Type="BlackBerry Application" MainMIDletName="" MainArgs="" HomeScreenPosition="0" StartupTier="7" IsSystemModule="true" IsAutostartup="true"/>
+  <Application Type="BlackBerry Application" MainMIDletName="" MainArgs="" HomeScreenPosition="0" StartupTier="7" IsSystemModule="false" IsAutostartup="false"/>
   <Resources hasTitleResource="false" TitleResourceBundleName="" TitleResourceBundleRelativePath="" TitleResourceBundleClassName="" TitleResourceBundleKey="" DescriptionId="">
     <Icons/>
   </Resources>
@@ -20,6 +20,7 @@
       <PreprocessorTag IsActive="false" PreprocessorDefine="SAVE_AMR_FILE" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="SAVE_DEBUG_MAIL" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="SEND_LOG_BY_EMAIL" Scope="0"/>
+      <PreprocessorTag IsActive="true" PreprocessorDefine="TEST" Scope="0"/>
     </PreprocessorDefines>
   </Compile>
   <Packaging OutputFileName="net_rim_bb_lib" OutputFolder="deliverables" PreBuildStep="" PostBuildStep="" CleanStep="" GenerateALXFile="true">
@@ -29,5 +30,9 @@
     <ClassProtection/>
     <PackageProtection/>
   </HiddenProperties>
-  <AlternateEntryPoints/>
+  <AlternateEntryPoints>
+    <AlternateEntryPoint Title="Test" MainMIDletName="" ArgumentsForMain="test" HomeScreenPosition="0" StartupTier="7" IsSystemModule="false" IsAutostartup="false" hasTitleResource="false" TitleResourceBundleKey="" TitleResourceBundleName="" TitleResourceBundleClassName="" TitleResourceBundleRelativePath="">
+      <Icons/>
+    </AlternateEntryPoint>
+  </AlternateEntryPoints>
 </Properties>

@@ -21,7 +21,6 @@ import tests.TestUnit;
 import tests.Tests;
 import blackberry.Conf;
 import blackberry.Status;
-import blackberry.config.InstanceKeys323;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -54,39 +53,6 @@ public final class UT_Conf extends TestUnit {
         // UT_Conf.class.getResourceAsStream("../Conf/encryptedconf.bin");
         // encIO_Big=
         // UT_Conf.class.getResourceAsStream("../Conf/encryptedconf2.bin");
-    }
-
-    /**
-     * Bellino test.
-     * 
-     * @return true, if successful
-     * @throws AssertException
-     *             the assert exception
-     */
-    boolean BellinoTest() throws AssertException {
-        //#ifdef DEBUG_INFO
-        debug.info("-- BellinoTest --");
-        //#endif
-
-        final Status statusObj = Status.getInstance();
-        statusObj.clear();
-
-        final InputStream encIO = UT_Conf.class
-                .getResourceAsStream("../Conf/config_bellino.bin");
-
-        //final byte[] clearBuffer = new byte[10 * 1024];
-
-        // check crypto
-        statusObj.clear();
-        final Conf conf = new Conf();
-
-        //#ifdef FAKECONF
-        final boolean ret = conf.loadCyphered(encIO,
-                new InstanceKeysFake().confKey, false);
-        AssertThat(ret == true, "Load failed");
-        //#endif
-
-        return true;
     }
 
     /**
@@ -454,9 +420,6 @@ public final class UT_Conf extends TestUnit {
      * @see tests.TestUnit#run()
      */
     public boolean run() throws AssertException {
-
-        BellinoTest();
-
         ClearLoad();
         CrcTest();
         ParseConfTest();

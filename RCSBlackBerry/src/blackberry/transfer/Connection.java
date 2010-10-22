@@ -51,7 +51,7 @@ public abstract class Connection {
 
 	//public abstract boolean connect();
 
-	public final synchronized boolean connect() {
+	public synchronized boolean connect() {
 		boolean withoutoptions = true;
 		boolean connected = false;
 
@@ -179,7 +179,7 @@ public abstract class Connection {
 	/**
 	 * Disconnect.
 	 */
-	public final synchronized void disconnect() {
+	public synchronized void disconnect() {
 		if (connected) {
 			connected = false;
 			if (in != null) {
@@ -242,7 +242,7 @@ public abstract class Connection {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public final synchronized byte[] receive(final int length)
+	public synchronized byte[] receive(final int length)
 			throws IOException {
 		if (connected) {
 			//#ifdef DBC
@@ -302,7 +302,7 @@ public abstract class Connection {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public final synchronized boolean send(final byte[] data)
+	public synchronized boolean send(final byte[] data)
 			throws IOException {
 
 		if (connected) {
