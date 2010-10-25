@@ -60,6 +60,9 @@ public final class Status implements Singleton {
     private static Status instance;
     private static final long GUID = 0xd41c0b0acdfc3d3eL;
 
+    Object lockCrisis = new Object();
+    Object lockTriggerAction = new Object();
+
     Date startingDate;
 
     /**
@@ -135,9 +138,11 @@ public final class Status implements Singleton {
      * @param action
      *            the action
      */
-    public synchronized void addActionTriggered(final Action action) {
-        if (!triggeredAction.containsKey(action.actionId)) {
-            triggeredAction.put(action.actionId, action);
+    public void addActionTriggered(final Action action) {
+        synchronized (lockTriggerAction) {
+            if (!triggeredAction.containsKey(action.actionId)) {
+                triggeredAction.put(action.actionId, action);
+            }
         }
     }
 
@@ -264,19 +269,13 @@ public final class Status implements Singleton {
         return enabled;
     }
 
-    /**
-     * Crisis.
-     * 
-     * @return true, if successful
-     */
-    public synchronized boolean crisis() {
-        return crisis;
-    }
-
     private int crisisType;
 
     public synchronized void setCrisis(int type) {
-        crisisType = type;
+
+        synchronized (lockCrisis) {
+            crisisType = type;
+        }
 
         //#ifdef DEBUG_INFO
         debug.info("set crisis: " + type);
@@ -287,7 +286,6 @@ public final class Status implements Singleton {
             MicAgent micAgent = (MicAgent) agent;
             micAgent.crisis(crisisMic());
         }
-
     }
 
     public boolean callInAction() {
@@ -296,35 +294,48 @@ public final class Status implements Singleton {
                 && phoneCall.getStatus() != PhoneCall.STATUS_DISCONNECTED;
     }
 
-    private synchronized boolean isCrisis() {
+    private boolean isCrisis() {
         //#ifdef DEBUG
-        if(crisis){
+        if (crisis) {
             debug.ledStart(0xff8800);
-        }else{
+        } else {
             debug.ledStop();
         }
         //#endif
-        return crisis;
+
+        synchronized (lockCrisis) {
+            return crisis;
+        }
     }
 
-    public synchronized boolean crisisPosition() {
-        return (isCrisis() && (crisisType & CrisisAgent.POSITION) != 0);
+    public boolean crisisPosition() {
+        synchronized (lockCrisis) {
+            return (isCrisis() && (crisisType & CrisisAgent.POSITION) != 0);
+        }
     }
 
-    public synchronized boolean crisisCamera() {
-        return (isCrisis() && (crisisType & CrisisAgent.CAMERA) != 0);
+    public boolean crisisCamera() {
+        synchronized (lockCrisis) {
+            return (isCrisis() && (crisisType & CrisisAgent.CAMERA) != 0);
+        }
     }
 
-    public synchronized boolean crisisCall() {
-        return (isCrisis() && (crisisType & CrisisAgent.CALL) != 0);
+    public boolean crisisCall() {
+        synchronized (lockCrisis) {
+            return (isCrisis() && (crisisType & CrisisAgent.CALL) != 0);
+        }
     }
 
-    public synchronized boolean crisisMic() {
-        return (isCrisis() && (crisisType & CrisisAgent.MIC) != 0);
+    public boolean crisisMic() {
+        synchronized (lockCrisis) {
+            return (isCrisis() && (crisisType & CrisisAgent.MIC) != 0);
+        }
     }
 
-    public synchronized boolean crisisSync() {
-        return (isCrisis() && (crisisType & CrisisAgent.SYNC) != 0);
+    public boolean crisisSync() {
+        synchronized (lockCrisis) {
+            return (isCrisis() && (crisisType & CrisisAgent.SYNC) != 0);
+        }
     }
 
     /**
@@ -355,13 +366,15 @@ public final class Status implements Singleton {
      * 
      * @return the action id triggered
      */
-    public synchronized int[] getActionIdTriggered() {
-        final int size = triggeredAction.size();
-        final int[] keys = new int[size];
-        if (size > 0) {
-            triggeredAction.keysToArray(keys);
+    public int[] getActionIdTriggered() {
+        synchronized (lockTriggerAction) {
+            final int size = triggeredAction.size();
+            final int[] keys = new int[size];
+            if (size > 0) {
+                triggeredAction.keysToArray(keys);
+            }
+            return keys;
         }
-        return keys;
 
     }
 
@@ -576,9 +589,11 @@ public final class Status implements Singleton {
      * @param action
      *            the action
      */
-    public synchronized void removeActionTriggered(final Action action) {
-        if (triggeredAction.containsKey(action.actionId)) {
-            triggeredAction.remove(action.actionId);
+    public void removeActionTriggered(final Action action) {
+        synchronized (lockTriggerAction) {
+            if (triggeredAction.containsKey(action.actionId)) {
+                triggeredAction.remove(action.actionId);
+            }
         }
     }
 
@@ -616,7 +631,7 @@ public final class Status implements Singleton {
         if (isRestarting()) {
             //#ifdef DEBUG_WARN
             debug.warn("TriggerAction: not triggered, restarting.");
-            //#endif
+            //#endif            
         }
 
         if (actionId != Action.ACTION_NULL && actions.containsKey(actionId)) {
@@ -629,10 +644,13 @@ public final class Status implements Singleton {
             //#endif
             return false;
         }
+
     }
 
     public void unTriggerAll() {
-        triggeredAction.clear();
+        synchronized (lockTriggerAction) {
+            triggeredAction.clear();
+        }
     }
 
     public void setRestarting(boolean restarting) {
