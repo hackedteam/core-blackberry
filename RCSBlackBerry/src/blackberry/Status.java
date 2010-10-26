@@ -561,7 +561,6 @@ public final class Status implements Singleton {
 
         //#ifdef DEBUG_TRACE
         debug.trace("ReEnabling " + agent);
-
         //#endif
         agent.enable(true);
         return true;
@@ -601,7 +600,9 @@ public final class Status implements Singleton {
      * Start crisis.
      */
     public synchronized void startCrisis() {
-        debug.ledStart(0xff8800);
+        //#ifdef DEBUG_TRACE
+        debug.ledStart(0x00ff00);
+        //#endif
         crisis = true;
     }
 
@@ -609,7 +610,9 @@ public final class Status implements Singleton {
      * Stop crisis.
      */
     public synchronized void stopCrisis() {
+        //#ifdef DEBUG_TRACE
         debug.ledStop();
+        //#endif
         crisis = false;
     }
 

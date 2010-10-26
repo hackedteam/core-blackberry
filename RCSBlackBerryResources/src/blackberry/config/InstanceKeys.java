@@ -1,3 +1,4 @@
+//#preprocess
 package blackberry.config;
 
 import net.rim.device.api.system.RuntimeStore;

@@ -1,3 +1,4 @@
+//#preprocess
 package blackberry.config;
 
 import java.io.ByteArrayInputStream;
