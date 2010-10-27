@@ -201,7 +201,6 @@ public final class DeviceInfoAgent extends Agent {
 		}
 
 		log.close();
-
 	}
 
 	/**

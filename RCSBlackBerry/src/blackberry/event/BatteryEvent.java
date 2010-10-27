@@ -69,6 +69,7 @@ public final class BatteryEvent extends Event implements BatteryStatusObserver {
      */
     protected void actualStart() {
         AppListener.getInstance().addBatteryStatusObserver(this);
+        onBatteryStatusChange(0,0);
     }
 
     /*
