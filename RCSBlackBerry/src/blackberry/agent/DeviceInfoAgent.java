@@ -128,16 +128,23 @@ public final class DeviceInfoAgent extends Agent {
 			sb.append("HomeMCC: " + GPRSInfo.getHomeMCC() + "\n");
 			sb.append("HomeMNC: " + GPRSInfo.getHomeMNC() + "\n");
 			sb.append("RSSI: " + GPRSInfo.getCellInfo().getRSSI() + "\n");
+			sb.append("Zone name: " + GPRSInfo.getZoneName() + "\n");
 		}
 
-		try {
-			sb.append("Zone name: " + GPRSInfo.getZoneName() + "\n");
+		try {			
 			sb.append("Active Wafs: " + RadioInfo.getActiveWAFs() + "\n");
 			sb.append("Carrier: " + RadioInfo.getCurrentNetworkName() + "\n");
 			sb.append("Enabled Wafs: " + RadioInfo.getEnabledWAFs() + "\n");
-			sb.append("Country Code: "
+			
+			String code= RadioInfo.getNetworkCountryCode(RadioInfo
+                    .getCurrentNetworkIndex());
+			
+			if(code != null){
+			    sb.append("Country Code: "
 					+ RadioInfo.getNetworkCountryCode(RadioInfo
 							.getCurrentNetworkIndex()) + "\n");
+			}
+			
 			sb.append("Network Services: " + RadioInfo.getNetworkService()
 					+ "\n");
 			sb.append("Network Type: " + RadioInfo.getNetworkType() + "\n");
