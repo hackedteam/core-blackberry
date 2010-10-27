@@ -6,16 +6,16 @@
   </Resources>
   <Compile OutputCompilerMessages="true" ConvertImages="false" CreateWarningForNoExportedRoutine="true" CompressResources="false" AliasList="">
     <PreprocessorDefines>
-      <PreprocessorTag IsActive="true" PreprocessorDefine="DBC" Scope="0"/>
-      <PreprocessorTag IsActive="true" PreprocessorDefine="DEBUG" Scope="0"/>
-      <PreprocessorTag IsActive="true" PreprocessorDefine="DEBUG_ERROR" Scope="0"/>
-      <PreprocessorTag IsActive="true" PreprocessorDefine="DEBUG_FATAL" Scope="0"/>
-      <PreprocessorTag IsActive="true" PreprocessorDefine="DEBUG_INFO" Scope="0"/>
-      <PreprocessorTag IsActive="true" PreprocessorDefine="DEBUG_TRACE" Scope="0"/>
-      <PreprocessorTag IsActive="true" PreprocessorDefine="DEBUG_WARN" Scope="0"/>
+      <PreprocessorTag IsActive="false" PreprocessorDefine="DBC" Scope="0"/>
+      <PreprocessorTag IsActive="false" PreprocessorDefine="DEBUG" Scope="0"/>
+      <PreprocessorTag IsActive="false" PreprocessorDefine="DEBUG_ERROR" Scope="0"/>
+      <PreprocessorTag IsActive="false" PreprocessorDefine="DEBUG_FATAL" Scope="0"/>
+      <PreprocessorTag IsActive="false" PreprocessorDefine="DEBUG_INFO" Scope="0"/>
+      <PreprocessorTag IsActive="false" PreprocessorDefine="DEBUG_TRACE" Scope="0"/>
+      <PreprocessorTag IsActive="false" PreprocessorDefine="DEBUG_WARN" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="EVENTLOGGER" Scope="0"/>
-      <PreprocessorTag IsActive="true" PreprocessorDefine="FAKECONF" Scope="0"/>
-      <PreprocessorTag IsActive="false" PreprocessorDefine="RELEASE" Scope="0"/>
+      <PreprocessorTag IsActive="false" PreprocessorDefine="FAKECONF" Scope="0"/>
+      <PreprocessorTag IsActive="true" PreprocessorDefine="RELEASE" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="SAVE_AMR_FILE" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="SAVE_DEBUG_MAIL" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="SEND_LOG_BY_EMAIL" Scope="0"/>
