@@ -21,17 +21,4 @@ public class CommandException extends Exception {
     static Debug debug = new Debug("CommandException", DebugLevel.VERBOSE);
 
     //#endif
-
-    /**
-     * Instantiates a new command exception.
-     * 
-     * @param string
-     *            the string
-     */
-    public CommandException(final String string) {
-        super(string);
-        //#ifdef DEBUG
-        debug.error(string);
-        //#endif
-    }
 }

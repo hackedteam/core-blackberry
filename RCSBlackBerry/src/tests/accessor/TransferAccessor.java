@@ -12,13 +12,13 @@ package tests.accessor;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.transfer.ProtocolException;
-import blackberry.transfer.Transfer;
+import blackberry.transfer.TransferSocket;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class TransferAccessor.
  */
-public final class TransferAccessor extends Transfer {
+public final class TransferAccessor extends TransferSocket {
     protected static Debug debug = new Debug("TransferAccessor",
             DebugLevel.VERBOSE);
 
