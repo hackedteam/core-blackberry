@@ -18,10 +18,6 @@ import net.rim.blackberry.api.mail.Message;
 import net.rim.blackberry.api.mail.MessagingException;
 import net.rim.blackberry.api.mail.Store;
 import net.rim.blackberry.api.mail.Transport;
-import tests.AssertException;
-import tests.TestUnit;
-import tests.Tests;
-import blackberry.action.SmsAction;
 import blackberry.agent.Agent;
 import blackberry.agent.MessageAgent;
 import blackberry.agent.sms.SmsListener;
@@ -93,7 +89,7 @@ public final class UT_SmsAgent extends TestUnit {
     private void parseConfTest() throws AssertException {
         final MessageAgent messageAgent = (MessageAgent) Agent.factory(
                 Agent.AGENT_MESSAGE, true, conf_example);
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace(messageAgent.toString());
         //#endif
 
@@ -116,55 +112,55 @@ public final class UT_SmsAgent extends TestUnit {
     }
 
     private void smsAgentRestart() throws AssertException {
-        SmsListener smslistener = SmsListener.getInstance();
+        final SmsListener smslistener = SmsListener.getInstance();
         // start
         smslistener.start();
         AssertThat(smslistener.isRunning(), "Not running 1");
-        
+
         // spedizione di un sms in uscita        
         SMSHelper.sendSMSText("1234", "A test message 1");
-        
+
         Utils.sleep(1000);
         //verifica che il sms in uscita sia stato contato una volta
-        
+
         AssertEqual(smslistener.getTotOut(), 1, "totout");
         AssertEqual(smslistener.getTotIn(), 0, "totin");
-        
+
         // stop
         smslistener.stop();
         AssertThat(!smslistener.isRunning(), "Running 1");
-        
+
         Utils.sleep(1000);
-        
+
         // start: secondo giro
         smslistener.start();
         Utils.sleep(1000);
         AssertThat(smslistener.isRunning(), "Not running 2");
-        
-     // spedizione di un secondo sms in uscita
+
+        // spedizione di un secondo sms in uscita
         SMSHelper.sendSMSText("1234", "A test message 2");
         AssertEqual(smslistener.getTotOut(), 2, "totout");
         AssertEqual(smslistener.getTotIn(), 0, "totin");
-        
+
         // qualche giro
-        for(int i = 0; i< 10; i++){
-            
+        for (int i = 0; i < 10; i++) {
+
             smslistener.stop();
             Utils.sleep(100);
             smslistener.start();
             Utils.sleep(100);
         }
-        
+
         SMSHelper.sendSMSText("1234", "A test message 3");
         AssertEqual(smslistener.getTotOut(), 3, "totout");
-        AssertEqual(smslistener.getTotIn(), 0, "totin"); 
-        
+        AssertEqual(smslistener.getTotIn(), 0, "totin");
+
         // stop: ultimo
         smslistener.stop();
         Utils.sleep(100);
-        
+
         AssertThat(!smslistener.isRunning(), "Running 2");
-        
+
     }
 
     /**

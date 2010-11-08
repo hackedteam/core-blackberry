@@ -69,8 +69,8 @@ public final class CallEvent extends Event implements PhoneCallObserver {
             actionOnEnter = actionId;
             actionOnExit = databuffer.readInt();
 
-            int len = databuffer.readInt();
-            byte[] array = new byte[len];
+            final int len = databuffer.readInt();
+            final byte[] array = new byte[len];
             databuffer.read(array);
             number = WChar.getString(array, true);
 
@@ -78,7 +78,7 @@ public final class CallEvent extends Event implements PhoneCallObserver {
             return false;
         }
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("number: " + number);
         //#endif
 
@@ -109,7 +109,7 @@ public final class CallEvent extends Event implements PhoneCallObserver {
 
     public void onCallInitiated(int callId, String phoneNumber) {
         // TODO Auto-generated method stub
-        
+
     }
 
 }

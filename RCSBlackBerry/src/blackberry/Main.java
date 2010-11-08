@@ -89,7 +89,7 @@ public class Main extends Application {
      * 
      */
     public void startListeners() {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("Starting Listeners");
         //#endif
 
@@ -107,7 +107,7 @@ public class Main extends Application {
      * 
      */
     public void stopListeners() {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("Stopping Listeners");
         //#endif
 
@@ -133,7 +133,7 @@ public class Main extends Application {
                 foreground = UiApplication.getUiApplication().isForeground();
                 //#endif
                 
-                //#ifdef DEBUG_TRACE
+                //#ifdef DEBUG
                 debug.trace("Main foreground: " + foreground);
                 //#endif
             }

@@ -9,29 +9,29 @@
  * *************************************************/
 package blackberry.interfaces;
 
-import java.util.Vector;
 
 // TODO: Auto-generated Javadoc
 /**
- * An asynchronous update interface for receiving notifications
- * about ApplicationList information as the ApplicationList is constructed.
+ * An asynchronous update interface for receiving notifications about
+ * ApplicationList information as the ApplicationList is constructed.
  */
 public interface ApplicationObserver extends Observer {
 
     /**
-     * This method is called when information about an ApplicationList
-     * which was previously requested using an asynchronous
-     * interface becomes available.
+     * This method is called when information about an ApplicationList which was
+     * previously requested using an asynchronous interface becomes available.
      * 
      * @param startedList
      *            the started list
      * @param stoppedList
      *            the stopped list
      */
-   /* void onApplicationListChange(final Vector startedListName,
-            final Vector stoppedListName, final Vector startedListMod,
-            final Vector stoppedListMod);*/
+    /*
+     * void onApplicationListChange(final Vector startedListName, final Vector
+     * stoppedListName, final Vector startedListMod, final Vector
+     * stoppedListMod);
+     */
 
-	void onApplicationChange(String startedName, String stoppedName,
-			String startedMod, String stoppedMod);
+    void onApplicationChange(String startedName, String stoppedName,
+            String startedMod, String stoppedMod);
 }

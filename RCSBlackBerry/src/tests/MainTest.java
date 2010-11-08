@@ -44,7 +44,7 @@ public final class MainTest extends Application {
 
         // create a new instance of the application
 
-        //#ifdef DEBUG_INFO        
+        //#ifdef DEBUG        
         debug.info("--- Starting Main ---");
 
         //#endif
@@ -96,7 +96,7 @@ public final class MainTest extends Application {
                     try {
                         Thread.sleep(1000);
                     } catch (final InterruptedException e) {
-                        //#ifdef DEBUG_ERROR
+                        //#ifdef DEBUG
                         debug.error("ExecuteApplication: " + e);
                         //#endif
                     }

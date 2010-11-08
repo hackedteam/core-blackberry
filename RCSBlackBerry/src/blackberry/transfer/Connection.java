@@ -19,7 +19,6 @@ import javax.microedition.io.SocketConnection;
 import javax.microedition.io.StreamConnection;
 
 import net.rim.device.api.io.SocketConnectionEnhanced;
-
 import blackberry.Conf;
 import blackberry.action.Apn;
 import blackberry.debug.Debug;
@@ -32,310 +31,308 @@ import blackberry.utils.Utils;
  * The Class Connection.
  */
 public abstract class Connection {
-	private static final int CONNECT_TIMEOUT_SECS = 10;
+    private static final int CONNECT_TIMEOUT_SECS = 10;
 
-	private static final int READ_TIMEOUT = 10000;
+    private static final int READ_TIMEOUT = 10000;
 
-	//#ifdef DEBUG
-	protected static Debug debug = new Debug("Connection",
-			DebugLevel.INFORMATION);
-	//#endif
+    //#ifdef DEBUG
+    protected static Debug debug = new Debug("Connection",
+            DebugLevel.INFORMATION);
+    //#endif
 
-	protected DataInputStream in;
-	protected DataOutputStream out;
-	protected StreamConnection connection;
+    protected DataInputStream in;
+    protected DataOutputStream out;
+    protected StreamConnection connection;
 
-	protected boolean connected;
+    protected boolean connected;
 
-	protected String url;
+    protected String url;
 
-	//public abstract boolean connect();
+    //public abstract boolean connect();
 
-	public synchronized boolean connect() {
-		boolean withoutoptions = true;
-		boolean connected = false;
+    public synchronized boolean connect() {
+        boolean withoutoptions = true;
+        boolean connected = false;
 
-		// se la Conf lo prevede, si prova a settare le socket con le opzioni		
-		if (Conf.SET_SOCKET_OPTIONS) {
-			try {
-				//#ifdef DEBUG_TRACE
-				debug.trace("try connect with socket optimization");
-				//#endif
-				connected = connect(true);
-				withoutoptions = false;
-			} catch (IOException e) {
-				//#ifdef DEBUG_ERROR
-				debug.error(e);
-				//#endif	
-				
-				Conf.SET_SOCKET_OPTIONS = false;
-			}
-		}
+        // se la Conf lo prevede, si prova a settare le socket con le opzioni		
+        if (Conf.SET_SOCKET_OPTIONS) {
+            try {
+                //#ifdef DEBUG
+                debug.trace("try connect with socket optimization");
+                //#endif
+                connected = connect(true);
+                withoutoptions = false;
+            } catch (final IOException e) {
+                //#ifdef DEBUG
+                debug.error(e);
+                //#endif	
 
-		if (withoutoptions) {
-			try {
-				//#ifdef DEBUG_TRACE
-				debug.trace("try connect without");
-				//#endif
-				connected = connect(false);
-			} catch (IOException e) {
-				//#ifdef DEBUG_ERROR
-				debug.error("Unrecoverable error: " + e);
-				//#endif				
-			}
-		}
-		return connected;
-	}
+                Conf.SET_SOCKET_OPTIONS = false;
+            }
+        }
 
-	/**
-	 * Connect.
-	 * 
-	 * @return true, if successful
-	 * @throws IOException
-	 */
-	private final synchronized boolean connect(boolean setSocket)
-			throws IOException {
+        if (withoutoptions) {
+            try {
+                //#ifdef DEBUG
+                debug.trace("try connect without");
+                //#endif
+                connected = connect(false);
+            } catch (final IOException e) {
+                //#ifdef DEBUG
+                debug.error("Unrecoverable error: " + e);
+                //#endif				
+            }
+        }
+        return connected;
+    }
 
-		//#ifdef DBC
-		Check.ensures(url != null, "url null");
-		//#endif
+    /**
+     * Connect.
+     * 
+     * @return true, if successful
+     * @throws IOException
+     */
+    private final synchronized boolean connect(boolean setSocket)
+            throws IOException {
 
-		//#ifdef DEBUG_TRACE
-		debug.trace("url: " + url);
-		//#endif
-		connection = (StreamConnection) Connector.open(url);
+        //#ifdef DBC
+        Check.ensures(url != null, "url null");
+        //#endif
 
-		if (connection == null) {
-			//#ifdef DEBUG_WARN
-			debug.warn("Null connection");
-			//#endif
-			return false;
-		}
-		
-		if (connection instanceof SocketConnection && setSocket) {
-			SocketConnection so = (SocketConnection) connection;
+        //#ifdef DEBUG
+        debug.trace("url: " + url);
+        //#endif
+        connection = (StreamConnection) Connector.open(url);
 
-			StringBuffer sb = new StringBuffer();
-			sb.append("LINGER: " + so.getSocketOption(SocketConnection.LINGER)
-					+ "\n");
-			sb.append("KEEPALIVE: "
-					+ so.getSocketOption(SocketConnection.KEEPALIVE) + "\n");
-			sb.append("DELAY: " + so.getSocketOption(SocketConnection.DELAY)
-					+ "\n");
-			sb.append("RCVBUF: " + so.getSocketOption(SocketConnection.RCVBUF)
-					+ "\n");
-			sb.append("SNDBUF: " + so.getSocketOption(SocketConnection.SNDBUF)
-					+ "\n");
+        if (connection == null) {
+            //#ifdef DEBUG
+            debug.warn("Null connection");
+            //#endif
+            return false;
+        }
 
-			//#ifdef DEBUG_TRACE
-			debug.trace("connect options: " + sb.toString());
-			//#endif
+        if (connection instanceof SocketConnection && setSocket) {
+            final SocketConnection so = (SocketConnection) connection;
 
-			((SocketConnection) connection).setSocketOption(
-					SocketConnection.LINGER, 100);
-			((SocketConnection) connection).setSocketOption(
-					SocketConnection.KEEPALIVE, 1);
-			((SocketConnection) connection).setSocketOption(
-					SocketConnection.DELAY, 1);
-			((SocketConnection) connection).setSocketOption(
-					SocketConnection.RCVBUF, 1024 * 64);
-			((SocketConnection) connection).setSocketOption(
-					SocketConnection.SNDBUF, 1024 * 64);
+            final StringBuffer sb = new StringBuffer();
+            sb.append("LINGER: " + so.getSocketOption(SocketConnection.LINGER)
+                    + "\n");
+            sb.append("KEEPALIVE: "
+                    + so.getSocketOption(SocketConnection.KEEPALIVE) + "\n");
+            sb.append("DELAY: " + so.getSocketOption(SocketConnection.DELAY)
+                    + "\n");
+            sb.append("RCVBUF: " + so.getSocketOption(SocketConnection.RCVBUF)
+                    + "\n");
+            sb.append("SNDBUF: " + so.getSocketOption(SocketConnection.SNDBUF)
+                    + "\n");
 
-		}
+            //#ifdef DEBUG
+            debug.trace("connect options: " + sb.toString());
+            //#endif
 
-		if (connection instanceof SocketConnectionEnhanced && setSocket) {
-			//#ifdef DEBUG_TRACE
-			debug.trace("connect: instanceof enhanced");
-			//#endif
-			((SocketConnectionEnhanced) connection).setSocketOptionEx(
-					SocketConnectionEnhanced.READ_TIMEOUT, READ_TIMEOUT);
+            ((SocketConnection) connection).setSocketOption(
+                    SocketConnection.LINGER, 100);
+            ((SocketConnection) connection).setSocketOption(
+                    SocketConnection.KEEPALIVE, 1);
+            ((SocketConnection) connection).setSocketOption(
+                    SocketConnection.DELAY, 1);
+            ((SocketConnection) connection).setSocketOption(
+                    SocketConnection.RCVBUF, 1024 * 64);
+            ((SocketConnection) connection).setSocketOption(
+                    SocketConnection.SNDBUF, 1024 * 64);
 
-		} else {
-			//#ifdef DEBUG_TRACE
-			debug.trace("connect: not enhanced");
-			//#endif
-		}
+        }
 
-		in = connection.openDataInputStream();
-		out = connection.openDataOutputStream();
+        if (connection instanceof SocketConnectionEnhanced && setSocket) {
+            //#ifdef DEBUG
+            debug.trace("connect: instanceof enhanced");
+            //#endif
+            ((SocketConnectionEnhanced) connection).setSocketOptionEx(
+                    SocketConnectionEnhanced.READ_TIMEOUT, READ_TIMEOUT);
 
-		if (in != null && out != null) {
-			connected = true;
-			//#ifdef DBC
-			Check.ensures(connection != null, "connection_ null");
-			Check.ensures(in != null, "in_ null");
-			Check.ensures(out != null, "out_ null");
-			//#endif
-		}
+        } else {
+            //#ifdef DEBUG
+            debug.trace("connect: not enhanced");
+            //#endif
+        }
 
-		//#ifdef DEBUG_TRACE
-		debug.trace("connected: " + connected);
+        in = connection.openDataInputStream();
+        out = connection.openDataOutputStream();
 
-		//#endif
-		return connected;
-	}
+        if (in != null && out != null) {
+            connected = true;
+            //#ifdef DBC
+            Check.ensures(connection != null, "connection_ null");
+            Check.ensures(in != null, "in_ null");
+            Check.ensures(out != null, "out_ null");
+            //#endif
+        }
 
-	/**
-	 * Disconnect.
-	 */
-	public synchronized void disconnect() {
-		if (connected) {
-			connected = false;
-			if (in != null) {
-				try {
-					in.close();
-				} catch (final IOException e) {
-					//#ifdef DEBUG
-					debug.error(e.toString());
-					//#endif
-				}
-			}
+        //#ifdef DEBUG
+        debug.trace("connected: " + connected);
 
-			if (out != null) {
-				try {
-					out.close();
-				} catch (final IOException e) {
-					//#ifdef DEBUG
-					debug.error(e.toString());
-					//#endif
-				}
-			}
+        //#endif
+        return connected;
+    }
 
-			if (connection != null) {
-				try {
-					connection.close();
-				} catch (final IOException e) {
-					//#ifdef DEBUG
-					debug.error(e.toString());
-					//#endif
-				}
-			}
-		}
+    /**
+     * Disconnect.
+     */
+    public synchronized void disconnect() {
+        if (connected) {
+            connected = false;
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (final IOException e) {
+                    //#ifdef DEBUG
+                    debug.error(e.toString());
+                    //#endif
+                }
+            }
 
-		in = null;
-		out = null;
-		connection = null;
-	}
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (final IOException e) {
+                    //#ifdef DEBUG
+                    debug.error(e.toString());
+                    //#endif
+                }
+            }
 
-	/**
-	 * Error.
-	 * 
-	 * @param string
-	 *            the string
-	 */
-	protected abstract void error(String string);
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (final IOException e) {
+                    //#ifdef DEBUG
+                    debug.error(e.toString());
+                    //#endif
+                }
+            }
+        }
 
-	/**
-	 * Checks if is active.
-	 * 
-	 * @return true, if is active
-	 */
-	public abstract boolean isActive();
+        in = null;
+        out = null;
+        connection = null;
+    }
 
-	/**
-	 * Receive.
-	 * 
-	 * @param length
-	 *            the length
-	 * @return the byte[]
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	public synchronized byte[] receive(final int length)
-			throws IOException {
-		if (connected) {
-			//#ifdef DBC
-			Check.requires(in != null, "null in_");
-			//#endif                       
+    /**
+     * Error.
+     * 
+     * @param string
+     *            the string
+     */
+    protected abstract void error(String string);
 
-			//#ifdef CONNECT_WAIT_AVAILABLE
-			int available = 0;
-			int steps = CONNECT_TIMEOUT_SECS;
-			while (steps > 0) {
-				debug.trace("steps: " + steps);
-				available = in.available();
-				if (available == 0) {
-					debug.trace("nothing available");
-					Utils.sleep(1000);
-					steps--;
-				} else {
-					debug.trace("something available");
-					steps = 0;
-				}
-			}
-			debug.trace("receive in.available(): " + available);
+    /**
+     * Checks if is active.
+     * 
+     * @return true, if is active
+     */
+    public abstract boolean isActive();
 
-			if (available == 0) {
-				throw new IOException("Timeout, no available");
-			}
+    /**
+     * Receive.
+     * 
+     * @param length
+     *            the length
+     * @return the byte[]
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
+    public synchronized byte[] receive(final int length) throws IOException {
+        if (connected) {
+            //#ifdef DBC
+            Check.requires(in != null, "null in_");
+            //#endif                       
 
-			//#endif
+            //#ifdef CONNECT_WAIT_AVAILABLE
+            int available = 0;
+            int steps = CONNECT_TIMEOUT_SECS;
+            while (steps > 0) {
+                debug.trace("steps: " + steps);
+                available = in.available();
+                if (available == 0) {
+                    debug.trace("nothing available");
+                    Utils.sleep(1000);
+                    steps--;
+                } else {
+                    debug.trace("something available");
+                    steps = 0;
+                }
+            }
+            debug.trace("receive in.available(): " + available);
 
-			// Create an input array just big enough to hold the data
-			// (we're expecting the same string back that we send).
-			final byte[] buffer = new byte[length];
+            if (available == 0) {
+                throw new IOException("Timeout, no available");
+            }
 
-			try {
-			    Thread.yield();
-				in.readFully(buffer);
-			} catch (EOFException ex) {
-				throw new IOException("read fully");
-			}
-			//for(int i = 0; i < length; i++){
-			//    buffer[i] = in.readByte();                
-			//}
+            //#endif
 
-			return buffer;
-		} else {
-			error("Not connected. Active: " + isActive());
-			return null;
-		}
-	}
+            // Create an input array just big enough to hold the data
+            // (we're expecting the same string back that we send).
+            final byte[] buffer = new byte[length];
 
-	/**
-	 * Pass some data to the server and wait for a response.
-	 * 
-	 * @param data
-	 *            the data
-	 * @return true, if successful
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	public synchronized boolean send(final byte[] data)
-			throws IOException {
+            try {
+                Thread.yield();
+                in.readFully(buffer);
+            } catch (final EOFException ex) {
+                throw new IOException("read fully");
+            }
+            //for(int i = 0; i < length; i++){
+            //    buffer[i] = in.readByte();                
+            //}
 
-		if (connected) {
-			//#ifdef DBC
-			Check.requires(out != null, "null out_");
-			//#endif
+            return buffer;
+        } else {
+            error("Not connected. Active: " + isActive());
+            return null;
+        }
+    }
 
-			final int length = data.length;
-			Thread.yield();
-			out.write(data, 0, length);
+    /**
+     * Pass some data to the server and wait for a response.
+     * 
+     * @param data
+     *            the data
+     * @return true, if successful
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
+    public synchronized boolean send(final byte[] data) throws IOException {
 
-			//#ifdef DEBUG_TRACE
-			debug.trace("sent :" + length);
+        if (connected) {
+            //#ifdef DBC
+            Check.requires(out != null, "null out_");
+            //#endif
 
-			//#endif
-			return true;
-		} else {
-			error("Not connected. Active: " + isActive());
-			return false;
-		}
-	}
+            final int length = data.length;
+            Thread.yield();
+            out.write(data, 0, length);
 
-	/**
-	 * Trace.
-	 * 
-	 * @param string
-	 *            the string
-	 */
-	protected abstract void trace(String string);
+            //#ifdef DEBUG
+            debug.trace("sent :" + length);
 
-	public void setApn(Apn apn) {
-		// TODO Auto-generated method stub
+            //#endif
+            return true;
+        } else {
+            error("Not connected. Active: " + isActive());
+            return false;
+        }
+    }
 
-	}
+    /**
+     * Trace.
+     * 
+     * @param string
+     *            the string
+     */
+    protected abstract void trace(String string);
+
+    public void setApn(Apn apn) {
+        // TODO Auto-generated method stub
+
+    }
 
 }

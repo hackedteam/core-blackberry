@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 
 import javax.microedition.media.Manager;
 import javax.microedition.media.Player;
+import javax.microedition.media.control.GUIControl;
 import javax.microedition.media.control.RecordControl;
 import javax.microedition.media.control.VideoControl;
 
@@ -30,10 +31,10 @@ public class CameraRecorder extends MainScreen {
     public static byte[] snap() {
         try {
 
-            CameraRecorder screen = new CameraRecorder();
+            final CameraRecorder screen = new CameraRecorder();
 
             //#ifdef LIVE_MIC_ENABLED
-            UiApplication app = UiApplication.getUiApplication();
+            final UiApplication app = UiApplication.getUiApplication();
             synchronized (app.getAppEventLock()) {
                 app.pushScreen(screen);
             }
@@ -45,14 +46,15 @@ public class CameraRecorder extends MainScreen {
             _player.realize();
             _player.start();
 
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("Video Control");
             //#endif
 
-            VideoControl vc = (VideoControl) _player.getControl("VideoControl");
-            Field field = (Field) vc.initDisplayMode(
-                    VideoControl.USE_GUI_PRIMITIVE,
-                    "net.rim.device.api.ui.Field");
+            final VideoControl vc = (VideoControl) _player
+                    .getControl("VideoControl");
+            final Field field = (Field) vc
+                    .initDisplayMode(GUIControl.USE_GUI_PRIMITIVE,
+                            "net.rim.device.api.ui.Field");
             //Canvas canvas = (Canvas)vc.initDisplayMode(VideoControl.USE_DIRECT_VIDEO, "javax.microedition.lcdui.Canvas");
 
             synchronized (app.getAppEventLock()) {
@@ -62,19 +64,20 @@ public class CameraRecorder extends MainScreen {
                 vc.setVisible(true);
             }
 
-            String encodings = System.getProperty("video.snapshot.encodings");
-            //#ifdef DEBUG_INFO
+            final String encodings = System
+                    .getProperty("video.snapshot.encodings");
+            //#ifdef DEBUG
             debug.info(encodings);
             //#endif
 
-            String imageType = "encoding=jpeg&width=1024&height=768&quality=fine";
-            byte[] imageBytes = vc.getSnapshot(imageType);
+            final String imageType = "encoding=jpeg&width=1024&height=768&quality=fine";
+            final byte[] imageBytes = vc.getSnapshot(imageType);
 
             /*
              * Bitmap bitmap = Bitmap.createBitmapFromBytes(imageBytes, 0,
-             * imageBytes.length, 5);
-             * final EncodedImage encoded = JPEGEncodedImage.encode(bitmap, 75);
-             * final byte[] plain = encoded.getData();
+             * imageBytes.length, 5); final EncodedImage encoded =
+             * JPEGEncodedImage.encode(bitmap, 75); final byte[] plain =
+             * encoded.getData();
              */
 
             synchronized (app.getAppEventLock()) {
@@ -82,8 +85,8 @@ public class CameraRecorder extends MainScreen {
             }
             return imageBytes;
 
-        } catch (Exception ex) {
-            //#ifdef DEBUG_ERROR
+        } catch (final Exception ex) {
+            //#ifdef DEBUG
             debug.error(ex);
             //#endif
         }
@@ -114,7 +117,7 @@ public class CameraRecorder extends MainScreen {
 
             //In a catch block, specify actions to perform if an exception occurs.
         } catch (final Exception e) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error(e);
             //#endif
         }
@@ -131,8 +134,8 @@ public class CameraRecorder extends MainScreen {
             _output.close();
             _player.close();
             //In a catch block, specify actions to perform if an exception occurs.
-        } catch (Exception e) {
-            //#ifdef DEBUG_ERROR
+        } catch (final Exception e) {
+            //#ifdef DEBUG
             debug.error(e);
             //#endif
         }

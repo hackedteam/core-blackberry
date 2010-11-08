@@ -17,10 +17,6 @@ import java.util.TimeZone;
 import java.util.Vector;
 
 import net.rim.device.api.util.Arrays;
-import tests.AssertException;
-import tests.Data;
-import tests.TestUnit;
-import tests.Tests;
 import blackberry.Conf;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
@@ -54,7 +50,7 @@ public final class UT_Utils extends TestUnit {
      *             the assert exception
      */
     boolean AsciiTest() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("-- AsciiTest --");
         //#endif
 
@@ -76,7 +72,7 @@ public final class UT_Utils extends TestUnit {
      *             the assert exception
      */
     public boolean CopyTest() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("-- CopyTest --");
         //#endif
 
@@ -127,7 +123,7 @@ public final class UT_Utils extends TestUnit {
      *             the assert exception
      */
     boolean CrcTest() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("-- CrcTest --");
         //#endif
 
@@ -175,7 +171,7 @@ public final class UT_Utils extends TestUnit {
     }
 
     private void DateTimeTest() {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("-- DateTimeTest --");
         //#endif
 
@@ -188,7 +184,7 @@ public final class UT_Utils extends TestUnit {
                 .getTimeZone("GMT"));
         calendar.setTime(date);
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info(calendar.toString());
 
         //#endif
@@ -234,7 +230,7 @@ public final class UT_Utils extends TestUnit {
      *             the assert exception
      */
     void DoubleStringSortVectorTest() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("-- StringSortVectorTest --");
         //#endif
 
@@ -258,7 +254,7 @@ public final class UT_Utils extends TestUnit {
      *             the assert exception
      */
     boolean GetIndexTest() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("-- GetIndexTest --");
         //#endif
 
@@ -275,7 +271,7 @@ public final class UT_Utils extends TestUnit {
         final int endofIndex = Utils.getIndex(payload,
                 Conf.ENDOF_CONF_DELIMITER.getBytes());
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("searchSectionIndex - agentIndex:" + agentIndex);
         debug.trace("searchSectionIndex - eventIndex:" + eventIndex);
         debug.trace("searchSectionIndex - mobileIndex:" + mobileIndex);
@@ -299,7 +295,7 @@ public final class UT_Utils extends TestUnit {
      *             the assert exception
      */
     boolean HexTest() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("-- HexTest --");
         //#endif
 
@@ -319,7 +315,7 @@ public final class UT_Utils extends TestUnit {
      *             Signals that an I/O exception has occurred.
      */
     public void IntToByteTest() throws AssertException, IOException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("-- IntToByteTest --");
         //#endif
 
@@ -353,7 +349,7 @@ public final class UT_Utils extends TestUnit {
      *             the assert exception
      */
     void StringSortVectorTest() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("-- StringSortVectorTest --");
         //#endif
 
@@ -381,8 +377,7 @@ public final class UT_Utils extends TestUnit {
         Vector vector = Utils.Tokenize("LOG zeno@whatever.com", " ");
         AssertEqual(vector.size(), 2, "Wrong size");
         AssertEqual(vector.elementAt(0), "LOG", "Wrong element 0");
-        AssertEqual(vector.elementAt(1), "zeno@whatever.com",
-                "Wrong element 0");
+        AssertEqual(vector.elementAt(1), "zeno@whatever.com", "Wrong element 0");
 
         vector = Utils.Tokenize("LOG SEND zeno@whatever.com", " .@");
         AssertEqual(vector.size(), 5, "Wrong size");

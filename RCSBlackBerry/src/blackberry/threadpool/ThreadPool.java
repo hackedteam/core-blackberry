@@ -51,11 +51,11 @@ public final class ThreadPool {
                 }
 
                 try {
-                    //#ifdef DEBUG_TRACE
+                    //#ifdef DEBUG
                     debug.trace("Pool " + id + " run:" + job);
                     //#endif
                     job.run();
-                    //#ifdef DEBUG_TRACE
+                    //#ifdef DEBUG
                     debug.trace("Pool " + id + " end:" + job);
                     //#endif
                 } catch (final Throwable t) {

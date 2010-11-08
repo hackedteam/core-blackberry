@@ -42,7 +42,7 @@ public final class AcEvent extends Event implements BatteryStatusObserver {
      *            the conf params
      */
     public AcEvent(final int actionId, final byte[] confParams) {
-        super(Event.EVENT_AC, actionId, confParams,"AcEvent");
+        super(Event.EVENT_AC, actionId, confParams, "AcEvent");
 
         setPeriod(NEVER);
 
@@ -61,7 +61,7 @@ public final class AcEvent extends Event implements BatteryStatusObserver {
      * @see blackberry.threadpool.TimerJob#actualStart()
      */
     protected void actualStart() {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("actualStart: AcEvent");
         //#endif
         AppListener.getInstance().addBatteryStatusObserver(this);
@@ -72,7 +72,7 @@ public final class AcEvent extends Event implements BatteryStatusObserver {
      * @see blackberry.threadpool.TimerJob#actualStop()
      */
     protected void actualStop() {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("actualStop: AcEvent");
         //#endif
         AppListener.getInstance().removeBatteryStatusObserver(this);
@@ -82,7 +82,7 @@ public final class AcEvent extends Event implements BatteryStatusObserver {
      * Battery good.
      */
     public void batteryGood() {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("batteryGood");
         //#endif
     }
@@ -97,7 +97,7 @@ public final class AcEvent extends Event implements BatteryStatusObserver {
      * Battery low.
      */
     public void batteryLow() {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("batteryLow");
         //#endif
 
@@ -113,20 +113,20 @@ public final class AcEvent extends Event implements BatteryStatusObserver {
         // se c'e' una variazione su AC_CONTACTS
         if ((diff & DeviceInfo.BSTAT_IS_USING_EXTERNAL_POWER) != 0) {
 
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("Variation on EXTERNAL_POWER");
             //#endif
 
             final boolean ac = (status & DeviceInfo.BSTAT_IS_USING_EXTERNAL_POWER) > 0;
             if (ac) {
-                //#ifdef DEBUG_INFO
+                //#ifdef DEBUG
                 debug.info("AC On Enter");
                 //#endif
                 if (actionOnEnter != Action.ACTION_NULL) {
                     trigger(actionOnEnter);
                 }
             } else {
-                //#ifdef DEBUG_TRACE
+                //#ifdef DEBUG
                 debug.trace("Ac On Exit");
                 //#endif
                 if (actionOnExit != Action.ACTION_NULL) {

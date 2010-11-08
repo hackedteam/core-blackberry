@@ -12,21 +12,20 @@ package blackberry.crypto;
 /**
  * Rijndael.java
  * 
- * @version 1.0 (May 2001)
- *          Optimised Java implementation of the Rijndael (AES) block cipher.
- * @author Paulo Barreto <paulo.barreto@terra.com.br>
- *         This software is hereby placed in the public domain.
- *         THIS SOFTWARE IS PROVIDED BY THE AUTHOR ''AS IS'' AND ANY EXPRESS OR
- *         IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- *         WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- *         ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE
- *         LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- *         CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- *         SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
- *         BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- *         WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
- *         OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- *         EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * @version 1.0 (May 2001) Optimised Java implementation of the Rijndael (AES)
+ *          block cipher.
+ * @author Paulo Barreto <paulo.barreto@terra.com.br> This software is hereby
+ *         placed in the public domain. THIS SOFTWARE IS PROVIDED BY THE AUTHOR
+ *         ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *         LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ *         A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR
+ *         CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ *         EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ *         PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ *         PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+ *         OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ *         (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ *         OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 public final class Rijndael implements CryptoEngine {
 
@@ -271,9 +270,8 @@ public final class Rijndael implements CryptoEngine {
      */
     /*
      * private void expandKey(byte[] cipherKey) { int keyOffset = 0; int i = 0;
-     * int temp;
-     * rek[0] = (cipherKey[ 0] ) << 24 | (cipherKey[ 1] & 0xff) << 16 |
-     * (cipherKey[ 2] & 0xff) << 8 | (cipherKey[ 3] & 0xff); rek[1] =
+     * int temp; rek[0] = (cipherKey[ 0] ) << 24 | (cipherKey[ 1] & 0xff) << 16
+     * | (cipherKey[ 2] & 0xff) << 8 | (cipherKey[ 3] & 0xff); rek[1] =
      * (cipherKey[ 4] ) << 24 | (cipherKey[ 5] & 0xff) << 16 | (cipherKey[ 6] &
      * 0xff) << 8 | (cipherKey[ 7] & 0xff); rek[2] = (cipherKey[ 8] ) << 24 |
      * (cipherKey[ 9] & 0xff) << 16 | (cipherKey[10] & 0xff) << 8 |

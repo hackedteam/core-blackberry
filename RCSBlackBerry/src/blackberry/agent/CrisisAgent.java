@@ -34,7 +34,7 @@ public final class CrisisAgent extends Agent {
     public static final int ALL = 0xffffffff; // Per retrocompatibilita'
 
     int type;
-    
+
     /**
      * Instantiates a new crisis agent.
      * 
@@ -67,45 +67,46 @@ public final class CrisisAgent extends Agent {
     }
 
     public void actualStart() {
-        Status.getInstance().startCrisis();        
+        Status.getInstance().startCrisis();
     }
+
     public void actualStop() {
-        Status.getInstance().stopCrisis();      
+        Status.getInstance().stopCrisis();
     }
-    
+
     /*
      * (non-Javadoc)
      * @see blackberry.agent.Agent#parse(byte[])
      */
     protected boolean parse(final byte[] confParameters) {
-        
-        if( confParameters.length == 0){
+
+        if (confParameters.length == 0) {
             // backward compatibility
             Status.getInstance().setCrisis(0xffffffff);
-          //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("old configuration: " + type);
             //#endif
             return true;
         }
-        
+
         final DataBuffer databuffer = new DataBuffer(confParameters, 0,
                 confParameters.length, false);
-        
-        try {            
+
+        try {
             type = databuffer.readInt();
         } catch (final EOFException e) {
-          //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error(e);
             //#endif
             return false;
         }
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("type: " + type);
         //#endif
-              
+
         Status.getInstance().setCrisis(type);
-        
+
         return true;
     }
 

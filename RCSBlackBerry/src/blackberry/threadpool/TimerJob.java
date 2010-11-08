@@ -135,7 +135,7 @@ public abstract class TimerJob {
      *            the timer
      */
     public final void addToTimer(final Timer timer) {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("adding timer");
         //#endif
         timer.schedule(new TimerWrapper(this), getDelay(), getPeriod());
@@ -216,7 +216,7 @@ public abstract class TimerJob {
      * Restart.
      */
     public final void restart(final Timer timer) {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("restart: " + this);
         //#endif
         stop();
@@ -229,10 +229,10 @@ public abstract class TimerJob {
      */
     public final synchronized void run() {
         //#ifdef DEBUG
-        debug.init();
+        Debug.init();
         //#endif
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("Run " + this);
         //#endif
 
@@ -244,20 +244,20 @@ public abstract class TimerJob {
         runningLoops++;
 
         try {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("actualRun " + this);
             //#endif
             running = true;
             actualRun();
         } catch (final Exception ex) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.fatal("actualRun: " + ex);
             //#endif
         } finally {
             running = false;
         }
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("End " + this);
 
         //#endif
@@ -267,7 +267,7 @@ public abstract class TimerJob {
      *Stop.
      */
     public final void stop() {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("Stopping... " + this);
         debug.trace("running: " + running);
         //#endif
@@ -283,7 +283,7 @@ public abstract class TimerJob {
             scheduled = false;
             actualStop();
         }
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("Stopped: " + this);
         //#endif
     }
@@ -304,7 +304,7 @@ public abstract class TimerJob {
 
             wantedDelay = delay_;
         }
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("setDelay: " + wantedDelay);
         //#endif
     }
@@ -324,7 +324,7 @@ public abstract class TimerJob {
         } else {
             wantedPeriod = period;
         }
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("setPeriod: " + wantedPeriod);
         //#endif
     }

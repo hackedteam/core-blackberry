@@ -81,7 +81,7 @@ public final class TimerEvent extends Event {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     protected void actualRun() {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("actualRun");
         //#endif
         trigger();
@@ -92,14 +92,14 @@ public final class TimerEvent extends Event {
 
         switch (type) {
         case Conf.CONF_TIMER_SINGLE:
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("TIMER_SINGLE delay: " + loDelay);
             //#endif
             setDelay(loDelay);
             setPeriod(NEVER);
             break;
         case Conf.CONF_TIMER_REPEAT:
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("TIMER_REPEAT period: " + loDelay);
             //#endif
             setPeriod(loDelay);
@@ -108,7 +108,7 @@ public final class TimerEvent extends Event {
         case Conf.CONF_TIMER_DATE:
             long tmpTime = hiDelay << 32;
             tmpTime += loDelay;
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             Date date = new Date(tmpTime);
             debug.info("TIMER_DATE: " + date);
             //#endif
@@ -117,7 +117,7 @@ public final class TimerEvent extends Event {
             setDelay(tmpTime - now);
             break;
         case Conf.CONF_TIMER_DELTA:
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("TIMER_DELTA");
             //#endif
 
@@ -126,7 +126,7 @@ public final class TimerEvent extends Event {
 
             // se la data di installazione non c'e' si crea.            
             if (!markup.isMarkup()) {
-                Date instTime = Status.getInstance().getStartingDate();
+                final Date instTime = Status.getInstance().getStartingDate();
                 markup.writeMarkup(Utils.longToByteArray(instTime.getTime()));
             }
 
@@ -136,20 +136,20 @@ public final class TimerEvent extends Event {
                         markup.readMarkup(), 0);
 
                 setPeriod(NEVER);
-                long delay = timeInst + deltaTime - now;
+                final long delay = timeInst + deltaTime - now;
                 if (delay > 0) {
                     setDelay(timeInst + deltaTime - now);
                 } else {
-                    //#ifdef DEBUG_INFO
+                    //#ifdef DEBUG
                     debug.info("negative delta");
                     //#endif
                 }
-                //#ifdef DEBUG_INFO
+                //#ifdef DEBUG
                 date = new Date(timeInst + deltaTime - now);
                 debug.info("DELTA_DATE: " + date);
                 //#endif
 
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 //#ifdef ERROR
                 debug.error(e);
                 //#endif
@@ -177,7 +177,7 @@ public final class TimerEvent extends Event {
             loDelay = databuffer.readInt();
             hiDelay = databuffer.readInt();
 
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("type: " + type + " lo:" + loDelay + " hi:" + hiDelay);
             //#endif
 

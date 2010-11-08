@@ -23,7 +23,6 @@ public class ProtocolException extends Exception {
 
     public boolean bye;
 
-
     /**
      * Instantiates a new protocol exception.
      * 
@@ -33,10 +32,10 @@ public class ProtocolException extends Exception {
      *            the bye_
      */
     public ProtocolException(final boolean bye_) {
-        bye = bye_;     
+        bye = bye_;
     }
-    
-    public ProtocolException(){
-    	this(false);
+
+    public ProtocolException() {
+        this(false);
     }
 }

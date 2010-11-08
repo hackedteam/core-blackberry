@@ -27,8 +27,9 @@ public class KeyInjector {
     //#endif
     /**
      * Press key.
-     *
-     * @param key the key
+     * 
+     * @param key
+     *            the key
      */
     public static void pressKey(final int key) {
         Application.getApplication().invokeLater(new Runnable() {

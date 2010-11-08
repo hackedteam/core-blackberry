@@ -1,8 +1,5 @@
 package tests.unit;
 
-import tests.AssertException;
-import tests.TestUnit;
-import tests.Tests;
 import blackberry.record.AudioRecorder;
 import blackberry.utils.Utils;
 
@@ -21,19 +18,19 @@ public class UT_Recorder extends TestUnit {
     }
 
     private void ChunksAvailable() throws AssertException {
-        AudioRecorder recorder = new AudioRecorder();
+        final AudioRecorder recorder = new AudioRecorder();
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("ChunksAvailable");
         //#endif
         recorder.start();
 
         for (int i = 1; i <= 10; i++) {
             Utils.sleep(1000);
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("getchunk " + i);
             //#endif
-            byte[] chunk = recorder.getAvailable();
+            final byte[] chunk = recorder.getAvailable();
             AssertNotNull(chunk, "Null chunk " + i);
             AssertThat(chunk.length > 0, "wrong len chunk " + i);
         }
@@ -42,21 +39,21 @@ public class UT_Recorder extends TestUnit {
     }
 
     private void ChunksHeader() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("-- Recorder Chunks --");
         //#endif
 
-        byte[] header = new byte[] { 35, 33, 65, 77, 82, 10 };
-        int chunksize = 160;
+        final byte[] header = new byte[] { 35, 33, 65, 77, 82, 10 };
+        final int chunksize = 160;
 
-        AudioRecorder recorder = new AudioRecorder();
+        final AudioRecorder recorder = new AudioRecorder();
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("start");
         //#endif
         recorder.start();
         Utils.sleep(1000);
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("getchunk 1");
         //#endif
         byte[] chunk = recorder.getChunk(chunksize);
@@ -67,7 +64,7 @@ public class UT_Recorder extends TestUnit {
         AssertThat(hasHeader, "no header");
 
         Utils.sleep(1000);
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("getchunk 2");
         //#endif
         chunk = recorder.getChunk(chunksize);
@@ -77,7 +74,7 @@ public class UT_Recorder extends TestUnit {
 
         AssertThat(!hasHeader, "header");
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("stop");
         //#endif
         recorder.stop();

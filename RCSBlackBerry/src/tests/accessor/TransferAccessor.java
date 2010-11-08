@@ -12,7 +12,6 @@ package tests.accessor;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.transfer.ProtocolException;
-import blackberry.transfer.TransferSocket;
 
 // TODO: Auto-generated Javadoc
 /**

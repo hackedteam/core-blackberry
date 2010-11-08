@@ -9,9 +9,6 @@
  * *************************************************/
 package tests.unit;
 
-import tests.AssertException;
-import tests.TestUnit;
-import tests.Tests;
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
 import blackberry.utils.Utils;
@@ -78,8 +75,6 @@ public final class UT_File extends TestUnit {
 
     private void FileCreateTest() throws AssertException {
 
-       
-
         final AutoFlashFile file = new AutoFlashFile(Path.SD()
                 + "testCreate.txt", false);
         boolean ret = file.create();
@@ -94,8 +89,8 @@ public final class UT_File extends TestUnit {
     }
 
     private void FileReadWriteTest() throws AssertException {
-        final AutoFlashFile file = new AutoFlashFile(Path.SD()
-                + "testRW.txt", false);
+        final AutoFlashFile file = new AutoFlashFile(Path.SD() + "testRW.txt",
+                false);
         boolean ret = file.create();
         AssertThat(ret == true, "Cannot create");
 
@@ -128,7 +123,7 @@ public final class UT_File extends TestUnit {
     public boolean run() throws AssertException {
         Path.makeDirs(Path.SD);
         Path.makeDirs(Path.USER);
-        
+
         FileCreateTest();
         FileCreateHiddenTest();
         FileReadWriteTest();

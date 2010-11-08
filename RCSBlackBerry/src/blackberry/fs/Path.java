@@ -1,4 +1,4 @@
-    //#preprocess
+//#preprocess
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -38,13 +38,12 @@ public final class Path {
     public static final String[] SD_EXT_PATHS = { "thumbs/wmrim/",
             "dvz_temp/wmrim/", "wmrim/" };
 
-    public static final String[] USER_EXT_PATHS = {            
-            "home/user/settings/media/wmrim/",
-            "home/user/settings/wmrim/",
+    public static final String[] USER_EXT_PATHS = {
+            "home/user/settings/media/wmrim/", "home/user/settings/wmrim/",
             "home/user/wmrim/" };
 
-    public static final String SD_BASE_PATH = "file:///SDCard/BlackBerry/";
-    public static final String USER_BASE_PATH = "file:///store/";
+    public static final String SD_BASE_PATH = "/SDCard/BlackBerry/";
+    public static final String USER_BASE_PATH = "/store/";
 
     //public static final String SD_PATH = "file:///SDCard/BlackBerry/system/WMDDR/";
     //public static final String SD_PATH = "file:///SDCard/BlackBerry/dvz_temp/wmddr/";
@@ -60,6 +59,9 @@ public final class Path {
 
     /** The Constant MARKUP_DIR. */
     public static final String MARKUP_DIR = "msdd/";
+
+    /** The Constant MARKUP_DIR. */
+    public static final String UPLOAD_DIR = "";
 
     //public static final String LOG_PATH = SD_PATH;
     //#ifdef DEBUG
@@ -82,19 +84,27 @@ public final class Path {
 
     public static String SD() {
         if (!isInizialized()) {
-
             init();
         }
+        //#ifdef DBC
+        Check.ensures(!conf.SD_PATH.startsWith("file://"),
+                "conf.SD_PATH shouldn.t start with file:// : " + conf.SD_PATH);
+        //#endif
         return conf.SD_PATH;
     }
 
     public static String USER() {
         if (!isInizialized()) {
-            //#ifdef DEBUG_WARN
+            //#ifdef DEBUG
             debug.warn("USER not initialized");
             //#endif
             init();
         }
+        
+        //#ifdef DBC
+        Check.ensures(!conf.USER_PATH.startsWith("file://"),
+                "USER_PATH shouldn.t start with file:// : " + conf.USER_PATH);
+        //#endif
         return conf.USER_PATH;
     }
 
@@ -109,20 +119,22 @@ public final class Path {
     public static synchronized boolean createDirectory(final String dirName) {
 
         if (conf == null) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error("createDirectory, Not init: " + dirName);
             //#endif
             return false;
         }
 
-        FileConnection fconn = null;
-
         //#ifdef DBC
+        Check.ensures(!dirName.startsWith("file://"),
+                "dirName shouldn.t start with file:// : " + dirName);
         Check.ensures(dirName.endsWith("/"), "directory should end with /");
         //#endif
+        
+        FileConnection fconn = null;
 
         try {
-            fconn = (FileConnection) Connector.open(dirName,
+            fconn = (FileConnection) Connector.open("file://" + dirName,
                     Connector.READ_WRITE);
 
             if (fconn.exists()) {
@@ -184,7 +196,7 @@ public final class Path {
 
             try {
                 fc = (FileConnection) Connector.open("file:///" + root);
-                //#ifdef DEBUG_INFO
+                //#ifdef DEBUG
                 debug.info(root + " " + fc.availableSize());
                 //#endif
             } catch (final Exception e) {
@@ -269,7 +281,7 @@ public final class Path {
         for (int i = 0; !found && i < extPaths.length; i++) {
             final String ext = extPaths[i];
             chosenDir = base + ext;
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("try chosenDir: " + chosenDir);
             //#endif
 
@@ -279,6 +291,7 @@ public final class Path {
                 found &= createDirectory(chosenDir + Path.MARKUP_DIR);
                 found &= createDirectory(chosenDir + Path.CONF_DIR);
                 found &= createDirectory(chosenDir + Path.DEBUG_DIR);
+                //found &= createDirectory(chosenDir + Path.UPLOAD_DIR);
 
                 //found &= createDirectory(chosenDir);
                 // createDirectory(Path.SD() + Path.LOG_DIR);
@@ -304,7 +317,7 @@ public final class Path {
             }
         }
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("chosenDir: " + chosenDir + " sd: " + sd);
         //#endif
 
@@ -350,15 +363,19 @@ public final class Path {
      */
     public static boolean removeDirectory(final String dirName) {
         if (!isInizialized()) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error("removeDirectory: Not init");
             //#endif
             return false;
         }
-
+        //#ifdef DBC
+        Check.asserts(!dirName.startsWith("file://"),
+                "dirName shouldn.t start with file:// : " + dirName);
+        //#endif
+        
         FileConnection fconn = null;
         try {
-            fconn = (FileConnection) Connector.open(dirName,
+            fconn = (FileConnection) Connector.open("file://" + dirName,
                     Connector.READ_WRITE);
 
             if (!fconn.exists()) {
@@ -412,11 +429,11 @@ public final class Path {
         init();
 
         if (Path.isSDAvailable() && Path.makeDirs(Path.SD)) {
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("SD available and writable");
             //#endif
         } else {
-            //#ifdef DEBUG_WARN
+            //#ifdef DEBUG
             debug.warn("SD is not available or writable");
             //#endif
             conf.SD_PATH = conf.USER_PATH;

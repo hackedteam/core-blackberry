@@ -9,9 +9,6 @@
  * *************************************************/
 package tests.unit;
 
-import tests.AssertException;
-import tests.TestUnit;
-import tests.Tests;
 import blackberry.Device;
 import blackberry.Status;
 import blackberry.agent.Agent;
@@ -62,7 +59,7 @@ public final class UT_Log extends TestUnit {
 
         agent.stop();
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("Agent Device ok");
 
         //#endif

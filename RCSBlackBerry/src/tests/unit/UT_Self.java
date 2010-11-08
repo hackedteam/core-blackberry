@@ -9,8 +9,6 @@
  * *************************************************/
 package tests.unit;
 
-import tests.TestUnit;
-import tests.Tests;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -36,7 +34,7 @@ public final class UT_Self extends TestUnit {
      */
     public boolean run() {
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("run " + name);
 
         //#endif

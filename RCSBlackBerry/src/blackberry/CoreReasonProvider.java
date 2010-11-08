@@ -4,7 +4,6 @@
  */
 package blackberry;
 
-import net.rim.device.api.applicationcontrol.ApplicationPermissions;
 import net.rim.device.api.applicationcontrol.ReasonProvider;
 
 // TODO: Auto-generated Javadoc
@@ -23,8 +22,7 @@ public final class CoreReasonProvider implements ReasonProvider {
      */
     public String getMessage(final int permissionID) {
         // General message for other permissions
-        String message = "Reason: "
-                + permissionID;
+        final String message = "Reason: " + permissionID;
         return message;
     }
 }

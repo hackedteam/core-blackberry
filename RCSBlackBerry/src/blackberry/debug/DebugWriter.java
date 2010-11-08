@@ -61,7 +61,7 @@ public final class DebugWriter extends Thread {
             instance = (DebugWriter) RuntimeStore.getRuntimeStore().get(GUID);
             if (instance == null) {
 
-                DebugWriter singleton = new DebugWriter();
+                final DebugWriter singleton = new DebugWriter();
 
                 RuntimeStore.getRuntimeStore().put(GUID, singleton);
                 instance = singleton;
@@ -82,7 +82,7 @@ public final class DebugWriter extends Thread {
         }
 
         if (fileDebug.exists()) {
-        	fileDebug.updateLogs();            
+            fileDebug.updateLogs();
         }
 
         fileDebug.create();
@@ -157,13 +157,4 @@ public final class DebugWriter extends Thread {
         notifyAll();
     }
 
-    //#ifdef SEND_LOG_BY_EMAIL
-    public synchronized boolean sendLogs(final String email) {
-        //byte[] content = fileDebug.read();
-        final boolean ret = fileDebug.sendLogs(email);
-        createNewFile();
-
-        return ret;
-    }
-    //#endif
 }

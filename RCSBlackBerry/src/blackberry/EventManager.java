@@ -12,8 +12,6 @@ package blackberry;
 import java.util.Vector;
 
 import net.rim.device.api.system.RuntimeStore;
-
-import blackberry.config.Keys;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
@@ -46,7 +44,7 @@ public final class EventManager extends Manager implements Singleton {
         if (instance == null) {
             instance = (EventManager) RuntimeStore.getRuntimeStore().get(GUID);
             if (instance == null) {
-                EventManager singleton = new EventManager();
+                final EventManager singleton = new EventManager();
                 RuntimeStore.getRuntimeStore().put(GUID, singleton);
                 instance = singleton;
             }
@@ -61,7 +59,7 @@ public final class EventManager extends Manager implements Singleton {
      */
     private EventManager() {
         super();
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("EventManager");
         //#endif
     }

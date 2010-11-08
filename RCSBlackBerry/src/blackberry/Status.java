@@ -15,7 +15,6 @@ import java.util.Vector;
 
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.blackberry.api.phone.PhoneCall;
-import net.rim.device.api.system.LED;
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.util.IntHashtable;
 import blackberry.action.Action;
@@ -170,7 +169,7 @@ public final class Status implements Singleton {
 
         agents.put(agent.agentId, agent);
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("Agent added:" + agent);
 
         //#endif
@@ -239,7 +238,7 @@ public final class Status implements Singleton {
      * Clear.
      */
     public void clear() {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("Clear");
         //#endif
 
@@ -277,19 +276,19 @@ public final class Status implements Singleton {
             crisisType = type;
         }
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("set crisis: " + type);
         //#endif
 
-        Agent agent = getAgent(Agent.AGENT_MIC);
+        final Agent agent = getAgent(Agent.AGENT_MIC);
         if (agent != null) {
-            MicAgent micAgent = (MicAgent) agent;
+            final MicAgent micAgent = (MicAgent) agent;
             micAgent.crisis(crisisMic());
         }
     }
 
     public boolean callInAction() {
-        PhoneCall phoneCall = Phone.getActiveCall();
+        final PhoneCall phoneCall = Phone.getActiveCall();
         return phoneCall != null
                 && phoneCall.getStatus() != PhoneCall.STATUS_DISCONNECTED;
     }
@@ -354,7 +353,7 @@ public final class Status implements Singleton {
             //#endif
             return action;
         } else {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("actions don't contain type " + id);
             //#endif
             return null;
@@ -419,7 +418,7 @@ public final class Status implements Singleton {
             //#endif
             return agent;
         } else {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("Agents don't contain type " + agentId);
             //#endif
             return null;
@@ -559,7 +558,7 @@ public final class Status implements Singleton {
             return false;
         }
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("ReEnabling " + agent);
         //#endif
         agent.enable(true);
@@ -600,7 +599,7 @@ public final class Status implements Singleton {
      * Start crisis.
      */
     public synchronized void startCrisis() {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.ledStart(0x00ff00);
         //#endif
         crisis = true;
@@ -610,7 +609,7 @@ public final class Status implements Singleton {
      * Stop crisis.
      */
     public synchronized void stopCrisis() {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.ledStop();
         //#endif
         crisis = false;
@@ -627,12 +626,12 @@ public final class Status implements Singleton {
      */
     public synchronized boolean triggerAction(final int actionId,
             final Event event) {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("TriggerAction:" + actionId);
         //#endif
 
         if (isRestarting()) {
-            //#ifdef DEBUG_WARN
+            //#ifdef DEBUG
             debug.warn("TriggerAction: not triggered, restarting.");
             //#endif            
         }
@@ -642,7 +641,7 @@ public final class Status implements Singleton {
             action.setTriggered(true, event);
             return true;
         } else {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error("TriggerAction FAILED " + actionId);
             //#endif
             return false;

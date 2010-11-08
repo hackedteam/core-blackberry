@@ -3,16 +3,13 @@ package blackberry.location;
 
 import javax.microedition.location.Location;
 import javax.microedition.location.LocationException;
-import javax.microedition.location.LocationListener;
 import javax.microedition.location.LocationProvider;
-
-import blackberry.Listener;
-import blackberry.Conf;
-import blackberry.debug.Debug;
-import blackberry.debug.DebugLevel;
 
 import net.rim.device.api.system.Application;
 import net.rim.device.api.system.RuntimeStore;
+import blackberry.Conf;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 
 public final class LocationHelper {
 
@@ -28,7 +25,7 @@ public final class LocationHelper {
             instance = (LocationHelper) RuntimeStore.getRuntimeStore()
                     .get(GUID);
             if (instance == null) {
-                LocationHelper singleton = new LocationHelper();
+                final LocationHelper singleton = new LocationHelper();
                 RuntimeStore.getRuntimeStore().put(GUID, singleton);
                 instance = singleton;
             }
@@ -40,36 +37,36 @@ public final class LocationHelper {
     private LocationHelper() {
         final Application application = Application.getApplication();
     }
-    
+
     public void locationGPS(final LocationProvider lp,
             final LocationObserver callback, boolean sync) {
-        Runnable closure = new Runnable() {
+        final Runnable closure = new Runnable() {
             public void run() {
                 //#ifdef DEBUG
-                debug.init();
+                Debug.init();
                 //#endif
                 try {
                     callback.waitingForPoint(true);
                     if (lp.getState() == LocationProvider.AVAILABLE) {
-                        //#ifdef DEBUG_TRACE
+                        //#ifdef DEBUG
                         debug.trace("getLocation");
                         //#endif
-                        Location loc = lp.getLocation(Conf.GPS_TIMEOUT);
+                        final Location loc = lp.getLocation(Conf.GPS_TIMEOUT);
                         callback.newLocation(loc);
                     }
-                } catch (LocationException e) {
+                } catch (final LocationException e) {
                     if (e.getMessage() == "Timed out while waiting for GPS") {
-                        //#ifdef DEBUG_ERROR
+                        //#ifdef DEBUG
                         debug.error(e.getMessage());
                         //#endif
                     } else {
-                        //#ifdef DEBUG_ERROR
+                        //#ifdef DEBUG
                         debug.error(e);
                         //#endif
                     }
                     callback.errorLocation();
-                } catch (InterruptedException e) {
-                    //#ifdef DEBUG_ERROR
+                } catch (final InterruptedException e) {
+                    //#ifdef DEBUG
                     debug.error(e);
                     //#endif
                     callback.errorLocation();
@@ -78,10 +75,10 @@ public final class LocationHelper {
                 }
             }
         };
-        
-        if(sync){
+
+        if (sync) {
             closure.run();
-        }else{
+        } else {
             new Thread(closure).start();
         }
     }

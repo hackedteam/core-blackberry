@@ -104,7 +104,7 @@ public abstract class Manager {
         Check.requires(timer != null, "Timer null");
         //#endif
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("restart " + id);
 
         //#endif
@@ -165,7 +165,7 @@ public abstract class Manager {
         }
 
         if (job.isScheduled()) {
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("Already scheduled" + id);
             //#endif
             return true;
@@ -175,12 +175,12 @@ public abstract class Manager {
         try {
             job.addToTimer(timer);
             ret = true;
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("Start() OK");
             //#endif
 
         } catch (final IllegalStateException ex) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.trace("execute: " + id + " ex: " + ex);
             //#endif
             ret = false;
@@ -205,13 +205,13 @@ public abstract class Manager {
                 final TimerJob job = (TimerJob) tasks.elementAt(i);
 
                 if (job.isEnabled()) {
-                    //#ifdef DEBUG_TRACE
+                    //#ifdef DEBUG
                     debug.trace("Starting: " + job);
                     //#endif
                     job.addToTimer(timer);
 
                 } else {
-                    //#ifdef DEBUG_TRACE
+                    //#ifdef DEBUG
                     debug.trace("Not starting because disabled: " + job);
                     //#endif
                 }
@@ -224,7 +224,7 @@ public abstract class Manager {
             //#endif
         }
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("StartAll() OK");
 
         //#endif
@@ -270,8 +270,8 @@ public abstract class Manager {
             final TimerJob job = (TimerJob) tasks.elementAt(i);
             try {
                 job.stop();
-            } catch (Exception ex) {
-                //#ifdef DEBUG_ERROR
+            } catch (final Exception ex) {
+                //#ifdef DEBUG
                 debug.error(ex);
                 //#endif
             }

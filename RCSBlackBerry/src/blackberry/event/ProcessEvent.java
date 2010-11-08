@@ -9,7 +9,6 @@
 package blackberry.event;
 
 import java.io.EOFException;
-import java.util.Vector;
 
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AppListener;
@@ -24,8 +23,7 @@ import blackberry.utils.WChar;
 /**
  * The Class ProcessEvent.
  */
-public final class ProcessEvent extends Event implements
-        ApplicationObserver {
+public final class ProcessEvent extends Event implements ApplicationObserver {
     //#ifdef DEBUG
     private static Debug debug = new Debug("ProcessEvent",
             DebugLevel.INFORMATION);
@@ -56,7 +54,7 @@ public final class ProcessEvent extends Event implements
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     protected void actualRun() {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("actualRun");
         //#endif
     }
@@ -66,7 +64,7 @@ public final class ProcessEvent extends Event implements
      * @see blackberry.threadpool.TimerJob#actualStart()
      */
     public void actualStart() {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("actualStart");
         //#endif
         AppListener.getInstance().addApplicationObserver(this);
@@ -77,7 +75,7 @@ public final class ProcessEvent extends Event implements
      * @see blackberry.threadpool.TimerJob#actualStop()
      */
     public void actualStop() {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("actualStop");
         //#endif
         AppListener.getInstance().removeApplicationObserver(this);
@@ -89,81 +87,57 @@ public final class ProcessEvent extends Event implements
      * blackberry.interfaces.ApplicationListObserver#onApplicationListChange
      * (java.util.Vector, java.util.Vector)
      */
-/*    public void onApplicationListChange(
-            final Vector startedListName, final Vector stoppedListName,
-            final Vector startedListMod, final Vector stoppedListMod) {
+    /*
+     * public void onApplicationListChange( final Vector startedListName, final
+     * Vector stoppedListName, final Vector startedListMod, final Vector
+     * stoppedListMod) { //#ifdef DEBUG debug.trace("onApplicationListChange: "
+     * + this); //#endif Vector startedList; Vector stoppedList; if
+     * (processType) { //#ifdef DEBUG
+     * debug.trace("onApplicationListChange: PROCESS (mod)"); //#endif
+     * startedList = startedListMod; stoppedList = stoppedListMod; } else {
+     * //#ifdef DEBUG debug.trace("onApplicationListChange: WINDOWS (name)");
+     * //#endif startedList = startedListName; stoppedList = stoppedListName; }
+     * if (actionOnEnter != Action.ACTION_NULL && startedList.contains(process))
+     * { //#ifdef DEBUG debug.info("triggering enter: " + process); //#endif
+     * trigger(actionOnEnter); } if (actionOnExit != Action.ACTION_NULL &&
+     * stoppedList.contains(process)) { //#ifdef DEBUG
+     * debug.info("triggering exit: " + process); //#endif
+     * trigger(actionOnExit); } }
+     */
 
-        //#ifdef DEBUG_TRACE
-        debug.trace("onApplicationListChange: " + this);
-        //#endif
+    public void onApplicationChange(String startedName, String stoppedName,
+            String startedMod, String stoppedMod) {
 
-        Vector startedList;
-        Vector stoppedList;
+        String started, stopped;
 
         if (processType) {
-            //#ifdef DEBUG_TRACE
-            debug.trace("onApplicationListChange: PROCESS (mod)");
-            //#endif
-            startedList = startedListMod;
-            stoppedList = stoppedListMod;
-        } else {
-            //#ifdef DEBUG_TRACE
-            debug.trace("onApplicationListChange: WINDOWS (name)");
-            //#endif
-            startedList = startedListName;
-            stoppedList = stoppedListName;
-        }
-
-        if (actionOnEnter != Action.ACTION_NULL
-                && startedList.contains(process)) {
-            //#ifdef DEBUG_INFO
-            debug.info("triggering enter: " + process);
-            //#endif
-            trigger(actionOnEnter);
-        }
-
-        if (actionOnExit != Action.ACTION_NULL && stoppedList.contains(process)) {
-            //#ifdef DEBUG_INFO
-            debug.info("triggering exit: " + process);
-            //#endif
-            trigger(actionOnExit);
-        }
-    }*/
-    
-    public void onApplicationChange(String startedName, String stoppedName,
-			String startedMod, String stoppedMod) {
-		
-    	String started, stopped;
-    	
-    	if (processType) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("onApplicationChange: PROCESS (mod)");
             //#endif
             started = startedMod;
             stopped = stoppedMod;
         } else {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("onApplicationChange: WINDOWS (name)");
             //#endif
             started = startedName;
             stopped = stoppedName;
         }
-    	
-    	if (actionOnEnter != Action.ACTION_NULL
-                && process.equals(started)) {
-            //#ifdef DEBUG_INFO
+
+        if (actionOnEnter != Action.ACTION_NULL && process.equals(started)) {
+            //#ifdef DEBUG
             debug.info("triggering enter: " + process);
             //#endif
             trigger(actionOnEnter);
         }
 
         if (actionOnExit != Action.ACTION_NULL && process.equals(stopped)) {
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("triggering exit: " + process);
             //#endif
             trigger(actionOnExit);
         }
-	}
+    }
 
     /*
      * (non-Javadoc)
@@ -217,6 +191,5 @@ public final class ProcessEvent extends Event implements
 
         return true;
     }
-
 
 }

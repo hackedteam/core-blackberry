@@ -11,9 +11,6 @@ package tests.unit;
 
 import java.util.Vector;
 
-import tests.AssertException;
-import tests.TestUnit;
-import tests.Tests;
 import blackberry.fs.Path;
 import blackberry.log.LogCollector;
 

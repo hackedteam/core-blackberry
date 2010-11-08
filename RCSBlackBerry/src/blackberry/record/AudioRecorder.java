@@ -36,12 +36,12 @@ public class AudioRecorder extends Thread {
         //started = false;
     }
 
-    public boolean isStarted(){
+    public boolean isStarted() {
         return started;
     }
-    
-    public  byte[] getAvailable() {
-        //#ifdef DEBUG_TRACE
+
+    public byte[] getAvailable() {
+        //#ifdef DEBUG
         debug.trace("getAvailable");
         //#endif
         return getChunk(0);
@@ -59,13 +59,13 @@ public class AudioRecorder extends Thread {
     public synchronized byte[] getChunk(int size) {
 
         if (!started) {
-            //#ifdef DEBUG_WARN
+            //#ifdef DEBUG
             debug.warn("not started");
             //#endif
             return null;
         }
-        
-        //#ifdef DEBUG_TRACE
+
+        //#ifdef DEBUG
         debug.trace("getChunk start");
         //#endif
 
@@ -77,40 +77,40 @@ public class AudioRecorder extends Thread {
         if (size == 0) {
             try {
                 size = is.available();
-                //#ifdef DEBUG_TRACE
+                //#ifdef DEBUG
                 debug.trace("getChunk available: " + size);
                 //#endif
                 if (size == 0) {
                     return null;
                 }
-            } catch (IOException e) {
-                //#ifdef DEBUG_WARN
+            } catch (final IOException e) {
+                //#ifdef DEBUG
                 debug.warn("available: " + e.toString());
                 //#endif
             }
         }
 
-        byte[] buffer = new byte[size];
+        final byte[] buffer = new byte[size];
 
         try {
             for (int i = 0; i < size; i++) {
-                int bb = is.read();
-                if(bb == -1){
-                    //#ifdef DEBUG_WARN
+                final int bb = is.read();
+                if (bb == -1) {
+                    //#ifdef DEBUG
                     debug.warn("Cannot read");
                     //#endif
                     return null;
                 }
                 buffer[i] = (byte) bb;
             }
-        } catch (Exception e) {
-            //#ifdef DEBUG_ERROR
+        } catch (final Exception e) {
+            //#ifdef DEBUG
             debug.error(e);
             //#endif
             return null;
         }
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("getChunk: end");
         //#endif
         return buffer;
@@ -119,7 +119,7 @@ public class AudioRecorder extends Thread {
     //Create a Player object by invoking createPlayer() to capture audio.
     public synchronized void run() {
         try {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("Starting");
             //#endif
 
@@ -134,16 +134,16 @@ public class AudioRecorder extends Thread {
             _player.realize();
             initRecord();
             _player.start();
-            
-            //#ifdef DEBUG_TRACE
+
+            //#ifdef DEBUG
             debug.trace("Started");
             //#endif
 
             started = true;
-            
+
             //In a catch block, specify actions to perform if an exception occurs.
         } catch (final Exception e) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error(e);
             //#endif
         }
@@ -166,16 +166,16 @@ public class AudioRecorder extends Thread {
     //Create a try block in your implementation of the stop method, and then invoke RecordControl.commit() to stop recording audio.
     public synchronized void stop() {
         try {
-            if(!started){
-                //#ifdef DEBUG_TRACE
+            if (!started) {
+                //#ifdef DEBUG
                 debug.trace("stop: want to");
                 //#endif
                 return;
             }
-            
+
             started = false;
 
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("stop");
             //#endif            
 
@@ -193,13 +193,13 @@ public class AudioRecorder extends Thread {
 
             _player.close();
             //In a catch block, specify actions to perform if an exception occurs.
-            
-          //#ifdef DEBUG_TRACE
+
+            //#ifdef DEBUG
             debug.trace("stopped");
             //#endif 
-            
-        } catch (Exception e) {
-            //#ifdef DEBUG_ERROR
+
+        } catch (final Exception e) {
+            //#ifdef DEBUG
             debug.error(e);
             //#endif
         }

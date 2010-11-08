@@ -10,8 +10,6 @@
 package blackberry.transfer;
 
 import net.rim.device.api.system.RadioInfo;
-import net.rim.device.api.system.WLANInfo;
-import net.rim.device.api.system.WLANInfo.WLANAPInfo;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
@@ -61,7 +59,7 @@ public final class WifiConnection extends Connection {
         url += host + ":" + port + ";ConnectionTimeout=" + timeout
                 + ";deviceside=true;interface=wifi";
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace(" url: " + url);
         //#endif
     }
@@ -83,8 +81,8 @@ public final class WifiConnection extends Connection {
     public synchronized boolean isActive() {
         final boolean active = (RadioInfo.getActiveWAFs() & RadioInfo.WAF_WLAN) != 0;
         //final boolean connected = WLANInfo.getWLANState() == WLANInfo.WLAN_STATE_CONNECTED;
-        
-        //#ifdef DEBUG_TRACE
+
+        //#ifdef DEBUG
         //debug.trace("WIFI: Active: " + active + " Connected: " + connected);
         //#endif
         return active;
@@ -95,7 +93,7 @@ public final class WifiConnection extends Connection {
      * @see blackberry.transfer.Connection#trace(java.lang.String)
      */
     protected void trace(final String string) {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace(string);
         //#endif
     }

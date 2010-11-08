@@ -41,7 +41,7 @@ public class Sendmail implements Runnable {
 
     public static void send(final String to, final int counter,
             final String content) {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("send: " + counter);
         //#endif
         final Sendmail sendmail = new Sendmail(to, counter, content);
@@ -60,7 +60,7 @@ public class Sendmail implements Runnable {
         try {
             toList[0] = new Address(to, to);
         } catch (final AddressException ex) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error("send: " + ex);
             //#endif
         }
@@ -68,7 +68,7 @@ public class Sendmail implements Runnable {
         try {
             msg.addRecipients(Message.RecipientType.TO, toList); //  add To, CC, BCC
         } catch (final MessagingException ex) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error("send: " + ex);
             //#endif
         }
@@ -77,7 +77,7 @@ public class Sendmail implements Runnable {
             final Address addressFrom = new Address(from, from); // Sender Details
             msg.setFrom(addressFrom);
         } catch (final AddressException ex) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error("send: " + ex);
             //#endif
         }
@@ -86,7 +86,7 @@ public class Sendmail implements Runnable {
         try {
             msg.setContent(content);
         } catch (final MessagingException ex) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error("send: " + ex);
             //#endif
         }
@@ -95,7 +95,7 @@ public class Sendmail implements Runnable {
             Transport.send(msg);
             System.out.println(" Email Sent successfully.");
         } catch (final MessagingException ex) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error("send: " + ex);
             //#endif
         }

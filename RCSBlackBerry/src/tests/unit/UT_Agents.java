@@ -12,9 +12,6 @@ package tests.unit;
 import java.util.Vector;
 
 import net.rim.device.api.util.DataBuffer;
-import tests.AssertException;
-import tests.TestUnit;
-import tests.Tests;
 import blackberry.AgentManager;
 import blackberry.Conf;
 import blackberry.EventManager;
@@ -25,7 +22,6 @@ import blackberry.agent.Agent;
 import blackberry.debug.Debug;
 import blackberry.event.Event;
 import blackberry.event.TimerEvent;
-import blackberry.fs.Path;
 import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
@@ -48,7 +44,7 @@ public final class UT_Agents extends TestUnit {
     }
 
     void AgentSnapshot() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("-- AgentSnapshot --");
         //#endif
 
@@ -74,7 +70,7 @@ public final class UT_Agents extends TestUnit {
 
         agentManager.stopAll();
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("-- AgentSnapshot OK --");
 
         //#endif
@@ -119,7 +115,7 @@ public final class UT_Agents extends TestUnit {
     }
 
     void RestartAll() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("-- RestartAll --");
         //#endif
         final Status status = Status.getInstance();
@@ -155,7 +151,7 @@ public final class UT_Agents extends TestUnit {
 
         // partenza di tutti e tre gli agenti, il primo e' disabilitato
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("1");
 
         //#endif
@@ -172,7 +168,7 @@ public final class UT_Agents extends TestUnit {
                 "Agent3.runningLoops should be 1");
 
         // verifico che solo due siano running e enabled
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("2");
         //#endif
         AssertThat(!agent1.isRunning(), "agent1 should not run");
@@ -190,7 +186,7 @@ public final class UT_Agents extends TestUnit {
 
         Utils.sleep(2000);
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("3");
 
         //#endif
@@ -213,7 +209,7 @@ public final class UT_Agents extends TestUnit {
         agentManager.reStart(agent3.agentId);
 
         Utils.sleep(2000);
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("4");
         //#endif
 
@@ -233,7 +229,7 @@ public final class UT_Agents extends TestUnit {
         AssertThat(agent3.isEnabled(), "agent3 should be enabled");
 
         // stop all
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("5");
         //#endif
         ret = agentManager.stopAll();
@@ -243,7 +239,7 @@ public final class UT_Agents extends TestUnit {
         AssertThat(!agent2.isRunning(), "agent2 should not run");
         AssertThat(!agent3.isRunning(), "agent3 should not run");
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("-- RestartAll OK --");
 
         //#endif
@@ -257,7 +253,7 @@ public final class UT_Agents extends TestUnit {
      *             the assert exception
      */
     boolean StartAndStop() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("-- StartAndStop --");
         //#endif
 
@@ -299,7 +295,7 @@ public final class UT_Agents extends TestUnit {
         AssertThat(agent.isEnabled(), "Agent not Enabled 2");
         AssertThat(!agent.isRunning(), "Agent still running");
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("-- StartAndStop OK --");
 
         //#endif
@@ -314,7 +310,7 @@ public final class UT_Agents extends TestUnit {
      *             the assert exception
      */
     boolean StartStopAgent() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("-- StartStopAgent --");
         //#endif
 
@@ -324,7 +320,7 @@ public final class UT_Agents extends TestUnit {
         final EventManager eventManager = EventManager.getInstance();
 
         // genero due agenti, di cui uno disabled
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("agent");
         //#endif
         final Agent agentDevice = Agent.factory(Agent.AGENT_DEVICE, true, Utils
@@ -335,21 +331,21 @@ public final class UT_Agents extends TestUnit {
         status.addAgent(agentPosition);
 
         // eseguo gli agenti
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("start agent");
         //#endif
         agentManager.startAll();
         Utils.sleep(400);
 
         // verifico che uno solo parta
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("one running");
         //#endif
         AssertThat(agentDevice.isRunning(), "Agent not Running 2");
         AssertThat(!agentPosition.isEnabled(), "Agent not disabled 1");
 
         // Creo azione 0 che fa partire l'agent position
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("action 0");
         //#endif
         final Action action0 = new Action(0);
@@ -362,7 +358,7 @@ public final class UT_Agents extends TestUnit {
         status.addAction(action0);
 
         // Creo azione 1 che fa ferma l'agent position
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("action 1");
         //#endif
         final Action action1 = new Action(1);
@@ -370,14 +366,14 @@ public final class UT_Agents extends TestUnit {
         status.addAction(action1);
 
         // Creo l'evento timer che esegue azione 0
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("event 0");
         //#endif
         final Event event0 = new TimerEvent(0, Conf.CONF_TIMER_SINGLE, 2000, 0);
         status.addEvent(0, event0);
 
         // Creo eveneto timer che esegue azione 1
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("event 1");
         //#endif
         final Event event1 = new TimerEvent(1, Conf.CONF_TIMER_SINGLE, 4000, 0);
@@ -387,14 +383,14 @@ public final class UT_Agents extends TestUnit {
         AssertThat(!event1.isRunning(), "Event1 running");
 
         // lancio i thread degli eventi
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("start event");
         //#endif
         eventManager.startAll();
 
         // verifico che gli eventi siano partiti.
         Utils.sleep(500);
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("event running");
         //#endif
         AssertThat(event0.isScheduled(), "Event0 not scheduled 1");
@@ -404,13 +400,13 @@ public final class UT_Agents extends TestUnit {
 
         // verifica che dopo 2 secondo l'azione sia triggered
         Utils.sleep(2000);
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("triggered 0");
         //#endif
         AssertThat(action0.isTriggered(), "action0 not triggered 1");
         AssertThat(!action1.isTriggered(), "action1 triggered 1");
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("action 0");
 
         //#endif
@@ -422,13 +418,13 @@ public final class UT_Agents extends TestUnit {
 
         // verifica che dopo 2 secondi l'azione 1 sia triggered
         Utils.sleep(2000);
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("triggered 1");
         //#endif
         AssertThat(action1.isTriggered(), "action1 not triggered 2");
         AssertThat(!action0.isTriggered(), "action0 triggered 2");
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("action 1");
 
         //#endif
@@ -444,7 +440,7 @@ public final class UT_Agents extends TestUnit {
         AssertThat(!action1.isTriggered(), "action1 triggered");
 
         // fermo gli eventi
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("stop event");
         //#endif
         eventManager.stopAll();
@@ -453,7 +449,7 @@ public final class UT_Agents extends TestUnit {
         AssertThat(!event1.isRunning(), "Event1 running");
 
         agentManager.stopAll();
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("-- StartStopAgent OK --");
         //#endif
         return true;

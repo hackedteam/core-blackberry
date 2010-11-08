@@ -51,8 +51,8 @@ public final class CamAgent extends Agent {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualRun() {
-        if(Status.getInstance().crisisCamera()){
-            //#ifdef DEBUG_WARN
+        if (Status.getInstance().crisisCamera()) {
+            //#ifdef DEBUG
             debug.warn("Crisis!");
             //#endif
             return;

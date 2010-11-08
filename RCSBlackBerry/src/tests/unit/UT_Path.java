@@ -9,9 +9,6 @@
  * *************************************************/
 package tests.unit;
 
-import tests.AssertException;
-import tests.TestUnit;
-import tests.Tests;
 import blackberry.fs.Path;
 
 // TODO: Auto-generated Javadoc

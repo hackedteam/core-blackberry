@@ -109,7 +109,7 @@ public final class Tests {
     public boolean execute(final int i) {
 
         final TestUnit unit = (TestUnit) testUnits.elementAt(i);
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("--== Executing: " + unit.name + " ==--");
         //#endif
 

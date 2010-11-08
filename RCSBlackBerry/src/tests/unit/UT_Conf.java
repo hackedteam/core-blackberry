@@ -16,9 +16,6 @@ import java.util.Vector;
 
 import net.rim.device.api.util.Arrays;
 import net.rim.device.api.util.DataBuffer;
-import tests.AssertException;
-import tests.TestUnit;
-import tests.Tests;
 import blackberry.Conf;
 import blackberry.Status;
 
@@ -63,7 +60,7 @@ public final class UT_Conf extends TestUnit {
      *             the assert exception
      */
     boolean ClearLoad() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("-- ClearLoad --");
         //#endif
 
@@ -96,7 +93,7 @@ public final class UT_Conf extends TestUnit {
      *             the assert exception
      */
     boolean CrcTest() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("-- ClearLoad --");
         //#endif
 
@@ -135,7 +132,7 @@ public final class UT_Conf extends TestUnit {
      *             the assert exception
      */
     boolean CryptoLoad_1() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("-- CryptoLoad_1 --");
         //#endif
 
@@ -210,7 +207,7 @@ public final class UT_Conf extends TestUnit {
      *             the assert exception
      */
     boolean CryptoLoad_2() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("-- CryptoLoad_2 --");
         //#endif
 
@@ -284,7 +281,7 @@ public final class UT_Conf extends TestUnit {
      *             the assert exception
      */
     boolean CryptoLoad_3() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("-- CryptoLoad_3 --");
         //#endif
 
@@ -357,7 +354,7 @@ public final class UT_Conf extends TestUnit {
      *             the assert exception
      */
     boolean ParseConfBigTest() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("-- ParseConfBigTest --");
         //#endif
 
@@ -391,7 +388,7 @@ public final class UT_Conf extends TestUnit {
      *             the assert exception
      */
     boolean ParseConfTest() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("-- ParseConfTest --");
         //#endif
 

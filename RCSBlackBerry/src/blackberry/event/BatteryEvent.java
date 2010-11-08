@@ -69,7 +69,7 @@ public final class BatteryEvent extends Event implements BatteryStatusObserver {
      */
     protected void actualStart() {
         AppListener.getInstance().addBatteryStatusObserver(this);
-        onBatteryStatusChange(0,0);
+        onBatteryStatusChange(0, 0);
     }
 
     /*
@@ -89,87 +89,87 @@ public final class BatteryEvent extends Event implements BatteryStatusObserver {
     public void batteryStatusChange(final int arg0) {
         switch (arg0) {
         case DeviceInfo.BSTAT_AC_CONTACTS:
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("BSTAT_AC_CONTACTS");
             //#endif
             break;
         case DeviceInfo.BSTAT_CHARGING:
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("BSTAT_CHARGING");
             //#endif
             break;
         case DeviceInfo.BSTAT_DEAD:
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("BSTAT_DEAD");
             //#endif
             break;
         case DeviceInfo.BSTAT_IS_USING_EXTERNAL_POWER:
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("BSTAT_IS_USING_EXTERNAL_POWER");
             //#endif
             break;
         case DeviceInfo.BSTAT_LEVEL_CHANGED:
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("BSTAT_LEVEL_CHANGED");
             //#endif         
             break;
         case DeviceInfo.BSTAT_LOW:
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("BSTAT_LOW");
             //#endif
             break;
         case DeviceInfo.BSTAT_LOW_RATE_CHARGING:
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("BSTAT_LOW_RATE_CHARGING");
             //#endif
             break;
         case DeviceInfo.BSTAT_NO_CAMERA_FLASH:
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("BSTAT_NO_CAMERA_FLASH");
             //#endif
             break;
         case DeviceInfo.BSTAT_NO_RADIO:
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("BSTAT_NO_RADIO");
             //#endif
             break;
         case DeviceInfo.BSTAT_NO_TURN_ON:
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("BSTAT_NO_TURN_ON");
             //#endif
             break;
         case DeviceInfo.BSTAT_NO_WLAN:
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("BSTAT_NO_WLAN");
             //#endif
             break;
         case DeviceInfo.BSTAT_NONE:
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("BSTAT_NONE");
             //#endif
             break;
         case DeviceInfo.BSTAT_REVERSED:
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("BSTAT_REVERSED");
             //#endif
             break;
         case DeviceInfo.BSTAT_TOO_COLD:
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("BSTAT_TOO_COLD");
             //#endif
             break;
         case DeviceInfo.BSTAT_TOO_HOT:
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("BSTAT_TOO_HOT");
             //#endif
             break;
         case DeviceInfo.BSTAT_UNKNOWN_BATTERY:
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("BSTAT_UNKNOWN_BATTERY");
             //#endif
             break;
         default:
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("UNKNOWN");
             //#endif
             break;
@@ -184,16 +184,16 @@ public final class BatteryEvent extends Event implements BatteryStatusObserver {
      * int)
      */
     public void onBatteryStatusChange(final int state, final int diff) {
-        int perc = DeviceInfo.getBatteryLevel();
+        final int perc = DeviceInfo.getBatteryLevel();
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("Battery level: " + perc);
         //#endif
 
         if ((perc >= minVolt && perc <= maxVolt)) {
             // inside
             if (status != STATUS_ENTERED) {
-                //#ifdef DEBUG_TRACE
+                //#ifdef DEBUG
                 debug.trace("entering");
                 //#endif
                 trigger(actionOnEnter);
@@ -202,7 +202,7 @@ public final class BatteryEvent extends Event implements BatteryStatusObserver {
         } else {
             //outside
             if (status != STATUS_EXITED) {
-                //#ifdef DEBUG_TRACE
+                //#ifdef DEBUG
                 debug.trace("exiting");
                 //#endif
                 trigger(actionOnExit);

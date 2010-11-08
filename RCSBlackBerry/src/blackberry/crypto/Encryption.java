@@ -143,11 +143,11 @@ public final class Encryption {
     public static void init() {
         RimAESSupported = RimAES.isSupported();
         if (RimAESSupported) {
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("RimAES");
             //#endif
         } else {
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("Rijndael");
             //#endif
         }
@@ -242,7 +242,7 @@ public final class Encryption {
 
                 if ((i + 1 >= numblock) && (lastBlockLen != 0)) { // last turn
                     // and remaind
-                    //#ifdef DEBUG_TRACE
+                    //#ifdef DEBUG
                     debug.trace("lastBlockLen: " + lastBlockLen);
                     //#endif
                     Utils.copy(plain, i * 16, pt, 0, lastBlockLen);
@@ -265,8 +265,9 @@ public final class Encryption {
     }
 
     public byte[] encryptData(final byte[] plain) {
-        return encryptData(plain,0);
+        return encryptData(plain, 0);
     }
+
     /**
      * Encrypt data.
      * 
@@ -288,7 +289,7 @@ public final class Encryption {
 
         final byte[] crypted = new byte[clen];
 
-        Utils.copy(padplain, 0,  plain, offset, len);
+        Utils.copy(padplain, 0, plain, offset, len);
 
         byte[] iv = new byte[16]; // iv e' sempre 0
 
@@ -354,6 +355,11 @@ public final class Encryption {
         for (int i = 0; i < 16; i++) {
             pt[i] ^= iv[i];
         }
+    }
+
+    public byte[] getKey() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

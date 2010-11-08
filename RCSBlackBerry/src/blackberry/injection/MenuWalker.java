@@ -27,8 +27,8 @@ public class MenuWalker {
     static Locale locale;
 
     /**
-     * Walk the menu and runs the item specified.
-     * Descriptions are english locale.
+     * Walk the menu and runs the item specified. Descriptions are english
+     * locale.
      * 
      * @param menuDesc
      *            the menu desc
@@ -36,7 +36,7 @@ public class MenuWalker {
     public synchronized static void walk(final String[] menuDescriptions) {
 
         if (!Conf.IS_UI) {
-            //#ifdef DEBUG_WARN
+            //#ifdef DEBUG
             debug.warn("Not UI");
             //#endif
             return;
@@ -49,21 +49,21 @@ public class MenuWalker {
 
                     boolean found = false;
                     //#ifdef LIVE_MIC_ENABLED
-                    Menu menu = UiApplication.getUiApplication()
+                    final Menu menu = UiApplication.getUiApplication()
                             .getActiveScreen().getMenu(0);
                     //#else
-                    Menu menu = null;
-                    
+                    final Menu menu = null;
+
                     //#endif
 
-                    if(menu==null){
+                    if (menu == null) {
                         return;
                     }
                     final int size = menu.getSize();
-                    for (int i = 0; i < size ; i++) { //&& !found
+                    for (int i = 0; i < size; i++) { //&& !found
                         final MenuItem item = menu.getItem(i);
 
-                        //#ifdef DEBUG_TRACE
+                        //#ifdef DEBUG
                         debug.trace("menu " + i + " : " + item.toString());
                         //#endif
 
@@ -71,7 +71,7 @@ public class MenuWalker {
                             final String menuDesc = menuDescriptions[j];
 
                             if (item.toString().startsWith(menuDesc) && !found) {
-                                //#ifdef DEBUG_INFO
+                                //#ifdef DEBUG
                                 debug.info("Press Menu: " + item);
                                 //#endif
                                 //Application.getApplication().invokeLater(
@@ -97,7 +97,7 @@ public class MenuWalker {
      * Sets the locale end.
      */
     private static void setLocaleEnd() {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("setLocaleEnd");
         //#endif
         Locale.setDefault(prev);
@@ -109,7 +109,7 @@ public class MenuWalker {
      * @return the locale
      */
     private static Locale setLocaleStart() {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("setLocaleStart");
         //#endif
         prev = Locale.getDefault();

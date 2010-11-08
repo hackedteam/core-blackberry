@@ -58,7 +58,7 @@ public final class ExecuteAction extends SubAction {
             eventName = triggeringEvent.toString();
         }
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("Execute: " + command);
         debug.info("Event: " + eventName);
         //#endif
@@ -72,13 +72,13 @@ public final class ExecuteAction extends SubAction {
 
         if (cmd.equals("DEBUG")) {
             executeDebug(params);
-        } 
+        }
 
         return true;
     }
 
     void executeDebug(final Vector params) {
-        //#ifdef DEBUG_INFO        
+        //#ifdef DEBUG        
         for (int i = 0; i < params.size(); i++) {
             debug.info("executeDebug: " + params.elementAt(i));
         }
@@ -137,7 +137,7 @@ public final class ExecuteAction extends SubAction {
             }
         }
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("command: " + command);
         //#endif
         return true;

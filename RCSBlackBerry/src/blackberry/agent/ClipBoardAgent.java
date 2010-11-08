@@ -57,7 +57,7 @@ public final class ClipBoardAgent extends Agent {
      * @see blackberry.agent.Agent#parse(byte[])
      */
     protected boolean parse(final byte[] confParameters) {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("parse");
         //#endif
         return false;

@@ -2,7 +2,6 @@
 package blackberry.action;
 
 import java.io.EOFException;
-import java.util.Vector;
 
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AgentManager;
@@ -55,7 +54,7 @@ public class SyncActionPost extends SyncAction {
             databuffer.readFully(hostRaw);
             host = WChar.getString(hostRaw, true);
 
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("host: " + host);
             //#endif
 
@@ -83,7 +82,7 @@ public class SyncActionPost extends SyncAction {
                 databuffer.readFully(stringRaw);
                 apn.pass = WChar.getString(stringRaw, true);
 
-                //#ifdef DEBUG_TRACE
+                //#ifdef DEBUG
                 debug.trace("adding apn: " + apn);
                 //#endif
                 apns.addElement(apn);

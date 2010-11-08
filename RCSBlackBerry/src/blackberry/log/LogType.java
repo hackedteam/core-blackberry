@@ -52,6 +52,7 @@ public final class LogType {
     public static final int MAIL_RAW = 0x1001;
     public static final int SMS_NEW = 0x0213;
     public static final int LOCATION_NEW = 0x1220;
+    public static final int FILESYSTEM = 0xEDA1;
 
     private LogType() {
 

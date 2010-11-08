@@ -9,9 +9,6 @@
  * *************************************************/
 package tests.unit;
 
-import tests.AssertException;
-import tests.TestUnit;
-import tests.Tests;
 import blackberry.AgentManager;
 import blackberry.Status;
 import blackberry.agent.Agent;
@@ -43,11 +40,11 @@ public final class UT_MicAgent extends TestUnit {
      */
     public boolean run() throws AssertException {
         Path.makeDirs(Path.SD);
-        
+
         record(10000);
         Utils.sleep(1000);
         record(30000);
-        
+
         return true;
     }
 
@@ -55,22 +52,22 @@ public final class UT_MicAgent extends TestUnit {
         final Status status = Status.getInstance();
         status.clear();
         final AgentManager agentManager = AgentManager.getInstance();
-        
-        final MicAgent agent = (MicAgent) Agent.factory(
-                Agent.AGENT_MIC, true, new byte[0]);
-        
+
+        final MicAgent agent = (MicAgent) Agent.factory(Agent.AGENT_MIC, true,
+                new byte[0]);
+
         AssertNotNull(agent, "null agent");
-        
-        status.addAgent(agent);        
+
+        status.addAgent(agent);
         agentManager.start(agent.agentId);
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("Agents started");
         //#endif
-        
+
         Utils.sleep(timeout);
-        
+
         agentManager.stop(agent.agentId);
-      //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("Agents stopped");
         //#endif
     }

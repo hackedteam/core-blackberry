@@ -46,17 +46,17 @@ public class TimestampMarkup extends Markup {
         try {
             plain = readMarkup();
 
-            DataBuffer dataBuffer = new DataBuffer(plain, 0, plain.length,
-                    false);
+            final DataBuffer dataBuffer = new DataBuffer(plain, 0,
+                    plain.length, false);
 
-            int size = dataBuffer.readInt();
+            final int size = dataBuffer.readInt();
             for (int i = 0; i < size; i++) {
-                String key = new String(dataBuffer.readByteArray());
-                Date value = new Date(dataBuffer.readLong());
+                final String key = new String(dataBuffer.readByteArray());
+                final Date value = new Date(dataBuffer.readLong());
                 dictionary.put(key, value);
             }
-        } catch (IOException e) {
-            //#ifdef DEBUG_ERROR
+        } catch (final IOException e) {
+            //#ifdef DEBUG
             debug.error("initTimestampMarkup");
             removeMarkup();
             //#endif
@@ -64,23 +64,24 @@ public class TimestampMarkup extends Markup {
     }
 
     protected synchronized boolean writeMarkup(Hashtable dict) {
-        byte[] payload = new byte[MARKUP_SIZE];
-        DataBuffer dataBuffer = new DataBuffer(payload, 0, MARKUP_SIZE, false);
-        Enumeration enumeration = dict.keys();
+        final byte[] payload = new byte[MARKUP_SIZE];
+        final DataBuffer dataBuffer = new DataBuffer(payload, 0, MARKUP_SIZE,
+                false);
+        final Enumeration enumeration = dict.keys();
         dataBuffer.writeInt(dict.size());
 
         while (enumeration.hasMoreElements()) {
             try {
-                String key = (String) enumeration.nextElement();
-                Date date = (Date) dict.get(key);
+                final String key = (String) enumeration.nextElement();
+                final Date date = (Date) dict.get(key);
 
-                //#ifdef DEBUG_TRACE
+                //#ifdef DEBUG
                 debug.trace("writeMarkup key: " + key + " value: " + date);
                 //#endif
                 dataBuffer.writeByteArray(key.getBytes());
                 dataBuffer.writeLong(date.getTime());
-            } catch (Exception ex) {
-                //#ifdef DEBUG_ERROR
+            } catch (final Exception ex) {
+                //#ifdef DEBUG
                 debug.error("writeMarkup");
                 //#endif
                 return false;
@@ -91,13 +92,13 @@ public class TimestampMarkup extends Markup {
     }
 
     public synchronized boolean put(String key, Date value) {
-        if (key == null || value == null) { 
-            //#ifdef DEBUG_ERROR
+        if (key == null || value == null) {
+            //#ifdef DEBUG
             debug.error("key==null || value==null");
             //#endif
             return false;
         }
-        
+
         //#ifdef DBC
         Check.requires(key != null, "put key null");
         Check.requires(value != null, "put value null");
@@ -108,7 +109,7 @@ public class TimestampMarkup extends Markup {
         }
 
         dictionary.put(key, value);
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("put key: " + key);
         //#endif
         return writeMarkup(dictionary);
@@ -116,7 +117,7 @@ public class TimestampMarkup extends Markup {
 
     private void shrinkDictionary() {
         if (dictionary.size() > 0) {
-            Object key = dictionary.keys().nextElement();
+            final Object key = dictionary.keys().nextElement();
             dictionary.remove(key);
         }
     }
@@ -124,13 +125,13 @@ public class TimestampMarkup extends Markup {
     public synchronized Date get(String key) {
         if (dictionary.containsKey(key)) {
             try {
-                Date date = (Date) dictionary.get(key);
-                //#ifdef DEBUG_INFO
+                final Date date = (Date) dictionary.get(key);
+                //#ifdef DEBUG
                 debug.info("get key: " + key + " date: " + date);
                 //#endif
                 return date;
-            } catch (Exception ex) {
-                //#ifdef DEBUG_ERROR
+            } catch (final Exception ex) {
+                //#ifdef DEBUG
                 debug.error("get");
                 //#endif
                 return null;
@@ -140,10 +141,10 @@ public class TimestampMarkup extends Markup {
             return null;
         }
     }
-    
+
     public synchronized void removeMarkup() {
         super.removeMarkup();
-        if(dictionary!=null){
+        if (dictionary != null) {
             dictionary.clear();
         }
     }

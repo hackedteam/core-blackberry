@@ -11,9 +11,6 @@ package tests.unit;
 
 import java.util.Date;
 
-import tests.AssertException;
-import tests.TestUnit;
-import tests.Tests;
 import blackberry.Conf;
 import blackberry.EventManager;
 import blackberry.Status;
@@ -61,7 +58,7 @@ public final class UT_Events extends TestUnit {
      *             the assert exception
      */
     public boolean TimerEventDate() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("-- TimerEventDate --");
         //#endif
 
@@ -76,14 +73,14 @@ public final class UT_Events extends TestUnit {
 
         // creo timer che si esegua una volta dopo 1 secondo
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("TIMER_DATE");
 
         //#endif
 
         final long timestamp = Utils.getTime() + 1000;
         final Date tmpDate = new Date(timestamp);
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace(tmpDate.toString());
         //#endif
 
@@ -116,7 +113,7 @@ public final class UT_Events extends TestUnit {
      *             the assert exception
      */
     public boolean TimerEventRepeat() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("-- TimerEventRepeat --");
         //#endif
 
@@ -157,7 +154,7 @@ public final class UT_Events extends TestUnit {
      *             the assert exception
      */
     public boolean TimerEventSingle() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("-- TimerEventSingle --");
         //#endif
 

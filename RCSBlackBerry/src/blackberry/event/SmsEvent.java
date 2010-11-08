@@ -90,14 +90,14 @@ public final class SmsEvent extends Event implements MessageListener {
      * ?nodeid=1357551&vernum=0
      */
     protected void actualRunDatagram() {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("actualRun");
         //#endif
         try {
             dc = (DatagramConnection) Connector.open("sms://0");
 
             final Datagram d = dc.newDatagram(dc.getMaximumLength());
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("waiting to receive sms");
             //#endif
             dc.receive(d);
@@ -105,13 +105,13 @@ public final class SmsEvent extends Event implements MessageListener {
             final String address = new String(d.getAddress());
             final String msg = new String(d.getData());
 
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("SMS Message received: " + msg);
             debug.info("From: " + address);
             //#endif
 
         } catch (final IOException e) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("exception: " + e);
             //#endif
         }
@@ -124,15 +124,15 @@ public final class SmsEvent extends Event implements MessageListener {
     public synchronized void actualStop() {
 
         try {
-            if(dc!=null){
+            if (dc != null) {
                 dc.close(); // Close the connection so the thread returns.
             }
         } catch (final IOException e) {
             //#ifdef DEBUG
             debug.error(e.toString());
             //#endif
-        }catch(Exception ex){
-            //#ifdef DEBUG_ERROR
+        } catch (final Exception ex) {
+            //#ifdef DEBUG
             debug.error(ex);
             //#endif
         }
@@ -161,7 +161,7 @@ public final class SmsEvent extends Event implements MessageListener {
                 // convert Binary Data to Text
                 msg = new String(data, "UTF-8");
             } else {
-            	//#ifdef DEBUG 
+                //#ifdef DEBUG 
                 System.out.println("Invalid Message Format");
                 System.out.println("Received SMS text from " + address + " : "
                         + msg);

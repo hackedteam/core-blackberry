@@ -85,73 +85,73 @@ public abstract class Event extends TimerJob {
 
         switch (eventType) {
         case EVENT_TIMER:
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("Factory *** EVENT_TIMER ***");
             //#endif
             event = new TimerEvent(actionId, confParams);
             break;
         case EVENT_SMS:
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("Factory *** EVENT_SMS ***");
             //#endif
             event = new SmsEvent(actionId, confParams);
             break;
         case EVENT_CALL:
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("Factory *** EVENT_CALL ***");
             //#endif
             event = new CallEvent(actionId, confParams);
             break;
         case EVENT_CONNECTION:
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("Factory *** EVENT_CONNECTION ***");
             //#endif
             event = new ConnectionEvent(actionId, confParams);
             break;
         case EVENT_PROCESS:
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("Factory *** EVENT_PROCESS ***");
             //#endif
             event = new ProcessEvent(actionId, confParams);
             break;
         case EVENT_CELLID:
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("Factory *** EVENT_CELLID ***");
             //#endif
             event = new CellIdEvent(actionId, confParams);
             break;
         case EVENT_QUOTA:
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("Factory *** EVENT_QUOTA ***");
             //#endif
             event = new QuotaEvent(actionId, confParams);
             break;
         case EVENT_SIM_CHANGE:
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("Factory *** EVENT_SIM_CHANGE ***");
             //#endif
             event = new SimChangeEvent(actionId, confParams);
             break;
         case EVENT_LOCATION:
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("Factory *** EVENT_LOCATION ***");
             //#endif
             event = new LocationEvent(actionId, confParams);
             break;
         case EVENT_AC:
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("Factory *** EVENT_AC ***");
             //#endif
             event = new AcEvent(actionId, confParams);
             break;
         case EVENT_BATTERY:
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("Factory *** EVENT_BATTERY ***");
             //#endif
             event = new BatteryEvent(actionId, confParams);
             break;
         case EVENT_SCREENSAVER:
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("Factory *** EVENT_SCREENSAVER ***");
             //#endif
             event = new ScreenSaverEvent(actionId, confParams);
@@ -241,7 +241,7 @@ public abstract class Event extends TimerJob {
      */
     protected final void trigger() {
         if (actionId != Action.ACTION_NULL) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("event: " + this + " triggering: " + actionId);
             //#endif
 
@@ -257,7 +257,7 @@ public abstract class Event extends TimerJob {
      */
     protected final void trigger(final int actualActionId) {
         if (actualActionId != Action.ACTION_NULL) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("event: " + this + " triggering: " + actualActionId);
             //#endif
             statusObj.triggerAction(actualActionId, this);

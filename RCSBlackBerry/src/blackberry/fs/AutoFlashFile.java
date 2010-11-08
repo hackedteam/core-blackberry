@@ -13,6 +13,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Date;
 
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
@@ -32,10 +33,10 @@ import blackberry.utils.Utils;
  */
 public final class AutoFlashFile {
     private static final long MAX_FILE_SIZE = 1024 * 10;
-    String filename;
-    String path;
-    boolean hidden;
-    boolean autoclose;
+    private String fullfilename;
+    private String path;
+    private boolean hidden;
+    private boolean autoclose;
 
     private FileConnection fconn;
     private DataInputStream is;
@@ -49,10 +50,32 @@ public final class AutoFlashFile {
      * @param hidden_
      *            the hidden_
      */
-    public AutoFlashFile(final String filename_, final boolean hidden_) {
-        filename = filename_;
-        path = filename.substring(0, filename.lastIndexOf('/')) + '/';
-        hidden = hidden_;
+    public AutoFlashFile(final String filename, final boolean hidden) {
+
+        //#ifdef DBC
+        Check.asserts(!filename.startsWith("file://"),
+                "dirName shouldn.t start with file:// : " + filename);
+        //#endif
+        
+        fullfilename = "file://" + filename;
+        
+       /* if (!filename_.startsWith("file://")) {
+            filename = "file://" + filename_;
+        } else {
+            filename = filename_;
+        }
+
+        //#ifdef DBC
+        Check.asserts(!filename.startsWith("file://"),
+                "filename should start with file:// : " + filename);
+        //#endif
+*/
+        path = fullfilename.substring(0, fullfilename.lastIndexOf('/')) + '/';
+        this.hidden = hidden;
+    }
+
+    public AutoFlashFile(String filepath) {
+        this(filepath, true);
     }
 
     /**
@@ -64,19 +87,19 @@ public final class AutoFlashFile {
      */
     public synchronized boolean append(final byte[] message) {
         try {
-            fconn = (FileConnection) Connector.open(filename,
+            fconn = (FileConnection) Connector.open(fullfilename,
                     Connector.READ_WRITE);
             //#ifdef DBC
             Check.asserts(fconn != null, "file fconn null");
             //#endif
 
-            boolean exists = fconn.exists();
-            if(!exists){
+            final boolean exists = fconn.exists();
+            if (!exists) {
                 return false;
             }
-            
+
             final long size = fconn.fileSize();
-            if(size == -1){
+            if (size == -1) {
                 return false;
             }
 
@@ -150,7 +173,7 @@ public final class AutoFlashFile {
     public synchronized boolean create() {
         try {
 
-            fconn = (FileConnection) Connector.open(filename,
+            fconn = (FileConnection) Connector.open(fullfilename,
                     Connector.READ_WRITE);
             //#ifdef DBC
             Check.asserts(fconn != null, "fconn null");
@@ -186,7 +209,7 @@ public final class AutoFlashFile {
      */
     public synchronized void delete() {
         try {
-            fconn = (FileConnection) Connector.open(filename,
+            fconn = (FileConnection) Connector.open(fullfilename,
                     Connector.READ_WRITE);
             //#ifdef DBC
             Check.asserts(fconn != null, "file fconn null");
@@ -209,7 +232,7 @@ public final class AutoFlashFile {
      */
     public synchronized boolean exists() {
         try {
-            fconn = (FileConnection) Connector.open(filename, Connector.READ);
+            fconn = (FileConnection) Connector.open(fullfilename, Connector.READ);
             //#ifdef DBC
             Check.asserts(fconn != null, "fconn null");
             //#endif
@@ -231,7 +254,7 @@ public final class AutoFlashFile {
      */
     public synchronized InputStream getInputStream() {
         try {
-            fconn = (FileConnection) Connector.open(filename, Connector.READ);
+            fconn = (FileConnection) Connector.open(fullfilename, Connector.READ);
             //#ifdef DBC
             Check.asserts(fconn != null, "file fconn null");
             //#endif
@@ -253,7 +276,7 @@ public final class AutoFlashFile {
         byte[] data = null;
 
         try {
-            fconn = (FileConnection) Connector.open(filename, Connector.READ);
+            fconn = (FileConnection) Connector.open(fullfilename, Connector.READ);
             //#ifdef DBC
             Check.asserts(fconn != null, "file fconn null");
             //#endif
@@ -277,68 +300,6 @@ public final class AutoFlashFile {
         rename(tempFile, false);
     }
 
-    //#ifdef SEND_LOG_BY_EMAIL
-    public synchronized boolean sendLogs(final String email) {
-        byte[] data = null;
-
-        FileConnection tempConn = null;
-        DataInputStream tempIs = null;
-
-        final String tempFile = "Debug_" + Math.abs(Utils.randomInt()) + ".txt";
-        try {
-            rename(tempFile, false);
-
-            tempConn = (FileConnection) Connector.open(path + tempFile,
-                    Connector.READ);
-
-            Check.asserts(tempConn != null, "file tempConn null");
-
-            tempIs = tempConn.openDataInputStream();
-            final LineReader lr = new LineReader(tempIs);
-            final int blockLines = 5000;
-            int counter = 0;
-            StringBuffer sb = new StringBuffer();
-            try {
-                while (true) {
-                    counter++;
-
-                    data = lr.readLine();
-                    sb.append(new String(data));
-                    sb.append("\r\n");
-
-                    if (counter % blockLines == 0) {
-                        Sendmail.send(email, counter / blockLines, sb
-                                .toString());
-                        sb = new StringBuffer();
-                    }
-                }
-            } catch (final EOFException ex) {
-            }
-
-        } catch (final IOException e) {
-            //System.out.println(e.getMessage());
-            return false;
-        } finally {
-
-            if (tempIs != null) {
-                try {
-                    tempIs.close();
-                } catch (final IOException e) {
-                }
-            }
-            if (tempConn != null) {
-                try {
-                    tempConn.close();
-                } catch (final IOException e) {
-                }
-            }
-        }
-
-        return true;
-    }
-
-    //#endif
-
     /**
      * Rename.
      * 
@@ -348,7 +309,7 @@ public final class AutoFlashFile {
      */
     public boolean rename(final String newFile, final boolean openNewname) {
         try {
-            fconn = (FileConnection) Connector.open(filename,
+            fconn = (FileConnection) Connector.open(fullfilename,
                     Connector.READ_WRITE);
             //#ifdef DBC
             Check.asserts(fconn != null, "file fconn null");
@@ -357,11 +318,13 @@ public final class AutoFlashFile {
             if (fconn.exists()) {
                 fconn.rename(newFile);
                 if (openNewname) {
-                    filename = path + newFile;
+                    fullfilename = path + newFile;
                 }
             }
         } catch (final IOException e) {
+            //#ifdef DEBUG
             System.out.println(e.getMessage());
+            //#endif
             return false;
         } finally {
             close();
@@ -379,7 +342,7 @@ public final class AutoFlashFile {
     public synchronized boolean write(final byte[] message) {
 
         try {
-            fconn = (FileConnection) Connector.open(filename, Connector.WRITE);
+            fconn = (FileConnection) Connector.open(fullfilename, Connector.WRITE);
             //#ifdef DBC
             Check.asserts(fconn != null, "file fconn null");
             //#endif
@@ -388,7 +351,9 @@ public final class AutoFlashFile {
             os.write(message);
 
         } catch (final IOException e) {
+            //#ifdef DEBUG
             System.out.println(e.getMessage());
+            //#endif
             return false;
         } finally {
             close();
@@ -408,5 +373,53 @@ public final class AutoFlashFile {
     public synchronized boolean write(final int value) {
         final byte[] repr = Utils.intToByteArray(value);
         return write(repr);
+    }
+
+    public synchronized boolean isDirectory() {
+        try {
+            fconn = (FileConnection) Connector.open(fullfilename, Connector.READ);
+            return fconn.isDirectory();
+        } catch (IOException e) {
+            //#ifdef DEBUG
+            System.out.println(e.getMessage());
+            //#endif
+            return false;
+        } finally {
+            close();
+        }
+    }
+
+    public long getSize() {
+        try {
+            fconn = (FileConnection) Connector.open(fullfilename, Connector.READ);
+            if (fconn.isDirectory()) {
+                return 0;
+            }
+            return fconn.fileSize();
+
+        } catch (IOException e) {
+            //#ifdef DEBUG
+            System.out.println(e.getMessage());
+            //#endif
+            return 0;
+        } finally {
+            close();
+        }
+    }
+
+    public Date getFileTime() {
+        try {
+            fconn = (FileConnection) Connector.open(fullfilename, Connector.READ);
+            return new Date(fconn.lastModified());
+
+        } catch (IOException e) {
+            //#ifdef DEBUG
+            System.out.println(e.getMessage());
+            //#endif
+            return new Date(0);
+        } finally {
+            close();
+        }
+
     }
 }

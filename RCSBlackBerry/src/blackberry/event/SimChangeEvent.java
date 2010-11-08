@@ -52,7 +52,7 @@ public final class SimChangeEvent extends Event {
             return;
         }
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("actualStart");
         //#endif
 
@@ -70,18 +70,18 @@ public final class SimChangeEvent extends Event {
             return;
         }
 
-        byte[] imsi = Device.getInstance().getWImsi();
+        final byte[] imsi = Device.getInstance().getWImsi();
         byte[] saved;
         try {
             saved = markup.readMarkup();
             if (!Utils.equals(imsi, saved)) {
-                //#ifdef DEBUG_TRACE
+                //#ifdef DEBUG
                 debug.trace("New Imsi, triggering");
                 //#endif
                 updateImsi();
                 trigger();
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
             updateImsi();
         }
 
@@ -92,7 +92,7 @@ public final class SimChangeEvent extends Event {
     }
 
     private void updateImsi() {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("updateImsi: " + Device.getInstance().getImsi());
         //#endif
         markup.createEmptyMarkup();

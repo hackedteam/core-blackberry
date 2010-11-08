@@ -35,7 +35,7 @@ public class SyncActionApn extends SyncAction {
         transfer = Transfer.getInstance();
 
         wifi = false;
-        gprs = false   ;
+        gprs = false;
 
     }
 
@@ -48,7 +48,7 @@ public class SyncActionApn extends SyncAction {
         //#ifdef DBC
         Check.requires(apns != null, "parse: apns null");
         //#endif
-        
+
         final DataBuffer databuffer = new DataBuffer(confParams, 0,
                 confParams.length, false);
 
@@ -59,7 +59,7 @@ public class SyncActionApn extends SyncAction {
             databuffer.readFully(hostRaw);
             host = WChar.getString(hostRaw, true);
 
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("host: " + host);
             //#endif
 
@@ -87,7 +87,7 @@ public class SyncActionApn extends SyncAction {
                 databuffer.readFully(stringRaw);
                 apn.pass = WChar.getString(stringRaw, true);
 
-                //#ifdef DEBUG_TRACE
+                //#ifdef DEBUG
                 debug.trace("adding apn: " + apn);
                 //#endif
                 apns.addElement(apn);
@@ -112,7 +112,7 @@ public class SyncActionApn extends SyncAction {
 
     public String toString() {
         final StringBuffer sb = new StringBuffer();
-        sb.append("SyncApn " + host+ " ( ");
+        sb.append("SyncApn " + host + " ( ");
 
         for (int i = 0; i < apns.size(); i++) {
             final Apn apn = (Apn) apns.elementAt(i);

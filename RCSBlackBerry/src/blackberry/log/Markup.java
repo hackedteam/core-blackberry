@@ -55,7 +55,7 @@ public class Markup {
         Check.requires(agentId >= 0, "agentId < 0");
         //#endif
         final String logName = NumberUtilities.toString(agentId, 16, 4);
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("makeMarkupName from: " + logName);
         //#endif
 
@@ -106,7 +106,7 @@ public class Markup {
         Check.asserts(markupInit, "makeMarkupName: " + markupInit);
         //#endif
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("makeMarkupName: " + encName);
         //#endif
 
@@ -286,7 +286,7 @@ public class Markup {
 
             return plain;
         } else {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("Markup file does not exists");
             //#endif
             return null;
@@ -297,8 +297,8 @@ public class Markup {
      * Removes the markup.
      */
     public synchronized void removeMarkup() {
-        
-        //#ifdef DEBUG_TRACE
+
+        //#ifdef DEBUG
         debug.trace("removeMarkup: ");
         //#endif
         //#ifdef DBC
@@ -310,8 +310,8 @@ public class Markup {
         Check.asserts(markupName != "", "markupName empty");
         //#endif
 
-        //#ifdef DEBUG_TRACE
-        debug.trace("removeMarkup: "+markupName);
+        //#ifdef DEBUG
+        debug.trace("removeMarkup: " + markupName);
         //#endif
         final AutoFlashFile remove = new AutoFlashFile(markupName, true);
         remove.delete();

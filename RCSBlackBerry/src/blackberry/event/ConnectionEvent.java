@@ -23,9 +23,10 @@ public final class ConnectionEvent extends Event {
     private static Debug debug = new Debug("ConnectionEvent",
             DebugLevel.VERBOSE);
     //#endif
-    
+
     int actionOnEnter;
     int actionOnExit;
+
     /**
      * Instantiates a new connection event.
      * 

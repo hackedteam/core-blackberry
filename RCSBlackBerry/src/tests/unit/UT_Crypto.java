@@ -17,9 +17,6 @@ import net.rim.device.api.crypto.AESKey;
 import net.rim.device.api.crypto.CryptoTokenException;
 import net.rim.device.api.crypto.CryptoUnsupportedOperationException;
 import net.rim.device.api.util.Arrays;
-import tests.AssertException;
-import tests.TestUnit;
-import tests.Tests;
 import blackberry.crypto.CryptoEngine;
 import blackberry.crypto.Encryption;
 import blackberry.crypto.Rijndael;
@@ -53,7 +50,7 @@ public final class UT_Crypto extends TestUnit {
      *             the assert exception
      */
     boolean CBCTest() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("-- CBCTest --");
         //#endif
 
@@ -92,7 +89,7 @@ public final class UT_Crypto extends TestUnit {
      *             the assert exception
      */
     boolean EncryptTest() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("-- EncryptTest --");
         //#endif
 
@@ -103,7 +100,7 @@ public final class UT_Crypto extends TestUnit {
         enc.makeKey(key);
 
         // 1
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("1");
         //#endif
         byte[] plain = new byte[1];
@@ -118,7 +115,7 @@ public final class UT_Crypto extends TestUnit {
                 "self error");
 
         // 1
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("12");
         //#endif
         plain = new byte[12];
@@ -133,7 +130,7 @@ public final class UT_Crypto extends TestUnit {
                 "self error");
 
         // 1
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("16");
         //#endif
         plain = new byte[16];
@@ -148,7 +145,7 @@ public final class UT_Crypto extends TestUnit {
                 "self error");
 
         // 1024
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("1024");
         //#endif
         plain = new byte[1024];
@@ -186,7 +183,7 @@ public final class UT_Crypto extends TestUnit {
      *             the assert exception
      */
     boolean RijndaelTest() throws AssertException {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("-- RijndaelTest --");
         //#endif
         final Rijndael crypto = new Rijndael();
@@ -370,7 +367,7 @@ public final class UT_Crypto extends TestUnit {
         after = new Date();
         final long elapsed_3 = Utils.dateDiff(after, before);
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("JAVA    1: " + elapsed_1);
         debug.info("RIMWRAP 2: " + elapsed_2);
         debug.info("RIM     3: " + elapsed_3);

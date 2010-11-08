@@ -48,7 +48,7 @@ public class Action {
     Event triggeringEvent;
 
     Status status;
-    
+
     /**
      * Instantiates a new action.
      * 
@@ -77,7 +77,7 @@ public class Action {
         //#endif
         addSubAction(subAction);
 
-        //#ifdef DEBUG_INFO        
+        //#ifdef DEBUG        
         debug.info("Action " + actionId + ": " + subAction);
         //#endif
     }
@@ -135,7 +135,7 @@ public class Action {
     public final synchronized void setTriggered(final boolean value,
             final Event event) {
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace(actionId + " triggered: " + value);
         //#endif
         triggered = value;
@@ -153,6 +153,7 @@ public class Action {
      * @see java.lang.Object#toString()
      */
     public final String toString() {
-        return this.getClass().getName()+ " id: "+ actionId + " sa:" + subActionList.size();
+        return this.getClass().getName() + " id: " + actionId + " sa:"
+                + subActionList.size();
     }
 }

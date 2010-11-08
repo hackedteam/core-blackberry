@@ -19,24 +19,23 @@ import javax.wireless.messaging.BinaryMessage;
 import javax.wireless.messaging.MessageConnection;
 import javax.wireless.messaging.TextMessage;
 
-import blackberry.debug.Debug;
-import blackberry.debug.DebugLevel;
-
 import net.rim.device.api.io.SmsAddress;
 import net.rim.device.api.system.SMSPacketHeader;
 import net.rim.device.api.system.SMSParameters;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 
 public class SMSHelper {
-  //#ifdef DEBUG
+    //#ifdef DEBUG
     static Debug debug = new Debug("SMSHelper", DebugLevel.VERBOSE);
     //#endif
-    
+
     private static final int MAX_LEN_UCS2 = 70;
     private static final int MAX_LEN_8BIT = 70;
-    
+
     public static boolean sendSMSText(final String number, final String message) {
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("Sending sms Message to: " + number + " message:" + message);
         //#endif
         try {
@@ -69,7 +68,7 @@ public class SMSHelper {
     public static boolean sendSMSBinary(final String number,
             final String message) {
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug.info("Sending sms Message to: " + number + " message:" + message);
         //#endif
         try {
@@ -105,7 +104,7 @@ public class SMSHelper {
     public static boolean sendSMSDatagram(final String number,
             final String message) {
 
-        //#ifdef DEBUG_INFO
+        //#ifdef DEBUG
         debug
                 .info("Sending sms Datagram to: " + number + " message:"
                         + message);
@@ -114,8 +113,8 @@ public class SMSHelper {
             final DatagramConnection conn = (DatagramConnection) Connector
                     .open("sms://" + number);
 
-            SmsAddress destinationAddr = new SmsAddress("//" + number);
-            SMSPacketHeader header = destinationAddr.getHeader();
+            final SmsAddress destinationAddr = new SmsAddress("//" + number);
+            final SMSPacketHeader header = destinationAddr.getHeader();
             // no need for the report
             header.setStatusReportRequest(false);
             // we are going to use the UDH
@@ -129,9 +128,9 @@ public class SMSHelper {
             // it has to be 8-bit
             header.setMessageCoding(SMSParameters.MESSAGE_CODING_8_BIT);
 
-            byte[] data = message.getBytes("UTF-8");
+            final byte[] data = message.getBytes("UTF-8");
 
-            Datagram dg = conn.newDatagram(conn.getMaximumLength());
+            final Datagram dg = conn.newDatagram(conn.getMaximumLength());
             dg.setData(data, 0, Math.min(data.length, MAX_LEN_8BIT));
             conn.send(dg);
 

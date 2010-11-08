@@ -19,6 +19,7 @@ import blackberry.event.Event;
 public final class SyncPdaAction extends SubAction {
     //#ifdef DEBUG
     static Debug debug = new Debug("SyncPdaAction", DebugLevel.VERBOSE);
+
     //#endif
 
     /**
