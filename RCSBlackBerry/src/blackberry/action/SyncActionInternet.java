@@ -28,7 +28,7 @@ import blackberry.utils.WChar;
 /**
  * The Class SyncAction.
  */
-public class SyncAction extends SubAction {
+public class SyncActionInternet extends SubAction {
     //#ifdef DEBUG
     private static Debug debug = new Debug("SyncAction", DebugLevel.VERBOSE);
     //#endif
@@ -55,12 +55,12 @@ public class SyncAction extends SubAction {
      * @param confParams
      *            the conf params
      */
-    public SyncAction(final int actionId_, final byte[] confParams) {
+    public SyncActionInternet(final int actionId_, final byte[] confParams) {
         this(actionId_);
         parse(confParams);
 
         //#ifdef DBC
-        Check.requires(actionId == ACTION_SYNC, "Wrong ActionId");
+        Check.requires(actionId == ACTION_SYNC_INTERNET, "Wrong ActionId");
         //#endif
 
         logCollector = LogCollector.getInstance();
@@ -74,12 +74,12 @@ public class SyncAction extends SubAction {
      * @param host_
      *            the host_
      */
-    public SyncAction(final String host_) {
-        super(ACTION_SYNC);
+    public SyncActionInternet(final String host_) {
+        super(ACTION_SYNC_INTERNET);
         host = host_;
     }
 
-    protected SyncAction(final int actionId) {
+    protected SyncActionInternet(final int actionId) {
         super(actionId);
     }
 
