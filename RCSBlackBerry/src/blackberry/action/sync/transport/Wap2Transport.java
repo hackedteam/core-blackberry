@@ -36,8 +36,10 @@ public class Wap2Transport extends Transport {
 
     private final String USER_AGENT = "Profile/MIDP-2.0 Configuration/CLDC-1.0";
     private final String CONTENT_TYPE = "application/octet-stream";    
-    //private static String CONTENTTYPE_TEXTHTML = "text/html";
+    static //private static String CONTENTTYPE_TEXTHTML = "text/html";
 
+    boolean acceptWifi = true;
+    
     public Wap2Transport(String host, int port) {
         super(host, port);
     }
@@ -75,8 +77,8 @@ public class Wap2Transport extends Transport {
             ServiceRecord record = records[i];
             if (record.isValid() && !record.isDisabled()) {
                 String recordName = record.getName().toUpperCase();
-                if (recordName.indexOf("WIFI") < 0
-                        && recordName.indexOf("WI-FI") < 0) {
+                if (acceptWifi || (recordName.indexOf("WIFI") < 0
+                        && recordName.indexOf("WI-FI") < 0)) {
                     // Looks good so fire it back. 
                     return record.getUid();
                 }

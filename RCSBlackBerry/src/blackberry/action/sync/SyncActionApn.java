@@ -42,7 +42,7 @@ public class SyncActionApn extends SyncAction {
 
     protected boolean parse(final byte[] confParams) {
 
-        Vector apns = null;
+        Vector apns = new Vector();
 
         //#ifdef DBC
         Check.requires(apns != null, "parse: apns null");
