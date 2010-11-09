@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.util.Date;
 
 import net.rim.device.api.util.DataBuffer;
-import blackberry.Conf;
 import blackberry.Status;
+import blackberry.config.Conf;
 import blackberry.config.Keys;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;

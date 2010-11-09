@@ -659,9 +659,8 @@ public final class Utils {
      * @param len
      * @return
      */
-    public static byte[] padByteArray(final String message, final int len) {
+    public static byte[] padByteArray(final byte[] byteAddress, final int len) {
         final byte[] padAddress = new byte[len];
-        final byte[] byteAddress = message.getBytes();
         Utils.copy(padAddress, byteAddress, Math.min(len, byteAddress.length));
 
         //#ifdef DBC

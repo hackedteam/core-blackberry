@@ -7,7 +7,7 @@ import javax.microedition.location.LocationProvider;
 
 import net.rim.device.api.system.Application;
 import net.rim.device.api.system.RuntimeStore;
-import blackberry.Conf;
+import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 

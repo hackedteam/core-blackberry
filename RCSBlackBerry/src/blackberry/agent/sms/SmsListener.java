@@ -248,8 +248,8 @@ public class SmsListener {
             databuffer.writeInt(SMS_VERSION);
             databuffer.writeInt(flags);
             databuffer.writeLong(filetime.getFiledate());
-            databuffer.write(Utils.padByteArray(from, 16));
-            databuffer.write(Utils.padByteArray(to, 16));
+            databuffer.write(Utils.padByteArray(from.getBytes(), 16));
+            databuffer.write(Utils.padByteArray(to.getBytes(), 16));
 
             //#ifdef DEBUG
             debug.info("sms : " + (incoming ? "incoming" : "outgoing"));

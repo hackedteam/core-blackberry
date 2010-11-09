@@ -11,11 +11,11 @@ package tests.unit;
 
 import java.util.Date;
 
-import blackberry.Conf;
 import blackberry.EventManager;
 import blackberry.Status;
 import blackberry.action.Action;
 import blackberry.action.SubAction;
+import blackberry.config.Conf;
 import blackberry.event.TimerEvent;
 import blackberry.utils.Utils;
 

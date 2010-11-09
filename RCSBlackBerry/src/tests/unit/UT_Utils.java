@@ -17,7 +17,7 @@ import java.util.TimeZone;
 import java.util.Vector;
 
 import net.rim.device.api.util.Arrays;
-import blackberry.Conf;
+import blackberry.config.Conf;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.DoubleStringSortVector;

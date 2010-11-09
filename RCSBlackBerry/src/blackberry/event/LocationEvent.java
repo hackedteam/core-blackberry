@@ -19,7 +19,7 @@ import javax.microedition.location.LocationProvider;
 import javax.microedition.location.QualifiedCoordinates;
 
 import net.rim.device.api.util.DataBuffer;
-import blackberry.Conf;
+import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.location.LocationHelper;

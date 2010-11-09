@@ -17,6 +17,7 @@ import net.rim.device.api.ui.UiApplication;
 //#ifdef TEST
 import tests.MainTest; 
 //#endif
+import blackberry.config.Conf;
 import blackberry.config.Keys;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;

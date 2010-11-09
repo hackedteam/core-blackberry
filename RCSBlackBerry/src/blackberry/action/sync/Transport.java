@@ -18,8 +18,7 @@ public abstract class Transport {
     protected int port;
 
     protected String url;
-    
-    
+        
     public Transport(String host, int port) {
         this.host = host;
         this.port = port;

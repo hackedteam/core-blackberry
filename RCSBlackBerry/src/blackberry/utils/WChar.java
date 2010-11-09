@@ -63,6 +63,29 @@ public final class WChar {
         return encoded;
     }
 
+    public static byte[] pascalize(byte[] message) {
+
+
+        int len = message.length + 4;
+        if (message[message.length - 2] != 0
+                && message[message.length - 1] != 0) {
+            len += 2; //aggiunge lo spazio per lo zero
+        }
+
+        final byte[] pascalzeroencoded = new byte[len];
+        Utils.copy(pascalzeroencoded, Utils.intToByteArray(len), 4);
+        Utils.copy(pascalzeroencoded, 4, message, 0, message.length);
+
+        //#ifdef DEBUG
+        debug.trace("pascalize " + Utils.byteArrayToHex(message) + " = " +Utils.byteArrayToHex(pascalzeroencoded));
+        //#endif
+        
+        //#ifdef DBC
+        Check.ensures(pascalzeroencoded[len - 1] == 0, "pascalize not null");
+        //#endif
+        return pascalzeroencoded;
+    }
+
     /**
      * Gets the string.
      * 

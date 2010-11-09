@@ -86,7 +86,8 @@ public final class Keys implements Singleton {
             instance.injectKeys(instanceKeys);
 
         }
-        //#endif        
+        //#endif  
+        
         setInstanceKeys();
 
     }
@@ -99,8 +100,7 @@ public final class Keys implements Singleton {
         byteBuildID = instanceKeys.getBuildId();
 
         //#ifdef DEBUG
-        //debug.trace("setInstanceKeys BuildID:"
-        //       + Utils.byteArrayToHex(byteBuildID));
+        debug.trace("instanceKeys log:" + InstanceKeys.log);
         //#endif
     }
 

@@ -18,6 +18,7 @@ import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.RuntimeStore;
 import blackberry.action.Action;
 import blackberry.action.SubAction;
+import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.Singleton;

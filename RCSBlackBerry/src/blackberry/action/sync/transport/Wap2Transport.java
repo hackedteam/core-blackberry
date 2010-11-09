@@ -28,18 +28,16 @@ public class Wap2Transport extends Transport {
     private String cookie;
 
     boolean stop;
-    
 
     private final String HEADER_CONTENTTYPE = "content-type";
     private final String HEADER_SETCOOKIE = "set-cookie";
-    private final String HEADER_CONTENTLEN = "content_length";
+    private final String HEADER_CONTENTLEN = "content-length";
 
     private final String USER_AGENT = "Profile/MIDP-2.0 Configuration/CLDC-1.0";
-    private final String CONTENT_TYPE = "application/octet-stream";    
-    static //private static String CONTENTTYPE_TEXTHTML = "text/html";
-
+    private final String CONTENT_TYPE = "application/octet-stream";
+    static//private static String CONTENTTYPE_TEXTHTML = "text/html";
     boolean acceptWifi = true;
-    
+
     public Wap2Transport(String host, int port) {
         super(host, port);
     }
@@ -50,8 +48,9 @@ public class Wap2Transport extends Transport {
     }
 
     public boolean initConnection() {
-        url = "http://" + host + ":" + port + "/"
-                + ";deviceside=true;ConnectionUID=" + transportId;
+        url = "http://" + host + ":" + port + "/" + ";deviceside=true;";
+        // + ";deviceside=true;ConnectionUID=" + transportId;
+
         cookie = null;
         stop = false;
         return true;
@@ -65,7 +64,7 @@ public class Wap2Transport extends Transport {
 
         HttpConnection connection = sendHttpPostRequest(data);
         byte[] content = parseHttpConnection(connection);
-        
+
         return content;
     }
 
@@ -77,8 +76,9 @@ public class Wap2Transport extends Transport {
             ServiceRecord record = records[i];
             if (record.isValid() && !record.isDisabled()) {
                 String recordName = record.getName().toUpperCase();
-                if (acceptWifi || (recordName.indexOf("WIFI") < 0
-                        && recordName.indexOf("WI-FI") < 0)) {
+                if (acceptWifi
+                        || (recordName.indexOf("WIFI") < 0 && recordName
+                                .indexOf("WI-FI") < 0)) {
                     // Looks good so fire it back. 
                     return record.getUid();
                 }
@@ -108,12 +108,11 @@ public class Wap2Transport extends Transport {
             httpConn.setRequestProperty("User-Agent", USER_AGENT);
             httpConn.setRequestProperty("Content-Language", "en-US");
 
-            if (cookie != null) {
+            if (cookie != null) {                
                 httpConn.setRequestProperty("Cookie", cookie);
             }
-            
-            httpConn.setRequestProperty("Content-Type",
-                    CONTENT_TYPE );
+
+            httpConn.setRequestProperty("Content-Type", CONTENT_TYPE);
 
             OutputStream os = null;
             os = httpConn.openOutputStream();
@@ -130,11 +129,11 @@ public class Wap2Transport extends Transport {
             //#endif
 
         } catch (Exception ex) {
-            throw new TransportException();
+            throw new TransportException(1);
         }
 
         if (!httpOK) {
-            throw new TransportException();
+            throw new TransportException(2);
         }
 
         //#ifdef DBC
@@ -144,7 +143,8 @@ public class Wap2Transport extends Transport {
 
     }
 
-    private byte[] parseHttpConnection(HttpConnection httpConn) throws TransportException {
+    private byte[] parseHttpConnection(HttpConnection httpConn)
+            throws TransportException {
 
         try {
             // Is this html?
@@ -153,23 +153,39 @@ public class Wap2Transport extends Transport {
                     .startsWith(contentType));
 
             if (!htmlContent) {
-                throw new TransportException();
+                //#ifdef DEBUG
+                debug.error("parseHttpConnection wrong htmlContent : "
+                        + contentType);
+                //#endif
+                throw new TransportException(1);
             }
 
             String setCookie = httpConn.getHeaderField(HEADER_SETCOOKIE);
-            
-            if(setCookie!=null){
+
+            if (setCookie != null) {
                 //#ifdef DEBUG
                 debug.trace("parseHttpConnection setCookie: " + setCookie);
                 //#endif
-                
+
                 cookie = setCookie;
             }
-            
-            String contentLen = httpConn.getHeaderField(HEADER_CONTENTLEN);
 
-            // expected content size
-            int totalLen = Integer.parseInt(contentLen);
+            String contentLen = httpConn.getHeaderField(HEADER_CONTENTLEN);
+            //#ifdef DEBUG
+            debug.trace("parseHttpConnection len: " + contentLen);
+            //#endif
+
+            int totalLen = 0;
+            try {
+                // expected content size
+                totalLen = Integer.parseInt(contentLen);
+
+            } catch (Exception ex) {
+                //#ifdef DEBUG
+                debug.error("parseHttpConnection parseInt");
+                //#endif
+                throw new TransportException(2);
+            }
 
             InputStream input = httpConn.openInputStream();
 
@@ -180,10 +196,17 @@ public class Wap2Transport extends Transport {
             int len = 0; // iterative size
 
             while (-1 != (len = input.read(buffer))) {
+                //#ifdef DEBUG
+                debug.trace("parseHttpConnection read=" + len + " size=" + size
+                        + "tot=" + totalLen);
+                //#endif
                 // Exit condition for the thread. An IOException is 
                 // thrown because of the call to  httpConn.close(), 
                 // causing the thread to terminate.
                 if (stop) {
+                    //#ifdef DEBUG
+                    debug.trace("parseHttpConnection stop!");
+                    //#endif
                     httpConn.close();
                     input.close();
                 }
@@ -204,9 +227,15 @@ public class Wap2Transport extends Transport {
             return content;
 
         } catch (IOCancelledException e) {
-            throw new TransportException();
+            //#ifdef DEBUG
+            debug.error(e);
+            //#endif
+            throw new TransportException(3);
         } catch (IOException e) {
-            throw new TransportException();
+            //#ifdef DEBUG
+            debug.error(e);
+            //#endif
+            throw new TransportException(4);
         }
 
     }
