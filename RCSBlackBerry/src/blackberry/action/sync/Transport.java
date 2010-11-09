@@ -32,10 +32,6 @@ public abstract class Transport {
     public abstract boolean isAvailable();
 
     public abstract byte[] command(byte[] data) throws TransportException;
-
-   
-  
-
     
     public abstract boolean initConnection();
 
