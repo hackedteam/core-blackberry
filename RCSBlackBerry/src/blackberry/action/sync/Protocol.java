@@ -1,6 +1,8 @@
 //#preprocess
 package blackberry.action.sync;
 
+import blackberry.transfer.ProtocolException;
+
 public abstract class Protocol {
     protected Transport transport;
 
@@ -8,6 +10,6 @@ public abstract class Protocol {
         this.transport = transport;
     }
 
-    public abstract boolean start();
+    public abstract boolean start() throws ProtocolException;
 
 }
