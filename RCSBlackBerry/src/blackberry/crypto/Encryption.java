@@ -9,6 +9,8 @@
 package blackberry.crypto;
 
 import net.rim.device.api.crypto.CryptoTokenException;
+import net.rim.device.api.crypto.PseudoRandomSource;
+import net.rim.device.api.crypto.RandomSource;
 import net.rim.device.api.crypto.SHA1Digest;
 import net.rim.device.api.util.Arrays;
 import blackberry.debug.Debug;
@@ -355,11 +357,6 @@ public final class Encryption {
         for (int i = 0; i < 16; i++) {
             pt[i] ^= iv[i];
         }
-    }
-
-    public byte[] getKey() {
-        // TODO Auto-generated method stub
-        return null;
     }
 
 }

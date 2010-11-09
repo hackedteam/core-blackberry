@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.Random;
 import java.util.Vector;
 
+import net.rim.device.api.crypto.RandomSource;
 import net.rim.device.api.system.GPRSInfo;
 import net.rim.device.api.util.Arrays;
 import net.rim.device.api.util.DataBuffer;
@@ -31,7 +32,7 @@ public final class Utils {
     private static Debug debug = new Debug("Utils", DebugLevel.VERBOSE);
     //#endif
 
-    final static Random RANDOM = new Random();
+    //final static Random RANDOM = new Random();
 
     /**
      * ASCII.
@@ -700,9 +701,8 @@ public final class Utils {
         return vector;
     }
 
-    public static int randomInt() {
-
-        return RANDOM.nextInt();
+    public static int randomInt() {        
+        return RandomSource.getInt();        
     }
 
     /**

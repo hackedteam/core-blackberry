@@ -35,7 +35,7 @@ public final class TransferAccessor extends TransferSocket {
      *             the protocol exception
      */
     public void ChallengeTest() throws ProtocolException {
-        final boolean ret = connect();
+        final boolean ret = initConnection();
         if (!ret) {
             debug.error("cannot connect");
         }

