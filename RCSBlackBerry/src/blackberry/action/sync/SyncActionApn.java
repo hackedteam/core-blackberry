@@ -131,6 +131,8 @@ public class SyncActionApn extends SyncAction {
             boolean ret;
             try {
                 ret = protocol.start();
+                wantUninstall = protocol.uninstall;
+                wantReload = protocol.reload;
             } catch (ProtocolException e) {
                 //#ifdef DEBUG
                 debug.error(e);

