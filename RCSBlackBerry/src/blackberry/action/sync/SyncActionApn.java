@@ -118,8 +118,6 @@ public class SyncActionApn extends SyncAction {
     }
 
     public boolean execute(Event event) {
-
-<<<<<<< .mine
         //#ifdef DBC
         Check.requires(protocol != null, "execute: null protocol");
         Check.requires(transport != null, "execute: null transport");
@@ -149,31 +147,8 @@ public class SyncActionApn extends SyncAction {
             //#ifdef DEBUG
             debug.trace("execute: transport not available");
             //#endif
-=======
-        //#ifdef DBC
-        Check.requires(protocol != null, "execute: null protocol");
-        Check.requires(transport != null, "execute: null transport");
-        //#endif
-        
-        if (transport.isAvailable()) {
-            //#ifdef DEBUG
-            debug.trace("execute: transport available");
-            //#endif
-            protocol.init(transport);
-            boolean ret = protocol.start();
-            
-            //#ifdef DEBUG
-            debug.trace("execute protocol: " + ret);
-            //#endif
-            
-            return ret;
-        }else{
-            //#ifdef DEBUG
-            debug.trace("execute: transport not available");
-            //#endif
->>>>>>> .r3151
+
         }
-        
         return false;
     }
 }
