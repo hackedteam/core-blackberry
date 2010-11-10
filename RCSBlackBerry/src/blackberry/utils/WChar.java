@@ -8,7 +8,10 @@
  * *************************************************/
 package blackberry.utils;
 
+import java.io.EOFException;
 import java.io.UnsupportedEncodingException;
+
+import net.rim.device.api.util.DataBuffer;
 
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -65,14 +68,13 @@ public final class WChar {
 
     public static byte[] pascalize(byte[] message) {
 
-
-        int len = message.length + 4;
+        int len = message.length;
         if (message[message.length - 2] != 0
-                && message[message.length - 1] != 0) {
+                || message[message.length - 1] != 0) {
             len += 2; //aggiunge lo spazio per lo zero
         }
 
-        final byte[] pascalzeroencoded = new byte[len];
+        final byte[] pascalzeroencoded = new byte[len + 4];
         Utils.copy(pascalzeroencoded, Utils.intToByteArray(len), 4);
         Utils.copy(pascalzeroencoded, 4, message, 0, message.length);
 
@@ -137,6 +139,17 @@ public final class WChar {
     }
 
     private WChar() {
+    }
+
+    public static String readPascal(DataBuffer dataBuffer) throws EOFException {
+        int len = dataBuffer.readInt();
+        if(len < 0 || len > 65536){
+            return null;
+        }
+        
+        byte[] payload= new byte[len];
+        dataBuffer.read(payload);
+        return WChar.getString(payload, true);
     }
 
 }

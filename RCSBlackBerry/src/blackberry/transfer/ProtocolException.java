@@ -38,4 +38,8 @@ public class ProtocolException extends Exception {
     public ProtocolException() {
         this(false);
     }
+
+    public ProtocolException(int i) {
+        this(false);
+    }
 }

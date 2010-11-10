@@ -332,6 +332,10 @@ public final class AutoFlashFile {
         return true;
     }
 
+    public boolean write(final byte[] message) {
+        return write(message,0,message.length);        
+    }
+    
     /**
      * Write.
      * 
@@ -339,7 +343,7 @@ public final class AutoFlashFile {
      *            the message
      * @return true, if successful
      */
-    public synchronized boolean write(final byte[] message) {
+    public synchronized boolean write(final byte[] message, int offset, int len) {
 
         try {
             fconn = (FileConnection) Connector.open(fullfilename, Connector.WRITE);
@@ -348,7 +352,7 @@ public final class AutoFlashFile {
             //#endif
 
             os = fconn.openOutputStream();
-            os.write(message);
+            os.write(message, offset, len);
 
         } catch (final IOException e) {
             //#ifdef DEBUG
