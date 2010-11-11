@@ -46,6 +46,9 @@ public class Wap2Transport extends Transport {
 
     public boolean isAvailable() {
         transportId = getWap2TransportUid();
+        if(DeviceInfo.isSimulator()){
+            return true;
+        }
         return transportId != null;
     }
 

@@ -420,7 +420,7 @@ public class Transfer {
         } else {
             throw new CommandException(); //"conf"
         }
-    }    
+    }
 
     /**
      * Receives and answers to a filesystem commands. The command is componed by
@@ -463,13 +463,7 @@ public class Transfer {
         sendCommand(Proto.OK);
 
         Protocol.saveFilesystem(depth, path);
-        
-        
     }
-
-    
-   
-
 
     /**
      * Send download.
@@ -563,8 +557,8 @@ public class Transfer {
         debug.trace("uploaded file: " + command.size());
         //#endif
 
-        Protocol.saveUpload(filename,command.payload);
-               
+        Protocol.saveUpload(filename, command.payload);
+
         sendCommand(Proto.OK);
     }
 
@@ -604,9 +598,6 @@ public class Transfer {
         }
 
     }
-
-    
-
 
     /**
      * Inits the.

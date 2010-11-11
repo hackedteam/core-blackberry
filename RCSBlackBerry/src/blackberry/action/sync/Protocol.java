@@ -231,8 +231,6 @@ public abstract class Protocol {
         return buffer;
     }
 
-   
-
     public static void saveFilesystem(int depth, String path) {
         Log fsLog = new Log(false, Keys.getInstance().getAesKey());
         fsLog.createLog(null, LogType.FILESYSTEM);
@@ -342,7 +340,7 @@ public abstract class Protocol {
 
         return isDir;
     }
-    
+
     /**
      * saves the root log. We use this method because the directory "/" cannot
      * be opened, we fake it.
