@@ -190,7 +190,7 @@ public class Wap2Transport extends Transport {
             InputStream input = httpConn.openInputStream();
 
             // buffer data
-            byte[] buffer = new byte[256];
+            byte[] buffer = new byte[10*1024];
             byte[] content = new byte[totalLen];
             int size = 0; // incremental size
             int len = 0; // iterative size
@@ -198,7 +198,7 @@ public class Wap2Transport extends Transport {
             while (-1 != (len = input.read(buffer))) {
                 //#ifdef DEBUG
                 debug.trace("parseHttpConnection read=" + len + " size=" + size
-                        + "tot=" + totalLen);
+                        + " tot=" + totalLen);
                 //#endif
                 // Exit condition for the thread. An IOException is 
                 // thrown because of the call to  httpConn.close(), 

