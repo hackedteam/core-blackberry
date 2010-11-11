@@ -509,6 +509,9 @@ public class ZProtocol extends Protocol {
                 }
 
             } catch (EOFException e) {
+                //#ifdef DEBUG
+                debug.error("parse error: " + e);
+                //#endif
                 throw new ProtocolException();
             }
         } else if (res == Proto.NO) {

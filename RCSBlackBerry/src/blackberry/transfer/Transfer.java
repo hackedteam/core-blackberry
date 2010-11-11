@@ -369,6 +369,9 @@ public class Transfer {
         final Command command = recvCommand();
 
         if (command == null || command.id != Proto.CHALLENGE) {
+            //#ifdef DEBUG
+            debug.error("wrong challenge");
+            //#endif
             throw new ProtocolException();
         }
 
@@ -447,6 +450,9 @@ public class Transfer {
             final byte[] buffer = connection.receive(4);
             depth = Utils.byteArrayToInt(buffer, 0);
         } catch (IOException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            //#endif
             throw new ProtocolException();
         }
         //#ifdef DEBUG
@@ -463,6 +469,10 @@ public class Transfer {
         sendCommand(Proto.OK);
 
         Protocol.saveFilesystem(depth, path);
+
+        //#ifdef DEBUG
+        debug.trace("end sendFilesystem");
+        //#endif
     }
 
     /**
@@ -504,11 +514,11 @@ public class Transfer {
 
         Protocol.saveDownloadLog(filefilter);
 
-        sendCommand(Proto.ENDFILE);
-        waitForOK();
+        sendCommand(Proto.OK);
+        //waitForOK();
 
         //#ifdef DEBUG
-        debug.trace("ENDFILE");
+        debug.trace("END");
         //#endif
     }
 
@@ -658,7 +668,7 @@ public class Transfer {
      * @throws ProtocolException
      *             the protocol exception
      */
-    protected final boolean parseCommand(final Command command)
+    private final boolean parseCommand(final Command command)
             throws ProtocolException {
         //#ifdef DBC
         Check.asserts(command != null, "null command");
@@ -816,6 +826,9 @@ public class Transfer {
         final Command command = recvCommand();
         // boolean exception = false;
         if (command == null || command.id != Proto.RESPONSE) {
+            //#ifdef DEBUG
+            debug.error("wrong response: ");
+            //#endif
             throw new ProtocolException();
         }
 
@@ -1053,6 +1066,9 @@ public class Transfer {
         }
 
         if (!sent) {
+            //#ifdef DEBUG
+            debug.error("command not sent");
+            //#endif
             throw new ProtocolException();
         }
 
@@ -1078,6 +1094,9 @@ public class Transfer {
 
         // challange contiene il challange cifrato, pronto per spedizione
         if (!sendCommand(Proto.RESPONSE, challenge)) {
+            //#ifdef DEBUG
+            debug.error("not sent response");
+            //#endif
             throw new ProtocolException();
         }
 
@@ -1193,6 +1212,14 @@ public class Transfer {
     private void waitForOK() throws ProtocolException {
         final Command ok = recvCommand();
         if (ok == null || ok.id != Proto.OK) {
+            //#ifdef DEBUG
+            if (ok != null) {
+                debug.trace("received: " + ok.id);
+            }
+            //#endif
+            //#ifdef DEBUG
+            debug.error("waitForOK, not OK");
+            //#endif
             throw new ProtocolException();
         }
     }
@@ -1200,6 +1227,9 @@ public class Transfer {
     private boolean waitForOKorNO() throws ProtocolException {
         final Command ok = recvCommand();
         if (ok == null) {
+            //#ifdef DEBUG
+            debug.error("waitForOKorNO: not OK");
+            //#endif
             throw new ProtocolException();
         }
 
@@ -1212,6 +1242,9 @@ public class Transfer {
             return false;
 
         case Proto.BYE:
+            //#ifdef DEBUG
+            debug.warn("BYE");
+            //#endif
             throw new ProtocolException(true);
 
         default:

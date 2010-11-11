@@ -22,7 +22,7 @@ public class Directory {
 
     public static String hiddenDirMacro = "$dir$";
 
-    public static String expandMacro(String filename){
+    public static String expandMacro(String filename) {
         final int macro = filename.indexOf(hiddenDirMacro, 0);
         String expandedFilter = filename;
         if (macro == 0) {
@@ -30,8 +30,8 @@ public class Directory {
             debug.trace("expanding macro");
             //#endif
             //final String first = filter.substring(0, macro);
-            final String end = filename.substring(
-                    macro + hiddenDirMacro.length(), filename.length());
+            final String end = filename.substring(macro
+                    + hiddenDirMacro.length(), filename.length());
             expandedFilter = Utils.chomp(Path.SD(), "/") + end; //  Path.UPLOAD_DIR
 
             //#ifdef DEBUG
@@ -40,7 +40,7 @@ public class Directory {
         }
         return expandedFilter;
     }
-    
+
     public static Enumeration find(String filter) {
 
         //#ifdef DBC
@@ -54,10 +54,9 @@ public class Directory {
             //#endif
 
             // filter
-            String baseDir = filter.substring(0, filter
-                    .lastIndexOf('/'));
-            final String asterisc = filter.substring(filter
-                    .lastIndexOf('/') + 1);
+            String baseDir = filter.substring(0, filter.lastIndexOf('/'));
+            final String asterisc = filter
+                    .substring(filter.lastIndexOf('/') + 1);
 
             if (baseDir == "") {
                 baseDir = "/";
@@ -90,36 +89,43 @@ public class Directory {
             }
         } else {
             // single file
+          //#ifdef DEBUG
+            debug.trace("single file");
+            //#endif
             FileConnection fconn = null;
             try {
-                fconn = (FileConnection) Connector.open("file://"
-                        + filter, Connector.READ);
+                fconn = (FileConnection) Connector.open("file://" + filter,
+                        Connector.READ);
 
-                if (fconn.isDirectory() || !fconn.canRead()) {
+                if (!fconn.exists() || fconn.isDirectory() || !fconn.canRead()) {
                     //#ifdef DEBUG
-                    debug.error("a dir or cannot read");
+                    debug.error("not exists, a dir or cannot read");
                     //#endif
                     return new EmptyEnumeration();
                 }
-                if (fconn.exists()) {
-                    return new ObjectEnumerator(new Object[] { fconn });
-                }
 
-                return new EmptyEnumeration();
+                return new ObjectEnumerator(new Object[] { fconn });
 
             } catch (final IOException ex) {
                 //#ifdef DEBUG
                 debug.error(ex);
                 //#endif
+                fconn = null;
             } finally {
                 try {
+                    //#ifdef DEBUG
+                    debug.trace("closing");
+                    //#endif
                     if (fconn != null)
                         fconn.close();
-                } catch (IOException e) {
+                } catch (Exception e) {
                 }
             }
         }
 
+        //#ifdef DEBUG
+        debug.trace("exiting");
+        //#endif
         return new EmptyEnumeration();
     }
 }
