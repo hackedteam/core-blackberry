@@ -94,10 +94,8 @@ public class Main extends Application {
         debug.info("Starting Listeners");
         //#endif
 
-        addHolsterListener(appListener);
-        
-        addSystemListener(appListener);
-        
+        addHolsterListener(appListener);        
+        addSystemListener(appListener);        
         PhoneLogs.addListener(appListener);
 
         goBackground();
@@ -114,7 +112,7 @@ public class Main extends Application {
 
         removeHolsterListener(appListener);
         removeSystemListener(appListener);
-        Phone.removePhoneListener(appListener);
+        //Phone.removePhoneListener(appListener);
         PhoneLogs.removeListener(appListener);
 
         goBackground();

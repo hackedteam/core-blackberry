@@ -50,7 +50,7 @@ import blackberry.log.Log;
  * @see AppEvent
  */
 public final class AppListener extends Listener implements RadioStatusListener,
-        HolsterListener, SystemListener, SystemListener2, PhoneListener,
+        HolsterListener, SystemListener, SystemListener2,
         PhoneLogListener, Singleton {
 
     private static final long GUID = 0x4e5dd52b9f50b3feL;
@@ -63,7 +63,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
     Vector batteryStatusObservers = new Vector();
     Vector applicationObservers = new Vector();
     Vector backlightObservers = new Vector();
-    Vector phoneCallObservers = new Vector();
+    //Vector phoneCallObservers = new Vector();
     Vector callListObservers = new Vector();
 
     Task task;
@@ -131,7 +131,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
         removeObserver(backlightObservers, observer);
     }
 
-    public synchronized void addPhoneCallObserver(
+   /* public synchronized void addPhoneCallObserver(
             final PhoneCallObserver observer) {
         addObserver(phoneCallObservers, observer);
     }
@@ -139,7 +139,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
     public synchronized void removePhoneCallObserver(
             final PhoneCallObserver observer) {
         removeObserver(phoneCallObservers, observer);
-    }
+    }*/
 
     public synchronized void addCallListObserver(final CallListObserver observer) {
         addObserver(callListObservers, observer);
@@ -479,7 +479,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
         debug.info("usbConnectionStateChange: " + state);
         //#endif
     }
-
+/*
     public void callAdded(int arg0) {
         //#ifdef DEBUG
         debug.info("callAddedd: " + arg0);
@@ -703,7 +703,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
                 observer.onCallDisconnected(callId, phoneNumber);
             }
         }
-    }
+    }*/
 
     public void callLogAdded(CallLog callLog) {
         init();

