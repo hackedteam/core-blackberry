@@ -42,7 +42,7 @@ public abstract class Protocol {
         return transport.initConnection();
     }
 
-    public abstract boolean start() throws ProtocolException;
+    public abstract boolean perform() throws ProtocolException;
 
     public static boolean saveNewConf(byte[] conf, int offset)
             throws CommandException {

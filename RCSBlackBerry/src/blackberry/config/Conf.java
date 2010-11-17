@@ -13,6 +13,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import net.rim.device.api.crypto.CryptoException;
 import net.rim.device.api.util.Arrays;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Common;
@@ -310,15 +311,22 @@ public final class Conf {
         final Encryption crypto = new Encryption();
         crypto.makeKey(confKey);
 
-        final byte[] plainconf = crypto.decryptData(cyphered, cryptoOffset);
-        //#ifdef DEBUG
-        debug.trace("plain len: " + plainconf.length);
-        //#endif
+        try {
+            final byte[] plainconf = crypto.decryptData(cyphered, cryptoOffset);
+            //#ifdef DEBUG
+            debug.trace("plain len: " + plainconf.length);
+            //#endif
 
-        // lettura della configurazione
-        ret = parseConf(plainconf, 0);
+            // lettura della configurazione
+            ret = parseConf(plainconf, 0);
 
-        return ret;
+            return ret;
+        } catch (CryptoException ex) {
+            //#ifdef DEBUG
+            debug.error("loadCyphered: " + ex);
+            //#endif
+            return false;
+        }
     }
 
     /**

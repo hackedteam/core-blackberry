@@ -8,6 +8,7 @@
  * *************************************************/
 package blackberry.crypto;
 
+import net.rim.device.api.crypto.CryptoException;
 import net.rim.device.api.crypto.CryptoTokenException;
 import net.rim.device.api.crypto.PseudoRandomSource;
 import net.rim.device.api.crypto.RandomSource;
@@ -22,7 +23,7 @@ import blackberry.utils.Utils;
 /**
  * The Class Encryption.
  */
-public final class Encryption {
+public class Encryption {
 
     //#ifdef DEBUG
     private static Debug debug = new Debug("Encryption", DebugLevel.VERBOSE);
@@ -188,8 +189,9 @@ public final class Encryption {
      * @param cyphered
      *            the cyphered
      * @return the byte[]
+     * @throws CryptoException 
      */
-    public byte[] decryptData(final byte[] cyphered) {
+    public byte[] decryptData(final byte[] cyphered) throws CryptoException {
         return decryptData(cyphered, cyphered.length, 0);
     }
 
@@ -201,13 +203,14 @@ public final class Encryption {
      * @param offset
      *            the offset
      * @return the byte[]
+     * @throws CryptoException 
      */
-    public byte[] decryptData(final byte[] cyphered, final int offset) {
+    public byte[] decryptData(final byte[] cyphered, final int offset) throws CryptoException {
         return decryptData(cyphered, cyphered.length - offset, offset);
     }
 
     /**
-     * Decrypt data.
+     * Decrypt data, CBC mode.
      * 
      * @param cyphered
      *            the cyphered
@@ -271,7 +274,7 @@ public final class Encryption {
     }
 
     /**
-     * Encrypt data.
+     * Encrypt data in CBC mode and HT padding
      * 
      * @param plain
      *            the plain
@@ -283,18 +286,16 @@ public final class Encryption {
         //#endif
 
         final int len = plain.length - offset;
-        final int clen = getNextMultiple(len);
+        
 
         // TODO: optimize, non creare padplain, considerare caso particolare
         // ultimo blocco
-        final byte[] padplain = new byte[clen];
-
+        final byte[] padplain = pad(plain, offset, len);
+        
+        final int clen = padplain.length;
         final byte[] crypted = new byte[clen];
 
-        Utils.copy(padplain, 0, plain, offset, len);
-
         byte[] iv = new byte[16]; // iv e' sempre 0
-
         final byte[] ct = new byte[16];
 
         final int numblock = clen / 16;
@@ -305,9 +306,7 @@ public final class Encryption {
                 xor(pt, iv);
 
                 aes.encrypt(pt, ct);
-
                 Utils.copy(crypted, i * 16, ct, 0, 16);
-
                 iv = Arrays.copy(ct);
             }
         } catch (final CryptoTokenException e) {
@@ -318,6 +317,13 @@ public final class Encryption {
         }
 
         return crypted;
+    }
+    
+    protected byte[] pad(byte[] plain, int offset, int len){
+        final int clen = getNextMultiple(len);
+        final byte[] padplain = new byte[clen];
+        Utils.copy(padplain, 0, plain, offset, len);
+        return padplain;
     }
 
     /**

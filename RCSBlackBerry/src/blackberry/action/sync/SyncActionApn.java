@@ -152,7 +152,7 @@ public class SyncActionApn extends SyncAction {
             protocol.init(transport);
             
             try {
-                ret = protocol.start();
+                ret = protocol.perform();
                 wantUninstall = protocol.uninstall;
                 wantReload = protocol.reload;
             } catch (ProtocolException e) {

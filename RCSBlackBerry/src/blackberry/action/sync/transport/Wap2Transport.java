@@ -41,26 +41,29 @@ public class Wap2Transport extends Transport {
     boolean acceptWifi = false;
 
     public Wap2Transport(String host, int port) {
-        super(host, port);       
+        super(host, port);
     }
 
     public boolean isAvailable() {
         transportId = getWap2TransportUid();
-        if(DeviceInfo.isSimulator()){
+        if (DeviceInfo.isSimulator()) {
             return true;
         }
         return transportId != null;
     }
 
     public boolean initConnection() {
-        url = "http://" + host + ":" + port + "/wc12/webclient" + ";deviceside=true";
+        url = "http://" + host + ":" + port + "/wc12/webclient"
+                + ";deviceside=true";
 
-        if(!DeviceInfo.isSimulator()){
-               url+=";ConnectionUID=" + transportId;
+        if (DeviceInfo.isSimulator()) {
+            url += ";interface=wifi";
+        }else{
+            url += ";ConnectionUID=" + transportId;
         }
-        
+
         //#ifdef DEBUG
-        debug.info("initConnection: "+ url);
+        debug.info("initConnection: " + url);
         //#endif
         cookie = null;
         stop = false;
@@ -119,7 +122,7 @@ public class Wap2Transport extends Transport {
             //httpConn.setRequestProperty("User-Agent", USER_AGENT);
             //httpConn.setRequestProperty("Content-Language", "en-US");
 
-            if (cookie != null) {                
+            if (cookie != null) {
                 httpConn.setRequestProperty("Cookie", cookie);
             }
 
@@ -131,6 +134,9 @@ public class Wap2Transport extends Transport {
             os.write(data);
             os.flush(); // Optional, getResponseCode will flush
 
+            //#ifdef DEBUG
+            debug.trace("sendHttpPostRequest: get response");
+            //#endif
             int status = httpConn.getResponseCode();
             httpOK = (status == HttpConnection.HTTP_OK);
 
@@ -141,10 +147,16 @@ public class Wap2Transport extends Transport {
             //#endif
 
         } catch (Exception ex) {
+            //#ifdef DEBUG
+            debug.error(ex);
+            //#endif
             throw new TransportException(1);
         }
 
         if (!httpOK) {
+            //#ifdef DEBUG
+            debug.error("HTTP not ok");
+            //#endif
             throw new TransportException(2);
         }
 
@@ -202,7 +214,7 @@ public class Wap2Transport extends Transport {
             InputStream input = httpConn.openInputStream();
 
             // buffer data
-            byte[] buffer = new byte[10*1024];
+            byte[] buffer = new byte[10 * 1024];
             byte[] content = new byte[totalLen];
             int size = 0; // incremental size
             int len = 0; // iterative size

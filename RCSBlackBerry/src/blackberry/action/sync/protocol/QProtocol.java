@@ -5,7 +5,7 @@ import blackberry.action.sync.Protocol;
 
 public class QProtocol extends Protocol {
 
-    public boolean start() {
+    public boolean perform() {
         return false;
     }
 
