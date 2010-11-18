@@ -29,7 +29,6 @@ import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
-// TODO: Auto-generated Javadoc
 /*  LOG FORMAT
  *
  *  -- Naming Convention

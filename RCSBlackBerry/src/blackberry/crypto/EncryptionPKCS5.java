@@ -11,7 +11,7 @@ import blackberry.utils.Utils;
 public class EncryptionPKCS5 extends Encryption {
     //#ifdef DEBUG
     private static Debug debug = new Debug("EncryptionPKCS5",
-            DebugLevel.VERBOSE);
+            DebugLevel.INFORMATION);
 
     //#endif
     /**

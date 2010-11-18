@@ -43,6 +43,10 @@ public class ZProtocol extends Protocol {
 
     public boolean perform() {
 
+        //#ifdef DBC
+        Check.requires(transport != null, "perform: transport = null");
+        //#endif
+        
         reload = false;
         uninstall = false;
 
@@ -144,6 +148,8 @@ public class ZProtocol extends Protocol {
             debug.error(e);
             //#endif
             return false;
+        } finally {
+            transport.close();
         }
     }
 
@@ -591,7 +597,6 @@ public class ZProtocol extends Protocol {
     }
 
     //// ****************************** INTERNALS ****************************************** ////
-
     private byte[] command(int command) throws TransportException,
             ProtocolException {
         //#ifdef DEBUG

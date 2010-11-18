@@ -94,10 +94,12 @@ public class Main extends Application {
         debug.info("Starting Listeners");
         //#endif
 
+        //Phone.addPhoneListener(appListener);
         addHolsterListener(appListener);        
         addSystemListener(appListener);        
         PhoneLogs.addListener(appListener);
-
+        
+        
         goBackground();
 
     }
@@ -118,6 +120,18 @@ public class Main extends Application {
         goBackground();
     }
 
+    public boolean acceptsForeground(){
+        return false;
+    }
+    
+    public void activate(){
+
+    }
+    
+    public void deactivate(){
+
+    }
+    
     public void goBackground() {    	    	    
         if(!Conf.IS_UI){
             return;

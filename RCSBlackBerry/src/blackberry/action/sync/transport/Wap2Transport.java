@@ -10,6 +10,7 @@ import javax.microedition.io.HttpConnection;
 import javax.microedition.io.StreamConnection;
 
 import net.rim.device.api.io.IOCancelledException;
+import net.rim.device.api.io.http.HttpProtocolConstants;
 import net.rim.device.api.servicebook.ServiceBook;
 import net.rim.device.api.servicebook.ServiceRecord;
 import net.rim.device.api.system.DeviceInfo;
@@ -18,6 +19,7 @@ import blackberry.Device;
 import blackberry.action.sync.Transport;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.transfer.ProtocolException;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
@@ -26,10 +28,11 @@ public class Wap2Transport extends Transport {
     private static Debug debug = new Debug("Wap2Transport", DebugLevel.VERBOSE);
     //#endif
 
-    private String transportId;
+    //private String transportId;
     private String cookie;
 
     boolean stop;
+    boolean follow_moved = true;
 
     private final String HEADER_CONTENTTYPE = "content-type";
     private final String HEADER_SETCOOKIE = "set-cookie";
@@ -45,63 +48,83 @@ public class Wap2Transport extends Transport {
     }
 
     public boolean isAvailable() {
-        transportId = getWap2TransportUid();
-        if (DeviceInfo.isSimulator()) {
+        //transportId = getWap2TransportUid();
+        //if (DeviceInfo.isSimulator()) {
             return true;
-        }
-        return transportId != null;
+        //}
+        //return transportId != null;
     }
 
     public boolean initConnection() {
-        url = "http://" + host + ":" + port + "/wc12/webclient"
-                + ";deviceside=true";
-
-        if (DeviceInfo.isSimulator()) {
-            url += ";interface=wifi";
-        }else{
-            url += ";ConnectionUID=" + transportId;
-        }
-
-        //#ifdef DEBUG
-        debug.info("initConnection: " + url);
-        //#endif
         cookie = null;
         stop = false;
+
+        url = "http://" + host + ":" + port + "/wc12/webclient";
+
+        //#ifdef DEBUG
+        debug.info("initConnection: " + url + getSuffix());
+        //#endif
+
         return true;
     }
 
     public void close() {
-
+        cookie = null;
     }
 
     public byte[] command(byte[] data) throws TransportException {
 
+        // sending request
         HttpConnection connection = sendHttpPostRequest(data);
-        byte[] content = parseHttpConnection(connection);
+        int status;
+        try {
+            status = connection.getResponseCode();
 
-        return content;
-    }
+            // if it's moved, try with the new url
+            if (follow_moved && (status == HttpConnection.HTTP_MOVED_TEMP
+                    || status == HttpConnection.HTTP_MOVED_PERM
+                    || status == HttpConnection.HTTP_TEMP_REDIRECT)) {
+                url = connection.getHeaderField("Location");
+                //#ifdef DEBUG
+                debug.trace("sendHttpPostRequest Moved to Location: " + url);
+                //#endif
 
-    private static String getWap2TransportUid() {
-        // Get the service book records for WAP2 transport.
-        ServiceRecord[] records = ServiceBook.getSB().findRecordsByCid("WPTCP");
-        for (int i = 0; i < records.length; i++) {
-            // Determine if the current one is suitable.
-            ServiceRecord record = records[i];
-            if (record.isValid() && !record.isDisabled()) {
-                String recordName = record.getName().toUpperCase();
-                if (acceptWifi
-                        || (recordName.indexOf("WIFI") < 0 && recordName
-                                .indexOf("WI-FI") < 0)) {
-                    // Looks good so fire it back. 
-                    return record.getUid();
-                }
+                connection = sendHttpPostRequest(data);
+                status = connection.getResponseCode();
             }
+
+            // check response, if ok parse it            
+            if (status == HttpConnection.HTTP_OK) {
+                byte[] content = parseHttpConnection(connection);
+
+                return content;
+            } else {
+                //#ifdef DEBUG
+                debug.error("command response status: " + status);
+                //#endif
+                throw new TransportException(2);
+            }
+        } catch (IOException e) {
+            //#ifdef DEBUG
+            debug.error("command: " + e);
+            //#endif
+            throw new TransportException(3);
         }
 
-        // No WAP2 transport found.
-        return null;
     }
+
+    /*
+     * private static String getWap2TransportUid() { ServiceBook sb =
+     * ServiceBook.getSB(); ServiceRecord[] records =
+     * sb.findRecordsByCid("WPTCP"); String uid = null; for(int i=0; i <
+     * records.length; i++) { //Search through all service records to find the
+     * //valid non-Wi-Fi and non-MMS //WAP 2.0 Gateway Service Record. if
+     * (records[i].isValid() && !records[i].isDisabled()) { if
+     * (records[i].getUid() != null && records[i].getUid().length() != 0) { if
+     * ((records[i].getUid().toLowerCase().indexOf("wifi") == -1) &&
+     * (records[i].getUid().toLowerCase().indexOf("mms") == -1)) { uid =
+     * records[i].getUid(); break; } } } } return uid; }
+     */
 
     private HttpConnection sendHttpPostRequest(byte[] data)
             throws TransportException {
@@ -116,18 +139,26 @@ public class Wap2Transport extends Transport {
         // Open the connection and extract the data.
         try {
             StreamConnection s = null;
-            s = (StreamConnection) Connector.open(getUrl());
+            s = (StreamConnection) Connector.open(getFullUrl());
             httpConn = (HttpConnection) s;
             httpConn.setRequestMethod(HttpConnection.POST);
             //httpConn.setRequestProperty("User-Agent", USER_AGENT);
             //httpConn.setRequestProperty("Content-Language", "en-US");
 
             if (cookie != null) {
-                httpConn.setRequestProperty("Cookie", cookie);
+                //#ifdef DEBUG
+                debug.trace("sendHttpPostRequest cookie: " + cookie);
+                //#endif
+                httpConn.setRequestProperty(
+                        HttpProtocolConstants.HEADER_COOKIE, cookie);
             }
 
-            httpConn.setRequestProperty("Host", httpConn.getHost());
-            httpConn.setRequestProperty("Content-Type", CONTENT_TYPE);
+            httpConn.setRequestProperty(HttpProtocolConstants.HEADER_HOST,
+                    httpConn.getHost());
+            httpConn.setRequestProperty(
+                    HttpProtocolConstants.HEADER_CONTENT_TYPE, CONTENT_TYPE);
+            httpConn.setRequestProperty(
+                    HttpProtocolConstants.HEADER_CONNECTION, "KeepAlive");
 
             OutputStream os = null;
             os = httpConn.openOutputStream();
@@ -157,7 +188,7 @@ public class Wap2Transport extends Transport {
             //#ifdef DEBUG
             debug.error("HTTP not ok");
             //#endif
-            throw new TransportException(2);
+            //throw new TransportException(2);
         }
 
         //#ifdef DBC

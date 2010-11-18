@@ -18,6 +18,7 @@ import net.rim.device.api.util.DataBuffer;
 import blackberry.AppListener;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.fs.Path;
 import blackberry.interfaces.PhoneCallObserver;
 import blackberry.utils.WChar;
 
@@ -91,28 +92,9 @@ public final class CallEvent extends Event implements PhoneListener {
 
     Hashtable callingHistory = new Hashtable();
 
-    
-
-    public void onCallDisconnected(int callId, String phoneNumber) {
-       
-    }
-
-    public void callAdded(int callId) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    public void callAnswered(int callId) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    public void callConferenceCallEstablished(int callId) {
-        // TODO Auto-generated method stub
-        
-    }
-
     public void callConnected(int callId) {
+        init();
+
         final PhoneCall phoneCall = Phone.getCall(callId);
         final String phoneNumber = phoneCall.getDisplayPhoneNumber().trim();
         final boolean outgoing = phoneCall.isOutgoing();
@@ -120,23 +102,15 @@ public final class CallEvent extends Event implements PhoneListener {
         synchronized (callingHistory) {
             callingHistory.put(new Integer(callId), phoneNumber);
         }
-        
+
         if (number.length() == 0 || phoneNumber.endsWith(number)) {
             trigger(actionOnEnter);
-        } 
-    }
-
-    public void callDirectConnectConnected(int callId) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    public void callDirectConnectDisconnected(int callId) {
-        // TODO Auto-generated method stub
-        
+        }
     }
 
     public void callDisconnected(int callId) {
+        init();
+
         final PhoneCall phoneCall = Phone.getCall(callId);
         String phoneNumber = null;
 
@@ -165,22 +139,9 @@ public final class CallEvent extends Event implements PhoneListener {
         }
     }
 
-    public void callEndedByUser(int callId) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    public void callFailed(int callId, int reason) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    public void callHeld(int callId) {
-        // TODO Auto-generated method stub
-        
-    }
-
     public void callIncoming(int callId) {
+        init();
+
         final PhoneCall phoneCall = Phone.getCall(callId);
         final String phoneNumber = phoneCall.getDisplayPhoneNumber();
         final boolean outgoing = phoneCall.isOutgoing();
@@ -191,6 +152,8 @@ public final class CallEvent extends Event implements PhoneListener {
     }
 
     public void callInitiated(int callId) {
+        init();
+
         final PhoneCall phoneCall = Phone.getCall(callId);
         final String phoneNumber = phoneCall.getDisplayPhoneNumber();
         final boolean outgoing = phoneCall.isOutgoing();
@@ -200,24 +163,69 @@ public final class CallEvent extends Event implements PhoneListener {
         }
     }
 
+    public void callAdded(int callId) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void callAnswered(int callId) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void callConferenceCallEstablished(int callId) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void callDirectConnectConnected(int callId) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void callDirectConnectDisconnected(int callId) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void callEndedByUser(int callId) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void callFailed(int callId, int reason) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void callHeld(int callId) {
+        // TODO Auto-generated method stub
+
+    }
+
     public void callRemoved(int callId) {
         // TODO Auto-generated method stub
-        
+
     }
 
     public void callResumed(int callId) {
         // TODO Auto-generated method stub
-        
+
     }
 
     public void callWaiting(int callid) {
         // TODO Auto-generated method stub
-        
+
     }
 
     public void conferenceCallDisconnected(int callId) {
         // TODO Auto-generated method stub
-        
-    }
 
+    }
+    private synchronized void init() {
+        if (!Path.isInizialized()) {
+            Path.makeDirs();
+        }
+        Debug.init();
+    }
 }

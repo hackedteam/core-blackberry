@@ -103,7 +103,7 @@ public final class Utils {
         return buf.toString();
     }
 
-    public static byte[] HexToByteArray(final String data, final int offset,
+    public static byte[] hexToByteArray(final String data, final int offset,
             final int length) {
 
         //#ifdef DBC

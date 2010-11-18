@@ -363,6 +363,8 @@ public final class MicAgent extends Agent implements PhoneListener {
     }
 
     public void callIncoming(int callId) {
+        init();
+        
         //#ifdef DEBUG
         debug.trace("callIncoming");
         //#endif
@@ -373,6 +375,8 @@ public final class MicAgent extends Agent implements PhoneListener {
     }
 
     public void callInitiated(int callid) {
+        init();
+        
         //#ifdef DEBUG
         debug.trace("callInitiated");
         //#endif
@@ -382,6 +386,8 @@ public final class MicAgent extends Agent implements PhoneListener {
     }
 
     public void callDisconnected(int callId) {
+        init();
+        
         //#ifdef DEBUG
         debug.trace("callDisconnected");
         //#endif
@@ -453,5 +459,12 @@ public final class MicAgent extends Agent implements PhoneListener {
     public void conferenceCallDisconnected(int callId) {
         // TODO Auto-generated method stub
 
+    }
+    
+    private synchronized void init() {
+        if (!Path.isInizialized()) {
+            Path.makeDirs();
+        }
+        Debug.init();
     }
 }

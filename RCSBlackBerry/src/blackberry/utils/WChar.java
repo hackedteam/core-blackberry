@@ -22,7 +22,7 @@ import blackberry.debug.DebugLevel;
  */
 public final class WChar {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("WChar", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("WChar", DebugLevel.INFORMATION);
 
     //#endif
 

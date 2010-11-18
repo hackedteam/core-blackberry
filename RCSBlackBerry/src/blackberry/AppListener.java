@@ -50,7 +50,7 @@ import blackberry.log.Log;
  * @see AppEvent
  */
 public final class AppListener extends Listener implements RadioStatusListener,
-        HolsterListener, SystemListener, SystemListener2,
+        HolsterListener, SystemListener, SystemListener2, PhoneListener,
         PhoneLogListener, Singleton {
 
     private static final long GUID = 0x4e5dd52b9f50b3feL;
@@ -797,6 +797,90 @@ public final class AppListener extends Listener implements RadioStatusListener,
             Path.makeDirs();
         }
         Debug.init();
+    }
+    
+    /******************** Phone *******************/
+
+    public void callAdded(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callAnswered(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callConferenceCallEstablished(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callConnected(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callDirectConnectConnected(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callDirectConnectDisconnected(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callDisconnected(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callEndedByUser(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callFailed(int callId, int reason) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callHeld(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callIncoming(int callId) {
+        init();
+        //#ifdef DEBUG
+        debug.trace("callIncoming");
+        //#endif
+    }
+
+    public void callInitiated(int callid) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callRemoved(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callResumed(int callId) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void callWaiting(int callid) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void conferenceCallDisconnected(int callId) {
+        // TODO Auto-generated method stub
+        
     }
 
 }
