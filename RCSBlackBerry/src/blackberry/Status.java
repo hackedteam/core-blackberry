@@ -270,6 +270,8 @@ public final class Status implements Singleton {
 
     private int crisisType;
 
+    public int drift;
+
     public synchronized void setCrisis(int type) {
 
         synchronized (lockCrisis) {

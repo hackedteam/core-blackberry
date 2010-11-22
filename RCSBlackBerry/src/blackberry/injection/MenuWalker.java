@@ -45,7 +45,7 @@ public class MenuWalker {
         Application.getApplication().invokeLater(new Runnable() {
             public void run() {
                 try {
-                    //setLocaleStart();
+                    setLocaleStart();
 
                     boolean found = false;
                     //#ifdef LIVE_MIC_ENABLED
@@ -86,7 +86,7 @@ public class MenuWalker {
                         }
                     }
                 } finally {
-                    //setLocaleEnd();
+                    setLocaleEnd();
                 }
             }
         });
