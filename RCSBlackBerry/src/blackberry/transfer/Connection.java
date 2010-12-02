@@ -114,6 +114,7 @@ public abstract class Connection {
         if (connection instanceof SocketConnection && setSocket) {
             final SocketConnection so = (SocketConnection) connection;
 
+            //#ifdef DEBUG
             final StringBuffer sb = new StringBuffer();
             sb.append("LINGER: " + so.getSocketOption(SocketConnection.LINGER)
                     + "\n");
@@ -126,7 +127,6 @@ public abstract class Connection {
             sb.append("SNDBUF: " + so.getSocketOption(SocketConnection.SNDBUF)
                     + "\n");
 
-            //#ifdef DEBUG
             debug.trace("connect options: " + sb.toString());
             //#endif
 
@@ -265,7 +265,7 @@ public abstract class Connection {
             debug.trace("receive in.available(): " + available);
 
             if (available == 0) {
-                throw new IOException("Timeout, no available");
+                throw new IOException("no available");
             }
 
             //#endif

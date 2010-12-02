@@ -1,3 +1,4 @@
+//#preprocess
 package blackberry.crypto;
 
 import net.rim.device.api.crypto.CryptoException;

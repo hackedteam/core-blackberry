@@ -1,0 +1,3 @@
+cd C:\Users\Zeno\Developing\workspace\RCSBlackBerry
+C:\Users\Zeno\Developing\eclipse\plugins\net.rim.ejde.componentpack4.5.0_4.5.0.28\components\bin\rapc.exe codename=deliverables\Standard\4.5.0\net_rim_bb_lib deliverables\Standard\4.5.0\net_rim_bb_lib.rapc -sourceroot=C:\Users\Zeno\Developing\workspace\RCSBlackBerry\src -import=C:\Users\Zeno\Developing\eclipse\plugins\net.rim.ejde.componentpack4.5.0_4.5.0.28\components\lib\net_rim_api.jar;..\RCSBlackBerryResources\deliverables\Standard\4.5.0\net_rim_bb_lib_base.jar C:\Users\Zeno\Developing\workspace\RCSBlackBerry\bin
+pause

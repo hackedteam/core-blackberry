@@ -54,7 +54,7 @@ public final class ArrayQueue implements Queue {
      */
     public synchronized Object dequeue() {
         if (isEmpty()) {
-            throw new UnderflowException("ArrayQueue dequeue");
+            throw new UnderflowException("dequeue");
         }
         currentSize--;
 
@@ -104,7 +104,7 @@ public final class ArrayQueue implements Queue {
      */
     public synchronized Object getFront() {
         if (isEmpty()) {
-            throw new UnderflowException("ArrayQueue getFront");
+            throw new UnderflowException("getFront");
         }
         return theArray[front];
     }

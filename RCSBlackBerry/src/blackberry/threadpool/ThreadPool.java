@@ -131,7 +131,7 @@ public final class ThreadPool {
      */
     public synchronized void start() {
         if (!closed) {
-            throw new IllegalStateException("Pool already started.");
+            throw new IllegalStateException("already started.");
         }
         closed = false;
         for (int i = 0; i < poolSize; ++i) {
