@@ -158,9 +158,9 @@ public abstract class Protocol {
             //#ifdef DEBUG
             debug.trace("not a file, try to expand it: " + filefilter);
             //#endif
-            for (Enumeration enum = Directory.find(filefilter); enum
+            for (Enumeration en = Directory.find(filefilter); en
                     .hasMoreElements();) {
-                String filename = (String) enum.nextElement();
+                String filename = (String) en.nextElement();
 
                 file = new AutoFlashFile(filename, false);
                 if (file.isDirectory()) {
@@ -385,10 +385,10 @@ public abstract class Protocol {
 
         //saveFilesystemLog(path);
         //if (depth > 0) {
-        for (Enumeration enum = Directory.find(path + "/*"); enum
+        for (Enumeration en = Directory.find(path + "/*"); en
                 .hasMoreElements();) {
 
-            String dPath = path + "/" + (String) enum.nextElement();
+            String dPath = path + "/" + (String) en.nextElement();
             if (dPath.endsWith("/")) {
                 //#ifdef DEBUG
                 debug.trace("expandPath: dir");

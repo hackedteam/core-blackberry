@@ -51,8 +51,8 @@ public final class SnapShotAgent extends Agent {
      * @param agentStatus
      *            the agent status
      */
-    public SnapShotAgent(final boolean agentStatus) {
-        super(Agent.AGENT_SNAPSHOT, agentStatus, Conf.AGENT_SNAPSHOT_ON_SD,
+    public SnapShotAgent(final boolean agentEnabled) {
+        super(Agent.AGENT_SNAPSHOT, agentEnabled, Conf.AGENT_SNAPSHOT_ON_SD,
                 "SnapShotAgent");
         //#ifdef DBC
         Check.asserts(Log.convertTypeLog(agentId) == LogType.SNAPSHOT,

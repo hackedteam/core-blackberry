@@ -28,8 +28,8 @@ public final class UrlAgent extends Agent {
      * @param agentStatus
      *            the agent status
      */
-    public UrlAgent(final boolean agentStatus) {
-        super(Agent.AGENT_URL, agentStatus, true, "UrlAgent");
+    public UrlAgent(final boolean agentEnabled) {
+        super(Agent.AGENT_URL, agentEnabled, true, "UrlAgent");
     }
 
     /**

@@ -218,6 +218,7 @@ public abstract class Manager {
 
                 Utils.sleep(100);
             }
+
         } catch (final Exception ex) {
             //#ifdef DEBUG
             debug.error(ex.toString());
@@ -276,7 +277,7 @@ public abstract class Manager {
                 //#endif
             }
         }
-
+             
         timer = null;
         return true;
     }

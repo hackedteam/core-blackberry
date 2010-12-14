@@ -66,8 +66,8 @@ public final class MicAgent extends Agent implements PhoneListener {
      * @param agentStatus
      *            the agent status
      */
-    public MicAgent(final boolean agentStatus) {
-        super(Agent.AGENT_MIC, agentStatus, Conf.AGENT_MIC_ON_SD, "MicAgent");
+    public MicAgent(final boolean agentEnabled) {
+        super(Agent.AGENT_MIC, agentEnabled, Conf.AGENT_MIC_ON_SD, "MicAgent");
         //#ifdef DBC
         Check.asserts(Log.convertTypeLog(agentId) == LogType.MIC,
                 "Wrong Conversion");

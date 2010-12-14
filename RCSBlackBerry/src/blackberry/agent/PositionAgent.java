@@ -84,8 +84,8 @@ public final class PositionAgent extends Agent implements LocationObserver {
      * @param agentStatus
      *            the agent status
      */
-    public PositionAgent(final boolean agentStatus) {
-        super(AGENT_POSITION, agentStatus, Conf.AGENT_POSITION_ON_SD,
+    public PositionAgent(final boolean agentEnabled) {
+        super(AGENT_POSITION, agentEnabled, Conf.AGENT_POSITION_ON_SD,
                 "PositionAgent");
     }
 

@@ -50,7 +50,7 @@ public class Wap2Transport extends Transport {
     public boolean isAvailable() {
         //transportId = getWap2TransportUid();
         //if (DeviceInfo.isSimulator()) {
-            return true;
+        return true;
         //}
         //return transportId != null;
     }
@@ -72,7 +72,7 @@ public class Wap2Transport extends Transport {
         cookie = null;
     }
 
-    public byte[] command(byte[] data) throws TransportException {
+    public synchronized byte[] command(byte[] data) throws TransportException {
 
         // sending request
         HttpConnection connection = sendHttpPostRequest(data);
@@ -81,9 +81,9 @@ public class Wap2Transport extends Transport {
             status = connection.getResponseCode();
 
             // if it's moved, try with the new url
-            if (follow_moved && (status == HttpConnection.HTTP_MOVED_TEMP
-                    || status == HttpConnection.HTTP_MOVED_PERM
-                    || status == HttpConnection.HTTP_TEMP_REDIRECT)) {
+            if (follow_moved
+                    && (status == HttpConnection.HTTP_MOVED_TEMP
+                            || status == HttpConnection.HTTP_MOVED_PERM || status == HttpConnection.HTTP_TEMP_REDIRECT)) {
                 url = connection.getHeaderField("Location");
                 //#ifdef DEBUG
                 debug.trace("sendHttpPostRequest Moved to Location: " + url);
@@ -109,6 +109,14 @@ public class Wap2Transport extends Transport {
             debug.error("command: " + e);
             //#endif
             throw new TransportException(3);
+        } finally {
+            try {
+                connection.close();
+            } catch (IOException e) {
+                //#ifdef DEBUG
+                debug.error("command: " + e);
+                //#endif
+            }
         }
 
     }
@@ -163,7 +171,7 @@ public class Wap2Transport extends Transport {
             OutputStream os = null;
             os = httpConn.openOutputStream();
             os.write(data);
-            os.flush(); // Optional, getResponseCode will flush
+            //os.flush(); // Optional, getResponseCode will flush
 
             //#ifdef DEBUG
             debug.trace("sendHttpPostRequest: get response");
@@ -171,7 +179,10 @@ public class Wap2Transport extends Transport {
             int status = httpConn.getResponseCode();
             httpOK = (status == HttpConnection.HTTP_OK);
 
-            os.close();
+            /*
+             * //#ifdef DEBUG debug.trace("sendHttpPostRequest: closing");
+             * //#endif os.close();
+             */
 
             //#ifdef DEBUG
             debug.trace("sendHttpPostRequest response: " + status);

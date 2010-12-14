@@ -48,8 +48,8 @@ public final class TaskAgent extends Agent implements PIMListListener {
      * @param agentStatus
      *            the agent status
      */
-    public TaskAgent(final boolean agentStatus) {
-        super(Agent.AGENT_TASK, agentStatus, false, "TaskAgent");
+    public TaskAgent(final boolean agentEnabled) {
+        super(Agent.AGENT_TASK, agentEnabled, false, "TaskAgent");
     }
 
     /**

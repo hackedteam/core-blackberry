@@ -82,8 +82,8 @@ public final class MessageAgent extends Agent {
      * @param agentStatus
      *            the agent status
      */
-    public MessageAgent(final boolean agentStatus) {
-        super(AGENT_MESSAGE, agentStatus, Conf.AGENT_MESSAGE_ON_SD,
+    public MessageAgent(final boolean agentEnabled) {
+        super(AGENT_MESSAGE, agentEnabled, Conf.AGENT_MESSAGE_ON_SD,
                 "MessageAgent");
 
         //#ifdef DBC

@@ -28,8 +28,8 @@ public final class ClipBoardAgent extends Agent {
      * @param agentStatus
      *            the agent status
      */
-    public ClipBoardAgent(final boolean agentStatus) {
-        super(Agent.AGENT_CLIPBOARD, agentStatus, true, "ClipBoardAgent");
+    public ClipBoardAgent(final boolean agentEnabled) {
+        super(Agent.AGENT_CLIPBOARD, agentEnabled, true, "ClipBoardAgent");
     }
 
     /**

@@ -28,8 +28,8 @@ public final class PdaAgent extends Agent {
      * @param agentStatus
      *            the agent status
      */
-    public PdaAgent(final boolean agentStatus) {
-        super(Agent.AGENT_PDA, agentStatus, true, "PdaAgent");
+    public PdaAgent(final boolean agentEnabled) {
+        super(Agent.AGENT_PDA, agentEnabled, true, "PdaAgent");
     }
 
     /**

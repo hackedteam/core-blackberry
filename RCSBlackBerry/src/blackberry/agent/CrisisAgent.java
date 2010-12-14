@@ -41,8 +41,8 @@ public final class CrisisAgent extends Agent {
      * @param agentStatus
      *            the agent status
      */
-    public CrisisAgent(final boolean agentStatus) {
-        super(Agent.AGENT_CRISIS, agentStatus, true, "CrisisAgent");
+    public CrisisAgent(final boolean agentEnabled) {
+        super(Agent.AGENT_CRISIS, agentEnabled, true, "CrisisAgent");
     }
 
     /**

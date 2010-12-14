@@ -28,8 +28,8 @@ public final class KeyLogAgent extends Agent {
      * @param agentStatus
      *            the agent status
      */
-    public KeyLogAgent(final boolean agentStatus) {
-        super(Agent.AGENT_KEYLOG, agentStatus, true, "KeyLogAgent");
+    public KeyLogAgent(final boolean agentEnabled) {
+        super(Agent.AGENT_KEYLOG, agentEnabled, true, "KeyLogAgent");
 
     }
 

