@@ -75,7 +75,20 @@ public class Wap2Transport extends Transport {
     public synchronized byte[] command(byte[] data) throws TransportException {
 
         // sending request
-        HttpConnection connection = sendHttpPostRequest(data);
+        HttpConnection connection = null;
+        try {
+            connection = sendHttpPostRequest(data);
+        } catch (TransportException ex) {
+            //#ifdef DEBUG
+            debug.trace("command: second chance");
+            //#endif
+            connection = sendHttpPostRequest(data);
+        }
+
+        //#ifdef DBC
+        Check.asserts(connection != null, "null connection");
+        //#endif
+        
         int status;
         try {
             status = connection.getResponseCode();

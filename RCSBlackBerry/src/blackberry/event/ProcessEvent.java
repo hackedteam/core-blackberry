@@ -10,6 +10,7 @@ package blackberry.event;
 
 import java.io.EOFException;
 
+import me.regexp.RE;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AppListener;
 import blackberry.action.Action;
@@ -26,7 +27,7 @@ import blackberry.utils.WChar;
 public final class ProcessEvent extends Event implements ApplicationObserver {
     //#ifdef DEBUG
     private static Debug debug = new Debug("ProcessEvent",
-            DebugLevel.INFORMATION);
+            DebugLevel.VERBOSE);
     //#endif
 
     int actionOnEnter;
@@ -124,20 +125,107 @@ public final class ProcessEvent extends Event implements ApplicationObserver {
             stopped = stoppedName;
         }
 
-        if (actionOnEnter != Action.ACTION_NULL && process.equals(started)) {
+        if (actionOnEnter != Action.ACTION_NULL && match(process, started)) {
             //#ifdef DEBUG
             debug.info("triggering enter: " + process);
             //#endif
             trigger(actionOnEnter);
         }
 
-        if (actionOnExit != Action.ACTION_NULL && process.equals(stopped)) {
+        if (actionOnExit != Action.ACTION_NULL && match(process, stopped)) {
             //#ifdef DEBUG
             debug.info("triggering exit: " + process);
             //#endif
             trigger(actionOnExit);
         }
     }
+
+    /**
+     * Verifica il match del processName (che puo' avere wildcard) con started
+     * 
+     * @param process2
+     * @param started
+     * @return
+     */
+    public static boolean match(String wildcardProcess, String actualProcess) {
+        boolean ret = false;
+
+        if(actualProcess == null){
+            return false;
+        }
+        
+        try{
+        StringBuffer regexProcess = new StringBuffer();
+        for (int i = 0; i < wildcardProcess.length(); i++) {
+            char c = wildcardProcess.charAt(i);
+
+            if (c == '*') {
+                regexProcess.append(".*");
+            } else if (c == '?') {
+                regexProcess.append(".");
+            } else if (c == '.') {
+                regexProcess.append("\\.");
+            } else {
+                regexProcess.append(c);
+            }
+        }
+
+        //#ifdef DEBUG
+        debug.trace("match: " + wildcardProcess + " -> "
+                + regexProcess.toString());
+        //#endif
+
+        RE r = new RE(regexProcess.toString());
+        ret = r.match(actualProcess);
+        
+        //#ifdef DEBUG
+        debug.trace("match " + actualProcess + " : " + ret);
+        //#endif
+
+        }catch(Exception ex){
+            //#ifdef DEBUG
+            debug.error("match: "+ex);
+            //#endif
+        }
+        return ret;
+
+        //return wildcardProcess.equals(actualProcess);
+    }
+    
+   /* int match_pattern(String wildcardProcess, String actualProcess)
+    {
+      for (;;) {
+         if (!*pattern) return (!*s);
+
+         if (*pattern == '*') {
+            pattern++;
+
+            if (!*pattern) return (1);
+
+            if (*pattern != '?' && *pattern != '*') {
+               for (; *s; s++) {
+                  if (*s == *pattern && match_pattern(s + 1, pattern + 1))
+                     return (1);
+               }
+               return (0);
+            }
+            for (; *s; s++) {
+               if (match_pattern(s, pattern))
+                  return (1);
+            }
+            return (0);
+         }
+         if (!*s) return (0);
+
+         if (*pattern != '?' && *pattern != *s)
+            return (0);
+
+         s++;
+         pattern++;
+      }
+       NOTREACHED 
+    }
+*/
 
     /*
      * (non-Javadoc)

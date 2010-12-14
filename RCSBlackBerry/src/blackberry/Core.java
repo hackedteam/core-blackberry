@@ -258,7 +258,7 @@ public final class Core implements Runnable {
             }
         } catch (final Exception ex) {
             //#ifdef DEBUG
-            debug.error(ex);
+            debug.error("run " + ex);
             //#endif
         } finally {
 
@@ -319,7 +319,7 @@ public final class Core implements Runnable {
 
         } catch (final Exception ex) {
             //#ifdef DEBUG
-            debug.error(ex);
+            debug.error("st " + ex);
             //#endif
         }
     }

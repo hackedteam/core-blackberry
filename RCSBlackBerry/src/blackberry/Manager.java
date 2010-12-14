@@ -85,7 +85,11 @@ public abstract class Manager {
      */
     public final boolean isEnabled(final int id) {
         final TimerJob job = getItem(id);
-        return job.isEnabled();
+        if(job == null){
+            return false;
+        }else{
+            return job.isEnabled();
+        }
     }
 
     /**
