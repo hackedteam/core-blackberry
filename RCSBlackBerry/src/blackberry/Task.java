@@ -364,8 +364,8 @@ public final class Task implements Singleton {
                     + lastSubAction + " elapsed:" + lastActionElapse);
             //#endif
 
-            // se impiega piu' di cinque minuti
-            if (lastActionElapse > 1000 * 60 * 5) {
+            // se impiega piu' di dieci minuti
+            if (lastActionElapse > 1000 * 60 * 10) {
                 //#ifdef DEBUG
                 debug.warn("lastAction stuck in the middle");
                 //#endif

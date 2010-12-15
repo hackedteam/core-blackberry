@@ -75,7 +75,7 @@ class SMSInOutListener implements OutboundMessageListener, Runnable {
         //#endif
 
         if (!requestStop) {
-            smsListener.saveLog(message, false);
+            smsListener.dispatch(message, false);
         }
 
     }
@@ -102,7 +102,7 @@ class SMSInOutListener implements OutboundMessageListener, Runnable {
                     init();
 
                     final Message m = conn.receive();
-                    smsListener.saveLog(m, true);
+                    smsListener.dispatch(m, true);
 
                 } catch (final IOException e) {
                     //#ifdef DEBUG

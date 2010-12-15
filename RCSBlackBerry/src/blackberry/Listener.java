@@ -23,7 +23,7 @@ public abstract class Listener {
      * @param observer
      *            the observer
      */
-    public synchronized void addObserver(final Vector observers,
+    public synchronized static void addObserver(final Vector observers,
             final Observer observer) {
 
         //#ifdef DBC
@@ -46,7 +46,7 @@ public abstract class Listener {
      * @param observer
      *            the observer
      */
-    public synchronized void removeObserver(final Vector observers,
+    public synchronized static void removeObserver(final Vector observers,
             final Observer observer) {
         //#ifdef DEBUG
         debug.trace("removing observer: " + observer);
