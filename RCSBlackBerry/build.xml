@@ -23,25 +23,8 @@
 	<property name="preprocess.symbols" value="DEBUG,DBC,FAKECONF,LIVE_MIC_ENABLED" />
 
 	<!-- MAIN -->
-	<target name="main" depends="lib,main.debug" />
+	<target name="main" depends="main.debug" />
 
-	<!-- LIB -->
-	<target name="lib">
-		<echo message="===========" />
-		<echo message="=== Lib ===" />
-		<echo message="===========" />
-
-		<splash imageurl="http://www.hackingteam.it/img/logo.gif" useproxy="true" showduration="5000" />
-		
-		<ant dir="../RCSBlackBerryResources"
-			useNativeBasedir="false"
-			inheritAll="false" >
-			<property name="preprocess.symbols" value="${preprocess.symbols}"/>
-			<property name="libs" value="${net_rim_api.jar}" />
-		</ant>
-
-		<input>Press Return key to continue...</input>
-	</target>
 
 	<!-- DEBUG -->
 	<property name="compile.name" value="DEBUG" />
@@ -50,13 +33,25 @@
 		<echo message="=== DEBUG ===" />
 		<echo message="=============" />
 
-		<splash imageurl="http://www.hackingteam.it/img/logo.gif" useproxy="true" showduration="5000" />
-
 		<property name="bb.lib" value="lib/net_rim_bb_comp_lib.jar" />
 		<property name="libs" value="${bb.lib}:${net_rim_api.jar}" />
 
+		<antcall target="common.build" />
+
+		<echo message="codname.cod=${codename}.cod" />
+		<echo message="output.cod=${output.cod}" />
+		<move file="${codename}.cod" tofile="${output.cod}/${codename}.cod" failonerror="false" />
+		<move file="${codename}.debug" tofile="${output.cod}/${codename}.debug" failonerror="false" />
+		<move file="${codename}.cso" tofile="${output.cod}/${codename}.cso" failonerror="false" />
+		<move file="${codename}.csl" tofile="${output.cod}/${codename}.csl" failonerror="false" />
+
+		<move file="../${codename}.cod" tofile="${output.cod}/${codename}.cod" failonerror="false" />
+		<move file="../${codename}.debug" tofile="${output.cod}/${codename}.debug" failonerror="false" />
+		<move file="../${codename}.cso" tofile="${output.cod}/${codename}.cso" failonerror="false" />
+		<move file="../${codename}.csl" tofile="${output.cod}/${codename}.csl" failonerror="false" />
+
 		<antcall target="common.sign" />
-		<input>Press Return key to continue...</input>
+		
 	</target>
 
 	<!-- RELEASE 
@@ -65,14 +60,6 @@
 	<target name="main.release" depends="common.sign" />
 	-->
 
-	<target name="init">
-		<echo message="=============" />
-		<echo message="=== Init Lib ===" />
-		<ant antfile="../RCSBlackBerryResources/build.xml" inheritAll="false" target="init" />
 
-		<echo message="=== Init Main ===" />
-		<antcall target="common.init" />
-		<echo message="=============" />
-	</target>
 
 </project>

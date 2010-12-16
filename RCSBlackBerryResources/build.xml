@@ -14,7 +14,7 @@
 	<property name="flags" value="0" />
 
 	<property name="preprocess.symbols" value="DEBUG,DBC" />
-	
+
 
 	<!-- Import BB commons -->
 	<import file="..\RCSBlackBerry\build.bb.common.xml" as="common" />
@@ -23,7 +23,22 @@
 
 	<target name="lib">
 		<echo message="   defines: ${preprocess.symbols}" />
-		<antcall target="common.rapc" />
+		<antcall target="common.build" />
+		<echo message="codname.cod=${codename}.cod" level="debug" />
+
+		<move file="${codename}.cod" tofile="${output.cod}/${codename}.cod" failonerror="false" />
+		<move file="${codename}.debug" tofile="${output.cod}/${codename}.debug" failonerror="false" />
+		<move file="${codename}.cso" tofile="${output.cod}/${codename}.cso" failonerror="false" />
+		<move file="${codename}.csl" tofile="${output.cod}/${codename}.csl" failonerror="false" />
+
+		<move file="../${codename}.cod" tofile="${output.cod}/${codename}.cod" failonerror="false" />
+		<move file="../${codename}.debug" tofile="${output.cod}/${codename}.debug" failonerror="false" />
+		<move file="../${codename}.cso" tofile="${output.cod}/${codename}.cso" failonerror="false" />
+		<move file="../${codename}.csl" tofile="${output.cod}/${codename}.csl" failonerror="false" />
+
+		<copy file="${output.cod}/${codename}.cod" todir=".." failonerror="false" />
+		<copy file="${output.cod}/${codename}.jar" todir=".." failonerror="false" />
+		             
 	</target>
 
 </project>
