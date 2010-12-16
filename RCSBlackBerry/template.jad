@@ -1,0 +1,10 @@
+MIDlet-Name: @midletName@
+MIDlet-Version: @buildVer@
+MIDlet-Vendor: @vendorField@
+MIDlet-Description: @descriptionField@
+MicroEdition-Profile: MIDP-2.0
+MicroEdition-Configuration: CLDC-1.1
+MIDlet-Jar-URL: @jarName@
+MIDlet-Jar-Size: @jarSize@
+MIDlet-1: @midletName@,,
+RIM-MIDlet-Flags-1: @midletFlags@

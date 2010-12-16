@@ -10,7 +10,6 @@
 package tests.unit;
 
 import java.util.Timer;
-
 import blackberry.threadpool.TimerJob;
 import blackberry.utils.Utils;
 

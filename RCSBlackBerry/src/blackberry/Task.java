@@ -161,7 +161,7 @@ public final class Task implements Singleton {
                                 //#ifdef DBC
                                 Check.asserts(subAction != null,
                                         "checkActions: subAction!=null");
-                                //#endift
+                                //#endif
 
                                 lastSubAction = subAction.toString();
 

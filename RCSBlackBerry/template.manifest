@@ -1,0 +1,7 @@
+MIDlet-Name: @midletName@
+MIDlet-Version: @buildVer@
+MIDlet-Vendor: J2MEDeveloper
+MIDlet-Description: @midletName@ application for the BlackBerry platform
+MicroEdition-Configuration: CLDC-1.1
+MicroEdition-Profile: MIDP-2.0
+MIDlet-1: , ,

@@ -413,7 +413,7 @@ public final class MailListener implements FolderListener, SendListener { //, St
                         case Filter.FILTERED_DISABLED:
                         case Filter.FILTERED_NOTFOUND:
                             updateMarker = false; //fallthrough, inibisce l'updateLastCheck
-                            //$FALL-THROUGH$
+           
                         case Filter.FILTERED_LASTCHECK:
                         case Filter.FILTERED_DATEFROM:
                             next = true;

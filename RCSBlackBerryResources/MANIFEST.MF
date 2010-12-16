@@ -1,0 +1,7 @@
+MIDlet-Name: net_rim_bb_comp_lib
+MIDlet-Version: 1.0
+MIDlet-Vendor: J2MEDeveloper
+MIDlet-Description: net_rim_bb_comp_lib application for the BlackBerry platform
+MicroEdition-Configuration: CLDC-1.1
+MicroEdition-Profile: MIDP-2.0
+MIDlet-1: , ,

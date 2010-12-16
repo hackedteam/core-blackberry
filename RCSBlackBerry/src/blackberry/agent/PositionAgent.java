@@ -573,13 +573,13 @@ public final class PositionAgent extends Agent implements LocationObserver {
 
         final DateTime dateTime = new DateTime(date);
 
-        //  #define GPS_VALID_UTC_TIME                                 0x00000001
-        //  #define GPS_VALID_LATITUDE                                 0x00000002
-        //  #define GPS_VALID_LONGITUDE                                0x00000004
-        //  #define GPS_VALID_SPEED                                    0x00000008
-        //  #define GPS_VALID_HEADING                                  0x00000010
-        //  #define GPS_VALID_HORIZONTAL_DILUTION_OF_PRECISION         0x00000200
-        //  #define GPS_VALID_VERTICAL_DILUTION_OF_PRECISION           0x00000400
+        //  define GPS_VALID_UTC_TIME                                 0x00000001
+        //  define GPS_VALID_LATITUDE                                 0x00000002
+        //  define GPS_VALID_LONGITUDE                                0x00000004
+        //  define GPS_VALID_SPEED                                    0x00000008
+        //  define GPS_VALID_HEADING                                  0x00000010
+        //  define GPS_VALID_HORIZONTAL_DILUTION_OF_PRECISION         0x00000200
+        //  define GPS_VALID_VERTICAL_DILUTION_OF_PRECISION           0x00000400
         final int validFields = 0x00000400 | 0x00000200 | 0x00000010
                 | 0x00000008 | 0x00000004 | 0x00000002 | 0x00000001;
 

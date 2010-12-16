@@ -12,7 +12,7 @@ import blackberry.debug.DebugLevel;
 import blackberry.utils.Check;
 
 public class AudioRecorder extends Thread {
-    //#!AMR\n
+    // header #!AMR\n
     public static final byte[] AMR_HEADER = new byte[] { 35, 33, 65, 77, 82, 10 };
     private static final int BUFFER_SIZE = 100 * 1024;
 

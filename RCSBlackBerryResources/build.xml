@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<project name="RCS_BB_lib" default="lib" basedir=".">
+	<typedef resource="bb-ant-defs.xml" />
+
+	<!-- Application properties -->
+	<property name="ver" value="1.0" />
+	<property name="codename" value="net_rim_bb_comp_lib" />
+	<property name="main.class" value="com.httpdemo.HTTPDemo" />
+
+	<property name="vendor" value="RIM" />
+	<property name="description" value="Compatibility library" />
+
+	<property name="jde.version" value="4.5.0" />
+	<property name="flags" value="0" />
+
+	<property name="preprocess.symbols" value="DEBUG,DBC" />
+	
+
+	<!-- Import BB commons -->
+	<import file="..\RCSBlackBerry\build.bb.common.xml" as="common" />
+	<property name="libs" value="${net_rim_api.jar}" />
+	<property name="src" location="src" />
+
+	<target name="lib">
+		<echo message="   defines: ${preprocess.symbols}" />
+		<antcall target="common.rapc" />
+	</target>
+
+</project>
