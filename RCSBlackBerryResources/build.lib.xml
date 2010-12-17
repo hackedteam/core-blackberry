@@ -17,7 +17,7 @@
 
 
 	<!-- Import BB commons -->
-	<import file="..\RCSBlackBerry\build.bb.common.xml" as="common" />
+	<import file="../RCSBlackBerry/build.common.xml" as="common" />
 	<property name="libs" value="${net_rim_api.jar}" />
 	<property name="src" location="src" />
 

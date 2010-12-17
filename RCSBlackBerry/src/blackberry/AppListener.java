@@ -316,6 +316,8 @@ public final class AppListener extends Listener implements RadioStatusListener,
         debug.info("networkServiceChange networkId: " + networkId
                 + " service : " + service);
         //#endif
+        
+        // service == 0 : non c'e' segnale, service == 1030 c'e'. EVENT
     }
 
     /*
@@ -351,6 +353,8 @@ public final class AppListener extends Listener implements RadioStatusListener,
         debug.info("pdpStateChange apn: " + apn + " state: " + state
                 + "cause :" + cause);
         //#endif
+        
+        // state : 1, spento, state == 1 acceso
     }
 
     /*

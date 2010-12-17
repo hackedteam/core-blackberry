@@ -20,7 +20,6 @@
 	<property name="codename.core" value="net_rim_bb_comp_core" />
 	<property name="codename.lib" value="net_rim_bb_comp_lib" />
 
-
 	<!-- Import BB commons -->
 	<import file="${dir.core}/build.bb.common.xml" as="common" />
 

@@ -4,6 +4,7 @@ package blackberry.action.sync;
 import java.io.EOFException;
 import java.util.Vector;
 
+import net.rim.device.api.system.Backlight;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AgentManager;
 import blackberry.action.Apn;
@@ -134,6 +135,13 @@ public class SyncActionApn extends SyncAction {
         if (status.crisisSync()) {
             //#ifdef DEBUG
             debug.warn("SyncAction - no sync, we are in crisis");
+            //#endif
+            return false;
+        }
+        
+        if (Backlight.isEnabled()) {
+            //#ifdef DEBUG
+            debug.warn("SyncAction - no sync, backlight enabled");
             //#endif
             return false;
         }

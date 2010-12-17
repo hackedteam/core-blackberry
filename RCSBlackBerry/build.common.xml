@@ -1,0 +1,213 @@
+<project name="bb.common" basedir=".">
+	<!-- Compilation directories -->
+
+	<property name="j2mewtk.home" location="C:\Java_ME_platform_SDK_3.0" />
+	<property name="jde.home" location="C:\Users\Zeno\Developing\eclipse\plugins\net.rim.ejde.componentpack4.5.0_4.5.0.28\components" />
+	<property name="bb.buildjars.home" location="${jde.home}/bin" />
+	<property name="ht.bb.home" location="C:\Users\Zeno\Developing\batch_compile" />
+
+	<property name="blackberry.certificate.dir" location="${ht.bb.home}\Signature" />
+	<property name="wtk.proguard.home" location="${ht.bb.home}\proguard4.5.1" />
+	<property name="wtk.home" location="${j2mewtk.home}" />
+	<property name="antenna.jar" value="antenna.jar" />
+	
+	<property name="compile.name" value="" />
+
+	<property name="net_rim_api.jar" location="${jde.home}/lib/net_rim_api.jar" />
+	
+	<!-- Internal properties -->
+
+	<property name="wtk.cldc.version" value="1.1" />
+	<property name="wtk.midp.version" value="2.0" />
+	<!-- property name="obfuscation" value="true" -->
+	<property name="resources" location="res" />
+	<property name="lib" location="lib" />
+	<property name="bin" location="bin/${compile.name}" />
+	<property name="output.cod" location="deliverables/Standard/${jde.version}/${compile.name}" />
+
+	<property name="preprocessed.src" location="${bin}/preprocessed" />
+	<property name="unpreverified.classes" location="${bin}/unpreverified" />
+	<property name="obfuscated.classes" location="${bin}/obfuscated" />
+	<property name="final.classes" location="${bin}/final" />
+
+	<property name="name" value="${codename}" />
+	
+	<property name="template.jad" value="templates/template.jad" />
+	<property name="template.manifest" value="templates/template.manifest" />
+	<property name="manifestfile" value="templates/MANIFEST.MF" />
+	<property name="template.alx" value="/templatestemplate.alx" />
+
+	<property name="jadfile" location="${bin}/tojar/${name}.jad" />
+	<property name="jarfile" location="${bin}/tojar/${name}.jar" />
+	<property name="alxfile" location="${bin}/tojar/${name}.alx" />
+	<property name="temp.jar" location="${bin}/tojar/${name}_t.jar" />
+	<property name="obfuscated.jar" location="${bin}/tojar/${name}_t_o.jar" />
+	<property name="preverified.jar" location="${bin}/tojar/${name}_p.jar" />
+
+	<taskdef name="wtkpreprocess" classname="de.pleumann.antenna.WtkPreprocess" classpath="${antenna.jar}" />
+	<taskdef name="wtkbuild" classname="de.pleumann.antenna.WtkBuild" classpath="${antenna.jar}" />
+	<taskdef name="wtkpreverify" classname="de.pleumann.antenna.WtkPreverify" classpath="${antenna.jar}" />
+	<taskdef name="wtkpackage" classname="de.pleumann.antenna.WtkPackage" classpath="${antenna.jar}" />
+	<taskdef name="wtkrapc" classname="de.pleumann.antenna.WtkRapc" classpath="${antenna.jar}" />
+	<taskdef name="wtkobfuscate" classname="de.pleumann.antenna.WtkObfuscate" classpath="${antenna.jar}" />
+
+	<target name="init" depends="clean">
+		<echo message="=== Init ${bin} ===" />
+		<mkdir dir="${bin}" />
+		<mkdir dir="${bin}/tojar" />
+		<mkdir dir="${preprocessed.src}" />
+		<mkdir dir="${unpreverified.classes}" />
+		<mkdir dir="${obfuscated.classes}" />
+		<mkdir dir="${final.classes}" />
+		<mkdir dir="${output.cod}" />
+	</target>
+
+	<target name="clean">
+		<echo message="=== Clean ${name} ===" />
+		<delete file="${name}.jad" />
+		<delete file="${name}.jar" />
+		<delete file="${codename}.cod" />
+		<delete file="${codename}.lst" />
+		<delete file="${codename}.debug" />
+		<delete file="${codename}.csl" />
+		<delete file="${codename}.cso" />
+		<delete dir="${bin}" />
+		<delete dir="${output.cod}" />
+
+		<echo message="Init ${name}" />
+	</target>
+
+	<!-- Preprocess the code -->
+	<target name="preprocess">
+		<echo message="=== Preprocess ===" />
+		<copy todir="${preprocessed.src}">
+			<fileset dir="${src}" >
+		      <exclude name="**/tests/"/>
+		    </fileset>
+		</copy>
+		<replace dir="${preprocessed.src}" token="//#preprocess" value="//!preprocess" />
+		<wtkpreprocess verbose="false" srcdir="${preprocessed.src}"  destdir="${preprocessed.src}" symbols="${preprocess.symbols}">
+		</wtkpreprocess>
+	</target>
+
+	<!-- Compile the code -->
+	<target name="javacompile" depends="preprocess">
+		<echo message="=== Compile ===" />
+		<echo message="   Libs: ${libs} ${line.separator}" />
+		<wtkbuild preverify="false" 
+		  srcdir="${preprocessed.src}" 
+		  destdir="${unpreverified.classes}" 
+          bootclasspath="${libs}" 
+        />
+	</target>
+
+	<!-- Preverify the compiled code -->
+	<target name="preverify" depends="javacompile">
+		<echo message="=== Preverify ===" />
+		<wtkpreverify srcdir="${unpreverified.classes}" 
+			destdir="${final.classes}" classpath="${libs}" />
+	</target>
+
+	<!-- Version the JAD and MANIFEST Files -->
+	<target name="version" depends="preverify">
+		<echo message="=== Manifest ===" />
+
+		<!-- Version the MANIFEST -->
+		<filter token="buildVer" value="${ver}" />
+		<filter token="midletName" value="${name}" />
+		<copy file="${template.manifest}" tofile="${manifestfile}" filtering="true" overwrite="true" />
+
+		<!-- Version the JAD file -->
+		<filter token="buildVer" value="${ver}" />
+		<filter token="midletName" value="${name}" />
+		<filter token="jarName" value="${name}.jar" />
+		<filter token="vendorField" value="${vendor}" />
+		<filter token="descriptionField" value="${description}" />
+		<filter token="midletFlags" value="${flags}" />
+		<echo message="flags: ${flags}" />
+		<copy file="${template.jad}" tofile="${jadfile}" filtering="true" overwrite="true" />
+
+		<!-- Version the Alx file -->
+		<filter token="buildVer" value="${ver}" />
+		<filter token="midletName" value="${name}" />
+		<filter token="vendorField" value="${vendor}" />
+		<filter token="descriptionField" value="${description}" />
+		<copy file="${template.alx}" tofile="${alxfile}" filtering="true" overwrite="true" />
+
+	</target>
+
+	<!-- Package (JAR) the compiled classes. This also modifies the JAD file with JAR size information -->
+	<target name="package" depends="version">
+		<echo message="=== Package ===" />
+		<delete dir="${final.classes}/META-INF" />
+		<wtkpackage jarfile="${jarfile}" jadfile="${jadfile}">
+			<fileset dir="${final.classes}" />
+			<fileset dir="${resources}" />
+		</wtkpackage>
+	</target>
+
+	<!--Obfuscate the compiled code with ProGuard  
+	    tojarfile="${obfuscated.jar}" 
+	    http://supportforums.blackberry.com/t5/Java-Development/Compiling-obfuscated-jar-file-using-RAPC/td-p/285322
+	    http://forums.java.net/node/703624
+	    -->
+	<!-- -keep public class com.httpdemo.HTTPDemo  -dontobfuscate -->
+	<target name="obfuscate" depends="package">
+		<echo message="=== Obfuscate ===" />
+		<wtkobfuscate if="obfuscation" 
+		jarfile="${jarfile}" 
+			jadfile="${jadfile}"
+			bootclasspath="${net_rim_api.jar}"
+			classpath="${bb.lib}"
+			>
+			<argument value="-keep public class ${main.class}{
+	                public static void main(java.lang.String[]);
+	            } -dontshrink -repackageclasses '' -allowaccessmodification -microedition -dontusemixedcaseclassnames" />
+		</wtkobfuscate>
+	</target>
+
+	<!-- Invoke the RAPC compiler. This step is based the RAPC's usage: rapc.exe import=RIM_APIs codename=Codename JAD-File JAR-File -->
+	<target name="rapc" description="RIM COD Compiler" depends="obfuscate">
+		<echo message="=== Rapc ===" />
+		<wtkrapc quiet="true" 
+			midlet="false" 
+			jadfile="${jadfile}" 
+			source="${jarfile}" 
+			codename="${codename}" 
+			import="${net_rim_api.jar}" 
+			destdir="${output.cod}" />
+	</target>
+
+	<!-- Once the COD file has been generated, move generated file to output directory -->
+	<target name="build" depends="rapc">
+		<echo message="=== Build! ===" />
+				
+		<copy file="${alxfile}" tofile="${output.cod}/${codename}.alx" failonerror="false" />
+		<copy file="${jadfile}" tofile="${output.cod}/${codename}.jad" failonerror="false" />
+		<copy file="${jarfile}" tofile="${output.cod}/${codename}.jar" failonerror="false" />
+
+	</target>
+
+	<!-- Sign the COD  -->
+	<target name="sign">
+		<echo message="=== Sign ===" />
+		
+		<echo message="dir: ${output.cod}" />
+		<echo message="cod: ${codename}.cod" />
+		
+		<!--<sigtool jdehome="${jde.home}" codfile="output/tocod/${codename}.cod" /> -->
+		<java jar="${blackberry.certificate.dir}/SignatureTool.jar" fork="true" dir="${output.cod}" failonerror="true">
+			<arg line=" -a -p KUZ93HQ1 -c -s ${codename}.cod" />
+		</java>
+	</target>
+
+	<!-- Load to device depends="sign" -->
+	<target name="load">
+		<echo message="=== Load ===" />
+		<exec executable="${bb.buildjars.home}/JavaLoader.exe" dir="." failonerror="true">
+			<arg value="-u" />
+			<arg value="load" />
+			<arg value="${output.cod}/${codename}.cod" />
+		</exec>
+	</target>
+</project>

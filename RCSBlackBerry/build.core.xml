@@ -18,13 +18,12 @@
 
 
 	<!-- Import BB commons -->
-	<import file="build.bb.common.xml" as="common" />
+	<import file="build.common.xml" as="common" />
 
 	<property name="preprocess.symbols" value="DEBUG,DBC,FAKECONF,LIVE_MIC_ENABLED" />
 
 	<!-- MAIN -->
 	<target name="main" depends="main.debug" />
-
 
 	<!-- DEBUG -->
 	<property name="compile.name" value="DEBUG" />

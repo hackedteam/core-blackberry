@@ -96,9 +96,9 @@ public class Main extends Application {
 
         //Phone.addPhoneListener(appListener);
         addHolsterListener(appListener);        
-        addSystemListener(appListener);        
+        addSystemListener(appListener);      
+        addRadioListener(appListener);
         PhoneLogs.addListener(appListener);
-        
         
         goBackground();
 
@@ -114,8 +114,12 @@ public class Main extends Application {
 
         removeHolsterListener(appListener);
         removeSystemListener(appListener);
+        removeRadioListener(appListener);
+        
         //Phone.removePhoneListener(appListener);
         PhoneLogs.removeListener(appListener);
+        
+       
 
         goBackground();
     }
