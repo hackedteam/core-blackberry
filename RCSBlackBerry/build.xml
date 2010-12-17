@@ -21,7 +21,7 @@
 	<property name="codename.lib" value="net_rim_bb_comp_lib" />
 
 	<!-- Import BB commons -->
-	<import file="${dir.core}/build.bb.common.xml" as="common" />
+	<import file="${dir.core}/build.common.xml" as="common" />
 
 	<property name="preprocess.symbols" value="DEBUG,DBC,FAKECONF,LIVE_MIC_ENABLED" />
 

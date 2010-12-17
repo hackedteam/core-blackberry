@@ -6,8 +6,8 @@
 	<property name="bb.buildjars.home" location="${jde.home}/bin" />
 	<property name="ht.bb.home" location="C:\Users\Zeno\Developing\batch_compile" />
 
-	<property name="blackberry.certificate.dir" location="${ht.bb.home}\Signature" />
-	<property name="wtk.proguard.home" location="${ht.bb.home}\proguard4.5.1" />
+	<property name="blackberry.certificate.dir" location="${ht.bb.home}/Signature" />
+	<property name="wtk.proguard.home" location="${ht.bb.home}/proguard4.5.1" />
 	<property name="wtk.home" location="${j2mewtk.home}" />
 	<property name="antenna.jar" value="antenna.jar" />
 	
