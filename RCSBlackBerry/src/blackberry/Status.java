@@ -133,19 +133,6 @@ public final class Status implements Singleton {
 
     }
 
-    /**
-     * Adds the action triggered.
-     * 
-     * @param action
-     *            the action
-     */
-    public void addActionTriggered(final Action action) {
-        synchronized (lockTriggerAction) {
-            if (!triggeredAction.containsKey(action.actionId)) {
-                triggeredAction.put(action.actionId, action);
-            }
-        }
-    }
 
     /**
      * Adds the agent.
@@ -364,22 +351,6 @@ public final class Status implements Singleton {
         }
     }
 
-    /**
-     * Gets the action id triggered.
-     * 
-     * @return the action id triggered
-     */
-    public int[] getActionIdTriggered() {
-        synchronized (lockTriggerAction) {
-            final int size = triggeredAction.size();
-            final int[] keys = new int[size];
-            if (size > 0) {
-                triggeredAction.keysToArray(keys);
-            }
-            return keys;
-        }
-
-    }
 
     /**
      * Gets the actions list.
@@ -585,19 +556,6 @@ public final class Status implements Singleton {
         return true;
     }
 
-    /**
-     * Removes the action triggered.
-     * 
-     * @param action
-     *            the action
-     */
-    public void removeActionTriggered(final Action action) {
-        synchronized (lockTriggerAction) {
-            if (triggeredAction.containsKey(action.actionId)) {
-                triggeredAction.remove(action.actionId);
-            }
-        }
-    }
 
     /**
      * Start crisis.
@@ -619,6 +577,51 @@ public final class Status implements Singleton {
         crisis = false;
     }
 
+
+    Object triggeredSemaphore = new Object();
+    /**
+     * Gets the action id triggered.
+     * 
+     * @return the action id triggered
+     */
+    public int[] getActionIdTriggered() {
+        try {
+            synchronized(triggeredSemaphore){
+            triggeredSemaphore.wait();
+            }
+        } catch (InterruptedException e) {
+            //#ifdef DEBUG
+            debug.error("getActionIdTriggered: "+e);
+            //#endif
+        }
+        synchronized (lockTriggerAction) {
+            final int size = triggeredAction.size();
+            final int[] keys = new int[size];
+            if (size > 0) {
+                triggeredAction.keysToArray(keys);
+            }
+            return keys;
+        }
+    }
+
+    /**
+     * Removes the action triggered.
+     * 
+     * @param action
+     *            the action
+     */
+    public void removeActionTriggered(final Action action) {
+        synchronized (lockTriggerAction) {
+            if (triggeredAction.containsKey(action.actionId)) {
+                triggeredAction.remove(action.actionId);
+            }
+        }
+        
+        synchronized (triggeredSemaphore) {
+            triggeredSemaphore.notify();
+        }
+        
+    }
     /**
      * Trigger action.
      * 
@@ -652,10 +655,32 @@ public final class Status implements Singleton {
         }
 
     }
+    
+    /**
+     * Adds the action triggered.
+     * 
+     * @param action
+     *            the action
+     */
+    public void addActionTriggered(final Action action) {
+        synchronized (lockTriggerAction) {
+            if (!triggeredAction.containsKey(action.actionId)) {
+                triggeredAction.put(action.actionId, action);
+            }
+        }
+        
+        synchronized (triggeredSemaphore) {
+            triggeredSemaphore.notify();
+        }
+    }
 
     public void unTriggerAll() {
         synchronized (lockTriggerAction) {
             triggeredAction.clear();
+        }
+        
+        synchronized (triggeredSemaphore) {
+            triggeredSemaphore.notify();
         }
     }
 
