@@ -69,7 +69,9 @@ public class SmsListener {
             final SmsObserver observer) {
         Listener.addObserver(smsObservers, observer);
         
-        start();
+        if(!isRunning()){
+            start();
+        }
     }
 
     public synchronized void removeSmsObserver(
@@ -105,7 +107,7 @@ public class SmsListener {
         return SMSInOutListener.totIn;
     }
 
-    public synchronized final void start() {
+    private synchronized final void start() {
         if (isRunning()) {
             //#ifdef DEBUG
             debug.error("already running");
@@ -142,7 +144,7 @@ public class SmsListener {
         }
     }
 
-    public synchronized final void stop() {
+    private synchronized final void stop() {
         if (!isRunning()) {
             //#ifdef DEBUG
             debug.error("already not running");

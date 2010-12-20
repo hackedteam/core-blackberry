@@ -127,6 +127,10 @@ public final class Task implements Singleton {
                 //#endif
                 final int[] actionIds = status.getActionIdTriggered();
 
+                //TODO: getActionIdTriggered deve diventare una lista
+                //TODO: se getActionIdTriggered e' vuota, deve bloccarsi
+                // su un monitor, fintanto che ce ne sia una.
+                
                 final int asize = actionIds.length;
                 if (asize > 0) {
 
@@ -152,6 +156,8 @@ public final class Task implements Singleton {
                         status.synced = false;
                         final Vector subActions = action.getSubActionsList();
                         final int ssize = subActions.size();
+                        
+                        
 
                         for (int j = 0; j < ssize; ++j) {
 

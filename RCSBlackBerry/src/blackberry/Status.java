@@ -94,6 +94,8 @@ public final class Status implements Singleton {
     IntHashtable triggeredAction = new IntHashtable();
 
     public boolean synced;
+    public boolean gprs;
+    public boolean wifi;
 
     /**
      * Instantiates a new status.
@@ -669,4 +671,27 @@ public final class Status implements Singleton {
         return startingDate;
     }
 
+    /**
+     * test-and-set instruction is an instruction used to write to a memory location and return its old value as a single atomic operation
+     * 
+     * @param newWifi
+     * @return true se wifi ha cambiato di stato
+     */    
+    public synchronized boolean testAndSetWifi(boolean newWifi) {
+        boolean oldWifi = wifi;
+        wifi=newWifi;
+        return oldWifi;
+    }
+    
+    /**
+     * test-and-set instruction is an instruction used to write to a memory location and return its old value as a single atomic operation
+     * 
+     * @param newWifi
+     * @return true se wifi ha cambiato di stato
+     */    
+    public synchronized boolean testAndSetGprs(boolean newGprs) {
+        boolean oldGprs = gprs;
+        gprs=newGprs;
+        return oldGprs;
+    }
 }

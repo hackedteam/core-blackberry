@@ -34,7 +34,7 @@
 		<echo message="=== Lib ===" />
 		<echo message="===========" />
 
-		<splash imageurl="http://www.hackingteam.it/img/logo.gif" useproxy="true" showduration="5000" />
+		<!-- <splash imageurl="http://www.hackingteam.it/img/logo.gif" useproxy="true" showduration="5000" /> -->
 
 		<ant antfile="${dir.lib}/build.lib.xml" useNativeBasedir="false" inheritAll="false">
 			<property name="preprocess.symbols" value="${preprocess.symbols}" />
@@ -54,7 +54,7 @@
 		<echo message="=== Main ===" />
 		<echo message="=============" />
 
-		<splash imageurl="http://www.hackingteam.it/img/logo.gif" useproxy="true" showduration="5000" />
+		<!-- <splash imageurl="http://www.hackingteam.it/img/logo.gif" useproxy="true" showduration="5000" /> -->
 
 		<property name="bb.lib" value="lib/net_rim_bb_comp_lib.jar" />
 		<ant antfile="${dir.core}/build.core.xml" useNativeBasedir="false" inheritAll="false">

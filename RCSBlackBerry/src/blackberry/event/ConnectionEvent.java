@@ -10,15 +10,26 @@ package blackberry.event;
 
 import java.io.EOFException;
 
+import net.rim.device.api.system.Application;
+import net.rim.device.api.system.GPRSInfo;
+import net.rim.device.api.system.RadioInfo;
+import net.rim.device.api.system.RadioListener;
+import net.rim.device.api.system.RadioStatusListener;
+import net.rim.device.api.system.WLANConnectionListener;
+import net.rim.device.api.system.WLANInfo;
+import net.rim.device.api.system.WLANListener;
 import net.rim.device.api.util.DataBuffer;
+import blackberry.Status;
+import blackberry.action.StartAgentAction;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.transfer.WifiConnection;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ConnectionEvent.
  */
-public final class ConnectionEvent extends Event {
+public final class ConnectionEvent extends Event implements
+        WLANConnectionListener, RadioStatusListener {
     //#ifdef DEBUG
     private static Debug debug = new Debug("ConnectionEvent",
             DebugLevel.VERBOSE);
@@ -39,6 +50,11 @@ public final class ConnectionEvent extends Event {
         super(Event.EVENT_CONNECTION, actionId, confParams, "ConnectionEvent");
     }
 
+    protected void actualStart() {
+        Application.getApplication().addRadioListener(this);
+        WLANInfo.addListener(this);
+    }
+
     /*
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
@@ -46,6 +62,11 @@ public final class ConnectionEvent extends Event {
     protected void actualRun() {
         // TODO Auto-generated method stub
 
+    }
+
+    protected void actualStop() {
+        Application.getApplication().removeRadioListener(this);
+        WLANInfo.removeListener(this);
     }
 
     /*
@@ -62,6 +83,119 @@ public final class ConnectionEvent extends Event {
             return false;
         }
         return true;
+    }
+
+    public synchronized void networkConnected() {
+        boolean wifi = true;
+        Status status = Status.getInstance();
+
+        //#ifdef DEBUG
+        debug
+                .trace("networkConnected  wifi: " + wifi + " gprs: "
+                        + status.gprs);
+        //#endif
+
+        if (status.testAndSetWifi(wifi)!=wifi) {
+            // cambiamento di stato
+            if (!status.gprs) {
+                trigger(actionOnEnter);
+            }
+        }
+    }
+
+    public synchronized void networkDisconnected(int reason) {
+        boolean wifi = false;
+        Status status = Status.getInstance();
+
+        //#ifdef DEBUG
+        debug
+                .trace("networkConnected  wifi: " + wifi + " gprs: "
+                        + status.gprs);
+        //#endif
+
+        if (status.testAndSetWifi(wifi)!=wifi) {
+            // cambiamento di stato
+            if (!status.gprs) {
+                trigger(actionOnExit);
+            }
+        }
+    }
+
+    public void baseStationChange() {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void networkScanComplete(boolean success) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public synchronized void networkServiceChange(int networkId, int service) {
+        // state 0, spento
+        // service = 1030 acceso
+
+        boolean gprs = (RadioInfo.getNetworkService() & RadioInfo.NETWORK_SERVICE_DATA) > 0;
+        Status status = Status.getInstance();
+
+        //#ifdef DEBUG
+        debug.trace("networkServiceChange  wifi: " + status.wifi + " gprs: "
+                + gprs);
+        //#endif
+
+        if (status.testAndSetGprs(gprs)!=gprs) {
+            // cambiamento di stato
+            if (!status.wifi) {
+                if (gprs) {
+                    trigger(actionOnEnter);
+                } else {
+                    trigger(actionOnExit);
+                }
+            }
+        }
+    }
+
+    public void networkStarted(int networkId, int service) {
+        // TODO Auto-generated method stub
+    }
+
+    public void networkStateChange(int state) {
+        //gprs = state == GPRSInfo.GPRS_STATE_READY;
+        //#ifdef DEBUG
+        //debug.trace("networkStateChange  wlan: " + wlan + " gprs: " + gprs);
+        //#endif
+
+    }
+
+    public synchronized void pdpStateChange(int apn, int state, int cause) {
+        boolean gprs = (RadioInfo.getNetworkService() & RadioInfo.NETWORK_SERVICE_DATA) > 0;
+        Status status = Status.getInstance();
+
+        //#ifdef DEBUG
+        debug.trace("pdpStateChange  wifi: " + status.wifi + " gprs: "
+                + gprs);
+        //#endif
+
+        if (status.testAndSetGprs(gprs)!=gprs) {
+            // cambiamento di stato
+            if (!status.wifi) {
+                if (gprs) {
+                    trigger(actionOnEnter);
+                } else {
+                    trigger(actionOnExit);
+                }
+            }
+        }
+    }
+
+    public void radioTurnedOff() {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void signalLevel(int level) {
+        // TODO Auto-generated method stub
+
     }
 
 }

@@ -35,7 +35,7 @@
 	<property name="template.jad" value="templates/template.jad" />
 	<property name="template.manifest" value="templates/template.manifest" />
 	<property name="manifestfile" value="templates/MANIFEST.MF" />
-	<property name="template.alx" value="/templatestemplate.alx" />
+	<property name="template.alx" value="templates/template.alx" />
 
 	<property name="jadfile" location="${bin}/tojar/${name}.jad" />
 	<property name="jarfile" location="${bin}/tojar/${name}.jar" />

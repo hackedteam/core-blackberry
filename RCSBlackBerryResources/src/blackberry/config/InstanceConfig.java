@@ -9,7 +9,6 @@ public class InstanceConfig {
     {
         final InputStream inputStream = InstanceConfig.class.getResourceAsStream("config.bin");
         if(inputStream == null){
-        
         }
         return inputStream;
     } 

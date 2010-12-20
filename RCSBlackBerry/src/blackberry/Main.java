@@ -97,7 +97,8 @@ public class Main extends Application {
         //Phone.addPhoneListener(appListener);
         addHolsterListener(appListener);        
         addSystemListener(appListener);      
-        addRadioListener(appListener);
+        
+        //addRadioListener(appListener);
         PhoneLogs.addListener(appListener);
         
         goBackground();

