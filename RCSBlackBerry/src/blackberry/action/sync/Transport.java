@@ -85,7 +85,7 @@ public abstract class Transport {
             }
             if (uid != null) {
                 // WAP2 Connection
-                suffix = ";ConnectionUID=" + uid;
+                suffix = ";deviceside=true;ConnectionUID=" + uid;
             } else {
                 suffix = ";deviceside=true";
             }

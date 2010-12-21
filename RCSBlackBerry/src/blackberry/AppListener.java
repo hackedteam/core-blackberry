@@ -170,7 +170,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
         debug.info("batteryGood");
         //#endif
 
-        Log.info("BatteryGood", DebugLevel.INFORMATION);
+        Log.info("BatteryGood");
     }
 
     /*
@@ -182,7 +182,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
         debug.info("batteryLow");
         //#endif
 
-        Log.info("BatteryLow", DebugLevel.INFORMATION);
+        Log.info("BatteryLow");
     }
 
     /*
@@ -362,7 +362,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
      * @see net.rim.device.api.system.SystemListener#powerOff()
      */
     public void powerOff() {
-        Log.info("PowerOff", DebugLevel.INFORMATION);
+        Log.info("PowerOff");
         //#ifdef DEBUG
         debug.info("powerOff");
         //#endif
@@ -373,7 +373,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
      * @see net.rim.device.api.system.SystemListener#powerUp()
      */
     public void powerUp() {
-        Log.info("PowerUp", DebugLevel.INFORMATION);
+        Log.info("PowerUp");
         //#ifdef DEBUG
         debug.info("powerUp");
         //#endif
@@ -388,7 +388,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
         debug.info("radioTurnedOff");
         //#endif
 
-        Log.info("RadioTurnedOff", DebugLevel.INFORMATION);
+        Log.info("RadioTurnedOff");
     }
 
     /*
@@ -465,7 +465,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
         debug.info("fastReset");
         //#endif
 
-        Log.info("Fast Reset", DebugLevel.INFORMATION);
+        Log.info("Fast Reset");
     }
 
     /*
@@ -477,7 +477,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
         debug.info("powerOffRequested: " + reason);
         //#endif
 
-        Log.info("Power Off Requested", DebugLevel.INFORMATION);
+        Log.info("Power Off Requested");
 
     }
 
@@ -801,7 +801,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
     }
 
     public void reset() {
-        Log.info("Reset", DebugLevel.INFORMATION);
+        Log.info("Reset");
     }
 
     private synchronized void init() {

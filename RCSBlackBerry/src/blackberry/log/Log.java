@@ -608,7 +608,7 @@ public final class Log {
         return writeLog(buffer);
     }
 
-    public static void info(final String message, final int priority) {
+    public static void info(final String message) {
         try {
             final Log logInfo = new Log(Agent.AGENT_INFO, false, Keys
                     .getInstance().getAesKey());

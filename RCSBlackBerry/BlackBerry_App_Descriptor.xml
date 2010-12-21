@@ -15,6 +15,7 @@
       <PreprocessorTag IsActive="false" PreprocessorDefine="SAVE_AMR_FILE" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="SAVE_DEBUG_MAIL" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="TEST" Scope="0"/>
+      <PreprocessorTag IsActive="true" PreprocessorDefine="OPTIMIZE_TASK" Scope="0"/>
     </PreprocessorDefines>
   </Compile>
   <Packaging OutputFileName="net_rim_bb_lib" OutputFolder="deliverables" PreBuildStep="" PostBuildStep="" CleanStep="" GenerateALXFile="true">

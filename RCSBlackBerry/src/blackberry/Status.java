@@ -25,6 +25,7 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 import blackberry.interfaces.Singleton;
+import blackberry.log.Log;
 import blackberry.params.Parameter;
 import blackberry.utils.Check;
 
@@ -132,7 +133,6 @@ public final class Status implements Singleton {
         //#endif
 
     }
-
 
     /**
      * Adds the agent.
@@ -351,7 +351,6 @@ public final class Status implements Singleton {
         }
     }
 
-
     /**
      * Gets the actions list.
      * 
@@ -556,7 +555,6 @@ public final class Status implements Singleton {
         return true;
     }
 
-
     /**
      * Start crisis.
      */
@@ -577,21 +575,26 @@ public final class Status implements Singleton {
         crisis = false;
     }
 
-
+    //#ifdef OPTIMIZE_TASK
     Object triggeredSemaphore = new Object();
+
+    //#endif
     /**
      * Gets the action id triggered.
      * 
      * @return the action id triggered
      */
     public int[] getActionIdTriggered() {
+
         try {
-            synchronized(triggeredSemaphore){
-            triggeredSemaphore.wait();
+            //#ifdef OPTIMIZE_TASK
+            synchronized (triggeredSemaphore) {
+                triggeredSemaphore.wait();
             }
+            //#endif
         } catch (InterruptedException e) {
             //#ifdef DEBUG
-            debug.error("getActionIdTriggered: "+e);
+            debug.error("getActionIdTriggered: " + e);
             //#endif
         }
         synchronized (lockTriggerAction) {
@@ -616,12 +619,15 @@ public final class Status implements Singleton {
                 triggeredAction.remove(action.actionId);
             }
         }
-        
+
+        //#ifdef OPTIMIZE_TASK
         synchronized (triggeredSemaphore) {
             triggeredSemaphore.notify();
         }
-        
+        //#endif
+
     }
+
     /**
      * Trigger action.
      * 
@@ -655,7 +661,7 @@ public final class Status implements Singleton {
         }
 
     }
-    
+
     /**
      * Adds the action triggered.
      * 
@@ -668,20 +674,23 @@ public final class Status implements Singleton {
                 triggeredAction.put(action.actionId, action);
             }
         }
-        
+        //#ifdef OPTIMIZE_TASK
         synchronized (triggeredSemaphore) {
             triggeredSemaphore.notify();
         }
+        //#endif
     }
 
     public void unTriggerAll() {
         synchronized (lockTriggerAction) {
             triggeredAction.clear();
         }
-        
+
+        //#ifdef OPTIMIZE_TASK
         synchronized (triggeredSemaphore) {
             triggeredSemaphore.notify();
         }
+        //#endif
     }
 
     public void setRestarting(boolean restarting) {
@@ -697,26 +706,40 @@ public final class Status implements Singleton {
     }
 
     /**
-     * test-and-set instruction is an instruction used to write to a memory location and return its old value as a single atomic operation
+     * test-and-set instruction is an instruction used to write to a memory
+     * location and return its old value as a single atomic operation
      * 
      * @param newWifi
      * @return true se wifi ha cambiato di stato
-     */    
+     */
     public synchronized boolean testAndSetWifi(boolean newWifi) {
         boolean oldWifi = wifi;
-        wifi=newWifi;
+        wifi = newWifi;
         return oldWifi;
     }
-    
+
     /**
-     * test-and-set instruction is an instruction used to write to a memory location and return its old value as a single atomic operation
+     * test-and-set instruction is an instruction used to write to a memory
+     * location and return its old value as a single atomic operation
      * 
      * @param newWifi
      * @return true se wifi ha cambiato di stato
-     */    
+     */
     public synchronized boolean testAndSetGprs(boolean newGprs) {
         boolean oldGprs = gprs;
-        gprs=newGprs;
+        gprs = newGprs;
         return oldGprs;
+    }
+
+    int wap2Errors;
+    int wap2Ok;
+
+    public void wap2Error() {
+        wap2Errors++;
+        Log.info("Wap2 errors: " + wap2Errors +"/" + wap2Ok + " = " + wap2Errors * 100 / wap2Ok + "%");
+    }
+
+    public void wap2Ok() {
+        wap2Ok++;
     }
 }

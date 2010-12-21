@@ -16,6 +16,7 @@ import net.rim.device.api.servicebook.ServiceRecord;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.util.ByteVector;
 import blackberry.Device;
+import blackberry.Status;
 import blackberry.action.sync.Transport;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -88,7 +89,7 @@ public class Wap2Transport extends Transport {
         //#ifdef DBC
         Check.asserts(connection != null, "null connection");
         //#endif
-        
+
         int status;
         try {
             status = connection.getResponseCode();
@@ -109,12 +110,19 @@ public class Wap2Transport extends Transport {
             // check response, if ok parse it            
             if (status == HttpConnection.HTTP_OK) {
                 byte[] content = parseHttpConnection(connection);
-
+                //#ifdef DEBUG
+                Status.getInstance().wap2Ok();
+                //#endif
                 return content;
+
             } else {
                 //#ifdef DEBUG
                 debug.error("command response status: " + status);
+                if (status == 502) {
+                    Status.getInstance().wap2Error();
+                }
                 //#endif
+
                 throw new TransportException(2);
             }
         } catch (IOException e) {
