@@ -665,7 +665,7 @@ public class ZProtocol extends Protocol {
             //#ifdef DEBUG
             debug.trace("command: " + e);
             //#endif
-            throw new TransportException(16);
+            throw new TransportException(9);
         }
 
     }

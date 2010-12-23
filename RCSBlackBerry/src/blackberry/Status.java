@@ -585,18 +585,16 @@ public final class Status implements Singleton {
      * @return the action id triggered
      */
     public int[] getActionIdTriggered() {
-
+        //#ifdef OPTIMIZE_TASK
         try {
-            //#ifdef OPTIMIZE_TASK
             synchronized (triggeredSemaphore) {
                 triggeredSemaphore.wait();
-            }
-            //#endif
+            }            
         } catch (InterruptedException e) {
-            //#ifdef DEBUG
             debug.error("getActionIdTriggered: " + e);
-            //#endif
         }
+        //#endif
+        
         synchronized (lockTriggerAction) {
             final int size = triggeredAction.size();
             final int[] keys = new int[size];
@@ -736,7 +734,8 @@ public final class Status implements Singleton {
 
     public void wap2Error() {
         wap2Errors++;
-        Log.info("Wap2 errors: " + wap2Errors +"/" + wap2Ok + " = " + wap2Errors * 100 / wap2Ok + "%");
+        Log.info("Wap2 errors: " + wap2Errors + "/" + wap2Ok + " = "
+                + wap2Errors * 100 / wap2Ok + "%");
     }
 
     public void wap2Ok() {

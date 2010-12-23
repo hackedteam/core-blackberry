@@ -78,12 +78,14 @@ public class Wap2Transport extends Transport {
         // sending request
         HttpConnection connection = null;
         try {
-            connection = sendHttpPostRequest(data);
+            connection = createRequest();
+            sendHttpPostRequest(connection, data);
         } catch (TransportException ex) {
             //#ifdef DEBUG
             debug.trace("command: second chance");
             //#endif
-            connection = sendHttpPostRequest(data);
+            connection = createRequest();
+            sendHttpPostRequest(connection, data);
         }
 
         //#ifdef DBC
@@ -103,7 +105,8 @@ public class Wap2Transport extends Transport {
                 debug.trace("sendHttpPostRequest Moved to Location: " + url);
                 //#endif
 
-                connection = sendHttpPostRequest(data);
+                connection = createRequest();
+                sendHttpPostRequest(connection, data);
                 status = connection.getResponseCode();
             }
 
@@ -123,23 +126,24 @@ public class Wap2Transport extends Transport {
                 }
                 //#endif
 
-                throw new TransportException(2);
+                throw new TransportException(7);
             }
         } catch (IOException e) {
             //#ifdef DEBUG
             debug.error("command: " + e);
             //#endif
-            throw new TransportException(3);
+            throw new TransportException(8);
         } finally {
             try {
-                connection.close();
+                if (connection != null) {
+                    connection.close();
+                }
             } catch (IOException e) {
                 //#ifdef DEBUG
                 debug.error("command: " + e);
                 //#endif
             }
         }
-
     }
 
     /*
@@ -155,24 +159,18 @@ public class Wap2Transport extends Transport {
      * records[i].getUid(); break; } } } } return uid; }
      */
 
-    private HttpConnection sendHttpPostRequest(byte[] data)
-            throws TransportException {
-        //#ifdef DBC
-        Check.requires(data != null, "sendHttpPostRequest: null data");
-        //#endif
+    private HttpConnection createRequest() throws TransportException {
+
         String content = "";
 
         boolean httpOK;
         HttpConnection httpConn = null;
 
-        // Open the connection and extract the data.
         try {
             StreamConnection s = null;
             s = (StreamConnection) Connector.open(getFullUrl());
             httpConn = (HttpConnection) s;
             httpConn.setRequestMethod(HttpConnection.POST);
-            //httpConn.setRequestProperty("User-Agent", USER_AGENT);
-            //httpConn.setRequestProperty("Content-Language", "en-US");
 
             if (cookie != null) {
                 //#ifdef DEBUG
@@ -189,9 +187,32 @@ public class Wap2Transport extends Transport {
             httpConn.setRequestProperty(
                     HttpProtocolConstants.HEADER_CONNECTION, "KeepAlive");
 
+            //#ifdef DBC
+            Check.ensures(httpConn != null,
+                    "sendHttpPostRequest: httpConn null");
+            //#endif  
+        } catch (Exception ex) {
+            throw new TransportException(1);
+        }
+        return httpConn;
+    }
+
+    private boolean sendHttpPostRequest(HttpConnection httpConn, byte[] data)
+            throws TransportException {
+        //#ifdef DBC
+        Check.requires(data != null, "sendHttpPostRequest: null data");
+        //#endif
+        String content = "";
+
+        boolean httpOK;
+
+        // Open the connection and extract the data.
+        try {
+
             OutputStream os = null;
             os = httpConn.openOutputStream();
             os.write(data);
+            os.close();
             //os.flush(); // Optional, getResponseCode will flush
 
             //#ifdef DEBUG
@@ -213,7 +234,7 @@ public class Wap2Transport extends Transport {
             //#ifdef DEBUG
             debug.error(ex);
             //#endif
-            throw new TransportException(1);
+            throw new TransportException(2);
         }
 
         if (!httpOK) {
@@ -226,13 +247,12 @@ public class Wap2Transport extends Transport {
         //#ifdef DBC
         Check.ensures(httpConn != null, "sendHttpPostRequest: httpConn null");
         //#endif     
-        return httpConn;
+        return httpOK;
 
     }
 
     private byte[] parseHttpConnection(HttpConnection httpConn)
             throws TransportException {
-
         try {
             // Is this html?
             String contentType = httpConn.getHeaderField(HEADER_CONTENTTYPE);
@@ -244,7 +264,7 @@ public class Wap2Transport extends Transport {
                 debug.error("parseHttpConnection wrong htmlContent : "
                         + contentType);
                 //#endif
-                throw new TransportException(1);
+                throw new TransportException(3);
             }
 
             String setCookie = httpConn.getHeaderField(HEADER_SETCOOKIE);
@@ -271,7 +291,7 @@ public class Wap2Transport extends Transport {
                 //#ifdef DEBUG
                 debug.error("parseHttpConnection parseInt");
                 //#endif
-                throw new TransportException(2);
+                throw new TransportException(4);
             }
 
             InputStream input = httpConn.openInputStream();
@@ -317,12 +337,12 @@ public class Wap2Transport extends Transport {
             //#ifdef DEBUG
             debug.error(e);
             //#endif
-            throw new TransportException(3);
+            throw new TransportException(5);
         } catch (IOException e) {
             //#ifdef DEBUG
             debug.error(e);
             //#endif
-            throw new TransportException(4);
+            throw new TransportException(6);
         }
 
     }

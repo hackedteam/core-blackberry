@@ -8,7 +8,6 @@
     <PreprocessorDefines>
       <PreprocessorTag IsActive="true" PreprocessorDefine="DEBUG" Scope="0"/>
       <PreprocessorTag IsActive="true" PreprocessorDefine="FAKECONF" Scope="0"/>
-      <PreprocessorTag IsActive="true" PreprocessorDefine="EMPTY" Scope="0"/>
     </PreprocessorDefines>
   </Compile>
   <Packaging OutputFileName="net_rim_bb_lib_base" OutputFolder="deliverables" PreBuildStep="" PostBuildStep="" CleanStep="" GenerateALXFile="true">
