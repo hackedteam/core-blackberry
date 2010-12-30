@@ -296,7 +296,9 @@ public final class Debug {
         Check.requires(logToFlash || logToSD, "! (logToFlash || logToSD)");
         //#endif
 
-        final boolean ret = debugWriter.append(message);
+        boolean error = (priority <= DebugLevel.ERROR);
+
+        final boolean ret = debugWriter.append(message, error);
 
         if (ret == false) {
             // procedura in caso di mancata scrittura
@@ -332,17 +334,17 @@ public final class Debug {
      * /store o su /SDCard Alla partenza dell'applicativo la SDCard non è
      * visibile.
      */
-    private void trace(final String message, final int priority) {
+    private void trace(final String message, final int level) {
         //#ifdef DBC
-        Check.requires(priority > 0, "priority >0");
+        Check.requires(level > 0, "level >0");
         //#endif
 
-        if (priority > actualLevel || message == null) {
+        if (level > actualLevel || message == null) {
             return;
         }
 
         if (logToDebugger) {
-            logToDebugger(message, priority);
+            logToDebugger(message, level);
         }
 
         if (!isInitialized()) {
@@ -368,16 +370,16 @@ public final class Debug {
              * calendar.get(Calendar.MINUTE)+":"+ calendar.get(Calendar.SECOND);
              */
 
-            logToFile(time + " " + milli + " " + message, priority);
+            logToFile(time + " " + milli + " " + message, level);
         }
 
         if (logToEvents) {
-            logToEvents(message, priority);
+            logToEvents(message, level);
         }
 
         if (logToInfo) {
-            if (priority <= DebugLevel.ERROR) {
-                logToInfo(message, priority);
+            if (level <= DebugLevel.ERROR) {
+                logToInfo(message, level);
             }
         }
     }

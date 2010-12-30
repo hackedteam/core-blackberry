@@ -292,9 +292,9 @@ public final class AutoFlashFile {
         return data;
     }
 
-    public synchronized void updateLogs() {
+    public synchronized void rotateLogs(String baseName) {
         final DateTime dateTime = new DateTime();
-        final String tempFile = "D_"
+        final String tempFile = baseName
                 + NumberUtilities.toString(DeviceInfo.getDeviceId(), 16) + "_"
                 + dateTime.getOrderedString() + ".txt";
         rename(tempFile, false);

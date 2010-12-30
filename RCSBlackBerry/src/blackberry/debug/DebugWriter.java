@@ -20,23 +20,28 @@ import blackberry.utils.Check;
  */
 public final class DebugWriter extends Thread {
 
-    static final String FILE_NAME = "D_";
-    static final String SD_PATH = Path.SD() + Path.DEBUG_DIR + FILE_NAME
-            + Device.getPin() + ".txt";
-    static final String FLASH_PATH = Path.USER() + Path.DEBUG_DIR + FILE_NAME
-            + Device.getPin() + ".txt";
+    static final String DEBUG_NAME = "D_";
+    static final String ERROR_NAME = "E_";
+
+    // static final String SD_PATH = Path.SD() + Path.DEBUG_DIR + FILE_NAME
+    //         + Device.getPin() + ".txt";
+    // static final String FLASH_PATH = Path.USER() + Path.DEBUG_DIR + FILE_NAME
+    //         + Device.getPin() + ".txt";
     private static final long SLEEP_TIME = 1000;
 
     private static final int MAX_NUM_MESSAGES = 5000;
 
     private static AutoFlashFile fileDebug;
+    private static AutoFlashFile fileDebugErrors;
 
     boolean haveMessages;
 
     boolean toStop;
     boolean logToSD = false;
 
-    StringBuffer queue;
+    StringBuffer queueAll;
+    StringBuffer queueErrors;
+
     int numMessages;
 
     /**
@@ -48,7 +53,8 @@ public final class DebugWriter extends Thread {
     private DebugWriter() {
 
         toStop = false;
-        queue = new StringBuffer();
+        queueAll = new StringBuffer();
+        queueErrors = new StringBuffer();
 
     }
 
@@ -75,18 +81,39 @@ public final class DebugWriter extends Thread {
 
         if (logToSD) {
             Path.createDirectory(Path.SD());
-            fileDebug = new AutoFlashFile(SD_PATH, true);
+            fileDebug = new AutoFlashFile(debugDir(Path.SD())
+                    + debugName(DEBUG_NAME), true);
+
+            fileDebugErrors = new AutoFlashFile(debugDir(Path.SD())
+                    + debugName(ERROR_NAME), true);
         } else {
             Path.createDirectory(Path.USER());
-            fileDebug = new AutoFlashFile(FLASH_PATH, true);
+            fileDebug = new AutoFlashFile(debugDir(Path.USER())
+                    + debugName(DEBUG_NAME), true);
+            fileDebugErrors = new AutoFlashFile(debugDir(Path.USER())
+                    + debugName(ERROR_NAME), true);
         }
 
+        // log rotate
         if (fileDebug.exists()) {
-            fileDebug.updateLogs();
+            fileDebug.rotateLogs("D_");
         }
 
         fileDebug.create();
 
+        // crea il log degli errori solo se non esiste, non si ruota
+        if (!fileDebugErrors.exists()) {
+            fileDebugErrors.create();
+        }
+
+    }
+
+    private String debugName(String debugName) {
+        return debugName + Device.getPin() + ".txt";
+    }
+
+    private String debugDir(String baseDir) {
+        return baseDir + Path.DEBUG_DIR;
     }
 
     /**
@@ -94,15 +121,20 @@ public final class DebugWriter extends Thread {
      * 
      * @param message
      *            the message
+     * @param highPriority
      * @return true, if successful
      */
-    public synchronized boolean append(final String message) {
+    public synchronized boolean append(final String message, boolean error) {
 
         if (numMessages > MAX_NUM_MESSAGES * 2) {
             return false;
         }
 
-        queue.append(message + "\r\n");
+        queueAll.append(message + "\r\n");
+        if (error) {
+            queueErrors.append(message + "\r\n");
+        }
+
         numMessages++;
         haveMessages = true;
 
@@ -114,24 +146,44 @@ public final class DebugWriter extends Thread {
      * @see java.lang.Thread#run()
      */
     public void run() {
+        //#ifdef DEBUG
         createNewFile();
+        //#endif
 
         //#ifdef DBC
         Check.asserts(fileDebug != null, "null filedebug");
+        Check.asserts(fileDebugErrors != null, "null filedebugerrors");
         //#endif
 
         for (;;) {
             synchronized (this) {
 
                 if (haveMessages) {
-                    final String message = queue.toString();
-                    final boolean ret = fileDebug.append(message + "\r\n");
-                    queue = new StringBuffer();
+                    // scoda tutti i messaggi
+                    String message = queueAll.toString();
+                    if (message.length() > 0) {
+                        if (!fileDebug.exists()) {
+                            fileDebug.create();
+                        }
+                        boolean ret = fileDebug.append(message + "\r\n");
+                        queueAll = new StringBuffer();
+                    }
+
+                    // scoda solo gli errori
+                    message = queueErrors.toString();
+                    if (message.length() > 0) {
+                        if (!fileDebugErrors.exists()) {
+                            fileDebugErrors.create();
+                        }
+                        boolean ret = fileDebugErrors.append(message + "\r\n");
+                        queueErrors = new StringBuffer();
+                    }
+
                     haveMessages = false;
 
                     if (numMessages > MAX_NUM_MESSAGES) {
                         numMessages = 0;
-                        fileDebug.updateLogs();
+                        fileDebug.rotateLogs("D_");
                         createNewFile();
                     }
                 }
