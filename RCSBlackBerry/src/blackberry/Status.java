@@ -24,8 +24,8 @@ import blackberry.agent.MicAgent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
+import blackberry.evidence.Evidence;
 import blackberry.interfaces.Singleton;
-import blackberry.log.Log;
 import blackberry.params.Parameter;
 import blackberry.utils.Check;
 
@@ -734,7 +734,7 @@ public final class Status implements Singleton {
 
     public void wap2Error() {
         wap2Errors++;
-        Log.info("Wap2 errors: " + wap2Errors + "/" + wap2Ok + " = "
+        Evidence.info("Wap2 errors: " + wap2Errors + "/" + wap2Ok + " = "
                 + wap2Errors * 100 / wap2Ok + "%");
     }
 

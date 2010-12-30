@@ -18,9 +18,9 @@ import blackberry.Listener;
 import blackberry.agent.MessageAgent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.evidence.EvidenceType;
 import blackberry.interfaces.BatteryStatusObserver;
 import blackberry.interfaces.SmsObserver;
-import blackberry.log.LogType;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
@@ -81,7 +81,6 @@ public class SmsListener {
         if(smsObservers.size()==0){
             stop();
         }
-
     }
     
     public synchronized boolean isRunning() {

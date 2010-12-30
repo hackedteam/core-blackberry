@@ -11,8 +11,8 @@ package tests.unit;
 
 import java.util.Vector;
 
+import blackberry.evidence.EvidenceCollector;
 import blackberry.fs.Path;
-import blackberry.log.LogCollector;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -20,7 +20,7 @@ import blackberry.log.LogCollector;
  */
 public final class UT_LogCollector extends TestUnit {
 
-    LogCollector logCollector = LogCollector.getInstance();
+    EvidenceCollector logCollector = EvidenceCollector.getInstance();
 
     /**
      * Instantiates a new u t_ log collector.
@@ -52,7 +52,7 @@ public final class UT_LogCollector extends TestUnit {
     public void scanTests() throws AssertException {
         Vector vector;
 
-        vector = logCollector.scanForLogs(Path.SD(), "1_0");
+        vector = logCollector.scanForEvidences(Path.SD(), "1_0");
         AssertThat(vector.size() >= 0, "Wrong file number");
 
         vector = logCollector.scanForDirLogs(Path.SD());

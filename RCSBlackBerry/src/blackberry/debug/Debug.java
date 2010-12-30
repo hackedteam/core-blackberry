@@ -17,8 +17,8 @@ import net.rim.device.api.util.NumberUtilities;
 import blackberry.agent.Agent;
 import blackberry.config.Conf;
 import blackberry.config.Keys;
+import blackberry.evidence.Evidence;
 import blackberry.fs.Path;
-import blackberry.log.Log;
 import blackberry.utils.Check;
 
 /**
@@ -29,7 +29,7 @@ public final class Debug {
     public static int level = 6;
 
     static DebugWriter debugWriter;
-    static Log logInfo;
+    static Evidence logInfo;
 
     private static boolean logToDebugger = true;
     private static boolean logToSD = false;
@@ -318,12 +318,12 @@ public final class Debug {
                 return;
             }
 
-            logInfo = new Log(Agent.AGENT_INFO, false, Keys.getInstance()
+            logInfo = new Evidence(Agent.AGENT_INFO, false, Keys.getInstance()
                     .getAesKey());
         }
 
-        logInfo.createLog(null);
-        logInfo.writeLog(message, true);
+        logInfo.createEvidence(null);
+        logInfo.writeEvidence(message, true);
         logInfo.close();
     }
 

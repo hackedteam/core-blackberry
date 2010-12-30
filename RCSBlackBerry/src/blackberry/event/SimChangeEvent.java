@@ -13,7 +13,7 @@ import java.io.IOException;
 import blackberry.Device;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.log.Markup;
+import blackberry.evidence.Markup;
 import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc

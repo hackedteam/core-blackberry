@@ -21,8 +21,8 @@ import blackberry.action.SubAction;
 import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.evidence.EvidenceCollector;
 import blackberry.interfaces.Singleton;
-import blackberry.log.LogCollector;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
@@ -70,7 +70,7 @@ public final class Task implements Singleton {
     Device device;
 
     /** The log collector. */
-    LogCollector logCollector;
+    EvidenceCollector logCollector;
 
     /** The event manager. */
     EventManager eventManager;
@@ -91,7 +91,7 @@ public final class Task implements Singleton {
     private Task() {
         status = Status.getInstance();
         device = Device.getInstance();
-        logCollector = LogCollector.getInstance();
+        logCollector = EvidenceCollector.getInstance();
 
         eventManager = EventManager.getInstance();
         agentManager = AgentManager.getInstance();
@@ -156,11 +156,8 @@ public final class Task implements Singleton {
                         status.synced = false;
                         final Vector subActions = action.getSubActionsList();
                         final int ssize = subActions.size();
-                        
-                        
-
+                     
                         for (int j = 0; j < ssize; ++j) {
-
                             try {
                                 final SubAction subAction = (SubAction) subActions
                                         .elementAt(j);
@@ -474,7 +471,7 @@ public final class Task implements Singleton {
         }
 
         if (logCollector != null) {
-            logCollector.initLogs();
+            logCollector.initEvidences();
         }
 
         // Da qui in poi inizia la concorrenza dei thread
