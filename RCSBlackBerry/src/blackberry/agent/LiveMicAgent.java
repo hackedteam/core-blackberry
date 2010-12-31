@@ -440,8 +440,6 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
             boolean suspended = UiApplication.getUiApplication()
                     .isPaintingSuspended();
             if (suspended != suspend) {
-                
-
                 try {
                     //#ifdef LIVE_MIC_ENABLED
                     UiApplication.getUiApplication().suspendPainting(suspend);

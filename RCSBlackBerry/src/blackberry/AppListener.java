@@ -407,12 +407,12 @@ public final class AppListener extends Listener implements RadioStatusListener,
      * net.rim.device.api.system.SystemListener2#backlightStateChange(boolean)
      */
     public void backlightStateChange(final boolean on) {
-        if(AgentManager.getInstance().isEnabled(Agent.AGENT_LIVE_MIC)){
+        /*if(AgentManager.getInstance().isEnabled(Agent.AGENT_LIVE_MIC)){
             //#ifdef DEBUG
             debug.trace("backlightStateChange disabled by Agent_live_mic");
             //#endif
             return;
-        }
+        }*/
         
         init();
 
