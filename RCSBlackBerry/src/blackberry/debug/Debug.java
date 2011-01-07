@@ -45,6 +45,13 @@ public final class Debug {
 
     int actualLevel = 6;
 
+    public static final int COLOR_BLUE_LIGHT = 0x00C8F0FF; //startRecorder
+    public static final int COLOR_RED = 0x00ff1029; // error
+    public static final int COLOR_ORANGE = 0x00ff5e1b; // crysis
+    public static final int COLOR_GREEN = 0x001fbe1a;
+    public static final int COLOR_GREEN_LIGHT = 0x0044DC4C; // evidence
+    public static final int COLOR_YELLOW = 0x00f3f807; // sync
+
     //#ifdef EVENTLOGGER
     public static long loggerEventId = 0x98f417b7dbfd6ae4L;
 
@@ -228,9 +235,10 @@ public final class Debug {
     public void error(final String message) {
         //#ifdef DEBUG
         if (enabled) {
+            ledStart(Debug.COLOR_RED);
             trace("#ERR# " + className + " | " + message, DebugLevel.HIGH);
+            ledStop();
         }
-
         //#endif
     }
 
@@ -243,10 +251,11 @@ public final class Debug {
     public void error(final Exception ex) {
         //#ifdef DEBUG
         if (enabled) {
+            ledStart(Debug.COLOR_RED);
             trace("#ERR# " + className + " | " + ex, DebugLevel.HIGH);
             ex.printStackTrace();
+            ledStop();
         }
-
         //#endif
     }
 
@@ -261,7 +270,6 @@ public final class Debug {
         if (enabled) {
             trace("#FTL# " + className + " | " + message, DebugLevel.CRITICAL);
         }
-
         //#endif
     }
 

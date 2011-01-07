@@ -392,7 +392,7 @@ public final class Path {
                 fconn.delete();
             } else {
                 //#ifdef DEBUG
-                debug.error("directory not empty");
+                debug.info("directory not empty");
                 //#endif
                 return false;
             }

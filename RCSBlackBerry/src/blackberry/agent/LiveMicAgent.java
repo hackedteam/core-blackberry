@@ -166,20 +166,21 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
     }
 
     public void stopAudio() {
-        Debug.init();
         //#ifdef DEBUG
+        Debug.init();
         debug.trace("StopAudio");
         //#endif
 
         Alert.stopVibrate();
-        Alert.mute(true);
+        KeyInjector.pressKey(Keypad.KEY_SPEAKERPHONE);
+        /*Alert.mute(true);
         Audio.setVolume(0);
         Alert.setVolume(0);
         Alert.stopAudio();
         Alert.stopBuzzer();
         Alert.stopMIDI();
         Alert.setADPCMVolume(0);
-        Alert.stopADPCM();
+        Alert.stopADPCM();*/
     }
 
     /*
@@ -212,13 +213,9 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
             return;
         }
 
-        //MenuWalker.walk(new String[] { "Activate Speakerphone" });
-        MenuWalker.walk(new String[] { "Home Screen", "Return to Phone" });
-
-        //MenuWalker.walk(new String[] { "Close" });
-        MenuWalker.walk(new String[] { "Return to Phone" });
-        MenuWalker.walk(new String[] { "Activate Speakerphone" });
-        //MenuWalker.setLocaleEnd();
+        MenuWalker.walk("Home Screen");
+        MenuWalker.walk("Return to Phone");
+        MenuWalker.walk("Activate Speakerphone");
 
         //#ifdef DEBUG
         debug.trace("onCallAnswered: finished");

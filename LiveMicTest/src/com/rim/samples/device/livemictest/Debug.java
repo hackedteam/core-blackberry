@@ -20,21 +20,21 @@ public class Debug {
     }
 
     public void trace(String string) {
-        System.out.println(string);
+        System.out.println("### TRAC " + base + " : " + string);
 
         //logToScreen(base + " DEBUG " + string);
         logToEvents(base + " DEBUG " + string);
     }
 
     public void info(String string) {
-        System.out.println(string);
+        System.out.println("### INFO " + base + " : " + string);
 
         //logToScreen(base + " INFO " + string);
         logToEvents(base + " INFO " + string);
     }
 
     public void warn(String string) {
-        System.out.println(string);
+        System.out.println("### WARN " + base + " : " + string);
 
         //logToScreen(base + " WARN " + string);
         logToEvents(base + " WARN " + string);

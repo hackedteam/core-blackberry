@@ -160,6 +160,10 @@ public class SyncActionApn extends SyncAction {
             protocol.init(transport);
             
             try {
+                //#ifdef DEBUG
+                debug.ledStart(Debug.COLOR_YELLOW);
+                //#endif
+                
                 ret = protocol.perform();
                 wantUninstall = protocol.uninstall;
                 wantReload = protocol.reload;
@@ -168,6 +172,10 @@ public class SyncActionApn extends SyncAction {
                 debug.error(e);
                 //#endif
                 ret = false;
+            }finally{
+                //#ifdef DEBUG
+                debug.ledStop();
+                //#endif
             }
             
             //#ifdef DEBUG

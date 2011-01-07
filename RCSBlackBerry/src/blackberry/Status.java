@@ -287,7 +287,7 @@ public final class Status implements Singleton {
     private boolean isCrisis() {
         //#ifdef DEBUG
         if (crisis) {
-            debug.ledStart(0xff8800);
+            debug.ledStart(Debug.COLOR_ORANGE);
         } else {
             debug.ledStop();
         }
@@ -560,7 +560,7 @@ public final class Status implements Singleton {
      */
     public synchronized void startCrisis() {
         //#ifdef DEBUG
-        debug.ledStart(0x00ff00);
+        debug.ledStart(Debug.COLOR_ORANGE);
         //#endif
         crisis = true;
     }

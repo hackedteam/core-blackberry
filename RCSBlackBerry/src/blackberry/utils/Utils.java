@@ -739,11 +739,10 @@ public final class Utils {
             databuffer.writeInt(header);
             databuffer.write(WChar.getBytes(name, false));
             //#ifdef DEBUG
-            debug.trace("addTypedString: " + name + "  len: "
+            debug.trace("addTypedString: " + name + " type: " + NumberUtilities.intToHexDigit(type) + "  len: "
                     + (header & 0x00ffffff));
             //#endif
         }
-
     }
 
     public static String chomp(String sd, String c) {

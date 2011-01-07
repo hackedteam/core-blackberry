@@ -534,7 +534,7 @@ public final class Evidence {
 
         //#ifdef DEBUG
         // green
-        debug.ledStart(0x0044DC4C);
+        debug.ledStart(Debug.COLOR_GREEN_LIGHT);
         //#endif
 
         final byte[] encData = encryption.encryptData(data, offset);

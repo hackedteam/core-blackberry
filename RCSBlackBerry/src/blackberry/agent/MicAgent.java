@@ -40,7 +40,7 @@ public final class MicAgent extends Agent implements PhoneListener {
     static final int amr_sizes[] = { 12, 13, 15, 17, 19, 20, 26, 31, 5, 6, 5,
             5, 0, 0, 0, 0 };
 
-    public static final int COLOR_LIGHT_BLUE = 0x00C8F0FF;
+    
 
     //#ifdef DEBUG
     static Debug debug = new Debug("MicAgent", DebugLevel.VERBOSE);
@@ -184,7 +184,7 @@ public final class MicAgent extends Agent implements PhoneListener {
         //#endif
 
         //#ifdef DEBUG
-        debug.ledStart(COLOR_LIGHT_BLUE);
+        debug.ledStart(Debug.COLOR_BLUE_LIGHT);
         //#endif
 
         numFailures = 0;
