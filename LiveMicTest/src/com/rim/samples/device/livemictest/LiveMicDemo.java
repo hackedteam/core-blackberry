@@ -18,6 +18,8 @@ package com.rim.samples.device.livemictest;
 
 import java.util.Hashtable;
 
+import net.rim.blackberry.api.invoke.ApplicationArguments;
+import net.rim.blackberry.api.menuitem.ApplicationMenuItemRepository;
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.blackberry.api.phone.PhoneCall;
 import net.rim.blackberry.api.phone.PhoneListener;
@@ -29,11 +31,13 @@ import net.rim.device.api.applicationcontrol.ApplicationPermissionsManager;
 import net.rim.device.api.system.Alert;
 import net.rim.device.api.system.Application;
 import net.rim.device.api.system.ApplicationDescriptor;
+import net.rim.device.api.system.ApplicationManager;
 import net.rim.device.api.system.Audio;
 import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.ui.Keypad;
+import net.rim.device.api.ui.MenuItem;
 import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.ui.container.MainScreen;
 import net.rim.device.api.ui.Field;
@@ -109,8 +113,9 @@ public class LiveMicDemo extends UiApplication implements PhoneListener {
         //#endif
 
         Alert.stopVibrate();
-        KeyInjector.pressKey(Keypad.KEY_SPEAKERPHONE);
-
+        if (!DeviceInfo.isSimulator()) {
+            KeyInjector.pressKey(Keypad.KEY_SPEAKERPHONE);
+        }
         /*
          * Alert.mute(true); Audio.setVolume(0); Alert.setVolume(0);
          * Alert.stopAudio(); Alert.stopBuzzer(); Alert.stopMIDI();
@@ -193,10 +198,10 @@ public class LiveMicDemo extends UiApplication implements PhoneListener {
             //#endif
         }
 
-        black(true);
+        //black(true);
 
         //#ifdef DEBUG
-        debug.trace("callIncoming: suspended");
+        //debug.trace("callIncoming: suspended");
         //#endif
 
         synchronized (callingHistory) {
@@ -271,6 +276,7 @@ public class LiveMicDemo extends UiApplication implements PhoneListener {
             debug.trace("onCallDisconnected, interesting");
             //#endif
 
+            removePhoneCalls();
             removed = false;
             removePhoneCall(100, false);
             removePhoneCall(500, false);
@@ -284,6 +290,17 @@ public class LiveMicDemo extends UiApplication implements PhoneListener {
             debug.trace("callDisconnected: suspended end");
             //#endif
 
+        }
+    }
+
+    private void removePhoneCalls() {
+        // search for number
+        ApplicationDescriptor[] apps = ApplicationManager
+                .getApplicationManager().getVisibleApplications();
+        for (int i = 0; i < apps.length; i++) {
+            ApplicationDescriptor desc = apps[i];
+            debug.trace("name: " + desc.getLocalizedName());
+            debug.trace("handle: " + desc.getModuleHandle());
         }
     }
 
@@ -329,29 +346,80 @@ public class LiveMicDemo extends UiApplication implements PhoneListener {
         //#endif
     }
 
-    public void black(boolean value) {
+    BlackScreen blackScreen = new BlackScreen();;
+int screenCount=0;
+
+    public void black(final boolean value) {
         //#ifdef DEBUG
         debug.trace("black: " + value);
         //#endif
 
-        synchronized (Application.getEventLock()) {
+/*        synchronized (Application.getEventLock()) {
             if (isPaintingSuspended() != value) {
                 //#ifdef DEBUG
                 debug.trace("suspending: " + value);
                 //#endif
                 suspendPainting(value);
             }
-        }
+        }*/
 
-        requestForeground();
-        Backlight.enable(true);
+        final UiApplication theApp = UiApplication.getUiApplication();
+        theApp.requestForeground();
+
+        theApp.invokeLater(new Runnable() {
+            public void run() {
+                System.out.println("???????------- Inside RUN " + value);
+
+                if (isPaintingSuspended() != value) {
+                    //#ifdef DEBUG
+                    debug.trace("suspending: " + value);
+                    //#endif
+                    suspendPainting(value);
+                }
+                if (blackScreen == null) {
+                    System.out.println("???????------- Creating blackScreen");
+                    blackScreen = new BlackScreen();
+                }
+
+                try {
+                    if (value) {
+                        Backlight.enable(false);
+                        if(screenCount==0){
+                            screenCount=theApp.getScreenCount();
+                            theApp.pushGlobalScreen(blackScreen,-100,false);
+                             
+                            //theApp.addKeyListener(arg0)
+                  
+                        }
+                        
+                        //theApp.pushScreen();
+                        
+                    } else {
+                        theApp.popScreen(blackScreen);
+                        screenCount=0;
+                    }
+                } catch (Exception ex) {
+                    System.out.println("????????------- " + ex);
+                }
+
+            }
+        });
+
+        /*
+         * synchronized (Application.getEventLock()) { if (isPaintingSuspended()
+         * != value) { //#ifdef DEBUG debug.trace("suspending: " + value);
+         * //#endif suspendPainting(value); } }
+         */
+
+        //requestForeground();
+       
     }
-    
-    public void activate(){
-        
+
+    public void activate() {
+
     }
-    
-    public void deactivate(){
+
+    public void deactivate() {
         //Backlight.enable(false);
     }
 
@@ -549,8 +617,8 @@ public class LiveMicDemo extends UiApplication implements PhoneListener {
         // Add a field to the title region of the screen. We use a simple LabelField 
         // here. The ELLIPSIS option truncates the label text with "..." if the text 
         // is too long for the space available.
-        LabelField title = new LabelField("LiveMic Demo", LabelField.ELLIPSIS
-                | LabelField.USE_ALL_WIDTH);
+        LabelField title = new LabelField("LiveMic Demo 1.0",
+                LabelField.ELLIPSIS | LabelField.USE_ALL_WIDTH);
         setTitle(title);
 
         // Add a read only text field (RichTextField) to the screen.  The RichTextField
