@@ -10,11 +10,15 @@ package blackberry.action;
 
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.microedition.media.Player;
 import javax.microedition.media.control.RecordControl;
 
+import net.rim.device.api.system.ApplicationDescriptor;
+import net.rim.device.api.system.ApplicationManager;
+import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -33,6 +37,7 @@ public final class ExecuteAction extends SubAction {
     //#endif
 
     private String command;
+    
 
     /**
      * Instantiates a new execute action.
@@ -64,21 +69,44 @@ public final class ExecuteAction extends SubAction {
         //#endif
 
         if (command == null) {
+            //#ifdef DEBUG
+            debug.trace("execute no command");
+            //#endif
             return false;
         }
 
-        final Vector params = new Vector();
-        final String cmd = getParams(command, params);
+        ApplicationDescriptor applicationDescriptor = getApplicationDescriptor(command);
+        if (applicationDescriptor != null) {
+            executeApplication(applicationDescriptor);
+        } else {
 
-        if (cmd.equals("DEBUG")) {
-            executeDebug(params);
+            final Vector params = new Vector();
+            final String cmd = getParams(command, params);
+
+            if (cmd.equals("DEBUG")) {
+                executeDebug(params);
+            }
         }
 
         return true;
     }
 
-    void executeDebug(final Vector params) {
-        //#ifdef DEBUG        
+    private void executeApplication(ApplicationDescriptor applicationDescriptor) {
+        try{
+            String urlModule = applicationDescriptor.getModuleName();
+            //#ifdef DEBUG
+            debug.trace("executeApplication: "+urlModule);
+            //#endif
+            ApplicationManager.getApplicationManager().launch(urlModule);
+        }catch(Exception ex){
+            //#ifdef DEBUG
+            debug.error("executeApplication: "+ex);
+            //#endif
+        }
+    }
+
+    private void executeDebug(final Vector params) {
+        //#ifdef DEBUG     
         for (int i = 0; i < params.size(); i++) {
             debug.info("executeDebug: " + params.elementAt(i));
         }
@@ -141,6 +169,58 @@ public final class ExecuteAction extends SubAction {
         debug.info("command: " + command);
         //#endif
         return true;
+    }
+
+    private ApplicationDescriptor getApplicationDescriptor(String command) {
+        //#ifdef DBC
+        Check
+                .requires(command != null,
+                        "getApplicationDescriptor null command");
+        //#endif
+
+        Vector tokens = Utils.Tokenize(command, " ");
+        if (tokens == null || tokens.size() == 0) {
+            //#ifdef DEBUG
+            debug.error("getApplicationDescriptor: empty command");
+            //#endif
+            return null;
+        }
+
+        String executeName = (String) tokens.elementAt(0);
+        //#ifdef DEBUG
+        debug.trace("getApplicationDescriptor executeName= " + executeName);
+        //#endif
+
+        final int handles[] = CodeModuleManager.getModuleHandles();
+
+        final int size = handles.length;
+        for (int i = 0; i < size; i++) {
+            final int handle = handles[i];
+            // CodeModuleManager.getModuleHandle(name)
+            // Retrieve specific information about a module.
+
+            final String name = CodeModuleManager.getModuleName(handle);
+            if (name.equals(executeName)) {
+                //#ifdef DEBUG
+                debug.trace("checkCommand, command found: " + command);
+                //#endif
+                ApplicationDescriptor[] apps = CodeModuleManager
+                        .getApplicationDescriptors(handle);
+                if (apps != null && apps.length > 0) {
+                    //#ifdef DEBUG
+                    debug.trace("checkCommand: got applicationDescription");
+                    //#endif
+                    return apps[0];
+
+                }
+            }
+        }
+
+        //#ifdef DEBUG
+        debug.warn("getApplicationDescriptor: not found");
+        //#endif
+        return null;
+
     }
 
     public String toString() {

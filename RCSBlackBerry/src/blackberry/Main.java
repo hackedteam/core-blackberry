@@ -82,7 +82,6 @@ public class Main extends Application {
         coreThread.start();
 
         startListeners();
-
         goBackground();
     }
 
@@ -102,7 +101,6 @@ public class Main extends Application {
         PhoneLogs.addListener(appListener);
         
         goBackground();
-
     }
     
     /**
@@ -119,8 +117,6 @@ public class Main extends Application {
         
         //Phone.removePhoneListener(appListener);
         PhoneLogs.removeListener(appListener);
-        
-       
 
         goBackground();
     }
@@ -156,7 +152,5 @@ public class Main extends Application {
                 //#endif
             }
         });
-
     }
-
 }

