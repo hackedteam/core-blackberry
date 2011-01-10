@@ -102,7 +102,8 @@ public final class MessageAgent extends Agent implements SmsObserver {
                 "MessageAgent");
 
         //#ifdef DBC
-        Check.asserts(Evidence.convertTypeEvidence(agentId) == EvidenceType.MAIL_RAW,
+        Check.asserts(
+                Evidence.convertTypeEvidence(agentId) == EvidenceType.MAIL_RAW,
                 "Wrong Conversion");
         //#endif
 
@@ -216,8 +217,8 @@ public final class MessageAgent extends Agent implements SmsObserver {
      *            the content
      * @param logType
      */
-    public void createEvidence(final byte[] additionalData, final byte[] content,
-            final int logType) {
+    public void createEvidence(final byte[] additionalData,
+            final byte[] content, final int logType) {
 
         //#ifdef DBC
         Check.requires(content != null, "createEvidence content null");
@@ -518,7 +519,6 @@ public final class MessageAgent extends Agent implements SmsObserver {
                 //#ifdef DEBUG
                 debug.error("data null");
                 //#endif
-
                 return;
             }
 

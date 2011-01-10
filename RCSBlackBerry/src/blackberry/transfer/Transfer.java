@@ -196,7 +196,6 @@ public class Transfer {
                 debug.trace("method: " + method);
                 //#endif
                 connection = new DirectTcpConnection(host, port, ssl, method);
-
                 connected = connection.connect();
 
                 if (connected) {
@@ -218,7 +217,6 @@ public class Transfer {
                 //#endif
 
                 connection = new DirectTcpConnection(host, port, ssl, apn);
-
                 connected = connection.connect();
 
                 if (connected) {
@@ -316,7 +314,6 @@ public class Transfer {
             //#endif
             throw new ProtocolException();
         }
-
     }
 
     /**
@@ -440,7 +437,6 @@ public class Transfer {
         //#ifdef DEBUG
         debug.trace("sendFilesystem");
         //#endif
-
         sendCommand(Proto.OK);
 
         //DEPTH
