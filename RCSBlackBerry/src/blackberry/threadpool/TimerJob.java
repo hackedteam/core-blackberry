@@ -9,6 +9,7 @@
  * *************************************************/
 package blackberry.threadpool;
 
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -37,6 +38,8 @@ public abstract class TimerJob {
 
     private int runningLoops = 0;
     protected String name;
+
+    private Date lastExecuted;
 
     /* private boolean enqueued; */
     //private static int numThreads = 0;
@@ -241,6 +244,20 @@ public abstract class TimerJob {
             actualStart();
         }
 
+        //#ifdef DEBUG
+        if (lastExecuted != null) {
+            Date now = new Date();
+            long millisec = now.getTime() - lastExecuted.getTime();
+            debug.trace("timer has run in: " + (millisec / 1000.0)
+                    + " instead of: " + (getDelay() / 1000.0));
+            if (millisec > getDelay() * 1.5) {
+                debug.error("Timer too long: " + millisec + " ms");
+            }
+
+            lastExecuted = now;
+        }
+        //#endif
+
         runningLoops++;
 
         try {
@@ -279,6 +296,7 @@ public abstract class TimerJob {
                 timerWrapper.cancel();
             }
             timerWrapper = null;
+            lastExecuted = null;
 
             scheduled = false;
             actualStop();
@@ -301,7 +319,6 @@ public abstract class TimerJob {
             //#endif
             wantedDelay = 0;
         } else {
-
             wantedDelay = delay_;
         }
         //#ifdef DEBUG
@@ -324,6 +341,9 @@ public abstract class TimerJob {
         } else {
             wantedPeriod = period;
         }
+
+        lastExecuted = null;
+
         //#ifdef DEBUG
         debug.trace("setPeriod: " + wantedPeriod);
         //#endif

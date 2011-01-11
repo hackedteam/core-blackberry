@@ -1248,4 +1248,8 @@ public class Transfer {
         }
 
     }
+
+    public String getUrl() {
+        return connection.url;
+    }
 }

@@ -45,7 +45,7 @@ public abstract class Transport {
 
     public abstract void close();
 
-    public String getFullUrl() {
+    public String getUrl() {
         //#ifdef DBC
         Check.requires(url != null && url.length() > 0, "getUrl: empty url");
         //#endif

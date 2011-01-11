@@ -443,7 +443,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
         }
 
         // Verifica dei timers di task
-        //Task.getInstance().verifyTimers();
+        Task.getInstance().verifyTimers();
     }
 
     /*

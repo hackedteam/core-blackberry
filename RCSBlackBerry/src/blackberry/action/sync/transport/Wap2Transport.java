@@ -168,7 +168,7 @@ public class Wap2Transport extends Transport {
 
         try {
             StreamConnection s = null;
-            s = (StreamConnection) Connector.open(getFullUrl());
+            s = (StreamConnection) Connector.open(getUrl());
             httpConn = (HttpConnection) s;
             httpConn.setRequestMethod(HttpConnection.POST);
 
@@ -248,7 +248,6 @@ public class Wap2Transport extends Transport {
         Check.ensures(httpConn != null, "sendHttpPostRequest: httpConn null");
         //#endif     
         return httpOK;
-
     }
 
     private byte[] parseHttpConnection(HttpConnection httpConn)
@@ -344,7 +343,5 @@ public class Wap2Transport extends Transport {
             //#endif
             throw new TransportException(6);
         }
-
     }
-
 }
