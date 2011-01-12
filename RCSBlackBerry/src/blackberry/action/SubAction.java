@@ -165,7 +165,6 @@ public abstract class SubAction implements Runnable {
                 finished = true;
             }
         }
-
     }
 
     /**

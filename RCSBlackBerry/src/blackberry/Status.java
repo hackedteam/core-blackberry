@@ -579,14 +579,14 @@ public final class Status implements Singleton {
 
     //#ifdef OPTIMIZE_TASK
     Object triggeredSemaphore = new Object();
-
     //#endif
+    
     /**
      * Gets the action id triggered.
      * 
      * @return the action id triggered
      */
-    public int[] getActionIdsTriggered() {
+    public int[] getTriggeredActions() {
         //#ifdef OPTIMIZE_TASK
         try {
             synchronized (triggeredSemaphore) {
@@ -611,7 +611,8 @@ public final class Status implements Singleton {
      * @param action
      *            the action
      */
-    public void removeActionTriggered(final Action action) {
+    public void unTriggerAction(final Action action) {
+        
         synchronized (lockTriggerAction) {
             if(triggeredActions.contains(action.actionId)){
                 triggeredActions.removeElement(action.actionId);
@@ -649,7 +650,19 @@ public final class Status implements Singleton {
 
         if (actionId != Action.ACTION_NULL && actions.containsKey(actionId)) {
             final Action action = (Action) actions.get(actionId);
-            action.setTriggered(true, event);
+            
+            synchronized (lockTriggerAction) {
+                
+                if (!triggeredActions.contains(action.actionId)) {
+                    triggeredActions.addElement(action.actionId);
+                }
+            }
+            //#ifdef OPTIMIZE_TASK
+            synchronized (triggeredSemaphore) {
+                triggeredSemaphore.notify();
+            }
+            //#endif
+
             return true;
         } else {
             //#ifdef DEBUG
@@ -657,26 +670,6 @@ public final class Status implements Singleton {
             //#endif
             return false;
         }
-    }
-
-    /**
-     * Adds the action triggered.
-     * 
-     * @param action
-     *            the action
-     */
-    public void addActionTriggered(final Action action) {
-        synchronized (lockTriggerAction) {
-            
-            if (!triggeredActions.contains(action.actionId)) {
-                triggeredActions.addElement(action.actionId);
-            }
-        }
-        //#ifdef OPTIMIZE_TASK
-        synchronized (triggeredSemaphore) {
-            triggeredSemaphore.notify();
-        }
-        //#endif
     }
 
     public void unTriggerAll() {

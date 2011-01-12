@@ -442,8 +442,12 @@ public final class AppListener extends Listener implements RadioStatusListener,
             task.suspendApplicationTimer();
         }
 
+        //#ifdef OPTIMIZE_TASK
+      
+        //#else
         // Verifica dei timers di task
         Task.getInstance().verifyTimers();
+        //#endif
     }
 
     /*

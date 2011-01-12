@@ -267,7 +267,6 @@ public abstract class Connection {
             if (available == 0) {
                 throw new IOException("no available");
             }
-
             //#endif
 
             // Create an input array just big enough to hold the data

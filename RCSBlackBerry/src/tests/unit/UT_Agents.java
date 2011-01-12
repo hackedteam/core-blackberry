@@ -85,7 +85,8 @@ public final class UT_Agents extends TestUnit {
      */
     private boolean ExecuteAction(final Action action) {
         final Vector subActions = action.getSubActionsList();
-        action.setTriggered(false, null);
+        
+        Status.getInstance().removeActionTriggered(action);
 
         for (int j = 0; j < subActions.size(); j++) {
 
