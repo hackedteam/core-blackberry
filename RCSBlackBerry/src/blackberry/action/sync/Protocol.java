@@ -416,4 +416,15 @@ public abstract class Protocol {
         //}
     }
 
+    public static String normalizeFilename(String file) {
+        if(file.startsWith("//")){
+            //#ifdef DEBUG
+            debug.trace("normalizeFilename: " + file);
+            //#endif
+            return file.substring(1);
+        }else{
+            return file;
+        }
+    }
+
 }

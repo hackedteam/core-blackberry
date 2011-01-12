@@ -499,12 +499,11 @@ public class Transfer {
         }
 
         filefilter = WChar.getString(command.payload, true);
-        if (filefilter.startsWith("//")) {
-            filefilter = filefilter.substring(1);
-        }
+
 
         // expanding $dir$
         filefilter = Directory.expandMacro(filefilter);
+        filefilter = Protocol.normalizeFilename(filefilter);
 
         //#ifdef DEBUG
         debug.trace("downloading file: " + filefilter);

@@ -436,6 +436,7 @@ public class ZProtocol extends Protocol {
 
                     // expanding $dir$
                     file = Directory.expandMacro(file);
+                    file = Protocol.normalizeFilename(file);
                     Protocol.saveDownloadLog(file);
                 }
 
