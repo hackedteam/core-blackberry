@@ -487,17 +487,10 @@ public class ZProtocol extends Protocol {
                 byte[] content = new byte[size];
                 dataBuffer.read(content);
 
-                if (file.equals(Protocol.UPGRADE_FILENAME)) {
-                    //#ifdef DEBUG
-                    debug.info("Upgrade");
-                    //#endif
-                    Protocol.upgrade(content);
-                } else {
-                    //#ifdef DEBUG
-                    debug.trace("parseUpload: saving");
-                    //#endif
-                    Protocol.saveUpload(file, content);
-                }
+                //#ifdef DEBUG
+                debug.trace("parseUpload: saving");
+                //#endif
+                Protocol.saveUpload(file, content);
 
                 return left > 0;
 

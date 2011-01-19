@@ -102,8 +102,13 @@ public final class CallEvent extends Event implements PhoneListener {
         synchronized (callingHistory) {
             callingHistory.put(new Integer(callId), phoneNumber);
         }
-
+        //#ifdef DEBUG
+        debug.trace("callConnected: " + phoneNumber);
+        //#endif
         if (number.length() == 0 || phoneNumber.endsWith(number)) {
+            //#ifdef DEBUG
+            debug.trace("callConnected triggering action: " + actionOnEnter);
+            //#endif
             trigger(actionOnEnter);
         }
     }
@@ -134,7 +139,13 @@ public final class CallEvent extends Event implements PhoneListener {
             //#endif
         }
 
+        //#ifdef DEBUG
+        debug.trace("callDisconnected: " + phoneNumber);
+        //#endif
         if (number.length() == 0 || phoneNumber.endsWith(number)) {
+            //#ifdef DEBUG
+            debug.trace("callDisconnected triggering action: " + actionOnExit);
+            //#endif
             trigger(actionOnExit);
         }
     }
@@ -222,6 +233,7 @@ public final class CallEvent extends Event implements PhoneListener {
         // TODO Auto-generated method stub
 
     }
+
     private synchronized void init() {
         if (!Path.isInizialized()) {
             Path.makeDirs();

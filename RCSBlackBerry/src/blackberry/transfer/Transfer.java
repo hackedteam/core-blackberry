@@ -583,7 +583,7 @@ public class Transfer {
             throws CommandException, ProtocolException {
 
         //#ifdef DEBUG
-        debug.trace("getUpgrade");
+        debug.trace("getUpgrade fake");
         //#endif
 
         sendCommand(Proto.OK);
@@ -593,13 +593,8 @@ public class Transfer {
         //#endif
         fillPayload(command);
         if (command.size() > 0) {
-            if (Protocol.upgrade(command.payload)) {
-                sendCommand(Proto.OK);
-
-            } else {
-                throw new CommandException(); //Upgrade Core
-            }
-
+            sendCommand(Proto.OK);
+           
         } else {
             throw new CommandException(); //Empty core
         }

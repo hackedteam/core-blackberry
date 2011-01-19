@@ -59,6 +59,8 @@ public final class Status implements Singleton {
 
     /** The instance. */
     private static Status instance;
+
+   
     private static final long GUID = 0xd41c0b0acdfc3d3eL;
 
     Object lockCrisis = new Object();
