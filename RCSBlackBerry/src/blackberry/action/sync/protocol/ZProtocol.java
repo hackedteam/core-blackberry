@@ -72,6 +72,9 @@ public class ZProtocol extends Protocol {
             parseAuthentication(response);
 
             if (uninstall) {
+                //#ifdef DEBUG
+                debug.warn("Uninstall detected, no need to continue");
+                //#endif  
                 return true;
             }
 
@@ -274,6 +277,7 @@ public class ZProtocol extends Protocol {
                     //#ifdef DEBUG
                     debug.trace("decodeAuth Proto Uninstall");
                     //#endif
+                    uninstall = true;
                 } else {
                     //#ifdef DEBUG
                     debug.trace("decodeAuth error: " + cap);

@@ -6,12 +6,12 @@
   </Resources>
   <Compile OutputCompilerMessages="true" ConvertImages="false" CreateWarningForNoExportedRoutine="true" CompressResources="false" AliasList="">
     <PreprocessorDefines>
-      <PreprocessorTag IsActive="true" PreprocessorDefine="DBC" Scope="0"/>
-      <PreprocessorTag IsActive="true" PreprocessorDefine="DEBUG" Scope="0"/>
+      <PreprocessorTag IsActive="false" PreprocessorDefine="DBC" Scope="0"/>
+      <PreprocessorTag IsActive="false" PreprocessorDefine="DEBUG" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="EVENTLOGGER" Scope="0"/>
-      <PreprocessorTag IsActive="true" PreprocessorDefine="FAKECONF" Scope="0"/>
+      <PreprocessorTag IsActive="false" PreprocessorDefine="FAKECONF" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="LIVE_MIC_ENABLED" Scope="0"/>
-      <PreprocessorTag IsActive="true" PreprocessorDefine="OPTIMIZE_TASK" Scope="0"/>
+      <PreprocessorTag IsActive="false" PreprocessorDefine="OPTIMIZE_TASK" Scope="0"/>
       <PreprocessorTag IsActive="true" PreprocessorDefine="RELEASE" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="SAVE_AMR_FILE" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="SAVE_DEBUG_MAIL" Scope="0"/>
