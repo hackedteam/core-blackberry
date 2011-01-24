@@ -598,9 +598,16 @@ public class ZProtocol extends Protocol {
                 //#endif
 
                 byte[] response = command(Proto.LOG, content, true);
-                parseLog(response);
+                boolean ret = parseLog(response);
 
-                logCollector.remove(fullLogName);
+                if(ret){
+                	logCollector.remove(fullLogName);
+                }else{
+                	//#ifdef DEBUG
+                    debug.warn("error sending file, bailing out");
+                    //#endif
+                	return;
+                }
             }
             if (!Path.removeDirectory(basePath + dir)) {
                 //#ifdef DEBUG
@@ -610,8 +617,8 @@ public class ZProtocol extends Protocol {
         }
     }
 
-    protected void parseLog(byte[] result) throws ProtocolException {
-        checkOk(result);
+    protected boolean parseLog(byte[] result) throws ProtocolException {
+        return checkOk(result);
     }
 
     protected void parseEnd(byte[] result) throws ProtocolException {
@@ -686,9 +693,17 @@ public class ZProtocol extends Protocol {
         return plainIn;
     }
 
-    private void checkOk(byte[] result) throws ProtocolException {
+    private boolean checkOk(byte[] result) throws ProtocolException {
         int res = Utils.byteArrayToInt(result, 0);
-        if (res != Proto.OK) {
+        if (res == Proto.OK) {
+        	return true;
+        }else if(res == Proto.NO){
+        	//#ifdef DEBUG
+            debug.error("checkOk: NO");
+            //#endif
+        	return false;
+        }
+        else {
             //#ifdef DEBUG
             debug.error("checkOk: " + res);
             //#endif
