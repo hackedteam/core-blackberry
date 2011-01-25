@@ -102,7 +102,6 @@ public class InstanceKeys {
     }
 
     private byte[] keyFromString(final String string) {
-
         try {
             int len = 16;
             byte[] array = new byte[len];

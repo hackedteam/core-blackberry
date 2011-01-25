@@ -3,6 +3,7 @@ package blackberry.crypto;
 
 import net.rim.device.api.crypto.CryptoException;
 import net.rim.device.api.crypto.CryptoTokenException;
+import net.rim.device.api.crypto.SHA1Digest;
 import net.rim.device.api.util.Arrays;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -39,35 +40,15 @@ public class EncryptionPKCS5 extends Encryption {
     }
 
     protected byte[] pad(byte[] plain, int offset, int len) {
-        final int clen = getNextMultiple(len);
-        int value = clen - len;
-        //#ifdef DEBUG
-        debug.trace("pad " + len + " " + clen + " : " + value);
-        //#endif
-        final byte[] padplain = new byte[clen];
-
-        Utils.copy(padplain, 0, plain, offset, len);
-
-        for (int i = 1; i <= value; i++) {
-            padplain[clen - i] = (byte) value;
-        }
-
-        //#ifdef DEBUG
-        debug.trace("padded: " + Utils.byteArrayToHex(padplain));
-        //#endif
-        return padplain;
+        return pad(plain, offset, len, true);
     }
 
-    public byte[] decryptData(final byte[] cyphered) throws CryptoException {
-        return decryptData(cyphered, 0);
-    }
-
-    public byte[] decryptData(final byte[] cyphered, final int offset) throws CryptoException {
+    public byte[] decryptData(final byte[] cyphered, final int enclen,
+            final int offset) throws CryptoException {
         //#ifdef DEBUG
-        debug.trace("decryptData");
+        debug.trace("decryptData PKCS5");
         //#endif
 
-        final int enclen = cyphered.length - offset;
         //int padlen = cyphered[cyphered.length -1];
         //int plainlen = enclen - padlen;
 
@@ -97,17 +78,17 @@ public class EncryptionPKCS5 extends Encryption {
             }
 
             int padlen = paddedplain[paddedplain.length - 1];
-            
-            if(padlen <= 0 || padlen > 16){
+
+            if (padlen <= 0 || padlen > 16) {
                 //#ifdef DEBUG
                 debug.error("decryptData, wrong padlen: " + padlen);
                 //#endif
                 throw new CryptoException();
             }
-                    
+
             plainlen = enclen - padlen;
             plain = new byte[plainlen];
-            
+
             Utils.copy(plain, 0, paddedplain, 0, plainlen);
 
         } catch (final CryptoTokenException e) {
@@ -118,9 +99,61 @@ public class EncryptionPKCS5 extends Encryption {
         }
 
         //#ifdef DBC
-        Check.ensures(plain!=null, "null plain");
+        Check.ensures(plain != null, "null plain");
         Check.ensures(plain.length == plainlen, "wrong plainlen");
         //#endif
         return plain;
+    }
+
+    public byte[] encryptDataIntegrity(final byte[] plain) {
+
+        byte[] sha = SHA1(plain);
+        byte[] plainSha = Utils.concat(plain, sha);
+
+        //#ifdef DBC
+        Check.asserts(sha.length == SHA1Digest.DIGEST_LENGTH, "sha.length");
+        Check.asserts(plainSha.length == plain.length
+                + SHA1Digest.DIGEST_LENGTH, "plainSha.length");
+        //#endif
+
+        //#ifdef DEBUG
+        debug.trace("encryptDataIntegrity plain: " + plain.length);
+        debug.trace("encryptDataIntegrity plainSha: " + plainSha.length);
+        //#endif
+
+        return encryptData(plainSha, 0);
+    }
+
+    public byte[] decryptDataIntegrity(final byte[] cyphered)
+            throws CryptoException {
+        byte[] plainSha = decryptData(cyphered, 0);
+        byte[] plain = Arrays.copy(plainSha, 0, plainSha.length
+                - SHA1Digest.DIGEST_LENGTH);
+        byte[] sha = Arrays.copy(plainSha, plainSha.length
+                - SHA1Digest.DIGEST_LENGTH, SHA1Digest.DIGEST_LENGTH);
+        byte[] calculatedSha = SHA1(plainSha, 0, plainSha.length
+                - SHA1Digest.DIGEST_LENGTH);
+
+        //#ifdef DBC
+        Check.asserts(SHA1Digest.DIGEST_LENGTH == 20, "DIGEST_LENGTH");
+        Check.asserts(
+                plain.length + SHA1Digest.DIGEST_LENGTH == plainSha.length,
+                "plain.length");
+        Check.asserts(sha.length == SHA1Digest.DIGEST_LENGTH, "sha.length");
+        Check.asserts(calculatedSha.length == SHA1Digest.DIGEST_LENGTH,
+                "calculatedSha.length");
+        //#endif
+
+        if (Utils.equals(calculatedSha, sha)) {
+            //#ifdef DEBUG
+            debug.trace("decryptDataIntegrity: sha corrected");
+            //#endif
+            return plain;
+        } else {
+            //#ifdef DEBUG
+            debug.error("decryptDataIntegrity: sha error!");
+            //#endif
+            throw new CryptoException();
+        }
     }
 }

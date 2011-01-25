@@ -9,6 +9,8 @@
  * *************************************************/
 package blackberry.crypto;
 
+import blackberry.config.InstanceKeysEmbedded;
+import fake.InstanceKeysFake;
 import net.rim.device.api.crypto.CryptoTokenException;
 
 // TODO: Auto-generated Javadoc
@@ -16,7 +18,6 @@ import net.rim.device.api.crypto.CryptoTokenException;
  * The Interface CryptoEngine.
  */
 public interface CryptoEngine {
-
     /**
      * Decrypt.
      * 

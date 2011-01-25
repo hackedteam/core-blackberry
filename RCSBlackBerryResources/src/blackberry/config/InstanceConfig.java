@@ -13,11 +13,4 @@ public class InstanceConfig {
         return inputStream;
     } 
     
-    //#ifdef FAKECONF
-    public static InputStream getConfigFake()
-    {
-        ByteArrayInputStream istream = new ByteArrayInputStream(InstanceConfigFake.getBytes());       
-        return istream;
-    }  
-    //#endif
 }

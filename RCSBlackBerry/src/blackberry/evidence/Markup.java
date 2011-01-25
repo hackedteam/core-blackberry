@@ -10,6 +10,7 @@ package blackberry.evidence;
 
 import java.io.IOException;
 
+import net.rim.device.api.crypto.CryptoException;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.agent.Agent;
 import blackberry.config.Keys;
@@ -115,7 +116,7 @@ public class Markup {
 
     private static int getMarkupSeed() {
         if (!markupInit) {
-            final Keys keys = Keys.getInstance();
+            final Keys keys = Encryption.getKeys();
             final byte[] challengeKey = keys.getChallengeKey();
             //#ifdef DBC
             Check.asserts(challengeKey != null,
@@ -276,7 +277,12 @@ public class Markup {
             final byte[] encData = fileRet.read();
             final int len = Utils.byteArrayToInt(encData, 0);
 
-            final byte[] plain = encryption.decryptData(encData, len, 4);
+            byte[] plain=null;
+            try {
+                plain = encryption.decryptData(encData, len, 4);
+            } catch (CryptoException e) {
+                return null;
+            }
             //#ifdef DBC
             Check.asserts(plain != null, "wrong decryption: null");
             //#endif

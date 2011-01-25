@@ -1,5 +1,5 @@
 //#preprocess
-package blackberry.config;
+package fake;
 
 import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.NumberUtilities;

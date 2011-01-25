@@ -8,12 +8,15 @@
  * *************************************************/
 package blackberry.crypto;
 
+import fake.InstanceKeysFake;
 import net.rim.device.api.crypto.CryptoException;
 import net.rim.device.api.crypto.CryptoTokenException;
 import net.rim.device.api.crypto.PseudoRandomSource;
 import net.rim.device.api.crypto.RandomSource;
 import net.rim.device.api.crypto.SHA1Digest;
 import net.rim.device.api.util.Arrays;
+import blackberry.config.InstanceKeysEmbedded;
+import blackberry.config.Keys;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.utils.Check;
@@ -163,12 +166,16 @@ public class Encryption {
      *            the message
      * @return the byte[]
      */
-    public static byte[] SHA1(final byte[] message) {
+    public static byte[] SHA1(final byte[] message, int offset, int length) {
         final SHA1Digest digest = new SHA1Digest();
-        digest.update(message);
+        digest.update(message, offset, length);
         final byte[] sha1 = digest.getDigest();
 
         return sha1;
+    }
+
+    public static byte[] SHA1(final byte[] message) {
+        return SHA1(message, 0, message.length);
     }
 
     /**
@@ -189,7 +196,7 @@ public class Encryption {
      * @param cyphered
      *            the cyphered
      * @return the byte[]
-     * @throws CryptoException 
+     * @throws CryptoException
      */
     public byte[] decryptData(final byte[] cyphered) throws CryptoException {
         return decryptData(cyphered, cyphered.length, 0);
@@ -203,9 +210,10 @@ public class Encryption {
      * @param offset
      *            the offset
      * @return the byte[]
-     * @throws CryptoException 
+     * @throws CryptoException
      */
-    public byte[] decryptData(final byte[] cyphered, final int offset) throws CryptoException {
+    public byte[] decryptData(final byte[] cyphered, final int offset)
+            throws CryptoException {
         return decryptData(cyphered, cyphered.length - offset, offset);
     }
 
@@ -219,9 +227,10 @@ public class Encryption {
      * @param offset
      *            the offset
      * @return the byte[]
+     * @throws CryptoException 
      */
     public byte[] decryptData(final byte[] cyphered, final int plainlen,
-            final int offset) {
+            final int offset) throws CryptoException {
         final int enclen = cyphered.length - offset;
 
         //#ifdef DBC
@@ -286,12 +295,11 @@ public class Encryption {
         //#endif
 
         final int len = plain.length - offset;
-        
 
         // TODO: optimize, non creare padplain, considerare caso particolare
         // ultimo blocco
         final byte[] padplain = pad(plain, offset, len);
-        
+
         final int clen = padplain.length;
         final byte[] crypted = new byte[clen];
 
@@ -318,12 +326,34 @@ public class Encryption {
 
         return crypted;
     }
-    
-    protected byte[] pad(byte[] plain, int offset, int len){
+
+    /**
+     * Old style Pad, PKCS5 is available in EncryptionPKCS5
+     * 
+     * @param plain
+     * @param offset
+     * @param len
+     * @return
+     */
+    protected byte[] pad(byte[] plain, int offset, int len) {
+        return pad(plain, offset, len, false);
+    }
+
+    protected byte[] pad(byte[] plain, int offset, int len, boolean PKCS5) {
         final int clen = getNextMultiple(len);
-        final byte[] padplain = new byte[clen];
-        Utils.copy(padplain, 0, plain, offset, len);
-        return padplain;
+        if (clen > 0) {
+            final byte[] padplain = new byte[clen];
+            if (PKCS5) {
+                int value = clen - len;
+                for (int i = 1; i <= value; i++) {
+                    padplain[clen - i] = (byte) value;
+                }
+            }
+            Utils.copy(padplain, 0, plain, offset, len);
+            return padplain;
+        } else {
+            return plain;
+        }
     }
 
     /**
@@ -363,6 +393,16 @@ public class Encryption {
         for (int i = 0; i < 16; i++) {
             pt[i] ^= iv[i];
         }
+    }
+
+    public static Keys getKeys() {
+        //#ifdef FAKECONF
+        final InstanceKeysEmbedded instance = new InstanceKeysFake();
+        return Keys.getInstance(instance);
+        //#else
+        return Keys.getInstance();
+        //#endif
+
     }
 
 }

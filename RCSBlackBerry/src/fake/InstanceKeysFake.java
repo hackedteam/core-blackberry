@@ -7,7 +7,10 @@
  * File         : InstanceKeys323.java
  * Created      : 28-apr-2010
  * *************************************************/
-package blackberry.config;
+package fake;
+
+import blackberry.config.InstanceKeys;
+import blackberry.config.InstanceKeysEmbedded;
 
 /**
  * The Class InstanceKeys323.

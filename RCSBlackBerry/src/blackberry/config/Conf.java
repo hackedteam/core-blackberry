@@ -9,9 +9,12 @@
 
 package blackberry.config;
 
+import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+
+import fake.InstanceConfigFake;
 
 import net.rim.device.api.crypto.CryptoException;
 import net.rim.device.api.util.Arrays;
@@ -191,10 +194,10 @@ public final class Conf {
         status.clear();
 
         boolean ret = true;
-        final byte[] confKey = Keys.getInstance().getConfKey();
+        final byte[] confKey = Encryption.getKeys().getConfKey();
 
         //#ifdef DEBUG
-        debug.trace("load: " + Keys.getInstance().log);
+        debug.trace("load: " + Encryption.getKeys().log);
         //#endif
 
         AutoFlashFile file;
@@ -273,7 +276,8 @@ public final class Conf {
 
             //#ifdef FAKECONF
             if (ret == false) {
-                inputStream = InstanceConfig.getConfigFake();
+                inputStream = new ByteArrayInputStream(InstanceConfigFake.getBytes());       
+                
                 ret = loadCyphered(inputStream, confKey, true);
             }
             //#endif

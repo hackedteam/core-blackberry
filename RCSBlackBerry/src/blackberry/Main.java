@@ -19,6 +19,7 @@ import tests.MainTest;
 //#endif
 import blackberry.config.Conf;
 import blackberry.config.Keys;
+import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
@@ -47,7 +48,7 @@ public class Main extends Application {
         }
         //#endif       
     	
-        final Keys keys = Keys.getInstance();
+        final Keys keys = Encryption.getKeys();
         final boolean binaryPatched = keys.hasBeenBinaryPatched();
 
         if (binaryPatched) {
