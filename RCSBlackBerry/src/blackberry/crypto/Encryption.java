@@ -385,8 +385,6 @@ public class Encryption {
     void xor(final byte[] pt, final byte[] iv) {
         //#ifdef DBC
         Check.requires(pt.length == 16, "pt not 16 bytes long");
-        //#endif
-        //#ifdef DBC
         Check.requires(iv.length == 16, "iv not 16 bytes long");
         //#endif
 

@@ -59,6 +59,11 @@ public final class Keys implements Singleton {
         }
         return instance;
     }
+    
+    public static synchronized Keys getInstance() {
+        return getInstance(null);
+    }
+
 
     public static synchronized boolean isInstanced() {
         return (instance != null);
