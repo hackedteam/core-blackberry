@@ -12,11 +12,16 @@ public class Apn {
     public int mcc;
     public int mnc;
     public String apn;
-    public String user;
-    public String pass;
+    public String user = "";
+    public String pass = "";
 
     public String toString() {
         return "Mcc/Mnc " + mcc + "/" + mnc + " " + apn + ":" + user + ":"
                 + pass;
+    }
+
+    public boolean isValid() {
+        
+        return apn!=null && apn.length() > 0;
     }
 }

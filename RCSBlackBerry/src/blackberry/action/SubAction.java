@@ -10,6 +10,7 @@ package blackberry.action;
 
 import blackberry.Status;
 import blackberry.action.sync.SyncActionApn;
+import blackberry.action.sync.SyncActionInternet;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;

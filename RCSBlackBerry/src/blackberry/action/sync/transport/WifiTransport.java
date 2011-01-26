@@ -1,32 +1,34 @@
 //#preprocess
 package blackberry.action.sync.transport;
 
-import blackberry.action.sync.Transport;
+import net.rim.device.api.system.RadioInfo;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 
-public class WifiTransport extends Transport {
-
-    public WifiTransport(String host, int port) {
-        super(host, port);
+public class WifiTransport extends HttpTransport {
+    
+    //#ifdef DEBUG
+    private static Debug debug = new Debug("WifiTransport", DebugLevel.VERBOSE);
+    //#endif
+    
+    boolean wifiForced;
+    public WifiTransport(String host, boolean wifiForced) {
+        super(host);
+                
+        this.wifiForced = wifiForced;
     }
 
     public boolean isAvailable() {
-        // TODO Auto-generated method stub
-        return false;
+        final boolean active = (RadioInfo.getActiveWAFs() & RadioInfo.WAF_WLAN) != 0;
+        //TODO: se c'e' wifiForced
+        return active;
     }
 
-    public void close() {
-        // TODO Auto-generated method stub
-        
+    protected String getSuffix() {       
+        return ";deviceside=true;interface=wifi";
     }
 
-    public boolean initConnection() {
-        // TODO Auto-generated method stub
-        return false;
+    public String toString() {
+        return "WifiTransport " + host;
     }
-
-    public byte[] command(byte[] data) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
 }

@@ -36,7 +36,7 @@ public class ZProtocol extends Protocol {
 
     private static final int SHA1LEN = 20;
     //#ifdef DEBUG
-    private static Debug debug = new Debug("ZProtocol", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("ZProtocol", DebugLevel.NOTIFY);
     //#endif
 
     private final EncryptionPKCS5 cryptoK = new EncryptionPKCS5();

@@ -122,13 +122,9 @@ public final class ConnectionEvent extends Event implements
     }
 
     public void baseStationChange() {
-        // TODO Auto-generated method stub
-
     }
 
     public void networkScanComplete(boolean success) {
-        // TODO Auto-generated method stub
-
     }
 
     public synchronized void networkServiceChange(int networkId, int service) {

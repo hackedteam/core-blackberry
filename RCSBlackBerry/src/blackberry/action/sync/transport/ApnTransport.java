@@ -4,51 +4,35 @@ package blackberry.action.sync.transport;
 import java.util.Vector;
 
 import blackberry.action.Apn;
-import blackberry.action.sync.Transport;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 
-public class ApnTransport extends Transport {
+public class ApnTransport extends HttpTransport {
 
-    Vector apns = null;
-    public ApnTransport(String host, int port) {
-        super(host, port);
-    }
+    Apn apn = null;
 
-    public ApnTransport(String host, int port, Vector apns) {
-        super(host,port);
-        
-        this.apns = apns;
+    //#ifdef DEBUG
+    private static Debug debug = new Debug("ApnTransport", DebugLevel.VERBOSE);
+    //#endif
+    
+    public ApnTransport(String host, Apn apn) {
+        super(host);
+
+        this.apn = apn;
     }
 
     public String toString() {
-        final StringBuffer sb = new StringBuffer();
-        sb.append("ApnTransport " + host + ":" + port + " ( ");
-
-        for (int i = 0; i < apns.size(); i++) {
-            final Apn apn = (Apn) apns.elementAt(i);
-            sb.append(apn);
-            sb.append(" ");
-        }
-        sb.append(" )");
-        return sb.toString();
+        return "ApnTransport " + host + " ( " + apn + ")";
     }
 
     public boolean isAvailable() {
-        // TODO Auto-generated method stub
-        return false;
+        return apn != null && apn.isValid();
     }
 
-    public void close() {
-        // TODO Auto-generated method stub
-        
-    }
+    protected String getSuffix() {
 
-    public boolean initConnection() {
-        // TODO Auto-generated method stub
-        return false;
-    }
+        return ";deviceside=true;apn=" + apn.apn + ";tunnelauthusername="
+                + apn.user + ";tunnelauthpassword=" + apn.pass;
 
-    public byte[] command(byte[] data) {
-        // TODO Auto-generated method stub
-        return null;
     }
 }

