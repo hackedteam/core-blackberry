@@ -5,13 +5,13 @@ import blackberry.debug.DebugLevel;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.RadioInfo;
 
-public class GprsTransport extends HttpTransport {
+public class DirectTransport extends HttpTransport {
 
     //#ifdef DEBUG
-    private static Debug debug = new Debug("GprsTransport", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("DirectTransport", DebugLevel.VERBOSE);
     //#endif
     
-    public GprsTransport(String host) {
+    public DirectTransport(String host) {
         super(host);
     }
 
@@ -26,6 +26,6 @@ public class GprsTransport extends HttpTransport {
     }
     
     public String toString() {
-        return "GprsTransport " + host ;
+        return "DirectTransport " + host ;
     }
 }

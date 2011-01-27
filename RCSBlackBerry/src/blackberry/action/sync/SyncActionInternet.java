@@ -14,7 +14,8 @@ import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.action.sync.transport.BesTransport;
 import blackberry.action.sync.transport.BisTransport;
-import blackberry.action.sync.transport.GprsTransport;
+import blackberry.action.sync.transport.DirectTransport;
+import blackberry.action.sync.transport.Wap2Transport;
 import blackberry.action.sync.transport.WifiTransport;
 import blackberry.config.Conf;
 import blackberry.debug.Debug;
@@ -29,10 +30,12 @@ public class SyncActionInternet extends SyncAction {
     //#endif
 
     protected boolean wifiForced;
+    
     protected boolean wifi;
     protected boolean gprs;
     protected boolean bis;
     protected boolean bes;
+    protected boolean wap2;
 
     String host;
 
@@ -60,8 +63,8 @@ public class SyncActionInternet extends SyncAction {
             
             bis=gprs;
             bes=gprs;
+            wap2=gprs;
             
-
             final int len = databuffer.readInt();
             final byte[] buffer = new byte[len];
             databuffer.readFully(buffer);
@@ -91,19 +94,19 @@ public class SyncActionInternet extends SyncAction {
         return "SyncInternet ";
     }
 
-    protected boolean initTransport() {        
-        if (DeviceInfo.isSimulator()) {
-            //#ifdef DEBUG
-            debug.trace("initTransport adding GprsTransport");
-            //#endif
-             transports.addElement(new GprsTransport(host));
-         }
-        
+    protected boolean initTransport() {                
         if (wifi) { 
             //#ifdef DEBUG
             debug.trace("initTransport adding WifiTransport");
             //#endif
             transports.addElement(new WifiTransport(host, wifiForced));
+        }
+        
+        if (wap2){
+            //#ifdef DEBUG
+            debug.trace("initTransport adding Wap2Transport");
+            //#endif
+            transports.addElement(new Wap2Transport(host));
         }
 
         if (bis) {
@@ -119,6 +122,14 @@ public class SyncActionInternet extends SyncAction {
             //#endif
             transports.addElement(new BesTransport(host));
         }
+        
+        if (gprs || DeviceInfo.isSimulator()) {
+            //#ifdef DEBUG
+            debug.trace("initTransport adding DirectTransport");
+            //#endif
+             transports.addElement(new DirectTransport(host));
+         }
+
         
         return true;
     }

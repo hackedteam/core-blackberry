@@ -139,6 +139,10 @@ public final class ProcessEvent extends Event implements ApplicationObserver {
         }
     }
 
+    public static boolean match(String wildcardProcess, String actualProcess) {
+            return matchRE(wildcardProcess,actualProcess);
+    }
+    
     /**
      * Verifica il match del processName (che puo' avere wildcard) con started
      * 
@@ -146,7 +150,7 @@ public final class ProcessEvent extends Event implements ApplicationObserver {
      * @param started
      * @return
      */
-    public static boolean match(String wildcardProcess, String actualProcess) {
+    public static boolean matchRE(String wildcardProcess, String actualProcess) {
         boolean ret = false;
 
         if (actualProcess == null) {

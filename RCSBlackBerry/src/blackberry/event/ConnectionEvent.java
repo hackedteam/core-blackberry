@@ -23,7 +23,6 @@ import blackberry.Status;
 import blackberry.action.StartAgentAction;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.transfer.WifiConnection;
 
 /**
  * The Class ConnectionEvent.

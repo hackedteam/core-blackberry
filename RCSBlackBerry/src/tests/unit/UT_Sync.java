@@ -12,11 +12,11 @@ package tests.unit;
 import java.io.IOException;
 
 import tests.accessor.TransferAccessor;
+import blackberry.action.sync.protocol.ProtocolException;
 import blackberry.config.Keys;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.transfer.DirectTcpConnection;
-import blackberry.transfer.ProtocolException;
 import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc

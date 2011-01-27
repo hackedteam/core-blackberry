@@ -9,9 +9,9 @@
  * *************************************************/
 package tests.accessor;
 
+import blackberry.action.sync.protocol.ProtocolException;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.transfer.ProtocolException;
 
 // TODO: Auto-generated Javadoc
 /**
