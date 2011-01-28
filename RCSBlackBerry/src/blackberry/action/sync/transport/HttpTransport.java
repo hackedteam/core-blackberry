@@ -1,3 +1,4 @@
+//#preprocess
 package blackberry.action.sync.transport;
 
 import java.io.IOException;
@@ -68,7 +69,7 @@ public abstract class HttpTransport extends Transport {
             sendHttpPostRequest(connection, data);
         }
 
-        //#ifdef DBC
+        //#ifdef DBC        
         Check.asserts(connection != null, "null connection");
         //#endif
 

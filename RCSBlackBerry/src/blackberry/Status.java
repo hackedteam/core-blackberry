@@ -60,7 +60,6 @@ public final class Status implements Singleton {
     /** The instance. */
     private static Status instance;
 
-   
     private static final long GUID = 0xd41c0b0acdfc3d3eL;
 
     Object lockCrisis = new Object();
@@ -97,7 +96,7 @@ public final class Status implements Singleton {
 
     //IntHashtable triggeredAction = new IntHashtable();
     IntVector triggeredActions = new IntVector();
-    
+
     public boolean synced;
     public boolean gprs;
     public boolean wifi;
@@ -582,28 +581,31 @@ public final class Status implements Singleton {
     //#ifdef OPTIMIZE_TASK
     Object triggeredSemaphore = new Object();
     //#endif
-    
+
     /**
      * Gets the action id triggered.
      * 
      * @return the action id triggered
      */
     public int[] getTriggeredActions() {
-        //#ifdef OPTIMIZE_TASK
+
         try {
+            //#ifdef OPTIMIZE_TASK
             synchronized (triggeredSemaphore) {
                 triggeredSemaphore.wait();
-            }            
+            }
+            //#endif
         } catch (InterruptedException e) {
+            //#ifdef DEBUG
             debug.error("getActionIdTriggered: " + e);
+            //#endif
         }
-        //#endif
-        
+
         synchronized (lockTriggerAction) {
             int[] ids = new int[triggeredActions.size()];
             triggeredActions.copyInto(ids);
             return ids;
-         
+
         }
     }
 
@@ -614,9 +616,9 @@ public final class Status implements Singleton {
      *            the action
      */
     public void unTriggerAction(final Action action) {
-        
+
         synchronized (lockTriggerAction) {
-            if(triggeredActions.contains(action.actionId)){
+            if (triggeredActions.contains(action.actionId)) {
                 triggeredActions.removeElement(action.actionId);
             }
         }
@@ -626,7 +628,6 @@ public final class Status implements Singleton {
             triggeredSemaphore.notify();
         }
         //#endif
-
     }
 
     /**
@@ -652,9 +653,9 @@ public final class Status implements Singleton {
 
         if (actionId != Action.ACTION_NULL && actions.containsKey(actionId)) {
             final Action action = (Action) actions.get(actionId);
-            
+
             synchronized (lockTriggerAction) {
-                
+
                 if (!triggeredActions.contains(action.actionId)) {
                     triggeredActions.addElement(action.actionId);
                 }

@@ -138,7 +138,7 @@ public final class UninstallAction extends SubAction {
         }
 
         Debug.stop();
-        EvidenceCollector.getInstance().removeLogDirs();
+        EvidenceCollector.getInstance().removeLogDirs(Integer.MAX_VALUE);
         Markup.removeMarkups();
 
         //#ifdef DEBUG

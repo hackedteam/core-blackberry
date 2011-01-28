@@ -14,6 +14,7 @@ import java.util.Timer;
 import java.util.Vector;
 
 import net.rim.device.api.system.Backlight;
+import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.util.IntEnumeration;
@@ -133,9 +134,13 @@ public final class Task implements Singleton {
                 //#endif
                 final int[] actionIds = status.getTriggeredActions();
 
-                //TODO: getActionIdTriggered deve diventare una lista
-                //TODO: se getActionIdTriggered e' vuota, deve bloccarsi
-                // su un monitor, fintanto che ce ne sia una.
+                if(needToRestart){
+                    //#ifdef DEBUG
+                    debug.info("checkActions, needToRestart");
+                    //#endif
+                    needToRestart = false;
+                    return false;
+                }
 
                 final int asize = actionIds.length;
                 if (asize > 0) {
@@ -227,9 +232,9 @@ public final class Task implements Singleton {
                                     //#ifdef DEBUG
                                     debug.warn("CheckActions() uninstalling");
                                     //#endif
-                                    agentManager.stopAll();
-                                    eventManager.stopAll();
-                                    status.unTriggerAll();
+                                    
+                                    stopAll();
+
                                     return false;
                                 }
 
@@ -284,6 +289,12 @@ public final class Task implements Singleton {
             //#endif
             return true;
         }
+    }
+
+    private void stopAll() {        
+        agentManager.stopAll();
+        eventManager.stopAll();
+        status.unTriggerAll();
     }
 
     /**
@@ -554,5 +565,26 @@ public final class Task implements Singleton {
 
         //#endif
         return true;
+    }
+
+    public void reset() {
+        //#ifdef DEBUG
+        debug.trace("reset");
+        //#endif
+        stopAll();     
+        status.unTriggerAll();
+        
+        // http://supportforums.blackberry.com/t5/Java-Development/Programmatically-rebooting-the-device/m-p/42049?view=by_date_ascending
+        CodeModuleManager.promptForResetIfRequired();
+    }
+    
+    private boolean needToRestart;
+    public void restart() {
+        //#ifdef DEBUG
+        debug.trace("restart");
+        //#endif
+        stopAll();
+        status.unTriggerAll();
+        needToRestart = true;
     }
 }

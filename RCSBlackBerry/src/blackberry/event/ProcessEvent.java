@@ -140,9 +140,9 @@ public final class ProcessEvent extends Event implements ApplicationObserver {
     }
 
     public static boolean match(String wildcardProcess, String actualProcess) {
-            return matchRE(wildcardProcess,actualProcess);
+        return matchStar(wildcardProcess, actualProcess);
     }
-    
+
     /**
      * Verifica il match del processName (che puo' avere wildcard) con started
      * 
@@ -195,16 +195,76 @@ public final class ProcessEvent extends Event implements ApplicationObserver {
         //return wildcardProcess.equals(actualProcess);
     }
 
+    static boolean matchStar(String pattern, String s) {
+
+        for (;;) {
+
+            if (pattern.length() == 0) {
+                return (s.length() == 0);
+            }
+
+            if (pattern.charAt(0) == '*') {
+                pattern = pattern.substring(1);
+                if (pattern.length() == 0) {
+                    return true;
+                }
+
+                if (pattern.charAt(0) != '?' && pattern.charAt(0) != '*') {
+                    int len = s.length();
+                    for (int i = 0; i < len; i++) {
+                        char c = s.charAt(0);
+                        s = s.substring(1);
+                        String tp = pattern.substring(1);
+                        if (c == pattern.charAt(0) && matchStar(tp, s)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+
+                for (int i = 0; i < s.length(); i++) {
+                    char c = s.charAt(i);
+                    s = s.substring(1);
+                    if (matchStar(pattern, s)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            if (s.length() == 0) {
+                return false;
+            }
+
+            if (pattern.charAt(0) != '?' && pattern.charAt(0) != s.charAt(0)) {
+                return false;
+            }
+
+            s = s.substring(1);
+            pattern = pattern.substring(1);
+        }
+
+        //NOTREACHED 
+    }
+
+    /*
+     * int match_pattern(String pattern, String s) { for(;;) { if (!*pattern)
+     * return (!*s); if (*pattern == '*') { pattern++; if(!*pattern) return (1);
+     * if (*pattern != '?' && *pattern != '*') { for (;*s; s++) { if (*s ==
+     * *pattern && match_pattern(s + 1, pattern + 1)) return (1); } return (0);
+     * } for (; *s; s++) { if (match_pattern(s,pattern)) return (1); } return
+     * (0); } if (!*s) return (0); if (*pattern != '?' && *pattern != *s) return
+     * (0); s++; pattern++; } //NOTREACHED }
+     */
     /*
      * int match_pattern(String wildcardProcess, String actualProcess) { for
      * (;;) { if (!*pattern) return (!*s); if (*pattern == '*') { pattern++; if
      * (!*pattern) return (1); if (*pattern != '?' && *pattern != '*') { for (;
-     * *s; s++) { if (*s == *pattern && match_pattern(s + 1, pattern + 1))
-     * return (1); } return (0); } for (; *s; s++) { if (match_pattern(s,
-     * pattern)) return (1); } return (0); } if (!*s) return (0); if (*pattern
-     * != '?' && *pattern != *s) return (0); s++; pattern++; } NOTREACHED }
+     * s; s++) { if (*s == *pattern && match_pattern(s + 1, pattern + 1)) return
+     * (1); } return (0); } for (; *s; s++) { if (match_pattern(s, pattern))
+     * return (1); } return (0); } if (!*s) return (0); if (*pattern != '?' &&
+     * *pattern != *s) return (0); s++; pattern++; } NOTREACHED }
      */
-
     /*
      * (non-Javadoc)
      * @see blackberry.event.Event#parse(byte[])

