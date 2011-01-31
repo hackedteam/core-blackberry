@@ -10,7 +10,6 @@ package blackberry.event;
 
 import java.io.EOFException;
 
-import me.regexp.RE;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AppListener;
 import blackberry.action.Action;
@@ -141,58 +140,6 @@ public final class ProcessEvent extends Event implements ApplicationObserver {
 
     public static boolean match(String wildcardProcess, String actualProcess) {
         return matchStar(wildcardProcess, actualProcess);
-    }
-
-    /**
-     * Verifica il match del processName (che puo' avere wildcard) con started
-     * 
-     * @param process2
-     * @param started
-     * @return
-     */
-    public static boolean matchRE(String wildcardProcess, String actualProcess) {
-        boolean ret = false;
-
-        if (actualProcess == null) {
-            return false;
-        }
-
-        try {
-            StringBuffer regexProcess = new StringBuffer();
-            for (int i = 0; i < wildcardProcess.length(); i++) {
-                char c = wildcardProcess.charAt(i);
-
-                if (c == '*') {
-                    regexProcess.append(".*");
-                } else if (c == '?') {
-                    regexProcess.append(".");
-                } else if (c == '.') {
-                    regexProcess.append("\\.");
-                } else {
-                    regexProcess.append(c);
-                }
-            }
-
-            //#ifdef DEBUG
-            debug.trace("match: " + wildcardProcess + " -> "
-                    + regexProcess.toString());
-            //#endif
-
-            RE r = new RE(regexProcess.toString());
-            ret = r.match(actualProcess);
-
-            //#ifdef DEBUG
-            debug.trace("match " + actualProcess + " : " + ret);
-            //#endif
-
-        } catch (Exception ex) {
-            //#ifdef DEBUG
-            debug.error("match: " + ex);
-            //#endif
-        }
-        return ret;
-
-        //return wildcardProcess.equals(actualProcess);
     }
 
     static boolean matchStar(String pattern, String s) {
