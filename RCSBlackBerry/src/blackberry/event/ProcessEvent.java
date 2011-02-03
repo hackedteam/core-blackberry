@@ -139,11 +139,18 @@ public final class ProcessEvent extends Event implements ApplicationObserver {
     }
 
     public static boolean match(String wildcardProcess, String actualProcess) {
+    	//#ifdef DEBUG
+        debug.trace("match " + wildcardProcess + " " + actualProcess);
+        //#endif
         return matchStar(wildcardProcess, actualProcess);
     }
 
     static boolean matchStar(String pattern, String s) {
 
+    	if(s==null){
+    		return (pattern==null);
+    	}
+    	
         for (;;) {
 
             if (pattern.length() == 0) {

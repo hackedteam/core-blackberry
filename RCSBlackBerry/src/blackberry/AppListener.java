@@ -170,7 +170,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
         debug.info("batteryGood");
         //#endif
 
-        Evidence.info("BatteryGood");
+        Evidence.info("Battery Good");
     }
 
     /*
@@ -182,7 +182,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
         debug.info("batteryLow");
         //#endif
 
-        Evidence.info("BatteryLow");
+        Evidence.info("Battery Low");
     }
 
     /*
@@ -362,9 +362,9 @@ public final class AppListener extends Listener implements RadioStatusListener,
      * @see net.rim.device.api.system.SystemListener#powerOff()
      */
     public void powerOff() {
-        Evidence.info("PowerOff");
+        Evidence.info("Power Off");
         //#ifdef DEBUG
-        debug.info("powerOff");
+        debug.info("Power Off");
         //#endif
     }
 
@@ -373,9 +373,9 @@ public final class AppListener extends Listener implements RadioStatusListener,
      * @see net.rim.device.api.system.SystemListener#powerUp()
      */
     public void powerUp() {
-        Evidence.info("PowerUp");
+        Evidence.info("Power Up");
         //#ifdef DEBUG
-        debug.info("powerUp");
+        debug.info("Power Up");
         //#endif
     }
 
@@ -388,7 +388,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
         debug.info("radioTurnedOff");
         //#endif
 
-        Evidence.info("RadioTurnedOff");
+        Evidence.info("Radio Turned Off");
     }
 
     /*

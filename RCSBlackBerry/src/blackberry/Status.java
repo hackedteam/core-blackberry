@@ -724,6 +724,8 @@ public final class Status implements Singleton {
         gprs = newGprs;
         return oldGprs;
     }
+     
+    //#ifdef DEBUG
 
     int wap2Errors;
     int wap2Ok;
@@ -737,4 +739,5 @@ public final class Status implements Singleton {
     public void wap2Ok() {
         wap2Ok++;
     }
+    //#endif
 }
