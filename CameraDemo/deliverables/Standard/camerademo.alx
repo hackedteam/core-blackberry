@@ -1,0 +1,31 @@
+<loader version="1.0">
+	<application id="camerademo">
+		<name >
+			Camera Demo
+		</name>
+		<description >
+			
+		</description>
+		<version >
+			0.9
+		</version>
+		<vendor >
+			Research In Motion Ltd.
+		</vendor>
+		<copyright >
+			Copyright (c) 2011 Research In Motion Ltd.
+		</copyright>
+		<fileset Java="1.52" _blackberryVersion="[6.0.0)">
+			<directory >
+				6.0.0
+			</directory>
+			<files >
+				camerademo.cod
+
+			</files>
+
+		</fileset>
+
+	</application>
+
+</loader>
