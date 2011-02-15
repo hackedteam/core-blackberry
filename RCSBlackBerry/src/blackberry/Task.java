@@ -567,13 +567,6 @@ public final class Task implements Singleton {
             return false;
         }
 
-        if (!DeviceInfo.isInHolster()) {
-            //#ifdef DEBUG
-            debug.trace("going to start ApplicationTimer");
-            //#endif
-            startApplicationTimer();
-        }
-
         //#ifdef DEBUG
         debug.info("Agents started");
 

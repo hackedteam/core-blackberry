@@ -32,6 +32,9 @@ public final class AppUpdateManager extends TimerTask {
 
     boolean windowName = false;
     String lastName, lastMod;
+    
+    // questo e' solo di ottimizzazione
+    int lastForegroundId;
 
     public AppUpdateManager() {
 
@@ -46,8 +49,9 @@ public final class AppUpdateManager extends TimerTask {
         return running;
     }
 
+    Object syncAppobj = new Object();
     public void run() {
-        synchronized (this) {
+        synchronized (syncAppobj) {
             if (running) {
                 return;
             } else {
@@ -57,11 +61,17 @@ public final class AppUpdateManager extends TimerTask {
 
         try {
 
-            final int foregroundId = ApplicationManager.getApplicationManager()
+            final int foregroundId = manager
                     .getForegroundProcessId();
+            
+            if(lastForegroundId == foregroundId){
+            	return;
+            }
+            
+            lastForegroundId = foregroundId;
             final ApplicationDescriptor[] descriptors = manager
                     .getVisibleApplications();
-
+            
             // Retrieve the name of running applications.
             for (int i = 0; i < descriptors.length; i++) {
                 final ApplicationDescriptor descriptor = descriptors[i];
@@ -87,7 +97,7 @@ public final class AppUpdateManager extends TimerTask {
             }
 
         } finally {
-            synchronized (this) {
+            synchronized (syncAppobj) {
                 running = false;
             }
         }

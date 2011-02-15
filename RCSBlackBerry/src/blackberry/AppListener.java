@@ -68,7 +68,6 @@ public final class AppListener extends Listener implements RadioStatusListener,
     Vector callListObservers = new Vector();
 
     Task task;
-
     //private Timer applicationTimer;
 
     static AppListener instance;
@@ -79,8 +78,6 @@ public final class AppListener extends Listener implements RadioStatusListener,
     private AppListener() {
         lastStatus = DeviceInfo.getBatteryStatus();
         task = Task.getInstance();
-
-        //ScreenFake.Push();
     }
 
     /**
