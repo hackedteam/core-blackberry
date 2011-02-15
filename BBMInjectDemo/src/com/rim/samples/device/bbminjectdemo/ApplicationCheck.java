@@ -16,7 +16,7 @@ import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.ui.UiApplication;
 
 public class ApplicationCheck extends TimerTask {
-	// #ifdef DEBUG
+	//#ifdef DEBUG
 	private static Debug debug = new Debug("ApplicationCheck",
 			DebugLevel.VERBOSE);
 	// #endif

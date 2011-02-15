@@ -23,9 +23,9 @@ import net.rim.device.api.ui.component.Menu;
 
 public class MenuWalker {
 
-	// #ifdef DEBUG
+	//#ifdef DEBUG
 	private static Debug debug = new Debug("MenuWalker", DebugLevel.VERBOSE);
-	// #endif
+	//#endif
 
 	static Locale prev;
 	static Locale locale;
@@ -130,9 +130,9 @@ public class MenuWalker {
 	 * Sets the locale end.
 	 */
 	public static void setLocaleEnd() {
-		// #ifdef DEBUG
+		//#ifdef DEBUG
 		// debug.trace("setLocaleEnd");
-		// #endif
+		//#endif
 		Locale.setDefault(prev);
 	}
 
@@ -142,9 +142,9 @@ public class MenuWalker {
 	 * @return the locale
 	 */
 	public static Locale setLocaleBegin() {
-		// #ifdef DEBUG
+		//#ifdef DEBUG
 		// debug.trace("setLocaleStart");
-		// #endif
+		//#endif
 		prev = Locale.getDefault();
 		final Locale locale = Locale.get(Locale.LOCALE_en);
 		Locale.setDefault(locale);

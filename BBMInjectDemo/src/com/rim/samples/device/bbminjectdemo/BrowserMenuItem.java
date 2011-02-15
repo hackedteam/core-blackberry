@@ -9,7 +9,7 @@ import net.rim.device.api.ui.UiApplication;
 
 public class BrowserMenuItem extends ApplicationMenuItem {
 	private static final String BROWSER_MENU = "Zend Menu";
-	// #ifdef DEBUG
+	//#ifdef DEBUG
 	private static Debug debug = new Debug("BrowserMenuItem",
 			DebugLevel.VERBOSE);
 	// #endif

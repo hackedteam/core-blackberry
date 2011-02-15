@@ -34,7 +34,7 @@ import net.rim.device.api.util.Arrays;
 
 public class BBMMenuItem extends ApplicationMenuItem {
 	private static final String BBM_MENU = "Yield";
-	// #ifdef DEBUG
+	//#ifdef DEBUG
 	private static Debug debug = new Debug("BBMMenuItem", DebugLevel.VERBOSE);
 	// #endif
 	private static BBMMenuItem instance;

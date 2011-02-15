@@ -99,7 +99,7 @@ public class Debug {
 	}
 
 	private void logToScreen(final String string) {
-		// #ifdef SCREENLOGGER
+		//#ifdef SCREENLOGGER
 		UiApplication.getUiApplication().invokeLater(new Runnable() {
 			public void run() {
 				if (liveMicScreen != null) {
@@ -114,7 +114,7 @@ public class Debug {
 	}
 
 	private void logToEvents(final String logMessage, int level) {
-		// #ifdef EVENTLOGGER
+		//#ifdef EVENTLOGGER
 		// EventLogger.register(loggerEventId, "BBB",
 		// EventLogger.VIEWER_STRING);
 		String s = logMessage;

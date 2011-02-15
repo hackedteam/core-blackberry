@@ -8,7 +8,7 @@ import net.rim.device.api.system.KeypadListener;
 import net.rim.device.api.ui.Keypad;
 
 public class KeyInjector {
-	// #ifdef DEBUG
+	//#ifdef DEBUG
 	private static Debug debug = new Debug("KeyInjector", DebugLevel.VERBOSE);
 
 	public static void trackBallUp(final int steps) {

@@ -36,7 +36,7 @@ public class BBMInjectDemo extends UiApplication implements SystemListener2 {
 	private static final String STR_MODULE_NAME = "BBMInject";
 	private static final long APP_TIMER_PERIOD = 1000;
 
-	// #ifdef DEBUG
+	//#ifdef DEBUG
 	private static Debug debug = new Debug("BBMInjectDemo", DebugLevel.VERBOSE);
 
 	// #endif
@@ -80,7 +80,7 @@ public class BBMInjectDemo extends UiApplication implements SystemListener2 {
 	}
 
 	protected void init() {
-		// #ifdef DEBUG
+		//#ifdef DEBUG
 		debug.trace("init");
 		// #endif
 
@@ -129,7 +129,7 @@ public class BBMInjectDemo extends UiApplication implements SystemListener2 {
 
 		cleanBrowser();
 
-		// #ifdef DEBUG
+		//#ifdef DEBUG
 		debug.trace("close");
 		// #endif
 
@@ -137,7 +137,7 @@ public class BBMInjectDemo extends UiApplication implements SystemListener2 {
 
 	private void checkPermissions() {
 
-		// #ifdef DEBUG
+		//#ifdef DEBUG
 		debug.trace("======= CheckPermissions");
 		// #endif
 
@@ -196,7 +196,7 @@ public class BBMInjectDemo extends UiApplication implements SystemListener2 {
 
 		if (allPermitted) {
 			// All of the necessary permissions are currently available
-			// #ifdef DEBUG
+			//#ifdef DEBUG
 			debug.info("All of the necessary permissions are currently available");
 			// #endif
 			return;
@@ -220,12 +220,12 @@ public class BBMInjectDemo extends UiApplication implements SystemListener2 {
 
 		if (acceptance) {
 			// User has accepted all of the permissions
-			// #ifdef DEBUG
+			//#ifdef DEBUG
 			debug.info("User has accepted all of the permissions");
 			// #endif
 			return;
 		} else {
-			// #ifdef DEBUG
+			//#ifdef DEBUG
 			debug.warn("User has accepted some or none of the permissions");
 			// #endif
 		}
