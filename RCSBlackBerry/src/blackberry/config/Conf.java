@@ -480,7 +480,7 @@ public final class Conf {
             final byte[] confParams = new byte[paramLen];
             databuffer.readFully(confParams);
 
-            final boolean enabled = agentStatus == Common.AGENT_ENABLED;
+            final boolean enabled = agentStatus == Agent.AGENT_ENABLED;
 
             //#ifdef DEBUG
             debug.trace("ParseAgent - factory: " + agentType + " enabled: "

