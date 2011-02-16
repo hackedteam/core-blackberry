@@ -9,6 +9,7 @@
  * *************************************************/
 package blackberry.debug;
 
+import net.rim.device.api.system.EventLogger;
 import net.rim.device.api.system.RuntimeStore;
 import blackberry.Device;
 import blackberry.fs.AutoFlashFile;
@@ -29,20 +30,23 @@ public final class DebugWriter extends Thread {
     //         + Device.getPin() + ".txt";
     private static final long SLEEP_TIME = 1000;
 
-    private static final int MAX_NUM_MESSAGES = 5000;
-
     private static AutoFlashFile fileDebug;
     private static AutoFlashFile fileDebugErrors;
 
-    boolean haveMessages;
+    private static final int MAX_NUM_MESSAGES = 5000;
+    int numMessages;
 
     boolean toStop;
     boolean logToSD = false;
+    boolean logToFile = true;
+    boolean logToEvents = false;
 
-    StringBuffer queueAll;
-    StringBuffer queueErrors;
+    DebugQueue queue;
 
-    int numMessages;
+    //#ifdef EVENTLOGGER
+    public static long loggerEventId = 0x98f417b7dbfd6ae4L;
+
+    //#endif
 
     /**
      * Instantiates a new debug writer.
@@ -53,8 +57,7 @@ public final class DebugWriter extends Thread {
     private DebugWriter() {
 
         toStop = false;
-        queueAll = new StringBuffer();
-        queueErrors = new StringBuffer();
+        queue = new DebugQueue();
 
     }
 
@@ -78,6 +81,10 @@ public final class DebugWriter extends Thread {
     }
 
     private void createNewFile() {
+
+        if (!logToFile) {
+            return;
+        }
 
         if (logToSD) {
             Path.createDirectory(Path.SD());
@@ -116,38 +123,15 @@ public final class DebugWriter extends Thread {
         return baseDir + Path.DEBUG_DIR;
     }
 
-    /**
-     * Append.
-     * 
-     * @param message
-     *            the message
-     * @param highPriority
-     * @return true, if successful
-     */
-    public synchronized boolean append(final String message, boolean error) {
-
-        if (numMessages > MAX_NUM_MESSAGES * 2) {
-            return false;
-        }
-
-        queueAll.append(message + "\r\n");
-        if (error) {
-            queueErrors.append(message + "\r\n");
-        }
-
-        numMessages++;
-        haveMessages = true;
-
-        return true;
-    }
-
     /*
      * (non-Javadoc)
      * @see java.lang.Thread#run()
      */
     public void run() {
         //#ifdef DEBUG
-        createNewFile();
+        if (logToFile) {
+            createNewFile();
+        }
         //#endif
 
         //#ifdef DBC
@@ -157,48 +141,53 @@ public final class DebugWriter extends Thread {
 
         for (;;) {
             synchronized (this) {
+                LogLine logLine = queue.dequeue();
+                String message = logLine.message;
+                int level = logLine.level;
+                boolean error = logLine.error;
 
-                if (haveMessages) {
-                    // scoda tutti i messaggi
-                    String message = queueAll.toString();
+                if (logToFile) {
                     if (message.length() > 0) {
                         if (!fileDebug.exists()) {
                             fileDebug.create();
                         }
                         boolean ret = fileDebug.append(message + "\r\n");
-                        queueAll = new StringBuffer();
                     }
 
-                    // scoda solo gli errori
-                    message = queueErrors.toString();
-                    if (message.length() > 0) {
+                    // elabora l'errore
+
+                    if (error) {
                         if (!fileDebugErrors.exists()) {
                             fileDebugErrors.create();
                         }
                         boolean ret = fileDebugErrors.append(message + "\r\n");
-                        queueErrors = new StringBuffer();
                     }
-
-                    haveMessages = false;
 
                     if (numMessages > MAX_NUM_MESSAGES) {
                         numMessages = 0;
                         fileDebug.rotateLogs("D_");
                         createNewFile();
+                    } else {
+                        numMessages += 1;
                     }
                 }
 
-                if (toStop) {
-                    break;
-                }
+                if (logToEvents) {
 
-                try {
-                    wait(SLEEP_TIME);
-                } catch (final InterruptedException e) {
+                    //TODO : spostare qui
                 }
             }
-            //Utils.sleep((int) SLEEP_TIME);
+
+            if (toStop) {
+                break;
+            }
+
+            try {
+                wait(SLEEP_TIME);
+            } catch (final InterruptedException e) {
+            }
         }
+        //Utils.sleep((int) SLEEP_TIME);
     }
 
     /**
@@ -207,6 +196,25 @@ public final class DebugWriter extends Thread {
     public synchronized void requestStop() {
         toStop = true;
         notifyAll();
+    }
+
+    public void initLogToFile(boolean logToFlash, boolean logToSD2) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void initLogToEvents(boolean logToEvents2) {
+        //#ifdef EVENTLOGGER
+        EventLogger.register(loggerEventId, "BBB", EventLogger.VIEWER_STRING);
+        EventLogger.setMinimumLevel(EventLogger.DEBUG_INFO);
+        //#endif
+    }
+
+    public boolean append(String message, int priority, boolean error) {
+        //#ifdef DBC
+        Check.requires(queue != null, "append: queue==null");
+        //#endif
+        return queue.enqueue(message, priority, error);
     }
 
 }

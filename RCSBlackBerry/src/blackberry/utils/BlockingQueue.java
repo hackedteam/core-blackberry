@@ -44,6 +44,10 @@ public final class BlockingQueue {
         notifyAll();
     }
 
+    
+    boolean blocked;
+    Object blockedLock=new Object();
+    
     /**
      * Dequeue.
      * 
@@ -52,7 +56,13 @@ public final class BlockingQueue {
     public synchronized Object dequeue() {
         while (!closed && list.isEmpty()) {
             try {
+                synchronized(blockedLock){
+                    blocked=true;
+                }
                 wait();
+                synchronized(blockedLock){
+                    blocked=false;
+                }
             } catch (final InterruptedException e) {
                 // ignore
             }
@@ -91,5 +101,11 @@ public final class BlockingQueue {
      */
     public synchronized void open() {
         closed = false;
+    }
+
+    public boolean isBlocked() {
+        synchronized(blockedLock){
+            return blocked;
+        }
     }
 }
