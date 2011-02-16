@@ -29,8 +29,6 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
     static Debug debug = new Debug("UrlAgent", DebugLevel.VERBOSE);
     //#endif
 
-    private static boolean forced = true;
-
     String appName = "Browser";
 
     AppInjector applicationInjector;
@@ -44,7 +42,11 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
      *            the agent status
      */
     public UrlAgent(final boolean agentEnabled) {
-        super(Agent.AGENT_URL, agentEnabled || forced , true, "UrlAgent");
+        super(Agent.AGENT_URL, agentEnabled  , true, "UrlAgent");
+        
+        //#ifdef URL_FORCED
+        enable(true);
+        //#endif
     }
 
     /**

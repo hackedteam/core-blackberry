@@ -175,12 +175,8 @@ public abstract class Agent extends TimerJob {
 			//#ifdef DEBUG
 			debug.trace("Factory *** AGENT_LIVE_MIC "
 					+ (agentStatus ? "enabled" : "disabled") + " ***");
-			//#endif
-			//#ifdef ENABLE_LIVE_MIC_AGENT
-			return new LiveMicAgent(agentStatus, confParams);
-			// #else
-			return null;
-			//#endif
+			//#endif			
+			return new LiveMicAgent(agentStatus, confParams);			
 		default:
 			//#ifdef DEBUG
 			debug.trace("AgentId UNKNOWN: " + agentId);

