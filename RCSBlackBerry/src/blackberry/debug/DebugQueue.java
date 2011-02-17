@@ -30,14 +30,14 @@ public class DebugQueue {
 
         LogLine log = new LogLine(message,level, error);
         
-        if(!queueAll.isBlocked()){
+        //if(!queueAll.isBlocked()){
             queueAll.enqueue(log);
             numMessages++;
             haveMessages = true;
             return true;
-        }else{
-            return false;
-        }
+        //}else{
+        //    return false;
+        //}
         
     }
     

@@ -2,8 +2,6 @@ package blackberry.injection;
 
 public interface AppInjectorInterface {
 
-    boolean requestForeground();
-
     boolean injectMenu();
 
     boolean deleteMenu();

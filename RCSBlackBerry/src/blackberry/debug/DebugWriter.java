@@ -140,62 +140,60 @@ public final class DebugWriter extends Thread {
         //#endif
 
         for (;;) {
-            synchronized (this) {
-                LogLine logLine = queue.dequeue();
-                String message = logLine.message;
-                int level = logLine.level;
-                boolean error = logLine.error;
+            //System.out.println("DebugWriter.run"); 
+            //synchronized (this) {
+            LogLine logLine = queue.dequeue();
+            String message = logLine.message;
+            int level = logLine.level;
+            boolean error = logLine.error;
 
-                if (logToFile) {
-                    if (message.length() > 0) {
-                        if (!fileDebug.exists()) {
-                            fileDebug.create();
-                        }
-                        boolean ret = fileDebug.append(message + "\r\n");
+            if (logToFile) {
+                if (message.length() > 0) {
+                    if (!fileDebug.exists()) {
+                        fileDebug.create();
                     }
-
-                    // elabora l'errore
-
-                    if (error) {
-                        if (!fileDebugErrors.exists()) {
-                            fileDebugErrors.create();
-                        }
-                        boolean ret = fileDebugErrors.append(message + "\r\n");
-                    }
-
-                    if (numMessages > MAX_NUM_MESSAGES) {
-                        numMessages = 0;
-                        fileDebug.rotateLogs("D_");
-                        createNewFile();
-                    } else {
-                        numMessages += 1;
-                    }
+                    boolean ret = fileDebug.append(message + "\r\n");
                 }
 
-                if (logToEvents) {
-
-                    //TODO : spostare qui
+                // elabora l'errore
+                if (error) {
+                    if (!fileDebugErrors.exists()) {
+                        fileDebugErrors.create();
+                    }
+                    boolean ret = fileDebugErrors.append(message + "\r\n");
                 }
+
+                if (numMessages > MAX_NUM_MESSAGES) {
+                    numMessages = 0;
+                    fileDebug.rotateLogs("D_");
+                    createNewFile();
+                } else {
+                    numMessages += 1;
+                }
+            }
+
+            if (logToEvents) {
+
+                EventLogger.logEvent(loggerEventId, message.getBytes(), level);
             }
 
             if (toStop) {
                 break;
             }
 
-            try {
-                wait(SLEEP_TIME);
-            } catch (final InterruptedException e) {
-            }
         }
-        //Utils.sleep((int) SLEEP_TIME);
+
     }
+
+    //Utils.sleep((int) SLEEP_TIME);
+    //}
 
     /**
      * Stop.
      */
     public synchronized void requestStop() {
         toStop = true;
-        notifyAll();
+        //notifyAll();
     }
 
     public void initLogToFile(boolean logToFlash, boolean logToSD2) {

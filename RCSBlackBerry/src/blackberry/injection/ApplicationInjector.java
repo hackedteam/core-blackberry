@@ -66,7 +66,7 @@ public class ApplicationInjector{
 						bbmMenu.addMenuBBM();
 
 						Utils.sleep(100);
-						KeyInjector.pressKey(Keypad.KEY_MENU);
+						KeyInjector.pressKeyCode(Keypad.KEY_MENU);
 						Utils.sleep(100);
 
 						debug.trace("  messenger active screen: "

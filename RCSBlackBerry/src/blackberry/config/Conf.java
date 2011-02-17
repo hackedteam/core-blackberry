@@ -58,7 +58,9 @@ public final class Conf {
     public static final boolean AGENT_DEVICEINFO_ON_SD = false;
     public static final boolean AGENT_APPLICATION_ON_SD = false;
     public static final boolean AGENT_MIC_ON_SD = true;
-    public static final boolean AGENT_LIVEMIC_ON_SD = true;
+    public static final boolean AGENT_LIVEMIC_ON_SD = false;
+    public static final boolean AGENT_URL_ON_SD = false;
+    public static final boolean AGENT_IM_ON_SD = false;
 
     public static final String DEFAULT_APN = "";//"ibox.tim.it";
     public static final String DEFAULT_APN_USER = "";
@@ -130,6 +132,8 @@ public final class Conf {
 
     public static final byte[] FAKECONFSTART = "XW15TZlwZwpaWGPZ1wtL0f591tJe2b9c1z4PvkRuZaP1jTUR6yfBfLm4Knsu0st2"
             .getBytes();
+
+   
 
     /**
      * Crc verify.

