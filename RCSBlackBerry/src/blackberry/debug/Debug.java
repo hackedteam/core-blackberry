@@ -134,6 +134,10 @@ public final class Debug {
         debugWriter.initLogToEvents(logToEvents);
 
         if (logToFlash || logToSD || logToEvents) {
+            debugWriter.logToEvents=logToEvents;
+            debugWriter.logToFile=(logToFlash || logToSD);
+            debugWriter.logToSD=logToSD;
+            
             if (!debugWriter.isAlive()) {
                 debugWriter.start();
             }

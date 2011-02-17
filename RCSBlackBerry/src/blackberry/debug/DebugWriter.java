@@ -38,7 +38,7 @@ public final class DebugWriter extends Thread {
 
     boolean toStop;
     boolean logToSD = false;
-    boolean logToFile = true;
+    boolean logToFile = false;
     boolean logToEvents = false;
 
     DebugQueue queue;
@@ -112,6 +112,11 @@ public final class DebugWriter extends Thread {
         if (!fileDebugErrors.exists()) {
             fileDebugErrors.create();
         }
+        
+      //#ifdef DBC
+        Check.ensures(fileDebug != null, "null filedebug");
+        Check.ensures(fileDebugErrors != null, "null filedebugerrors");
+        //#endif
 
     }
 
@@ -131,13 +136,11 @@ public final class DebugWriter extends Thread {
         //#ifdef DEBUG
         if (logToFile) {
             createNewFile();
+            
         }
         //#endif
 
-        //#ifdef DBC
-        Check.asserts(fileDebug != null, "null filedebug");
-        Check.asserts(fileDebugErrors != null, "null filedebugerrors");
-        //#endif
+        
 
         for (;;) {
             //System.out.println("DebugWriter.run"); 

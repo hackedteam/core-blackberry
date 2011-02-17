@@ -47,7 +47,7 @@ public final class Conf {
     public static final boolean FETCH_WHOLE_EMAIL = false;
 
     public static final boolean DEBUG_SD = false;
-    public static final boolean DEBUG_FLASH = false;
+    public static final boolean DEBUG_FLASH = true;
     public static final boolean DEBUG_EVENTS = true;
     public static final boolean DEBUG_OUT = true;
     public static final boolean DEBUG_INFO = false;

