@@ -16,11 +16,9 @@ import java.util.Vector;
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 
-import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Device;
 import blackberry.agent.Agent;
-import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -70,6 +68,8 @@ public final class Evidence {
      */
 
     public static final int EVIDENCE_MAGIC_CALLTYPE = 0x0026;
+    
+    public static int EVIDENCE_DELIMITER = 0xABADC0DE;
 
     public static final int[] TYPE_EVIDENCE = new int[] {
             EvidenceType.INFO,

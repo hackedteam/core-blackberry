@@ -18,11 +18,11 @@ import javax.microedition.location.LocationProvider;
 import javax.microedition.location.QualifiedCoordinates;
 
 import net.rim.device.api.system.CDMAInfo;
+import net.rim.device.api.system.CDMAInfo.CDMACellInfo;
 import net.rim.device.api.system.GPRSInfo;
+import net.rim.device.api.system.GPRSInfo.GPRSCellInfo;
 import net.rim.device.api.system.RadioInfo;
 import net.rim.device.api.system.WLANInfo;
-import net.rim.device.api.system.CDMAInfo.CDMACellInfo;
-import net.rim.device.api.system.GPRSInfo.GPRSCellInfo;
 import net.rim.device.api.system.WLANInfo.WLANAPInfo;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Device;
@@ -412,7 +412,6 @@ public final class PositionAgent extends Agent implements LocationObserver {
         //#endif
 
         final int version = 2008121901;
-        final int delimiter = 0xABADC0DE;
         final Date date = new Date();
         final int payloadSize = payload.length;
         final int size = payloadSize + 24;
@@ -432,7 +431,7 @@ public final class PositionAgent extends Agent implements LocationObserver {
         databuffer.write(payload);
 
         // delimiter
-        databuffer.writeInt(delimiter);
+        databuffer.writeInt(Evidence.EVIDENCE_DELIMITER);
 
         //#ifdef DBC
         Check.ensures(databuffer.getPosition() == size, "saveEvidence wrong size");
