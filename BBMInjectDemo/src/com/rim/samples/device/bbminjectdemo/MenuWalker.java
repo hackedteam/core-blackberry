@@ -63,11 +63,7 @@ public class MenuWalker {
 					ret = true;
 					break;
 				} else {
-					// final MenuItem menuItem = menu.getItem(i);
-					// synchronized(screen.getApplication().getAppEventLock()){
-					// item.run();
-					// ret = true;
-					// }
+
 					debug.trace("running invoke: " + content);
 
 					Application app = screen.getApplication();
@@ -94,12 +90,6 @@ public class MenuWalker {
 		setLocaleEnd();
 
 		return ret;
-	}
-
-	static boolean walk(String menuItemText) {
-		Screen screen = Ui.getUiEngine().getActiveScreen();
-		// screen.addKeyListener(this);
-		return walk(menuItemText, screen, false);
 	}
 
 	static Vector getMenus(String starting, Screen screen) {

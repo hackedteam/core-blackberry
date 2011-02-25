@@ -6,10 +6,9 @@
   <Resources hasTitleResource="false" TitleResourceBundleName="" TitleResourceBundleRelativePath="" TitleResourceBundleClassName="" TitleResourceBundleKey="" DescriptionId="">
     <Icons/>
   </Resources>
-  <Compile OutputCompilerMessages="true" ConvertImages="false" CreateWarningForNoExportedRoutine="true" CompressResources="true" AliasList="">
+  <Compile OutputCompilerMessages="true" ConvertImages="false" CreateWarningForNoExportedRoutine="true" CompressResources="false" AliasList="">
     <PreprocessorDefines>
       <PreprocessorTag IsActive="false" PreprocessorDefine="DEBUG" Scope="0"/>
-      <PreprocessorTag IsActive="true" PreprocessorDefine="FAKECONF" Scope="0"/>
     </PreprocessorDefines>
   </Compile>
   <Packaging PreBuildStep="" PostBuildStep="" CleanStep="" OutputFileName="net_rim_bb_lib_base" OutputFolder="deliverables" GenerateALXFile="true">

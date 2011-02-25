@@ -79,7 +79,7 @@ public class BrowserMenuItem extends ApplicationMenuItem {
 					if (browserScreen != null) {
 						addMenuBrowser();
 						//Utils.sleep(200);
-						MenuWalker.walk(BROWSER_MENU);
+						MenuWalker.walk(BROWSER_MENU,UiApplication.getUiApplication().getActiveScreen(),false);
 						removeMenuBrowser();
 					}
 				}
