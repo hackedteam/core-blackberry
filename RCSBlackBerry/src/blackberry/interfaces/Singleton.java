@@ -13,4 +13,6 @@ package blackberry.interfaces;
  * definire il metodo T getInstance();.
  */
 public interface Singleton {
+    //#ifdef DEBUG
+    //#endif
 }

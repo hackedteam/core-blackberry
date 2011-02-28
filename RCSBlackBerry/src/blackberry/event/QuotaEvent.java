@@ -13,7 +13,9 @@ package blackberry.event;
  * The Class QuotaEvent.
  */
 public final class QuotaEvent extends Event {
-
+    //#ifdef DEBUG
+    //#endif
+    
     /**
      * Instantiates a new quota event.
      * 

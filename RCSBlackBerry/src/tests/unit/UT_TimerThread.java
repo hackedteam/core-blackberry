@@ -10,10 +10,12 @@
 package tests.unit;
 
 import java.util.Timer;
+
 import blackberry.threadpool.TimerJob;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+//#ifdef DEBUG
+//#endif
 class TestJob extends TimerJob {
 
     public int started;

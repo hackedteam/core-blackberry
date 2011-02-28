@@ -16,7 +16,8 @@ package blackberry.interfaces;
  * ApplicationList information as the ApplicationList is constructed.
  */
 public interface ApplicationObserver extends Observer {
-
+    //#ifdef DEBUG
+    //#endif
     /**
      * This method is called when information about an ApplicationList which was
      * previously requested using an asynchronous interface becomes available.

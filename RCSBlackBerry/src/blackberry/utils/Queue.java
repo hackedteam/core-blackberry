@@ -9,7 +9,8 @@
  * *************************************************/
 package blackberry.utils;
 
-// TODO: Auto-generated Javadoc
+//#ifdef DEBUG
+//#endif
 //Queue interface
 //
 // ******************PUBLIC OPERATIONS*********************

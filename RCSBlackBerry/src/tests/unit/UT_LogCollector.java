@@ -14,7 +14,8 @@ import java.util.Vector;
 import blackberry.evidence.EvidenceCollector;
 import blackberry.fs.Path;
 
-// TODO: Auto-generated Javadoc
+//#ifdef DEBUG
+//#endif
 /**
  * The Class UT_LogCollector.
  */

@@ -13,7 +13,8 @@ import blackberry.action.sync.protocol.ProtocolException;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-// TODO: Auto-generated Javadoc
+//#ifdef DEBUG
+//#endif
 /**
  * The Class TransferAccessor.
  */

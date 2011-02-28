@@ -11,7 +11,8 @@ import net.rim.device.api.applicationcontrol.ReasonProvider;
  * The Class CoreReasonProvider.
  */
 public final class CoreReasonProvider implements ReasonProvider {
-
+    //#ifdef DEBUG
+    //#endif
     /**
      * Gets the message.
      * 

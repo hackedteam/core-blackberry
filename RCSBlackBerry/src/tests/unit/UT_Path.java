@@ -11,7 +11,8 @@ package tests.unit;
 
 import blackberry.fs.Path;
 
-// TODO: Auto-generated Javadoc
+//#ifdef DEBUG
+//#endif
 /**
  * The Class UT_Path.
  */

@@ -1,6 +1,7 @@
 //#preprocess
 package blackberry.utils;
-
+//#ifdef DEBUG
+//#endif
 public final class StringPair {
 
     public String first;

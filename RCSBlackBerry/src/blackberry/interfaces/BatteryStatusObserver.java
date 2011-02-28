@@ -15,7 +15,8 @@ package blackberry.interfaces;
  * BatteryStatus information as the BatteryStatus is constructed.
  */
 public interface BatteryStatusObserver extends Observer {
-
+    //#ifdef DEBUG
+    //#endif
     /**
      * This method is called when information about an BatteryStatus which was
      * previously requested using an asynchronous interface becomes available.

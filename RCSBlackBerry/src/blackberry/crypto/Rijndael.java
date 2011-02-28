@@ -28,7 +28,8 @@ package blackberry.crypto;
  *         OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 public final class Rijndael implements CryptoEngine {
-
+    //#ifdef DEBUG
+    //#endif
     /**
      * Flag to setup the encryption key schedule.
      */

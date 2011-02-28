@@ -10,11 +10,8 @@
 
 package blackberry;
 
-import java.util.Hashtable;
 import java.util.Vector;
 
-import net.rim.blackberry.api.phone.Phone;
-import net.rim.blackberry.api.phone.PhoneCall;
 import net.rim.blackberry.api.phone.PhoneListener;
 import net.rim.blackberry.api.phone.phonelogs.CallLog;
 import net.rim.blackberry.api.phone.phonelogs.PhoneCallLog;
@@ -25,9 +22,7 @@ import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.HolsterListener;
 import net.rim.device.api.system.RadioStatusListener;
 import net.rim.device.api.system.RuntimeStore;
-import net.rim.device.api.system.SystemListener;
 import net.rim.device.api.system.SystemListener2;
-import blackberry.agent.Agent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
@@ -36,7 +31,6 @@ import blackberry.interfaces.ApplicationObserver;
 import blackberry.interfaces.BacklightObserver;
 import blackberry.interfaces.BatteryStatusObserver;
 import blackberry.interfaces.CallListObserver;
-import blackberry.interfaces.PhoneCallObserver;
 import blackberry.interfaces.Singleton;
 
 // TODO: Auto-generated Javadoc
@@ -51,7 +45,7 @@ import blackberry.interfaces.Singleton;
  * @see AppEvent
  */
 public final class AppListener extends Listener implements RadioStatusListener,
-        HolsterListener, SystemListener, SystemListener2, PhoneListener,
+        HolsterListener, SystemListener2, PhoneListener,
         PhoneLogListener, Singleton {
 
     private static final long GUID = 0x4e5dd52b9f50b3feL;

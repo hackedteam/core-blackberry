@@ -20,7 +20,8 @@ import net.rim.device.api.crypto.CryptoUnsupportedOperationException;
  * The Class RimAES.
  */
 public final class RimAES implements CryptoEngine {
-
+    //#ifdef DEBUG
+    //#endif
     /**
      * Checks if is supported.
      * 

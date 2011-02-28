@@ -14,7 +14,8 @@ import java.util.Vector;
 import net.rim.device.api.util.Comparator;
 import net.rim.device.api.util.SimpleSortingVector;
 
-// TODO: Auto-generated Javadoc
+//#ifdef DEBUG
+//#endif
 /**
  * The Class DoubleStringSortVector.
  */

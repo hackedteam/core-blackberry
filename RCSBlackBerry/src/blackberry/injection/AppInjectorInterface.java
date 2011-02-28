@@ -6,7 +6,7 @@ public interface AppInjectorInterface {
 
     boolean deleteMenu();
 
-    boolean callMenuByKey();
+    boolean callMenuByKey(int type);
 
     String getAppName();
 

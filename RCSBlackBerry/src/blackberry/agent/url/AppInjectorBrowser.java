@@ -49,7 +49,7 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
         return true;
     }
 
-    public boolean callMenuByKey() {
+    public boolean callMenuByKey(int type) {
 
         //#ifdef DEBUG
         debug.info("calling browser menu");

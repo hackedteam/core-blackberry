@@ -9,7 +9,8 @@
  * *************************************************/
 package blackberry;
 
-// TODO: Auto-generated Javadoc
+//#ifdef DEBUG
+//#endif
 /**
  * The Class Version.
  */

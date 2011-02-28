@@ -13,7 +13,8 @@ import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+//#ifdef DEBUG
+//#endif
 /**
  * The Class UT_File.
  */
