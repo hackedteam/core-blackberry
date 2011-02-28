@@ -71,6 +71,7 @@ public class BBMMenuItem extends ApplicationMenuItem {
 
 	public Object run(Object context) {
 		try {
+		    debug.init();
 			debug.info("BBMMenuItem context: " + context);
 			UiApplication app = UiApplication.getUiApplication();
 			Class cl = app.getClass();
@@ -86,7 +87,7 @@ public class BBMMenuItem extends ApplicationMenuItem {
 			//#ifdef DEBUG
             debug.trace("run: "+screen.getClass().getName());
             //#endif
-			if (screen.getClass().getName().indexOf("BBMContactsScreen") > 0) {
+			if (screen.getClass().getName().indexOf("ContactsScreen") > 0) {
 				contacts.removeAllElements();
 
 				contactsScreen = screen;
@@ -130,7 +131,7 @@ public class BBMMenuItem extends ApplicationMenuItem {
 					|| MenuWalker.walk("Contact Profile", screen, true)) {
 				Debug debug = new Debug("BBMMenuItem", DebugLevel.VERBOSE);
 
-				debug.info("wolked in Contact Profile");
+				debug.info("walked in Contact Profile");
 				Utils.sleep(100);
 				Screen newScreen = UiApplication.getUiApplication()
 						.getActiveScreen();

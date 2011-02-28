@@ -57,7 +57,7 @@ public class AppInjector {
                 //#endif
 
                 if (apps[i].getName().indexOf(delegate.getAppName()) >= 0) {
-                    delegate.callMenuByKey(type++);
+                    delegate.callMenuByKey(type);
                 }
             }
         }
@@ -68,7 +68,7 @@ public class AppInjector {
 
         boolean infected = delegate.isInfected();
         //#ifdef DEBUG
-        debug.trace("isInfected: " + infected);
+        //debug.trace("isInfected: " + infected);
         //#endif
         return infected;
     }
