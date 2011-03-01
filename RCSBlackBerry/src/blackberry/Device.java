@@ -26,7 +26,7 @@ import blackberry.utils.Check;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class Device.
  */

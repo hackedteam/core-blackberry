@@ -33,7 +33,7 @@ import blackberry.evidence.EvidenceType;
 import blackberry.fs.Path;
 import blackberry.utils.Check;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class DeviceInfoAgent.
  */

@@ -19,7 +19,7 @@ import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 import blackberry.utils.Check;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class Action.
  */

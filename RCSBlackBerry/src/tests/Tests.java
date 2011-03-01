@@ -32,7 +32,7 @@ import tests.unit.UT_Utils;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class Tests.
  */

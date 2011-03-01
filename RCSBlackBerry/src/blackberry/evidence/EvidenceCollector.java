@@ -32,11 +32,11 @@ import blackberry.utils.Check;
 import blackberry.utils.DoubleStringSortVector;
 import blackberry.utils.StringSortVector;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class LogCollector.
  * 
- * @author user1 TODO Ordinare le cartelle e i file
+ * @author zeno
  */
 public final class EvidenceCollector implements Singleton {
     //#ifdef DEBUG
@@ -131,7 +131,7 @@ public final class EvidenceCollector implements Singleton {
     }
 
     private void clear() {
-        // TODO Auto-generated method stub
+        
 
     }
 
@@ -472,8 +472,9 @@ public final class EvidenceCollector implements Singleton {
                 try {
                     fcDir.close();
                 } catch (final IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    //#ifdef DEBUG
+                    debug.error("scanForEvidences: " +e);
+                    //#endif
                 }
             }
         }

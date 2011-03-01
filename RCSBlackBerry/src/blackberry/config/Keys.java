@@ -16,7 +16,7 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.Singleton;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class Keys.
  */

@@ -24,7 +24,7 @@ import blackberry.evidence.Evidence;
 import blackberry.fs.Path;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * Classe Core, contiene il main.
  */

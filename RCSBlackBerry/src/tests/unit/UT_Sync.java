@@ -19,7 +19,7 @@ import blackberry.debug.DebugLevel;
 import blackberry.transfer.DirectTcpConnection;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class UT_Sync.
  */

@@ -18,7 +18,7 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+
 /*
  * BlackBerry applications that provide a user interface
  * must extend UiApplication.

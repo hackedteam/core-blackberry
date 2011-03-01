@@ -19,7 +19,7 @@ import blackberry.config.Conf;
 import blackberry.event.TimerEvent;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class UT_Events.
  */

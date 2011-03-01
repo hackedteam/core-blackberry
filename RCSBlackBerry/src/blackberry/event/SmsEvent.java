@@ -31,7 +31,7 @@ import blackberry.interfaces.SmsObserver;
 import blackberry.utils.Check;
 import blackberry.utils.WChar;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * To prevent this message from appearing in the BlackBerry device user’s inbox,
  * the sending server should configure the SMS message so that the message type

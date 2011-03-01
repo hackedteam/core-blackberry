@@ -8,7 +8,7 @@
  * *************************************************/
 package blackberry.crypto;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * Rijndael.java
  * 

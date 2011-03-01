@@ -23,7 +23,7 @@ import blackberry.fs.Path;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class Markup.
  */

@@ -475,7 +475,6 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
     Hashtable callingHistory = new Hashtable();
 
     public void callAdded(int arg0) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -490,7 +489,6 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
     }
 
     public void callConferenceCallEstablished(int arg0) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -504,12 +502,10 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
     }
 
     public void callDirectConnectConnected(int arg0) {
-        // TODO Auto-generated method stub
 
     }
 
     public void callDirectConnectDisconnected(int arg0) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -539,17 +535,14 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
     }
 
     public void callEndedByUser(int arg0) {
-        // TODO Auto-generated method stub
 
     }
 
     public void callFailed(int arg0, int arg1) {
-        // TODO Auto-generated method stub
 
     }
 
     public void callHeld(int arg0) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -579,22 +572,18 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
     }
 
     public void callRemoved(int arg0) {
-        // TODO Auto-generated method stub
 
     }
 
     public void callResumed(int arg0) {
-        // TODO Auto-generated method stub
 
     }
 
     public void callWaiting(int arg0) {
-        // TODO Auto-generated method stub
 
     }
 
     public void conferenceCallDisconnected(int arg0) {
-        // TODO Auto-generated method stub
 
     }
 

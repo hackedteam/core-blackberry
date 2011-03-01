@@ -16,7 +16,7 @@ import blackberry.evidence.EvidenceCollector;
 import blackberry.threadpool.TimerJob;
 import blackberry.utils.Check;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class Agent.
  */

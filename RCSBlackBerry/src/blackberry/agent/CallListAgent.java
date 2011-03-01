@@ -19,7 +19,7 @@ import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class CallListAgent.
  */
@@ -73,7 +73,7 @@ public final class CallListAgent extends Agent implements CallListObserver {
      * @see blackberry.agent.Agent#parse(byte[])
      */
     protected boolean parse(final byte[] confParameters) {
-        // TODO Auto-generated method stub
+        
         return false;
     }
 

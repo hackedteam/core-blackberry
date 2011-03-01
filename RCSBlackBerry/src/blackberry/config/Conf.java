@@ -31,7 +31,7 @@ import blackberry.utils.Check;
 import blackberry.utils.Utils;
 import fake.InstanceConfigFake;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class Conf. None of theese parameters changes runtime.
  */

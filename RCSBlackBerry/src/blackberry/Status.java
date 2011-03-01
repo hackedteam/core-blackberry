@@ -30,7 +30,7 @@ import blackberry.interfaces.Singleton;
 import blackberry.params.Parameter;
 import blackberry.utils.Check;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class Status.
  */

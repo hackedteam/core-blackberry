@@ -18,7 +18,7 @@ import net.rim.device.api.ui.Keypad;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class KeyInjector.
  */

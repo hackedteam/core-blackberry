@@ -24,7 +24,7 @@ import blackberry.agent.sms.SmsListener;
 import blackberry.sms.SMSHelper;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class UT_SmsAgent.
  */

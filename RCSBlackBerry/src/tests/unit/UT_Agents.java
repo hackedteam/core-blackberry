@@ -24,7 +24,7 @@ import blackberry.event.Event;
 import blackberry.event.TimerEvent;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class UT_Agents.
  */

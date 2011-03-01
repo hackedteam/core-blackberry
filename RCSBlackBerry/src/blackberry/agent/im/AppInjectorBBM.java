@@ -35,7 +35,6 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
     BBMMenuItem menu = BBMMenuItem.getInstance();
 
     public boolean requestForeground() {
-        // TODO Auto-generated method stub
         return false;
     }
 
@@ -123,7 +122,6 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
 
 
     public void callMenuInContext() {
-        // TODO Auto-generated method stub
         
     }
     

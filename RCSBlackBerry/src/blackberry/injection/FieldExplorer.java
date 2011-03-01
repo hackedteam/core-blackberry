@@ -194,7 +194,6 @@ public class FieldExplorer {
 			accessibleTraverse(context, deep + 1, isContact);
 			//#endif
 			
-			// TODO: se si potesse clickare sul field sarebbe ottimo!
 
 		}
 

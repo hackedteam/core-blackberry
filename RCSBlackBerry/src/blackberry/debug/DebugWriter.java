@@ -200,7 +200,7 @@ public final class DebugWriter extends Thread {
     }
 
     public void initLogToFile(boolean logToFlash, boolean logToSD2) {
-        // TODO Auto-generated method stub
+        
 
     }
 

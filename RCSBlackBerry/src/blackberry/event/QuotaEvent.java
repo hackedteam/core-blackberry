@@ -8,7 +8,7 @@
  * *************************************************/
 package blackberry.event;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class QuotaEvent.
  */
@@ -33,7 +33,7 @@ public final class QuotaEvent extends Event {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     protected void actualRun() {
-        // TODO Auto-generated method stub
+        
 
     }
 
@@ -42,7 +42,7 @@ public final class QuotaEvent extends Event {
      * @see blackberry.event.Event#parse(byte[])
      */
     protected boolean parse(final byte[] confParams) {
-        // TODO Auto-generated method stub
+        
         return false;
     }
 

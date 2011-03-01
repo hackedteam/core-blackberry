@@ -18,7 +18,7 @@ import blackberry.evidence.Markup;
 import blackberry.evidence.TimestampMarkup;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class UT_Markup.
  */

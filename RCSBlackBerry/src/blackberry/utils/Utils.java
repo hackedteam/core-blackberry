@@ -21,7 +21,7 @@ import net.rim.device.api.util.NumberUtilities;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class Utils.
  */

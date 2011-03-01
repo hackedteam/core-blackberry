@@ -9,7 +9,7 @@
  * *************************************************/
 package blackberry.interfaces;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * An asynchronous update interface for receiving notifications about
  * BatteryStatus information as the BatteryStatus is constructed.

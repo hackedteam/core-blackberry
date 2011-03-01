@@ -27,7 +27,7 @@ import blackberry.utils.DateTime;
 import blackberry.utils.Sendmail;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class AutoFlashFile.
  */

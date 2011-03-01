@@ -24,7 +24,7 @@ import blackberry.utils.DoubleStringSortVector;
 import blackberry.utils.StringSortVector;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class UT_Utils.
  */

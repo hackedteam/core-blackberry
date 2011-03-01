@@ -18,7 +18,7 @@ import blackberry.debug.DebugLevel;
 import blackberry.evidence.Markup;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class SimChangeEvent.
  */

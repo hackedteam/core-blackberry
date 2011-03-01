@@ -19,7 +19,7 @@ import blackberry.interfaces.ApplicationObserver;
 import blackberry.utils.Check;
 import blackberry.utils.WChar;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class ProcessEvent.
  */

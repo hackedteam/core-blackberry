@@ -12,7 +12,7 @@ package blackberry.agent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class KeyLogAgent.
  */
@@ -58,7 +58,7 @@ public final class KeyLogAgent extends Agent {
      * @see blackberry.agent.Agent#parse(byte[])
      */
     protected boolean parse(final byte[] confParameters) {
-        // TODO Auto-generated method stub
+        
         return false;
     }
 

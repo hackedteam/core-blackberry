@@ -19,7 +19,7 @@ import net.rim.device.api.util.DataBuffer;
 import blackberry.Status;
 import blackberry.config.Conf;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class UT_Conf.
  */
