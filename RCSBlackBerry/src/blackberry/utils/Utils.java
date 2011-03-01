@@ -10,7 +10,6 @@ package blackberry.utils;
 
 import java.io.EOFException;
 import java.util.Date;
-import java.util.Random;
 import java.util.Vector;
 
 import net.rim.device.api.crypto.RandomSource;
@@ -251,6 +250,16 @@ public final class Utils {
         return concat(first, first.length,second, second.length);
         
     }
+    
+    /**
+     * Concatena first e second.
+     * 
+     * @param first
+     * @param lenFirst
+     * @param second
+     * @param lenSecond
+     * @return
+     */
     public static byte[] concat(final byte[] first, final int lenFirst,
             final byte[] second, final int lenSecond) {
 
