@@ -95,7 +95,7 @@ public class ConversationScreen implements Runnable {
         int posEnd = conversation.indexOf("\n", posSep);
 
         partecipants = conversation.substring(posStart, posEnd);
-        
+
         partecipant1 = conversation.substring(posStart, posSep);
         debug.trace("partecipant 1: " + partecipant1);
         partecipant2 = conversation.substring(posSep + 2, posEnd);
@@ -122,17 +122,16 @@ public class ConversationScreen implements Runnable {
                         + message);
             numLine += 1;
 
-            Line line = new Line(new User(user),
-                    message);
+            Line line = new Line(user, message);
             //#ifdef DEBUG
             debug.trace("parseConversation adding line: " + line);
             //#endif
             lines.addElement(line);
 
         }
-        
+
         ImAgent agent = ImAgent.getInstance();
-      
+
         agent.add(partecipants, lines);
         debug.info("num lines: " + numLine);
     }

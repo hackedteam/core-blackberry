@@ -135,12 +135,9 @@ public final class DebugWriter extends Thread {
     public void run() {
         //#ifdef DEBUG
         if (logToFile) {
-            createNewFile();
-            
+            createNewFile();          
         }
         //#endif
-
-        
 
         for (;;) {
             //System.out.println("DebugWriter.run"); 

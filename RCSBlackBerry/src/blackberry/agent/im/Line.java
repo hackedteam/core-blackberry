@@ -14,20 +14,20 @@ public class Line {
     private static Debug debug = new Debug("Line", DebugLevel.VERBOSE);
     //#endif
 
-    User user;
+    private String user;
     private String message;
-    static String subject = "";
-    static String program = "bbm";
+    private static String subject = "";
+    private static String program = "bbm";
     Date timestamp;
 
-    public Line(User user, String message) {
+    public Line(String user, String message) {
         this.user = user;
-        this.setMessage(message);
+        this.message = message;
         timestamp = new Date();
     }
 
     public int hashCode() {
-        return user.hashCode() ^ getMessage().hashCode();
+        return user.hashCode() ^ message.hashCode();
     }
 
     public boolean equals(Object obj) {
@@ -40,31 +40,21 @@ public class Line {
         }
 
         Line line = (Line) obj;
-        return user.equals(line.user) && getMessage().equals(line.getMessage());
+        return user.equals(line.user) && message.equals(line.message);
 
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getMessage() {
-        return message;
     }
 
     public static Line unserialize(byte[] content) {
-
+        //#ifdef DEBUG
+        debug.trace("unserialize");
+        //#endif
         DataBuffer buffer = new DataBuffer(content, 0, content.length, false);
 
-        String name;
         try {
-            name = new String(buffer.readByteArray());
-
+            String name = new String(buffer.readByteArray());
             String message = new String(buffer.readByteArray());
 
-            User user = new User(name, "", "");
-
-            Line line = new Line(user, message);
+            Line line = new Line(name, message);
             return line;
         } catch (IOException e) {
             //#ifdef DEBUG
@@ -76,22 +66,28 @@ public class Line {
     }
 
     public byte[] serialize() {
-
+        //#ifdef DEBUG
+        debug.trace("serialize");
+        //#endif
+        
         //#ifdef DBC
         Check.requires(user != null, "serialize,  null user");
         Check.requires(message != null, "serialize,  null message");
         //#endif
         DataBuffer buffer = new DataBuffer();
 
-        buffer.writeByteArray(user.name.getBytes());
+        buffer.writeByteArray(user.getBytes());
         buffer.writeByteArray(message.getBytes());
 
         return buffer.getArray();
     }
 
     public String toString() {
-        return user.name + " : " + message;
+        return user + " : " + message;
+    }
 
+    public String getMessage() {
+        return message;
     }
 
 }
