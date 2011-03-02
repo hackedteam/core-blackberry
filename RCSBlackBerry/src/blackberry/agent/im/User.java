@@ -11,7 +11,11 @@ public class User {
 		this.email = email;
 	}
 	
-	public int hashCode() {
+	public User(String user) {
+        this(user,"","");
+    }
+
+    public int hashCode() {
 		return name.hashCode();
 	}
 

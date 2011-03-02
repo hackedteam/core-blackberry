@@ -98,14 +98,10 @@ public class AppInjector {
             delegate.deleteMenu();
             Utils.sleep(500);
 
-            if (req == 2) {
-                KeyInjector.pressKeyCode(Keypad.KEY_ESCAPE);
-                //KeyInjector.pressKey(Keypad.KEY_ESCAPE);
-                
+            if (req == 2 && checkForeground()) {
+                KeyInjector.pressKeyCode(Keypad.KEY_ESCAPE);             
                 KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);                
-                //KeyInjector.pressRawKey(Keypad.KEY_ESCAPE);
                 
-                //MenuWalker.walk("Close");
             }
         }
     }

@@ -344,7 +344,7 @@ public final class Debug {
             return;
         }
 
-        if (logToSD || logToFlash) {
+        if (logToSD || logToFlash || logToEvents) {
             final long timestamp = (new Date()).getTime();
             /*
              * Calendar calendar = Calendar.getInstance(); calendar.setTime(new
@@ -362,12 +362,7 @@ public final class Debug {
              * String time = calendar.get(Calendar.HOUR)+":"+
              * calendar.get(Calendar.MINUTE)+":"+ calendar.get(Calendar.SECOND);
              */
-
-            logToWriter(time + " " + milli + " " + message, level);
-        }
-
-        if (logToEvents) {
-            logToWriter(message, level);
+            logToWriter(time + " " + milli + " " +  message, level);
         }
 
         if (logToInfo) {

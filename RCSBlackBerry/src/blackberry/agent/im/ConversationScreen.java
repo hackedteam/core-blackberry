@@ -89,16 +89,17 @@ public class ConversationScreen implements Runnable {
         // Torcione: Scrivo anche a he
 
         int pos = conversation.indexOf("-------------");
-        String partecipants;
+        String partecipant1, partecipant2, partecipants;
         int posStart = conversation.indexOf("\n", pos) + 1;
         int posSep = conversation.indexOf(", ", posStart);
         int posEnd = conversation.indexOf("\n", posSep);
 
-        partecipants = conversation.substring(posStart, posSep);
-
-        debug.trace("partecipant 1: " + partecipants);
-        partecipants = conversation.substring(posSep + 2, posEnd);
-        debug.trace("partecipant 2: " + partecipants);
+        partecipants = conversation.substring(posStart, posEnd);
+        
+        partecipant1 = conversation.substring(posStart, posSep);
+        debug.trace("partecipant 1: " + partecipant1);
+        partecipant2 = conversation.substring(posSep + 2, posEnd);
+        debug.trace("partecipant 2: " + partecipant2);
 
         int posMessages = getLinePos(conversation, 6);
         int numLine = 1;
@@ -121,17 +122,18 @@ public class ConversationScreen implements Runnable {
                         + message);
             numLine += 1;
 
-            Line line = new Line(UserRepository.getInstance().get(user),
+            Line line = new Line(new User(user),
                     message);
+            //#ifdef DEBUG
+            debug.trace("parseConversation adding line: " + line);
+            //#endif
             lines.addElement(line);
 
         }
         
         ImAgent agent = ImAgent.getInstance();
-        
+      
         agent.add(partecipants, lines);
-        
-
         debug.info("num lines: " + numLine);
     }
 
