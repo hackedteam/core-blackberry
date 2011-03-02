@@ -15,6 +15,7 @@ import blackberry.Device;
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
 import blackberry.utils.Check;
+import blackberry.utils.Utils;
 
 /**
  * The Class DebugWriter.
@@ -175,6 +176,7 @@ public final class DebugWriter extends Thread {
             if (logToEvents) {
 
                 EventLogger.logEvent(loggerEventId, message.getBytes(), level);
+                Utils.sleep(10);
             }
 
             if (toStop) {

