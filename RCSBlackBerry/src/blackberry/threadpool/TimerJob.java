@@ -268,7 +268,8 @@ public abstract class TimerJob {
             actualRun();
         } catch (final Exception ex) {
             //#ifdef DEBUG
-            debug.fatal("actualRun: " + ex);
+            debug.fatal( getClass().getName() +  " actualRun: " + ex);
+            ex.printStackTrace();
             //#endif
         } finally {
             running = false;

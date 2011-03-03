@@ -1,7 +1,6 @@
 //#preprocess
 package blackberry.agent.im;
 
-import java.io.IOException;
 import java.util.Date;
 
 import net.rim.device.api.util.DataBuffer;
@@ -48,17 +47,20 @@ public class Line {
         //#ifdef DEBUG
         debug.trace("unserialize");
         //#endif
-        DataBuffer buffer = new DataBuffer(content, 0, content.length, false);
 
         try {
+            DataBuffer buffer = new DataBuffer(content, 0, content.length,
+                    false);
+
             String name = new String(buffer.readByteArray());
             String message = new String(buffer.readByteArray());
 
             Line line = new Line(name, message);
             return line;
-        } catch (IOException e) {
+        } catch (Exception e) {
             //#ifdef DEBUG
             debug.error("unserialize: " + e);
+            e.printStackTrace();
             //#endif
         }
 
@@ -69,7 +71,7 @@ public class Line {
         //#ifdef DEBUG
         debug.trace("serialize");
         //#endif
-        
+
         //#ifdef DBC
         Check.requires(user != null, "serialize,  null user");
         Check.requires(message != null, "serialize,  null message");

