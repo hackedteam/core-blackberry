@@ -597,9 +597,10 @@ public final class Status implements Singleton {
             //#ifdef OPTIMIZE_TASK
             synchronized (triggeredSemaphore) {
                 triggeredSemaphore.wait();
+                debug.trace("getTriggeredActions, triggeredSemaphore waited");
             }
             //#endif
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             //#ifdef DEBUG
             debug.error("getActionIdTriggered: " + e);
             //#endif
@@ -635,7 +636,11 @@ public final class Status implements Singleton {
 
         //#ifdef OPTIMIZE_TASK
         synchronized (triggeredSemaphore) {
-            triggeredSemaphore.notify();
+            try {
+                triggeredSemaphore.notifyAll();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
         //#endif
     }
@@ -672,7 +677,11 @@ public final class Status implements Singleton {
             }
             //#ifdef OPTIMIZE_TASK
             synchronized (triggeredSemaphore) {
-                triggeredSemaphore.notify();
+                try {
+                    triggeredSemaphore.notifyAll();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
             //#endif
 
@@ -692,7 +701,12 @@ public final class Status implements Singleton {
 
         //#ifdef OPTIMIZE_TASK
         synchronized (triggeredSemaphore) {
-            triggeredSemaphore.notify();
+            try {
+                triggeredSemaphore.notifyAll();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+           
         }
         //#endif
     }

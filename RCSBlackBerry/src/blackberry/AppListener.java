@@ -113,12 +113,12 @@ public final class AppListener extends Listener implements RadioStatusListener,
         removeObserver(applicationObservers, observer);
     }
 
-    public synchronized void addBacklightObserver(
+    public  void addBacklightObserver(
             final BacklightObserver observer) {
         addObserver(backlightObservers, observer);
     }
 
-    public synchronized void removeBacklightObserver(
+    public  void removeBacklightObserver(
             final BacklightObserver observer) {
         removeObserver(backlightObservers, observer);
     }
