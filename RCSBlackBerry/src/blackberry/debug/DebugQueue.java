@@ -4,7 +4,7 @@ import blackberry.utils.BlockingQueue;
 
 public class DebugQueue {
     
-    private static final int MAX_NUM_MESSAGES = 500;
+    private static final int MAX_NUM_MESSAGES = 1000;
     boolean haveMessages;
     int numMessages;
     

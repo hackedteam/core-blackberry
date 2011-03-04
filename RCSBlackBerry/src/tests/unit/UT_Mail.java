@@ -1,9 +1,10 @@
 package tests.unit;
-
 import java.util.Date;
 
 import net.rim.blackberry.api.mail.Message;
-import tests.accessor.TransferAccessor;
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
 import blackberry.agent.Agent;
 import blackberry.agent.mail.Filter;
 import blackberry.debug.Debug;
@@ -18,8 +19,6 @@ public class UT_Mail extends TestUnit {
     //String host = "rcs-prod";
     String host = "192.168.1.177";
     int port = 80;
-
-    TransferAccessor transfer;
 
     public UT_Mail(String name, Tests tests) {
         super(name, tests);

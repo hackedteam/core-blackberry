@@ -144,6 +144,7 @@ public class BBMMenuItem extends ApplicationMenuItem {
 			debug.warn("injectBBM:" + ex.toString());
 			debug.ledStart(Debug.COLOR_RED);
 		}
+		
 		return null;
 	}
 

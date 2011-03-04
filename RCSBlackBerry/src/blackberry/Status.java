@@ -234,10 +234,14 @@ public final class Status implements Singleton {
         debug.trace("Clear");
         //#endif
 
+        triggeredActions.removeAllElements();
+        
         agents.clear();
         actions.clear();
         events.clear();
         parameters.clear();
+        
+        
     }
 
     /**
@@ -606,6 +610,12 @@ public final class Status implements Singleton {
             triggeredActions.copyInto(ids);
             return ids;
 
+        }
+    }
+    
+    public boolean isActionTriggered(Action action){
+        synchronized (lockTriggerAction) {
+            return (triggeredActions.contains(action.actionId)) ;
         }
     }
 

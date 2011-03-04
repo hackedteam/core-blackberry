@@ -8,7 +8,6 @@
  * *************************************************/
 package blackberry.config;
 
-import fake.InstanceKeysFake;
 import net.rim.device.api.system.RuntimeStore;
 import blackberry.Device;
 import blackberry.crypto.Encryption;
@@ -60,7 +59,7 @@ public final class Keys implements Singleton {
         return instance;
     }
     
-    public static synchronized Keys getInstance() {
+    static synchronized Keys getInstance() {
         return getInstance(null);
     }
 

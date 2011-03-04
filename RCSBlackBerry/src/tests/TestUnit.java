@@ -10,6 +10,7 @@
 package tests;
 
 import blackberry.config.Keys;
+import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
@@ -57,7 +58,7 @@ public abstract class TestUnit {
         name = name_;
 
         //#ifdef TEST
-        final Keys keys = Keys.getInstance();
+        final Keys keys = Encryption.getKeys();
         /*
          * InstanceKeys instance = keys.getInstanceKeys();
          * instance.setAesKey(LogKey);

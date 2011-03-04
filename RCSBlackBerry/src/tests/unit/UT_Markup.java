@@ -8,12 +8,14 @@
  * Created      : 28-apr-2010
  * *************************************************/
 package tests.unit;
-
 import java.io.IOException;
 import java.util.Date;
 
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
 import blackberry.agent.Agent;
-import blackberry.config.Keys;
+import blackberry.crypto.Encryption;
 import blackberry.evidence.Markup;
 import blackberry.evidence.TimestampMarkup;
 import blackberry.utils.Utils;
@@ -56,8 +58,7 @@ public final class UT_Markup extends TestUnit {
     private void DictMarkupTest() throws AssertException {
         final int agentId = Agent.AGENT_APPLICATION;
 
-        final TimestampMarkup markup = new TimestampMarkup(agentId, Keys
-                .getInstance().getAesKey());
+        final TimestampMarkup markup = new TimestampMarkup(agentId, Encryption.getKeys().getAesKey());
 
         AssertThat(markup.isMarkup(), "isMarkup");
         AssertNull(markup.get("FIRST"), "get");
@@ -119,7 +120,7 @@ public final class UT_Markup extends TestUnit {
     void SimpleMarkupTest() throws AssertException {
 
         final int agentId = Agent.AGENT_APPLICATION;
-        final Markup markup = new Markup(agentId, Keys.getInstance()
+        final Markup markup = new Markup(agentId, Encryption.getKeys()
                 .getAesKey());
 
         if (markup.isMarkup()) {

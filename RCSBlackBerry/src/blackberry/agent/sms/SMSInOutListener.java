@@ -15,7 +15,7 @@ import blackberry.utils.Check;
 class SMSInOutListener implements OutboundMessageListener, Runnable {
 
     //#ifdef DEBUG
-    static Debug debug = new Debug("SMSINListener", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("SMSInOutListener", DebugLevel.VERBOSE);
 
     //#endif
 
@@ -33,6 +33,10 @@ class SMSInOutListener implements OutboundMessageListener, Runnable {
 
         this.conn = conn;
         this.smsListener = smsListener;
+
+        //#ifdef DEBUG
+        debug.trace("SMSInOutListener: " + conn + "  listener: " + smsListener);
+        //#endif
     }
 
     private synchronized void init() {
@@ -67,6 +71,10 @@ class SMSInOutListener implements OutboundMessageListener, Runnable {
         Check.requires(message != null, "notifyOutgoingMessage: null message ");
         //#endif
 
+        //#ifdef DEBUG
+        debug.trace("notifyOutgoingMessage: " + this + " conn: " + conn
+                + "  listener: " + smsListener);
+        //#endif
         totOut++;
         init();
 
@@ -114,6 +122,9 @@ class SMSInOutListener implements OutboundMessageListener, Runnable {
             synchronized (this) {
                 try {
                     wait();
+                    //#ifdef DEBUG
+                    debug.trace("run: notified");
+                    //#endif
                 } catch (final Exception e) {
                     //#ifdef DEBUG
                     debug.error(e);
@@ -121,6 +132,10 @@ class SMSInOutListener implements OutboundMessageListener, Runnable {
                 }
             }
         }
+
+        //#ifdef DEBUG
+        debug.trace("run: requestStop == " + requestStop);
+        //#endif
     }
 
 }

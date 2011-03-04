@@ -16,7 +16,6 @@ import tests.unit.UT_Conf;
 import tests.unit.UT_Crypto;
 import tests.unit.UT_Events;
 import tests.unit.UT_File;
-import tests.unit.UT_HTTPConnection;
 import tests.unit.UT_Log;
 import tests.unit.UT_LogCollector;
 import tests.unit.UT_Mail;
@@ -26,7 +25,6 @@ import tests.unit.UT_Path;
 import tests.unit.UT_Recorder;
 import tests.unit.UT_Self;
 import tests.unit.UT_SmsAgent;
-import tests.unit.UT_Sync;
 import tests.unit.UT_TimerThread;
 import tests.unit.UT_Utils;
 import blackberry.debug.Debug;
@@ -62,6 +60,8 @@ public final class Tests {
 
     private Tests() {
 
+        Debug.init();
+        
         if (full) {
             addTest(new UT_Self("Self", this));
             addTest(new UT_Utils("Utils", this));
@@ -77,8 +77,7 @@ public final class Tests {
 
             addTest(new UT_Log("Log", this));
             addTest(new UT_LogCollector("LogCollector", this));
-            addTest(new UT_Sync("Sync", this));
-            
+
             addTest(new UT_Recorder("Recorder", this));  
             
             addTest(new UT_MicAgent("MicAgent", this));
@@ -90,9 +89,11 @@ public final class Tests {
             addTest(new UT_Mail("Mail", this));      
             
         }
-
-        addTest(new UT_HTTPConnection("HTTPConnection", this));  
-                      
+        
+   
+        addTest(new UT_SmsAgent("SmsAgent", this));
+        
+               
     }
 
     private void addTest(final TestUnit unitTest) {

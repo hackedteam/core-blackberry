@@ -17,7 +17,6 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.utils.Check;
 
-
 /**
  * The Class TimerJob.
  */
@@ -137,7 +136,7 @@ public abstract class TimerJob {
      * @param timer
      *            the timer
      */
-    public final void addToTimer(final Timer timer) {
+    public synchronized final void addToTimer(final Timer timer) {
         //#ifdef DEBUG
         debug.trace("adding timer");
         //#endif
@@ -230,7 +229,7 @@ public abstract class TimerJob {
      * (non-Javadoc)
      * @see java.util.TimerTask#run()
      */
-    public final synchronized void run() {
+    public final void run() {
         //#ifdef DEBUG
         Debug.init();
         //#endif
@@ -239,40 +238,53 @@ public abstract class TimerJob {
         debug.trace("Run " + this);
         //#endif
 
-        if (stopped) {
-            stopped = false;
-            actualStart();
+        if (running) {
+            //#ifdef DEBUG
+            debug.trace("running...");
+            //#endif
+            return;
         }
 
-        //#ifdef DEBUG
-        if (lastExecuted != null) {
-            Date now = new Date();
-            long millisec = now.getTime() - lastExecuted.getTime();
-            debug.trace("timer has run in: " + (millisec / 1000.0)
-                    + " instead of: " + (getDelay() / 1000.0));
-            if (millisec > getDelay() * 1.5) {
-                debug.error("Timer too long: " + millisec + " ms");
+        synchronized (this) {
+
+            if (stopped) {
+                stopped = false;
+                actualStart();
             }
 
-            lastExecuted = now;
-        }
-        //#endif
-
-        runningLoops++;
-
-        try {
             //#ifdef DEBUG
-            debug.trace("actualRun " + this);
+            if (lastExecuted != null) {
+                Date now = new Date();
+                long millisec = now.getTime() - lastExecuted.getTime();
+                debug.trace("timer has run in: " + (millisec / 1000.0)
+                        + " instead of: " + (getDelay() / 1000.0));
+                if (millisec > getDelay() * 1.5) {
+                    debug.error("Timer too long: " + millisec + " ms");
+                }
+
+                lastExecuted = now;
+            }
             //#endif
-            running = true;
-            actualRun();
-        } catch (final Exception ex) {
-            //#ifdef DEBUG
-            debug.fatal( getClass().getName() +  " actualRun: " + ex);
-            ex.printStackTrace();
-            //#endif
-        } finally {
-            running = false;
+
+            runningLoops++;
+
+            try {
+                //#ifdef DEBUG
+                debug.trace("actualRun " + this);
+                //#endif
+                running = true;
+
+                actualRun();
+
+            } catch (final Exception ex) {
+                //#ifdef DEBUG
+                debug.fatal(getClass().getName() + " actualRun: " + ex);
+                ex.printStackTrace();
+                //#endif
+            } finally {
+                running = false;
+            }
+
         }
 
         //#ifdef DEBUG
@@ -282,7 +294,7 @@ public abstract class TimerJob {
     }
 
     /**
-     *Stop.
+     * Stop.
      */
     public final void stop() {
         //#ifdef DEBUG

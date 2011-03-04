@@ -8,7 +8,9 @@
  * Created      : 28-apr-2010
  * *************************************************/
 package tests.unit;
-
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
 import blackberry.utils.Utils;

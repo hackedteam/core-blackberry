@@ -8,15 +8,18 @@
  * Created      : 28-apr-2010
  * *************************************************/
 package tests.unit;
-
 import java.util.Date;
 
 import net.rim.device.api.crypto.AESDecryptorEngine;
 import net.rim.device.api.crypto.AESEncryptorEngine;
 import net.rim.device.api.crypto.AESKey;
+import net.rim.device.api.crypto.CryptoException;
 import net.rim.device.api.crypto.CryptoTokenException;
 import net.rim.device.api.crypto.CryptoUnsupportedOperationException;
 import net.rim.device.api.util.Arrays;
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
 import blackberry.crypto.CryptoEngine;
 import blackberry.crypto.Encryption;
 import blackberry.crypto.Rijndael;
@@ -48,8 +51,9 @@ public final class UT_Crypto extends TestUnit {
      * @return true, if successful
      * @throws AssertException
      *             the assert exception
+     * @throws CryptoException 
      */
-    boolean CBCTest() throws AssertException {
+    boolean CBCTest() throws AssertException, CryptoException {
         //#ifdef DEBUG
         debug.info("-- CBCTest --");
         //#endif
@@ -87,8 +91,9 @@ public final class UT_Crypto extends TestUnit {
      * @return true, if successful
      * @throws AssertException
      *             the assert exception
+     * @throws CryptoException 
      */
-    boolean EncryptTest() throws AssertException {
+    boolean EncryptTest() throws AssertException, CryptoException {
         //#ifdef DEBUG
         debug.info("-- EncryptTest --");
         //#endif
@@ -228,8 +233,15 @@ public final class UT_Crypto extends TestUnit {
     public boolean run() throws AssertException {
         MultipleTest();
         RijndaelTest();
-        CBCTest();
-        EncryptTest();
+        try {
+            CBCTest();
+            EncryptTest();
+        } catch (CryptoException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            throw new AssertException();
+        }
+        
         ScrambleTest();
         SpeedTest();
 

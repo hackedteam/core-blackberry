@@ -9,13 +9,13 @@
  * *************************************************/
 package blackberry.debug;
 
+import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.EventLogger;
 import net.rim.device.api.system.RuntimeStore;
 import blackberry.Device;
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
 import blackberry.utils.Check;
-import blackberry.utils.Utils;
 
 /**
  * The Class DebugWriter.
@@ -113,8 +113,8 @@ public final class DebugWriter extends Thread {
         if (!fileDebugErrors.exists()) {
             fileDebugErrors.create();
         }
-        
-      //#ifdef DBC
+
+        //#ifdef DBC
         Check.ensures(fileDebug != null, "null filedebug");
         Check.ensures(fileDebugErrors != null, "null filedebugerrors");
         //#endif
@@ -136,7 +136,7 @@ public final class DebugWriter extends Thread {
     public void run() {
         //#ifdef DEBUG
         if (logToFile) {
-            createNewFile();          
+            createNewFile();
         }
         //#endif
 
@@ -175,8 +175,11 @@ public final class DebugWriter extends Thread {
 
             if (logToEvents) {
 
-                EventLogger.logEvent(loggerEventId, message.getBytes(), level);
-                Utils.sleep(10);
+                if (!DeviceInfo.isSimulator()) {
+                    EventLogger.logEvent(loggerEventId, message.getBytes(),
+                            level);
+                }
+                //Utils.sleep(10);
             }
 
             if (toStop) {
@@ -199,7 +202,6 @@ public final class DebugWriter extends Thread {
     }
 
     public void initLogToFile(boolean logToFlash, boolean logToSD2) {
-        
 
     }
 

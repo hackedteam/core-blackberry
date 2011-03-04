@@ -9,7 +9,8 @@
  * *************************************************/
 package tests.unit;
 
-
+import tests.TestUnit;
+import tests.Tests;
 
 /**
  * The Class UT_Self.

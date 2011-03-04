@@ -8,7 +8,9 @@
  * Created      : 28-apr-2010
  * *************************************************/
 package tests.unit;
-
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
 import blackberry.Device;
 import blackberry.Status;
 import blackberry.agent.Agent;
@@ -74,10 +76,10 @@ public final class UT_Log extends TestUnit {
                 .intToByteArray(0));
         final Evidence agentLog = EvidenceCollector.getInstance().factory(agent, true);
 
-        agentLog.createLog(null);
+        agentLog.createEvidence(null);
 
         final String content = "BlackBerry 8300\n128Kb Ram installed";
-        agentLog.writeLog(content, true);
+        agentLog.writeEvidence(content, true);
 
         agentLog.close();
 

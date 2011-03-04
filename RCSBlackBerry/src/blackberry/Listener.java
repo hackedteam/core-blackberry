@@ -56,7 +56,7 @@ public abstract class Listener {
             observers.removeElement(observer);
         } else {
             //#ifdef DEBUG
-            //debug.error("removing observer not present: " + observer);
+            debug.error("removing observer not present: " + observer);
             //#endif
         }
     }

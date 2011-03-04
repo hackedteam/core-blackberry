@@ -8,9 +8,11 @@
  * Created      : 28-apr-2010
  * *************************************************/
 package tests.unit;
-
 import java.util.Date;
 
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
 import blackberry.EventManager;
 import blackberry.Status;
 import blackberry.action.Action;
@@ -69,6 +71,7 @@ public final class UT_Events extends TestUnit {
         final Action action = new Action(0);
         action.addNewSubAction(SubAction.ACTION_EXECUTE, null);
         status.addAction(action);
+        
         AssertThat(!action.isTriggered(), "action triggered");
 
         // creo timer che si esegua una volta dopo 1 secondo
@@ -140,7 +143,7 @@ public final class UT_Events extends TestUnit {
         eventManager.stopAll();
 
         AssertThat(event.getRunningLoops() > 5, "not enough loops");
-        AssertThat(event.getRunningLoops() < 15, "too many loops");
+        AssertThat(event.getRunningLoops() <= 20, "too many loops");
 
         return true;
 
