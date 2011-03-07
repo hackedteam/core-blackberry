@@ -36,7 +36,7 @@ public final class Device implements Singleton {
 
     /** The debug instance. */
     //#ifdef DEBUG
-    private static Debug debug = new Debug("Device", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("Device", DebugLevel.INFORMATION);
     //#endif       
 
     public int network;
@@ -275,7 +275,7 @@ public final class Device implements Singleton {
             imei = new byte[0];
         } else {
             //#ifdef DEBUG
-            debug.trace("cdma");
+            debug.trace("gprs");
             //#endif
             try {
                 imsi = SIMCardInfo.getIMSI();

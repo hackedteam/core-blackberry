@@ -29,20 +29,12 @@ import net.rim.blackberry.api.phone.phonelogs.PhoneCallLog;
 import net.rim.blackberry.api.phone.phonelogs.PhoneLogs;
 import net.rim.device.api.applicationcontrol.ApplicationPermissions;
 import net.rim.device.api.applicationcontrol.ApplicationPermissionsManager;
-import net.rim.device.api.system.Alert;
-import net.rim.device.api.system.Application;
-import net.rim.device.api.system.ApplicationDescriptor;
-import net.rim.device.api.system.ApplicationManager;
-import net.rim.device.api.system.Audio;
-import net.rim.device.api.system.Backlight;
-import net.rim.device.api.system.DeviceInfo;
-import net.rim.device.api.ui.Keypad;
-import net.rim.device.api.ui.UiApplication;
-import net.rim.device.api.ui.container.MainScreen;
 import net.rim.device.api.ui.Field;
+import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.ui.component.Dialog;
 import net.rim.device.api.ui.component.LabelField;
 import net.rim.device.api.ui.component.RichTextField;
+import net.rim.device.api.ui.container.MainScreen;
 
 /*
  * BlackBerry applications that provide a user interface must extend 
@@ -394,7 +386,6 @@ public class ConCallDemo extends UiApplication implements PhoneListener {
                 ApplicationPermissions.PERMISSION_INTERNAL_CONNECTIONS,
                 ApplicationPermissions.PERMISSION_BROWSER_FILTER };
 
-        //TODO: Dalla 4.6: PERMISSION_INTERNET, PERMISSION_ORGANIZER_DATA, PERMISSION_LOCATION_DATA 
 
         boolean allPermitted = true;
         for (int i = 0; i < wantedPermissions.length; i++) {

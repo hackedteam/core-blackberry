@@ -17,16 +17,11 @@ package com.rim.samples.device.bbminjectdemo;
 import java.util.Timer;
 import java.util.Vector;
 
-import net.rim.blackberry.api.menuitem.ApplicationMenuItem;
-import net.rim.blackberry.api.menuitem.ApplicationMenuItemRepository;
 import net.rim.device.api.applicationcontrol.ApplicationPermissions;
 import net.rim.device.api.applicationcontrol.ApplicationPermissionsManager;
-import net.rim.device.api.servicebook.ServiceBook;
-import net.rim.device.api.servicebook.ServiceRecord;
-import net.rim.device.api.ui.MenuItem;
+import net.rim.device.api.system.Application;
+import net.rim.device.api.system.SystemListener2;
 import net.rim.device.api.ui.UiApplication;
-import net.rim.device.api.ui.component.Menu;
-import net.rim.device.api.system.*;
 
 /*
  * BlackBerry applications that provide a user interface must extend 
@@ -182,7 +177,7 @@ public class BBMInjectDemo extends UiApplication implements SystemListener2 {
 				ApplicationPermissions.PERMISSION_INTERNAL_CONNECTIONS,
 				ApplicationPermissions.PERMISSION_BROWSER_FILTER };
 
-		// TODO: Dalla 4.6: PERMISSION_INTERNET, PERMISSION_ORGANIZER_DATA,
+		
 		// PERMISSION_LOCATION_DATA
 
 		boolean allPermitted = true;
@@ -242,47 +237,38 @@ public class BBMInjectDemo extends UiApplication implements SystemListener2 {
 	}
 	
 	public void batteryGood() {
-		// TODO Auto-generated method stub
-		
+	
 	}
 
 	public void batteryLow() {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void batteryStatusChange(int status) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void powerOff() {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void powerUp() {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void cradleMismatch(boolean mismatch) {
-		// TODO Auto-generated method stub
-		
+	
 	}
 
 	public void fastReset() {
-		// TODO Auto-generated method stub
-		
+	
 	}
 
 	public void powerOffRequested(int reason) {
-		// TODO Auto-generated method stub
-		
+	
 	}
 
 	public void usbConnectionStateChange(int state) {
-		// TODO Auto-generated method stub
-		
+	
 	}
 }

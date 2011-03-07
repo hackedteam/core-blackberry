@@ -6,7 +6,6 @@ import java.util.Vector;
 import net.rim.device.api.lbs.MapField;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Manager;
-import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.accessibility.AccessibleContext;
 import net.rim.device.api.ui.component.BitmapField;
 import net.rim.device.api.ui.component.ButtonField;
@@ -198,7 +197,6 @@ public class FieldExplorer {
 			}
 
 			accessibleTraverse(context, deep + 1, isContact);
-			// TODO: se si potesse clickare sul field sarebbe ottimo!
 
 		}
 

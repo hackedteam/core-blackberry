@@ -49,7 +49,7 @@ public class Conversation {
 	}
 
 	private void log(Line line) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 }

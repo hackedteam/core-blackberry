@@ -63,6 +63,7 @@ public class TimestampMarkup extends Markup {
         }
     }
 
+    //TODO: questo metod ha prodotto un eccezione nul pointer in makeMarkupName
     protected synchronized boolean writeMarkup(Hashtable dict) {
         final byte[] payload = new byte[MARKUP_SIZE];
         final DataBuffer dataBuffer = new DataBuffer(payload, 0, MARKUP_SIZE,

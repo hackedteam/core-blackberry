@@ -6,12 +6,14 @@ public interface AppInjectorInterface {
 
     boolean deleteMenu();
 
-    boolean callMenuByKey(int type);
+    boolean callMenuByKey();
 
     String getAppName();
 
     void callMenuInContext();
 
     boolean isInfected();
+
+    int getDelay();
 
 }

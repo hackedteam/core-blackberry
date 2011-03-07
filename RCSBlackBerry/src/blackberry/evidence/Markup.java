@@ -120,7 +120,7 @@ public class Markup {
             final byte[] challengeKey = keys.getChallengeKey();
             //#ifdef DBC
             Check.asserts(challengeKey != null,
-                    "makeMarkupName: challengeKey!=null");
+                    "makeMarkupName: challengeKey==null");
             //#endif
             markupSeed = challengeKey[0];
             markupInit = true;
