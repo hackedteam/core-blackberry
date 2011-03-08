@@ -16,6 +16,7 @@ import tests.unit.UT_Conf;
 import tests.unit.UT_Crypto;
 import tests.unit.UT_Events;
 import tests.unit.UT_File;
+import tests.unit.UT_ImAgent;
 import tests.unit.UT_Log;
 import tests.unit.UT_LogCollector;
 import tests.unit.UT_Mail;
@@ -90,8 +91,8 @@ public final class Tests {
             
         }
         
-   
-        addTest(new UT_SmsAgent("SmsAgent", this));
+        addTest(new UT_Utils("Utils", this));
+        addTest(new UT_ImAgent("ImAgent", this));
         
                
     }

@@ -2,8 +2,6 @@ package blackberry.agent.im;
 
 import java.util.Vector;
 
-import net.rim.device.api.util.StringUtilities;
-
 /**
  * Rappresenta una conversazione tra un certo numero di utenti.
  * Tiene traccia delle ultime linee.
@@ -28,7 +26,7 @@ public class Conversation {
 
 	Vector lastLines = new Vector();
 	
-	int archivedPos(Line line){
+	int archivedPos(String line){
 		return lastLines.indexOf(line);
 	}
 	
@@ -38,17 +36,17 @@ public class Conversation {
 		}
 	}
 	
-	boolean addLine(Line line){
+	boolean addLine(String line){
 		
 		if(!lastLines.contains(line)){
-			log(line);
+			//log(line);
 			lastLines.addElement(line);
 			return true;
 		}
 		return false;
 	}
 
-	private void log(Line line) {
+	private void log(String line) {
 		
 		
 	}

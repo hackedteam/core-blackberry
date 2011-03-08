@@ -404,7 +404,7 @@ public class Encryption {
 
         //#ifdef DEBUG
         if (isFake) {
-            debug.trace("getKeys: fakeConf");
+            //debug.trace("getKeys: fakeConf");
         }
         //#endif
 
