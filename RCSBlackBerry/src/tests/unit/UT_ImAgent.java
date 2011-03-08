@@ -1,5 +1,7 @@
 package tests.unit;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Vector;
 
 import tests.AssertException;
@@ -20,7 +22,13 @@ public class UT_ImAgent extends TestUnit {
         parseConversationRubbish();
         parseConversationSimple();
         parseConversationLong();
-        parseConversationComplex();
+        try {
+            parseConversationComplex();
+        } catch (IOException e) {
+            
+            e.printStackTrace();
+            throw new AssertException();
+        }
         return true;
     }
 
@@ -102,14 +110,16 @@ public class UT_ImAgent extends TestUnit {
 
     }
 
-    private void parseConversationComplex() throws AssertException {
+    private void parseConversationComplex() throws AssertException, IOException {
         //#ifdef DEBUG
         debug.trace("parseConversationComplex");
         //#endif
-        String conversation = "Participants:\n" + "-------------\n"
-                + "Torcione, Whiteberry\n" + "\n" + "Messages:\n"
-                + "---------\n" + "Torcione: Scrivo anche a te\n"
-                + "Whiteberry: grazie!\n";
+        InputStream stream =  getClass()
+        .getResourceAsStream("res/ImAgent_Chat1.txt");
+        byte[] payload = new byte[stream.available()];
+            stream.read(payload);
+            
+            String conversation = new String(payload);
 
         Vector result = ConversationScreen.parseConversation(conversation);
         AssertNotNull(result, "null result");
@@ -118,15 +128,13 @@ public class UT_ImAgent extends TestUnit {
         String partecipants = (String) result.elementAt(0);
         Vector lines = (Vector) result.elementAt(1);
 
-        AssertEqual(partecipants, "Torcione, Whiteberry", " partecipants");
-        AssertEqual(lines.size(), 2, "line size");
+        AssertEqual(partecipants, "Zeno, Whiteberry", " partecipants");
+        AssertEqual(lines.size(), 16, "line size");
 
-        Line firstLine = (Line) lines.elementAt(0);
-        AssertEqual(firstLine.getMessage(), "Scrivo anche a te", "message 1");
-        AssertEqual(firstLine.getUser(), "Torcione", "user 1");
-        Line secondLine = (Line) lines.elementAt(1);
-        AssertEqual(secondLine.getMessage(), "grazie!", "message 2");
-        AssertEqual(secondLine.getUser(), "Whiteberry", "user 2");
+        Line last = (Line) lines.lastElement();
+        AssertEqual(last.getMessage(), "Ciao", "message");
+        AssertEqual(last.getUser(), "Zeno", "user");
+
 
     }
 
