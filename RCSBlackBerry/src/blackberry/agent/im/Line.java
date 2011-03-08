@@ -91,5 +91,9 @@ public class Line {
     public String getMessage() {
         return message;
     }
+    
+    public String getUser() {
+        return user;
+    }
 
 }

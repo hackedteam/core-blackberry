@@ -1,4 +1,4 @@
-<class-diagram version="1.0.0" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+<class-diagram version="1.0.1" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
   associations="true" dependencies="false" nesting-relationships="true">  
   <class id="1" corner="BOTTOM_RIGHT" language="java" name="blackberry.Task" project="RCSBlackBerry" 
     file="/RCSBlackBerry/src/blackberry/Task.java" binary="false">    
@@ -24,14 +24,6 @@
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="4" corner="BOTTOM_RIGHT" language="java" name="blackberry.Main.Main" project="RCSBlackBerry" 
-    file="/RCSBlackBerry/src/blackberry/Main.java" binary="false">    
-    <position x="119" y="-137" width="-1" height="-1"/>    
-    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true"/>      
-      <operations public="true" package="true" protected="true" private="true"/>    
-    </display>  
-  </class>  
   <class id="5" corner="BOTTOM_RIGHT" language="java" name="blackberry.Core" project="RCSBlackBerry" 
     file="/RCSBlackBerry/src/blackberry/Core.java" binary="false">    
     <position x="101" y="92" width="-1" height="-1"/>    
@@ -49,23 +41,11 @@
     </display>  
   </class>  
   <association>    
-    <end type="SOURCE" nodeId="6" navigable="false">      
-      <attribute name="instance"/>      
+    <end type="SOURCE" nodeId="1" navigable="false">      
+      <attribute name="status"/>      
       <multiplicity minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" nodeId="6" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <nesting>    
-    <end type="SOURCE" nodeId="3"/>    
-    <end type="TARGET" nodeId="4"/>  
-  </nesting>  
-  <association>    
-    <end type="SOURCE" nodeId="5" navigable="false">      
-      <attribute name="task"/>      
-      <multiplicity minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" nodeId="1" navigable="true"/>    
+    <end type="TARGET" nodeId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association>    
@@ -74,6 +54,22 @@
       <multiplicity minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" nodeId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association>    
+    <end type="SOURCE" nodeId="6" navigable="false">      
+      <attribute name="instance"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" nodeId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association>    
+    <end type="SOURCE" nodeId="5" navigable="false">      
+      <attribute name="instance"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" nodeId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association>    
@@ -85,19 +81,11 @@
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association>    
-    <end type="SOURCE" nodeId="1" navigable="false">      
-      <attribute name="status"/>      
-      <multiplicity minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" nodeId="2" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association>    
     <end type="SOURCE" nodeId="5" navigable="false">      
-      <attribute name="instance"/>      
+      <attribute name="task"/>      
       <multiplicity minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" nodeId="5" navigable="true"/>    
+    <end type="TARGET" nodeId="1" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association>    
