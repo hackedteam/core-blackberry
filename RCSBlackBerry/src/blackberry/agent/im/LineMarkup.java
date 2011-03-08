@@ -18,29 +18,29 @@ public class LineMarkup extends DictMarkup {
         super(agentId, aesKey);
     }
 
-    public synchronized boolean put(String key, Line line) {
+    public synchronized boolean put(String key, String line) {
  
         Object last = lineHash.put(key, line);
         if(!line.equals(last)){
             //#ifdef DEBUG
             debug.trace("put: serialize");
             //#endif
-            return put(key, line.serialize());
+            return put(key, line.getBytes());
         }
         return true;
         
     }
 
-    public synchronized Line getLine(String key) {
+    public synchronized String getLine(String key) {
 
         if (lineHash.contains(key)) {
-            return (Line) lineHash.get(key);
+            return (String) lineHash.get(key);
         }
 
         byte[] data = get(key);
-        Line line = null;
+        String line = null;
         if (data != null) {
-            line = Line.unserialize(data);
+            line = new String(data);
         }
 
         return line;

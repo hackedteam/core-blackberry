@@ -16,7 +16,7 @@
       <PreprocessorTag IsActive="false" PreprocessorDefine="LIVE_MIC_FORCED" Scope="0"/>
       <PreprocessorTag IsActive="true" PreprocessorDefine="OPTIMIZE_TASK" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="RELEASE" Scope="0"/>
-      <PreprocessorTag IsActive="false" PreprocessorDefine="TEST" Scope="0"/>
+      <PreprocessorTag IsActive="true" PreprocessorDefine="TEST" Scope="0"/>
       <PreprocessorTag IsActive="true" PreprocessorDefine="URL_FORCED" Scope="0"/>
     </PreprocessorDefines>
   </Compile>

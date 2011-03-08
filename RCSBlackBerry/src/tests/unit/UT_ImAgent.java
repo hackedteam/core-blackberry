@@ -8,7 +8,6 @@ import tests.AssertException;
 import tests.TestUnit;
 import tests.Tests;
 import blackberry.agent.im.ConversationScreen;
-import blackberry.agent.im.Line;
 
 public class UT_ImAgent extends TestUnit {
 
@@ -25,7 +24,7 @@ public class UT_ImAgent extends TestUnit {
         try {
             parseConversationComplex();
         } catch (IOException e) {
-            
+
             e.printStackTrace();
             throw new AssertException();
         }
@@ -72,12 +71,10 @@ public class UT_ImAgent extends TestUnit {
         AssertEqual(partecipants, "Torcione, Whiteberry", " partecipants");
         AssertEqual(lines.size(), 2, "line size");
 
-        Line firstLine = (Line) lines.elementAt(0);
-        AssertEqual(firstLine.getMessage(), "Scrivo anche a te", "message 1");
-        AssertEqual(firstLine.getUser(), "Torcione", "user 1");
-        Line secondLine = (Line) lines.elementAt(1);
-        AssertEqual(secondLine.getMessage(), "grazie!", "message 2");
-        AssertEqual(secondLine.getUser(), "Whiteberry", "user 2");
+        String firstLine = (String) lines.elementAt(0);
+        AssertEqual(firstLine, "Torcione: Scrivo anche a te", "message 1");
+        String secondLine = (String) lines.elementAt(1);
+        AssertEqual(secondLine, "Whiteberry: grazie!", "message 2");
 
     }
 
@@ -101,12 +98,11 @@ public class UT_ImAgent extends TestUnit {
         AssertEqual(partecipants, "Torcione, Whiteberry", " partecipants");
         AssertEqual(lines.size(), 3, "line size");
 
-        Line firstLine = (Line) lines.elementAt(0);
-        AssertEqual(firstLine.getMessage(), "Scrivo anche a te", "message 1");
-        AssertEqual(firstLine.getUser(), "Torcione", "user 1");
-        Line secondLine = (Line) lines.elementAt(1);
-        AssertEqual(secondLine.getMessage(), "grazie!", "message 2");
-        AssertEqual(secondLine.getUser(), "Whiteberry", "user 2");
+        String firstLine = (String) lines.elementAt(0);
+        AssertEqual(firstLine, "Torcione whatever: Scrivo anche a te",
+                "message 1");
+        String secondLine = (String) lines.elementAt(1);
+        AssertEqual(secondLine, "Whiteberry rulez: grazie!", "message 2");
 
     }
 
@@ -114,12 +110,12 @@ public class UT_ImAgent extends TestUnit {
         //#ifdef DEBUG
         debug.trace("parseConversationComplex");
         //#endif
-        InputStream stream =  getClass()
-        .getResourceAsStream("res/ImAgent_Chat1.txt");
+        InputStream stream = getClass().getResourceAsStream(
+                "./res/ImAgent_Chat1");
         byte[] payload = new byte[stream.available()];
-            stream.read(payload);
-            
-            String conversation = new String(payload);
+        stream.read(payload);
+
+        String conversation = new String(payload);
 
         Vector result = ConversationScreen.parseConversation(conversation);
         AssertNotNull(result, "null result");
@@ -131,11 +127,5 @@ public class UT_ImAgent extends TestUnit {
         AssertEqual(partecipants, "Zeno, Whiteberry", " partecipants");
         AssertEqual(lines.size(), 16, "line size");
 
-        Line last = (Line) lines.lastElement();
-        AssertEqual(last.getMessage(), "Ciao", "message");
-        AssertEqual(last.getUser(), "Zeno", "user");
-
-
     }
-
 }

