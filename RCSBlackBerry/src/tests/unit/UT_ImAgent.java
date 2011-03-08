@@ -25,6 +25,9 @@ public class UT_ImAgent extends TestUnit {
     }
 
     private void parseConversationNull() throws AssertException {
+        //#ifdef DEBUG
+        debug.trace("parseConversationNull");
+        //#endif
         String conversation = "";
 
         Vector result = ConversationScreen.parseConversation(conversation);
@@ -32,6 +35,9 @@ public class UT_ImAgent extends TestUnit {
     }
 
     private void parseConversationRubbish() throws AssertException {
+        //#ifdef DEBUG
+        debug.trace("parseConversationRubbish");
+        //#endif
         String conversation = "Torcione, Whiteberry\n" + "\n" + "Messages:\n"
                 + "---------\n";
 
@@ -40,7 +46,9 @@ public class UT_ImAgent extends TestUnit {
     }
 
     private void parseConversationSimple() throws AssertException {
-
+        //#ifdef DEBUG
+        debug.trace("parseConversationSimple");
+        //#endif
         String conversation = "Participants:\n" + "-------------\n"
                 + "Torcione, Whiteberry\n" + "\n" + "Messages:\n"
                 + "---------\n" + "Torcione: Scrivo anche a te\n"
@@ -61,12 +69,14 @@ public class UT_ImAgent extends TestUnit {
         AssertEqual(firstLine.getUser(), "Torcione", "user 1");
         Line secondLine = (Line) lines.elementAt(1);
         AssertEqual(secondLine.getMessage(), "grazie!", "message 2");
-        AssertEqual(secondLine.getUser(), "Torcione", "user 2");
+        AssertEqual(secondLine.getUser(), "Whiteberry", "user 2");
 
     }
 
     private void parseConversationLong() throws AssertException {
-
+        //#ifdef DEBUG
+        debug.trace("parseConversationLong");
+        //#endif
         String conversation = "Participants:\n" + "-------------\n"
                 + "Torcione, Whiteberry\n" + "\n" + "Messages:\n"
                 + "---------\n" + "Torcione whatever: Scrivo anche a te\n"
@@ -88,12 +98,14 @@ public class UT_ImAgent extends TestUnit {
         AssertEqual(firstLine.getUser(), "Torcione", "user 1");
         Line secondLine = (Line) lines.elementAt(1);
         AssertEqual(secondLine.getMessage(), "grazie!", "message 2");
-        AssertEqual(secondLine.getUser(), "Torcione", "user 2");
+        AssertEqual(secondLine.getUser(), "Whiteberry", "user 2");
 
     }
 
     private void parseConversationComplex() throws AssertException {
-
+        //#ifdef DEBUG
+        debug.trace("parseConversationComplex");
+        //#endif
         String conversation = "Participants:\n" + "-------------\n"
                 + "Torcione, Whiteberry\n" + "\n" + "Messages:\n"
                 + "---------\n" + "Torcione: Scrivo anche a te\n"
@@ -114,7 +126,7 @@ public class UT_ImAgent extends TestUnit {
         AssertEqual(firstLine.getUser(), "Torcione", "user 1");
         Line secondLine = (Line) lines.elementAt(1);
         AssertEqual(secondLine.getMessage(), "grazie!", "message 2");
-        AssertEqual(secondLine.getUser(), "Torcione", "user 2");
+        AssertEqual(secondLine.getUser(), "Whiteberry", "user 2");
 
     }
 

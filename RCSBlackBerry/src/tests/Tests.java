@@ -91,7 +91,7 @@ public final class Tests {
             
         }
         
-   
+        addTest(new UT_Utils("Utils", this));
         addTest(new UT_ImAgent("ImAgent", this));
         
                

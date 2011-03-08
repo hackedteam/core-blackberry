@@ -20,7 +20,6 @@ import net.rim.device.api.util.NumberUtilities;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-
 /**
  * The Class Utils.
  */
@@ -29,6 +28,7 @@ public final class Utils {
     /** The debug instance. */
     //#ifdef DEBUG
     private static Debug debug = new Debug("Utils", DebugLevel.VERBOSE);
+
     //#endif
 
     //final static Random RANDOM = new Random();
@@ -245,12 +245,11 @@ public final class Utils {
         }
     }
 
-    public static byte[] concat(final byte[] first, 
-            final byte[] second) {
-        return concat(first, first.length,second, second.length);
-        
+    public static byte[] concat(final byte[] first, final byte[] second) {
+        return concat(first, first.length, second, second.length);
+
     }
-    
+
     /**
      * Concatena first e second.
      * 
@@ -292,26 +291,26 @@ public final class Utils {
         Check.requires(second != null, "second null");
         //#endif
 
-        if(first.length < offsetFirst + len){
+        if (first.length < offsetFirst + len) {
             //#ifdef DEBUG
-            debug.trace("equals: wrong first len: " +first.length);
+            debug.trace("equals: wrong first len: " + first.length);
             //#endif
             return false;
         }
-        
-        if(second.length < offsetSecond + len ){
+
+        if (second.length < offsetSecond + len) {
             //#ifdef DEBUG
-            debug.trace("equals: wrong second len: "+second.length);
+            debug.trace("equals: wrong second len: " + second.length);
             //#endif
             return false;
         }
-        
+
         for (int i = 0; i < len; i++) {
             if (first[i + offsetFirst] != second[i + offsetSecond]) {
                 return false;
             }
         }
-        
+
         return true;
     }
 
@@ -706,7 +705,10 @@ public final class Utils {
             if (separators.indexOf(ch) >= 0) {
                 if (!skip) {
                     final String word = fullCommand.substring(pos, i);
-                    vector.addElement(word);
+                    if (word != null && word.length() > 0) {
+                        vector.addElement(word);
+                        
+                    }
                     skip = true;
                 }
             } else {
@@ -717,16 +719,19 @@ public final class Utils {
             }
         }
 
-        if (pos < fullCommand.length()) {
+        if (!skip && pos < fullCommand.length()) {
             final String word = fullCommand.substring(pos);
-            vector.addElement(word);
+            if (word != null && word.length() > 0) {
+                vector.addElement(word);
+            }
+
         }
 
         return vector;
     }
 
-    public static int randomInt() {        
-        return RandomSource.getInt();        
+    public static int randomInt() {
+        return RandomSource.getInt();
     }
 
     /**
@@ -764,7 +769,8 @@ public final class Utils {
             databuffer.writeInt(header);
             databuffer.write(WChar.getBytes(name, false));
             //#ifdef DEBUG
-            debug.trace("addTypedString: " + name + " type: " + NumberUtilities.intToHexDigit(type) + "  len: "
+            debug.trace("addTypedString: " + name + " type: "
+                    + NumberUtilities.intToHexDigit(type) + "  len: "
                     + (header & 0x00ffffff));
             //#endif
         }
@@ -795,5 +801,15 @@ public final class Utils {
         }
         return false;
 
+    }
+
+    public static String firstWord(String string) {
+        string = string.trim();
+        int firstSpace = string.indexOf(" ");
+        if (firstSpace == -1) {
+            return string;
+        } else {
+            return string.substring(0, firstSpace).trim();
+        }
     }
 }
