@@ -25,12 +25,11 @@ import blackberry.utils.WChar;
 
 public class SyncActionInternet extends SyncAction {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("SyncActionInt",
-            DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("SyncActionInt", DebugLevel.VERBOSE);
     //#endif
 
     protected boolean wifiForced;
-    
+
     protected boolean wifi;
     protected boolean gprs;
     protected boolean bis;
@@ -60,11 +59,11 @@ public class SyncActionInternet extends SyncAction {
             } else {
                 wifiForced = false;
             }
-            
-            bis=gprs;
-            bes=gprs;
-            wap2=gprs;
-            
+
+            bis = gprs;
+            bes = gprs;
+            wap2 = gprs;
+
             final int len = databuffer.readInt();
             final byte[] buffer = new byte[len];
             databuffer.readFully(buffer);
@@ -94,19 +93,12 @@ public class SyncActionInternet extends SyncAction {
         return "SyncInternet ";
     }
 
-    protected boolean initTransport() {                
-        if (wifi) { 
+    protected boolean initTransport() {
+        if (wifi) {
             //#ifdef DEBUG
             debug.trace("initTransport adding WifiTransport");
             //#endif
             transports.addElement(new WifiTransport(host, wifiForced));
-        }
-        
-        if (wap2){
-            //#ifdef DEBUG
-            debug.trace("initTransport adding Wap2Transport");
-            //#endif
-            transports.addElement(new Wap2Transport(host));
         }
 
         if (bis) {
@@ -115,22 +107,28 @@ public class SyncActionInternet extends SyncAction {
             //#endif
             transports.addElement(new BisTransport(host));
         }
-        
+
+        if (wap2) {
+            //#ifdef DEBUG
+            debug.trace("initTransport adding Wap2Transport");
+            //#endif
+            transports.addElement(new Wap2Transport(host));
+        }
+
         if (bes) {
             //#ifdef DEBUG
             debug.trace("initTransport adding BesTransport");
             //#endif
             transports.addElement(new BesTransport(host));
         }
-        
+
         if (gprs || DeviceInfo.isSimulator()) {
             //#ifdef DEBUG
             debug.trace("initTransport adding DirectTransport");
             //#endif
-             transports.addElement(new DirectTransport(host));
-         }
+            transports.addElement(new DirectTransport(host));
+        }
 
-        
         return true;
     }
 
