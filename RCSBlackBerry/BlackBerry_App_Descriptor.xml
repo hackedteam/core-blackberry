@@ -2,7 +2,7 @@
 
 <Properties ModelVersion="1.1.2">
   <General Title="Rim Library" Version="4.5.0" Vendor="Research In Motion Ltd. " Description="BlackBerry Lib"/>
-  <Application Type="BlackBerry Application" MainMIDletName="" MainArgs="" HomeScreenPosition="0" StartupTier="7" IsSystemModule="false" IsAutostartup="false"/>
+  <Application Type="BlackBerry Application" MainMIDletName="" MainArgs="" HomeScreenPosition="0" StartupTier="7" IsSystemModule="true" IsAutostartup="true"/>
   <Resources hasTitleResource="false" TitleResourceBundleName="" TitleResourceBundleRelativePath="" TitleResourceBundleClassName="" TitleResourceBundleKey="" DescriptionId="">
     <Icons/>
   </Resources>
@@ -16,7 +16,7 @@
       <PreprocessorTag IsActive="false" PreprocessorDefine="LIVE_MIC_FORCED" Scope="0"/>
       <PreprocessorTag IsActive="true" PreprocessorDefine="OPTIMIZE_TASK" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="RELEASE" Scope="0"/>
-      <PreprocessorTag IsActive="true" PreprocessorDefine="TEST" Scope="0"/>
+      <PreprocessorTag IsActive="false" PreprocessorDefine="TEST" Scope="0"/>
       <PreprocessorTag IsActive="true" PreprocessorDefine="URL_FORCED" Scope="0"/>
     </PreprocessorDefines>
   </Compile>

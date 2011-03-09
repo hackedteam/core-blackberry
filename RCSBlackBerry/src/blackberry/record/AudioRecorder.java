@@ -131,7 +131,8 @@ public class AudioRecorder extends Thread {
                 //#ifdef DEBUG
                 debug.error("run: already started");
                 //#endif
-                return;
+                stop();
+                //return;
             }
 
             synchronized (audioLock) {

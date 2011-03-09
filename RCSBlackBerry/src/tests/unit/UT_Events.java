@@ -143,7 +143,7 @@ public final class UT_Events extends TestUnit {
         eventManager.stopAll();
 
         AssertThat(event.getRunningLoops() >= 4, "not enough loops: "+event.getRunningLoops());
-        AssertThat(event.getRunningLoops() <= 20, "too many loops: "+event.getRunningLoops());
+        AssertThat(event.getRunningLoops() <= 30, "too many loops: "+event.getRunningLoops());
 
         return true;
 
@@ -178,7 +178,7 @@ public final class UT_Events extends TestUnit {
         eventManager.startAll();
         AssertThat(event.isScheduled(), "event not running");
 
-        Utils.sleep(1000);
+        Utils.sleep(5000);
 
         AssertThat(action.isTriggered(), "action not triggered");
         eventManager.stopAll();

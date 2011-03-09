@@ -1,4 +1,5 @@
 package tests.unit;
+
 import tests.AssertException;
 import tests.TestUnit;
 import tests.Tests;
@@ -43,7 +44,7 @@ public class UT_Recorder extends TestUnit {
     }
 
     private void ChunksHeader() throws AssertException {
-        
+
         //#ifdef DEBUG
         debug.info("-- Recorder Chunks --");
         //#endif
@@ -53,36 +54,40 @@ public class UT_Recorder extends TestUnit {
 
         final AudioRecorder recorder = new AudioRecorder();
 
-        //#ifdef DEBUG
-        debug.info("start");
-        //#endif
-        recorder.start();
-        Utils.sleep(1000);
-        //#ifdef DEBUG
-        debug.info("getchunk 1");
-        //#endif
-        byte[] chunk = recorder.getChunk(chunksize);
-        AssertNotNull(chunk, "Null chunk 1");
-        AssertThat(chunk.length == chunksize, "wrong len chunk 1");
-        boolean hasHeader = Utils.equals(chunk, 0, header, 0, header.length);
+        try {
+            //#ifdef DEBUG
+            debug.info("start");
+            //#endif
+            recorder.start();
+            Utils.sleep(1000);
+            //#ifdef DEBUG
+            debug.info("getchunk 1");
+            //#endif
+            byte[] chunk = recorder.getChunk(chunksize);
+            AssertNotNull(chunk, "Null chunk 1");
+            AssertThat(chunk.length == chunksize, "wrong len chunk 1");
+            boolean hasHeader = Utils
+                    .equals(chunk, 0, header, 0, header.length);
 
-        AssertThat(hasHeader, "no header");
+            AssertThat(hasHeader, "no header");
 
-        Utils.sleep(1000);
-        //#ifdef DEBUG
-        debug.info("getchunk 2");
-        //#endif
-        chunk = recorder.getChunk(chunksize);
-        AssertNotNull(chunk, "Null chunk 2");
-        AssertThat(chunk.length == chunksize, "wrong len chunk 2");
-        hasHeader = Utils.equals(chunk, 0, header, 0, header.length);
+            Utils.sleep(1000);
+            //#ifdef DEBUG
+            debug.info("getchunk 2");
+            //#endif
+            chunk = recorder.getChunk(chunksize);
+            AssertNotNull(chunk, "Null chunk 2");
+            AssertThat(chunk.length == chunksize, "wrong len chunk 2");
+            hasHeader = Utils.equals(chunk, 0, header, 0, header.length);
 
-        AssertThat(!hasHeader, "header");
+            AssertThat(!hasHeader, "header");
 
-        //#ifdef DEBUG
-        debug.info("stop");
-        //#endif
-        recorder.stop();
+            //#ifdef DEBUG
+            debug.info("stop");
+            //#endif
+        } finally {
+            recorder.stop();
+        }
         AssertNotNull(recorder, "Null recorder");
     }
 
