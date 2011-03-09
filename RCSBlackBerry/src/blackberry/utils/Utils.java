@@ -733,6 +733,10 @@ public final class Utils {
     public static int randomInt() {
         return RandomSource.getInt();
     }
+    
+    public static long randomLong() {
+        return RandomSource.getLong();
+    }
 
     /**
      * Restituisce una stringa senza spazi Es: "333 1234" diventa: "3331234"
