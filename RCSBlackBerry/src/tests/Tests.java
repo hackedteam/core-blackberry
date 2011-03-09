@@ -39,7 +39,7 @@ public final class Tests {
     static Debug debug = new Debug("Tests", DebugLevel.VERBOSE);
     //#endif
 
-    static boolean full = false;
+    static boolean full = true;
 
     private static Tests instance = null;
 
