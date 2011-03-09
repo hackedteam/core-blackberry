@@ -594,9 +594,9 @@ public final class Evidence {
         }
     }
 
-    public synchronized void atomicWriteOnce(byte[] additionalData, byte[] plain) {
+    public synchronized void atomicWriteOnce(byte[] additionalData, byte[] content) {
         createEvidence(additionalData);
-        writeEvidence(plain);
+        writeEvidence(content);
         close();
     }
 
@@ -615,6 +615,13 @@ public final class Evidence {
     public synchronized void atomicWriteOnce(String string) {
         createEvidence(null);
         writeEvidence(WChar.getBytes(string, true));
+        close();
+    }
+
+    public void atomicWriteOnce(byte[] additionalData, int logType,
+            byte[] content) {
+        createEvidence(additionalData, logType);
+        writeEvidence(content);
         close();
     }
 }

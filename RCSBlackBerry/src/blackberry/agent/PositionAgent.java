@@ -38,7 +38,6 @@ import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 
-
 /**
  * The Class PositionAgent.
  */
@@ -228,8 +227,8 @@ public final class PositionAgent extends Agent implements LocationObserver {
             //#ifdef DEBUG
             debug.info("Wifi: " + wifi.getBSSID());
             //#endif
-            final byte[] payload = getWifiPayload(wifi.getBSSID(), wifi
-                    .getSSID(), wifi.getSignalLevel());
+            final byte[] payload = getWifiPayload(wifi.getBSSID(),
+                    wifi.getSSID(), wifi.getSignalLevel());
 
             logWifi.createEvidence(getAdditionalData(1, LOG_TYPE_WIFI),
                     EvidenceType.LOCATION_NEW);
@@ -435,13 +434,14 @@ public final class PositionAgent extends Agent implements LocationObserver {
         databuffer.writeInt(Evidence.EVIDENCE_DELIMITER);
 
         //#ifdef DBC
-        Check.ensures(databuffer.getPosition() == size, "saveEvidence wrong size");
+        Check.ensures(databuffer.getPosition() == size,
+                "saveEvidence wrong size");
         //#endif
 
         // save log
-        //log.createLog(null, LogType.LOCATION);
+
         acutalEvidence.writeEvidence(message);
-        //log.close();
+
     }
 
     private byte[] getWifiPayload(String bssid, String ssid, int signalLevel) {
@@ -463,9 +463,7 @@ public final class PositionAgent extends Agent implements LocationObserver {
             //#endif
 
             //#ifdef DBC
-            Check
-                    .asserts(token.length == 1,
-                            "getWifiPayload: token wrong size");
+            Check.asserts(token.length == 1, "getWifiPayload: token wrong size");
             //#endif
             databuffer.writeByte(token[0]);
         }

