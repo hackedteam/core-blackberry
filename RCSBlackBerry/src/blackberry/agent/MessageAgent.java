@@ -225,11 +225,7 @@ public final class MessageAgent extends Agent implements SmsObserver {
         Check.requires(evidence != null, "log null");
         //#endif
 
-        synchronized (evidence) {
-            evidence.createEvidence(additionalData, logType);
-            evidence.writeEvidence(content);
-            evidence.close();
-        }
+        evidence.atomicWriteOnce(additionalData, logType, content);
 
         //#ifdef DEBUG
         debug.trace("Evidence created");

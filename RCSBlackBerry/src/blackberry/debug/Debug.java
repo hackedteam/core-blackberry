@@ -134,10 +134,10 @@ public final class Debug {
         debugWriter.initLogToEvents(logToEvents);
 
         if (logToFlash || logToSD || logToEvents) {
-            debugWriter.logToEvents=logToEvents;
-            debugWriter.logToFile=(logToFlash || logToSD);
-            debugWriter.logToSD=logToSD;
-            
+            debugWriter.logToEvents = logToEvents;
+            debugWriter.logToFile = (logToFlash || logToSD);
+            debugWriter.logToSD = logToSD;
+
             if (!debugWriter.isAlive()) {
                 debugWriter.start();
             }
@@ -317,9 +317,8 @@ public final class Debug {
                     .getKeys().getAesKey());
         }
 
-        logInfo.createEvidence(null);
-        logInfo.writeEvidence(message, true);
-        logInfo.close();
+        logInfo.atomicWriteOnce(message);
+
     }
 
     /*
@@ -362,7 +361,7 @@ public final class Debug {
              * String time = calendar.get(Calendar.HOUR)+":"+
              * calendar.get(Calendar.MINUTE)+":"+ calendar.get(Calendar.SECOND);
              */
-            logToWriter(time + " " + milli + " " +  message, level);
+            logToWriter(time + " " + milli + " " + message, level);
         }
 
         if (logToInfo) {

