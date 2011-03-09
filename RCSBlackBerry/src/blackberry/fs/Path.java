@@ -347,6 +347,7 @@ public final class Path {
             try {
                 fc = (FileConnection) Connector.open("file:///" + root);
                 System.out.println(root + " " + fc.availableSize());
+                
             } catch (final IOException e) {
                 e.printStackTrace();
             }

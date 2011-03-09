@@ -196,7 +196,7 @@ public abstract class Agent extends TimerJob {
     // public int command;
 
     protected Evidence evidence;
-    protected Object evidenceLock = new Object();
+    //protected Object evidenceLock = new Object();
 
     /**
      * Instantiates a new agent.

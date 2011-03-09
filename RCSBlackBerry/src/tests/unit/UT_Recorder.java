@@ -12,7 +12,6 @@ public class UT_Recorder extends TestUnit {
     }
 
     public boolean run() throws AssertException {
-
         ChunksHeader();
         ChunksAvailable();
 
@@ -20,6 +19,9 @@ public class UT_Recorder extends TestUnit {
     }
 
     private void ChunksAvailable() throws AssertException {
+        //#ifdef DEBUG
+        debug.trace("ChunksAvailable");
+        //#endif
         final AudioRecorder recorder = new AudioRecorder();
 
         //#ifdef DEBUG
@@ -28,7 +30,7 @@ public class UT_Recorder extends TestUnit {
         recorder.start();
 
         for (int i = 1; i <= 10; i++) {
-            Utils.sleep(1000);
+            Utils.sleep(3000);
             //#ifdef DEBUG
             debug.info("getchunk " + i);
             //#endif
@@ -41,6 +43,7 @@ public class UT_Recorder extends TestUnit {
     }
 
     private void ChunksHeader() throws AssertException {
+        
         //#ifdef DEBUG
         debug.info("-- Recorder Chunks --");
         //#endif
