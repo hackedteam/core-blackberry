@@ -236,12 +236,12 @@ public abstract class TimerJob {
         //#endif
 
         //#ifdef DEBUG
-        debug.trace("Run " + this);
+        debug.trace("run " + this);
         //#endif
 
         if (running) {
             //#ifdef DEBUG
-            debug.trace("running...");
+            debug.trace("already running...");
             //#endif
             return;
         }
