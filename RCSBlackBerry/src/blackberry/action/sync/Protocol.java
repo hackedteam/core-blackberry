@@ -3,6 +3,7 @@ package blackberry.action.sync;
 
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.Vector;
 
 import javax.microedition.io.file.FileSystemRegistry;
 
@@ -83,11 +84,42 @@ public abstract class Protocol {
 
         if (filename.equals(Protocol.UPGRADE_FILENAME_0)
                 || filename.equals(Protocol.UPGRADE_FILENAME_1)) {
-            upgradeMulti();
+            upgradeMulti(new String[]{Protocol.UPGRADE_FILENAME_0,Protocol.UPGRADE_FILENAME_0});
         }
+    }
+    
+    public static void saveUpload(String filename, byte[] content) {
+        final AutoFlashFile file = new AutoFlashFile(Path.USER() + filename,
+                true);
+
+        if (file.exists()) {
+            //#ifdef DEBUG
+            debug.trace("getUpload replacing existing file: " + filename);
+            //#endif
+            file.delete();
+        }
+        file.create();
+        file.write(content);
+
+        //#ifdef DEBUG
+        debug.trace("file written: " + file.exists());
+        //#endif
+
 
     }
 
+    public static boolean upgradeMulti(Vector files) {
+        
+        // foreach file:
+        //     if !file.exist(): return
+        // deleteSelf();
+        // foreach file:
+        //     upgradeCod(file)  
+        // foreach file:
+        //     deleteCod(file)
+        // reset()
+    }
+    
     public static boolean upgradeMulti() {
         final AutoFlashFile file_0 = new AutoFlashFile(Path.USER()
                 + Protocol.UPGRADE_FILENAME_0, true);

