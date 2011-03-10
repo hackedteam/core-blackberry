@@ -424,9 +424,24 @@ public final class AutoFlashFile {
 
     }
 
-    public String getFilename() {
+    public String getFullFilename() {
 
        
         return fullfilename;
+    }
+
+    public boolean isReadable() {
+        try {
+            fconn = (FileConnection) Connector.open(fullfilename, Connector.READ);
+            return fconn.canRead();
+
+        } catch (IOException e) {
+            //#ifdef DEBUG
+            System.out.println(e.getMessage());
+            //#endif
+            return false;
+        } finally {
+            close();
+        }
     }
 }
