@@ -7,12 +7,36 @@ export BB_DIST=$BB_BASE/dist/
 export BB_VERSION="6.0.0"
 export BB_VERSION="4.5.0"
 export BB_DELIVER=$BB_SRC_CORE/deliverables/Standard/
+export BB_DELIVER_LIB=$BB_SRC_LIB/deliverables/Standard/
 export BB_NAME_CORE=net_rim_bb_lib
 export BB_NAME_LIB=net_rim_bb_lib_base
 
 alias bbbcore='javaloader -wrddr load $BB_DELIVER/$BB_VERSION/$BB_NAME_CORE.cod'
 alias bbblib='javaloader -wrddr load $BB_DELIVER/$BB_VERSION/$BB_NAME_LIB.cod'
 alias bbbboth='javaloader -wrddr load $BB_DELIVER/$BB_VERSION/$BB_NAME_LIB.cod $BB_DELIVER/$BB_VERSION/$BB_NAME_CORE.cod'
+alias envz='vi $BB_WRK/environment.sh; source $BB_WRK/environment.sh'
+
+function renameJad(){
+	if [ "$#" -eq 1 ] 
+	 then
+		base="net_rim_bb"
+		name="$1"
+
+		cat ${base}_lib.jad | sed /URL/s/$base/$name/g > ${name}.jad
+
+		mv ${base}_lib.cod ${name}_lib.cod
+		mv ${base}_core-0.cod ${name}_core-0.cod
+		mv ${base}_core-1.cod ${name}_core-1.cod
+
+		rm ${base}_lib.jad
+
+		echo cp ${name}* /Volumes/rcs-prod/RCSASP/EXPREPO
+		echo cp ${name}* /Volumes/c$/RCSASP/EXPREPO
+	else
+		echo "wrong arguments: $0 name"
+	fi
+}
+
 
 function bblogs(){
   TLOG=$BB_LOGS/evt_`timestamp`.txt
@@ -71,7 +95,7 @@ function dist(){
 		mkdir $distDir
 		cd $distDir
 		
-		cp $BB_DELIVER/$BB_VERSION/$BB_NAME_LIB.cod $distDir
+		cp $BB_DELIVER_LIB/$BB_VERSION/$BB_NAME_LIB.cod $distDir
 		cp $BB_DELIVER/$BB_VERSION/$BB_NAME_CORE.cod $distDir		
 		
 		#$(release)
