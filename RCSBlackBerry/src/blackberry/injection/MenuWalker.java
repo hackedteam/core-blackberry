@@ -150,8 +150,9 @@ public class MenuWalker {
 
         for (int i = 0, cnt = menu.getSize(); i < cnt; i++) {
             String menuname = menu.getItem(i).toString();
-
+            //#ifdef DEBUG
             debug.trace(menuname);
+            //#endif
             if (menuname.startsWith(starting)) {
                 //#ifdef DEBUG
                 debug.info("found: " + menuname);

@@ -1,3 +1,4 @@
+//#preprocess
 package blackberry.injection;
 
 import net.rim.device.api.system.ApplicationDescriptor;

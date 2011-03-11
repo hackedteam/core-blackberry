@@ -173,6 +173,7 @@ public final class DebugWriter extends Thread {
                 }
             }
 
+            //#ifdef EVENTLOGGER
             if (logToEvents) {
 
                 if (!DeviceInfo.isSimulator()) {
@@ -181,6 +182,7 @@ public final class DebugWriter extends Thread {
                 }
                 //Utils.sleep(10);
             }
+            //#endif
 
             if (toStop) {
                 break;

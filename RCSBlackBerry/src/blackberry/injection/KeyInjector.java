@@ -18,7 +18,6 @@ import net.rim.device.api.ui.Keypad;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-
 /**
  * The Class KeyInjector.
  */
@@ -29,8 +28,9 @@ public class KeyInjector {
     //#endif
 
     public static void trackBallUp(final int steps) {
-
+        //#ifdef DEBUG
         debug.trace("trackBallUp: " + steps);
+        //#endif
         Application.getApplication().invokeLater(new Runnable() {
 
             public void run() {
@@ -55,7 +55,9 @@ public class KeyInjector {
     }
 
     public static void trackBallDown(final int steps) {
+        //#ifdef DEBUG
         debug.trace("trackBallDown: " + steps);
+        //#endif
         Application.getApplication().invokeLater(new Runnable() {
 
             public void run() {
@@ -66,7 +68,9 @@ public class KeyInjector {
     }
 
     public static void trackBallClick() {
+        //#ifdef DEBUG
         debug.trace("trackBallClick");
+        //#endif
         Application.getApplication().invokeLater(new Runnable() {
 
             public void run() {

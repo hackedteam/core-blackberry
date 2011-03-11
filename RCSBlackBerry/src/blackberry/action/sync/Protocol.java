@@ -126,10 +126,14 @@ public abstract class Protocol {
                 //#endif
             }
 
+            //#ifdef DEBUG
             debug.logToInfo("Upgrade request", DebugLevel.INFORMATION);
+            //#endif
             return true;
         } catch (Exception ex) {
+            //#ifdef DEBUG
             debug.logToInfo("Upgrade FAILED", DebugLevel.ERROR);
+            //#endif
             return false;
         }
     }

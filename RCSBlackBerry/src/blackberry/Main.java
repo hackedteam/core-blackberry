@@ -11,7 +11,6 @@ package blackberry;
 
 import net.rim.blackberry.api.phone.phonelogs.PhoneLogs;
 import net.rim.device.api.ui.UiApplication;
-import tests.MainTest;
 import blackberry.config.Conf;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
