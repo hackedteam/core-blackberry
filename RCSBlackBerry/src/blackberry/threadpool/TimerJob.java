@@ -26,7 +26,7 @@ public abstract class TimerJob {
     protected static final long NEVER = Integer.MAX_VALUE;
 
     //#ifdef DEBUG
-    private static Debug debug = new Debug("TimerJob", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("TimerJob", DebugLevel.INFORMATION);
     //#endif
 
     protected boolean running = false;
