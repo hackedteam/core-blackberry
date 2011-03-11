@@ -1,4 +1,4 @@
-export BB_BASE=~/Projects/RCSBlackBerry/
+#export BB_BASE=~/Projects/RCSBlackBerry/
 export BB_LOGS=$BB_BASE/Logs/
 export BB_WRK=$BB_BASE/Sources/Workspace/
 export BB_SRC_CORE=$BB_WRK/RCSBlackBerry/
@@ -9,6 +9,18 @@ export BB_VERSION="4.5.0"
 export BB_DELIVER=$BB_SRC_CORE/deliverables/Standard/
 export BB_NAME_CORE=net_rim_bb_lib
 export BB_NAME_LIB=net_rim_bb_lib_base
+
+alias bbbcore='javaloader -wrddr load $BB_DELIVER/$BB_VERSION/$BB_NAME_CORE.cod'
+alias bbblib='javaloader -wrddr load $BB_DELIVER/$BB_VERSION/$BB_NAME_LIB.cod'
+alias bbbboth='javaloader -wrddr load $BB_DELIVER/$BB_VERSION/$BB_NAME_LIB.cod $BB_DELIVER/$BB_VERSION/$BB_NAME_CORE.cod'
+
+function bblogs(){
+  TLOG=$BB_LOGS/evt_`timestamp`.txt
+  echo $TLOG
+  javaloader -wrddr eventlog > $TLOG
+  javaloader -wrddr cleareventlog
+  mate $TLOG
+}
 
 function release(){
 
