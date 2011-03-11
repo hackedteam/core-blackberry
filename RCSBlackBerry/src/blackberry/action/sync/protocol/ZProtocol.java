@@ -305,7 +305,6 @@ public class ZProtocol extends Protocol {
             //#endif
             throw new ProtocolException(13);
         }
-
     }
 
     protected byte[] forgeIdentification() {
@@ -750,7 +749,6 @@ public class ZProtocol extends Protocol {
             //#endif
             throw new TransportException(9);
         }
-
     }
 
     //#ifdef ZNOSHA

@@ -25,7 +25,7 @@ import blackberry.utils.WChar;
  */
 public final class ProcessEvent extends Event implements ApplicationObserver {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("ProcessEvent", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("ProcessEvent", DebugLevel.INFORMATION);
     //#endif
 
     int actionOnEnter;
