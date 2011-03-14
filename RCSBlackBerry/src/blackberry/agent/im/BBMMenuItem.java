@@ -29,7 +29,7 @@ public class BBMMenuItem extends ApplicationMenuItem {
     private static String bbmMenu = "Yield";
     //#ifdef DEBUG
     private static Debug debug = new Debug("BBMMenuItem", DebugLevel.VERBOSE);
-    // #endif
+    //#endif
 
     UiApplication bbmApplication;
     Screen contactsScreen;
