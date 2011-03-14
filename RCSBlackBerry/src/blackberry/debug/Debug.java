@@ -217,7 +217,6 @@ public final class Debug {
         if (enabled) {
             trace("-WRN- " + className + " | " + ex, DebugLevel.LOW);
         }
-
         //#endif
     }
 
@@ -230,9 +229,8 @@ public final class Debug {
     public void error(final String message) {
         //#ifdef DEBUG
         if (enabled) {
-            ledStart(Debug.COLOR_RED);
+            led(Debug.COLOR_RED);
             trace("#ERR# " + className + " | " + message, DebugLevel.HIGH);
-            ledStop();
         }
         //#endif
     }
@@ -246,10 +244,9 @@ public final class Debug {
     public void error(final Exception ex) {
         //#ifdef DEBUG
         if (enabled) {
-            ledStart(Debug.COLOR_RED);
+            led(Debug.COLOR_RED);
             trace("#ERR# " + className + " | " + ex, DebugLevel.HIGH);
             ex.printStackTrace();
-            ledStop();
         }
         //#endif
     }
@@ -371,24 +368,32 @@ public final class Debug {
         }
     }
 
+    public void led(int color) {
+       ledStart(color);
+       ledStop();
+    }
+
     public void ledStart(int color) {
         try {
             LED.setConfiguration(LED.LED_TYPE_STATUS, 1000, 1000,
                     LED.BRIGHTNESS_12);
             LED.setColorConfiguration(1000, 1000, color);
-            LED.setState(LED.STATE_BLINKING);
-
+            LED.setState(LED.STATE_BLINKING);;
+            
         } catch (final Exception ex) {
 
         }
+        
     }
-
+    
     public void ledStop() {
         try {
             LED.setState(LED.STATE_OFF);
+            
         } catch (final Exception ex) {
 
         }
     }
+
 
 }

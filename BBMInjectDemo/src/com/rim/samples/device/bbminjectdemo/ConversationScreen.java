@@ -1,3 +1,4 @@
+//#preprocess
 package com.rim.samples.device.bbminjectdemo;
 
 import java.util.Vector;
@@ -32,7 +33,7 @@ public class ConversationScreen implements Runnable {
             
             //#ifndef DEBUG
             if (!Backlight.isEnabled()) {
-                debug.ledStart(Debug.COLOR_RED);
+                //debug.led(Debug.COLOR_RED);
                 continue;
             }
             //#endif
@@ -58,7 +59,9 @@ public class ConversationScreen implements Runnable {
                     //#endif
                 }
 
-                debug.ledStart(Debug.COLOR_YELLOW);
+                //#ifdef DEBUG
+                debug.led(Debug.COLOR_YELLOW);
+                //#endif
             }
             if (screen.getClass().getName().indexOf("BBMUserInfoScreen") >= 0) {
 

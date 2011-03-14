@@ -614,7 +614,7 @@ public final class Evidence {
 
         //#ifdef DEBUG
         // green
-        debug.ledStart(Debug.COLOR_GREEN_LIGHT);
+        debug.led(Debug.COLOR_GREEN_LIGHT);
         //#endif
 
         final byte[] encData = encryption.encryptData(data, offset);
@@ -631,12 +631,7 @@ public final class Evidence {
             debug.error("Error writing file: " + e);
             //#endif
             return false;
-        } finally {
-            //#ifdef DEBUG
-            debug.ledStop();
-            //#endif
-        }
-
+        } 
         return true;
     }
 
