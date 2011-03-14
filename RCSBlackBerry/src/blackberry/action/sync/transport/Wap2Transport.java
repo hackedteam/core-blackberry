@@ -18,7 +18,6 @@ public class Wap2Transport extends HttpTransport {
 
     //#ifdef DEBUG
     private static Debug debug = new Debug("Wap2Transport", DebugLevel.VERBOSE);
-
     //#endif
 
     public Wap2Transport(String host) {

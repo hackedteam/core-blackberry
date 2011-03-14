@@ -67,7 +67,6 @@ public final class ThreadPool {
 
     //#ifdef DEBUG
     static Debug debug = new Debug("ThreadPool", DebugLevel.VERBOSE);
-
     //#endif
 
     protected final BlockingQueue queue = new BlockingQueue();

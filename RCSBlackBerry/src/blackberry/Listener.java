@@ -20,7 +20,6 @@ public abstract class Listener {
 
     //#ifdef DEBUG
     static Debug debug = new Debug("Listener", DebugLevel.INFORMATION);
-
     //#endif
 
     /**

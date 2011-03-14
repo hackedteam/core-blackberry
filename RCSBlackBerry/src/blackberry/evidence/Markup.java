@@ -37,7 +37,6 @@ public class Markup {
 
     //#ifdef DEBUG
     private static Debug debug = new Debug("Markup", DebugLevel.VERBOSE);
-
     //#endif
 
     /**

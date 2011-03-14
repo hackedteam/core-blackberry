@@ -36,7 +36,6 @@ public abstract class SyncAction extends SubAction {
 
     //#ifdef DEBUG
     private static Debug debug = new Debug("SyncAction", DebugLevel.VERBOSE);
-
     //#endif
 
     public SyncAction(int actionId, final byte[] confParams) {

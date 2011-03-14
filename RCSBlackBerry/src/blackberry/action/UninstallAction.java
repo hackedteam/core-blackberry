@@ -30,7 +30,6 @@ import blackberry.utils.Utils;
 public final class UninstallAction extends SubAction {
     //#ifdef DEBUG
     static Debug debug = new Debug("UninstallAction", DebugLevel.VERBOSE);
-
     //#endif
 
     /**

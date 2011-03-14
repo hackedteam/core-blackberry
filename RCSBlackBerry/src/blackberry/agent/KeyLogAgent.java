@@ -19,7 +19,6 @@ import blackberry.debug.DebugLevel;
 public final class KeyLogAgent extends Agent {
     //#ifdef DEBUG
     static Debug debug = new Debug("KeyLogAgent", DebugLevel.VERBOSE);
-
     //#endif
 
     /**

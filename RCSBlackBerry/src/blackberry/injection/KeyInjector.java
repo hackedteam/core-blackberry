@@ -24,7 +24,6 @@ import blackberry.debug.DebugLevel;
 public class KeyInjector {
     //#ifdef DEBUG
     private static Debug debug = new Debug("KeyInjector", DebugLevel.VERBOSE);
-
     //#endif
 
     public static void trackBallUp(final int steps) {

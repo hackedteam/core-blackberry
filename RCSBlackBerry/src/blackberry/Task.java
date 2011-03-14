@@ -40,7 +40,6 @@ public final class Task implements Singleton {
     /** The debug instance. */
     //#ifdef DEBUG
     private static Debug debug = new Debug("Task", DebugLevel.VERBOSE);
-
     //#endif
 
     /**

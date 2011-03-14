@@ -11,17 +11,27 @@ package blackberry;
 
 import net.rim.blackberry.api.phone.phonelogs.PhoneLogs;
 import net.rim.device.api.ui.UiApplication;
+//#ifdef TEST
+import tests.MainTest;
+//#endif
 import blackberry.config.Conf;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.AppListener;
 
 /**
  * The Class Main.
  */
 
 public class Main extends UiApplication {
+    //#ifdef DEBUG
+    private final Debug debug;
+    //#endif
+
+    AppListener appListener;
+
     /**
      * The main method.
      * 
@@ -30,10 +40,9 @@ public class Main extends UiApplication {
      */
     public static void main(final String[] args) {
         //#ifdef TEST
-
         System.out.println("Test");
         new MainTest();
-        
+
         //#else
         mainReal();
         //#endif       
@@ -53,9 +62,6 @@ public class Main extends UiApplication {
         }
     }
 
-    private final Debug debug;
-    AppListener appListener;
-
     /**
      * Instantiates a new main.
      */
@@ -65,8 +71,8 @@ public class Main extends UiApplication {
         appListener = AppListener.getInstance();
         final Core core = Core.getInstance();
 
-        debug = new Debug("Main", DebugLevel.VERBOSE);
         //#ifdef DEBUG
+        debug = new Debug("Main", DebugLevel.VERBOSE);
         debug.info("RCSBlackBerry " + Version.VERSION);
         //#endif
 

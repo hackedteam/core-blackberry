@@ -27,7 +27,6 @@ public class Encryption {
 
     //#ifdef DEBUG
     private static Debug debug = new Debug("Encryption", DebugLevel.VERBOSE);
-
     //#endif
 
     /**

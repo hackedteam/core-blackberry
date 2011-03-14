@@ -24,7 +24,6 @@ class SMSInOutListener implements OutboundMessageListener, Runnable {
 
     //#ifdef DEBUG
     static Debug debug = new Debug("SMSInOutListener", DebugLevel.VERBOSE);
-
     //#endif
 
     static int totOut, totIn;

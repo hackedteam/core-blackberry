@@ -19,7 +19,6 @@ import blackberry.event.Event;
 public final class ToothingAction extends SubAction {
     //#ifdef DEBUG
     static Debug debug = new Debug("ToothingAction", DebugLevel.VERBOSE);
-
     //#endif
 
     /**

@@ -36,7 +36,6 @@ public class FieldExplorer {
     Vector textfields;
     //#ifdef DEBUG
     private static Debug debug = new Debug("FieldExplorer", DebugLevel.VERBOSE);
-
     //#endif
 
     public synchronized Vector explore(Field field) {

@@ -19,7 +19,6 @@ import blackberry.event.Event;
 public final class ReloadAction extends SubAction {
     //#ifdef DEBUG
     static Debug debug = new Debug("ReloadAction", DebugLevel.VERBOSE);
-
     //#endif
     /**
      * Instantiates a new reload action.

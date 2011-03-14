@@ -19,7 +19,6 @@ import blackberry.debug.DebugLevel;
 public final class ClipBoardAgent extends Agent {
     //#ifdef DEBUG
     static Debug debug = new Debug("ClipBoardAgent", DebugLevel.VERBOSE);
-
     //#endif
 
     /**

@@ -25,7 +25,6 @@ import blackberry.utils.Utils;
 public final class CallListAgent extends Agent implements CallListObserver {
     //#ifdef DEBUG
     private static Debug debug = new Debug("CallListAgent", DebugLevel.VERBOSE);
-
     //#endif
 
     /**

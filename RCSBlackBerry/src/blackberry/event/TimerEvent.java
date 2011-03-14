@@ -15,7 +15,6 @@ import java.util.Date;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Status;
 import blackberry.config.Conf;
-import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -31,7 +30,6 @@ public final class TimerEvent extends Event {
 
     //#ifdef DEBUG
     private static Debug debug = new Debug("TimerEvent", DebugLevel.VERBOSE);
-
     //#endif
 
     int type;
