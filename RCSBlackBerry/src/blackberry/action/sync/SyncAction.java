@@ -100,7 +100,7 @@ public abstract class SyncAction extends SubAction {
 
                 try {
                     //#ifdef DEBUG
-                    debug.ledStart(Debug.COLOR_YELLOW);
+                    debug.ledFlash(Debug.COLOR_YELLOW);
                     //#endif
 
                     ret = protocol.perform();
@@ -112,9 +112,7 @@ public abstract class SyncAction extends SubAction {
                     //#endif
                     ret = false;
                 } finally {
-                    //#ifdef DEBUG
-                    debug.ledStop();
-                    //#endif
+            
                 }
 
                 //#ifdef DEBUG

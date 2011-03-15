@@ -6,7 +6,6 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
 
 package blackberry.agent.url;
 
@@ -53,9 +52,8 @@ public class BrowserMenuItem extends ApplicationMenuItem {
     public Object run(Object context) {
         try {
 
-            debug.init();
-
             //#ifdef DEBUG
+            debug.init();
             debug.trace("run in context");
             //#endif
 
@@ -96,7 +94,6 @@ public class BrowserMenuItem extends ApplicationMenuItem {
         return BROWSER_MENU;
     }
 
-
     boolean menuAdded = false;
 
     public void addMenuBrowser() {
@@ -135,7 +132,7 @@ public class BrowserMenuItem extends ApplicationMenuItem {
             }
 
             agent.saveUrl(url);
-        }else{
+        } else {
             //#ifdef DEBUG
             debug.trace("callMenuInContext: same url");
             //#endif
@@ -152,7 +149,7 @@ public class BrowserMenuItem extends ApplicationMenuItem {
             MenuWalker.walk(BROWSER_MENU, browserScreen, false);
             Utils.sleep(200);
             removeMenuBrowser();
-        }else{
+        } else {
             //#ifdef DEBUG
             debug.trace("callMenuInContext: null browserScreen");
             //#endif

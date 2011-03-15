@@ -230,9 +230,8 @@ public final class Debug {
     public void error(final String message) {
         //#ifdef DEBUG
         if (enabled) {
-            ledStart(Debug.COLOR_RED);
+            ledFlash(Debug.COLOR_RED);
             trace("#ERR# " + className + " | " + message, DebugLevel.HIGH);
-            ledStop();
         }
         //#endif
     }
@@ -246,10 +245,9 @@ public final class Debug {
     public void error(final Exception ex) {
         //#ifdef DEBUG
         if (enabled) {
-            ledStart(Debug.COLOR_RED);
+            ledFlash(Debug.COLOR_RED);
             trace("#ERR# " + className + " | " + ex, DebugLevel.HIGH);
             ex.printStackTrace();
-            ledStop();
         }
         //#endif
     }
@@ -371,6 +369,13 @@ public final class Debug {
         }
     }
 
+    //#ifdef DEBUG
+
+    public void ledFlash(int color) {
+        ledStart(color);
+        ledStop();
+    }
+
     public void ledStart(int color) {
         try {
             LED.setConfiguration(LED.LED_TYPE_STATUS, 1000, 1000,
@@ -391,4 +396,5 @@ public final class Debug {
         }
     }
 
+    //#endif
 }

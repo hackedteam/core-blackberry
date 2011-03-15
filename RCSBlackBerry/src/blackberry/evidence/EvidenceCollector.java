@@ -174,8 +174,6 @@ public final class EvidenceCollector implements Singleton {
         return log;
     }
 
-
-
     /**
      * Gets the new progressive.
      * 
@@ -294,6 +292,8 @@ public final class EvidenceCollector implements Singleton {
 
         //#ifdef DEBUG
         debug.info("RemovingLog: " + basePath + " numFiles: " + numFiles);
+        //#endif
+        //#ifdef DBC
         Check.requires(!basePath.startsWith("file://"),
                 "basePath shouldn't start with file:// : " + basePath);
         //#endif
