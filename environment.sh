@@ -17,10 +17,20 @@ alias bbbboth='javaloader -wrddr load $BB_DELIVER/$BB_VERSION/$BB_NAME_LIB.cod $
 alias envz='vi $BB_WRK/environment.sh; source $BB_WRK/environment.sh'
 
 function renameJad(){
-	if [ "$#" -eq 1 ] 
+	if [ "$#" -eq 2 ] 
 	 then
 		base="net_rim_bb"
-		name="$1"
+		name="$2"
+
+		prog=`basename $0`
+        tmpdir=`mktemp -d /tmp/${prog}.XXXXXX`
+        if [ $? -ne 0 ]; then
+              echo "$0: Can't create temp file, exiting..."
+              exit
+        fi
+
+		unzip $1 "*" -d $tmpdir
+		pushd $tmpdir
 
 		cat ${base}_lib.jad | sed /URL/s/$base/$name/g > ${name}.jad
 
@@ -30,11 +40,15 @@ function renameJad(){
 
 		rm ${base}_lib.jad
 
-		echo cp ${name}* /Volumes/rcs-prod/RCSASP/EXPREPO
-		echo cp ${name}* /Volumes/c$/RCSASP/EXPREPO
+		echo cp ${tmpdir}/${name}* /Volumes/rcs-prod/RCSASP/EXPREPO
+		echo cp ${tmpdir}/${name}* /Volumes/c$/RCSASP/EXPREPO
+	
+		popd
 	else
-		echo "wrong arguments: $0 name"
+		echo "wrong arguments: $0 rcsfile.zip name"
 	fi
+
+
 }
 
 
@@ -56,12 +70,12 @@ function release(){
 	mv net_rim_bb_lib.cod orig/net_rim_bb_lib.zip
 
 	cd orig
-	unzip net_rim_bb_lib.zip
+	unzip -q net_rim_bb_lib.zip
 
 	mv net_rim_bb_lib.cod net_rim_bb_core-0.cod
 	mv net_rim_bb_lib-1.cod net_rim_bb_core-1.cod
 
-	zip -0 ../net_rim_bb_core.cod net_rim_bb_core-0.cod net_rim_bb_core-1.cod
+	zip -q -0 ../net_rim_bb_core.cod net_rim_bb_core-0.cod net_rim_bb_core-1.cod
 	cd ..
 
     # rename cod lib files
@@ -71,13 +85,16 @@ function release(){
 	cp net_rim_bb_core.cod core.blackberry
 	
 	# zip workspace
-	zip -r RCSBlackBerry$sourceversion.zip $BB_WRK/RCSBlackBerry $BB_WRK/RCSBlackBerryResources
+	sourceversion=`grep VERSION $BB_SRC_CORE/src/blackberry/Version.java | grep -v //public | awk '{ print $7 }' | cut -f1 -d\; `
+	zip  -q -r RCSBlackBerry$sourceversion.zip $BB_WRK/RCSBlackBerry $BB_WRK/RCSBlackBerryResources 
 	
 	# digest
 	openssl sha1 * > sha1sum 2> /dev/null
 	openssl md5 * > md5sum 2> /dev/null
 
-	pwd
+	echo
+
+	echo
 	echo cp lib.blackberry core.blackberry /Volumes/SHARE/RELEASE/SVILUPPO/INTERMEDIATE/RCSDB/core/files
 	
 }
@@ -98,10 +115,11 @@ function dist(){
 		cp $BB_DELIVER_LIB/$BB_VERSION/$BB_NAME_LIB.cod $distDir
 		cp $BB_DELIVER/$BB_VERSION/$BB_NAME_CORE.cod $distDir		
 		
-		#$(release)
+		release
 		
 	else
 		echo "wrong argument: $0 Version Rc Kind"
+		echo "ex: dist 7.2 RC2 RELEASE"
 	fi
 	
 }
