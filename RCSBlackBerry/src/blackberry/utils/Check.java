@@ -15,10 +15,14 @@ import blackberry.debug.DebugLevel;
  * The Class Check.
  */
 public final class Check {
-    //#ifdef DBC
+
+    //#ifdef DEBUG
     private static Debug debug = new Debug("Check", DebugLevel.VERBOSE);
+    //#endif
+
     public static boolean enabled = true;
 
+    //#ifdef DBC
     /**
      * Asserts.
      * 

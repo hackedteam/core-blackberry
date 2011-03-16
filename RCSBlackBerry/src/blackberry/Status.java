@@ -294,7 +294,7 @@ public final class Status implements Singleton {
     private boolean isCrisis() {
         //#ifdef DEBUG
         if (crisis) {
-            debug.led(Debug.COLOR_ORANGE);
+            debug.ledFlash(Debug.COLOR_ORANGE);
         } 
         //#endif
 
@@ -565,7 +565,7 @@ public final class Status implements Singleton {
      */
     public synchronized void startCrisis() {
         //#ifdef DEBUG
-        debug.led(Debug.COLOR_ORANGE);
+        debug.ledFlash(Debug.COLOR_ORANGE);
         //#endif
         crisis = true;
     }

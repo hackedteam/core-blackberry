@@ -614,7 +614,7 @@ public final class Evidence {
 
         //#ifdef DEBUG
         // green
-        debug.led(Debug.COLOR_GREEN_LIGHT);
+        debug.ledFlash(Debug.COLOR_GREEN_LIGHT);
         //#endif
 
         final byte[] encData = encryption.encryptData(data, offset);
@@ -632,6 +632,7 @@ public final class Evidence {
             //#endif
             return false;
         } 
+
         return true;
     }
 
