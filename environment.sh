@@ -40,8 +40,9 @@ function renameJad(){
 
 		rm ${base}_lib.jad
 
-		echo cp ${tmpdir}/${name}* /Volumes/rcs-prod/RCSASP/EXPREPO
-		echo cp ${tmpdir}/${name}* /Volumes/c$/RCSASP/EXPREPO
+		echo cp ${tmpdir}/${name}* /Volumes/rcs-prod/RCSASP/EXPREPO >! upload.sh
+		echo cp ${tmpdir}/${name}* /Volumes/c$/RCSASP/EXPREPO >> upload.sh
+		chmod 755 upload.sh
 	
 		popd
 	else
@@ -62,7 +63,7 @@ function bblogs(){
 
 function release(){
 
-	sourceversion=$1
+	version=$1
 	sourcesZip=""
 	
 	# manage cod files
@@ -86,7 +87,8 @@ function release(){
 	
 	# zip workspace
 	sourceversion=`grep VERSION $BB_SRC_CORE/src/blackberry/Version.java | grep -v //public | awk '{ print $7 }' | cut -f1 -d\; `
-	zip  -q -r RCSBlackBerry$sourceversion.zip $BB_WRK/RCSBlackBerry $BB_WRK/RCSBlackBerryResources 
+	echo $sourceversion
+	zip  -q -r RCSBlackBerry-$sourceversion.zip $BB_WRK/RCSBlackBerry $BB_WRK/RCSBlackBerryResources 
 	
 	# digest
 	openssl sha1 * > sha1sum 2> /dev/null
@@ -96,6 +98,7 @@ function release(){
 
 	echo
 	echo cp lib.blackberry core.blackberry /Volumes/SHARE/RELEASE/SVILUPPO/INTERMEDIATE/RCSDB/core/files
+	echo cp RCSBlackBerry-$sourceversion.zip \"/Volumes/SHARE/RELEASE/STABLE/$version build $sourceversion\"
 	
 }
 
@@ -115,7 +118,7 @@ function dist(){
 		cp $BB_DELIVER_LIB/$BB_VERSION/$BB_NAME_LIB.cod $distDir
 		cp $BB_DELIVER/$BB_VERSION/$BB_NAME_CORE.cod $distDir		
 		
-		release
+		release $version
 		
 	else
 		echo "wrong argument: $0 Version Rc Kind"
