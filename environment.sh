@@ -43,6 +43,9 @@ function renameJad(){
 		echo cp ${tmpdir}/${name}* /Volumes/rcs-prod/RCSASP/EXPREPO >! upload.sh
 		echo cp ${tmpdir}/${name}* /Volumes/c$/RCSASP/EXPREPO >> upload.sh
 		chmod 755 upload.sh
+
+		echo "execute ${tmpdir}/upload.sh:"
+		cat ${tmpdir}/upload.sh
 	
 		popd
 	else
@@ -97,7 +100,7 @@ function release(){
 	echo
 
 	echo
-	echo cp lib.blackberry core.blackberry /Volumes/SHARE/RELEASE/SVILUPPO/INTERMEDIATE/RCSDB/core/files
+	echo cp lib.blackberry core.blackberry /Volumes/SHARE/RELEASE/SVILUPPO/INTERMEDIATE/RCSDB/core/blackberry
 	echo cp RCSBlackBerry-$sourceversion.zip \"/Volumes/SHARE/RELEASE/STABLE/$version build $sourceversion\"
 	
 }

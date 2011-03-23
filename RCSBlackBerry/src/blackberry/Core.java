@@ -220,7 +220,7 @@ public final class Core implements Runnable {
         //#ifdef DEBUG
         debug.info("START: " + (new Date()));
         //#endif
-        Evidence.info("START");
+        Evidence.info("Start");
    
         stealth();
         Utils.sleep(500);     
