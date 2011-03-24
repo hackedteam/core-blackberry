@@ -138,7 +138,7 @@ function dist(){
 		echo "dist procedure:"
 		echo "- package and sign core"
 		echo "- clean resources"
-		echo "- package resources
+		echo "- package resources"
 	fi
 	
 }

