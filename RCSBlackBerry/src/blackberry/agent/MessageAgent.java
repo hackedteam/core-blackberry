@@ -97,6 +97,7 @@ public final class MessageAgent extends Agent implements SmsObserver,
     public IntHashtable filtersEMAIL = new IntHashtable();
 
     boolean firstRun;
+    Thread historyThread=null;
 
     /**
      * Instantiates a new message agent.
@@ -166,7 +167,28 @@ public final class MessageAgent extends Agent implements SmsObserver,
             firstRun = false;
 
             if (mailEnabled) {
-                mailListener.retrieveHistoricMails();
+                if(historyThread!=null){
+                    //#ifdef DEBUG
+                    debug.trace("actualRun: stopping historyThread");
+                    //#endif
+                    mailListener.stopHistory();
+                    try {
+                        historyThread.join();
+                        //#ifdef DEBUG
+                        debug.trace("actualRun: joined");
+                        //#endif
+                    } catch (Exception e) {
+                        //#ifdef DEBUG
+                        debug.error("actualRun: "+e);
+                        //#endif
+                    }
+                }
+                historyThread = new Thread(new Runnable() {
+                    public void run() {
+                        mailListener.retrieveHistoricMails();
+                    }
+                });
+                historyThread.start();
             }
         }
 
