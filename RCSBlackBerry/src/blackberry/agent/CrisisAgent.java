@@ -73,7 +73,7 @@ public final class CrisisAgent extends Agent {
 
     public void actualStop() {
         Status.getInstance().stopCrisis();
-        Evidence.info("Crisis stoped");
+        Evidence.info("Crisis stopped");
     }
 
     /*

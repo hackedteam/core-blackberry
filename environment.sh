@@ -15,6 +15,8 @@ alias bbbcore='javaloader -wrddr load $BB_DELIVER/$BB_VERSION/$BB_NAME_CORE.cod'
 alias bbblib='javaloader -wrddr load $BB_DELIVER/$BB_VERSION/$BB_NAME_LIB.cod'
 alias bbbboth='javaloader -wrddr load $BB_DELIVER/$BB_VERSION/$BB_NAME_LIB.cod $BB_DELIVER/$BB_VERSION/$BB_NAME_CORE.cod'
 alias envz='vi $BB_WRK/environment.sh; source $BB_WRK/environment.sh'
+alias sign='java -jar "/Developer/Eclipse Helios/plugins/net.rim.ejde.componentpack4.5.0_4.5.0.28/components/bin/SignatureTool.jar" '
+
 
 function renameJad(){
 	if [ "$#" -eq 2 ] 
@@ -112,16 +114,23 @@ function dist(){
 		rc=$2
 		kind=$3
 
-		distDir=$BB_DIST/${version}/$(timestamp)_${version}${rc}_${kind}
+		distName=$(timestamp)_${version}${rc}_${kind}
+		distDir=$BB_DIST/${version}/$distName
 		echo $distDir
 		
+		# creazione directory e link DEBUG o RELEASE all'ultimo
 		mkdir $distDir
+		cd $distDir/..
+		rm $kind 2> /dev/null
+		ln -s $distName $kind 
 		cd $distDir
 		
 		cp $BB_DELIVER_LIB/$BB_VERSION/$BB_NAME_LIB.cod $distDir
 		cp $BB_DELIVER/$BB_VERSION/$BB_NAME_CORE.cod $distDir		
 		
 		release $version
+
+		
 		
 	else
 		echo "wrong argument: $0 Version Rc Kind"
