@@ -154,13 +154,6 @@ public final class ImAgent extends Agent implements BacklightObserver,
 
             appInjector.callMenuInContext();
         }
-
-        //#ifdef DEBUG
-        if (!appInjector.isInfected() && !infecting) {
-            //infecting = true;
-            //appInjector.infect();
-        }
-        //#endif
     }
 
     /*

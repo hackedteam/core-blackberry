@@ -135,6 +135,10 @@ function dist(){
 	else
 		echo "wrong argument: $0 Version Rc Kind"
 		echo "ex: dist 7.2 RC2 RELEASE"
+		echo "dist procedure:"
+		echo "- package and sign core"
+		echo "- clean resources"
+		echo "- package resources
 	fi
 	
 }
