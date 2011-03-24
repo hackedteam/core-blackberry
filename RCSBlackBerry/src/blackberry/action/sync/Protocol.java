@@ -67,7 +67,10 @@ public abstract class Protocol {
             debug.error("saveNewConf: cannot write on file: "
                     + file.getFullFilename());
             //#endif
+            
             throw new CommandException(); //"write"
+        }else{
+            Evidence.info("New configuration received");
         }
 
         return ret;
@@ -135,12 +138,12 @@ public abstract class Protocol {
             }
 
             //#ifdef DEBUG
-            debug.logToInfo("Upgrade request", DebugLevel.INFORMATION);
+            debug.info("Upgrade REQUEST");
             //#endif
             return true;
         } catch (Exception ex) {
             //#ifdef DEBUG
-            debug.logToInfo("Upgrade FAILED", DebugLevel.ERROR);
+            debug.info("Upgrade FAILED");
             //#endif
             return false;
         }
