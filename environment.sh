@@ -103,7 +103,7 @@ function release(){
 
 	echo
 	echo cp lib.blackberry core.blackberry /Volumes/SHARE/RELEASE/SVILUPPO/INTERMEDIATE/RCSDB/core/blackberry
-	echo cp RCSBlackBerry-$sourceversion.zip \"/Volumes/SHARE/RELEASE/STABLE/$version build $sourceversion\"
+	echo cp RCSBlackBerry-$sourceversion.zip \"/Volumes/SHARE/RELEASE/STABLE/${version}* build $sourceversion\/Sorgenti/\"
 	
 }
 
