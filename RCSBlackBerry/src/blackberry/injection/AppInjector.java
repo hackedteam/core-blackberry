@@ -116,22 +116,17 @@ public class AppInjector {
         }
         
         int req = requestForeground();
-        Utils.sleep(100);
+        Utils.sleep(200);
         boolean fore = checkForeground();
 
         if (fore) {
-            Utils.sleep(100);
+            Utils.sleep(200);
             delegate.injectMenu();
-            Utils.sleep(100);
+            Utils.sleep(200);
             callMenuByKey();
-            Utils.sleep(100);
+            Utils.sleep(200);
             delegate.deleteMenu();
-            Utils.sleep(100);
-
-            if (req == 2 && checkForeground()) {
-                //KeyInjector.pressKeyCode(Keypad.KEY_ESCAPE);
-                //KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
-            }
+            Utils.sleep(200);
             
             if (req == 2 && checkForeground()) {
                manager.requestForegroundForConsole();
