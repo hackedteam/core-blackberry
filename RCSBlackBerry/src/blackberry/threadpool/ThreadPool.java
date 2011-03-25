@@ -13,7 +13,7 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.utils.BlockingQueue;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * implementation of a thread pool.
  * 

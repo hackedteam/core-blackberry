@@ -18,7 +18,7 @@ import blackberry.threadpool.TimerJob;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class Manager. Classe astratta che racchiude le funzionalita' di Manager,
  * utili a - far partire un servizio identificato da un id - far partire tutti i

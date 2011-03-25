@@ -9,12 +9,18 @@
  * *************************************************/
 package blackberry.action.sync.protocol;
 
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 
-// TODO: Auto-generated Javadoc
+
+
 /**
  * The Class Command.
  */
 public class Command {
+    //#ifdef DEBUG
+    private static Debug debug = new Debug("Command", DebugLevel.VERBOSE);
+    //#endif
     public int id;
     public byte[] payload;
 

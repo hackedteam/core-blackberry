@@ -16,7 +16,7 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class StopAgentAction.
  */

@@ -20,7 +20,7 @@ import blackberry.interfaces.BatteryStatusObserver;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class BatteryEvent.
  */

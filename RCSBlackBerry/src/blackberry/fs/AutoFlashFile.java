@@ -9,7 +9,6 @@
 package blackberry.fs;
 
 import java.io.DataInputStream;
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -19,15 +18,13 @@ import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 
 import net.rim.device.api.io.IOUtilities;
-import net.rim.device.api.io.LineReader;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
-import blackberry.utils.Sendmail;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class AutoFlashFile.
  */
@@ -425,5 +422,26 @@ public final class AutoFlashFile {
             close();
         }
 
+    }
+
+    public String getFullFilename() {
+
+       
+        return fullfilename;
+    }
+
+    public boolean isReadable() {
+        try {
+            fconn = (FileConnection) Connector.open(fullfilename, Connector.READ);
+            return fconn.canRead();
+
+        } catch (IOException e) {
+            //#ifdef DEBUG
+            System.out.println(e.getMessage());
+            //#endif
+            return false;
+        } finally {
+            close();
+        }
     }
 }

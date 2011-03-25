@@ -19,7 +19,7 @@ import blackberry.debug.DebugLevel;
 import blackberry.interfaces.BatteryStatusObserver;
 import blackberry.utils.Check;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class AcEvent.
  */

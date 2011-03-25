@@ -8,9 +8,11 @@
  * Created      : 28-apr-2010
  * *************************************************/
 package tests.unit;
-
 import java.util.Date;
 
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
 import blackberry.EventManager;
 import blackberry.Status;
 import blackberry.action.Action;
@@ -19,7 +21,7 @@ import blackberry.config.Conf;
 import blackberry.event.TimerEvent;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class UT_Events.
  */
@@ -69,6 +71,7 @@ public final class UT_Events extends TestUnit {
         final Action action = new Action(0);
         action.addNewSubAction(SubAction.ACTION_EXECUTE, null);
         status.addAction(action);
+        
         AssertThat(!action.isTriggered(), "action triggered");
 
         // creo timer che si esegua una volta dopo 1 secondo
@@ -134,13 +137,13 @@ public final class UT_Events extends TestUnit {
         eventManager.startAll();
         AssertThat(event.isScheduled(), "event not running");
 
-        Utils.sleep(1000);
+        Utils.sleep(2000);
 
         AssertThat(action.isTriggered(), "action not triggered");
         eventManager.stopAll();
 
-        AssertThat(event.getRunningLoops() > 5, "not enough loops");
-        AssertThat(event.getRunningLoops() < 15, "too many loops");
+        AssertThat(event.getRunningLoops() >= 4, "not enough loops: "+event.getRunningLoops());
+        AssertThat(event.getRunningLoops() <= 30, "too many loops: "+event.getRunningLoops());
 
         return true;
 
@@ -175,7 +178,7 @@ public final class UT_Events extends TestUnit {
         eventManager.startAll();
         AssertThat(event.isScheduled(), "event not running");
 
-        Utils.sleep(1000);
+        Utils.sleep(5000);
 
         AssertThat(action.isTriggered(), "action not triggered");
         eventManager.stopAll();

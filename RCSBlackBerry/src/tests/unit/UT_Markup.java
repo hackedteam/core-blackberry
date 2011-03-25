@@ -8,17 +8,19 @@
  * Created      : 28-apr-2010
  * *************************************************/
 package tests.unit;
-
 import java.io.IOException;
 import java.util.Date;
 
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
 import blackberry.agent.Agent;
-import blackberry.config.Keys;
+import blackberry.crypto.Encryption;
 import blackberry.evidence.Markup;
 import blackberry.evidence.TimestampMarkup;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class UT_Markup.
  */
@@ -56,8 +58,7 @@ public final class UT_Markup extends TestUnit {
     private void DictMarkupTest() throws AssertException {
         final int agentId = Agent.AGENT_APPLICATION;
 
-        final TimestampMarkup markup = new TimestampMarkup(agentId, Keys
-                .getInstance().getAesKey());
+        final TimestampMarkup markup = new TimestampMarkup(agentId, Encryption.getKeys().getAesKey());
 
         AssertThat(markup.isMarkup(), "isMarkup");
         AssertNull(markup.get("FIRST"), "get");
@@ -74,28 +75,34 @@ public final class UT_Markup extends TestUnit {
         fetch = markup.get("FIRST");
         AssertEqual(next.getTime(), fetch.getTime(), "differents getTime 2");
 
+        int maxKey = TimestampMarkup.MAX_DICT_SIZE;
+        
         //multivalue
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < maxKey; i++) {
             next = new Date(now.getTime() + i);
             markup.put("KEY_" + i, next);
         }
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < maxKey; i++) {
             fetch = markup.get("KEY_" + i);
+            AssertNotNull(fetch, "Null Fetch");
             AssertEqual(now.getTime() + i, fetch.getTime(),
                     "differents getTime: " + i);
         }
 
         // check limits
-        markup.put("KEY_100", next);
+        markup.put("KEY_ANOTHER", next);
         int nullCount = 0;
-        for (int i = 0; i < 100; i++) {
+        int nullKey=-1;
+        for (int i = 0; i < maxKey; i++) {
             fetch = markup.get("KEY_" + i);
             if (fetch == null) {
                 nullCount++;
+                nullKey=i;
             }
         }
         AssertThat(nullCount == 1, "Not deleted");
+        AssertThat(nullKey == 0, "Wrong deleted");
 
         // check error
         AssertThat(!markup.put(null, next), "put(null,null) should be false");
@@ -119,7 +126,7 @@ public final class UT_Markup extends TestUnit {
     void SimpleMarkupTest() throws AssertException {
 
         final int agentId = Agent.AGENT_APPLICATION;
-        final Markup markup = new Markup(agentId, Keys.getInstance()
+        final Markup markup = new Markup(agentId, Encryption.getKeys()
                 .getAesKey());
 
         if (markup.isMarkup()) {

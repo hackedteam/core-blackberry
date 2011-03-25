@@ -15,12 +15,13 @@ import net.rim.device.api.crypto.AESKey;
 import net.rim.device.api.crypto.CryptoTokenException;
 import net.rim.device.api.crypto.CryptoUnsupportedOperationException;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class RimAES.
  */
 public final class RimAES implements CryptoEngine {
-
+    //#ifdef DEBUG
+    //#endif
     /**
      * Checks if is supported.
      * 

@@ -11,20 +11,22 @@ package blackberry.event;
 import java.io.EOFException;
 
 import net.rim.device.api.system.CDMAInfo;
-import net.rim.device.api.system.GPRSInfo;
-import net.rim.device.api.system.RadioInfo;
 import net.rim.device.api.system.CDMAInfo.CDMACellInfo;
+import net.rim.device.api.system.GPRSInfo;
 import net.rim.device.api.system.GPRSInfo.GPRSCellInfo;
+import net.rim.device.api.system.RadioInfo;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Device;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class CellIdEvent.
  */
 public final class CellIdEvent extends Event {
+    private static final long CELLID_PERIOD = 60000;
+    private static final long CELLID_DELAY = 1000;
     //#ifdef DEBUG
     private static Debug debug = new Debug("CellIdEvent", DebugLevel.VERBOSE);
     //#endif
@@ -163,8 +165,8 @@ public final class CellIdEvent extends Event {
                     + lacOrig + " Cid: " + cidOrig);
             //#endif
 
-            setPeriod(60000);
-            setDelay(60000);
+            setPeriod(CELLID_PERIOD);
+            setDelay(CELLID_DELAY);
 
         } catch (final EOFException e) {
             return false;

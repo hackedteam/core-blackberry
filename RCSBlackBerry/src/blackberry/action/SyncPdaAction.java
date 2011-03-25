@@ -12,7 +12,7 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class SyncPdaAction.
  */
@@ -40,7 +40,7 @@ public final class SyncPdaAction extends SubAction {
      * @see blackberry.action.SubAction#execute(blackberry.event.Event)
      */
     public boolean execute(final Event triggeringEvent) {
-        // TODO Auto-generated method stub
+        
         return false;
     }
 
@@ -49,7 +49,7 @@ public final class SyncPdaAction extends SubAction {
      * @see blackberry.action.SubAction#parse(byte[])
      */
     protected boolean parse(final byte[] confParams) {
-        // TODO Auto-generated method stub
+        
         return false;
     }
 

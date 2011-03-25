@@ -9,11 +9,15 @@
  * *************************************************/
 package tests.unit;
 
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+//#ifdef DEBUG
+//#endif
 /**
  * The Class UT_File.
  */
@@ -32,7 +36,10 @@ public final class UT_File extends TestUnit {
     }
 
     private void FileAppendTest() throws AssertException {
-        final AutoFlashFile file = new AutoFlashFile(Path.SD()
+        //#ifdef DEBUG
+        debug.trace("FileAppendTest");
+        //#endif
+        final AutoFlashFile file = new AutoFlashFile(Path.USER()
                 + "testAppend.txt", false);
         boolean ret = file.create();
         AssertThat(ret == true, "Cannot create");
@@ -60,7 +67,10 @@ public final class UT_File extends TestUnit {
     }
 
     private void FileCreateHiddenTest() throws AssertException {
-        final AutoFlashFile file = new AutoFlashFile(Path.SD()
+        //#ifdef DEBUG
+        debug.trace("FileCreateHiddenTest");
+        //#endif
+        final AutoFlashFile file = new AutoFlashFile(Path.USER()
                 + "testHidden.txt", true);
         boolean ret = file.create();
         AssertThat(ret == true, "Cannot create");
@@ -74,8 +84,10 @@ public final class UT_File extends TestUnit {
     }
 
     private void FileCreateTest() throws AssertException {
-
-        final AutoFlashFile file = new AutoFlashFile(Path.SD()
+        //#ifdef DEBUG
+        debug.trace("FileCreateTest");
+        //#endif
+        final AutoFlashFile file = new AutoFlashFile(Path.USER()
                 + "testCreate.txt", false);
         boolean ret = file.create();
         AssertThat(ret == true, "Cannot create");
@@ -89,7 +101,10 @@ public final class UT_File extends TestUnit {
     }
 
     private void FileReadWriteTest() throws AssertException {
-        final AutoFlashFile file = new AutoFlashFile(Path.SD() + "testRW.txt",
+        //#ifdef DEBUG
+        debug.trace("FileReadWriteTest");
+        //#endif
+        final AutoFlashFile file = new AutoFlashFile(Path.USER() + "testRW.txt",
                 false);
         boolean ret = file.create();
         AssertThat(ret == true, "Cannot create");
@@ -111,7 +126,9 @@ public final class UT_File extends TestUnit {
     }
 
     private void PathSDPresentTest() {
-
+        //#ifdef DEBUG
+        debug.trace("PathSDPresentTest");
+        //#endif
         Path.isSDAvailable();
 
     }

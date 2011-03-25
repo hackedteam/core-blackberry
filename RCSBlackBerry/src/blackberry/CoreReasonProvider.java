@@ -1,4 +1,12 @@
 //#preprocess
+
+/* *************************************************
+ * Copyright (c) 2010 - 2011
+ * HT srl,   All rights reserved.
+ * 
+ * Project      : RCS, RCSBlackBerry
+ * *************************************************/
+	
 /*
  * 
  */
@@ -6,12 +14,13 @@ package blackberry;
 
 import net.rim.device.api.applicationcontrol.ReasonProvider;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class CoreReasonProvider.
  */
 public final class CoreReasonProvider implements ReasonProvider {
-
+    //#ifdef DEBUG
+    //#endif
     /**
      * Gets the message.
      * 

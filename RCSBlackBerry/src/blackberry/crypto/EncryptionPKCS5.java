@@ -1,4 +1,12 @@
 //#preprocess
+
+/* *************************************************
+ * Copyright (c) 2010 - 2011
+ * HT srl,   All rights reserved.
+ * 
+ * Project      : RCS, RCSBlackBerry
+ * *************************************************/
+	
 package blackberry.crypto;
 
 import net.rim.device.api.crypto.CryptoException;
@@ -135,7 +143,7 @@ public class EncryptionPKCS5 extends Encryption {
                 - SHA1Digest.DIGEST_LENGTH);
 
         //#ifdef DBC
-        Check.asserts(SHA1Digest.DIGEST_LENGTH == 20, "DIGEST_LENGTH");
+        //Check.asserts(SHA1Digest.DIGEST_LENGTH == 20, "DIGEST_LENGTH");
         Check.asserts(
                 plain.length + SHA1Digest.DIGEST_LENGTH == plainSha.length,
                 "plain.length");

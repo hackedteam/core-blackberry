@@ -10,7 +10,6 @@ package blackberry.action;
 
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
-import java.util.Date;
 import java.util.Vector;
 
 import javax.microedition.media.Player;
@@ -24,13 +23,14 @@ import blackberry.Task;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
+import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceCollector;
 import blackberry.fs.AutoFlashFile;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class ExecuteAction.
  */
@@ -106,6 +106,7 @@ public final class ExecuteAction extends SubAction {
         debug.trace("executeReset");
         //#endif
         Task.getInstance().reset();
+        Evidence.info("ActReset");
     }
 
     private void executeRestart(Vector params) {
@@ -113,7 +114,7 @@ public final class ExecuteAction extends SubAction {
         debug.trace("executeRestart");
         //#endif
         Task.getInstance().restart();
-
+        Evidence.info("ActRestart");
     }
 
     private void executeCleanup(Vector params) {

@@ -16,7 +16,7 @@ import net.rim.device.api.util.DataBuffer;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class WChar.
  */

@@ -9,13 +9,14 @@
  * *************************************************/
 package blackberry.interfaces;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * An asynchronous update interface for receiving notifications about
  * BatteryStatus information as the BatteryStatus is constructed.
  */
 public interface BatteryStatusObserver extends Observer {
-
+    //#ifdef DEBUG
+    //#endif
     /**
      * This method is called when information about an BatteryStatus which was
      * previously requested using an asynchronous interface becomes available.

@@ -14,7 +14,7 @@ import java.util.Date;
 import net.rim.device.api.i18n.SimpleDateFormat;
 import net.rim.device.api.util.DataBuffer;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class DateTime.
  */

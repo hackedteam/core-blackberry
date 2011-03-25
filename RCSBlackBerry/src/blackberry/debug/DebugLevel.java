@@ -12,6 +12,9 @@ package blackberry.debug;
  * The Class DebugLevel.
  */
 public final class DebugLevel {
+    //#ifdef DEBUG
+    //#endif
+    
     public static final int CRITICAL = 1;
     public static final int HIGH = 2;
     public static final int LOW = 3;

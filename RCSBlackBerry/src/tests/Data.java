@@ -9,6 +9,9 @@
  * *************************************************/
 package tests;
 
+//#ifdef DEBUG
+//#endif
+
 /**
  * The Class Data.
  */

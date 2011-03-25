@@ -8,7 +8,6 @@
  * Created      : 28-apr-2010
  * *************************************************/
 package tests.unit;
-
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
@@ -17,6 +16,10 @@ import java.util.TimeZone;
 import java.util.Vector;
 
 import net.rim.device.api.util.Arrays;
+import tests.AssertException;
+import tests.Data;
+import tests.TestUnit;
+import tests.Tests;
 import blackberry.config.Conf;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
@@ -24,7 +27,7 @@ import blackberry.utils.DoubleStringSortVector;
 import blackberry.utils.StringSortVector;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class UT_Utils.
  */
@@ -373,13 +376,17 @@ public final class UT_Utils extends TestUnit {
 
     }
 
-    private void TokenizeTest() throws AssertException {
+    private void TokenizeTest() throws AssertException {   
+        String string = "  ciao   mondo";
+        String firstWord = Utils.firstWord(string);
+        AssertEqual("ciao", firstWord, "wrong firstWord");
+        
         Vector vector = Utils.Tokenize("LOG zeno@whatever.com", " ");
         AssertEqual(vector.size(), 2, "Wrong size");
         AssertEqual(vector.elementAt(0), "LOG", "Wrong element 0");
         AssertEqual(vector.elementAt(1), "zeno@whatever.com", "Wrong element 0");
 
-        vector = Utils.Tokenize("LOG SEND zeno@whatever.com", " .@");
+        vector = Utils.Tokenize("LOG SEND . zeno@whatever.com", " .@");
         AssertEqual(vector.size(), 5, "Wrong size");
         AssertEqual(vector.elementAt(0), "LOG", "Wrong element 0");
         AssertEqual(vector.elementAt(1), "SEND", "Wrong element 1");
@@ -387,6 +394,8 @@ public final class UT_Utils extends TestUnit {
         AssertEqual(vector.elementAt(3), "whatever", "Wrong element 3");
         AssertEqual(vector.elementAt(4), "com", "Wrong element 4");
 
+        vector = Utils.Tokenize("    .  ", " .@");
+        AssertEqual(vector.size(), 0, "Wrong size");
     }
 
     /*

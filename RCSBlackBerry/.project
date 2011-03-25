@@ -3,6 +3,7 @@
 	<name>RCSBlackBerry</name>
 	<comment></comment>
 	<projects>
+		<project>RCSBlackBerryResources</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

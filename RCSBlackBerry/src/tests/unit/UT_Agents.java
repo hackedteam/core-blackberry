@@ -12,6 +12,9 @@ package tests.unit;
 import java.util.Vector;
 
 import net.rim.device.api.util.DataBuffer;
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
 import blackberry.AgentManager;
 import blackberry.EventManager;
 import blackberry.Status;
@@ -24,7 +27,7 @@ import blackberry.event.Event;
 import blackberry.event.TimerEvent;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class UT_Agents.
  */
@@ -86,7 +89,7 @@ public final class UT_Agents extends TestUnit {
     private boolean ExecuteAction(final Action action) {
         final Vector subActions = action.getSubActionsList();
         
-        Status.getInstance().removeActionTriggered(action);
+        Status.getInstance().unTriggerAction(action);
 
         for (int j = 0; j < subActions.size(); j++) {
 
@@ -139,8 +142,8 @@ public final class UT_Agents extends TestUnit {
         status.addAgent(agent2);
 
         final Agent agent3 = Agent
-                .factory(Agent.AGENT_URL, true, new byte[] {});
-        AssertNotNull(agent3, "AGENT_URL");
+                .factory(Agent.AGENT_CALL, true, new byte[] {});
+        AssertNotNull(agent3, "AGENT_CALL");
         status.addAgent(agent3);
 
         AssertEqual(agent1.getRunningLoops(), 0,
@@ -377,7 +380,7 @@ public final class UT_Agents extends TestUnit {
         //#ifdef DEBUG
         debug.trace("event 1");
         //#endif
-        final Event event1 = new TimerEvent(1, Conf.CONF_TIMER_SINGLE, 4000, 0);
+        final Event event1 = new TimerEvent(1, Conf.CONF_TIMER_SINGLE, 6000, 0);
         status.addEvent(1, event1);
 
         AssertThat(!event0.isRunning(), "Event0 running");
@@ -418,7 +421,7 @@ public final class UT_Agents extends TestUnit {
         AssertThat(agentPosition.isRunning(), "Agent not Running 4");
 
         // verifica che dopo 2 secondi l'azione 1 sia triggered
-        Utils.sleep(2000);
+        Utils.sleep(4000);
         //#ifdef DEBUG
         debug.trace("triggered 1");
         //#endif

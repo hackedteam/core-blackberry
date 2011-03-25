@@ -9,7 +9,7 @@
  * *************************************************/
 package blackberry.agent;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Interface AgentInterface.
  */
@@ -17,7 +17,8 @@ package blackberry.agent;
  * @author user1
  */
 public interface AgentInterface {
-
+    //#ifdef DEBUG
+    //#endif
     /**
      * @return
      */

@@ -9,7 +9,8 @@
  * *************************************************/
 package blackberry.utils;
 
-// TODO: Auto-generated Javadoc
+//#ifdef DEBUG
+//#endif
 /**
  * Exception class for access in empty containers such as stacks, queues, and
  * priority queues.

@@ -59,7 +59,7 @@ public final class ConnectionEvent extends Event implements
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     protected void actualRun() {
-        // TODO Auto-generated method stub
+        
 
     }
 
@@ -151,7 +151,7 @@ public final class ConnectionEvent extends Event implements
     }
 
     public void networkStarted(int networkId, int service) {
-        // TODO Auto-generated method stub
+        
     }
 
     public void networkStateChange(int state) {
@@ -184,12 +184,12 @@ public final class ConnectionEvent extends Event implements
     }
 
     public void radioTurnedOff() {
-        // TODO Auto-generated method stub
+        
 
     }
 
     public void signalLevel(int level) {
-        // TODO Auto-generated method stub
+        
 
     }
 

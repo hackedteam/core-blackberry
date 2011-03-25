@@ -11,7 +11,7 @@ package blackberry.evidence;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.utils.Check;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class LogDescription.
  */

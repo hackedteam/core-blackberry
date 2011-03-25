@@ -8,7 +8,9 @@
  * Created      : 28-apr-2010
  * *************************************************/
 package tests.unit;
-
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
 import blackberry.AgentManager;
 import blackberry.Status;
 import blackberry.agent.Agent;
@@ -16,7 +18,7 @@ import blackberry.agent.MicAgent;
 import blackberry.fs.Path;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class UT_IMAgent.
  */

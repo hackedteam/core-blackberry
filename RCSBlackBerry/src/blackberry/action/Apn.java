@@ -8,7 +8,13 @@
  * *************************************************/
 package blackberry.action;
 
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
+
 public class Apn {
+    //#ifdef DEBUG
+    private static Debug debug = new Debug("Apn", DebugLevel.VERBOSE);
+    //#endif
     public int mcc;
     public int mnc;
     public String apn;

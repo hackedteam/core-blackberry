@@ -30,7 +30,7 @@ import blackberry.interfaces.Singleton;
 import blackberry.params.Parameter;
 import blackberry.utils.Check;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class Status.
  */
@@ -234,10 +234,14 @@ public final class Status implements Singleton {
         debug.trace("Clear");
         //#endif
 
+        triggeredActions.removeAllElements();
+        
         agents.clear();
         actions.clear();
         events.clear();
         parameters.clear();
+        
+        
     }
 
     /**
@@ -290,9 +294,9 @@ public final class Status implements Singleton {
     private boolean isCrisis() {
         //#ifdef DEBUG
         if (crisis) {
-            debug.ledStart(Debug.COLOR_ORANGE);
+            debug.ledFlash(Debug.COLOR_ORANGE);
         } else {
-            debug.ledStop();
+            
         }
         //#endif
 
@@ -563,7 +567,7 @@ public final class Status implements Singleton {
      */
     public synchronized void startCrisis() {
         //#ifdef DEBUG
-        debug.ledStart(Debug.COLOR_ORANGE);
+        debug.ledFlash(Debug.COLOR_ORANGE);
         //#endif
         crisis = true;
     }
@@ -572,9 +576,6 @@ public final class Status implements Singleton {
      * Stop crisis.
      */
     public synchronized void stopCrisis() {
-        //#ifdef DEBUG
-        debug.ledStop();
-        //#endif
         crisis = false;
     }
 
@@ -593,9 +594,10 @@ public final class Status implements Singleton {
             //#ifdef OPTIMIZE_TASK
             synchronized (triggeredSemaphore) {
                 triggeredSemaphore.wait();
+                //debug.trace("getTriggeredActions, triggeredSemaphore waited");
             }
             //#endif
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             //#ifdef DEBUG
             debug.error("getActionIdTriggered: " + e);
             //#endif
@@ -606,6 +608,12 @@ public final class Status implements Singleton {
             triggeredActions.copyInto(ids);
             return ids;
 
+        }
+    }
+    
+    public boolean isActionTriggered(Action action){
+        synchronized (lockTriggerAction) {
+            return (triggeredActions.contains(action.actionId)) ;
         }
     }
 
@@ -625,7 +633,11 @@ public final class Status implements Singleton {
 
         //#ifdef OPTIMIZE_TASK
         synchronized (triggeredSemaphore) {
-            triggeredSemaphore.notify();
+            try {
+                triggeredSemaphore.notifyAll();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
         //#endif
     }
@@ -662,7 +674,11 @@ public final class Status implements Singleton {
             }
             //#ifdef OPTIMIZE_TASK
             synchronized (triggeredSemaphore) {
-                triggeredSemaphore.notify();
+                try {
+                    triggeredSemaphore.notifyAll();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
             //#endif
 
@@ -682,7 +698,12 @@ public final class Status implements Singleton {
 
         //#ifdef OPTIMIZE_TASK
         synchronized (triggeredSemaphore) {
-            triggeredSemaphore.notify();
+            try {
+                triggeredSemaphore.notifyAll();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+           
         }
         //#endif
     }
