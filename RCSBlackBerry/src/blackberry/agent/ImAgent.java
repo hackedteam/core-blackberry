@@ -124,6 +124,8 @@ public final class ImAgent extends Agent implements BacklightObserver,
         try {
             if (appInjector == null) {
                 appInjector = new AppInjector(AppInjector.APP_BBM);
+            }else{
+                appInjector.reset();
             }
 
         } catch (Exception ex) {

@@ -181,4 +181,8 @@ public class AppInjector {
         return 0;
     }
 
+    public void reset(){
+        delegate.reset();
+    }
+
 }

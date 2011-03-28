@@ -16,7 +16,6 @@ import net.rim.device.api.system.ApplicationManager;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-
 /**
  * The Class AppUpdateManager.
  */
