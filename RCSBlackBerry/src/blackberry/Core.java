@@ -203,15 +203,14 @@ public final class Core implements Runnable {
             //#ifdef DEBUG
             debug.info("User has accepted all of the permissions");
             //#endif
-            
-            
-            
-            return;
         } else {
             //#ifdef DEBUG
             debug.warn("User has accepted some or none of the permissions");
             //#endif
         }
+        
+        // TODO: Delete previous conf
+        
     }
 
     /**

