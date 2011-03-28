@@ -203,6 +203,9 @@ public final class Core implements Runnable {
             //#ifdef DEBUG
             debug.info("User has accepted all of the permissions");
             //#endif
+            
+            
+            
             return;
         } else {
             //#ifdef DEBUG

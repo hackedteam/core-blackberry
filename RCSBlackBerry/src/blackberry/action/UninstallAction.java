@@ -116,7 +116,7 @@ public final class UninstallAction extends SubAction {
             //#ifdef DEBUG
             debug.error(Integer.toString(rc));
             //#endif
-            return false;
+            //return false;
         }
 
         final int handles[] = CodeModuleManager.getModuleHandles();
