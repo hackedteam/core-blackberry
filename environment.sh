@@ -1,10 +1,15 @@
 #export BB_BASE=~/Projects/RCSBlackBerry/
+#export BB_WRK=$BB_BASE/Sources/Workspace/
+
+alias timestamp='date "+%Y%m%d_%H%M%S"'
+alias sha1='openssl sha1'
+alias md5='openssl md5'
+
 export BB_LOGS=$BB_BASE/Logs/
-export BB_WRK=$BB_BASE/Sources/Workspace/
 export BB_SRC_CORE=$BB_WRK/RCSBlackBerry/
 export BB_SRC_LIB=$BB_WRK/RCSBlackBerryResources/
 export BB_DIST=$BB_BASE/dist/
-export BB_VERSION="6.0.0"
+#export BB_VERSION="6.0.0"
 export BB_VERSION="4.5.0"
 export BB_DELIVER=$BB_SRC_CORE/deliverables/Standard/
 export BB_DELIVER_LIB=$BB_SRC_LIB/deliverables/Standard/
