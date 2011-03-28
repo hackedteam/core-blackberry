@@ -12,6 +12,7 @@ package blackberry.agent.url;
 
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.ui.Keypad;
+import net.rim.device.api.ui.UiApplication;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
