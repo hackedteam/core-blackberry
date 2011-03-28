@@ -15,6 +15,8 @@ alias bbbcore='javaloader -wrddr load $BB_DELIVER/$BB_VERSION/$BB_NAME_CORE.cod'
 alias bbblib='javaloader -wrddr load $BB_DELIVER/$BB_VERSION/$BB_NAME_LIB.cod'
 alias bbbboth='javaloader -wrddr load $BB_DELIVER/$BB_VERSION/$BB_NAME_LIB.cod $BB_DELIVER/$BB_VERSION/$BB_NAME_CORE.cod'
 alias envz='vi $BB_WRK/environment.sh; source $BB_WRK/environment.sh'
+alias sign='java -jar "/Developer/Eclipse Helios/plugins/net.rim.ejde.componentpack4.5.0_4.5.0.28/components/bin/SignatureTool.jar" '
+
 
 function renameJad(){
 	if [ "$#" -eq 2 ] 
@@ -40,8 +42,12 @@ function renameJad(){
 
 		rm ${base}_lib.jad
 
-		echo cp ${tmpdir}/${name}* /Volumes/rcs-prod/RCSASP/EXPREPO
-		echo cp ${tmpdir}/${name}* /Volumes/c$/RCSASP/EXPREPO
+		echo cp ${tmpdir}/${name}* /Volumes/rcs-prod/RCSASP/EXPREPO >! upload.sh
+		echo cp ${tmpdir}/${name}* /Volumes/c$/RCSASP/EXPREPO >> upload.sh
+		chmod 755 upload.sh
+
+		echo "execute ${tmpdir}/upload.sh:"
+		cat ${tmpdir}/upload.sh
 	
 		popd
 	else
@@ -62,7 +68,7 @@ function bblogs(){
 
 function release(){
 
-	sourceversion=$1
+	version=$1
 	sourcesZip=""
 	
 	# manage cod files
@@ -86,7 +92,8 @@ function release(){
 	
 	# zip workspace
 	sourceversion=`grep VERSION $BB_SRC_CORE/src/blackberry/Version.java | grep -v //public | awk '{ print $7 }' | cut -f1 -d\; `
-	zip  -q -r RCSBlackBerry$sourceversion.zip $BB_WRK/RCSBlackBerry $BB_WRK/RCSBlackBerryResources 
+	echo $sourceversion
+	zip  -q -r RCSBlackBerry-$sourceversion.zip $BB_WRK/RCSBlackBerry $BB_WRK/RCSBlackBerryResources 
 	
 	# digest
 	openssl sha1 * > sha1sum 2> /dev/null
@@ -95,7 +102,8 @@ function release(){
 	echo
 
 	echo
-	echo cp lib.blackberry core.blackberry /Volumes/SHARE/RELEASE/SVILUPPO/INTERMEDIATE/RCSDB/core/files
+	echo cp lib.blackberry core.blackberry /Volumes/SHARE/RELEASE/SVILUPPO/INTERMEDIATE/RCSDB/core/blackberry
+	echo cp RCSBlackBerry-$sourceversion.zip \"/Volumes/SHARE/RELEASE/STABLE/${version}* build $sourceversion\/Sorgenti/\"
 	
 }
 
@@ -106,20 +114,31 @@ function dist(){
 		rc=$2
 		kind=$3
 
-		distDir=$BB_DIST/${version}/$(timestamp)_${version}${rc}_${kind}
+		distName=$(timestamp)_${version}${rc}_${kind}
+		distDir=$BB_DIST/${version}/$distName
 		echo $distDir
 		
+		# creazione directory e link DEBUG o RELEASE all'ultimo
 		mkdir $distDir
+		cd $distDir/..
+		rm $kind 2> /dev/null
+		ln -s $distName $kind 
 		cd $distDir
 		
 		cp $BB_DELIVER_LIB/$BB_VERSION/$BB_NAME_LIB.cod $distDir
 		cp $BB_DELIVER/$BB_VERSION/$BB_NAME_CORE.cod $distDir		
 		
-		release
+		release $version
+
+		
 		
 	else
 		echo "wrong argument: $0 Version Rc Kind"
 		echo "ex: dist 7.2 RC2 RELEASE"
+		echo "dist procedure:"
+		echo "- package and sign core"
+		echo "- clean resources"
+		echo "- package resources"
 	fi
 	
 }

