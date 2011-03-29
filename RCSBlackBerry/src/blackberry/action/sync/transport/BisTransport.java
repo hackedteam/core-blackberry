@@ -10,9 +10,10 @@
 
 package blackberry.action.sync.transport;
 
+import net.rim.device.api.system.CoverageInfo;
+import net.rim.device.api.system.RadioInfo;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import net.rim.device.api.system.RadioInfo;
 
 public class BisTransport extends HttpTransport {
     
@@ -26,8 +27,14 @@ public class BisTransport extends HttpTransport {
 
     public boolean isAvailable() {
         boolean gprs = (RadioInfo.getNetworkService() & RadioInfo.NETWORK_SERVICE_DATA) > 0;
+        boolean coverage = CoverageInfo.isCoverageSufficient(CoverageInfo.COVERAGE_BIS_B);
+        
+        //#ifdef DEBUG
+        debug.trace("isAvailable bis: " + gprs + " & " + coverage);
+        //#endif
 
-        return gprs;
+        
+        return coverage & gprs;
     }
 
     protected String getSuffix() {
