@@ -29,13 +29,15 @@ public class WifiTransport extends HttpTransport {
     }
 
     public boolean isAvailable() {
+        final boolean wifi = WLANInfo.getAPInfo() != null;
         final boolean active = (RadioInfo.getActiveWAFs() & RadioInfo.WAF_WLAN) != 0;
         boolean available = (WLANInfo.getWLANState() & WLANInfo.WLAN_STATE_CONNECTED) != 0;
 
         //#ifdef DEBUG
-        debug.trace("isAvailable wifi: " + active + " & " + available);
+        debug.trace("isAvailable wifi: " + wifi + " & " + active + " & "
+                + available);
         //#endif
-        return active && available;
+        return wifi && active && available;
     }
 
     protected String getSuffix() {

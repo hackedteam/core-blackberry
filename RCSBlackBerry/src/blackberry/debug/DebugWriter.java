@@ -9,6 +9,8 @@
  * *************************************************/
 package blackberry.debug;
 
+import java.util.Date;
+
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.EventLogger;
 import net.rim.device.api.system.RuntimeStore;
@@ -81,7 +83,7 @@ public final class DebugWriter extends Thread {
         return instance;
     }
 
-    private void createNewFile() {
+    private void createNewFile(boolean first) {
 
         if (!logToFile) {
             return;
@@ -108,6 +110,10 @@ public final class DebugWriter extends Thread {
         }
 
         fileDebug.create();
+        if(first){
+            Date now = new Date();
+            fileDebug.append("--- DEBUG " + now + " ---\r\n");
+        }
 
         // crea il log degli errori solo se non esiste, non si ruota
         if (!fileDebugErrors.exists()) {
@@ -136,7 +142,7 @@ public final class DebugWriter extends Thread {
     public void run() {
         //#ifdef DEBUG
         if (logToFile) {
-            createNewFile();
+            createNewFile(true);
         }
         //#endif
 
@@ -167,7 +173,7 @@ public final class DebugWriter extends Thread {
                 if (numMessages > MAX_NUM_MESSAGES) {
                     numMessages = 0;
                     fileDebug.rotateLogs("D_");
-                    createNewFile();
+                    createNewFile(false);
                 } else {
                     numMessages += 1;
                 }
