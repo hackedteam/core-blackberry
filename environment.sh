@@ -10,14 +10,15 @@ export BB_SRC_CORE=$BB_WRK/RCSBlackBerry/
 export BB_SRC_LIB=$BB_WRK/RCSBlackBerryResources/
 export BB_DIST=$BB_BASE/dist/
 #export BB_VERSION="6.0.0"
-export BB_VERSION="4.5.0"
+#export BB_VERSION="4.5.0"
+export BB_VERSION="5.0.0"
 export BB_DELIVER=$BB_SRC_CORE/deliverables/Standard/
 export BB_DELIVER_LIB=$BB_SRC_LIB/deliverables/Standard/
 export BB_NAME_CORE=net_rim_bb_lib
 export BB_NAME_LIB=net_rim_bb_lib_base
 
-export BB_CORE=$BB_DELIVER/$BB_VERSION/$BB_NAME_CORE.cod
-export BB_LIB=$BB_DELIVER/$BB_VERSION/$BB_NAME_LIB.cod
+export BB_CORE="$BB_DELIVER/$BB_VERSION/$BB_NAME_CORE.cod"
+export BB_LIB="$BB_DELIVER/$BB_VERSION/$BB_NAME_LIB.cod"
 
 
 

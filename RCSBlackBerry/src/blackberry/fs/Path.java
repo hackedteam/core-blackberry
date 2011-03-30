@@ -454,6 +454,7 @@ public final class Path {
                 FileConnection conn = (FileConnection) Connector
                         .open("file://" + USER_BASE_PATH);
                 return conn.availableSize();
+                
             }
         } catch (IOException ex) {
             //#ifdef DEBUG
@@ -465,5 +466,31 @@ public final class Path {
 
         return 0;
     }
+    
+    public static long totalSpace(int sd) {
+        try {
+            if (sd == SD) {
+                if (Path.isSDAvailable()) {
+                    FileConnection conn;
+                    conn = (FileConnection) Connector.open("file://" + SD_BASE_PATH);
+                    return conn.availableSize();
+                }
+            } else {
+                FileConnection conn = (FileConnection) Connector
+                        .open("file://" + USER_BASE_PATH);
+                return conn.totalSize();
+                
+            }
+        } catch (IOException ex) {
+            //#ifdef DEBUG
+            debug.error("totalSpace: " + ex);
+            //#endif
+            
+            return -1;
+        }
+
+        return 0;
+    }
+
 
 }

