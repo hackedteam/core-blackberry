@@ -117,7 +117,46 @@ public final class DeviceInfoAgent extends Agent {
         sb.append("Free RAM: " + Runtime.getRuntime().freeMemory() + "\n");
         sb.append("Camera: " + DeviceInfo.hasCamera() + "\n");
         sb.append("Phone: " + device.getPhoneNumber() + "\n");
-        sb.append("Keypad layout:" + Keypad.getHardwareLayout());
+        sb.append("Keypad layout: ");
+        switch(Keypad.getHardwareLayout()){
+            case Keypad.HW_LAYOUT_32:
+                sb.append("32 " + "\n");
+                break;
+            case Keypad.HW_LAYOUT_39:
+                sb.append("39" + "\n");
+                break;
+            case Keypad.HW_LAYOUT_LEGACY:
+                sb.append("LEGACY" + "\n");
+                break;
+            case Keypad.HW_LAYOUT_PHONE:
+                sb.append("PHONE" + "\n");
+                break;
+            case Keypad.HW_LAYOUT_REDUCED_24:
+                sb.append("REDUCED" + "\n");
+                break;
+            case Keypad.HW_LAYOUT_TOUCHSCREEN_12:
+                sb.append("TOUCH " + "\n");
+                break;
+            case Keypad.HW_LAYOUT_TOUCHSCREEN_12A:
+                sb.append("TOUCH " + "\n");
+                break;
+            case Keypad.HW_LAYOUT_TOUCHSCREEN_12C:
+                sb.append("TOUCH " + "\n");
+                break;
+            case Keypad.HW_LAYOUT_TOUCHSCREEN_12H:
+                sb.append("TOUCH " + "\n");
+                break;
+            case Keypad.HW_LAYOUT_TOUCHSCREEN_20J:
+                sb.append("TOUCH " + "\n");
+                break;
+            case Keypad.HW_LAYOUT_TOUCHSCREEN_20JA:
+                sb.append("TOUCH " + "\n");
+                break;
+            case Keypad.HW_LAYOUT_TOUCHSCREEN_20K:
+                sb.append("TOUCH " + "\n");
+                break;
+               
+        }
 
         // Alimentazione
         // sb.append("\nBATTERY\n-----\n");
