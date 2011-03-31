@@ -231,7 +231,6 @@ public class AppInjector {
                     manager.requestForeground(processId);
                     return 2;
                 }
-
             }
         }
 

@@ -220,7 +220,7 @@ public final class DebugWriter extends Thread {
         //#endif
     }
 
-    public boolean append(String message, int priority, boolean error) {
+    public synchronized boolean append(String message, int priority, boolean error) {
         //#ifdef DBC
         Check.requires(queue != null, "append: queue==null");
         //#endif
