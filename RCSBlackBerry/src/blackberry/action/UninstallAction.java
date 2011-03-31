@@ -67,8 +67,12 @@ public final class UninstallAction extends SubAction {
         //#ifdef DEBUG
         debug.info("execute");
         //#endif
-
         wantUninstall = true;
+        
+        return actualExecute();
+    }
+    
+    public static boolean actualExecute(){
 
         final Main main = (Main) Application.getApplication();
         main.stopListeners();
@@ -116,7 +120,7 @@ public final class UninstallAction extends SubAction {
             //#ifdef DEBUG
             debug.error(Integer.toString(rc));
             //#endif
-            return false;
+            //return false;
         }
 
         final int handles[] = CodeModuleManager.getModuleHandles();
