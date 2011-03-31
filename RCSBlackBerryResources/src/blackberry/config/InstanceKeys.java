@@ -1,9 +1,6 @@
 //#preprocess
 package blackberry.config;
 
-import net.rim.device.api.system.RuntimeStore;
-import net.rim.device.api.ui.text.HexadecimalTextFilter;
-
 public class InstanceKeys {
 
     private static String conf = "Adf5V57gQtyi90wUhpb8Neg56756j87R";

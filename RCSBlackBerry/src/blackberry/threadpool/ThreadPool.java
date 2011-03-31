@@ -13,7 +13,7 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.utils.BlockingQueue;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * implementation of a thread pool.
  * 
@@ -67,7 +67,6 @@ public final class ThreadPool {
 
     //#ifdef DEBUG
     static Debug debug = new Debug("ThreadPool", DebugLevel.VERBOSE);
-
     //#endif
 
     protected final BlockingQueue queue = new BlockingQueue();

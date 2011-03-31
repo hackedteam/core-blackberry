@@ -8,7 +8,6 @@
  * Created      : 28-apr-2010
  * *************************************************/
 package tests.unit;
-
 import java.util.Calendar;
 
 import net.rim.blackberry.api.mail.Address;
@@ -18,17 +17,21 @@ import net.rim.blackberry.api.mail.Message;
 import net.rim.blackberry.api.mail.MessagingException;
 import net.rim.blackberry.api.mail.Store;
 import net.rim.blackberry.api.mail.Transport;
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
 import blackberry.agent.Agent;
 import blackberry.agent.MessageAgent;
 import blackberry.agent.sms.SmsListener;
+import blackberry.interfaces.SmsObserver;
 import blackberry.sms.SMSHelper;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class UT_SmsAgent.
  */
-public final class UT_SmsAgent extends TestUnit {
+public final class UT_SmsAgent extends TestUnit implements SmsObserver {
 
     protected static Store _store;
     protected final static int[] HEADER_KEYS = { Message.RecipientType.TO,
@@ -114,11 +117,11 @@ public final class UT_SmsAgent extends TestUnit {
     private void smsAgentRestart() throws AssertException {
         final SmsListener smslistener = SmsListener.getInstance();
         // start
-        smslistener.start();
+        smslistener.addSmsObserver(this);
         AssertThat(smslistener.isRunning(), "Not running 1");
 
         // spedizione di un sms in uscita        
-        SMSHelper.sendSMSText("1234", "A test message 1");
+        SMSHelper.sendSMSText("11111", "A test message 1");
 
         Utils.sleep(1000);
         //verifica che il sms in uscita sia stato contato una volta
@@ -127,36 +130,36 @@ public final class UT_SmsAgent extends TestUnit {
         AssertEqual(smslistener.getTotIn(), 0, "totin");
 
         // stop
-        smslistener.stop();
+        smslistener.removeSmsObserver(this);
         AssertThat(!smslistener.isRunning(), "Running 1");
 
         Utils.sleep(1000);
 
         // start: secondo giro
-        smslistener.start();
+        smslistener.addSmsObserver(this);
         Utils.sleep(1000);
         AssertThat(smslistener.isRunning(), "Not running 2");
 
         // spedizione di un secondo sms in uscita
-        SMSHelper.sendSMSText("1234", "A test message 2");
+        SMSHelper.sendSMSText("22222", "A test message 2");
         AssertEqual(smslistener.getTotOut(), 2, "totout");
         AssertEqual(smslistener.getTotIn(), 0, "totin");
 
         // qualche giro
         for (int i = 0; i < 10; i++) {
 
-            smslistener.stop();
+            smslistener.removeSmsObserver(this);
             Utils.sleep(100);
-            smslistener.start();
+            smslistener.addSmsObserver(this);
             Utils.sleep(100);
         }
 
-        SMSHelper.sendSMSText("1234", "A test message 3");
+        SMSHelper.sendSMSText("3333", "A test message 3");
         AssertEqual(smslistener.getTotOut(), 3, "totout");
         AssertEqual(smslistener.getTotIn(), 0, "totin");
 
         // stop: ultimo
-        smslistener.stop();
+        smslistener.removeSmsObserver(this);
         Utils.sleep(100);
 
         AssertThat(!smslistener.isRunning(), "Running 2");
@@ -212,5 +215,11 @@ public final class UT_SmsAgent extends TestUnit {
             }
         }
 
+    }
+
+    public void onNewSms(javax.wireless.messaging.Message message,
+            boolean incoming) {
+        // TODO Auto-generated method stub
+        
     }
 }

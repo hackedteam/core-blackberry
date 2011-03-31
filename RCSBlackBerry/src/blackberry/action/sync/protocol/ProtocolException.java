@@ -11,7 +11,7 @@ package blackberry.action.sync.protocol;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class ProtocolException. Viene lanciato in caso di eccezione durante
  * l'esecuzione di un protocollo. Come effetto fa cadere la comunicazione.

@@ -8,11 +8,8 @@
  * *************************************************/
 package blackberry.crypto;
 
-import fake.InstanceKeysFake;
 import net.rim.device.api.crypto.CryptoException;
 import net.rim.device.api.crypto.CryptoTokenException;
-import net.rim.device.api.crypto.PseudoRandomSource;
-import net.rim.device.api.crypto.RandomSource;
 import net.rim.device.api.crypto.SHA1Digest;
 import net.rim.device.api.util.Arrays;
 import blackberry.config.InstanceKeysEmbedded;
@@ -21,8 +18,8 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
+import fake.InstanceKeysFake;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Encryption.
  */
@@ -30,7 +27,6 @@ public class Encryption {
 
     //#ifdef DEBUG
     private static Debug debug = new Debug("Encryption", DebugLevel.VERBOSE);
-
     //#endif
 
     /**
@@ -227,7 +223,7 @@ public class Encryption {
      * @param offset
      *            the offset
      * @return the byte[]
-     * @throws CryptoException 
+     * @throws CryptoException
      */
     public byte[] decryptData(final byte[] cyphered, final int plainlen,
             final int offset) throws CryptoException {
@@ -394,13 +390,29 @@ public class Encryption {
     }
 
     public static Keys getKeys() {
+        boolean isFake = false;
+        Keys keys;
         //#ifdef FAKECONF
+        isFake = true;
+
         final InstanceKeysEmbedded instance = new InstanceKeysFake();
-        return Keys.getInstance(instance);
+        keys = Keys.getInstance(instance);
         //#else
-        return Keys.getInstance();
+        keys = Keys.getInstance();
         //#endif
 
+        //#ifdef DEBUG
+        if (isFake) {
+            //debug.trace("getKeys: fakeConf");
+        }
+        //#endif
+
+        //#ifdef DBC
+        Check.ensures(keys.getChallengeKey() != null, "null challengeKey");
+        Check.ensures(keys.getAesKey() != null, "null aesKey");
+        //#endif
+
+        return keys;
     }
 
 }

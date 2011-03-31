@@ -26,7 +26,7 @@ import blackberry.utils.Check;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class Device.
  */
@@ -36,7 +36,7 @@ public final class Device implements Singleton {
 
     /** The debug instance. */
     //#ifdef DEBUG
-    private static Debug debug = new Debug("Device", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("Device", DebugLevel.INFORMATION);
     //#endif       
 
     public int network;
@@ -53,6 +53,8 @@ public final class Device implements Singleton {
     /** The instance. */
     private static Device instance = null;
 
+    public boolean hasAdvancedClick;
+    
     /**
      * Gets the single instance of Device.
      * 
@@ -63,13 +65,19 @@ public final class Device implements Singleton {
             instance = (Device) RuntimeStore.getRuntimeStore().get(GUID);
             if (instance == null) {
                 final Device singleton = new Device();
+                singleton.init();
                 RuntimeStore.getRuntimeStore().put(GUID, singleton);
                 instance = singleton;
             }
-
         }
-
         return instance;
+    }
+    
+    private void init(){
+        String version = DeviceInfo.getPlatformVersion();
+        if(!version.startsWith("4")){
+            hasAdvancedClick = true;
+        }
     }
 
     /**
@@ -267,7 +275,7 @@ public final class Device implements Singleton {
             imei = new byte[0];
         } else {
             //#ifdef DEBUG
-            debug.trace("cdma");
+            debug.trace("gprs");
             //#endif
             try {
                 imsi = SIMCardInfo.getIMSI();

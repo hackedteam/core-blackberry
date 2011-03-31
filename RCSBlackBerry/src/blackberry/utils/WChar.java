@@ -12,18 +12,16 @@ import java.io.EOFException;
 import java.io.UnsupportedEncodingException;
 
 import net.rim.device.api.util.DataBuffer;
-
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class WChar.
  */
 public final class WChar {
     //#ifdef DEBUG
     private static Debug debug = new Debug("WChar", DebugLevel.INFORMATION);
-
     //#endif
 
     /**

@@ -8,13 +8,16 @@
  * Created      : 28-apr-2010
  * *************************************************/
 package tests.unit;
-
 import java.util.Vector;
 
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
 import blackberry.evidence.EvidenceCollector;
 import blackberry.fs.Path;
 
-// TODO: Auto-generated Javadoc
+//#ifdef DEBUG
+//#endif
 /**
  * The Class UT_LogCollector.
  */
@@ -52,10 +55,10 @@ public final class UT_LogCollector extends TestUnit {
     public void scanTests() throws AssertException {
         Vector vector;
 
-        vector = logCollector.scanForEvidences(Path.SD(), "1_0");
+        vector = logCollector.scanForEvidences(Path.USER(), "1_0");
         AssertThat(vector.size() >= 0, "Wrong file number");
 
-        vector = logCollector.scanForDirLogs(Path.SD());
+        vector = logCollector.scanForDirLogs(Path.USER());
         AssertThat(vector.size() >= 0, "Wrong dir number");
 
     }

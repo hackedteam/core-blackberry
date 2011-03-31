@@ -23,7 +23,7 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.utils.Check;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class Path.
  */
@@ -347,8 +347,8 @@ public final class Path {
             try {
                 fc = (FileConnection) Connector.open("file:///" + root);
                 System.out.println(root + " " + fc.availableSize());
+                
             } catch (final IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }

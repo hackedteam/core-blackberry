@@ -11,14 +11,13 @@ package blackberry.agent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class CallAgent.
  */
 public final class CallAgent extends Agent {
     //#ifdef DEBUG
     private static Debug debug = new Debug("CallAgent", DebugLevel.VERBOSE);
-
     //#endif
 
     /**

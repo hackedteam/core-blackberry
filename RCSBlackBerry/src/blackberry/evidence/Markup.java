@@ -23,7 +23,7 @@ import blackberry.fs.Path;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class Markup.
  */
@@ -37,7 +37,6 @@ public class Markup {
 
     //#ifdef DEBUG
     private static Debug debug = new Debug("Markup", DebugLevel.VERBOSE);
-
     //#endif
 
     /**
@@ -120,7 +119,7 @@ public class Markup {
             final byte[] challengeKey = keys.getChallengeKey();
             //#ifdef DBC
             Check.asserts(challengeKey != null,
-                    "makeMarkupName: challengeKey!=null");
+                    "makeMarkupName: challengeKey==null");
             //#endif
             markupSeed = challengeKey[0];
             markupInit = true;

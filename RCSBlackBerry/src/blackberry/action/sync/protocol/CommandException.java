@@ -12,13 +12,12 @@ package blackberry.action.sync.protocol;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class CommandException.
  */
 public class CommandException extends Exception {
     //#ifdef DEBUG
     static Debug debug = new Debug("CommandException", DebugLevel.VERBOSE);
-
     //#endif
 }

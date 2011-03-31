@@ -16,10 +16,9 @@ import java.util.Vector;
 import blackberry.Status;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.event.Event;
 import blackberry.utils.Check;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class Action.
  */
@@ -113,4 +112,9 @@ public class Action {
         return this.getClass().getName() + " id: " + actionId + " sa:"
                 + subActionList.size();
     }
+
+    public boolean isTriggered() {
+        return status.isActionTriggered(this);
+    }
+
 }

@@ -1,0 +1,97 @@
+dfguid:0x98F217B7DBFD6AE4 time: Thu Feb 10 13:24:15 2011  severity:4 type:2 app:BBMINJECT data:Start Debug: BBMMenuItem
+guid:0x98F217B7DBFD6AE4 time: Thu Feb 10 13:24:15 2011  severity:4 type:2 app:BBMINJECT data:BBMMenuItem View Contact Profile
+guid:0x98F217B7DBFD6AE4 time: Thu Feb 10 13:24:15 2011  severity:4 type:2 app:BBMINJECT data:BBMMenuItem   active screen: net.rim.device.apps.internal.qm.bbm.BBMUserInfoScreen@5475565c
+guid:0x98F217B7DBFD6AE4 time: Thu Feb 10 13:24:15 2011  severity:4 type:2 app:BBMINJECT data:BBMMenuItem   local active screen: net.rim.device.apps.internal.qm.bbm.BBMUserInfoScreen@5475565c
+guid:0x98F217B7DBFD6AE4 time: Thu Feb 10 13:24:15 2011  severity:4 type:2 app:BBMINJECT data:BBMMenuItem exploring Contact Profile: net.rim.device.apps.internal.qm.bbm.BBMUserInfoScreen@5475565c
+guid:0x98F217B7DBFD6AE4 time: Thu Feb 10 13:24:15 2011  severity:4 type:2 app:BBMINJECT data:BBMMenuItem                   AccessibleContextClass
+guid:0x98F217B7DBFD6AE4 time: Thu Feb 10 13:24:15 2011  severity:4 type:2 app:BBMINJECT data:BBMMenuItem User: Zeno
+guid:0x98F217B7DBFD6AE4 time: Thu Feb 10 13:24:15 2011  severity:4 type:2 app:BBMINJECT data:BBMMenuItem PIN: 21CC6534
+guid:0x98F217B7DBFD6AE4 time: Thu Feb 10 13:24:15 2011  severity:4 type:2 app:BBMINJECT data:BBMMenuItem closing Contact Profile
+guid:0x98F217B7DBFD6AE4 time: Thu Feb 10 13:24:15 2011  severity:4 type:2 app:BBMINJECT data:BBMMenuItem run, extracting profile from: net.rim.device.apps.internal.qm.bbm.BBMConversationScreen@c33e1656
+guid:0x98F217B7DBFD6AE4 time: Thu Feb 10 13:24:15 2011  severity:4 type:2 app:BBMINJECT data:BBMMenuItem extractProfile
+guid:0x98F217B7DBFD6AE4 time: Thu Feb 10 13:24:15 2011  severity:4 type:2 app:BBMINJECT data:BBMMenuItem   local active screen: net.rim.device.apps.internal.qm.bbm.BBMContactsScreen@57e198ec
+guid:0x98F217B7DBFD6AE4 time: Thu Feb 10 13:24:15 2011  severity:4 type:2 app:BBMINJECT data:Start Debug: walk
+
+
+guid:0x43D4C8AA264559F0 time: Thu Feb 10 15:24:27 2011  severity:5 type:2 app:BBM data:COMT
+guid:0x98F217B7DBFD6AE4 time: Thu Feb 10 15:24:27 2011  severity:5 type:2 app:BBMINJECT data:
+
+Versione 6
+
+BBMUserInfoScreen hist: 0
+   VerticalFieldManager hist: 1
+      VerticalFieldManager hist: 2
+         HorizontalFieldManager hist: 3
+            FocusableBitmapField hist: 4
+            BitmapField
+            VerticalFieldManager hist: 4
+               VerticalFieldManager hist: 5
+                  UiUtils$2 hist: 6
+                  label: Display Name:
+
+guid:0x98F217B7DBFD6AE4 time: Thu Feb 10 15:24:27 2011  severity:5 type:2 app:BBMINJECT data:
+               UserInfoScreen$UserInfoActiveAutoTextEditField hist: 5
+               TextField null : Zeno style: -2136670208
+         VerticalFieldManager hist: 3
+            QmJustifiedHorizontalFieldManager hist: 4
+               UiUtils$2 hist: 5
+               label: PIN:
+               RichTextField hist: 5
+               TextField  : 21CC6534 style: 524352
+      VerticalFieldManager hist: 2
+         VerticalFieldManager hist: 3
+
+guid:0x98F217B7DBFD6AE4 time: Thu Feb 10 15:24:27 2011  severity:5 type:2 app:BBMINJECT data:
+            QmJustifiedHorizontalFieldManager hist: 4
+               UiUtils$2 hist: 5
+               label: Status:
+               BBMUserInfoScreen$1 hist: 5
+                  AccessibleContextClass
+      VerticalFieldManager hist: 2
+      
+      
+ Versione 5
+      
+      
+BBMUserInfoScreen hist: 0
+   VerticalFieldManager hist: 1
+      VerticalFieldManager hist: 2
+         HorizontalFieldManager hist: 3
+            FocusableBitmapField hist: 4
+            BitmapField
+            VerticalFieldManager hist: 4
+               VerticalFieldManager hist: 5
+                  HorizontalFieldManager hist: 6
+                     UiUtils$2 hist: 7
+
+guid:0x98F217B7DBFD6AE4 time: Thu Feb 10 15:30:22 2011  severity:4 type:2 app:BBMINJECT data:
+                     label: Display Name:
+                     LabelField hist: 7
+                     label:  
+                  UiUtils$1 hist: 6
+                  SeparatorField
+                  UserInfoScreen$UserInfoActiveAutoTextEditField hist: 6
+                  TextField null : Alberto Ornaghi style: -2136670208
+      VerticalFieldManager hist: 2
+         QmJustifiedHorizontalFieldManager hist: 3
+            UiUtils$2 hist: 4
+
+guid:0x98F217B7DBFD6AE4 time: Thu Feb 10 15:30:22 2011  severity:4 type:2 app:BBMINJECT data:
+            label: Status:
+            BBMUserInfoScreen$1 hist: 4
+               AccessibleContextClass
+      VerticalFieldManager hist: 2
+         HorizontalFieldManager hist: 3
+            UiUtils$2 hist: 4
+            label: PIN:
+            RichTextField hist: 4
+            TextField  : 25378ABF style: 524288
+         HorizontalFieldManager hist: 3
+
+guid:0x98F217B7DBFD6AE4 time: Thu Feb 10 15:30:22 2011  severity:4 type:2 app:BBMINJECT data:
+            UiUtils$2 hist: 4
+            label: Email: 
+            RichTextField hist: 4
+            TextField  : a.ornaghi@hackingteam.it style: 524288
+      VerticalFieldManager hist: 2
+      

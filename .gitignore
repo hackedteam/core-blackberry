@@ -1,5 +1,5 @@
-RCSBlackBerry/.preprocessed/
-RCSBlackBerry/bin/
-RCSBlackBerryResources/.preprocessed/
-RCSBlackBerryResources/bin/
+*/.preprocessed/
+*/bin/
+*/deliverables/
 .metadata
+.DS_Store

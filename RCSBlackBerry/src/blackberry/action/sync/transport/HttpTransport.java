@@ -1,4 +1,12 @@
 //#preprocess
+
+/* *************************************************
+ * Copyright (c) 2010 - 2011
+ * HT srl,   All rights reserved.
+ * 
+ * Project      : RCS, RCSBlackBerry
+ * *************************************************/
+	
 package blackberry.action.sync.transport;
 
 import java.io.IOException;
@@ -22,7 +30,7 @@ public abstract class HttpTransport extends Transport {
     private static final int PORT = 80;
 
     //#ifdef DEBUG
-    private static Debug debug = new Debug("HttpTransport", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("HttpTransport", DebugLevel.INFORMATION);
     //#endif
 
     String host;

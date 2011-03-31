@@ -12,14 +12,13 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class ReloadAction.
  */
 public final class ReloadAction extends SubAction {
     //#ifdef DEBUG
     static Debug debug = new Debug("ReloadAction", DebugLevel.VERBOSE);
-
     //#endif
     /**
      * Instantiates a new reload action.

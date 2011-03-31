@@ -8,10 +8,13 @@
  * Created      : 28-apr-2010
  * *************************************************/
 package tests.unit;
-
+import tests.AssertException;
+import tests.TestUnit;
+import tests.Tests;
 import blackberry.fs.Path;
 
-// TODO: Auto-generated Javadoc
+//#ifdef DEBUG
+//#endif
 /**
  * The Class UT_Path.
  */
@@ -33,23 +36,29 @@ public final class UT_Path extends TestUnit {
     }
 
     private void CreateDirTest() throws AssertException {
+        //#ifdef DEBUG
+        debug.trace("CreateDirTest");
+        //#endif
         boolean ret;
-        Path.removeDirectory(Path.SD() + dir1 + dir2);
-        Path.removeDirectory(Path.SD() + dir1);
+        Path.removeDirectory(Path.USER() + dir1 + dir2);
+        Path.removeDirectory(Path.USER() + dir1);
 
-        ret = Path.createDirectory(Path.SD() + dir1);
+        ret = Path.createDirectory(Path.USER() + dir1);
         AssertThat(ret, "Cannot create dir1 ");
-        ret = Path.createDirectory(Path.SD() + dir1 + dir2);
+        ret = Path.createDirectory(Path.USER() + dir1 + dir2);
         AssertThat(ret, "Cannot create dir2 ");
     }
 
     private void RemoveDirTest() throws AssertException {
+        //#ifdef DEBUG
+        debug.trace("RemoveDirTest");
+        //#endif
         boolean ret;
-        ret = Path.removeDirectory(Path.SD() + dir1);
+        ret = Path.removeDirectory(Path.USER() + dir1);
         AssertThat(!ret, "shouldn't delete dir1 ");
-        ret = Path.removeDirectory(Path.SD() + dir1 + dir2);
+        ret = Path.removeDirectory(Path.USER() + dir1 + dir2);
         AssertThat(ret, "Cannot delete dir2 ");
-        ret = Path.removeDirectory(Path.SD() + dir1);
+        ret = Path.removeDirectory(Path.USER() + dir1);
         AssertThat(ret, "Cannot delete dir1 ");
     }
 
@@ -58,6 +67,7 @@ public final class UT_Path extends TestUnit {
      * @see tests.TestUnit#run()
      */
     public boolean run() throws AssertException {
+        Path.printRoots();
         CreateDirTest();
         RemoveDirTest();
         return true;

@@ -25,11 +25,13 @@ import blackberry.debug.DebugLevel;
 import blackberry.location.LocationHelper;
 import blackberry.location.LocationObserver;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class LocationEvent.
  */
 public final class LocationEvent extends Event implements LocationObserver {
+    private static final long LOCATION_PERIOD = 60000;
+    private static final long LOCATION_DELAY = 1000;
     //#ifdef DEBUG
     private static Debug debug = new Debug("LocationEvent", DebugLevel.VERBOSE);
     //#endif
@@ -222,8 +224,8 @@ public final class LocationEvent extends Event implements LocationObserver {
                         + " Dist: " + distance);
                 //#endif
 
-                setPeriod(60000);
-                setDelay(60000);
+                setPeriod(LOCATION_PERIOD);
+                setDelay(LOCATION_DELAY);
                 //setPeriod(NEVER);
 
             } catch (final EOFException e) {

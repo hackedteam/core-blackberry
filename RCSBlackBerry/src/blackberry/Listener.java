@@ -1,4 +1,12 @@
 //#preprocess
+
+/* *************************************************
+ * Copyright (c) 2010 - 2011
+ * HT srl,   All rights reserved.
+ * 
+ * Project      : RCS, RCSBlackBerry
+ * *************************************************/
+	
 package blackberry;
 
 import java.util.Vector;
@@ -12,7 +20,6 @@ public abstract class Listener {
 
     //#ifdef DEBUG
     static Debug debug = new Debug("Listener", DebugLevel.INFORMATION);
-
     //#endif
 
     /**
@@ -56,7 +63,7 @@ public abstract class Listener {
             observers.removeElement(observer);
         } else {
             //#ifdef DEBUG
-            //debug.error("removing observer not present: " + observer);
+            debug.trace("removing observer not present: " + observer);
             //#endif
         }
     }

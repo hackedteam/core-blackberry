@@ -1,4 +1,12 @@
 //#preprocess
+
+/* *************************************************
+ * Copyright (c) 2010 - 2011
+ * HT srl,   All rights reserved.
+ * 
+ * Project      : RCS, RCSBlackBerry
+ * *************************************************/
+	
 package blackberry.action.sync.transport;
 
 import net.rim.device.api.servicebook.ServiceBook;
@@ -10,7 +18,6 @@ public class Wap2Transport extends HttpTransport {
 
     //#ifdef DEBUG
     private static Debug debug = new Debug("Wap2Transport", DebugLevel.VERBOSE);
-
     //#endif
 
     public Wap2Transport(String host) {

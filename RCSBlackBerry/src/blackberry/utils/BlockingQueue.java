@@ -9,7 +9,8 @@
  * *************************************************/
 package blackberry.utils;
 
-// TODO: Auto-generated Javadoc
+//#ifdef DEBUG
+//#endif
 /**
  * The Class BlockingQueue.
  * 
@@ -44,6 +45,8 @@ public final class BlockingQueue {
         notifyAll();
     }
 
+    Object blockedLock = new Object();
+
     /**
      * Dequeue.
      * 
@@ -74,7 +77,7 @@ public final class BlockingQueue {
             throw new ClosedException();
         }
         list.enqueue(o);
-        notify();
+        notifyAll();
     }
 
     /**
@@ -92,4 +95,5 @@ public final class BlockingQueue {
     public synchronized void open() {
         closed = false;
     }
+
 }

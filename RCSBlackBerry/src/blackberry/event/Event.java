@@ -14,7 +14,7 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.threadpool.TimerJob;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class Event.
  */

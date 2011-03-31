@@ -26,7 +26,7 @@ import blackberry.utils.DateTime;
 import blackberry.utils.Sendmail;
 import blackberry.utils.WChar;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class Filter.
  */

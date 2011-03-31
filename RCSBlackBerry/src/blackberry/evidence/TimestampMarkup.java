@@ -22,11 +22,11 @@ import blackberry.utils.Utils;
 
 public class TimestampMarkup extends Markup {
     //#ifdef DEBUG
-    static Debug debug = new Debug("DictMarkup", DebugLevel.INFORMATION);
+    static Debug debug = new Debug("TimeMarkup", DebugLevel.INFORMATION);
     //#endif
 
-    private static final int MARKUP_SIZE = 35 * 100;
-    private static final int MAX_DICT_SIZE = 100;
+    private static final int MARKUP_SIZE = 35 * 20;
+    public static final int MAX_DICT_SIZE = 20;
     Hashtable dictionary = null;
 
     public TimestampMarkup(int agentId, byte[] aesKey) {
@@ -64,9 +64,9 @@ public class TimestampMarkup extends Markup {
     }
 
     protected synchronized boolean writeMarkup(Hashtable dict) {
-        final byte[] payload = new byte[MARKUP_SIZE];
-        final DataBuffer dataBuffer = new DataBuffer(payload, 0, MARKUP_SIZE,
-                false);
+        int size = dict.size() * (8 + 20);
+        final byte[] payload = new byte[size];
+        final DataBuffer dataBuffer = new DataBuffer(payload, 0, size, false);
         final Enumeration enumeration = dict.keys();
         dataBuffer.writeInt(dict.size());
 
@@ -115,10 +115,31 @@ public class TimestampMarkup extends Markup {
         return writeMarkup(dictionary);
     }
 
-    private void shrinkDictionary() {
+    /**
+     * remove oldest value
+     */
+    private synchronized void shrinkDictionary() {
         if (dictionary.size() > 0) {
-            final Object key = dictionary.keys().nextElement();
-            dictionary.remove(key);
+
+            final Enumeration enumeration = dictionary.keys();
+            Object latestKey = null;
+            long minimum = Long.MAX_VALUE;
+
+            while (enumeration.hasMoreElements()) {
+
+                final Object key = enumeration.nextElement();
+                Date date = (Date) dictionary.get(key);
+                long value = date.getTime();
+                if (value < minimum) {
+                    latestKey = key;
+                    minimum = value;
+                }
+            }
+
+            //#ifdef DBC
+            Check.asserts(latestKey != null, "null latest key");
+            //#endif
+            dictionary.remove(latestKey);
         }
     }
 

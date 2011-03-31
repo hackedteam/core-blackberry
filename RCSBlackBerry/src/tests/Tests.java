@@ -16,7 +16,6 @@ import tests.unit.UT_Conf;
 import tests.unit.UT_Crypto;
 import tests.unit.UT_Events;
 import tests.unit.UT_File;
-import tests.unit.UT_HTTPConnection;
 import tests.unit.UT_Log;
 import tests.unit.UT_LogCollector;
 import tests.unit.UT_Mail;
@@ -26,13 +25,12 @@ import tests.unit.UT_Path;
 import tests.unit.UT_Recorder;
 import tests.unit.UT_Self;
 import tests.unit.UT_SmsAgent;
-import tests.unit.UT_Sync;
 import tests.unit.UT_TimerThread;
 import tests.unit.UT_Utils;
+import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Tests.
  */
@@ -41,7 +39,7 @@ public final class Tests {
     static Debug debug = new Debug("Tests", DebugLevel.VERBOSE);
     //#endif
 
-    static boolean full = false;
+    static boolean full = true;
 
     private static Tests instance = null;
 
@@ -62,37 +60,44 @@ public final class Tests {
 
     private Tests() {
 
+        Debug.init();
+
+        Conf.SD_ENABLED = true;
+
         if (full) {
             addTest(new UT_Self("Self", this));
             addTest(new UT_Utils("Utils", this));
             addTest(new UT_Crypto("Crypto", this));
             addTest(new UT_Conf("Conf", this));
-            
+
             addTest(new UT_File("File", this));
             addTest(new UT_Markup("Markup", this));
 
             addTest(new UT_Path("Path", this));
-            
+
             addTest(new UT_TimerThread("TimerThread", this));
 
             addTest(new UT_Log("Log", this));
             addTest(new UT_LogCollector("LogCollector", this));
-            addTest(new UT_Sync("Sync", this));
-            
-            addTest(new UT_Recorder("Recorder", this));  
-            
-            addTest(new UT_MicAgent("MicAgent", this));
+
+            addTest(new UT_Recorder("Recorder", this));
+
             addTest(new UT_SmsAgent("SmsAgent", this));
-            
+
             addTest(new UT_Events("Events", this));
             addTest(new UT_Agents("Agents", this));
 
-            addTest(new UT_Mail("Mail", this));      
-            
+            addTest(new UT_Mail("Mail", this));
+
+            addTest(new UT_MicAgent("MicAgent", this));
+
+        } else {
+
+            addTest(new UT_Events("Events", this));
+            addTest(new UT_Recorder("Recorder", this));
+            addTest(new UT_MicAgent("MicAgent", this));
         }
 
-        addTest(new UT_HTTPConnection("HTTPConnection", this));  
-                      
     }
 
     private void addTest(final TestUnit unitTest) {

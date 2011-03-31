@@ -13,6 +13,9 @@ package blackberry.action.sync.protocol;
  * The Class Proto.
  */
 public final class Proto {
+    //#ifdef DEBUG
+    //#endif
+    
     /** The Constant OK. */
     public static final int OK = 0x1; // OK
 

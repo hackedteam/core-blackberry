@@ -10,5 +10,7 @@
 package blackberry.interfaces;
 
 public interface BacklightObserver extends Observer {
+    //#ifdef DEBUG
+    //#endif
     void onBacklightChange(final boolean status);
 }

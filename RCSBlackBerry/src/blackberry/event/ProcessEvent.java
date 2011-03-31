@@ -19,13 +19,13 @@ import blackberry.interfaces.ApplicationObserver;
 import blackberry.utils.Check;
 import blackberry.utils.WChar;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class ProcessEvent.
  */
 public final class ProcessEvent extends Event implements ApplicationObserver {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("ProcessEvent", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("ProcessEvent", DebugLevel.INFORMATION);
     //#endif
 
     int actionOnEnter;

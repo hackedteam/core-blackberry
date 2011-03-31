@@ -1,6 +1,15 @@
 //#preprocess
-package blackberry.utils;
 
+/* *************************************************
+ * Copyright (c) 2010 - 2011
+ * HT srl,   All rights reserved.
+ * 
+ * Project      : RCS, RCSBlackBerry
+ * *************************************************/
+	
+package blackberry.utils;
+//#ifdef DEBUG
+//#endif
 public final class StringPair {
 
     public String first;

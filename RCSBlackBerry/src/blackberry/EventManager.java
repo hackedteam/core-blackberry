@@ -19,7 +19,7 @@ import blackberry.interfaces.Singleton;
 import blackberry.threadpool.TimerJob;
 import blackberry.utils.Check;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class EventManager.
  */

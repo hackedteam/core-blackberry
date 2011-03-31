@@ -1,7 +1,7 @@
 //#preprocess
 package blackberry.config;
-
-import java.io.ByteArrayInputStream;
+//#ifdef DEBUG
+//#endif
 import java.io.InputStream;
 
 public class InstanceConfig {

