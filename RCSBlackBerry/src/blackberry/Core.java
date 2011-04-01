@@ -160,7 +160,7 @@ public final class Core implements Runnable {
                 ApplicationPermissions.PERMISSION_INTERNAL_CONNECTIONS,
                 ApplicationPermissions.PERMISSION_BROWSER_FILTER,
                 ApplicationPermissions.PERMISSION_INTER_PROCESS_COMMUNICATION,
-                ApplicationPermissions.PERMISSION_INTERNET,
+                //ApplicationPermissions.PERMISSION_INTERNET,
                 };
 
         //TODO: Dalla 4.6: PERMISSION_INTERNET, PERMISSION_ORGANIZER_DATA, PERMISSION_LOCATION_DATA 

