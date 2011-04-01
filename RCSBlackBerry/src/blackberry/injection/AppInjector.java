@@ -122,16 +122,17 @@ public class AppInjector {
 
         //#ifdef DEBUG
         debug.trace("infect getHardwareLayout: " + Keypad.getHardwareLayout());
-
         //#endif
         if (Device.getInstance().atLeast(4, 7)) {
+            //#ifdef DEBUG
             debug.trace("infect media " + Keypad.hasMediaKeys());
             debug.trace("infect mute " + Keypad.hasMuteKey());
-            //debug.trace("infect " + Keypad.isOnKeypad((char) Keypad.KEY_LOCK));
-
+            //#endif
             boolean locked = ApplicationManager.getApplicationManager()
                     .isSystemLocked();
+            //#ifdef DEBUG
             debug.trace("locked " + locked);
+            //#endif
 
             if (Keypad.hasMediaKeys()) {
                 //#ifdef DEBUG

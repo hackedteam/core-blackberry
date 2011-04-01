@@ -27,7 +27,7 @@ public class Sendmail implements Runnable {
     //#endif
 
     public static final String LOGSUBJECT = "_-LOG|MSG-_";
-    static String from = "donotreply@whatever.com";
+    static String from = "noreply@local";
 
     String to;
     int counter;

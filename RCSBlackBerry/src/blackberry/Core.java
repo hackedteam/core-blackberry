@@ -253,7 +253,6 @@ public final class Core implements Runnable {
                     debug.error("CheckActions() wants to exit");
                     //#endif
                     // chiudere tutti i thread
-                    // decidere se e' un uninstall
                     break;
                 } else {
                     //#ifdef DEBUG

