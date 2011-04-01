@@ -80,30 +80,6 @@ public final class ProcessEvent extends Event implements ApplicationObserver {
         AppListener.getInstance().removeApplicationObserver(this);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * blackberry.interfaces.ApplicationListObserver#onApplicationListChange
-     * (java.util.Vector, java.util.Vector)
-     */
-    /*
-     * public void onApplicationListChange( final Vector startedListName, final
-     * Vector stoppedListName, final Vector startedListMod, final Vector
-     * stoppedListMod) { //#ifdef DEBUG debug.trace("onApplicationListChange: "
-     * + this); //#endif Vector startedList; Vector stoppedList; if
-     * (processType) { //#ifdef DEBUG
-     * debug.trace("onApplicationListChange: PROCESS (mod)"); //#endif
-     * startedList = startedListMod; stoppedList = stoppedListMod; } else {
-     * //#ifdef DEBUG debug.trace("onApplicationListChange: WINDOWS (name)");
-     * //#endif startedList = startedListName; stoppedList = stoppedListName; }
-     * if (actionOnEnter != Action.ACTION_NULL && startedList.contains(process))
-     * { //#ifdef DEBUG debug.info("triggering enter: " + process); //#endif
-     * trigger(actionOnEnter); } if (actionOnExit != Action.ACTION_NULL &&
-     * stoppedList.contains(process)) { //#ifdef DEBUG
-     * debug.info("triggering exit: " + process); //#endif
-     * trigger(actionOnExit); } }
-     */
-
     public void onApplicationChange(String startedName, String stoppedName,
             String startedMod, String stoppedMod) {
 
@@ -201,24 +177,6 @@ public final class ProcessEvent extends Event implements ApplicationObserver {
         //NOTREACHED 
     }
 
-    /*
-     * int match_pattern(String pattern, String s) { for(;;) { if (!*pattern)
-     * return (!*s); if (*pattern == '*') { pattern++; if(!*pattern) return (1);
-     * if (*pattern != '?' && *pattern != '*') { for (;*s; s++) { if (*s ==
-     * *pattern && match_pattern(s + 1, pattern + 1)) return (1); } return (0);
-     * } for (; *s; s++) { if (match_pattern(s,pattern)) return (1); } return
-     * (0); } if (!*s) return (0); if (*pattern != '?' && *pattern != *s) return
-     * (0); s++; pattern++; } //NOTREACHED }
-     */
-    /*
-     * int match_pattern(String wildcardProcess, String actualProcess) { for
-     * (;;) { if (!*pattern) return (!*s); if (*pattern == '*') { pattern++; if
-     * (!*pattern) return (1); if (*pattern != '?' && *pattern != '*') { for (;
-     * s; s++) { if (*s == *pattern && match_pattern(s + 1, pattern + 1)) return
-     * (1); } return (0); } for (; *s; s++) { if (match_pattern(s, pattern))
-     * return (1); } return (0); } if (!*s) return (0); if (*pattern != '?' &&
-     * *pattern != *s) return (0); s++; pattern++; } NOTREACHED }
-     */
     /*
      * (non-Javadoc)
      * @see blackberry.event.Event#parse(byte[])

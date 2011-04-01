@@ -18,6 +18,7 @@ import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.system.RuntimeStore;
 import blackberry.action.Action;
 import blackberry.action.SubAction;
+import blackberry.action.UninstallAction;
 import blackberry.agent.Agent;
 import blackberry.config.Conf;
 import blackberry.debug.Debug;
@@ -152,8 +153,10 @@ public final class Task implements Singleton {
 
                         if (exitValue == 1) {
                             //#ifdef DEBUG
-                            debug.info("checkActions: want Uninstall");
+                            debug.info("checkActions: Uninstall");
                             //#endif
+                            
+                            UninstallAction.actualExecute();
                             return false;
                         } else if (exitValue == 2) {
                             //#ifdef DEBUG
@@ -246,8 +249,6 @@ public final class Task implements Singleton {
                     //#ifdef DEBUG
                     debug.warn("CheckActions() uninstalling");
                     //#endif
-
-                    stopAll();
 
                     exit = 1;
                     break;
