@@ -11,7 +11,7 @@
   <Compile OutputCompilerMessages="true" ConvertImages="false" CreateWarningForNoExportedRoutine="true" CompressResources="true" AliasList="">
     <PreprocessorDefines>
       <PreprocessorTag IsActive="true" PreprocessorDefine="DBC" Scope="0"/>
-      <PreprocessorTag IsActive="true" PreprocessorDefine="DEBUG" Scope="0"/>s
+      <PreprocessorTag IsActive="true" PreprocessorDefine="DEBUG" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="EVENTLOGGER" Scope="0"/>
       <PreprocessorTag IsActive="true" PreprocessorDefine="FAKECONF" Scope="0"/>
       <PreprocessorTag IsActive="true" PreprocessorDefine="IM_FORCED" Scope="0"/>

