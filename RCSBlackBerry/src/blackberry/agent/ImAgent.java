@@ -313,5 +313,11 @@ public final class ImAgent extends Agent implements BacklightObserver,
         evidence.atomicWriteOnce(items);
 
     }
+    
+    public void disinfect(){
+        if(appInjector!=null){
+            appInjector.disinfect();
+        }
+    }
 
 }

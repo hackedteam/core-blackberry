@@ -126,9 +126,11 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
         return infected;
     }
 
-    public void setInfected() {
-        Evidence.info("BBM");
-        infected = true;
+    public void setInfected(boolean value) {
+        if(value){
+            Evidence.info("BBM");
+        }
+        infected = value;
     }
 
     public int getDelay() {

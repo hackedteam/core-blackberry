@@ -218,4 +218,10 @@ public class AppInjector {
         delegate.reset();
     }
 
+    //#ifdef DEBUG
+    public void disinfect() {
+        delegate.setInfected(false);
+    }
+    //#endif
+
 }
