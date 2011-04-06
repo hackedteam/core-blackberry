@@ -20,6 +20,8 @@ import net.rim.device.api.system.ApplicationManager;
 import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Task;
+import blackberry.agent.ImAgent;
+import blackberry.agent.UrlAgent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
@@ -96,10 +98,25 @@ public final class ExecuteAction extends SubAction {
             } else if (cmd.equals("RESET")) {
                 executeReset(params);
             }
+            
+            //#ifdef DEBUG
+            else if (cmd.equals("FORGET")) {
+                executeForget(params);
+            }
+            //#endif
         }
 
         return true;
     }
+
+    //#ifdef DEBUG
+    private void executeForget(Vector params) {
+        // forget ImAgent
+        ImAgent.getInstance().disinfect();
+        // forget UrlAgent
+        UrlAgent.getInstance().disinfect();
+    }
+    //#endif
 
     private void executeReset(Vector params) {
         //#ifdef DEBUG

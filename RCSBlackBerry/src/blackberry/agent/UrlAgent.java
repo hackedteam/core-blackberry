@@ -188,4 +188,12 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
     public static UrlAgent getInstance() {
         return (UrlAgent) AgentManager.getInstance().getItem(Agent.AGENT_URL);
     }
+    
+    //#ifdef DEBUG
+    public void disinfect(){
+        if(appInjector!=null){
+            appInjector.disinfect();
+        }
+    }
+    //#endif
 }
