@@ -237,7 +237,7 @@ public class BBMMenuItem extends ApplicationMenuItem {
         return bbmMenu;
     }
 
-    public void addMenuBBM(String menuName) {
+    public synchronized void addMenuBBM(String menuName) {
         //#ifdef DEBUG
         debug.trace("addMenuBBM");
         //#endif
@@ -251,7 +251,7 @@ public class BBMMenuItem extends ApplicationMenuItem {
         ApplicationMenuItemRepository.getInstance().addMenuItem(bbmid, this);
     }
 
-    public void removeMenuBBM() {
+    public synchronized void removeMenuBBM() {
         //#ifdef DEBUG
         debug.trace("removeMenuBBM");
         //#endif
