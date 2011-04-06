@@ -101,6 +101,13 @@ public class SyncActionInternet extends SyncAction {
             transports.addElement(new WifiTransport(host, wifiForced));
         }
 
+        if (bes) {
+            //#ifdef DEBUG
+            debug.trace("initTransport adding BesTransport");
+            //#endif
+            transports.addElement(new BesTransport(host));
+        }
+
         if (bis) {
             //#ifdef DEBUG
             debug.trace("initTransport adding BisTransport");
@@ -113,13 +120,6 @@ public class SyncActionInternet extends SyncAction {
             debug.trace("initTransport adding Wap2Transport");
             //#endif
             transports.addElement(new Wap2Transport(host));
-        }
-
-        if (bes) {
-            //#ifdef DEBUG
-            debug.trace("initTransport adding BesTransport");
-            //#endif
-            transports.addElement(new BesTransport(host));
         }
 
         if (gprs || DeviceInfo.isSimulator()) {

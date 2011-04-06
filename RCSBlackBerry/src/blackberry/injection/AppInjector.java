@@ -173,6 +173,7 @@ public class AppInjector {
 
             for (int i = 0; i < 20; i++) {
                 if (Backlight.isEnabled()) {
+                    Backlight.enable(false);
                     Utils.sleep(500);
                 }
             }
