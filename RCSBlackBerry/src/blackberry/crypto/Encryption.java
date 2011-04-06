@@ -395,7 +395,10 @@ public class Encryption {
         //#ifdef FAKECONF
         isFake = true;
 
-        final InstanceKeysEmbedded instance = new InstanceKeysFake();
+        InstanceKeysEmbedded instance = new InstanceKeysFake();
+        if(instance==null){
+            instance = null;
+        }
         keys = Keys.getInstance(instance);
         //#else
         keys = Keys.getInstance();
@@ -403,7 +406,7 @@ public class Encryption {
 
         //#ifdef DEBUG
         if (isFake) {
-            //debug.trace("getKeys: fakeConf");
+            debug.trace("getKeys, fakeConf, instance: " +instance);
         }
         //#endif
 

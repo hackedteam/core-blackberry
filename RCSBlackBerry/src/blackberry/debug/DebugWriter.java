@@ -15,7 +15,7 @@ import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.EventLogger;
 import net.rim.device.api.system.RuntimeStore;
 import blackberry.Device;
-import blackberry.fs.AutoFlashFile;
+import blackberry.fs.AutoFile;
 import blackberry.fs.Path;
 import blackberry.utils.Check;
 
@@ -33,8 +33,8 @@ public final class DebugWriter extends Thread {
     //         + Device.getPin() + ".txt";
     private static final long SLEEP_TIME = 1000;
 
-    private static AutoFlashFile fileDebug;
-    private static AutoFlashFile fileDebugErrors;
+    private static AutoFile fileDebug;
+    private static AutoFile fileDebugErrors;
 
     private static final int MAX_NUM_MESSAGES = 5000;
     int numMessages;
@@ -91,16 +91,16 @@ public final class DebugWriter extends Thread {
 
         if (logToSD) {
             Path.createDirectory(Path.SD());
-            fileDebug = new AutoFlashFile(debugDir(Path.SD())
+            fileDebug = new AutoFile(debugDir(Path.SD())
                     + debugName(DEBUG_NAME), true);
 
-            fileDebugErrors = new AutoFlashFile(debugDir(Path.SD())
+            fileDebugErrors = new AutoFile(debugDir(Path.SD())
                     + debugName(ERROR_NAME), true);
         } else {
             Path.createDirectory(Path.USER());
-            fileDebug = new AutoFlashFile(debugDir(Path.USER())
+            fileDebug = new AutoFile(debugDir(Path.USER())
                     + debugName(DEBUG_NAME), true);
-            fileDebugErrors = new AutoFlashFile(debugDir(Path.USER())
+            fileDebugErrors = new AutoFile(debugDir(Path.USER())
                     + debugName(ERROR_NAME), true);
         }
 

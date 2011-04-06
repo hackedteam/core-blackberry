@@ -28,7 +28,7 @@ import blackberry.utils.Utils;
 /**
  * The Class AutoFlashFile.
  */
-public final class AutoFlashFile {
+public final class AutoFile {
     private static final long MAX_FILE_SIZE = 1024 * 10;
     private String fullfilename;
     private String path;
@@ -47,7 +47,7 @@ public final class AutoFlashFile {
      * @param hidden_
      *            the hidden_
      */
-    public AutoFlashFile(final String filename, final boolean hidden) {
+    public AutoFile(final String filename, final boolean hidden) {
 
         //#ifdef DBC
         Check.asserts(!filename.startsWith("file://"),
@@ -71,7 +71,7 @@ public final class AutoFlashFile {
         this.hidden = hidden;
     }
 
-    public AutoFlashFile(String filepath) {
+    public AutoFile(String filepath) {
         this(filepath, true);
     }
 

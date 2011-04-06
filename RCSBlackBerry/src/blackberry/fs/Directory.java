@@ -24,7 +24,7 @@ import blackberry.utils.Utils;
 
 public class Directory {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("Utils", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("Directory", DebugLevel.VERBOSE);
     //#endif
 
     public static String hiddenDirMacro = "$dir$";

