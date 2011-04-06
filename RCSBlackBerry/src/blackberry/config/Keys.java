@@ -55,6 +55,7 @@ public final class Keys implements Singleton {
                 final Keys singleton = new Keys();
                 RuntimeStore.getRuntimeStore().put(GUID, singleton);
                 instance = singleton;
+                
             }
         }
         //#ifdef FAKECONF
@@ -89,13 +90,15 @@ public final class Keys implements Singleton {
 
     private Keys() {
         final Device device = Device.getInstance();
+        instanceKeys = new InstanceKeys();
+
         //device.refreshData();
         final byte[] deviceid = device.getWDeviceId();
         byteInstanceID = Encryption.SHA1(deviceid);
     }
 
     private void setInstanceKeys(InstanceKeysEmbedded instance) {
-        instanceKeys = new InstanceKeys();
+        //instanceKeys = new InstanceKeys();
         //#ifdef FAKECONF
         if (!hasBeenBinaryPatched()) {
             if (instance != null) {

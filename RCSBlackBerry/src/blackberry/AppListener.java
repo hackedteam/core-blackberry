@@ -45,7 +45,7 @@ import blackberry.interfaces.Singleton;
  * @see AppEvent
  */
 public final class AppListener extends Listener implements RadioStatusListener,
-        HolsterListener, SystemListener2, PhoneListener, MemoryCleanerListener,
+        HolsterListener, SystemListener2, PhoneListener,
         PhoneLogListener, Singleton {
 
     private static final long GUID = 0x4e5dd52b9f50b3feL;
@@ -790,9 +790,5 @@ public final class AppListener extends Listener implements RadioStatusListener,
         return false;
     }
 
-    public String getDescription() {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
 }
