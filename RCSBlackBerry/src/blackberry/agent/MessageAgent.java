@@ -171,7 +171,11 @@ public final class MessageAgent extends Agent implements SmsObserver,
                     //#ifdef DEBUG
                     debug.trace("actualRun: stopping historyThread");
                     //#endif
+                    
+                    //#ifdef HISTORY_MAIL
                     mailListener.stopHistory();
+                    //#endif
+                    
                     try {
                         historyThread.join();
                         //#ifdef DEBUG
