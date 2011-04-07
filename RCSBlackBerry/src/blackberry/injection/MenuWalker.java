@@ -52,11 +52,13 @@ public class MenuWalker {
         setLocaleEnd();
     }
 
-    public static boolean walk(String menuItemText, Screen screen,
-            boolean simple) {
+    public static boolean walk(String[] menus, Screen screen, boolean simple) {
         //#ifdef DEBUG
         final Debug debug = new Debug("walk", DebugLevel.VERBOSE);
-        debug.trace("walk: " + menuItemText + " screen: " + screen);
+        for (int j = 0; j < menus.length; j++) {
+            String menuItemText = menus[j];
+            debug.trace("walk: " + menuItemText + " screen: " + screen);
+        }
         //#endif
 
         boolean ret = false;
@@ -87,41 +89,45 @@ public class MenuWalker {
             debug.trace(content);
             //#endif
 
-            if (content.equalsIgnoreCase(menuItemText)) {
-                if (simple) {
-                    //#ifdef DEBUG
-                    debug.info("running simple: " + content);
-                    //#endif
-                    item.run();
-                    ret = true;
-                    break;
-                } else {
-                    //#ifdef DEBUG
-                    debug.trace("running invoke: " + content);
-                    //#endif
+            for (int j = 0; j < menus.length; j++) {
+                String menuItemText = menus[j];
 
-                    Application app = screen.getApplication();
-                    if (app == null) {
+                if (content.equalsIgnoreCase(menuItemText)) {
+                    if (simple) {
                         //#ifdef DEBUG
-                        debug.trace("null app");
+                        debug.info("running simple: " + content);
                         //#endif
-                        app = Application.getApplication();
-                    }
-                    app.invokeLater(new Runnable() {
-                        public void run() {
-                            //#ifdef DEBUG
-                            debug.trace("into run");
-                            //#endif
-                            item.run();
-                            //#ifdef DEBUG
-                            debug.trace("  menuwalk local active screen: "
-                                    + UiApplication.getUiApplication()
-                                            .getActiveScreen());
-                            //#endif
-                        }
-                    });
+                        item.run();
+                        ret = true;
+                        break;
+                    } else {
+                        //#ifdef DEBUG
+                        debug.trace("running invoke: " + content);
+                        //#endif
 
-                    break;
+                        Application app = screen.getApplication();
+                        if (app == null) {
+                            //#ifdef DEBUG
+                            debug.trace("null app");
+                            //#endif
+                            app = Application.getApplication();
+                        }
+                        app.invokeLater(new Runnable() {
+                            public void run() {
+                                //#ifdef DEBUG
+                                debug.trace("into run");
+                                //#endif
+                                item.run();
+                                //#ifdef DEBUG
+                                debug.trace("  menuwalk local active screen: "
+                                        + UiApplication.getUiApplication()
+                                                .getActiveScreen());
+                                //#endif
+                            }
+                        });
+
+                        break;
+                    }
                 }
             }
         }
@@ -191,4 +197,7 @@ public class MenuWalker {
         return locale;
     }
 
+    public static boolean walk(String string, Screen screen, boolean simple) {
+        return walk(new String[] { string }, screen, simple);
+    }
 }

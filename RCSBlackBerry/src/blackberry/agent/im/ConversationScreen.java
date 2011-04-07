@@ -120,7 +120,7 @@ public class ConversationScreen {
         //#endif
 
         // debug.trace("try copy chat: "+screen);
-        if (MenuWalker.walk("Copy Chat", screen, true)) {
+        if (MenuWalker.walk(new String[] {"Copy Chat", "Copy History"}, screen, true)) {
             String clip = (String) Clipboard.getClipboard().get();
             Clipboard.getClipboard().put("");
 
