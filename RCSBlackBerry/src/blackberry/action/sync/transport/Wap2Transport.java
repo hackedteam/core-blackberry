@@ -11,6 +11,8 @@ package blackberry.action.sync.transport;
 
 import net.rim.device.api.servicebook.ServiceBook;
 import net.rim.device.api.servicebook.ServiceRecord;
+import net.rim.device.api.system.CoverageInfo;
+import net.rim.device.api.system.RadioInfo;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
@@ -25,8 +27,17 @@ public class Wap2Transport extends HttpTransport {
     }
 
     public boolean isAvailable() {
+        
         String uid = getUid();
-        return uid != null;
+        
+        boolean gprs = (RadioInfo.getNetworkService() & RadioInfo.NETWORK_SERVICE_DATA) > 0;
+        boolean coverage = CoverageInfo.isCoverageSufficient(CoverageInfo.COVERAGE_DIRECT);
+        
+        //#ifdef DEBUG
+        debug.trace("isAvailable wap2: " + gprs + " & " + coverage);
+        //#endif
+        
+        return coverage & gprs & uid != null;
     }
 
     private String getUid() {

