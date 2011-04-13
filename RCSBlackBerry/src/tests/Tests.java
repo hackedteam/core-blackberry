@@ -39,7 +39,7 @@ public final class Tests {
     static Debug debug = new Debug("Tests", DebugLevel.VERBOSE);
     //#endif
 
-    static boolean full = true;
+    static boolean full = false;
 
     private static Tests instance = null;
 
@@ -93,9 +93,7 @@ public final class Tests {
 
         } else {
 
-            addTest(new UT_Events("Events", this));
-            addTest(new UT_Recorder("Recorder", this));
-            addTest(new UT_MicAgent("MicAgent", this));
+            addTest(new UT_Log("Log", this));
         }
 
     }

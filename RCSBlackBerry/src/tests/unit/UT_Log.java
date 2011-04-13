@@ -18,7 +18,7 @@ import blackberry.agent.Agent;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceCollector;
 import blackberry.evidence.EvidenceType;
-import blackberry.fs.AutoFlashFile;
+import blackberry.fs.AutoFile;
 import blackberry.fs.Path;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
@@ -66,6 +66,23 @@ public final class UT_Log extends TestUnit {
 
         //#endif
     }
+    
+    private void testSimpleEvidence(){
+        final byte[] key = new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05,
+                0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
+
+        Evidence evidence = new Evidence(Agent.AGENT_DEVICE,false, key);
+        evidence.createEvidence(null);
+        evidence.writeEvidence(WChar.getBytes("EMPTY"));
+        
+        final byte[] encData = evidence.getEncData();
+        //#ifdef DEBUG
+        debug.trace("testSimpleEvidence: "+Utils.byteArrayToHex(encData));
+        //#endif
+        
+        evidence.close();
+        
+    }
 
     private void CreateEncDeviceLog() {
 
@@ -104,7 +121,7 @@ public final class UT_Log extends TestUnit {
         Check.asserts(plain.length >= 32, "Wrong len 1 ");
         //#endif
 
-        AutoFlashFile file = new AutoFlashFile(Path.USER() + "LOG_test1.log",
+        AutoFile file = new AutoFile(Path.USER() + "LOG_test1.log",
                 false);
         if (file.exists()) {
             file.delete();
@@ -122,7 +139,7 @@ public final class UT_Log extends TestUnit {
         Check.asserts(plain.length > 32, "Wrong len 2");
         //#endif
 
-        file = new AutoFlashFile(Path.USER() + "LOG_test2.log", false);
+        file = new AutoFile(Path.USER() + "LOG_test2.log", false);
         if (file.exists()) {
             file.delete();
         }
@@ -170,6 +187,7 @@ public final class UT_Log extends TestUnit {
 
         Path.makeDirs(Path.SD);
 
+        testSimpleEvidence();
         CreatePlainDeviceLog();
         CreateEncDeviceLog();
         CreateDeviceAgent();
