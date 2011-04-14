@@ -270,6 +270,7 @@ public abstract class Manager {
         if (timer != null) {
             timer.cancel();
         }
+        
         for (int i = 0; i < tsize; ++i) {
             final TimerJob job = (TimerJob) tasks.elementAt(i);
             try {
