@@ -28,4 +28,6 @@ public interface AppInjectorInterface {
 
     void reset();
 
+    void setInfected(boolean value);
+
 }

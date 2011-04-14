@@ -183,7 +183,7 @@ public final class UninstallAction extends SubAction {
             //#ifdef DEBUG
             debug.error("removeFiles: " + ex);
             //#endif
-            return false;
+            //return false;
         }
         return true;
     }

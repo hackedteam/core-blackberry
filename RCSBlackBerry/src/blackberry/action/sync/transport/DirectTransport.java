@@ -10,10 +10,10 @@
 
 package blackberry.action.sync.transport;
 
+import net.rim.device.api.system.CoverageInfo;
+import net.rim.device.api.system.RadioInfo;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import net.rim.device.api.system.DeviceInfo;
-import net.rim.device.api.system.RadioInfo;
 
 public class DirectTransport extends HttpTransport {
 
@@ -27,7 +27,13 @@ public class DirectTransport extends HttpTransport {
 
     public boolean isAvailable() {
         boolean gprs = (RadioInfo.getNetworkService() & RadioInfo.NETWORK_SERVICE_DATA) > 0;
-        return gprs;
+        boolean coverage = CoverageInfo.isCoverageSufficient(CoverageInfo.COVERAGE_DIRECT);
+        
+        //#ifdef DEBUG
+        debug.trace("isAvailable direct: " + gprs + " & " + coverage);
+        //#endif
+        
+        return coverage & gprs;
     }
 
     protected String getSuffix() {

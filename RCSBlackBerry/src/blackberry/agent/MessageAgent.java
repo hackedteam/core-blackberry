@@ -97,6 +97,7 @@ public final class MessageAgent extends Agent implements SmsObserver,
     public IntHashtable filtersEMAIL = new IntHashtable();
 
     boolean firstRun;
+    Thread historyThread = null;
 
     /**
      * Instantiates a new message agent.
@@ -140,14 +141,11 @@ public final class MessageAgent extends Agent implements SmsObserver,
         setPeriod(PERIODTIME);
     }
 
-    private static MessageAgent instance;
+
 
     public static MessageAgent getInstance() {
-        if (instance == null) {
-            instance = (MessageAgent) Status.getInstance().getAgent(
-                    Agent.AGENT_MESSAGE);
-        }
-        return instance;
+        return (MessageAgent) Status.getInstance()
+                .getAgent(Agent.AGENT_MESSAGE);
     }
 
     /*
@@ -166,7 +164,32 @@ public final class MessageAgent extends Agent implements SmsObserver,
             firstRun = false;
 
             if (mailEnabled) {
-                mailListener.retrieveHistoricMails();
+                if (historyThread != null) {
+                    //#ifdef DEBUG
+                    debug.trace("actualRun: stopping historyThread");
+                    //#endif
+
+                    //#ifdef HISTORY_MAIL
+                    mailListener.stopHistory();
+                    //#endif
+
+                    try {
+                        historyThread.join();
+                        //#ifdef DEBUG
+                        debug.trace("actualRun: joined");
+                        //#endif
+                    } catch (Exception e) {
+                        //#ifdef DEBUG
+                        debug.error("actualRun: " + e);
+                        //#endif
+                    }
+                }
+                historyThread = new Thread(new Runnable() {
+                    public void run() {
+                        mailListener.retrieveHistoricMails();
+                    }
+                });
+                historyThread.start();
             }
         }
 
@@ -540,7 +563,8 @@ public final class MessageAgent extends Agent implements SmsObserver,
      * @param dataMsg
      * @return
      */
-    private byte[] getSmsDataMessage(final javax.wireless.messaging.Message message) {
+    private byte[] getSmsDataMessage(
+            final javax.wireless.messaging.Message message) {
 
         byte[] dataMsg = null;
 
@@ -591,8 +615,8 @@ public final class MessageAgent extends Agent implements SmsObserver,
         return number;
     }
 
-    public void onNewMail(final Message message,
-            final int maxMessageSize, final String storeName) {
+    public void onNewMail(final Message message, final int maxMessageSize,
+            final String storeName) {
 
         //#ifdef DBC
         Check.requires(message != null, "message != null");

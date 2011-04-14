@@ -9,6 +9,8 @@
 
 package blackberry;
 
+import java.util.Vector;
+
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.device.api.system.CDMAInfo;
 import net.rim.device.api.system.DeviceInfo;
@@ -25,7 +27,6 @@ import blackberry.interfaces.Singleton;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
-
 
 /**
  * The Class Device.
@@ -53,8 +54,6 @@ public final class Device implements Singleton {
     /** The instance. */
     private static Device instance = null;
 
-    public boolean hasAdvancedClick;
-    
     /**
      * Gets the single instance of Device.
      * 
@@ -72,12 +71,21 @@ public final class Device implements Singleton {
         }
         return instance;
     }
-    
-    private void init(){
-        String version = DeviceInfo.getPlatformVersion();
-        if(!version.startsWith("4")){
-            hasAdvancedClick = true;
-        }
+
+    int majorVersion;
+    int minorVersion;
+
+    private void init() {
+        String version = DeviceInfo.getSoftwareVersion();
+        Vector tokens = Utils.splitString(version, ".");
+
+        majorVersion = Integer.parseInt((String) tokens.elementAt(0));
+        minorVersion = Integer.parseInt((String) tokens.elementAt(1));
+
+        //#ifdef DEBUG
+        debug.info("Version major: " + majorVersion + " minor: "
+                + minorVersion);
+        //#endif
     }
 
     /**
@@ -335,6 +343,31 @@ public final class Device implements Singleton {
 
     public static String getPin() {
         return NumberUtilities.toString(DeviceInfo.getDeviceId(), 16);
+    }
+
+    public boolean atLeast(int major, int minor) {
+        try {
+
+            //#ifdef DEBUG
+            debug.trace("Version major: " + majorVersion + " minor: "
+                    + minorVersion);
+            debug.trace("atLeast: " + major + "." + minor);
+            //#endif
+            if (majorVersion > major) {
+                return true;
+            } else if (majorVersion == major) {
+                return (minorVersion >= minor);
+            } else {
+                return false;
+            }
+
+        } catch (Exception ex) {
+            //#ifdef DEBUG
+            debug.error("atLeast: " + ex);
+            //#endif
+        }
+
+        return false;
     }
 
 }

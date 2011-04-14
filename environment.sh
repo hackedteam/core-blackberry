@@ -1,4 +1,5 @@
 #export BB_BASE=~/Projects/RCSBlackBerry/
+export BB_WIN_BASE='C:\Users\zeno\HT\RCSBlackBerry\Workspace\RCSBlackBerry'
 #export BB_WRK=$BB_BASE/Sources/Workspace/
 
 alias timestamp='date "+%Y%m%d_%H%M%S"'
@@ -10,15 +11,22 @@ export BB_SRC_CORE=$BB_WRK/RCSBlackBerry/
 export BB_SRC_LIB=$BB_WRK/RCSBlackBerryResources/
 export BB_DIST=$BB_BASE/dist/
 #export BB_VERSION="6.0.0"
+#export BB_VERSION="5.0.0"
 export BB_VERSION="4.5.0"
 export BB_DELIVER=$BB_SRC_CORE/deliverables/Standard/
 export BB_DELIVER_LIB=$BB_SRC_LIB/deliverables/Standard/
 export BB_NAME_CORE=net_rim_bb_lib
 export BB_NAME_LIB=net_rim_bb_lib_base
 
-alias bbbcore='javaloader -wrddr load $BB_DELIVER/$BB_VERSION/$BB_NAME_CORE.cod'
-alias bbblib='javaloader -wrddr load $BB_DELIVER/$BB_VERSION/$BB_NAME_LIB.cod'
-alias bbbboth='javaloader -wrddr load $BB_DELIVER/$BB_VERSION/$BB_NAME_LIB.cod $BB_DELIVER/$BB_VERSION/$BB_NAME_CORE.cod'
+export BB_CORE="$BB_DELIVER/$BB_VERSION/$BB_NAME_CORE.cod"
+export BB_LIB="$BB_DELIVER/$BB_VERSION/$BB_NAME_LIB.cod"
+
+
+export BB_WIN_CORE='C:\Users\zeno\HT\RCSBlackBerry\Workspace\RCSBlackBerry\deliverables\Standard\4.5.0\net_rim_bb_lib.cod'
+
+alias bbbcore='javaloader -wrddr load $BB_CORE'
+alias bbblib='javaloader -wrddr load $BB_LIB'
+alias bbbboth='javaloader -wrddr load $BB_CORE $BB_LIB'
 alias envz='vi $BB_WRK/environment.sh; source $BB_WRK/environment.sh'
 alias sign='java -jar "/Developer/Eclipse Helios/plugins/net.rim.ejde.componentpack4.5.0_4.5.0.28/components/bin/SignatureTool.jar" '
 

