@@ -219,8 +219,6 @@ public final class Core implements Runnable {
             //#endif
         }
         
-        // TODO: Delete previous conf
-        
     }
 
     /**

@@ -277,8 +277,9 @@ public abstract class HttpKeepAliveTransport extends HttpTransport {
             try {
                 os.close();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+              //#ifdef DEBUG
+                debug.error(e);
+                //#endif
             }
             os = null;
         }

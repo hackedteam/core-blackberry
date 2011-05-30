@@ -15,7 +15,7 @@ import net.rim.device.api.system.RadioInfo;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-public class DirectTransport extends HttpKeepAliveTransport {
+public class DirectTransport extends HttpTransport {
 
     //#ifdef DEBUG
     private static Debug debug = new Debug("DirectTransport", DebugLevel.VERBOSE);

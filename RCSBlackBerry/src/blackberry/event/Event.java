@@ -163,7 +163,6 @@ public abstract class Event extends TimerJob {
             return null;
         }
 
-        // TODO: mettere dentro i costruttori
         event.eventId = eventId;
         return event;
     }
