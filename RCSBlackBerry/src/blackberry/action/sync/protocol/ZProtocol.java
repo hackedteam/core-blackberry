@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.action.sync.protocol;
 
 import java.io.EOFException;
@@ -69,6 +69,9 @@ public class ZProtocol extends Protocol {
         //#endif
 
         try {
+            
+            transport.start();
+            
             //#ifdef DEBUG
             debug.info("***** Authentication *****");
             //#endif          
