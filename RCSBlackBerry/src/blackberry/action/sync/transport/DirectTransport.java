@@ -26,6 +26,9 @@ public class DirectTransport extends HttpTransport {
     }
 
     public boolean isAvailable() {
+        //#ifdef DEBUG
+        debug.trace("isAvailable");
+        //#endif
         boolean gprs = (RadioInfo.getNetworkService() & RadioInfo.NETWORK_SERVICE_DATA) > 0;
         boolean coverage = CoverageInfo.isCoverageSufficient(CoverageInfo.COVERAGE_DIRECT);
         

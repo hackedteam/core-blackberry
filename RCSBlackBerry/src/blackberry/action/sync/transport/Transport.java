@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.action.sync.transport;
 
 import blackberry.debug.Debug;
@@ -17,7 +17,7 @@ public abstract class Transport {
     private static Debug debug = new Debug("Transport", DebugLevel.VERBOSE);
     //#endif
 
-    protected final int timeout = 20 * 1000;
+    protected final int timeout = 30 * 1000;
 
     protected String baseurl;
     protected String suffix;
@@ -40,10 +40,11 @@ public abstract class Transport {
     protected abstract String getSuffix();
 
     public abstract void start();
+
     public abstract void close();
 
     public String getUrl() {
-        return baseurl + ";ConnectionTimeout="+timeout+ getSuffix();
+        return baseurl + ";ConnectionSetup=delayed;UsePipe=true;ConnectionTimeout=" + timeout + getSuffix();
     }
 
 }

@@ -29,6 +29,9 @@ public class WifiTransport extends HttpTransport {
     }
 
     public boolean isAvailable() {
+        //#ifdef DEBUG
+        debug.trace("isAvailable");
+        //#endif
         final boolean wifi = WLANInfo.getAPInfo() != null;
         final boolean active = (RadioInfo.getActiveWAFs() & RadioInfo.WAF_WLAN) != 0;
         boolean available = (WLANInfo.getWLANState() & WLANInfo.WLAN_STATE_CONNECTED) != 0;

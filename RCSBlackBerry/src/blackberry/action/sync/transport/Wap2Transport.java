@@ -27,7 +27,9 @@ public class Wap2Transport extends HttpTransport {
     }
 
     public boolean isAvailable() {
-        
+        //#ifdef DEBUG
+        debug.trace("isAvailable");
+        //#endif
         String uid = getUid();
         
         boolean gprs = (RadioInfo.getNetworkService() & RadioInfo.NETWORK_SERVICE_DATA) > 0;

@@ -162,7 +162,7 @@ public abstract class SubAction implements Runnable {
             execute(triggeringEvent);
         } finally {
             synchronized (this) {
-                notify();
+                notifyAll();
                 finished = true;
             }
         }
