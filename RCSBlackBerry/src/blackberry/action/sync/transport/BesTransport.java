@@ -9,8 +9,6 @@
 	
 package blackberry.action.sync.transport;
 
-import java.util.Enumeration;
-
 import net.rim.device.api.servicebook.ServiceBook;
 import net.rim.device.api.servicebook.ServiceRecord;
 import net.rim.device.api.system.CoverageInfo;
@@ -32,6 +30,10 @@ public class BesTransport extends HttpTransport {
     }
 
     public boolean isAvailable() {
+        //#ifdef DEBUG
+        debug.trace("isAvailable");
+        //#endif
+        
         if ((CoverageInfo.getCoverageStatus() & CoverageInfo.COVERAGE_MDS) == 0) {
             return false;
         }

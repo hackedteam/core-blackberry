@@ -213,12 +213,10 @@ public final class MessageAgent extends Agent implements SmsObserver,
      */
     public void actualStart() {
         firstRun = true;
-        //TODO: se gli sms sono disabilitati non far partire il listener.
         if (smsEnabled) {
             smsListener.addSmsObserver(this);
         }
 
-        //TODO: se l'email e' disabilitata non far partire il listener.
         if (mailEnabled) {
             mailListener.addSingleMailObserver(this);
         }

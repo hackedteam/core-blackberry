@@ -219,8 +219,6 @@ public final class Core implements Runnable {
             //#endif
         }
         
-        // TODO: Delete previous conf
-        
     }
 
     /**
@@ -252,8 +250,6 @@ public final class Core implements Runnable {
                     //#endif
                     // CHECK: Status o init?
                 }
-
-                Status.getInstance().setRestarting(false);
 
                 //#ifdef DEBUG
                 debug.info("starting checking actions");

@@ -22,6 +22,8 @@ public class WifiTransport extends HttpTransport {
 
     boolean wifiForced;
 
+    private boolean forced;
+
     public WifiTransport(String host, boolean wifiForced) {
         super(host);
 
@@ -29,6 +31,9 @@ public class WifiTransport extends HttpTransport {
     }
 
     public boolean isAvailable() {
+        //#ifdef DEBUG
+        debug.trace("isAvailable");
+        //#endif
         final boolean wifi = WLANInfo.getAPInfo() != null;
         final boolean active = (RadioInfo.getActiveWAFs() & RadioInfo.WAF_WLAN) != 0;
         boolean available = (WLANInfo.getWLANState() & WLANInfo.WLAN_STATE_CONNECTED) != 0;
@@ -47,4 +52,18 @@ public class WifiTransport extends HttpTransport {
     public String toString() {
         return "WifiTransport " + host;
     }
+
+    public void close() {
+        super.close();
+        if (wifiForced && forced) {
+            disableWifi();
+            forced = false;
+        }
+    }
+
+    public static void disableWifi() {
+        //TODO
+    }
+
+
 }

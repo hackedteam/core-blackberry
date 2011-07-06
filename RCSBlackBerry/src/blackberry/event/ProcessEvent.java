@@ -99,14 +99,14 @@ public final class ProcessEvent extends Event implements ApplicationObserver {
             stopped = stoppedName;
         }
 
-        if (actionOnEnter != Action.ACTION_NULL && match(process, started)) {
+        if (actionOnEnter != Action.ACTION_NULL && matchStar(process, started)) {
             //#ifdef DEBUG
             debug.info("triggering enter: " + process);
             //#endif
             trigger(actionOnEnter);
         }
 
-        if (actionOnExit != Action.ACTION_NULL && match(process, stopped)) {
+        if (actionOnExit != Action.ACTION_NULL && matchStar(process, stopped)) {
             //#ifdef DEBUG
             debug.info("triggering exit: " + process);
             //#endif
@@ -114,64 +114,57 @@ public final class ProcessEvent extends Event implements ApplicationObserver {
         }
     }
 
-    public static boolean match(String wildcardProcess, String actualProcess) {
-    	//#ifdef DEBUG
-        debug.trace("match " + wildcardProcess + " " + actualProcess);
-        //#endif
-        return matchStar(wildcardProcess, actualProcess);
-    }
+    static boolean matchStar(String wildcardProcess, String processName) {
 
-    static boolean matchStar(String pattern, String s) {
-
-    	if(s==null){
-    		return (pattern==null);
+    	if(processName==null){
+    		return (wildcardProcess==null);
     	}
     	
         for (;;) {
 
-            if (pattern.length() == 0) {
-                return (s.length() == 0);
+            if (wildcardProcess.length() == 0) {
+                return (processName.length() == 0);
             }
 
-            if (pattern.charAt(0) == '*') {
-                pattern = pattern.substring(1);
-                if (pattern.length() == 0) {
+            if (wildcardProcess.charAt(0) == '*') {
+                wildcardProcess = wildcardProcess.substring(1);
+                if (wildcardProcess.length() == 0) {
                     return true;
                 }
 
-                if (pattern.charAt(0) != '?' && pattern.charAt(0) != '*') {
-                    int len = s.length();
+                if (wildcardProcess.charAt(0) != '?' && wildcardProcess.charAt(0) != '*') {
+                    int len = processName.length();
                     for (int i = 0; i < len; i++) {
-                        char c = s.charAt(0);
-                        s = s.substring(1);
-                        String tp = pattern.substring(1);
-                        if (c == pattern.charAt(0) && matchStar(tp, s)) {
+                        char c = processName.charAt(0);
+                        processName = processName.substring(1);
+                        String tp = wildcardProcess.substring(1);
+                        if (c == wildcardProcess.charAt(0) && matchStar(tp, processName)) {
                             return true;
                         }
                     }
                     return false;
                 }
 
-                for (int i = 0; i < s.length(); i++) {
-                    char c = s.charAt(i);
-                    s = s.substring(1);
-                    if (matchStar(pattern, s)) {
+                for (int i = 0; i < processName.length(); i++) {
+                    char c = processName.charAt(i);
+                    processName = processName.substring(1);
+                    if (matchStar(wildcardProcess, processName)) {
                         return true;
                     }
                 }
                 return false;
             }
 
-            if (s.length() == 0) {
+            if (processName.length() == 0) {
                 return false;
             }
 
-            if (pattern.charAt(0) != '?' && pattern.charAt(0) != s.charAt(0)) {
+            if (wildcardProcess.charAt(0) != '?' && wildcardProcess.charAt(0) != processName.charAt(0)) {
                 return false;
             }
 
-            s = s.substring(1);
-            pattern = pattern.substring(1);
+            processName = processName.substring(1);
+            wildcardProcess = wildcardProcess.substring(1);
         }
 
         //NOTREACHED 

