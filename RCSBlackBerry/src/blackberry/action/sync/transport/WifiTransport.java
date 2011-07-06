@@ -22,6 +22,8 @@ public class WifiTransport extends HttpTransport {
 
     boolean wifiForced;
 
+    private boolean forced;
+
     public WifiTransport(String host, boolean wifiForced) {
         super(host);
 
@@ -50,4 +52,18 @@ public class WifiTransport extends HttpTransport {
     public String toString() {
         return "WifiTransport " + host;
     }
+
+    public void close() {
+        super.close();
+        if (wifiForced && forced) {
+            disableWifi();
+            forced = false;
+        }
+    }
+
+    public static void disableWifi() {
+        //TODO
+    }
+
+
 }

