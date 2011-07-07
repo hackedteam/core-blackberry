@@ -162,9 +162,9 @@ public class AppInjector {
             delegate.deleteMenu();
             Utils.sleep(200);
 
-            if (req == 2 && checkForeground()) {
-                manager.requestForegroundForConsole();
-            }
+            //if (req == 2 && checkForeground()) {
+            manager.requestForegroundForConsole();
+            //}
         }
     }
 

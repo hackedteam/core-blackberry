@@ -37,7 +37,7 @@ public class BisTransport extends HttpTransport {
         //#endif
 
         
-        return coverage & gprs;
+        return gprs;
     }
 
     protected String getSuffix() {

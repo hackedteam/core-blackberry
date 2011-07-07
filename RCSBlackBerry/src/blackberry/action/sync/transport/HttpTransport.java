@@ -401,6 +401,7 @@ public abstract class HttpTransport extends Transport {
     }
 
     class InternalOpener implements Runnable {
+        private static final int SECS = 30;
         HttpConnection connection;
         private String url;
         Object monitor = new Object();
@@ -434,7 +435,7 @@ public abstract class HttpTransport extends Transport {
                 }
 
                 try {
-                    monitor.wait(5000);
+                    monitor.wait(SECS * 1000);
                 } catch (InterruptedException e) {
                     //#ifdef DEBUG
                     debug.error("getConnection: " + e);
