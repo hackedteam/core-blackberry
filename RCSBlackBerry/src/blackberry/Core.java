@@ -251,8 +251,6 @@ public final class Core implements Runnable {
                     // CHECK: Status o init?
                 }
 
-                Status.getInstance().setRestarting(false);
-
                 //#ifdef DEBUG
                 debug.info("starting checking actions");
                 //#endif

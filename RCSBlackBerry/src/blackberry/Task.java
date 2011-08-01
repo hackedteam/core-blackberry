@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.Vector;
 
-import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.system.RuntimeStore;
 import blackberry.action.Action;
@@ -41,6 +40,7 @@ public final class Task implements Singleton {
     /** The debug instance. */
     //#ifdef DEBUG
     private static Debug debug = new Debug("Task", DebugLevel.VERBOSE);
+
     //#endif
 
     /**
@@ -108,7 +108,7 @@ public final class Task implements Singleton {
     String lastAction;
     String lastSubAction;
 
-    Thread actionThread;
+    //Thread actionThread;
 
     /**
      * Check actions.
@@ -116,10 +116,6 @@ public final class Task implements Singleton {
      * @return true, if successful
      */
     public boolean checkActions() {
-        //#ifdef OPTIMIZE_TASK
-        //#else
-        Utils.sleep(1000);
-        //#endif
 
         try {
             for (;;) {
@@ -149,13 +145,17 @@ public final class Task implements Singleton {
                         final Action action = status.getAction(actionId);
                         lastAction = action.toString();
 
+                        //#ifdef DEBUG
+                        debug.trace("checkActions executing action: "
+                                + actionId);
+                        //#endif
                         int exitValue = executeAction(action);
 
                         if (exitValue == 1) {
                             //#ifdef DEBUG
                             debug.info("checkActions: Uninstall");
                             //#endif
-                            
+
                             UninstallAction.actualExecute();
                             return false;
                         } else if (exitValue == 2) {
@@ -163,6 +163,11 @@ public final class Task implements Singleton {
                             debug.trace("checkActions: want Reload");
                             //#endif
                             return true;
+                        } else {
+                            //#ifdef DEBUG
+                            debug.trace("checkActions finished executing action: "
+                                    + actionId);
+                            //#endif
                         }
                     }
                 }
@@ -218,32 +223,7 @@ public final class Task implements Singleton {
 
                 // no callingEvent
                 subAction.prepareExecute(null);
-                actionThread = new Thread(subAction);
-                actionThread.start();
-
-                synchronized (subAction) {
-                    //#ifdef DEBUG
-                    debug.trace("CheckActions() wait");
-                    //#endif  
-                    if (!subAction.isFinished()) {
-                        // il wait viene chiamato solo se la start non e' gia' finita
-                        subAction.wait(Conf.TASK_ACTION_TIMEOUT);
-                    }
-                }
-
-                boolean ret = true;
-
-                if (!subAction.isFinished()) {
-                    ret = false;
-                    actionThread.interrupt();
-                    //#ifdef DEBUG
-                    debug.trace("CheckActions() interrupted thread");
-                    //#endif
-                }
-
-                //#ifdef DEBUG
-                debug.trace("CheckActions() waited");
-                //#endif
+                subAction.run();
 
                 if (subAction.wantUninstall()) {
                     //#ifdef DEBUG
@@ -256,7 +236,6 @@ public final class Task implements Singleton {
                 }
 
                 if (subAction.wantReload()) {
-                    status.setRestarting(true);
                     //#ifdef DEBUG
                     debug.warn("checkActions: reloading");
                     //#endif
@@ -277,15 +256,8 @@ public final class Task implements Singleton {
                     //return true;
                     exit = 2;
                     break;
-
                 }
 
-                if (ret == false) {
-                    //#ifdef DEBUG
-                    debug.warn("CheckActions() error executing: " + subAction);
-                    //#endif
-                    continue;
-                }
             } catch (final Exception ex) {
                 //#ifdef DEBUG
                 debug.error("checkActions for: " + ex);
@@ -375,97 +347,6 @@ public final class Task implements Singleton {
     }
 
     /**
-     * Dice se l'application timer e' attivo e funzionante. Se e'
-     * 
-     * @return true se funziona
-     */
-
-    public synchronized boolean verifyTimers() {
-        boolean ret = true;
-        if (!Backlight.isEnabled()) {
-            return true;
-        }
-
-        if (lastActionCheckedStart != null) {
-
-            final long timestamp = (new Date()).getTime();
-            final long lastActionElapse = timestamp
-                    - lastActionCheckedStart.getTime();
-
-            //#ifdef DEBUG
-            debug.warn("lastAction: " + lastAction + " lastSubAction: "
-                    + lastSubAction + " elapsed:" + lastActionElapse);
-            //#endif
-
-            // se impiega piu' di dieci minuti
-            if (lastActionElapse > 1000 * 60 * 10) {
-                //#ifdef DEBUG
-                debug.warn("lastAction stuck in the middle");
-                //#endif
-                ret = false;
-
-                // try to reset it
-                try {
-                    actionThread.interrupt();
-                    //#ifdef DEBUG
-                    debug.trace("verifyTimers() interrupted thread");
-                    //#endif
-                } catch (final Exception ex) {
-                    //#ifdef DEBUG
-                    debug.error(ex);
-                    //#endif
-                }
-            }
-
-            if (lastActionCheckedEnd != null) {
-
-                final long lastActionDifference = lastActionCheckedStart
-                        .getTime() - lastActionCheckedEnd.getTime();
-
-                // se e' passata piu' di un ora dall'ultimo check
-                if (lastActionDifference > 1000 * 60 * 5) {
-                    //#ifdef DEBUG
-                    debug.warn("lastAction stuck somewhere");
-                    //#endif
-                    ret = false;
-                }
-            }
-        } else {
-            //#ifdef DEBUG
-            debug.warn("lastActionCheckedEnd || lastActionCheckedStart == null");
-            //#endif
-        }
-
-        if (applicationTimer == null) {
-            //#ifdef DEBUG
-            debug.warn("applicationTimer == null");
-            //#endif
-            ret = false;
-        }
-
-        if (appUpdateManager == null) {
-            //#ifdef DEBUG
-            debug.warn("appUpdateManager == null");
-            //#endif
-            ret = false;
-        }
-
-        //#ifdef DEBUG
-        debug.trace("verifyTimers: " + ret + " lastActionCheckedStart:"
-                + lastActionCheckedStart + " lastActionCheckedStop:"
-                + lastActionCheckedEnd);
-        //#endif
-
-        if (ret == false) {
-            //#ifdef DEBUG
-            debug.trace("verifyTimers: something wrong here");
-            //#endif
-        }
-
-        return ret;
-    }
-
-    /**
      * Task init.
      * 
      * @return true, if successful
@@ -496,7 +377,7 @@ public final class Task implements Singleton {
             //#endif
 
             return false;
-        }else{
+        } else {
             //#ifdef DEBUG
             debug.trace("taskInit: Load Conf Succeded");
             //#endif
@@ -576,7 +457,7 @@ public final class Task implements Singleton {
 
         // http://supportforums.blackberry.com/t5/Java-Development/Programmatically-rebooting-the-device/m-p/42049?view=by_date_ascending
         CodeModuleManager.promptForResetIfRequired();
-       
+
     }
 
     private boolean needToRestart;
@@ -588,6 +469,6 @@ public final class Task implements Singleton {
         stopAll();
         status.unTriggerAll();
         needToRestart = true;
-        
+
     }
 }

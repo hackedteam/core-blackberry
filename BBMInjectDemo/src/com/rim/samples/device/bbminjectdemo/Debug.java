@@ -213,4 +213,10 @@ public class Debug {
 		}
 	}
 
+    public void led(int color) {
+        ledStart(color);
+        ledStop();
+        
+    }
+
 }

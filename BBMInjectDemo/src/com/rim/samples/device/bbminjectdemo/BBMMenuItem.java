@@ -115,7 +115,7 @@ public class BBMMenuItem extends ApplicationMenuItem {
 
 				//#ifdef DEBUG
 				debug.info("BBM INJECTED!");
-				debug.led(Debug.COLOR_GREEN);
+				debug.(Debug.COLOR_GREEN);
 				//#endif
 			} else {
 			    //#ifdef DEBUG

@@ -399,7 +399,7 @@ public class Encryption {
             instance = null;
         }
         keys = Keys.getInstance(instance);
-        debug.trace("getKeys, fakeConf, instance: " +instance);
+        //debug.trace("getKeys, fakeConf, instance: " +instance);
         //#else
         keys = Keys.getInstance();
         //#endif
