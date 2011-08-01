@@ -148,6 +148,26 @@ public final class UT_Crypto extends TestUnit {
         AssertThat(buffer.length == 16, "len error 2");
         AssertThat(Arrays.equals(buffer, 0, plain, 0, plain.length),
                 "self error");
+        
+        // 1
+        //#ifdef DEBUG
+        debug.info("32");
+        //#endif
+        plain = new byte[32];
+        Arrays.fill(plain, (byte) 0x0f);
+        buffer = enc.encryptData(plain);
+        AssertThat(!Arrays.equals(buffer, plain), "enc error");
+        AssertThat(buffer.length == plain.length, "len error 1");
+
+        //#ifdef DEBUG
+        debug.trace("EncryptTest plain : " + Utils.byteArrayToHex(plain));
+        debug.trace("EncryptTest cypher: " + Utils.byteArrayToHex(buffer));
+        //#endif
+        
+        buffer = enc.decryptData(buffer, plain.length, 0);
+        AssertThat(buffer.length == plain.length, "len error 2");
+        AssertThat(Arrays.equals(buffer, 0, plain, 0, plain.length),
+                "self error");
 
         // 1024
         //#ifdef DEBUG

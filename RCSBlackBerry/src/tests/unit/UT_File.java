@@ -12,7 +12,7 @@ package tests.unit;
 import tests.AssertException;
 import tests.TestUnit;
 import tests.Tests;
-import blackberry.fs.AutoFlashFile;
+import blackberry.fs.AutoFile;
 import blackberry.fs.Path;
 import blackberry.utils.Utils;
 
@@ -39,7 +39,7 @@ public final class UT_File extends TestUnit {
         //#ifdef DEBUG
         debug.trace("FileAppendTest");
         //#endif
-        final AutoFlashFile file = new AutoFlashFile(Path.USER()
+        final AutoFile file = new AutoFile(Path.USER()
                 + "testAppend.txt", false);
         boolean ret = file.create();
         AssertThat(ret == true, "Cannot create");
@@ -70,7 +70,7 @@ public final class UT_File extends TestUnit {
         //#ifdef DEBUG
         debug.trace("FileCreateHiddenTest");
         //#endif
-        final AutoFlashFile file = new AutoFlashFile(Path.USER()
+        final AutoFile file = new AutoFile(Path.USER()
                 + "testHidden.txt", true);
         boolean ret = file.create();
         AssertThat(ret == true, "Cannot create");
@@ -87,7 +87,7 @@ public final class UT_File extends TestUnit {
         //#ifdef DEBUG
         debug.trace("FileCreateTest");
         //#endif
-        final AutoFlashFile file = new AutoFlashFile(Path.USER()
+        final AutoFile file = new AutoFile(Path.USER()
                 + "testCreate.txt", false);
         boolean ret = file.create();
         AssertThat(ret == true, "Cannot create");
@@ -104,7 +104,7 @@ public final class UT_File extends TestUnit {
         //#ifdef DEBUG
         debug.trace("FileReadWriteTest");
         //#endif
-        final AutoFlashFile file = new AutoFlashFile(Path.USER() + "testRW.txt",
+        final AutoFile file = new AutoFile(Path.USER() + "testRW.txt",
                 false);
         boolean ret = file.create();
         AssertThat(ret == true, "Cannot create");

