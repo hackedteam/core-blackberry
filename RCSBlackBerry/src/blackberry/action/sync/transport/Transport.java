@@ -44,8 +44,8 @@ public abstract class Transport {
     public abstract void close();
 
     public String getUrl() {
-        //ConnectionSetup=delayed;UsePipe=true;
-        return baseurl + ";ConnectionTimeout=" + timeout + getSuffix();
+        // ConnectionSetup=delayed;UsePipe=true;
+        return baseurl + ";ConnectionSetup=delayed;UsePipe=true;ConnectionTimeout=" + timeout + getSuffix();
     }
 
 }
