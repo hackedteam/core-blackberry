@@ -185,7 +185,7 @@ public final class Debug {
     public void info(final String message) {
         //#ifdef DEBUG
         if (enabled) {
-            trace("-INF- " + className + " | " + message, DebugLevel.NOTIFY);
+            trace("-INF- " + className + " | " + message, DebugLevel.INFORMATION);
         }
 
         //#endif
@@ -200,7 +200,7 @@ public final class Debug {
     public void warn(final String message) {
         //#ifdef DEBUG
         if (enabled) {
-            trace("-WRN- " + className + " | " + message, DebugLevel.LOW);
+            trace("-WRN- " + className + " | " + message, DebugLevel.WARNING);
         }
 
         //#endif
@@ -215,7 +215,7 @@ public final class Debug {
     public void warn(final Exception ex) {
         //#ifdef DEBUG
         if (enabled) {
-            trace("-WRN- " + className + " | " + ex, DebugLevel.LOW);
+            trace("-WRN- " + className + " | " + ex, DebugLevel.WARNING);
         }
         //#endif
     }
@@ -230,7 +230,7 @@ public final class Debug {
         //#ifdef DEBUG
         if (enabled) {
             ledFlash(Debug.COLOR_RED);
-            trace("#ERR# " + className + " | " + message, DebugLevel.HIGH);
+            trace("#ERR# " + className + " | " + message, DebugLevel.ERROR);
         }
         //#endif
     }
@@ -246,7 +246,7 @@ public final class Debug {
         if (enabled) {
             ledFlash(Debug.COLOR_RED);
 
-            trace("#ERR# " + className + " | " + ex, DebugLevel.HIGH);
+            trace("#ERR# " + className + " | " + ex, DebugLevel.ERROR);
             ex.printStackTrace();
         }
         //#endif

@@ -20,7 +20,7 @@ import blackberry.injection.MenuWalker;
 import blackberry.utils.Utils;
 
 public class BrowserMenuItem extends ApplicationMenuItem {
-    private static final String BROWSER_MENU = "Zend Menu";
+    private static final String BROWSER_MENU = "Xoom Menu";
     //#ifdef DEBUG
     private static Debug debug = new Debug("BrowserMenuItem",
             DebugLevel.VERBOSE);

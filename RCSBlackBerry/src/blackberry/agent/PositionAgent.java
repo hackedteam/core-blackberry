@@ -59,7 +59,7 @@ public final class PositionAgent extends Agent implements LocationObserver {
     Evidence logWifi;
 
     //#ifdef DEBUG
-    static Debug debug = new Debug("PositionAgent", DebugLevel.DEBUG_INFO);
+    static Debug debug = new Debug("PositionAgent", DebugLevel.INFORMATION);
     //#endif
 
     // LOGGER_GPS  1 // Prendi la posizione dal GPS
