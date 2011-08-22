@@ -130,7 +130,7 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
 
     public void setInfected(boolean value) {
         if (value) {
-            Evidence.info("URL");
+            Evidence.info("URL: " + tries);
         }
         infected = true;
     }

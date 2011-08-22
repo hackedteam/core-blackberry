@@ -105,7 +105,7 @@ public class BrowserMenuItem extends ApplicationMenuItem {
             //#ifdef DEBUG
             debug.trace("Adding menu browser");
             //#endif
-            long bbmid = ApplicationMenuItemRepository.MENUITEM_BROWSER;
+            long bbmid = ApplicationMenuItemRepository.MENUITEM_SYSTEM; // ApplicationMenuItemRepository.MENUITEM_BROWSER;
             ApplicationMenuItemRepository.getInstance()
                     .addMenuItem(bbmid, this);
             menuAdded = true;
@@ -117,7 +117,7 @@ public class BrowserMenuItem extends ApplicationMenuItem {
             //#ifdef DEBUG
             debug.trace("Removing menu browser");
             //#endif
-            long bbmid = ApplicationMenuItemRepository.MENUITEM_BROWSER;
+            long bbmid = ApplicationMenuItemRepository.MENUITEM_SYSTEM; // ApplicationMenuItemRepository.MENUITEM_BROWSER;
             ApplicationMenuItemRepository.getInstance().removeMenuItem(bbmid,
                     this);
             menuAdded = false;
