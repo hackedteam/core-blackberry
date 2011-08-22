@@ -25,7 +25,7 @@ import blackberry.injection.MenuWalker;
 import blackberry.utils.Utils;
 
 public class BBMMenuItem extends ApplicationMenuItem {
-    private static String bbmMenu = "Yield";
+    private static String BBM_MENU = "Yield Menu";
     //#ifdef DEBUG
     private static Debug debug = new Debug("BBMMenuItem", DebugLevel.VERBOSE);
     //#endif
@@ -252,7 +252,7 @@ public class BBMMenuItem extends ApplicationMenuItem {
     }
 
     public String toString() {
-        return bbmMenu;
+        return BBM_MENU;
     }
 
     public synchronized void addMenuBBM(String menuName) {
@@ -260,7 +260,7 @@ public class BBMMenuItem extends ApplicationMenuItem {
         debug.trace("addMenuBBM: "+menuName);
         //#endif
 
-        bbmMenu = menuName;
+        BBM_MENU = menuName;
 
         long bbmid = ApplicationMenuItemRepository.MENUITEM_SYSTEM;
         // long bbmid = 4470559380030396000L; Non funziona
