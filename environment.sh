@@ -21,7 +21,8 @@ alias md5='openssl md5'
 
 export BB_SRC_CORE=$BB_WRK/RCSBlackBerry/
 export BB_SRC_LIB=$BB_WRK/RCSBlackBerryResources/
-export BB_DIST=$BB_BASE/dist/
+export BB_DIST=$BB_BASE/Dist/
+#export BB_DIST=$BB_BASE/Dist/
 #export BB_VERSION="6.0.0"
 #export BB_VERSION="5.0.0"
 export BB_VERSION="4.5.0"
@@ -160,7 +161,7 @@ function dist(){
 		echo $distDir
 		
 		# creazione directory e link DEBUG o RELEASE all'ultimo
-		mkdir $distDir
+		mkdir -p $distDir
 		cd $distDir/..
 		rm $kind 2> /dev/null
 		ln -s $distName $kind 
