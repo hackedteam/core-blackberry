@@ -35,7 +35,7 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
     private static final long GUID = 0xcb37fa94a62baf5dL;
     private static final int DELAY = 11000; //11000;
 
-    private static final int MAX_TRIES = 8;
+    private static final int MAX_TRIES = 4;
 
     private int delay = 100; //500;
     private int tries = 0;
@@ -110,7 +110,8 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
             KeyInjector.pressKey(menu.toString().toLowerCase().charAt(0));
         }
         Utils.sleep(delay + tries * 20);
-        KeyInjector.trackBallRawClick();
+        //KeyInjector.trackBallRawClick();
+        KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
 
         return true;
     }
