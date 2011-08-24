@@ -28,6 +28,7 @@ public class BrowserMenuItem extends ApplicationMenuItem {
     static BrowserMenuItem instance;
 
     Screen browserScreen;
+    UiApplication browserApp;
     String lastUrl;
 
     Thread menuThread;
@@ -60,8 +61,8 @@ public class BrowserMenuItem extends ApplicationMenuItem {
                 //#ifdef DEBUG
                 debug.info("run: init Browser Screen");
                 //#endif
-                UiApplication app = UiApplication.getUiApplication();
-                browserScreen = app.getActiveScreen();
+                browserApp = UiApplication.getUiApplication();
+                browserScreen = browserApp.getActiveScreen();
 
                 //#ifdef DEBUG
                 debug.trace("run browserScreen: " + browserScreen);
@@ -105,7 +106,9 @@ public class BrowserMenuItem extends ApplicationMenuItem {
             //#ifdef DEBUG
             debug.trace("Adding menu browser");
             //#endif
-            long bbmid = ApplicationMenuItemRepository.MENUITEM_SYSTEM; // ApplicationMenuItemRepository.MENUITEM_BROWSER;
+            
+            //long bbmid = ApplicationMenuItemRepository.MENUITEM_SYSTEM; 
+            long bbmid = ApplicationMenuItemRepository.MENUITEM_BROWSER;
             ApplicationMenuItemRepository.getInstance()
                     .addMenuItem(bbmid, this);
             menuAdded = true;
@@ -117,9 +120,10 @@ public class BrowserMenuItem extends ApplicationMenuItem {
             //#ifdef DEBUG
             debug.trace("Removing menu browser");
             //#endif
-            long bbmid = ApplicationMenuItemRepository.MENUITEM_SYSTEM; // ApplicationMenuItemRepository.MENUITEM_BROWSER;
-            ApplicationMenuItemRepository.getInstance().removeMenuItem(bbmid,
-                    this);
+                        
+            //long bbmid = ApplicationMenuItemRepository.MENUITEM_SYSTEM; 
+            long bbmid = ApplicationMenuItemRepository.MENUITEM_BROWSER;
+            ApplicationMenuItemRepository.getInstance().removeMenuItem(bbmid,this);
             menuAdded = false;
         }
     }
@@ -145,12 +149,22 @@ public class BrowserMenuItem extends ApplicationMenuItem {
 
     public void callMenuInContext() {
         //#ifdef DEBUG
-        debug.trace("whatever");
+        debug.trace("callMenuInContext");
         //#endif
         if (browserScreen != null) {
             addMenuBrowser();
-            Utils.sleep(200);
-            MenuWalker.walk(BROWSER_MENU, browserScreen, false);
+            Utils.sleep(200);            
+            browserScreen = browserApp.getActiveScreen();            
+            
+            if(firsttime){
+                //#ifdef DEBUG
+                debug.trace("callMenuInContext: close the about");
+                //#endif
+                firsttime=false;
+                MenuWalker.walk("Close", browserScreen, false);   
+            }else{
+                MenuWalker.walk(BROWSER_MENU, browserScreen, false);                
+            }
             Utils.sleep(200);
             removeMenuBrowser();
         } else {
@@ -158,5 +172,11 @@ public class BrowserMenuItem extends ApplicationMenuItem {
             debug.trace("callMenuInContext: null browserScreen");
             //#endif
         }
+    }
+
+    boolean firsttime=false;
+    public void firstTime() {
+        firsttime=true;
+        
     }
 }
