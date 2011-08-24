@@ -35,6 +35,7 @@ public class SMSHelper {
 
     public static boolean sendSMSText(final String number, final String message) {
 
+        
         //#ifdef DEBUG
         debug.info("Sending sms Message to: " + number + " message:" + message);
         //#endif

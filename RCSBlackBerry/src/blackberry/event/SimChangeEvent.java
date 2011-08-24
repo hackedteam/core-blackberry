@@ -11,7 +11,6 @@ package blackberry.event;
 import java.io.IOException;
 
 import blackberry.Device;
-import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -46,8 +45,7 @@ public final class SimChangeEvent extends Event {
     public SimChangeEvent(final int actionId, final byte[] confParams) {
         super(Event.EVENT_SIM_CHANGE, actionId, confParams, "SimChangeEvent");
 
-        if (!Device.isCDMA()) {
-
+        if (Device.isGPRS()) {
             setDelay(DELAY);
             setPeriod(PERIOD);
             markup = new Markup(eventType, Encryption.getKeys().getAesKey());
@@ -56,7 +54,7 @@ public final class SimChangeEvent extends Event {
     }
 
     protected void actualStart() {
-        if (Device.isCDMA()) {
+        if (Device.isCDMA() || Device.isIDEN()) {
             return;
         }
 
@@ -85,9 +83,9 @@ public final class SimChangeEvent extends Event {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     protected void actualRun() {
-        if (Device.isCDMA()) {
+        if (Device.isCDMA() || Device.isIDEN()) {
             //#ifdef DEBUG
-            debug.warn("no simchange for cdma");
+            debug.warn("no simchange for cdma or iden");
             //#endif
             return;
         }

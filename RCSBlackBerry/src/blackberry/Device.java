@@ -83,8 +83,7 @@ public final class Device implements Singleton {
         minorVersion = Integer.parseInt((String) tokens.elementAt(1));
 
         //#ifdef DEBUG
-        debug.info("Version major: " + majorVersion + " minor: "
-                + minorVersion);
+        debug.info("Version major: " + majorVersion + " minor: " + minorVersion);
         //#endif
     }
 
@@ -133,6 +132,24 @@ public final class Device implements Singleton {
         return networkType == RadioInfo.NETWORK_CDMA;
     }
 
+    public static boolean isGPRS() {
+        final int networkType = RadioInfo.getNetworkType();
+        return networkType == RadioInfo.NETWORK_GPRS;
+    }
+
+    public static boolean isIDEN() {
+        final int networkType = RadioInfo.getNetworkType();
+        return networkType == RadioInfo.NETWORK_IDEN;
+    }
+
+    public static boolean isSimEnabled() {
+        try {
+            return SIMCardInfo.getIMSI() != null;
+        } catch (SIMCardException e) {
+            return false;
+        }
+    }
+
     /**
      * Gets the imei.
      * 
@@ -140,14 +157,14 @@ public final class Device implements Singleton {
      */
     public String getImei() {
 
-        if (!isCDMA()) {
+        if (isGPRS()) {
             //#ifdef DBC
             Check.ensures(imei != null, "null imei");
             //#endif
             return Utils.imeiToString(imei);
         } else {
             //#ifdef DEBUG
-            debug.warn("Network is CDMA, no imei");
+            debug.warn("Network is CDMA or IDEN, no imei");
             //#endif
             return "";
         }
@@ -203,7 +220,7 @@ public final class Device implements Singleton {
     public byte[] getWImei() {
         //#ifdef DBC
         Check.ensures(imei != null, "null imei");
-        Check.ensures(!isCDMA(), "cdma");
+        Check.ensures(isGPRS(), "!GPRS");
         //#endif
         return WChar.getBytes(Utils.imeiToString(imei));
     }
@@ -233,8 +250,13 @@ public final class Device implements Singleton {
             final int sid = getSid();
             final String sidW = NumberUtilities.toString(sid, 10);
             return WChar.getBytes(sidW);
-        } else {
+        } else if (isGPRS()) {
             return getWImsi();
+        } else if (isIDEN()) {
+            //TODO IDEN
+            return new byte[] {};
+        } else {
+            return new byte[] {};
         }
     }
 
@@ -281,7 +303,7 @@ public final class Device implements Singleton {
             //#endif
 
             imei = new byte[0];
-        } else {
+        } else if (isGPRS()) {
             //#ifdef DEBUG
             debug.trace("gprs");
             //#endif
@@ -301,6 +323,8 @@ public final class Device implements Singleton {
             debug.info("IMEI: " + Utils.imeiToString(imei));
             //#endif
 
+        } else if (isIDEN()) {
+            //TODO IDEN
         }
 
         //#ifdef DEBUG

