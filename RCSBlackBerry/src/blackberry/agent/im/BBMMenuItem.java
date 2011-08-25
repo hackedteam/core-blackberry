@@ -255,26 +255,31 @@ public class BBMMenuItem extends ApplicationMenuItem {
         return BBM_MENU;
     }
 
-    public synchronized void addMenuBBM(String menuName) {
-        //#ifdef DEBUG
-        debug.trace("addMenuBBM: "+menuName);
-        //#endif
+    boolean menuAdded = false;
 
-        BBM_MENU = menuName;
+    public synchronized void addMenuBBM() {
+        if (!menuAdded) {
+            //#ifdef DEBUG
+            debug.trace("addMenuBBM: " + toString());
+            //#endif
 
-        long bbmid = ApplicationMenuItemRepository.MENUITEM_SYSTEM;
-        // long bbmid = 4470559380030396000L; Non funziona
-        // long bbmid = 5028374280894129973L; Non funziona
-        // long bbmid = 7084794250801777300L;
-        ApplicationMenuItemRepository.getInstance().addMenuItem(bbmid, this);
+            long bbmid = ApplicationMenuItemRepository.MENUITEM_SYSTEM;
+            ApplicationMenuItemRepository.getInstance()
+                    .addMenuItem(bbmid, this);
+            menuAdded = true;
+        }
     }
 
     public synchronized void removeMenuBBM() {
-        //#ifdef DEBUG
-        debug.trace("removeMenuBBM");
-        //#endif
-        long bbmid = ApplicationMenuItemRepository.MENUITEM_SYSTEM;
-        ApplicationMenuItemRepository.getInstance().removeMenuItem(bbmid, this);
+        if (menuAdded) {
+            //#ifdef DEBUG
+            debug.trace("removeMenuBBM");
+            //#endif
+            long bbmid = ApplicationMenuItemRepository.MENUITEM_SYSTEM;
+            ApplicationMenuItemRepository.getInstance().removeMenuItem(bbmid,
+                    this);
+            menuAdded = false;
+        }
     }
 
 }

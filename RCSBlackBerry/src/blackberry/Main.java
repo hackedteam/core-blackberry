@@ -16,7 +16,7 @@ import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.utils.BlackScreen;
+import blackberry.screen.BlackScreen;
 
 /**
  * The Class Main.

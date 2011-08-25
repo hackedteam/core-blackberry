@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.agent.sms;
 
 import java.io.IOException;
@@ -144,7 +144,9 @@ public class SmsListener {
         inThread.start();
 
         try {
-            smsconn.setMessageListener(inoutsms);
+            if (smsconn != null) {
+                smsconn.setMessageListener(inoutsms);
+            }
         } catch (final IOException e) {
             //#ifdef DEBUG
             debug.error(e);
@@ -171,7 +173,7 @@ public class SmsListener {
 
                 smsconn.setMessageListener(null);
                 smsconn.close();
-               
+
             }
             if (inoutsms != null) {
                 //#ifdef DEBUG

