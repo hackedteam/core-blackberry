@@ -176,7 +176,9 @@ public final class Device implements Singleton {
      * @return the imsi
      */
     public String getImsi() {
+
         return Utils.imeiToString(imsi);
+
     }
 
     public int getSid() {
@@ -309,9 +311,14 @@ public final class Device implements Singleton {
             //#endif
             try {
                 imsi = SIMCardInfo.getIMSI();
+                if (imsi == null) {
+                    imsi = new byte[0];
+                }
+                
                 //#ifdef DEBUG
                 debug.info("IMSI: " + Utils.imeiToString(imsi));
                 //#endif
+
             } catch (final SIMCardException e) {
                 //#ifdef WARN
                 debug.warn("no sim detected");
