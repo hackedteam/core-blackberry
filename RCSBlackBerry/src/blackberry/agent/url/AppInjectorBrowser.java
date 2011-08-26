@@ -9,12 +9,10 @@
 
 package blackberry.agent.url;
 
-import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
-import blackberry.Device;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
@@ -36,7 +34,7 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
     private static final int MAX_TRIES = 8;
 
     private int tries = 0;
-    private int delay = 300; //500;
+    private int delay = 400; //500;
     boolean infected;
 
     public static synchronized AppInjectorBrowser getInstance() {
@@ -91,7 +89,7 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
         }
 
         //#ifdef DEBUG
-        Backlight.enable(true);
+        //Backlight.enable(true);
         //#endif
         /*
          * if (tries % 2 == 0) { //#ifdef DEBUG

