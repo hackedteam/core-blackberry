@@ -72,7 +72,9 @@ public final class SimChangeEvent extends Event {
                 debug.trace("imsi too short, maybe the sim is not enabled ");
                 //#endif
             } else {
-
+                //#ifdef DEBUG
+                debug.trace("imsi: " + Utils.byteArrayToHex(imsi));
+                //#endif
                 updateImsi();
             }
         }
