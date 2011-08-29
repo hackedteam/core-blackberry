@@ -81,7 +81,18 @@ public final class Conf {
     public static final long TASK_ACTION_TIMEOUT = 600 * 1000; // ogni action che dura piu' di dieci minuti viene killata
 
     public static boolean IS_UI = true;
-    public static boolean DEMO = false;
+    
+    //#ifdef DEMO
+    public static final boolean DEMO = true;
+    //#else
+    public static final boolean DEMO = false;
+    //#endif
+    
+    //#ifdef DEBUG
+    public static final boolean DEBUG = true;
+    //#else
+    public static final boolean DEBUG = false;
+    //#endif
 
     public static final boolean MAIL_TEXT_FORCE_UTF8 = true;
 

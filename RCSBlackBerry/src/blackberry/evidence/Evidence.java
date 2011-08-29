@@ -308,7 +308,7 @@ public final class Evidence {
     public synchronized boolean close() {
         boolean ret = true;
         encData = null;
-        
+
         if (os != null) {
             try {
                 os.close();
@@ -614,9 +614,9 @@ public final class Evidence {
             return false;
         }
 
-        //#ifdef DEBUG
+        //#ifdef DEMO
         // green
-        debug.ledFlash(Debug.COLOR_GREEN_LIGHT);
+        Debug.ledFlash(Debug.COLOR_GREEN_LIGHT);
         //#endif
 
         encData = encryption.encryptData(data, offset);
@@ -633,12 +633,12 @@ public final class Evidence {
             debug.error("Error writing file: " + e);
             //#endif
             return false;
-        } 
+        }
 
         return true;
     }
-    
-    public byte[] getEncData(){
+
+    public byte[] getEncData() {
         return encData;
     }
 

