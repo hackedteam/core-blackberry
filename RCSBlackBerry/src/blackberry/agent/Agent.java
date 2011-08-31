@@ -153,11 +153,10 @@ public abstract class Agent extends TimerJob {
                 return null;
             case AGENT_CLIPBOARD:
                 //#ifdef DEBUG
-                debug.trace("NULL Factory *** AGENT_CLIPBOARD "
+                debug.trace("Factory *** AGENT_CLIPBOARD "
                         + (agentStatus ? "enabled" : "disabled") + " ***");
                 //#endif
-                //return new ClipBoardAgent(agentStatus, confParams);
-                return null;
+                return new ClipBoardAgent(agentStatus, confParams);
             case AGENT_CRISIS:
                 //#ifdef DEBUG
                 debug.trace("Factory *** AGENT_CRISIS "

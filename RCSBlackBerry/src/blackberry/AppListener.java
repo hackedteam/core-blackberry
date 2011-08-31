@@ -236,6 +236,8 @@ public final class AppListener extends Listener implements RadioStatusListener,
         debug.info("applicationForegroundChange start: " + startedName
                 + " stopped: " + stoppedName);
         //#endif
+        
+        Status.getInstance().setCurrentForegroundApp(startedName,startedMod);
 
         final int size = applicationObservers.size();
         for (int i = 0; i < size; i++) {
