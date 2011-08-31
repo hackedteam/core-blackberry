@@ -22,6 +22,7 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceType;
+import blackberry.interfaces.UserAgent;
 import blackberry.utils.Check;
 import blackberry.utils.WChar;
 
@@ -30,7 +31,7 @@ import blackberry.utils.WChar;
  * 
  * @author user1
  */
-public final class SnapShotAgent extends Agent {
+public final class SnapShotAgent extends Agent implements UserAgent{
     //#ifdef DEBUG
     static Debug debug = new Debug("SnapShotAgent", DebugLevel.INFORMATION);
     //#endif
