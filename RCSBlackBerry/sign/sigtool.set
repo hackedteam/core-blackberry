@@ -1,11 +1,11 @@
 #This file contains the settings for the Signature Tool.
-#Thu Sep 30 16:44:08 CEST 2010
-tableHeight=48
+#Fri Sep 02 12:17:27 CEST 2011
+tableHeight=288
 frameHeight=372
-tableWidth=812
-4=368
+tableWidth=797
+4=360
 frameWidth=853
 3=43
-2=71
-1=146
-0=184
+2=70
+1=144
+0=180

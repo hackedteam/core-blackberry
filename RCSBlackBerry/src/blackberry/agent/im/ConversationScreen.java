@@ -126,6 +126,7 @@ public class ConversationScreen {
         if (MenuWalker.walk(new String[] { "Copy Chat", "Copy History" },
                 screen, true)) {
 
+            ClipBoardAgent.getInstance().suspendClip();
             clip = (String) Clipboard.getClipboard().get();
             ClipBoardAgent.getInstance().setClip(clip);
             

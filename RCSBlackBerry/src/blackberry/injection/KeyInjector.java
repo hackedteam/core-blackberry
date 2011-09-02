@@ -79,7 +79,6 @@ public class KeyInjector {
         });
     }
 
-    // #endif
     /**
      * Press key.
      * 

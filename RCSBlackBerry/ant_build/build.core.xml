@@ -13,14 +13,14 @@
 	<property name="jde.version" value="4.5.0" />
 	<property name="flags" value="0" />
 
-	<property name="obfuscation" value="true" />
+	<!-- <property name="obfuscation" value="false" /> -->
 	<property name="src" location="src" />
 
 
 	<!-- Import BB commons -->
 	<import file="build.common.xml" as="common" />
 
-	<property name="preprocess.symbols" value="DEBUG,DBC,FAKECONF,LIVE_MIC_ENABLED" />
+	<property name="preprocess.symbols" value="DEBUG,DBC,DEMO,FAKECONF" />
 
 	<!-- MAIN -->
 	<target name="main" depends="main.debug" />
@@ -35,6 +35,8 @@
 		<property name="bb.lib" value="lib/net_rim_bb_comp_lib.jar" />
 		<property name="libs" value="${bb.lib}:${net_rim_api.jar}" />
 
+		<copy file="../RCSBlackBerryResources/deliverables/Standard/4.5.0/net_rim_bb_lib_base.jar" tofile="${bb.lib}" failonerror="true" />
+		
 		<antcall target="common.build" />
 
 		<echo message="codname.cod=${codename}.cod" />
