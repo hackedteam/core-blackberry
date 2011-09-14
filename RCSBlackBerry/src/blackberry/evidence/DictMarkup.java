@@ -64,9 +64,7 @@ public class DictMarkup extends Markup {
     }
 
     protected synchronized boolean writeMarkup(Hashtable dict) {
-        final byte[] payload = new byte[MARKUP_SIZE];
-        final DataBuffer dataBuffer = new DataBuffer(payload, 0, MARKUP_SIZE,
-                false);
+        final DataBuffer dataBuffer = new DataBuffer(false);
         final Enumeration enumeration = dict.keys();
         dataBuffer.writeInt(dict.size());
 
@@ -87,7 +85,7 @@ public class DictMarkup extends Markup {
                 return false;
             }
         }
-        return writeMarkup(payload);
+        return writeMarkup(dataBuffer.toArray());
 
     }
 

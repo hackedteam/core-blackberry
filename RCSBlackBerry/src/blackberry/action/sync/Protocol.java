@@ -482,9 +482,8 @@ public abstract class Protocol {
         //#ifdef DBC
         Check.requires(fsLog != null, "fsLog null");
         //#endif
-        byte[] content = new byte[30];
-        DataBuffer databuffer = new DataBuffer(content, 0, content.length,
-                false);
+        //byte[] content = new byte[30];
+        DataBuffer databuffer = new DataBuffer(false);
         databuffer.writeInt(version);
         databuffer.writeInt(2); // len
         databuffer.writeInt(1); // flags
@@ -492,7 +491,7 @@ public abstract class Protocol {
         databuffer.writeLong(DateTime.getFiledate(new Date()));
         databuffer.write(WChar.getBytes("/"));
 
-        fsLog.writeEvidence(content);
+        fsLog.writeEvidence(databuffer.toArray());
     }
 
     /**

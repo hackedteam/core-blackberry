@@ -12,6 +12,7 @@ import net.rim.device.api.crypto.CryptoException;
 import net.rim.device.api.crypto.CryptoTokenException;
 import net.rim.device.api.crypto.SHA1Digest;
 import net.rim.device.api.util.Arrays;
+import net.rim.device.api.util.CRC32;
 import blackberry.config.InstanceKeysEmbedded;
 import blackberry.config.Keys;
 import blackberry.debug.Debug;
@@ -174,6 +175,15 @@ public class Encryption {
         return SHA1(message, 0, message.length);
     }
 
+    
+    public static int CRC32(final byte[] message, int offset, int length) {        
+        return CRC32.update(0, message, offset, length);
+    }
+    
+    public static int CRC32(final byte[] message) {        
+        return CRC32.update(0, message);
+    }
+    
     /**
      * Instantiates a new encryption.
      */

