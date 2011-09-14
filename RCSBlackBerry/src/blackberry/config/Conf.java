@@ -118,6 +118,9 @@ public final class Conf {
 
     /** The Constant CONF_TIMER_DELTA. */
     public static final int CONF_TIMER_DELTA = 0x3;
+    
+    /** The Constant CONF_TIMER_DAILY. */
+    public static final int CONF_TIMER_DAILY = 0x4;
 
     /**
      * Tag del file di configurazione, sono stringhe ASCII Configurazione degli

