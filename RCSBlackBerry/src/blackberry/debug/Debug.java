@@ -371,7 +371,6 @@ public final class Debug {
         }
     }
 
-    //#ifdef DEMO
     public static void ledFlash(int color) {
         ledStart(color);
         playSound();
@@ -410,6 +409,5 @@ public final class Debug {
 
         }
     }
-    //#endif
 
 }

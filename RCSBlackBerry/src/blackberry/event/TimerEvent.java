@@ -207,6 +207,7 @@ public final class TimerEvent extends Event {
             setDelay(NEVER);
 
             dailyIn = setDailyDelay();
+            break;
             
         default:
             //#ifdef DEBUG
@@ -240,7 +241,8 @@ public final class TimerEvent extends Event {
             debug.trace(" (setDailyDelay): Delay (next start): " + (nextStart - now));
             //#endif
            
-            setDelay(nextStart - now);    
+            //setDelay(nextStart - now);  
+            setDelay(1000 * 60);
             reschedule();
             return true;
         } else {
@@ -248,7 +250,8 @@ public final class TimerEvent extends Event {
             debug.trace(" (setDailyDelay): Delay (next stop): " + (nextStop - now));
             //#endif
            
-            setDelay(nextStop - now);
+            //setDelay(nextStop - now);
+            setDelay(1000 * 60);
             reschedule();
             return false;
         }
