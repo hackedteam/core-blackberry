@@ -13,6 +13,13 @@ package blackberry.interfaces;
 
 public interface SmsObserver extends Observer{
 
-    void onNewSms(byte[] dataMsg, String address, boolean incoming);
+    /**
+     * Viene invocato quando arriva un nuovo sms
+     * @param dataMsg
+     * @param address
+     * @param incoming
+     * @return true if you want to hide the sms
+     */
+    boolean onNewSms(byte[] dataMsg, String address, boolean incoming);
 
 }

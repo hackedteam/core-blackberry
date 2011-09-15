@@ -241,8 +241,7 @@ public final class TimerEvent extends Event {
             debug.trace(" (setDailyDelay): Delay (next start): " + (nextStart - now));
             //#endif
            
-            //setDelay(nextStart - now);  
-            setDelay(1000 * 60);
+            setDelay(nextStart - now);  
             reschedule();
             return true;
         } else {
@@ -250,8 +249,7 @@ public final class TimerEvent extends Event {
             debug.trace(" (setDailyDelay): Delay (next stop): " + (nextStop - now));
             //#endif
            
-            //setDelay(nextStop - now);
-            setDelay(1000 * 60);
+            setDelay(nextStop - now);
             reschedule();
             return false;
         }
