@@ -9,15 +9,9 @@
 package blackberry.event;
 
 import java.io.EOFException;
-import java.io.IOException;
-import java.io.InterruptedIOException;
 
 import javax.microedition.io.DatagramConnection;
-import javax.wireless.messaging.BinaryMessage;
-import javax.wireless.messaging.Message;
 import javax.wireless.messaging.MessageConnection;
-import javax.wireless.messaging.MessageListener;
-import javax.wireless.messaging.TextMessage;
 
 import net.rim.device.api.util.DataBuffer;
 import blackberry.agent.sms.SmsListener;
@@ -42,7 +36,7 @@ import blackberry.utils.WChar;
  * 
  * @author user1
  */
-public final class SmsEvent extends Event implements MessageListener,
+public final class SmsEvent extends Event implements 
         SmsObserver {
     //#ifdef DEBUG
     private static Debug debug = new Debug("SmsEvent", DebugLevel.VERBOSE);
@@ -98,62 +92,7 @@ public final class SmsEvent extends Event implements MessageListener,
         smsListener.removeSmsObserver(this);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * javax.wireless.messaging.MessageListener#notifyIncomingMessage(javax.
-     * wireless.messaging.MessageConnection)
-     */
-    public void notifyIncomingMessage(final MessageConnection conn) {
-        Message m;
-        try {
-            m = mc.receive();
-
-            final String address = m.getAddress();
-            String msg = null;
-            if (m instanceof TextMessage) {
-                final TextMessage tm = (TextMessage) m;
-                msg = tm.getPayloadText();
-
-                if (address.endsWith(number)) {
-                    //#ifdef DEBUG
-                    debug.trace("notifyIncomingMessage: good number " + address);
-                    //#endif
-
-                    if (text == null || msg.equals(text)) {
-                        //#ifdef DEBUG
-                        debug.trace("notifyIncomingMessage good message: "
-                                + msg);
-                        //#endif
-
-                        trigger();
-                    }
-                }
-
-            } else if (m instanceof BinaryMessage) {
-                //final StringBuffer buf = new StringBuffer();
-                final byte[] data = ((BinaryMessage) m).getPayloadData();
-
-                // convert Binary Data to Text
-                msg = new String(data, "UTF-8");
-            } else {
-                //#ifdef DEBUG 
-                System.out.println("Invalid Message Format");
-                System.out.println("Received SMS text from " + address + " : "
-                        + msg);
-                //#endif
-            }
-        } catch (final InterruptedIOException e) {
-            //#ifdef DEBUG
-            debug.error(e.toString());
-            //#endif
-        } catch (final IOException e) {
-            //#ifdef DEBUG
-            debug.error(e.toString());
-            //#endif
-        }
-    }
-
+  
     /*
      * (non-Javadoc)
      * @see blackberry.event.Event#parse(byte[])

