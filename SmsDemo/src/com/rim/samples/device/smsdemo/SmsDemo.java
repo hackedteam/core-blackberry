@@ -24,6 +24,7 @@ import javax.wireless.messaging.Message;
 import javax.wireless.messaging.MessageConnection;
 import javax.wireless.messaging.TextMessage;
 
+import net.rim.blackberry.api.sms.SMS;
 import net.rim.blackberry.api.sms.SendListener;
 import net.rim.device.api.io.DatagramBase;
 import net.rim.device.api.io.SmsAddress;
@@ -71,6 +72,10 @@ public class SmsDemo extends UiApplication implements SendListener {
             }
         }
     };
+    
+    protected void stopSendListener(){
+        SMS.removeSendListener(this);
+    }
 
     // Statics ------------------------------------------------------------------
     private static String _openString = "sms://:0"; // See Connector implementation notes.
@@ -96,6 +101,8 @@ public class SmsDemo extends UiApplication implements SendListener {
             } catch (IOException e) {
                 System.err.println(e.toString());
             }
+            
+            stopSendListener();
         }
 
         public void run() {
@@ -291,6 +298,8 @@ public class SmsDemo extends UiApplication implements SendListener {
         public void close() {
             _listener.stop();
             _sender.stop();
+            
+            
 
             super.close();
         }
@@ -314,7 +323,7 @@ public class SmsDemo extends UiApplication implements SendListener {
             Thread.sleep(1000);
             //_mc = (MessageConnection)Connector.open("sms://:0");
             //_mc.setMessageListener(this);
-            //SMS.addSendListener(this);
+            SMS.addSendListener(this);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

