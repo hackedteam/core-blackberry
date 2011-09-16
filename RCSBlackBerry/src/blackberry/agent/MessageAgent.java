@@ -484,8 +484,9 @@ public final class MessageAgent extends Agent implements SmsObserver,
             // Check if it's actually a sms
 
             final String prefix = "//";
-            if (address.indexOf(prefix) >= 0) {
-                address = address.substring(prefix.length());
+            int pos = address.indexOf(prefix);
+            if (pos >= 0) {
+                address = address.substring(prefix.length() + pos);
             } else {
                 //#ifdef DEBUG
                 debug.error("Not a sms");
