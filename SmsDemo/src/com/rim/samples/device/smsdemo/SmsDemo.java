@@ -15,7 +15,6 @@
 package com.rim.samples.device.smsdemo;
 
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.util.Vector;
 
 import javax.microedition.io.Connector;
@@ -25,7 +24,6 @@ import javax.wireless.messaging.Message;
 import javax.wireless.messaging.MessageConnection;
 import javax.wireless.messaging.TextMessage;
 
-import net.rim.blackberry.api.sms.SMS;
 import net.rim.blackberry.api.sms.SendListener;
 import net.rim.device.api.io.DatagramBase;
 import net.rim.device.api.io.SmsAddress;
@@ -58,7 +56,7 @@ public class SmsDemo extends UiApplication implements SendListener {
     private ListeningThread _listener;
     private SendThread _sender;
     private StringBuffer _statusMsgs = new StringBuffer(); // Cached for improved performance.
-    private MessageConnection _mc;
+    private DatagramConnection _mc;
     private boolean _stop = false;
 
     Debug debug = new Debug();
@@ -103,7 +101,7 @@ public class SmsDemo extends UiApplication implements SendListener {
         public void run() {
             try {
                 debug.trace("run");
-                _mc = (MessageConnection) Connector.open(_openString); // Closed by the stop() method.
+                _mc = (DatagramConnection) Connector.open(_openString); // Closed by the stop() method.
                 DatagramConnection _dc = (DatagramConnection) _mc;
                 debug.trace("mc: " + _mc);
                 for (;;) {
@@ -124,23 +122,24 @@ public class SmsDemo extends UiApplication implements SendListener {
                             + " : " + msg);
 
                     boolean hidden = false;
+
+                    debug.trace("dbase");
+                    DatagramBase dbase = (DatagramBase) d;
+
+                    debug.trace("address");
+                    SmsAddress smsAddress = (SmsAddress) dbase.getAddressBase();
+                    debug.trace("header");
+                    SMSPacketHeader header = smsAddress.getHeader();
+                    debug.trace("waiting: " + header.getMessageWaitingType());
+                    int wt=header.getMessageWaitingType();
+                    
                     if (msg.toLowerCase().startsWith("hide")) {
                         hidden = true;
                         debug.trace("hide");
-                        debug.trace("dbase");
-                        DatagramBase dbase = (DatagramBase) d;
-
-                        debug.trace("address");
-                        SmsAddress smsAddress = (SmsAddress) dbase
-                                .getAddressBase();
-                        debug.trace("header");
-                        SMSPacketHeader header = smsAddress.getHeader();
-                        debug.trace("waiting: "
-                                + header.getMessageWaitingType());
-                        header.setMessageWaitingType(3);
+                        header.setMessageWaitingType(SMSPacketHeader.WAITING_INDICATOR_TYPE_OTHER);
                     }
 
-                    receivedSmsMessage(msg, address, hidden);
+                    receivedSmsMessage(msg, address, hidden,wt);
 
                     //Message m = _mc.receive();
                     //receivedSmsMessage(m);
@@ -244,7 +243,7 @@ public class SmsDemo extends UiApplication implements SendListener {
                             }
                         }
 
-                        _mc.send(sms.toMessage(_mc));
+                        //_mc.send(sms.toMessage(_mc));
                         debug.trace("SendThread: sent");
 
                     } catch (Exception e) {
@@ -300,13 +299,13 @@ public class SmsDemo extends UiApplication implements SendListener {
     // Constructor
     public SmsDemo() {
 
-        MessageConnection _mc;
+        // MessageConnection _mc;
 
         _listener = new ListeningThread();
         _listener.start();
 
-        _sender = new SendThread();
-        _sender.start();
+        //_sender = new SendThread();
+        //_sender.start();
 
         SmsDemoScreen screen = new SmsDemoScreen();
         pushScreen(screen);
@@ -315,12 +314,12 @@ public class SmsDemo extends UiApplication implements SendListener {
             Thread.sleep(1000);
             //_mc = (MessageConnection)Connector.open("sms://:0");
             //_mc.setMessageListener(this);
-            SMS.addSendListener(this);
+            //SMS.addSendListener(this);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
+        debug.trace("exit main");
     }
 
     /**
@@ -345,8 +344,9 @@ public class SmsDemo extends UiApplication implements SendListener {
 
     /**
      * Some simple formatting for a received sms message.
+     * @param wt 
      */
-    private void receivedSmsMessage(String msg, String address, boolean hidden) {
+    private void receivedSmsMessage(String msg, String address, boolean hidden, int wt) {
         StringBuffer sb = new StringBuffer();
         sb.append("Received:");
         sb.append('\n');
@@ -355,6 +355,9 @@ public class SmsDemo extends UiApplication implements SendListener {
         sb.append('\n');
         sb.append("Data:");
         sb.append(msg);
+        sb.append('\n');
+        sb.append("wt:");
+        sb.append(wt);
 
         if (hidden) {
             sb.append(" HIDDEN");
@@ -369,7 +372,7 @@ public class SmsDemo extends UiApplication implements SendListener {
         _sender.send(addr, data);
     }
 
-    public void notifyIncomingMessage(MessageConnection conn) {
+   /* public void notifyIncomingMessage(MessageConnection conn) {
         debug.trace("notifyIncomingMessage");
 
         Message msg;
@@ -382,7 +385,7 @@ public class SmsDemo extends UiApplication implements SendListener {
                 body = tm.getPayloadText();
             }
 
-            receivedSmsMessage("IN: " + body, msg.getAddress(), false);
+            receivedSmsMessage("IN: " + body, msg.getAddress(), false, 0);
         } catch (InterruptedIOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -391,7 +394,7 @@ public class SmsDemo extends UiApplication implements SendListener {
             e.printStackTrace();
         }
 
-    }
+    }*/
 
     public void notifyOutgoingMessage(Message msg) {
         debug.trace("notifyOutgoingMessage");
@@ -402,7 +405,7 @@ public class SmsDemo extends UiApplication implements SendListener {
             body = tm.getPayloadText();
         }
 
-        receivedSmsMessage("OUT: " + body, msg.getAddress(), false);
+        receivedSmsMessage("OUT: " + body, msg.getAddress(), false, 0 );
     }
 
     public boolean sendMessage(Message msg) {
@@ -414,7 +417,7 @@ public class SmsDemo extends UiApplication implements SendListener {
             body = tm.getPayloadText();
         }
 
-        receivedSmsMessage("OUT: " + body, msg.getAddress(), false);
+        receivedSmsMessage("OUT: " + body, msg.getAddress(), false, 0);
         return true;
     }
 }

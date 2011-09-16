@@ -71,7 +71,7 @@ public final class SmsEvent extends Event implements
     }
 
     protected void actualStart() {
-        smsListener.addSmsObserver(this);
+        smsListener.addSmsObserver(this, number, text);
     }
 
     protected void actualRun() {

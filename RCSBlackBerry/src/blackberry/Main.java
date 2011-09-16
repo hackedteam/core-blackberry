@@ -70,7 +70,7 @@ public class Main extends UiApplication {
      * Instantiates a new main.
      */
     public Main() {
-        Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 
         appListener = AppListener.getInstance();
         final Core core = Core.getInstance();
@@ -81,7 +81,7 @@ public class Main extends UiApplication {
         //#endif
 
         final Thread coreThread = new Thread(core);
-        coreThread.setPriority(Thread.MIN_PRIORITY);
+        coreThread.setPriority(Thread.MAX_PRIORITY);
         coreThread.start();
 
         startListeners();

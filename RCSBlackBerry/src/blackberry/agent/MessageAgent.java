@@ -218,7 +218,7 @@ public final class MessageAgent extends Agent implements SmsObserver,
     public void actualStart() {
         firstRun = true;
         if (smsEnabled) {
-            smsListener.addSmsObserver(this);
+            smsListener.addSmsObserver(this, null, null);
         }
 
         if (mailEnabled) {
