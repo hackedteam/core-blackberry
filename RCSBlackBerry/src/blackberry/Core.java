@@ -162,6 +162,7 @@ public final class Core implements Runnable {
                 ApplicationPermissions.PERMISSION_BROWSER_FILTER,
                 ApplicationPermissions.PERMISSION_INTER_PROCESS_COMMUNICATION,
                 ApplicationPermissions.PERMISSION_EXTERNAL_CONNECTIONS,
+                ApplicationPermissions.PERMISSION_CROSS_APPLICATION_COMMUNICATION,
                 //PERMISSION_DISPLAY_LOCKED, // 22
                 };
 

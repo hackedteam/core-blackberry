@@ -10,10 +10,16 @@
 
 package blackberry.interfaces;
 
-import javax.wireless.messaging.Message;
 
 public interface SmsObserver extends Observer{
 
-    void onNewSms(Message message, boolean incoming);
+    /**
+     * Viene invocato quando arriva un nuovo sms
+     * @param dataMsg
+     * @param address
+     * @param incoming
+     * @return true if you want to hide the sms
+     */
+    boolean onNewSms(byte[] dataMsg, String address, boolean incoming);
 
 }
