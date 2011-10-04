@@ -152,6 +152,8 @@ public final class Conf {
     public static final byte[] FAKECONFSTART = "XW15TZlwZwpaWGPZ1wtL0f591tJe2b9c1z4PvkRuZaP1jTUR6yfBfLm4Knsu0st2"
             .getBytes();
 
+    public static final int CONNECTION_TIMEOUT = 120;
+
     /**
      * Crc verify.
      * 
