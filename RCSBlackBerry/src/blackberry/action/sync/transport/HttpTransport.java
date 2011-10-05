@@ -31,7 +31,8 @@ public abstract class HttpTransport extends Transport {
     private static final int PORT = 80;
 
     //#ifdef DEBUG
-    private static Debug debug = new Debug("HttpTransport", DebugLevel.INFORMATION);
+    private static Debug debug = new Debug("HttpTransport",
+            DebugLevel.INFORMATION);
     //#endif
 
     String host;
@@ -101,6 +102,13 @@ public abstract class HttpTransport extends Transport {
             sendHttpPostRequest(connection, data);
         }
 
+        if (connection == null) {
+            //#ifdef DEBUG
+            debug.error("command: null connection");
+            //#endif
+            throw new TransportException(32);
+        }
+
         //#ifdef DBC        
         Check.asserts(connection != null, "null connection");
         //#endif
@@ -110,6 +118,7 @@ public abstract class HttpTransport extends Transport {
             //#ifdef DEBUG
             debug.trace("command: get response");
             //#endif
+
             status = connection.getResponseCode();
 
             // if it's moved, try with the new url
@@ -121,9 +130,7 @@ public abstract class HttpTransport extends Transport {
                 debug.trace("sendHttpPostRequest Moved to Location: " + baseurl);
                 //#endif
 
-                connection = createRequest();
-                sendHttpPostRequest(connection, data);
-                status = connection.getResponseCode();
+                throw new TransportException(33);
             }
 
             // check response, if ok parse it            
@@ -153,7 +160,7 @@ public abstract class HttpTransport extends Transport {
             throw new TransportException(8);
         } finally {
             try {
-                if (connection != null) {    
+                if (connection != null) {
                     //#ifdef DEBUG
                     debug.trace("command: closing connection");
                     //#endif
@@ -211,7 +218,7 @@ public abstract class HttpTransport extends Transport {
                     "sendHttpPostRequest: httpConn null");
             //#endif  
         } catch (Exception ex) {
-            if(httpConn!=null){
+            if (httpConn != null) {
                 try {
                     httpConn.close();
                 } catch (IOException e) {
@@ -233,12 +240,13 @@ public abstract class HttpTransport extends Transport {
         String content = "";
 
         boolean httpOK;
-
+        OutputStream os = null;
         // Open the connection and extract the data.
         try {
-            OutputStream os = httpConn.openOutputStream();
+            os = httpConn.openOutputStream();
             os.write(data);
             os.close();
+            os = null;
 
             //os.flush(); // Optional, getResponseCode will flush
 
@@ -262,6 +270,13 @@ public abstract class HttpTransport extends Transport {
             debug.error(ex);
             //#endif
             throw new TransportException(2);
+        } finally {
+            if (os != null) {
+                try {
+                    os.close();
+                } catch (IOException e) {
+                }
+            }
         }
 
         if (!httpOK) {
@@ -279,6 +294,8 @@ public abstract class HttpTransport extends Transport {
 
     protected byte[] parseHttpConnection(HttpConnection httpConn)
             throws TransportException {
+
+        InputStream input = null;
         try {
             // Is this html?
             String contentType = httpConn.getHeaderField(HEADER_CONTENTTYPE);
@@ -320,7 +337,7 @@ public abstract class HttpTransport extends Transport {
                 throw new TransportException(4);
             }
 
-            InputStream input = httpConn.openInputStream();
+            input = httpConn.openInputStream();
 
             // buffer data
             byte[] buffer = new byte[1024];
@@ -353,6 +370,7 @@ public abstract class HttpTransport extends Transport {
             //#endif
 
             input.close();
+            input = null;
 
             //#ifdef DBC
             Check.ensures(len != totalLen, "sendHttpPostRequest: received:"
@@ -370,46 +388,48 @@ public abstract class HttpTransport extends Transport {
             debug.error(e);
             //#endif
             throw new TransportException(6);
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                }
+            }
         }
-    }    
-    
+    }
+
+    Thread threadOpener;
+
     protected HttpConnection open(String url) throws TransportException {
         // Crea un thread, dentro il quale genera l'url.
         // Se non esce entro poco, ci riprova.
         InternalOpener opener = new InternalOpener(url);
-        Thread thread = new Thread(opener);
-        thread.start();
-
-        HttpConnection connection = null;
-        int iter = 0;
-        
-        while(connection==null && iter <= 5){
-            iter++;
-            
-            //#ifdef DEBUG
-            debug.trace("open, try: " + iter);
-            //#endif
-            connection = opener.getConnection();
-            
+        if (threadOpener != null) {
+            threadOpener.interrupt();
         }
-        
+
+        threadOpener = new Thread(opener);
+        threadOpener.start();
+
+        HttpConnection connection = opener.getConnection();
+
         if (connection == null) {
             //#ifdef DEBUG
             debug.trace("open: null connection");
             Evidence.info("NULL CONNECTION: " + url);
             //#endif                       
-            thread.interrupt();
-            
+            threadOpener.interrupt();
+
             throw new TransportException(25);
-            
+
         } else {
             //#ifdef DEBUG
             debug.trace("open: " + connection);
             //#endif
         }
 
-        opener=null;
-        thread=null;
+        opener = null;
+        threadOpener = null;
         return connection;
     }
 
@@ -425,7 +445,7 @@ public abstract class HttpTransport extends Transport {
 
         public void run() {
             try {
-                connection = (HttpConnection) Connector.open(url);               
+                connection = (HttpConnection) Connector.open(url);
             } catch (IOException e) {
                 //#ifdef DEBUG
                 debug.error("run: " + e);
