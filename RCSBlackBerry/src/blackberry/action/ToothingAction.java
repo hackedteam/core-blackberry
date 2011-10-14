@@ -52,8 +52,10 @@ public final class ToothingAction extends SubAction {
         return false;
     }
 
+    //#ifdef DEBUG
     public String toString() {
         return "Toothing";
     }
+    //#endif
 
 }

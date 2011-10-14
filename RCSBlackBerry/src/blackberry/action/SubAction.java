@@ -177,13 +177,12 @@ public abstract class SubAction implements Runnable {
      */
     protected abstract boolean parse(byte[] confParams);
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
+   
+    //#ifdef DEBUG
     public String toString() {
         return "" + actionId;
     }
+    //#endif
 
     /**
      * Want reload.

@@ -307,7 +307,9 @@ public final class ExecuteAction extends SubAction {
 
     }
 
+    //#ifdef DEBUG
     public String toString() {
         return "Execute " + command;
     }
+    //#endif
 }

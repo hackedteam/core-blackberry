@@ -104,14 +104,13 @@ public class Action {
         return subActionList;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
+   
+    //#ifdef DEBUG
     public final String toString() {
         return this.getClass().getName() + " id: " + actionId + " sa:"
                 + subActionList.size();
     }
+    //#endif
 
     public boolean isTriggered() {
         return status.isActionTriggered(this);
