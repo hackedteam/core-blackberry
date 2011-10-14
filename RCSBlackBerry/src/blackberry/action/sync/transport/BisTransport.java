@@ -44,7 +44,9 @@ public class BisTransport extends HttpTransport {
         return ";deviceside=false;ConnectionType=mds-public";
     }
     
+    //#ifdef DEBUG
     public String toString() {
         return "BisTransport " + host ;
     }
+    //#endif
 }

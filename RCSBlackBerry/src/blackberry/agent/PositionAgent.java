@@ -440,7 +440,7 @@ public final class PositionAgent extends Agent implements LocationObserver {
         databuffer.write(payload);
 
         // delimiter
-        databuffer.writeInt(Evidence.EVIDENCE_DELIMITER);
+        databuffer.writeInt(Evidence.E_DELIMITER);
 
         //#ifdef DBC
         Check.ensures(databuffer.getPosition() == size,

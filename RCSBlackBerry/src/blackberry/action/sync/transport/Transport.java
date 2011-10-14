@@ -28,9 +28,11 @@ public abstract class Transport {
         this.baseurl = baseurl;
     }
 
+    //#ifdef DEBUG
     public String toString() {
         return "Transport " + getUrl();
     }
+    //#endif
 
     public abstract boolean isAvailable();
 

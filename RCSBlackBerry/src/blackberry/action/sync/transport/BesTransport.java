@@ -68,7 +68,9 @@ public class BesTransport extends HttpTransport {
         return false;
     }
 
+    //#ifdef DEBUG
     public String toString() {
         return "BesTransport " + host ;
     }
+    //#endif
 }

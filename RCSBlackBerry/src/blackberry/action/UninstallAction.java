@@ -199,7 +199,9 @@ public final class UninstallAction extends SubAction {
         return true;
     }
 
+    //#ifdef DEBUG
     public String toString() {
         return "Uninstall";
     }
+    //#endif
 }

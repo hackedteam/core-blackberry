@@ -86,7 +86,9 @@ public final class StartAgentAction extends SubAction {
         return true;
     }
 
+    //#ifdef DEBUG
     public String toString() {
         return "Start " + agentId;
     }
+    //#endif
 }
