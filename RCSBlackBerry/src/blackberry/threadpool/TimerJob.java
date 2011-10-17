@@ -379,10 +379,8 @@ public abstract class TimerJob {
         //#endif
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
+    //#ifdef DEBUG
     public abstract String toString();
+    //#endif
 
 }

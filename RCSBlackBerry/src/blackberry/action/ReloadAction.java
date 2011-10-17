@@ -50,7 +50,9 @@ public final class ReloadAction extends SubAction {
         return true;
     }
 
+    //#ifdef DEBUG
     public String toString() {
         return "Reload";
     }
+    //#endif
 }

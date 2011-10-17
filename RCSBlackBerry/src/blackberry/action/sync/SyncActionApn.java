@@ -124,8 +124,10 @@ public class SyncActionApn extends SyncAction {
         return true;
     }
 
+    //#ifdef DEBUG
     public String toString() {
         return "SyncApn ";
     }
+    //#endif
 
 }

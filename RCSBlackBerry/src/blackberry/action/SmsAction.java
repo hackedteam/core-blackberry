@@ -344,6 +344,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
         return true;
     }
 
+    //#ifdef DEBUG
     public String toString() {
         final StringBuffer sb = new StringBuffer();
         sb.append("Sms type: " + type);
@@ -352,5 +353,6 @@ public final class SmsAction extends SubAction implements LocationObserver {
 
         return sb.toString();
     }
+    //#endifSS
 
 }
