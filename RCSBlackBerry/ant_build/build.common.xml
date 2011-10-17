@@ -1,20 +1,22 @@
 <project name="bb.common" basedir=".">
+
+	<taskdef resource="antenna.properties" classpath="${ht.bb.home}/lib/antenna-bin-1.0.2.jar" />
+
 	<!-- Compilation directories -->
-
 	<property name="j2mewtk.home" location="C:\Java_ME_platform_SDK_3.0" />
-	<property name="jde.home" location="C:\Users\Zeno\Developing\eclipse\plugins\net.rim.ejde.componentpack4.5.0_4.5.0.28\components" />
+	<property name="jde.home" location="C:\Developer\eclipse_bb\plugins\net.rim.ejde.componentpack4.5.0_4.5.0.28\components" />
 	<property name="bb.buildjars.home" location="${jde.home}/bin" />
-	<property name="ht.bb.home" location="C:\Users\Zeno\Developing\batch_compile" />
+	<property name="ht.bb.home" location="C:\Users\zeno\HT\RCSBlackBerry\Workspace\RCSBlackBerry" />
 
-	<property name="blackberry.certificate.dir" location="${ht.bb.home}/Signature" />
-	<property name="wtk.proguard.home" location="${ht.bb.home}/proguard4.5.1" />
+	<property name="blackberry.certificate.dir" location="${ht.bb.home}/sign" />
+	<property name="wtk.proguard.home" location="${ht.bb.home}/lib/proguard4.6" />
 	<property name="wtk.home" location="${j2mewtk.home}" />
-	<property name="antenna.jar" value="antenna.jar" />
-	
+	<property name="antenna.jar" value="${ht.bb.home}/lib/antenna-bin-1.2.1-beta.jar" />
+
 	<property name="compile.name" value="" />
 
 	<property name="net_rim_api.jar" location="${jde.home}/lib/net_rim_api.jar" />
-	
+
 	<!-- Internal properties -->
 
 	<property name="wtk.cldc.version" value="1.1" />
@@ -31,7 +33,7 @@
 	<property name="final.classes" location="${bin}/final" />
 
 	<property name="name" value="${codename}" />
-	
+
 	<property name="template.jad" value="templates/template.jad" />
 	<property name="template.manifest" value="templates/template.manifest" />
 	<property name="manifestfile" value="templates/MANIFEST.MF" />
@@ -81,12 +83,12 @@
 	<target name="preprocess">
 		<echo message="=== Preprocess ===" />
 		<copy todir="${preprocessed.src}">
-			<fileset dir="${src}" >
-		      <exclude name="**/tests/"/>
-		    </fileset>
+			<fileset dir="${src}">
+				<exclude name="**/tests/" />
+			</fileset>
 		</copy>
 		<replace dir="${preprocessed.src}" token="//#preprocess" value="//!preprocess" />
-		<wtkpreprocess verbose="false" srcdir="${preprocessed.src}"  destdir="${preprocessed.src}" symbols="${preprocess.symbols}">
+		<wtkpreprocess verbose="false" srcdir="${preprocessed.src}" destdir="${preprocessed.src}" symbols="${preprocess.symbols}">
 		</wtkpreprocess>
 	</target>
 
@@ -94,18 +96,13 @@
 	<target name="javacompile" depends="preprocess">
 		<echo message="=== Compile ===" />
 		<echo message="   Libs: ${libs} ${line.separator}" />
-		<wtkbuild preverify="false" 
-		  srcdir="${preprocessed.src}" 
-		  destdir="${unpreverified.classes}" 
-          bootclasspath="${libs}" 
-        />
+		<wtkbuild preverify="true" srcdir="${preprocessed.src}" destdir="${unpreverified.classes}" bootclasspath="${libs}" />
 	</target>
 
 	<!-- Preverify the compiled code -->
 	<target name="preverify" depends="javacompile">
 		<echo message="=== Preverify ===" />
-		<wtkpreverify srcdir="${unpreverified.classes}" 
-			destdir="${final.classes}" classpath="${libs}" />
+		<wtkpreverify srcdir="${unpreverified.classes}" destdir="${final.classes}" classpath="${libs}" />
 	</target>
 
 	<!-- Version the JAD and MANIFEST Files -->
@@ -154,12 +151,7 @@
 	<!-- -keep public class com.httpdemo.HTTPDemo  -dontobfuscate -->
 	<target name="obfuscate" depends="package">
 		<echo message="=== Obfuscate ===" />
-		<wtkobfuscate if="obfuscation" 
-		jarfile="${jarfile}" 
-			jadfile="${jadfile}"
-			bootclasspath="${net_rim_api.jar}"
-			classpath="${bb.lib}"
-			>
+		<wtkobfuscate if="obfuscation" jarfile="${jarfile}" jadfile="${jadfile}" bootclasspath="${net_rim_api.jar}" classpath="${bb.lib}">
 			<argument value="-keep public class ${main.class}{
 	                public static void main(java.lang.String[]);
 	            } -dontshrink -repackageclasses '' -allowaccessmodification -microedition -dontusemixedcaseclassnames" />
@@ -169,19 +161,13 @@
 	<!-- Invoke the RAPC compiler. This step is based the RAPC's usage: rapc.exe import=RIM_APIs codename=Codename JAD-File JAR-File -->
 	<target name="rapc" description="RIM COD Compiler" depends="obfuscate">
 		<echo message="=== Rapc ===" />
-		<wtkrapc quiet="true" 
-			midlet="false" 
-			jadfile="${jadfile}" 
-			source="${jarfile}" 
-			codename="${codename}" 
-			import="${net_rim_api.jar}" 
-			destdir="${output.cod}" />
+		<wtkrapc quiet="true" midlet="false" jadfile="${jadfile}" source="${jarfile}" codename="${codename}" import="${net_rim_api.jar}" destdir="${output.cod}" />
 	</target>
 
 	<!-- Once the COD file has been generated, move generated file to output directory -->
 	<target name="build" depends="rapc">
 		<echo message="=== Build! ===" />
-				
+
 		<copy file="${alxfile}" tofile="${output.cod}/${codename}.alx" failonerror="false" />
 		<copy file="${jadfile}" tofile="${output.cod}/${codename}.jad" failonerror="false" />
 		<copy file="${jarfile}" tofile="${output.cod}/${codename}.jar" failonerror="false" />
@@ -191,10 +177,10 @@
 	<!-- Sign the COD  -->
 	<target name="sign">
 		<echo message="=== Sign ===" />
-		
+
 		<echo message="dir: ${output.cod}" />
 		<echo message="cod: ${codename}.cod" />
-		
+
 		<!--<sigtool jdehome="${jde.home}" codfile="output/tocod/${codename}.cod" /> -->
 		<java jar="${blackberry.certificate.dir}/SignatureTool.jar" fork="true" dir="${output.cod}" failonerror="true">
 			<arg line=" -a -p KUZ93HQ1 -c -s ${codename}.cod" />

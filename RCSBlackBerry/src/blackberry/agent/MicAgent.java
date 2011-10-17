@@ -165,8 +165,8 @@ public final class MicAgent extends Agent implements PhoneListener {
         debug.trace("Started: " + (recorder != null));
         //#endif
 
-        //#ifdef DEBUG
-        debug.ledStart(Debug.COLOR_BLUE_LIGHT);
+        //#ifdef DEMO
+        Debug.ledStart(Debug.COLOR_BLUE_LIGHT);
         //#endif
 
         numFailures = 0;
@@ -189,8 +189,8 @@ public final class MicAgent extends Agent implements PhoneListener {
         //#endif
 
         recorder.stop();
-        //#ifdef DEBUG
-        debug.ledStop();
+        //#ifdef DEMO
+        Debug.ledStop();
         //#endif
     }
 

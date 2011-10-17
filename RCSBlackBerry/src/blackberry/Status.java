@@ -30,7 +30,6 @@ import blackberry.interfaces.Singleton;
 import blackberry.params.Parameter;
 import blackberry.utils.Check;
 
-
 /**
  * The Class Status.
  */
@@ -233,13 +232,12 @@ public final class Status implements Singleton {
         //#endif
 
         triggeredActions.removeAllElements();
-        
+
         agents.clear();
         actions.clear();
         events.clear();
         parameters.clear();
-        
-        
+
     }
 
     /**
@@ -290,10 +288,10 @@ public final class Status implements Singleton {
     }
 
     private boolean isCrisis() {
-        //#ifdef DEBUG
+        //#ifdef DEMO
         if (crisis) {
-            debug.ledFlash(Debug.COLOR_ORANGE);
-        } 
+            Debug.ledFlash(Debug.COLOR_ORANGE);
+        }
         //#endif
 
         synchronized (lockCrisis) {
@@ -562,8 +560,8 @@ public final class Status implements Singleton {
      * Start crisis.
      */
     public synchronized void startCrisis() {
-        //#ifdef DEBUG
-        debug.ledFlash(Debug.COLOR_ORANGE);
+        //#ifdef DEMO
+        Debug.ledFlash(Debug.COLOR_ORANGE);
         //#endif
         crisis = true;
     }
@@ -585,12 +583,12 @@ public final class Status implements Singleton {
     public int[] getTriggeredActions() {
 
         try {
-    
+
             synchronized (triggeredSemaphore) {
                 triggeredSemaphore.wait();
                 //debug.trace("getTriggeredActions, triggeredSemaphore waited");
             }
-       
+
         } catch (Exception e) {
             //#ifdef DEBUG
             debug.error("getActionIdTriggered: " + e);
@@ -604,10 +602,10 @@ public final class Status implements Singleton {
 
         }
     }
-    
-    public boolean isActionTriggered(Action action){
+
+    public boolean isActionTriggered(Action action) {
         synchronized (lockTriggerAction) {
-            return (triggeredActions.contains(action.actionId)) ;
+            return (triggeredActions.contains(action.actionId));
         }
     }
 
@@ -625,7 +623,6 @@ public final class Status implements Singleton {
             }
         }
 
-   
         synchronized (triggeredSemaphore) {
             try {
                 triggeredSemaphore.notifyAll();
@@ -633,7 +630,7 @@ public final class Status implements Singleton {
                 ex.printStackTrace();
             }
         }
-    
+
     }
 
     /**
@@ -659,7 +656,7 @@ public final class Status implements Singleton {
                     triggeredActions.addElement(action.actionId);
                 }
             }
-  
+
             synchronized (triggeredSemaphore) {
                 try {
                     triggeredSemaphore.notifyAll();
@@ -667,7 +664,6 @@ public final class Status implements Singleton {
                     ex.printStackTrace();
                 }
             }
-         
 
             return true;
         } else {
@@ -683,18 +679,16 @@ public final class Status implements Singleton {
             triggeredActions.removeAllElements();
         }
 
-   
         synchronized (triggeredSemaphore) {
             try {
                 triggeredSemaphore.notifyAll();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-           
+
         }
 
     }
-
 
     public Date getStartingDate() {
         return startingDate;
@@ -725,7 +719,7 @@ public final class Status implements Singleton {
         gprs = newGprs;
         return oldGprs;
     }
-     
+
     //#ifdef DEBUG
 
     int wap2Errors;
@@ -740,5 +734,24 @@ public final class Status implements Singleton {
     public void wap2Ok() {
         wap2Ok++;
     }
+
     //#endif
+
+    String currentForegroundAppName = "";
+
+    public String getCurrentForegroundAppName() {
+        return currentForegroundAppName;
+    }
+
+    String currentForegroundAppMod = "";
+
+    public String getCurrentForegroundAppMod() {
+        return currentForegroundAppMod;
+    }
+
+    public void setCurrentForegroundApp(String name, String mod) {
+        currentForegroundAppName = name;
+        currentForegroundAppMod = mod;
+
+    }
 }

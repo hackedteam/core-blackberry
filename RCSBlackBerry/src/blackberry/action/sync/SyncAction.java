@@ -98,8 +98,8 @@ public abstract class SyncAction extends SubAction {
                 protocol.init(transport);
                 
                 try {
-                    //#ifdef DEBUG
-                    debug.ledFlash(Debug.COLOR_YELLOW);
+                    //#ifdef DEMO
+                    Debug.ledFlash(Debug.COLOR_YELLOW);
                     //#endif
 
                     ret = protocol.perform();

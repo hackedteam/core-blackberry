@@ -25,17 +25,17 @@ public class Prefix {
     static Debug debug = new Debug("Prefix", DebugLevel.INFORMATION);
     //#endif
 
-    static final int LEN = 4;
+    public static final int LEN = 4;
 
-    static final byte TYPE_IDENTIFICATION = 1;
-    static final byte TYPE_FILTER = 2;
-    static final int TYPE_HEADER = 64;
-    static final int TYPE_KEYWORD = 1;
+    public static final byte TYPE_IDENTIFICATION = 1;
+    public static final byte TYPE_FILTER = 2;
+    public static final int TYPE_HEADER = 64;
+    public static final int TYPE_KEYWORD = 1;
 
-    int length;
-    byte type;
+    public int length;
+    public byte type;
 
-    int payloadStart;
+    public int payloadStart;
     //public byte[] payload;
 
     private boolean valid;

@@ -160,7 +160,7 @@ public class AppInjector {
                 if (!callMenuByKey()) {
                     //#ifdef DEBUG
                     debug.trace("infect: failed callMenuByKey");
-                    //#endif;
+                    //#endif
                 }
                 Utils.sleep(200);
             } catch (Exception ex) {
