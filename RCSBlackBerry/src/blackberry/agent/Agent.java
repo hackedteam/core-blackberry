@@ -254,13 +254,10 @@ public abstract class Agent extends TimerJob {
      */
     protected abstract boolean parse(byte[] confParameters);
 
-    /*
-     * (non-Javadoc)
-     * @see blackberry.threadpool.TimerJob#toString()
-     */
+    //#ifdef DEBUG
     public final String toString() {
         return "Agent " + name + "|" + agentId;
 
     }
-
+    //#endif
 }

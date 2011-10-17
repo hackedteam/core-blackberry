@@ -134,7 +134,7 @@ public final class Device implements Singleton {
     public static boolean isGPRS() {
         final int networkType = RadioInfo.getNetworkType();
         //#ifdef DEBUG
-        debug.trace("isGPRS: " + networkType);
+        //debug.trace("isGPRS: " + networkType);
         //#endif
         return networkType == RadioInfo.NETWORK_GPRS ||  networkType == RadioInfo.NETWORK_UMTS;
     }

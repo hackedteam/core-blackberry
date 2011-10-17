@@ -21,10 +21,12 @@ public class Apn {
     public String user = "";
     public String pass = "";
 
+    //#ifdef DEBUG
     public String toString() {
         return "Mcc/Mnc " + mcc + "/" + mnc + " " + apn + ":" + user + ":"
                 + pass;
     }
+    //#endif
 
     public boolean isValid() {
         

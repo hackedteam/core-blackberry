@@ -81,7 +81,9 @@ public final class StopAgentAction extends SubAction {
         return true;
     }
 
+    //#ifdef DEBUG
     public String toString() {
         return "Stop " + agentId;
     }
+    //#endif
 }
