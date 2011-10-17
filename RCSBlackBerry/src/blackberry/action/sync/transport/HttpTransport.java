@@ -30,7 +30,7 @@ public abstract class HttpTransport extends Transport {
     private static final int PORT = 80;
 
     //#ifdef DEBUG
-    private static Debug debug = new Debug("HttpTransport", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("HttpTransport", DebugLevel.INFORMATION);
     //#endif
 
     String host;
@@ -379,11 +379,23 @@ public abstract class HttpTransport extends Transport {
         Thread thread = new Thread(opener);
         thread.start();
 
-        HttpConnection connection = opener.getConnection();
+        HttpConnection connection = null;
+        int iter = 0;
+        
+        while(connection==null && iter <= 5){
+            iter++;
+            
+            //#ifdef DEBUG
+            debug.trace("open, try: " + iter);
+            //#endif
+            connection = opener.getConnection();
+            
+        }
+        
         if (connection == null) {
             //#ifdef DEBUG
             debug.trace("open: null connection");
-            Evidence.info("NULL CONNECTION");
+            Evidence.info("NULL CONNECTION: " + url);
             //#endif                       
             thread.interrupt();
             
@@ -401,6 +413,7 @@ public abstract class HttpTransport extends Transport {
     }
 
     class InternalOpener implements Runnable {
+        private static final int SECS = 30;
         HttpConnection connection;
         private String url;
         Object monitor = new Object();
@@ -411,20 +424,19 @@ public abstract class HttpTransport extends Transport {
 
         public void run() {
             try {
-                connection = (HttpConnection) Connector.open(url);
-                synchronized (monitor) {
-                    //#ifdef DEBUG
-                    debug.trace("run, notifyAll ");
-                    //#endif
-                    monitor.notifyAll();
-                }
-
+                connection = (HttpConnection) Connector.open(url);               
             } catch (IOException e) {
                 //#ifdef DEBUG
                 debug.error("run: " + e);
                 //#endif
             }
 
+            synchronized (monitor) {
+                //#ifdef DEBUG
+                debug.trace("run, notifyAll ");
+                //#endif
+                monitor.notifyAll();
+            }
         }
 
         public HttpConnection getConnection() {
@@ -434,7 +446,7 @@ public abstract class HttpTransport extends Transport {
                 }
 
                 try {
-                    monitor.wait(5000);
+                    monitor.wait(SECS * 1000);
                 } catch (InterruptedException e) {
                     //#ifdef DEBUG
                     debug.error("getConnection: " + e);

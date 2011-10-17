@@ -557,7 +557,7 @@ public final class Utils {
      *            the imei
      * @return the string
      */
-    public static String imeiToString(final byte[] imei) {
+    public static String imeiToString(final byte[] imei) {        
         final String imeiString = GPRSInfo.imeiToString(imei);
         return imeiString.replace('.', '0');
     }

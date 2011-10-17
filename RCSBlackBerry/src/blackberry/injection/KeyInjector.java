@@ -97,7 +97,6 @@ public class KeyInjector {
 
     public static void pressKey(final int key) {
         Application.getApplication().invokeLater(new Runnable() {
-
             public void run() {
                 pressRawKey(key);
             }

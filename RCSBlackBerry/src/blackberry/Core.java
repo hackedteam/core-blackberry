@@ -13,7 +13,6 @@ import java.util.Date;
 
 import net.rim.device.api.applicationcontrol.ApplicationPermissions;
 import net.rim.device.api.applicationcontrol.ApplicationPermissionsManager;
-import net.rim.device.api.system.Application;
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.CodeModuleGroup;
 import net.rim.device.api.system.CodeModuleGroupManager;
@@ -100,7 +99,7 @@ public final class Core implements Runnable {
 
         Encryption.init();
 
-        ((Main) Application.getApplication()).goBackground();
+        Main.getInstance().goBackground();
     }
 
     /**

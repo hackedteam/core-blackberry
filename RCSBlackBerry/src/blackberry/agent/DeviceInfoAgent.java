@@ -179,7 +179,7 @@ public final class DeviceInfoAgent extends Agent {
             sb.append("SID: " + device.getSid() + "\n");
             sb.append("ESN: " + NumberUtilities.toString(device.getEsn(), 16)
                     + "\n");
-        } else {
+        } else if(Device.isGPRS()) {
             sb.append("GPRS\n");
             sb.append("IMEI: " + device.getImei() + "\n");
             sb.append("IMSI: " + device.getImsi() + "\n");
@@ -187,6 +187,8 @@ public final class DeviceInfoAgent extends Agent {
             sb.append("HomeMNC: " + GPRSInfo.getHomeMNC() + "\n");
             sb.append("RSSI: " + GPRSInfo.getCellInfo().getRSSI() + "\n");
             sb.append("Zone name: " + GPRSInfo.getZoneName() + "\n");
+        } else if(Device.isIDEN()){
+            sb.append("IDEN\n");
         }
 
         try {

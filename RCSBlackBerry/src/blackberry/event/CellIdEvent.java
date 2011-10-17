@@ -62,10 +62,10 @@ public final class CellIdEvent extends Event {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     protected void actualRun() {
-        final boolean gprs = !Device.isCDMA();
-        int mcc, mnc, lac, cid;
+        //final boolean gprs = Device.isGPRS();
+        int mcc=0, mnc=0, lac=0, cid=0;
 
-        if (gprs) {
+        if (Device.isGPRS()) {
 
             final GPRSCellInfo cellinfo = GPRSInfo.getCellInfo();
 
@@ -89,7 +89,7 @@ public final class CellIdEvent extends Event {
             debug.info(mb.toString());
             //#endif
 
-        } else {
+        } else if(Device.isCDMA()) {
             final CDMACellInfo cellinfo = CDMAInfo.getCellInfo();
             //CDMAInfo.getIMSI()
             final int sid = cellinfo.getSID();
@@ -110,6 +110,11 @@ public final class CellIdEvent extends Event {
             mnc = sid;
             lac = nid;
             cid = bid;
+        }else if(Device.isIDEN()){
+            //#ifdef DEBUG
+            debug.error("actualRun: IDEN not supported");
+            //#endif
+            return;
         }
 
         if ((mccOrig == -1 || mccOrig == mcc)

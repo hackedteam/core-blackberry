@@ -22,7 +22,7 @@ import blackberry.utils.Utils;
  */
 public class Prefix {
     //#ifdef DEBUG
-    static Debug debug = new Debug("Prefix", DebugLevel.NOTIFY);
+    static Debug debug = new Debug("Prefix", DebugLevel.INFORMATION);
     //#endif
 
     static final int LEN = 4;

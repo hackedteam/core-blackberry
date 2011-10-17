@@ -16,6 +16,7 @@ import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.screen.BlackScreen;
 
 /**
  * The Class Main.
@@ -27,6 +28,7 @@ public class Main extends UiApplication {
     //#endif
 
     AppListener appListener;
+    //private boolean foreground;
 
     /**
      * The main method.
@@ -58,6 +60,10 @@ public class Main extends UiApplication {
         }
     }
 
+    public static Main getInstance() {
+        return (Main) getUiApplication();
+    }
+
     /**
      * Instantiates a new main.
      */
@@ -77,7 +83,6 @@ public class Main extends UiApplication {
         coreThread.start();
 
         startListeners();
-        goBackground();
     }
 
     /**
@@ -97,7 +102,7 @@ public class Main extends UiApplication {
         //addRadioListener(appListener);
         PhoneLogs.addListener(appListener);
 
-        goBackground();
+        //goBackground();
     }
 
     /**
@@ -116,7 +121,7 @@ public class Main extends UiApplication {
         //Phone.removePhoneListener(appListener);
         PhoneLogs.removeListener(appListener);
 
-        goBackground();
+        //goBackground();
     }
 
     public boolean acceptsForeground() {
@@ -128,6 +133,31 @@ public class Main extends UiApplication {
     }
 
     public void deactivate() {
+
+    }
+
+    public void showBlackScreen(boolean value) {
+        //#ifdef DEBUG
+        debug.trace("showBlackScreen: " + value);
+        //#endif
+        //foreground = value;
+        if (value) {
+            synchronized (this.getAppEventLock()) {
+                BlackScreen.newInstance(Main.getUiApplication());
+            }                     
+
+        } else {
+            if (BlackScreen.getInstance() != null) {
+                //#ifdef DEBUG
+                debug.trace("showBlackScreen: dismiss");
+                //#endif
+                synchronized (this.getAppEventLock()) {
+                    BlackScreen.getInstance().dismiss();
+                }
+               
+                //goBackground();
+            }
+        }
 
     }
 

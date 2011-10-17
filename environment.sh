@@ -1,15 +1,28 @@
-#export BB_BASE=~/Projects/RCSBlackBerry/
-export BB_WIN_BASE='C:\Users\zeno\HT\RCSBlackBerry\Workspace\RCSBlackBerry'
-#export BB_WRK=$BB_BASE/Sources/Workspace/
+export BB_BASE=~/Projects/RCSBlackBerry/
+
+if [ _$OS = _Windows_NT ]
+then 
+	echo WINDOWS
+	export BB_WIN_BASE=$( cygpath -aw $BB_BASE )
+	export BB_LOGS=~/log/
+	export EDITOR="n"
+	export DIRT="windows"
+else
+	echo UNIX
+	export BB_LOGS=$BB_BASE/Logs/
+	export BB_WIN_BASE=$BB_BASE
+	export EDITOR="mate"	
+	export DIRT="unix"
+fi
 
 alias timestamp='date "+%Y%m%d_%H%M%S"'
 alias sha1='openssl sha1'
 alias md5='openssl md5'
 
-export BB_LOGS=$BB_BASE/Logs/
 export BB_SRC_CORE=$BB_WRK/RCSBlackBerry/
 export BB_SRC_LIB=$BB_WRK/RCSBlackBerryResources/
-export BB_DIST=$BB_BASE/dist/
+export BB_DIST=$BB_BASE/Dist/
+#export BB_DIST=$BB_BASE/Dist/
 #export BB_VERSION="6.0.0"
 #export BB_VERSION="5.0.0"
 export BB_VERSION="4.5.0"
@@ -21,15 +34,42 @@ export BB_NAME_LIB=net_rim_bb_lib_base
 export BB_CORE="$BB_DELIVER/$BB_VERSION/$BB_NAME_CORE.cod"
 export BB_LIB="$BB_DELIVER/$BB_VERSION/$BB_NAME_LIB.cod"
 
+alias bbbcore='zload $BB_CORE'
+alias bbblib='zload $BB_LIB'
+alias bbbboth='zload $BB_CORE; zload $BB_LIB'
 
-export BB_WIN_CORE='C:\Users\zeno\HT\RCSBlackBerry\Workspace\RCSBlackBerry\deliverables\Standard\4.5.0\net_rim_bb_lib.cod'
-
-alias bbbcore='javaloader -wrddr load $BB_CORE'
-alias bbblib='javaloader -wrddr load $BB_LIB'
-alias bbbboth='javaloader -wrddr load $BB_CORE $BB_LIB'
-alias envz='vi $BB_WRK/environment.sh; source $BB_WRK/environment.sh'
+alias envz='zedit $BB_WRK/environment.sh; source $BB_WRK/environment.sh'
 alias sign='java -jar "/Developer/Eclipse Helios/plugins/net.rim.ejde.componentpack4.5.0_4.5.0.28/components/bin/SignatureTool.jar" '
 
+function zedit(){
+ if [ _$OS = _Windows_NT ]
+  then
+  	$EDITOR $( cygpath -aw $1 )
+  else
+  	$EDITOR $1
+  fi
+}
+
+function zload(){
+ if [ _$OS = _Windows_NT ]
+  then
+	file="$( cygpath -aw $1 )"
+  else
+	file="$1"
+  fi
+  
+  ls -la $file
+  javaloader -wrddr load $file
+}
+
+function bblogs(){
+  TLOG=$BB_LOGS/evt_`timestamp`.txt
+  echo $TLOG
+  javaloader -wrddr eventlog > $TLOG
+  javaloader -wrddr cleareventlog
+	
+  zedit $TLOG
+}
 
 function renameJad(){
 	if [ "$#" -eq 2 ] 
@@ -66,17 +106,6 @@ function renameJad(){
 	else
 		echo "wrong arguments: $0 rcsfile.zip name"
 	fi
-
-
-}
-
-
-function bblogs(){
-  TLOG=$BB_LOGS/evt_`timestamp`.txt
-  echo $TLOG
-  javaloader -wrddr eventlog > $TLOG
-  javaloader -wrddr cleareventlog
-  mate $TLOG
 }
 
 function release(){
@@ -132,7 +161,7 @@ function dist(){
 		echo $distDir
 		
 		# creazione directory e link DEBUG o RELEASE all'ultimo
-		mkdir $distDir
+		mkdir -p $distDir
 		cd $distDir/..
 		rm $kind 2> /dev/null
 		ln -s $distName $kind 
@@ -142,8 +171,6 @@ function dist(){
 		cp $BB_DELIVER/$BB_VERSION/$BB_NAME_CORE.cod $distDir		
 		
 		release $version
-
-		
 		
 	else
 		echo "wrong argument: $0 Version Rc Kind"
