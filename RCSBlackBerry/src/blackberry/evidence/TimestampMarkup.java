@@ -64,9 +64,7 @@ public class TimestampMarkup extends Markup {
     }
 
     protected synchronized boolean writeMarkup(Hashtable dict) {
-        int size = dict.size() * (8 + 20);
-        final byte[] payload = new byte[size];
-        final DataBuffer dataBuffer = new DataBuffer(payload, 0, size, false);
+        final DataBuffer dataBuffer = new DataBuffer(false);
         final Enumeration enumeration = dict.keys();
         dataBuffer.writeInt(dict.size());
 
@@ -87,7 +85,7 @@ public class TimestampMarkup extends Markup {
                 return false;
             }
         }
-        return writeMarkup(payload);
+        return writeMarkup(dataBuffer.toArray());
 
     }
 

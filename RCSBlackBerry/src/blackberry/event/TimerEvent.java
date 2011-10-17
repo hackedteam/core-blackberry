@@ -10,7 +10,9 @@ package blackberry.event;
 
 import java.io.EOFException;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Status;
@@ -39,6 +41,12 @@ public final class TimerEvent extends Event {
     Date timestamp;
 
     Markup markup;
+
+    private int actionOnEnter, actionOnExit;
+    
+    boolean dailyIn;
+    private long start;
+    private long stop;
 
     /**
      * Instantiates a new timer event.
@@ -84,7 +92,34 @@ public final class TimerEvent extends Event {
         debug.trace("actualRun BEGIN");
         //#endif
         
-        trigger();
+        if (type == Conf.CONF_TIMER_DAILY) {
+            if (dailyIn) {
+                //#ifdef DEBUG
+                debug.trace("actualRun: DAILY TIMER: action enter");
+                //#endif
+               
+                trigger(actionOnEnter);
+            } else {
+                //#ifdef DEBUG
+                debug.trace("actualRun: DAILY TIMER: action exit");
+                //#endif
+
+                trigger(actionOnExit);
+            }
+            
+            //#ifdef DEBUG
+            debug.trace("actualRun: daily IN BEFORE: " + dailyIn);
+            //#endif
+
+            dailyIn = setDailyDelay();
+            
+            //#ifdef DEBUG
+            debug.trace("actualRun: daily IN AFTER: " + dailyIn);
+            //#endif
+           
+        } else {
+            trigger(actionOnEnter);
+        }
 
         //#ifdef DEBUG
         debug.trace("actualRun END");
@@ -160,11 +195,63 @@ public final class TimerEvent extends Event {
             }
 
             break;
+            
+        case Conf.CONF_TIMER_DAILY:
+            //#ifdef DEBUG
+            debug.info("TIMER_DAILY");
+            //#endif
+            
+            start = loDelay;
+            stop = hiDelay;
+            setPeriod(NEVER);
+            setDelay(NEVER);
+
+            dailyIn = setDailyDelay();
+            break;
+            
         default:
             //#ifdef DEBUG
             debug.error("shouldn't be here");
             //#endif
             break;
+        }
+    }
+
+    private boolean setDailyDelay() {
+        Calendar nowCalendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        
+        long nextStart, nextStop;
+                   
+        int now = ((nowCalendar.get(Calendar.HOUR_OF_DAY) * 3600) + (nowCalendar.get(Calendar.MINUTE) * 60) 
+                            + nowCalendar.get(Calendar.SECOND)) * 1000;
+
+        // Estriamo il prossimo evento e determiniamo il delay sulla base del tipo
+        if (start > now)
+            nextStart = start;
+        else
+            nextStart = start + (3600 * 24 * 1000); // 1 Day
+
+        if (stop > now)
+            nextStop = stop;
+        else
+            nextStop = stop + (3600 * 24 * 1000); // 1 Day
+
+        if (nextStop > nextStart) {
+            //#ifdef DEBUG
+            debug.trace(" (setDailyDelay): Delay (next start): " + (nextStart - now));
+            //#endif
+           
+            setDelay(nextStart - now);  
+            reschedule();
+            return true;
+        } else {
+            //#ifdef DEBUG
+            debug.trace(" (setDailyDelay): Delay (next stop): " + (nextStop - now));
+            //#endif
+           
+            setDelay(nextStop - now);
+            reschedule();
+            return false;
         }
     }
 
@@ -180,6 +267,9 @@ public final class TimerEvent extends Event {
             type = databuffer.readInt();
             loDelay = databuffer.readInt();
             hiDelay = databuffer.readInt();
+            
+            actionOnEnter = actionId;
+            actionOnExit = databuffer.readInt();
 
             //#ifdef DEBUG
             debug.trace("type: " + type + " lo:" + loDelay + " hi:" + hiDelay);

@@ -43,8 +43,9 @@ public class DirectTransport extends HttpTransport {
         return ";deviceside=true";
 
     }
-    
+    //#ifdef DEBUG
     public String toString() {
         return "DirectTransport " + host ;
     }
+    //#endif
 }

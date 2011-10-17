@@ -30,9 +30,11 @@ public class ApnTransport extends HttpTransport {
         this.apn = apn;
     }
 
+    //#ifdef DEBUG
     public String toString() {
         return "ApnTransport " + host + " ( " + apn + ")";
     }
+   //#endif
 
     public boolean isAvailable() {
         //#ifdef DEBUG

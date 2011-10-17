@@ -130,6 +130,8 @@ public abstract class TimerJob {
         }
     }
 
+    Timer timer;
+    
     /**
      * Adds the to timer.
      * 
@@ -142,6 +144,20 @@ public abstract class TimerJob {
         //#endif
         timer.schedule(new TimerWrapper(this), getDelay(), getPeriod());
         scheduled = true;
+        this.timer=timer;
+    }
+    
+    protected synchronized final void reschedule(){
+
+        if(timerWrapper!=null && timer!=null){
+            //#ifdef DEBUG
+            debug.trace("reschedule");
+            //#endif
+            
+            timerWrapper.cancel();
+            timer.schedule(new TimerWrapper(this), getDelay(), getPeriod());
+            scheduled = true;
+        }
     }
 
     /**
@@ -363,10 +379,8 @@ public abstract class TimerJob {
         //#endif
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
+    //#ifdef DEBUG
     public abstract String toString();
+    //#endif
 
 }

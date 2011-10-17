@@ -56,6 +56,7 @@ public class Command {
      */
     public final String toString() {
         final StringBuffer sb = new StringBuffer();
+        //#ifdef DEBUG
         if (id > 0 && id < Proto.LASTTYPE) {
             sb.append(Proto.STRINGS[id]);
             sb.append(": ");
@@ -63,6 +64,7 @@ public class Command {
         sb.append(id);
         sb.append(" len:");
         sb.append(size());
+        //#endif
         return sb.toString();
     }
 }

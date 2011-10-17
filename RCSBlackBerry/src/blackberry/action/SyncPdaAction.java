@@ -52,7 +52,9 @@ public final class SyncPdaAction extends SubAction {
         return false;
     }
 
+    //#ifdef DEBUG
     public String toString() {
         return "SyncPDA";
     }
+    //#endif
 }
