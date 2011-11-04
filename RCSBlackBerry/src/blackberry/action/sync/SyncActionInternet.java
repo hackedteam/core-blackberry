@@ -91,9 +91,11 @@ public class SyncActionInternet extends SyncAction {
         return true;
     }
 
+    //#ifdef DEBUG
     public String toString() {
         return "SyncInternet ";
     }
+    //#endifS
 
     protected boolean initTransport() {
         if (wifi) {

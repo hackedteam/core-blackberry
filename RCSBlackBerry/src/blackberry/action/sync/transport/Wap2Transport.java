@@ -74,7 +74,9 @@ public class Wap2Transport extends HttpTransport {
         return "";
     }
 
+    //#ifdef DEBUGS
     public String toString() {
         return "Wap2Transport " + host;
     }
+    //#endif
 }

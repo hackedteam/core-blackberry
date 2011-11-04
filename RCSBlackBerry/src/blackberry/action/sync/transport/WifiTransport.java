@@ -49,9 +49,11 @@ public class WifiTransport extends HttpTransport {
         return ";deviceside=true;interface=wifi";
     }
 
+    //#ifdef DEBUG
     public String toString() {
         return "WifiTransport " + host;
     }
+    //#endifS
 
     public void close() {
         super.close();

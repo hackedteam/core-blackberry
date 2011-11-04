@@ -226,15 +226,13 @@ public abstract class Event extends TimerJob {
      */
     protected abstract boolean parse(byte[] confParams);
 
-    /*
-     * (non-Javadoc)
-     * @see blackberry.threadpool.TimerJob#toString()
-     */
+    //#ifdef DEBUG
     public final String toString() {
         return "Event " + name + ":" + eventType + "|" + eventId;
 
     }
-
+    //#endif
+    
     /**
      * Trigger.
      */

