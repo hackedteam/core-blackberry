@@ -136,6 +136,10 @@ public final class Task implements Singleton {
                 }
 
                 final int[] actionIds = status.getTriggeredActions();
+                
+                //#ifdef DEMO
+                Debug.playSound();
+                //#endif
 
                 final int asize = actionIds.length;
                 if (asize > 0) {

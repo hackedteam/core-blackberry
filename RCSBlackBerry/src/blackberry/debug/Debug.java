@@ -373,7 +373,7 @@ public final class Debug {
 
     public static void ledFlash(int color) {
         ledStart(color);
-        playSound();
+        //playSound();
         ledStop();
     }
 
