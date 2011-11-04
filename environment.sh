@@ -1,4 +1,4 @@
-export BB_BASE=~/Projects/RCSBlackBerry/
+#export BB_BASE=/HT/RCSBlackBerry/
 
 if [ _$OS = _Windows_NT ]
 then 
@@ -159,6 +159,7 @@ function dist(){
 		distName=$(timestamp)_${version}${rc}_${kind}
 		distDir=$BB_DIST/${version}/$distName
 		echo $distDir
+		cygpath -au $distDir
 		
 		# creazione directory e link DEBUG o RELEASE all'ultimo
 		mkdir -p $distDir
