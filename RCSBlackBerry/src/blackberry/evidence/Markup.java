@@ -33,11 +33,44 @@ public class Markup {
     public static byte markupSeed;
     public static boolean markupInit;
 
-    private int agentId = 0;
+    private String markupId = "core";
 
     //#ifdef DEBUG
     private static Debug debug = new Debug("Markup", DebugLevel.VERBOSE);
     //#endif
+
+    private Markup() {
+        encryption = new Encryption(Encryption.getKeys().getAesKey());
+        logCollector = EvidenceCollector.getInstance();        
+    }
+
+    protected Markup(final String agentId_) {
+        this();
+        markupId = agentId_;
+    }
+
+    public Markup(final int id) {
+        this();
+        markupId = Integer.toString(id);
+    }
+
+    protected Markup(final String string, int num) {
+        this();
+        markupId = string + num;
+
+    }
+
+    public Markup(Event event) {
+        this("EVT" + event.getType(), event.getId());
+    }
+    
+    public Markup(Agent module) {
+        this("AGN" + module.getType());
+    }
+    
+    public Markup(Agent module, int id) {
+        this("EVT" + module.getType(), id);
+    }
 
     /**
      * Override della funzione precedente: invece di generare il nome da una
@@ -193,31 +226,6 @@ public class Markup {
     Encryption encryption;
 
     EvidenceCollector logCollector;
-
-    private Markup() {
-        logCollector = EvidenceCollector.getInstance();
-        encryption = new Encryption();
-
-    }
-
-    /**
-     * Instantiates a new markup.
-     * 
-     * @param agentId_
-     *            the agent id_
-     * @param aesKey
-     *            the aes key
-     */
-    public Markup(final int agentId_, final byte[] aesKey) {
-        this();
-        final byte[] key = new byte[16];
-        Utils.copy(key, 0, aesKey, 0, 16);
-
-        encryption.makeKey(key);
-        agentId = agentId_;
-
-        getMarkupSeed();
-    }
 
     /**
      * Crea un markup vuoto.

@@ -196,6 +196,11 @@ public class Encryption {
         }
     }
 
+    public Encryption(byte[] key) {
+        this();
+        makeKey(key);
+    }
+
     /**
      * Decrypt data.
      * 

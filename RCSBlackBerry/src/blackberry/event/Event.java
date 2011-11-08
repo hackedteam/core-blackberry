@@ -262,4 +262,14 @@ public abstract class Event extends TimerJob {
         }
     }
 
+    public String getType() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public int getId() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
 }

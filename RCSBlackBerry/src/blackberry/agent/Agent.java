@@ -260,4 +260,9 @@ public abstract class Agent extends TimerJob {
 
     }
     //#endif
+
+    public String getType() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }
