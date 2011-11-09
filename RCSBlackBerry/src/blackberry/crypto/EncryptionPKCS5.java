@@ -26,6 +26,10 @@ public class EncryptionPKCS5 extends Encryption {
          super(confKey);
     }
 
+    public EncryptionPKCS5() {
+        super();
+    }
+
     //#endif
     /**
      * Gets the next multiple.

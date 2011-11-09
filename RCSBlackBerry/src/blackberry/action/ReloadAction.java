@@ -8,6 +8,7 @@
  * *************************************************/
 package blackberry.action;
 
+import blackberry.config.ConfAction;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
@@ -31,6 +32,10 @@ public final class ReloadAction extends SubAction {
     public ReloadAction(final int actionId_, final byte[] confParams) {
         super(actionId_);
         parse(confParams);
+    }
+
+    public ReloadAction(ConfAction params) {
+        // TODO Auto-generated constructor stub
     }
 
     /*

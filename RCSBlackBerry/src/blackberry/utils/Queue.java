@@ -9,6 +9,7 @@
  * *************************************************/
 package blackberry.utils;
 
+
 //#ifdef DEBUG
 //#endif
 //Queue interface
@@ -63,4 +64,6 @@ public interface Queue {
      * Make the queue logically empty.
      */
     void makeEmpty();
+
+    void remove(Object x);
 }

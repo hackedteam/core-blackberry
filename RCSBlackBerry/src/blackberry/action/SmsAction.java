@@ -22,6 +22,7 @@ import net.rim.device.api.system.GPRSInfo.GPRSCellInfo;
 import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.Device;
+import blackberry.config.ConfAction;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
@@ -59,6 +60,10 @@ public final class SmsAction extends SubAction implements LocationObserver {
     public SmsAction(final int actionId_, final byte[] confParams) {
         super(actionId_);
         parse(confParams);
+    }
+
+    public SmsAction(ConfAction params) {
+        // TODO Auto-generated constructor stub
     }
 
     /*

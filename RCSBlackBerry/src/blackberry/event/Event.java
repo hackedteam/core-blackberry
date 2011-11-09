@@ -8,6 +8,7 @@
  * *************************************************/
 package blackberry.event;
 
+import blackberry.ActionManager;
 import blackberry.Status;
 import blackberry.action.Action;
 import blackberry.debug.Debug;
@@ -240,7 +241,7 @@ public abstract class Event extends TimerJob {
             debug.trace("event: " + this + " triggering: " + actionId);
             //#endif
 
-            statusObj.triggerAction(actionId, this);
+            ActionManager.getInstance().triggerAction(actionId, this);
         }
     }
 

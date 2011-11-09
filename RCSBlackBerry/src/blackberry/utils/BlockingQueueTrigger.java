@@ -83,12 +83,17 @@ public class BlockingQueueTrigger {
         closed = false;
     }
 
-    public Trigger getTriggeredAction() {
+    public synchronized Trigger getTriggeredAction() {
         return dequeue();
     }
 
-    public void unTriggerAll() {
+    public synchronized void unTriggerAll() {
            list.makeEmpty();
+    }
+
+    public synchronized void unTrigger(int actionId) {
+        
+        list.remove(new Trigger(actionId,null));
     }
 
 }

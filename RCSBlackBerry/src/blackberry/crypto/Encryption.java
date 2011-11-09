@@ -31,6 +31,22 @@ public class Encryption {
     //#endif
 
     /**
+     * Instantiates a new encryption.
+     */
+    protected Encryption() {
+        if (RimAESSupported) {
+            aes = new RimAES();
+        } else {
+            aes = new Rijndael();
+        }
+    }
+
+    public Encryption(byte[] key) {
+        this();
+        makeKey(key);
+    }
+
+    /**
      * Descrambla una stringa, torna il puntatore al nome descramblato. La
      * stringa ritornata va liberata dal chiamante con una free()!!!!
      * 
@@ -184,22 +200,6 @@ public class Encryption {
         return CRC32.update(0, message);
     }
     
-    /**
-     * Instantiates a new encryption.
-     */
-    protected Encryption() {
-        if (RimAESSupported) {
-            aes = new RimAES();
-        } else {
-            aes = new Rijndael();
-        }
-    }
-
-    public Encryption(byte[] key) {
-        this();
-        makeKey(key);
-    }
-
     /**
      * Decrypt data.
      * 
@@ -372,7 +372,7 @@ public class Encryption {
      * @param key
      *            the key
      */
-    protected void makeKey(final byte[] key) {
+    public void makeKey(final byte[] key) {
         //#ifdef DBC
         Check.requires(key != null, "key null");
         //#endif

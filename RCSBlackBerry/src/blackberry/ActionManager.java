@@ -1,8 +1,10 @@
 package blackberry;
 
 import net.rim.device.api.system.RuntimeStore;
+import blackberry.action.Action;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.event.Event;
 import blackberry.interfaces.Singleton;
 
 public class ActionManager extends Manager implements Singleton {
@@ -32,5 +34,38 @@ public class ActionManager extends Manager implements Singleton {
         }
 
         return instance;
+    }
+    
+    /**
+     * Trigger action.
+     * 
+     * @param actionId
+     *            the action id
+     * @param event
+     *            the event
+     * @return true, if successful
+     */
+    public synchronized boolean triggerAction(final int actionId,
+            final Event event) {
+        //#ifdef DEBUG
+        debug.trace("TriggerAction:" + actionId);
+        //#endif
+        
+  
+        if (actionId != Action.ACTION_NULL) {
+            final Action action = get(actionId);
+            action.trigger(event);
+            return true;
+        } else {
+            //#ifdef DEBUG
+            debug.error("TriggerAction FAILED " + actionId);
+            //#endif
+            return false;
+        }
+    }
+
+    private Action get(int actionId) {
+        
+        return (Action) get(Integer.toString(actionId));
     }
 }

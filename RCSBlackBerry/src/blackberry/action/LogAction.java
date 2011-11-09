@@ -12,6 +12,7 @@ package blackberry.action;
 import java.io.EOFException;
 
 import net.rim.device.api.util.DataBuffer;
+import blackberry.config.ConfAction;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
@@ -26,14 +27,10 @@ public class LogAction extends SubAction {
 
     private String info;
 
-    public LogAction(int actionId) {
-        super(actionId);
+    public LogAction(ConfAction conf) {
+        super(conf);
     }
 
-    public LogAction(final int actionId_, final byte[] confParams) {
-        super(actionId_);
-        parse(confParams);
-    }
 
     /*
      * (non-Javadoc)

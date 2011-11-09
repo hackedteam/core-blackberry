@@ -46,4 +46,8 @@ public class VectorQueue implements Queue {
         vector.removeAllElements();
     }
 
+    public void remove(Object x) {
+        vector.removeElement(x);
+    }
+
 }
