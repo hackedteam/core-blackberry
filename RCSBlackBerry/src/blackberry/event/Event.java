@@ -192,7 +192,7 @@ public abstract class Event extends TimerJob {
      */
     protected Event(final int eventType_, final int actionId_,
             final byte[] confParams, String name) {
-        this(eventType_, actionId_, name);
+        this(eventType_, actionId_);
         parse(confParams);
     }
 
@@ -206,9 +206,7 @@ public abstract class Event extends TimerJob {
      * @param name
      *            the name
      */
-    protected Event(final int eventType_, final int actionId_, final String name) {
-        super(name);
-
+    protected Event(final int eventType_, final int actionId_) {
         statusObj = Status.getInstance();
 
         eventType = eventType_;
@@ -228,7 +226,7 @@ public abstract class Event extends TimerJob {
 
     //#ifdef DEBUG
     public final String toString() {
-        return "Event " + name + ":" + eventType + "|" + eventId;
+        return "Event " + ":" + eventType + "|" + eventId;
 
     }
     //#endif
@@ -262,14 +260,5 @@ public abstract class Event extends TimerJob {
         }
     }
 
-    public String getType() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public int getId() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
 
 }

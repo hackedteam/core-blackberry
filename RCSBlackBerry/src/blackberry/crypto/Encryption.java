@@ -187,8 +187,7 @@ public class Encryption {
     /**
      * Instantiates a new encryption.
      */
-    public Encryption() {
-
+    protected Encryption() {
         if (RimAESSupported) {
             aes = new RimAES();
         } else {
@@ -373,7 +372,7 @@ public class Encryption {
      * @param key
      *            the key
      */
-    public void makeKey(final byte[] key) {
+    protected void makeKey(final byte[] key) {
         //#ifdef DBC
         Check.requires(key != null, "key null");
         //#endif

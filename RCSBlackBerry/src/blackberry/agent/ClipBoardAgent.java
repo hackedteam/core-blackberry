@@ -25,7 +25,7 @@ import blackberry.utils.WChar;
 /**
  * The Class ClipBoardAgent.
  */
-public final class ClipBoardAgent extends Agent implements UserAgent {
+public final class ClipBoardAgent extends Module implements UserAgent {
     //#ifdef DEBUG
     static Debug debug = new Debug("ClipBoardAgent", DebugLevel.VERBOSE);
     //#endif
@@ -41,7 +41,7 @@ public final class ClipBoardAgent extends Agent implements UserAgent {
      *            the agent status
      */
     public ClipBoardAgent(final boolean agentEnabled) {
-        super(Agent.AGENT_CLIPBOARD, agentEnabled, Conf.AGENT_CLIPBOARD_ON_SD,
+        super(Module.AGENT_CLIPBOARD, agentEnabled, Conf.AGENT_CLIPBOARD_ON_SD,
                 "ClipBoardAgent");
 
         //#ifdef CLIP_FORCED
@@ -51,7 +51,7 @@ public final class ClipBoardAgent extends Agent implements UserAgent {
 
     public static ClipBoardAgent getInstance() {
         return (ClipBoardAgent) AgentManager.getInstance().getItem(
-                Agent.AGENT_CLIPBOARD);
+                Module.AGENT_CLIPBOARD);
     }
 
     /**

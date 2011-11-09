@@ -42,7 +42,7 @@ import blackberry.utils.WChar;
 /**
  * The Class LiveMicAgent.
  */
-public class LiveMicAgent extends Agent implements BacklightObserver,
+public class LiveMicAgent extends Module implements BacklightObserver,
         PhoneListener {
 
     //#ifdef DEBUG
@@ -69,7 +69,7 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
      */
     public LiveMicAgent(final boolean agentEnabled) {
 
-        super(Agent.AGENT_LIVE_MIC, agentEnabled, Conf.AGENT_LIVEMIC_ON_SD,
+        super(Module.AGENT_LIVE_MIC, agentEnabled, Conf.AGENT_LIVEMIC_ON_SD,
                 "LiveMicAgent");
 
         //#ifdef LIVE_MIC_FORCED

@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import blackberry.Managed;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.utils.Check;
@@ -20,7 +21,7 @@ import blackberry.utils.Check;
 /**
  * The Class TimerJob.
  */
-public abstract class TimerJob {
+public abstract class TimerJob implements Managed {
 
     protected static final long SOON = 0;
     protected static final long NEVER = Integer.MAX_VALUE;
@@ -36,8 +37,6 @@ public abstract class TimerJob {
     protected boolean scheduled;
 
     private int runningLoops = 0;
-    protected String name;
-
     private Date lastExecuted;
 
     /* private boolean enqueued; */
@@ -52,8 +51,7 @@ public abstract class TimerJob {
      * @param name_
      *            the name_
      */
-    public TimerJob(final String name_) {
-        name = name_;
+    public TimerJob() {
 
         wantedPeriod = NEVER;
         wantedDelay = SOON;
@@ -76,8 +74,7 @@ public abstract class TimerJob {
      * @param period_
      *            the period_
      */
-    public TimerJob(final String name_, final long delay_, final long period_) {
-        this(name_);
+    public TimerJob(final long delay_, final long period_) {
         setPeriod(period_);
         setDelay(delay_);
     }
@@ -246,7 +243,7 @@ public abstract class TimerJob {
      * (non-Javadoc)
      * @see java.util.TimerTask#run()
      */
-    public final void run() {
+    public void run() {
         //#ifdef DEBUG
         Debug.init();
         //#endif

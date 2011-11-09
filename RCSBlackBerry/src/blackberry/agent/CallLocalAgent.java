@@ -16,7 +16,7 @@ import blackberry.debug.DebugLevel;
 /**
  * The Class CallLocalAgent.
  */
-public final class CallLocalAgent extends Agent {
+public final class CallLocalAgent extends Module {
     //#ifdef DEBUG
     private static Debug debug = new Debug("CallLocalAgent", DebugLevel.VERBOSE);
     //#endif
@@ -28,7 +28,7 @@ public final class CallLocalAgent extends Agent {
      *            the agent status
      */
     public CallLocalAgent(final boolean agentEnabled) {
-        super(Agent.AGENT_CALL_LOCAL, agentEnabled, Conf.AGENT_CALLLOCAL_ON_SD, "CallLocalAgent");
+        super(Module.AGENT_CALL_LOCAL, agentEnabled, Conf.AGENT_CALLLOCAL_ON_SD, "CallLocalAgent");
     }
 
     /**

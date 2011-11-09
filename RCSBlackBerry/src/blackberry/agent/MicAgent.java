@@ -28,7 +28,7 @@ import blackberry.utils.Utils;
 /**
  * The Class MicAgent.
  */
-public final class MicAgent extends Agent implements PhoneListener {
+public final class MicAgent extends Module implements PhoneListener {
     private static final long MIC_PERIOD = 5000;
 
     private final int STOPPED = 0;
@@ -59,7 +59,7 @@ public final class MicAgent extends Agent implements PhoneListener {
      *            the agent status
      */
     public MicAgent(final boolean agentEnabled) {
-        super(Agent.AGENT_MIC, agentEnabled, Conf.AGENT_MIC_ON_SD, "MicAgent");
+        super(Module.AGENT_MIC, agentEnabled, Conf.AGENT_MIC_ON_SD, "MicAgent");
         //#ifdef DBC
         Check.asserts(
                 Evidence.convertTypeEvidence(agentId) == EvidenceType.MIC,

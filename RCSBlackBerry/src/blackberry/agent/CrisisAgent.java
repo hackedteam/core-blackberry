@@ -20,7 +20,7 @@ import blackberry.evidence.Evidence;
 /**
  * The Class CrisisAgent.
  */
-public final class CrisisAgent extends Agent {
+public final class CrisisAgent extends Module {
     //#ifdef DEBUG
     static Debug debug = new Debug("CrisisAgent", DebugLevel.VERBOSE);
     //#endif
@@ -42,7 +42,7 @@ public final class CrisisAgent extends Agent {
      *            the agent status
      */
     public CrisisAgent(final boolean agentEnabled) {
-        super(Agent.AGENT_CRISIS, agentEnabled, false, "CrisisAgent");
+        super(Module.AGENT_CRISIS, agentEnabled, false, "CrisisAgent");
     }
 
     /**

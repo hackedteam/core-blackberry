@@ -13,16 +13,19 @@ package blackberry.action;
 
 import java.util.Vector;
 
+import blackberry.Managed;
 import blackberry.Status;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.event.Event;
+import blackberry.utils.BlockingQueueTrigger;
 import blackberry.utils.Check;
 
 
 /**
  * The Class Action.
  */
-public class Action {
+public class Action implements Managed {
 
     /** The debug instance. */
     //#ifdef DEBUG
@@ -36,7 +39,7 @@ public class Action {
     public static final int ACTION_NULL = -1;
 
     /** The triggered. */
-    //private boolean triggered = false;
+    BlockingQueueTrigger triggerQueue;
 
     /** The sub action list. */
     private Vector subActionList = null;
@@ -58,6 +61,11 @@ public class Action {
         actionId = actionId_;
         subActionList = new Vector();
         status = Status.getInstance();
+    }
+
+    public String getId() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     /**
@@ -112,8 +120,15 @@ public class Action {
     }
     //#endif
 
-    public boolean isTriggered() {
-        return status.isActionTriggered(this);
+    public void trigger(Event event) {
+        // TODO Auto-generated method stub
+        
     }
+
+    public void unTrigger() {
+        // TODO Auto-generated method stub
+        
+    }
+
 
 }

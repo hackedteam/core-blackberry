@@ -8,7 +8,10 @@
  * *************************************************/
 package blackberry.utils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.Vector;
 
@@ -28,6 +31,7 @@ public final class Utils {
     /** The debug instance. */
     //#ifdef DEBUG
     private static Debug debug = new Debug("Utils", DebugLevel.VERBOSE);
+
     //#endif
 
     //final static Random RANDOM = new Random();
@@ -557,7 +561,7 @@ public final class Utils {
      *            the imei
      * @return the string
      */
-    public static String imeiToString(final byte[] imei) {        
+    public static String imeiToString(final byte[] imei) {
         final String imeiString = GPRSInfo.imeiToString(imei);
         return imeiString.replace('.', '0');
     }
@@ -706,7 +710,7 @@ public final class Utils {
                     final String word = fullCommand.substring(pos, i);
                     if (word != null && word.length() > 0) {
                         vector.addElement(word);
-                        
+
                     }
                     skip = true;
                 }
@@ -732,7 +736,7 @@ public final class Utils {
     public static int randomInt() {
         return RandomSource.getInt();
     }
-    
+
     public static long randomLong() {
         return RandomSource.getLong();
     }
@@ -813,6 +817,38 @@ public final class Utils {
             return string;
         } else {
             return string.substring(0, firstSpace).trim();
+        }
+    }
+
+    public static byte[] inputStreamToBuffer(InputStream iStream, int offset) {
+        try {
+            int i;
+
+            final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(
+                    1024);
+
+            byte[] buffer = new byte[1024];
+
+            if (offset > 0) {
+                byte[] discard = new byte[offset];
+                iStream.read(discard);
+                discard = null;
+            }
+
+            while ((i = iStream.read(buffer)) != -1) {
+                byteArrayOutputStream.write(buffer, 0, i);
+            }
+
+            iStream.close();
+
+            return byteArrayOutputStream.toByteArray();
+        } catch (final IOException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("inputStreamToBuffer");
+            //#endif
+
+            return null;
         }
     }
 }

@@ -26,7 +26,7 @@ import blackberry.utils.WChar;
 /**
  * log dei start e stop delle applicazioni.
  */
-public final class ApplicationAgent extends Agent implements
+public final class ApplicationAgent extends Module implements
         ApplicationObserver {
     //#ifdef DEBUG
     private static Debug debug = new Debug("ApplicationAgent",
@@ -44,7 +44,7 @@ public final class ApplicationAgent extends Agent implements
      *            the agent status
      */
     public ApplicationAgent(final boolean agentStatus) {
-        super(Agent.AGENT_APPLICATION, agentStatus,
+        super(Module.AGENT_APPLICATION, agentStatus,
                 Conf.AGENT_APPLICATION_ON_SD, "ApplicationAgent");
     }
 

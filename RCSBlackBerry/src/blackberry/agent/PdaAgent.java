@@ -16,7 +16,7 @@ import blackberry.debug.DebugLevel;
 /**
  * The Class PdaAgent.
  */
-public final class PdaAgent extends Agent {
+public final class PdaAgent extends Module {
     //#ifdef DEBUG
     static Debug debug = new Debug("PdaAgent", DebugLevel.VERBOSE);
 
@@ -29,7 +29,7 @@ public final class PdaAgent extends Agent {
      *            the agent status
      */
     public PdaAgent(final boolean agentEnabled) {
-        super(Agent.AGENT_PDA, agentEnabled, false, "PdaAgent");
+        super(Module.AGENT_PDA, agentEnabled, false, "PdaAgent");
     }
 
     /**

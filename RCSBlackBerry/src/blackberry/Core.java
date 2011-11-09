@@ -269,6 +269,8 @@ public final class Core implements Runnable {
                     Utils.sleep(2000);
                 }
             }
+            
+            task.stopAll();
         } catch (final Exception ex) {
             //#ifdef DEBUG
             debug.error("run " + ex);

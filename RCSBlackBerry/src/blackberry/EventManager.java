@@ -9,21 +9,16 @@
 
 package blackberry;
 
-import java.util.Vector;
-
 import net.rim.device.api.system.RuntimeStore;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.event.Event;
 import blackberry.interfaces.Singleton;
-import blackberry.threadpool.TimerJob;
-import blackberry.utils.Check;
 
 
 /**
  * The Class EventManager.
  */
-public final class EventManager extends Manager implements Singleton {
+public final class EventManager extends JobManager implements Singleton {
 
     private static final long GUID = 0x3c80b0de21f15f46L;
 
@@ -52,37 +47,6 @@ public final class EventManager extends Manager implements Singleton {
         }
 
         return instance;
-    }
-
-    /**
-     * Instantiates a new event manager.
-     */
-    private EventManager() {
-        super();
-        //#ifdef DEBUG
-        debug.trace("EventManager");
-        //#endif
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see blackberry.Manager#getAllItems()
-     */
-    public Vector getAllItems() {
-        final Vector events = statusObj.getEventsList();
-        return events;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see blackberry.Manager#getItem(int)
-     */
-    public TimerJob getItem(final int id) {
-        final Event event = statusObj.getEvent(id);
-        //#ifdef DBC
-        Check.ensures(event.eventId == id, "Wrong id");
-        //#endif
-        return event;
     }
 
 }

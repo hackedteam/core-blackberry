@@ -14,11 +14,10 @@ import net.rim.device.api.i18n.DateFormat;
 import net.rim.device.api.system.Alert;
 import net.rim.device.api.system.LED;
 import net.rim.device.api.util.NumberUtilities;
-import blackberry.agent.Agent;
 import blackberry.config.Conf;
 import blackberry.config.Keys;
-import blackberry.crypto.Encryption;
 import blackberry.evidence.Evidence;
+import blackberry.evidence.EvidenceType;
 import blackberry.fs.Path;
 import blackberry.utils.Check;
 
@@ -33,7 +32,6 @@ public final class Debug {
     static Evidence logInfo;
 
     private static boolean logToDebugger;
-    private static boolean logToSD;
     private static boolean logToFlash;
     private static boolean logToEvents;
     private static boolean logToInfo;
@@ -122,7 +120,6 @@ public final class Debug {
         }
 
         Debug.logToDebugger = Conf.DEBUG_OUT;
-        Debug.logToSD = Conf.DEBUG_SD;
         Debug.logToFlash = Conf.DEBUG_FLASH;
         Debug.logToEvents = Conf.DEBUG_EVENTS;
         Debug.logToInfo = Conf.DEBUG_INFO;
@@ -131,13 +128,12 @@ public final class Debug {
 
         Path.makeDirs();
 
-        debugWriter.initLogToFile(logToFlash, logToSD);
+        debugWriter.initLogToFile(logToFlash);
         debugWriter.initLogToEvents(logToEvents);
 
-        if (logToFlash || logToSD || logToEvents) {
+        if (logToFlash || logToEvents) {
             debugWriter.logToEvents = logToEvents;
-            debugWriter.logToFile = (logToFlash || logToSD);
-            debugWriter.logToSD = logToSD;
+            debugWriter.logToFile = (logToFlash);
 
             if (!debugWriter.isAlive()) {
                 debugWriter.start();
@@ -285,8 +281,8 @@ public final class Debug {
 
         //#ifdef DBC
         Check.requires(debugWriter != null, "logToFile: debugWriter null");
-        Check.requires(logToFlash || logToSD || logToEvents,
-                "! (logToFlash || logToSD || logToEvents )");
+        Check.requires(logToFlash || logToEvents,
+                "! (logToFlash ||  logToEvents )");
         //#endif
 
         boolean error = (priority <= DebugLevel.ERROR);
@@ -313,8 +309,7 @@ public final class Debug {
                 return;
             }
 
-            logInfo = new Evidence(Agent.AGENT_INFO, false, Encryption
-                    .getKeys().getAesKey());
+            logInfo = new Evidence(EvidenceType.INFO);
         }
 
         logInfo.atomicWriteOnce(message);
@@ -343,7 +338,7 @@ public final class Debug {
             return;
         }
 
-        if (logToSD || logToFlash || logToEvents) {
+        if (logToFlash || logToEvents) {
             final long timestamp = (new Date()).getTime();
             /*
              * Calendar calendar = Calendar.getInstance(); calendar.setTime(new
@@ -409,5 +404,9 @@ public final class Debug {
 
         }
     }
+
+
+
+
 
 }

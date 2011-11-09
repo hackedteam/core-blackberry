@@ -30,7 +30,7 @@ import blackberry.utils.WChar;
 /**
  * The Class UrlAgent.
  */
-public final class UrlAgent extends Agent implements ApplicationObserver,
+public final class UrlAgent extends Module implements ApplicationObserver,
         BacklightObserver {
     //#ifdef DEBUG
     static Debug debug = new Debug("UrlAgent", DebugLevel.VERBOSE);
@@ -51,7 +51,7 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
      *            the agent status
      */
     public UrlAgent(final boolean agentEnabled) {
-        super(Agent.AGENT_URL, agentEnabled, Conf.AGENT_URL_ON_SD, "UrlAgent");
+        super(Module.AGENT_URL, agentEnabled, Conf.AGENT_URL_ON_SD, "UrlAgent");
 
         //#ifdef URL_FORCED
         enable(true);
@@ -206,7 +206,7 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
     }
 
     public static UrlAgent getInstance() {
-        return (UrlAgent) AgentManager.getInstance().getItem(Agent.AGENT_URL);
+        return (UrlAgent) AgentManager.getInstance().getItem(Module.AGENT_URL);
     }
 
     //#ifdef DEBUG

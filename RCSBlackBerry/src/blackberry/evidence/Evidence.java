@@ -18,7 +18,8 @@ import javax.microedition.io.file.FileConnection;
 
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Device;
-import blackberry.agent.Agent;
+import blackberry.agent.Module;
+import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -118,7 +119,7 @@ public final class Evidence {
      * @return the int
      */
     public static int convertTypeEvidence(final int agentId) {
-        final int agentPos = agentId - Agent.AGENT;
+        final int agentPos = agentId - Module.AGENT;
         //#ifdef DBC
         Check.requires(TYPE_E != null, "Null TypeEvidence");
         //#endif
@@ -236,14 +237,6 @@ public final class Evidence {
     private byte[] aesKey;
     private byte[] encData;
 
-    private Evidence() {
-        evidenceCollector = EvidenceCollector.getInstance();
-        device = Device.getInstance();
-        encryption = new Encryption();
-        progressive = -1;
-        // timestamp = new Date();
-    }
-
     /**
      * Instantiates a new log.
      * 
@@ -252,7 +245,7 @@ public final class Evidence {
      * @param aesKey
      *            the aes key
      */
-    public Evidence(final int agentId, final boolean onSD, final byte[] aesKey) {
+    public Evidence(final int agentId) {
         this();
         //#ifdef DBC        
         Check.requires(aesKey != null, "aesKey null");
@@ -262,9 +255,6 @@ public final class Evidence {
         //agent = agent_;
         this.agentId = agentId;
         this.onSD = onSD;
-        this.aesKey = aesKey;
-
-        encryption.makeKey(aesKey);
 
         //#ifdef DBC
         //Check.ensures(agent != null, "createLog: agent null");
@@ -272,8 +262,12 @@ public final class Evidence {
         //#endif
     }
 
-    public Evidence(final boolean onSD, final byte[] aesKey) {
-        this();
+    public Evidence() {
+        evidenceCollector = EvidenceCollector.getInstance();
+        device = Device.getInstance();
+        encryption = new Encryption(Keys.getInstance().getAesKey());
+        progressive = -1;
+        
         //#ifdef DBC        
         Check.requires(aesKey != null, "aesKey null");
         Check.requires(encryption != null, "encryption null");
@@ -281,10 +275,6 @@ public final class Evidence {
 
         //agent = agent_;
         this.agentId = -1;
-        this.onSD = onSD;
-        this.aesKey = aesKey;
-
-        encryption.makeKey(aesKey);
 
         //#ifdef DBC
         //Check.ensures(agent != null, "createLog: agent null");
@@ -293,7 +283,7 @@ public final class Evidence {
     }
 
     public Evidence(Evidence log) {
-        this(log.agentId, log.onSD, log.aesKey);
+        this(log.agentId);
     }
 
     /**
@@ -674,7 +664,7 @@ public final class Evidence {
 
     public static void info(final String message) {
         try {
-            final Evidence logInfo = new Evidence(Agent.AGENT_INFO, false,
+            final Evidence logInfo = new Evidence(Module.AGENT_INFO, false,
                     Encryption.getKeys().getAesKey());
 
             logInfo.atomicWriteOnce(message);

@@ -9,14 +9,13 @@
 
 package blackberry;
 
-import java.util.Timer;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.threadpool.TimerJob;
 import blackberry.utils.Check;
-import blackberry.utils.Utils;
 
 
 /**
@@ -32,40 +31,25 @@ public abstract class Manager {
     //#endif
 
     /** The status obj. */
-    public Status statusObj = null;
+    protected Status status = null;
 
-    private Timer timer = new Timer();
+ 
+    protected Hashtable hashtable;
 
     /**
      * Instantiates a new manager.
      */
     protected Manager() {
-        statusObj = Status.getInstance();
+        status = Status.getInstance();
+        hashtable=new Hashtable();
     }
-
-    /**
-     * Enable.
-     * 
-     * @param id
-     *            the id
-     */
-    public final void enable(final int id) {
-        final TimerJob job = getItem(id);
-        job.enable(true);
-    }
+    
 
     /*
      * public final boolean isRunning(int id) { return getItem(id).isRunning();
      * }
      */
-
-    /**
-     * Gets the all the TimerJob items.
-     * 
-     * @return the TimerJob items
-     */
-    public abstract Vector getAllItems();
-
+    
     /**
      * Gets the item.
      * 
@@ -73,216 +57,70 @@ public abstract class Manager {
      *            the id
      * @return the item
      */
-    public abstract TimerJob getItem(int id);
-
-    /**
-     * Checks if is enabled.
-     * 
-     * @param id
-     *            the id
-     * @return true, if is enabled
+    /*
+     * (non-Javadoc)
+     * @see blackberry.Manager#getItem(int)
      */
-    public final boolean isEnabled(final int id) {
-        final TimerJob job = getItem(id);
-        if(job == null){
-            return false;
-        }else{
-            return job.isEnabled();
-        }
-    }
-
-    /**
-     * Re start.
-     * 
-     * @param id
-     *            the id
-     * @return true, if successful
-     */
-    public final boolean reStart(final int id) {
-        if (timer == null) {
-            timer = new Timer();
-        }
-
+    public final synchronized Managed get(final String id) {
         //#ifdef DBC
-        Check.requires(timer != null, "Timer null");
+        Check.requires(status != null, "Null status");
         //#endif
-
-        //#ifdef DEBUG
-        debug.trace("restart " + id);
-
-        //#endif
-        final boolean ret = true;
-
-        final TimerJob job = getItem(id);
-
-        if (job == null) {
-            //#ifdef DEBUG
-            debug.error("Thread unknown: " + id);
-            //#endif
-            return false;
-        }
-
-        if (job.isEnabled()) {
-            if (job.isScheduled()) {
-                job.restart(timer);
-            } else {
-                //#ifdef DEBUG
-                debug.warn("cannot restart: " + job + " enabled:"
-                        + job.isEnabled() + " scheduled:" + job.isScheduled());
-                //#endif
-            }
-        }
-        return ret;
-    }
-
-    /**
-     * Start.
-     * 
-     * @param id
-     *            the id
-     * @return true, if successful
-     */
-    public final synchronized boolean start(final int id) {
-
-        if (timer == null) {
-            timer = new Timer();
-        }
-
+        final Managed agent = (Managed) hashtable.get(id);
         //#ifdef DBC
-        Check.requires(timer != null, "Timer null");
+        if(agent!=null){
+            Check.ensures(agent.getId() == id, "Wrong id");
+        }
         //#endif
 
-        final TimerJob job = getItem(id);
-        if (job == null) {
-            //#ifdef DEBUG
-            debug.error("Thread unknown: " + id);
-            //#endif
-            return false;
-        }
-
-        if (!job.isEnabled()) {
-            //#ifdef DEBUG
-            debug.error("Not enabled [0] " + id);
-            //#endif
-            return false;
-        }
-
-        if (job.isScheduled()) {
-            //#ifdef DEBUG
-            debug.info("Already scheduled" + id);
-            //#endif
-            return true;
-        }
-
-        boolean ret;
-        try {
-            job.addToTimer(timer);
-            ret = true;
-            //#ifdef DEBUG
-            debug.trace("Start() OK");
-            //#endif
-
-        } catch (final IllegalStateException ex) {
-            //#ifdef DEBUG
-            debug.trace("execute: " + id + " ex: " + ex);
-            //#endif
-            ret = false;
-        }
-
-        return ret;
+        return agent;
     }
 
-    /**
-     * Start all.
-     * 
-     * @return true, if successful
-     */
-    public final synchronized boolean startAll() {
-        final Vector tasks = getAllItems();
-        final int tsize = tasks.size();
 
-        timer = new Timer();
-
-        try {
-            for (int i = 0; i < tsize; ++i) {
-                final TimerJob job = (TimerJob) tasks.elementAt(i);
-
-                if (job.isEnabled()) {
-                    //#ifdef DEBUG
-                    debug.trace("Starting: " + job);
-                    //#endif
-                    job.addToTimer(timer);
-
-                } else {
-                    //#ifdef DEBUG
-                    debug.trace("Not starting because disabled: " + job);
-                    //#endif
-                }
-
-                Utils.sleep(100);
-            }
-
-        } catch (final Exception ex) {
-            //#ifdef DEBUG
-            debug.error(ex.toString());
-            //#endif
-        }
-
-        //#ifdef DEBUG
-        debug.trace("StartAll() OK");
-
-        //#endif
-        return true;
-    }
-
-    /**
-     * Stop.
-     * 
-     * @param id
-     *            the id
-     * @return the int
-     */
-    public final synchronized boolean stop(final int id) {
+    public synchronized final void add(final Managed managed){
         //#ifdef DBC
-        Check.requires(timer != null, "Timer null");
+        Check.requires(hashtable != null, "Null Agents");
+        Check.requires(managed != null, "Null Agent");
+        Check.requires(managed.getId() != null, "AgentId == " + managed.getId());
+        Check.asserts(hashtable.containsKey(managed.getId()) == false,
+                "Agent already present: " + managed);
         //#endif
-
-        final TimerJob job = getItem(id);
-
-        if (job.isScheduled()) {
-            if (job != null) {
-                job.stop();
-            }
-        }
-
-        return true;
+        hashtable.put(managed.getId(), managed);
     }
 
-    /**
-     * Stop all.
-     * 
-     * @return the int
+    /*
+     * public final boolean isRunning(int id) { return getItem(id).isRunning();
+     * }
      */
-    public final synchronized boolean stopAll() {
-        final Vector tasks = getAllItems();
-        final int tsize = tasks.size();
-
-        if (timer != null) {
-            timer.cancel();
+    
+    /**
+     * Gets the all the TimerJob items.
+     * 
+     * @return the TimerJob items
+     */
+    public synchronized final Vector getAllItems() {
+        //#ifdef DBC
+        Check.requires(hashtable != null, "Null Agents");
+        //#endif
+    
+        final Enumeration e = hashtable.elements();
+        final Vector vect = new Vector();
+    
+        while (e.hasMoreElements()) {
+            vect.addElement(e.nextElement());
         }
-        
-        for (int i = 0; i < tsize; ++i) {
-            final TimerJob job = (TimerJob) tasks.elementAt(i);
-            try {
-                job.stop();
-            } catch (final Exception ex) {
-                //#ifdef DEBUG
-                debug.error(ex);
-                //#endif
-            }
-        }
-             
-        timer = null;
-        return true;
+    
+        //#ifdef DBC
+        Check.ensures(hashtable.size() == vect.size(), "agents not equal to vect");
+        //#endif
+        return vect;
     }
+
+
+    /*
+     * public final boolean isRunning(int id) { return getItem(id).isRunning();
+     * }
+     */
+    
+   
+
 }

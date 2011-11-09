@@ -23,7 +23,6 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.utils.Check;
 
-
 /**
  * The Class Path.
  */
@@ -35,19 +34,13 @@ public final class Path {
     public static final int SD = 0;
     public static final int USER = 1;
 
-    public static final String[] SD_EXT_PATHS = { "thumbs/wmrim/",
-            "dvz_temp/wmrim/", "wmrim/" };
-
     public static final String[] USER_EXT_PATHS = {
             "home/user/settings/media/wmrim/", "home/user/settings/wmrim/",
             "home/user/wmrim/" };
 
-    public static final String SD_BASE_PATH = "/SDCard/BlackBerry/";
     public static final String USER_BASE_PATH = "/store/";
 
-    //public static final String SD_PATH = "file:///SDCard/BlackBerry/system/WMDDR/";
-    //public static final String SD_PATH = "file:///SDCard/BlackBerry/dvz_temp/wmddr/";
-    //public static final String SD_PATH = "file:///SDCard/BlackBerry/system/media/thumbs_old/";
+    private static final String SD_BASE_PATH = "/SDCard/Blackberry/";
 
     /** The Constant LOG_DIR_BASE. */
     public static final String LOG_DIR_BASE = "ld";
@@ -75,22 +68,8 @@ public final class Path {
 
         boolean init;
 
-        /** The Constant SD_PATH. */
-        public String SD_PATH = SD_BASE_PATH + "thumbs/";
-
         /** The Constant USER_PATH. */
         public String USER_PATH = USER_BASE_PATH + "wmrim/";
-    }
-
-    public static String SD() {
-        if (!isInizialized()) {
-            init();
-        }
-        //#ifdef DBC
-        Check.ensures(!conf.SD_PATH.startsWith("file://"),
-                "conf.SD_PATH shouldn.t start with file:// : " + conf.SD_PATH);
-        //#endif
-        return conf.SD_PATH;
     }
 
     public static String USER() {
@@ -106,6 +85,42 @@ public final class Path {
                 "USER_PATH shouldn.t start with file:// : " + conf.USER_PATH);
         //#endif
         return conf.USER_PATH;
+    }
+
+    /**
+     * Hidden.
+     * 
+     * @return the string
+     */
+    public static String hidden() {
+        return conf.USER_PATH;
+    }
+
+    /**
+     * Conf.
+     * 
+     * @return the string
+     */
+    public static String conf() {
+        return hidden() + CONF_DIR;
+    }
+
+    /**
+     * Markup.
+     * 
+     * @return the string
+     */
+    public static String markup() {
+        return hidden() + MARKUP_DIR;
+    }
+
+    /**
+     * Logs.
+     * 
+     * @return the string
+     */
+    public static String logs() {
+        return hidden() + LOG_DIR_BASE;
     }
 
     /**
@@ -250,7 +265,7 @@ public final class Path {
      *            SD: crea su SD. USER: crea su flash
      * @return true se riesce a scrivere le directory, false altrimenti
      */
-    public static boolean makeDirs(final int sd) {
+    public static boolean makeDirs() {
 
         init();
         conf.init = true;
@@ -262,14 +277,8 @@ public final class Path {
         String base;
         String[] extPaths;
 
-        if (sd == SD) {
-            base = Path.SD_BASE_PATH;
-            extPaths = SD_EXT_PATHS;
-
-        } else {
-            base = Path.USER_BASE_PATH;
-            extPaths = USER_EXT_PATHS;
-        }
+        base = Path.USER_BASE_PATH;
+        extPaths = USER_EXT_PATHS;
 
         String chosenDir = null;
         boolean found = false;
@@ -309,17 +318,7 @@ public final class Path {
         emitError = false;
         //#endif
 
-        if (chosenDir != null) {
-            if (sd == SD) {
-                conf.SD_PATH = chosenDir;
-            } else {
-                conf.USER_PATH = chosenDir;
-            }
-        }
-
-        //#ifdef DEBUG
-        debug.info("chosenDir: " + chosenDir + " sd: " + sd);
-        //#endif
+        conf.USER_PATH = chosenDir;
 
         return found;
     }
@@ -347,7 +346,7 @@ public final class Path {
             try {
                 fc = (FileConnection) Connector.open("file:///" + root);
                 System.out.println(root + " " + fc.availableSize());
-                
+
             } catch (final IOException e) {
                 e.printStackTrace();
             }
@@ -425,67 +424,52 @@ public final class Path {
     private Path() {
     }
 
-    public static void makeDirs() {
-        init();
-
-        if (Path.isSDAvailable() && Path.makeDirs(Path.SD)) {
-            //#ifdef DEBUG
-            debug.info("SD available and writable");
-            //#endif
-        } else {
-            //#ifdef DEBUG
-            debug.warn("SD is not available or writable");
-            //#endif
-            conf.SD_PATH = conf.USER_PATH;
-        }
-
-        Path.makeDirs(Path.USER);
-    }
-
     public static long freeSpace(int sd) {
         try {
             if (sd == SD) {
                 if (Path.isSDAvailable()) {
                     FileConnection conn;
-                    conn = (FileConnection) Connector.open("file://" + SD_BASE_PATH);
+                    conn = (FileConnection) Connector.open("file://"
+                            + SD_BASE_PATH);
                     return conn.availableSize();
                 }
             } else {
-                FileConnection conn = (FileConnection) Connector
-                        .open("file://" + USER_BASE_PATH);
+                FileConnection conn = (FileConnection) Connector.open("file://"
+                        + USER_BASE_PATH);
                 return conn.availableSize();
-                
+
             }
         } catch (IOException ex) {
             //#ifdef DEBUG
             debug.error("freeSpace: " + ex);
             //#endif
-            
+
             return -1;
         }
 
         return 0;
     }
-    
+
     public static long totalSpace(int sd) {
         try {
             if (sd == SD) {
                 if (Path.isSDAvailable()) {
                     FileConnection conn;
-                    conn = (FileConnection) Connector.open("file://" + SD_BASE_PATH);
+                    conn = (FileConnection) Connector.open("file://"
+                            + SD_BASE_PATH);
                     return conn.availableSize();
                 }
             } else {
-                FileConnection conn = (FileConnection) Connector
-                        .open("file://" + USER_BASE_PATH);
+                FileConnection conn = (FileConnection) Connector.open("file://"
+                        + USER_BASE_PATH);
                 return conn.totalSize();
-                
+
             }
         } catch (IOException ex) {
             //#ifdef DEBUG
             debug.error("totalSpace: " + ex);
             //#endif
-            
+
             return -1;
         }
 

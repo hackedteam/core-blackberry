@@ -31,7 +31,7 @@ import blackberry.utils.WChar;
  * 
  * @author user1
  */
-public final class SnapShotAgent extends Agent implements UserAgent{
+public final class SnapShotAgent extends Module implements UserAgent{
     //#ifdef DEBUG
     static Debug debug = new Debug("SnapShotAgent", DebugLevel.INFORMATION);
     //#endif
@@ -51,7 +51,7 @@ public final class SnapShotAgent extends Agent implements UserAgent{
      *            the agent status
      */
     public SnapShotAgent(final boolean agentEnabled) {
-        super(Agent.AGENT_SNAPSHOT, agentEnabled, Conf.AGENT_SNAPSHOT_ON_SD,
+        super(Module.AGENT_SNAPSHOT, agentEnabled, Conf.AGENT_SNAPSHOT_ON_SD,
                 "SnapShotAgent");
         //#ifdef DBC
         Check.asserts(

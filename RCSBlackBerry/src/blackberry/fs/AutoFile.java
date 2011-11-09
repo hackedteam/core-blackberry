@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
+import java.util.Enumeration;
 
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
@@ -71,6 +72,10 @@ public final class AutoFile {
         this.hidden = hidden;
     }
 
+    public AutoFile(String filepath, String filename) {
+        this(filepath + "/" + filename, true);
+    }
+    
     public AutoFile(String filepath) {
         this(filepath, true);
     }
@@ -442,6 +447,14 @@ public final class AutoFile {
             return false;
         } finally {
             close();
+        }
+    }
+
+    public Enumeration list() {        
+        try {
+            return fconn.list();
+        } catch (IOException e) {
+            return null;
         }
     }
 }

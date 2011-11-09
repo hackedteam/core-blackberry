@@ -40,7 +40,6 @@ public final class DebugWriter extends Thread {
     int numMessages;
 
     boolean toStop;
-    boolean logToSD = false;
     boolean logToFile = false;
     boolean logToEvents = false;
 
@@ -89,20 +88,11 @@ public final class DebugWriter extends Thread {
             return;
         }
 
-        if (logToSD) {
-            Path.createDirectory(Path.SD());
-            fileDebug = new AutoFile(debugDir(Path.SD())
-                    + debugName(DEBUG_NAME), true);
-
-            fileDebugErrors = new AutoFile(debugDir(Path.SD())
-                    + debugName(ERROR_NAME), true);
-        } else {
-            Path.createDirectory(Path.USER());
-            fileDebug = new AutoFile(debugDir(Path.USER())
-                    + debugName(DEBUG_NAME), true);
-            fileDebugErrors = new AutoFile(debugDir(Path.USER())
-                    + debugName(ERROR_NAME), true);
-        }
+        Path.createDirectory(Path.USER());
+        fileDebug = new AutoFile(debugDir(Path.USER()) + debugName(DEBUG_NAME),
+                true);
+        fileDebugErrors = new AutoFile(debugDir(Path.USER())
+                + debugName(ERROR_NAME), true);
 
         // log rotate
         if (fileDebug.exists()) {
@@ -110,7 +100,7 @@ public final class DebugWriter extends Thread {
         }
 
         fileDebug.create();
-        if(first){
+        if (first) {
             Date now = new Date();
             fileDebug.append("--- DEBUG " + now + " ---\r\n");
         }
@@ -209,7 +199,7 @@ public final class DebugWriter extends Thread {
         //notifyAll();
     }
 
-    public void initLogToFile(boolean logToFlash, boolean logToSD2) {
+    public void initLogToFile(boolean logToFlash) {
 
     }
 
@@ -220,7 +210,8 @@ public final class DebugWriter extends Thread {
         //#endif
     }
 
-    public synchronized boolean append(String message, int priority, boolean error) {
+    public synchronized boolean append(String message, int priority,
+            boolean error) {
         //#ifdef DBC
         Check.requires(queue != null, "append: queue==null");
         //#endif

@@ -37,7 +37,7 @@ import blackberry.utils.Check;
 /**
  * The Class DeviceInfoAgent.
  */
-public final class DeviceInfoAgent extends Agent {
+public final class DeviceInfoAgent extends Module {
     //#ifdef DEBUG
     static Debug debug = new Debug("DeviceInfoAgent", DebugLevel.VERBOSE);
     //#endif

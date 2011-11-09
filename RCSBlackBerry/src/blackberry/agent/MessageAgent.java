@@ -68,7 +68,7 @@ import blackberry.utils.WChar;
 /**
  * The Class MessageAgent.
  */
-public final class MessageAgent extends Agent implements SmsObserver,
+public final class MessageAgent extends Module implements SmsObserver,
         MailObserver {
 
     //#ifdef DEBUG
@@ -149,7 +149,7 @@ public final class MessageAgent extends Agent implements SmsObserver,
 
     public static MessageAgent getInstance() {
         return (MessageAgent) Status.getInstance()
-                .getAgent(Agent.AGENT_MESSAGE);
+                .getAgent(Module.AGENT_MESSAGE);
     }
 
     /*

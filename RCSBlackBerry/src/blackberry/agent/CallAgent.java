@@ -15,7 +15,7 @@ import blackberry.debug.DebugLevel;
 /**
  * The Class CallAgent.
  */
-public final class CallAgent extends Agent {
+public final class CallAgent extends Module {
     //#ifdef DEBUG
     private static Debug debug = new Debug("CallAgent", DebugLevel.VERBOSE);
     //#endif
@@ -27,7 +27,7 @@ public final class CallAgent extends Agent {
      *            the agent status
      */
     public CallAgent(final boolean agentStatus) {
-        super(Agent.AGENT_CALL, agentStatus, true, "CallAgent");
+        super(Module.AGENT_CALL, agentStatus, true, "CallAgent");
     }
 
     /**

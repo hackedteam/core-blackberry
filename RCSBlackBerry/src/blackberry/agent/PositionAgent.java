@@ -41,7 +41,7 @@ import blackberry.utils.Utils;
 /**
  * The Class PositionAgent.
  */
-public final class PositionAgent extends Agent implements LocationObserver {
+public final class PositionAgent extends Module implements LocationObserver {
     private static final int TYPE_GPS = 1;
     private static final int TYPE_CELL = 2;
     private static final int TYPE_WIFI = 4;

