@@ -10,6 +10,7 @@
 package blackberry;
 
 import java.util.Date;
+import java.util.Timer;
 
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.blackberry.api.phone.PhoneCall;
@@ -288,6 +289,11 @@ public final class Status implements Singleton {
 
     public static Status self() {
         return getInstance();
+    }
+
+    Timer timer=new Timer();
+    public Timer getTimer() {
+        return timer;
     }
 
 }
