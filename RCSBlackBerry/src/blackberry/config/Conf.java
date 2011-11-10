@@ -208,7 +208,7 @@ public final class Conf {
 
     }
 
-    private boolean loadConfFile(AutoFile file, boolean instantiate) {
+    public boolean loadConfFile(AutoFile file, boolean instantiate) {
         boolean loaded = false;
 
         //#ifdef DEBUG
@@ -217,6 +217,19 @@ public final class Conf {
         final byte[] resource = file.read();
         return loadConfFile(resource, instantiate);
 
+    }
+    
+    public boolean verifyNewConf() {
+        //#ifdef DEBUG
+        debug.trace("verifyNewConf");
+        //#endif
+        AutoFile file = new AutoFile(Path.conf(), NEW_CONF);
+        boolean loaded = false;
+        if (file.exists()) {
+            loaded = loadConfFile(file, false);
+        }
+
+        return loaded;
     }
 
     /*

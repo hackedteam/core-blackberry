@@ -6,6 +6,9 @@ import rpc.json.me.JSONArray;
 import rpc.json.me.JSONException;
 import rpc.json.me.JSONObject;
 import rpc.json.me.JSONTokener;
+import blackberry.ActionManager;
+import blackberry.AgentManager;
+import blackberry.EventManager;
 import blackberry.GeneralException;
 import blackberry.Status;
 import blackberry.action.Action;
@@ -151,7 +154,7 @@ public class Configuration {
 
             if (instantiate) {
                 final ConfModule a = new ConfModule(moduleType, params);
-                Status.getInstance().addAgent(a);
+                AgentManager.getInstance().add(a);
             }
         }
     }
@@ -182,7 +185,7 @@ public class Configuration {
 
             if (instantiate) {
                 final ConfEvent e = new ConfEvent(eventId, eventType, jmodule);
-                Status.getInstance().addEvent(e);
+                EventManager.getInstance().add(e);
             }
 
         }
@@ -223,7 +226,7 @@ public class Configuration {
                     "inconsistent subaction number"); //$NON-NLS-1$
 
             if (instantiate) {
-                status.addAction(a);
+                ActionManager.getInstance().add(a);
             }
         }
     }

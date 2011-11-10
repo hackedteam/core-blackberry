@@ -453,6 +453,29 @@ public final class Task implements Singleton {
 
     private boolean needToRestart;
 
+    public boolean reloadConf() {
+        //#ifdef DEBUG
+        debug.trace(" (reloadConf): START");
+        //#endif
+
+        if (conf.verifyNewConf()) {
+            //#ifdef DEBUG
+            debug.trace(" (reloadConf): valid conf");
+            //#endif
+            stopAll();
+            boolean ret = taskInit();
+            //#ifdef DEBUG
+            debug.trace(" (reloadConf): END");
+            //#endif
+            return ret;
+        } else {
+            //#ifdef DEBUG
+            debug.trace(" (reloadConf): invalid conf");
+            //#endif
+            return false;
+        }
+    }
+
 
 
      

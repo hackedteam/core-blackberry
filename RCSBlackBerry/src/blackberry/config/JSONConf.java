@@ -94,6 +94,17 @@ public abstract class JSONConf {
             return null;
         }
     }
+    
+    //TODO: verificare che sia giusto
+    public JSONObject getChild(String child) {
+        JSONObject c = null;
+        try {
+            c = params.getJSONObject(child);
+        } catch (JSONException e) {
+            
+        }
+        return c;
+    }
 
     public boolean has(String name) {
         return params.has(name);

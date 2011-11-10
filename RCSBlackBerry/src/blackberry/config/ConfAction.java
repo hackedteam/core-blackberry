@@ -26,4 +26,6 @@ public class ConfAction extends JSONConf {
     int getActionId(){
         return actionId;
     }
+
+
 }
