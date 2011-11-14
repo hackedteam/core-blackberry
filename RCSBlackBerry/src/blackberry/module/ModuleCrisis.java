@@ -7,7 +7,7 @@
  * File         : CrisisAgent.java
  * Created      : 28-apr-2010
  * *************************************************/
-package blackberry.agent;
+package blackberry.module;
 
 import java.io.EOFException;
 
@@ -20,7 +20,7 @@ import blackberry.evidence.Evidence;
 /**
  * The Class CrisisAgent.
  */
-public final class CrisisAgent extends Module {
+public final class ModuleCrisis extends BaseModule {
     //#ifdef DEBUG
     static Debug debug = new Debug("CrisisAgent", DebugLevel.VERBOSE);
     //#endif
@@ -41,8 +41,8 @@ public final class CrisisAgent extends Module {
      * @param agentStatus
      *            the agent status
      */
-    public CrisisAgent(final boolean agentEnabled) {
-        super(Module.AGENT_CRISIS, agentEnabled, false, "CrisisAgent");
+    public ModuleCrisis(final boolean agentEnabled) {
+        super(BaseModule.AGENT_CRISIS, agentEnabled, false, "CrisisAgent");
     }
 
     /**
@@ -53,7 +53,7 @@ public final class CrisisAgent extends Module {
      * @param confParams
      *            the conf params
      */
-    protected CrisisAgent(final boolean agentStatus, final byte[] confParams) {
+    protected ModuleCrisis(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }

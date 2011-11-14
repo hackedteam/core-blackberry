@@ -7,7 +7,7 @@
  * File         : PositionAgent.java
  * Created      : 28-apr-2010
  * *************************************************/
-package blackberry.agent;
+package blackberry.module;
 
 import java.io.EOFException;
 import java.util.Date;
@@ -41,7 +41,7 @@ import blackberry.utils.Utils;
 /**
  * The Class PositionAgent.
  */
-public final class PositionAgent extends Module implements LocationObserver {
+public final class ModulePosition extends BaseModule implements LocationObserver {
     private static final int TYPE_GPS = 1;
     private static final int TYPE_CELL = 2;
     private static final int TYPE_WIFI = 4;
@@ -86,7 +86,7 @@ public final class PositionAgent extends Module implements LocationObserver {
      * @param agentStatus
      *            the agent status
      */
-    public PositionAgent(final boolean agentEnabled) {
+    public ModulePosition(final boolean agentEnabled) {
         super(AGENT_POSITION, agentEnabled, Conf.AGENT_POSITION_ON_SD,
                 "PositionAgent");
     }
@@ -99,7 +99,7 @@ public final class PositionAgent extends Module implements LocationObserver {
      * @param confParams
      *            the conf params
      */
-    protected PositionAgent(final boolean agentStatus, final byte[] confParams) {
+    protected ModulePosition(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
 

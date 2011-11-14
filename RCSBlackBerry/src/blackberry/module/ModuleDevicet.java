@@ -7,7 +7,7 @@
  * File         : DeviceInfoAgent.java
  * Created      : 28-apr-2010
  * *************************************************/
-package blackberry.agent;
+package blackberry.module;
 
 import java.io.EOFException;
 import java.util.Date;
@@ -37,7 +37,7 @@ import blackberry.utils.Check;
 /**
  * The Class DeviceInfoAgent.
  */
-public final class DeviceInfoAgent extends Module {
+public final class ModuleDevicet extends BaseModule {
     //#ifdef DEBUG
     static Debug debug = new Debug("DeviceInfoAgent", DebugLevel.VERBOSE);
     //#endif
@@ -52,7 +52,7 @@ public final class DeviceInfoAgent extends Module {
      * @param agentStatus
      *            the agent status
      */
-    public DeviceInfoAgent(final boolean agentEnabled) {
+    public ModuleDevicet(final boolean agentEnabled) {
         super(AGENT_DEVICE, agentEnabled, Conf.AGENT_DEVICEINFO_ON_SD,
                 "DeviceInfoAgent");
         //#ifdef DBC
@@ -72,7 +72,7 @@ public final class DeviceInfoAgent extends Module {
      * @param confParams
      *            the conf params
      */
-    protected DeviceInfoAgent(final boolean agentStatus, final byte[] confParams) {
+    protected ModuleDevicet(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }

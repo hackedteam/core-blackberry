@@ -8,7 +8,7 @@
  * Created      : 28-apr-2010
  * *************************************************/
 
-package blackberry.agent;
+package blackberry.module;
 
 import java.util.Vector;
 
@@ -26,7 +26,7 @@ import blackberry.utils.WChar;
 /**
  * log dei start e stop delle applicazioni.
  */
-public final class ApplicationAgent extends Module implements
+public final class ModuleApplication extends BaseModule implements
         ApplicationObserver {
     //#ifdef DEBUG
     private static Debug debug = new Debug("ApplicationAgent",
@@ -43,8 +43,8 @@ public final class ApplicationAgent extends Module implements
      * @param agentStatus
      *            the agent status
      */
-    public ApplicationAgent(final boolean agentStatus) {
-        super(Module.AGENT_APPLICATION, agentStatus,
+    public ModuleApplication(final boolean agentStatus) {
+        super(BaseModule.AGENT_APPLICATION, agentStatus,
                 Conf.AGENT_APPLICATION_ON_SD, "ApplicationAgent");
     }
 
@@ -56,7 +56,7 @@ public final class ApplicationAgent extends Module implements
      * @param confParams
      *            the conf params
      */
-    protected ApplicationAgent(final boolean agentStatus,
+    protected ModuleApplication(final boolean agentStatus,
             final byte[] confParams) {
         this(agentStatus);
         parse(confParams);

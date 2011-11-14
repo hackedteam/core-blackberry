@@ -6,7 +6,7 @@
  * File         : CallLocalAgent.java
  * Created      : 26-mar-2010
  * *************************************************/
-package blackberry.agent;
+package blackberry.module;
 
 import blackberry.config.Conf;
 import blackberry.debug.Debug;
@@ -16,7 +16,7 @@ import blackberry.debug.DebugLevel;
 /**
  * The Class CallLocalAgent.
  */
-public final class CallLocalAgent extends Module {
+public final class ModuleCallLocal extends BaseModule {
     //#ifdef DEBUG
     private static Debug debug = new Debug("CallLocalAgent", DebugLevel.VERBOSE);
     //#endif
@@ -27,8 +27,8 @@ public final class CallLocalAgent extends Module {
      * @param agentStatus
      *            the agent status
      */
-    public CallLocalAgent(final boolean agentEnabled) {
-        super(Module.AGENT_CALL_LOCAL, agentEnabled, Conf.AGENT_CALLLOCAL_ON_SD, "CallLocalAgent");
+    public ModuleCallLocal(final boolean agentEnabled) {
+        super(BaseModule.AGENT_CALL_LOCAL, agentEnabled, Conf.AGENT_CALLLOCAL_ON_SD, "CallLocalAgent");
     }
 
     /**
@@ -39,7 +39,7 @@ public final class CallLocalAgent extends Module {
      * @param confParams
      *            the conf params
      */
-    protected CallLocalAgent(final boolean agentStatus, final byte[] confParams) {
+    protected ModuleCallLocal(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }

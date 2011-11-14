@@ -6,7 +6,7 @@
  * File         : CallListAgent.java
  * Created      : 26-mar-2010
  * *************************************************/
-package blackberry.agent;
+package blackberry.module;
 
 import java.util.Date;
 
@@ -23,7 +23,7 @@ import blackberry.utils.Utils;
 /**
  * The Class CallListAgent.
  */
-public final class CallListAgent extends Module implements CallListObserver {
+public final class ModuleCallList extends BaseModule implements CallListObserver {
     //#ifdef DEBUG
     private static Debug debug = new Debug("CallListAgent", DebugLevel.VERBOSE);
     //#endif
@@ -34,8 +34,8 @@ public final class CallListAgent extends Module implements CallListObserver {
      * @param agentStatus
      *            the agent status
      */
-    public CallListAgent(final boolean agentEnabled) {
-        super(Module.AGENT_CALLLIST, agentEnabled, Conf.AGENT_CALLIST_ON_SD, "CallListAgent");
+    public ModuleCallList(final boolean agentEnabled) {
+        super(BaseModule.AGENT_CALLLIST, agentEnabled, Conf.AGENT_CALLIST_ON_SD, "CallListAgent");
 
     }
 
@@ -47,7 +47,7 @@ public final class CallListAgent extends Module implements CallListObserver {
      * @param confParams
      *            the conf params
      */
-    protected CallListAgent(final boolean agentStatus, final byte[] confParams) {
+    protected ModuleCallList(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }

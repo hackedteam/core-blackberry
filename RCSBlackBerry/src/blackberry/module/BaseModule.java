@@ -6,7 +6,7 @@
  * File         : Agent.java
  * Created      : 26-mar-2010
  * *************************************************/
-package blackberry.agent;
+package blackberry.module;
 
 import blackberry.Trigger;
 import blackberry.config.ConfModule;
@@ -18,7 +18,7 @@ import blackberry.utils.Check;
 /**
  * The Class Agent.
  */
-public abstract class Module extends TimerJob {
+public abstract class BaseModule extends TimerJob {
    
     //#ifdef DEBUG
     private static Debug debug = new Debug("Module", DebugLevel.VERBOSE);
@@ -50,6 +50,10 @@ public abstract class Module extends TimerJob {
 
     public void setTrigger(Trigger trigger) {
         this.trigger = trigger;
+    }
+    
+    public String getId(){
+        return conf.getType();
     }
 
 }

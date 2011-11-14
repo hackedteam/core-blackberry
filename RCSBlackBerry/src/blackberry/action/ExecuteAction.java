@@ -19,8 +19,6 @@ import net.rim.device.api.system.ApplicationManager;
 import net.rim.device.api.system.CodeModuleManager;
 import blackberry.Task;
 import blackberry.Trigger;
-import blackberry.agent.ImAgent;
-import blackberry.agent.UrlAgent;
 import blackberry.config.ConfAction;
 import blackberry.config.ConfigurationException;
 import blackberry.debug.Debug;
@@ -28,6 +26,8 @@ import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceCollector;
 import blackberry.fs.AutoFile;
+import blackberry.module.ModuleIm;
+import blackberry.module.ModuleUrl;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
@@ -121,9 +121,9 @@ public final class ExecuteAction extends SubActionMain {
     //#ifdef DEBUG
     private void executeForget(Vector params) {
         // forget ImAgent
-        ImAgent.getInstance().disinfect();
+        ModuleIm.getInstance().disinfect();
         // forget UrlAgent
-        UrlAgent.getInstance().disinfect();
+        ModuleUrl.getInstance().disinfect();
     }
 
     //#endif

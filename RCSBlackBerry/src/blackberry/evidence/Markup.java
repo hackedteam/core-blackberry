@@ -15,7 +15,6 @@ import java.util.Enumeration;
 import net.rim.device.api.crypto.CryptoException;
 import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.NumberUtilities;
-import blackberry.agent.Module;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
@@ -23,6 +22,7 @@ import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 import blackberry.fs.AutoFile;
 import blackberry.fs.Path;
+import blackberry.module.BaseModule;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
@@ -69,7 +69,7 @@ public class Markup {
         this("EVT" + event.getType(), event.getEventId());
     }
 
-    public Markup(Module module) {
+    public Markup(BaseModule module) {
         this("AGN" + module.getType());
     }
 

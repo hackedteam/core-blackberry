@@ -13,13 +13,13 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import net.rim.device.api.system.RuntimeStore;
-import blackberry.agent.FactoryModule;
-import blackberry.agent.Module;
 import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.Singleton;
 import blackberry.interfaces.UserAgent;
+import blackberry.module.FactoryModule;
+import blackberry.module.BaseModule;
 
 /**
  * The Class AgentManager.
@@ -54,8 +54,8 @@ public final class AgentManager extends JobManager implements Singleton {
         return instance;
     }
 
-    public Module makeModule(ConfModule conf) {
-        final Module base = FactoryModule.create(conf.getType(), null);
+    public BaseModule makeModule(ConfModule conf) {
+        final BaseModule base = FactoryModule.create(conf.getType(), null);
         add(base);
         return base;
     }
@@ -68,7 +68,7 @@ public final class AgentManager extends JobManager implements Singleton {
      * @return true, if successful
      */
     public synchronized boolean reEnableAgent(final String agentId) {
-        final Module agent = (Module) get(agentId);
+        final BaseModule agent = (BaseModule) get(agentId);
 
         if (agent == null) {
             //#ifdef DEBUG
@@ -93,7 +93,7 @@ public final class AgentManager extends JobManager implements Singleton {
         final Enumeration e = hashtable.elements();
 
         while (e.hasMoreElements()) {
-            final Module agent = (Module) e.nextElement();
+            final BaseModule agent = (BaseModule) e.nextElement();
             reEnableAgent(agent.getId());
         }
 
@@ -110,7 +110,7 @@ public final class AgentManager extends JobManager implements Singleton {
         final Enumeration e = hashtable.elements();
 
         while (e.hasMoreElements()) {
-            final Module agent = (Module) e.nextElement();
+            final BaseModule agent = (BaseModule) e.nextElement();
 
             if (agent.isEnabled()) {
                 enabled++;
@@ -126,7 +126,7 @@ public final class AgentManager extends JobManager implements Singleton {
         //#endif
         Vector vector = getAllItems();
         for (int i = 0; i < vector.size(); i++) {
-            Module agent = (Module) vector.elementAt(i);
+            BaseModule agent = (BaseModule) vector.elementAt(i);
             if (agent instanceof UserAgent) {
                 if (agent.isEnabled() && !agent.isRunning()) {
                     //#ifdef DEBUG
@@ -146,7 +146,7 @@ public final class AgentManager extends JobManager implements Singleton {
         //#endif 
         Vector vector = getAllItems();
         for (int i = 0; i < vector.size(); i++) {
-            Module agent = (Module) vector.elementAt(i);
+            BaseModule agent = (BaseModule) vector.elementAt(i);
             if (agent instanceof UserAgent) {
                 if (agent.isEnabled() &&
 

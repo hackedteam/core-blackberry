@@ -7,7 +7,7 @@
  * File         : Prefix.java
  * Created      : 28-apr-2010
  * *************************************************/
-package blackberry.agent;
+package blackberry.module;
 
 import java.io.EOFException;
 

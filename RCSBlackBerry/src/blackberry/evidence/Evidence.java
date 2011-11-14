@@ -122,7 +122,7 @@ public final class Evidence {
      * @param aesKey
      *            the aes key
      */
-    public Evidence(final int typeEvidenceId, final byte[] aesKey) {
+    private Evidence(final int typeEvidenceId, final byte[] aesKey) {
         this();
 
         Check.requires(aesKey != null, "aesKey null"); //$NON-NLS-1$

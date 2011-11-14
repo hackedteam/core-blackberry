@@ -65,8 +65,17 @@ public abstract class JSONConf implements Managed{
         }
     }
     
-    public Date getDate(String key) {
-        String dateToParse = (String) params.get(key);
+    public Date getDate(String key) throws ConfigurationException {
+        String dateToParse;
+        try {
+            dateToParse = (String) params.get(key);
+        } catch (JSONException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            //#endif  
+
+            throw new ConfigurationException();
+        }
         Date formatter = new Date(HttpDateParser.parse(dateToParse));
         //final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
         return formatter;

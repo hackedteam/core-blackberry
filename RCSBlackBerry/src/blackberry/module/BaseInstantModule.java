@@ -1,9 +1,9 @@
-package blackberry.agent;
+package blackberry.module;
 
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-public abstract class BaseInstantModule extends Module {
+public abstract class BaseInstantModule extends BaseModule {
     //#ifdef DEBUG
     private static Debug debug = new Debug("BaseInstantModule",
             DebugLevel.VERBOSE);

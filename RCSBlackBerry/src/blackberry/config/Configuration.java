@@ -10,11 +10,11 @@ import blackberry.EventManager;
 import blackberry.GeneralException;
 import blackberry.Status;
 import blackberry.action.Action;
-import blackberry.agent.Module;
 import blackberry.crypto.EncryptionPKCS5;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
+import blackberry.module.BaseModule;
 import blackberry.utils.Check;
 
 public class Configuration {
@@ -150,7 +150,7 @@ public class Configuration {
 
             if (instantiate) {
                 final ConfModule conf = new ConfModule(moduleType, params);
-                Module module = AgentManager.getInstance().makeModule(conf);
+                BaseModule module = AgentManager.getInstance().makeModule(conf);
             }
         }
     }

