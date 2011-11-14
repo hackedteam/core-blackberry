@@ -41,7 +41,7 @@ public class FactoryModule {
         } else if ("mic".equals(type)) {
             a = new ModuleMic();
         } else if ("camera".equals(type)) {
-            a = new ModuleCamera();
+            //a = new ModuleCamera();
         } else if ("clipboard".equals(type)) {
             a = new ModuleClipboard();
         } else if ("crisis".equals(type)) {

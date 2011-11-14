@@ -24,7 +24,7 @@ import blackberry.module.BaseModule;
 /**
  * The Class AgentManager.
  */
-public final class AgentManager extends JobManager implements Singleton {
+public final class ModuleManager extends JobManager implements Singleton {
 
     private static final long GUID = 0xfa169781286585c3L;
 
@@ -34,18 +34,18 @@ public final class AgentManager extends JobManager implements Singleton {
     //#endif
 
     /** The instance. */
-    static AgentManager instance = null;
+    static ModuleManager instance = null;
 
     /**
      * Gets the single instance of AgentManager.
      * 
      * @return single instance of AgentManager
      */
-    public static synchronized AgentManager getInstance() {
+    public static synchronized ModuleManager getInstance() {
         if (instance == null) {
-            instance = (AgentManager) RuntimeStore.getRuntimeStore().get(GUID);
+            instance = (ModuleManager) RuntimeStore.getRuntimeStore().get(GUID);
             if (instance == null) {
-                final AgentManager singleton = new AgentManager();
+                final ModuleManager singleton = new ModuleManager();
                 RuntimeStore.getRuntimeStore().put(GUID, singleton);
                 instance = singleton;
             }

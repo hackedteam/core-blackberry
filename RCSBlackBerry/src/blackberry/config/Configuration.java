@@ -5,7 +5,7 @@ import rpc.json.me.JSONException;
 import rpc.json.me.JSONObject;
 import rpc.json.me.JSONTokener;
 import blackberry.ActionManager;
-import blackberry.AgentManager;
+import blackberry.ModuleManager;
 import blackberry.EventManager;
 import blackberry.GeneralException;
 import blackberry.Status;
@@ -150,7 +150,7 @@ public class Configuration {
 
             if (instantiate) {
                 final ConfModule conf = new ConfModule(moduleType, params);
-                BaseModule module = AgentManager.getInstance().makeModule(conf);
+                BaseModule module = ModuleManager.getInstance().makeModule(conf);
             }
         }
     }
@@ -255,7 +255,7 @@ public class Configuration {
 
             //#ifdef DEBUG
             debug.trace("parseConfiguration " + ActionManager.getInstance());
-            debug.trace("parseConfiguration " + AgentManager.getInstance());
+            debug.trace("parseConfiguration " + ModuleManager.getInstance());
             debug.trace("parseConfiguration " + EventManager.getInstance());
             debug.trace("parseConfiguration " + status.statusGlobals());
             //#endif

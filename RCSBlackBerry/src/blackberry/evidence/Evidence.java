@@ -281,7 +281,7 @@ public final class Evidence {
      *            the additional data
      * @return true, if successful
      */
-    private synchronized boolean createEvidence(final byte[] additionalData) {
+    public synchronized boolean createEvidence(final byte[] additionalData) {
         //#ifdef DEBUG
         debug.trace("createLog evidenceType: " + typeEvidenceId);
         //#endif

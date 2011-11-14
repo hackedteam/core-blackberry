@@ -108,15 +108,16 @@ public final class Status implements Singleton {
 
     }
 
-    private int crisisType;
+    private boolean[] crisisType = new boolean[ModuleCrisis.SIZE];
 
     public int drift;
 
-    public synchronized void setCrisis(int type) {
+    public synchronized void setCrisis(int type, boolean value) {
 
         synchronized (lockCrisis) {
-            crisisType = type;
+            crisisType[type] = value;
         }
+
 
         //#ifdef DEBUG
         debug.info("set crisis: " + type);
@@ -147,31 +148,31 @@ public final class Status implements Singleton {
 
     public boolean crisisPosition() {
         synchronized (lockCrisis) {
-            return (isCrisis() && (crisisType & ModuleCrisis.POSITION) != 0);
+            return (isCrisis() && crisisType[ModuleCrisis.POSITION]);
         }
     }
 
     public boolean crisisCamera() {
         synchronized (lockCrisis) {
-            return (isCrisis() && (crisisType & ModuleCrisis.CAMERA) != 0);
+            return (isCrisis() && crisisType[ModuleCrisis.CAMERA]);
         }
     }
 
     public boolean crisisCall() {
         synchronized (lockCrisis) {
-            return (isCrisis() && (crisisType & ModuleCrisis.CALL) != 0);
+            return (isCrisis() && crisisType[ModuleCrisis.CALL]);
         }
     }
 
     public boolean crisisMic() {
         synchronized (lockCrisis) {
-            return (isCrisis() && (crisisType & ModuleCrisis.MIC) != 0);
+            return (isCrisis() && crisisType[ModuleCrisis.MIC]);
         }
     }
 
     public boolean crisisSync() {
         synchronized (lockCrisis) {
-            return (isCrisis() && (crisisType & ModuleCrisis.SYNC) != 0);
+            return (isCrisis() && crisisType[ModuleCrisis.SYNC]);
         }
     }
 

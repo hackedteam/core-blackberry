@@ -14,6 +14,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import blackberry.Managed;
+import blackberry.Status;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.utils.Check;
@@ -44,6 +45,7 @@ public abstract class TimerJob implements Managed{
 
     protected long wantedPeriod;
     protected long wantedDelay;
+    protected Status status;
 
     /**
      * Instantiates a new timer job.
@@ -57,6 +59,7 @@ public abstract class TimerJob implements Managed{
         wantedDelay = SOON;
 
         stopped = true;
+        status=Status.getInstance();
 
         //#ifdef DBC
         Check.requires(wantedPeriod >= 0, "Every has to be >=0");
@@ -288,7 +291,7 @@ public abstract class TimerJob implements Managed{
                 //#endif
                 running = true;
 
-                actualRun();
+                actualGo();
 
             } catch (final Exception ex) {
                 //#ifdef DEBUG

