@@ -2,10 +2,11 @@ package blackberry.config;
 
 import rpc.json.me.JSONException;
 import rpc.json.me.JSONObject;
+import blackberry.Managed;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-public abstract class JSONConf {
+public abstract class JSONConf implements Managed{
     //#ifdef DEBUG
     private static Debug debug = new Debug("JSONConf", DebugLevel.VERBOSE);
     //#endif

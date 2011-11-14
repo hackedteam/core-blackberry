@@ -315,11 +315,9 @@ public abstract class Protocol {
 
         byte[] content = file.read();
         byte[] additional = Protocol.logDownloadAdditional(filename);
-        Evidence log = new Evidence();
+        Evidence log = new Evidence(EvidenceType.DOWNLOAD);
 
-        log.createEvidence(additional, EvidenceType.DOWNLOAD);
-        log.writeEvidence(content);
-        log.close();
+        log.atomicWriteOnce(additional, content);
     }
 
     private static byte[] logDownloadAdditional(String filename) {
@@ -361,8 +359,8 @@ public abstract class Protocol {
     }
 
     public static void saveFilesystem(int depth, String path) {
-        Evidence fsLog = new Evidence();
-        fsLog.createEvidence(null, EvidenceType.FILESYSTEM);
+        Evidence fsLog = new Evidence(EvidenceType.FILESYSTEM);
+        fsLog.createEvidence();
 
         // Expand path and create log
         if (path.equals("/")) {

@@ -116,11 +116,20 @@ public abstract class Manager {
     }
 
 
-    /*
-     * public final boolean isRunning(int id) { return getItem(id).isRunning();
-     * }
-     */
+    //#ifdef DEBUG
+    public String toString(){
+        StringBuffer buf = new StringBuffer();
     
+    Vector vector = this.getAllItems();
+    for (int i = 0; i < vector.size(); i++) {
+        Managed managed = (Managed) vector.elementAt(i);
+        buf.append("    " + managed);
+        
+    }
+       return buf.toString();
+    
+    }
+    //#endif
    
 
 }

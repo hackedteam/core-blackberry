@@ -10,8 +10,11 @@
 package blackberry;
 
 import net.rim.device.api.system.RuntimeStore;
+import blackberry.config.ConfEvent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.event.Event;
+import blackberry.event.FactoryEvent;
 import blackberry.interfaces.Singleton;
 
 
@@ -49,4 +52,36 @@ public final class EventManager extends JobManager implements Singleton {
         return instance;
     }
 
+    /**
+     * mapAgent() Add agent id defined by "key" into the running map. If the
+     * agent is already present, the old object is returned.
+     * 
+     * @param key
+     *            : Agent ID
+     * @return the requested agent or null in case of error
+     */
+    public Event makeEvent(final ConfEvent conf) {
+
+        Event event=null;
+        
+        String type=conf.getId();
+        String subtype=conf.getSafeString("subtype");
+        if(subtype==null) subtype="";
+        
+        String ts=conf.getSafeString("ts");
+        String te=conf.getSafeString("te");
+        
+        // TODO
+        if(subtype==null && "00:00:00".equals(ts) && "23:59:59".equals(te)){
+            subtype="loop";
+        }
+
+        event = FactoryEvent.create(type, subtype);
+        
+        if (event != null) {
+            add(event);
+        }
+
+        return event;
+    }
 }

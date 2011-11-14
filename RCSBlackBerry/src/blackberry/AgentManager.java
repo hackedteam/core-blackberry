@@ -13,7 +13,9 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import net.rim.device.api.system.RuntimeStore;
+import blackberry.agent.FactoryModule;
 import blackberry.agent.Module;
+import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.Singleton;
@@ -52,6 +54,12 @@ public final class AgentManager extends JobManager implements Singleton {
         return instance;
     }
 
+    public Module makeModule(ConfModule conf) {
+        final Module base = FactoryModule.create(conf.getType(), null);
+        add(base);
+        return base;
+    }
+    
     /**
      * Re enable agent.
      * 
@@ -151,5 +159,6 @@ public final class AgentManager extends JobManager implements Singleton {
             }
         }
     }
+
 
 }

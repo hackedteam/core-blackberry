@@ -64,7 +64,7 @@ public class Markup {
     }
 
     public Markup(Event event) {
-        this("EVT" + event.getType(), event.getId());
+        this("EVT" + event.getType(), event.getEventId());
     }
 
     public Markup(Module module) {

@@ -27,7 +27,7 @@ import blackberry.utils.BlockingQueueTrigger;
 /**
  * The Class Action.
  */
-public class Action implements Managed {
+public class Action implements Managed{
 
     /** The debug instance. */
     //#ifdef DEBUG

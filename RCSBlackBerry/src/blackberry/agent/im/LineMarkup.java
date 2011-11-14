@@ -24,8 +24,8 @@ public class LineMarkup extends DictMarkup {
     
     Hashtable lineHash = new Hashtable();
 
-    public LineMarkup(int agentId, byte[] aesKey) {
-        super(agentId, aesKey);
+    public LineMarkup(String id) {
+        super(id);
     }
 
     public synchronized boolean put(String key, String line) {

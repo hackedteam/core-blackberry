@@ -251,7 +251,6 @@ public final class Status implements Singleton {
     }
 
     //#ifdef DEBUG
-
     int wap2Errors;
     int wap2Ok;
 
@@ -264,7 +263,6 @@ public final class Status implements Singleton {
     public void wap2Ok() {
         wap2Ok++;
     }
-
     //#endif
 
     String currentForegroundAppName = "";
@@ -284,7 +282,6 @@ public final class Status implements Singleton {
     public void setCurrentForegroundApp(String name, String mod) {
         currentForegroundAppName = name;
         currentForegroundAppMod = mod;
-
     }
 
     public static Status self() {
@@ -296,4 +293,22 @@ public final class Status implements Singleton {
         return timer;
     }
 
+    public String statusGlobals() {        
+        StringBuffer buf=new StringBuffer();
+        Globals g = getGlobals();
+        buf.append(" quota min: " + g.quotaMin + " max:" + g.quotaMax); //$NON-NLS-1$ 
+        buf.append(" wipe: " + g.wipe); //$NON-NLS-1$ 
+        buf.append(" type: " + g.type); //$NON-NLS-1$ 
+        buf.append(" migrated: " + g.migrated); //$NON-NLS-1$ 
+        buf.append(" versin: " + g.version); //$NON-NLS-1$ 
+        return buf.toString();
+    }
+
+    public void setGlobal(Globals g) {
+        this.globals = g;
+    }
+
+    public Globals getGlobals() {
+        return globals;
+    }
 }

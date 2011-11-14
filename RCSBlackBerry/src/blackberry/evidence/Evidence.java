@@ -261,9 +261,10 @@ public final class Evidence {
         return ret;
     }
 
-    public synchronized boolean createEvidence(final byte[] additionalData) {
-        return createEvidence(additionalData, typeEvidenceId);
+    public synchronized boolean createEvidence() {
+        return createEvidence(null);
     }
+
 
     /**
      * Questa funzione crea un file di log e lascia l'handle aperto. Il file
@@ -280,10 +281,9 @@ public final class Evidence {
      *            the additional data
      * @return true, if successful
      */
-    public synchronized boolean createEvidence(final byte[] additionalData,
-            final int evidenceType) {
+    private synchronized boolean createEvidence(final byte[] additionalData) {
         //#ifdef DEBUG
-        debug.trace("createLog evidenceType: " + evidenceType);
+        debug.trace("createLog evidenceType: " + typeEvidenceId);
         //#endif
 
         //#ifdef DBC
@@ -291,7 +291,6 @@ public final class Evidence {
                 "createLog: not previously closed");
         //#endif
         
-        this.typeEvidenceId = evidenceType;
         timestamp = new Date();
 
         int additionalLen = 0;
@@ -309,7 +308,7 @@ public final class Evidence {
         }
 
         final Vector tuple = evidenceCollector.makeNewName(this,
-                memoTypeEvidence(evidenceType), onSD);
+                memoTypeEvidence(typeEvidenceId), onSD);
         //#ifdef DBC
         Check.asserts(tuple.size() == 5, "Wrong tuple size");
         //#endif
@@ -357,7 +356,7 @@ public final class Evidence {
             debug.info("Created: " + fileName);
             //#endif
 
-            final byte[] plainBuffer = makeDescription(additionalData, logType);
+            final byte[] plainBuffer = makeDescription(additionalData, typeEvidenceId);
             //#ifdef DBC
             Check.asserts(plainBuffer.length >= 32 + additionalLen,
                     "Short plainBuffer");
@@ -642,10 +641,4 @@ public final class Evidence {
         close();
     }
 
-    public void atomicWriteOnce(byte[] additionalData, int logType,
-            byte[] content) {
-        createEvidence(additionalData, logType);
-        writeEvidence(content);
-        close();
-    }
 }

@@ -44,11 +44,11 @@ public abstract class Event extends TimerJob {
     private int iterCounter;
 
     public String getId() {
-        return Integer.toString(conf.getId());
+        return conf.getId();
     }
 
     public int getEventId() {
-        return conf.getId();
+        return conf.getEventId();
     }
 
     public String getType() {

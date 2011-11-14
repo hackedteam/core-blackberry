@@ -21,7 +21,7 @@ import blackberry.utils.Check;
 /**
  * The Class TimerJob.
  */
-public abstract class TimerJob implements Managed {
+public abstract class TimerJob implements Managed{
 
     protected static final long SOON = 0;
     protected static final long NEVER = Integer.MAX_VALUE;

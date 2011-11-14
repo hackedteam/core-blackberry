@@ -54,8 +54,12 @@ public class ConfEvent extends JSONConf {
      * 
      * @return the id
      */
-    public int getId() {
+    public int getEventId() {
         return this.eventId;
+    }
+
+    public String getId() {
+        return Integer.toString(eventId);
     }
 
 }

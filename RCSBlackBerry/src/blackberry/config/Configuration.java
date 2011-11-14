@@ -1,7 +1,5 @@
 package blackberry.config;
 
-import java.util.Vector;
-
 import rpc.json.me.JSONArray;
 import rpc.json.me.JSONException;
 import rpc.json.me.JSONObject;
@@ -12,7 +10,6 @@ import blackberry.EventManager;
 import blackberry.GeneralException;
 import blackberry.Status;
 import blackberry.action.Action;
-import blackberry.action.SubAction;
 import blackberry.agent.Module;
 import blackberry.crypto.EncryptionPKCS5;
 import blackberry.debug.Debug;
@@ -92,7 +89,6 @@ public class Configuration {
         } catch (final Exception rcse) {
             return false;
         }
-
     }
 
     abstract static class Visitor {
@@ -153,8 +149,8 @@ public class Configuration {
             //#endif
 
             if (instantiate) {
-                final ConfModule a = new ConfModule(moduleType, params);
-                AgentManager.getInstance().add(a);
+                final ConfModule conf = new ConfModule(moduleType, params);
+                Module module = AgentManager.getInstance().makeModule(conf);
             }
         }
     }
@@ -184,8 +180,9 @@ public class Configuration {
             //#endif
 
             if (instantiate) {
-                final ConfEvent e = new ConfEvent(eventId, eventType, jmodule);
-                EventManager.getInstance().add(e);
+                final ConfEvent conf = new ConfEvent(eventId, eventType,
+                        jmodule);
+                Event event = EventManager.getInstance().makeEvent(conf);
             }
 
         }
@@ -257,12 +254,10 @@ public class Configuration {
             loadGlobals(jglobals, instantiate);
 
             //#ifdef DEBUG
-            showStatus();
-
-            status.statusActions();
-            status.statusModules();
-            status.statusEvents();
-            status.statusGlobals();
+            debug.trace("parseConfiguration " + ActionManager.getInstance());
+            debug.trace("parseConfiguration " + AgentManager.getInstance());
+            debug.trace("parseConfiguration " + EventManager.getInstance());
+            debug.trace("parseConfiguration " + status.statusGlobals());
             //#endif
 
             return true;
@@ -273,41 +268,6 @@ public class Configuration {
             return false;
         }
 
-    }
-
-    private void showStatus() {
-        //#ifdef DEBUG
-        debug.trace("----------");
-        debug.info("AGENTS");
-        Vector vector = status.getAgentsList();
-        for (int i = 0; i < vector.size(); i++) {
-            Module agent = (Module) vector.elementAt(i);
-            if (agent.isEnabled()) {
-                debug.info("    " + agent.toString());
-            }
-        }
-
-        debug.info("ACTIONS");
-        vector = status.getActionsList();
-        for (int i = 0; i < vector.size(); i++) {
-            Action action = (Action) vector.elementAt(i);
-            debug.info("    " + action.toString());
-            Vector subs = action.getSubActionsList();
-            for (int j = 0; j < subs.size(); j++) {
-                SubAction sub = (SubAction) subs.elementAt(j);
-                debug.info("        " + sub.toString());
-            }
-        }
-
-        debug.info("EVENTS");
-        vector = status.getEventsList();
-        for (int i = 0; i < vector.size(); i++) {
-            Event event = (Event) vector.elementAt(i);
-            if (event.isEnabled()) {
-                debug.info("    " + event.toString());
-            }
-        }
-        //#endif
     }
 
     private void loadGlobals(JSONObject jglobals, boolean instantiate)

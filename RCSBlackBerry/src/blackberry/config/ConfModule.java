@@ -16,5 +16,8 @@ public class ConfModule extends JSONConf {
         super(moduleType, jmodule);
     }
 
+    public String getId() {
+        return getType();
+    }
 
 }
