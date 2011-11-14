@@ -162,7 +162,7 @@ public final class ImAgent extends Module implements BacklightObserver,
 
     boolean infecting = false;
 
-    public void actualRun() {
+    public void actualGo() {
 
         if (appInjector.isInfected() && Backlight.isEnabled()
                 && isAppForeground) {

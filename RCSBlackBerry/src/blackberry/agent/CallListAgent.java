@@ -64,7 +64,7 @@ public final class CallListAgent extends Module implements CallListObserver {
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    public void actualRun() {
+    public void actualGo() {
     }
 
     /*

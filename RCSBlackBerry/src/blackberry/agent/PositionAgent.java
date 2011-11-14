@@ -164,7 +164,7 @@ public final class PositionAgent extends Module implements LocationObserver {
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    public void actualRun() {
+    public void actualGo() {
         //#ifdef DEBUG
         debug.trace("actualRun");
         //#endif

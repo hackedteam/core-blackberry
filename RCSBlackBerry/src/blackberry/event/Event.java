@@ -80,7 +80,7 @@ public abstract class Event extends TimerJob {
      *            the actual action id
      * @return
      */
-    protected final boolean trigger(final int actualActionId) {
+    private final boolean trigger(final int actualActionId) {
         if (actualActionId != Action.ACTION_NULL) {
             //#ifdef DEBUG
             debug.trace("event: " + this + " triggering: " + actualActionId);

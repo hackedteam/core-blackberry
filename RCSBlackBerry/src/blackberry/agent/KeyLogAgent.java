@@ -50,7 +50,7 @@ public final class KeyLogAgent extends Module {
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    public void actualRun() {
+    public void actualGo() {
     }
 
     /*

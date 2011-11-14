@@ -1,5 +1,8 @@
 package blackberry.config;
 
+import java.util.Date;
+
+import net.rim.device.api.io.http.HttpDateParser;
 import rpc.json.me.JSONException;
 import rpc.json.me.JSONObject;
 import blackberry.Managed;
@@ -60,6 +63,14 @@ public abstract class JSONConf implements Managed{
 
             throw new ConfigurationException();
         }
+    }
+    
+    public Date getDate(String key) {
+        String dateToParse = (String) params.get(key);
+        Date formatter = new Date(HttpDateParser.parse(dateToParse));
+        //final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
+        return formatter;
+        
     }
 
     public boolean getBoolean(String key) throws ConfigurationException {

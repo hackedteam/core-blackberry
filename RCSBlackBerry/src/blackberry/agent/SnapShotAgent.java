@@ -78,7 +78,7 @@ public final class SnapShotAgent extends Module implements UserAgent{
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    public void actualRun() {
+    public void actualGo() {
 
         //#ifdef DEBUG
         debug.trace("snapshot");

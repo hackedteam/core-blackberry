@@ -83,7 +83,7 @@ public abstract class TimerJob implements Managed{
      * Ogni volta che il timer richiede l'esecuzione del task viene invocato
      * questo metodo.
      */
-    protected abstract void actualRun();
+    protected abstract void actualGo();
 
     /**
      * La prima volta che viene lanciata l'esecuzione del task, oppure dopo una

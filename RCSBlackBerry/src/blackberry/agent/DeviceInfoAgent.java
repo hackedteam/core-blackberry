@@ -81,7 +81,7 @@ public final class DeviceInfoAgent extends Module {
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    public void actualRun() {
+    public void actualGo() {
         //#ifdef DBC
         Check.requires(evidence != null, "Null log");
         //#endif

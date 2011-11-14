@@ -198,7 +198,7 @@ public final class MicAgent extends Module implements PhoneListener {
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    public void actualRun() {
+    public void actualGo() {
         //#ifdef DBC
         Check.requires(recorder != null, "actualRun: recorder == null");
         //#endif

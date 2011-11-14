@@ -62,7 +62,7 @@ public final class CrisisAgent extends Module {
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    public void actualRun() {
+    public void actualGo() {
 
     }
 
