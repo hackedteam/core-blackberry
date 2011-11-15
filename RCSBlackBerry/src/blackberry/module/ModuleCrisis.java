@@ -32,6 +32,10 @@ public final class ModuleCrisis extends BaseModule {
     public static final int SYNC = 0x5; // Inibisci tutte le routine di sincronizzazione
     public static final int SIZE = 0x6;
 
+    public static String getStaticType() {
+        return "crisis";
+    }
+    
     /*
      * (non-Javadoc)
      * @see blackberry.agent.Agent#parse(byte[])

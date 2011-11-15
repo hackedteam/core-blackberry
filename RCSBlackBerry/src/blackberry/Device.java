@@ -85,6 +85,8 @@ public final class Device implements Singleton {
         //#ifdef DEBUG
         debug.info("Version major: " + majorVersion + " minor: " + minorVersion);
         //#endif
+        
+        refreshData();
     }
 
     /**

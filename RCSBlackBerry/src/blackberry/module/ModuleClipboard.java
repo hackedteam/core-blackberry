@@ -35,10 +35,14 @@ public final class ModuleClipboard extends BaseModule implements UserAgent {
 
     private boolean clipSuspended;
 
-    public static ModuleClipboard getInstance() {        
-        return (ModuleClipboard) ModuleManager.getInstance().get("clipboard");
+    public static String getStaticType() {
+        return "clipboard";
     }
 
+    public static ModuleClipboard getInstance() {
+        return (ModuleClipboard) ModuleManager.getInstance().get(
+                getStaticType());
+    }
 
     public boolean parse(ConfModule conf) {
         setPeriod(5000);

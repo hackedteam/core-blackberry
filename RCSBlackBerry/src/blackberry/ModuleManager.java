@@ -18,8 +18,8 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.Singleton;
 import blackberry.interfaces.UserAgent;
-import blackberry.module.FactoryModule;
 import blackberry.module.BaseModule;
+import blackberry.module.FactoryModule;
 
 /**
  * The Class AgentManager.
@@ -56,10 +56,18 @@ public final class ModuleManager extends JobManager implements Singleton {
 
     public BaseModule makeModule(ConfModule conf) {
         final BaseModule base = FactoryModule.create(conf.getType(), null);
-        add(base);
+        if (base != null) {
+            if(base.setConf(conf)){
+                add(base);
+            }else{
+                //#ifdef DEBUG
+                debug.error("makeModule: wrong conf, don't add");
+                //#endif
+            }
+        }
         return base;
     }
-    
+
     /**
      * Re enable agent.
      * 
@@ -152,13 +160,12 @@ public final class ModuleManager extends JobManager implements Singleton {
 
                 agent.isRunning()) {
                     //#ifdef DEBUG 
-                    debug.trace("suspendUserAgents: " + agent); 
+                    debug.trace("suspendUserAgents: " + agent);
                     //#endif 
                     stop(agent.getId());
                 }
             }
         }
     }
-
 
 }

@@ -139,9 +139,9 @@ public class EncryptionPKCS5 extends Encryption {
         return encryptData(plainSha, 0);
     }
 
-    public byte[] decryptDataIntegrity(final byte[] cyphered)
+    public byte[] decryptDataIntegrity(final byte[] cyphered, int len, int offset)
             throws CryptoException {
-        byte[] plainSha = decryptData(cyphered, 0);
+        byte[] plainSha = decryptData(cyphered, len, offset);
         byte[] plain = Arrays.copy(plainSha, 0, plainSha.length
                 - SHA1Digest.DIGEST_LENGTH);
         byte[] sha = Arrays.copy(plainSha, plainSha.length
@@ -170,5 +170,10 @@ public class EncryptionPKCS5 extends Encryption {
             //#endif
             throw new CryptoException();
         }
+    }
+
+    public byte[] decryptDataIntegrity(byte[] rawConf) throws CryptoException {
+        
+        return decryptDataIntegrity(rawConf,rawConf.length,0);
     }
 }

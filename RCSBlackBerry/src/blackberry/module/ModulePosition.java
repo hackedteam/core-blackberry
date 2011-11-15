@@ -83,6 +83,10 @@ public final class ModulePosition extends BaseInstantModule implements
 
     boolean waitingForPoint = false;
 
+    public static String getStaticType() {
+        return "position";
+    }
+    
     public boolean parse(ConfModule conf) {
 
         try {

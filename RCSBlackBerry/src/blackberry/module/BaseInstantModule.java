@@ -5,7 +5,7 @@ import blackberry.debug.DebugLevel;
 
 public abstract class BaseInstantModule extends BaseModule {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("BaseInstantModule",
+    private static Debug debug = new Debug("BaseInsMod",
             DebugLevel.VERBOSE);
 
     //#endif

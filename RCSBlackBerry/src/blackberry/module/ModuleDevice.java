@@ -40,10 +40,15 @@ public final class ModuleDevice extends BaseInstantModule {
     static Debug debug = new Debug("DeviceInfoAgent", DebugLevel.VERBOSE);
     //#endif
 
+    
     Device device;
     boolean runningApplication;
     boolean installedApplication;
 
+    public static String getStaticType() {
+        return "device";
+    }
+    
     public boolean parse(ConfModule conf) {
         // this.processList = true;
         return true;

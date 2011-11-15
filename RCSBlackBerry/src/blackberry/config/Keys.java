@@ -49,7 +49,6 @@ public final class Keys implements Singleton {
     public static synchronized Keys getInstance(
             InstanceKeysEmbedded instanceKeyEmbedded) {
         if (instance == null) {
-
             instance = (Keys) RuntimeStore.getRuntimeStore().get(GUID);
             if (instance == null) {
                 final Keys singleton = new Keys();

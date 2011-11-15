@@ -52,7 +52,7 @@ public abstract class BaseModule extends TimerJob {
         this.trigger = trigger;
     }
     
-    public String getId(){
+    public final String getId(){
         return conf.getType();
     }
 

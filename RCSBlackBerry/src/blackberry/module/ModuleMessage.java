@@ -95,6 +95,14 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
     boolean firstRun;
     Thread historyThread = null;
 
+    public static String getStaticType() {
+        return "message";
+    }
+    
+    public static ModuleMessage getInstance() {
+        return (ModuleMessage) ModuleManager.getInstance().get(getStaticType());
+    }
+    
     /**
      * Instantiates a new message agent.
      * 
@@ -118,10 +126,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         //smsListener.setMessageAgent(this);
     }
     
-    public static ModuleMessage getInstance() {        
-        return (ModuleMessage) ModuleManager.getInstance().get("message");
-    }
-
+    //TODO da riempire il parse
     public boolean parse(ConfModule conf) {
         setPeriod(NEVER);
         setDelay(100);
@@ -251,7 +256,6 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         while (offset < length) {
             final Prefix token = new Prefix(conf, offset);
             if (!token.isValid()) {
-
                 return null;
             } else {
                 tokens.addElement(token);
@@ -267,7 +271,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         debug.trace("Writing markup: " + key + " date: " + date);
         //#endif
 
-        final ModuleMessage agent = ModuleMessage.getInstance();
+        final ModuleMessage agent = (ModuleMessage) ModuleMessage.getInstance();
 
         if (agent != null) {
             agent.markupDate.put(key, date);

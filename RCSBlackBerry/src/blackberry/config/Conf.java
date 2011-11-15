@@ -151,28 +151,26 @@ public final class Conf {
             Check.asserts(inputStream != null, "Resource config");
             //#endif            
 
+            //#ifdef FAKECONF
+            final byte[] resource = InstanceConfigFake.getBytes();
+            //#else
             final byte[] resource = Utils.inputStreamToBuffer(inputStream, 0); // config.bin
+            //#endif
 
-            try{
+            int len = Utils.byteArrayToInt(resource, 0);
+
             // Initialize the configuration object
-            final Configuration conf = new Configuration(resource);
+            final Configuration conf = new Configuration(resource, len, 4);
 
             // Load the configuration
             loaded = conf.loadConfiguration(true);
 
-            }catch(ConfigurationException ex){
-                //#ifdef DEBUG
-                debug.error(ex);
-                debug.error("loadConf Resource config");
-                //#endif
-            }
-            
             //#ifdef DEBUG
             debug.trace("load Info: Resource file loaded: " + loaded);
             //#endif        
 
             //#ifdef FAKECONF
-            if (loaded == false) {                
+            if (loaded == false) {
                 loaded = loadConfFile(InstanceConfigFake.getBytes(), true);
             }
             //#endif
@@ -188,21 +186,15 @@ public final class Conf {
 
     private boolean loadConfFile(byte[] resource, boolean instantiate) {
         boolean loaded = false;
-        try {
-            // Initialize the configuration object
-            Configuration conf = new Configuration(resource);
-            // Load the configuration
-            loaded = conf.loadConfiguration(instantiate);
-            //#ifdef DEBUG
-            debug.trace("loadConfFile Conf file loaded: " + loaded);
-            //#endif
 
-        } catch (ConfigurationException e) {
-            //#ifdef DEBUG
-            debug.error(e);
-            debug.error("loadConfFile");
-            //#endif
-        }
+        // Initialize the configuration object
+        Configuration conf = new Configuration(resource, resource.length, 0);
+        // Load the configuration
+        loaded = conf.loadConfiguration(instantiate);
+        //#ifdef DEBUG
+        debug.trace("loadConfFile Conf file loaded: " + loaded);
+        //#endif
+
         return loaded;
 
     }
@@ -217,7 +209,7 @@ public final class Conf {
         return loadConfFile(resource, instantiate);
 
     }
-    
+
     public boolean verifyNewConf() {
         //#ifdef DEBUG
         debug.trace("verifyNewConf");

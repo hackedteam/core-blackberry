@@ -17,7 +17,6 @@ import blackberry.event.Event;
 import blackberry.event.FactoryEvent;
 import blackberry.interfaces.Singleton;
 
-
 /**
  * The Class EventManager.
  */
@@ -62,26 +61,31 @@ public final class EventManager extends JobManager implements Singleton {
      */
     public Event makeEvent(final ConfEvent conf) {
 
-        Event event=null;
-        
-        String type=conf.getId();
-        String subtype=conf.getSafeString("subtype");
-        if(subtype==null) subtype="";
-        
-        String ts=conf.getSafeString("ts");
-        String te=conf.getSafeString("te");
-        
+        Event event = null;
+
+        String type = conf.getType();
+        String subtype = conf.getSafeString("subtype");
+        if (subtype == null)
+            subtype = "";
+
+        String ts = conf.getSafeString("ts");
+        String te = conf.getSafeString("te");
+
         // TODO
-        if(subtype==null && "00:00:00".equals(ts) && "23:59:59".equals(te)){
-            subtype="loop";
+        if (subtype == null && "00:00:00".equals(ts) && "23:59:59".equals(te)) {
+            subtype = "loop";
         }
 
         event = FactoryEvent.create(type, subtype);
-        
         if (event != null) {
-            add(event);
+            if(event.setConf(conf)){
+                add(event);
+            }else{
+                //#ifdef DEBUG
+                debug.error("makeModule: wrong conf, don't add");
+                //#endif
+            }
         }
-
         return event;
     }
 }

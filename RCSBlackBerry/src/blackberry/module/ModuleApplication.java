@@ -13,6 +13,7 @@ package blackberry.module;
 import java.util.Vector;
 
 import blackberry.AppListener;
+import blackberry.ModuleManager;
 import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -36,6 +37,15 @@ public final class ModuleApplication extends BaseModule implements
 
     //#endif
 
+    public static String getStaticType() {
+        return "application";
+    }
+
+    public static ModuleApplication getInstance() {
+        return (ModuleApplication) ModuleManager.getInstance().get(
+                getStaticType());
+    }
+    
     public boolean parse(ConfModule conf) {
         return true;
     }

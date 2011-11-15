@@ -80,7 +80,7 @@ public abstract class Manager {
         //#ifdef DBC
         Check.requires(hashtable != null, "Null Agents");
         Check.requires(managed != null, "Null Agent");
-        Check.requires(managed.getId() != null, "AgentId == " + managed.getId());
+        Check.requires(managed.getId() != null, "Id == " + managed.getId());
         Check.asserts(hashtable.containsKey(managed.getId()) == false,
                 "Agent already present: " + managed);
         //#endif

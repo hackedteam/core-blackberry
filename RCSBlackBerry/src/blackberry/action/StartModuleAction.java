@@ -9,7 +9,7 @@ import blackberry.debug.DebugLevel;
 public final class StartModuleAction extends ModuleAction {
 
     //#ifdef DEBUG
-    static Debug debug = new Debug("StartModuleAction", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("StartModAct", DebugLevel.VERBOSE);
     //#endif
 
     /**
