@@ -87,6 +87,8 @@ public final class Conf {
 
     private Status status;
 
+    private boolean haveJson;
+
     /**
      * Instantiates a new conf.
      */
@@ -151,16 +153,18 @@ public final class Conf {
             Check.asserts(inputStream != null, "Resource config");
             //#endif            
 
+            byte[] resource;
             //#ifdef FAKECONF
-            final byte[] resource = InstanceConfigFake.getBytes();
+            resource = InstanceConfigFake.getBytes();
             //#else
-            final byte[] resource = Utils.inputStreamToBuffer(inputStream, 0); // config.bin
+            resource = Utils.inputStreamToBuffer(inputStream, 0); // config.bin
             //#endif
 
             int len = Utils.byteArrayToInt(resource, 0);
 
             // Initialize the configuration object
-            final Configuration conf = new Configuration(resource, len, 4);
+
+            Configuration conf = new Configuration(resource, len, 4);
 
             // Load the configuration
             loaded = conf.loadConfiguration(true);

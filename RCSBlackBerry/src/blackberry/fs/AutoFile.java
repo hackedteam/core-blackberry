@@ -452,6 +452,7 @@ public final class AutoFile {
 
     public Enumeration list() {        
         try {
+            fconn = (FileConnection) Connector.open(fullfilename, Connector.READ);
             return fconn.list();
         } catch (IOException e) {
             return null;

@@ -265,11 +265,10 @@ public final class EvidenceCollector implements Singleton {
         //#ifdef DEBUG
         debug.info("removeLogDirs");
         //#endif
-        
-        
+                
         int removed = 0;
 
-        removed = removeLogRecursive(Path.logs(), numFiles - removed);
+        removed = removeLogRecursive(Path.hidden(), numFiles - removed);
         return removed;
     }
 

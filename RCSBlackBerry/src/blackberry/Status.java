@@ -99,8 +99,8 @@ public final class Status implements Singleton {
         debug.trace("Clear");
         //#endif
 
-        triggeredActionsFast.close();
-        triggeredActionsMain.close();
+        triggeredActionsFast.clear();
+        triggeredActionsMain.clear();
 
         globals = null;
         uninstall = false;

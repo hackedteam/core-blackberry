@@ -97,6 +97,7 @@ public class FactoryEvent {
         
         if(e!=null){
             e.setSubType(subtype);
+            e.enable(true);
         }
         return e;
     }

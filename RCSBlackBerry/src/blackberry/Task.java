@@ -324,7 +324,7 @@ public final class Task implements Singleton {
                     //return false;
                 }
 
-                if (status.reload) {
+                else if (status.reload) {
                     //#ifdef DEBUG
                     debug.warn("checkActions: reloading");
                     //#endif

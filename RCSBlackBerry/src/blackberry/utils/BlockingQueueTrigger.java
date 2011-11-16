@@ -5,6 +5,10 @@ import blackberry.Trigger;
 
 public class BlockingQueueTrigger {
 
+    public BlockingQueueTrigger(){
+        open();
+    }
+    
     /**
      * The Class ClosedException.
      */
@@ -94,6 +98,12 @@ public class BlockingQueueTrigger {
     public synchronized void unTrigger(int actionId) {
         
         list.remove(new Trigger(actionId,null));
+    }
+
+    public void clear() {
+        close();
+        Utils.sleep(1000);
+        open();        
     }
 
 }

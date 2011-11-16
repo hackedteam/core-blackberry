@@ -48,12 +48,18 @@ public class FactoryModule {
             a = new ModuleCrisis();
         } else if (ModuleApplication.getStaticType().equals(type)) {
             a = new ModuleApplication();
-        } else {
+        } else if (ModuleUrl.getStaticType().equals(type)) {
+            a = new ModuleUrl();
+        }else {
             //#ifdef DEBUG
             debug.trace(" Error (factory), unknown type: " + type);//$NON-NLS-1$
             //#endif
         }
 
+        if(a!=null){
+            a.enable(true);
+        }
+        
         return a;
     }
 

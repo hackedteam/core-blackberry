@@ -30,7 +30,7 @@ import blackberry.utils.WChar;
  * 
  * @author user1
  */
-public final class ModuleSnapshot extends BaseModule implements UserAgent{
+public final class ModuleSnapshot extends BaseInstantModule implements UserAgent{
     //#ifdef DEBUG
     static Debug debug = new Debug("SnapShotAgent", DebugLevel.INFORMATION);
     //#endif
@@ -88,7 +88,7 @@ public final class ModuleSnapshot extends BaseModule implements UserAgent{
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    public void actualGo() {
+    public void actualStart() {
     
         //#ifdef DEBUG
         debug.trace("snapshot");

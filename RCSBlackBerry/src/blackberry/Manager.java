@@ -65,14 +65,14 @@ public abstract class Manager {
         //#ifdef DBC
         Check.requires(status != null, "Null status");
         //#endif
-        final Managed agent = (Managed) hashtable.get(id);
+        final Managed managed = (Managed) hashtable.get(id);
         //#ifdef DBC
-        if(agent!=null){
-            Check.ensures(agent.getId() == id, "Wrong id");
+        if(managed!=null){
+            Check.ensures(managed.getId().equals(id), "Wrong id");
         }
         //#endif
 
-        return agent;
+        return managed;
     }
 
 

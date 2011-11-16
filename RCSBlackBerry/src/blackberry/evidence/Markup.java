@@ -151,6 +151,10 @@ public class Markup {
 
     public static synchronized int removeMarkups() {
 
+        //#ifdef DEBUG
+        debug.trace("removeMarkups");
+        //#endif
+        
         int numDeleted = 0;
 
         AutoFile dir = new AutoFile(Path.markup());

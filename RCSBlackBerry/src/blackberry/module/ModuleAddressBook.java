@@ -56,7 +56,7 @@ public final class ModuleAddressBook extends BaseModule implements
     final int version = 0x01000000;
 
     public static String getStaticType() {
-        return "contacts";
+        return "addressbook";
     }
     
     public static ModuleAddressBook getInstance(){
