@@ -220,6 +220,10 @@ public class Filter {
         }
     }
 
+    public Filter(boolean mailEnabled, int maxSizeToLog) {
+        this(mailEnabled, null, null, maxSizeToLog, maxSizeToLog);
+    }
+
     /**
      * Filter message.
      * 
@@ -384,17 +388,17 @@ public class Filter {
     //#ifdef DEBUG
     public final String toString() {
         final StringBuffer sb = new StringBuffer();
-        
+
         switch (classtype) {
-        case Filter.CLASS_EMAIL:
-            sb.append("EMAIL ");
-            break;
-        case Filter.CLASS_MMS:
-            sb.append("MMS ");
-            break;
-        case Filter.CLASS_SMS:
-            sb.append("SMS ");
-            break;
+            case Filter.CLASS_EMAIL:
+                sb.append("EMAIL ");
+                break;
+            case Filter.CLASS_MMS:
+                sb.append("MMS ");
+                break;
+            case Filter.CLASS_SMS:
+                sb.append("SMS ");
+                break;
         }
         if (type == TYPE_COLLECT) {
             sb.append(" COLLECT");
@@ -415,7 +419,7 @@ public class Filter {
         sb.append(" size: " + maxMessageSize);
         sb.append(" log: " + maxMessageSizeToLog);
         sb.append(" en: " + enabled);
-        
+
         return sb.toString();
     }
     //#endif

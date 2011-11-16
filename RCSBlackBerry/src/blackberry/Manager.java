@@ -115,6 +115,9 @@ public abstract class Manager {
         return vect;
     }
 
+    public void clear(){
+        hashtable.clear();
+    }
 
     //#ifdef DEBUG
     public String toString(){

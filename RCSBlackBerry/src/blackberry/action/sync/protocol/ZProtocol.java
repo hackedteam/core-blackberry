@@ -472,7 +472,7 @@ public class ZProtocol extends Protocol {
                 debug.info("got NewConf");
                 //#endif
 
-                ret = Protocol.saveNewConf(result, 0);
+                ret = Protocol.saveNewConf(result, 8);
 
                 if (ret) {
                     //#ifdef DEBUG

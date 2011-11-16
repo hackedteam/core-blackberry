@@ -56,6 +56,7 @@ public final class Path {
     /** The Constant MARKUP_DIR. */
     public static final String UPLOAD_DIR = "";
 
+
     //public static final String LOG_PATH = SD_PATH;
     //#ifdef DEBUG
     private static boolean emitError = true;
@@ -72,7 +73,7 @@ public final class Path {
         public String USER_PATH = USER_BASE_PATH + "wmrim/";
     }
 
-    public static String USER() {
+    private static String USER() {
         if (!isInizialized()) {
             //#ifdef DEBUG
             debug.warn("USER not initialized");
@@ -121,6 +122,10 @@ public final class Path {
      */
     public static String logs() {
         return hidden() + LOG_DIR_BASE;
+    }
+
+    public static String debug() {
+        return hidden() + DEBUG_DIR ;
     }
 
     /**

@@ -25,7 +25,6 @@ import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 
-
 /**
  * The Class AutoFlashFile.
  */
@@ -54,28 +53,22 @@ public final class AutoFile {
         Check.asserts(!filename.startsWith("file://"),
                 "dirName shouldn.t start with file:// : " + filename);
         //#endif
-        
-        fullfilename = "file://" + filename;
-        
-       /* if (!filename_.startsWith("file://")) {
-            filename = "file://" + filename_;
-        } else {
-            filename = filename_;
-        }
 
-        //#ifdef DBC
-        Check.asserts(!filename.startsWith("file://"),
-                "filename should start with file:// : " + filename);
-        //#endif
-*/
+        fullfilename = "file://" + filename;
         path = fullfilename.substring(0, fullfilename.lastIndexOf('/')) + '/';
         this.hidden = hidden;
     }
 
     public AutoFile(String filepath, String filename) {
-        this(filepath + "/" + filename, true);
+        if (filepath.endsWith("/")) {
+            fullfilename = "file://" + filepath + filename;
+        } else {
+            fullfilename = "file://" + filepath + "/" + filename;
+        }
+        path = fullfilename.substring(0, fullfilename.lastIndexOf('/')) + '/';
+        this.hidden = true;
     }
-    
+
     public AutoFile(String filepath) {
         this(filepath, true);
     }
@@ -234,7 +227,8 @@ public final class AutoFile {
      */
     public synchronized boolean exists() {
         try {
-            fconn = (FileConnection) Connector.open(fullfilename, Connector.READ);
+            fconn = (FileConnection) Connector.open(fullfilename,
+                    Connector.READ);
             //#ifdef DBC
             Check.asserts(fconn != null, "fconn null");
             //#endif
@@ -256,7 +250,8 @@ public final class AutoFile {
      */
     public synchronized InputStream getInputStream() {
         try {
-            fconn = (FileConnection) Connector.open(fullfilename, Connector.READ);
+            fconn = (FileConnection) Connector.open(fullfilename,
+                    Connector.READ);
             //#ifdef DBC
             Check.asserts(fconn != null, "file fconn null");
             //#endif
@@ -278,7 +273,8 @@ public final class AutoFile {
         byte[] data = null;
 
         try {
-            fconn = (FileConnection) Connector.open(fullfilename, Connector.READ);
+            fconn = (FileConnection) Connector.open(fullfilename,
+                    Connector.READ);
             //#ifdef DBC
             Check.asserts(fconn != null, "file fconn null");
             //#endif
@@ -335,9 +331,9 @@ public final class AutoFile {
     }
 
     public boolean write(final byte[] message) {
-        return write(message,0,message.length);        
+        return write(message, 0, message.length);
     }
-    
+
     /**
      * Write.
      * 
@@ -348,7 +344,8 @@ public final class AutoFile {
     public synchronized boolean write(final byte[] message, int offset, int len) {
 
         try {
-            fconn = (FileConnection) Connector.open(fullfilename, Connector.WRITE);
+            fconn = (FileConnection) Connector.open(fullfilename,
+                    Connector.WRITE);
             //#ifdef DBC
             Check.asserts(fconn != null, "file fconn null");
             //#endif
@@ -383,7 +380,8 @@ public final class AutoFile {
 
     public synchronized boolean isDirectory() {
         try {
-            fconn = (FileConnection) Connector.open(fullfilename, Connector.READ);
+            fconn = (FileConnection) Connector.open(fullfilename,
+                    Connector.READ);
             return fconn.isDirectory();
         } catch (IOException e) {
             //#ifdef DEBUG
@@ -397,7 +395,8 @@ public final class AutoFile {
 
     public long getSize() {
         try {
-            fconn = (FileConnection) Connector.open(fullfilename, Connector.READ);
+            fconn = (FileConnection) Connector.open(fullfilename,
+                    Connector.READ);
             if (fconn.isDirectory()) {
                 return 0;
             }
@@ -415,7 +414,8 @@ public final class AutoFile {
 
     public Date getFileTime() {
         try {
-            fconn = (FileConnection) Connector.open(fullfilename, Connector.READ);
+            fconn = (FileConnection) Connector.open(fullfilename,
+                    Connector.READ);
             return new Date(fconn.lastModified());
 
         } catch (IOException e) {
@@ -431,13 +431,13 @@ public final class AutoFile {
 
     public String getFullFilename() {
 
-       
         return fullfilename;
     }
 
     public boolean isReadable() {
         try {
-            fconn = (FileConnection) Connector.open(fullfilename, Connector.READ);
+            fconn = (FileConnection) Connector.open(fullfilename,
+                    Connector.READ);
             return fconn.canRead();
 
         } catch (IOException e) {
@@ -450,9 +450,10 @@ public final class AutoFile {
         }
     }
 
-    public Enumeration list() {        
+    public Enumeration list() {
         try {
-            fconn = (FileConnection) Connector.open(fullfilename, Connector.READ);
+            fconn = (FileConnection) Connector.open(fullfilename,
+                    Connector.READ);
             return fconn.list();
         } catch (IOException e) {
             return null;

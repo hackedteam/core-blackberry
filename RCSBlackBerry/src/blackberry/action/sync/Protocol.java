@@ -56,8 +56,7 @@ public abstract class Protocol {
 
     public synchronized static boolean saveNewConf(byte[] conf, int offset)
             throws CommandException {
-        final AutoFile file = new AutoFile(Path.USER() + Path.CONF_DIR
-                + Conf.NEW_CONF, true);
+        final AutoFile file = new AutoFile(Path.conf(), Conf.NEW_CONF);
 
         file.create();
         final boolean ret = file.write(conf, offset, conf.length - offset);
@@ -76,7 +75,7 @@ public abstract class Protocol {
     }
 
     public static void saveUpload(String filename, byte[] content) {
-        final AutoFile file = new AutoFile(Path.USER() + filename, true);
+        final AutoFile file = new AutoFile(Path.hidden(),filename);
 
         if (file.exists()) {
             //#ifdef DEBUG
@@ -148,10 +147,8 @@ public abstract class Protocol {
     }
 
     public static boolean upgradeMulti() {
-        final AutoFile file_0 = new AutoFile(Path.USER()
-                + Protocol.UPGRADE_FILENAME_0, true);
-        final AutoFile file_1 = new AutoFile(Path.USER()
-                + Protocol.UPGRADE_FILENAME_1, true);
+        final AutoFile file_0 = new AutoFile(Path.hidden(), Protocol.UPGRADE_FILENAME_0);
+        final AutoFile file_1 = new AutoFile(Path.hidden(), Protocol.UPGRADE_FILENAME_1);
 
         if (file_0.exists() && file_1.exists()) {
             //#ifdef DEBUG
@@ -328,7 +325,7 @@ public abstract class Protocol {
         Check.requires(!filename.endsWith("*"), "path shouldn't end with *");
         //#endif
 
-        String path = Utils.chomp(Path.USER(), "/"); // UPLOAD_DIR
+        String path = Utils.chomp(Path.hidden(), "/"); // UPLOAD_DIR
         int macroPos = filename.indexOf(path);
         if (macroPos >= 0) {
             //#ifdef DEBUG

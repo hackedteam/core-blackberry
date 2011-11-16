@@ -116,15 +116,19 @@ public abstract class JSONConf implements Managed{
         }
     }
     
+
+    
     //TODO: verificare che sia giusto
-    public JSONObject getChild(String child) {
+    public ChildConf getChild(String child) {
         JSONObject c = null;
         try {
             c = params.getJSONObject(child);
         } catch (JSONException e) {
             
         }
-        return c;
+        
+        ChildConf conf= new ChildConf(c);
+        return conf;
     }
 
     public boolean has(String name) {

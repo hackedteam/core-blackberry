@@ -88,11 +88,9 @@ public final class DebugWriter extends Thread {
             return;
         }
 
-        Path.createDirectory(Path.USER());
-        fileDebug = new AutoFile(debugDir(Path.USER()) + debugName(DEBUG_NAME),
-                true);
-        fileDebugErrors = new AutoFile(debugDir(Path.USER())
-                + debugName(ERROR_NAME), true);
+        Path.createDirectory(Path.debug());
+        fileDebug = new AutoFile(Path.debug(), debugName(DEBUG_NAME));
+        fileDebugErrors = new AutoFile(Path.debug(), debugName(ERROR_NAME));
 
         // log rotate
         if (fileDebug.exists()) {
@@ -119,10 +117,6 @@ public final class DebugWriter extends Thread {
 
     private String debugName(String debugName) {
         return debugName + Device.getPin() + ".txt";
-    }
-
-    private String debugDir(String baseDir) {
-        return baseDir + Path.DEBUG_DIR;
     }
 
     /*

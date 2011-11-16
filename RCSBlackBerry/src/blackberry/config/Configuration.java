@@ -341,7 +341,9 @@ public class Configuration {
     public void cleanConfiguration() {
         // Clean an eventual old initialization
         status.clear();
-
+        ModuleManager.getInstance().clear();
+        EventManager.getInstance().clear();
+        ActionManager.getInstance().clear();
     }
 
 }
