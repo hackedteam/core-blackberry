@@ -474,11 +474,14 @@ public class ZProtocol extends Protocol {
             //#ifdef DEBUG
             debug.trace("parseNewConf len: " + confLen);
             //#endif
+            
+            byte[] newconf = new byte[confLen];
+            Utils.copy(newconf, 0, result, 8, confLen);
 
             Conf conf = new Conf();            
-            if (conf.verifyConfig(result)) {
+            if (conf.verifyConfig(newconf)) {
 
-                boolean ret = Protocol.saveNewConf(result, 8);
+                boolean ret = Protocol.saveNewConf(newconf, 0);
                 if (ret) {
                     return Proto.OK;
                 }
