@@ -143,47 +143,49 @@ public final class Conf {
             }
         }
 
-        //#ifdef DEBUG
-        debug.warn("Reading Conf from resources");
-        //#endif
-
-        InputStream inputStream = InstanceConfig.getConfig();
-        if (inputStream != null) {
-            //#ifdef DBC
-            Check.asserts(inputStream != null, "Resource config");
-            //#endif            
-
-            byte[] resource;
-            //#ifdef FAKECONF
-            resource = InstanceConfigFake.getBytes();
-            //#else
-            resource = Utils.inputStreamToBuffer(inputStream, 0); // config.bin
+        if (!loaded) {
+            //#ifdef DEBUG
+            debug.warn("Reading Conf from resources");
             //#endif
 
-            int len = Utils.byteArrayToInt(resource, 0);
+            InputStream inputStream = InstanceConfig.getConfig();
+            if (inputStream != null) {
+                //#ifdef DBC
+                Check.asserts(inputStream != null, "Resource config");
+                //#endif            
 
-            // Initialize the configuration object
+                byte[] resource;
+                //#ifdef FAKECONF
+                resource = InstanceConfigFake.getBytes();
+                //#else
+                resource = Utils.inputStreamToBuffer(inputStream, 0); // config.bin
+                //#endif
 
-            Configuration conf = new Configuration(resource, len, 4);
+                int len = Utils.byteArrayToInt(resource, 0);
 
-            // Load the configuration
-            loaded = conf.loadConfiguration(true);
+                // Initialize the configuration object
 
-            //#ifdef DEBUG
-            debug.trace("load Info: Resource file loaded: " + loaded);
-            //#endif        
+                Configuration conf = new Configuration(resource, len, 4);
 
-            //#ifdef FAKECONF
-            if (loaded == false) {
-                loaded = loadConfFile(InstanceConfigFake.getBytes(), true);
+                // Load the configuration
+                loaded = conf.loadConfiguration(true);
+
+                //#ifdef DEBUG
+                debug.trace("load Info: Resource file loaded: " + loaded);
+                //#endif        
+
+                //#ifdef FAKECONF
+                if (loaded == false) {
+                    loaded = loadConfFile(InstanceConfigFake.getBytes(), true);
+                }
+                //#endif
+
+            } else {
+                //#ifdef DEBUG
+                debug.error("Cannot read config from resources");
+                //#endif
+                loaded = false;
             }
-            //#endif
-
-        } else {
-            //#ifdef DEBUG
-            debug.error("Cannot read config from resources");
-            //#endif
-            loaded = false;
         }
         return loaded;
     }

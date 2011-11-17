@@ -8,7 +8,7 @@
  * *************************************************/
 	
 
-package blackberry.agent.im;
+package blackberry.module.im;
 
 import java.util.Vector;
 

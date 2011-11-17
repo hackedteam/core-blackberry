@@ -7,14 +7,12 @@
  * File         : TimerJob.java
  * Created      : 28-apr-2010
  * *************************************************/
-package blackberry.threadpool;
+package blackberry;
 
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import blackberry.Managed;
-import blackberry.Status;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.utils.Check;

@@ -7,7 +7,7 @@
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
 
-package blackberry.agent.im;
+package blackberry.module.im;
 
 import java.util.Hashtable;
 import java.util.Vector;

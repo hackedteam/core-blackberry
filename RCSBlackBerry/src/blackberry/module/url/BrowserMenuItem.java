@@ -7,7 +7,7 @@
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
 
-package blackberry.agent.url;
+package blackberry.module.url;
 
 import net.rim.blackberry.api.menuitem.ApplicationMenuItem;
 import net.rim.blackberry.api.menuitem.ApplicationMenuItemRepository;

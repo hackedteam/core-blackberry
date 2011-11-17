@@ -7,7 +7,7 @@
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
 	
-package blackberry.agent.mail;
+package blackberry.module.mail;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;

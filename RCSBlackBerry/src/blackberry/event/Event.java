@@ -12,11 +12,11 @@ import java.util.TimerTask;
 
 import blackberry.ActionManager;
 import blackberry.Status;
+import blackberry.TimerJob;
 import blackberry.action.Action;
 import blackberry.config.ConfEvent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.threadpool.TimerJob;
 import blackberry.utils.Check;
 
 /**

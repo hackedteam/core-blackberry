@@ -8,7 +8,7 @@
  * *************************************************/
 	
 
-package blackberry.agent.im;
+package blackberry.module.im;
 
 public class User {
 	public String name;

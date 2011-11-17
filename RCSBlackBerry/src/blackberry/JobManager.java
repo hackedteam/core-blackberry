@@ -5,7 +5,6 @@ import java.util.Vector;
 
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.threadpool.TimerJob;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 

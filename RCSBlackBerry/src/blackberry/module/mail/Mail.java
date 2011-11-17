@@ -7,7 +7,7 @@
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
 	
-package blackberry.agent.mail;
+package blackberry.module.mail;
 
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;

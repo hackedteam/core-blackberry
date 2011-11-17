@@ -6,7 +6,7 @@
  * File         : Parameter.java
  * Created      : 26-mar-2010
  * *************************************************/
-package blackberry.params;
+package blackberry;
 
 /**
  * The Class Parameter.

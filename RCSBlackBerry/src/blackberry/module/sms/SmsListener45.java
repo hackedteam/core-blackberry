@@ -7,7 +7,7 @@
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
 
-package blackberry.agent.sms;
+package blackberry.module.sms;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

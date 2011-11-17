@@ -10,7 +10,7 @@
 /**
  * 
  */
-package blackberry.agent.mail;
+package blackberry.module.mail;
 
 import java.util.Date;
 
