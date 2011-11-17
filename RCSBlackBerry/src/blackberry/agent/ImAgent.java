@@ -62,10 +62,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
             //#endif
             enable(false);
         }
-        
-        //#ifdef IM_FORCED
-        enable(true);
-        //#endif
+
 
     }
 

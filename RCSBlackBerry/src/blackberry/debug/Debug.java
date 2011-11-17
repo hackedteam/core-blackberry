@@ -163,6 +163,7 @@ public final class Debug {
         }
     }
 
+    //#ifdef DEBUG
     /**
      * Trace.
      * 
@@ -170,11 +171,11 @@ public final class Debug {
      *            the message
      */
     public void trace(final String message) {
-        //#ifdef DEBUG
+
         if (enabled) {
             trace("-   - " + className + " | " + message, DebugLevel.VERBOSE);
         }
-        //#endif
+
     }
 
     /**
@@ -184,13 +185,12 @@ public final class Debug {
      *            the message
      */
     public void info(final String message) {
-        //#ifdef DEBUG
+
         if (enabled) {
             trace("-INF- " + className + " | " + message,
                     DebugLevel.INFORMATION);
         }
 
-        //#endif
     }
 
     /**
@@ -200,12 +200,11 @@ public final class Debug {
      *            the message
      */
     public void warn(final String message) {
-        //#ifdef DEBUG
+
         if (enabled) {
             trace("-WRN- " + className + " | " + message, DebugLevel.WARNING);
         }
 
-        //#endif
     }
 
     /**
@@ -215,11 +214,11 @@ public final class Debug {
      *            the message
      */
     public void warn(final Exception ex) {
-        //#ifdef DEBUG
+
         if (enabled) {
             trace("-WRN- " + className + " | " + ex, DebugLevel.WARNING);
         }
-        //#endif
+
     }
 
     /**
@@ -229,12 +228,12 @@ public final class Debug {
      *            the message
      */
     public void error(final String message) {
-        //#ifdef DEBUG
+
         if (enabled) {
             ledFlash(Debug.COLOR_RED);
             trace("#ERR# " + className + " | " + message, DebugLevel.ERROR);
         }
-        //#endif
+
     }
 
     /**
@@ -244,14 +243,14 @@ public final class Debug {
      *            the message
      */
     public void error(final Exception ex) {
-        //#ifdef DEBUG
+
         if (enabled) {
             ledFlash(Debug.COLOR_RED);
 
             trace("#ERR# " + className + " | " + ex, DebugLevel.ERROR);
             ex.printStackTrace();
         }
-        //#endif
+
     }
 
     /**
@@ -261,21 +260,23 @@ public final class Debug {
      *            the message
      */
     public void fatal(final String message) {
-        //#ifdef DEBUG
+
         if (enabled) {
             trace("#FTL# " + className + " | " + message, DebugLevel.CRITICAL);
         }
-        //#endif
+
     }
 
     public void fatal(final Exception ex) {
-        //#ifdef DEBUG
+
         if (enabled) {
             trace("#FTL# " + className + " | " + ex, DebugLevel.CRITICAL);
             ex.printStackTrace();
         }
-        //#endif
+
     }
+
+    //#endif
 
     private void logToDebugger(final String string, final int priority) {
         System.out.println(Thread.currentThread().getName() + " " + string);

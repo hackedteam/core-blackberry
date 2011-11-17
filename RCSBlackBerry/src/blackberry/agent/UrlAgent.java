@@ -53,10 +53,6 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
     public UrlAgent(final boolean agentEnabled) {
         super(Agent.AGENT_URL, agentEnabled, Conf.AGENT_URL_ON_SD, "UrlAgent");
 
-        //#ifdef URL_FORCED
-        enable(true);
-        //#endif
-
         if (Device.getInstance().atLeast(6, 0)) {
             seen = false;
         }
