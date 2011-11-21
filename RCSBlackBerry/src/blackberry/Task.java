@@ -361,8 +361,8 @@ public final class Task implements Singleton {
         debug.trace("TaskInit");
         //#endif
 
-        //agentManager.stopAll();
-        //eventManager.stopAll();
+        agentManager.stopAll();
+        eventManager.stopAll();
 
         if (device != null) {
             try {
