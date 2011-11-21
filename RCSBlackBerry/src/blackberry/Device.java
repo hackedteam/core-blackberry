@@ -403,4 +403,29 @@ public final class Device implements Singleton {
         return false;
     }
 
+    public boolean lessThan(int major, int minor) {
+        try {
+
+            //#ifdef DEBUG
+            debug.trace("Version major: " + majorVersion + " minor: "
+                    + minorVersion);
+            debug.trace("atLeast: " + major + "." + minor);
+            //#endif
+            if (majorVersion < major) {
+                return true;
+            } else if (majorVersion == major) {
+                return (minorVersion <= minor);
+            } else {
+                return false;
+            }
+
+        } catch (Exception ex) {
+            //#ifdef DEBUG
+            debug.error("lessThan: " + ex);
+            //#endif
+        }
+
+        return false;
+    }
+
 }

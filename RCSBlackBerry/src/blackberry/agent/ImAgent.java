@@ -62,7 +62,13 @@ public final class ImAgent extends Agent implements BacklightObserver,
             //#endif
             enable(false);
         }
-
+        
+        if(!Device.getInstance().lessThan(7, 0)){
+            //#ifdef DEBUG
+            debug.error("ImAgent: not supported before OS 5.0");
+            //#endif
+            enable(false);
+        }
 
     }
 
