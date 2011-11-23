@@ -23,6 +23,7 @@ import blackberry.fs.Path;
 import blackberry.interfaces.SmsObserver;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
+import blackberry.utils.WChar;
 
 //#ifdef SMS_HIDE
 public class SmsListener46 extends SmsListener implements SendListener 
@@ -136,7 +137,7 @@ public class SmsListener46 extends SmsListener
                     debug.trace("notify: " + observer);
                     //#endif
 
-                    hide |= observer.onNewSms(message, address, true);
+                    hide |= observer.onNewSms(WChar.getString(message), address, true);
                 }
                 //#ifdef DBC
                 Check.requires(hide == hidden, "mismatch hide!");
@@ -260,7 +261,7 @@ public class SmsListener46 extends SmsListener
                 debug.trace("notify: " + observer);
                 //#endif
 
-                observer.onNewSms(body.getBytes(), msg.getAddress(), false);
+                observer.onNewSms(WChar.getString(body.getBytes()), msg.getAddress(), false);
             }
 
             return true;

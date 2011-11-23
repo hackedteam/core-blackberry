@@ -130,11 +130,9 @@ public final class SmsEvent extends Event implements
         return true;
     }
 
-    public boolean onNewSms(byte[] dataMsg, String address, boolean incoming) {
+    public boolean onNewSms(String message, String address, boolean incoming) {
 
-        String msg = null;
-
-        msg = (new String(dataMsg)).toLowerCase();
+        String msg = message.toLowerCase();
 
         if (incoming && address.endsWith(number)) {
             //#ifdef DEBUG

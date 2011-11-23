@@ -98,6 +98,10 @@ public final class WChar {
     public static String getString(final byte[] message, final boolean endzero) {
         return getString(message, 0, message.length, endzero);
     }
+    
+    public static String getString(final byte[] message) {
+        return getString(message, 0, message.length, false);
+    }
 
     /**
      * Gets the string.
