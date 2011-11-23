@@ -105,6 +105,8 @@ public final class Proto {
             "INSTANCE", "USERID", "DEVICEID", "SOURCEID", "VERSION", "LOG_END",
             "UPGRADE", "ENDFILE", "SUBTYPE", "FILESYSTEM" };
 
+    public static final int ERROR = 0;
+
     private Proto() {
     }
 }

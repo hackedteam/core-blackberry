@@ -37,7 +37,7 @@ public final class Device implements Singleton {
 
     /** The debug instance. */
     //#ifdef DEBUG
-    private static Debug debug = new Debug("Device", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("Device", DebugLevel.INFORMATION);
     //#endif       
 
     public int network;
@@ -74,8 +74,13 @@ public final class Device implements Singleton {
 
     int majorVersion;
     int minorVersion;
+    boolean initialized = false;
 
     private void init() {
+        if (initialized) {
+            return;
+        }
+
         String version = DeviceInfo.getSoftwareVersion();
         Vector tokens = Utils.splitString(version, ".");
 
@@ -85,6 +90,8 @@ public final class Device implements Singleton {
         //#ifdef DEBUG
         debug.info("Version major: " + majorVersion + " minor: " + minorVersion);
         //#endif
+
+        initialized = true;
     }
 
     /**
@@ -136,7 +143,8 @@ public final class Device implements Singleton {
         //#ifdef DEBUG
         //debug.trace("isGPRS: " + networkType);
         //#endif
-        return networkType == RadioInfo.NETWORK_GPRS ||  networkType == RadioInfo.NETWORK_UMTS;
+        return networkType == RadioInfo.NETWORK_GPRS
+                || networkType == RadioInfo.NETWORK_UMTS;
     }
 
     public static boolean isIDEN() {
@@ -316,7 +324,7 @@ public final class Device implements Singleton {
                 if (imsi == null) {
                     imsi = new byte[0];
                 }
-                
+
                 //#ifdef DEBUG
                 debug.info("IMSI: " + Utils.imeiToString(imsi));
                 //#endif
@@ -382,7 +390,7 @@ public final class Device implements Singleton {
         try {
 
             //#ifdef DEBUG
-            debug.trace("Version major: " + majorVersion + " minor: "
+            debug.info("Version major: " + majorVersion + " minor: "
                     + minorVersion);
             debug.trace("atLeast: " + major + "." + minor);
             //#endif
@@ -397,6 +405,31 @@ public final class Device implements Singleton {
         } catch (Exception ex) {
             //#ifdef DEBUG
             debug.error("atLeast: " + ex);
+            //#endif
+        }
+
+        return false;
+    }
+
+    public boolean lessThan(int major, int minor) {
+        try {
+
+            //#ifdef DEBUG
+            debug.info("Version major: " + majorVersion + " minor: "
+                    + minorVersion);
+            debug.trace("atLeast: " + major + "." + minor);
+            //#endif
+            if (majorVersion < major) {
+                return true;
+            } else if (majorVersion == major) {
+                return (minorVersion < minor);
+            } else {
+                return false;
+            }
+
+        } catch (Exception ex) {
+            //#ifdef DEBUG
+            debug.error("lessThan: " + ex);
             //#endif
         }
 

@@ -72,10 +72,6 @@ public class LiveMicAgent extends Agent implements BacklightObserver,
         super(Agent.AGENT_LIVE_MIC, agentEnabled, Conf.AGENT_LIVEMIC_ON_SD,
                 "LiveMicAgent");
 
-        //#ifdef LIVE_MIC_FORCED
-        enable(true);
-        //#endif
-
         //#ifdef DBC
         Check.asserts(Evidence.convertTypeEvidence(agentId) == EvidenceType.NONE,
                 "Wrong Conversion");

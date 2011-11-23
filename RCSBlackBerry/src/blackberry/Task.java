@@ -136,6 +136,10 @@ public final class Task implements Singleton {
                 }
 
                 final int[] actionIds = status.getTriggeredActions();
+                
+                //#ifdef DEMO
+                Debug.playSound();
+                //#endif
 
                 final int asize = actionIds.length;
                 if (asize > 0) {
@@ -357,8 +361,8 @@ public final class Task implements Singleton {
         debug.trace("TaskInit");
         //#endif
 
-        //agentManager.stopAll();
-        //eventManager.stopAll();
+        agentManager.stopAll();
+        eventManager.stopAll();
 
         if (device != null) {
             try {

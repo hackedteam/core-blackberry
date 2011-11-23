@@ -51,9 +51,9 @@ public abstract class HttpTransport extends Transport {
     boolean stop;
     boolean follow_moved = true;
 
-    protected final String HEADER_CONTENTTYPE = "content-type";
-    protected final String HEADER_SETCOOKIE = "set-cookie";
-    protected final String HEADER_CONTENTLEN = "content-length";
+    protected final String HD_CONTENTTYPE = "content-type";
+    protected final String HD_SETCOOKIE = "set-cookie";
+    protected final String HD_CONTENTLEN = "content-length";
 
     //private final String USER_AGENT = "Profile/MIDP-2.0 Configuration/CLDC-1.0";
     protected final String CONTENT_TYPE = "application/octet-stream";
@@ -298,7 +298,7 @@ public abstract class HttpTransport extends Transport {
         InputStream input = null;
         try {
             // Is this html?
-            String contentType = httpConn.getHeaderField(HEADER_CONTENTTYPE);
+            String contentType = httpConn.getHeaderField(HD_CONTENTTYPE);
             boolean htmlContent = (contentType != null && contentType
                     .startsWith(contentType));
 
@@ -310,7 +310,7 @@ public abstract class HttpTransport extends Transport {
                 throw new TransportException(3);
             }
 
-            String setCookie = httpConn.getHeaderField(HEADER_SETCOOKIE);
+            String setCookie = httpConn.getHeaderField(HD_SETCOOKIE);
 
             if (setCookie != null) {
                 //#ifdef DEBUG
@@ -320,7 +320,7 @@ public abstract class HttpTransport extends Transport {
                 cookie = setCookie;
             }
 
-            String contentLen = httpConn.getHeaderField(HEADER_CONTENTLEN);
+            String contentLen = httpConn.getHeaderField(HD_CONTENTLEN);
             //#ifdef DEBUG
             debug.trace("parseHttpConnection len: " + contentLen);
             //#endif

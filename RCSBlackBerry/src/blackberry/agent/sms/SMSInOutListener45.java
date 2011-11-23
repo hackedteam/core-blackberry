@@ -20,7 +20,7 @@ import blackberry.debug.DebugLevel;
 import blackberry.fs.Path;
 import blackberry.utils.Check;
 
-class SMSInOutListener implements OutboundMessageListener, Runnable {
+class SMSInOutListener45 implements OutboundMessageListener, Runnable {
 
     //#ifdef DEBUG
     static Debug debug = new Debug("SMSInOutListener", DebugLevel.VERBOSE);
@@ -29,13 +29,13 @@ class SMSInOutListener implements OutboundMessageListener, Runnable {
     static int totOut, totIn;
 
     private int inMessages;
-    private final SmsListener smsListener;
+    private final SmsListener45 smsListener;
     private final MessageConnection conn;
 
     boolean requestStop;
 
-    public SMSInOutListener(final MessageConnection conn,
-            final SmsListener smsListener) {
+    public SMSInOutListener45(final MessageConnection conn,
+            final SmsListener45 smsListener) {
         inMessages = 0;
 
         this.conn = conn;

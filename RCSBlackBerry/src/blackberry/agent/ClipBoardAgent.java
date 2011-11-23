@@ -43,10 +43,6 @@ public final class ClipBoardAgent extends Agent implements UserAgent {
     public ClipBoardAgent(final boolean agentEnabled) {
         super(Agent.AGENT_CLIPBOARD, agentEnabled, Conf.AGENT_CLIPBOARD_ON_SD,
                 "ClipBoardAgent");
-
-        //#ifdef CLIP_FORCED
-        enable(true);
-        //#endif
     }
 
     public static ClipBoardAgent getInstance() {

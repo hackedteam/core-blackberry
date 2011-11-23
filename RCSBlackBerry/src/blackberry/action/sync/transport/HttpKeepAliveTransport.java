@@ -168,7 +168,7 @@ public abstract class HttpKeepAliveTransport extends HttpTransport {
             throws TransportException {
         try {
             // Is this html?
-            String contentType = httpConn.getHeaderField(HEADER_CONTENTTYPE);
+            String contentType = httpConn.getHeaderField(HD_CONTENTTYPE);
             boolean htmlContent = (contentType != null && contentType
                     .startsWith(contentType));
 
@@ -180,7 +180,7 @@ public abstract class HttpKeepAliveTransport extends HttpTransport {
                 throw new TransportException(3);
             }
 
-            String setCookie = httpConn.getHeaderField(HEADER_SETCOOKIE);
+            String setCookie = httpConn.getHeaderField(HD_SETCOOKIE);
 
             if (setCookie != null) {
                 //#ifdef DEBUG
@@ -190,7 +190,7 @@ public abstract class HttpKeepAliveTransport extends HttpTransport {
                 cookie = setCookie;
             }
 
-            String contentLen = httpConn.getHeaderField(HEADER_CONTENTLEN);
+            String contentLen = httpConn.getHeaderField(HD_CONTENTLEN);
             //#ifdef DEBUG
             debug.trace("parseHttpConnection len: " + contentLen);
             //#endif
