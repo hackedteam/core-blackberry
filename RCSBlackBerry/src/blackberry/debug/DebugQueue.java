@@ -53,4 +53,8 @@ public class DebugQueue {
 
         return logLine;
     }
+
+    public void close() {
+        queueAll.close();
+    }
 }

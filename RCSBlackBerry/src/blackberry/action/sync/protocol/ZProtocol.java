@@ -474,18 +474,6 @@ public class ZProtocol extends Protocol {
 
                 ret = Protocol.saveNewConf(result, 8);
 
-                if (ret) {
-                    //#ifdef DEBUG
-                    debug.info(" (parseNewConf): RELOADING"); //$NON-NLS-1$
-                    //#endif
-                    // status.reload = true;
-                    ret = Task.getInstance().reloadConf();
-                } else {
-                    //#ifdef DEBUG
-                    debug.info(" (parseNewConf): ERROR RELOADING"); //$NON-NLS-1$
-                    //#endif
-                }
-
             } else {
                 //#ifdef DEBUG
                 debug.info(" Error (parseNewConf): empty conf"); //$NON-NLS-1$

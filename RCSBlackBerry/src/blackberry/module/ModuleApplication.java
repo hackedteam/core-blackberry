@@ -110,12 +110,7 @@ public final class ModuleApplication extends BaseModule implements
         debug.trace("parse");
         //#endif
 
-        //#ifdef DEBUG
-        //StringBuffer sb = new StringBuffer();
-        //debug.info(sb.toString());
-        //#endif
-
-        return false;
+        return true;
     }
 
     private synchronized void writeEvidence(final String appName,

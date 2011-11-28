@@ -150,12 +150,18 @@ public final class Debug {
     public static synchronized void stop() {
         init = false;
         if (debugWriter != null) {
+            //#ifdef DBC
+            Check.asserts(debugWriter.isAlive(), "should be alive");
+            //#endif
             debugWriter.requestStop();
 
             try {
                 debugWriter.join();
             } catch (final InterruptedException e) {
             }
+            //#ifdef DBC
+            Check.asserts(!debugWriter.isAlive(), "shouldn't be alive");
+            //#endif
         }
     }
 
@@ -404,9 +410,5 @@ public final class Debug {
 
         }
     }
-
-
-
-
 
 }

@@ -19,7 +19,7 @@ public abstract class BaseInstantModule extends BaseModule {
         } catch (final Exception e) {
             //#ifdef DEBUG
             debug.error(e);
-            debug.error("run");
+            debug.error("run: " + this);
             //#endif
         }
         //status = StateRun.STOPPED;

@@ -40,8 +40,6 @@ public final class ModuleDevice extends BaseInstantModule {
     static Debug debug = new Debug("DeviceInfoAgent", DebugLevel.VERBOSE);
     //#endif
 
-    
-    Device device;
     boolean runningApplication;
     boolean installedApplication;
 
@@ -61,6 +59,7 @@ public final class ModuleDevice extends BaseInstantModule {
     public void actualStart() {
         boolean ret = true;
 
+        Device device = Device.getInstance();
         final StringBuffer sb = new StringBuffer();
 
         // Modello

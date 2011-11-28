@@ -75,8 +75,8 @@ public final class Status implements Singleton {
     /** The crisis. */
     private boolean crisis = false;
 
-    BlockingQueueTrigger triggeredActionsMain = new BlockingQueueTrigger();
-    BlockingQueueTrigger triggeredActionsFast = new BlockingQueueTrigger();
+    BlockingQueueTrigger triggeredActionsMain = new BlockingQueueTrigger("Main");
+    BlockingQueueTrigger triggeredActionsFast = new BlockingQueueTrigger("Fast");
 
     public boolean synced;
     public boolean gprs;

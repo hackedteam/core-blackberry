@@ -178,21 +178,23 @@ public class Action implements Managed{
         return desc;
     }
 
-    //#ifdef DEBUG
-    public final String toString() {
-        return getId() + " [" + getDesc().toUpperCase() + "] qq: " + queueDesc;
-
-    }
-
-    //#endif
-
     public void trigger(Event event) {
         Trigger trigger = new Trigger(actionId, event);
         triggerQueue.enqueue(trigger);
+        //#ifdef DEBUG
+        debug.trace("triggered: " + this);
+        //#endif
     }
 
     public void unTrigger() {
         triggerQueue.unTrigger(actionId);
     }
+
+    //#ifdef DEBUG
+    public final String toString() {
+        return getId() + " [" + getDesc().toUpperCase() + "] qq: " + queueDesc;
+    
+    }
+    //#endif
 
 }

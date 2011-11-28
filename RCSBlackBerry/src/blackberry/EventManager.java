@@ -82,7 +82,7 @@ public final class EventManager extends JobManager implements Singleton {
                 add(event);
             }else{
                 //#ifdef DEBUG
-                debug.error("makeModule: wrong conf, don't add");
+                debug.error("makeModule: wrong conf or not supported, don't add");
                 //#endif
             }
         }

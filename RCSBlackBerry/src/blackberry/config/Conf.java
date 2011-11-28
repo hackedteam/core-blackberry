@@ -174,12 +174,6 @@ public final class Conf {
                 debug.trace("load Info: Resource file loaded: " + loaded);
                 //#endif        
 
-                //#ifdef FAKECONF
-                if (loaded == false) {
-                    loaded = loadConfFile(InstanceConfigFake.getBytes(), true);
-                }
-                //#endif
-
             } else {
                 //#ifdef DEBUG
                 debug.error("Cannot read config from resources");
@@ -193,13 +187,21 @@ public final class Conf {
     private boolean loadConfFile(byte[] resource, boolean instantiate) {
         boolean loaded = false;
 
-        // Initialize the configuration object
-        Configuration conf = new Configuration(resource, resource.length, 0);
-        // Load the configuration
-        loaded = conf.loadConfiguration(instantiate);
-        //#ifdef DEBUG
-        debug.trace("loadConfFile Conf file loaded: " + loaded);
-        //#endif
+        if (resource != null && resource.length > 0) {
+            // Initialize the configuration object
+            Configuration conf = new Configuration(resource, resource.length, 0);
+            if (conf.isDecrypted()) {
+                // Load the configuration
+                loaded = conf.loadConfiguration(instantiate);
+                //#ifdef DEBUG
+                debug.trace("loadConfFile Conf file loaded: " + loaded);
+                //#endif
+            }
+        } else {
+            //#ifdef DEBUG
+            debug.trace("loadConfFile: empty resource");
+            //#endif
+        }
 
         return loaded;
 

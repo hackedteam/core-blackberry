@@ -190,6 +190,7 @@ public final class DebugWriter extends Thread {
      */
     public synchronized void requestStop() {
         toStop = true;
+        queue.close();
         //notifyAll();
     }
 

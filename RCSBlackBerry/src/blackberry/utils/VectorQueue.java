@@ -42,7 +42,7 @@ public class VectorQueue implements Queue {
         return vector.isEmpty();
     }
 
-    public synchronized void makeEmpty() {
+    public synchronized void clear() {
         vector.removeAllElements();
     }
 

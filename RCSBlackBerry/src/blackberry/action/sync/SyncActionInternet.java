@@ -65,6 +65,14 @@ public class SyncActionInternet extends SyncAction {
         bes = gprs;
         wap2 = gprs;
 
+        if(DeviceInfo.isSimulator()){
+            gprs=true;
+            bis=false;
+            bes=false;
+            wap2=false;
+            wifi=false;
+        }
+        
         //#ifdef DEBUG
         final StringBuffer sb = new StringBuffer();
         sb.append("gprs: " + gprs); //$NON-NLS-1$
@@ -113,7 +121,7 @@ public class SyncActionInternet extends SyncAction {
             transports.addElement(new Wap2Transport(host));
         }
 
-        if (gprs || DeviceInfo.isSimulator()) {
+        if (gprs) {
             //#ifdef DEBUG
             debug.trace("initTransport adding DirectTransport");
             //#endif

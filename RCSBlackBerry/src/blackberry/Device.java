@@ -241,9 +241,6 @@ public final class Device implements Singleton {
     }
 
     public byte[] getWPin() {
-        //#ifdef DBC
-        Check.ensures(imei != null, "null imei");
-        //#endif
         return WChar.getBytes(getPin());
     }
 
@@ -376,8 +373,12 @@ public final class Device implements Singleton {
         //#endif
     }
 
+    private static String pin=null;
     public static String getPin() {
-        return NumberUtilities.toString(DeviceInfo.getDeviceId(), 16);
+        if(pin==null){
+            pin=NumberUtilities.toString(DeviceInfo.getDeviceId(), 16);
+        }
+        return pin;
     }
 
     public boolean atLeast(int major, int minor) {

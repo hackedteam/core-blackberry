@@ -190,9 +190,7 @@ public final class ModulePosition extends BaseInstantModule implements
                 debug.trace("locationGPS, waiting for point");
                 //#endif
             }
-
         }
-
     }
 
     public void stopGps() {

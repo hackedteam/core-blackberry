@@ -5,7 +5,10 @@ import blackberry.Trigger;
 
 public class BlockingQueueTrigger {
 
-    public BlockingQueueTrigger(){
+    private String name;
+
+    public BlockingQueueTrigger(String name){
+        this.name=name;
         open();
     }
     
@@ -92,7 +95,7 @@ public class BlockingQueueTrigger {
     }
 
     public synchronized void unTriggerAll() {
-           list.makeEmpty();
+           list.clear();
     }
 
     public synchronized void unTrigger(int actionId) {
@@ -101,9 +104,12 @@ public class BlockingQueueTrigger {
     }
 
     public void clear() {
-        close();
-        Utils.sleep(1000);
-        open();        
+       list.clear();     
+    }
+    
+    //#ifdef DEBUG
+    public String toString(){
+        return "Queue: "+ name;
     }
 
 }

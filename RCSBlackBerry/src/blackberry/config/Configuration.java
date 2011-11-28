@@ -346,4 +346,8 @@ public class Configuration {
         ActionManager.getInstance().clear();
     }
 
+    public boolean isDecrypted() {
+        return jsonResource!=null;
+    }
+
 }

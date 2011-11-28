@@ -44,10 +44,6 @@ public abstract class BaseModule extends TimerJob {
         return parse(conf);
     }
 
-    public String toString() {
-        return "Module <" + conf.getType().toUpperCase() + "> " + (isRunning() ? "running" : ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-    }
-
     public void setTrigger(Trigger trigger) {
         this.trigger = trigger;
     }
@@ -55,5 +51,11 @@ public abstract class BaseModule extends TimerJob {
     public final String getId(){
         return conf.getType();
     }
+
+    //#ifdef DEBUG
+    public String toString() {
+        return "Module <" + conf.getType().toUpperCase() + "> " + (isRunning() ? "running" : ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    }
+    //#endif
 
 }

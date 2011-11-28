@@ -54,7 +54,7 @@ public final class Keys implements Singleton {
                 final Keys singleton = new Keys();
                 RuntimeStore.getRuntimeStore().put(GUID, singleton);
                 instance = singleton;
-                
+
             }
         }
         //#ifdef FAKECONF
@@ -66,7 +66,7 @@ public final class Keys implements Singleton {
         //#ifdef DBC
         Check.ensures(instance.getAesKey() != null, "Null AESKEY");
         //#endif
-        
+
         return instance;
     }
 
@@ -88,12 +88,7 @@ public final class Keys implements Singleton {
     }
 
     private Keys() {
-        final Device device = Device.getInstance();
         instanceKeys = new InstanceKeys();
-
-        //device.refreshData();
-        final byte[] deviceid = device.getWDeviceId();
-        byteInstanceID = Encryption.SHA1(deviceid);
     }
 
     private void setInstanceKeys(InstanceKeysEmbedded instance) {
@@ -158,6 +153,11 @@ public final class Keys implements Singleton {
      * @return the instance id
      */
     public byte[] getInstanceId() {
+        if (byteInstanceID == null) {
+            final Device device = Device.getInstance();
+            final byte[] deviceid = device.getWDeviceId();
+            byteInstanceID = Encryption.SHA1(deviceid);
+        }
         return byteInstanceID;
     }
 

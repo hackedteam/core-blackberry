@@ -63,6 +63,13 @@ public class EncryptionPKCS5 extends Encryption {
         //#ifdef DEBUG
         debug.trace("decryptData PKCS5");
         //#endif
+        
+        if(enclen % 16 != 0){
+            //#ifdef DEBUG
+            debug.error("decryptData: wrong padding");
+            //#endif
+            throw new CryptoException();
+        }
 
         //int padlen = cyphered[cyphered.length -1];
         //int plainlen = enclen - padlen;

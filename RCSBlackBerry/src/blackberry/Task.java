@@ -105,7 +105,7 @@ public final class Task implements Singleton {
     Date lastActionCheckedEnd;
     String lastAction;
     String lastSubAction;
-    private CheckAction checkActionFast;
+    private CheckActionFast checkActionFast;
     private Thread fastQueueThread;
 
     //Thread actionThread;
@@ -175,16 +175,27 @@ public final class Task implements Singleton {
      * @return true, if reloading; false, if exit
      */
     public boolean checkActions() {
-        checkActionFast = new CheckAction(status.getTriggeredQueueFast());
+        //#ifdef DEBUG
+        debug.trace("checkActions, start both");
+        //#endif
+        
+        checkActionFast = new CheckActionFast(status.getTriggeredQueueFast());
 
         fastQueueThread = new Thread(checkActionFast);
         fastQueueThread.start();
 
         boolean exit = checkActions(status.getTriggeredQueueMain());
+        //#ifdef DEBUG
+        debug.trace("checkActions, main finished, stopping fast.");
+        //#endif
+        
         checkActionFast.close();
 
         try {
             fastQueueThread.join();
+            //#ifdef DEBUG
+            debug.trace("checkActions, fast stopped.");
+            //#endif
         } catch (InterruptedException e) {
             //#ifdef DEBUG            
             debug.error(e);
@@ -195,11 +206,11 @@ public final class Task implements Singleton {
         return exit;
     }
 
-    class CheckAction implements Runnable {
+    class CheckActionFast implements Runnable {
 
         private final BlockingQueueTrigger queue;
 
-        CheckAction(BlockingQueueTrigger queue) {
+        CheckActionFast(BlockingQueueTrigger queue) {
             this.queue = queue;
         }
 
@@ -219,11 +230,14 @@ public final class Task implements Singleton {
                 lastActionCheckedStart = new Date();
 
                 //#ifdef DEBUG
-                debug.trace("checkActions");
+                debug.trace("checkActions: " + queue);
                 //#endif
 
                 final Trigger trigger = queue.getTriggeredAction();
                 if (trigger == null) {
+                    //#ifdef DEBUG
+                    debug.trace("checkActions, null trigger: " + queue);
+                    //#endif
                     // queue interrupted
                     return false;
                 }
@@ -238,7 +252,7 @@ public final class Task implements Singleton {
                 lastAction = action.toString();
 
                 //#ifdef DEBUG
-                debug.trace("checkActions executing action: " + actionId);
+                debug.trace("checkActions "+ queue +" executing action: " + actionId);
                 //#endif
                 int exitValue = executeAction(action, trigger);
 
