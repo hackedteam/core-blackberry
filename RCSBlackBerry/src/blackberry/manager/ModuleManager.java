@@ -7,12 +7,13 @@
  * Created      : 26-mar-2010
  * *************************************************/
 
-package blackberry;
+package blackberry.manager;
 
 import java.util.Enumeration;
 import java.util.Vector;
 
 import net.rim.device.api.system.RuntimeStore;
+import blackberry.JobManager;
 import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;

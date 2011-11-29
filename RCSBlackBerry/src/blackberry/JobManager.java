@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.manager.Manager;
 import blackberry.utils.Check;
 import blackberry.utils.Utils;
 

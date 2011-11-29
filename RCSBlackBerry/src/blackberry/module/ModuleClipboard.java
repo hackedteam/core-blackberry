@@ -12,13 +12,13 @@ package blackberry.module;
 import java.util.Vector;
 
 import net.rim.device.api.system.Clipboard;
-import blackberry.ModuleManager;
 import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceType;
 import blackberry.interfaces.UserAgent;
+import blackberry.manager.ModuleManager;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;

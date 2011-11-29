@@ -8,11 +8,11 @@
  * *************************************************/
 package blackberry.action;
 
-import blackberry.ModuleManager;
 import blackberry.Trigger;
 import blackberry.config.ConfAction;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.manager.ModuleManager;
 
 
 /**

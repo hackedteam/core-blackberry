@@ -23,6 +23,9 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.EvidenceCollector;
 import blackberry.interfaces.Singleton;
+import blackberry.manager.ActionManager;
+import blackberry.manager.EventManager;
+import blackberry.manager.ModuleManager;
 import blackberry.utils.BlockingQueueTrigger;
 import blackberry.utils.Check;
 

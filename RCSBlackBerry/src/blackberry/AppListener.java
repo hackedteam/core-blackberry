@@ -33,6 +33,7 @@ import blackberry.interfaces.BacklightObserver;
 import blackberry.interfaces.BatteryStatusObserver;
 import blackberry.interfaces.CallListObserver;
 import blackberry.interfaces.Singleton;
+import blackberry.manager.ModuleManager;
 
 /**
  * The listener interface for receiving app events. The class that is interested

@@ -1,4 +1,4 @@
-package blackberry;
+package blackberry.manager;
 
 import net.rim.device.api.system.RuntimeStore;
 import blackberry.action.Action;

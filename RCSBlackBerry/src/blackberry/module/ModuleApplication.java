@@ -13,13 +13,13 @@ package blackberry.module;
 import java.util.Vector;
 
 import blackberry.AppListener;
-import blackberry.ModuleManager;
 import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceType;
 import blackberry.interfaces.ApplicationObserver;
+import blackberry.manager.ModuleManager;
 import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;

@@ -7,12 +7,14 @@
  * Created      : 26-mar-2010
  * *************************************************/
 
-package blackberry;
+package blackberry.manager;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import blackberry.Managed;
+import blackberry.Status;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.utils.Check;

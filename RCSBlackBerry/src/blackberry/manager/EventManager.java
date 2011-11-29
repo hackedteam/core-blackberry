@@ -7,9 +7,10 @@
  * Created      : 26-mar-2010
  * *************************************************/
 
-package blackberry;
+package blackberry.manager;
 
 import net.rim.device.api.system.RuntimeStore;
+import blackberry.JobManager;
 import blackberry.config.ConfEvent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
