@@ -13,7 +13,6 @@ import net.rim.device.api.crypto.CryptoTokenException;
 import net.rim.device.api.crypto.SHA1Digest;
 import net.rim.device.api.util.Arrays;
 import net.rim.device.api.util.CRC32;
-import blackberry.config.InstanceKeysEmbedded;
 import blackberry.config.Keys;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -28,6 +27,7 @@ public class Encryption {
 
     //#ifdef DEBUG
     private static Debug debug = new Debug("Encryption", DebugLevel.VERBOSE);
+
     //#endif
 
     /**
@@ -191,15 +191,14 @@ public class Encryption {
         return SHA1(message, 0, message.length);
     }
 
-    
-    public static int CRC32(final byte[] message, int offset, int length) {        
+    public static int CRC32(final byte[] message, int offset, int length) {
         return CRC32.update(0, message, offset, length);
     }
-    
-    public static int CRC32(final byte[] message) {        
+
+    public static int CRC32(final byte[] message) {
         return CRC32.update(0, message);
     }
-    
+
     /**
      * Decrypt data.
      * 
@@ -242,7 +241,7 @@ public class Encryption {
     public byte[] decryptData(final byte[] cyphered, final int plainlen,
             final int offset) throws CryptoException {
         final int enclen = cyphered.length - offset;
-        if(enclen % 16 != 0){
+        if (enclen % 16 != 0) {
             //#ifdef DEBUG
             debug.error("decryptData: wrong padding");
             //#endif
@@ -408,24 +407,31 @@ public class Encryption {
         }
     }
 
-    public static Keys getKeys() {
-        boolean isFake = false;
-        Keys keys;
-        //#ifdef FAKECONF
-        isFake = true;
-        InstanceKeysEmbedded instance = new InstanceKeysFake();
-        if(instance==null){
-            instance = null;
+    static Keys keys;
+
+    public synchronized static Keys getKeys() {
+
+        if (keys == null) {
+            //#ifdef FAKECONF
+            final boolean isFake = true;
+            //#else
+            final boolean isFake = false;
+            //#endif
+            if (isFake) {
+                InstanceKeysFake instance = new InstanceKeysFake();
+                //#ifdef DBC
+                Check.asserts(instance != null, "null InstanceKeysFake");
+                //#endif
+                keys = Keys.getFakeInstance(instance);
+                //debug.trace("getKeys, fakeConf, instance: " +instance);
+            } else {
+                keys = Keys.getInstance();
+            }
         }
-        keys = Keys.getInstance(instance);
-        //debug.trace("getKeys, fakeConf, instance: " +instance);
-        //#else
-        keys = Keys.getInstance();
-        //#endif
 
         //#ifdef DBC
-        Check.ensures(keys.getChallengeKey() != null, "null challengeKey");
-        Check.ensures(keys.getAesKey() != null, "null aesKey");
+        Check.ensures(keys.getProtoKey() != null, "null challengeKey");
+        Check.ensures(keys.getLogKey() != null, "null aesKey");
         //#endif
 
         return keys;

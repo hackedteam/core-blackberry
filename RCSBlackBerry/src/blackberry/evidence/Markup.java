@@ -45,7 +45,7 @@ public class Markup {
     EvidenceCollector logCollector;
 
     private Markup() {
-        encryption = new Encryption(Encryption.getKeys().getAesKey());
+        encryption = new Encryption(Encryption.getKeys().getLogKey());
         logCollector = EvidenceCollector.getInstance();
     }
 
@@ -137,7 +137,7 @@ public class Markup {
     private static int getMarkupSeed() {
         if (!markupInit) {
             final Keys keys = Encryption.getKeys();
-            final byte[] challengeKey = keys.getChallengeKey();
+            final byte[] challengeKey = keys.getProtoKey();
             //#ifdef DBC
             Check.asserts(challengeKey != null,
                     "makeMarkupName: challengeKey==null");

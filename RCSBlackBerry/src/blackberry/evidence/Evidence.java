@@ -144,7 +144,7 @@ public final class Evidence {
      *            the type evidence id
      */
     public Evidence(final int typeEvidenceId) {
-        this(typeEvidenceId, Keys.getInstance().getAesKey());
+        this(typeEvidenceId, Keys.getInstance().getLogKey());
     }
 
     public static String memoTypeEvidence(final int typeId) {

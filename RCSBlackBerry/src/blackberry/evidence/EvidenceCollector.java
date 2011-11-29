@@ -73,7 +73,7 @@ public final class EvidenceCollector implements Singleton {
      */
     public static String decryptName(final String logMask) {
         return Encryption.decryptName(logMask, Encryption.getKeys()
-                .getChallengeKey()[0]);
+                .getProtoKey()[0]);
     }
 
     /**
@@ -85,7 +85,7 @@ public final class EvidenceCollector implements Singleton {
      */
     public static String encryptName(final String logMask) {
         return Encryption.encryptName(logMask, Encryption.getKeys()
-                .getChallengeKey()[0]);
+                .getProtoKey()[0]);
     }
 
     /**
@@ -125,7 +125,7 @@ public final class EvidenceCollector implements Singleton {
 
         logProgressive = deserializeProgressive();
         keys = Encryption.getKeys();
-        seed = keys.getChallengeKey()[0];
+        seed = keys.getProtoKey()[0];
     }
 
     private void clear() {
