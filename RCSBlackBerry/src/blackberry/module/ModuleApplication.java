@@ -31,7 +31,7 @@ import blackberry.utils.WChar;
 public final class ModuleApplication extends BaseModule implements
         ApplicationObserver {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("ApplicationAgent",
+    private static Debug debug = new Debug("ModApp",
             DebugLevel.VERBOSE);
     private Evidence evidence;
 

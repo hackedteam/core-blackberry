@@ -27,7 +27,7 @@ import blackberry.utils.WChar;
 
 public class ModuleCalendar extends BaseModule implements PIMListListener {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("ModuleCalendar", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("ModCalendar", DebugLevel.VERBOSE);
     //#endif
 
     private static final int POOM_STRING_SUBJECT = 0x01000000;
@@ -282,7 +282,7 @@ public class ModuleCalendar extends BaseModule implements PIMListListener {
             }
         } catch (IndexOutOfBoundsException ex) {
             //#ifdef DEBUG
-            debug.error("getCalendarStringField: " + ex);
+            debug.error("getCalendarStringField: " + ex + " type: " + type);
             //#endif
         }
 

@@ -21,7 +21,7 @@ import blackberry.utils.Check;
 public abstract class BaseModule extends TimerJob {
    
     //#ifdef DEBUG
-    private static Debug debug = new Debug("Module", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("Mod", DebugLevel.VERBOSE);
     //#endif
 
     private ConfModule conf;

@@ -29,6 +29,10 @@ import blackberry.utils.Utils;
  * The Class MicAgent.
  */
 public final class ModuleMic extends BaseModule implements PhoneListener {
+    //#ifdef DEBUG
+    static Debug debug = new Debug("ModMic", DebugLevel.VERBOSE);
+    //#endif
+
     private static final long MIC_PERIOD = 5000;
 
     private final int STOPPED = 0;
@@ -37,10 +41,6 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
 
     static final int amr_sizes[] = { 12, 13, 15, 17, 19, 20, 26, 31, 5, 6, 5,
             5, 0, 0, 0, 0 };
-
-    //#ifdef DEBUG
-    static Debug debug = new Debug("MicAgent", DebugLevel.VERBOSE);
-    //#endif
 
     //AudioRecorderDispatcher recorder;
     long fId;

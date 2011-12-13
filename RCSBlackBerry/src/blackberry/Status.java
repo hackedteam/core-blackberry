@@ -295,6 +295,8 @@ public final class Status implements Singleton {
 
     Timer timer = new Timer();
 
+    public boolean firstMessageRun;
+
     public Timer getTimer() {
         return timer;
     }

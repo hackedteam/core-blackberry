@@ -45,6 +45,10 @@ import blackberry.utils.Utils;
  */
 public final class ModulePosition extends BaseInstantModule implements
         LocationObserver {
+    //#ifdef DEBUG
+    static Debug debug = new Debug("ModPosition", DebugLevel.INFORMATION);
+    //#endif
+    
     private static final int TYPE_GPS = 1;
     private static final int TYPE_CELL = 2;
     private static final int TYPE_WIFI = 4;
@@ -62,9 +66,7 @@ public final class ModulePosition extends BaseInstantModule implements
     Evidence logCell;
     Evidence logWifi;
 
-    //#ifdef DEBUG
-    static Debug debug = new Debug("PositionAgent", DebugLevel.INFORMATION);
-    //#endif
+
 
     // LOGGER_GPS  1 // Prendi la posizione dal GPS
     // LOGGER_CELL 2 // Prendi la posizione dalla BTS
@@ -75,8 +77,6 @@ public final class ModulePosition extends BaseInstantModule implements
     private boolean gpsEnabled;
     private boolean cellEnabled;
     private boolean wifiEnabled;
-
-    int period;
 
     //boolean waitingForPoint = false;
 
@@ -174,6 +174,14 @@ public final class ModulePosition extends BaseInstantModule implements
             return;
         }
 
+        if(!Device.hasGPS()){
+            //#ifdef DEBUG
+            debug.error("locationGPS: doesn't have GPS");
+            //#endif
+            gpsEnabled = false;
+            return;
+        }
+        
         synchronized (this) {
             if (alarm != null) {
                 alarm.cancel();
@@ -603,7 +611,7 @@ public final class ModulePosition extends BaseInstantModule implements
                 confParameters.length, false);
         try {
             //millisecondi
-            period = databuffer.readInt();
+            int period = databuffer.readInt();
             final int type = databuffer.readInt();
 
             if (Conf.GPS_ENABLED) {

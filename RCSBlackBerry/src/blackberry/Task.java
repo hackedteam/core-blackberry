@@ -373,8 +373,14 @@ public final class Task implements Singleton {
 
     void stopAll() {
         agentManager.stopAll();
-        eventManager.stopAll();
+        eventManager.stopAll();       
         status.unTriggerAll();
+    }
+    
+    void clearAll(){
+        agentManager.clear();
+        eventManager.clear();
+        ActionManager.getInstance().clear();
     }
 
     /**
@@ -454,6 +460,7 @@ public final class Task implements Singleton {
         debug.trace("reset");
         //#endif
         stopAll();
+        clearAll();
 
         // http://supportforums.blackberry.com/t5/Java-Development/Programmatically-rebooting-the-device/m-p/42049?view=by_date_ascending
         CodeModuleManager.promptForResetIfRequired();
@@ -472,6 +479,7 @@ public final class Task implements Singleton {
             debug.trace(" (reloadConf): valid conf");
             //#endif
             stopAll();
+            clearAll();
             boolean ret = taskInit();
             //#ifdef DEBUG
             debug.trace(" (reloadConf): END");

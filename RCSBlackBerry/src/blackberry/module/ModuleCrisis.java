@@ -21,7 +21,7 @@ import blackberry.evidence.Evidence;
  */
 public final class ModuleCrisis extends BaseModule {
     //#ifdef DEBUG
-    static Debug debug = new Debug("CrisisAgent", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("ModCrisis", DebugLevel.VERBOSE);
     //#endif
 
     public static final int NONE = 0x0; // Per retrocompatibilita'

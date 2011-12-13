@@ -7,7 +7,7 @@ import blackberry.debug.DebugLevel;
 
 abstract class ModuleAction extends SubAction {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("ModuleAction", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("ModAction", DebugLevel.VERBOSE);
     //#endif
     protected String moduleId;
 

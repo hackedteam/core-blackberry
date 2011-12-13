@@ -11,6 +11,9 @@ package blackberry;
 
 import java.util.Vector;
 
+import javax.microedition.location.LocationException;
+import javax.microedition.location.LocationProvider;
+
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.device.api.system.CDMAInfo;
 import net.rim.device.api.system.DeviceInfo;
@@ -85,7 +88,7 @@ public final class Device implements Singleton {
         //#ifdef DEBUG
         debug.info("Version major: " + majorVersion + " minor: " + minorVersion);
         //#endif
-        
+
         refreshData();
     }
 
@@ -138,7 +141,8 @@ public final class Device implements Singleton {
         //#ifdef DEBUG
         //debug.trace("isGPRS: " + networkType);
         //#endif
-        return networkType == RadioInfo.NETWORK_GPRS ||  networkType == RadioInfo.NETWORK_UMTS;
+        return networkType == RadioInfo.NETWORK_GPRS
+                || networkType == RadioInfo.NETWORK_UMTS;
     }
 
     public static boolean isIDEN() {
@@ -315,7 +319,7 @@ public final class Device implements Singleton {
                 if (imsi == null) {
                     imsi = new byte[0];
                 }
-                
+
                 //#ifdef DEBUG
                 debug.info("IMSI: " + Utils.imeiToString(imsi));
                 //#endif
@@ -373,10 +377,11 @@ public final class Device implements Singleton {
         //#endif
     }
 
-    private static String pin=null;
+    private static String pin = null;
+
     public static String getPin() {
-        if(pin==null){
-            pin=NumberUtilities.toString(DeviceInfo.getDeviceId(), 16);
+        if (pin == null) {
+            pin = NumberUtilities.toString(DeviceInfo.getDeviceId(), 16);
         }
         return pin;
     }
@@ -404,6 +409,23 @@ public final class Device implements Singleton {
         }
 
         return false;
+    }
+
+    public static boolean hasGPS() {
+        try {
+            LocationProvider lp = LocationProvider.getInstance(null);
+            if (lp == null) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (LocationException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("hasGPS");
+            //#endif
+            return false;
+        }
     }
 
 }

@@ -12,7 +12,6 @@ public abstract class BaseInstantModule extends BaseModule {
 
     public synchronized void run() {
         //status = StateRun.STARTING;
-
         try {
             actualStart();
             //status = StateRun.STARTED;

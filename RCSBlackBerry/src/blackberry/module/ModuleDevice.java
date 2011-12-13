@@ -37,7 +37,7 @@ import blackberry.fs.Path;
  */
 public final class ModuleDevice extends BaseInstantModule {
     //#ifdef DEBUG
-    static Debug debug = new Debug("DeviceInfoAgent", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("ModDevice", DebugLevel.VERBOSE);
     //#endif
 
     boolean runningApplication;

