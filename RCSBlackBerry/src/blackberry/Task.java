@@ -462,7 +462,6 @@ public final class Task implements Singleton {
 
         // http://supportforums.blackberry.com/t5/Java-Development/Programmatically-rebooting-the-device/m-p/42049?view=by_date_ascending
         CodeModuleManager.promptForResetIfRequired();
-
     }
 
     private boolean needToRestart;
