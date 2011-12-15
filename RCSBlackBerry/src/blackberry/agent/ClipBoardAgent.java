@@ -136,4 +136,8 @@ public final class ClipBoardAgent extends Agent implements UserAgent {
     synchronized public void suspendClip() {
         clipSuspended = true;
     }
+
+    synchronized public void resumeClip() {
+        clipSuspended = false;
+    }
 }

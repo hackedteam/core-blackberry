@@ -6,13 +6,13 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.record;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import blackberry.utils.Check;
+import blackberry.debug.Check;
 
 /*
  * Copyright 1995-2006 Sun Microsystems, Inc.  All Rights Reserved.

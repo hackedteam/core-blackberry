@@ -20,10 +20,10 @@ import net.rim.device.api.io.IOCancelledException;
 import net.rim.device.api.io.http.HttpProtocolConstants;
 import blackberry.Status;
 import blackberry.config.Conf;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
-import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
 public abstract class HttpTransport extends Transport {

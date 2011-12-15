@@ -21,6 +21,7 @@ import blackberry.Status;
 import blackberry.action.Action;
 import blackberry.agent.Agent;
 import blackberry.crypto.Encryption;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
@@ -28,7 +29,6 @@ import blackberry.evidence.Evidence;
 import blackberry.fs.AutoFile;
 import blackberry.fs.Path;
 import blackberry.params.Parameter;
-import blackberry.utils.Check;
 import blackberry.utils.Utils;
 import fake.InstanceConfigFake;
 

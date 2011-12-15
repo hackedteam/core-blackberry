@@ -14,9 +14,9 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 import net.rim.device.api.util.DataBuffer;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
 public class DictMarkup extends Markup {

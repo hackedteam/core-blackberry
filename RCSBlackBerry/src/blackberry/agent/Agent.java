@@ -10,12 +10,12 @@ package blackberry.agent;
 
 import blackberry.Status;
 import blackberry.config.Conf;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceCollector;
 import blackberry.threadpool.TimerJob;
-import blackberry.utils.Check;
 
 /**
  * The Class Agent.

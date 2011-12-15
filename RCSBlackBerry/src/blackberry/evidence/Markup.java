@@ -15,12 +15,12 @@ import net.rim.device.api.util.NumberUtilities;
 import blackberry.agent.Agent;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 import blackberry.fs.AutoFile;
 import blackberry.fs.Path;
-import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
 

@@ -15,10 +15,10 @@ import javax.wireless.messaging.Message;
 import javax.wireless.messaging.MessageConnection;
 
 import net.rim.blackberry.api.sms.OutboundMessageListener;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.fs.Path;
-import blackberry.utils.Check;
 
 class SMSInOutListener45 implements OutboundMessageListener, Runnable {
 

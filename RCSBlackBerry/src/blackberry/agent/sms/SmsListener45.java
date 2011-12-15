@@ -18,10 +18,10 @@ import javax.wireless.messaging.MessageConnection;
 import javax.wireless.messaging.TextMessage;
 
 import net.rim.device.api.system.RuntimeStore;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.SmsObserver;
-import blackberry.utils.Check;
 
 public class SmsListener45 extends SmsListener{
 

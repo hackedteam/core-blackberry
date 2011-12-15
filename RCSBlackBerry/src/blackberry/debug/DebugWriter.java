@@ -17,7 +17,6 @@ import net.rim.device.api.system.RuntimeStore;
 import blackberry.Device;
 import blackberry.fs.AutoFile;
 import blackberry.fs.Path;
-import blackberry.utils.Check;
 
 /**
  * The Class DebugWriter.

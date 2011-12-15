@@ -14,10 +14,10 @@ import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AppListener;
 import blackberry.action.Action;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.BatteryStatusObserver;
-import blackberry.utils.Check;
 
 
 /**
