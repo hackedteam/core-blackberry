@@ -187,6 +187,10 @@ public class Encryption {
         return CRC32.update(0, message);
     }
     
+    public static int CRC32(String message) {        
+        return CRC32.update(0, message.getBytes());
+    }
+    
     /**
      * Instantiates a new encryption.
      */

