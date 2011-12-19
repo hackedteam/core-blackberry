@@ -268,12 +268,12 @@ public class ConversationScreen {
                     String ll = lastLine.trim();
                     if (!StringUtils.empty(ll)) {
                         lines.addElement(ll);
-                        lastLine = currentLine;
                     } else {
                         //#ifdef DEBUG
                         debug.trace("parseLinesConversation: empty line");
                         //#endif
                     }
+                    lastLine = currentLine;
                 } else {
                     //#ifdef DEBUG
                     debug.trace("parseConversation adding line: " + currentLine);
@@ -285,7 +285,7 @@ public class ConversationScreen {
             //adding last line
             String ll = lastLine.trim();
             if (!StringUtils.empty(ll)) {
-                lines.addElement(lastLine.trim());
+                lines.addElement(ll);
             }
 
             //agent.add(partecipants, lines);
