@@ -2,10 +2,16 @@ package blackberry.utils;
 
 import java.util.Vector;
 
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
+
 public class StringUtils {
-    
+    //#ifdef DEBUG
+    private static Debug debug = new Debug("StringUtils", DebugLevel.VERBOSE);
+    //#endif
     /**
      * split a string into tokens, delimited by the delimiter
+     * 
      * @param inString
      * @param delimeter
      * @return
@@ -24,42 +30,51 @@ public class StringUtils {
                 indexA = indexB + delimeter.length();
                 indexB = inString.indexOf(delimeter, indexA);
             }
-            vec.addElement(new String(inString.substring(indexA, inString
-                    .length())));
-          
+            vec.addElement(new String(inString.substring(indexA,
+                    inString.length())));
+
         } catch (Exception e) {
- 
+
         }
         return vec;
     }
 
     /**
-     * Returns the difference between new and last. If last is null, or if there's 
-     * not a starting equal subset, returns newConversation
+     * Returns the difference between new and last. If last is null, or if
+     * there's not a starting equal subset, returns newConversation
+     * 
      * @param newConversation
      * @param lastConversation
      * @return
      */
     public static String diffStrings(String newConversation,
             String lastConversation) {
-        if(lastConversation!=null && newConversation.startsWith(lastConversation) ){
-            int pos=newConversation.indexOf(lastConversation);
-            String diffConversation = newConversation.substring(pos);
+        if (lastConversation != null
+                && newConversation.startsWith(lastConversation)) {
+            //#ifdef DEBUG
+            debug.trace("diffStrings: startsWith");
+            //#endif
+          
+            String diffConversation = newConversation.substring(newConversation.length());
             return diffConversation;
-        }else{
+        } else {
+            //#ifdef DEBUG
+            debug.trace("diffStrings: return conversation");
+            //#endif
             return newConversation;
         }
     }
 
     /**
      * check if a string is null or empty
+     * 
      * @param string
      * @return
      */
     public static boolean empty(String string) {
-        return string == null || string.length()==0;
+        return string == null || string.length() == 0;
     }
-    
+
     /**
      * get the next line of conversation starting from posMessage
      * 

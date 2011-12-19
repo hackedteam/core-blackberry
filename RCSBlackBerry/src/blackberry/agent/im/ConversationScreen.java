@@ -33,7 +33,7 @@ public class ConversationScreen {
     // Vector<String>
     private static Vector parts;
     private static String partecipants;
-    
+
     private UiApplication bbmApplication;
     // Vector<Screen>
     //private Vector conversationScreens = new Vector();
@@ -47,8 +47,8 @@ public class ConversationScreen {
     }
 
     /**
-     * retrieves the screen, if it's the conversation one, calls the
-     * copy and parses the content
+     * retrieves the screen, if it's the conversation one, calls the copy and
+     * parses the content
      */
     public synchronized void getConversationScreen() {
         try {
@@ -174,10 +174,30 @@ public class ConversationScreen {
      */
     public static Vector parseConversation(String newConversation,
             String lastConversation) {
+
+        //#ifdef DBC
+        Check.requires(newConversation != null,
+                "parseConversation, null newCoversation");
+        //#endif
+
+        //#ifdef DEBUG
+        int lastLen = 0;
+        if (lastConversation != null) {
+            lastLen = lastConversation.length();
+        }
+        debug.trace("parseConversation new: " + newConversation.length()
+                + " last: " + lastLen);
+        //#endif
+
         String lineConversation = StringUtils.diffStrings(newConversation,
                 lastConversation);
         boolean full;
-        if (lineConversation.startsWith("Partecipants")) {
+
+        //#ifdef DEBUG
+        debug.trace("parseConversation lineConversation: " + lineConversation);
+        //#endif
+
+        if (lineConversation.startsWith("Participants")) {
             full = true;
             //#ifdef DEBUG
             debug.trace("parseConversation: full");
@@ -194,8 +214,9 @@ public class ConversationScreen {
     }
 
     /**
-     * parses partial conversation, containing only lines.
-     * this method requires that the parseFull has already been called once.
+     * parses partial conversation, containing only lines. this method requires
+     * that the parseFull has already been called once.
+     * 
      * @param conversation
      * @param posMessages
      * @return
@@ -222,7 +243,8 @@ public class ConversationScreen {
             // elabora la last
             String lastLine = "";
             while (true) {
-                String currentLine = StringUtils.getNextLine(conversation, posMessages);
+                String currentLine = StringUtils.getNextLine(conversation,
+                        posMessages);
                 if (currentLine == null) {
                     break;
                 }
@@ -243,8 +265,15 @@ public class ConversationScreen {
                     //#ifdef DEBUG
                     debug.trace("parseConversation part line: " + currentLine);
                     //#endif
-                    lines.addElement(lastLine.trim());
-                    lastLine = currentLine;
+                    String ll = lastLine.trim();
+                    if (!StringUtils.empty(ll)) {
+                        lines.addElement(ll);
+                        lastLine = currentLine;
+                    } else {
+                        //#ifdef DEBUG
+                        debug.trace("parseLinesConversation: empty line");
+                        //#endif
+                    }
                 } else {
                     //#ifdef DEBUG
                     debug.trace("parseConversation adding line: " + currentLine);
@@ -254,7 +283,10 @@ public class ConversationScreen {
 
             }
             //adding last line
-            lines.addElement(lastLine.trim());
+            String ll = lastLine.trim();
+            if (!StringUtils.empty(ll)) {
+                lines.addElement(lastLine.trim());
+            }
 
             //agent.add(partecipants, lines);
             //#ifdef DEBUG
@@ -276,8 +308,8 @@ public class ConversationScreen {
     }
 
     /**
-     * parses a full conversation.
-     * gets the partecipants and retrives the lines.
+     * parses a full conversation. gets the partecipants and retrives the lines.
+     * 
      * @param conversation
      * @return
      */
@@ -352,14 +384,14 @@ public class ConversationScreen {
         //#ifdef DBC
         Check.requires(parts != null && parts.size() > 1, "empty parts");
         //#endif
-        
+
         int pos = 0;
 
         for (int i = 0; i < parts.size(); i++) {
             String part = (String) parts.elementAt(i);
-            pos = currentLine.indexOf(part + ": ");
+            pos = currentLine.indexOf(part);
             if (pos == 0) {
-                return part.length() + 2;
+                return part.length();
             }
         }
         return 0;

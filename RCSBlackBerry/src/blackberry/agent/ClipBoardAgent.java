@@ -27,7 +27,7 @@ import blackberry.utils.WChar;
  */
 public final class ClipBoardAgent extends Agent implements UserAgent {
     //#ifdef DEBUG
-    static Debug debug = new Debug("ClipBoardAgent", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("ClipBoardAgent", DebugLevel.INFORMATION);
     //#endif
 
     static String lastClip = "";
