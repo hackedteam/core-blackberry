@@ -74,6 +74,7 @@ public class BrowserMenuItem extends ApplicationMenuItem {
                 if (ret) {                    
                     String url = (String) Clipboard.getClipboard().get();
                     ClipBoardAgent.getInstance().setClip(url);
+                                        
                     if (url != null) {
                         //#ifdef DEBUG
                         debug.trace("run, 6.0, URL FOUND:" + url);
@@ -84,6 +85,7 @@ public class BrowserMenuItem extends ApplicationMenuItem {
                     //#ifdef DEBUG
                     debug.error("run: no Copy Address, wrong screen");
                     //#endif
+                    ClipBoardAgent.getInstance().resumeClip();
                     return null;
                 }
                 ClipBoardAgent.getInstance().resumeClip();

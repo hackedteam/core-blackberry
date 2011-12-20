@@ -100,7 +100,17 @@ public final class ClipBoardAgent extends Agent implements UserAgent {
         debug.trace("setClip: " + clip);
         //#endif
         lastClip = clip;
+        
+        try{
+            Clipboard.getClipboard().put(null);
+        }catch(Exception ex){
+            //#ifdef DEBUG
+            debug.error(ex);
+            debug.error("setClip, empty clip");
+            //#endif
+        }
         clipSuspended = false;
+        
     }
 
     /*
