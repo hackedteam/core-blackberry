@@ -40,6 +40,10 @@ alias bbbboth='zload $BB_CORE; zload $BB_LIB'
 alias envz='zedit $BB_WRK/environment.sh; source $BB_WRK/environment.sh'
 alias sign='java -jar "/Developer/Eclipse Helios/plugins/net.rim.ejde.componentpack4.5.0_4.5.0.28/components/bin/SignatureTool.jar" '
 
+function null(){
+	echo null
+}
+
 function zedit(){
  if [ _$OS = _Windows_NT ]
   then

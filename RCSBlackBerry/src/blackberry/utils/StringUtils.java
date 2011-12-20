@@ -1,3 +1,4 @@
+//#preprocessor
 package blackberry.utils;
 
 import java.util.Vector;
@@ -55,7 +56,7 @@ public class StringUtils {
             debug.trace("diffStrings: startsWith");
             //#endif
           
-            String diffConversation = newConversation.substring(newConversation.length());
+            String diffConversation = newConversation.substring(lastConversation.length());
             return diffConversation;
         } else {
             //#ifdef DEBUG
@@ -88,6 +89,9 @@ public class StringUtils {
         if (endLinePos > 0) {
             return conversation.substring(posMessages, endLinePos);
         } else {
+            //#ifdef DEBUG
+            debug.trace("getNextLine: no next line");
+            //#endif
             return null;
         }
     }
