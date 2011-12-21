@@ -15,7 +15,6 @@ import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.Singleton;
-import blackberry.debug.Check;
 import fake.InstanceKeysFake;
 
 /**
@@ -37,12 +36,10 @@ public final class Keys implements Singleton {
     protected byte[] byteConfKey;
     protected byte[] byteBuildID;
     //private static byte[] byteInstanceID;
-
+    private byte[] byteInstanceID;
+    
     //#ifdef DEBUG
     public String log = "";
-
-    private byte[] byteInstanceID;
-
     //#endif
 
     /**

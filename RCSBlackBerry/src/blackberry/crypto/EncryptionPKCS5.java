@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.crypto;
 
 import net.rim.device.api.crypto.CryptoException;
@@ -22,15 +22,16 @@ public class EncryptionPKCS5 extends Encryption {
     //#ifdef DEBUG
     private static Debug debug = new Debug("EncryptionPKCS5",
             DebugLevel.INFORMATION);
+
+    //#endif
     public EncryptionPKCS5(byte[] confKey) {
-         super(confKey);
+        super(confKey);
     }
 
     public EncryptionPKCS5() {
         super();
     }
 
-    //#endif
     /**
      * Gets the next multiple.
      * 
@@ -63,8 +64,8 @@ public class EncryptionPKCS5 extends Encryption {
         //#ifdef DEBUG
         debug.trace("decryptData PKCS5");
         //#endif
-        
-        if(enclen % 16 != 0){
+
+        if (enclen % 16 != 0) {
             //#ifdef DEBUG
             debug.error("decryptData: wrong padding");
             //#endif
@@ -146,8 +147,8 @@ public class EncryptionPKCS5 extends Encryption {
         return encryptData(plainSha, 0);
     }
 
-    public byte[] decryptDataIntegrity(final byte[] cyphered, int len, int offset)
-            throws CryptoException {
+    public byte[] decryptDataIntegrity(final byte[] cyphered, int len,
+            int offset) throws CryptoException {
         byte[] plainSha = decryptData(cyphered, len, offset);
         byte[] plain = Arrays.copy(plainSha, 0, plainSha.length
                 - SHA1Digest.DIGEST_LENGTH);
@@ -180,7 +181,7 @@ public class EncryptionPKCS5 extends Encryption {
     }
 
     public byte[] decryptDataIntegrity(byte[] rawConf) throws CryptoException {
-        
-        return decryptDataIntegrity(rawConf,rawConf.length,0);
+
+        return decryptDataIntegrity(rawConf, rawConf.length, 0);
     }
 }

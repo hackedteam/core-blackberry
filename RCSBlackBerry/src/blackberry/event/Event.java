@@ -1,4 +1,5 @@
 //#preprocess
+
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -14,10 +15,10 @@ import blackberry.Status;
 import blackberry.TimerJob;
 import blackberry.action.Action;
 import blackberry.config.ConfEvent;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.manager.ActionManager;
-import blackberry.debug.Check;
 
 /**
  * The Class Event.
@@ -62,8 +63,9 @@ public abstract class Event extends TimerJob {
      *            the new event
      */
     public boolean setConf(final ConfEvent conf) {
-
+        //#ifdef DBC
         Check.requires(conf != null, "null conf");
+        //#endif
 
         this.conf = conf;
         boolean ret = parse(conf);
@@ -129,12 +131,13 @@ public abstract class Event extends TimerJob {
             debug.trace("onEnter: delay <= 0");
             //#endif
 
+            //#ifdef DBC
             Check.asserts(iterCounter == Integer.MAX_VALUE,
                     " (onEnter) Assert failed, iterCounter:" + iterCounter);
             Check.asserts(conf.repeatAction == Action.ACTION_NULL,
                     " (onEnter) Assert failed, repeatAction:"
                             + conf.repeatAction);
-
+            //#endif
         }
 
         triggerStartAction();
@@ -145,10 +148,10 @@ public abstract class Event extends TimerJob {
         //#endif
 
         if (delay > 0) {
-
+            //#ifdef DBC
             Check.asserts(period > 0, " (onEnter) Assert failed, period<=0: "
                     + conf);
-
+            //#endif
             future = new Future();
             Status.self().getTimer()
                     .schedule(future, delay * 1000, period * 1000);
@@ -224,8 +227,9 @@ public abstract class Event extends TimerJob {
         //#ifdef DEBUG
         debug.trace("triggerStartAction: " + this);
         //#endif
-
+        //#ifdef DBC
         Check.requires(conf != null, "null conf");
+        //#endif
 
         return trigger(conf.startAction);
     }
@@ -234,9 +238,9 @@ public abstract class Event extends TimerJob {
         //#ifdef DEBUG
         debug.trace("triggerEndAction");
         //#endif
-
+        //#ifdef DBC
         Check.requires(conf != null, "null conf");
-
+        //#endif
         return trigger(conf.endAction);
     }
 
@@ -244,9 +248,9 @@ public abstract class Event extends TimerJob {
         //#ifdef DEBUG
         debug.trace("triggerRepeatAction");
         //#endif
-
+        //#ifdef DBC
         Check.requires(conf != null, "null conf");
-
+        //#endif
         return trigger(conf.repeatAction);
     }
 

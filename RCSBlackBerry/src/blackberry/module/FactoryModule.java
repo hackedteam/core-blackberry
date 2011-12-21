@@ -1,3 +1,4 @@
+//#preprocess
 package blackberry.module;
 
 import blackberry.debug.Debug;

@@ -14,13 +14,13 @@ import java.util.Vector;
 
 import blackberry.AppListener;
 import blackberry.config.ConfModule;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceType;
 import blackberry.interfaces.ApplicationObserver;
 import blackberry.manager.ModuleManager;
-import blackberry.debug.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
@@ -33,9 +33,9 @@ public final class ModuleApplication extends BaseModule implements
     //#ifdef DEBUG
     private static Debug debug = new Debug("ModApp",
             DebugLevel.VERBOSE);
-    private Evidence evidence;
-
     //#endif
+    
+    private Evidence evidence;
 
     public static String getStaticType() {
         return "application";

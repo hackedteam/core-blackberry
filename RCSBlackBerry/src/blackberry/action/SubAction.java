@@ -1,4 +1,5 @@
 //#preprocess
+
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -15,9 +16,9 @@ import blackberry.action.sync.SyncActionApn;
 import blackberry.action.sync.SyncActionInternet;
 import blackberry.config.ConfAction;
 import blackberry.config.ConfigurationException;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.debug.Check;
 
 
 /**
@@ -59,7 +60,9 @@ public abstract class SubAction {
      * @throws ConfigurationException 
      */
     public static SubAction factory(String type, final ConfAction params) throws  ConfigurationException {
+        //#ifdef DBC
         Check.asserts(type != null,"factory: null type");
+        //#endif
         
         if (type.equals("uninstall")) {
 

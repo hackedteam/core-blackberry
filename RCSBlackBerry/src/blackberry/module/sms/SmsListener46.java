@@ -146,20 +146,30 @@ public class SmsListener46 extends SmsListener {
 
         public void run() {
             try {
+              //#ifdef DEBUG
+            
                 debug.trace("run");
+              //#endif
                 _mc = (MessageConnection) Connector.open(_openString); // Closed by the stop() method.
                 DatagramConnection _dc = (DatagramConnection) _mc;
+              //#ifdef DEBUG
                 debug.trace("mc: " + _mc);
+              //#endif
                 for (;;) {
                     if (_stop) {
+                        //#ifdef DEBUG
+                    
                         debug.trace("stop");
+                      //#endif
                         return;
                     }
-
+                  //#ifdef DEBUG
                     debug.trace("datagram");
+                  //#endif
                     Datagram d = _dc.newDatagram(_dc.getMaximumLength());
-
+                  //#ifdef DEBUG
                     debug.trace("receive");
+                  //#endif
                     _dc.receive(d);
 
                     byte[] bytes = d.getData();
@@ -174,7 +184,9 @@ public class SmsListener46 extends SmsListener {
                         SMSPacketHeader header = smsAddress.getHeader();
 
                         header.setMessageWaitingType(SMSPacketHeader.WAITING_INDICATOR_TYPE_OTHER);
+                      //#ifdef DEBUG
                         debug.trace("hidden");
+                      //#endif
                     }
 
                     dispatch(bytes, address, hidden);
@@ -218,11 +230,12 @@ public class SmsListener46 extends SmsListener {
     /**
      * ESECUZIONE FUORI CONTEST
      */
-    public boolean sendMessage(Message msg) {
+    public boolean sendMessage(Message msg) {            
         //#ifdef DEBUG
         init();
-        //#endif
         debug.trace("notifyOutgoingMessage");
+        //#endif
+        
 
         String body = "";
         if (msg instanceof TextMessage) {

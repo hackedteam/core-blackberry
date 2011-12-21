@@ -1,3 +1,4 @@
+//#preprocess
 package blackberry;
 
 import java.util.Timer;
@@ -7,7 +8,6 @@ import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.manager.Manager;
-import blackberry.debug.Check;
 import blackberry.utils.Utils;
 
 public class JobManager extends Manager {

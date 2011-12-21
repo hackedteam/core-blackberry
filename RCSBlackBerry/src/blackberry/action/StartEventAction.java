@@ -1,3 +1,4 @@
+//#preprocess
 package blackberry.action;
 
 import blackberry.Trigger;

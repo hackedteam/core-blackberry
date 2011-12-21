@@ -1,3 +1,4 @@
+//#preprocess
 package blackberry.module;
 
 import java.util.Date;

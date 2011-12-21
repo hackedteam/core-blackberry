@@ -1,3 +1,4 @@
+//#preprocess
 package blackberry.module.sms;
 
 import java.util.Hashtable;

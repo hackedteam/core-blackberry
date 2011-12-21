@@ -1,3 +1,4 @@
+//#preprocessor
 package blackberry.manager;
 
 import net.rim.device.api.system.RuntimeStore;
