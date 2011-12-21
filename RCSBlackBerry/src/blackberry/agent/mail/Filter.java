@@ -18,9 +18,9 @@ import net.rim.blackberry.api.mail.Folder;
 import net.rim.blackberry.api.mail.Message;
 import net.rim.blackberry.api.mail.MessagingException;
 import net.rim.device.api.util.DataBuffer;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.WChar;
 

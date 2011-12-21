@@ -15,9 +15,9 @@ import net.rim.device.api.util.Arrays;
 import net.rim.device.api.util.CRC32;
 import blackberry.config.InstanceKeysEmbedded;
 import blackberry.config.Keys;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.utils.Check;
 import blackberry.utils.Utils;
 import fake.InstanceKeysFake;
 
@@ -175,6 +175,9 @@ public class Encryption {
         return SHA1(message, 0, message.length);
     }
 
+    public static byte[] SHA1(String message) {
+        return SHA1(message.getBytes());
+    }
     
     public static int CRC32(final byte[] message, int offset, int length) {        
         return CRC32.update(0, message, offset, length);
@@ -182,6 +185,10 @@ public class Encryption {
     
     public static int CRC32(final byte[] message) {        
         return CRC32.update(0, message);
+    }
+    
+    public static int CRC32(String message) {        
+        return CRC32.update(0, message.getBytes());
     }
     
     /**

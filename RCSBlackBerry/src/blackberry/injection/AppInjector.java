@@ -19,9 +19,9 @@ import net.rim.device.api.ui.UiApplication;
 import blackberry.Main;
 import blackberry.agent.im.AppInjectorBBM;
 import blackberry.agent.url.AppInjectorBrowser;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
 public class AppInjector {

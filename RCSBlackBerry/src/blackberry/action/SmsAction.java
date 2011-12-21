@@ -22,13 +22,13 @@ import net.rim.device.api.system.GPRSInfo.GPRSCellInfo;
 import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.Device;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 import blackberry.location.LocationHelper;
 import blackberry.location.LocationObserver;
 import blackberry.sms.SMSHelper;
-import blackberry.utils.Check;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 

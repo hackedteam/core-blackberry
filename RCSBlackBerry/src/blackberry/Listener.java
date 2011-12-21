@@ -11,10 +11,10 @@ package blackberry;
 
 import java.util.Vector;
 
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.Observer;
-import blackberry.utils.Check;
 
 public abstract class Listener {
 

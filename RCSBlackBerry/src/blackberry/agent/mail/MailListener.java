@@ -30,10 +30,10 @@ import net.rim.device.api.servicebook.ServiceRecord;
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.util.IntHashtable;
 import blackberry.agent.MessageAgent;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.MailObserver;
-import blackberry.utils.Check;
 
 /**
  * The listener interface for receiving mail events. The class that is

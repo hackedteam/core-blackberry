@@ -20,7 +20,7 @@ import javax.microedition.io.file.FileConnection;
 import net.rim.device.api.io.IOUtilities;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.util.NumberUtilities;
-import blackberry.utils.Check;
+import blackberry.debug.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 

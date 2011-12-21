@@ -1,4 +1,5 @@
 //#preprocess
+
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -20,7 +21,6 @@ import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.evidence.Evidence;
 import blackberry.fs.Path;
-import blackberry.utils.Check;
 
 /**
  * The Class Debug.

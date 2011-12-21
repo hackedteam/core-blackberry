@@ -22,13 +22,13 @@ import net.rim.device.api.util.DataBuffer;
 import blackberry.Task;
 import blackberry.agent.ImAgent;
 import blackberry.agent.UrlAgent;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceCollector;
 import blackberry.fs.AutoFile;
-import blackberry.utils.Check;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 

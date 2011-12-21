@@ -9,9 +9,9 @@ import javax.microedition.io.HttpConnection;
 
 import net.rim.device.api.io.IOCancelledException;
 import blackberry.Status;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
 public abstract class HttpKeepAliveTransport extends HttpTransport {

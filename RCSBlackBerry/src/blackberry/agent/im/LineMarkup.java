@@ -22,7 +22,7 @@ public class LineMarkup extends DictMarkup {
     private static Debug debug = new Debug("LineMarkup", DebugLevel.VERBOSE);
     //#endif
     
-    Hashtable lineHash = new Hashtable();
+    private Hashtable lineHash = new Hashtable();
 
     public LineMarkup(int agentId, byte[] aesKey) {
         super(agentId, aesKey);
@@ -33,7 +33,7 @@ public class LineMarkup extends DictMarkup {
         Object last = lineHash.put(key, line);
         if(!line.equals(last)){
             //#ifdef DEBUG
-            debug.trace("put: serialize");
+            debug.trace("put, serialize key: " + key);
             //#endif
             return put(key, line.getBytes());
         }
@@ -43,10 +43,19 @@ public class LineMarkup extends DictMarkup {
 
     public synchronized String getLine(String key) {
 
-        if (lineHash.contains(key)) {
+        //#ifdef DEBUG
+        debug.trace("getLine: " + key);
+        //#endif
+        if (lineHash.containsKey(key)) {
+            //#ifdef DEBUG
+            debug.trace("getLine memoized");
+            //#endif
             return (String) lineHash.get(key);
         }
 
+        //#ifdef DEBUG
+        debug.trace("getLine: try to get from dictionary");
+        //#endif
         byte[] data = get(key);
         String line = null;
         if (data != null) {

@@ -13,11 +13,11 @@ import java.util.Vector;
 
 import net.rim.device.api.system.RuntimeStore;
 import blackberry.agent.Agent;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.Singleton;
 import blackberry.threadpool.TimerJob;
-import blackberry.utils.Check;
 
 
 /**
