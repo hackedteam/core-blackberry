@@ -33,7 +33,7 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.MailObserver;
 import blackberry.module.ModuleMessage;
-import blackberry.utils.Check;
+import blackberry.debug.Check;
 
 /**
  * The listener interface for receiving mail events. The class that is

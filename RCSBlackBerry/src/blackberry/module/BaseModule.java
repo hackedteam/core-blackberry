@@ -11,9 +11,10 @@ package blackberry.module;
 import blackberry.TimerJob;
 import blackberry.Trigger;
 import blackberry.config.ConfModule;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.utils.Check;
+
 
 /**
  * The Class Agent.

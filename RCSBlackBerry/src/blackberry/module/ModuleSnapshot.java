@@ -21,7 +21,7 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceType;
-import blackberry.utils.Check;
+import blackberry.debug.Check;
 import blackberry.utils.WChar;
 
 /**

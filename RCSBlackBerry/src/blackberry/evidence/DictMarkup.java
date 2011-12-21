@@ -14,20 +14,20 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 import net.rim.device.api.util.DataBuffer;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.utils.Check;
 import blackberry.utils.Utils;
 
 public class DictMarkup extends Markup {
 
     //#ifdef DEBUG
-    static Debug debug = new Debug("DictMarkup", DebugLevel.INFORMATION);
+    static Debug debug = new Debug("DictMarkup", DebugLevel.VERBOSE);
     //#endif
 
     private static final int MARKUP_SIZE = 35 * 100;
     private static final int MAX_DICT_SIZE = 100;
-    Hashtable dictionary = null;
+    private Hashtable dictionary = null;
 
     public DictMarkup(String id) {
         super(id);
@@ -35,6 +35,9 @@ public class DictMarkup extends Markup {
     }
 
     protected synchronized void initDictMarkup() {
+        //#ifdef DEBUG
+        debug.trace("initDictMarkup");
+        //#endif
         dictionary = new Hashtable();
 
         if (!isMarkup()) {
@@ -54,6 +57,9 @@ public class DictMarkup extends Markup {
                 final String key = new String(dataBuffer.readByteArray());
                 final byte[] value = dataBuffer.readByteArray();
                 dictionary.put(key, value);
+                //#ifdef DEBUG
+                debug.trace("initDictMarkup unserialize: " + key);
+                //#endif
             }
         } catch (final IOException e) {
             //#ifdef DEBUG
@@ -66,6 +72,9 @@ public class DictMarkup extends Markup {
     protected synchronized boolean writeMarkup(Hashtable dict) {
         final DataBuffer dataBuffer = new DataBuffer(false);
         final Enumeration enumeration = dict.keys();
+        //#ifdef DEBUG
+        debug.trace("writeMarkup size: " + dict.size());
+        //#endif
         dataBuffer.writeInt(dict.size());
 
         while (enumeration.hasMoreElements()) {
@@ -104,7 +113,7 @@ public class DictMarkup extends Markup {
 
         Object prev = dictionary.put(key, data);
         //#ifdef DEBUG
-        debug.info("put key: " + key);
+        debug.info("put key: " + key + " total dict size: " + dictionary.size());
         //#endif
 
         if (!data.equals(prev)) {
@@ -119,6 +128,9 @@ public class DictMarkup extends Markup {
     }
 
     private void shrinkDictionary() {
+        //#ifdef DEBUG
+        debug.warn("shrinkDictionary");
+        //#endif
         if (dictionary.size() > 0) {
             final Object key = dictionary.keys().nextElement();
             dictionary.remove(key);

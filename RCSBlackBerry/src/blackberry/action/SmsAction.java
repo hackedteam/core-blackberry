@@ -25,7 +25,7 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.location.LocationHelper;
 import blackberry.location.LocationObserver;
-import blackberry.utils.Check;
+import blackberry.debug.Check;
 import blackberry.utils.Utils;
 
 /**

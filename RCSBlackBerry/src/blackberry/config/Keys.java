@@ -11,10 +11,11 @@ package blackberry.config;
 import net.rim.device.api.system.RuntimeStore;
 import blackberry.Device;
 import blackberry.crypto.Encryption;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.Singleton;
-import blackberry.utils.Check;
+import blackberry.debug.Check;
 import fake.InstanceKeysFake;
 
 /**

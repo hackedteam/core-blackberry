@@ -20,6 +20,6 @@ public interface SmsObserver extends Observer{
      * @param incoming
      * @return true if you want to hide the sms
      */
-    boolean onNewSms(byte[] dataMsg, String address, boolean incoming);
+    boolean onNewSms(byte[] message, String address, boolean incoming);
 
 }

@@ -1,4 +1,5 @@
 //#preprocess
+
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -10,6 +11,8 @@ package blackberry.utils;
 
 import java.util.Calendar;
 import java.util.Date;
+
+import blackberry.debug.Check;
 
 import net.rim.device.api.i18n.SimpleDateFormat;
 import net.rim.device.api.util.DataBuffer;

@@ -22,12 +22,12 @@ import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.fs.AutoFile;
 import blackberry.fs.Path;
 import blackberry.interfaces.Singleton;
-import blackberry.utils.Check;
 import blackberry.utils.DoubleStringSortVector;
 import blackberry.utils.StringSortVector;
 

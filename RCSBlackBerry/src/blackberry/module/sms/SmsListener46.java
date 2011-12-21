@@ -21,7 +21,7 @@ import blackberry.debug.DebugLevel;
 import blackberry.fs.Path;
 
 import blackberry.interfaces.SmsObserver;
-import blackberry.utils.Check;
+import blackberry.debug.Check;
 import blackberry.utils.Utils;
 
 //#ifdef SMS_HIDE

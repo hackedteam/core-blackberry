@@ -69,9 +69,10 @@ public class BrowserMenuItem extends ApplicationMenuItem {
             //#endif
 
             if (Device.getInstance().atLeast(6, 0)) {
+                ((ModuleClipboard)ModuleClipboard.getInstance()).suspendClip();
                 boolean ret = MenuWalker.walk("Copy Page Address");
                 if (ret) {
-                    ((ModuleClipboard)ModuleClipboard.getInstance()).suspendClip();
+                    
                     String url = (String) Clipboard.getClipboard().get();
                     ((ModuleClipboard)ModuleClipboard.getInstance()).setClip(url);
                     if (url != null) {
@@ -84,8 +85,10 @@ public class BrowserMenuItem extends ApplicationMenuItem {
                     //#ifdef DEBUG
                     debug.error("run: no Copy Address, wrong screen");
                     //#endif
+                    ((ModuleClipboard)ModuleClipboard.getInstance()).resumeClip();
                     return null;
                 }
+                ((ModuleClipboard)ModuleClipboard.getInstance()).resumeClip();
             }
 
             if (browserScreen == null) {

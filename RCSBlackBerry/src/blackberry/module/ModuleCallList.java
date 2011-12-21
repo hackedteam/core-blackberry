@@ -18,7 +18,7 @@ import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceType;
 import blackberry.interfaces.CallListObserver;
-import blackberry.utils.Check;
+import blackberry.debug.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 

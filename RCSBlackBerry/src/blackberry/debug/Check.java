@@ -1,4 +1,5 @@
 //#preprocess
+
 /* *************************************************
  * Copyright (c) 2010 - 2010
  * HT srl,   All rights reserved.
@@ -6,10 +7,8 @@
  * File         : Check.java 
  * Created      : 26-mar-2010
  * *************************************************/
-package blackberry.utils;
+package blackberry.debug;
 
-import blackberry.debug.Debug;
-import blackberry.debug.DebugLevel;
 
 /**
  * The Class Check.

@@ -27,7 +27,7 @@ import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceCollector;
 import blackberry.fs.AutoFile;
 import blackberry.module.ModuleChat;
-import blackberry.utils.Check;
+import blackberry.debug.Check;
 import blackberry.utils.Utils;
 
 /**

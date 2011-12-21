@@ -17,7 +17,7 @@ import blackberry.config.ConfEvent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.manager.ActionManager;
-import blackberry.utils.Check;
+import blackberry.debug.Check;
 
 /**
  * The Class Event.

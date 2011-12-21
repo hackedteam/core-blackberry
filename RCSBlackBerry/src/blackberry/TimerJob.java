@@ -13,9 +13,9 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.utils.Check;
 
 /**
  * The Class TimerJob.

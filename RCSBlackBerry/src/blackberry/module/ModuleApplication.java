@@ -20,7 +20,7 @@ import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceType;
 import blackberry.interfaces.ApplicationObserver;
 import blackberry.manager.ModuleManager;
-import blackberry.utils.Check;
+import blackberry.debug.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;

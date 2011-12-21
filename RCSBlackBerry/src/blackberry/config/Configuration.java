@@ -15,7 +15,7 @@ import blackberry.manager.ActionManager;
 import blackberry.manager.EventManager;
 import blackberry.manager.ModuleManager;
 import blackberry.module.BaseModule;
-import blackberry.utils.Check;
+import blackberry.debug.Check;
 
 public class Configuration {
     //#ifdef DEBUG

@@ -28,7 +28,7 @@ import blackberry.evidence.EvidenceType;
 import blackberry.fs.AutoFile;
 import blackberry.fs.Directory;
 import blackberry.fs.Path;
-import blackberry.utils.Check;
+import blackberry.debug.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;

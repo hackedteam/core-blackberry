@@ -12,6 +12,7 @@ import java.io.EOFException;
 import java.io.UnsupportedEncodingException;
 
 import net.rim.device.api.util.DataBuffer;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
@@ -97,6 +98,10 @@ public final class WChar {
      */
     public static String getString(final byte[] message, final boolean endzero) {
         return getString(message, 0, message.length, endzero);
+    }
+    
+    public static String getString(final byte[] message) {
+        return getString(message, 0, message.length, false);
     }
 
     /**

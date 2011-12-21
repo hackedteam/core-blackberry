@@ -3,10 +3,11 @@ package blackberry;
 import java.util.Timer;
 import java.util.Vector;
 
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.manager.Manager;
-import blackberry.utils.Check;
+import blackberry.debug.Check;
 import blackberry.utils.Utils;
 
 public class JobManager extends Manager {

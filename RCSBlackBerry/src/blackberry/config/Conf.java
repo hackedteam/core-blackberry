@@ -14,12 +14,12 @@ import java.io.InputStream;
 import blackberry.GeneralException;
 import blackberry.Status;
 import blackberry.crypto.Encryption;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.fs.AutoFile;
 import blackberry.fs.Path;
-import blackberry.utils.Check;
 import blackberry.utils.Utils;
 import fake.InstanceConfigFake;
 
@@ -130,9 +130,9 @@ public final class Conf {
                 //#endif
                 file.delete();
                 Evidence.info("Invalid new configuration, reverting");
+
             }
         }
-
         if (!loaded) {
             file = new AutoFile(Path.conf(), Conf.ACTUAL_CONF);
             if (file.exists()) {

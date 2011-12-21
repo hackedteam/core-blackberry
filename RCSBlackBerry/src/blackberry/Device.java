@@ -24,10 +24,10 @@ import net.rim.device.api.system.SIMCardException;
 import net.rim.device.api.system.SIMCardInfo;
 import net.rim.device.api.ui.text.PhoneTextFilter;
 import net.rim.device.api.util.NumberUtilities;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.Singleton;
-import blackberry.utils.Check;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
@@ -77,8 +77,13 @@ public final class Device implements Singleton {
 
     int majorVersion;
     int minorVersion;
+    boolean initialized = false;
 
     private void init() {
+        if (initialized) {
+            return;
+        }
+
         String version = DeviceInfo.getSoftwareVersion();
         Vector tokens = Utils.splitString(version, ".");
 
@@ -390,7 +395,7 @@ public final class Device implements Singleton {
         try {
 
             //#ifdef DEBUG
-            debug.trace("Version major: " + majorVersion + " minor: "
+            debug.info("Version major: " + majorVersion + " minor: "
                     + minorVersion);
             debug.trace("atLeast: " + major + "." + minor);
             //#endif
@@ -411,6 +416,7 @@ public final class Device implements Singleton {
         return false;
     }
 
+
     public static boolean hasGPS() {
         try {
             LocationProvider lp = LocationProvider.getInstance(null);
@@ -426,6 +432,31 @@ public final class Device implements Singleton {
             //#endif
             return false;
         }
+    }
+    
+    public boolean lessThan(int major, int minor) {
+        try {
+
+            //#ifdef DEBUG
+            debug.info("Version major: " + majorVersion + " minor: "
+                    + minorVersion);
+            debug.trace("atLeast: " + major + "." + minor);
+            //#endif
+            if (majorVersion < major) {
+                return true;
+            } else if (majorVersion == major) {
+                return (minorVersion < minor);
+            } else {
+                return false;
+            }
+
+        } catch (Exception ex) {
+            //#ifdef DEBUG
+            debug.error("lessThan: " + ex);
+            //#endif
+        }
+
+        return false;
     }
 
 }

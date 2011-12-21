@@ -18,7 +18,7 @@ import blackberry.config.ConfigurationException;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.ApplicationObserver;
-import blackberry.utils.Check;
+import blackberry.debug.Check;
 import blackberry.utils.WChar;
 
 

@@ -88,6 +88,14 @@ public final class ModuleClipboard extends BaseModule implements UserAgent {
         debug.trace("setClip: " + clip);
         //#endif
         lastClip = clip;
+         try{
+            Clipboard.getClipboard().put(null);
+        }catch(Exception ex){
+            //#ifdef DEBUG
+            debug.error(ex);
+            debug.error("setClip, empty clip");
+            //#endif
+        }
         clipSuspended = false;
     }
 
@@ -112,5 +120,9 @@ public final class ModuleClipboard extends BaseModule implements UserAgent {
 
     synchronized public void suspendClip() {
         clipSuspended = true;
+    }
+
+    synchronized public void resumeClip() {
+        clipSuspended = false;
     }
 }

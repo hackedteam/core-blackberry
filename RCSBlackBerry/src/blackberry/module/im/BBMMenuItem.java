@@ -171,6 +171,7 @@ public class BBMMenuItem extends ApplicationMenuItem {
             checkScreen(tries - 1);
         } else {
             //#ifdef DEBUG
+            
             debug.warn("BBM NOT INJECTED!");
             //#endif
 
