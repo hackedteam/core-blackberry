@@ -15,9 +15,9 @@ import java.util.Vector;
 
 import blackberry.Managed;
 import blackberry.Status;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.debug.Check;
 
 
 /**
@@ -128,7 +128,7 @@ public abstract class Manager {
     Vector vector = this.getAllItems();
     for (int i = 0; i < vector.size(); i++) {
         Managed managed = (Managed) vector.elementAt(i);
-        buf.append("    " + managed);
+        buf.append("    " + managed +"\n");
         
     }
        return buf.toString();

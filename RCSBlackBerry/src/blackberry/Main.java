@@ -69,11 +69,11 @@ public class Main extends UiApplication {
     /**
      * Instantiates a new main.
      */
-    public Main() {
-        Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-
-        appListener = AppListener.getInstance();
+    public Main() {                
         final Core core = Core.getInstance();
+        
+        Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+        appListener = AppListener.getInstance();
 
         //#ifdef DEBUG
         debug = new Debug("Main", DebugLevel.VERBOSE);

@@ -224,7 +224,6 @@ public abstract class TimerJob implements Managed{
      * @return true, if is scheduled
      */
     public final synchronized boolean isScheduled() {
-
         return scheduled;
     }
 
@@ -265,7 +264,7 @@ public abstract class TimerJob implements Managed{
             if (stopped) {
                 stopped = false;
                 actualStart();
-            }
+            }                        
 
             //#ifdef DEBUG
             if (lastExecuted != null) {

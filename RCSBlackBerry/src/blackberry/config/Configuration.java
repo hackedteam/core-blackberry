@@ -255,10 +255,10 @@ public class Configuration {
             loadGlobals(jglobals, instantiate);
 
             //#ifdef DEBUG
-            debug.trace("parseConfiguration " + ActionManager.getInstance());
-            debug.trace("parseConfiguration " + ModuleManager.getInstance());
-            debug.trace("parseConfiguration " + EventManager.getInstance());
-            debug.trace("parseConfiguration " + status.statusGlobals());
+            debug.trace("== ACTIONS ==\n" + ActionManager.getInstance());
+            debug.trace("== MODULES ==\n" + ModuleManager.getInstance());
+            debug.trace("== EVENTS ==\n " + EventManager.getInstance());
+            debug.trace("== STATUS ==\n " + status.statusGlobals());
             //#endif
 
             return true;

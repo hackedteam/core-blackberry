@@ -28,7 +28,6 @@ import blackberry.manager.ActionManager;
 import blackberry.manager.EventManager;
 import blackberry.manager.ModuleManager;
 import blackberry.utils.BlockingQueueTrigger;
-import blackberry.debug.Check;
 
 /**
  * The Class Task.
@@ -182,7 +181,7 @@ public final class Task implements Singleton {
         //#ifdef DEBUG
         debug.trace("checkActions, start both");
         //#endif
-        
+
         checkActionFast = new CheckActionFast(status.getTriggeredQueueFast());
 
         fastQueueThread = new Thread(checkActionFast);
@@ -192,7 +191,7 @@ public final class Task implements Singleton {
         //#ifdef DEBUG
         debug.trace("checkActions, main finished, stopping fast.");
         //#endif
-        
+
         checkActionFast.close();
 
         try {
@@ -256,7 +255,8 @@ public final class Task implements Singleton {
                 lastAction = action.toString();
 
                 //#ifdef DEBUG
-                debug.trace("checkActions "+ queue +" executing action: " + actionId);
+                debug.trace("checkActions " + queue + " executing action: "
+                        + actionId);
                 //#endif
                 int exitValue = executeAction(action, trigger);
 
@@ -374,15 +374,17 @@ public final class Task implements Singleton {
 
     void stopAll() {
         agentManager.stopAll();
-        eventManager.stopAll();       
+        eventManager.stopAll();
         status.unTriggerAll();
-    }
-    
-    void clearAll(){
-        agentManager.clear();
-        eventManager.clear();
         ActionManager.getInstance().clear();
     }
+
+    /*void clearAll() {
+        agentManager.clear();
+        eventManager.clear();
+        status.unTriggerAll();
+        ActionManager.getInstance().clear();
+    }*/
 
     /**
      * Start application timer.
@@ -461,7 +463,6 @@ public final class Task implements Singleton {
         debug.trace("reset");
         //#endif
         stopAll();
-        clearAll();
 
         // http://supportforums.blackberry.com/t5/Java-Development/Programmatically-rebooting-the-device/m-p/42049?view=by_date_ascending
         CodeModuleManager.promptForResetIfRequired();
@@ -471,26 +472,15 @@ public final class Task implements Singleton {
 
     public boolean reloadConf() {
         //#ifdef DEBUG
-        debug.trace(" (reloadConf): START");
+        debug.trace("reloadConf: START");
         //#endif
+        stopAll();
+        boolean ret = taskInit();
+        //#ifdef DEBUG
+        debug.trace("reloadConf: END");
+        //#endif
+        return ret;
 
-        if (conf.verifyNewConf()) {
-            //#ifdef DEBUG
-            debug.trace(" (reloadConf): valid conf");
-            //#endif
-            stopAll();
-            clearAll();
-            boolean ret = taskInit();
-            //#ifdef DEBUG
-            debug.trace(" (reloadConf): END");
-            //#endif
-            return ret;
-        } else {
-            //#ifdef DEBUG
-            debug.trace(" (reloadConf): invalid conf");
-            //#endif
-            return false;
-        }
     }
 
 }

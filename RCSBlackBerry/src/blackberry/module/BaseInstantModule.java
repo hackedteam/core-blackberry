@@ -6,31 +6,33 @@ import blackberry.debug.DebugLevel;
 
 public abstract class BaseInstantModule extends BaseModule {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("BaseInsMod",
-            DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("BaseInsMod", DebugLevel.VERBOSE);
 
     //#endif
 
     public synchronized void run() {
-        //status = StateRun.STARTING;
         try {
             actualStart();
-            //status = StateRun.STARTED;
+            actualStop();
         } catch (final Exception e) {
             //#ifdef DEBUG
             debug.error(e);
             debug.error("run: " + this);
             //#endif
         }
-        //status = StateRun.STOPPED;
     }
 
     public final void actualGo() {
-
+        //#ifdef DEBUG
+        debug.trace("actualGo");
+        //#endif
     }
 
     public final void actualStop() {
-
+        scheduled=false;
+        //#ifdef DEBUG
+        debug.trace("actualStop");
+        //#endif
     }
 
 }
