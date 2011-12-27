@@ -9,8 +9,6 @@
  * *************************************************/
 package blackberry.utils;
 
-//#ifdef DEBUG
-//#endif
 /**
  * The Class BlockingQueue.
  * 

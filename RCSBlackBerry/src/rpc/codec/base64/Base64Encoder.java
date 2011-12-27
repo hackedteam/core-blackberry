@@ -1,11 +1,15 @@
 // Base64Encoder.java
-// $Id: Base64Encoder.java,v 1.8 2000/08/16 21:37:48 ylafon Exp $
 // (c) COPYRIGHT MIT and INRIA, 1996.
 // Please first read the full copyright statement in file COPYRIGHT.html
 
 package rpc.codec.base64;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 
 /**
  * BASE64 encoder implementation.

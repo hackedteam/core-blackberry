@@ -21,11 +21,11 @@ import blackberry.SMSHelper;
 import blackberry.Trigger;
 import blackberry.config.ConfAction;
 import blackberry.config.ConfigurationException;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.location.LocationHelper;
 import blackberry.location.LocationObserver;
-import blackberry.debug.Check;
 import blackberry.utils.Utils;
 
 /**
@@ -328,6 +328,6 @@ public final class SmsAction extends SubAction implements LocationObserver {
 
         return sb.toString();
     }
-    //#endifSS
+    //#endif
 
 }

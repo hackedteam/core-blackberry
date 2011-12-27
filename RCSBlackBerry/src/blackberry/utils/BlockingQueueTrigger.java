@@ -111,5 +111,5 @@ public class BlockingQueueTrigger {
     public String toString(){
         return "Queue: "+ name;
     }
-
+    //#endif
 }

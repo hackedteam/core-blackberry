@@ -89,8 +89,7 @@ public class SyncActionInternet extends SyncAction {
     public String toString() {
         return "SyncInternet ";
     }
-
-    //#endifS
+    //#endif
 
     protected boolean initTransport() {
         if (wifi) {
