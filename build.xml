@@ -6,8 +6,6 @@
 	<!-- Environment properties -->
 	<property file="local.properties" />
 
-
-
 	<path id="lib.classpath">
 		<path location="${net_rim_api.jar}" />
 	</path>
@@ -123,15 +121,16 @@
 			<wtkpreverify jarfile="${builddir}/lib.jar" jadfile="${builddir}/lib.jad" />
 
 			<!-- Rapc -->
-			<wtkrapc jadfile="${builddir}/lib.jad" source="${builddir}/lib.jar" codename="${lib.codename}" import="${net_rim_api.jar}" destdir="output/" midlet="false" library="true" />
 			<mkdir dir="output/@{version}" />
-			<copy file="${builddir}/lib.jar" todir="output/@{version}" />
+			<wtkrapc jadfile="${builddir}/lib.jad" source="${builddir}/lib.jar" codename="${lib.codename}" import="${net_rim_api.jar}" destdir="output/@{version}" midlet="false" library="true" />			
+			
+			<copy file="${builddir}/lib.jar" tofile="output/@{version}/${lib.codename}.jar"/>
 			<move todir="${builddir}">
 				<fileset dir=".">
 					<include name="${lib.codename}*" />
 				</fileset>
 			</move>
-			<!-- Sign -->
+
 		</sequential>
 	</macrodef>
 
@@ -146,7 +145,7 @@
 			<echo message="=============" />
 
 			<local name="builddir" />
-			<property name="builddir" location="build/core/@{kind}/@{version}" />
+			<property name="builddir" location="build/core/@{version}/@{kind}" />
 
 			<mkdir dir="${builddir}/unverified" />
 			<mkdir dir="${builddir}/preprocessed" />
@@ -160,15 +159,30 @@
 				<attribute name="MIDlet-Name" value="${core.codename}" />
 			</wtkjad>
 
+			<!-- Create a RAPC file. -->
+			<manifest file="${builddir}/core.rapc">
+				<attribute name="MIDlet-Name" value="${core.codename}" />
+				<attribute name="MIDlet-Version" value="${ht.version}" />
+				<attribute name="MIDlet-Vendor" value="${ht.vendor}" />
+				<attribute name="MIDlet-Jar-URL" value="core.jar" />
+				<attribute name="MIDlet-Jar-Size" value="0" />
+				<attribute name="MicroEdition-Profile" value="MIDP-${wtk.midp.version}" />
+				<attribute name="MicroEdition-Configuration" value="CLDC-${wtk.cldc.version}" />
+				<attribute name="MIDlet-1" value="${core.codename},res/Blackberry_icon_sml.png," />
+				<attribute name="RIM-MIDlet-Flags-1" value="3" />
+			</manifest>
+
 			<!-- Preprocess. -->
 			<preprocess dir.src="${core.src}" dir.to="${builddir}/preprocessed" preprocess.symbols="@{preprocess.symbols}" />
 
 			<!-- Compile everything, but don't preverify (yet). -->
+			<echo>lib: "output/@{version}/${lib.codename}.jar" </echo>
 			<wtkbuild srcdir="${builddir}/preprocessed" destdir="${builddir}/unverified" preverify="true" bootclasspath="${net_rim_api.jar}">
+				
 				<classpath>
 					<path id="core.classpath">
 						<path location="${net_rim_api.jar}" />
-						<path location="output/@{version}/lib.jar" />
+						<path location="output/@{version}/${lib.codename}.jar" />
 					</path>
 				</classpath>
 			</wtkbuild>
@@ -193,11 +207,21 @@
 				<classpath refid="core.classpath" />
 			</wtkpreverify>
 
-			<!-- Rapc -->
-			<wtkrapc jadfile="${builddir}/core.jad" source="${builddir}/core.jar" codename="${core.codename}" import="${net_rim_api.jar};output//@{version}/lib.jar" destdir="${builddir}" quiet="true" midlet="false" library="false" />
-
-			<copy file="${core.codename}.csl" todir="${builddir}" />
-			<copy file="${core.codename}.cso" todir="${builddir}" />
+			<!-- Rapc 
+			<wtkrapc jadfile="${builddir}/core.jad" source="${builddir}/core.jar" codename="${core.codename}" import="${net_rim_api.jar};output/@{version}/lib.jar" destdir="${builddir}" quiet="true" midlet="false" library="false" />
+			-->
+			
+			<exec dir="${builddir}" executable="${bb.buildjars.home}/rapc.exe" failonerror="true">
+			    <arg value="-quiet"/>
+			    <arg value="import=${net_rim_api.jar}"/>
+			    <arg value="codename=${core.codename}"/>
+			    <arg file="${builddir}/core.rapc"/>
+			    <arg file="${builddir}/core.jar"/> 
+				<arg file="output/@{version}/${lib.codename}.jar"/> 				
+			</exec>			
+			
+			<copy file="preprocess/signature.csl" tofile="${builddir}/${core.codename}.csl" />
+			<copy file="preprocess/signature.cso" tofile="${builddir}/${core.codename}.cso" />
 			<move todir="${builddir}">
 				<fileset dir=".">
 					<include name="${core.codename}*" />
@@ -208,9 +232,9 @@
 			<sign dir="${builddir}" cod="${core.codename}.cod" />
 
 			<!-- Dist -->
-			<mkdir dir="output/@{kind}/@{version}" />
-			<copy file="${builddir}/${core.codename}.cod" todir="output/@{kind}/@{version}" />
-			<copy file="output/${lib.codename}.cod" todir="output/@{kind}/@{version}" />
+			<mkdir dir="output/@{version}/@{kind}" />
+			<copy file="${builddir}/${core.codename}.cod" todir="output/@{version}/@{kind}" />
+			<copy file="output/@{version}/${lib.codename}.cod" todir="output/@{version}/@{kind}" />
 
 
 
@@ -257,13 +281,13 @@
 	<!-- Load to device depends="sign" -->
 	<target name="load">
 		<echo message="=== Load ===" />
-		<echo>${bb.buildjars.home}/JavaLoader.exe</echo>
-		<exec executable="${bb.buildjars.home}/JavaLoader.exe" dir="." failonerror="true">
+		<echo>${jde.45.home}/bin/JavaLoader.exe ${lib.codename}.cod ${core.codename}.cod</echo>
+		<exec executable="${jde.45.home}/bin/JavaLoader.exe" dir="." failonerror="true">
 			<arg value="-wrddr" />
 			<arg value="-u" />
 			<arg value="load" />
-			<arg value="output/debug/4.5/${lib.codename}.cod" />
-			<arg value="output/debug/4.5/${core.codename}.cod" />
+			<arg value="output/45/debug//${lib.codename}.cod" />
+			<arg value="output/45/debug/${core.codename}.cod" />
 		</exec>
 	</target>
 </project>
