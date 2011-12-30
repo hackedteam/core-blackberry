@@ -17,11 +17,11 @@ import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
 import blackberry.Main;
-import blackberry.agent.im.AppInjectorBBM;
-import blackberry.agent.url.AppInjectorBrowser;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.module.im.AppInjectorBBM;
+import blackberry.module.url.AppInjectorBrowser;
 import blackberry.utils.Utils;
 
 public class AppInjector {

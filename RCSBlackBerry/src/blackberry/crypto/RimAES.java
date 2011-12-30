@@ -43,7 +43,6 @@ public final class RimAES implements CryptoEngine {
 
     AESKey aeskey;
     AESEncryptorEngine aesencrypt;
-
     AESDecryptorEngine aesdecrypt;
 
     /*

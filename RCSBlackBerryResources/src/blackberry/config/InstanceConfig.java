@@ -1,7 +1,6 @@
 //#preprocess
 package blackberry.config;
-//#ifdef DEBUG
-//#endif
+
 import java.io.InputStream;
 
 public class InstanceConfig {

@@ -42,6 +42,10 @@ public abstract class Listener {
         //#endif
         if (!observers.contains(observer)) {
             observers.addElement(observer);
+        }else{
+            //#ifdef DEBUG
+            debug.warn("addObserver: already observing");
+            //#endif
         }
     }
 

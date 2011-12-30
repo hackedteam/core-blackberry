@@ -21,7 +21,7 @@ import tests.Data;
 import tests.TestUnit;
 import tests.Tests;
 import blackberry.config.Conf;
-import blackberry.utils.Check;
+import blackberry.debug.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.DoubleStringSortVector;
 import blackberry.utils.StringSortVector;

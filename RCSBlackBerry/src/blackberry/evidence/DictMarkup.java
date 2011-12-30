@@ -29,8 +29,8 @@ public class DictMarkup extends Markup {
     private static final int MAX_DICT_SIZE = 100;
     private Hashtable dictionary = null;
 
-    public DictMarkup(int agentId, byte[] aesKey) {
-        super(agentId, aesKey);
+    public DictMarkup(String id) {
+        super(id);
         initDictMarkup();
     }
 

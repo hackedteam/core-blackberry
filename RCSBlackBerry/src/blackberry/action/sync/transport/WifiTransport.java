@@ -53,7 +53,7 @@ public class WifiTransport extends HttpTransport {
     public String toString() {
         return "WifiTransport " + host;
     }
-    //#endifS
+    //#endif
 
     public void close() {
         super.close();

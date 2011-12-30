@@ -24,7 +24,7 @@ import blackberry.crypto.CryptoEngine;
 import blackberry.crypto.Encryption;
 import blackberry.crypto.Rijndael;
 import blackberry.crypto.RimAES;
-import blackberry.utils.Check;
+import blackberry.debug.Check;
 import blackberry.utils.Utils;
 
 

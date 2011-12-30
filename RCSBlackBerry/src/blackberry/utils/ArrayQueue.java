@@ -45,7 +45,7 @@ public final class ArrayQueue implements Queue {
      */
     public ArrayQueue() {
         theArray = new Object[DEFAULT_CAPACITY];
-        makeEmpty();
+        clear();
     }
 
     /**
@@ -136,10 +136,15 @@ public final class ArrayQueue implements Queue {
     /**
      * Make the queue logically empty.
      */
-    public synchronized void makeEmpty() {
+    public synchronized void clear() {
         currentSize = 0;
         front = 0;
         back = -1;
+    }
+
+    public void remove(Object x) {
+        // TODO Auto-generated method stub
+        
     }
 
 }
