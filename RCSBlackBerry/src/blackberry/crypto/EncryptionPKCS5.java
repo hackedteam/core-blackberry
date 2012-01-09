@@ -9,8 +9,24 @@
 
 package blackberry.crypto;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Date;
+
+import net.rim.device.api.crypto.AESDecryptorEngine;
+import net.rim.device.api.crypto.AESEncryptorEngine;
+import net.rim.device.api.crypto.AESKey;
+import net.rim.device.api.crypto.BlockDecryptor;
+import net.rim.device.api.crypto.BlockEncryptor;
+import net.rim.device.api.crypto.CBCDecryptorEngine;
+import net.rim.device.api.crypto.CBCEncryptorEngine;
 import net.rim.device.api.crypto.CryptoException;
 import net.rim.device.api.crypto.CryptoTokenException;
+import net.rim.device.api.crypto.CryptoUnsupportedOperationException;
+import net.rim.device.api.crypto.InitializationVector;
+import net.rim.device.api.crypto.PKCS5FormatterEngine;
+import net.rim.device.api.crypto.PKCS5UnformatterEngine;
 import net.rim.device.api.crypto.SHA1Digest;
 import net.rim.device.api.util.Arrays;
 import blackberry.debug.Check;
@@ -22,14 +38,31 @@ public class EncryptionPKCS5 extends Encryption {
     //#ifdef DEBUG
     private static Debug debug = new Debug("EncryptionPKCS5",
             DebugLevel.INFORMATION);
-
     //#endif
-    public EncryptionPKCS5(byte[] confKey) {
-        super(confKey);
+
+    AESKey aeskey;
+
+    public EncryptionPKCS5(byte[] key) {
+        super(key);
+
     }
 
     public EncryptionPKCS5() {
         super();
+    }
+
+    public void makeKey(final byte[] key) {
+        //#ifdef DBC
+        Check.requires(key != null, "key null");
+        //#endif
+        //#ifdef DBC
+        Check.requires(key.length == 16, "key not 16 bytes long");
+        //#endif
+        aes.makeKey(key, 128);
+
+        aeskey = new AESKey(key);
+
+        keyReady = true;
     }
 
     /**
@@ -124,7 +157,19 @@ public class EncryptionPKCS5 extends Encryption {
         //#ifdef DBC
         Check.ensures(plain != null, "null plain");
         Check.ensures(plain.length == plainlen, "wrong plainlen");
+
+        try {
+            byte[] test = decryptTest(cyphered, offset);
+            boolean equal = Arrays.equals(test, plain);
+
+            Check.ensures(equal, "not equal");
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
         //#endif
+
         return plain;
     }
 
@@ -144,7 +189,38 @@ public class EncryptionPKCS5 extends Encryption {
         debug.trace("encryptDataIntegrity plainSha: " + plainSha.length);
         //#endif
 
-        return encryptData(plainSha, 0);
+
+        long first = new Date().getTime();
+        byte[] encrypted = encryptData(plainSha, 0);
+        long second = new Date().getTime();
+        long third =0;
+        //#ifdef DBC
+        byte[] test = null;
+        try {
+            test = encryptTest(plainSha, 0);
+            third = new Date().getTime();
+            //debug.info(new String(test));
+            //debug.info(new String(encrypted));
+        } catch (CryptoTokenException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (CryptoUnsupportedOperationException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        boolean equal = Arrays.equals(test, encrypted);
+        Check.ensures(equal, "not equal");
+        //#endif
+        
+        //#ifdef DEBUG
+        debug.info("encryptDataIntegrity: test " + ( third - second ));
+        debug.info("encryptDataIntegrity: orig " + ( second - first ));
+        //#endif
+
+        return encrypted;
     }
 
     public byte[] decryptDataIntegrity(final byte[] cyphered, int len,
@@ -183,5 +259,61 @@ public class EncryptionPKCS5 extends Encryption {
     public byte[] decryptDataIntegrity(byte[] rawConf) throws CryptoException {
 
         return decryptDataIntegrity(rawConf, rawConf.length, 0);
+    }
+
+    public byte[] encryptTest(byte[] plain, int offset)
+            throws CryptoTokenException, CryptoUnsupportedOperationException,
+            IOException {
+
+        AESEncryptorEngine engine = new AESEncryptorEngine(aeskey);
+
+        byte[] iv = new byte[16];
+        Arrays.fill(iv, (byte) 0);
+        InitializationVector ivc = new InitializationVector(iv);
+        
+        CBCEncryptorEngine cbc = new CBCEncryptorEngine(engine,ivc);
+        PKCS5FormatterEngine formatter = new PKCS5FormatterEngine(cbc);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        BlockEncryptor encryptor = new BlockEncryptor(formatter, output);
+
+        encryptor.write(plain, offset, plain.length - offset);
+        encryptor.close();
+
+        output.flush();
+        byte[] cyphered = output.toByteArray();
+        return cyphered;
+    }
+
+    public byte[] decryptTest(byte[] cyphered, int offset)
+            throws CryptoTokenException, CryptoUnsupportedOperationException,
+            IOException {
+
+        AESDecryptorEngine engine = new AESDecryptorEngine(aeskey);
+        
+        byte[] iv = new byte[16];
+        Arrays.fill(iv, (byte) 0);
+        InitializationVector ivc = new InitializationVector(iv);
+        
+        CBCDecryptorEngine cbc = new CBCDecryptorEngine(engine, ivc);
+
+        PKCS5UnformatterEngine formatter = new PKCS5UnformatterEngine(cbc);
+        ByteArrayInputStream input = new ByteArrayInputStream(cyphered, offset,
+                cyphered.length - offset);
+
+        BlockDecryptor decryptor = new BlockDecryptor(formatter, input);
+        ByteArrayOutputStream decryptedStream = new ByteArrayOutputStream();
+
+        byte[] buffer = new byte[1024];
+        int bytesRead = 0;
+        do {
+            bytesRead = decryptor.read(buffer);
+            if (bytesRead != -1) {
+                decryptedStream.write(buffer, 0, bytesRead);
+            }
+        } while (bytesRead != -1);
+
+        byte[] decryptedBytes = decryptedStream.toByteArray();
+        return decryptedBytes;
     }
 }
