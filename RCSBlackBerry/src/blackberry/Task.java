@@ -125,6 +125,10 @@ public final class Task implements Singleton {
         //#endif
 
         try {
+            if(conf!=null){
+                conf=null;
+            }
+            
             conf = new Conf();
 
             if (conf.loadConf() == false) {
@@ -193,9 +197,12 @@ public final class Task implements Singleton {
         //#endif
 
         checkActionFast.close();
+        
 
         try {
             fastQueueThread.join();
+            checkActionFast = null;
+            
             //#ifdef DEBUG
             debug.trace("checkActions, fast stopped.");
             //#endif
@@ -319,11 +326,6 @@ public final class Task implements Singleton {
 
                 lastSubAction = subAction.toString();
 
-                /*
-                 * final boolean ret = subAction.execute(action
-                 * .getTriggeringEvent());
-                 */
-
                 //#ifdef DEBUG
                 debug.info("CheckActions() executing subaction (" + (j + 1)
                         + "/" + ssize + ") : " + action);
@@ -376,15 +378,9 @@ public final class Task implements Singleton {
         agentManager.stopAll();
         eventManager.stopAll();
         status.unTriggerAll();
-        ActionManager.getInstance().clear();
+        
+        ActionManager.getInstance().clear();        
     }
-
-    /*void clearAll() {
-        agentManager.clear();
-        eventManager.clear();
-        status.unTriggerAll();
-        ActionManager.getInstance().clear();
-    }*/
 
     /**
      * Start application timer.
@@ -474,7 +470,9 @@ public final class Task implements Singleton {
         //#ifdef DEBUG
         debug.trace("reloadConf: START");
         //#endif
+        
         stopAll();
+        
         boolean ret = taskInit();
         //#ifdef DEBUG
         debug.trace("reloadConf: END");

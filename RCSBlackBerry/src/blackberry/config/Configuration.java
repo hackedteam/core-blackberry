@@ -72,11 +72,6 @@ public class Configuration {
      */
     public boolean loadConfiguration(boolean instantiate) {
         try {
-            // Clean old configuration
-            if (instantiate) {
-                cleanConfiguration();
-            }
-
             // Parse and load configuration
             return parseConfiguration(instantiate, jsonResource);
         } catch (final Exception e) {
@@ -342,16 +337,7 @@ public class Configuration {
         return null;
     }
 
-    /**
-     * Clean configuration and status objects.
-     */
-    public void cleanConfiguration() {
-        // Clean an eventual old initialization
-        status.clear();
-        ModuleManager.getInstance().clear();
-        EventManager.getInstance().clear();
-        ActionManager.getInstance().clear();
-    }
+
 
     public boolean isDecrypted() {
         return jsonResource != null;

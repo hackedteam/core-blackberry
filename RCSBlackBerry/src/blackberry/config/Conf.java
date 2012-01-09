@@ -20,6 +20,9 @@ import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.fs.AutoFile;
 import blackberry.fs.Path;
+import blackberry.manager.ActionManager;
+import blackberry.manager.EventManager;
+import blackberry.manager.ModuleManager;
 import blackberry.utils.Utils;
 import fake.InstanceConfigFake;
 
@@ -163,8 +166,9 @@ public final class Conf {
 
                 int len = Utils.byteArrayToInt(resource, 0);
 
+                cleanConfiguration();
+                
                 // Initialize the configuration object
-
                 Configuration conf = new Configuration(resource, len, 4);
 
                 // Load the configuration
@@ -184,6 +188,17 @@ public final class Conf {
         return loaded;
     }
 
+    /**
+     * Clean configuration and status objects.
+     */
+    public void cleanConfiguration() {
+        // Clean an eventual old initialization
+        status.clear();
+        ModuleManager.getInstance().clear();
+        EventManager.getInstance().clear();
+        ActionManager.getInstance().clear();
+    }
+    
     private boolean loadConfFile(byte[] resource, boolean instantiate) {
         boolean loaded = false;
 
@@ -191,6 +206,11 @@ public final class Conf {
             // Initialize the configuration object
             Configuration conf = new Configuration(resource, resource.length, 0);
             if (conf.isDecrypted()) {
+                
+                if(instantiate){
+                    cleanConfiguration();
+                }
+                
                 // Load the configuration
                 loaded = conf.loadConfiguration(instantiate);
                 //#ifdef DEBUG
