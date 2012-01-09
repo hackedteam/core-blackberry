@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.evidence;
 
 import java.io.IOException;
@@ -64,8 +64,9 @@ public class DictMarkup extends Markup {
         } catch (final IOException e) {
             //#ifdef DEBUG
             debug.error("initDictMarkup");
-            removeMarkup();
             //#endif
+            removeMarkup();
+            writeMarkup(Utils.intToByteArray(0));
         }
     }
 

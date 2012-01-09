@@ -30,33 +30,6 @@ import blackberry.utils.WChar;
 
 /*  LOG FORMAT
  *
- *  -- Naming Convention
- *  Il formato dei log e' il seguente:
- *  Il nome del file in chiaro ha questa forma: ID_AGENTE-LOG_TYPE-SEQUENCE.mob
- *  e si presenta cosi': xxxx-xxxx-dddd.mob
- *  Il primo gruppo e' formato generalmente da 4 cifre in esadecimali, il secondo
- *  e' formato generalmente da una cifra esadecimale, il terzo gruppo e' un numero
- *  di sequenza in formato decimale. Ognuno dei tre gruppi puo' essere composto da
- *  1 fino a 8 cifre. Il nome del file viene scramblato con il primo byte della
- *  chiave utilizzata per il challenge.
- *
- *  -- Header
- *  Il log cifrato e' cosi' composto:
- *  all'inizio del file viene scritta una LogStruct non cifrata, il membro FileSize indica la
- *  lunghezza complessiva di tutto il file. Dopo la LogStruct troviamo il filename in WCHAR,
- *  quindi i byte di AdditionalData se presenti e poi il contenuto vero e proprio.
- *
- *  -- Data
- *  Il contenuto e' formato da una DWORD in chiaro che indica la dimensione del blocco
- *  unpadded (va quindi paddata a BLOCK_SIZE per ottenere la lunghezza del blocco cifrato)
- *  e poi il blocco di dati vero e proprio. Questa struttura puo' esser ripetuta fino alla
- *  fine del file.
- *
- *  -- Global Struct
- *  |Log Struct|FileName|AdditionalData|DWORD Unpadded|Block|.....|DWORD Unpadded|Block|.....|
- *
- *  Un log puo' essere composto sia da un unico blocco DWORD-Dati che da piu' blocchi DWORD-Dati.
- *
  */
 /**
  * The Class Evidence (formerly known as Log.)

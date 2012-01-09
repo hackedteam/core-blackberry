@@ -94,6 +94,31 @@ public class EncryptionPKCS5 extends Encryption {
 
     public byte[] decryptData(final byte[] cyphered, final int enclen,
             final int offset) throws CryptoException {
+        try {
+            return decryptDataRim(cyphered, offset);
+        } catch (IOException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("decryptData");
+            //#endif
+            return decryptDataSelf(cyphered, enclen, offset);
+        }
+    }
+
+    public byte[] encryptData(final byte[] plain, int offset) {
+        try {
+            return encryptDataRim(plain, offset);
+        } catch (Exception e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("encryptData");
+            //#endif
+            return null;
+        }
+    }
+
+    public byte[] decryptDataSelf(final byte[] cyphered, final int enclen,
+            final int offset) throws CryptoException {
         //#ifdef DEBUG
         debug.trace("decryptData PKCS5");
         //#endif
@@ -177,7 +202,7 @@ public class EncryptionPKCS5 extends Encryption {
 
         byte[] encrypted;
         try {
-            encrypted = encryptRim(plainSha, 0);
+            encrypted = encryptDataRim(plainSha, 0);
         } catch (Exception e) {
             //#ifdef DEBUG
             debug.error(e);
@@ -194,7 +219,7 @@ public class EncryptionPKCS5 extends Encryption {
 
         byte[] plainSha;
         try {
-            plainSha = decryptRim(cyphered, offset);
+            plainSha = decryptDataRim(cyphered, offset);
         } catch (IOException e) {
             //#ifdef DEBUG
             debug.error(e);
@@ -238,7 +263,7 @@ public class EncryptionPKCS5 extends Encryption {
         return decryptDataIntegrity(rawConf, rawConf.length, 0);
     }
 
-    public byte[] encryptRim(byte[] plain, int offset)
+    public byte[] encryptDataRim(byte[] plain, int offset)
             throws CryptoTokenException, CryptoUnsupportedOperationException,
             IOException {
 
@@ -262,7 +287,7 @@ public class EncryptionPKCS5 extends Encryption {
         return cyphered;
     }
 
-    public byte[] decryptRim(byte[] cyphered, int offset)
+    public byte[] decryptDataRim(byte[] cyphered, int offset)
             throws CryptoTokenException, CryptoUnsupportedOperationException,
             IOException {
 

