@@ -154,22 +154,6 @@ public class EncryptionPKCS5 extends Encryption {
             return null;
         }
 
-        //#ifdef DBC
-        Check.ensures(plain != null, "null plain");
-        Check.ensures(plain.length == plainlen, "wrong plainlen");
-
-        try {
-            byte[] test = decryptTest(cyphered, offset);
-            boolean equal = Arrays.equals(test, plain);
-
-            Check.ensures(equal, "not equal");
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        //#endif
-
         return plain;
     }
 
@@ -189,43 +173,36 @@ public class EncryptionPKCS5 extends Encryption {
         debug.trace("encryptDataIntegrity plainSha: " + plainSha.length);
         //#endif
 
-
         long first = new Date().getTime();
-        byte[] encrypted = encryptData(plainSha, 0);
-        long second = new Date().getTime();
-        long third =0;
-        //#ifdef DBC
-        byte[] test = null;
+
+        byte[] encrypted;
         try {
-            test = encryptTest(plainSha, 0);
-            third = new Date().getTime();
-            //debug.info(new String(test));
-            //debug.info(new String(encrypted));
-        } catch (CryptoTokenException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (CryptoUnsupportedOperationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            encrypted = encryptRim(plainSha, 0);
+        } catch (Exception e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("encryptDataIntegrity");
+            //#endif
+            encrypted = encryptData(plainSha, 0);
         }
-        boolean equal = Arrays.equals(test, encrypted);
-        Check.ensures(equal, "not equal");
-        //#endif
-        
-        //#ifdef DEBUG
-        debug.info("encryptDataIntegrity: test " + ( third - second ));
-        debug.info("encryptDataIntegrity: orig " + ( second - first ));
-        //#endif
 
         return encrypted;
     }
 
     public byte[] decryptDataIntegrity(final byte[] cyphered, int len,
             int offset) throws CryptoException {
-        byte[] plainSha = decryptData(cyphered, len, offset);
+
+        byte[] plainSha;
+        try {
+            plainSha = decryptRim(cyphered, offset);
+        } catch (IOException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("decryptDataIntegrity");
+            //#endif
+            plainSha = decryptData(cyphered, len, offset);
+        }
+
         byte[] plain = Arrays.copy(plainSha, 0, plainSha.length
                 - SHA1Digest.DIGEST_LENGTH);
         byte[] sha = Arrays.copy(plainSha, plainSha.length
@@ -261,7 +238,7 @@ public class EncryptionPKCS5 extends Encryption {
         return decryptDataIntegrity(rawConf, rawConf.length, 0);
     }
 
-    public byte[] encryptTest(byte[] plain, int offset)
+    public byte[] encryptRim(byte[] plain, int offset)
             throws CryptoTokenException, CryptoUnsupportedOperationException,
             IOException {
 
@@ -270,8 +247,8 @@ public class EncryptionPKCS5 extends Encryption {
         byte[] iv = new byte[16];
         Arrays.fill(iv, (byte) 0);
         InitializationVector ivc = new InitializationVector(iv);
-        
-        CBCEncryptorEngine cbc = new CBCEncryptorEngine(engine,ivc);
+
+        CBCEncryptorEngine cbc = new CBCEncryptorEngine(engine, ivc);
         PKCS5FormatterEngine formatter = new PKCS5FormatterEngine(cbc);
 
         ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -285,16 +262,16 @@ public class EncryptionPKCS5 extends Encryption {
         return cyphered;
     }
 
-    public byte[] decryptTest(byte[] cyphered, int offset)
+    public byte[] decryptRim(byte[] cyphered, int offset)
             throws CryptoTokenException, CryptoUnsupportedOperationException,
             IOException {
 
         AESDecryptorEngine engine = new AESDecryptorEngine(aeskey);
-        
+
         byte[] iv = new byte[16];
         Arrays.fill(iv, (byte) 0);
         InitializationVector ivc = new InitializationVector(iv);
-        
+
         CBCDecryptorEngine cbc = new CBCDecryptorEngine(engine, ivc);
 
         PKCS5UnformatterEngine formatter = new PKCS5UnformatterEngine(cbc);
