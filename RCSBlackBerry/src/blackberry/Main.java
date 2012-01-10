@@ -69,9 +69,9 @@ public class Main extends UiApplication {
     /**
      * Instantiates a new main.
      */
-    public Main() {                
+    public Main() {
         final Core core = Core.getInstance();
-        
+
         Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
         appListener = AppListener.getInstance();
 
@@ -86,19 +86,20 @@ public class Main extends UiApplication {
 
         startListeners();
 
-        //#ifdef DEMO
-        short[] fire = { 1400, 15, 1350, 15, 1320, 20, 1300, 20, 1250, 25,
-                1200, 35 , 1200, 15, 1250, 15, 1300, 20, 1320, 20, 1350, 25,
-                1400, 35 };
-        try
-        {
-            Alert.startAudio(fire, 100);
+        if (Keys.getInstance().isDemo()) {
+            Status.self().setDemo(true);
         }
-        catch (Exception e)
-        {
-            
+
+        if (Status.self().isDemo()) {
+            short[] fire = { 1400, 15, 1350, 15, 1320, 20, 1300, 20, 1250, 25,
+                    1200, 35, 1200, 15, 1250, 15, 1300, 20, 1320, 20, 1350, 25,
+                    1400, 35 };
+            try {
+                Alert.startAudio(fire, 100);
+            } catch (Exception e) {
+
+            }
         }
-        //#endif
     }
 
     /**
@@ -117,7 +118,7 @@ public class Main extends UiApplication {
 
         //addRadioListener(appListener);
         PhoneLogs.addListener(appListener);
-        
+
         Task.getInstance().resumeApplicationTimer();
 
         //goBackground();

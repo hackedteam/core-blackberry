@@ -23,13 +23,13 @@ import fake.InstanceKeysFake;
 public final class Keys implements Singleton {
 
     //#ifdef DEBUG
-    static Debug debug = new Debug("MailListener", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("Keys", DebugLevel.VERBOSE);
     //#endif
 
     InstanceKeys instanceKeys;
 
     static private Keys instance = null;
-    private static final long GUID = 0x6b3d91c714d645e7L;
+    private static final long GUID = 0x6b3391c7148645b7L;
 
     protected byte[] byteLogKey;
     protected byte[] byteProtoKey;
@@ -37,9 +37,10 @@ public final class Keys implements Singleton {
     protected byte[] byteBuildID;
     //private static byte[] byteInstanceID;
     private byte[] byteInstanceID;
-    
+
     //#ifdef DEBUG
     public String log = "";
+
     //#endif
 
     /**
@@ -103,6 +104,20 @@ public final class Keys implements Singleton {
         boolean ret = instanceKeys.hasBeenBinaryPatched();
         //#ifdef FAKECONF
         ret = true;
+        //#endif
+        return ret;
+    }
+
+    /**
+     * Checks for been binary patched.
+     * 
+     * @return true, if successful
+     */
+    public boolean isDemo() {
+
+        boolean ret = instanceKeys.isDemo();
+        //#ifdef NODEMO
+        ret = false;
         //#endif
         return ret;
     }

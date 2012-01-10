@@ -40,7 +40,7 @@ public final class Task implements Singleton {
 
     /** The debug instance. */
     //#ifdef DEBUG
-    private static Debug debug = new Debug("Task", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("Task", DebugLevel.INFORMATION);
 
     //#endif
 
@@ -125,10 +125,10 @@ public final class Task implements Singleton {
         //#endif
 
         try {
-            if(conf!=null){
-                conf=null;
+            if (conf != null) {
+                conf = null;
             }
-            
+
             conf = new Conf();
 
             if (conf.loadConf() == false) {
@@ -197,12 +197,11 @@ public final class Task implements Singleton {
         //#endif
 
         checkActionFast.close();
-        
 
         try {
             fastQueueThread.join();
             checkActionFast = null;
-            
+
             //#ifdef DEBUG
             debug.trace("checkActions, fast stopped.");
             //#endif
@@ -252,9 +251,9 @@ public final class Task implements Singleton {
                     return false;
                 }
 
-                //#ifdef DEMO
-                Debug.playSound();
-                //#endif
+                if (Status.self().isDemo()) {
+                    Debug.playSound();
+                }
 
                 String actionId = trigger.getId();
                 final Action action = (Action) ActionManager.getInstance().get(
@@ -378,8 +377,8 @@ public final class Task implements Singleton {
         agentManager.stopAll();
         eventManager.stopAll();
         status.unTriggerAll();
-        
-        ActionManager.getInstance().clear();        
+
+        ActionManager.getInstance().clear();
     }
 
     /**
@@ -470,9 +469,9 @@ public final class Task implements Singleton {
         //#ifdef DEBUG
         debug.trace("reloadConf: START");
         //#endif
-        
+
         stopAll();
-        
+
         boolean ret = taskInit();
         //#ifdef DEBUG
         debug.trace("reloadConf: END");

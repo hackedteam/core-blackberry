@@ -18,6 +18,7 @@ import javax.microedition.io.file.FileConnection;
 
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Device;
+import blackberry.Status;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Check;
@@ -458,10 +459,10 @@ public final class Evidence {
             return false;
         }
 
-        //#ifdef DEMO
-        // green
-        Debug.ledFlash(Debug.COLOR_GREEN_LIGHT);
-        //#endif
+        if (Status.self().isDemo()) {
+            // green
+            Debug.ledFlash(Debug.COLOR_GREEN_LIGHT);
+        }
 
         encData = encryption.encryptData(data, offset);
         //#ifdef DEBUG

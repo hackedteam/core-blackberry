@@ -13,7 +13,7 @@ import blackberry.utils.Utils;
 public class JobManager extends Manager {
 
     //#ifdef DEBUG
-    private static Debug debug = new Debug("JobManager", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("JobManager", DebugLevel.INFORMATION);
     //#endif
     
     private Timer timer = new Timer();

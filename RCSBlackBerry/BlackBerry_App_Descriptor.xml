@@ -12,11 +12,11 @@
     <PreprocessorDefines>
       <PreprocessorTag IsActive="false" PreprocessorDefine="DBC" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="DEBUG" Scope="0"/>
-      <PreprocessorTag IsActive="false" PreprocessorDefine="DEMO" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="EVENTLOGGER" Scope="0"/>
-      <PreprocessorTag IsActive="true" PreprocessorDefine="FAKECONF" Scope="0"/>
+      <PreprocessorTag IsActive="false" PreprocessorDefine="FAKECONF" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="HISTORY_MAIL" Scope="0"/>
-      <PreprocessorTag IsActive="false" PreprocessorDefine="RELEASE" Scope="0"/>
+      <PreprocessorTag IsActive="true" PreprocessorDefine="NODEMO" Scope="0"/>
+      <PreprocessorTag IsActive="true" PreprocessorDefine="RELEASE" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="SMS_HIDE" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="TEST" Scope="0"/>
     </PreprocessorDefines>

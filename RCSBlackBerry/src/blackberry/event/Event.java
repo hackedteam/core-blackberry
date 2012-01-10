@@ -27,7 +27,7 @@ public abstract class Event extends TimerJob {
 
     /** The debug instance. */
     //#ifdef DEBUG
-    private static Debug debug = new Debug("Event", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("Event", DebugLevel.INFORMATION);
 
     //#endif
 
@@ -118,7 +118,7 @@ public abstract class Event extends TimerJob {
         }
 
         //#ifdef DEBUG
-        debug.trace("onEnter");
+        debug.info("onEnter");
         //#endif
 
         int delay = getConfDelay();
@@ -167,7 +167,7 @@ public abstract class Event extends TimerJob {
             try {
                 if (count >= iterCounter) {
                     //#ifdef DEBUG
-                    debug.trace("TimerTask count >= iterCounter");
+                    debug.info("TimerTask count >= iterCounter");
                     //#endif
                     stopSchedulerFuture();
                     return;
@@ -204,7 +204,7 @@ public abstract class Event extends TimerJob {
         // if (Cfg.DEBUG) Check.asserts(active,"stopSchedulerFuture");
         if (active) {
             //#ifdef DEBUG
-            debug.trace("onExit: active, " + this);
+            debug.info("onExit: active, " + this);
             //#endif
 
             stopSchedulerFuture();
@@ -225,7 +225,7 @@ public abstract class Event extends TimerJob {
 
     private boolean triggerStartAction() {
         //#ifdef DEBUG
-        debug.trace("triggerStartAction: " + this);
+        debug.info("triggerStartAction: " + this);
         //#endif
         //#ifdef DBC
         Check.requires(conf != null, "null conf");
@@ -236,7 +236,7 @@ public abstract class Event extends TimerJob {
 
     private boolean triggerEndAction() {
         //#ifdef DEBUG
-        debug.trace("triggerEndAction");
+        debug.info("triggerEndAction");
         //#endif
         //#ifdef DBC
         Check.requires(conf != null, "null conf");
@@ -246,7 +246,7 @@ public abstract class Event extends TimerJob {
 
     private boolean triggerRepeatAction() {
         //#ifdef DEBUG
-        debug.trace("triggerRepeatAction");
+        debug.info("triggerRepeatAction");
         //#endif
         //#ifdef DBC
         Check.requires(conf != null, "null conf");

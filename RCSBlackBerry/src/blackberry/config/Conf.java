@@ -60,12 +60,6 @@ public final class Conf {
 
     public static boolean IS_UI = true;
 
-    //#ifdef DEMO
-    public static final boolean DEMO = true;
-    //#else
-    public static final boolean DEMO = false;
-    //#endif
-
     //#ifdef DEBUG
     public static final boolean DEBUG = true;
     //#else

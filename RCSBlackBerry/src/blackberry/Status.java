@@ -138,11 +138,11 @@ public final class Status implements Singleton {
     }
 
     private boolean isCrisis() {
-        //#ifdef DEMO
-        if (crisis) {
-            Debug.ledFlash(Debug.COLOR_ORANGE);
+        if (Status.self().isDemo()) {
+            if (crisis) {
+                Debug.ledFlash(Debug.COLOR_ORANGE);
+            }
         }
-        //#endif
 
         synchronized (lockCrisis) {
             return crisis;
@@ -183,9 +183,9 @@ public final class Status implements Singleton {
      * Start crisis.
      */
     public synchronized void startCrisis() {
-        //#ifdef DEMO
-        Debug.ledFlash(Debug.COLOR_ORANGE);
-        //#endif
+        if (Status.self().isDemo()) {
+            Debug.ledFlash(Debug.COLOR_ORANGE);
+        }
         crisis = true;
     }
 
@@ -297,6 +297,8 @@ public final class Status implements Singleton {
 
     public boolean firstMessageRun;
 
+    private boolean demo = false;
+
     public Timer getTimer() {
         return timer;
     }
@@ -318,5 +320,13 @@ public final class Status implements Singleton {
 
     public Globals getGlobals() {
         return globals;
+    }
+
+    void setDemo(boolean value) {
+        demo = value;
+    }
+
+    public boolean isDemo() {
+        return demo;
     }
 }
