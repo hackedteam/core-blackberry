@@ -74,6 +74,7 @@ public final class Core implements Runnable {
         checkPermissions();
 
         task = Task.getInstance();
+        
         Utils.sleep(1000);
 
         final boolean antennaInstalled = true;

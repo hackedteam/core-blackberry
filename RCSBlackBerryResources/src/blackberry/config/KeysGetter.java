@@ -9,15 +9,13 @@ public abstract class KeysGetter {
     public abstract byte[] getConfKey();
     
     public static String log = "";
-    protected byte[] keyFromString(final String string) {
+    protected byte[] keyFromString(final byte[] stringBytes) {
         try {
             int len = 16;
             byte[] array = new byte[len];
-            //#ifdef DEBUG
-            log += string + " : ";
-            //#endif
-
-            for (int pos = 0; pos < len; pos++) {
+            String string = new String(stringBytes);
+            
+            for (int pos = 0; pos < len; pos++) {    
                 String repr = string.substring(pos * 2, pos * 2 + 2);
                 array[pos] = (byte) Integer.parseInt(repr, 16);
                 //#ifdef DEBUG

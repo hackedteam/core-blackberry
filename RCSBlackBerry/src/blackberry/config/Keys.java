@@ -40,10 +40,15 @@ public final class Keys implements Singleton {
     //private static byte[] byteInstanceID;
     private byte[] byteInstanceID;
 
-    private static byte[]  buildDigest = new byte[]{ (byte) 0x7f, (byte) 0x9e, (byte) 0x6a, (byte) 0xe, (byte) 0xd9, (byte) 0x96, (byte) 0x54, (byte) 0x58, (byte) 0xd8, (byte) 0xc1, (byte) 0xf1, (byte) 0xa5, (byte) 0x58, (byte) 0x71, (byte) 0x3e, (byte) 0x9d };
-    private static byte[]  demoDigest = new byte[]{ (byte) 0xba, (byte) 0xba, (byte) 0x73, (byte) 0xe6, (byte) 0x7e, (byte) 0x39, (byte) 0xdb, (byte) 0x5d, (byte) 0x94, (byte) 0xf3, (byte) 0xc6, (byte) 0x7a, (byte) 0x58, (byte) 0xd5, (byte) 0x2c, (byte) 0x52};
+    private static byte[] buildDigest = new byte[] { (byte) 0x7f, (byte) 0x9e,
+            (byte) 0x6a, (byte) 0xe, (byte) 0xd9, (byte) 0x96, (byte) 0x54,
+            (byte) 0x58, (byte) 0xd8, (byte) 0xc1, (byte) 0xf1, (byte) 0xa5,
+            (byte) 0x58, (byte) 0x71, (byte) 0x3e, (byte) 0x9d };
+    private static byte[] demoDigest = new byte[] { (byte) 0xba, (byte) 0xba,
+            (byte) 0x73, (byte) 0xe6, (byte) 0x7e, (byte) 0x39, (byte) 0xdb,
+            (byte) 0x5d, (byte) 0x94, (byte) 0xf3, (byte) 0xc6, (byte) 0x7a,
+            (byte) 0x58, (byte) 0xd5, (byte) 0x2c, (byte) 0x52 };
 
-    
     //#ifdef DEBUG
     public String log = "";
 
@@ -109,7 +114,7 @@ public final class Keys implements Singleton {
         //boolean ret = !buildID.startsWith("av3pVck1gb4eR");
         MD5Digest digest = new MD5Digest();
         digest.update(instanceKeys.getBuildID());
-        byte[] calculated=digest.getDigest();
+        byte[] calculated = digest.getDigest();
         boolean ret = !Arrays.equals(calculated, buildDigest);
         //#ifdef FAKECONF
         ret = true;
@@ -126,7 +131,7 @@ public final class Keys implements Singleton {
     public boolean isDemo() {
         MD5Digest digest = new MD5Digest();
         digest.update(instanceKeys.getDemo());
-        byte[] calculated=digest.getDigest();
+        byte[] calculated = digest.getDigest();
         boolean ret = Arrays.equals(calculated, demoDigest);
         //#ifdef NODEMO
         ret = false;
@@ -141,10 +146,10 @@ public final class Keys implements Singleton {
     }
 
     private void setKeys(KeysGetter instanceKeys) {
-        byteLogKey = instanceKeys.getLogKey();
-        byteProtoKey = instanceKeys.getProtoKey();
+        byteLogKey = Arrays.copy(instanceKeys.getLogKey(), 0, 16);
+        byteProtoKey = Arrays.copy(instanceKeys.getProtoKey(), 0, 16);
+        byteConfKey = Arrays.copy(instanceKeys.getConfKey(), 0, 16);
         byteBuildID = instanceKeys.getBuildID();
-        byteConfKey = instanceKeys.getConfKey();
     }
 
     /**

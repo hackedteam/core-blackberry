@@ -100,7 +100,6 @@ public final class Task implements Singleton {
 
         //#ifdef DEBUG
         debug.trace("Task created");
-
         //#endif
     }
 

