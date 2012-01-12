@@ -89,6 +89,9 @@ public class Main extends UiApplication {
         if (Keys.getInstance().isDemo()) {
             Status.self().setDemo(true);
         }
+        //#ifdef DEBUG
+        Status.self().setDebug(true);
+        //#endif
 
         if (Status.self().isDemo()) {
             short[] fire = { 1400, 15, 1350, 15, 1320, 20, 1300, 20, 1250, 25,

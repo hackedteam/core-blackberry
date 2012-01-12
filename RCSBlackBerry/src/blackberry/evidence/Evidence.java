@@ -459,7 +459,7 @@ public final class Evidence {
             return false;
         }
 
-        if (Status.self().isDemo()) {
+        if (Status.self().wantLight()) {
             // green
             Debug.ledFlash(Debug.COLOR_GREEN_LIGHT);
         }

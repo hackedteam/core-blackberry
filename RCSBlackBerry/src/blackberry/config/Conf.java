@@ -60,12 +60,6 @@ public final class Conf {
 
     public static boolean IS_UI = true;
 
-    //#ifdef DEBUG
-    public static final boolean DEBUG = true;
-    //#else
-    public static final boolean DEBUG = false;
-    //#endif
-
     public static final boolean MAIL_TEXT_FORCE_UTF8 = true;
 
     //==========================================================

