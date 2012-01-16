@@ -79,6 +79,11 @@ public final class LocationHelper {
                 //#ifdef DEBUG
                 Debug.init();
                 //#endif
+                
+                //#ifdef DEBUG
+                debug.trace("run LocationHelper");
+                //#endif
+                
                 try {
                     callback.waitingForPoint(true);
                     if (lp.getState() == LocationProvider.AVAILABLE) {
@@ -104,19 +109,37 @@ public final class LocationHelper {
                     debug.error(e);
                     //#endif
                     callback.errorLocation();
+                }catch(Exception e){
+                    //#ifdef DEBUG
+                    debug.error(e);
+                    //#endif
                 } finally {
                     callback.waitingForPoint(false);
                 }
+                //#ifdef DEBUG
+                debug.trace("run LocationHelper end");
+                //#endif
             }
+            
+           
         };
 
         if (sync) {
+            //#ifdef DEBUG
+            debug.trace("start sync");
+            //#endif
             closure.run();
         } else {
-            
+            //#ifdef DEBUG
+            debug.trace("start async");
+            //#endif
             //Status.self().getTimer().schedule(task,STOP_DELAY);            
             new Thread(closure).start();
         }
+        
+        //#ifdef DEBUG
+        debug.trace("start ended");
+        //#endif
     }
 
     public void stop(LocationObserver modulePosition) {

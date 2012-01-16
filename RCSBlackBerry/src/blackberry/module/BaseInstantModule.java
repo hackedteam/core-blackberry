@@ -12,8 +12,16 @@ public abstract class BaseInstantModule extends BaseModule {
 
     public synchronized void run() {
         try {
-            actualStart();
-            actualStop();
+            actualStart();            
+        } catch (final Exception e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("run: " + this);
+            //#endif
+        }        
+        
+        try {
+            actualStop();           
         } catch (final Exception e) {
             //#ifdef DEBUG
             debug.error(e);

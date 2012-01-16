@@ -13,6 +13,7 @@ import java.util.Date;
 
 import net.rim.device.api.i18n.DateFormat;
 import net.rim.device.api.system.Alert;
+import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.LED;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.config.Conf;
@@ -123,6 +124,10 @@ public final class Debug {
         Debug.logToFlash = Conf.DEBUG_FLASH;
         Debug.logToEvents = Conf.DEBUG_EVENTS;
         Debug.logToInfo = Conf.DEBUG_INFO;
+        
+        if(DeviceInfo.isSimulator()){
+            Debug.logToFlash = false;
+        }
 
         debugWriter = DebugWriter.getInstance();
 

