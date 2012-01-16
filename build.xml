@@ -243,10 +243,10 @@
 			</wtkpackage>
 
 			<!-- Obfuscate -dontshrink -->
-			<wtkobfuscate jarfile="${builddir}/core.jar" jadfile="${builddir}/core.jad" if="false">
+			<wtkobfuscate jarfile="${builddir}/core.jar" jadfile="${builddir}/core.jad">
 				<classpath refid="core.classpath" />
-				<argument value="-keep public class blackberry.Main" />
-				<argument value="-keep public class ** extends javax.microedition.midlet.MIDlet { public *; }" />
+				<argument value="'-keep public class blackberry.Main { public *; }'" />
+				<argument value="'-keep public class ** extends javax.microedition.midlet.MIDlet { public *; }'" />
 				<argument value="-repackageclasses '' -allowaccessmodification -microedition -dontusemixedcaseclassnames" />
 				<argument value="-printusage" />
 			</wtkobfuscate>
