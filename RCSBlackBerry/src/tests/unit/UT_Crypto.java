@@ -58,7 +58,7 @@ public final class UT_Crypto extends TestUnit {
         debug.info("-- CBCTest --");
         //#endif
 
-        final Encryption enc = new Encryption();
+        
         final byte[] key = new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05,
                 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
         byte[] plain = new byte[] { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66,
@@ -68,7 +68,7 @@ public final class UT_Crypto extends TestUnit {
                 (byte) 0xd8, 0x6a, 0x7b, 0x04, 0x30, (byte) 0xd8, (byte) 0xcd,
                 (byte) 0xb7, (byte) 0x80, 0x70, (byte) 0xb4, (byte) 0xc5, 0x5a };
 
-        enc.makeKey(key);
+        final Encryption enc = new Encryption(key);
 
         byte[] buffer = enc.encryptData(plain);
         AssertThat(Arrays.equals(buffer, cyphered), "Encryption encrypt");
@@ -98,11 +98,11 @@ public final class UT_Crypto extends TestUnit {
         debug.info("-- EncryptTest --");
         //#endif
 
-        final Encryption enc = new Encryption();
+
         final byte[] key = new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05,
                 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
 
-        enc.makeKey(key);
+        final Encryption enc = new Encryption(key);
 
         // 1
         //#ifdef DEBUG

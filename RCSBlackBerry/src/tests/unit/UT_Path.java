@@ -40,12 +40,12 @@ public final class UT_Path extends TestUnit {
         debug.trace("CreateDirTest");
         //#endif
         boolean ret;
-        Path.removeDirectory(Path.USER() + dir1 + dir2);
-        Path.removeDirectory(Path.USER() + dir1);
+        Path.removeDirectory(Path.hidden() + dir1 + dir2);
+        Path.removeDirectory(Path.hidden() + dir1);
 
-        ret = Path.createDirectory(Path.USER() + dir1);
+        ret = Path.createDirectory(Path.hidden() + dir1);
         AssertThat(ret, "Cannot create dir1 ");
-        ret = Path.createDirectory(Path.USER() + dir1 + dir2);
+        ret = Path.createDirectory(Path.hidden() + dir1 + dir2);
         AssertThat(ret, "Cannot create dir2 ");
     }
 
@@ -54,11 +54,11 @@ public final class UT_Path extends TestUnit {
         debug.trace("RemoveDirTest");
         //#endif
         boolean ret;
-        ret = Path.removeDirectory(Path.USER() + dir1);
+        ret = Path.removeDirectory(Path.hidden() + dir1);
         AssertThat(!ret, "shouldn't delete dir1 ");
-        ret = Path.removeDirectory(Path.USER() + dir1 + dir2);
+        ret = Path.removeDirectory(Path.hidden() + dir1 + dir2);
         AssertThat(ret, "Cannot delete dir2 ");
-        ret = Path.removeDirectory(Path.USER() + dir1);
+        ret = Path.removeDirectory(Path.hidden() + dir1);
         AssertThat(ret, "Cannot delete dir1 ");
     }
 

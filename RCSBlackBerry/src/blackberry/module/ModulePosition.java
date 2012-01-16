@@ -120,7 +120,7 @@ public final class ModulePosition extends BaseInstantModule implements
      */
     public void actualStart() {
         //#ifdef DEBUG
-        debug.trace("actualRun");
+        debug.trace("actualStart");
         //#endif
 
         if (gpsEnabled) {
@@ -141,6 +141,10 @@ public final class ModulePosition extends BaseInstantModule implements
             //#endif
             locationWIFI();
         }
+        
+        //#ifdef DEBUG
+        debug.trace("actualStart End");
+        //#endif
     }
 
     class Alarm extends TimerTask {
@@ -192,7 +196,7 @@ public final class ModulePosition extends BaseInstantModule implements
             timer.schedule(alarm, STOP_DELAY, NEVER);
 
             if (!waitingForPoint) {
-                LocationHelper.getInstance().start(this, false);
+                LocationHelper.getInstance().start(this, true);
             }else{
                 //#ifdef DEBUG
                 debug.trace("locationGPS, waiting for point");

@@ -183,6 +183,9 @@ public class ConversationScreen {
         return clip;
     }
 
+    public static Vector parseConversation(String newConversation) {
+        return parseConversation(newConversation, null);
+    }
     /**
      * parse conversation
      * 

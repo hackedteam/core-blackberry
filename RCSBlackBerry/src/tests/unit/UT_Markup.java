@@ -14,8 +14,6 @@ import java.util.Date;
 import tests.AssertException;
 import tests.TestUnit;
 import tests.Tests;
-import blackberry.agent.Agent;
-import blackberry.crypto.Encryption;
 import blackberry.evidence.Markup;
 import blackberry.evidence.TimestampMarkup;
 import blackberry.utils.Utils;
@@ -56,9 +54,9 @@ public final class UT_Markup extends TestUnit {
     }
 
     private void DictMarkupTest() throws AssertException {
-        final int agentId = Agent.AGENT_APPLICATION;
 
-        final TimestampMarkup markup = new TimestampMarkup(agentId, Encryption.getKeys().getAesKey());
+        String markupName="TESTTTMARKUP1";
+        final TimestampMarkup markup = new TimestampMarkup(markupName);
 
         AssertThat(markup.isMarkup(), "isMarkup");
         AssertNull(markup.get("FIRST"), "get");
@@ -77,12 +75,18 @@ public final class UT_Markup extends TestUnit {
 
         int maxKey = TimestampMarkup.MAX_DICT_SIZE;
         
+        //#ifdef DEBUG
+        debug.trace("DictMarkupTest: multi write");
+        //#endif
         //multivalue
         for (int i = 0; i < maxKey; i++) {
             next = new Date(now.getTime() + i);
             markup.put("KEY_" + i, next);
         }
 
+        //#ifdef DEBUG
+        debug.trace("DictMarkupTest: multi read");
+        //#endif
         for (int i = 0; i < maxKey; i++) {
             fetch = markup.get("KEY_" + i);
             AssertNotNull(fetch, "Null Fetch");
@@ -110,7 +114,7 @@ public final class UT_Markup extends TestUnit {
                 "put(null,null) should be false");
 
         // cancello il markup
-        Markup.removeMarkup(agentId);
+        markup.removeMarkup();
 
         // verifico che sia stato cancellato
         final boolean ret = markup.isMarkup();
@@ -125,9 +129,8 @@ public final class UT_Markup extends TestUnit {
      */
     void SimpleMarkupTest() throws AssertException {
 
-        final int agentId = Agent.AGENT_APPLICATION;
-        final Markup markup = new Markup(agentId, Encryption.getKeys()
-                .getAesKey());
+
+        final Markup markup = new Markup(12345678);
 
         if (markup.isMarkup()) {
             markup.removeMarkup();
@@ -167,7 +170,7 @@ public final class UT_Markup extends TestUnit {
         AssertEqual(value, 123, "Wrong read 123");
 
         // cancello il markup
-        Markup.removeMarkup(agentId);
+        markup.removeMarkup();
 
         // verifico che sia stato cancellato
         ret = markup.isMarkup();

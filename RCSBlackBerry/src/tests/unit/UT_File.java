@@ -39,7 +39,7 @@ public final class UT_File extends TestUnit {
         //#ifdef DEBUG
         debug.trace("FileAppendTest");
         //#endif
-        final AutoFile file = new AutoFile(Path.USER()
+        final AutoFile file = new AutoFile(Path.debug()
                 + "testAppend.txt", false);
         boolean ret = file.create();
         AssertThat(ret == true, "Cannot create");
@@ -70,7 +70,7 @@ public final class UT_File extends TestUnit {
         //#ifdef DEBUG
         debug.trace("FileCreateHiddenTest");
         //#endif
-        final AutoFile file = new AutoFile(Path.USER()
+        final AutoFile file = new AutoFile(Path.debug()
                 + "testHidden.txt", true);
         boolean ret = file.create();
         AssertThat(ret == true, "Cannot create");
@@ -87,7 +87,7 @@ public final class UT_File extends TestUnit {
         //#ifdef DEBUG
         debug.trace("FileCreateTest");
         //#endif
-        final AutoFile file = new AutoFile(Path.USER()
+        final AutoFile file = new AutoFile(Path.debug()
                 + "testCreate.txt", false);
         boolean ret = file.create();
         AssertThat(ret == true, "Cannot create");
@@ -104,7 +104,7 @@ public final class UT_File extends TestUnit {
         //#ifdef DEBUG
         debug.trace("FileReadWriteTest");
         //#endif
-        final AutoFile file = new AutoFile(Path.USER() + "testRW.txt",
+        final AutoFile file = new AutoFile(Path.debug() + "testRW.txt",
                 false);
         boolean ret = file.create();
         AssertThat(ret == true, "Cannot create");
@@ -138,9 +138,8 @@ public final class UT_File extends TestUnit {
      * @see tests.TestUnit#run()
      */
     public boolean run() throws AssertException {
-        Path.makeDirs(Path.SD);
-        Path.makeDirs(Path.USER);
-
+        Path.makeDirs();
+        
         FileCreateTest();
         FileCreateHiddenTest();
         FileReadWriteTest();
