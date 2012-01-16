@@ -37,6 +37,19 @@ public final class Utils {
 
     //final static Random RANDOM = new Random();
 
+
+    public static int hex(int value) {
+        try {
+            return Integer.parseInt(Integer.toHexString(value));
+        } catch (NumberFormatException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("hex");
+            //#endif
+            return value;
+        }
+    }
+    
     /**
      * ASCII.
      * 

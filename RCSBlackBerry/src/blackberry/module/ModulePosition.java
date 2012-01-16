@@ -290,7 +290,7 @@ public final class ModulePosition extends BaseInstantModule implements
              */
             //#endif
 
-            int mcc = hex(RadioInfo.getMCC(RadioInfo.getCurrentNetworkIndex()));
+            int mcc = Utils.hex(RadioInfo.getMCC(RadioInfo.getCurrentNetworkIndex()));
             int mnc = RadioInfo.getMNC(RadioInfo.getCurrentNetworkIndex());
 
             final int lac = cellinfo.getLAC();
@@ -357,17 +357,6 @@ public final class ModulePosition extends BaseInstantModule implements
 
     }
 
-    private int hex(int value) {
-        try {
-            return Integer.parseInt(Integer.toHexString(value));
-        } catch (NumberFormatException e) {
-            //#ifdef DEBUG
-            debug.error(e);
-            debug.error("hex");
-            //#endif
-            return value;
-        }
-    }
 
     public void newLocation(Location loc) {
         //#ifdef DEBUG

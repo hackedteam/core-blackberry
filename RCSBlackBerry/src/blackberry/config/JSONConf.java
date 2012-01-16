@@ -117,7 +117,16 @@ public abstract class JSONConf implements Managed{
         }
     }
     
-
+    public int getSafeInt(String key, int defaultValue) throws ConfigurationException {
+        try {
+            if(!params.has(key)){
+                throw new ConfigurationException();
+            }
+            return params.getInt(key);
+        } catch (JSONException e) {
+            return defaultValue;
+        }
+    }
     
     //TODO: verificare che sia giusto
     public ChildConf getChild(String child) {

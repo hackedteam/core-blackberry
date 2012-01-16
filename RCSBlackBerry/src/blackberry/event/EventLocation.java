@@ -10,7 +10,6 @@ package blackberry.event;
 
 import javax.microedition.location.Coordinates;
 import javax.microedition.location.Location;
-import javax.microedition.location.LocationProvider;
 import javax.microedition.location.QualifiedCoordinates;
 
 import blackberry.config.ConfEvent;
@@ -38,7 +37,7 @@ public final class EventLocation extends Event implements LocationObserver {
     double longitudeOrig;
     Coordinates coordinatesOrig;
 
-    LocationProvider lp;
+    //LocationProvider lp;
     boolean entered = false;
 
     //int interval = 60;
@@ -52,6 +51,13 @@ public final class EventLocation extends Event implements LocationObserver {
 
             //#ifdef DEBUG
             debug.trace(" Lat: " + latitudeOrig + " Lon: " + longitudeOrig + " Dist: " + distance);//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            //#endif
+            
+            setDelay(LOCATION_DELAY);
+            //#ifdef DEBUG
+            setPeriod(LOCATION_PERIOD/10);
+            //#else
+            setPeriod(LOCATION_PERIOD);
             //#endif
         } catch (final ConfigurationException ex) {
             return false;
@@ -78,12 +84,6 @@ public final class EventLocation extends Event implements LocationObserver {
         //#ifdef DEBUG
         debug.trace("actualRun");
         //#endif
-        if (lp == null) {
-            //#ifdef DEBUG
-            debug.error("GPS Not Supported on Device");
-            //#endif               
-            return;
-        }
 
         if (waitingForPoint) {
             //#ifdef DEBUG
@@ -102,14 +102,7 @@ public final class EventLocation extends Event implements LocationObserver {
     }
 
     protected void actualStop() {
-        if (lp != null) {
-            //#ifdef DEBUG
-            debug.trace("actualStop: resetting");
-            //#endif
-            //lp.setLocationListener(null, -1, -1, -1 );
-            lp.reset();
-        }
-
+        LocationHelper.getInstance().stop(this);
         onExit();
     }
 
@@ -117,7 +110,7 @@ public final class EventLocation extends Event implements LocationObserver {
 
     public void newLocation(Location loc) {
         //#ifdef DEBUG
-        debug.trace("checkProximity: " + loc);
+        debug.trace("checkProximity: " + loc.isValid());
         //#endif
 
         QualifiedCoordinates coord = null;
@@ -172,7 +165,7 @@ public final class EventLocation extends Event implements LocationObserver {
         }
     }
 
-    public synchronized void waitingForPoint(boolean b) {
+    public void waitingForPoint(boolean b) {
         waitingForPoint = b;
     }
 

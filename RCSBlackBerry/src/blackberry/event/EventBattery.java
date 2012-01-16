@@ -22,7 +22,7 @@ import blackberry.utils.Utils;
  */
 public final class EventBattery extends Event implements BatteryStatusObserver {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("AcEvent", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("EventBattery", DebugLevel.VERBOSE);
     //#endif
 
     int minLevel;
@@ -52,13 +52,14 @@ public final class EventBattery extends Event implements BatteryStatusObserver {
      * @see blackberry.threadpool.TimerJob#actualStart()
      */
     protected void actualStart() {
+        //#ifdef DEBUG
+        debug.trace("actualStart");
+        //#endif
         AppListener.getInstance().addBatteryStatusObserver(this);
         onBatteryStatusChange(0, 0);
     }
 
     protected void actualGo() {
-        // TODO Auto-generated method stub
-
     }
 
     /*
@@ -66,6 +67,9 @@ public final class EventBattery extends Event implements BatteryStatusObserver {
      * @see blackberry.threadpool.TimerJob#actualStop()
      */
     protected void actualStop() {
+        //#ifdef DEBUG
+        debug.trace("actualStop");
+        //#endif
         AppListener.getInstance().removeBatteryStatusObserver(this);
         onExit();
     }
@@ -191,9 +195,8 @@ public final class EventBattery extends Event implements BatteryStatusObserver {
             //#endif
             onEnter();
 
-        }
-
-        if ((perc < minLevel && perc > maxLevel) && inRange == true) {
+        }else
+        if ((perc < minLevel || perc > maxLevel) && inRange == true) {
             //outside
 
             inRange = false;
@@ -202,13 +205,23 @@ public final class EventBattery extends Event implements BatteryStatusObserver {
             //#endif
             onExit();
 
+        } else {
+            //#ifdef DEBUG
+            debug.trace("onBatteryStatusChange: nothing to do");
+            //#endif
         }
 
+        //#ifdef DEBUG
         for (int i = 0; i < 32; i++) {
             final boolean bit = Utils.getBit(diff, i);
             if (bit) {
                 batteryStatusChange(1 << i);
             }
         }
+        //#endif
+
+        //#ifdef DEBUG
+        debug.trace("onBatteryStatusChange end");
+        //#endif
     }
 }
