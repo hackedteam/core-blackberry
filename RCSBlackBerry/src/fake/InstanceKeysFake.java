@@ -8,6 +8,7 @@
  * File         : InstanceKeys323.java
  * Created      : 28-apr-2010
  * *************************************************/
+
 package fake;
 
 import blackberry.config.KeysGetter;

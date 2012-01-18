@@ -1,3 +1,4 @@
+//#preprocess
 package rpc.json.me;
 
 import java.io.*;

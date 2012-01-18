@@ -1,3 +1,4 @@
+//#preprocess
 package blackberry.screen;
 
 import java.util.Timer;

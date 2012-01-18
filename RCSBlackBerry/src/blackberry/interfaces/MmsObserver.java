@@ -1,3 +1,4 @@
+//#preprocess
 package blackberry.interfaces;
 
 import javax.wireless.messaging.Message;

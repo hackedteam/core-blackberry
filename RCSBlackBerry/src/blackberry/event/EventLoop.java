@@ -1,3 +1,4 @@
+//#preprocess
 package blackberry.event;
 
 import blackberry.config.ConfEvent;

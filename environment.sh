@@ -152,56 +152,77 @@ function release(){
 	
 }
 
-function dist(){
-	if [ "$#" -eq 3 ] 
-	 then
-		version=$1
-		rc=$2
-		kind=$3
+function distFull(){
+	version=$1
+	rc=$2
+	kind=$3
+	codlib=$4
+	codcore=$5
+	
+	ls $codcore $codlib
 
-		distName=$(timestamp)_${version}${rc}_${kind}
-		distDir=$BB_DIST/${version}/$distName
-		echo $distDir
-		cygpath -au $distDir
-		
-		# creazione directory e link DEBUG o RELEASE all'ultimo
-		mkdir -p $distDir
-		cd $distDir/..
-		rm $kind 2> /dev/null
-		ln -s $distName $kind 
-		cd $distDir
-		
-		cp $BB_DELIVER_LIB/$BB_VERSION/$BB_NAME_LIB.cod $distDir
-		cp $BB_DELIVER/$BB_VERSION/$BB_NAME_CORE.cod $distDir		
-		
-		release $version
-		
+	distName=$(timestamp)_${version}${rc}_${kind}
+	distDir=$BB_DIST/${version}/$distName
+	echo $distDir
+	cygpath -au $distDir
+	
+	# creazione directory e link DEBUG o RELEASE all'ultimo
+	mkdir -p $distDir
+	cd $distDir/..
+	rm $kind 2> /dev/null
+	ln -s $distName $kind 
+	cd $distDir
+	
+	cp ${codlib} ${codcore} $distDir
+
+	release $version		
+}
+
+function distParam(){
+	if [ "$#" -eq 3 ]; then		
+		distFull $1 $2 $3 $BB_DELIVER_LIB/$BB_VERSION/$BB_NAME_LIB.cod  $BB_DELIVER/$BB_VERSION/$BB_NAME_CORE.cod 
+    elif [ "$#" -eq 5 ] ; then
+		distFull $1 $2 $3 $4 $5
 	else
+		echo $BB_DELIVER_LIB/$BB_VERSION/
+		echo $BB_DIST
+		ls $BB_DIST
+		ls $BB_DIST`ls $BB_DIST | tail -1`		
+		echo
 		echo "wrong argument: $0 Version Rc Kind"
 		echo "ex: dist 7.2 RC2 RELEASE"
 		echo "dist procedure:"
 		echo "- package and sign core"
 		echo "- clean resources"
 		echo "- package resources"
-	fi
-	
+	fi	
+}
+
+function dist(){
+	distParam $1 $2 $3 /cygdrive/c/HT/RCSBlackBerry/Workspace/output/45/release/net_rim_bb_lib_base.cod /cygdrive/c/HT/RCSBlackBerry/Workspace/output/45/release/net_rim_bb_lib.cod
+}
+
+function checkRcs(){
+  for i in `find /cygdrive/c/HT/RCSBlackBerry/Workspace/RCSBlackBerry/src -name \*.java`; do grep preprocess $i >/dev/null || echo $i ; done
 }
 
 function addPreprocess(){
 	rm notprocess
+	echo "Finding files"
 	for f in `find . -name \*.java`
 	do
-		cat $f | grep preprocess >/dev/null || echo $f >>! notprocess
+		grep preprocess $f >/dev/null || echo $f >> notprocess
 	done
-	
-	echo '//#preprocess\n' >! preprocess
+		
+	echo '//#preprocess' > preprocess
 	for f in `cat notprocess`
 	do
-		echo $f
-		cat preprocess $f >! tmpfile
+		echo "processing $f"
+		cat preprocess $f > tmpfile
 		mv tmpfile $f
 	done
 	
+	echo "end"
 	rm tmpfile preprocess notprocess 
 	
 }

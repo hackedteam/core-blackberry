@@ -1,3 +1,4 @@
+//#preprocess
 package rpc.json.me;
 /**
  * The <code>JSONString</code> interface allows a <code>toJSONString()</code>

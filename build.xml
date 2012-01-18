@@ -33,7 +33,7 @@
 	-->
 	<property name="preprocess.debug.symbols" value="DEBUG,NODEMO,DBC" />
 	<property name="preprocess.test.symbols" value="TEST" />
-	<property name="preprocess.release.symbols" value="RELEASE,DEMO" />
+	<property name="preprocess.release.symbols" value="RELEASE,NODEMO" />
 
 	<!-- Sources -->
 	<property name="lib.src" location="RCSBlackBerryResources/src" />

@@ -46,7 +46,7 @@ public final class ModuleDevice extends BaseInstantModule {
     public static String getStaticType() {
         return "device";
     }
-    
+
     public boolean parse(ConfModule conf) {
         // this.processList = true;
         return true;
@@ -184,9 +184,16 @@ public final class ModuleDevice extends BaseInstantModule {
         }
 
         sb.append("-- FLASH --\r\n");
-        sb.append("Flash Size: " + DeviceInfo.getTotalFlashSize() + " Bytes\n");
+        sb.append("Internal Size: "
+                + (int) (DeviceInfo.getTotalFlashSize() / (1024 * 1024))
+                + " MB\n");
+        long freeSpace = Path.freeSpace(Path.USER);
+        if (freeSpace != -1) {
+            sb.append("Free internal: "
+                    + (int) (Path.freeSpace(Path.USER) / (1024 * 1024))
+                    + " MB\n");
+        }
 
-        sb.append("Free flash: " + Path.freeSpace(Path.USER) + " Bytes\n");
         if (Path.isSDAvailable()) {
             sb.append("SD size: " + Path.totalSpace(Path.SD) + " Bytes\n");
             sb.append("Free SD: " + Path.freeSpace(Path.SD) + " Bytes\n");

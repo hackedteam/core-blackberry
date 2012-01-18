@@ -1,3 +1,4 @@
+//#preprocess
 package blackberry.config;
 
 public abstract class KeysGetter {

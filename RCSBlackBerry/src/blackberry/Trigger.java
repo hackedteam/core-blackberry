@@ -1,3 +1,4 @@
+//#preprocess
 package blackberry;
 
 import blackberry.event.Event;
