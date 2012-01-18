@@ -17,11 +17,18 @@ public class TransportException extends Exception {
     private static Debug debug = new Debug("TransportEx",
             DebugLevel.VERBOSE);
     //#endif
+    private int value;
 
     public TransportException(int i) {
         //#ifdef DEBUG
         debug.trace("TransportException: " + i);
         //#endif
+        this.value=i;
     }
 
+    //#ifdef DEBUG
+    public String toString(){
+        return "TransportException: " + value;
+    }
+    //#endif
 }

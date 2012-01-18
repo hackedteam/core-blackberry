@@ -31,7 +31,7 @@ public final class Utils {
 
     /** The debug instance. */
     //#ifdef DEBUG
-    private static Debug debug = new Debug("Utils", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("Utils", DebugLevel.INFORMATION);
 
     //#endif
 

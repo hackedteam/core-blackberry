@@ -22,7 +22,6 @@ import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.SmsObserver;
-import blackberry.utils.WChar;
 
 public class SmsListener45 extends SmsListener{
 
@@ -220,7 +219,7 @@ public class SmsListener45 extends SmsListener{
             debug.info("Got Text SMS: " + msg);
             //#endif
 
-            dataMsg = WChar.getBytes(msg);
+            dataMsg = msg.getBytes();
 
         } else if (message instanceof BinaryMessage) {
             dataMsg = ((BinaryMessage) message).getPayloadData();

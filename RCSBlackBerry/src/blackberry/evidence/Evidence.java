@@ -466,7 +466,7 @@ public final class Evidence {
 
         encData = encryption.encryptData(data, offset);
         //#ifdef DEBUG
-        debug.info("writeEvidence encdata: " + encData.length);
+        debug.trace("writeEvidence encdata: " + encData.length);
         //#endif
 
         try {

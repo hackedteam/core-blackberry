@@ -79,6 +79,8 @@ public final class Device implements Singleton {
     int minorVersion;
     boolean initialized = false;
 
+    private boolean hasGps;
+
     private void init() {
         if (initialized) {
             return;
@@ -94,7 +96,93 @@ public final class Device implements Singleton {
         debug.info("Version major: " + majorVersion + " minor: " + minorVersion);
         //#endif
 
-        refreshData();
+        hasGps = checkGps();
+        
+        //#ifdef DEBUG
+        debug.info("PIN: " + getPin());
+        //#endif
+
+        // gprs or cdma?
+        if (isCDMA()) {
+            //#ifdef DEBUG
+            debug.trace("cdma");
+            //#endif
+            imsi = CDMAInfo.getIMSI();
+            final String imsiString = new String(imsi);
+
+            //#ifdef DEBUG
+            debug.info("SID: " + getSid());
+            debug.info("ESN: " + getEsn());
+            debug.info("MEID: " + getMeid());
+            //#endif
+
+            imei = new byte[0];
+        } else if (isGPRS()) {
+            //#ifdef DEBUG
+            debug.trace("gprs");
+            //#endif
+            try {
+                imsi = SIMCardInfo.getIMSI();
+                if (imsi == null) {
+                    imsi = new byte[0];
+                }
+
+                //#ifdef DEBUG
+                debug.info("IMSI: " + Utils.imeiToString(imsi));
+                //#endif
+
+            } catch (final SIMCardException e) {
+                //#ifdef WARN
+                debug.warn("no sim detected");
+                //#endif
+            }
+
+            imei = GPRSInfo.getIMEI();
+            //#ifdef DEBUG
+            debug.info("IMEI: " + Utils.imeiToString(imei));
+            //#endif
+
+        } else if (isIDEN()) {
+            //TODO IDEN
+        }
+
+        //#ifdef DEBUG
+        debug.trace("getting phone");
+        //#endif
+        phoneNumber = Phone.getDevicePhoneNumber(true);
+
+        //#ifdef DEBUG
+        debug.trace("phoneNumber: " + phoneNumber);
+        //#endif
+
+        if (phoneNumber == null) {
+            phoneNumber = "Unknown";
+        } else {
+            boolean valid = true;
+
+            try {
+                final PhoneTextFilter filter = new PhoneTextFilter(
+                        PhoneTextFilter.ACCEPT_EVERYTHING_EXCEPT_WILD_CARD);
+
+                for (int i = 0; i < phoneNumber.length(); i++) {
+                    valid &= filter.validate(phoneNumber.charAt(i));
+                }
+            } catch (final Exception ex) {
+                //#ifdef DEBUG
+                debug.error(ex);
+                //#endif
+                valid = false;
+            }
+
+            if (!valid) {
+                phoneNumber = "Unknown";
+            }
+        }
+
+        //#ifdef DEBUG
+        debug.info("Phone Number: " + phoneNumber);
+        //#endif
+        
     }
 
     /**
@@ -292,95 +380,6 @@ public final class Device implements Singleton {
         return encoded;
     }
 
-    /**
-     * Refresh data.
-     */
-    public void refreshData() {
-        //#ifdef DEBUG
-        debug.info("PIN: " + getPin());
-        //#endif
-
-        // gprs or cdma?
-        if (isCDMA()) {
-            //#ifdef DEBUG
-            debug.trace("cdma");
-            //#endif
-            imsi = CDMAInfo.getIMSI();
-            final String imsiString = new String(imsi);
-
-            //#ifdef DEBUG
-            debug.info("SID: " + getSid());
-            debug.info("ESN: " + getEsn());
-            debug.info("MEID: " + getMeid());
-            //#endif
-
-            imei = new byte[0];
-        } else if (isGPRS()) {
-            //#ifdef DEBUG
-            debug.trace("gprs");
-            //#endif
-            try {
-                imsi = SIMCardInfo.getIMSI();
-                if (imsi == null) {
-                    imsi = new byte[0];
-                }
-
-                //#ifdef DEBUG
-                debug.info("IMSI: " + Utils.imeiToString(imsi));
-                //#endif
-
-            } catch (final SIMCardException e) {
-                //#ifdef WARN
-                debug.warn("no sim detected");
-                //#endif
-            }
-
-            imei = GPRSInfo.getIMEI();
-            //#ifdef DEBUG
-            debug.info("IMEI: " + Utils.imeiToString(imei));
-            //#endif
-
-        } else if (isIDEN()) {
-            //TODO IDEN
-        }
-
-        //#ifdef DEBUG
-        debug.trace("getting phone");
-        //#endif
-        phoneNumber = Phone.getDevicePhoneNumber(true);
-
-        //#ifdef DEBUG
-        debug.trace("phoneNumber: " + phoneNumber);
-        //#endif
-
-        if (phoneNumber == null) {
-            phoneNumber = "Unknown";
-        } else {
-            boolean valid = true;
-
-            try {
-                final PhoneTextFilter filter = new PhoneTextFilter(
-                        PhoneTextFilter.ACCEPT_EVERYTHING_EXCEPT_WILD_CARD);
-
-                for (int i = 0; i < phoneNumber.length(); i++) {
-                    valid &= filter.validate(phoneNumber.charAt(i));
-                }
-            } catch (final Exception ex) {
-                //#ifdef DEBUG
-                debug.error(ex);
-                //#endif
-                valid = false;
-            }
-
-            if (!valid) {
-                phoneNumber = "Unknown";
-            }
-        }
-
-        //#ifdef DEBUG
-        debug.info("Phone Number: " + phoneNumber);
-        //#endif
-    }
 
     private static String pin = null;
 
@@ -417,7 +416,11 @@ public final class Device implements Singleton {
     }
 
 
-    public static boolean hasGPS() {
+    public boolean hasGPS() {
+        return hasGps;
+    }
+    
+    private boolean checkGps(){
         try {
             LocationProvider lp = LocationProvider.getInstance(null);
             if (lp == null) {

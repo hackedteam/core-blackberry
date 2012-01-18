@@ -39,7 +39,6 @@ public final class LocationHelper {
                 RuntimeStore.getRuntimeStore().put(GUID, singleton);
                 instance = singleton;
             }
-
         }
         return instance;
     }

@@ -16,9 +16,9 @@ import java.util.Date;
 import java.util.Enumeration;
 
 import javax.microedition.io.Connector;
-import javax.microedition.io.file.FileConnection;
 
 import net.rim.device.api.io.IOUtilities;
+import net.rim.device.api.io.file.ExtendedFileConnection;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.debug.Check;
@@ -35,7 +35,7 @@ public final class AutoFile {
     private boolean hidden;
     private boolean autoclose;
 
-    private FileConnection fconn;
+    private ExtendedFileConnection fconn;
     private DataInputStream is;
     private OutputStream os;
 
@@ -82,7 +82,7 @@ public final class AutoFile {
      */
     public synchronized boolean append(final byte[] message) {
         try {
-            fconn = (FileConnection) Connector.open(fullfilename,
+            fconn = (ExtendedFileConnection) Connector.open(fullfilename,
                     Connector.READ_WRITE);
             //#ifdef DBC
             Check.asserts(fconn != null, "file fconn null");
@@ -106,8 +106,9 @@ public final class AutoFile {
             os.write(message);
 
         } catch (final IOException e) {
+            //#ifdef DEBUG
             System.out.println(e.getMessage());
-            e.printStackTrace();
+            //#endif
             return false;
         } finally {
 
@@ -156,7 +157,9 @@ public final class AutoFile {
             }
 
         } catch (final IOException e) {
+            //#ifdef DEBUG
             System.out.println(e.getMessage());
+            //#endif
         }
     }
 
@@ -168,7 +171,7 @@ public final class AutoFile {
     public synchronized boolean create() {
         try {
 
-            fconn = (FileConnection) Connector.open(fullfilename,
+            fconn = (ExtendedFileConnection) Connector.open(fullfilename,
                     Connector.READ_WRITE);
             //#ifdef DBC
             Check.asserts(fconn != null, "fconn null");
@@ -204,7 +207,7 @@ public final class AutoFile {
      */
     public synchronized void delete() {
         try {
-            fconn = (FileConnection) Connector.open(fullfilename,
+            fconn = (ExtendedFileConnection) Connector.open(fullfilename,
                     Connector.READ_WRITE);
             //#ifdef DBC
             Check.asserts(fconn != null, "file fconn null");
@@ -214,7 +217,9 @@ public final class AutoFile {
                 fconn.delete();
             }
         } catch (final IOException e) {
-            e.printStackTrace();
+            //#ifdef DEBUG
+            System.out.println(e.getMessage());
+            //#endif
         } finally {
             close();
         }
@@ -227,7 +232,7 @@ public final class AutoFile {
      */
     public synchronized boolean exists() {
         try {
-            fconn = (FileConnection) Connector.open(fullfilename,
+            fconn = (ExtendedFileConnection) Connector.open(fullfilename,
                     Connector.READ);
             //#ifdef DBC
             Check.asserts(fconn != null, "fconn null");
@@ -236,7 +241,9 @@ public final class AutoFile {
             return fconn.exists();
 
         } catch (final IOException e) {
+            //#ifdef DEBUG
             System.out.println(e.getMessage());
+            //#endif
             return false;
         } finally {
             close();
@@ -250,7 +257,7 @@ public final class AutoFile {
      */
     public synchronized InputStream getInputStream() {
         try {
-            fconn = (FileConnection) Connector.open(fullfilename,
+            fconn = (ExtendedFileConnection) Connector.open(fullfilename,
                     Connector.READ);
             //#ifdef DBC
             Check.asserts(fconn != null, "file fconn null");
@@ -258,7 +265,9 @@ public final class AutoFile {
 
             is = fconn.openDataInputStream();
         } catch (final IOException e) {
+            //#ifdef DEBUG
             System.out.println(e.getMessage());
+            //#endif
         }
 
         return is;
@@ -273,7 +282,7 @@ public final class AutoFile {
         byte[] data = null;
 
         try {
-            fconn = (FileConnection) Connector.open(fullfilename,
+            fconn = (ExtendedFileConnection) Connector.open(fullfilename,
                     Connector.READ);
             //#ifdef DBC
             Check.asserts(fconn != null, "file fconn null");
@@ -282,7 +291,9 @@ public final class AutoFile {
             is = fconn.openDataInputStream();
             data = IOUtilities.streamToBytes(is);
         } catch (final IOException e) {
+            //#ifdef DEBUG
             System.out.println(e.getMessage());
+            //#endif
         } finally {
             close();
         }
@@ -307,7 +318,7 @@ public final class AutoFile {
      */
     public boolean rename(final String newFile, final boolean openNewname) {
         try {
-            fconn = (FileConnection) Connector.open(fullfilename,
+            fconn = (ExtendedFileConnection) Connector.open(fullfilename,
                     Connector.READ_WRITE);
             //#ifdef DBC
             Check.asserts(fconn != null, "file fconn null");
@@ -330,10 +341,6 @@ public final class AutoFile {
         return true;
     }
 
-    public boolean write(final byte[] message) {
-        return write(message, 0, message.length);
-    }
-
     /**
      * Write.
      * 
@@ -344,8 +351,8 @@ public final class AutoFile {
     public synchronized boolean write(final byte[] message, int offset, int len) {
 
         try {
-            fconn = (FileConnection) Connector.open(fullfilename,
-                    Connector.WRITE);
+            fconn = (ExtendedFileConnection) Connector.open(fullfilename,
+                    Connector.READ_WRITE);
             //#ifdef DBC
             Check.asserts(fconn != null, "file fconn null");
             //#endif
@@ -366,6 +373,10 @@ public final class AutoFile {
 
     }
 
+    public boolean write(final byte[] message) {
+        return write(message, 0, message.length);
+    }
+
     /**
      * Write.
      * 
@@ -380,7 +391,7 @@ public final class AutoFile {
 
     public synchronized boolean isDirectory() {
         try {
-            fconn = (FileConnection) Connector.open(fullfilename,
+            fconn = (ExtendedFileConnection) Connector.open(fullfilename,
                     Connector.READ);
             return fconn.isDirectory();
         } catch (IOException e) {
@@ -395,7 +406,7 @@ public final class AutoFile {
 
     public long getSize() {
         try {
-            fconn = (FileConnection) Connector.open(fullfilename,
+            fconn = (ExtendedFileConnection) Connector.open(fullfilename,
                     Connector.READ);
             if (fconn.isDirectory()) {
                 return 0;
@@ -414,7 +425,7 @@ public final class AutoFile {
 
     public Date getFileTime() {
         try {
-            fconn = (FileConnection) Connector.open(fullfilename,
+            fconn = (ExtendedFileConnection) Connector.open(fullfilename,
                     Connector.READ);
             return new Date(fconn.lastModified());
 
@@ -436,7 +447,7 @@ public final class AutoFile {
 
     public boolean isReadable() {
         try {
-            fconn = (FileConnection) Connector.open(fullfilename,
+            fconn = (ExtendedFileConnection) Connector.open(fullfilename,
                     Connector.READ);
             return fconn.canRead();
 
@@ -452,7 +463,7 @@ public final class AutoFile {
 
     public Enumeration list() {
         try {
-            fconn = (FileConnection) Connector.open(fullfilename,
+            fconn = (ExtendedFileConnection) Connector.open(fullfilename,
                     Connector.READ);
             return fconn.list();
         } catch (IOException e) {

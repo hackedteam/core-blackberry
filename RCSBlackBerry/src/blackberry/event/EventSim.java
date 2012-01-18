@@ -50,7 +50,7 @@ public final class EventSim extends Event {
 
         if (!markup.isMarkup()) {
 
-            Device.getInstance().refreshData();
+            //Device.getInstance().refreshData();
 
             final byte[] imsi = Device.getInstance().getWImsi();
             if (imsi == null || imsi.length < 8) {
@@ -78,7 +78,7 @@ public final class EventSim extends Event {
             return;
         }
 
-        Device.getInstance().refreshData();
+        //Device.getInstance().refreshData();
 
         final byte[] imsi = Device.getInstance().getWImsi();
         if (imsi == null || imsi.length < 8) {

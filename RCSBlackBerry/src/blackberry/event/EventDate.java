@@ -27,7 +27,12 @@ public class EventDate extends Event {
 
         try {
             dateFrom = conf.getDate("datefrom");
-            dateTo = conf.getDate("dateto");
+            
+            if(conf.has("dateto")){
+                dateTo = conf.getDate("dateto");
+            }else{
+                dateTo = new Date(Long.MAX_VALUE);
+            }
         } catch (ConfigurationException e) {
             return false;
         }

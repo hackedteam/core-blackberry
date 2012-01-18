@@ -39,7 +39,7 @@ import blackberry.utils.Utils;
 public final class ModuleAddressBook extends BaseModule implements
         PIMListListener, UserAgent {
     //#ifdef DEBUG
-    static Debug debug = new Debug("ModAddress", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("ModAddress", DebugLevel.INFORMATION);
     //#endif
 
     Markup markup;
