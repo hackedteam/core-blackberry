@@ -729,9 +729,10 @@ public final class ModulePosition extends BaseInstantModule implements
         waitingForPoint = b;
     }
 
-    public void errorLocation() {
+    public void errorLocation(boolean interrupted) {
         //#ifdef DEBUG
         debug.error("errorLocation");
         //#endif
+        waitingForPoint(false);
     }
 }

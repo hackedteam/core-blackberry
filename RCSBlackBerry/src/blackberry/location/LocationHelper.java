@@ -102,12 +102,12 @@ public final class LocationHelper {
                         debug.error(e);
                         //#endif
                     }
-                    callback.errorLocation();
+                    callback.errorLocation(false);
                 } catch (final InterruptedException e) {
                     //#ifdef DEBUG
                     debug.error(e);
                     //#endif
-                    callback.errorLocation();
+                    callback.errorLocation(true);
                 }catch(Exception e){
                     //#ifdef DEBUG
                     debug.error(e);

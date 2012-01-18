@@ -52,10 +52,10 @@ public final class EventLocation extends Event implements LocationObserver {
             //#ifdef DEBUG
             debug.trace(" Lat: " + latitudeOrig + " Lon: " + longitudeOrig + " Dist: " + distance);//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             //#endif
-            
+
             setDelay(LOCATION_DELAY);
             //#ifdef DEBUG
-            setPeriod(LOCATION_PERIOD/10);
+            setPeriod(LOCATION_PERIOD / 10);
             //#else
             setPeriod(LOCATION_PERIOD);
             //#endif
@@ -92,9 +92,7 @@ public final class EventLocation extends Event implements LocationObserver {
             return;
         }
 
-        synchronized (this) {
-            LocationHelper.getInstance().start(this, false);
-        }
+        LocationHelper.getInstance().start(this, false);
 
         //#ifdef DEBUG
         debug.trace("exiting actualRun");
@@ -169,10 +167,11 @@ public final class EventLocation extends Event implements LocationObserver {
         waitingForPoint = b;
     }
 
-    public void errorLocation() {
+    public void errorLocation(boolean interrupted) {
         //#ifdef DEBUG
         debug.error("errorLocation");
         //#endif
+        waitingForPoint(false);
     }
 
 }

