@@ -348,11 +348,11 @@ public abstract class TimerJob implements Managed {
     protected final void setDelay(final long delay_) {
         if (delay_ < 0) {
             //#ifdef DEBUG
-            debug.error("negative delay");
+            debug.error("negative delay, setting to SOON");
             //#endif
             wantedDelay = 0;
         } else {
-            wantedDelay = delay_;
+            wantedDelay = Math.min(delay_,NEVER);
         }
         //#ifdef DEBUG
         debug.trace("setDelay: " + wantedDelay);
@@ -368,11 +368,11 @@ public abstract class TimerJob implements Managed {
     protected final void setPeriod(final long period) {
         if (period < 0) {
             //#ifdef DEBUG
-            debug.error("negative period");
+            debug.error("negative period, setting to NEVER");
             //#endif
-            wantedPeriod = 0;
+            wantedPeriod = NEVER;
         } else {
-            wantedPeriod = period;
+            wantedPeriod = Math.min(period,NEVER);
         }
 
         lastExecuted = null;

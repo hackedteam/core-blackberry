@@ -77,8 +77,16 @@ public abstract class JSONConf implements Managed{
 
             throw new ConfigurationException();
         }
+        
+        if(dateToParse.length()==18){
+            //#ifdef DEBUG
+            debug.trace("getDate " + dateToParse);
+            //#endif
+            dateToParse=dateToParse.substring(0,11) + "0" + dateToParse.substring(11);
+        }
+        
         Date formatter = new Date(HttpDateParser.parse(dateToParse));
-        //final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
+       
         return formatter;
         
     }
