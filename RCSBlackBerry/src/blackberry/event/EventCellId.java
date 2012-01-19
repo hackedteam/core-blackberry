@@ -69,7 +69,7 @@ public final class EventCellId extends Event {
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    protected void actualGo() {
+    protected void actualLoop() {
         //final boolean gprs = Device.isGPRS();
         int mcc = 0, mnc = 0, lac = 0, cid = 0;
 

@@ -9,7 +9,6 @@
 package blackberry.event;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
 
 import blackberry.config.ConfEvent;
@@ -34,47 +33,39 @@ public final class EventTimer extends Event {
     /** The type. */
     private int type;
 
-    long start, stop;
+    // milliseconds
+    private long start, stop;
 
     private final long oneDayMs = 24 * 3600 * 1000;
 
-    private Date timestart;
-
-    private Date timestop;
+    private boolean needExit;
 
     public boolean parse(final ConfEvent conf) {
         //SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
         try {
-            timestart = conf.getDate("ts");
-            timestop = conf.getDate("te");
+            start = conf.getSeconds("ts") * 1000;
+            stop = conf.getSeconds("te") * 1000;
         } catch (ConfigurationException e) {
             return false;
         }
 
         //#ifdef DEBUG
-        debug.trace(" type: " + type + " ts:" + timestart + " te:" + timestop);//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        debug.trace(" type: " + type + " ts:" + start + " te:" + stop);//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         //#endif
+
+        needExit = false;
 
         return true;
     }
 
     public void actualStart() {
-        final long now = System.currentTimeMillis();
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 
-        long nextStart, nextStop;
-
-        calendar.setTime(timestart);
-        start = ((calendar.get(Calendar.HOUR_OF_DAY) * 3600)
-                + (calendar.get(Calendar.MINUTE) * 60) + calendar
-                .get(Calendar.SECOND)) * 1000;
-
-        calendar.setTime(timestop);
-        stop = ((calendar.get(Calendar.HOUR_OF_DAY) * 3600)
-                + (calendar.get(Calendar.MINUTE) * 60) + calendar
-                .get(Calendar.SECOND)) * 1000;
-
-        nextDailyIn = setDailyDelay(true);
+        nextDailyIn = setDailyDelay();
+        if (!nextDailyIn) {
+            // siamo dentro
+            onEnter();
+            needExit = true;
+        }
 
     }
 
@@ -82,7 +73,7 @@ public final class EventTimer extends Event {
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    protected void actualGo() {
+    protected void actualLoop() {
         //#ifdef DEBUG
         debug.trace(" Info: " + "triggering");//$NON-NLS-1$ //$NON-NLS-2$
         //#endif
@@ -92,27 +83,31 @@ public final class EventTimer extends Event {
             debug.trace(" (go): DAILY TIMER: action enter"); //$NON-NLS-1$
             //#endif
             onEnter();
+            needExit = true;
         } else {
             //#ifdef DEBUG
             debug.trace(" (go): DAILY TIMER: action exit"); //$NON-NLS-1$
             //#endif
             onExit();
+            needExit = false;
         }
 
         //#ifdef DEBUG
         debug.trace(" (go): daily IN BEFORE: " + nextDailyIn); //$NON-NLS-1$
         //#endif
-        nextDailyIn = setDailyDelay(false);
+        nextDailyIn = setDailyDelay();
         //#ifdef DEBUG
         debug.trace(" (go): daily IN AFTER: " + nextDailyIn); //$NON-NLS-1$
         //#endif
     }
 
     public void actualStop() {
-        onExit(); // di sicurezza
+        if (needExit) {
+            onExit(); // di sicurezza
+        }
     }
 
-    private boolean setDailyDelay(boolean initialCheck) {
+    private boolean setDailyDelay() {
         Calendar nowCalendar = Calendar
                 .getInstance(TimeZone.getTimeZone("GMT"));
 
@@ -122,9 +117,6 @@ public final class EventTimer extends Event {
                 + (nowCalendar.get(Calendar.MINUTE) * 60) + nowCalendar
                 .get(Calendar.SECOND)) * 1000;
 
-        if (initialCheck) {
-            initialCheck();
-        }
         // Estriamo il prossimo evento e determiniamo il delay sulla base del
         // tipo
         if (now < start)
@@ -143,10 +135,10 @@ public final class EventTimer extends Event {
             //#ifdef DEBUG
             debug.trace(" (setDailyDelay): Delay (next start): " + (nextStart - now)); //$NON-NLS-1$
             //#endif
-            if (initialCheck)
-                setDelay(nextStart - now);
-            else
-                setPeriod(nextStart - now);
+
+            setDelay(nextStart - now);
+            reschedule();
+
             ret = true;
         } else {
             //#ifdef DEBUG
@@ -154,44 +146,14 @@ public final class EventTimer extends Event {
             //#endif
 
             long delay = nextStop - now;
-            if (initialCheck)
-                setDelay(nextStop - now);
-            else
-                setPeriod(nextStop - now);
+
+            setDelay(nextStop - now);
+            reschedule();
+
             ret = false;
         }
 
         return ret;
-    }
-
-    private void initialCheck() {
-        Calendar nowCalendar = Calendar
-                .getInstance(TimeZone.getTimeZone("GMT"));
-        int now = ((nowCalendar.get(Calendar.HOUR_OF_DAY) * 3600)
-                + (nowCalendar.get(Calendar.MINUTE) * 60) + nowCalendar
-                .get(Calendar.SECOND)) * 1000;
-        // verifica se al primo giro occorre chiamare OnEnter
-        if (start < stop) {
-            //#ifdef DEBUG
-            debug.trace(" (setDailyDelay): start < stop ");
-            //#endif
-            if (now > start && now < stop) {
-                //#ifdef DEBUG
-                debug.trace(" (setDailyDelay): we are already in the brackets");
-                //#endif
-                onEnter();
-            }
-        } else {
-            //#ifdef DEBUG
-            debug.trace(" (setDailyDelay): start > stop ");
-            //#endif
-            if (now < stop || now > start) {
-                //#ifdef DEBUG
-                debug.trace(" (setDailyDelay): we are already in the inverted brackets");
-                //#endif
-                onEnter();
-            }
-        }
     }
 
 }

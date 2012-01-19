@@ -116,7 +116,7 @@ public final class ModuleUrl extends BaseModule implements ApplicationObserver,
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    public void actualGo() {
+    public void actualLoop() {
         if (unsupported) {
             return;
         }

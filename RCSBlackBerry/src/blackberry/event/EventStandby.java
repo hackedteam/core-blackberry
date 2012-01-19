@@ -37,7 +37,7 @@ public class EventStandby extends Event implements BacklightObserver{
         //AppListener.getInstance().addApplicationObserver(this);
     }
 
-    public void actualGo() {
+    public void actualLoop() {
 
     }
 

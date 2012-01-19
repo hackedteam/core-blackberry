@@ -50,7 +50,7 @@ public final class ModuleApplication extends BaseModule implements
         return true;
     }
 
-    public void actualGo() {
+    public void actualLoop() {
 
     }
 

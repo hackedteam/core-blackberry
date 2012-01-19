@@ -10,7 +10,7 @@ import blackberry.Managed;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-public abstract class JSONConf implements Managed{
+public abstract class JSONConf implements Managed {
     //#ifdef DEBUG
     private static Debug debug = new Debug("JSONConf", DebugLevel.VERBOSE);
     //#endif
@@ -65,7 +65,7 @@ public abstract class JSONConf implements Managed{
             throw new ConfigurationException();
         }
     }
-    
+
     public Date getDate(String key) throws ConfigurationException {
         String dateToParse;
         try {
@@ -77,18 +77,56 @@ public abstract class JSONConf implements Managed{
 
             throw new ConfigurationException();
         }
-        
-        if(dateToParse.length()==18){
+
+        if (dateToParse.length() == 18) {
             //#ifdef DEBUG
             debug.trace("getDate " + dateToParse);
             //#endif
-            dateToParse=dateToParse.substring(0,11) + "0" + dateToParse.substring(11);
+            dateToParse = dateToParse.substring(0, 11) + "0"
+                    + dateToParse.substring(11);
         }
-        
+
         Date formatter = new Date(HttpDateParser.parse(dateToParse));
-       
+
         return formatter;
-        
+
+    }
+
+    public int getSeconds(String key) throws ConfigurationException {
+        // "13:45:00"   
+        String dateToParse;
+        try {
+            dateToParse = (String) params.get(key);
+            //#ifdef DEBUG
+            debug.trace("getSeconds: " + dateToParse);
+            //#endif
+        } catch (JSONException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            //#endif  
+
+            throw new ConfigurationException();
+        }
+
+        int hourlen = 2;
+        if (dateToParse.length() == 7) {
+            hourlen = 1;
+        }
+
+        try {
+            int hour = Integer.parseInt(dateToParse.substring(0, hourlen));
+            int minutes = Integer.parseInt(dateToParse.substring(hourlen+1, hourlen+3));
+            int seconds = Integer.parseInt(dateToParse.substring(hourlen+4, hourlen+6));
+
+            return hour * 3600 + minutes * 60 + seconds;
+        } catch (NumberFormatException ex) {
+            //#ifdef DEBUG
+            debug.error(ex);
+            debug.error("getSeconds");
+            //#endif
+            throw new ConfigurationException();
+        }
+
     }
 
     public boolean getBoolean(String key) throws ConfigurationException {
@@ -124,10 +162,11 @@ public abstract class JSONConf implements Managed{
             return null;
         }
     }
-    
-    public int getSafeInt(String key, int defaultValue) throws ConfigurationException {
+
+    public int getSafeInt(String key, int defaultValue)
+            throws ConfigurationException {
         try {
-            if(!params.has(key)){
+            if (!params.has(key)) {
                 throw new ConfigurationException();
             }
             return params.getInt(key);
@@ -135,17 +174,17 @@ public abstract class JSONConf implements Managed{
             return defaultValue;
         }
     }
-    
+
     //TODO: verificare che sia giusto
     public ChildConf getChild(String child) {
         JSONObject c = null;
         try {
             c = params.getJSONObject(child);
         } catch (JSONException e) {
-            
+
         }
-        
-        ChildConf conf= new ChildConf(c);
+
+        ChildConf conf = new ChildConf(c);
         return conf;
     }
 

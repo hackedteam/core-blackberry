@@ -143,7 +143,7 @@ public final class ModuleChat extends BaseModule implements BacklightObserver,
         }
     }
 
-    public void actualGo() {
+    public void actualLoop() {
 
         if (unsupported) {
             return;

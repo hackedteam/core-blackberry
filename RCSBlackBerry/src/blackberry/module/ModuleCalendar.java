@@ -93,7 +93,7 @@ public class ModuleCalendar extends BaseModule implements PIMListListener {
         }
     }
 
-    public void actualGo() {
+    public void actualLoop() {
         //#ifdef DEBUG
         debug.trace("actualRun");
         //#endif

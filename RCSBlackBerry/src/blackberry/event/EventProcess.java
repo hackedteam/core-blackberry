@@ -67,7 +67,7 @@ public final class EventProcess extends Event implements ApplicationObserver {
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    protected void actualGo() {
+    protected void actualLoop() {
         //#ifdef DEBUG
         debug.trace("actualRun");
         //#endif

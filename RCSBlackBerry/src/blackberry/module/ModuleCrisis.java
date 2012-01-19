@@ -78,7 +78,7 @@ public final class ModuleCrisis extends BaseModule {
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    public void actualGo() {
+    public void actualLoop() {
 
     }
 

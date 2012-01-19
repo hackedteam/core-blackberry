@@ -84,7 +84,7 @@ public abstract class TimerJob implements Managed {
      * Ogni volta che il timer richiede l'esecuzione del task viene invocato
      * questo metodo.
      */
-    protected abstract void actualGo();
+    protected abstract void actualLoop();
 
     /**
      * La prima volta che viene lanciata l'esecuzione del task, oppure dopo una
@@ -293,7 +293,7 @@ public abstract class TimerJob implements Managed {
                 running = true;
 
                 if (!rescheduled) {
-                    actualGo();
+                    actualLoop();
                 }
 
             } catch (final Exception ex) {

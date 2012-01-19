@@ -70,7 +70,7 @@ public final class EventSim extends Event {
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    protected void actualGo() {
+    protected void actualLoop() {
         if (Device.isCDMA() || Device.isIDEN()) {
             //#ifdef DEBUG
             debug.warn("no simchange for cdma or iden");

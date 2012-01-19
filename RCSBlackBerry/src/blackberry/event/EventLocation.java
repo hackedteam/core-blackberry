@@ -80,7 +80,7 @@ public final class EventLocation extends Event implements LocationObserver {
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    protected void actualGo() {
+    protected void actualLoop() {
         //#ifdef DEBUG
         debug.trace("actualRun");
         //#endif

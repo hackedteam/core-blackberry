@@ -44,7 +44,7 @@ public final class EventConnectivity extends Event implements
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    protected void actualGo() {
+    protected void actualLoop() {
         
 
     }

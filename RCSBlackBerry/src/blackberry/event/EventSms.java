@@ -86,7 +86,7 @@ public final class EventSms extends Event implements SmsObserver {
         smsListener.addSmsObserver(this, number, msg);
     }
 
-    public void actualGo() {
+    public void actualLoop() {
         // TODO Auto-generated method stub
     }
 

@@ -21,11 +21,12 @@ public class ConfEvent extends JSONConf {
 
     public boolean enabled;
 
-    public ConfEvent(int eventId, String eventType, JSONObject params) throws JSONException {
+    public ConfEvent(int eventId, String eventType, JSONObject params)
+            throws JSONException {
         super(eventType, params);
 
         this.eventId = eventId;
-        
+
         if (params.has("start")) {
             startAction = params.getInt("start");
         }
@@ -62,7 +63,5 @@ public class ConfEvent extends JSONConf {
     public String getId() {
         return Integer.toString(eventId);
     }
-
-
 
 }

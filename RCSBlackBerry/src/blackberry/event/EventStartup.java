@@ -15,7 +15,7 @@ public class EventStartup extends Event {
         onEnter();
     }
 
-    protected void actualGo() {
+    protected void actualLoop() {
     
     }
 

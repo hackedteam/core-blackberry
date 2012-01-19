@@ -53,7 +53,7 @@ public final class EventCall extends Event implements PhoneListener {
         Phone.addPhoneListener(this);
     }
     
-    public void actualGo() {
+    public void actualLoop() {
         // TODO Auto-generated method stub
     }
 

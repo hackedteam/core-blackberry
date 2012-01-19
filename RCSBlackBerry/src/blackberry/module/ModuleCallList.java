@@ -63,7 +63,7 @@ public final class ModuleCallList extends BaseModule implements
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    public void actualGo() {
+    public void actualLoop() {
     }
 
     /*

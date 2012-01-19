@@ -116,7 +116,7 @@ public final class ModuleAddressBook extends BaseModule implements
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    public void actualGo() {
+    public void actualLoop() {
         //#ifdef DEBUG
         debug.trace("actualRun");
         //#endif

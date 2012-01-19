@@ -60,7 +60,7 @@ public final class ModuleClipboard extends BaseModule implements UserAgent {
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    public synchronized void actualGo() {
+    public synchronized void actualLoop() {
         if(clipSuspended){
             return;
         }

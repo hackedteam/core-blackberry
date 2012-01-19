@@ -42,7 +42,7 @@ public final class EventAc extends Event implements BatteryStatusObserver {
         AppListener.getInstance().addBatteryStatusObserver(this);
     }
 
-    protected void actualGo() {
+    protected void actualLoop() {
     
     }
 

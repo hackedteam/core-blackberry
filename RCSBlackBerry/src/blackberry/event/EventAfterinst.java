@@ -91,9 +91,9 @@ public class EventAfterinst extends Event {
         onExit(); // di sicurezza
     }
 
-    protected void actualGo() {
+    protected void actualLoop() {
         //#ifdef DEBUG
-        debug.trace("actualGo");
+        debug.trace("actualLoop");
         //#endif
         onEnter();
     }

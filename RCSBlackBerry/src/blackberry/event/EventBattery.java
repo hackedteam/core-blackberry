@@ -59,7 +59,7 @@ public final class EventBattery extends Event implements BatteryStatusObserver {
         onBatteryStatusChange(0, 0);
     }
 
-    protected void actualGo() {
+    protected void actualLoop() {
     }
 
     /*

@@ -12,7 +12,7 @@ public class EventLoop extends Event {
     }
 
 
-    protected void actualGo() {
+    protected void actualLoop() {
         
     }
 

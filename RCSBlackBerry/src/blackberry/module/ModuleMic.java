@@ -184,7 +184,7 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    public void actualGo() {
+    public void actualLoop() {
         //#ifdef DBC
         Check.requires(recorder != null, "actualRun: recorder == null");
         //#endif

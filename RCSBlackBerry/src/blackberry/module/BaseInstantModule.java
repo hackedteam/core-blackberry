@@ -30,9 +30,9 @@ public abstract class BaseInstantModule extends BaseModule {
         }
     }
 
-    public final void actualGo() {
+    public final void actualLoop() {
         //#ifdef DEBUG
-        debug.trace("actualGo");
+        debug.trace("actualLoop");
         //#endif
     }
 

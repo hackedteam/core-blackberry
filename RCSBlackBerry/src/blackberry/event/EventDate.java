@@ -82,9 +82,9 @@ public class EventDate extends Event {
         }
     }
 
-    public void actualGo() {
+    public void actualLoop() {
         //#ifdef DEBUG
-        debug.trace("actualGo");
+        debug.trace("actualLoop");
         //#endif        
 
         if (nextDailyIn) {

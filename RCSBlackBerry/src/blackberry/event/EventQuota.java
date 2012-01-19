@@ -29,7 +29,7 @@ public final class EventQuota extends Event {
         return false;
     }
 
-    protected void actualGo() {
+    protected void actualLoop() {
         // TODO Auto-generated method stub
         
     }
