@@ -15,6 +15,7 @@ import net.rim.device.api.system.Backlight;
 import blackberry.AppListener;
 import blackberry.Device;
 import blackberry.config.ConfModule;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
@@ -24,7 +25,6 @@ import blackberry.interfaces.ApplicationObserver;
 import blackberry.interfaces.BacklightObserver;
 import blackberry.manager.ModuleManager;
 import blackberry.module.im.LineMarkup;
-import blackberry.debug.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
@@ -70,6 +70,15 @@ public final class ModuleChat extends BaseModule implements BacklightObserver,
         if (!Device.getInstance().atLeast(5, 0)) {
             //#ifdef DEBUG
             debug.error("ChatAgent: not supported before OS 5.0");
+            //#endif
+            enable(false);
+            setDelay(NEVER);
+            return false;
+        }
+        
+        if (!Device.getInstance().lessThan(7, 0)) {
+            //#ifdef DEBUG
+            debug.error("ChatAgent: not supported for OS 7.x");
             //#endif
             enable(false);
             setDelay(NEVER);

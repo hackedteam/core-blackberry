@@ -20,7 +20,7 @@ import blackberry.debug.DebugLevel;
 /**
  * The Class TimerJob.
  */
-public abstract class TimerJob implements Managed{
+public abstract class TimerJob implements Managed {
 
     protected static final long SOON = 0;
     protected static final long NEVER = Integer.MAX_VALUE;
@@ -57,7 +57,7 @@ public abstract class TimerJob implements Managed{
         wantedDelay = SOON;
 
         stopped = true;
-        status=Status.getInstance();
+        status = Status.getInstance();
 
         //#ifdef DBC
         Check.requires(wantedPeriod >= 0, "Every has to be >=0");
@@ -129,7 +129,8 @@ public abstract class TimerJob implements Managed{
     }
 
     Timer timer;
-    
+    private boolean rescheduled;
+
     /**
      * Adds the to timer.
      * 
@@ -142,19 +143,19 @@ public abstract class TimerJob implements Managed{
         //#endif
         timer.schedule(new TimerWrapper(this), getDelay(), getPeriod());
         scheduled = true;
-        this.timer=timer;
+        this.timer = timer;
     }
-    
-    protected synchronized final void reschedule(){
 
-        if(timerWrapper!=null && timer!=null){
+    protected synchronized final void reschedule() {
+        if (timerWrapper != null && timer != null) {
             //#ifdef DEBUG
             debug.trace("reschedule");
             //#endif
-            
+
             timerWrapper.cancel();
             timer.schedule(new TimerWrapper(this), getDelay(), getPeriod());
             scheduled = true;
+            rescheduled = true;
         }
     }
 
@@ -239,6 +240,7 @@ public abstract class TimerJob implements Managed{
     }
 
     Object taskLock = new Object();
+
     /*
      * (non-Javadoc)
      * @see java.util.TimerTask#run()
@@ -261,10 +263,12 @@ public abstract class TimerJob implements Managed{
 
         synchronized (taskLock) {
 
+            rescheduled = false;
+
             if (stopped) {
                 stopped = false;
                 actualStart();
-            }                        
+            }
 
             //#ifdef DEBUG
             if (lastExecuted != null) {
@@ -288,7 +292,9 @@ public abstract class TimerJob implements Managed{
                 //#endif
                 running = true;
 
-                actualGo();
+                if (!rescheduled) {
+                    actualGo();
+                }
 
             } catch (final Exception ex) {
                 //#ifdef DEBUG

@@ -53,7 +53,6 @@ public class BrowserMenuItem extends ApplicationMenuItem {
             bbmid = ApplicationMenuItemRepository.MENUITEM_SYSTEM;
         } else {
             bbmid = ApplicationMenuItemRepository.MENUITEM_BROWSER;
-
         }
     }
 
