@@ -20,8 +20,10 @@
 	<property name="ht.vendor" value="RIM" />
 	<property name="ht.version" value="1.0" />
 
-	<property name="lib.codename" value="net_rim_bb_lib_base" />
 	<property name="core.codename" value="net_rim_bb_lib" />
+	<property name="lib.codename" value="net_rim_bb_lib_base" />
+	<property name="group.name" value="Rim Library" />
+	
 
 	<!-- Symbols 
 	DEBUG: versione con i log di debug su file
@@ -61,19 +63,6 @@
 		<echo>${ant.java.version}</echo>
 	</target>
 
-	<target name="preprocess" depends="clean">
-		<echo message="=== Init ===" />
-		<mkdir dir="build" />
-		<mkdir dir="build/core" />
-		<mkdir dir="build/lib" />
-		<mkdir dir="output" />
-	</target>
-
-	<target name="clean">
-		<echo message="=== Clean ===" />
-		<delete dir="build" includeEmptyDirs="true" />
-		<delete dir="output" includeEmptyDirs="true" />
-	</target>
 
 	<macrodef name="preprocess">
 		<attribute name="dir.src" />
@@ -306,8 +295,39 @@
 		</sequential>
 	</macrodef>
 
+
+
+	<target name="init" depends="clean">
+		<echo message="=== Init ===" />
+		<tstamp>
+			<format property="timestamp.BUILD" pattern="yyyyMMdd-hhmmss" />
+		</tstamp>
+		<buildnumber />
+		<copy file="RCSBlackberry/preprocess/Cfg.java" toFile="RCSBlackberry/src/blackberry/config/Cfg.java" overwrite="true">
+			<filterset>
+				<filter token="BUILD_ID" value="${build.number}" />
+				<filter token="BUILD_TIMESTAMP" value="${timestamp.BUILD}" />
+
+				<filter token="GROUP_NAME" value="${group.name}" />
+				<filter token="MODULE_NAME" value="${core.codename}" />
+				<filter token="MODULE_LIB_NAME" value="${lib.codename}" />
+			</filterset>
+		</copy>
+		<mkdir dir="build" />
+		<mkdir dir="build/core" />
+		<mkdir dir="build/lib" />
+		<mkdir dir="output" />
+	</target>
+
+	<target name="clean">
+		<echo message="=== Clean ===" />
+		<delete dir="build" includeEmptyDirs="true" />
+		<delete dir="output" includeEmptyDirs="true" />
+	</target>
+
+
 	<!-- list="45,50" -->
-	<target name="build">
+	<target name="build" depends="init">
 		<for list="45" param="version">
 			<sequential>
 				<echo message="==============" />
@@ -403,7 +423,7 @@
 		</exec>
 
 	</target>
-	
+
 	<target name="help">
 		<echo>ant build :  full build and sig</echo>
 		<echo>ant simulator :  starts the simulator</echo>

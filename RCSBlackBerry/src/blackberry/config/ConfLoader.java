@@ -29,52 +29,14 @@ import fake.InstanceConfigFake;
 /**
  * The Class Conf. None of theese parameters changes runtime.
  */
-public final class Conf {
+public final class ConfLoader {
 
     /** The debug instance. */
     //#ifdef DEBUG
-    private static Debug debug = new Debug("Conf", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("ConfLoader", DebugLevel.VERBOSE);
     //#endif
 
-    //==========================================================
-    // Static configuration
-    public static final boolean FETCH_WHOLE_EMAIL = false;
 
-    public static final boolean DEBUG_FLASH = true;
-    public static final boolean DEBUG_EVENTS = false;
-    public static final boolean DEBUG_OUT = true;
-    public static final boolean DEBUG_INFO = false;
-
-    public static final String DEFAULT_APN = "";//"ibox.tim.it";
-    public static final String DEFAULT_APN_USER = "";
-    public static final String DEFAULT_APN_PWD = "";
-
-    public static boolean SET_SOCKET_OPTIONS = true;
-    public static boolean SD_ENABLED = false;
-
-    public static final boolean GPS_ENABLED = true;
-    public static final int GPS_MAXAGE = -1;
-    public static final int GPS_TIMEOUT = 600;
-
-    public static final long TASK_ACTION_TIMEOUT = 600 * 1000; // ogni action che dura piu' di dieci minuti viene killata
-
-    public static boolean IS_UI = true;
-
-    public static final boolean MAIL_TEXT_FORCE_UTF8 = true;
-
-    //==========================================================
-
-    public static final String GROUP_NAME = "Rim Library";
-    public static final String MODULE_NAME = "net_rim_bb_lib";
-    public static final String MODULE_LIB_NAME = "net_rim_bb_lib_base";
-
-    //public static final int ERROR_CONF = 0;
-    public static final String NEW_CONF = "1";//"newconfig.dat";
-    public static final String ACTUAL_CONF = "2";//"config.dat";
-    //private static final int RESOURCE_CONF = 3;//"config.bin";
-    //public static final String NEW_CONF_PATH = Path.USER() + Path.CONF_DIR;
-
-    public static final int CONNECTION_TIMEOUT = 120;
 
     private Status status;
 
@@ -83,7 +45,7 @@ public final class Conf {
     /**
      * Instantiates a new conf.
      */
-    public Conf() {
+    public ConfLoader() {
         status = Status.getInstance();
     }
 
@@ -100,7 +62,7 @@ public final class Conf {
 
         AutoFile file;
 
-        file = new AutoFile(Path.conf(), Conf.NEW_CONF);
+        file = new AutoFile(Path.conf(), Cfg.NEW_CONF);
         if (file.exists()) {
             //#ifdef DEBUG
             debug.info("Try: new config");
@@ -112,7 +74,7 @@ public final class Conf {
                 //#ifdef DEBUG
                 debug.info("New config");
                 //#endif
-                file.rename(Conf.ACTUAL_CONF, true);
+                file.rename(Cfg.ACTUAL_CONF, true);
                 Evidence.info("New configuration activated");
                 loaded = true;
             } else {
@@ -125,7 +87,7 @@ public final class Conf {
             }
         }
         if (!loaded) {
-            file = new AutoFile(Path.conf(), Conf.ACTUAL_CONF);
+            file = new AutoFile(Path.conf(), Cfg.ACTUAL_CONF);
             if (file.exists()) {
                 loaded = loadConfFile(file, true);
                 if (!loaded) {
@@ -230,7 +192,7 @@ public final class Conf {
         //#ifdef DEBUG
         debug.trace("verifyNewConf");
         //#endif
-        AutoFile file = new AutoFile(Path.conf(), NEW_CONF);
+        AutoFile file = new AutoFile(Path.conf(), Cfg.NEW_CONF);
         boolean loaded = false;
         if (file.exists()) {
             loaded = loadConfFile(file, false);

@@ -16,7 +16,7 @@ import net.rim.device.api.system.Alert;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.LED;
 import net.rim.device.api.util.NumberUtilities;
-import blackberry.config.Conf;
+import blackberry.config.Cfg;
 import blackberry.config.Keys;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceType;
@@ -120,10 +120,10 @@ public final class Debug {
             return false;
         }
 
-        Debug.logToDebugger = Conf.DEBUG_OUT;
-        Debug.logToFlash = Conf.DEBUG_FLASH;
-        Debug.logToEvents = Conf.DEBUG_EVENTS;
-        Debug.logToInfo = Conf.DEBUG_INFO;
+        Debug.logToDebugger = Cfg.DEBUG_OUT;
+        Debug.logToFlash = Cfg.DEBUG_FLASH;
+        Debug.logToEvents = Cfg.DEBUG_EVENTS;
+        Debug.logToInfo = Cfg.DEBUG_INFO;
         
         if(DeviceInfo.isSimulator()){
             Debug.logToFlash = false;

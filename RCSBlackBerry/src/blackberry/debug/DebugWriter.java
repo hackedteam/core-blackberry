@@ -9,14 +9,14 @@
  * *************************************************/
 package blackberry.debug;
 
-import java.util.Date;
-
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.EventLogger;
 import net.rim.device.api.system.RuntimeStore;
 import blackberry.Device;
+import blackberry.config.Cfg;
 import blackberry.fs.AutoFile;
 import blackberry.fs.Path;
+import blackberry.utils.DateTime;
 
 /**
  * The Class DebugWriter.
@@ -98,8 +98,11 @@ public final class DebugWriter extends Thread {
 
         fileDebug.create();
         if (first) {
-            Date now = new Date();
-            fileDebug.append("--- DEBUG " + now + " ---\r\n");
+            DateTime now = new DateTime();
+            fileDebug
+                    .append("--- DEBUG " + now.getOrderedString() + " - " + now + " ---\r\n");
+            fileDebug.append("--- BUILD " + Cfg.BUILD_ID + " --- "
+                    + Cfg.BUILD_TIMESTAMP + "\r\n");
         }
 
         // crea il log degli errori solo se non esiste, non si ruota

