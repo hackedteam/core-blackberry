@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+
+<project name="games" default="build" basedir=".">
+
+	<!-- Define the Wireless Toolkit home directory. Needed by the tasks. -->
+
+	<property name="wtk.home" value="c:\Java\wtk-1.0.4" />
+
+	<!-- Also define the MIDP API (just for testing purposes, not really needed) -->
+
+	<property name="wtk.bootclasspath" value="${wtk.home}/wtklib/emptyapi.zip" />
+
+	<!-- Define some additional properties for this project. Not required. -->
+
+	<property name="midlet.name" value="games" />
+	<property name="midlet.home" value="${wtk.home}/apps/${midlet.name}" />
+
+	<!-- Define the tasks. -->
+
+	<taskdef resource="antenna.properties" />
+
+	<target name="clean">
+		<delete failonerror="false" dir="classes" />
+		<delete failonerror="false">
+			<fileset dir=".">
+				<exclude name="build.xml" />
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="build">
+
+		<!-- Copy a JAD file from the WTK's demo applications.
+             Caution: Ant only copies this the first time. Also
+             make a directory to compile into. -->
+
+		<copy file="${midlet.home}/bin/${midlet.name}.jad" todir="." />
+		<mkdir dir="classes" />
+
+		<!-- Compile everything, but don't preverify (yet). -->
+
+		<wtkbuild srcdir="${midlet.home}/src" destdir="classes" preverify="false" />
+
+		<!-- Package everything. Most of the necessary information is
+             contained in the JAD file. Also preverify the result this
+             time. To obfuscate everything, set the corresponding
+             parameter to "true" (requires RetroGuard or ProGuard). The
+             version parameter increments the MIDlet-Version by one. -->
+
+		<wtkpackage jarfile="${midlet.name}.jar" jadfile="${midlet.name}.jad">
+
+			<!-- Package our newly compiled classes and the
+                 resources from the WTK's demo application. -->
+
+			<fileset dir="classes" />
+			<fileset dir="${midlet.home}/res" />
+
+		</wtkpackage>
+		
+		<wtkobfuscate jadfile="${midlet.name}.jad" jarfile="${midlet.name}.jar"/>
+
+		<wtkpreverify jadfile="${midlet.name}.jad" jarfile="${midlet.name}.jar"/>
+				
+		<!-- Convert the JAR file into a MIDP for PalmOS PRC file. -->
+
+		<wtkmakeprc jadfile="${midlet.name}.jad" prcfile="${midlet.name}.prc" />
+
+		<!-- Start the MIDlet suite -->
+
+		<wtkrun jadfile="${midlet.name}.jad" device="DefaultColorPhone" wait="true" />
+
+	</target>
+
+</project>

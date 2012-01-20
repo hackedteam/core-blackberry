@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+
+<project name="libs" default="build" basedir=".">
+
+    <!-- Define the Wireless Toolkit home directory. Needed by the tasks. -->
+
+    <property name="wtk.home" value="c:\Java\wtk-1.0.4"/>
+
+    <!-- Define the tasks. -->
+	
+    <taskdef resource="antenna.properties"/>
+	
+    <target name="build">
+
+       <!-- Create a JAD file. -->
+        
+       <wtkjad jadfile="libs.jad"
+                jarfile="libs.jar"
+                name="Libraries"
+                vendor="Joerg Pleumann"
+                version="1.0.0">
+
+            <midlet name="Libraries" class="Main"/>
+
+        </wtkjad>
+        
+        <delete dir="classes"/>
+        <mkdir dir="classes"/>
+
+        <!-- Compile everything, but don't preverify (yet). -->
+
+        <wtkbuild srcdir="src"
+                  destdir="classes"
+                  preverify="false"/>
+
+        <!-- Package everything. Most of the necessary information is
+             contained in the JAD file. Also preverify the result this
+             time. To obfuscate everything, set the corresponding
+             parameter to "true" (requires RetroGuard or ProGuard). The
+             version parameter increments the MIDlet-Version by one. -->
+
+        <wtkpackage jarfile="libs.jar"
+                    jadfile="libs.jad"
+                    obfuscate="false"
+                    preverify="true"
+                    libclasspath="lib1;lib2/lib2.zip">
+
+            <!-- Package our newly compiled classes. Try to include some
+                 additional files to test JAR/ZIP functionality. -->
+
+           <fileset dir="classes"/>
+
+           <zipfileset src="lib3/lib3.zip"/>
+
+           <zipgroupfileset dir="lib4"/>
+
+        </wtkpackage>
+
+    	<wtkrun jadfile="libs.jad" device="DefaultColorPhone" wait="true"/>
+
+    </target>
+
+</project>

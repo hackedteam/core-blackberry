@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<project name="samples" default="standard" basedir=".">
+
+	<target name="standard">
+		<ant dir="demos" />
+		<ant dir="games" />
+		<ant dir="hello" />
+		<ant dir="libs" />
+		<ant dir="photoalbum" />
+		<ant dir="preprocessor" />
+		<ant dir="uidemo" />
+		<ant dir="white space" />
+		<ant dir="wme" />
+	</target>
+
+	<target name="deploy">
+		<ant dir="deploy" />
+	</target>
+
+	<target name="siemens">
+		<ant dir="siemens" />
+	</target>
+
+	<target name="wtk21">
+		<ant dir="audiodemo" />
+		<ant dir="fpdemo" />
+	</target>
+
+	<target name="all" depends="standard,deploy,wtk21,siemens" />
+
+</project>

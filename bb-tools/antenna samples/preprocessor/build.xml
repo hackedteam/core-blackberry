@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+
+<project name="hello" default="build" basedir=".">
+
+    <!-- Define the Wireless Toolkit home directory. Needed by the tasks. -->
+
+    <property name="wtk.home" value="c:\WTK22"/>
+
+    <!-- Define the tasks. -->
+	<!-- Work with the jar 
+    <taskdef classpath="../../dist/antenna-bin-0.9.15-CVS.jar" resource="antenna.properties"/>
+	-->
+	
+	<!-- Work with the actual code
+	-->
+	<taskdef classpath="../../classes;../../lib/antlr.jar" resource="antenna.properties"/>
+	
+	
+    <property name="myString" value="Yabba dabba doo"/>
+    <property name="myInteger" value="42"/>
+    <property name="myDouble" value="3.1415"/>
+    <property name="myBoolean" value="true"/>
+	
+    <target name="build">
+
+		<delete dir="src_nokia"/>
+		<mkdir dir="src_nokia"/>
+		<delete dir="src_motorola"/>
+		<mkdir dir="src_motorola"/>
+		<delete dir="src_siemens"/>
+		<mkdir dir="src_siemens"/>
+		<delete dir="src_other"/>
+		<mkdir dir="src_other"/>
+		
+		<property name="MYFILE" value="src/handler.inc"/>
+		
+		<wtkpreprocess srcdir="src" destdir="src_nokia" symbols="want_nokia,FOO,BAR,YO" verbose="true" indent="false"/>
+    	<wtkpreprocess srcdir="src" destdir="src_motorola" symbols="want_motorola,FOO,BAR,YO" verbose="true"/>
+    	<wtkpreprocess srcdir="src" destdir="src_siemens" symbols="want_siemens,FOO,BAR,YO" verbose="true" filter="true"/>
+    	<wtkpreprocess srcdir="src" destdir="src_other" symbols="FOO,BAR,YO" verbose="true"/>
+
+    </target>
+
+</project>

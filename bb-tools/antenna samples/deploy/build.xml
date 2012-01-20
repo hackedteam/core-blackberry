@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+
+<project name="games" default="build" basedir=".">
+
+    <!-- Define the Wireless Toolkit home directory. Needed by the tasks. -->
+
+    <property name="wtk.home" value="c:\Java\wtk-1.0.4"/>
+
+    <!-- Define some additional properties for this project. -->
+
+    <property name="midlet.name" value="games"/>
+    <property name="midlet.home" value="${wtk.home}/apps/${midlet.name}"/>
+
+    <!-- Define deployment properties. Assumes a Tomcat on Port 8080 and
+         the default login/password. Adjust this to your local settings. -->
+
+    <property name="deploy.target"   value="http://localhost:8080/antenna"/>
+    <property name="deploy.login"    value="admin"/>
+    <property name="deploy.password" value="secret"/>
+
+    <!-- Define the tasks. -->
+	
+    <taskdef resource="antenna.properties"/>
+	
+	<!-- Cleanup -->
+	
+	<target name="clean">
+	    <delete failonerror="false" dir="classes"/>
+	    <delete failonerror="false">
+	        <fileset dir=".">
+	            <exclude name="build.xml"/>
+	        </fileset>
+	    </delete>
+	</target>
+	
+    <target name="build">
+
+        <!-- Copy a JAD file from the WTK's demo applications.
+             Caution: Ant only copies this the first time. Also
+             make a directory to compile into. -->
+             
+        <copy file="${midlet.home}/bin/${midlet.name}.jad" todir="."/>
+        <mkdir dir="classes"/>
+
+        <!-- Compile everything, but don't preverify (yet). -->
+
+        <wtkbuild srcdir="${midlet.home}/src"
+                  destdir="classes"
+                  preverify="false"/>
+
+        <!-- Package the MIDlet suite. -->
+
+        <wtkpackage jarfile="${midlet.name}.jar" jadfile="${midlet.name}.jad">
+
+            <!-- Package our newly compiled classes and the
+                 resources from the WTK's demo application. -->
+
+            <fileset dir="classes"/>
+            <fileset dir="${midlet.home}/res"/>
+
+        </wtkpackage>
+
+		<!-- Preverify the MIDlet suite. -->
+		
+        <wtkpreverify jarfile="${midlet.name}.jar" jadfile="${midlet.name}.jad"/>
+    		
+    	<!-- Deploy the MIDlet suite -->
+
+    	<wtkdeploy jarfile="${midlet.name}.jar" jadfile="${midlet.name}.jad" target="${deploy.target}" login="${deploy.login}" password="${deploy.password}"/>
+
+    </target>
+
+</project>
