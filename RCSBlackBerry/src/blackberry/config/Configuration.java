@@ -136,8 +136,8 @@ public class Configuration {
             final String moduleType = params.getString("module");
 
             //#ifdef DEBUG
-            debug.trace("call  Module: " + moduleType + " Params size: "
-                    + params.length());
+            /*debug.trace("call Module: " + moduleType + " Params size: "
+                    + params.length());*/
             //#endif
 
             if (instantiate) {
@@ -243,10 +243,22 @@ public class Configuration {
             JSONArray jactions = root.getJSONArray("actions");
             JSONObject jglobals = root.getJSONObject("globals");
 
+            //#ifdef DEBUG
+            debug.info("parseConfiguration -- MODULES");
+            //#endif
             Visitor.load(jmodules, new LoadModule(instantiate));
+          //#ifdef DEBUG
+            debug.info("parseConfiguration -- EVENTS");
+            //#endif
             Visitor.load(jevents, new LoadEvent(instantiate));
+          //#ifdef DEBUG
+            debug.info("parseConfiguration -- ACTIONS");
+            //#endif
             Visitor.load(jactions, new LoadAction(instantiate));
 
+          //#ifdef DEBUG
+            debug.info("parseConfiguration -- GLOBALS");
+            //#endif
             loadGlobals(jglobals, instantiate);
 
             //#ifdef DEBUG
@@ -263,7 +275,6 @@ public class Configuration {
             //#endif
             return false;
         }
-
     }
 
     private void loadGlobals(JSONObject jglobals, boolean instantiate)

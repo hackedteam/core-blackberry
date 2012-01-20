@@ -19,7 +19,6 @@ import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-
 /**
  * The Class Manager. Classe astratta che racchiude le funzionalita' di Manager,
  * utili a - far partire un servizio identificato da un id - far partire tutti i
@@ -35,7 +34,6 @@ public abstract class Manager {
     /** The status obj. */
     protected Status status = null;
 
- 
     protected Hashtable hashtable;
 
     /**
@@ -43,15 +41,14 @@ public abstract class Manager {
      */
     protected Manager() {
         status = Status.getInstance();
-        hashtable=new Hashtable();
+        hashtable = new Hashtable();
     }
-    
 
     /*
      * public final boolean isRunning(int id) { return getItem(id).isRunning();
      * }
      */
-    
+
     /**
      * Gets the item.
      * 
@@ -69,7 +66,7 @@ public abstract class Manager {
         //#endif
         final Managed managed = (Managed) hashtable.get(id);
         //#ifdef DBC
-        if(managed!=null){
+        if (managed != null) {
             Check.ensures(managed.getId().equals(id), "Wrong id");
         }
         //#endif
@@ -77,23 +74,29 @@ public abstract class Manager {
         return managed;
     }
 
-
-    public synchronized final void add(final Managed managed){
+    public synchronized final Managed add(final Managed managed) {
         //#ifdef DBC
         Check.requires(hashtable != null, "Null Agents");
         Check.requires(managed != null, "Null Agent");
         Check.requires(managed.getId() != null, "Id == " + managed.getId());
-        Check.asserts(hashtable.containsKey(managed.getId()) == false,
-                "Agent already present: " + managed);
         //#endif
+
+        Managed replaced = null;
+        if (hashtable.containsKey(managed.getId())) {
+            replaced = (Managed) hashtable.get(managed.getId());
+            //#ifdef DEBUG
+            debug.trace("add replacing an existing Managed: " + managed);
+            //#endif
+        }
         hashtable.put(managed.getId(), managed);
+        return replaced;
     }
 
     /*
      * public final boolean isRunning(int id) { return getItem(id).isRunning();
      * }
      */
-    
+
     /**
      * Gets the all the TimerJob items.
      * 
@@ -103,38 +106,38 @@ public abstract class Manager {
         //#ifdef DBC
         Check.requires(hashtable != null, "Null Agents");
         //#endif
-    
+
         final Enumeration e = hashtable.elements();
         final Vector vect = new Vector();
-    
+
         while (e.hasMoreElements()) {
             vect.addElement(e.nextElement());
         }
-    
+
         //#ifdef DBC
-        Check.ensures(hashtable.size() == vect.size(), "agents not equal to vect");
+        Check.ensures(hashtable.size() == vect.size(),
+                "agents not equal to vect");
         //#endif
         return vect;
     }
 
-    public void clear(){
+    public void clear() {
         hashtable.clear();
     }
 
     //#ifdef DEBUG
-    public String toString(){
+    public String toString() {
         StringBuffer buf = new StringBuffer();
-    
-    Vector vector = this.getAllItems();
-    for (int i = 0; i < vector.size(); i++) {
-        Managed managed = (Managed) vector.elementAt(i);
-        buf.append("    " + managed +"\n");
-        
-    }
-       return buf.toString();
-    
+
+        Vector vector = this.getAllItems();
+        for (int i = 0; i < vector.size(); i++) {
+            Managed managed = (Managed) vector.elementAt(i);
+            buf.append("    " + managed + "\n");
+
+        }
+        return buf.toString();
+
     }
     //#endif
-   
 
 }

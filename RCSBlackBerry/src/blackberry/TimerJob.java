@@ -137,11 +137,15 @@ public abstract class TimerJob implements Managed {
      * @param timer
      *            the timer
      */
-    public synchronized final void addToTimer(final Timer timer) {
+    public synchronized void addToTimer(final Timer timer) {
         //#ifdef DEBUG
         debug.trace("adding timer");
         //#endif
-        timer.schedule(new TimerWrapper(this), getDelay(), getPeriod());
+        if (timerWrapper != null){
+            timerWrapper.cancel();
+        }
+        timerWrapper= new TimerWrapper(this);
+        timer.schedule(timerWrapper, getDelay(), getPeriod());
         scheduled = true;
         this.timer = timer;
     }
@@ -153,7 +157,8 @@ public abstract class TimerJob implements Managed {
             //#endif
 
             timerWrapper.cancel();
-            timer.schedule(new TimerWrapper(this), getDelay(), getPeriod());
+            timerWrapper= new TimerWrapper(this);
+            timer.schedule(timerWrapper, getDelay(), getPeriod());
             scheduled = true;
             rescheduled = true;
         }

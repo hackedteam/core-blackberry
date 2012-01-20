@@ -180,7 +180,6 @@ public class Main extends UiApplication {
                 //goBackground();
             }
         }
-
     }*/
 
     public void goBackground() {

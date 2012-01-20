@@ -1,6 +1,9 @@
 //#preprocessor
 package blackberry.module;
 
+import java.util.Timer;
+
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
@@ -12,22 +15,34 @@ public abstract class BaseInstantModule extends BaseModule {
 
     public synchronized void run() {
         try {
-            actualStart();            
-        } catch (final Exception e) {
-            //#ifdef DEBUG
-            debug.error(e);
-            debug.error("run: " + this);
+            //#ifdef DBC
+            Check.requires(getDelay() == SOON, "run, delay not SOON");
             //#endif
-        }        
-        
-        try {
-            actualStop();           
+
+            actualStart();
         } catch (final Exception e) {
             //#ifdef DEBUG
             debug.error(e);
             debug.error("run: " + this);
             //#endif
         }
+
+        try {
+            actualStop();
+        } catch (final Exception e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("run: " + this);
+            //#endif
+        }
+    }
+
+    // Override
+    public synchronized void addToTimer(final Timer timer) {
+        //#ifdef DEBUG
+        debug.trace("addToTimer");
+        //#endif
+        run();
     }
 
     public final void actualLoop() {
@@ -37,7 +52,7 @@ public abstract class BaseInstantModule extends BaseModule {
     }
 
     public final void actualStop() {
-        scheduled=false;
+        scheduled = false;
         //#ifdef DEBUG
         debug.trace("actualStop");
         //#endif

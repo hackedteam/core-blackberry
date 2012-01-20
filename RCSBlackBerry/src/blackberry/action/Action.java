@@ -27,7 +27,7 @@ import blackberry.utils.BlockingQueueTrigger;
 /**
  * The Class Action.
  */
-public class Action implements Managed{
+public class Action implements Managed {
 
     /** The debug instance. */
     //#ifdef DEBUG
@@ -114,7 +114,6 @@ public class Action implements Managed{
                     debug.error("addSubAction Error (addSubAction): unknown type: "
                             + actionConf.getType());
                     //#endif
-
                     return false;
                 }
 
@@ -131,7 +130,7 @@ public class Action implements Managed{
 
                 return false;
             }
-        }  catch (ConfigurationException e) {
+        } catch (ConfigurationException e) {
             //#ifdef DEBUG
             debug.error(e);
             debug.error("addSubAction");
@@ -149,7 +148,6 @@ public class Action implements Managed{
             this.triggerQueue = status.getTriggeredQueueMain();
             this.queueDesc = "MAIN";
         }
-
     }
 
     /**
@@ -192,8 +190,14 @@ public class Action implements Managed{
 
     //#ifdef DEBUG
     public final String toString() {
-        return getId() + " [" + getDesc().toUpperCase() + "] qq: " + queueDesc;
-    
+        String ret = getId() + " [" + getDesc().toUpperCase() + "] qq: "
+                + queueDesc ;
+        for (int i = 0; i < list.size(); i++) {
+            SubAction sub = (SubAction) list.elementAt(i);
+            ret += "\n    "+ sub;
+        }
+        return ret;
+
     }
     //#endif
 

@@ -15,12 +15,11 @@ import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-
 /**
  * The Class Agent.
  */
 public abstract class BaseModule extends TimerJob {
-   
+
     //#ifdef DEBUG
     private static Debug debug = new Debug("Mod", DebugLevel.VERBOSE);
     //#endif
@@ -48,14 +47,14 @@ public abstract class BaseModule extends TimerJob {
     public void setTrigger(Trigger trigger) {
         this.trigger = trigger;
     }
-    
-    public final String getId(){
+
+    public final String getId() {
         return conf.getType();
     }
 
     //#ifdef DEBUG
     public String toString() {
-        return "Module <" + conf.getType().toUpperCase() + "> " + (isRunning() ? "running" : ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        return "Module <" + conf.getType().toUpperCase() + "> " + (isRunning() ? "running" : "") + conf; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     }
     //#endif
 

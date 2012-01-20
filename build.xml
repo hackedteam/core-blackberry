@@ -1,4 +1,4 @@
-<project name="RCSBlackberry" default="build" basedir=".">
+<project name="RCSBlackberry" default="help" basedir=".">
 	<typedef resource="bb-ant-defs.xml" />
 	<!-- <taskdef resource="net/sf/antcontrib/antcontrib.properties" /> -->
 	<taskdef resource="net/sf/antcontrib/antlib.xml" />
@@ -346,7 +346,7 @@
 	</target>
 
 	<!-- Load to device depends="sign" -->
-	<target name="load">
+	<target name="upload">
 		<echo message="=== Load ===" />
 		<echo>${jde.45.home}/bin/JavaLoader.exe ${lib.codename}.cod ${core.codename}.cod</echo>
 		<exec executable="${jde.45.home}/bin/JavaLoader.exe" dir="." failonerror="true">
@@ -402,5 +402,12 @@
 			<arg line=" /pin=0x2100000A " />
 		</exec>
 
+	</target>
+	
+	<target name="help">
+		<echo>ant build :  full build and sig</echo>
+		<echo>ant simulator :  starts the simulator</echo>
+		<echo>ant upload : uploads both the core and the lib</echo>
+		<echo>ant updatecoredebug : uploads the core debug 45</echo>
 	</target>
 </project>
