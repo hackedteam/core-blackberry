@@ -9,19 +9,19 @@
 
 package blackberry.manager;
 
-import net.rim.device.api.system.RuntimeStore;
 import blackberry.JobManager;
+import blackberry.Singleton;
 import blackberry.config.ConfEvent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
 import blackberry.event.FactoryEvent;
-import blackberry.interfaces.Singleton;
+import blackberry.interfaces.iSingleton;
 
 /**
  * The Class EventManager.
  */
-public final class EventManager extends JobManager implements Singleton {
+public final class EventManager extends JobManager implements iSingleton {
 
     private static final long GUID = 0x3c80b0de21f15f46L;
 
@@ -40,10 +40,10 @@ public final class EventManager extends JobManager implements Singleton {
      */
     public static synchronized EventManager getInstance() {
         if (instance == null) {
-            instance = (EventManager) RuntimeStore.getRuntimeStore().get(GUID);
+            instance = (EventManager) Singleton.self().get(GUID);
             if (instance == null) {
                 final EventManager singleton = new EventManager();
-                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                Singleton.self().put(GUID, singleton);
                 instance = singleton;
             }
 

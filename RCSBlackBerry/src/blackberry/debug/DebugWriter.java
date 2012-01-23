@@ -11,17 +11,18 @@ package blackberry.debug;
 
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.EventLogger;
-import net.rim.device.api.system.RuntimeStore;
 import blackberry.Device;
+import blackberry.Singleton;
 import blackberry.config.Cfg;
 import blackberry.fs.AutoFile;
 import blackberry.fs.Path;
+import blackberry.interfaces.iSingleton;
 import blackberry.utils.DateTime;
 
 /**
  * The Class DebugWriter.
  */
-public final class DebugWriter extends Thread {
+public final class DebugWriter extends Thread implements iSingleton {
 
     static final String DEBUG_NAME = "D_";
     static final String ERROR_NAME = "E_";
@@ -68,12 +69,12 @@ public final class DebugWriter extends Thread {
     public static synchronized DebugWriter getInstance() {
 
         if (instance == null) {
-            instance = (DebugWriter) RuntimeStore.getRuntimeStore().get(GUID);
+            instance = (DebugWriter) Singleton.self().get(GUID);
             if (instance == null) {
 
                 final DebugWriter singleton = new DebugWriter();
 
-                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                Singleton.self().put(GUID, singleton);
                 instance = singleton;
             }
         }

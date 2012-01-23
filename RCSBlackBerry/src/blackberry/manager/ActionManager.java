@@ -1,14 +1,14 @@
 //#preprocessor
 package blackberry.manager;
 
-import net.rim.device.api.system.RuntimeStore;
+import blackberry.Singleton;
 import blackberry.action.Action;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
-import blackberry.interfaces.Singleton;
+import blackberry.interfaces.iSingleton;
 
-public class ActionManager extends Manager implements Singleton {
+public class ActionManager extends Manager implements iSingleton {
     private static final long GUID = 0xfa169723286585c3L;
 
     /** The debug instance. */
@@ -26,10 +26,10 @@ public class ActionManager extends Manager implements Singleton {
      */
     public static synchronized ActionManager getInstance() {
         if (instance == null) {
-            instance = (ActionManager) RuntimeStore.getRuntimeStore().get(GUID);
+            instance = (ActionManager) Singleton.self().get(GUID);
             if (instance == null) {
                 final ActionManager singleton = new ActionManager();
-                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                Singleton.self().put(GUID, singleton);
                 instance = singleton;
             }
         }

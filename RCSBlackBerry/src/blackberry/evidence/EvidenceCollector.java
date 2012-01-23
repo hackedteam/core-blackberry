@@ -19,8 +19,8 @@ import javax.microedition.io.file.FileConnection;
 import net.rim.device.api.io.file.ExtendedFileConnection;
 import net.rim.device.api.system.PersistentObject;
 import net.rim.device.api.system.PersistentStore;
-import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.util.NumberUtilities;
+import blackberry.Singleton;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Check;
@@ -28,7 +28,7 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.fs.AutoFile;
 import blackberry.fs.Path;
-import blackberry.interfaces.Singleton;
+import blackberry.interfaces.iSingleton;
 import blackberry.utils.DoubleStringSortVector;
 import blackberry.utils.StringSortVector;
 
@@ -37,7 +37,7 @@ import blackberry.utils.StringSortVector;
  * 
  * @author zeno
  */
-public final class EvidenceCollector implements Singleton {
+public final class EvidenceCollector implements iSingleton {
     //#ifdef DEBUG
     private static Debug debug = new Debug("EvidenceColl", DebugLevel.INFORMATION);
     //#endif
@@ -95,13 +95,13 @@ public final class EvidenceCollector implements Singleton {
      */
     public static synchronized EvidenceCollector getInstance() {
         if (instance == null) {
-            instance = (EvidenceCollector) RuntimeStore.getRuntimeStore().get(
+            instance = (EvidenceCollector) Singleton.self().get(
                     GUID);
             if (instance == null) {
                 final EvidenceCollector singleton = new EvidenceCollector();
                 singleton.initKeys();
                 singleton.initProgressive();
-                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                Singleton.self().put(GUID, singleton);
                 instance = singleton;
             }
         }

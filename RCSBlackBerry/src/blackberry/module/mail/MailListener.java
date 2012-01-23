@@ -27,13 +27,14 @@ import net.rim.blackberry.api.mail.event.FolderListener;
 import net.rim.blackberry.api.mail.event.StoreEvent;
 import net.rim.device.api.servicebook.ServiceBook;
 import net.rim.device.api.servicebook.ServiceRecord;
-import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.util.IntHashtable;
+import blackberry.Singleton;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.MailObserver;
+import blackberry.interfaces.iSingleton;
 import blackberry.module.ModuleMessage;
-import blackberry.debug.Check;
 
 /**
  * The listener interface for receiving mail events. The class that is
@@ -45,7 +46,7 @@ import blackberry.debug.Check;
  * 
  * @author user1
  */
-public final class MailListener implements FolderListener, SendListener { //, StoreListener, SendListener {
+public final class MailListener implements FolderListener, SendListener, iSingleton { //, StoreListener, SendListener {
 
     //#ifdef DEBUG
     static Debug debug = new Debug("MailListener", DebugLevel.VERBOSE);
@@ -72,11 +73,11 @@ public final class MailListener implements FolderListener, SendListener { //, St
 
     public static synchronized MailListener getInstance() {
         if (instance == null) {
-            instance = (MailListener) RuntimeStore.getRuntimeStore().get(GUID);
+            instance = (MailListener) Singleton.self().get(GUID);
             if (instance == null) {
                 final MailListener singleton = new MailListener();
 
-                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                Singleton.self().put(GUID, singleton);
                 instance = singleton;
             }
         }

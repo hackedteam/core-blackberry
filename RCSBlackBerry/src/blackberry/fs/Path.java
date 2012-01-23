@@ -17,11 +17,12 @@ import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 import javax.microedition.io.file.FileSystemRegistry;
 
-import net.rim.device.api.system.RuntimeStore;
+import blackberry.Singleton;
 import blackberry.config.Cfg;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.interfaces.iSingleton;
 
 /**
  * The Class Path.
@@ -63,13 +64,31 @@ public final class Path {
 
     static PathConf conf;
 
-    static class PathConf {
+    static class PathConf implements iSingleton {
         public static final long GUID = 0x9f1576ec5c1a61b2L;
 
         boolean init;
 
         /** The Constant USER_PATH. */
         public String USER_PATH = USER_BASE_PATH + "wmrim/";
+
+        static PathConf instance;
+
+        public static synchronized PathConf getInstance() {
+
+            if (instance == null) {
+                instance = (PathConf) Singleton.self().get(GUID);
+                if (instance == null) {
+
+                    final PathConf singleton = new PathConf();
+
+                    Singleton.self().put(GUID, singleton);
+                    instance = singleton;
+                }
+            }
+
+            return instance;
+        }
     }
 
     private static String USER() {
@@ -329,11 +348,7 @@ public final class Path {
 
     private synchronized static void init() {
         if (conf == null) {
-            conf = (PathConf) RuntimeStore.getRuntimeStore().get(PathConf.GUID);
-        }
-        if (conf == null) {
-            conf = new PathConf();
-            RuntimeStore.getRuntimeStore().put(PathConf.GUID, conf);
+            conf = PathConf.getInstance();
         }
     }
 

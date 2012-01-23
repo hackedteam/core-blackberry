@@ -16,6 +16,7 @@ import net.rim.device.api.applicationcontrol.ApplicationPermissionsManager;
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.CodeModuleGroup;
 import net.rim.device.api.system.CodeModuleGroupManager;
+import blackberry.config.Cfg;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -230,8 +231,11 @@ public final class Core implements Runnable {
     public void run() {
         //#ifdef DEBUG
         debug.info("START: " + (new Date()));
-        //#endif
+        Evidence.info("Start build:" + Cfg.BUILD_ID + " " + Cfg.BUILD_TIMESTAMP);
+        //#else
         Evidence.info("Start");
+        //#endif
+       
 
         stealth();
         Utils.sleep(500);
@@ -283,8 +287,12 @@ public final class Core implements Runnable {
             //#ifdef DEBUG
             Debug.stop();
             //#endif
+                        
 
             Utils.sleep(2000);
+            
+            Singleton.self().clear();
+            
             System.exit(0);
         }
     }

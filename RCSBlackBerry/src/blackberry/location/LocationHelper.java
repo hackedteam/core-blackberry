@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.location;
 
 import javax.microedition.location.Criteria;
@@ -16,13 +16,15 @@ import javax.microedition.location.LocationProvider;
 
 import net.rim.device.api.system.Application;
 import net.rim.device.api.system.RuntimeStore;
+import blackberry.Singleton;
 import blackberry.config.Cfg;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.interfaces.iSingleton;
 
-public final class LocationHelper {
+public final class LocationHelper implements iSingleton {
 
-    private long STOP_DELAY = 5 * 60 * 1000;
+    private long STOP_DELAY = 10 * 60 * 1000;
     //#ifdef DEBUG
     static Debug debug = new Debug("LocationHelper", DebugLevel.VERBOSE);
     //#endif
@@ -36,7 +38,7 @@ public final class LocationHelper {
                     .get(GUID);
             if (instance == null) {
                 final LocationHelper singleton = new LocationHelper();
-                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                Singleton.self().put(GUID, singleton);
                 instance = singleton;
             }
         }
@@ -44,53 +46,72 @@ public final class LocationHelper {
     }
 
     private LocationProvider lp;
+    private Criteria criteria;
 
     private LocationHelper() {
         final Application application = Application.getApplication();
-        
-        final Criteria criteria = new Criteria();
+
+        criteria = new Criteria();
         criteria.setCostAllowed(true);
 
-        criteria.setHorizontalAccuracy(50);
-        criteria.setVerticalAccuracy(50);
+        criteria.setHorizontalAccuracy(Criteria.NO_REQUIREMENT);
+        criteria.setVerticalAccuracy(Criteria.NO_REQUIREMENT);
         criteria.setPreferredPowerConsumption(Criteria.POWER_USAGE_HIGH);
-        
-        try {
-            lp = LocationProvider.getInstance(criteria);
-        } catch (LocationException e) {
-            //#ifdef DEBUG
-            debug.error(e);
-            debug.error("LocationHelper");
-            //#endif
-        }
-        
-        if (lp == null) {
-            //#ifdef DEBUG
-            debug.error("GPS Not Supported on Device");
-            //#endif               
 
-        }
+       
     }
 
-    public void start( final LocationObserver callback, boolean sync) {
+    public void start(final LocationObserver callback, boolean sync) {
         final Runnable closure = new Runnable() {
             public void run() {
                 //#ifdef DEBUG
                 Debug.init();
                 //#endif
-                
+
                 //#ifdef DEBUG
                 debug.trace("run LocationHelper");
                 //#endif
+
+                try {
+                    lp = LocationProvider.getInstance(criteria);
+                } catch (LocationException e) {
+                    //#ifdef DEBUG
+                    debug.error(e);
+                    debug.error("LocationHelper");
+                    //#endif
+                    callback.errorLocation(false);
+                    return;
+                }
+
+                if (lp == null) {
+                    //#ifdef DEBUG
+                    debug.error("GPS Not Supported on Device");
+                    //#endif       
+                    callback.errorLocation(false);
+                    return;
+                }
                 
                 try {
                     callback.waitingForPoint(true);
-                    if (lp.getState() == LocationProvider.AVAILABLE) {
+                    int state = lp.getState();
+                    if (state == LocationProvider.AVAILABLE) {
                         //#ifdef DEBUG
                         debug.trace("getLocation");
                         //#endif
                         final Location loc = lp.getLocation(Cfg.GPS_TIMEOUT);
                         callback.newLocation(loc);
+                    } else if (state == LocationProvider.OUT_OF_SERVICE) {
+                        //#ifdef DEBUG
+                        debug.error("start, GPS not available, OUT_OF_SERVICE");
+                        //#endif
+                        lp.reset();
+                        callback.errorLocation(false);
+                    } else if (state == LocationProvider.TEMPORARILY_UNAVAILABLE) {
+                        //#ifdef DEBUG
+                        debug.error("start, GPS not available, TEMPORARILY_UNAVAILABLE");
+                        //#endif
+                        lp.reset();
+                        callback.errorLocation(false);
                     }
                 } catch (final LocationException e) {
                     if (e.getMessage() == "Timed out while waiting for GPS") {
@@ -108,7 +129,7 @@ public final class LocationHelper {
                     debug.error(e);
                     //#endif
                     callback.errorLocation(true);
-                }catch(Exception e){
+                } catch (Exception e) {
                     //#ifdef DEBUG
                     debug.error(e);
                     //#endif
@@ -119,8 +140,7 @@ public final class LocationHelper {
                 debug.trace("run LocationHelper end");
                 //#endif
             }
-            
-           
+
         };
 
         if (sync) {
@@ -135,7 +155,7 @@ public final class LocationHelper {
             //Status.self().getTimer().schedule(task,STOP_DELAY);            
             new Thread(closure).start();
         }
-        
+
         //#ifdef DEBUG
         debug.trace("start ended");
         //#endif
@@ -145,10 +165,14 @@ public final class LocationHelper {
         //#ifdef DEBUG
         debug.trace("stop");
         //#endif
-        if(lp!=null){
+        if (lp != null) {
             lp.reset();
         }
-        
     }
 
+    public void reset() {
+        if (lp != null) {
+            lp.reset();
+        }
+    }
 }

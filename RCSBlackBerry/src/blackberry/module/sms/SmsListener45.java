@@ -17,13 +17,14 @@ import javax.wireless.messaging.BinaryMessage;
 import javax.wireless.messaging.MessageConnection;
 import javax.wireless.messaging.TextMessage;
 
-import net.rim.device.api.system.RuntimeStore;
+import blackberry.Singleton;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.SmsObserver;
+import blackberry.interfaces.iSingleton;
 
-public class SmsListener45 extends SmsListener{
+public class SmsListener45 extends SmsListener implements iSingleton{
 
     private static final long GUID = 0xe78b740082783262L;
 
@@ -49,10 +50,10 @@ public class SmsListener45 extends SmsListener{
     public synchronized static SmsListener45 getInstance() {
 
         if (instance == null) {
-            instance = (SmsListener45) RuntimeStore.getRuntimeStore().get(GUID);
+            instance = (SmsListener45) Singleton.self().get(GUID);
             if (instance == null) {
                 final SmsListener45 singleton = new SmsListener45();
-                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                Singleton.self().put(GUID, singleton);
                 instance = singleton;
             }
         }

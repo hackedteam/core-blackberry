@@ -36,8 +36,6 @@ public final class ConfLoader {
     private static Debug debug = new Debug("ConfLoader", DebugLevel.VERBOSE);
     //#endif
 
-
-
     private Status status;
 
     private boolean haveJson;
@@ -117,7 +115,7 @@ public final class ConfLoader {
                 int len = Utils.byteArrayToInt(resource, 0);
 
                 cleanConfiguration();
-                
+
                 // Initialize the configuration object
                 Configuration conf = new Configuration(resource, len, 4);
 
@@ -148,7 +146,7 @@ public final class ConfLoader {
         EventManager.getInstance().clear();
         ActionManager.getInstance().clear();
     }
-    
+
     private boolean loadConfFile(byte[] resource, boolean instantiate) {
         boolean loaded = false;
 
@@ -156,11 +154,11 @@ public final class ConfLoader {
             // Initialize the configuration object
             Configuration conf = new Configuration(resource, resource.length, 0);
             if (conf.isDecrypted()) {
-                
-                if(instantiate){
+
+                if (instantiate) {
                     cleanConfiguration();
                 }
-                
+
                 // Load the configuration
                 loaded = conf.loadConfiguration(instantiate);
                 //#ifdef DEBUG
@@ -183,6 +181,7 @@ public final class ConfLoader {
         //#ifdef DEBUG
         debug.trace("loadConfFile: " + file);
         //#endif
+
         final byte[] resource = file.read();
         return loadConfFile(resource, instantiate);
 

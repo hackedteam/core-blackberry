@@ -15,6 +15,8 @@ import net.rim.device.api.i18n.DateFormat;
 import net.rim.device.api.system.Alert;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.LED;
+import net.rim.device.api.system.Memory;
+import net.rim.device.api.system.MemoryStats;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.config.Cfg;
 import blackberry.config.Keys;
@@ -124,8 +126,8 @@ public final class Debug {
         Debug.logToFlash = Cfg.DEBUG_FLASH;
         Debug.logToEvents = Cfg.DEBUG_EVENTS;
         Debug.logToInfo = Cfg.DEBUG_INFO;
-        
-        if(DeviceInfo.isSimulator()){
+
+        if (DeviceInfo.isSimulator()) {
             Debug.logToFlash = false;
         }
 
@@ -417,4 +419,19 @@ public final class Debug {
         }
     }
 
+    public void traceMemory() {
+        MemoryStats objects = Memory.getObjectStats();
+
+        Evidence.info("Memory STATS OBJECTS:  allocated="
+                + objects.getAllocated() + " free=" + objects.getFree()
+                + " numAllocated=" + objects.getObjectCount() + "  size="
+                + objects.getObjectSize());
+
+        /*objects = Memory.getRAMStats();
+        Evidence.info("Memory STATS RAM:  allocated=" + objects.getAllocated()
+                + " free=" + objects.getFree() + " numAllocated="
+                + objects.getObjectCount() + "  size="
+                + objects.getObjectSize());*/
+
+    }
 }

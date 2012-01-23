@@ -389,6 +389,8 @@
 			<arg value="output/45/debug/${core.codename}.cod" />
 		</exec>
 	</target>
+	
+	<target name="update" depends="updatecoredebug"/>
 
 	<property name="blackberry.simulator.path" location="${jde.45.home}\simulator" />
 	<property name="simulator.model" value="8300" />

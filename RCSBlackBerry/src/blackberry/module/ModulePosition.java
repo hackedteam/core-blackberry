@@ -226,6 +226,7 @@ public final class ModulePosition extends BaseInstantModule implements
                 debug.trace("locationGPS, not waiting, start location get");
                 //#endif
 
+                LocationHelper.getInstance().reset();
                 LocationHelper.getInstance().start(this, false);
             } else {
                 //#ifdef DEBUG

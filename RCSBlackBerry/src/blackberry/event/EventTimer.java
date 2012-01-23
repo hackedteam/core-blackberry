@@ -66,7 +66,6 @@ public final class EventTimer extends Event {
             onEnter();
             needExit = true;
         }
-
     }
 
     /*

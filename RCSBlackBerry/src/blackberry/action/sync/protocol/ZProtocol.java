@@ -58,6 +58,7 @@ public class ZProtocol extends Protocol {
         Check.requires(transport != null, "perform: transport = null");
         //#endif
 
+
         // key init
         //cryptoConf.makeKey(Encryption.getKeys().getProtoKey());
         RandomSource.getBytes(Kd);

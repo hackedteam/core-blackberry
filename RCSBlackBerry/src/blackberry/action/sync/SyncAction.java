@@ -11,7 +11,9 @@ package blackberry.action.sync;
 
 import java.util.Vector;
 
+import net.rim.device.api.crypto.RandomSource;
 import net.rim.device.api.system.Backlight;
+import net.rim.device.api.system.DeviceInfo;
 import blackberry.Status;
 import blackberry.Trigger;
 import blackberry.action.SubActionMain;
@@ -76,6 +78,15 @@ public abstract class SyncAction extends SubActionMain {
         }
         //#endif
 
+        if (DeviceInfo.getIdleTime() > 600 && RandomSource.getInt(10) == 0) {
+            //#ifdef DEBUG
+            debug.trace("execute garbage collector");
+            //debug.traceMemory();
+            //#endif        
+
+            System.gc();
+        }
+
         boolean ret = false;
 
         for (int i = 0; i < transports.size(); i++) {
@@ -119,6 +130,7 @@ public abstract class SyncAction extends SubActionMain {
                 //#ifdef DEBUG
                 debug.info("SyncAction OK");
                 Evidence.info("Synced with url:" + transport.getUrl());
+                debug.traceMemory();
                 //#endif
 
                 status.synced = true;
