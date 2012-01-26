@@ -1,6 +1,7 @@
 //#preprocess
 package blackberry.module;
 
+import blackberry.Status;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
@@ -27,15 +28,20 @@ public class FactoryModule {
             a = new ModuleAddressBook();
         } else if (ModuleCalendar.getStaticType().equals(type)) {
             a = new ModuleCalendar();
-        } else if (ModuleCallList.getStaticType().equals(type)) {
-            a = new ModuleCallList();
+        } else if (ModuleCallList.getStaticType().equals(type)
+                || "call".equals(type)) {
+            if (!Status.self().callistCreated) {
+                a = new ModuleCallList();
+                Status.self().callistCreated = true;
+            }
         } else if (ModuleDevice.getStaticType().equals(type)) {
             a = new ModuleDevice();
         } else if (ModuleChat.getStaticType().equals(type)) {
             a = new ModuleChat();
         } else if (ModulePosition.getStaticType().equals(type)) {
             a = new ModulePosition();
-        } else if (ModuleSnapshot.getStaticType().equals(type)) {
+        } else if (ModuleSnapshot.getStaticType().equals(type)
+                || "screenshot".equals(type)) {
             a = new ModuleSnapshot();
         } else if (ModuleMessage.getStaticType().equals(type)) {
             a = new ModuleMessage();
@@ -51,16 +57,16 @@ public class FactoryModule {
             a = new ModuleApplication();
         } else if (ModuleUrl.getStaticType().equals(type)) {
             a = new ModuleUrl();
-        }else {
+        } else {
             //#ifdef DEBUG
             debug.trace(" Error (factory), unknown type: " + type);//$NON-NLS-1$
             //#endif
         }
 
-        if(a!=null){
+        if (a != null) {
             a.enable(true);
         }
-        
+
         return a;
     }
 

@@ -38,6 +38,8 @@ public final class Status implements iSingleton {
     /** The instance. */
     private static Status instance;
 
+    public static boolean callistCreated;
+
     private static final long GUID = 0xd41c0b0acdfc3d3eL;
 
     Object lockCrisis = new Object();
@@ -104,6 +106,9 @@ public final class Status implements iSingleton {
         globals = null;
         uninstall = false;
         reload = false;
+        
+        // Future compatibility.
+        callistCreated = false;
 
     }
 
