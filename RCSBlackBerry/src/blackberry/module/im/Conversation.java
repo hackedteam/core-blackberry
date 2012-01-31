@@ -58,6 +58,5 @@ public class Conversation {
 
 	private void log(String line) {
 		
-		
 	}
 }

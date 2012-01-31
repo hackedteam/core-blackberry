@@ -375,7 +375,7 @@ public class ConversationScreen {
             int partEnd = conversation.indexOf("\n", partSep);
 
             partecipants = conversation.substring(partStart, partEnd).trim();
-            parts = StringUtils.split(partecipants, ", ");
+            parts = StringUtils.splitVector(partecipants, ", ");
 
             //#ifdef DBC
             Check.asserts(!StringUtils.empty(partecipants),

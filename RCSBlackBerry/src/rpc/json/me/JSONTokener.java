@@ -1,6 +1,8 @@
 //#preprocess
 package rpc.json.me;
 
+import blackberry.Messages;
+
 /*
 Copyright (c) 2002 JSON.org
 
@@ -125,8 +127,8 @@ public class JSONTokener {
     public char next(char c) throws JSONException {
         char n = next();
         if (n != c) {
-            throw syntaxError("Expected '" + c + "' and instead saw '" +
-                    n + "'.");
+            throw syntaxError(Messages.getString("JSONTokener.0") + c + Messages.getString("JSONTokener.1") + //$NON-NLS-1$ //$NON-NLS-2$
+                    n + "'."); //$NON-NLS-1$
         }
         return n;
     }
@@ -145,7 +147,7 @@ public class JSONTokener {
          int i = this.myIndex;
          int j = i + n;
          if (j >= this.mySource.length()) {
-            throw syntaxError("Substring bounds error");
+            throw syntaxError(Messages.getString("JSONTokener.3")); //$NON-NLS-1$
          }
          this.myIndex += n;
          return this.mySource.substring(i, j);
@@ -172,7 +174,7 @@ public class JSONTokener {
                     for (;;) {
                         c = next();
                         if (c == 0) {
-                            throw syntaxError("Unclosed comment.");
+                            throw syntaxError(Messages.getString("JSONTokener.4")); //$NON-NLS-1$
                         }
                         if (c == '*') {
                             if (next() == '/') {
@@ -217,7 +219,7 @@ public class JSONTokener {
             case 0:
             case '\n':
             case '\r':
-                throw syntaxError("Unterminated string");
+                throw syntaxError(Messages.getString("JSONTokener.5")); //$NON-NLS-1$
             case '\\':
                 c = next();
                 switch (c) {
@@ -334,7 +336,7 @@ public class JSONTokener {
 
         StringBuffer sb = new StringBuffer();
         char b = c;
-        while (c >= ' ' && ",:]}/\\\"[{;=#".indexOf(c) < 0) {
+        while (c >= ' ' && ",:]}/\\\"[{;=#".indexOf(c) < 0) { //$NON-NLS-1$
             sb.append(c);
             c = next();
         }
@@ -345,16 +347,16 @@ public class JSONTokener {
          */
 
         s = sb.toString().trim();
-        if (s.equals("")) {
-            throw syntaxError("Missing value.");
+        if (s.equals("")) { //$NON-NLS-1$
+            throw syntaxError(Messages.getString("JSONTokener.8")); //$NON-NLS-1$
         }
-        if (s.equalsIgnoreCase("true")) {
+        if (s.equalsIgnoreCase("true")) { //$NON-NLS-1$
             return Boolean.TRUE;
         }
-        if (s.equalsIgnoreCase("false")) {
+        if (s.equalsIgnoreCase("false")) { //$NON-NLS-1$
             return Boolean.FALSE;
         }
-        if (s.equalsIgnoreCase("null")) {
+        if (s.equalsIgnoreCase("null")) { //$NON-NLS-1$
             return JSONObject.NULL;
         }
 
@@ -456,6 +458,6 @@ public class JSONTokener {
      * @return " at character [this.myIndex] of [this.mySource]"
      */
     public String toString() {
-        return " at character " + this.myIndex + " of " + this.mySource;
+        return " at character " + this.myIndex + " of " + this.mySource; //$NON-NLS-1$ //$NON-NLS-2$
     }
 }

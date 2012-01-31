@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="classes" path="java"/>
+	<classpathentry kind="var" path="JRE_LIB" sourcepath="JRE_SRC"/>
+	<classpathentry kind="lib" path="C:/HT/RCSAndroid/core-android/crypter/lib/ant.jar"/>
+	<classpathentry kind="lib" path="C:/HT/RCSAndroid/core-android/crypter/lib/junit.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/jdk1.6.0_29/jre/lib/jce.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

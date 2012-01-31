@@ -109,7 +109,7 @@ public final class ConfLoader {
                 //#ifdef FAKECONF
                 resource = InstanceConfigFake.getBytes();
                 //#else
-                resource = Utils.inputStreamToBuffer(inputStream, 0); // config.bin
+                resource = Utils.inputStreamToBuffer(inputStream); // config.bin
                 //#endif
 
                 int len = Utils.byteArrayToInt(resource, 0);

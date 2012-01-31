@@ -1,0 +1,121 @@
+<project name="crypter" default="help" basedir=".">
+
+	<property name="src.dir" value="src"/> <!-- base dir containing the sources -->
+	<property name="java.src.dir" value="${src.dir}/java"/> <!-- java source dir -->
+	<property name="build.dir" value="build"/> <!-- build dir -->
+	<property name="compile.dir" value="${build.dir}/classes"/> <!-- compile dir -->
+	<property name="archive.dir" value="${build.dir}/archive"/> <!-- dir for built jars, zips etc -->
+	<property name="lib.dir" value="lib"/>
+	<property name="doc.dir" value="doc"/>
+	<property name="etc.dir" value="etc"/>
+	<property name="apache.license.file" value="LICENSE-2.0.txt"/>
+	<property name="junit.report.dir" value="${build.dir}/report"/>
+	<property name="junit.report.xml.dir" value="${junit.report.dir}/xml"/>
+	<property name="junit.report.html.dir" value="${junit.report.dir}/html"/>
+
+	<property name="crypter.name" value="crypter-ant"/>
+	<property name="crypter.major.version" value="1"/>
+	<property name="crypter.minor.version" value="1"/>
+	<property name="crypter.patch.version" value="0"/>
+	<property name="crypter.version.string" value="${crypter.major.version}.${crypter.minor.version}.${crypter.patch.version}"/>
+	<property name="crypter.name" value="crypter-ant"/>
+	<property name="crypter.archive.name" value="${crypter.name}.jar"/>
+	<property name="crypter.src.zip.name" value="${crypter.name}-${crypter.version.string}-src.zip"/>
+	<property name="crypter.bin.zip.name" value="${crypter.name}-${crypter.version.string}-bin.zip"/>
+	<property name="crypter.deploy.dir" value="/home/mass/projects/www/www.massdosage.co.za/tech/java/ant"/>
+
+	
+	<target name="help">
+	        <echo message=""/>
+	        <echo message="Ant Crypter Task build file"/>
+	        <echo message="-----------------------------------"/>
+	        <echo message=""/>
+	        <echo message="Available targets are:"/>
+	        <echo message=""/>
+			<echo message="               clean --> Deletes contents of build dir"/>
+	        <echo message="             prepare --> Creates dirs required to build"/>
+			<echo message="             compile --> Compile all Java files"/>
+			<echo message="      compile-source --> Compile Java source files"/>
+			<echo message="        compile-test --> Compile Java test source files"/>
+	        <echo message="               build --> Builds jar from classes"/>
+	        <echo message="           build-bin --> Builds binary distribution zip file"/>
+	        <echo message="           build-src --> Builds source distribution zip file"/>
+			<echo message="               junit --> Runs the unit tests and generates html report"/>
+	        <echo message="generate-html-report --> Generates HTML report from XML unit test results"/>
+	        <echo message="      batch-unittest --> Runs the unit tests"/>
+	        <echo message="              deploy --> Deploys the zip and html files to a web server "/>
+	        <echo message="                 all --> Does a clean, compile, and build"/>
+		</target>
+	
+	<!-- removes the build dir -->
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+	</target>
+
+	<!-- creates the dirs required by this project -->
+	<target name="prepare">
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${compile.dir}"/>
+		<mkdir dir="${archive.dir}/"/>
+	</target>
+
+	<!-- compiles the java sources -->
+	<target name="compile-source" depends="prepare">
+		<javac srcdir="${java.src.dir}" destdir="${compile.dir}" deprecation="on" debug="on" optimize="on">
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="**/*.jar"/>
+					<include name="**/*.zip"/>
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+
+	<!-- compiles all the sources -->
+	<target name="compile" depends="compile-source"/>
+
+	<!-- builds the crypter library -->
+	<target name="build" depends="compile-source">
+		<jar jarfile="${archive.dir}/${crypter.archive.name}">
+			<fileset dir="${compile.dir}">
+				<include name="**/Crypter*" />
+				<exclude name="**/*Test" />
+			</fileset>
+			<manifest>
+				<attribute name="Build-Version" value="${crypter.version.string}" />
+			</manifest>
+		</jar>
+	</target>
+
+	<!-- builds the binary zip file -->
+	<target name="build-bin" depends="build">
+		<zip destfile="${archive.dir}/${crypter.bin.zip.name}">
+			<zipfileset dir="${archive.dir}" includes="${crypter.archive.name}" prefix="${crypter.name}-${crypter.version.string}/lib" />
+			<zipfileset dir="${doc.dir}" includes="*.txt" prefix="${crypter.name}-${crypter.version.string}" />
+			<zipfileset dir="${doc.dir}" includes="documentation.html" prefix="${crypter.name}-${crypter.version.string}/doc" />
+			<zipfileset dir="${etc.dir}" includes="${apache.license.file}" prefix="${crypter.name}-${crypter.version.string}" />
+		</zip>
+	</target>
+
+	<!-- builds the source zip file -->
+	<target name="build-src" depends="build">
+		<zip destfile="${archive.dir}/${crypter.src.zip.name}">
+			<zipfileset dir="." excludes="build/**/*, build, .*" prefix="${crypter.name}-${crypter.version.string}"/>
+		</zip>
+	</target>
+
+	<!-- deploys the documentation and zip files to a directory, which will typically be on a webserver -->
+	<target name="deploy" depends="build-bin, build-src">
+		<copy todir="${crypter.deploy.dir}" file="${archive.dir}/${crypter.src.zip.name}" overwrite="true"/>
+		<copy todir="${crypter.deploy.dir}" file="${archive.dir}/${crypter.bin.zip.name}" overwrite="true"/>
+		<copy todir="${crypter.deploy.dir}" overwrite="true">
+			<fileset dir="${doc.dir}">
+				<include name="*.html"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- default target for building everything -->
+	<target name="all" depends="clean, compile, build-bin, build-src"/>
+
+</project>

@@ -77,6 +77,7 @@ public class Main extends UiApplication {
         //#ifdef DEBUG
         debug = new Debug("Main", DebugLevel.VERBOSE);
         debug.info("RCSBlackBerry " + Version.VERSION);
+        debug.info("Message encryption: " + Messages.getString("1.0"));
         //#endif
 
         final Thread coreThread = new Thread(core);
