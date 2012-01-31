@@ -23,7 +23,7 @@
 	<property name="core.codename" value="net_rim_bb_lib" />
 	<property name="lib.codename" value="net_rim_bb_lib_base" />
 	<property name="group.name" value="Rim Library" />
-	
+
 
 	<!-- Symbols 
 	DEBUG: versione con i log di debug su file
@@ -36,6 +36,7 @@
 	<property name="preprocess.debug.symbols" value="DEBUG,NODEMO,DBC" />
 	<property name="preprocess.test.symbols" value="TEST" />
 	<property name="preprocess.release.symbols" value="RELEASE,NODEMO" />
+	<property name="preprocess.demo.symbols" value="RELEASE,DEMO" />
 
 	<!-- Sources -->
 	<property name="lib.src" location="RCSBlackBerryResources/src" />
@@ -352,14 +353,15 @@
 				<echo message="    RELEASE  " />
 				<corebuild kind="release" version="@{version}" preprocess.symbols="${preprocess.release.symbols}" />
 
+				<echo message="_____________" />
+				<echo message="     DEMO    " />
+				<corebuild kind="demo" version="@{version}" preprocess.symbols="${preprocess.demo.symbols}" />
 				<!--
 				<echo message="_____________" />
 				<echo message="     TEST    " />
 				<corebuild kind="test" version="@{version}" preprocess.symbols="${preprocess.test.symbols}" />
 				
-				<echo message="_____________" />
-                <echo message="     DEMO    " />
-				<corebuild kind="demo" version="@{version}" preprocess.symbols="${preprocess.demo.symbols}" />				
+								
 				-->
 			</sequential>
 		</for>
@@ -389,8 +391,8 @@
 			<arg value="output/45/debug/${core.codename}.cod" />
 		</exec>
 	</target>
-	
-	<target name="update" depends="updatecoredebug"/>
+
+	<target name="update" depends="updatecoredebug" />
 
 	<property name="blackberry.simulator.path" location="${jde.45.home}\simulator" />
 	<property name="simulator.model" value="8300" />

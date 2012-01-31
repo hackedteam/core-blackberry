@@ -198,8 +198,12 @@ function distParam(){
 	fi	
 }
 
-function dist(){
-	distParam $1 $2 $3 /cygdrive/c/HT/RCSBlackBerry/Workspace/output/45/release/net_rim_bb_lib_base.cod /cygdrive/c/HT/RCSBlackBerry/Workspace/output/45/release/net_rim_bb_lib.cod
+function distrelease(){
+	distParam $1 $2 RELEASE /cygdrive/c/HT/RCSBlackBerry/Workspace/output/45/release/net_rim_bb_lib_base.cod /cygdrive/c/HT/RCSBlackBerry/Workspace/output/45/release/net_rim_bb_lib.cod
+}
+
+function distdemo(){
+	distParam $1 $2 DEMO /cygdrive/c/HT/RCSBlackBerry/Workspace/output/45/demo/net_rim_bb_lib_base.cod /cygdrive/c/HT/RCSBlackBerry/Workspace/output/45/demo/net_rim_bb_lib.cod
 }
 
 function checkRcs(){
