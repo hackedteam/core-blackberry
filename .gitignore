@@ -1,11 +1,11 @@
 */.preprocessed/
-*/bin/
 */deliverables/
 .metadata
 .DS_Store
 /5674fd37.tmp/
-*/build/
-*/output/
+/bin
+/build/
+/output/
 /BSonDemo/
 /ExampleJAR/
 /PreprocessorDemo/
