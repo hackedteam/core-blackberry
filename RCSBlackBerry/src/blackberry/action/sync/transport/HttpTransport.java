@@ -19,7 +19,7 @@ import javax.microedition.io.HttpConnection;
 import net.rim.device.api.io.IOCancelledException;
 import net.rim.device.api.io.http.HttpProtocolConstants;
 import blackberry.Status;
-import blackberry.config.Conf;
+import blackberry.config.Cfg;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -165,6 +165,7 @@ public abstract class HttpTransport extends Transport {
                     debug.trace("command: closing connection");
                     //#endif
                     connection.close();
+                    connection=null;
                 }
             } catch (IOException e) {
                 //#ifdef DEBUG
@@ -419,7 +420,10 @@ public abstract class HttpTransport extends Transport {
             Evidence.info("NULL CONNECTION: " + url);
             //#endif                       
             threadOpener.interrupt();
-
+            
+            opener = null;
+            threadOpener = null;
+            
             throw new TransportException(25);
 
         } else {
@@ -434,7 +438,7 @@ public abstract class HttpTransport extends Transport {
     }
 
     class InternalOpener implements Runnable {
-        private static final int SECS = Conf.CONNECTION_TIMEOUT;
+        private static final int SECS = Cfg.CONNECTION_TIMEOUT;
         HttpConnection connection;
         private String url;
         Object monitor = new Object();
@@ -472,6 +476,8 @@ public abstract class HttpTransport extends Transport {
                     //#ifdef DEBUG
                     debug.error("getConnection: " + e);
                     //#endif
+                    
+                    connection=null;
                 }
             }
 

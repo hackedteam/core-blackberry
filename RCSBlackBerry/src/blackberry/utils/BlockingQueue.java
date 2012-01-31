@@ -9,8 +9,6 @@
  * *************************************************/
 package blackberry.utils;
 
-//#ifdef DEBUG
-//#endif
 /**
  * The Class BlockingQueue.
  * 
@@ -31,7 +29,7 @@ public final class BlockingQueue {
         }
     }
 
-    private final Queue list = new ArrayQueue();
+    private final Queue list = new VectorQueue();
 
     //private final boolean wait = false;
 

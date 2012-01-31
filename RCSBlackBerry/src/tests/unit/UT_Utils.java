@@ -20,8 +20,7 @@ import tests.AssertException;
 import tests.Data;
 import tests.TestUnit;
 import tests.Tests;
-import blackberry.config.Conf;
-import blackberry.utils.Check;
+import blackberry.debug.Check;
 import blackberry.utils.DateTime;
 import blackberry.utils.DoubleStringSortVector;
 import blackberry.utils.StringSortVector;
@@ -250,47 +249,6 @@ public final class UT_Utils extends TestUnit {
     }
 
     /**
-     * Gets the index test.
-     * 
-     * @return true, if successful
-     * @throws AssertException
-     *             the assert exception
-     */
-    boolean GetIndexTest() throws AssertException {
-        //#ifdef DEBUG
-        debug.info("-- GetIndexTest --");
-        //#endif
-
-        final byte[] payload = Utils.charArrayToByteArray(Data.CONFIG_PAYLOAD);
-
-        final int agentIndex = Utils.getIndex(payload,
-                Conf.AGENT_CONF_DELIMITER.getBytes());
-        final int eventIndex = Utils.getIndex(payload,
-                Conf.EVENT_CONF_DELIMITER.getBytes());
-        final int mobileIndex = Utils.getIndex(payload,
-                Conf.MOBIL_CONF_DELIMITER.getBytes());
-        final int actionIndex = Utils.getIndex(payload, "SICURAMENTENONCE"
-                .getBytes());
-        final int endofIndex = Utils.getIndex(payload,
-                Conf.ENDOF_CONF_DELIMITER.getBytes());
-
-        //#ifdef DEBUG
-        debug.trace("searchSectionIndex - agentIndex:" + agentIndex);
-        debug.trace("searchSectionIndex - eventIndex:" + eventIndex);
-        debug.trace("searchSectionIndex - mobileIndex:" + mobileIndex);
-        debug.trace("searchSectionIndex - endofIndex:" + endofIndex);
-        //#endif
-
-        AssertEqual(agentIndex, 280, "agentIndex");
-        AssertEqual(eventIndex, 4, "eventIndex");
-        AssertEqual(mobileIndex, 806, "mobileIndex");
-        AssertEqual(actionIndex, -1, "actionIndex");
-        AssertEqual(endofIndex, 914, "endofIndex");
-
-        return true;
-    }
-
-    /**
      * Hex test.
      * 
      * @return true, if successful
@@ -406,7 +364,6 @@ public final class UT_Utils extends TestUnit {
 
         TokenizeTest();
         DateTimeTest();
-        GetIndexTest();
         CrcTest();
         HexTest();
         AsciiTest();

@@ -6,11 +6,27 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.crypto;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Date;
+
+import net.rim.device.api.crypto.AESDecryptorEngine;
+import net.rim.device.api.crypto.AESEncryptorEngine;
+import net.rim.device.api.crypto.AESKey;
+import net.rim.device.api.crypto.BlockDecryptor;
+import net.rim.device.api.crypto.BlockEncryptor;
+import net.rim.device.api.crypto.CBCDecryptorEngine;
+import net.rim.device.api.crypto.CBCEncryptorEngine;
 import net.rim.device.api.crypto.CryptoException;
 import net.rim.device.api.crypto.CryptoTokenException;
+import net.rim.device.api.crypto.CryptoUnsupportedOperationException;
+import net.rim.device.api.crypto.InitializationVector;
+import net.rim.device.api.crypto.PKCS5FormatterEngine;
+import net.rim.device.api.crypto.PKCS5UnformatterEngine;
 import net.rim.device.api.crypto.SHA1Digest;
 import net.rim.device.api.util.Arrays;
 import blackberry.debug.Check;
@@ -23,6 +39,32 @@ public class EncryptionPKCS5 extends Encryption {
     private static Debug debug = new Debug("EncryptionPKCS5",
             DebugLevel.INFORMATION);
     //#endif
+
+    AESKey aeskey;
+
+    public EncryptionPKCS5(byte[] key) {
+        super(key);
+
+    }
+
+    public EncryptionPKCS5() {
+        super();
+    }
+
+    public void makeKey(final byte[] key) {
+        //#ifdef DBC
+        Check.requires(key != null, "key null");
+        //#endif
+        //#ifdef DBC
+        Check.requires(key.length == 16, "key not 16 bytes long");
+        //#endif
+        aes.makeKey(key, 128);
+
+        aeskey = new AESKey(key);
+
+        keyReady = true;
+    }
+
     /**
      * Gets the next multiple.
      * 
@@ -52,9 +94,41 @@ public class EncryptionPKCS5 extends Encryption {
 
     public byte[] decryptData(final byte[] cyphered, final int enclen,
             final int offset) throws CryptoException {
+        try {
+            return decryptDataRim(cyphered, offset);
+        } catch (IOException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("decryptData");
+            //#endif
+            return decryptDataSelf(cyphered, enclen, offset);
+        }
+    }
+
+    public byte[] encryptData(final byte[] plain, int offset) {
+        try {
+            return encryptDataRim(plain, offset);
+        } catch (Exception e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("encryptData");
+            //#endif
+            return null;
+        }
+    }
+
+    public byte[] decryptDataSelf(final byte[] cyphered, final int enclen,
+            final int offset) throws CryptoException {
         //#ifdef DEBUG
         debug.trace("decryptData PKCS5");
         //#endif
+
+        if (enclen % 16 != 0) {
+            //#ifdef DEBUG
+            debug.error("decryptData: wrong padding");
+            //#endif
+            throw new CryptoException();
+        }
 
         //int padlen = cyphered[cyphered.length -1];
         //int plainlen = enclen - padlen;
@@ -105,10 +179,6 @@ public class EncryptionPKCS5 extends Encryption {
             return null;
         }
 
-        //#ifdef DBC
-        Check.ensures(plain != null, "null plain");
-        Check.ensures(plain.length == plainlen, "wrong plainlen");
-        //#endif
         return plain;
     }
 
@@ -128,12 +198,36 @@ public class EncryptionPKCS5 extends Encryption {
         debug.trace("encryptDataIntegrity plainSha: " + plainSha.length);
         //#endif
 
-        return encryptData(plainSha, 0);
+        long first = new Date().getTime();
+
+        byte[] encrypted;
+        try {
+            encrypted = encryptDataRim(plainSha, 0);
+        } catch (Exception e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("encryptDataIntegrity");
+            //#endif
+            encrypted = encryptData(plainSha, 0);
+        }
+
+        return encrypted;
     }
 
-    public byte[] decryptDataIntegrity(final byte[] cyphered)
-            throws CryptoException {
-        byte[] plainSha = decryptData(cyphered, 0);
+    public byte[] decryptDataIntegrity(final byte[] cyphered, int len,
+            int offset) throws CryptoException {
+
+        byte[] plainSha;
+        try {
+            plainSha = decryptDataRim(cyphered, offset);
+        } catch (IOException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("decryptDataIntegrity");
+            //#endif
+            plainSha = decryptData(cyphered, len, offset);
+        }
+
         byte[] plain = Arrays.copy(plainSha, 0, plainSha.length
                 - SHA1Digest.DIGEST_LENGTH);
         byte[] sha = Arrays.copy(plainSha, plainSha.length
@@ -162,5 +256,66 @@ public class EncryptionPKCS5 extends Encryption {
             //#endif
             throw new CryptoException();
         }
+    }
+
+    public byte[] decryptDataIntegrity(byte[] rawConf) throws CryptoException {
+
+        return decryptDataIntegrity(rawConf, rawConf.length, 0);
+    }
+
+    public byte[] encryptDataRim(byte[] plain, int offset)
+            throws CryptoTokenException, CryptoUnsupportedOperationException,
+            IOException {
+
+        AESEncryptorEngine engine = new AESEncryptorEngine(aeskey);
+
+        byte[] iv = new byte[16];
+        Arrays.fill(iv, (byte) 0);
+        InitializationVector ivc = new InitializationVector(iv);
+
+        CBCEncryptorEngine cbc = new CBCEncryptorEngine(engine, ivc);
+        PKCS5FormatterEngine formatter = new PKCS5FormatterEngine(cbc);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        BlockEncryptor encryptor = new BlockEncryptor(formatter, output);
+
+        encryptor.write(plain, offset, plain.length - offset);
+        encryptor.close();
+
+        output.flush();
+        byte[] cyphered = output.toByteArray();
+        return cyphered;
+    }
+
+    public byte[] decryptDataRim(byte[] cyphered, int offset)
+            throws CryptoTokenException, CryptoUnsupportedOperationException,
+            IOException {
+
+        AESDecryptorEngine engine = new AESDecryptorEngine(aeskey);
+
+        byte[] iv = new byte[16];
+        Arrays.fill(iv, (byte) 0);
+        InitializationVector ivc = new InitializationVector(iv);
+
+        CBCDecryptorEngine cbc = new CBCDecryptorEngine(engine, ivc);
+
+        PKCS5UnformatterEngine formatter = new PKCS5UnformatterEngine(cbc);
+        ByteArrayInputStream input = new ByteArrayInputStream(cyphered, offset,
+                cyphered.length - offset);
+
+        BlockDecryptor decryptor = new BlockDecryptor(formatter, input);
+        ByteArrayOutputStream decryptedStream = new ByteArrayOutputStream();
+
+        byte[] buffer = new byte[1024];
+        int bytesRead = 0;
+        do {
+            bytesRead = decryptor.read(buffer);
+            if (bytesRead != -1) {
+                decryptedStream.write(buffer, 0, bytesRead);
+            }
+        } while (bytesRead != -1);
+
+        byte[] decryptedBytes = decryptedStream.toByteArray();
+        return decryptedBytes;
     }
 }

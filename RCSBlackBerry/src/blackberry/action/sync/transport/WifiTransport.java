@@ -17,7 +17,7 @@ import blackberry.debug.DebugLevel;
 public class WifiTransport extends HttpTransport {
 
     //#ifdef DEBUG
-    private static Debug debug = new Debug("WifiTransport", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("WifiTransport", DebugLevel.INFORMATION);
     //#endif
 
     boolean wifiForced;
@@ -53,7 +53,7 @@ public class WifiTransport extends HttpTransport {
     public String toString() {
         return "WifiTransport " + host;
     }
-    //#endifS
+    //#endif
 
     public void close() {
         super.close();

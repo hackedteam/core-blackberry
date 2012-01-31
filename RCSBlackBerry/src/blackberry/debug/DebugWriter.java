@@ -9,19 +9,20 @@
  * *************************************************/
 package blackberry.debug;
 
-import java.util.Date;
-
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.EventLogger;
-import net.rim.device.api.system.RuntimeStore;
 import blackberry.Device;
+import blackberry.Singleton;
+import blackberry.config.Cfg;
 import blackberry.fs.AutoFile;
 import blackberry.fs.Path;
+import blackberry.interfaces.iSingleton;
+import blackberry.utils.DateTime;
 
 /**
  * The Class DebugWriter.
  */
-public final class DebugWriter extends Thread {
+public final class DebugWriter extends Thread implements iSingleton {
 
     static final String DEBUG_NAME = "D_";
     static final String ERROR_NAME = "E_";
@@ -39,7 +40,6 @@ public final class DebugWriter extends Thread {
     int numMessages;
 
     boolean toStop;
-    boolean logToSD = false;
     boolean logToFile = false;
     boolean logToEvents = false;
 
@@ -69,12 +69,12 @@ public final class DebugWriter extends Thread {
     public static synchronized DebugWriter getInstance() {
 
         if (instance == null) {
-            instance = (DebugWriter) RuntimeStore.getRuntimeStore().get(GUID);
+            instance = (DebugWriter) Singleton.self().get(GUID);
             if (instance == null) {
 
                 final DebugWriter singleton = new DebugWriter();
 
-                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                Singleton.self().put(GUID, singleton);
                 instance = singleton;
             }
         }
@@ -88,20 +88,9 @@ public final class DebugWriter extends Thread {
             return;
         }
 
-        if (logToSD) {
-            Path.createDirectory(Path.SD());
-            fileDebug = new AutoFile(debugDir(Path.SD())
-                    + debugName(DEBUG_NAME), true);
-
-            fileDebugErrors = new AutoFile(debugDir(Path.SD())
-                    + debugName(ERROR_NAME), true);
-        } else {
-            Path.createDirectory(Path.USER());
-            fileDebug = new AutoFile(debugDir(Path.USER())
-                    + debugName(DEBUG_NAME), true);
-            fileDebugErrors = new AutoFile(debugDir(Path.USER())
-                    + debugName(ERROR_NAME), true);
-        }
+        Path.createDirectory(Path.debug());
+        fileDebug = new AutoFile(Path.debug(), debugName(DEBUG_NAME));
+        fileDebugErrors = new AutoFile(Path.debug(), debugName(ERROR_NAME));
 
         // log rotate
         if (fileDebug.exists()) {
@@ -109,9 +98,12 @@ public final class DebugWriter extends Thread {
         }
 
         fileDebug.create();
-        if(first){
-            Date now = new Date();
-            fileDebug.append("--- DEBUG " + now + " ---\r\n");
+        if (first) {
+            DateTime now = new DateTime();
+            fileDebug
+                    .append("--- DEBUG " + now.getOrderedString() + " - " + now + " ---\r\n");
+            fileDebug.append("--- BUILD " + Cfg.BUILD_ID + " --- "
+                    + Cfg.BUILD_TIMESTAMP + "\r\n");
         }
 
         // crea il log degli errori solo se non esiste, non si ruota
@@ -128,10 +120,6 @@ public final class DebugWriter extends Thread {
 
     private String debugName(String debugName) {
         return debugName + Device.getPin() + ".txt";
-    }
-
-    private String debugDir(String baseDir) {
-        return baseDir + Path.DEBUG_DIR;
     }
 
     /*
@@ -205,10 +193,11 @@ public final class DebugWriter extends Thread {
      */
     public synchronized void requestStop() {
         toStop = true;
+        queue.close();
         //notifyAll();
     }
 
-    public void initLogToFile(boolean logToFlash, boolean logToSD2) {
+    public void initLogToFile(boolean logToFlash) {
 
     }
 
@@ -219,7 +208,8 @@ public final class DebugWriter extends Thread {
         //#endif
     }
 
-    public synchronized boolean append(String message, int priority, boolean error) {
+    public synchronized boolean append(String message, int priority,
+            boolean error) {
         //#ifdef DBC
         Check.requires(queue != null, "append: queue==null");
         //#endif

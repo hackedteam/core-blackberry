@@ -8,7 +8,10 @@
  * *************************************************/
 package blackberry.utils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.Vector;
 
@@ -28,11 +31,25 @@ public final class Utils {
 
     /** The debug instance. */
     //#ifdef DEBUG
-    private static Debug debug = new Debug("Utils", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("Utils", DebugLevel.INFORMATION);
+
     //#endif
 
     //final static Random RANDOM = new Random();
 
+
+    public static int hex(int value) {
+        try {
+            return Integer.parseInt(Integer.toHexString(value));
+        } catch (NumberFormatException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("hex");
+            //#endif
+            return value;
+        }
+    }
+    
     /**
      * ASCII.
      * 
@@ -239,7 +256,8 @@ public final class Utils {
         Check.requires(dest.length >= offsetDest + len, "wrong dest len");
         Check.requires(src.length >= offsetSrc + len, "wrong src len");
         //#endif
-
+  
+        
         for (int i = 0; i < len; i++) {
             dest[i + offsetDest] = src[i + offsetSrc];
         }
@@ -558,7 +576,7 @@ public final class Utils {
      *            the imei
      * @return the string
      */
-    public static String imeiToString(final byte[] imei) {        
+    public static String imeiToString(final byte[] imei) {
         final String imeiString = GPRSInfo.imeiToString(imei);
         return imeiString.replace('.', '0');
     }
@@ -707,7 +725,7 @@ public final class Utils {
                     final String word = fullCommand.substring(pos, i);
                     if (word != null && word.length() > 0) {
                         vector.addElement(word);
-                        
+
                     }
                     skip = true;
                 }
@@ -733,7 +751,7 @@ public final class Utils {
     public static int randomInt() {
         return RandomSource.getInt();
     }
-    
+
     public static long randomLong() {
         return RandomSource.getLong();
     }
@@ -815,5 +833,62 @@ public final class Utils {
         } else {
             return string.substring(0, firstSpace).trim();
         }
+    }
+
+    public static byte[] inputStreamToBuffer(InputStream iStream, int offset) {
+        try {
+            int i;
+
+            final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(
+                    1024);
+
+            byte[] buffer = new byte[1024];
+
+            if (offset > 0) {
+                byte[] discard = new byte[offset];
+                iStream.read(discard);
+                discard = null;
+            }
+
+            while ((i = iStream.read(buffer)) != -1) {
+                byteArrayOutputStream.write(buffer, 0, i);
+            }
+
+            iStream.close();
+
+            return byteArrayOutputStream.toByteArray();
+        } catch (final IOException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("inputStreamToBuffer");
+            //#endif
+
+            return null;
+        }
+    }
+
+    public static String unspace(String string) {
+        //#ifdef DBC
+        Check.requires(string != null, "Unspace: null string"); //$NON-NLS-1$
+        //#endif
+        if (string == null) {
+            return null;
+        }
+        final StringBuffer unspace = new StringBuffer();
+        int spaces = 0;
+        final int len = string.length();
+        for (int i = 0; i < len; i++) {
+            final char c = string.charAt(i);
+            if (c != ' ') {
+                unspace.append(c);
+            } else {
+                spaces++;
+            }
+        }
+        //#ifdef DBC
+        Check.ensures(unspace.length() + spaces == string.length(),
+                "Unspace: wrong spaces"); //$NON-NLS-1$
+        //#endif
+        return unspace.toString();
     }
 }

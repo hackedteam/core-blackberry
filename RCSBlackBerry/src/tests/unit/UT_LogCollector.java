@@ -55,10 +55,10 @@ public final class UT_LogCollector extends TestUnit {
     public void scanTests() throws AssertException {
         Vector vector;
 
-        vector = logCollector.scanForEvidences(Path.USER(), "1_0");
+        vector = logCollector.scanForEvidences(Path.hidden(), "1_0");
         AssertThat(vector.size() >= 0, "Wrong file number");
 
-        vector = logCollector.scanForDirLogs(Path.USER());
+        vector = logCollector.scanForDirLogs(Path.hidden());
         AssertThat(vector.size() >= 0, "Wrong dir number");
 
     }

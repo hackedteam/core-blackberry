@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<project name="hello" default="build" basedir=".">
+
+    <!-- Define the Wireless Toolkit home directory. Needed by the tasks. -->
+
+    <property name="wtk.home" value="c:\Java\iden-sdk-3.0"/>
+
+    <!-- Define the tasks. -->
+	
+    <taskdef resource="antenna.properties"/>
+	
+    <target name="build">
+
+        <!-- Create a JAD file. -->
+        
+        <wtkjad jadfile="hello.jad"
+                jarfile="hello.jar"
+                name="Hello"
+                vendor="Joerg Pleumann"
+                version="1.0.0">
+
+            <midlet name="Hello" class="Main"/>
+
+        </wtkjad>
+        
+        <delete dir="classes"/>
+        <mkdir dir="classes"/>
+
+        <!-- Compile everything, but don't preverify (yet). -->
+
+        <wtkbuild srcdir="src"
+                  destdir="classes"
+                  preverify="false"/>
+
+        <!-- Package everything. Most of the necessary information is
+             contained in the JAD file. Also preverify the result this
+             time. To obfuscate everything, set the corresponding
+             parameter to "true" (requires RetroGuard or ProGuard). The
+             version parameter increments the MIDlet-Version by one. -->
+
+        <wtkpackage jarfile="hello.jar"
+                    jadfile="hello.jad"
+                    obfuscate="false"
+                    preverify="false">
+
+            <!-- Package our newly compiled classes. -->
+
+            <fileset dir="classes"/>
+               			
+        </wtkpackage>
+    		
+        <!-- Preverify. -->
+
+        <wtkpreverify jarfile="hello.jar"
+                      jadfile="hello.jad"/>
+
+	<!-- Start the MIDlet suite -->
+
+    	<wtkrun jadfile="hello.jad" wait="true"/>
+
+    </target>
+
+</project>

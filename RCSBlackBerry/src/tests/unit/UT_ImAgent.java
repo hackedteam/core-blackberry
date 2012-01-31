@@ -17,7 +17,7 @@ import java.util.Vector;
 import tests.AssertException;
 import tests.TestUnit;
 import tests.Tests;
-import blackberry.agent.im.ConversationScreen;
+import blackberry.module.im.ConversationScreen;
 
 public class UT_ImAgent extends TestUnit {
 

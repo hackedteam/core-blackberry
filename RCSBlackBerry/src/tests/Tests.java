@@ -11,21 +11,13 @@ package tests;
 
 import java.util.Vector;
 
-import tests.unit.UT_Agents;
-import tests.unit.UT_Conf;
 import tests.unit.UT_Crypto;
-import tests.unit.UT_Events;
 import tests.unit.UT_File;
-import tests.unit.UT_Log;
 import tests.unit.UT_LogCollector;
-import tests.unit.UT_Mail;
 import tests.unit.UT_Markup;
-import tests.unit.UT_MicAgent;
 import tests.unit.UT_Path;
 import tests.unit.UT_Recorder;
 import tests.unit.UT_Self;
-import tests.unit.UT_SmsAgent;
-import tests.unit.UT_TimerThread;
 import tests.unit.UT_Utils;
 import blackberry.config.Conf;
 import blackberry.debug.Debug;
@@ -38,8 +30,6 @@ public final class Tests {
     //#ifdef DEBUG
     static Debug debug = new Debug("Tests", DebugLevel.VERBOSE);
     //#endif
-
-    static boolean full = false;
 
     private static Tests instance = null;
 
@@ -64,37 +54,20 @@ public final class Tests {
 
         Conf.SD_ENABLED = true;
 
-        if (full) {
-            addTest(new UT_Self("Self", this));
-            addTest(new UT_Utils("Utils", this));
-            addTest(new UT_Crypto("Crypto", this));
-            addTest(new UT_Conf("Conf", this));
+        addTest(new UT_Self("Self", this));
+        addTest(new UT_Markup("Markup", this));
+        
+        addTest(new UT_Utils("Utils", this));
+        addTest(new UT_Crypto("Crypto", this));
 
-            addTest(new UT_File("File", this));
-            addTest(new UT_Markup("Markup", this));
+        addTest(new UT_File("File", this));
+       
 
-            addTest(new UT_Path("Path", this));
+        addTest(new UT_Path("Path", this));
 
-            addTest(new UT_TimerThread("TimerThread", this));
+        addTest(new UT_LogCollector("LogCollector", this));
 
-            addTest(new UT_Log("Log", this));
-            addTest(new UT_LogCollector("LogCollector", this));
-
-            addTest(new UT_Recorder("Recorder", this));
-
-            addTest(new UT_SmsAgent("SmsAgent", this));
-
-            addTest(new UT_Events("Events", this));
-            addTest(new UT_Agents("Agents", this));
-
-            addTest(new UT_Mail("Mail", this));
-
-            addTest(new UT_MicAgent("MicAgent", this));
-
-        } else {
-
-            addTest(new UT_Log("Log", this));
-        }
+        addTest(new UT_Recorder("Recorder", this));
 
     }
 

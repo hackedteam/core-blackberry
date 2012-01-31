@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+
+<project name="Preprocessor v2 sample" default="build" basedir=".">
+
+    <!-- Define the Wireless Toolkit home directory. Needed by the tasks. -->
+
+    <property name="wtk.home" value="c:/WTK2.5.1EA"/>
+
+    <!-- Define the tasks. -->
+	
+    <!-- Define the tasks. -->
+	<!-- Work with the jar
+    <taskdef classpath="../../dist/antenna-bin-0.9.15-CVS.jar" resource="antenna.properties"/>
+     -->
+	<taskdef classpath="../../classes;../../lib/antlr.jar;../../lib/preprocessor-bin-1.1.jar" resource="antenna.properties"/>
+	<!-- Work with the actual code 
+	-->
+	
+	<property name="VERSION" value="6"/>
+
+	
+    <target name="build">
+    
+    	<!-- 
+    	Note the version="2" parameter, this cause the preprocessor to use the new backend 
+    	The device is optional, and cause the preprocesor to include all the parameters from the built-in devices.xml file.
+    	(verbose will cause the set of defines to be printed)
+    	-->
+<wtkpreprocess 
+	verbose="true"
+	version="2"
+	srcdir="src" 
+	destdir="out" 
+	device="Generic/Java"
+	symbols="LIST='1,2,3',STR='String',PI=3.1415,VERSION=${VERSION}"
+	printsymbols="true"
+	savesymbols="out/symbols.txt"
+	debuglevel="info"
+	devicedbpath="abc"
+>
+	<!-- Load a.symbols -->
+	<symbols_file name="a.symbols"/>
+		
+	<!-- Load b.symbols -->
+	<symbols_file name="b.symbols"/>
+	
+	<!-- Load c.symbols and d.symbols-->
+	<symbols_file list="c.symbols,d.symbols"/> 
+	
+</wtkpreprocess>
+    </target>
+
+</project>

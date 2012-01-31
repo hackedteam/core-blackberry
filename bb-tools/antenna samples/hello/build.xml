@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<project name="hello" default="build" basedir=".">
+
+    <!-- Define the Wireless Toolkit home directory. Needed by the tasks. -->
+
+    <property name="wtk.home" value="c:/WTK2.5.1EA"/>
+
+    <!-- Define the tasks. -->
+	
+    <taskdef resource="antenna.properties"/>
+	
+    <target name="build">
+
+        <!-- Create a JAD file. -->
+        
+        <wtkjad jadfile="hello.jad"
+                jarfile="hello.jar"
+                name="Hello"
+                vendor="Joerg Pleumann"
+                version="1.0.0">
+
+            <midlet name="Hello" class="Main"/>
+	       	<attribute name="ZOO" value="GAR" />
+        	<attribute name="FOO" value="BAR" />
+           	<attribute name="A" value="1" />
+           	<attribute name="URL" value="http://google.com" />
+        </wtkjad>
+        
+        <delete dir="classes"/>
+        <mkdir dir="classes"/>
+
+        <!-- Compile everything, but don't preverify (yet). -->
+
+        <wtkbuild srcdir="src"
+                  destdir="classes"
+                  preverify="false"/>
+
+        <!-- Package everything. Most of the necessary information is
+             contained in the JAD file. Also preverify the result this
+             time. To obfuscate everything, set the corresponding
+             parameter to "true" (requires RetroGuard or ProGuard). The
+             version parameter increments the MIDlet-Version by one. -->
+
+        <wtkpackage jarfile="hello.jar"
+                    jadfile="hello.jad"
+                    obfuscate="false"
+                    preverify="false">
+
+            <!-- Package our newly compiled classes. -->
+
+            <fileset dir="classes"/>
+        	<exclude_from_manifest name="FOO"/>
+           	<exclude_from_manifest list="A,FOO,URL"/>
+        </wtkpackage>
+    		
+        <!-- Preverify. -->
+
+        <!-- wtkpreverify jarfile="hello.jar"
+                      jadfile="hello.jad"/-->
+
+        <!-- Convert the JAR file into a MIDP for PalmOS PRC file. -->
+
+        <!--wtkmakeprc jadfile="hello.jad"
+			jarfile="hello.jar"
+                    prcfile="hello.prc"/-->
+    	        
+		<!-- Start the MIDlet suite
+    	<wtkrun jadfile="hello.jad" device="DefaultColorPhone" wait="true"/>
+    	 -->
+
+    </target>
+
+</project>
