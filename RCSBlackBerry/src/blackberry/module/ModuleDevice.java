@@ -222,8 +222,9 @@ public final class ModuleDevice extends BaseInstantModule {
             //#endif
         }
 
+        String content = sb.toString();
         Evidence evidence = new Evidence(EvidenceType.DEVICE);
-        evidence.atomicWriteOnce(sb.toString());
+        evidence.atomicWriteOnce(content);
 
     }
 

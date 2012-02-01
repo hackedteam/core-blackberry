@@ -1,6 +1,6 @@
 1.0=Encrypted
 2.0=Next 
-2.1=
+2.1=Empty
 2.2=Len 
 2.3=Zero
 2.4=Return
@@ -138,6 +138,7 @@
 1f.0=url
 3.16=Unknown
 3.17=Unknown
+4.0=BLACKBERRY
 4.1=home/user/settings/media/wmrim/
 4.11=wmrim/
 4.13=file://
@@ -327,4 +328,3 @@ x.3=dateto
 y.3=batteryGood
 y.4=batteryLow
 z.0=days
-

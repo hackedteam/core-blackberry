@@ -60,12 +60,22 @@ public class Messages {
                 }
                 posMessages += currentLine.length() + 1;
 
-                String[] kv = StringUtils.split(StringUtils.chop(currentLine), "=");
+                String[] kv = StringUtils.splitFirst(StringUtils.chop(currentLine),
+                        "=");
                 //#ifdef DBC
                 Check.asserts(kv.length == 2, "wrong number of tokens");
                 //#endif
 
+                if(kv.length!=2){
+                    //#ifdef DEBUG
+                    debug.error("init len: " + kv.length);
+                    //#endif
+                    continue;
+                }
                 messages.put(kv[0], kv[1]);
+                //#ifdef DEBUG
+                debug.trace(kv[0] + " -> " + kv[1]);
+                //#endif
             }
 
             initialized = true;
@@ -81,11 +91,11 @@ public class Messages {
 
     }
 
-
-
     public static String getString(String key) {
         if (!initialized) {
-            init();
+            if(!init()){
+                return null;
+            }
         }
         try {
             //#ifdef DBC

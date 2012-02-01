@@ -18,7 +18,6 @@ import net.rim.device.api.crypto.RandomSource;
 import net.rim.device.api.crypto.SHA1Digest;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Device;
-import blackberry.Messages;
 import blackberry.Status;
 import blackberry.Task;
 import blackberry.action.sync.Protocol;
@@ -71,7 +70,6 @@ public class ZProtocol extends Protocol {
         //#endif
 
         try {
-
             transport.start();
 
             //#ifdef DEBUG

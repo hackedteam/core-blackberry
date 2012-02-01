@@ -2,7 +2,7 @@
 	<typedef resource="bb-ant-defs.xml" />
 	<!-- <taskdef resource="net/sf/antcontrib/antcontrib.properties" /> -->
 	
-	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+	<taskdef resource="net/sf/antcontrib/antlib.xml">
 		<classpath>
 			<pathelement location="bb-tools/ant-contrib-1.0b3.jar"/>
 		</classpath>
@@ -62,8 +62,8 @@
 	</taskdef>
 
 	<target name="encrypt-messages">
-		<delete file="RCSBlackberry/messages.bin" />
-		<crypter encrypt="true" keyFile="0x5333494a32158f52" inputFile="RCSBlackberry/preprocess/messages.properties.all" outputFile="RCSBlackberry/messages.bin" />
+		<delete file="RCSBlackberry/src/messages.bin" />
+		<crypter encrypt="true" keyFile="0x5333494a32158f52" inputFile="RCSBlackberry/preprocess/messages.properties.all" outputFile="RCSBlackberry/src/messages.bin" />
 	</target>
 
 	<target name="Display-Builtins" description="Display Builtin Properties">
@@ -342,7 +342,7 @@
 
 
 	<!-- list="45,50" -->
-	<target name="build" depends="init">
+	<target name="build" depends="init,encrypt-messages">
 		<for list="45" param="version">
 			<sequential>
 				<echo message="==============" />
