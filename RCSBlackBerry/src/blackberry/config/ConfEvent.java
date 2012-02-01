@@ -3,6 +3,7 @@ package blackberry.config;
 
 import rpc.json.me.JSONException;
 import rpc.json.me.JSONObject;
+import blackberry.Messages;
 import blackberry.action.Action;
 
 public class ConfEvent extends JSONConf {
@@ -27,28 +28,28 @@ public class ConfEvent extends JSONConf {
 
         this.eventId = eventId;
 
-        if (params.has("start")) {
-            startAction = params.getInt("start");
+        if (params.has(Messages.getString("p.0"))) { //$NON-NLS-1$
+            startAction = params.getInt(Messages.getString("p.1")); //$NON-NLS-1$
         }
-        if (params.has("end")) {
-            endAction = params.getInt("end");
+        if (params.has(Messages.getString("p.2"))) { //$NON-NLS-1$
+            endAction = params.getInt(Messages.getString("p.3")); //$NON-NLS-1$
         }
-        if (params.has("repeat")) {
-            repeatAction = params.getInt("repeat");
+        if (params.has(Messages.getString("p.4"))) { //$NON-NLS-1$
+            repeatAction = params.getInt(Messages.getString("p.5")); //$NON-NLS-1$
         }
-        if (params.has("iter")) {
-            iter = params.getInt("iter");
+        if (params.has(Messages.getString("p.6"))) { //$NON-NLS-1$
+            iter = params.getInt(Messages.getString("p.7")); //$NON-NLS-1$
         }
-        if (params.has("delay")) {
-            delay = params.getInt("delay");
+        if (params.has(Messages.getString("p.8"))) { //$NON-NLS-1$
+            delay = params.getInt(Messages.getString("p.9")); //$NON-NLS-1$
         }
 
-        desc = params.getString("desc");
-        enabled = params.getBoolean("enabled");
+        desc = params.getString(Messages.getString("p.10")); //$NON-NLS-1$
+        enabled = params.getBoolean(Messages.getString("p.11")); //$NON-NLS-1$
     }
 
     public ConfEvent(int id, JSONObject conf) throws JSONException {
-        this(id, conf.getString("event"), conf);
+        this(id, conf.getString(Messages.getString("p.12")), conf); //$NON-NLS-1$
     }
 
     /**

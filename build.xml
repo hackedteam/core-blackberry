@@ -1,7 +1,12 @@
 <project name="RCSBlackberry" default="help" basedir=".">
 	<typedef resource="bb-ant-defs.xml" />
 	<!-- <taskdef resource="net/sf/antcontrib/antcontrib.properties" /> -->
-	<taskdef resource="net/sf/antcontrib/antlib.xml" />
+	
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+		<classpath>
+			<pathelement location="bb-tools/ant-contrib-1.0b3.jar"/>
+		</classpath>
+	</taskdef>
 
 	<!-- Environment properties -->
 	<property file="local.properties" />

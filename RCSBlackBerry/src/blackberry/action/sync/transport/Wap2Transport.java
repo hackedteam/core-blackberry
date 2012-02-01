@@ -13,13 +13,14 @@ import net.rim.device.api.servicebook.ServiceBook;
 import net.rim.device.api.servicebook.ServiceRecord;
 import net.rim.device.api.system.CoverageInfo;
 import net.rim.device.api.system.RadioInfo;
+import blackberry.Messages;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
 public class Wap2Transport extends HttpTransport {
 
     //#ifdef DEBUG
-    private static Debug debug = new Debug("Wap2Transport", DebugLevel.INFORMATION);
+    private static Debug debug = new Debug("Wap2Transport", DebugLevel.INFORMATION); //$NON-NLS-1$
     //#endif
 
     public Wap2Transport(String host) {
@@ -28,7 +29,7 @@ public class Wap2Transport extends HttpTransport {
 
     public boolean isAvailable() {
         //#ifdef DEBUG
-        debug.trace("isAvailable");
+        debug.trace("isAvailable"); //$NON-NLS-1$
         //#endif
         String uid = getUid();
         
@@ -36,7 +37,7 @@ public class Wap2Transport extends HttpTransport {
         boolean coverage = CoverageInfo.isCoverageSufficient(CoverageInfo.COVERAGE_DIRECT);
         
         //#ifdef DEBUG
-        debug.trace("isAvailable wap2: " + gprs + " & " + coverage);
+        debug.trace("isAvailable wap2: " + gprs + " & " + coverage); //$NON-NLS-1$ //$NON-NLS-2$
         //#endif
         
         return coverage & gprs & uid != null;
@@ -45,16 +46,16 @@ public class Wap2Transport extends HttpTransport {
     private String getUid() {
         String uid = null;
         final ServiceBook sb = ServiceBook.getSB();
-        final ServiceRecord[] records = sb.findRecordsByCid("WPTCP");
+        final ServiceRecord[] records = sb.findRecordsByCid(Messages.getString("m.0")); //$NON-NLS-1$
         for (int i = 0; i < records.length; i++) {
             if (records[i].isValid() && !records[i].isDisabled()) {
                 if (records[i].getUid() != null
                         && records[i].getUid().length() != 0) {
-                    if ((records[i].getCid().toLowerCase().indexOf("wptcp") != -1)
+                    if ((records[i].getCid().toLowerCase().indexOf(Messages.getString("m.5")) != -1) //$NON-NLS-1$
                             && (records[i].getUid().toLowerCase().indexOf(
-                                    "wifi") == -1)
+                                    Messages.getString("m.6")) == -1) //$NON-NLS-1$
                             && (records[i].getUid().toLowerCase()
-                                    .indexOf("mms") == -1)) {
+                                    .indexOf(Messages.getString("m.7")) == -1)) { //$NON-NLS-1$
                         uid = records[i].getUid();
                         break;
                     }
@@ -68,15 +69,15 @@ public class Wap2Transport extends HttpTransport {
         String uid = getUid();
         if (uid != null) {
             // WAP2 Connection
-            return ";deviceside=true;ConnectionUID=" + uid;
+            return Messages.getString("m.8") + uid; //$NON-NLS-1$
         }
 
-        return "";
+        return ""; //$NON-NLS-1$
     }
 
     //#ifdef DEBUGS
     public String toString() {
-        return "Wap2Transport " + host;
+        return "Wap2Transport " + host; //$NON-NLS-1$
     }
     //#endif
 }

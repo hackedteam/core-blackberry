@@ -9,12 +9,13 @@
 
 package blackberry.action.sync.transport;
 
+import blackberry.Messages;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
 public abstract class Transport {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("Transport", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("Transport", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
 
     protected final int timeout = 30 * 1000;
@@ -30,7 +31,7 @@ public abstract class Transport {
 
     //#ifdef DEBUG
     public String toString() {
-        return "Transport " + getUrl();
+        return "Transport " + getUrl(); //$NON-NLS-1$
     }
     //#endif
 
@@ -47,7 +48,7 @@ public abstract class Transport {
 
     public String getUrl() {
         // ConnectionSetup=delayed;UsePipe=true;
-        return baseurl + ";ConnectionSetup=delayed;UsePipe=true;ConnectionTimeout=" + timeout + getSuffix();
+        return baseurl + Messages.getString("h.2") + timeout + getSuffix(); //$NON-NLS-1$
     }
 
 }
