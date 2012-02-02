@@ -2,8 +2,8 @@ package blackberry.config;
 
 public class Cfg {
     
-    public static final int BUILD_ID = 20;
-    public static final String BUILD_TIMESTAMP = "20120202-093425";
+    public static final int BUILD_ID = 21;
+    public static final String BUILD_TIMESTAMP = "20120202-094514";
     
     //==========================================================
     // Static configuration

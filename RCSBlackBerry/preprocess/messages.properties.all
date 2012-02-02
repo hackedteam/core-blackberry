@@ -366,6 +366,7 @@ q.8=wipe
 q.9=type
 r.0=New configuration activated
 r.1=Invalid new configuration, reverting
+r.2=Actual configuration corrupted
 s.0=number
 t.0= BID: 
 t.1= NID: 

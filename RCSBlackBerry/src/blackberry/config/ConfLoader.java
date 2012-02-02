@@ -90,7 +90,7 @@ public final class ConfLoader {
             if (file.exists()) {
                 loaded = loadConfFile(file, true);
                 if (!loaded) {
-                    Evidence.info("Actual configuration corrupted"); //$NON-NLS-1$
+                    Evidence.info(Messages.getString("r.2")); //$NON-NLS-1$
                 }
             }
         }
