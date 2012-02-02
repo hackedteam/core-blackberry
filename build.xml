@@ -373,9 +373,7 @@
 				<!--
 				<echo message="_____________" />
 				<echo message="     TEST    " />
-				<corebuild kind="test" version="@{version}" preprocess.symbols="${preprocess.test.symbols}" />
-				
-								
+				<corebuild kind="test" version="@{version}" preprocess.symbols="${preprocess.test.symbols}" />			
 				-->
 			</sequential>
 		</for>

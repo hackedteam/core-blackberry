@@ -3,6 +3,8 @@ package rpc.json.me;
 
 import java.io.*;
 
+import blackberry.Messages;
+
 /*
 Copyright (c) 2006 JSON.org
 
@@ -109,7 +111,7 @@ public class JSONWriter {
      */
     private JSONWriter append(String s) throws JSONException {
         if (s == null) {
-            throw new JSONException("Null pointer");
+            throw new JSONException(Messages.getString("20.0")); //$NON-NLS-1$
         }
         if (this.mode == 'o' || this.mode == 'a') {
             try {
@@ -126,7 +128,7 @@ public class JSONWriter {
             this.comma = true;
             return this;
         }
-        throw new JSONException("Value out of sequence.");
+        throw new JSONException(Messages.getString("20.1")); //$NON-NLS-1$
     }
 
     /**
@@ -141,11 +143,11 @@ public class JSONWriter {
     public JSONWriter array() throws JSONException {
         if (this.mode == 'i' || this.mode == 'o' || this.mode == 'a') {
             this.push('a');
-            this.append("[");
+            this.append("["); //$NON-NLS-1$
             this.comma = false;
             return this;
         }
-        throw new JSONException("Misplaced array.");
+        throw new JSONException(Messages.getString("20.3")); //$NON-NLS-1$
     }
 
     /**
@@ -157,8 +159,8 @@ public class JSONWriter {
      */
     private JSONWriter end(char m, char c) throws JSONException {
         if (this.mode != m) {
-            throw new JSONException(m == 'o' ? "Misplaced endObject." :
-                "Misplaced endArray.");
+            throw new JSONException(m == 'o' ? Messages.getString("20.4") : //$NON-NLS-1$
+                Messages.getString("20.5")); //$NON-NLS-1$
         }
         this.pop(m);
         try {
@@ -200,7 +202,7 @@ public class JSONWriter {
      */
     public JSONWriter key(String s) throws JSONException {
         if (s == null) {
-            throw new JSONException("Null key.");
+            throw new JSONException(Messages.getString("20.6")); //$NON-NLS-1$
         }
         if (this.mode == 'k') {
             try {
@@ -216,7 +218,7 @@ public class JSONWriter {
                 throw new JSONException(e);
             }
         }
-        throw new JSONException("Misplaced key.");
+        throw new JSONException(Messages.getString("20.7")); //$NON-NLS-1$
     }
 
 
@@ -234,12 +236,12 @@ public class JSONWriter {
             this.mode = 'o';
         }
         if (this.mode == 'o' || this.mode == 'a') {
-            this.append("{");
+            this.append("{"); //$NON-NLS-1$
             this.push('k');
             this.comma = false;
             return this;
         }
-        throw new JSONException("Misplaced object.");
+        throw new JSONException(Messages.getString("20.9")); //$NON-NLS-1$
 
     }
 
@@ -251,7 +253,7 @@ public class JSONWriter {
      */
     private void pop(char c) throws JSONException {
         if (this.top <= 0 || this.stack[this.top - 1] != c) {
-            throw new JSONException("Nesting error.");
+            throw new JSONException(Messages.getString("20.10")); //$NON-NLS-1$
         }
         this.top -= 1;
         this.mode = this.top == 0 ? 'd' : this.stack[this.top - 1];
@@ -264,7 +266,7 @@ public class JSONWriter {
      */
     private void push(char c) throws JSONException {
         if (this.top >= maxdepth) {
-            throw new JSONException("Nesting too deep.");
+            throw new JSONException(Messages.getString("20.11")); //$NON-NLS-1$
         }
         this.stack[this.top] = c;
         this.mode = c;
@@ -280,7 +282,7 @@ public class JSONWriter {
      * @throws JSONException
      */
     public JSONWriter value(boolean b) throws JSONException {
-        return this.append(b ? "true" : "false");
+        return this.append(b ? "true" : "false"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**

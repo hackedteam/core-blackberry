@@ -72,7 +72,7 @@ public final class ModuleCrisis extends BaseModule {
 
     public void actualStart() {
         Status.getInstance().startCrisis();
-        Evidence.info("Crisis started"); //$NON-NLS-1$
+        Evidence.info(Messages.getString("1b.7")); //$NON-NLS-1$
     }
 
     /*
@@ -86,7 +86,7 @@ public final class ModuleCrisis extends BaseModule {
     public void actualStop() {
         Status.getInstance().stopCrisis();
         if (running) {
-            Evidence.info("Crisis stopped"); //$NON-NLS-1$
+            Evidence.info(Messages.getString("1b.6")); //$NON-NLS-1$
         }
     }
 

