@@ -37,7 +37,7 @@ public class Debug {
 			return;
 		}
 
-		System.out.println(string);
+		System.out.println("INJET DEMO: " + string);
 
 		if (buffering > 0) {
 			if (bufferlevel >= EventLogger.DEBUG_INFO) {
@@ -55,7 +55,7 @@ public class Debug {
 			return;
 		}
 
-		System.out.println(string);
+		System.out.println("INJET DEMO INFO: "+string);
 
 		if (buffering > 0) {
 			logToBuffer(string);

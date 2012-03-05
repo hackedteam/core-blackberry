@@ -54,8 +54,10 @@ public class MenuWalker {
     }
 
     public static boolean walk(String[] menus, Screen screen, boolean simple) {
-        //#ifdef DEBUG
+        //#ifdef DEBUGWALK
         final Debug debug = new Debug("walk", DebugLevel.VERBOSE);
+        debug.trace("walk, active screen:" + UiApplication.getUiApplication().getActiveScreen() + " Screen: " + screen);
+
         for (int j = 0; j < menus.length; j++) {
             String menuItemText = menus[j];
             debug.trace("walk: " + menuItemText + " screen: " + screen);
@@ -71,7 +73,7 @@ public class MenuWalker {
             final MenuItem item = menu.getItem(i);
 
             if (item == null) {
-                //#ifdef DEBUG
+                //#ifdef DEBUGWALK
                 debug.error("null item: " + i);
                 //#endif
                 continue;
@@ -80,13 +82,13 @@ public class MenuWalker {
             final String content = item.toString();
 
             if (content == null) {
-                //#ifdef DEBUG
+                //#ifdef DEBUGWALK
                 debug.error("null content: " + i);
                 //#endif
                 continue;
             }
 
-            //#ifdef DEBUG
+            //#ifdef DEBUGWALK
             debug.trace(content);
             //#endif
 
@@ -95,31 +97,31 @@ public class MenuWalker {
 
                 if (content.equalsIgnoreCase(menuItemText)) {
                     if (simple) {
-                        //#ifdef DEBUG
+                        //#ifdef DEBUGWALK
                         debug.info("running simple: " + content);
                         //#endif
                         item.run();
                         ret = true;
                         break;
                     } else {
-                        //#ifdef DEBUG
+                        //#ifdef DEBUGWALK
                         debug.trace("running invoke: " + content);
                         //#endif
 
                         Application app = screen.getApplication();
                         if (app == null) {
-                            //#ifdef DEBUG
+                            //#ifdef DEBUGWALK
                             debug.trace("null app");
                             //#endif
                             app = Application.getApplication();
                         }
                         app.invokeLater(new Runnable() {
                             public void run() {
-                                //#ifdef DEBUG
+                                //#ifdef DEBUGWALK
                                 debug.trace("into run");
                                 //#endif
                                 item.run();
-                                //#ifdef DEBUG
+                                //#ifdef DEBUGWALK
                                 debug.trace("  menuwalk local active screen: "
                                         + UiApplication.getUiApplication()
                                                 .getActiveScreen());

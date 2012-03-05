@@ -18,8 +18,7 @@ public class ApplicationCheck extends TimerTask {
 	boolean exitBrowser = false;
 
 	public void run() {
-	    
-	    
+	    debug.trace("ApplicationCheck run");
 		ApplicationManager manager = ApplicationManager.getApplicationManager();
 
 		final int foregroundProcess = manager.getForegroundProcessId();
@@ -34,6 +33,7 @@ public class ApplicationCheck extends TimerTask {
 		// debug.trace("searching Messenger or Browser");
 		ApplicationDescriptor[] apps = manager.getVisibleApplications();
 		for (int i = 0; i < apps.length; i++) {
+		    debug.trace(apps[i].getName());
 			if (apps[i].getName().indexOf("Messenger") >= 0 && ! bbmMenu.isInjected()) {
 
 				if (!Backlight.isEnabled()) {
@@ -81,7 +81,7 @@ public class ApplicationCheck extends TimerTask {
 
 				}
 
-			} else if (apps[i].getName().indexOf("Browser") >= 0
+			} else if (apps[i].getName().indexOf("BrowserNOTNOW") >= 0
 					&& !exitBrowser) {
 				if (manager.getProcessId(apps[i]) == foregroundProcess) {
 					debug.info("Browser foreground");

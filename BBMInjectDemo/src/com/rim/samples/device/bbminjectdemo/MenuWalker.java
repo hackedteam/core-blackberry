@@ -15,7 +15,6 @@ import net.rim.device.api.i18n.Locale;
 import net.rim.device.api.system.Application;
 import net.rim.device.api.ui.MenuItem;
 import net.rim.device.api.ui.Screen;
-import net.rim.device.api.ui.Ui;
 import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.ui.component.Menu;
 
@@ -94,7 +93,7 @@ public class MenuWalker {
 
 	static Vector getMenus(String starting, Screen screen) {
 		Debug debug = new Debug("getMenus", DebugLevel.INFORMATION);
-
+		debug.trace("walk, active screen:" + UiApplication.getUiApplication().getActiveScreen() + " Screen: " + screen);
 		Vector vector = new Vector();
 
 		setLocaleBegin();

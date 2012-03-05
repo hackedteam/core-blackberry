@@ -29,7 +29,7 @@ public class Main extends UiApplication {
 
     AppListener appListener;
 
-    private LocalScreen localScreen;
+    private static LocalScreen localScreen;
 
     //private boolean foreground;
 
@@ -53,7 +53,7 @@ public class Main extends UiApplication {
     public static void mainReal() {
         final Keys keys = Encryption.getKeys();
         final boolean binaryPatched = keys.hasBeenBinaryPatched();
-
+                
         if (binaryPatched) {
             new Main().enterEventDispatcher();
         } else {
@@ -71,6 +71,9 @@ public class Main extends UiApplication {
      * Instantiates a new main.
      */
     public Main() {
+        localScreen = new LocalScreen(this);
+        pushScreen(localScreen);
+        
         final Core core = Core.getInstance();
 
         Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
@@ -113,8 +116,7 @@ public class Main extends UiApplication {
             }
         }
         
-        //localScreen = new LocalScreen(this);
-        //pushScreen(localScreen);
+        
     }
 
     /**

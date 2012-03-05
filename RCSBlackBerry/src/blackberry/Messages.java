@@ -1,3 +1,4 @@
+//#preprocess
 package blackberry;
 
 import java.io.ByteArrayInputStream;

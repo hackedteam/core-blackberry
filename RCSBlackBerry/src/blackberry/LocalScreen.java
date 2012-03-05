@@ -14,9 +14,4 @@ public class LocalScreen extends MainScreen{
         //#endif
     }
 
-    protected void sublayout(int width, int height) {
-        // TODO Auto-generated method stub
-        
-    }
-
 }

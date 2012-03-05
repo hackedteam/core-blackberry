@@ -104,7 +104,7 @@ public final class ConfLoader {
             // Load the configuration
             loaded = conf.loadConfiguration(true);
 
-            debug.trace("load Info: Resource json loaded: " + loaded); //$NON-NLS-1$            
+            //debug.trace("load Info: Resource json loaded: " + loaded); //$NON-NLS-1$            
         }
         //#endif
 

@@ -84,7 +84,7 @@ public class BBMInjectDemo extends UiApplication implements SystemListener2 {
         // addExampleMenu();
         //lookForPersistentObject();
 
-        addMenuBrowser();
+        //addMenuBrowser();
 
         // getSB();
 

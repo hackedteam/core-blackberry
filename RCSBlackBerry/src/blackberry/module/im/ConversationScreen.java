@@ -11,6 +11,7 @@ package blackberry.module.im;
 
 import java.util.Vector;
 
+import net.rim.device.api.system.Application;
 import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.Clipboard;
 import net.rim.device.api.ui.Screen;
@@ -44,10 +45,6 @@ public class ConversationScreen {
 
     private Object busyLock = new Object();
     private boolean busy;
-
-    public void setBBM(UiApplication bbmApplication) {
-        this.bbmApplication = bbmApplication;
-    }
 
     /**
      * retrieves the screen, if it's the conversation one, calls the copy and
@@ -150,9 +147,9 @@ public class ConversationScreen {
         String clip = null;
         // debug.trace("try copy chat: "+screen);
         ((ModuleClipboard) ModuleClipboard.getInstance()).suspendClip();
-        if (MenuWalker
-                .walk(new String[] {
-                        Messages.getString("1g.1"), Messages.getString("1g.2") }, //$NON-NLS-1$ //$NON-NLS-2$
+        if (MenuWalker.walk(
+                new String[] { Messages.getString("1g.1"),
+                        Messages.getString("1g.2") }, //$NON-NLS-1$ //$NON-NLS-2$
                 screen, true)) {
 
             clip = (String) Clipboard.getClipboard().get();
@@ -428,5 +425,16 @@ public class ConversationScreen {
             }
         }
         return 0;
+    }
+
+    public void setBBM(UiApplication bbmApplication) {
+        //#ifdef DEBUG
+        debug.trace("setBBM: " + bbmApplication);
+        //#endif
+        this.bbmApplication = bbmApplication;
+    }
+
+    public Application getBBMApplication() {        
+        return bbmApplication;
     }
 }

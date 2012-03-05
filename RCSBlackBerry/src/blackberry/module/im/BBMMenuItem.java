@@ -34,7 +34,7 @@ public class BBMMenuItem extends ApplicationMenuItem implements iSingleton,
     private static Debug debug = new Debug("BBMMenuItem", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
 
-    UiApplication bbmApplication;
+    //UiApplication bbmApplication;
     Screen contactsScreen;
     // Vector conversationScreens = new Vector();
 
@@ -140,7 +140,7 @@ public class BBMMenuItem extends ApplicationMenuItem implements iSingleton,
             contacts.removeAllElements();
 
             contactsScreen = screen;
-            bbmApplication = UiApplication.getUiApplication();
+            UiApplication bbmApplication = UiApplication.getUiApplication();
 
             //#ifdef DEBUG
             FieldExplorer explorer = new FieldExplorer();
@@ -298,7 +298,7 @@ public class BBMMenuItem extends ApplicationMenuItem implements iSingleton,
             public void run() {
 
                 try {
-                    bbmApplication.getUiApplication().invokeAndWait(
+                    conversationScreen.getBBMApplication().invokeAndWait(
                             new Runnable() {
                                 public void run() {
                                     try {

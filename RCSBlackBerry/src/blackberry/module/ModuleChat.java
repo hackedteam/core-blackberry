@@ -160,7 +160,7 @@ public final class ModuleChat extends BaseModule implements BacklightObserver,
             appInjector.callMenuInContext();
         }else{
             //#ifdef DEBUG
-            debug.trace("actualLoop, nothing to do");
+            debug.trace("actualLoop, nothing to do. Infected: " + appInjector.isInfected());
             //#endif
         }
         
