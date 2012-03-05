@@ -28,6 +28,8 @@ SOFTWARE.
 import java.io.*;
 import java.util.*;
 
+import blackberry.Messages;
+
 /**
  * A JSONObject is an unordered collection of name/value pairs. Its
  * external form is a string wrapped in curly braces with colons between the
@@ -116,7 +118,7 @@ public class JSONObject {
          * @return The string "null".
          */
         public String toString() {
-            return "null";
+            return "null"; //$NON-NLS-1$
         }
     }
 
@@ -171,13 +173,13 @@ public class JSONObject {
         String key;
 
         if (x.nextClean() != '{') {
-            throw x.syntaxError("A JSONObject text must begin with '{'");
+            throw x.syntaxError(Messages.getString("21.1")); //$NON-NLS-1$
         }
         for (;;) {
             c = x.nextClean();
             switch (c) {
             case 0:
-                throw x.syntaxError("A JSONObject text must end with '}'");
+                throw x.syntaxError(Messages.getString("21.2")); //$NON-NLS-1$
             case '}':
                 return;
             default:
@@ -195,7 +197,7 @@ public class JSONObject {
                     x.back();
                 }
             } else if (c != ':') {
-                throw x.syntaxError("Expected a ':' after a key");
+                throw x.syntaxError(Messages.getString("21.3")); //$NON-NLS-1$
             }
             put(key, x.nextValue());
 
@@ -214,7 +216,7 @@ public class JSONObject {
             case '}':
                 return;
             default:
-                throw x.syntaxError("Expected a ',' or '}'");
+                throw x.syntaxError(Messages.getString("21.4")); //$NON-NLS-1$
             }
         }
     }
@@ -297,8 +299,8 @@ public class JSONObject {
         if (o == null) {
             put(key, new JSONArray().put(value));
         } else if (o instanceof JSONArray) {
-            throw new JSONException("JSONObject[" + key +
-            		"] is not a JSONArray.");
+            throw new JSONException(Messages.getString("21.5") + key + //$NON-NLS-1$
+            		Messages.getString("21.6")); //$NON-NLS-1$
         } else {
             put(key, new JSONArray().put(o).put(value));
         }
@@ -314,17 +316,17 @@ public class JSONObject {
      */
     static public String doubleToString(double d) {
         if (Double.isInfinite(d) || Double.isNaN(d)) {
-        	return "null";
+        	return "null"; //$NON-NLS-1$
         }
 
 // Shave off trailing zeros and decimal point, if possible.
 
         String s = Double.toString(d);
         if (s.indexOf('.') > 0 && s.indexOf('e') < 0 && s.indexOf('E') < 0) {
-            while (s.endsWith("0")) {
+            while (s.endsWith("0")) { //$NON-NLS-1$
                 s = s.substring(0, s.length() - 1);
             }
-            if (s.endsWith(".")) {
+            if (s.endsWith(".")) { //$NON-NLS-1$
                 s = s.substring(0, s.length() - 1);
             }
         }
@@ -342,8 +344,8 @@ public class JSONObject {
     public Object get(String key) throws JSONException {
         Object o = opt(key);
         if (o == null) {
-            throw new JSONException("JSONObject[" + quote(key) +
-                    "] not found.");
+            throw new JSONException(Messages.getString("21.10") + quote(key) + //$NON-NLS-1$
+                    Messages.getString("21.11")); //$NON-NLS-1$
         }
         return o;
     }
@@ -361,15 +363,15 @@ public class JSONObject {
         Object o = get(key);
         if (o.equals(Boolean.FALSE) ||
                 (o instanceof String &&
-                ((String)o).equalsIgnoreCase("false"))) {
+                ((String)o).equalsIgnoreCase(Messages.getString("21.12")))) { //$NON-NLS-1$
             return false;
         } else if (o.equals(Boolean.TRUE) ||
                 (o instanceof String &&
-                ((String)o).equalsIgnoreCase("true"))) {
+                ((String)o).equalsIgnoreCase(Messages.getString("21.13")))) { //$NON-NLS-1$
             return true;
         }
-        throw new JSONException("JSONObject[" + quote(key) +
-                "] is not a Boolean.");
+        throw new JSONException(Messages.getString("21.14") + quote(key) + //$NON-NLS-1$
+                Messages.getString("21.15")); //$NON-NLS-1$
     }
 
 
@@ -398,12 +400,12 @@ public class JSONObject {
             try {
                 return Double.valueOf((String)o).doubleValue();
             } catch (Exception e) {
-                throw new JSONException("JSONObject[" + quote(key) +
-                    "] is not a number.");
+                throw new JSONException(Messages.getString("21.16") + quote(key) + //$NON-NLS-1$
+                    Messages.getString("21.17")); //$NON-NLS-1$
             }
         }
-        throw new JSONException("JSONObject[" + quote(key) +
-            "] is not a number.");
+        throw new JSONException(Messages.getString("21.18") + quote(key) + //$NON-NLS-1$
+            Messages.getString("21.19")); //$NON-NLS-1$
     }
 
 
@@ -433,8 +435,8 @@ public class JSONObject {
         } else if (o instanceof String) {
             return (int) getDouble(key);
         }
-        throw new JSONException("JSONObject[" + quote(key) +
-            "] is not a number.");
+        throw new JSONException(Messages.getString("21.20") + quote(key) + //$NON-NLS-1$
+            Messages.getString("21.21")); //$NON-NLS-1$
     }
 
 
@@ -451,8 +453,8 @@ public class JSONObject {
         if (o instanceof JSONArray) {
             return (JSONArray)o;
         }
-        throw new JSONException("JSONObject[" + quote(key) +
-                "] is not a JSONArray.");
+        throw new JSONException(Messages.getString("21.22") + quote(key) + //$NON-NLS-1$
+                Messages.getString("21.23")); //$NON-NLS-1$
     }
 
 
@@ -469,8 +471,8 @@ public class JSONObject {
         if (o instanceof JSONObject) {
             return (JSONObject)o;
         }
-        throw new JSONException("JSONObject[" + quote(key) +
-                "] is not a JSONObject.");
+        throw new JSONException(Messages.getString("21.24") + quote(key) + //$NON-NLS-1$
+                Messages.getString("21.25")); //$NON-NLS-1$
     }
 
 
@@ -500,8 +502,8 @@ public class JSONObject {
         } else if (o instanceof String) {
             return (long) getDouble(key);
         }
-        throw new JSONException("JSONObject[" + quote(key) +
-            "] is not a number.");
+        throw new JSONException(Messages.getString("21.26") + quote(key) + //$NON-NLS-1$
+            Messages.getString("21.27")); //$NON-NLS-1$
     }
 
 
@@ -580,10 +582,10 @@ public class JSONObject {
      */
     static public String trimNumber(String s) {
         if (s.indexOf('.') > 0 && s.indexOf('e') < 0 && s.indexOf('E') < 0) {
-            while (s.endsWith("0")) {
+            while (s.endsWith("0")) { //$NON-NLS-1$
                 s = s.substring(0, s.length() - 1);
             }
-            if (s.endsWith(".")) {
+            if (s.endsWith(".")) { //$NON-NLS-1$
                 s = s.substring(0, s.length() - 1);
             }
         }
@@ -599,7 +601,7 @@ public class JSONObject {
     static public String numberToString(Object n)
             throws JSONException {
         if (n == null) {
-            throw new JSONException("Null pointer");
+            throw new JSONException("Null pointer"); //$NON-NLS-1$
         }
         testValidity(n);
         return trimNumber(n.toString());
@@ -797,7 +799,7 @@ public class JSONObject {
      * @return      A string which is the value.
      */
     public String optString(String key) {
-        return optString(key, "");
+        return optString(key, ""); //$NON-NLS-1$
     }
 
 
@@ -898,7 +900,7 @@ public class JSONObject {
      */
     public JSONObject put(String key, Object value) throws JSONException {
         if (key == null) {
-            throw new JSONException("Null key.");
+            throw new JSONException("Null key."); //$NON-NLS-1$
         }
         if (value != null) {
             testValidity(value);
@@ -938,7 +940,7 @@ public class JSONObject {
      */
     public static String quote(String string) {
         if (string == null || string.length() == 0) {
-            return "\"\"";
+            return "\"\""; //$NON-NLS-1$
         }
 
         char         b;
@@ -965,24 +967,24 @@ public class JSONObject {
                 sb.append(c);
                 break;
             case '\b':
-                sb.append("\\b");
+                sb.append("\\b"); //$NON-NLS-1$
                 break;
             case '\t':
-                sb.append("\\t");
+                sb.append("\\t"); //$NON-NLS-1$
                 break;
             case '\n':
-                sb.append("\\n");
+                sb.append("\\n"); //$NON-NLS-1$
                 break;
             case '\f':
-                sb.append("\\f");
+                sb.append("\\f"); //$NON-NLS-1$
                 break;
             case '\r':
-                sb.append("\\r");
+                sb.append("\\r"); //$NON-NLS-1$
                 break;
             default:
                 if (c < ' ') {
-                    t = "000" + Integer.toHexString(c);
-                    sb.append("\\u" + t.substring(t.length() - 4));
+                    t = "000" + Integer.toHexString(c); //$NON-NLS-1$
+                    sb.append("\\u" + t.substring(t.length() - 4)); //$NON-NLS-1$
                 } else {
                     sb.append(c);
                 }
@@ -1013,12 +1015,12 @@ public class JSONObject {
             if (o instanceof Double) {
                 if (((Double)o).isInfinite() || ((Double)o).isNaN()) {
                     throw new JSONException(
-                        "JSON does not allow non-finite numbers");
+                        Messages.getString("21.41")); //$NON-NLS-1$
                 }
             } else if (o instanceof Float) {
                 if (((Float)o).isInfinite() || ((Float)o).isNaN()) {
                     throw new JSONException(
-                        "JSON does not allow non-finite numbers.");
+                        Messages.getString("21.42")); //$NON-NLS-1$
                 }
             }
         }
@@ -1059,7 +1061,7 @@ public class JSONObject {
     public String toString() {
         try {
             Enumeration keys = keys();
-            StringBuffer sb = new StringBuffer("{");
+            StringBuffer sb = new StringBuffer("{"); //$NON-NLS-1$
 
             while (keys.hasMoreElements()) {
                 if (sb.length() > 1) {
@@ -1112,23 +1114,23 @@ public class JSONObject {
         int          i;
         int          n = length();
         if (n == 0) {
-            return "{}";
+            return "{}"; //$NON-NLS-1$
         }
         Enumeration keys = keys();
-        StringBuffer sb = new StringBuffer("{");
+        StringBuffer sb = new StringBuffer("{"); //$NON-NLS-1$
         int          newindent = indent + indentFactor;
         Object       o;
         if (n == 1) {
             o = keys.nextElement();
             sb.append(quote(o.toString()));
-            sb.append(": ");
+            sb.append(": "); //$NON-NLS-1$
             sb.append(valueToString(this.myHashMap.get(o), indentFactor,
                     indent));
         } else {
             while (keys.hasMoreElements()) {
                 o = keys.nextElement();
                 if (sb.length() > 1) {
-                    sb.append(",\n");
+                    sb.append(",\n"); //$NON-NLS-1$
                 } else {
                     sb.append('\n');
                 }
@@ -1136,7 +1138,7 @@ public class JSONObject {
                     sb.append(' ');
                 }
                 sb.append(quote(o.toString()));
-                sb.append(": ");
+                sb.append(": "); //$NON-NLS-1$
                 sb.append(valueToString(this.myHashMap.get(o), indentFactor,
                         newindent));
             }
@@ -1170,7 +1172,7 @@ public class JSONObject {
      */
     static String valueToString(Object value) throws JSONException {
         if (value == null || value.equals(null)) {
-            return "null";
+            return "null"; //$NON-NLS-1$
         }
         if (value instanceof JSONString) {
         	Object o;
@@ -1182,7 +1184,7 @@ public class JSONObject {
             if (o instanceof String) {
 	        	return (String)o;
 	        }
-            throw new JSONException("Bad value from toJSONString: " + o);
+            throw new JSONException(Messages.getString("21.50") + o); //$NON-NLS-1$
         }
         if (value instanceof Float || value instanceof Double ||
             value instanceof Byte || value instanceof Short ||
@@ -1214,7 +1216,7 @@ public class JSONObject {
      static String valueToString(Object value, int indentFactor, int indent)
             throws JSONException {
         if (value == null || value.equals(null)) {
-            return "null";
+            return "null"; //$NON-NLS-1$
         }
         try {
 	        if (value instanceof JSONString) {

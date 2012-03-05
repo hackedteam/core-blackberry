@@ -28,8 +28,7 @@ public class Singleton {
         return instance;
     }
 
-    public iSingleton get(long guid) {
-        
+    public iSingleton get(long guid) {        
         return (iSingleton) hashtable.get(new Long(guid));
     }
 

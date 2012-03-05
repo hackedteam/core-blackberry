@@ -34,7 +34,7 @@ public final class Version {
 	public static final int VERSION = 2012013101; // 7.6 beta
 
 
-    public static final String SUBTYPE = "BLACKBERRY";
+    public static final String SUBTYPE = Messages.getString("4.0"); //$NON-NLS-1$
 
     /**
      * Instantiates a new version.

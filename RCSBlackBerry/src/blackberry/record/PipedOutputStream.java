@@ -117,7 +117,7 @@ public class PipedOutputStream extends OutputStream {
         if (snk == null) {
             throw new NullPointerException();
         } else if (sink != null || snk.connected) {
-            throw new IOException("Already connected");
+            throw new IOException("conn");
         }
         sink = snk;
         snk.in = -1;
@@ -139,7 +139,7 @@ public class PipedOutputStream extends OutputStream {
      */
     public void write(int b) throws IOException {
         if (sink == null) {
-            throw new IOException("Pipe not connected");
+            throw new IOException("null");
         }
         sink.receive(b);
     }
@@ -162,7 +162,7 @@ public class PipedOutputStream extends OutputStream {
      */
     public void write(byte b[], int off, int len) throws IOException {
         if (sink == null) {
-            throw new IOException("Pipe not connected");
+            throw new IOException("null");
         } else if (b == null) {
             throw new NullPointerException();
         } else if ((off < 0) || (off > b.length) || (len < 0)

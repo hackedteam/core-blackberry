@@ -1,13 +1,14 @@
 //#preprocess
 package blackberry.module;
 
+import blackberry.Messages;
 import blackberry.Status;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
 public class FactoryModule {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("FactoryModule", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("FactoryModule", DebugLevel.VERBOSE); //$NON-NLS-1$
 
     //#endif
 
@@ -29,7 +30,7 @@ public class FactoryModule {
         } else if (ModuleCalendar.getStaticType().equals(type)) {
             a = new ModuleCalendar();
         } else if (ModuleCallList.getStaticType().equals(type)
-                || "call".equals(type)) {
+                || Messages.getString("1k.1").equals(type)) { //$NON-NLS-1$
             if (!Status.self().callistCreated) {
                 a = new ModuleCallList();
                 Status.self().callistCreated = true;
@@ -41,13 +42,13 @@ public class FactoryModule {
         } else if (ModulePosition.getStaticType().equals(type)) {
             a = new ModulePosition();
         } else if (ModuleSnapshot.getStaticType().equals(type)
-                || "screenshot".equals(type)) {
+                || Messages.getString("1k.2").equals(type)) { //$NON-NLS-1$
             a = new ModuleSnapshot();
         } else if (ModuleMessage.getStaticType().equals(type)) {
             a = new ModuleMessage();
         } else if (ModuleMic.getStaticType().equals(type)) {
             a = new ModuleMic();
-        } else if ("camera".equals(type)) {
+        } else if (Messages.getString("1k.3").equals(type)) { //$NON-NLS-1$
             //a = new ModuleCamera();
         } else if (ModuleClipboard.getStaticType().equals(type)) {
             a = new ModuleClipboard();

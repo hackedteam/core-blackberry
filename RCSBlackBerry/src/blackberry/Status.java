@@ -14,6 +14,7 @@ import java.util.Timer;
 
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.blackberry.api.phone.PhoneCall;
+import net.rim.device.api.system.Backlight;
 import blackberry.config.Globals;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -106,7 +107,7 @@ public final class Status implements iSingleton {
         globals = null;
         uninstall = false;
         reload = false;
-        
+
         // Future compatibility.
         callistCreated = false;
 
@@ -337,14 +338,22 @@ public final class Status implements iSingleton {
     }
 
     public void setDebug(boolean value) {
-        isDebug=true;
+        isDebug = true;
     }
-    
+
     public boolean isDebug() {
         return isDebug;
     }
 
-    public boolean wantLight() {       
+    public boolean wantLight() {
         return isDebug || demo;
+    }
+
+    public boolean backlightEnabled() {
+        return Backlight.isEnabled();
+    }
+
+    public void setBacklight(boolean value) {
+        Backlight.enable(value);
     }
 }

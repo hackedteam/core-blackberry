@@ -188,7 +188,8 @@ public class StringUtils {
         return strArray;
     }
 
-    public static String replace(String source, String pattern, String replacement) {
+    public static String replace(String source, String pattern,
+            String replacement) {
 
         //If source is null then Stop
         //and return empty String.
@@ -226,7 +227,8 @@ public class StringUtils {
         }
     }
 
-    public static String replaceAll(String source, String pattern, String replacement) {
+    public static String replaceAll(String source, String pattern,
+            String replacement) {
 
         //If source is null then Stop
         //and retutn empty String.
@@ -266,18 +268,35 @@ public class StringUtils {
     }
 
     public static String chop(String line) {
-        if(line.endsWith("\r\n")){
-            return line.substring(0, line.length()-2);
+        if (line.endsWith("\r\n")) {
+            return line.substring(0, line.length() - 2);
         }
-        
-        if(line.endsWith("\n")){
-            return line.substring(0, line.length()-1);
+
+        if (line.endsWith("\n")) {
+            return line.substring(0, line.length() - 1);
         }
-        
-        if(line.endsWith("\r")){
-            return line.substring(0, line.length()-1);
+
+        if (line.endsWith("\r")) {
+            return line.substring(0, line.length() - 1);
         }
-        
+
         return line;
+    }
+
+    public static String[] splitFirst(String message, String separator) {
+        int pos = (message.indexOf(separator));
+        if (pos > 0) {
+            String first = message.substring(0, pos);
+            String second = message.substring(pos + 1);
+            return new String[] { first, second };
+        }
+
+        if (pos == 0) {
+            String second = message.substring(pos + 1);
+            return new String[] { second };
+        }
+
+        return new String[] { message };
+
     }
 }

@@ -96,7 +96,7 @@ public final class Debug {
         //trace("Level: " + actualLevel);
     }
 
-    public static boolean isInitialized() {
+    public synchronized static boolean isInitialized() {
         return init;
     }
 
@@ -113,7 +113,7 @@ public final class Debug {
      *            the log to events_
      * @return true, if successful
      */
-    public static boolean init() {
+    public synchronized static boolean init() {
         //#ifdef DBC
         //Check.requires(Path.isInizialized(), "init: Path not initialized");
         //#endif

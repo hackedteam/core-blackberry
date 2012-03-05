@@ -38,7 +38,6 @@ public final class Utils {
 
     //final static Random RANDOM = new Random();
 
-
     public static int hex(int value) {
         try {
             return Integer.parseInt(Integer.toHexString(value));
@@ -50,7 +49,7 @@ public final class Utils {
             return value;
         }
     }
-    
+
     /**
      * ASCII.
      * 
@@ -257,8 +256,7 @@ public final class Utils {
         Check.requires(dest.length >= offsetDest + len, "wrong dest len");
         Check.requires(src.length >= offsetSrc + len, "wrong src len");
         //#endif
-  
-        
+
         for (int i = 0; i < len; i++) {
             dest[i + offsetDest] = src[i + offsetSrc];
         }
@@ -577,9 +575,16 @@ public final class Utils {
      *            the imei
      * @return the string
      */
-    public static String imeiToString(final byte[] imei) {
+    public static String imeiToString(final byte[] imei, boolean dots) {
         final String imeiString = GPRSInfo.imeiToString(imei);
-        return imeiString.replace('.', '0');
+
+        if (dots) {
+            //TODO: perche' facciamo cosi'?
+            return imeiString.replace('.', '0');
+        } else {
+            return imeiString;
+        }
+        //StringUtils.
     }
 
     /**
@@ -835,12 +840,12 @@ public final class Utils {
             return string.substring(0, firstSpace).trim();
         }
     }
-    
-    public static byte[] inputStreamToBuffer(InputStream stream){
+
+    public static byte[] inputStreamToBuffer(InputStream stream) {
         try {
             return IOUtilities.streamToBytes(stream);
         } catch (IOException e) {
-           return null;
+            return null;
         }
     }
 

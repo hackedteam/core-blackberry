@@ -23,6 +23,8 @@ public class ProtocolException extends Exception {
 
     public boolean bye;
 
+    private int value;
+
     /**
      * Instantiates a new protocol exception.
      * 
@@ -41,5 +43,6 @@ public class ProtocolException extends Exception {
 
     public ProtocolException(int i) {
         this(false);
+        this.value=i;
     }
 }

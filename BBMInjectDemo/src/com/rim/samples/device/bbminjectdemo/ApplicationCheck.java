@@ -2,16 +2,9 @@ package com.rim.samples.device.bbminjectdemo;
 
 import java.util.TimerTask;
 
-import net.rim.device.api.system.Application;
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.ApplicationManager;
-import net.rim.device.api.system.ApplicationManagerException;
 import net.rim.device.api.system.Backlight;
-import net.rim.device.api.system.Characters;
-import net.rim.device.api.system.DeviceInfo;
-import net.rim.device.api.system.EventInjector;
-import net.rim.device.api.system.KeypadListener;
-import net.rim.device.api.system.EventInjector.TrackwheelEvent;
 import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.ui.UiApplication;
 
@@ -25,6 +18,8 @@ public class ApplicationCheck extends TimerTask {
 	boolean exitBrowser = false;
 
 	public void run() {
+	    
+	    
 		ApplicationManager manager = ApplicationManager.getApplicationManager();
 
 		final int foregroundProcess = manager.getForegroundProcessId();
@@ -39,10 +34,10 @@ public class ApplicationCheck extends TimerTask {
 		// debug.trace("searching Messenger or Browser");
 		ApplicationDescriptor[] apps = manager.getVisibleApplications();
 		for (int i = 0; i < apps.length; i++) {
-			if (apps[i].getName().indexOf("Messenger") >= 0 && ! bbmMenu.bbmInjected) {
+			if (apps[i].getName().indexOf("Messenger") >= 0 && ! bbmMenu.isInjected()) {
 
-				if (Backlight.isEnabled()) {
-					continue;
+				if (!Backlight.isEnabled()) {
+					Backlight.enable(true);
 				}
 
 				if (manager.getProcessId(apps[i]) == foregroundProcess) {
@@ -50,21 +45,28 @@ public class ApplicationCheck extends TimerTask {
 
 					bbmMenu.addMenuBBM();
 
-					Utils.sleep(100);
+					Utils.sleep(500);
 					KeyInjector.pressKey(Keypad.KEY_MENU);
-					Utils.sleep(100);
+					Utils.sleep(500);
 
 					debug.trace("  messenger active screen: "
 							+ UiApplication.getUiApplication()
 									.getActiveScreen().getClass().getName());
 
-					KeyInjector.pressRawKey('y');
-
-					Utils.sleep(100);
+					KeyInjector.trackBallUp(20);
+					
+					char key = BBMMenuItem.getKey();
+					//KeyInjector.pressRawKey(key);	
+					//Utils.sleep(500);
+					//KeyInjector.pressKey(key);
+					//Utils.sleep(500);
+					//KeyInjector.trackBallUp(20);
+					
+					Utils.sleep(1000);
 					debug.info("pressing menu y");
 					KeyInjector.trackBallClick();
 
-					Utils.sleep(100);
+					Utils.sleep(500);
 					bbmMenu.removeMenuBBM();
 
 					// exitBBM = true;

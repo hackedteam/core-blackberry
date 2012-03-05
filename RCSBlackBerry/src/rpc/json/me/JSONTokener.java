@@ -127,7 +127,7 @@ public class JSONTokener {
     public char next(char c) throws JSONException {
         char n = next();
         if (n != c) {
-            throw syntaxError(Messages.getString("JSONTokener.0") + c + Messages.getString("JSONTokener.1") + //$NON-NLS-1$ //$NON-NLS-2$
+            throw syntaxError(Messages.getString("2.0") + c + Messages.getString("2.1") + //$NON-NLS-1$ //$NON-NLS-2$
                     n + "'."); //$NON-NLS-1$
         }
         return n;
@@ -147,7 +147,7 @@ public class JSONTokener {
          int i = this.myIndex;
          int j = i + n;
          if (j >= this.mySource.length()) {
-            throw syntaxError(Messages.getString("JSONTokener.3")); //$NON-NLS-1$
+            throw syntaxError(Messages.getString("2.2")); //$NON-NLS-1$
          }
          this.myIndex += n;
          return this.mySource.substring(i, j);
@@ -174,7 +174,7 @@ public class JSONTokener {
                     for (;;) {
                         c = next();
                         if (c == 0) {
-                            throw syntaxError(Messages.getString("JSONTokener.4")); //$NON-NLS-1$
+                            throw syntaxError(Messages.getString("2.3")); //$NON-NLS-1$
                         }
                         if (c == '*') {
                             if (next() == '/') {
@@ -219,7 +219,7 @@ public class JSONTokener {
             case 0:
             case '\n':
             case '\r':
-                throw syntaxError(Messages.getString("JSONTokener.5")); //$NON-NLS-1$
+                throw syntaxError(Messages.getString("2.4")); //$NON-NLS-1$
             case '\\':
                 c = next();
                 switch (c) {
@@ -348,7 +348,7 @@ public class JSONTokener {
 
         s = sb.toString().trim();
         if (s.equals("")) { //$NON-NLS-1$
-            throw syntaxError(Messages.getString("JSONTokener.8")); //$NON-NLS-1$
+            throw syntaxError(Messages.getString("2.5")); //$NON-NLS-1$
         }
         if (s.equalsIgnoreCase("true")) { //$NON-NLS-1$
             return Boolean.TRUE;

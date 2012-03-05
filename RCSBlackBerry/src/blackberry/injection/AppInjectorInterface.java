@@ -22,12 +22,12 @@ public interface AppInjectorInterface {
 
     void callMenuInContext();
 
-    boolean isInfected();
+   // boolean isInfected();
 
     int getDelay();
 
     void reset();
 
-    void setInfected(boolean value);
+   // void setInfected(boolean value);
 
 }

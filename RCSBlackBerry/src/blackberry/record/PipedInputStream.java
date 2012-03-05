@@ -289,9 +289,9 @@ public class PipedInputStream extends InputStream {
 
     private void checkStateForReceive() throws IOException {
         if (!connected) {
-            throw new IOException("Pipe not connected");
+            throw new IOException("conn");
         } else if (closedByWriter || closedByReader) {
-            throw new IOException("Pipe closed");
+            throw new IOException("closed");
         } else if (readSide != null && !readSide.isAlive()) {
             throw new IOException("Read end dead");
         }
@@ -335,9 +335,9 @@ public class PipedInputStream extends InputStream {
      */
     public synchronized int read() throws IOException {
         if (!connected) {
-            throw new IOException("Pipe not connected");
+            throw new IOException("conn");
         } else if (closedByReader) {
-            throw new IOException("Pipe closed");
+            throw new IOException("closed");
         } else if (writeSide != null && !writeSide.isAlive() && !closedByWriter
                 && (in < 0)) {
             throw new IOException("Write end dead");
@@ -351,7 +351,7 @@ public class PipedInputStream extends InputStream {
                 return -1;
             }
             if ((writeSide != null) && (!writeSide.isAlive()) && (--trials < 0)) {
-                throw new IOException("Pipe broken");
+                throw new IOException("broken");
             }
             /* might be a writer waiting */
             notifyAll();

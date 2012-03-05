@@ -51,7 +51,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
     private static final long GUID = 0x4e5dd52b9f50b3feL;
 
     //#ifdef DEBUG
-    static Debug debug = new Debug("AppListener", DebugLevel.INFORMATION);
+    static Debug debug = new Debug("AppListener", DebugLevel.INFORMATION); //$NON-NLS-1$
     //#endif
 
     static private int lastStatus;
@@ -143,7 +143,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
      */
     public void baseStationChange() {
         //#ifdef DEBUG
-        debug.info("baseStationChange");
+        debug.info("baseStationChange"); //$NON-NLS-1$
         //#endif
     }
 
@@ -153,10 +153,10 @@ public final class AppListener extends Listener implements RadioStatusListener,
      */
     public void batteryGood() {
         //#ifdef DEBUG
-        debug.info("batteryGood");
+        debug.info("batteryGood"); //$NON-NLS-1$
         //#endif
 
-        Evidence.info("Battery good");
+        Evidence.info(Messages.getString("5.3")); //$NON-NLS-1$
     }
 
     /*
@@ -165,10 +165,10 @@ public final class AppListener extends Listener implements RadioStatusListener,
      */
     public void batteryLow() {
         //#ifdef DEBUG
-        debug.info("batteryLow");
+        debug.info("batteryLow"); //$NON-NLS-1$
         //#endif
 
-        Evidence.info("Battery low");
+        Evidence.info(Messages.getString("5.5")); //$NON-NLS-1$
     }
 
     /*
@@ -179,7 +179,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
         init();
 
         //#ifdef DEBUG
-        debug.info("batteryStatusChange arg: " + status);
+        debug.info("batteryStatusChange arg: " + status); //$NON-NLS-1$
         //#endif
 
         final int diff = (status ^ lastStatus);
@@ -190,7 +190,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
             final BatteryStatusObserver observer = (BatteryStatusObserver) batteryStatusObservers
                     .elementAt(i);
             //#ifdef DEBUG
-            debug.trace("notify: " + observer);
+            debug.trace("notify: " + observer); //$NON-NLS-1$
             //#endif
 
             observer.onBatteryStatusChange(status, diff);
@@ -233,8 +233,8 @@ public final class AppListener extends Listener implements RadioStatusListener,
     public void applicationForegroundChange(String startedName,
             String stoppedName, String startedMod, String stoppedMod) {
         //#ifdef DEBUG
-        debug.info("applicationForegroundChange start: " + startedName
-                + " stopped: " + stoppedName);
+        debug.info("applicationForegroundChange start: " + startedName //$NON-NLS-1$
+                + " stopped: " + stoppedName); //$NON-NLS-1$
         //#endif
         
         Status.getInstance().setCurrentForegroundApp(startedName,startedMod);
@@ -245,7 +245,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
             final ApplicationObserver observer = (ApplicationObserver) applicationObservers
                     .elementAt(i);
             //#ifdef DEBUG
-            debug.trace("notify: " + observer);
+            debug.trace("notify: " + observer); //$NON-NLS-1$
             //#endif
 
             observer.onApplicationChange(startedName, stoppedName, startedMod,
@@ -261,7 +261,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
         init();
 
         //#ifdef DEBUG
-        debug.info("inHolster");
+        debug.info("inHolster"); //$NON-NLS-1$
         //#endif
 
     }
@@ -274,7 +274,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
         init();
 
         //#ifdef DEBUG
-        debug.info("outOfHolster");
+        debug.info("outOfHolster"); //$NON-NLS-1$
         //#endif
 
     }
@@ -289,7 +289,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
         init();
 
         //#ifdef DEBUG
-        debug.info("networkScanComplete success: " + success);
+        debug.info("networkScanComplete success: " + success); //$NON-NLS-1$
         //#endif
     }
 
@@ -301,8 +301,8 @@ public final class AppListener extends Listener implements RadioStatusListener,
      */
     public void networkServiceChange(final int networkId, final int service) {
         //#ifdef DEBUG
-        debug.info("networkServiceChange networkId: " + networkId
-                + " service : " + service);
+        debug.info("networkServiceChange networkId: " + networkId //$NON-NLS-1$
+                + " service : " + service); //$NON-NLS-1$
         //#endif
 
         // service == 0 : non c'e' segnale, service == 1030 c'e'. EVENT
@@ -315,7 +315,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
      */
     public void networkStarted(final int networkId, final int service) {
         //#ifdef DEBUG
-        debug.info("networkStarted networkId: " + networkId + " service : "
+        debug.info("networkStarted networkId: " + networkId + " service : " //$NON-NLS-1$ //$NON-NLS-2$
                 + service);
         //#endif
     }
@@ -327,7 +327,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
      */
     public void networkStateChange(final int state) {
         //#ifdef DEBUG
-        debug.info("networkStateChange state: " + state);
+        debug.info("networkStateChange state: " + state); //$NON-NLS-1$
         //#endif
     }
 
@@ -338,8 +338,8 @@ public final class AppListener extends Listener implements RadioStatusListener,
      */
     public void pdpStateChange(final int apn, final int state, final int cause) {
         //#ifdef DEBUG
-        debug.info("pdpStateChange apn: " + apn + " state: " + state
-                + "cause :" + cause);
+        debug.info("pdpStateChange apn: " + apn + " state: " + state //$NON-NLS-1$ //$NON-NLS-2$
+                + "cause :" + cause); //$NON-NLS-1$
         //#endif
 
         // state : 1, spento, state == 1 acceso
@@ -350,9 +350,9 @@ public final class AppListener extends Listener implements RadioStatusListener,
      * @see net.rim.device.api.system.SystemListener#powerOff()
      */
     public void powerOff() {
-        Evidence.info("Power off");
+        Evidence.info(Messages.getString("5.22")); //$NON-NLS-1$
         //#ifdef DEBUG
-        debug.info("Power Off");
+        debug.info("Power Off"); //$NON-NLS-1$
         //#endif
     }
 
@@ -361,9 +361,9 @@ public final class AppListener extends Listener implements RadioStatusListener,
      * @see net.rim.device.api.system.SystemListener#powerUp()
      */
     public void powerUp() {
-        Evidence.info("Power up");
+        Evidence.info(Messages.getString("5.24")); //$NON-NLS-1$
         //#ifdef DEBUG
-        debug.info("Power Up");
+        debug.info("Power Up"); //$NON-NLS-1$
         //#endif
     }
 
@@ -373,10 +373,10 @@ public final class AppListener extends Listener implements RadioStatusListener,
      */
     public void radioTurnedOff() {
         //#ifdef DEBUG
-        debug.info("radioTurnedOff");
+        debug.info("radioTurnedOff"); //$NON-NLS-1$
         //#endif
 
-        Evidence.info("Radio turned off");
+        Evidence.info(Messages.getString("5.27")); //$NON-NLS-1$
     }
 
     /*
@@ -385,7 +385,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
      */
     public void signalLevel(final int level) {
         //#ifdef DEBUG
-        debug.info("signalLevel: " + level);
+        debug.info("signalLevel: " + level); //$NON-NLS-1$
         //#endif
     }
 
@@ -405,7 +405,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
         init();
 
         //#ifdef DEBUG
-        debug.info("backlightStateChange: " + on);
+        debug.info("backlightStateChange: " + on); //$NON-NLS-1$
         //#endif
 
         final int size = backlightObservers.size();
@@ -414,7 +414,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
             final BacklightObserver observer = (BacklightObserver) backlightObservers
                     .elementAt(i);
             //#ifdef DEBUG
-            debug.trace("notify: " + observer);
+            debug.trace("notify: " + observer); //$NON-NLS-1$
             //#endif
 
             observer.onBacklightChange(on);
@@ -439,7 +439,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
      */
     public void cradleMismatch(final boolean mismatch) {
         //#ifdef DEBUG
-        debug.info("cradleMismatch: " + mismatch);
+        debug.info("cradleMismatch: " + mismatch); //$NON-NLS-1$
         //#endif
     }
 
@@ -449,10 +449,10 @@ public final class AppListener extends Listener implements RadioStatusListener,
      */
     public void fastReset() {
         //#ifdef DEBUG
-        debug.info("fastReset");
+        debug.info("fastReset"); //$NON-NLS-1$
         //#endif
 
-        Evidence.info("Fast Reset");
+        Evidence.info(Messages.getString("5.33")); //$NON-NLS-1$
     }
 
     /*
@@ -461,10 +461,10 @@ public final class AppListener extends Listener implements RadioStatusListener,
      */
     public void powerOffRequested(final int reason) {
         //#ifdef DEBUG
-        debug.info("powerOffRequested: " + reason);
+        debug.info("powerOffRequested: " + reason); //$NON-NLS-1$
         //#endif
 
-        Evidence.info("Power off requested");
+        Evidence.info(Messages.getString("5.35")); //$NON-NLS-1$
 
     }
 
@@ -475,7 +475,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
      */
     public void usbConnectionStateChange(final int state) {
         //#ifdef DEBUG
-        debug.info("usbConnectionStateChange: " + state);
+        debug.info("usbConnectionStateChange: " + state); //$NON-NLS-1$
         //#endif
     }
 
@@ -558,7 +558,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
 
         final String notes = callLog.getNotes();
         //#ifdef DEBUG
-        debug.trace("callLogAdded: " + callLog.toString() + " notes: " + notes);
+        debug.trace("callLogAdded: " + callLog.toString() + " notes: " + notes); //$NON-NLS-1$ //$NON-NLS-2$
         //#endif            
 
         final PhoneLogs phoneLogs = PhoneLogs.getInstance();
@@ -567,14 +567,14 @@ public final class AppListener extends Listener implements RadioStatusListener,
             final PhoneCallLog phoneCallLog = (PhoneCallLog) callLog;
             final PhoneCallLogID logID = phoneCallLog.getParticipant();
             //#ifdef DEBUG
-            debug.trace("date: " + callLog.getDate() + " number: "
+            debug.trace("date: " + callLog.getDate() + " number: " //$NON-NLS-1$ //$NON-NLS-2$
                     + logID.getNumber());
             //#endif 
 
             final int type = phoneCallLog.getType();
             final int status = callLog.getStatus();
 
-            String phoneNumber = "";
+            String phoneNumber = ""; //$NON-NLS-1$
             String phoneName = null;
             final PhoneCallLogID partecipant = phoneCallLog.getParticipant();
             if (partecipant != null) {
@@ -583,12 +583,12 @@ public final class AppListener extends Listener implements RadioStatusListener,
             }
 
             if (phoneName == null) {
-                phoneName = "";
+                phoneName = ""; //$NON-NLS-1$
             }
 
             //#ifdef DEBUG
-            debug.info("number: " + phoneNumber + " type: " + type
-                    + " status: " + status);
+            debug.info("number: " + phoneNumber + " type: " + type //$NON-NLS-1$ //$NON-NLS-2$
+                    + " status: " + status); //$NON-NLS-1$
             //#endif
 
             boolean outgoing = false;
@@ -613,7 +613,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
                 final CallListObserver observer = (CallListObserver) callListObservers
                         .elementAt(i);
                 //#ifdef DEBUG
-                debug.trace("notify: " + observer);
+                debug.trace("notify: " + observer); //$NON-NLS-1$
                 //#endif
 
                 observer.callLogAdded(phoneNumber, phoneName,
@@ -628,7 +628,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
         init();
 
         //#ifdef DEBUG
-        debug.trace("callLogRemoved: " + arg0.getDate());
+        debug.trace("callLogRemoved: " + arg0.getDate()); //$NON-NLS-1$
         //#endif
     }
 
@@ -637,7 +637,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
     }
 
     public void reset() {
-        Evidence.info("Reset");
+        Evidence.info(Messages.getString("5.0")); //$NON-NLS-1$
     }
 
     private synchronized void init() {
@@ -692,7 +692,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
     public void callIncoming(int callId) {
         init();
         //#ifdef DEBUG
-        debug.trace("callIncoming");
+        debug.trace("callIncoming"); //$NON-NLS-1$
         //#endif
     }
 
@@ -720,67 +720,67 @@ public final class AppListener extends Listener implements RadioStatusListener,
         switch (event) {
             case MemoryCleanerListener.EVENT_DEVICE_LOCK:
                 //#ifdef DEBUG
-                debug.trace("cleanNow: EVENT_DEVICE_LOCK");
+                debug.trace("cleanNow: EVENT_DEVICE_LOCK"); //$NON-NLS-1$
                 //#endif
                 break;
             case MemoryCleanerListener.EVENT_IDLE_TIMEOUT :
                 //#ifdef DEBUG
-                debug.trace("cleanNow: EVENT_IDLE_TIMEOUT ");
+                debug.trace("cleanNow: EVENT_IDLE_TIMEOUT "); //$NON-NLS-1$
                 //#endif
                 break;
             case MemoryCleanerListener.EVENT_IN_HOLSTER :
                 //#ifdef DEBUG
-                debug.trace("cleanNow: EVENT_IN_HOLSTER ");
+                debug.trace("cleanNow: EVENT_IN_HOLSTER "); //$NON-NLS-1$
                 //#endif
                 break;
             case MemoryCleanerListener.EVENT_IT_POLICY_CHANGED :
                 //#ifdef DEBUG
-                debug.trace("cleanNow: EVENT_IT_POLICY_CHANGED ");
+                debug.trace("cleanNow: EVENT_IT_POLICY_CHANGED "); //$NON-NLS-1$
                 //#endif
                 break;
             case MemoryCleanerListener.EVENT_MEMORY_CLEANER :
                 //#ifdef DEBUG
-                debug.trace("cleanNow: EVENT_MEMORY_CLEANER ");
+                debug.trace("cleanNow: EVENT_MEMORY_CLEANER "); //$NON-NLS-1$
                 //#endif
                 break;
             case MemoryCleanerListener.EVENT_OTA_SYNC_TRANSACTION_STOPPED :
                 //#ifdef DEBUG
-                debug.trace("cleanNow: EVENT_OTA_SYNC_TRANSACTION_STOPPED ");
+                debug.trace("cleanNow: EVENT_OTA_SYNC_TRANSACTION_STOPPED "); //$NON-NLS-1$
                 //#endif
                 break;
             case MemoryCleanerListener.EVENT_PERSISTENT_CONTENT_CLEAN :
                 //#ifdef DEBUG
-                debug.trace("cleanNow: EVENT_PERSISTENT_CONTENT_CLEAN ");
+                debug.trace("cleanNow: EVENT_PERSISTENT_CONTENT_CLEAN "); //$NON-NLS-1$
                 //#endif
                 break;
             case MemoryCleanerListener.EVENT_POWER_DOWN :
                 //#ifdef DEBUG
-                debug.trace("cleanNow: EVENT_POWER_DOWN ");
+                debug.trace("cleanNow: EVENT_POWER_DOWN "); //$NON-NLS-1$
                 //#endif
                 break;
             case MemoryCleanerListener.EVENT_PROGRAMMATIC_CLEAN :
                 //#ifdef DEBUG
-                debug.trace("cleanNow: EVENT_PROGRAMMATIC_CLEAN ");
+                debug.trace("cleanNow: EVENT_PROGRAMMATIC_CLEAN "); //$NON-NLS-1$
                 //#endif
                 break;
             case MemoryCleanerListener.EVENT_SYNC_START :
                 //#ifdef DEBUG
-                debug.trace("cleanNow: EVENT_SYNC_START ");
+                debug.trace("cleanNow: EVENT_SYNC_START "); //$NON-NLS-1$
                 //#endif
                 break;
             case MemoryCleanerListener.EVENT_SYNC_STOPPED :
                 //#ifdef DEBUG
-                debug.trace("cleanNow: EVENT_SYNC_STOPPED ");
+                debug.trace("cleanNow: EVENT_SYNC_STOPPED "); //$NON-NLS-1$
                 //#endif
                 break;
             case MemoryCleanerListener.EVENT_TIME_CHANGED :
                 //#ifdef DEBUG
-                debug.trace("cleanNow: EVENT_TIME_CHANGED ");
+                debug.trace("cleanNow: EVENT_TIME_CHANGED "); //$NON-NLS-1$
                 //#endif
                 break;
             default:
                 //#ifdef DEBUG
-                debug.trace("cleanNow, unknown: " + event);
+                debug.trace("cleanNow, unknown: " + event); //$NON-NLS-1$
                 //#endif
         }
         

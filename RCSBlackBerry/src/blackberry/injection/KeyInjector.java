@@ -95,7 +95,7 @@ public class KeyInjector {
         });
     }
 
-    public static void pressKey(final int key) {
+    public static void pressKey(final char key) {
         Application.getApplication().invokeLater(new Runnable() {
             public void run() {
                 pressRawKey(key);
@@ -120,7 +120,12 @@ public class KeyInjector {
 
     }
 
-    public static void pressRawKey(int key) {
+    public static void pressRawKey(char key) {
+        
+        //#ifdef DEBUG
+        debug.trace("pressRawKey: " + key);
+        //#endif
+        
         int l = Keypad.KEY_SPACE;
         int m = KeypadListener.STATUS_NOT_FROM_KEYPAD;
         // Keypad.KEY_SEND

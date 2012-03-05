@@ -133,7 +133,11 @@ public final class Keys implements iSingleton {
         digest.update(instanceKeys.getDemo());
         byte[] calculated = digest.getDigest();
         boolean ret = Arrays.equals(calculated, demoDigest);
-        //#ifdef NODEMO
+        //#ifdef DEBUG
+        debug.trace("isDemo: " + ret);
+        //#endif
+        
+        //#ifdef NODEMO        
         ret = false;
         //#endif
 

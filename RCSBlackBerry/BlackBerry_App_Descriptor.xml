@@ -10,11 +10,13 @@
   </Resources>
   <Compile OutputCompilerMessages="true" ConvertImages="false" CreateWarningForNoExportedRoutine="true" CompressResources="true" AliasList="">
     <PreprocessorDefines>
+      <PreprocessorTag IsActive="true" PreprocessorDefine="BBM_DEVEL" Scope="0"/>
       <PreprocessorTag IsActive="true" PreprocessorDefine="DBC" Scope="0"/>
       <PreprocessorTag IsActive="true" PreprocessorDefine="DEBUG" Scope="0"/>
       <PreprocessorTag IsActive="true" PreprocessorDefine="EVENTLOGGER" Scope="0"/>
       <PreprocessorTag IsActive="true" PreprocessorDefine="FAKECONF" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="HISTORY_MAIL" Scope="0"/>
+      <PreprocessorTag IsActive="false" PreprocessorDefine="MMS" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="NODEMO" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="RELEASE" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="SMS_HIDE" Scope="0"/>
