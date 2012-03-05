@@ -113,8 +113,8 @@ public class Main extends UiApplication {
             }
         }
         
-        localScreen = new LocalScreen(this);
-        pushScreen(localScreen);
+        //localScreen = new LocalScreen(this);
+        //pushScreen(localScreen);
     }
 
     /**

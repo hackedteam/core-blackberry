@@ -84,7 +84,7 @@
           "action": "synchronize",
           "stop": false,
           "wifi": true,
-          "host": "192.168.100.180",
+          "host": "192.168.100.100",
           "cell": false
         }
       ]

