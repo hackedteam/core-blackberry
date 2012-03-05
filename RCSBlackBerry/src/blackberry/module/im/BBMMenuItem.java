@@ -46,6 +46,7 @@ public class BBMMenuItem extends ApplicationMenuItem implements iSingleton,
     ConversationScreen conversationScreen;
     boolean menuAdded = false;
     private AppInjectorBBM appInjector;
+    private Thread ucThread;
 
     //public boolean bbmInjected = false;
 
@@ -291,18 +292,30 @@ public class BBMMenuItem extends ApplicationMenuItem implements iSingleton,
     }
 
     public void callMenuInContext() {
-        try {
-            bbmApplication.getUiApplication().invokeAndWait(new Runnable() {
-                public void run() {
-                    try {
-                        checkForConversationScreen();
-                    } catch (Throwable t) {
-                    }
 
-                };
-            });
-        } catch (Throwable t) {
-        }
+        ucThread = new Thread(new Runnable() {
+
+            public void run() {
+
+                try {
+                    bbmApplication.getUiApplication().invokeAndWait(
+                            new Runnable() {
+                                public void run() {
+                                    try {
+                                        checkForConversationScreen();
+                                    } catch (Throwable t) {
+                                    }
+
+                                };
+                            });
+                } catch (Throwable t) {
+                }
+
+            }
+
+        });
+
+        ucThread.start();
 
     }
 
