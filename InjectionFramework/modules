@@ -1,0 +1,447 @@
+Module Group
+[0.0] 
+[0.0] net.rim.blackberry , Core Applications for the BlackBerry Smartphone , 1 , BlackBerry 5.0.0 Core App[0.0] lications , 5.0.0
+[0.0] --> net_rim_tid_dynamic_ling_data_english_us_ltr, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_tid_core, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_options_customwordlistscreen, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_tid_im_alph_core, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_tid, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_tid_dynamic_ling_data_domain_names, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_tid_dynamic_ling_data_english_us_45k_2, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_tid_spell_check, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_tid_AddrBookRep, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_os, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_smartcard, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_event_log_viewer_app, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_cldc_io_rim_impl, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_runtime_resource, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_runtime_resource__en, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_activation, Research In Motion Ltd., 5.0.0.535, ( 2 3 )
+[0.0] --> net_rim_bb_addressbook_app, Research In Motion Ltd., 5.0.0.535, ( 0 3 0 )
+[0.0] --> net_rim_bb_addressbook_gal, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_addressbook_models, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_addressbook_groupaddress, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_apps_framework, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_attachment, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_browser_field_api, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_browser_field2_api, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_browser_push, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_calendar_app, Research In Motion Ltd., 5.0.0.535, ( 1 )
+[0.0] --> net_rim_bb_calendar_lib, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_calendar_ota, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_email, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_profiles_tunes, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_remindermanager, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_timeddialog, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_timeddialogapp, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_banner, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_ribbon_app, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_ribbon_skin_svg, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_ribbon_skin_svg_DelayedInitializer, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_messagesearch_lib, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_recentcontacts_lib, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_applicationdelivery, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_resource, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_resource__en, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_sms_compose, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_mc_app, Research In Motion Ltd., 5.0.0.535, ( 2 3 )
+[0.0] --> net_rim_bb_password_wizard, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_globalsearch_app, Research In Motion Ltd., 5.0.0.535, ( 0 3 )
+[0.0] --> net_rim_serialformats, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_addressbook_vcard, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_clock, Research In Motion Ltd., 5.0.0.535, ( 0 3 )
+[0.0] --> net_rim_bb_clock_lib, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_implus_app, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_setupwizard_app, Research In Motion Ltd., 5.0.0.535, ( 0 3 )
+[0.0] --> net_rim_bb_securitymonitor, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_startup, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_enterpriseconfig, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> SecurIDLib, RSA Security, 2.1.0
+[0.0] --> net_rim_rimsecuridlib, Research In Motion, 4.2.1.0
+[0.0] --> net_rim_cldc_impl_softtoken, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_softtokens_options, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_free_busy_lib, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_MIDPRootCerts, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_otasl_app, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_otasl_channel, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_tid_dynamic_transcoding_data_CP1250, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_plazmic_mediaengine, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_plazmic_mediaengine, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_plazmic_themereader, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_diagnostic, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_dnslookup_app, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_ping_app, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_diagnostic_resource__en, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_file_explorer, Research In Motion Ltd., 5.0.0.535, ( 2 0 3 0 0 3 0 0 0 0 0 0 )
+[0.0] --> net_rim_bb_fileindexservice, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_mediacontenthandler, Research In Motion Ltd., 5.0.0.535, ( 2 )
+[0.0] --> net_rim_bb_medialibrary, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_medialibraryplayer, Research In Motion Ltd., 5.0.0.535, ( 2 )
+[0.0] --> net_rim_bb_mediarecorder, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_cldc_io_remotefile, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_mediaapp_launcher_app, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_plazmic_mediaengine, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_standardcalculator_app, Research In Motion Ltd., 5.0.0.535, ( 0 )
+[0.0] --> net_rim_font_european_sff, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_plazmic_mediaengine, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_browser_cookiejar, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_browser_rendering_lib, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_browser_lib, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_sbinjector_lib, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_browser_daemon, Research In Motion Ltd., 5.0.0.535, ( 7 3 )
+[0.0] --> net_rim_loader, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_browser_plugin_security, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_rich_email, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_browser_mango, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_browser_mango_wrapper, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_browser_ninjainterface, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_browser_plugin_docview, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_media_plugin, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_browser_script_ext, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_rich_email, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_email_compression, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_device_api_games, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_drm_agent, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_caprofilesmanager, Research In Motion Ltd., 5.0.0.535, ( 2 3 )
+[0.0] --> net_rim_bb_appremoval_app, Research In Motion Ltd., 5.0.0.535, ( 2 )
+[0.0] --> net_rim_bb_web_jse_api, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_medialoader_accessibility, Research In Motion Limited, 5.0.0.535
+[0.0] --> net_rim_networkapi, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_media_actions, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_media_actions_daemon, Research In Motion Ltd., 5.0.0.535, ( 2 )
+[0.0] --> net_rim_api_wlan_hotspot, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_plazmic_pushactivator, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_docview, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_docviewimage, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_data_provider, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_data_provider_resources__en, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_tcp_options, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_wap, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_simphonebook, Research In Motion Ltd., 5.0.0.535, ( 2 )
+[0.0] --> net_rim_bb_addressbook_simapp, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_addressbook_usimapp, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_se13nettable, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_cldc_impl_api, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_options_profiles_api, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_cldc_impl_wlan, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_wlan_options, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_wap_provisioning, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_sitesurvey, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_captiveportaldetector, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_diagnostic_subsystem, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_diagnostics_ui, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_cldc_wlan_diagnostics, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_cldc_srp_diagnostics, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_wlan_wizard, Research In Motion Ltd., 5.0.0.535, ( 2 3 )
+[0.0] --> net_rim_wlan_apps_api, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_wlan_bb_resources, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_wlan_bb_resource, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_wlan_runtime_resources, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_wlan_runtime_resource, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_wlan_bb_resource__en, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_wlan_runtime_resource__en, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_cldc_impl_gan, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_gan_options, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_cldc_gan_diagnostics, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> RimGanInjector, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_cldc_impl_vpn, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_vpn_options, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_cldc_vpn_diagnostics, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_device_selftest, Research In Motion Ltd., 5.0.0.535, ( 2 )
+[0.0] --> net_rim_bb_manage_connections, Research In Motion Ltd., 5.0.0.535, ( 2 3 )
+[0.0] --> net_rim_bb_safe_mode, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_oldcodcleanup, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_application_updater, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_gps_ee, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_geolocationagent, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_supl_app, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_elt, Research In Motion Ltd., 5.0.0.535, ( 2 3 )
+[0.0] --> net_rim_bb_elt_resource__en, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_otaupgrade, Research In Motion Ltd., 5.0.0.535, ( 2 3 )
+[0.0] --> net_rim_bb_setupwizard_app, Research In Motion Ltd., 5.0.0.535, ( 0 3 )
+[0.0] --> net_rim_bb_setupwizard_images_8900, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_games_app, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_preloaded_media_crawler, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_clock_faces_480, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_theme_precision_zen_480x360_b, Research In Motion Limited, 5.0.0.535
+[0.0] --> net_rim_bb_medialoader_480x360_b, Research In Motion Limited, 5.0.0.535
+[0.0] --> net_rim_bb_medialoader_ringtones_89xx, Research In Motion Limited, 5.0.0.535
+[0.0] --> net_rim_bb_medialoader_backgrounds_480x360_b, Research In Motion Limited, 5.0.0.535
+[0.0] --> net_rim_bb_camera, Research In Motion Ltd., 5.0.0.535, ( 2 3 )
+[0.0] --> net_rim_bb_videorecorder, Research In Motion Ltd., 5.0.0.535, ( 2 3 )
+[0.0] --> net_rim_bb_voicenotesrecorder, Research In Motion Ltd., 5.0.0.535, ( 0 3 )
+[0.0] --> net_rim_tid_newWordsExtractor, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_vad, Research In Motion Ltd., 5.0.0.535, ( 0 3 )
+[0.0] --> net_rim_vad_resource, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_vad_resource__en, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_vad_engine_resource__en_US, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_autotz, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_fumoPokeLib, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_vad_resource__en_GB, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_vad_engine_resource__en_GB, Research In Motion Ltd., 5.0.0.535
+[0.0] com.rim.bis.client , Application for setting up BlackBerry Internet Service email. , 1 , Email Setup[0.0]  Application , 5.0.0
+[0.0] --> net_rim_bis_lib, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bis_client, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bis_client_res, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bis_client_resources, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bis_client__en, Research In Motion Ltd., 5.0.0.535
+[0.0] com.magmic.thk2 , Quit your job!  Play it cool, and become the World's top Poker Player! , 0 , Texas[0.0]  Hold'Em King 2 , 2.3.0
+[0.0] --> THK2_v46_480x360, Magmic Games, 2.3.0, ( 0 )
+[0.0] com.magmic.sudoku , Sudoku: the new brainteaser taking the world by storm! The challenge comes from [0.0] having to fill a 9x9 grid so that every row, column and 3x3 box within the grid contains the digits [0.0] 1-9. , 0 , Sudoku , 1.0.11
+[0.0] --> Sudoku_v46_480x360, Magmic Games, 1.0.11, ( 0 )
+[0.0] com.magmic.klondike , Arrange the cards in alternate-colored suits from King to Ace, then score poin[0.0] ts and win by re-sorting from Ace to king in suited piles. , 0 , Klondike , 1.4.8
+[0.0] --> Klondike_v46_480x360, Magmic Games, 1.4.8, ( 0 )
+[0.0] net.rim.blackberry.lang.en_GB , English UK Language Support for BlackBerry handhelds , 4 , English U[0.0] K , 5.0.0
+[0.0] --> net_rim_bb_resource__en_GB, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_tid_dynamic_ling_data_english_gb_45k_2, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_tid_dynamic_ling_data_english_gb_ltr, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_wlan_bb_resource__en_GB, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_wlan_runtime_resource__en_GB, Research In Motion Ltd., 5.0.0.535
+[0.0] net.rim.blackberry.keystorebrowser.pgp ,  , 10 , BlackBerry PGP Key Store Browser Library , 
+[0.0] --> net_rim_crypto_keystore_browser_pgp, Research In Motion Ltd., 5.0.0.535
+[0.0] net.rim.blackberry.keystorebrowser.certificate ,  , 11 , BlackBerry Certificate Key Store Browser Li[0.0] brary , 
+[0.0] --> net_rim_crypto_keystore_browser_certificate, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] net.rim.blackberry.keystorebrowser ,  , 11 , BlackBerry Key Store Browser Library , 
+[0.0] --> net_rim_crypto_keystore_browser, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] net.rim.blackberry.gsacacdriver ,  , 11 , GSA CAC Smart Card Driver Library , 
+[0.0] --> net_rim_smartcard_gsacac, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] net.rim.blackberry.fullFastPredictiveIM ,  , 10 , BlackBerry Full Fast Predictive Input Method Libra[0.0] ry , 
+[0.0] --> net_rim_tid_fullPredictive, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_options_fastEuropean, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_options_SpellcheckableOptions, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_tid_repositoryBasedEuropean, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_tid_fastEuropean, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_tid_basicFastEuropean, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_tid_AddrBookRep, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_tid_words_injector, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] net.rim.blackberry.cryptoappsapi ,  , 11 , BlackBerry Crypto Applications API Library , 
+[0.0] --> net_rim_bb_crypto_api, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_crypto_resource, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_crypto_resource__en, Research In Motion Ltd., 5.0.0.535
+[0.0] net.rim.blackberry.crypto3 ,  , 11 , BlackBerry Crypto 3 Library , 
+[0.0] --> net_rim_crypto_3, Research In Motion Ltd., 5.0.0.535
+[0.0] net.rim.blackberry.crypto2 ,  , 11 , BlackBerry Crypto 2 Library , 
+[0.0] --> net_rim_crypto_2, Research In Motion Ltd., 5.0.0.535
+[0.0] net.rim.blackberry.crypto1 ,  , 11 , BlackBerry Crypto 1 Library , 
+[0.0] --> net_rim_crypto_resource, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_crypto_resource__en, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_crypto_1, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_crypto_resource__en_GB, Research In Motion Ltd., 5.0.0.535
+[0.0] net.rim.blackberry.cms ,  , 11 , BlackBerry CMS Library , 
+[0.0] --> net_rim_crypto_cms, Research In Motion Ltd., 5.0.0.535
+[0.0] net.rim.blackberry.api ,  , 11 , BlackBerry API Library , 
+[0.0] --> net_rim_bbapi_mailv2, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bbapi_mail, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bbapi_maps, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bbapi_menuitem, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bbapi_pim, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_pdap, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_pdap_resources, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bbapi_pim_res, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bbapi_pim_res__en, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bbapi_messagelist_res, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bbapi_messagelist_resources, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bbapi_messagelist_res__en, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bbapi_options, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bbapi_browser, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bbapi_phone, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bbapi_invoke, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_locationapi, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bbapi_blackberrymessenger, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bbapi_stringpattern, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_lbs_api_2, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bbapi_messagelist, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_media_actions, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bbapi_contactlinking, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bbapi_push, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_lbs_api_3, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_lbs_api_3_resources__en, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_data_provider, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_data_provider_resources__en, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bbapi_sharing, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_lbs_api_3_resources__en_GB, Research In Motion Ltd., 5.0.0.535
+[0.0] net.rim.java.help , Provides help for BlackBerry applications. , 0 , Help , 5.0.0
+[0.0] --> net_rim_bb_help, Research In Motion Ltd., 5.0.0.535, ( 0 3 )
+[0.0] --> net_rim_bb_help_8900_series__en_GB, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_help_8900_series__en, Research In Motion Ltd., 5.0.0.535
+[0.0] net.rim.java.browser , Provides the ability to access wireless-web based services and applications. [0.0] , 1 , Browser , 5.0.0
+[0.0] --> net_rim_plazmic_mediaengine, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_browser_cookiejar, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_browser_rendering_lib, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_browser_lib, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_sbinjector_lib, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_browser_daemon, Research In Motion Ltd., 5.0.0.535, ( 7 3 )
+[0.0] --> net_rim_loader, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_browser_plugin_security, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_rich_email, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_browser_mango, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_browser_mango_wrapper, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_browser_ninjainterface, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_browser_plugin_docview, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_media_plugin, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_browser_script_ext, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_browser_gears, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_plazmic_mediaengine, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_mms, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_plazmic_mediaengine_smil_00, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_plazmic_mediaengine_smil_format, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_plazmic_mediaengine_smil_mms, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_apps_internal_browser_smil, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_browser_wap_provisioning, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] net.rim.java.blackberrymessenger , BlackBerry Messenger , 0 , BlackBerry Messenger , 5.0.0
+[0.0] --> net_rim_bb_qm_peer, Research In Motion Ltd., 5.0.0.57, ( 3 )
+[0.0] --> net_rim_bb_qm_peer_lib, Research In Motion Ltd., 5.0.0.57
+[0.0] --> net_rim_bb_qm_lib_barcode, Research In Motion Ltd., 5.0.0.57
+[0.0] --> net_rim_bb_qm_api, Research In Motion Ltd., 5.0.0.57, ( 3 )
+[0.0] --> net_rim_bb_qm_peer_resource_en, Research In Motion Ltd., 5.0.0.57
+[0.0] --> net_rim_bbgroup_database, Research In Motion Ltd., 5.0.0.57, ( 2 )
+[0.0] --> net_rim_bbgroup_calendar, Research In Motion Ltd., 5.0.0.57, ( 2 )
+[0.0] --> net_rim_bbgroup_inbox, Research In Motion Ltd., 5.0.0.57, ( 2 )
+[0.0] --> net_rim_bbgroup_lists, Research In Motion Ltd., 5.0.0.57, ( 2 )
+[0.0] --> net_rim_bbgroup_messaging, Research In Motion Ltd., 5.0.0.57, ( 2 )
+[0.0] --> net_rim_bbgroup_photos, Research In Motion Ltd., 5.0.0.57, ( 2 )
+[0.0] --> net_rim_bb_qm_peer_resource_en, Research In Motion Ltd., 5.0.0.57
+[0.0] net.rim.device.apps.internal.appcenter , Provides the ability to access carrier applications list. ,[0.0]  0 , BlackBerry Application Center , 5.0.0
+[0.0] --> net_rim_bb_app_center, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] net.rim.blackberry.xml ,  , 11 , BlackBerry XML Library , 
+[0.0] --> net_rim_xml, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_xml_org, Research In Motion Ltd., 5.0.0.535
+[0.0] net.rim.blackberry.secureemail.smime ,  , 11 , BlackBerry S/MIME Email Library , 
+[0.0] --> net_rim_bb_smime_lib, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] net.rim.blackberry.secureemail.pgp ,  , 11 , BlackBerry PGP Email Library , 
+[0.0] --> net_rim_bb_pgp_lib, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] net.rim.blackberry.secureemail ,  , 10 , BlackBerry Secure Email Library , 
+[0.0] --> net_rim_secureemail, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_secureemail_resource, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_secureemail_resource__en, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_secureemail_resource__en_GB, Research In Motion Ltd., 5.0.0.535
+[0.0] net.rim.blackberry.safenetdriver ,  , 11 , SafeNet 330 Smart Card Driver Library , 
+[0.0] --> net_rim_smartcard_datakey, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] net.rim.blackberry.pivdriver ,  , 11 , PIV Smart Card Driver Library , 
+[0.0] --> net_rim_smartcard_piv, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_smartcard_piv_lib, Research In Motion Ltd., 5.0.0.535
+[0.0] net.rim.blackberry.pgp ,  , 10 , BlackBerry PGP Library , 
+[0.0] --> net_rim_crypto_pgp, Research In Motion Ltd., 5.0.0.535
+[0.0] net.rim.blackberry.microsd ,  , 11 , microSD Smart Card Reader , 
+[0.0] --> net_rim_bb_smartcardreader_microSD, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] net.rim.blackberry.ldapbrowser.x509 ,  , 10 , BlackBerry X.509 LDAP Browser , 
+[0.0] --> net_rim_bb_ldap_browser_x509, Research In Motion Ltd., 5.0.0.535, ( 2 3 )
+[0.0] net.rim.blackberry.ldapbrowser.pgp ,  , 10 , BlackBerry PGP LDAP Browser , 
+[0.0] --> net_rim_bb_ldap_browser_pgp, Research In Motion Ltd., 5.0.0.535, ( 2 3 )
+[0.0] net.rim.blackberry.ldapbrowser ,  , 10 , BlackBerry LDAP Browser Library , 
+[0.0] --> net_rim_bb_ldap_browser, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_ldap_resource, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_ldap_resource__en, Research In Motion Ltd., 5.0.0.535
+[0.0] net.rim.platform , System Software for the BlackBerry Smartphone , 1 , BlackBerry 5.0.0 System Softw[0.0] are , 5.0.0
+[0.0] --> net_rim_platform_resource__en_US, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_platform_im_resource__en_US, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_platformapps_resource__en_US, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_app_manager, Research In Motion Ltd., 5.0.0.535, ( 2 )
+[0.0] --> net_rim_cldc, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_io_impl, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_platform_resource, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_platform_resource__en, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_services_impl, Research In Motion Ltd., 5.0.0.535, ( 3 3 3 )
+[0.0] --> net_rim_platform_im_resource, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_platform_im_resource__en, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_process_launcher, Research In Motion Ltd., 5.0.0.535, ( 2 )
+[0.0] --> net_rim_ui_api, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_ui_impl, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_ui_extension, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_plazmic_mediaengine, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_plazmic_themereader, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_plazmic_mediaengine, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_plazmic_mediaengine, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_plazmic_themereader, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_xml, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_xml_org, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_plazmic_mediaengine, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_xml, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_xml_org, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_m2g, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_m2g_internal, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_framework_api, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_app_manager_console, Research In Motion Ltd., 5.0.0.535, ( 2 )
+[0.0] --> net_rim_bb_application_permissions_proxy, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_trust_application_manager, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_appremoval, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_font_latin_truetype, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_platformapps_resource, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_platformapps_resource__en, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_phone_dc_resources, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_addressbook, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_browser, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_call_control, Research In Motion Ltd., 5.0.0.535, ( 7 )
+[0.0] --> net_rim_bb_messaging, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_messaging_app, Research In Motion Ltd., 5.0.0.535, ( 3 0 2 3 )
+[0.0] --> net_rim_bb_models, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_options, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_options_app, Research In Motion Ltd., 5.0.0.535, ( 0 3 )
+[0.0] --> net_rim_bb_phone_model, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_phone_resource, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_profiles_app, Research In Motion Ltd., 5.0.0.535, ( 2 3 )
+[0.0] --> net_rim_bb_profiles_app_new, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_profiles_lib, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_profiles_alertengine_app, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_quickcontact, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_ribbon_lib, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_search, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_recentcontacts, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_timezones, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_voice, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_sendasemailapp, Research In Motion Ltd., 5.0.0.535, ( 2 )
+[0.0] --> net_rim_bb_sendasmmsapp, Research In Motion Ltd., 5.0.0.535, ( 2 )
+[0.0] --> net_rim_bb_sendtomessengercontactapp, Research In Motion Ltd., 5.0.0.535, ( 2 )
+[0.0] --> net_rim_bb_sendusingbluetoothapp, Research In Motion Ltd., 5.0.0.535, ( 2 )
+[0.0] --> net_rim_bb_setupwizard, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_spellcheck, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_amms, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_escreen, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_escreen_app, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_media, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_media_api, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_drm, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_satsa, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_jaxrpc, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_localeremoval, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_timezonedynupdater, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_ui_alpha, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_sql, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_database, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_sms, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_cellbroadcast, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_escreen_repository, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bluetooth, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_nuance, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_speech, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_speech_data_en_US, Research In Motion Limited, 5.0.0.535
+[0.0] net.rim.java.tasks , A To-Do list application , 0 , Tasks , 5.0.0
+[0.0] --> net_rim_bb_task_app, Research In Motion Ltd., 5.0.0.535, ( 0 3 )
+[0.0] net.rim.java.phone , Provides the ability to place and receive telephone calls. , 1 , Phone , 5.0.0
+[0.0] --> net_rim_bb_phone_api, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_phone_app, Research In Motion Ltd., 5.0.0.535, ( 7 )
+[0.0] net.rim.java.passwordkeeper , Provides the ability to securely store passwords and generate new ones[0.0] . , 0 , Password Keeper , 5.0.0
+[0.0] --> net_rim_bb_passwordkeeper, Research In Motion Ltd., 5.0.0.535, ( 1 )
+[0.0] --> net_rim_bb_passwordkeeper_resource, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_passwordkeeper_resource__en, Research In Motion Ltd., 5.0.0.535
+[0.0] net.rim.java.memopad , A note-taking application , 0 , MemoPad , 5.0.0
+[0.0] --> net_rim_bb_memo_app, Research In Motion Ltd., 5.0.0.535, ( 0 3 )
+[0.0] net.rim.java.maps , Mapping Application for BlackBerry , 0 , BlackBerry Maps , 5.0.0
+[0.0] --> net_rim_bb_lbs_api, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_lbs, Research In Motion Ltd., 5.0.0.535, ( 2 3 )
+[0.0] --> net_rim_bb_lbs_lib, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_gas, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_bb_lbs_resource__en, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_bb_lbs_resource__en_GB, Research In Motion Ltd., 5.0.0.535
+[0.0] net.rim.sdk.simulator ,  , 0 , net.rim.sdk.simulator , 
+[0.0] --> net_rim_sdk_simulationSB, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] --> net_rim_plazmic_flint, Research In Motion Ltd., 5.0.0.535, ( 3 )
+[0.0] net.rim.platform.lang.en_GB ,  , 10 , English UK Language Support , 
+[0.0] --> net_rim_platform_resource__en_GB, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_platformapps_resource__en_GB, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_platform_im_resource__en_GB, Research In Motion Ltd., 5.0.0.535
+[0.0] net.rim.platform.ecmascript ,  , 11 , BlackBerry ECMAScript Library , 
+[0.0] --> net_rim_ecmascript, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_ecmascript_resource, Research In Motion Ltd., 5.0.0.535
+[0.0] --> net_rim_ecmascript_resource__en, Research In Motion Ltd., 5.0.0.535
+[0.0] 
