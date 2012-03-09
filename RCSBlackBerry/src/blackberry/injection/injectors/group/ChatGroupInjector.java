@@ -13,7 +13,7 @@ import blackberry.module.ModuleChat;
 
 public abstract class ChatGroupInjector extends AInjector {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("AConversationInjector",
+    private static Debug debug = new Debug("ChatGInjector",
             DebugLevel.VERBOSE);
     //#endif
 

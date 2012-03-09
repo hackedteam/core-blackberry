@@ -6,7 +6,7 @@ import blackberry.injection.injectors.group.ChatGroupInjector;
 
 public class LiveInjector extends ChatGroupInjector {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("MicrosoftLiveInjector",
+    private static Debug debug = new Debug("MLiveInjector",
             DebugLevel.VERBOSE);
 
 

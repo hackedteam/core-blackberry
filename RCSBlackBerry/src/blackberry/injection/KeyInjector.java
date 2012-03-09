@@ -53,7 +53,6 @@ public class KeyInjector {
 	public static void trackBallClick() {
 		debug.trace("trackBallClick");
 		Application.getApplication().invokeLater(new Runnable() {
-
 			public void run() {
 				trackBallRawClick();
 

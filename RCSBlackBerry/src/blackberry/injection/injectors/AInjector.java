@@ -7,7 +7,7 @@ import blackberry.debug.DebugLevel;
 
 public abstract class AInjector {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("Injector", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("AInjector", DebugLevel.VERBOSE);
     //#endif
     private UiApplication injectedApp = null;
     private int tries=0;

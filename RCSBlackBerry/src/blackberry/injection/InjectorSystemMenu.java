@@ -5,9 +5,9 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.injection.injectors.AInjector;
 
-public class InjectorSystemMenu extends SystemMenuInjector {
+public class InjectorSystemMenu extends SystemMenu {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("InjectorSystemMenu",
+    private static Debug debug = new Debug("InjectSysMenu",
             DebugLevel.VERBOSE);
     //#endif
     private InjectorManager manager;

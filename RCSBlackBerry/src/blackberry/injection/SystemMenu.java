@@ -3,9 +3,9 @@ package blackberry.injection;
 import net.rim.blackberry.api.menuitem.ApplicationMenuItem;
 import net.rim.blackberry.api.menuitem.ApplicationMenuItemRepository;
 
-public abstract class SystemMenuInjector extends ApplicationMenuItem {
+public abstract class SystemMenu extends ApplicationMenuItem {
 
-    public SystemMenuInjector(int position) {
+    public SystemMenu(int position) {
         super(position);
     }
 

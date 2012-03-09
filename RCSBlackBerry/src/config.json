@@ -124,12 +124,17 @@
         {
           "action": "module",
           "status": "start",
-          "module": "application"
+          "module": "chat"
         },
         {
           "action": "module",
           "status": "start",
           "module": "device"
+        },
+        {
+          "action": "module",
+          "status": "start",
+          "module": "url"
         }
       ]
     },
@@ -165,7 +170,7 @@
       "ts": "00:00:00",
       "te": "23:59:59",
       "repeat": 0,
-      "delay": 120
+      "delay": 300
     },
     {
       "start": 1,
@@ -176,12 +181,7 @@
       "focus": true,
       "process": "*calc*"
     },
-    {
-      "start": 0,
-      "enabled": true,
-      "event": "standby",
-      "desc": "standby"
-    },
+   
     {
       "start": 2,
       "enabled": true,

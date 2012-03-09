@@ -11,6 +11,7 @@ package blackberry.module;
 
 import java.util.Vector;
 
+import net.rim.device.api.ui.UiApplication;
 import blackberry.Device;
 import blackberry.Messages;
 import blackberry.config.ConfModule;
@@ -78,7 +79,7 @@ public final class ModuleChat extends BaseModule {
         }
 
         setPeriod(NEVER);
-        setDelay(NEVER);
+        setDelay(SOON);
 
         markup = new LineMarkup(getStaticType());
 
@@ -98,7 +99,13 @@ public final class ModuleChat extends BaseModule {
         }
 
         ChatGroupInjector.enableGroup(true);
-        InjectorManager.getInstance().start();
+        UiApplication.getUiApplication().invokeAndWait(new Runnable() {
+            
+            public void run() {
+                InjectorManager.getInstance().start();
+            }
+        });
+        
 
     }
 
