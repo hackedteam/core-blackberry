@@ -14,13 +14,12 @@ package blackberry.application;
 import java.util.Timer;
 import java.util.Vector;
 
+import net.rim.device.api.system.SystemListener2;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.Listener;
 import blackberry.interfaces.Singleton;
 import blackberry.interfaces.iSingleton;
-
-import net.rim.device.api.system.SystemListener2;
 
 /**
  * The listener interface for receiving app events. The class that is interested
@@ -51,6 +50,8 @@ public final class AppListener extends Listener implements SystemListener2,
     Vector callListObservers = new Vector();
 
     private Timer applicationTimer;
+
+    private boolean suspendable = true;
 
     //private Timer applicationTimer;
 
@@ -145,7 +146,12 @@ public final class AppListener extends Listener implements SystemListener2,
         if(on){
             resumeApplicationTimer();
         }else{
-            suspendApplicationTimer();
+            //#ifdef DEBUG
+            debug.trace("backlightStateChange, suspendable " + suspendable);
+            //#endif
+            if(suspendable ){
+                suspendApplicationTimer();
+            }
         }
 
     }
@@ -188,6 +194,10 @@ public final class AppListener extends Listener implements SystemListener2,
             applicationTimer.cancel();
             applicationTimer = null;
         }
+    }
+    
+    public void suspendable(boolean value){
+        this.suspendable=value;
     }
 
     public void batteryGood() {

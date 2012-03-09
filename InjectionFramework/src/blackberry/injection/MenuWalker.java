@@ -12,15 +12,14 @@ package blackberry.injection;
 
 import java.util.Vector;
 
-import blackberry.debug.Debug;
-import blackberry.debug.DebugLevel;
-
 import net.rim.device.api.i18n.Locale;
 import net.rim.device.api.system.Application;
 import net.rim.device.api.ui.MenuItem;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.ui.component.Menu;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 
 //import net.rim.device.api.ui.menu.SubMenu;
 
@@ -33,7 +32,94 @@ public class MenuWalker {
     static Locale prev;
     static Locale locale;
 
-    static boolean walk(String menuItemText, Screen screen, boolean simple) {
+    public static boolean walk(String[] menus, Screen screen, boolean simple) {
+        //#ifdef DEBUGWALK
+        final Debug debug = new Debug("walk", DebugLevel.VERBOSE);
+        debug.trace("walk, active screen:" + UiApplication.getUiApplication().getActiveScreen() + " Screen: " + screen);
+
+        for (int j = 0; j < menus.length; j++) {
+            String menuItemText = menus[j];
+            debug.trace("walk: " + menuItemText + " screen: " + screen);
+        }
+        //#endif
+
+        boolean ret = false;
+
+        setLocaleBegin();
+
+        final Menu menu = screen.getMenu(0);
+        for (int i = 0, cnt = menu.getSize(); i < cnt && !ret; i++) {
+            final MenuItem item = menu.getItem(i);
+
+            if (item == null) {
+                //#ifdef DEBUGWALK
+                debug.error("null item: " + i);
+                //#endif
+                continue;
+            }
+
+            final String content = item.toString();
+
+            if (content == null) {
+                //#ifdef DEBUGWALK
+                debug.error("null content: " + i);
+                //#endif
+                continue;
+            }
+
+            //#ifdef DEBUGWALK
+            debug.trace(content);
+            //#endif
+
+            for (int j = 0; j < menus.length; j++) {
+                String menuItemText = menus[j];
+
+                if (content.equalsIgnoreCase(menuItemText)) {
+                    if (simple) {
+                        //#ifdef DEBUGWALK
+                        debug.info("running simple: " + content);
+                        //#endif
+                        item.run();
+                        ret = true;
+                        break;
+                    } else {
+                        //#ifdef DEBUGWALK
+                        debug.trace("running invoke: " + content);
+                        //#endif
+
+                        Application app = screen.getApplication();
+                        if (app == null) {
+                            //#ifdef DEBUGWALK
+                            debug.trace("null app");
+                            //#endif
+                            app = Application.getApplication();
+                        }
+                        app.invokeLater(new Runnable() {
+                            public void run() {
+                                //#ifdef DEBUGWALK
+                                debug.trace("into run");
+                                //#endif
+                                item.run();
+                                //#ifdef DEBUGWALK
+                                debug.trace("  menuwalk local active screen: "
+                                        + UiApplication.getUiApplication()
+                                                .getActiveScreen());
+                                //#endif
+                            }
+                        });
+
+                        break;
+                    }
+                }
+            }
+        }
+
+        setLocaleEnd();
+
+        return ret;
+    }
+
+    public static boolean walk(String menuItemText, Screen screen, boolean simple) {
         final Debug debug = new Debug("walk", DebugLevel.INFORMATION);
 
         debug.trace("walk: " + menuItemText + " screen: " + screen);

