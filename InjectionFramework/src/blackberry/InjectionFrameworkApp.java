@@ -6,13 +6,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Timer;
 
-import blackberry.application.AppListener;
-import blackberry.application.InjectorManager;
-import blackberry.debug.Debug;
-import blackberry.debug.DebugLevel;
-import blackberry.injection.SystemMenuExtractor;
-import blackberry.utils.Utils;
-
 import net.rim.device.api.applicationcontrol.ApplicationPermissions;
 import net.rim.device.api.applicationcontrol.ApplicationPermissionsManager;
 import net.rim.device.api.system.ApplicationDescriptor;
@@ -20,6 +13,12 @@ import net.rim.device.api.system.CodeModuleGroup;
 import net.rim.device.api.system.CodeModuleGroupManager;
 import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.ui.UiApplication;
+import blackberry.application.AppListener;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
+import blackberry.injection.InjectorManager;
+import blackberry.injection.SystemMenuExtractor;
+import blackberry.utils.Utils;
 
 /**
  * This class extends the UiApplication class, providing a graphical user
@@ -78,6 +77,7 @@ public class InjectionFrameworkApp extends UiApplication {
         menu = new SystemMenuExtractor(100);
         menu.addMenu();
         
+        addSystemListener(AppListener.getInstance());
         AppListener.getInstance().resumeApplicationTimer();
 
         injectorManagerThread = new Thread(new Runnable() {

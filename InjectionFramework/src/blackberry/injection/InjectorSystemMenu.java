@@ -1,7 +1,6 @@
 package blackberry.injection;
 
 import net.rim.device.api.ui.UiApplication;
-import blackberry.application.InjectorManager;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.injection.injectors.AInjector;

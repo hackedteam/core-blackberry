@@ -11,7 +11,7 @@ public abstract class AInjector {
     //#endif
     private UiApplication injectedApp = null;
     private int tries=0;
-    private boolean enabled;
+    private boolean enabled=true;
     
     public abstract String getAppName();
     public abstract String getCodName();

