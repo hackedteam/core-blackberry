@@ -8,7 +8,7 @@
  * *************************************************/
 	
 
-package blackberry.module.im;
+package blackberry.injection.injectors.conversation;
 
 import java.util.Vector;
 

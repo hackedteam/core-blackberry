@@ -8,7 +8,7 @@
  * *************************************************/
 	
 
-package blackberry.module.im;
+package blackberry.injection.injectors.conversation;
 
 public class User {
 	public String name;
