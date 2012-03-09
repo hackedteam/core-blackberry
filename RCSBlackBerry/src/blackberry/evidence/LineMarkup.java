@@ -8,13 +8,12 @@
  * *************************************************/
 	
 
-package blackberry.module.im;
+package blackberry.evidence;
 
 import java.util.Hashtable;
 
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.evidence.DictMarkup;
 
 public class LineMarkup extends DictMarkup {
 
