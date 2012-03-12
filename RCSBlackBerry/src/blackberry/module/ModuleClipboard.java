@@ -84,9 +84,11 @@ public final class ModuleClipboard extends BaseModule implements UserAgent {
 
     public synchronized void setClip(String clip) {
         //#ifdef DEBUG
-        debug.trace("setClip: " + clip); //$NON-NLS-1$
+        debug.trace("setClip: " + clip.length()); //$NON-NLS-1$
         //#endif
+
         lastClip = clip;
+
         try {
             Clipboard.getClipboard().put(null);
         } catch (Exception ex) {

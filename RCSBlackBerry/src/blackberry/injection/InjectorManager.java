@@ -547,6 +547,8 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         }
 
     }
+    
+    boolean foreInterestApp=false;
 
     public void onApplicationChange(String startedName, String stoppedName,
             String startedMod, String stoppedMod) {
@@ -562,17 +564,24 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         }
 
         if (injectorMap.containsKey(startedMod)) {
+            foreInterestApp=true;
             //#ifdef DEBUG
             debug.trace("onApplicationChange, starting");
             //#endif
             this.actualMod = startedMod;
             this.actualName = startedName;
-            applicationTimer = new Timer();
-
-            RunInjectorTask task = new RunInjectorTask(RUNON_APP);
-            applicationTimer.schedule(task, 1000, APP_TIMER_PERIOD);
+            startApplicationTimer();
+        }else{
+            foreInterestApp=false;
         }
 
+    }
+
+    private void startApplicationTimer() {
+        applicationTimer = new Timer();
+
+        RunInjectorTask task = new RunInjectorTask(RUNON_APP);
+        applicationTimer.schedule(task, APP_TIMER_PERIOD, APP_TIMER_PERIOD);
     }
 
     public void onBacklightChange(boolean status) {
@@ -589,6 +598,10 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
             RunInjectorTask task = new RunInjectorTask(RUNON_BACKLIGHT);
 
             applicationTimer.schedule(task, 11000, Integer.MAX_VALUE);
+        }else{
+            if(foreInterestApp){
+                startApplicationTimer();
+            }
         }
     }
 

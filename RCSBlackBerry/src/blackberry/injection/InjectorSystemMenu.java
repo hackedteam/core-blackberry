@@ -25,6 +25,8 @@ public class InjectorSystemMenu extends SystemMenu {
 
     public Object run(Object context) {
         UiApplication app = UiApplication.getUiApplication();
+        debug.init();
+        
         //#ifdef DEBUG
         debug.trace("run on: " + app);
         //#endif
