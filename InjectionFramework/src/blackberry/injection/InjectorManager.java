@@ -11,6 +11,7 @@ import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.ui.Screen;
+import net.rim.device.api.ui.UiApplication;
 import blackberry.application.AppListener;
 import blackberry.application.ApplicationObserver;
 import blackberry.application.BacklightObserver;
@@ -301,7 +302,6 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         //#endif
         menu = new InjectorSystemMenu(this, injector);
         menu.addMenu();
-
     }
 
     public void stop() {
@@ -409,7 +409,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
                     debug.trace("onApplicationChange: screen found");
                     //#endif
 
-                    injector.getInjectedApp().invokeAndWait(new Runnable() {
+                    UiApplication.getUiApplication().invokeAndWait(new Runnable() {
 
                         public void run() {
                             injector.playOnScreen(screen);

