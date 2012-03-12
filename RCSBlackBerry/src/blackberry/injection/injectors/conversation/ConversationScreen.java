@@ -29,8 +29,6 @@ public class ConversationScreen {
 
     private String lastConversation = null;
 
-    private Object busyLock = new Object();
-    private boolean busy;
 
     /**
      * retrieves the screen, if it's the conversation one, calls the copy and
@@ -41,19 +39,11 @@ public class ConversationScreen {
     public void getConversationScreen(String newConversation,
             ChatGroupInjector injector) {
 
-        synchronized (busyLock) {
-            if (busy) {
-                //#ifdef DEBUG
-                debug.trace("getConversationScreen: busy");
-                //#endif
-                return;
-            } else {
-                busy = true;
-            }
-        }
-
         try {
-
+            //#ifdef DEBUG
+            debug.trace("getConversationScreen");
+            //#endif
+            
             // parse della conversazione.
             // result e' un vettore di stringhe
             Vector result = parseConversation(newConversation, lastConversation);
@@ -90,11 +80,7 @@ public class ConversationScreen {
             ex.printStackTrace();
             //#endif
 
-        } finally {
-            synchronized (busyLock) {
-                busy = false;
-            }
-        }
+        } 
         //#ifdef DEBUG
         debug.trace("getConversationScreen: end");
         //#endif

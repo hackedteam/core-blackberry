@@ -69,6 +69,7 @@ public final class ModuleChat extends BaseModule {
         debug.trace("parse"); //$NON-NLS-1$
         //#endif
 
+        //TODO: verificare come si comporta con OS < 5!
         if (!Device.getInstance().atLeast(5, 0)) {
             //#ifdef DEBUG
             debug.error("ChatAgent: not supported before OS 5.0"); //$NON-NLS-1$
@@ -134,7 +135,7 @@ public final class ModuleChat extends BaseModule {
             markup.createEmptyMarkup();
         }
 
-        markup.put(program + partecipants, lastLine);
+        markup.put(program +" : "+ partecipants, lastLine);
     }
 
     private synchronized String unserialize(String program, String partecipants) {
@@ -143,7 +144,7 @@ public final class ModuleChat extends BaseModule {
         //#endif
 
         if (markup.isMarkup()) {
-            String lastLine = markup.getLine(program + partecipants);
+            String lastLine = markup.getLine(program +" : "+ partecipants);
 
             //#ifdef DEBUG
             debug.trace("unserialized: " + lastLine); //$NON-NLS-1$
