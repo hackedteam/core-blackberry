@@ -36,9 +36,13 @@ public class Singleton {
         hashtable.put(new Long(guid), singleton);
     }
     
+    public void deleteRuntime(){
+        RuntimeStore.getRuntimeStore().remove(GUID);
+    }
+    
     public void clear(){
         hashtable.clear();
-        RuntimeStore.getRuntimeStore().remove(GUID);
+        deleteRuntime();
     }
 
 }

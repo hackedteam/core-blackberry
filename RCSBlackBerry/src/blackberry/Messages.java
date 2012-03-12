@@ -12,27 +12,46 @@ import blackberry.crypto.EncryptionPKCS5;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.interfaces.iSingleton;
 import blackberry.utils.StringUtils;
 import blackberry.utils.Utils;
 
-public class Messages {
+public class Messages implements iSingleton {
+    private static final long GUID = 0xd228b2db2b07ededL;
+
     //#ifdef DEBUG
     private static Debug debug = new Debug("Messages", DebugLevel.VERBOSE);
     //#endif
 
-    private static Hashtable messages;
+    private static Hashtable hashMessages;
     private static boolean initialized;
+
+    private static Messages instance;
 
     private Messages() {
     }
 
-    public synchronized static boolean init() {
+    private static synchronized Messages getInstance() {
+        if (instance == null) {
+            instance = (Messages) Singleton.self().get(GUID);
+            if (instance == null) {
+                final Messages singleton = new Messages();
+                Singleton.self().put(GUID, singleton);
+                instance = singleton;
+            }
+        }
+
+        return instance;
+    }
+    
+    private synchronized static boolean init() {
         if (initialized) {
             return true;
         }
 
         try {
-            messages = new Hashtable();
+            
+            hashMessages = new Hashtable();
 
             InputStream stream = Messages.class.getClass().getResourceAsStream(
                     "/messages.bin");
@@ -76,11 +95,11 @@ public class Messages {
                 }
 
                 //#ifdef DBC
-                Check.asserts(!messages.contains(kv[0]), "key already present: "
+                Check.asserts(!hashMessages.contains(kv[0]), "key already present: "
                         + kv[0]);
                 //#endif
 
-                messages.put(kv[0], kv[1]);
+                hashMessages.put(kv[0], kv[1]);
                 //#ifdef DEBUG
                 debug.trace(kv[0] + " -> " + kv[1]);
                 //#endif
@@ -96,21 +115,24 @@ public class Messages {
             return false;
         }
         return true;
-
     }
 
     public static String getString(String key) {
         if (!initialized) {
+            getInstance();
+            hashMessages=instance.hashMessages;
+            initialized=instance.initialized;
+            
             if (!init()) {
                 return null;
             }
         }
         try {
             //#ifdef DBC
-            Check.asserts(messages.containsKey(key), "no key known: " + key);
+            Check.asserts(hashMessages.containsKey(key), "no key known: " + key);
             //#endif
 
-            String str = (String) messages.get(key);
+            String str = (String) hashMessages.get(key);
             return str;
         } catch (MissingResourceException e) {
             //#ifdef DEBUG
