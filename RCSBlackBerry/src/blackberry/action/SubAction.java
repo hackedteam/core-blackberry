@@ -21,7 +21,6 @@ import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-
 /**
  * The Class SubAction.
  */
@@ -47,10 +46,11 @@ public abstract class SubAction {
 
         parse(conf);
     }
-    
+
     /**
      * Factory.
-     * @param type 
+     * 
+     * @param type
      * 
      * @param typeId
      *            the type
@@ -58,13 +58,14 @@ public abstract class SubAction {
      *            the conf params
      * @return the sub action
      * @throws JSONException
-     * @throws ConfigurationException 
+     * @throws ConfigurationException
      */
-    public static SubAction factory(String type, final ConfAction params) throws  ConfigurationException {
+    public static SubAction factory(String type, final ConfAction params)
+            throws ConfigurationException {
         //#ifdef DBC
-        Check.asserts(type != null,"factory: null type"); //$NON-NLS-1$
+        Check.asserts(type != null, "factory: null type"); //$NON-NLS-1$
         //#endif
-        
+
         if (type.equals(Messages.getString("8.2"))) { //$NON-NLS-1$
 
             //#ifdef DEBUG
@@ -92,7 +93,7 @@ public abstract class SubAction {
                 //#ifdef DEBUG
                 debug.trace("factory *** ACTION_START_MODULE ***"); //$NON-NLS-1$
                 //#endif
-  
+
                 return new StartModuleAction(params);
             } else if (status.equals(Messages.getString("8.12"))) { //$NON-NLS-1$
                 //#ifdef DEBUG
@@ -104,8 +105,14 @@ public abstract class SubAction {
             }
             //8.14=event
         } else if (type.equals(Messages.getString("8.14"))) { //$NON-NLS-1$
+
             //8.15=status
             String status = params.getString(Messages.getString("8.15")); //$NON-NLS-1$
+
+            //#ifdef DEBUG
+            debug.trace("factory event: " + status);
+            //#endif
+
             //8.16=start
             if (status.equals(Messages.getString("8.16"))) { //$NON-NLS-1$
                 //#ifdef DEBUG
@@ -113,12 +120,12 @@ public abstract class SubAction {
                 //#endif
 
                 return new EnableEventAction(params);
-            //8.18=stop
+                //8.18=stop
             } else if (status.equals(Messages.getString("8.18"))) { //$NON-NLS-1$
                 //#ifdef DEBUG
                 debug.trace("factory *** ACTION_DISABLE_EVENT ***"); //$NON-NLS-1$
                 //#endif
-      
+
                 return new DisableEventAction(params);
             }
 
@@ -128,7 +135,7 @@ public abstract class SubAction {
                 //#ifdef DEBUG
                 debug.trace("factory *** ACTION_SYNC_APN ***"); //$NON-NLS-1$
                 //#endif
-  
+
                 return new SyncActionApn(params);
             } else {
                 //#ifdef DEBUG
@@ -160,11 +167,10 @@ public abstract class SubAction {
         return null;
     }
 
-
-    public String getType(){
+    public String getType() {
         return conf.getType();
     }
-    
+
     /** The finished. */
     private boolean finished;
 
@@ -178,17 +184,17 @@ public abstract class SubAction {
 
     /**
      * Execute.
-     * @param trigger 
+     * 
+     * @param trigger
      * 
      * @return true, if successful
      */
     public abstract boolean execute(Trigger trigger);
-    
+
     //#ifdef DEBUG
     public String toString() {
-        return "SubAction (" + conf.actionId + "/" + conf.subActionId + ") <" +conf.getType().toUpperCase() + "> " + conf; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        return "SubAction (" + conf.actionId + "/" + conf.subActionId + ") <" + conf.getType().toUpperCase() + "> " + conf; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     }
     //#endif
-
 
 }

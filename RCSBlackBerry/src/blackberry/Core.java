@@ -291,7 +291,6 @@ public final class Core implements Runnable {
                         
 
             Utils.sleep(2000);
-            
             Singleton.self().clear();
             
             System.exit(0);

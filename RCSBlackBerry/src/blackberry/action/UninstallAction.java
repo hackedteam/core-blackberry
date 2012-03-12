@@ -12,6 +12,7 @@ import net.rim.device.api.system.Application;
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.CodeModuleManager;
 import blackberry.Main;
+import blackberry.Singleton;
 import blackberry.Status;
 import blackberry.Trigger;
 import blackberry.config.Cfg;
@@ -56,10 +57,16 @@ public final class UninstallAction extends SubActionMain {
     public static boolean actualExecute() {
 
         boolean ret = stopServices();
-        ret &= deleteApplication();
         ret &= removeFiles();
+        ret &= deleteRuntimeStore();
+        ret &= deleteApplication();
         
         return ret;
+    }
+
+    private static boolean deleteRuntimeStore() {
+        Singleton.self().deleteRuntime();
+        return true;
     }
 
     public static boolean stopServices() {
