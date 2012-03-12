@@ -53,6 +53,9 @@ public abstract class AConversationInjector extends AInjector {
                 screen, true)) {
 
             clip = (String) Clipboard.getClipboard().get();
+            //#ifdef DEBUG
+            debug.trace("extractConversation: " + clip.length());
+            //#endif
             setClipboard(clip);
 
         } else {

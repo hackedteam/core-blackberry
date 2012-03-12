@@ -312,20 +312,25 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         injectorMap.clear();
     }
 
-    private boolean execute(String command) {
-        ApplicationDescriptor applicationDescriptor = getApplicationDescriptor(command);
-        if (applicationDescriptor != null) {
-            try {
-                String urlModule = applicationDescriptor.getModuleName();
-                //#ifdef DEBUG
-                debug.trace("executeApplication: " + urlModule); //$NON-NLS-1$
-                //#endif
-                ApplicationManager.getApplicationManager().launch(urlModule);
-                return true;
-            } catch (Exception ex) {
-                //#ifdef DEBUG
-                debug.error("executeApplication: " + ex); //$NON-NLS-1$
-                //#endif
+    private boolean execute(String codName) {
+        int foregroundPin = manager.getForegroundProcessId();
+        ApplicationDescriptor[] apps = manager.getVisibleApplications();
+        for (int i = 0; i < apps.length; i++) {
+            if (apps[i].getModuleName().indexOf(codName) >= 0) {
+                int processId = manager.getProcessId(apps[i]);
+
+                if (foregroundPin == processId) {
+                    //#ifdef DEBUG
+                    debug.trace("requestForeground: already foreground");
+                    //#endif
+                    return true;
+                } else {
+                    //#ifdef DEBUG
+                    debug.trace("requestForeground: bringing foreground");
+                    //#endif
+                    manager.requestForeground(processId);
+                    return true;
+                }
             }
         }
 

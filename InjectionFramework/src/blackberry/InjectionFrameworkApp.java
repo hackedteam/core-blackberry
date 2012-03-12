@@ -71,7 +71,7 @@ public class InjectionFrameworkApp extends UiApplication {
 
         //#ifdef DEBUG
         //debug.trace("init: " + getInstalledApplications());
-        debug.trace("init: " + getInstalledModuleGroup());
+        //debug.trace("init: " + getInstalledModuleGroup());
         //#endif
 
         menu = new SystemMenuExtractor(100);
