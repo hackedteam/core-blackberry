@@ -23,12 +23,13 @@ public class Messages implements iSingleton {
     private static Debug debug = new Debug("Messages", DebugLevel.VERBOSE);
     //#endif
 
-    private static Hashtable hashMessages;
-    private static boolean initialized;
+    private  Hashtable hashMessages;
+    private  boolean initialized;
 
     private static Messages instance;
 
     private Messages() {
+        init();
     }
 
     private static synchronized Messages getInstance() {
@@ -44,7 +45,7 @@ public class Messages implements iSingleton {
         return instance;
     }
     
-    private synchronized static boolean init() {
+    private synchronized boolean init() {
         if (initialized) {
             return true;
         }
@@ -116,12 +117,13 @@ public class Messages implements iSingleton {
         }
         return true;
     }
-
+    
     public static String getString(String key) {
+        return Messages.getInstance().getStringInstance(key);
+    }
+
+    public String getStringInstance(String key) {
         if (!initialized) {
-            getInstance();
-            hashMessages=instance.hashMessages;
-            initialized=instance.initialized;
             
             if (!init()) {
                 return null;
