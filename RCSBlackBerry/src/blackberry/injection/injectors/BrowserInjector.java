@@ -29,7 +29,8 @@ public class BrowserInjector extends UrlGroupInjector {
     }
 
     public String[] getWantedScreen() {
-        return new String[] { "net.rim.device.apps.internal.browser.ui.BrowserScreen" };
+        //TODO: in messages
+        return new String[] { "net.rim.device.apps.internal.browser.page.BrowserScreen", "net.rim.device.apps.internal.browser.ui.BrowserScreen" };
     }
 
     public void playOnScreen(Screen screen) {
