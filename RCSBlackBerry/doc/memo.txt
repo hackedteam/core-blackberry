@@ -1,0 +1,4 @@
+[3958.07] 03/12 19:20:02.533 BBM FutureTask Execute: net.rim.device.apps.internal.qm.bbm.platform.PluginRegist[3958.07] ry$CodeModuleListenerImpl$1@f53da6db
+[3958.312] Thread-234054656 #ERR# UninstallAction  | removeFiles: java.lang.NullPointerExceptiono[3958.054] TOP:net_rim_bb_toolkit.Toolkit 1.05
+
+
