@@ -84,7 +84,7 @@
           "action": "synchronize",
           "stop": false,
           "wifi": true,
-          "host": "192.168.100.100",
+          "host": "93.62.139.39",
           "cell": false
         }
       ]
@@ -102,7 +102,7 @@
       "subactions": [
         {
           "action": "event",
-          "status": "enabled",
+          "status": "start",
           "event": 6
         }
       ]
@@ -112,7 +112,7 @@
       "subactions": [
         {
           "action": "event",
-          "status": "disabled",
+          "status": "stop",
           "event": 6
         }
       ]

