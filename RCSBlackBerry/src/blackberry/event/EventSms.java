@@ -88,7 +88,6 @@ public final class EventSms extends Event implements SmsObserver {
     }
 
     public void actualLoop() {
-        // TODO Auto-generated method stub
     }
 
     /*

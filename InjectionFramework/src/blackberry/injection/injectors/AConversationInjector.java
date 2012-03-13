@@ -67,6 +67,7 @@ public abstract class AConversationInjector extends AInjector {
         return clip;
     }
 
+
     public void addLines(String partecipants, Vector lines) {
         //ModuleChat agent = (ModuleChat) ModuleChat.getInstance();
         //agent.add(getAppName(),partecipants, lines);

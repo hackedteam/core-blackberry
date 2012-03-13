@@ -54,7 +54,6 @@ public final class EventCall extends Event implements PhoneListener {
     }
 
     public void actualLoop() {
-        // TODO Auto-generated method stub
     }
 
     protected void actualStop() {

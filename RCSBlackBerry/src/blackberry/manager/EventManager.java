@@ -73,7 +73,6 @@ public final class EventManager extends JobManager implements iSingleton {
         String ts = conf.getSafeString("ts"); //$NON-NLS-1$
         String te = conf.getSafeString("te"); //$NON-NLS-1$
 
-        // TODO
         if (subtype == null
                 && Messages.getString("12.2").equals(ts) && Messages.getString("12.1").equals(te)) { //$NON-NLS-1$ //$NON-NLS-2$
             subtype = Messages.getString("12.0"); //$NON-NLS-1$

@@ -29,7 +29,7 @@ package blackberry.utils;
  * 
  * @author Mark Allen Weiss
  */
-public final class ArrayQueue implements Queue {
+public abstract class ArrayQueue implements Queue {
     private Object[] theArray;
 
     private int currentSize;
@@ -143,7 +143,7 @@ public final class ArrayQueue implements Queue {
     }
 
     public void remove(Object x) {
-        // TODO Auto-generated method stub
+        // TODO 
 
     }
 

@@ -9,7 +9,8 @@
 
 package rpc.json.me.util;
 
-import rpc.json.me.*;
+import rpc.json.me.JSONException;
+import rpc.json.me.JSONTokener;
 
 /*
  Copyright (c) 2002 JSON.org
@@ -308,7 +309,6 @@ public class XMLTokener extends JSONTokener {
         }
     }
 
-    // TODO
     private static boolean isWhitespace(char c) {
         switch (c) {
             case ' ':
@@ -320,7 +320,6 @@ public class XMLTokener extends JSONTokener {
         return false;
     }
 
-    // TODO
     private static boolean isLetterOrDigit(char c) {
         switch (c) {
             case '0':

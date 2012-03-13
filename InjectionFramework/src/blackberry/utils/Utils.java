@@ -16,16 +16,15 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.Vector;
 
-import blackberry.debug.Check;
-import blackberry.debug.Debug;
-import blackberry.debug.DebugLevel;
-
 import net.rim.device.api.crypto.RandomSource;
 import net.rim.device.api.io.IOUtilities;
 import net.rim.device.api.system.GPRSInfo;
 import net.rim.device.api.util.Arrays;
 import net.rim.device.api.util.DataBuffer;
 import net.rim.device.api.util.NumberUtilities;
+import blackberry.debug.Check;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 
 
 /**
@@ -582,7 +581,6 @@ public final class Utils {
         final String imeiString = GPRSInfo.imeiToString(imei);
 
         if (dots) {
-            //TODO: perche' facciamo cosi'?
             return imeiString.replace('.', '0');
         } else {
             return imeiString;

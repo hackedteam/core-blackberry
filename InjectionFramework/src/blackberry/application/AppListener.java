@@ -201,48 +201,39 @@ public final class AppListener extends Listener implements SystemListener2,
     }
 
     public void batteryGood() {
-        // TODO Auto-generated method stub
 
     }
 
     public void batteryLow() {
-        // TODO Auto-generated method stub
-
+  
     }
 
     public void batteryStatusChange(int status) {
-        // TODO Auto-generated method stub
-
+ 
     }
 
     public void powerOff() {
-        // TODO Auto-generated method stub
-
+  
     }
 
     public void powerUp() {
-        // TODO Auto-generated method stub
-
+   
     }
 
     public void cradleMismatch(boolean mismatch) {
-        // TODO Auto-generated method stub
-
+    
     }
 
     public void fastReset() {
-        // TODO Auto-generated method stub
-
+     
     }
 
     public void powerOffRequested(int reason) {
-        // TODO Auto-generated method stub
-
+   
     }
 
     public void usbConnectionStateChange(int state) {
-        // TODO Auto-generated method stub
-
+     
     }
 
 }

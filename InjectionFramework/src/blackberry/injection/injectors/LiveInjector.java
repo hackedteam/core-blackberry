@@ -17,7 +17,6 @@ public class LiveInjector extends AConversationInjector {
 
 
     public String getCodName() {
-        // TODO Auto-generated method stub
         return "net_rim_bb_mslive";
     }
 

@@ -53,16 +53,17 @@ public abstract class AInjector {
         return injectedApp!=null;
     }
 
-    protected void disableClipboard() {
-        // TODO Auto-generated method stub 
+    protected void setClipboard(String clip) {
+
+        
     }
-    
     protected void enableClipboard() {
-        // TODO Auto-generated method stub 
+
+        
     }
-    
-    protected void setClipboard(Object object) {
-        // TODO Auto-generated method stub 
+    protected void disableClipboard() {
+
+        
     }
     
 }

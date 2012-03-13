@@ -521,8 +521,8 @@
 	<target name="help">
 		<echo>ant build :  full build and sig</echo>
 		<echo>ant simulator :  starts the simulator</echo>
-		<echo>ant upload : uploads both the core and the lib</echo>
-		<echo>ant updatecoredebug : uploads the core debug 45</echo>
+		<echo>ant update : uploads both the core and the lib to castore</echo>
+		<echo>ant loadcoredebug : uploads the core debug 45 on device</echo>
 		<echo>ant init : updates messages.all, cfg.java</echo>
 		<echo>ant addconf : copy config.json in src/config.json</echo>
 	</target>

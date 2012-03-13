@@ -23,9 +23,9 @@ public class BrowserInjector extends UrlGroupInjector {
     //#ifdef DEBUG
     private static Debug debug = new Debug("BrowserInjector",
             DebugLevel.VERBOSE);
-    private Object lastUrl;
-
     //#endif
+    
+    private Object lastUrl;
 
     public String getAppName() {
         //TODO: in messages

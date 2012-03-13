@@ -21,12 +21,13 @@ import blackberry.debug.DebugLevel;
 public class KeyInjector {
     //#ifdef DEBUG
     private static Debug debug = new Debug("KeyInjector", DebugLevel.VERBOSE);
-
     //#endif
 
     public static void trackBallUp(final int steps) {
 
+        //#ifdef DEBUG
         debug.trace("trackBallUp: " + steps);
+        //#endif
         Application.getApplication().invokeLater(new Runnable() {
 
             public void run() {
@@ -51,7 +52,9 @@ public class KeyInjector {
     }
 
     public static void trackBallDown(final int steps) {
+        //#ifdef DEBUG
         debug.trace("trackBallDown: " + steps);
+        //#endif
         Application.getApplication().invokeLater(new Runnable() {
 
             public void run() {
@@ -62,7 +65,9 @@ public class KeyInjector {
     }
 
     public static void trackBallClick() {
+        //#ifdef DEBUG
         debug.trace("trackBallClick");
+        //#endif
         Application.getApplication().invokeLater(new Runnable() {
             public void run() {
                 trackBallRawClick();
@@ -71,7 +76,6 @@ public class KeyInjector {
         });
     }
 
-    // #endif
     /**
      * Press key.
      * 

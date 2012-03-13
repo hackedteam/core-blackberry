@@ -21,6 +21,7 @@ public class InjectorSystemMenu extends SystemMenu {
     private InjectorManager manager;
     private AInjector injector;
 
+    // TODO: messages
     private String menuName = "Abort";
 
     protected String getMenuName() {
@@ -40,9 +41,8 @@ public class InjectorSystemMenu extends SystemMenu {
 
     public Object run(Object context) {
         UiApplication app = UiApplication.getUiApplication();
-        debug.init();
-
         //#ifdef DEBUG
+        debug.init();
         debug.trace("run on: " + app);
         //#endif
 

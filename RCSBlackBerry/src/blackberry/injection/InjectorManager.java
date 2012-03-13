@@ -58,8 +58,10 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
     //#ifdef DEBUG
     private static Debug debug = new Debug("InjectorManager",
             DebugLevel.VERBOSE);
-    private static InjectorManager instance;
     //#endif
+    
+    private static InjectorManager instance;
+
     AInjector[] injectors;
     Hashtable injectorMap = new Hashtable();
 

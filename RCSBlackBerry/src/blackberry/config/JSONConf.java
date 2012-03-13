@@ -185,7 +185,6 @@ public abstract class JSONConf implements Managed {
         }
     }
 
-    //TODO: verificare che sia giusto
     public ChildConf getChild(String child) {
         JSONObject c = null;
         try {

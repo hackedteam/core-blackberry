@@ -23,7 +23,6 @@ public class LiveInjector extends ChatGroupInjector {
     }
 
     public String getCodName() {
-        // TODO Auto-generated method stub
         return "net_rim_bb_mslive";
     }
 
