@@ -1,4 +1,12 @@
 //#preprocess
+
+/* *************************************************
+ * Copyright (c) 2010 - 2012
+ * HT srl,   All rights reserved.
+ * 
+ * Project      : RCS, RCSBlackBerry
+ * *************************************************/
+	
 package rpc.json.me;
 /**
  * The <code>JSONString</code> interface allows a <code>toJSONString()</code>
