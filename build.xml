@@ -424,7 +424,7 @@
 	</target>
 
 	<!-- Load to device depends="sign" -->
-	<target name="load" depends="build">
+	<target name="load">
 		<echo message="=== Load ===" />
 		<echo>${jde.45.home}/bin/JavaLoader.exe ${lib.codename}.cod ${core.codename}.cod</echo>
 		<exec executable="${jde.45.home}/bin/JavaLoader.exe" dir="." failonerror="true">

@@ -100,6 +100,7 @@ public class Main extends UiApplication {
             //#ifdef DEBUG
             debug.trace("Main: no DEMO");
             //#endif
+            Status.self().setDemo(false);
         }
         //#ifdef DEBUG
         Status.self().setDebug(true);

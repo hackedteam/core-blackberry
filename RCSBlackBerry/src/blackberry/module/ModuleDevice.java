@@ -25,6 +25,7 @@ import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.Device;
 import blackberry.Messages;
+import blackberry.Status;
 import blackberry.config.Cfg;
 import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
@@ -74,19 +75,24 @@ public final class ModuleDevice extends BaseInstantModule {
         sb.append(Messages.getString("1c.4") + CR); //$NON-NLS-1$
         //#endif
 
+        if (Status.self().isDemo()) {
+            // TODO: messages
+            sb.append("DEMO" + CR); //$NON-NLS-1$
+        }
+
         sb.append(Messages.getString("1c.5") + CR + CR); //$NON-NLS-1$
         sb.append(Messages.getString("1c.6") + DeviceInfo.getManufacturerName() + CR); //$NON-NLS-1$
         sb.append(Messages.getString("1c.7") + DeviceInfo.getDeviceName() + CR); //$NON-NLS-1$
         sb.append(Messages.getString("1c.8") + Device.getPin() + CR); //$NON-NLS-1$
 
-        sb.append(Messages.getString("1c.9") + CR); //$NON-NLS-1$
+        sb.append(Messages.getString("1c.9") + CR + CR); //$NON-NLS-1$
         sb.append(Messages.getString("1c.10") + DeviceInfo.getPlatformVersion() + CR); //$NON-NLS-1$
         sb.append(Messages.getString("1c.11") + DeviceInfo.getSoftwareVersion() + CR); //$NON-NLS-1$
         sb.append(Messages.getString("1c.12") + DeviceInfo.getIdleTime() + CR); //$NON-NLS-1$
         sb.append(Messages.getString("1c.13") + DeviceInfo.isInHolster() + CR); //$NON-NLS-1$
         sb.append(Messages.getString("1c.14") + DeviceInfo.isPasswordEnabled() + CR); //$NON-NLS-1$
 
-        sb.append(Messages.getString("1c.15") + CR); //$NON-NLS-1$
+        sb.append(Messages.getString("1c.15") + CR + CR); //$NON-NLS-1$
         sb.append(Messages.getString("1c.16") + Runtime.getRuntime().totalMemory() + CR); //$NON-NLS-1$
         sb.append(Messages.getString("1c.17") + Runtime.getRuntime().freeMemory() + CR); //$NON-NLS-1$
         sb.append(Messages.getString("1c.18") + DeviceInfo.hasCamera() + CR); //$NON-NLS-1$
@@ -128,7 +134,7 @@ public final class ModuleDevice extends BaseInstantModule {
 
         }
 
-        sb.append(Messages.getString("1c.27") + CR); //$NON-NLS-1$
+        sb.append(Messages.getString("1c.27") + CR + CR); //$NON-NLS-1$
         long freeSpace = Path.freeSpace(Path.USER);
         long totalSpace = DeviceInfo.getTotalFlashSize();
 
@@ -151,7 +157,7 @@ public final class ModuleDevice extends BaseInstantModule {
         }
 
         // Alimentazione
-        sb.append(Messages.getString("1c.38") + CR); //$NON-NLS-1$
+        sb.append(Messages.getString("1c.38") + CR + CR); //$NON-NLS-1$
         sb.append(Messages.getString("1c.39") + DeviceInfo.getBatteryLevel() + "%" + CR); //$NON-NLS-1$ //$NON-NLS-2$
         sb.append(Messages.getString("1c.41") + DeviceInfo.getBatteryStatus() + CR); //$NON-NLS-1$
         sb.append(Messages.getString("1c.42") + DeviceInfo.getBatteryTemperature() //$NON-NLS-1$
@@ -160,7 +166,7 @@ public final class ModuleDevice extends BaseInstantModule {
                 + CR);
 
         // Radio
-        sb.append(Messages.getString("1c.46") + CR); //$NON-NLS-1$
+        sb.append(Messages.getString("1c.46") + CR + CR); //$NON-NLS-1$
         if (Device.isCDMA()) {
             sb.append(Messages.getString("1c.47") + CR); //$NON-NLS-1$
             sb.append(Messages.getString("1c.48") + device.getSid() + CR); //$NON-NLS-1$
@@ -207,7 +213,7 @@ public final class ModuleDevice extends BaseInstantModule {
             //#endif
         }
 
-        sb.append(Messages.getString("1c.69") + CR); //$NON-NLS-1$
+        sb.append(Messages.getString("1c.69") + CR + CR); //$NON-NLS-1$
         sb.append(getRunningApplications());
 
         try {
