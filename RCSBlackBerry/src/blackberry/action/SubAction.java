@@ -164,7 +164,8 @@ public abstract class SubAction {
             //#endif
 
         }
-        return null;
+        
+        return new NullAction(params);
     }
 
     public String getType() {

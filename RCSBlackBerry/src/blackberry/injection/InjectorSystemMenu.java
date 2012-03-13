@@ -13,14 +13,20 @@ public class InjectorSystemMenu extends SystemMenu {
     private InjectorManager manager;
     private AInjector injector;
 
+    private String menuName="Abort";
+    
     protected String getMenuName() {
-        return "Abort";
-    }
-
+        return menuName;
+    }    
+    protected void setMenuName(String menuName) {
+        this.menuName=menuName;
+    }  
+    
     public InjectorSystemMenu(InjectorManager manager, AInjector injector) {
         super(0);
         this.manager = manager;
         this.injector = injector;
+        setMenuName(injector.getPreferredMenuName());
     }
 
     public Object run(Object context) {

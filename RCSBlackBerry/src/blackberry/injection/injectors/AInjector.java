@@ -89,4 +89,6 @@ public abstract class AInjector {
             ModuleClipboard.getInstance().setClip(clip);
         }
     }
+
+    public abstract String getPreferredMenuName();
 }

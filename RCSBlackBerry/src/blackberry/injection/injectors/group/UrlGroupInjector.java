@@ -17,5 +17,10 @@ public abstract class UrlGroupInjector extends AInjector {
     static public void enableGroup(boolean value) {
         enabledGroup=value;
     }
+    
+    public String getPreferredMenuName(){
+        //TODO: messages
+        return "Quit";
+    }
 
 }

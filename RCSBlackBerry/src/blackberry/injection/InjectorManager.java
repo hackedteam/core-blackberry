@@ -128,10 +128,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
 
     }
 
-    public void stop() {
-        //#ifdef DBC
-        Check.requires(started > 0, "stop, started: " + started);
-        //#endif
+    public void stop() {        
         synchronized (this) {
             started -= 1;
             if (started > 0) {
@@ -149,8 +146,12 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         AppListener appListener = AppListener.getInstance();
         appListener.removeApplicationObserver(this);
         appListener.removeBacklightObserver(this);
-        menu.removeMenu();
-        injectorMap.clear();
+        if (menu != null) {
+            menu.removeMenu();
+        }
+        if (injectorMap != null) {
+            injectorMap.clear();
+        }
 
     }
 
@@ -338,7 +339,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         //#endif
         menu = new InjectorSystemMenu(this, injector);
         menu.addMenu();
-    
+
     }
 
     private void callSystemMenu() {
@@ -376,10 +377,10 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         //#ifdef DEBUG
         debug.trace("removeSystemMenu");
         //#endif
-    
+
         ApplicationMenuItemRepository.getInstance().removeMenuItem(
                 ApplicationMenuItemRepository.MENUITEM_SYSTEM, menu);
-    
+
     }
 
     private boolean requestForeground(String codName) {
@@ -457,7 +458,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
      */
     private boolean exists(String name) {
         final int handles[] = CodeModuleManager.getModuleHandles();
-    
+
         final int size = handles.length;
         for (int i = 0; i < size; i++) {
             final int handle = handles[i];
@@ -520,7 +521,6 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
                                 public void run() {
                                     injector.playOnScreen(screen);
                                 }
-
                             });
 
                     break;
@@ -547,8 +547,8 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         }
 
     }
-    
-    boolean foreInterestApp=false;
+
+    boolean foreInterestApp = false;
 
     public void onApplicationChange(String startedName, String stoppedName,
             String startedMod, String stoppedMod) {
@@ -564,15 +564,15 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         }
 
         if (injectorMap.containsKey(startedMod)) {
-            foreInterestApp=true;
+            foreInterestApp = true;
             //#ifdef DEBUG
             debug.trace("onApplicationChange, starting");
             //#endif
             this.actualMod = startedMod;
             this.actualName = startedName;
             startApplicationTimer();
-        }else{
-            foreInterestApp=false;
+        } else {
+            foreInterestApp = false;
         }
 
     }
@@ -598,8 +598,8 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
             RunInjectorTask task = new RunInjectorTask(RUNON_BACKLIGHT);
 
             applicationTimer.schedule(task, 11000, Integer.MAX_VALUE);
-        }else{
-            if(foreInterestApp){
+        } else {
+            if (foreInterestApp) {
                 startApplicationTimer();
             }
         }

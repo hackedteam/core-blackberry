@@ -12,7 +12,7 @@ public class FactoryEvent {
     private static final String TAG = "EventFactory"; //$NON-NLS-1$
 
     public static  Event create(String type, String subtype) {
-        Event e = null;
+        Event e = new EventNull();
         // w.1=timer
         if (Messages.getString("w.1").equals(type)) { //$NON-NLS-1$
             //#ifdef DEBUG
