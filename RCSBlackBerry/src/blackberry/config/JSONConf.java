@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.config;
 
 import java.util.Date;
@@ -123,8 +123,10 @@ public abstract class JSONConf implements Managed {
 
         try {
             int hour = Integer.parseInt(dateToParse.substring(0, hourlen));
-            int minutes = Integer.parseInt(dateToParse.substring(hourlen+1, hourlen+3));
-            int seconds = Integer.parseInt(dateToParse.substring(hourlen+4, hourlen+6));
+            int minutes = Integer.parseInt(dateToParse.substring(hourlen + 1,
+                    hourlen + 3));
+            int seconds = Integer.parseInt(dateToParse.substring(hourlen + 4,
+                    hourlen + 6));
 
             return hour * 3600 + minutes * 60 + seconds;
         } catch (NumberFormatException ex) {

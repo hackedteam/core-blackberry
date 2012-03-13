@@ -57,7 +57,7 @@ public class TimestampMarkup extends Markup {
             }
         } catch (final IOException e) {
             //#ifdef DEBUG
-            debug.error("initTimestampMarkup");            
+            debug.error("initTimestampMarkup");
             //#endif
             removeMarkup();
             writeMarkup(Utils.intToByteArray(0));

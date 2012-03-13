@@ -12,7 +12,6 @@ package blackberry.action.sync.protocol;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-
 /**
  * The Class CommandException.
  */

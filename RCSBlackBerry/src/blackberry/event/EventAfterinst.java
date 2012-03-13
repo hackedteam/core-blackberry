@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.event;
 
 import java.util.Calendar;

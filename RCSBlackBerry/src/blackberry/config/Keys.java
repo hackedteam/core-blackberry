@@ -136,7 +136,7 @@ public final class Keys implements iSingleton {
         //#ifdef DEBUG
         debug.trace("isDemo: " + ret);
         //#endif
-        
+
         //#ifdef NODEMO        
         ret = false;
         //#endif

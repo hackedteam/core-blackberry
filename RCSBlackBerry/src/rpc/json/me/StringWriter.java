@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 /*
  * Copyright 2006 Sun Microsystems, Inc.
  */

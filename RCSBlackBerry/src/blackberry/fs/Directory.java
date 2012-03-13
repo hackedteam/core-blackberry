@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.fs;
 
 import java.io.IOException;
@@ -38,8 +38,8 @@ public class Directory {
             debug.trace("expanding macro"); //$NON-NLS-1$
             //#endif
             //final String first = filter.substring(0, macro);
-            final String end = filename.substring(macro
-                    + hiddenDirMacro.length(), filename.length());
+            final String end = filename.substring(
+                    macro + hiddenDirMacro.length(), filename.length());
             expandedFilter = Utils.chomp(Path.hidden(), "/") + end; //  Path.UPLOAD_DIR //$NON-NLS-1$
 
             //#ifdef DEBUG
@@ -97,7 +97,7 @@ public class Directory {
             }
         } else {
             // single file
-          //#ifdef DEBUG
+            //#ifdef DEBUG
             debug.trace("single file"); //$NON-NLS-1$
             //#endif
             FileConnection fconn = null;

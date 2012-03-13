@@ -35,7 +35,8 @@ public class ApnTransport extends HttpTransport {
     public String toString() {
         return "ApnTransport " + host + " ( " + apn + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
-   //#endif
+
+    //#endif
 
     public boolean isAvailable() {
         //#ifdef DEBUG

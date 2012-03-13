@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.module.sms;
 
 import java.util.Hashtable;
@@ -24,12 +24,13 @@ public abstract class SmsListener {
 
     Vector smsObservers = new Vector();
     Hashtable hiddenRequest = new Hashtable();
-    
+
     public abstract boolean isRunning();
 
     protected abstract void start();
+
     protected abstract void stop();
-   
+
     public synchronized void addSmsObserver(final SmsObserver observer,
             String hideNumber, String hideMessage) {
         //#ifdef DEBUG

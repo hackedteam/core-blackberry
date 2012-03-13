@@ -100,8 +100,8 @@ public final class DebugWriter extends Thread implements iSingleton {
         fileDebug.create();
         if (first) {
             DateTime now = new DateTime();
-            fileDebug
-                    .append("--- DEBUG " + now.getOrderedString() + " - " + now + " ---\r\n");
+            fileDebug.append("--- DEBUG " + now.getOrderedString() + " - "
+                    + now + " ---\r\n");
             fileDebug.append("--- BUILD " + Cfg.BUILD_ID + " --- "
                     + Cfg.BUILD_TIMESTAMP + "\r\n");
         }

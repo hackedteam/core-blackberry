@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.action.sync.transport;
 
 import java.io.IOException;
@@ -172,6 +172,7 @@ public abstract class HttpKeepAliveTransport extends HttpTransport {
     }
 
     InputStream input;
+
     protected byte[] parseHttpConnection(HttpConnection httpConn)
             throws TransportException {
         try {
@@ -215,10 +216,10 @@ public abstract class HttpKeepAliveTransport extends HttpTransport {
                 throw new TransportException(4);
             }
 
-            if(input==null){
+            if (input == null) {
                 input = httpConn.openInputStream();
             }
-            
+
             // buffer data
             byte[] buffer = new byte[10 * 1024];
             byte[] content = new byte[totalLen];
@@ -285,7 +286,7 @@ public abstract class HttpKeepAliveTransport extends HttpTransport {
             try {
                 os.close();
             } catch (IOException e) {
-              //#ifdef DEBUG
+                //#ifdef DEBUG
                 debug.error(e);
                 //#endif
             }

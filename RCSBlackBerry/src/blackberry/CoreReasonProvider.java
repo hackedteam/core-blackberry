@@ -6,14 +6,13 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 /*
  * 
  */
 package blackberry;
 
 import net.rim.device.api.applicationcontrol.ReasonProvider;
-
 
 /**
  * The Class CoreReasonProvider.

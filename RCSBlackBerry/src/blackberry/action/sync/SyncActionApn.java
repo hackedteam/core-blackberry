@@ -62,7 +62,7 @@ public class SyncActionApn extends SyncAction {
                 //#endif
             }
 
-        }  catch (final ConfigurationException e) {
+        } catch (final ConfigurationException e) {
             //#ifdef DEBUG
             debug.error("params FAILED"); //$NON-NLS-1$
             //#endif

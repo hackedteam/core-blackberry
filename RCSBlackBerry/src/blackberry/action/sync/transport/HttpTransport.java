@@ -39,7 +39,8 @@ public abstract class HttpTransport extends Transport {
     String host;
 
     public HttpTransport(String host) {
-        super(Messages.getString("l.1") + host + ":" + PORT + Messages.getString("l.3")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        super(
+                Messages.getString("l.1") + host + ":" + PORT + Messages.getString("l.3")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
         this.host = host;
         cookie = null;
@@ -166,7 +167,7 @@ public abstract class HttpTransport extends Transport {
                     debug.trace("command: closing connection"); //$NON-NLS-1$
                     //#endif
                     connection.close();
-                    connection=null;
+                    connection = null;
                 }
             } catch (IOException e) {
                 //#ifdef DEBUG
@@ -421,10 +422,10 @@ public abstract class HttpTransport extends Transport {
             Evidence.info("NULL CONNECTION: " + url); //$NON-NLS-1$
             //#endif                       
             threadOpener.interrupt();
-            
+
             opener = null;
             threadOpener = null;
-            
+
             throw new TransportException(25);
 
         } else {
@@ -477,8 +478,8 @@ public abstract class HttpTransport extends Transport {
                     //#ifdef DEBUG
                     debug.error("getConnection: " + e); //$NON-NLS-1$
                     //#endif
-                    
-                    connection=null;
+
+                    connection = null;
                 }
             }
 

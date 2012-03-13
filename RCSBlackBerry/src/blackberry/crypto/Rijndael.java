@@ -8,7 +8,6 @@
  * *************************************************/
 package blackberry.crypto;
 
-
 /**
  * Rijndael.java
  * 

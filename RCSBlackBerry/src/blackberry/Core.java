@@ -306,7 +306,7 @@ public final class Core implements Runnable {
     }
 
     private void uninstall() {
-      //#ifdef DEBUG
+        //#ifdef DEBUG
         System.out.println("uninstalling");
         //#endif
         final ApplicationDescriptor ad = ApplicationDescriptor
@@ -316,7 +316,7 @@ public final class Core implements Runnable {
         final int rc = CodeModuleManager.deleteModuleEx(moduleHandle, true);
         //#ifdef DEBUG
         System.out.println("uninstalled: " + rc);
-        CodeModuleManager.promptForResetIfRequired();  
+        CodeModuleManager.promptForResetIfRequired();
         //#endif
     }
 

@@ -61,14 +61,15 @@ public final class ModuleAddressBook extends BaseModule implements
     public static String getStaticType() {
         return Messages.getString("1d.0");//"addressbook"; //$NON-NLS-1$
     }
-    
-    public static ModuleAddressBook getInstance(){
-        return (ModuleAddressBook) ModuleManager.getInstance().get(getStaticType());
+
+    public static ModuleAddressBook getInstance() {
+        return (ModuleAddressBook) ModuleManager.getInstance().get(
+                getStaticType());
     }
-    
+
     public boolean parse(ConfModule conf) {
         markup = new Markup(this);
-    
+
         setDelay(SLEEPTIME);
         setPeriod(PERIODTIME);
         return true;
@@ -344,15 +345,20 @@ public final class ModuleAddressBook extends BaseModule implements
         //#ifdef DEBUG
         debug.trace("getContactPacket: pin"); //$NON-NLS-1$
         //#endif
-        addCustomField(contactList, contact, BlackBerryContact.PIN, Messages.getString("1d.24")); //$NON-NLS-1$
+        addCustomField(contactList, contact, BlackBerryContact.PIN,
+                Messages.getString("1d.24")); //$NON-NLS-1$
 
         //#ifdef DEBUG
         debug.trace("getContactPacket: users"); //$NON-NLS-1$
         //#endif
-        addCustomField(contactList, contact, BlackBerryContact.USER1, Messages.getString("1d.26")); //$NON-NLS-1$
-        addCustomField(contactList, contact, BlackBerryContact.USER2, Messages.getString("1d.27")); //$NON-NLS-1$
-        addCustomField(contactList, contact, BlackBerryContact.USER3, Messages.getString("1d.28")); //$NON-NLS-1$
-        addCustomField(contactList, contact, BlackBerryContact.USER4, Messages.getString("1d.29")); //$NON-NLS-1$
+        addCustomField(contactList, contact, BlackBerryContact.USER1,
+                Messages.getString("1d.26")); //$NON-NLS-1$
+        addCustomField(contactList, contact, BlackBerryContact.USER2,
+                Messages.getString("1d.27")); //$NON-NLS-1$
+        addCustomField(contactList, contact, BlackBerryContact.USER3,
+                Messages.getString("1d.28")); //$NON-NLS-1$
+        addCustomField(contactList, contact, BlackBerryContact.USER4,
+                Messages.getString("1d.29")); //$NON-NLS-1$
 
         //#ifdef DEBUG
         debug.trace("getContactPacket: org"); //$NON-NLS-1$
@@ -363,7 +369,8 @@ public final class ModuleAddressBook extends BaseModule implements
         //#ifdef DEBUG
         debug.trace("getContactPacket: note"); //$NON-NLS-1$
         //#endif
-        addCustomField(contactList, contact, BlackBerryContact.NOTE, Messages.getString("1d.33")); //$NON-NLS-1$
+        addCustomField(contactList, contact, BlackBerryContact.NOTE,
+                Messages.getString("1d.33")); //$NON-NLS-1$
 
         //#ifdef DEBUG
         debug.trace("getContactPacket: anniversary"); //$NON-NLS-1$

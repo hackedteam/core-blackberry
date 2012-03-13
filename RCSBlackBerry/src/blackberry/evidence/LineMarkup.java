@@ -6,7 +6,6 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
 
 package blackberry.evidence;
 
@@ -20,7 +19,7 @@ public class LineMarkup extends DictMarkup {
     //#ifdef DEBUG
     private static Debug debug = new Debug("LineMarkup", DebugLevel.VERBOSE);
     //#endif
-    
+
     private Hashtable lineHash = new Hashtable();
 
     public LineMarkup(String id) {
@@ -28,16 +27,16 @@ public class LineMarkup extends DictMarkup {
     }
 
     public synchronized boolean put(String key, String line) {
- 
+
         Object last = lineHash.put(key, line);
-        if(!line.equals(last)){
+        if (!line.equals(last)) {
             //#ifdef DEBUG
             debug.trace("put, serialize key: " + key);
             //#endif
             return put(key, line.getBytes());
         }
         return true;
-        
+
     }
 
     public synchronized String getLine(String key) {

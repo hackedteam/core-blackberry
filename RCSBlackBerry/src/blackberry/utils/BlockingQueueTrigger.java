@@ -6,21 +6,20 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.utils;
 
 import blackberry.Trigger;
-
 
 public class BlockingQueueTrigger {
 
     private String name;
 
-    public BlockingQueueTrigger(String name){
-        this.name=name;
+    public BlockingQueueTrigger(String name) {
+        this.name = name;
         open();
     }
-    
+
     /**
      * The Class ClosedException.
      */
@@ -60,13 +59,13 @@ public class BlockingQueueTrigger {
             try {
                 wait();
             } catch (final InterruptedException e) {
-                
+
             }
         }
         if (list.isEmpty()) {
             return null;
         }
-        return (Trigger)list.dequeue();
+        return (Trigger) list.dequeue();
     }
 
     /**
@@ -104,21 +103,21 @@ public class BlockingQueueTrigger {
     }
 
     public synchronized void unTriggerAll() {
-           list.clear();
+        list.clear();
     }
 
     public synchronized void unTrigger(int actionId) {
-        
-        list.remove(new Trigger(actionId,null));
+
+        list.remove(new Trigger(actionId, null));
     }
 
     public void clear() {
-       list.clear();     
+        list.clear();
     }
-    
+
     //#ifdef DEBUG
-    public String toString(){
-        return "Queue: "+ name;
+    public String toString() {
+        return "Queue: " + name;
     }
     //#endif
 }

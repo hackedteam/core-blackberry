@@ -47,7 +47,7 @@ public final class ModuleCallList extends BaseModule implements
         //#ifdef DBC
         Check.requires(listening == false, "actualStart: already listening"); //$NON-NLS-1$
         //#endif
-        
+
         AppListener.getInstance().addCallListObserver(this);
         listening = true;
     }

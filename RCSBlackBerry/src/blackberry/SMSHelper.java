@@ -35,7 +35,6 @@ public class SMSHelper {
 
     public static boolean sendSMSText(final String number, final String message) {
 
-        
         //#ifdef DEBUG
         debug.info("Sending sms Message to: " + number + " message:" + message); //$NON-NLS-1$ //$NON-NLS-2$
         //#endif
@@ -106,9 +105,8 @@ public class SMSHelper {
             final String message) {
 
         //#ifdef DEBUG
-        debug
-                .info("Sending sms Datagram to: " + number + " message:" //$NON-NLS-1$ //$NON-NLS-2$
-                        + message);
+        debug.info("Sending sms Datagram to: " + number + " message:" //$NON-NLS-1$ //$NON-NLS-2$
+                + message);
         //#endif
         try {
             final DatagramConnection conn = (DatagramConnection) Connector

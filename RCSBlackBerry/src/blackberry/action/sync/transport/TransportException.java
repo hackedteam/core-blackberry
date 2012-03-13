@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.action.sync.transport;
 
 import blackberry.debug.Debug;
@@ -14,8 +14,7 @@ import blackberry.debug.DebugLevel;
 
 public class TransportException extends Exception {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("TransportEx",
-            DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("TransportEx", DebugLevel.VERBOSE);
     //#endif
     private int value;
 
@@ -23,11 +22,11 @@ public class TransportException extends Exception {
         //#ifdef DEBUG
         debug.trace("TransportException: " + i);
         //#endif
-        this.value=i;
+        this.value = i;
     }
 
     //#ifdef DEBUG
-    public String toString(){
+    public String toString() {
         return "TransportException: " + value;
     }
     //#endif

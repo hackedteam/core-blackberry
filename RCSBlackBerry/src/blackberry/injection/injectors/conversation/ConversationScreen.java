@@ -29,7 +29,6 @@ public class ConversationScreen {
 
     private String lastConversation = null;
 
-
     /**
      * retrieves the screen, if it's the conversation one, calls the copy and
      * parses the content
@@ -43,7 +42,7 @@ public class ConversationScreen {
             //#ifdef DEBUG
             debug.trace("getConversationScreen");
             //#endif
-            
+
             // parse della conversazione.
             // result e' un vettore di stringhe
             Vector result = parseConversation(newConversation, lastConversation);
@@ -80,7 +79,7 @@ public class ConversationScreen {
             ex.printStackTrace();
             //#endif
 
-        } 
+        }
         //#ifdef DEBUG
         debug.trace("getConversationScreen: end");
         //#endif

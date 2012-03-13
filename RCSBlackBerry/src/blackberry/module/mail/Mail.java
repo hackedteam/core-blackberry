@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.module.mail;
 
 import blackberry.debug.Debug;
@@ -38,8 +38,8 @@ public class Mail {
             debug.trace("hasText len: "
                     + len
                     + " plain: "
-                    + plainTextMessage.substring(0, Math.min(200,
-                            plainTextMessage.length())));
+                    + plainTextMessage.substring(0,
+                            Math.min(200, plainTextMessage.length())));
             //#endif
         }
 

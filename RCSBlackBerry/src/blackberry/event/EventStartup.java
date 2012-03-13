@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.event;
 
 import blackberry.config.ConfEvent;
@@ -24,7 +24,7 @@ public class EventStartup extends Event {
     }
 
     protected void actualLoop() {
-    
+
     }
 
     protected void actualStop() {

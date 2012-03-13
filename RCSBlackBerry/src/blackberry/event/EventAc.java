@@ -17,7 +17,6 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.BatteryStatusObserver;
 
-
 /**
  * The Class AcEvent.
  */
@@ -31,7 +30,6 @@ public final class EventAc extends Event implements BatteryStatusObserver {
     int actionOnEnter;
     int actionOnExit;
 
-
     /*
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualStart()
@@ -44,7 +42,7 @@ public final class EventAc extends Event implements BatteryStatusObserver {
     }
 
     protected void actualLoop() {
-    
+
     }
 
     /*
@@ -122,7 +120,7 @@ public final class EventAc extends Event implements BatteryStatusObserver {
      * @see blackberry.event.Event#parse(byte[])
      */
     protected boolean parse(ConfEvent conf) {
-     
+
         return true;
     }
 

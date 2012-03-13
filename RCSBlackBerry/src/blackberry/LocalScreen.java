@@ -6,13 +6,13 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry;
 
 import net.rim.device.api.ui.component.LabelField;
 import net.rim.device.api.ui.container.MainScreen;
 
-public class LocalScreen extends MainScreen{
+public class LocalScreen extends MainScreen {
 
     public LocalScreen(Main main) {
         super();

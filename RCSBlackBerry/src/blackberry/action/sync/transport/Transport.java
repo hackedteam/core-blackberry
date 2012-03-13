@@ -33,6 +33,7 @@ public abstract class Transport {
     public String toString() {
         return "Transport " + getUrl(); //$NON-NLS-1$
     }
+
     //#endif
 
     public abstract boolean isAvailable();

@@ -15,10 +15,11 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.BacklightObserver;
 
-public class EventStandby extends Event implements BacklightObserver{
+public class EventStandby extends Event implements BacklightObserver {
     //#ifdef DEBUG
     private static Debug debug = new Debug("ScreenSaverEvent",
             DebugLevel.VERBOSE);
+
     //#endif
 
     public boolean parse(ConfEvent event) {

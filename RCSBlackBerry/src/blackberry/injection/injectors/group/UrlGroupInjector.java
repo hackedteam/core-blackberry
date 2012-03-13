@@ -6,28 +6,28 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.injection.injectors.group;
 
 import blackberry.injection.injectors.AInjector;
 
-
 public abstract class UrlGroupInjector extends AInjector {
 
-
-    public boolean enabled(){
+    public boolean enabled() {
         return enabledGroup && enabled;
     }
-    
-    static boolean  enabledGroup;
+
+    static boolean enabledGroup;
+
     static public boolean enabledGroup() {
         return enabledGroup;
     }
+
     static public void enableGroup(boolean value) {
-        enabledGroup=value;
+        enabledGroup = value;
     }
-    
-    public String getPreferredMenuName(){
+
+    public String getPreferredMenuName() {
         //TODO: messages
         return "Quit";
     }

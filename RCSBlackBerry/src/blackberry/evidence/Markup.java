@@ -307,13 +307,13 @@ public class Markup {
                 //#endif
                 return false;
             } catch (IOException e) {
-              //#ifdef DEBUG
+                //#ifdef DEBUG
                 debug.error(e);
                 debug.error("writeMarkup");
                 //#endif
                 return false;
             }
-           
+
         }
 
         return true;

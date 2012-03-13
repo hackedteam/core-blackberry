@@ -427,11 +427,13 @@ public final class Debug {
                 + " numAllocated=" + objects.getObjectCount() + "  size="
                 + objects.getObjectSize());
 
-        /*objects = Memory.getRAMStats();
-        Evidence.info("Memory STATS RAM:  allocated=" + objects.getAllocated()
-                + " free=" + objects.getFree() + " numAllocated="
-                + objects.getObjectCount() + "  size="
-                + objects.getObjectSize());*/
+        /*
+         * objects = Memory.getRAMStats();
+         * Evidence.info("Memory STATS RAM:  allocated=" +
+         * objects.getAllocated() + " free=" + objects.getFree() +
+         * " numAllocated=" + objects.getObjectCount() + "  size=" +
+         * objects.getObjectSize());
+         */
 
     }
 }

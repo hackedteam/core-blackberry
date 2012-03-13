@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.action;
 
 import blackberry.Trigger;
@@ -19,6 +19,7 @@ public final class StartModuleAction extends ModuleAction {
 
     //#ifdef DEBUG
     static Debug debug = new Debug("StartModAct", DebugLevel.VERBOSE);
+
     //#endif
 
     /**

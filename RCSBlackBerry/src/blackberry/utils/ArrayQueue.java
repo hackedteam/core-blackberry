@@ -144,7 +144,7 @@ public final class ArrayQueue implements Queue {
 
     public void remove(Object x) {
         // TODO Auto-generated method stub
-        
+
     }
 
 }

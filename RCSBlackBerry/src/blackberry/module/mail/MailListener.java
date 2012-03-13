@@ -46,7 +46,8 @@ import blackberry.module.ModuleMessage;
  * 
  * @author user1
  */
-public final class MailListener implements FolderListener, SendListener, iSingleton { //, StoreListener, SendListener {
+public final class MailListener implements FolderListener, SendListener,
+        iSingleton { //, StoreListener, SendListener {
 
     //#ifdef DEBUG
     static Debug debug = new Debug("MailListener", DebugLevel.VERBOSE);

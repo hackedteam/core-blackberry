@@ -17,7 +17,6 @@ import blackberry.debug.Check;
 import net.rim.device.api.i18n.SimpleDateFormat;
 import net.rim.device.api.util.DataBuffer;
 
-
 /**
  * The Class DateTime.
  */

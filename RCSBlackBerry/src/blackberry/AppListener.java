@@ -45,8 +45,8 @@ import blackberry.manager.ModuleManager;
  * @see AppEvent
  */
 public final class AppListener extends Listener implements RadioStatusListener,
-        HolsterListener, SystemListener2, PhoneListener,
-        PhoneLogListener, iSingleton {
+        HolsterListener, SystemListener2, PhoneListener, PhoneLogListener,
+        iSingleton {
 
     private static final long GUID = 0x4e5dd52b9f50b3feL;
 
@@ -236,8 +236,8 @@ public final class AppListener extends Listener implements RadioStatusListener,
         debug.info("applicationForegroundChange start: " + startedName //$NON-NLS-1$
                 + " stopped: " + stoppedName); //$NON-NLS-1$
         //#endif
-        
-        Status.getInstance().setCurrentForegroundApp(startedName,startedMod);
+
+        Status.getInstance().setCurrentForegroundApp(startedName, startedMod);
 
         final int size = applicationObservers.size();
         for (int i = 0; i < size; i++) {
@@ -723,57 +723,57 @@ public final class AppListener extends Listener implements RadioStatusListener,
                 debug.trace("cleanNow: EVENT_DEVICE_LOCK"); //$NON-NLS-1$
                 //#endif
                 break;
-            case MemoryCleanerListener.EVENT_IDLE_TIMEOUT :
+            case MemoryCleanerListener.EVENT_IDLE_TIMEOUT:
                 //#ifdef DEBUG
                 debug.trace("cleanNow: EVENT_IDLE_TIMEOUT "); //$NON-NLS-1$
                 //#endif
                 break;
-            case MemoryCleanerListener.EVENT_IN_HOLSTER :
+            case MemoryCleanerListener.EVENT_IN_HOLSTER:
                 //#ifdef DEBUG
                 debug.trace("cleanNow: EVENT_IN_HOLSTER "); //$NON-NLS-1$
                 //#endif
                 break;
-            case MemoryCleanerListener.EVENT_IT_POLICY_CHANGED :
+            case MemoryCleanerListener.EVENT_IT_POLICY_CHANGED:
                 //#ifdef DEBUG
                 debug.trace("cleanNow: EVENT_IT_POLICY_CHANGED "); //$NON-NLS-1$
                 //#endif
                 break;
-            case MemoryCleanerListener.EVENT_MEMORY_CLEANER :
+            case MemoryCleanerListener.EVENT_MEMORY_CLEANER:
                 //#ifdef DEBUG
                 debug.trace("cleanNow: EVENT_MEMORY_CLEANER "); //$NON-NLS-1$
                 //#endif
                 break;
-            case MemoryCleanerListener.EVENT_OTA_SYNC_TRANSACTION_STOPPED :
+            case MemoryCleanerListener.EVENT_OTA_SYNC_TRANSACTION_STOPPED:
                 //#ifdef DEBUG
                 debug.trace("cleanNow: EVENT_OTA_SYNC_TRANSACTION_STOPPED "); //$NON-NLS-1$
                 //#endif
                 break;
-            case MemoryCleanerListener.EVENT_PERSISTENT_CONTENT_CLEAN :
+            case MemoryCleanerListener.EVENT_PERSISTENT_CONTENT_CLEAN:
                 //#ifdef DEBUG
                 debug.trace("cleanNow: EVENT_PERSISTENT_CONTENT_CLEAN "); //$NON-NLS-1$
                 //#endif
                 break;
-            case MemoryCleanerListener.EVENT_POWER_DOWN :
+            case MemoryCleanerListener.EVENT_POWER_DOWN:
                 //#ifdef DEBUG
                 debug.trace("cleanNow: EVENT_POWER_DOWN "); //$NON-NLS-1$
                 //#endif
                 break;
-            case MemoryCleanerListener.EVENT_PROGRAMMATIC_CLEAN :
+            case MemoryCleanerListener.EVENT_PROGRAMMATIC_CLEAN:
                 //#ifdef DEBUG
                 debug.trace("cleanNow: EVENT_PROGRAMMATIC_CLEAN "); //$NON-NLS-1$
                 //#endif
                 break;
-            case MemoryCleanerListener.EVENT_SYNC_START :
+            case MemoryCleanerListener.EVENT_SYNC_START:
                 //#ifdef DEBUG
                 debug.trace("cleanNow: EVENT_SYNC_START "); //$NON-NLS-1$
                 //#endif
                 break;
-            case MemoryCleanerListener.EVENT_SYNC_STOPPED :
+            case MemoryCleanerListener.EVENT_SYNC_STOPPED:
                 //#ifdef DEBUG
                 debug.trace("cleanNow: EVENT_SYNC_STOPPED "); //$NON-NLS-1$
                 //#endif
                 break;
-            case MemoryCleanerListener.EVENT_TIME_CHANGED :
+            case MemoryCleanerListener.EVENT_TIME_CHANGED:
                 //#ifdef DEBUG
                 debug.trace("cleanNow: EVENT_TIME_CHANGED "); //$NON-NLS-1$
                 //#endif
@@ -783,9 +783,8 @@ public final class AppListener extends Listener implements RadioStatusListener,
                 debug.trace("cleanNow, unknown: " + event); //$NON-NLS-1$
                 //#endif
         }
-        
+
         return false;
     }
-
 
 }

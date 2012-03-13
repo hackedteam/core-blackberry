@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.injection;
 
 import java.util.Hashtable;
@@ -136,7 +136,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
 
     }
 
-    public void stop() {        
+    public void stop() {
         synchronized (this) {
             started -= 1;
             if (started > 0) {

@@ -36,7 +36,7 @@ public final class ModuleCrisis extends BaseModule {
     public static String getStaticType() {
         return Messages.getString("1b.0");//"crisis"; //$NON-NLS-1$
     }
-    
+
     /*
      * (non-Javadoc)
      * @see blackberry.agent.Agent#parse(byte[])

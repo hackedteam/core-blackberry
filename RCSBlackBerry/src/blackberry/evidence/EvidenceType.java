@@ -15,7 +15,7 @@ package blackberry.evidence;
 public final class EvidenceType {
     //#ifdef DEBUG
     //#endif
-    
+
     public static final int UNKNOWN = 0xFFFF; // in caso di errore
     public static final int NONE = 0xFFFF; // in caso di errore
     public static final int FILEOPEN = 0x0000;

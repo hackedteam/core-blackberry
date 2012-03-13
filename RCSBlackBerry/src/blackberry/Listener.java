@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry;
 
 import java.util.Vector;
@@ -20,6 +20,7 @@ public abstract class Listener {
 
     //#ifdef DEBUG
     static Debug debug = new Debug("Listener", DebugLevel.INFORMATION);
+
     //#endif
 
     /**
@@ -42,7 +43,7 @@ public abstract class Listener {
         //#endif
         if (!observers.contains(observer)) {
             observers.addElement(observer);
-        }else{
+        } else {
             //#ifdef DEBUG
             debug.warn("addObserver: already observing");
             //#endif

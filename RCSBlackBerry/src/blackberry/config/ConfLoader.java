@@ -94,7 +94,7 @@ public final class ConfLoader {
                 }
             }
         }
-        
+
         //#ifdef FAKECONF
         if (!loaded) {
             cleanConfiguration();

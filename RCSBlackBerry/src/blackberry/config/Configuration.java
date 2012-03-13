@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.config;
 
 import rpc.json.me.JSONArray;
@@ -142,11 +142,14 @@ public class Configuration {
 
         public void call(int moduleId, JSONObject params)
                 throws ConfigurationException, JSONException {
-            final String moduleType = params.getString(Messages.getString("q.18")); //$NON-NLS-1$
+            final String moduleType = params.getString(Messages
+                    .getString("q.18")); //$NON-NLS-1$
 
             //#ifdef DEBUG
-            /*debug.trace("call Module: " + moduleType + " Params size: "
-                    + params.length());*/
+            /*
+             * debug.trace("call Module: " + moduleType + " Params size: " +
+             * params.length());
+             */
             //#endif
 
             if (instantiate) {
@@ -202,7 +205,8 @@ public class Configuration {
             String desc = jaction.getString(Messages.getString("q.14")); //$NON-NLS-1$
             final Action a = new Action(actionId, desc);
 
-            JSONArray jsubactions = jaction.getJSONArray(Messages.getString("q.13")); //$NON-NLS-1$
+            JSONArray jsubactions = jaction.getJSONArray(Messages
+                    .getString("q.13")); //$NON-NLS-1$
             int subNum = jsubactions.length();
 
             //#ifdef DEBUG
@@ -212,7 +216,8 @@ public class Configuration {
             for (int j = 0; j < subNum; j++) {
                 JSONObject jsubaction = jsubactions.getJSONObject(j);
 
-                final String type = jsubaction.getString(Messages.getString("q.12")); //$NON-NLS-1$
+                final String type = jsubaction.getString(Messages
+                        .getString("q.12")); //$NON-NLS-1$
                 ConfAction conf = new ConfAction(actionId, j, type, jsubaction);
                 if (a.addSubAction(conf)) {
                     //#ifdef DEBUG
@@ -244,8 +249,8 @@ public class Configuration {
             //#ifdef DEBUG
             debug.trace("parseConfiguration: " + json); //$NON-NLS-1$
             //#endif
-            
-            if(json==null){
+
+            if (json == null) {
                 //#ifdef DEBUG
                 debug.error("parseConfiguration, null json");
                 //#endif
@@ -263,16 +268,16 @@ public class Configuration {
             debug.info("parseConfiguration -- MODULES"); //$NON-NLS-1$
             //#endif
             Visitor.load(jmodules, new LoadModule(instantiate));
-          //#ifdef DEBUG
+            //#ifdef DEBUG
             debug.info("parseConfiguration -- EVENTS"); //$NON-NLS-1$
             //#endif
             Visitor.load(jevents, new LoadEvent(instantiate));
-          //#ifdef DEBUG
+            //#ifdef DEBUG
             debug.info("parseConfiguration -- ACTIONS"); //$NON-NLS-1$
             //#endif
             Visitor.load(jactions, new LoadAction(instantiate));
 
-          //#ifdef DEBUG
+            //#ifdef DEBUG
             debug.info("parseConfiguration -- GLOBALS"); //$NON-NLS-1$
             //#endif
             loadGlobals(jglobals, instantiate);
@@ -363,8 +368,6 @@ public class Configuration {
 
         return null;
     }
-
-
 
     public boolean isDecrypted() {
         return jsonResource != null;

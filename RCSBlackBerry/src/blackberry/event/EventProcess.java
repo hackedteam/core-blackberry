@@ -22,13 +22,13 @@ import blackberry.interfaces.ApplicationObserver;
 import blackberry.debug.Check;
 import blackberry.utils.WChar;
 
-
 /**
  * The Class ProcessEvent.
  */
 public final class EventProcess extends Event implements ApplicationObserver {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("ProcessEvent", DebugLevel.INFORMATION); //$NON-NLS-1$
+    private static Debug debug = new Debug(
+            "ProcessEvent", DebugLevel.INFORMATION); //$NON-NLS-1$
     //#endif
 
     private int actionOnEnter, actionOnExit;
@@ -44,12 +44,12 @@ public final class EventProcess extends Event implements ApplicationObserver {
             starname = conf.getString(Messages.getString("v.2")); //$NON-NLS-1$
         } catch (final ConfigurationException e) {
             //#ifdef DEBUG
-                debug.trace(" Error: params FAILED");//$NON-NLS-1$
+            debug.trace(" Error: params FAILED");//$NON-NLS-1$
             //#endif
-    
+
             return false;
         }
-    
+
         return true;
     }
 
@@ -122,10 +122,10 @@ public final class EventProcess extends Event implements ApplicationObserver {
 
     static boolean matchStar(String wildcardProcess, String processName) {
 
-    	if(processName==null){
-    		return (wildcardProcess==null);
-    	}
-    	
+        if (processName == null) {
+            return (wildcardProcess == null);
+        }
+
         for (;;) {
 
             if (wildcardProcess.length() == 0) {
@@ -138,13 +138,15 @@ public final class EventProcess extends Event implements ApplicationObserver {
                     return true;
                 }
 
-                if (wildcardProcess.charAt(0) != '?' && wildcardProcess.charAt(0) != '*') {
+                if (wildcardProcess.charAt(0) != '?'
+                        && wildcardProcess.charAt(0) != '*') {
                     int len = processName.length();
                     for (int i = 0; i < len; i++) {
                         char c = processName.charAt(0);
                         processName = processName.substring(1);
                         String tp = wildcardProcess.substring(1);
-                        if (c == wildcardProcess.charAt(0) && matchStar(tp, processName)) {
+                        if (c == wildcardProcess.charAt(0)
+                                && matchStar(tp, processName)) {
                             return true;
                         }
                     }
@@ -165,7 +167,8 @@ public final class EventProcess extends Event implements ApplicationObserver {
                 return false;
             }
 
-            if (wildcardProcess.charAt(0) != '?' && wildcardProcess.charAt(0) != processName.charAt(0)) {
+            if (wildcardProcess.charAt(0) != '?'
+                    && wildcardProcess.charAt(0) != processName.charAt(0)) {
                 return false;
             }
 

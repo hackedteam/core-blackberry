@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.event;
 
 import java.util.Calendar;
@@ -135,7 +135,7 @@ public class EventDate extends Event {
 
     private boolean setDailyDelay() {
         Calendar now = Calendar.getInstance(TimeZone.getTimeZone("GMT")); //$NON-NLS-1$
-    
+
         //#ifdef DEBUG
         debug.trace("setDailyDelay start: " + start.getTime().getTime()); //$NON-NLS-1$
         debug.trace("setDailyDelay stop: " + start.getTime().getTime()); //$NON-NLS-1$

@@ -195,8 +195,7 @@ public final class EventBattery extends Event implements BatteryStatusObserver {
             //#endif
             onEnter();
 
-        }else
-        if ((perc < minLevel || perc > maxLevel) && inRange == true) {
+        } else if ((perc < minLevel || perc > maxLevel) && inRange == true) {
             //outside
 
             inRange = false;

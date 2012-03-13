@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry;
 
 import java.io.ByteArrayInputStream;
@@ -31,8 +31,8 @@ public class Messages implements iSingleton {
     private static Debug debug = new Debug("Messages", DebugLevel.VERBOSE);
     //#endif
 
-    private  Hashtable hashMessages;
-    private  boolean initialized;
+    private Hashtable hashMessages;
+    private boolean initialized;
 
     private static Messages instance;
 
@@ -52,14 +52,14 @@ public class Messages implements iSingleton {
 
         return instance;
     }
-    
+
     private synchronized boolean init() {
         if (initialized) {
             return true;
         }
 
         try {
-            
+
             hashMessages = new Hashtable();
 
             InputStream stream = Messages.class.getClass().getResourceAsStream(
@@ -104,8 +104,8 @@ public class Messages implements iSingleton {
                 }
 
                 //#ifdef DBC
-                Check.asserts(!hashMessages.contains(kv[0]), "key already present: "
-                        + kv[0]);
+                Check.asserts(!hashMessages.contains(kv[0]),
+                        "key already present: " + kv[0]);
                 //#endif
 
                 hashMessages.put(kv[0], kv[1]);
@@ -125,14 +125,14 @@ public class Messages implements iSingleton {
         }
         return true;
     }
-    
+
     public static String getString(String key) {
         return Messages.getInstance().getStringInstance(key);
     }
 
     public String getStringInstance(String key) {
         if (!initialized) {
-            
+
             if (!init()) {
                 return null;
             }

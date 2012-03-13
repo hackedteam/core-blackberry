@@ -20,7 +20,6 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.fs.Path;
 
-
 /**
  * The Class CallEvent.
  */
@@ -36,24 +35,24 @@ public final class EventCall extends Event implements PhoneListener {
     public boolean parse(ConfEvent conf) {
         try {
             number = conf.getString(Messages.getString("s.0")); //$NON-NLS-1$
-    
+
             //#ifdef DEBUG
-                debug.trace(" exitAction: " + actionOnExit + " number: \"");//$NON-NLS-1$ //$NON-NLS-2$
+            debug.trace(" exitAction: " + actionOnExit + " number: \"");//$NON-NLS-1$ //$NON-NLS-2$
             //#endif
         } catch (final ConfigurationException e) {
-           //#ifdef DEBUG
-                debug.error(" Error: params FAILED");//$NON-NLS-1$
+            //#ifdef DEBUG
+            debug.error(" Error: params FAILED");//$NON-NLS-1$
             //#endif
             return false;
         }
-    
+
         return true;
     }
 
     protected void actualStart() {
         Phone.addPhoneListener(this);
     }
-    
+
     public void actualLoop() {
         // TODO Auto-generated method stub
     }
@@ -62,7 +61,6 @@ public final class EventCall extends Event implements PhoneListener {
         Phone.removePhoneListener(this);
         onExit();
     }
-
 
     Hashtable callingHistory = new Hashtable();
 

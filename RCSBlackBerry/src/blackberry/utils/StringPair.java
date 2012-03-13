@@ -6,8 +6,9 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.utils;
+
 //#ifdef DEBUG
 //#endif
 public final class StringPair {

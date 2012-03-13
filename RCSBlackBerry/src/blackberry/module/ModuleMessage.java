@@ -116,7 +116,6 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         //#endif
         //smsListener.setMessageAgent(this);
 
-        
     }
 
     public boolean parse(ConfModule conf) {
@@ -232,15 +231,15 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
      * @see blackberry.threadpool.TimerJob#actualStop()
      */
     public void actualStop() {
-        if (smsEnabled && smsListener!=null) {
+        if (smsEnabled && smsListener != null) {
             smsListener.removeSmsObserver(this);
         }
 
-        if (mmsEnabled && mmsListener!=null) {
+        if (mmsEnabled && mmsListener != null) {
             mmsListener.stop();
         }
 
-        if (mailEnabled && mailListener!=null) {
+        if (mailEnabled && mailListener != null) {
             mailListener.removeSingleMailObserver(this);
         }
     }
@@ -441,7 +440,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
     public void onNewMms(final byte[] byteMessage, String address,
             final boolean incomin) {
-        
+
     }
 
     private String getMySmsAddress() {

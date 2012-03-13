@@ -11,7 +11,6 @@ package blackberry.action.sync.protocol;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-
 /**
  * The Class ProtocolException. Viene lanciato in caso di eccezione durante
  * l'esecuzione di un protocollo. Come effetto fa cadere la comunicazione.
@@ -43,6 +42,6 @@ public class ProtocolException extends Exception {
 
     public ProtocolException(int i) {
         this(false);
-        this.value=i;
+        this.value = i;
     }
 }

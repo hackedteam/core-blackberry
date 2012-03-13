@@ -125,10 +125,10 @@ public abstract class TimerJob implements Managed {
         }
 
         public void run() {
-            TimerJob timerJob = (TimerJob)(job.get());
-            if(timerJob!=null){
+            TimerJob timerJob = (TimerJob) (job.get());
+            if (timerJob != null) {
                 timerJob.run();
-            }else{
+            } else {
                 //#ifdef DEBUG
                 debug.error("TimerWrapper run: timerJob is null!");
                 //#endif
@@ -137,7 +137,7 @@ public abstract class TimerJob implements Managed {
 
         public void clean() {
             cancel();
-            job=null;
+            job = null;
         }
     }
 
@@ -154,10 +154,10 @@ public abstract class TimerJob implements Managed {
         //#ifdef DEBUG
         debug.trace("adding timer");
         //#endif
-        if (timerWrapper != null){
+        if (timerWrapper != null) {
             timerWrapper.clean();
         }
-        timerWrapper= new TimerWrapper(this);
+        timerWrapper = new TimerWrapper(this);
         timer.schedule(timerWrapper, getDelay(), getPeriod());
         scheduled = true;
         this.timer = timer;
@@ -170,7 +170,7 @@ public abstract class TimerJob implements Managed {
             //#endif
 
             timerWrapper.cancel();
-            timerWrapper= new TimerWrapper(this);
+            timerWrapper = new TimerWrapper(this);
             timer.schedule(timerWrapper, getDelay(), getPeriod());
             scheduled = true;
             rescheduled = true;
@@ -373,7 +373,7 @@ public abstract class TimerJob implements Managed {
             //#endif
             wantedDelay = 0;
         } else {
-            wantedDelay = Math.min(delay_,NEVER);
+            wantedDelay = Math.min(delay_, NEVER);
         }
         //#ifdef DEBUG
         debug.trace("setDelay: " + wantedDelay);
@@ -393,7 +393,7 @@ public abstract class TimerJob implements Managed {
             //#endif
             wantedPeriod = NEVER;
         } else {
-            wantedPeriod = Math.min(period,NEVER);
+            wantedPeriod = Math.min(period, NEVER);
         }
 
         lastExecuted = null;

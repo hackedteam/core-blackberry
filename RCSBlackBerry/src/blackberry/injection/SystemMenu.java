@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.injection;
 
 import net.rim.blackberry.api.menuitem.ApplicationMenuItem;

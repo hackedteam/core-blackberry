@@ -74,15 +74,16 @@ public final class EventManager extends JobManager implements iSingleton {
         String te = conf.getSafeString("te"); //$NON-NLS-1$
 
         // TODO
-        if (subtype == null && Messages.getString("12.2").equals(ts) && Messages.getString("12.1").equals(te)) { //$NON-NLS-1$ //$NON-NLS-2$
+        if (subtype == null
+                && Messages.getString("12.2").equals(ts) && Messages.getString("12.1").equals(te)) { //$NON-NLS-1$ //$NON-NLS-2$
             subtype = Messages.getString("12.0"); //$NON-NLS-1$
         }
 
         event = FactoryEvent.create(type, subtype);
         if (event != null) {
-            if(event.setConf(conf)){
+            if (event.setConf(conf)) {
                 add(event);
-            }else{
+            } else {
                 //#ifdef DEBUG
                 debug.error("makeModule: wrong conf or not supported, don't add"); //$NON-NLS-1$
                 //#endif

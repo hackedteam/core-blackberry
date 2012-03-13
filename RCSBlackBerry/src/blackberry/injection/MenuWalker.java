@@ -56,7 +56,9 @@ public class MenuWalker {
     public static boolean walk(String[] menus, Screen screen, boolean simple) {
         //#ifdef DEBUGWALK
         final Debug debug = new Debug("walk", DebugLevel.VERBOSE);
-        debug.trace("walk, active screen:" + UiApplication.getUiApplication().getActiveScreen() + " Screen: " + screen);
+        debug.trace("walk, active screen:"
+                + UiApplication.getUiApplication().getActiveScreen()
+                + " Screen: " + screen);
 
         for (int j = 0; j < menus.length; j++) {
             String menuItemText = menus[j];

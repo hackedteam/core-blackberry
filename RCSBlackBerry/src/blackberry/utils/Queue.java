@@ -9,7 +9,6 @@
  * *************************************************/
 package blackberry.utils;
 
-
 //#ifdef DEBUG
 //#endif
 //Queue interface

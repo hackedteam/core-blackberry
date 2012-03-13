@@ -6,9 +6,8 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
-package blackberry.injection;
 
+package blackberry.injection;
 
 import java.util.Hashtable;
 import java.util.Vector;
@@ -244,5 +243,5 @@ public class FieldExplorer {
         }
         return name;
     }
-  //#endif
+    //#endif
 }

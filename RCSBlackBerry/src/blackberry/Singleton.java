@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry;
 
 import java.util.Hashtable;
@@ -19,11 +19,11 @@ public class Singleton {
     private static Singleton instance;
 
     private Hashtable hashtable;
-    
-    private Singleton(){
-        hashtable=new Hashtable();
+
+    private Singleton() {
+        hashtable = new Hashtable();
     }
-    
+
     public static synchronized Singleton self() {
         if (instance == null) {
             instance = (Singleton) RuntimeStore.getRuntimeStore().get(GUID);
@@ -37,19 +37,19 @@ public class Singleton {
         return instance;
     }
 
-    public iSingleton get(long guid) {        
+    public iSingleton get(long guid) {
         return (iSingleton) hashtable.get(new Long(guid));
     }
 
     public void put(long guid, iSingleton singleton) {
         hashtable.put(new Long(guid), singleton);
     }
-    
-    public void deleteRuntime(){
+
+    public void deleteRuntime() {
         RuntimeStore.getRuntimeStore().remove(GUID);
     }
-    
-    public void clear(){
+
+    public void clear() {
         hashtable.clear();
         deleteRuntime();
     }

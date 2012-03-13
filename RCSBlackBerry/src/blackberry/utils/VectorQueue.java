@@ -6,7 +6,7 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
+
 package blackberry.utils;
 
 import java.util.Vector;
@@ -20,15 +20,16 @@ import java.util.Vector;
 // void makeEmpty( )      --> Remove all items
 // ******************ERRORS********************************
 // getFront or dequeue on empty queue
+
 public class VectorQueue implements Queue {
 
     Vector vector = new Vector();
-    
+
     public synchronized Object dequeue() {
         if (isEmpty()) {
             throw new UnderflowException("dequeue");
         }
-        Object obj=vector.elementAt(0);
+        Object obj = vector.elementAt(0);
         vector.removeElementAt(0);
         return obj;
     }
@@ -41,13 +42,13 @@ public class VectorQueue implements Queue {
         if (isEmpty()) {
             throw new UnderflowException("getFront");
         }
-        
-        Object obj=vector.elementAt(0);
+
+        Object obj = vector.elementAt(0);
         vector.removeElementAt(0);
         return obj;
     }
 
-    public synchronized boolean isEmpty() {        
+    public synchronized boolean isEmpty() {
         return vector.isEmpty();
     }
 

