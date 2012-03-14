@@ -457,6 +457,7 @@
 		<exec executable="${jde.45.home}/bin/JavaLoader.exe" dir="." failonerror="true">
 			<arg value="-u" />
 			<arg value="erase" />
+			<arg value="-f" />
 			<arg value="${core.codename}.cod" />
 		</exec>
 	</target>
