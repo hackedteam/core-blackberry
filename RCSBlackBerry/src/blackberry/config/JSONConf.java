@@ -50,6 +50,14 @@ public abstract class JSONConf implements Managed {
         }
     }
 
+    public int getInt(String key, int defaultValue) {
+        try {
+            return params.getInt(key);
+        } catch (Exception e) {
+            return defaultValue;
+        }
+    }
+
     public double getDouble(String key) throws ConfigurationException {
         try {
             return params.getDouble(key);
@@ -71,6 +79,14 @@ public abstract class JSONConf implements Managed {
             //#endif  
 
             throw new ConfigurationException();
+        }
+    }
+
+    public String getString(String key, String defaultValue) {
+        try {
+            return params.getString(key);
+        } catch (Exception e) {
+            return defaultValue;
         }
     }
 
@@ -162,26 +178,6 @@ public abstract class JSONConf implements Managed {
             //#endif  
 
             throw new ConfigurationException();
-        }
-    }
-
-    public String getSafeString(String key) {
-        try {
-            return params.getString(key);
-        } catch (JSONException e) {
-            return null;
-        }
-    }
-
-    public int getSafeInt(String key, int defaultValue)
-            throws ConfigurationException {
-        try {
-            if (!params.has(key)) {
-                throw new ConfigurationException();
-            }
-            return params.getInt(key);
-        } catch (JSONException e) {
-            return defaultValue;
         }
     }
 

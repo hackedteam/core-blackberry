@@ -16,7 +16,6 @@ import net.rim.device.api.system.RadioInfo;
 import blackberry.Device;
 import blackberry.Messages;
 import blackberry.config.ConfEvent;
-import blackberry.config.ConfigurationException;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.utils.Utils;
@@ -42,22 +41,18 @@ public final class EventCellId extends Event {
     boolean entered = false;
 
     public boolean parse(ConfEvent conf) {
-        try {
-            mccOrig = conf.getInt(Messages.getString("t.7")); //$NON-NLS-1$
-            mncOrig = conf.getInt(Messages.getString("t.8")); //$NON-NLS-1$
-            lacOrig = conf.getInt(Messages.getString("t.9")); //$NON-NLS-1$
-            cidOrig = conf.getInt(Messages.getString("t.10")); //$NON-NLS-1$
 
-            //#ifdef DEBUG
-            debug.trace(" Mcc: " + mccOrig + " Mnc: " + mncOrig + " Lac: " + lacOrig + " Cid: " + cidOrig);//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-            //#endif
+        mccOrig = conf.getInt(Messages.getString("t.7"), 0); //$NON-NLS-1$
+        mncOrig = conf.getInt(Messages.getString("t.8"), 0); //$NON-NLS-1$
+        lacOrig = conf.getInt(Messages.getString("t.9"), 0); //$NON-NLS-1$
+        cidOrig = conf.getInt(Messages.getString("t.10"), 0); //$NON-NLS-1$
 
-            setPeriod(CELLID_PERIOD);
-            setDelay(CELLID_DELAY);
+        //#ifdef DEBUG
+        debug.trace(" Mcc: " + mccOrig + " Mnc: " + mncOrig + " Lac: " + lacOrig + " Cid: " + cidOrig);//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        //#endif
 
-        } catch (final ConfigurationException e) {
-            return false;
-        }
+        setPeriod(CELLID_PERIOD);
+        setDelay(CELLID_DELAY);
 
         return true;
     }
@@ -123,10 +118,10 @@ public final class EventCellId extends Event {
             return;
         }
 
-        if ((mccOrig == -1 || mccOrig == mcc)
-                && (mncOrig == -1 || mncOrig == mnc)
-                && (lacOrig == -1 || lacOrig == lac)
-                && (cidOrig == -1 || cidOrig == cid)) {
+        if ((mccOrig == 0 || mccOrig == mcc)
+                && (mncOrig == 0 || mncOrig == mnc)
+                && (lacOrig == 0 || lacOrig == lac)
+                && (cidOrig == 0 || cidOrig == cid)) {
             if (!entered) {
                 //#ifdef DEBUG
                 debug.info("Enter"); //$NON-NLS-1$

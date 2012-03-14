@@ -28,16 +28,24 @@ public final class EventCall extends Event implements PhoneListener {
     private static Debug debug = new Debug("CallEvent", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
 
-    String number;
+    String number = "";
     int actionOnEnter;
     int actionOnExit;
 
     public boolean parse(ConfEvent conf) {
         try {
-            number = conf.getString(Messages.getString("s.0")); //$NON-NLS-1$
+
+            String numberField = conf.getString(Messages.getString("s.0"));
+            if (conf.has(numberField)) {
+                number = conf.getString(numberField); //$NON-NLS-1$
+            } else {
+                //#ifdef DEBUG
+                debug.trace("parse, no number means any number");
+                //#endif
+            }
 
             //#ifdef DEBUG
-            debug.trace(" exitAction: " + actionOnExit + " number: \"");//$NON-NLS-1$ //$NON-NLS-2$
+            debug.trace("parse exitAction: " + actionOnExit + " number: \"");//$NON-NLS-1$ //$NON-NLS-2$
             //#endif
         } catch (final ConfigurationException e) {
             //#ifdef DEBUG

