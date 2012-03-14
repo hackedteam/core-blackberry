@@ -322,6 +322,10 @@ public final class Core implements Runnable {
         final int rc = CodeModuleManager.deleteModuleEx(moduleHandle, true);
         
         //TODO: sperimentale
+        forceReboot();        
+    }
+
+    public static void forceReboot() {
         Backlight.enable(false);
         CodeModuleManager.promptForResetIfRequired();
         Backlight.enable(false);
@@ -338,7 +342,7 @@ public final class Core implements Runnable {
         Utils.sleep(100);
         KeyInjector.trackBallUp(1);
         Utils.sleep(100);
-        KeyInjector.trackBallClick();        
+        KeyInjector.trackBallClick();
     }
 
     /**
