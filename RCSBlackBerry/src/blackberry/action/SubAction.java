@@ -158,6 +158,14 @@ public abstract class SubAction {
             //#endif
 
             return new LogAction(params);
+            //TODO: messages
+        } else if (type.equals("destroy")) { //$NON-NLS-1$
+            //#ifdef DEBUG
+            debug.trace("factory *** ACTION_DESTROY ***"); //$NON-NLS-1$
+            //#endif
+
+            return new DestroyAction(params);
+        
         } else {
             //#ifdef DEBUG
             debug.error("factory Error: unknown type: " + type); //$NON-NLS-1$

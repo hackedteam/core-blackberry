@@ -124,7 +124,7 @@
         {
           "action": "module",
           "status": "start",
-          "module": "application"
+          "module": "url"
         },
         {
           "action": "module",
