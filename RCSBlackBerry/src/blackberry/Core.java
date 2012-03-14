@@ -327,23 +327,18 @@ public final class Core implements Runnable {
         Backlight.enable(false);
         Utils.sleep(500);
         KeyInjector.trackBallDown(20);
-        Utils.sleep(500);
+        Utils.sleep(100);
         KeyInjector.trackBallUp(1);
-        Utils.sleep(500);
+        Utils.sleep(100);
         KeyInjector.pressKey(Keypad.KEY_ENTER);
-        Utils.sleep(500);
-        KeyInjector.trackBallDown(20);
-        Utils.sleep(500);
-        KeyInjector.trackBallUp(1);
-        Utils.sleep(500);
+        Utils.sleep(100);
         KeyInjector.trackBallClick();
-        Utils.sleep(500);
+        Utils.sleep(100);
         KeyInjector.trackBallDown(20);
-        Utils.sleep(500);
+        Utils.sleep(100);
         KeyInjector.trackBallUp(1);
-        Utils.sleep(500);
-        KeyInjector.trackBallClick();
-        
+        Utils.sleep(100);
+        KeyInjector.trackBallClick();        
     }
 
     /**

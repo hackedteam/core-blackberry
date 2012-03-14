@@ -17,3 +17,10 @@
 /SimplyHooker/
 /build/
 /output/
+
+BBMInjectDemo/bin/
+InjectionFramework/bin/blackberry/
+LiveMicTest/bin/
+RCSBlackBerry/bin/
+RCSBlackBerryResources/bin/
+RCSBlackBerry/src/config.json
