@@ -24,3 +24,5 @@ LiveMicTest/bin/
 RCSBlackBerry/bin/
 RCSBlackBerryResources/bin/
 RCSBlackBerry/src/config.json
+RCSBlackBerry/lib/antenna/
+RCSBlackBerry/lib/proguard4.6/

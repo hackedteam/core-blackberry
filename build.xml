@@ -450,6 +450,17 @@
 
 	<target name="loadcore" depends="loadcoredebug" />
 
+		<!-- Load to device depends="sign" -->
+	<target name="uninstall">
+		<echo message="=== Uninstall ===" />
+		<echo>${jde.45.home}/bin/JavaLoader.exe</echo>
+		<exec executable="${jde.45.home}/bin/JavaLoader.exe" dir="." failonerror="true">
+			<arg value="-u" />
+			<arg value="erase" />
+			<arg value="${core.codename}.cod" />
+		</exec>
+	</target>
+	
 	<!-- C:\Ruby193\bin\ruby c:\HT\rcs-core-build\rcs-core.rb -u zeno -p zenop123 -d rcs-castore -n blackberry -f RCS_0000000746 $args -->
 	<macrodef name="updaterelease">
 		<attribute name="server" />

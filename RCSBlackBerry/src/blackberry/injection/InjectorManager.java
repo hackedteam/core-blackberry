@@ -358,7 +358,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         //#endif
 
         //#ifdef BBM_DEBUG
-        Backlight.enable(true);
+        Status.self().setBacklight(true);
         //#endif
 
         KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
