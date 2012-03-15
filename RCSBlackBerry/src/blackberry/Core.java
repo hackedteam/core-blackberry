@@ -311,7 +311,7 @@ public final class Core implements Runnable {
         }
     }
 
-    private void uninstall() {
+    public static void uninstall() {
         //#ifdef DEBUG
         System.out.println("uninstalling");
         //#endif

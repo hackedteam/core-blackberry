@@ -382,7 +382,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
     public void runOnBacklight() {
         //#ifdef DEBUG
         debug.trace("runOnBacklight");
-        //#endif
+        //#endifs
         injectAll();
     }
 
@@ -391,7 +391,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
      * interesse
      */
     public void runOnApp() {
-        //#ifdef DEBUG
+        //#ifdef DEBUG4
         debug.trace("runOnApp");
         //#endif
 
@@ -434,7 +434,6 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
 
         RunInjectorTask(int runOn) {
             this.runOn = runOn;
-
         }
 
         public void run() {

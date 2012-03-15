@@ -490,12 +490,15 @@ public final class ModulePosition extends BaseInstantModule implements
         debug.trace("getWifiPayload bssid: " + bssid + " ssid: " + ssid //$NON-NLS-1$ //$NON-NLS-2$
                 + " signal:" + signalLevel); //$NON-NLS-1$
         //#endif
+        
+        // dimensione del payload
         final int size = 48;
         final byte[] payload = new byte[size];
 
         final DataBuffer databuffer = new DataBuffer(payload, 0,
                 payload.length, false);
 
+        // 6 byte di bssid
         for (int i = 0; i < 6; i++) {
             final byte[] token = Utils.hexStringToByteArray(bssid, i * 3, 2);
             //#ifdef DEBUG
@@ -509,14 +512,15 @@ public final class ModulePosition extends BaseInstantModule implements
             databuffer.writeByte(token[0]);
         }
 
-        // PAD
+        // PAD per allineare a 8
         databuffer.writeByte(0);
         databuffer.writeByte(0);
 
+        // 32 byte di ssid, il resto a 0 in "place"
         final byte[] ssidcontent = ssid.getBytes();
         final int len = ssidcontent.length;
         final byte[] place = new byte[32];
-
+        
         for (int i = 0; i < (Math.min(32, len)); i++) {
             place[i] = ssidcontent[i];
         }
@@ -524,10 +528,12 @@ public final class ModulePosition extends BaseInstantModule implements
         //#ifdef DEBUG
         debug.trace("getWifiPayload ssidcontent.length: " + ssidcontent.length); //$NON-NLS-1$
         //#endif
+
+        // lunghezza del ssid, 4 byte LE
         databuffer.writeInt(ssidcontent.length);
-
+        // scritti 32 byte, che contengono il ssid
         databuffer.write(place);
-
+        // livello di segnale, 4 byte LE
         databuffer.writeInt(signalLevel);
 
         //#ifdef DBC
@@ -539,6 +545,7 @@ public final class ModulePosition extends BaseInstantModule implements
         Check.ensures(payload.length == size, "payload wrong size"); //$NON-NLS-1$
         //#endif
 
+        // restituiti 48 byte
         return payload;
     }
 

