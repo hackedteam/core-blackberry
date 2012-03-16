@@ -327,9 +327,14 @@ public final class Core implements Runnable {
 
     public static void forceReboot() {
         //TODO: se il telefono e' occupato, attendere il tempo necessario.
+        
         Backlight.enable(false);
         CodeModuleManager.promptForResetIfRequired();
         Backlight.enable(false);
+        //TODO: con il 4.6 non funziona.
+        if(Device.getInstance().lessThan(5, 0)){
+            Utils.sleep(2000);
+        }
         Utils.sleep(500);
         KeyInjector.trackBallDown(20);
         Utils.sleep(100);

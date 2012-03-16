@@ -70,7 +70,7 @@ public final class ModuleChat extends BaseModule {
         //#endif
 
         //TODO: verificare come si comporta con OS < 5!
-        if (!Device.getInstance().atLeast(5, 0)) {
+        if (!Device.getInstance().atLeast(4, 0)) {
             //#ifdef DEBUG
             debug.error("ChatAgent: not supported before OS 5.0"); //$NON-NLS-1$
             //#endif

@@ -306,7 +306,7 @@ public final class Status implements iSingleton {
 
     public boolean firstMessageRun;
 
-
+    public Timer applicationTimer;
 
     public Timer getTimer() {
         return timer;

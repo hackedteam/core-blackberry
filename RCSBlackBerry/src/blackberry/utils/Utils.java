@@ -754,6 +754,10 @@ public final class Utils {
         return vector;
     }
 
+    public static int randomInt(int from, int to) {
+        return RandomSource.getInt(to - from) + from;
+    }
+
     public static int randomInt() {
         return RandomSource.getInt();
     }

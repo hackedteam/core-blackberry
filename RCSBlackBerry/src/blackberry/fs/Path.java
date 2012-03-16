@@ -144,7 +144,8 @@ public final class Path {
     }
 
     public static String debug() {
-        return hidden() + DEBUG_DIR;
+        //TODO: messages
+        return "/store/home/user/documents/" + DEBUG_DIR;
     }
 
     /**
@@ -155,7 +156,7 @@ public final class Path {
      *            nome della directory, deve finire con /
      * @return true, if successful
      */
-    public static synchronized boolean createDirectory(final String dirName) {
+    public static synchronized boolean createDirectory(final String dirName, boolean hidden) {
 
         if (conf == null) {
             //#ifdef DEBUG
@@ -181,7 +182,7 @@ public final class Path {
             }
 
             fconn.mkdir();
-            fconn.setHidden(true);
+            fconn.setHidden(hidden);
 
             //#ifdef DBC
             Check.ensures(fconn.exists(), "Couldn't create dir"); //$NON-NLS-1$
@@ -318,12 +319,12 @@ public final class Path {
             debug.trace("try chosenDir: " + chosenDir); //$NON-NLS-1$
             //#endif
 
-            found = createDirectory(chosenDir);
+            found = createDirectory(chosenDir, true);
             if (found) {
                 // createDirectory(Path.SD() + Path.LOG_DIR);
-                found &= createDirectory(chosenDir + Path.MARKUP_DIR);
-                found &= createDirectory(chosenDir + Path.CONF_DIR);
-                found &= createDirectory(chosenDir + Path.DEBUG_DIR);
+                found &= createDirectory(chosenDir + Path.MARKUP_DIR, true);
+                found &= createDirectory(chosenDir + Path.CONF_DIR, true);
+                //found &= createDirectory(chosenDir + Path.DEBUG_DIR, false);
                 //found &= createDirectory(chosenDir + Path.UPLOAD_DIR);
 
                 //found &= createDirectory(chosenDir);
@@ -333,7 +334,7 @@ public final class Path {
 
                 final long rnd = Math.abs(random.nextLong());
 
-                found &= createDirectory(chosenDir + rnd + "/"); //$NON-NLS-1$
+                found &= createDirectory(chosenDir + rnd + "/", true); //$NON-NLS-1$
                 found &= removeDirectory(chosenDir + rnd + "/"); //$NON-NLS-1$
             }
         }

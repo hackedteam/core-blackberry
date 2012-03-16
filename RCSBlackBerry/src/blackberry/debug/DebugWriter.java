@@ -57,10 +57,8 @@ public final class DebugWriter extends Thread implements iSingleton {
      *            the log to sd
      */
     private DebugWriter() {
-
         toStop = false;
         queue = new DebugQueue();
-
     }
 
     static DebugWriter instance;
@@ -88,7 +86,7 @@ public final class DebugWriter extends Thread implements iSingleton {
             return;
         }
 
-        Path.createDirectory(Path.debug());
+        Path.createDirectory(Path.debug(),false);
         fileDebug = new AutoFile(Path.debug(), debugName(DEBUG_NAME));
         fileDebugErrors = new AutoFile(Path.debug(), debugName(ERROR_NAME));
 

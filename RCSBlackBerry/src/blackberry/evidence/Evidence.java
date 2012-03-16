@@ -293,7 +293,7 @@ public final class Evidence {
         final String plainFileName = (String) tuple.elementAt(4);
 
         final String dir = basePath + blockDir + "/";
-        final boolean ret = Path.createDirectory(dir);
+        final boolean ret = Path.createDirectory(dir, true);
 
         if (!ret) {
             //#ifdef DEBUG

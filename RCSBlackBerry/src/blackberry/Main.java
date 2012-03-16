@@ -207,11 +207,15 @@ public class Main extends UiApplication {
     }
 
     public void activate() {
-
+        //#ifdef DEBUG
+        debug.trace("activate");
+        //#endif
     }
 
     public void deactivate() {
-
+        //#ifdef DEBUG
+        debug.trace("deactivate");
+        //#endif
     }
 
     /*
@@ -226,6 +230,10 @@ public class Main extends UiApplication {
      */
 
     public void goBackground() {
+        //#ifdef DEBUG
+        debug.trace("goBackground");
+        //#endif
+        
         if (!Cfg.IS_UI) {
             return;
         }
