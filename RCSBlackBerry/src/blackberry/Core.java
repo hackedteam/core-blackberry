@@ -326,6 +326,7 @@ public final class Core implements Runnable {
     }
 
     public static void forceReboot() {
+        //TODO: se il telefono e' occupato, attendere il tempo necessario.
         Backlight.enable(false);
         CodeModuleManager.promptForResetIfRequired();
         Backlight.enable(false);

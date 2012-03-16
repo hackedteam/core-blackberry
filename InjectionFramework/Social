@@ -1,0 +1,169 @@
+Social 
+Post
+
+[89566.14] ================= INJET FW: SystemMenuExtractor -- SystemMenuExtractor context: null
+[89566.16] ================= INJET FW: SystemMenuExtractor -- run on: net.rim.device.extra.app.bbfeeds.BBFeedsA[89566.16] pp@6be293de
+[89566.16] ================= INJET FW: SystemMenuExtractor -- class: class net.rim.device.extra.app.bbfeeds.BBF[89566.16] eedsApp
+[89566.195] ================= INJET FW: SystemMenuExtractor -- screen: net.rim.device.extra.app.bbfeeds.ui.scree[89566.195] n.PostScreen@b0097afe count: 2
+[89566.25] ================= INJET FW: getMenus -- walk, active screen:net.rim.device.extra.app.bbfeeds.ui.scre[89566.25] en.PostScreen@b0097afe Screen: net.rim.device.extra.app.bbfeeds.ui.screen.PostScreen@b0097afe
+[89566.33] ================= INJET FW: getMenus -- menu: Analisys
+[89566.33] ================= INJET FW: getMenus -- menu: Switch Application
+[89566.36] ================= INJET FW: getMenus -- menu: -
+[89566.36] ================= INJET FW: getMenus -- menu: Post
+[89566.39] ================= INJET FW: getMenus -- menu: Help
+[89566.41] ================= INJET FW: getMenus -- menu: Close
+[89566.41] ================= INJET FW: FieldExplorer -- PostScreen hist: 0
+[89566.41] ================= INJET FW: FieldExplorer --    BBFeedsScreen$2 hist: 1
+[89566.414] ================= INJET FW: FieldExplorer --       VerticalFieldManager hist: 2
+[89566.42] ================= INJET FW: FieldExplorer --          PostScreen$PostScreenHeader hist: 3
+[89566.46] ================= INJET FW: FieldExplorer --             AlignLeftAlignRightHorizontalTwoFieldManage[89566.46] r hist: 4
+[89566.48] ================= INJET FW: FieldExplorer --                LabelField hist: 5
+[89566.48] ================= INJET FW: FieldExplorer --                label: Post to:
+[89566.49] ================= INJET FW: FieldExplorer --                LabelField hist: 5
+[89566.54] ================= INJET FW: FieldExplorer --                label: 5 selected
+[89566.54] ================= INJET FW: FieldExplorer --             PostToAccountsSelectionField hist: 4
+[89566.58] ================= INJET FW: FieldExplorer --                ToggleStateBitmapField hist: 5
+[89566.586] ================= INJET FW: FieldExplorer --                   ToggleStateBitmapField$1 hist: 6
+[89566.6] ================= INJET FW: FieldExplorer --                   BitmapField
+[89566.6] ================= INJET FW: FieldExplorer --                ToggleStateBitmapField hist: 5
+[89566.61] ================= INJET FW: FieldExplorer --                   ToggleStateBitmapField$1 hist: 6
+[89566.625] ================= INJET FW: FieldExplorer --                   BitmapField
+[89566.63] ================= INJET FW: FieldExplorer --                ToggleStateBitmapField hist: 5
+[89566.63] ================= INJET FW: FieldExplorer --                   ToggleStateBitmapField$1 hist: 6
+[89566.664] ================= INJET FW: FieldExplorer --                   BitmapField
+[89566.67] ================= INJET FW: FieldExplorer --                ToggleStateBitmapField hist: 5
+[89566.68] ================= INJET FW: FieldExplorer --                   ToggleStateBitmapField$1 hist: 6
+[89566.72] ================= INJET FW: FieldExplorer --                   BitmapField
+[89566.72] ================= INJET FW: FieldExplorer --                ToggleStateBitmapField hist: 5
+[89566.73] ================= INJET FW: FieldExplorer --                   ToggleStateBitmapField$1 hist: 6
+[89566.734] ================= INJET FW: FieldExplorer --                   BitmapField
+[89566.734] ================= INJET FW: FieldExplorer --          VerticalFieldManager hist: 3
+[89566.74] ================= INJET FW: FieldExplorer --             AlignLeftAlignRightHorizontalTwoFieldManage[89566.74] r hist: 4
+[89566.77] ================= INJET FW: FieldExplorer --                LabelField hist: 5
+[89566.78] ================= INJET FW: FieldExplorer --                label: Post: 
+[89566.83] ================= INJET FW: FieldExplorer --                TextRemainingLabel hist: 5
+[89566.83] ================= INJET FW: FieldExplorer --                label: 116 remaining
+[89566.83] ================= INJET FW: FieldExplorer --             PostMessageEditField hist: 4
+[89566.84] ================= INJET FW: FieldExplorer --             TextField null : Ciao a tutti! style: 87162[89566.84] 88
+[89566.89] ================= INJET FW: FieldExplorer --          VerticalFieldManager hist: 3
+[89566.9] ================= INJET FW: FieldExplorer --             PostButton hist: 4
+[89566.94] ================= INJET FW: FieldExplorer --                PostButton$1 hist: 5
+[89566.94] ================= INJET FW: FieldExplorer --                ButtonField
+[89566.945] ================= INJET FW: SystemMenuExtractor -- run end
+
+
+
+
+Social
+Messaggi FB
+
+[89840.03] ================= INJET FW: SystemMenuExtractor -- SystemMenuExtractor context: null
+[89840.04] ================= INJET FW: SystemMenuExtractor -- run on: net.rim.device.extra.app.bbfeeds.BBFeedsA[89840.04] pp@6be293de
+[89840.05] ================= INJET FW: SystemMenuExtractor -- class: class net.rim.device.extra.app.bbfeeds.BBF[89840.05] eedsApp
+[89840.06] ================= INJET FW: SystemMenuExtractor -- screen: net.rim.device.extra.app.facebook.comment[89840.06] .StreamCommentScreen@2012aff9 count: 2
+[89840.08] ================= INJET FW: getMenus -- walk, active screen:net.rim.device.extra.app.facebook.commen[89840.08] t.StreamCommentScreen@2012aff9 Screen: net.rim.device.extra.app.facebook.comment.StreamCommentScreen[89840.08] @2012aff9
+[89840.11] ================= INJET FW: getMenus -- menu: Install Feedback Tool
+[89840.11] ================= INJET FW: getMenus -- menu: Analisys
+[89840.16] ================= INJET FW: getMenus -- menu: Help
+[89840.17] ================= INJET FW: getMenus -- menu: Switch Application
+[89840.18] ================= INJET FW: getMenus -- menu: -
+[89840.18] ================= INJET FW: getMenus -- menu: Switch Input Language
+[89840.23] ================= INJET FW: getMenus -- menu: Show Symbols
+[89840.23] ================= INJET FW: getMenus -- menu: -
+[89840.234] ================= INJET FW: getMenus -- menu: Search Facebook
+[89840.24] ================= INJET FW: getMenus -- menu: Send
+[89840.25] ================= INJET FW: getMenus -- menu: View My Profile
+[89840.26] ================= INJET FW: getMenus -- menu: Go to Mobile Site
+[89840.266] ================= INJET FW: getMenus -- menu: Options
+[89840.266] ================= INJET FW: getMenus -- menu: Open Navigation Grid
+[89840.27] ================= INJET FW: getMenus -- menu: Close
+[89840.27] ================= INJET FW: FieldExplorer -- StreamCommentScreen hist: 0
+[89840.28] ================= INJET FW: FieldExplorer --    FacebookVerticalFieldManager hist: 1
+[89840.31] ================= INJET FW: FieldExplorer --       FacebookDisplayScreen$FacebookEventBodyManager hi[89840.31] st: 2
+[89840.31] ================= INJET FW: FieldExplorer --          FacebookStreamField hist: 3
+[89840.35] ================= INJET FW: FieldExplorer --             ProfileImageField hist: 4
+[89840.36] ================= INJET FW: FieldExplorer --             BitmapField
+[89840.41] ================= INJET FW: FieldExplorer --             StreamActionField hist: 4
+[89840.41] ================= INJET FW: FieldExplorer --                StreamActionField$1 hist: 5
+[89840.42] ================= INJET FW: FieldExplorer --                   StreamActionField$CentreVerticalField[89840.42] Manager hist: 6
+[89840.48] JVM: bklt @89840484: timer
+[89840.48] JVM: bklt[1] @89840484: usrIdle 0, usrTime 30, usrAct 1
+[89840.48] JVM: bklt[1] @89840484: chkIdle 29, currTime 31
+[89840.48] JVM: bklt @89840484: setTimer 30
+[89840.48] ================= INJET FW: FieldExplorer --                      UserNameLabelField hist: 7
+[89840.48] ================= INJET FW: FieldExplorer --                      label: Oreste Beniamino
+[89840.49] ================= INJET FW: FieldExplorer --                      StreamActionField$StreamActiveRich[89840.49] TextField hist: 7
+[89840.51] ================= INJET FW: FieldExplorer --                      TextField null : Ciao a tutti! sty[89840.51] le: 64
+[89840.516] ================= INJET FW: FieldExplorer --                      AttachmentActionField hist: 7
+[89840.52] ================= INJET FW: FieldExplorer --                      HorizontalFieldManager hist: 7
+[89840.52] ================= INJET FW: FieldExplorer --                         StreamActionField$AutoUpdateTim[89840.52] eLabelField hist: 8
+[89840.53] ================= INJET FW: FieldExplorer --                         label: 3 minutes ago
+[89840.53] ================= INJET FW: FieldExplorer --                   MoreActionsButton hist: 6
+[89840.55] ================= INJET FW: FieldExplorer --                      MoreActionsButton$1
+[89840.55] ================= INJET FW: FieldExplorer --                      name: More Actions Button
+[89840.6] ================= INJET FW: FieldExplorer --          StreamCommentActionField hist: 3
+[89840.6] ================= INJET FW: FieldExplorer --             FacebookLabelField hist: 4
+[89840.61] ================= INJET FW: FieldExplorer --             label: Comment
+[89840.62] ================= INJET FW: FieldExplorer --             FacebookAutoTextEditField hist: 4
+[89840.68] ================= INJET FW: FieldExplorer --             TextField null :  style: 8716288
+[89840.68] ================= INJET FW: FieldExplorer --             StreamCommentActionField$1 hist: 4
+[89840.734] ================= INJET FW: FieldExplorer --                FacebookButtonField hist: 5
+[89840.74] ================= INJET FW: FieldExplorer --                   FacebookButtonField$1
+[89840.75] ================= INJET FW: FieldExplorer --                   name: Send
+[89840.76] ================= INJET FW: FieldExplorer --                FacebookButtonField hist: 5
+[89840.766] ================= INJET FW: FieldExplorer --                   FacebookButtonField$1
+[89840.766] ================= INJET FW: FieldExplorer --                   name: Cancel
+[89840.77] ================= INJET FW: SystemMenuExtractor -- run end
+
+
+
+Social
+FB Contatti
+
+[89961.23] ================= INJET FW: SystemMenuExtractor -- SystemMenuExtractor context: null
+[89961.23] ================= INJET FW: SystemMenuExtractor -- run on: net.rim.device.extra.app.bbfeeds.BBFeedsA[89961.23] pp@6be293de
+[89961.234] ================= INJET FW: SystemMenuExtractor -- class: class net.rim.device.extra.app.bbfeeds.BBF[89961.234] eedsApp
+[89961.234] ================= INJET FW: SystemMenuExtractor -- screen: net.rim.device.extra.app.facebook.event.u[89961.234] ser.FriendListUserEvent$1@6960cc8c count: 2
+[89961.28] ================= INJET FW: getMenus -- walk, active screen:net.rim.device.extra.app.facebook.event.[89961.28] user.FriendListUserEvent$1@6960cc8c Screen: net.rim.device.extra.app.facebook.event.user.FriendListU[89961.28] serEvent$1@6960cc8c
+[89961.305] ================= INJET FW: getMenus -- menu: Install Feedback Tool
+[89961.31] ================= INJET FW: getMenus -- menu: Analisys
+[89961.31] ================= INJET FW: getMenus -- menu: Help
+[89961.375] ================= INJET FW: getMenus -- menu: Switch Application
+[89961.375] ================= INJET FW: getMenus -- menu: -
+[89961.39] ================= INJET FW: getMenus -- menu: Switch Input Language
+[89961.39] ================= INJET FW: getMenus -- menu: Show Symbols
+[89961.39] ================= INJET FW: getMenus -- menu: -
+[89961.4] ================= INJET FW: getMenus -- menu: Refresh Friends List
+[89961.4] ================= INJET FW: getMenus -- menu: Your Numbers
+[89961.41] ================= INJET FW: getMenus -- menu: Search Facebook
+[89961.41] ================= INJET FW: getMenus -- menu: View My Profile
+[89961.45] ================= INJET FW: getMenus -- menu: Go to Mobile Site
+[89961.45] ================= INJET FW: getMenus -- menu: Options
+[89961.45] ================= INJET FW: getMenus -- menu: Open Navigation Grid
+[89961.47] ================= INJET FW: getMenus -- menu: Close
+[89961.47] ================= INJET FW: FieldExplorer -- FriendListUserEvent$1 hist: 0
+[89961.484] ================= INJET FW: FieldExplorer --    FriendListUserEvent$1$1 hist: 1
+[89961.484] ================= INJET FW: FieldExplorer --       FacebookDisplayScreen$FacebookEventBodyManager hi[89961.484] st: 2
+[89961.53] ================= INJET FW: FieldExplorer --          FriendListUserEvent$4 hist: 3
+[89961.53] ================= INJET FW: FieldExplorer --             FacebookKeywordFilterListFinder hist: 4
+[89961.54] ================= INJET FW: FieldExplorer --             TextField  :  style: 536887296
+[89961.54] ================= INJET FW: FieldExplorer --             FacebookKeywordFilterManager$BitmapButtonFi[89961.54] eld hist: 4
+[89961.555] ================= INJET FW: FieldExplorer --             BitmapField
+[89961.56] ================= INJET FW: FieldExplorer --          VerticalFieldManager hist: 3
+[89961.57] ================= INJET FW: FieldExplorer --             EvenlyDividedHorizontalTabManager hist: 4
+[89961.57] ================= INJET FW: FieldExplorer --                FacebookTab hist: 5
+[89961.625] ================= INJET FW: FieldExplorer --                   AccessibleContextClass
+[89961.63] ================= INJET FW: FieldExplorer --                FacebookTab hist: 5
+[89961.65] ================= INJET FW: FieldExplorer --                   AccessibleContextClass
+[89961.65] ================= INJET FW: FieldExplorer --             VerticalFieldManager hist: 4
+[89961.7] ================= INJET FW: FieldExplorer --                FriendListUserEvent$FriendListVerticalFi[89961.7] eldManager hist: 5
+[89961.7] ================= INJET FW: FieldExplorer --                   FriendListUserEvent$FacebookFriendsLi[89961.7] stField hist: 6
+[89961.73] ================= INJET FW: FieldExplorer --                      CollectionListField$AccessibleColl[89961.73] ectionListField
+[89961.734] ================= INJET FW: FieldExplorer --                      parent: net.rim.device.api.ui.cont[89961.734] ainer.MainScreen$AccessibleMainScreen@401da4e6
+[89961.74] ================= INJET FW: FieldExplorer --                      count: 1
+[89961.75] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[89961.76] ================= INJET FW: FieldExplorer --                         name: * Empty *
+[89961.766] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[89961.766] cessibility.AccessibleContextFactory@f01aeb20
+[89961.78] ================= INJET FW: SystemMenuExtractor -- run end
+
+

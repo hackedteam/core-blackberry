@@ -1,0 +1,1158 @@
+Options
+info
+
+[92931.69] ================= INJET FW: SystemMenuExtractor -- SystemMenuExtractor context: null
+[92931.695] ================= INJET FW: SystemMenuExtractor -- run on: net.rim.device.apps.internal.options.Opti[92931.695] onsApp@5d0ba76d
+[92931.695] ================= INJET FW: SystemMenuExtractor -- class: class net.rim.device.apps.internal.options[92931.695] .OptionsApp
+[92931.695] ================= INJET FW: SystemMenuExtractor -- screen: net.rim.device.apps.internal.options.item[92931.695] s.appmgmt.ModulePropertiesScreen@d15f8601 count: 3
+[92931.695] ================= INJET FW: getMenus -- walk, active screen:net.rim.device.apps.internal.options.ite[92931.695] ms.appmgmt.ModulePropertiesScreen@d15f8601 Screen: net.rim.device.apps.internal.options.items.appmgm[92931.695] t.ModulePropertiesScreen@d15f8601
+[92931.7] ================= INJET FW: getMenus -- menu: Analisys
+[92931.7] ================= INJET FW: getMenus -- menu: Switch Application
+[92931.7] ================= INJET FW: getMenus -- menu: -
+[92931.7] ================= INJET FW: getMenus -- menu: Edit Permissions
+[92931.71] ================= INJET FW: getMenus -- menu: Delete
+[92931.71] ================= INJET FW: getMenus -- menu: Close
+[92931.71] ================= INJET FW: FieldExplorer -- ModulePropertiesScreen hist: 0
+[92931.71] ================= INJET FW: FieldExplorer --    VerticalFieldManager hist: 1
+[92931.71] ================= INJET FW: FieldExplorer --       GroupBox hist: 2
+[92931.72] ================= INJET FW: FieldExplorer --          GroupBox$GroupBoxTitlebar hist: 3
+[92931.73] ================= INJET FW: FieldExplorer --             AccessibleContextClass
+[92931.734] ================= INJET FW: FieldExplorer --             name: About
+[92931.734] ================= INJET FW: FieldExplorer --             parent: net.rim.device.alpha.ui.container.G[92931.734] roupBox$AccessibleManager@9ed9ab1c
+[92931.734] ================= INJET FW: FieldExplorer --          GroupBox$BaseManager hist: 3
+[92931.734] ================= INJET FW: FieldExplorer --             VerticalFieldManager hist: 4
+[92931.74] ================= INJET FW: FieldExplorer --                LeftRightFieldManager hist: 5
+[92931.74] ================= INJET FW: FieldExplorer --                   LabelField hist: 6
+[92931.75] ================= INJET FW: FieldExplorer --                   label: Name:
+[92931.76] ================= INJET FW: FieldExplorer --                   LabelField hist: 6
+[92931.76] ================= INJET FW: FieldExplorer --                   label: InjectionFramework
+[92931.766] ================= INJET FW: FieldExplorer --                LeftRightFieldManager hist: 5
+[92931.766] ================= INJET FW: FieldExplorer --                   LabelField hist: 6
+[92931.766] ================= INJET FW: FieldExplorer --                   label: Version: 
+[92931.77] ================= INJET FW: FieldExplorer --                   LabelField hist: 6
+[92931.77] ================= INJET FW: FieldExplorer --                   label: 1.0.0
+[92931.78] ================= INJET FW: FieldExplorer --                LeftRightFieldManager hist: 5
+[92931.78] ================= INJET FW: FieldExplorer --                   LabelField hist: 6
+[92931.78] ================= INJET FW: FieldExplorer --                   label: Vendor: 
+[92931.79] ================= INJET FW: FieldExplorer --                   LabelField hist: 6
+[92931.79] ================= INJET FW: FieldExplorer --                   label: BlackBerry Developer
+[92931.79] ================= INJET FW: FieldExplorer --                HorizontalFieldManager hist: 5
+[92931.79] ================= INJET FW: FieldExplorer --                   ButtonField hist: 6
+[92931.79] ================= INJET FW: FieldExplorer --                   ButtonField
+[92931.805] ================= INJET FW: FieldExplorer --                   ButtonField hist: 6
+[92931.805] ================= INJET FW: FieldExplorer --                   ButtonField
+[92931.805] ================= INJET FW: FieldExplorer --       GroupBox hist: 2
+[92931.805] ================= INJET FW: FieldExplorer --          GroupBox$GroupBoxTitlebar hist: 3
+[92931.805] ================= INJET FW: FieldExplorer --             AccessibleContextClass
+[92931.82] ================= INJET FW: FieldExplorer --             name: Details
+[92931.82] ================= INJET FW: FieldExplorer --             parent: net.rim.device.alpha.ui.container.G[92931.82] roupBox$AccessibleManager@c497be9b
+[92931.82] ================= INJET FW: FieldExplorer --          GroupBox$BaseManager hist: 3
+[92931.82] ================= INJET FW: FieldExplorer --             VerticalFieldManager hist: 4
+[92931.82] ================= INJET FW: FieldExplorer --                LeftRightFieldManager hist: 5
+[92931.82] ================= INJET FW: FieldExplorer --                   LabelField hist: 6
+[92931.82] ================= INJET FW: FieldExplorer --                   label: Type: 
+[92931.83] ================= INJET FW: FieldExplorer --                   LabelField hist: 6
+[92931.83] ================= INJET FW: FieldExplorer --                   label: Application
+[92931.83] ================= INJET FW: FieldExplorer --                LeftRightFieldManager hist: 5
+[92931.83] ================= INJET FW: FieldExplorer --                   LabelField hist: 6
+[92931.83] ================= INJET FW: FieldExplorer --                   label: Created: 
+[92931.84] ================= INJET FW: FieldExplorer --                   LabelField hist: 6
+[92931.84] ================= INJET FW: FieldExplorer --                   label: Mar 15, 2012 2:35 PM
+[92931.84] ================= INJET FW: FieldExplorer --                LeftRightFieldManager hist: 5
+[92931.85] ================= INJET FW: FieldExplorer --                   LabelField hist: 6
+[92931.85] ================= INJET FW: FieldExplorer --                   label: Installed: 
+[92931.85] ================= INJET FW: FieldExplorer --                   LabelField hist: 6
+[92931.86] ================= INJET FW: FieldExplorer --                   label: Mar 15, 2012 2:35 PM
+[92931.86] ================= INJET FW: FieldExplorer --                LeftRightFieldManager hist: 5
+[92931.86] ================= INJET FW: FieldExplorer --                   LabelField hist: 6
+[92931.87] ================= INJET FW: FieldExplorer --                   label: Signer IDs:
+[92931.87] ================= INJET FW: FieldExplorer --                   LabelField hist: 6
+[92931.87] ================= INJET FW: FieldExplorer --                   label: RBB, RCR, RRT
+[92931.875] ================= INJET FW: FieldExplorer --                LeftRightFieldManager hist: 5
+[92931.875] ================= INJET FW: FieldExplorer --                   LabelField hist: 6
+[92931.875] ================= INJET FW: FieldExplorer --                   label: Hash:
+[92931.875] ================= INJET FW: FieldExplorer --                   LabelField hist: 6
+[92931.875] ================= INJET FW: FieldExplorer --                   label: 0868 82AE A884 AAC1 EC34
+[92931.875] ================= INJET FW: FieldExplorer --                LabelField hist: 5
+[92931.89] ================= INJET FW: FieldExplorer --                label: 3183 14AA EF77 2FCD D1DF
+[92931.89] ================= INJET FW: FieldExplorer --       GroupBox hist: 2
+[92931.89] ================= INJET FW: FieldExplorer --          GroupBox$GroupBoxTitlebar hist: 3
+[92931.9] ================= INJET FW: FieldExplorer --             AccessibleContextClass
+[92931.9] ================= INJET FW: FieldExplorer --             name: Resources
+[92931.9] ================= INJET FW: FieldExplorer --             parent: net.rim.device.alpha.ui.container.G[92931.9] roupBox$AccessibleManager@22576fae
+[92931.92] ================= INJET FW: FieldExplorer --          GroupBox$BaseManager hist: 3
+[92931.93] ================= INJET FW: FieldExplorer --             VerticalFieldManager hist: 4
+[92931.93] ================= INJET FW: FieldExplorer --                AppPropertiesScreen$ResourcesField hist:[92931.93]  5
+[92931.93] ================= INJET FW: FieldExplorer --                   AppPropertiesScreen$ResourcesField$1 [92931.93] hist: 6
+[92931.93] ================= INJET FW: FieldExplorer --                   ChoiceField
+[92931.94] ================= INJET FW: FieldExplorer --                   VerticalFieldManager hist: 6
+[92931.94] ================= INJET FW: FieldExplorer --                      AppPropertiesScreen$ResourcesField[92931.94] $ResourceUsageField hist: 7
+[92931.945] ================= INJET FW: FieldExplorer --                         AccessibleContextClass
+[92931.945] ================= INJET FW: FieldExplorer --                         name:  29.3 KB
+[92931.945] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.alpha.ui[92931.945] .container.GroupBox$AccessibleManager@22576fae
+[92931.945] ================= INJET FW: FieldExplorer --       GroupBox hist: 2
+[92931.95] ================= INJET FW: FieldExplorer --          GroupBox$GroupBoxTitlebar hist: 3
+[92931.95] ================= INJET FW: FieldExplorer --             AccessibleContextClass
+[92931.95] ================= INJET FW: FieldExplorer --             name: Applications
+[92931.95] ================= INJET FW: FieldExplorer --             parent: net.rim.device.alpha.ui.container.G[92931.95] roupBox$AccessibleManager@5f2d83ad
+[92931.95] ================= INJET FW: FieldExplorer --          GroupBox$BaseManager hist: 3
+[92931.96] ================= INJET FW: FieldExplorer --             VerticalFieldManager hist: 4
+[92931.96] ================= INJET FW: FieldExplorer --                LabelField hist: 5
+[92931.97] ================= INJET FW: FieldExplorer --                label: InjectionFramework
+[92931.97] ================= INJET FW: SystemMenuExtractor -- run end
+[92932.086] Signal level only changed - ONS not updated
+
+
+
+
+
+
+
+Options
+management screen
+
+[92474.97] ================= INJET FW: SystemMenuExtractor -- SystemMenuExtractor context: null
+[92474.99] CodeStore.DependencyList.buildModuleDependencyList() took 15 - [263]
+[92475.0] ================= INJET FW: SystemMenuExtractor -- run on: net.rim.device.apps.internal.options.Opti[92475.0] onsApp@5d0ba76d
+[92475.0] ================= INJET FW: SystemMenuExtractor -- class: class net.rim.device.apps.internal.options[92475.0] .OptionsApp
+[92475.0] ================= INJET FW: SystemMenuExtractor -- screen: net.rim.device.apps.internal.options.item[92475.0] s.appmgmt.AppMgmtScreen@ed8c5fd3 count: 2
+[92475.01] ================= INJET FW: getMenus -- walk, active screen:net.rim.device.apps.internal.options.ite[92475.01] ms.appmgmt.AppMgmtScreen@ed8c5fd3 Screen: net.rim.device.apps.internal.options.items.appmgmt.AppMgmt[92475.01] Screen@ed8c5fd3
+[92475.15] ================= INJET FW: getMenus -- menu: Analisys
+[92475.17] ================= INJET FW: getMenus -- menu: Switch Application
+[92475.17] ================= INJET FW: getMenus -- menu: -
+[92475.18] ================= INJET FW: getMenus -- menu: View Properties
+[92475.18] ================= INJET FW: getMenus -- menu: Delete
+[92475.22] ================= INJET FW: getMenus -- menu: Modules
+[92475.23] ================= INJET FW: getMenus -- menu: Edit Default Permissions
+[92475.23] ================= INJET FW: getMenus -- menu: Help
+[92475.26] ================= INJET FW: getMenus -- menu: Close
+[92475.266] ================= INJET FW: FieldExplorer -- AppMgmtScreen hist: 0
+[92475.35] ================= INJET FW: FieldExplorer --    AppMgmtScreen$FocusHolderField hist: 1
+[92475.39] ================= INJET FW: FieldExplorer --    NullField
+[92475.39] ================= INJET FW: FieldExplorer --    AppMgmtScreen$AppMgmtDividerField hist: 1
+[92475.414] ================= INJET FW: FieldExplorer --       AccessibleContextClass
+[92475.414] ================= INJET FW: FieldExplorer --    AppMgmtScreen$AppMgmtPaneManagerView hist: 1
+[92475.414] ================= INJET FW: FieldExplorer --       AppMgmtScreen$AppMgmtHorizontalScrollableTitleVie[92475.414] w hist: 2
+[92475.42] ================= INJET FW: FieldExplorer --          AppMgmtView$AppMgmtViewTitleField hist: 3
+[92475.42] ================= INJET FW: FieldExplorer --             NullField hist: 4
+[92475.42] ================= INJET FW: FieldExplorer --             NullField
+[92475.45] ================= INJET FW: FieldExplorer --             LabelField hist: 4
+[92475.45] ================= INJET FW: FieldExplorer --             label: Applications
+[92475.45] ================= INJET FW: FieldExplorer --             AppMgmtView$AppMgmtViewTitleField$2 hist: 4[92475.45] 
+[92475.484] ================= INJET FW: FieldExplorer --             NullField
+[92475.51] ================= INJET FW: FieldExplorer --             HorizontalFieldManager hist: 4
+[92475.51] ================= INJET FW: FieldExplorer --                AppMgmtView$AppMgmtViewTitleField$1 hist[92475.51] : 5
+[92475.53] ================= INJET FW: FieldExplorer --                NullField
+[92475.53] ================= INJET FW: FieldExplorer --                HorizontalFieldManager hist: 5
+[92475.53] ================= INJET FW: FieldExplorer --                   LabelField hist: 6
+[92475.57] ================= INJET FW: FieldExplorer --                   label: All
+[92475.58] ================= INJET FW: FieldExplorer --                   BitmapField hist: 6
+[92475.58] ================= INJET FW: FieldExplorer --                   BitmapField
+[92475.61] ================= INJET FW: FieldExplorer --          AppMgmtView$AppMgmtViewTitleField hist: 3
+[92475.61] ================= INJET FW: FieldExplorer --             NullField hist: 4
+[92475.62] ================= INJET FW: FieldExplorer --             NullField
+[92475.65] ================= INJET FW: FieldExplorer --             LabelField hist: 4
+[92475.66] ================= INJET FW: FieldExplorer --             label: CPU
+[92475.66] ================= INJET FW: FieldExplorer --             AppMgmtView$AppMgmtViewTitleField$2 hist: 4[92475.66] 
+[92475.67] ================= INJET FW: FieldExplorer --             NullField
+[92475.67] ================= INJET FW: FieldExplorer --             HorizontalFieldManager hist: 4
+[92475.68] ================= INJET FW: FieldExplorer --                AppMgmtView$AppMgmtViewTitleField$1 hist[92475.68] : 5
+[92475.69] ================= INJET FW: FieldExplorer --                NullField
+[92475.695] ================= INJET FW: FieldExplorer --                HorizontalFieldManager hist: 5
+[92475.695] ================= INJET FW: FieldExplorer --                   LabelField hist: 6
+[92475.7] ================= INJET FW: FieldExplorer --                   label: Now
+[92475.7] ================= INJET FW: FieldExplorer --                   BitmapField hist: 6
+[92475.71] ================= INJET FW: FieldExplorer --                   BitmapField
+[92475.74] ================= INJET FW: FieldExplorer --          AppMgmtView$AppMgmtViewTitleField hist: 3
+[92475.74] ================= INJET FW: FieldExplorer --             NullField hist: 4
+[92475.74] ================= INJET FW: FieldExplorer --             NullField
+[92475.79] ================= INJET FW: FieldExplorer --             LabelField hist: 4
+[92475.79] ================= INJET FW: FieldExplorer --             label: Usage
+[92475.83] ================= INJET FW: FieldExplorer --             AppMgmtView$AppMgmtViewTitleField$2 hist: 4[92475.83] 
+[92475.84] ================= INJET FW: FieldExplorer --             NullField
+[92475.84] ================= INJET FW: FieldExplorer --             HorizontalFieldManager hist: 4
+[92475.85] ================= INJET FW: FieldExplorer --                AppMgmtView$AppMgmtViewTitleField$1 hist[92475.85] : 5
+[92475.86] ================= INJET FW: FieldExplorer --                NullField
+[92475.86] ================= INJET FW: FieldExplorer --                HorizontalFieldManager hist: 5
+[92475.86] ================= INJET FW: FieldExplorer --                   LabelField hist: 6
+[92475.89] ================= INJET FW: FieldExplorer --                   label: Today
+[92475.9] ================= INJET FW: FieldExplorer --                   BitmapField hist: 6
+[92475.91] ================= INJET FW: FieldExplorer --                   BitmapField
+[92475.914] ================= INJET FW: FieldExplorer --          AppMgmtView$AppMgmtViewTitleField hist: 3
+[92475.914] ================= INJET FW: FieldExplorer --             NullField hist: 4
+[92475.914] ================= INJET FW: FieldExplorer --             NullField
+[92475.92] ================= INJET FW: FieldExplorer --             LabelField hist: 4
+[92475.92] ================= INJET FW: FieldExplorer --             label: Memory
+[92475.93] ================= INJET FW: FieldExplorer --             AppMgmtView$AppMgmtViewTitleField$2 hist: 4[92475.93] 
+[92475.96] ================= INJET FW: FieldExplorer --             NullField
+[92475.97] ================= INJET FW: FieldExplorer --             HorizontalFieldManager hist: 4
+[92475.97] ================= INJET FW: FieldExplorer --                AppMgmtView$AppMgmtViewTitleField$1 hist[92475.97] : 5
+[92476.04] ================= INJET FW: FieldExplorer --                NullField
+[92476.05] ================= INJET FW: FieldExplorer --                HorizontalFieldManager hist: 5
+[92476.05] ================= INJET FW: FieldExplorer --                   LabelField hist: 6
+[92476.09] ================= INJET FW: FieldExplorer --                   label: Now
+[92476.1] ================= INJET FW: FieldExplorer --                   BitmapField hist: 6
+[92476.1] ================= INJET FW: FieldExplorer --                   BitmapField
+[92476.11] JVM: bklt @92476109: timer
+[92476.11] JVM: bklt[1] @92476109: usrIdle 2, usrTime 30, usrAct 1
+[92476.11] JVM: bklt[1] @92476109: chkIdle 468, currTime 31
+[92476.11] JVM: bklt @92476109: setTimer 28
+[92476.11] ================= INJET FW: FieldExplorer --          AppMgmtView$AppMgmtViewTitleField hist: 3
+[92476.11] ================= INJET FW: FieldExplorer --             NullField hist: 4
+[92476.12] ================= INJET FW: FieldExplorer --             NullField
+[92476.125] ================= INJET FW: FieldExplorer --             LabelField hist: 4
+[92476.125] ================= INJET FW: FieldExplorer --             label: Application Storage
+[92476.14] ================= INJET FW: FieldExplorer --             AppMgmtView$AppMgmtViewTitleField$2 hist: 4[92476.14] 
+[92476.14] ================= INJET FW: FieldExplorer --             NullField
+[92476.16] ================= INJET FW: FieldExplorer --             HorizontalFieldManager hist: 4
+[92476.16] ================= INJET FW: FieldExplorer --                AppMgmtView$AppMgmtViewTitleField$1 hist[92476.16] : 5
+[92476.17] Signal level only changed - ONS not updated
+[92476.17] ================= INJET FW: FieldExplorer --                NullField
+[92476.17] ================= INJET FW: FieldExplorer --                HorizontalFieldManager hist: 5
+[92476.17] ================= INJET FW: FieldExplorer --                   LabelField hist: 6
+[92476.19] ================= INJET FW: FieldExplorer --                   label: 
+[92476.19] ================= INJET FW: FieldExplorer --       AppMgmtScreen$AppMgmtPaneView hist: 2
+[92476.195] ================= INJET FW: FieldExplorer --          KeywordFilterView hist: 3
+[92476.21] ================= INJET FW: FieldExplorer --             VerticalFieldManager hist: 4
+[92476.21] ================= INJET FW: FieldExplorer --                KeywordFilterView$ApplicationsKeywordFil[92476.21] terField$1 hist: 5
+[92476.21] ================= INJET FW: FieldExplorer --                TextField  Search  :  style: 536887296
+[92476.25] ================= INJET FW: FieldExplorer --             VerticalFieldManager hist: 4
+[92476.25] ================= INJET FW: FieldExplorer --                AppMgmtView$GroupBoxListManager hist: 5
+[92476.26] ================= INJET FW: FieldExplorer --                   KeywordFilterView$ApplicationsKeyword[92476.26] FilterField hist: 6
+[92476.29] ================= INJET FW: FieldExplorer --                      ListField$AccessibleListField
+[92476.29] ================= INJET FW: FieldExplorer --                      parent: net.rim.device.api.ui.cont[92476.29] ainer.MainScreen$AccessibleMainScreen@40bea2a5
+[92476.29] ================= INJET FW: FieldExplorer --                      count: 45
+[92476.3] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92476.3] ================= INJET FW: FieldExplorer --                         name: Amazon MP3 Music Store 1.[92476.3] 0.1.22,Research In Motion Limited
+[92476.336] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92476.336] cessibility.AccessibleContextFactory@2c83ad47
+[92476.336] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92476.336] omponent.ListField$AccessibleListField@14da590c
+[92476.336] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92476.34] ================= INJET FW: FieldExplorer --                         name: BBMInjectDemo (BBMInject)[92476.34]  1.0.0,BlackBerry Developer
+[92476.34] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92476.34] cessibility.AccessibleContextFactory@657f4293
+[92476.34] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92476.34] omponent.ListField$AccessibleListField@14da590c
+[92476.35] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92476.35] ================= INJET FW: FieldExplorer --                         name: BlackBerry 7.0.0 System S[92476.35] oftware 7.0.0,Research In Motion Limited
+[92476.35] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92476.35] cessibility.AccessibleContextFactory@a90ce067
+[92476.38] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92476.38] omponent.ListField$AccessibleListField@14da590c
+[92476.39] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92476.42] ================= INJET FW: FieldExplorer --                         name: BlackBerry App World 3.0.[92476.42] 1.29,Research In Motion Limited
+[92476.43] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92476.43] cessibility.AccessibleContextFactory@cb483d2a
+[92476.43] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92476.43] omponent.ListField$AccessibleListField@14da590c
+[92476.43] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92476.48] ================= INJET FW: FieldExplorer --                         name: BlackBerry Maps 6.1.0.25,[92476.48] Research In Motion Limited
+[92476.48] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92476.48] cessibility.AccessibleContextFactory@683a95a9
+[92476.49] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92476.49] omponent.ListField$AccessibleListField@14da590c
+[92476.49] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92476.51] ================= INJET FW: FieldExplorer --                         name: BlackBerry Messenger 6.0.[92476.51] 1.34,Research In Motion Limited
+[92476.516] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92476.516] cessibility.AccessibleContextFactory@7fe3e9e4
+[92476.516] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92476.516] omponent.ListField$AccessibleListField@14da590c
+[92476.52] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92476.52] ================= INJET FW: FieldExplorer --                         name: BlackBerry Podcasts 1.5.0[92476.52] .51,Research In Motion Limited
+[92476.52] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92476.52] cessibility.AccessibleContextFactory@b8df7f30
+[92476.55] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92476.55] omponent.ListField$AccessibleListField@14da590c
+[92476.555] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92476.555] ================= INJET FW: FieldExplorer --                         name: BlackBerry Protect 1.1.1.[92476.555] 46,Research In Motion Limited
+[92476.56] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92476.56] cessibility.AccessibleContextFactory@6063e037
+[92476.57] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92476.57] omponent.ListField$AccessibleListField@14da590c
+[92476.58] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92476.6] ================= INJET FW: FieldExplorer --                         name: BlackBerry S/MIME Support[92476.6]  Package 7.0.0,Research In Motion Limited
+[92476.61] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92476.61] cessibility.AccessibleContextFactory@dc03f7a5
+[92476.62] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92476.62] omponent.ListField$AccessibleListField@14da590c
+[92476.625] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92476.625] ================= INJET FW: FieldExplorer --                         name: BrickBreaker 7.0.0,Resear[92476.625] ch In Motion Limited
+[92476.64] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92476.64] cessibility.AccessibleContextFactory@f3ad4be0
+[92476.64] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92476.64] omponent.ListField$AccessibleListField@14da590c
+[92476.65] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92476.66] ================= INJET FW: FieldExplorer --                         name: Browser 7.0.0,Research In[92476.66]  Motion Limited
+[92476.664] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92476.664] cessibility.AccessibleContextFactory@2ca8e12c
+[92476.664] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92476.664] omponent.ListField$AccessibleListField@14da590c
+[92476.68] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92476.69] ================= INJET FW: FieldExplorer --                         name: Calculator 7.0.0,Research[92476.69]  In Motion Limited
+[92476.695] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92476.695] cessibility.AccessibleContextFactory@c99b39ab
+[92476.73] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92476.73] omponent.ListField$AccessibleListField@14da590c
+[92476.73] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92476.73] ================= INJET FW: FieldExplorer --                         name: Calendar 7.0.0,Research I[92476.73] n Motion Limited
+[92476.734] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92476.734] cessibility.AccessibleContextFactory@23e91008
+[92476.74] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92476.74] omponent.ListField$AccessibleListField@14da590c
+[92476.74] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92476.76] ================= INJET FW: FieldExplorer --                         name: Clock 7.0.0,Research In M[92476.76] otion Limited
+[92476.76] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92476.76] cessibility.AccessibleContextFactory@aa1b2ffe
+[92476.76] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92476.76] omponent.ListField$AccessibleListField@14da590c
+[92476.79] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92476.79] ================= INJET FW: FieldExplorer --                         name: com_rim_samples_bbm_ticta[92476.79] ctoe (Tic-Tac-Toe) 6.0.0,Research In Motion Ltd.
+[92476.8] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92476.8] cessibility.AccessibleContextFactory@c1c48439
+[92476.8] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92476.8] omponent.ListField$AccessibleListField@14da590c
+[92476.8] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92476.81] ================= INJET FW: FieldExplorer --                         name: Contacts 7.0.0,Research I[92476.81] n Motion Limited
+[92476.81] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92476.81] cessibility.AccessibleContextFactory@d96dd874
+[92476.81] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92476.81] omponent.ListField$AccessibleListField@14da590c
+[92476.85] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92476.86] ================= INJET FW: FieldExplorer --                         name: Documents To Go 3.0.0.134[92476.86] ,Research In Motion Limited
+[92476.87] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92476.87] cessibility.AccessibleContextFactory@12696dc0
+[92476.875] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92476.875] omponent.ListField$AccessibleListField@14da590c
+[92476.875] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92476.88] ================= INJET FW: FieldExplorer --                         name: DOD Root Certificates 7.0[92476.88] .0,Research In Motion Limited
+[92476.88] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92476.88] cessibility.AccessibleContextFactory@2a12c1fb
+[92476.9] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92476.9] omponent.ListField$AccessibleListField@14da590c
+[92476.91] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92476.91] ================= INJET FW: FieldExplorer --                         name: Email Setup 7.11.1019.163[92476.91] 1,Research In Motion Limited
+[92476.914] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92476.914] cessibility.AccessibleContextFactory@41bc1636
+[92476.92] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92476.92] omponent.ListField$AccessibleListField@14da590c
+[92476.96] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92476.97] ================= INJET FW: FieldExplorer --                         name: Facebook 2.0.0.53,Researc[92476.97] h In Motion Limited
+[92476.97] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92476.97] cessibility.AccessibleContextFactory@6e897b81
+[92477.0] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92477.0] omponent.ListField$AccessibleListField@14da590c
+[92477.0] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92477.01] ================= INJET FW: FieldExplorer --                         name: File Explorer 7.0.0,Resea[92477.01] rch In Motion Limited
+[92477.04] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92477.04] cessibility.AccessibleContextFactory@27f99ea6
+[92477.04] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92477.04] omponent.ListField$AccessibleListField@14da590c
+[92477.08] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92477.086] ================= INJET FW: FieldExplorer --                         name: Free A+ Chat for Facebook[92477.086]  with Emoticon 2.2.1,shendz
+[92477.09] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92477.09] cessibility.AccessibleContextFactory@60f533f2
+[92477.125] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92477.125] omponent.ListField$AccessibleListField@14da590c
+[92477.13] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92477.13] ================= INJET FW: FieldExplorer --                         name: Google Talk 2.5.108,Resea[92477.13] rch In Motion Limited
+[92477.13] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92477.13] cessibility.AccessibleContextFactory@4981efa2
+[92477.15] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92477.15] omponent.ListField$AccessibleListField@14da590c
+[92477.19] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92477.19] ================= INJET FW: FieldExplorer --                         name: Help 4.0.0.17,Research In[92477.19]  Motion Limited
+[92477.19] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92477.19] cessibility.AccessibleContextFactory@8b7365fd
+[92477.2] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92477.2] omponent.ListField$AccessibleListField@14da590c
+[92477.26] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92477.266] ================= INJET FW: FieldExplorer --                         name: Home Screen 7.0.0,Researc[92477.266] h In Motion Limited
+[92477.27] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92477.27] cessibility.AccessibleContextFactory@c2d2d3d0
+[92477.27] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92477.27] omponent.ListField$AccessibleListField@14da590c
+[92477.32] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92477.32] ================= INJET FW: FieldExplorer --                         name: InjectionFramework 1.0.0,[92477.32] BlackBerry Developer
+[92477.375] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92477.375] cessibility.AccessibleContextFactory@fa3241a3
+[92477.38] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92477.38] omponent.ListField$AccessibleListField@14da590c
+[92477.38] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92477.38] ================= INJET FW: FieldExplorer --                         name: Media 7.0.0,Research In M[92477.38] otion Limited
+[92477.39] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92477.39] cessibility.AccessibleContextFactory@1c6d9e66
+[92477.39] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92477.39] omponent.ListField$AccessibleListField@14da590c
+[92477.4] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92477.4] ================= INJET FW: FieldExplorer --                         name: MemoPad 7.0.0,Research In[92477.4]  Motion Limited
+[92477.4] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92477.4] cessibility.AccessibleContextFactory@3416f2a1
+[92477.43] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92477.43] omponent.ListField$AccessibleListField@14da590c
+[92477.44] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92477.44] ================= INJET FW: FieldExplorer --                         name: Messages 7.0.0,Research I[92477.44] n Motion Limited
+[92477.445] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92477.445] cessibility.AccessibleContextFactory@1211a5c9
+[92477.445] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92477.445] omponent.ListField$AccessibleListField@14da590c
+[92477.445] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92477.47] ================= INJET FW: FieldExplorer --                         name: Options 7.0.0,Research In[92477.47]  Motion Limited
+[92477.484] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92477.484] cessibility.AccessibleContextFactory@6c5f7c26
+[92477.484] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92477.484] omponent.ListField$AccessibleListField@14da590c
+[92477.51] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92477.51] ================= INJET FW: FieldExplorer --                         name: Password Keeper 7.0.0,Res[92477.51] earch In Motion Limited
+[92477.51] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92477.51] cessibility.AccessibleContextFactory@7b5ad2c
+[92477.516] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92477.516] omponent.ListField$AccessibleListField@14da590c
+[92477.516] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92477.516] ================= INJET FW: FieldExplorer --                         name: Password Lock 7.0.0,Resea[92477.516] rch In Motion Limited
+[92477.54] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92477.54] cessibility.AccessibleContextFactory@8355c49a
+[92477.55] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92477.55] omponent.ListField$AccessibleListField@14da590c
+[92477.555] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92477.59] ================= INJET FW: FieldExplorer --                         name: Phone 7.0.0,Research In M[92477.59] otion Limited
+[92477.59] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92477.59] cessibility.AccessibleContextFactory@9aff18d5
+[92477.6] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92477.6] omponent.ListField$AccessibleListField@14da590c
+[92477.62] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92477.625] ================= INJET FW: FieldExplorer --                         name: Setup 7.0.0,Research In M[92477.625] otion Limited
+[92477.63] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92477.63] cessibility.AccessibleContextFactory@37f17154
+[92477.68] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92477.68] omponent.ListField$AccessibleListField@14da590c
+[92477.68] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92477.72] ================= INJET FW: FieldExplorer --                         name: Social Feeds 2.0.0.45,Res[92477.72] earch In Motion Limited
+[92477.72] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92477.72] cessibility.AccessibleContextFactory@207e2d04
+[92477.72] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92477.72] omponent.ListField$AccessibleListField@14da590c
+[92477.72] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92477.73] ================= INJET FW: FieldExplorer --                         name: Tasks 7.0.0,Research In M[92477.73] otion Limited
+[92477.734] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92477.734] cessibility.AccessibleContextFactory@1fcb213d
+[92477.766] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92477.766] omponent.ListField$AccessibleListField@14da590c
+[92477.77] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92477.77] ================= INJET FW: FieldExplorer --                         name: Twitter 2.0.0.25,Research[92477.77]  In Motion Limited
+[92477.78] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92477.78] cessibility.AccessibleContextFactory@a46119ba
+[92477.79] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92477.79] omponent.ListField$AccessibleListField@14da590c
+[92477.79] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92477.79] ================= INJET FW: FieldExplorer --                         name: Voice Dialing 7.0.0,Resea[92477.79] rch In Motion Limited
+[92477.79] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92477.79] cessibility.AccessibleContextFactory@b8d21f03
+[92477.79] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92477.79] omponent.ListField$AccessibleListField@14da590c
+[92477.79] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92477.805] ================= INJET FW: FieldExplorer --                         name: WhatsApp Messenger 2.7.46[92477.805] 95,WhatsApp Inc.
+[92477.805] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92477.805] cessibility.AccessibleContextFactory@ad8d0ab4
+[92477.86] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92477.86] omponent.ListField$AccessibleListField@14da590c
+[92477.86] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92477.86] ================= INJET FW: FieldExplorer --                         name: Wikitude 6.0.13,Wikitude
+[92477.86] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92477.86] cessibility.AccessibleContextFactory@80f5b554
+[92477.875] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92477.875] omponent.ListField$AccessibleListField@14da590c
+[92477.875] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92477.92] ================= INJET FW: FieldExplorer --                         name: Windows Live Messenger 2.[92477.92] 5.108,Research In Motion Limited
+[92477.92] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92477.92] cessibility.AccessibleContextFactory@545e5ff4
+[92477.93] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92477.93] omponent.ListField$AccessibleListField@14da590c
+[92477.945] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92477.945] ================= INJET FW: FieldExplorer --                         name: Wireless Music Sync 1.0.2[92477.945] .19,Research In Motion Limited
+[92477.945] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92477.945] cessibility.AccessibleContextFactory@c3d04761
+[92477.95] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92477.95] omponent.ListField$AccessibleListField@14da590c
+[92477.95] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92478.0] ================= INJET FW: FieldExplorer --                         name: Word Mole 7.0.0,Research [92478.0] In Motion Limited
+[92478.0] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92478.0] cessibility.AccessibleContextFactory@9738f201
+[92478.0] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92478.0] omponent.ListField$AccessibleListField@14da590c
+[92478.02] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92478.02] ================= INJET FW: FieldExplorer --                         name: Yahoo Messenger 2.5.108,R[92478.02] esearch In Motion Limited
+[92478.02] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92478.02] cessibility.AccessibleContextFactory@76cfcca2
+[92478.03] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92478.03] omponent.ListField$AccessibleListField@14da590c
+[92478.03] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92478.04] ================= INJET FW: FieldExplorer --                         name: YouTube 1.0.0.43,Research[92478.04]  In Motion Limited
+[92478.05] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92478.05] cessibility.AccessibleContextFactory@8e7920dd
+[92478.055] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92478.055] omponent.ListField$AccessibleListField@14da590c
+[92478.06] ================= INJET FW: FieldExplorer --          CpuView hist: 3
+[92478.09] ================= INJET FW: FieldExplorer --             VerticalFieldManager hist: 4
+[92478.1] ================= INJET FW: FieldExplorer --                ResourceUsageView$ResourceUsageSummaryFi[92478.1] eld hist: 5
+[92478.11] ================= INJET FW: FieldExplorer --                   AccessibleContextClass
+[92478.12] ================= INJET FW: FieldExplorer --                   name: 22% Used 78% Free
+[92478.125] ================= INJET FW: FieldExplorer --                   parent: net.rim.device.api.ui.contain[92478.125] er.MainScreen$AccessibleMainScreen@40bea2a5
+[92478.125] ================= INJET FW: FieldExplorer --             VerticalFieldManager hist: 4
+[92478.16] ================= INJET FW: FieldExplorer --                AppMgmtView$GroupBoxListManager hist: 5
+[92478.17] ================= INJET FW: FieldExplorer --                   ResourceUsageView$ResourceUsageListFi[92478.17] eld hist: 6
+[92478.18] ================= INJET FW: FieldExplorer --                      ListField$AccessibleListField
+[92478.22] ================= INJET FW: FieldExplorer --                      parent: net.rim.device.api.ui.cont[92478.22] ainer.MainScreen$AccessibleMainScreen@40bea2a5
+[92478.22] ================= INJET FW: FieldExplorer --                      count: 44
+[92478.23] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92478.234] ================= INJET FW: FieldExplorer --                         name: Options 19%
+[92478.234] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92478.234] cessibility.AccessibleContextFactory@9f34db58
+[92478.234] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92478.234] omponent.ListField$AccessibleListField@3a54fc73
+[92478.26] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92478.266] ================= INJET FW: FieldExplorer --                         name: BlackBerry App World 0%
+[92478.28] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92478.28] cessibility.AccessibleContextFactory@79f73f8e
+[92478.29] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92478.29] omponent.ListField$AccessibleListField@3a54fc73
+[92478.29] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92478.3] ================= INJET FW: FieldExplorer --                         name: BlackBerry Messenger 0%
+[92478.305] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92478.305] cessibility.AccessibleContextFactory@b2f2d4da
+[92478.305] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92478.305] omponent.ListField$AccessibleListField@3a54fc73
+[92478.31] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92478.32] ================= INJET FW: FieldExplorer --                         name: BlackBerry Podcasts 0%
+[92478.35] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92478.35] cessibility.AccessibleContextFactory@bb35aa22
+[92478.35] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92478.35] omponent.ListField$AccessibleListField@3a54fc73
+[92478.35] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92478.375] ================= INJET FW: FieldExplorer --                         name: BlackBerry Protect 0%
+[92478.38] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92478.38] cessibility.AccessibleContextFactory@d2defe5d
+[92478.38] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92478.38] omponent.ListField$AccessibleListField@3a54fc73
+[92478.414] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92478.414] ================= INJET FW: FieldExplorer --                         name: Browser 0%
+[92478.414] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92478.414] cessibility.AccessibleContextFactory@d3c81a0f
+[92478.42] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92478.42] omponent.ListField$AccessibleListField@3a54fc73
+[92478.43] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92478.44] ================= INJET FW: FieldExplorer --                         name: Email Setup 0%
+[92478.445] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92478.445] cessibility.AccessibleContextFactory@cc3af5b
+[92478.445] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92478.445] omponent.ListField$AccessibleListField@3a54fc73
+[92478.45] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92478.46] ================= INJET FW: FieldExplorer --                         name: Facebook 0%
+[92478.516] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92478.516] cessibility.AccessibleContextFactory@d2620281
+[92478.516] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92478.516] omponent.ListField$AccessibleListField@3a54fc73
+[92478.52] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92478.53] ================= INJET FW: FieldExplorer --                         name: Free A+ Chat for Facebook[92478.53]  with Emoticon 0%
+[92478.53] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92478.53] cessibility.AccessibleContextFactory@ea0b56bc
+[92478.56] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92478.56] omponent.ListField$AccessibleListField@3a54fc73
+[92478.56] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92478.57] ================= INJET FW: FieldExplorer --                         name: Google Talk 0%
+[92478.58] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92478.58] cessibility.AccessibleContextFactory@1b4aaf7
+[92478.586] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92478.586] omponent.ListField$AccessibleListField@3a54fc73
+[92478.59] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92478.64] ================= INJET FW: FieldExplorer --                         name: Home Screen 0%
+[92478.65] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92478.65] cessibility.AccessibleContextFactory@5c028154
+[92478.65] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92478.65] omponent.ListField$AccessibleListField@3a54fc73
+[92478.66] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92478.66] ================= INJET FW: FieldExplorer --                         name: InjectionFramework 0%
+[92478.664] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92478.664] cessibility.AccessibleContextFactory@5259947e
+[92478.69] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92478.69] omponent.ListField$AccessibleListField@3a54fc73
+[92478.695] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92478.695] ================= INJET FW: FieldExplorer --                         name: Media 0%
+[92478.71] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92478.71] cessibility.AccessibleContextFactory@8b5529ca
+[92478.72] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92478.72] omponent.ListField$AccessibleListField@3a54fc73
+[92478.72] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92478.74] ================= INJET FW: FieldExplorer --                         name: Messages 0%
+[92478.74] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92478.74] cessibility.AccessibleContextFactory@6059fbe3
+[92478.75] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92478.75] omponent.ListField$AccessibleListField@3a54fc73
+[92478.766] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92478.766] ================= INJET FW: FieldExplorer --                         name: Phone 0%
+[92478.766] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92478.766] cessibility.AccessibleContextFactory@56b10f0d
+[92478.77] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92478.77] omponent.ListField$AccessibleListField@3a54fc73
+[92478.77] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92478.8] ================= INJET FW: FieldExplorer --                         name: Setup 0%
+[92478.8] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92478.8] cessibility.AccessibleContextFactory@f06b189a
+[92478.8] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92478.8] omponent.ListField$AccessibleListField@3a54fc73
+[92478.83] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92478.83] ================= INJET FW: FieldExplorer --                         name: Social Feeds 0%
+[92478.83] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92478.83] cessibility.AccessibleContextFactory@554af77f
+[92478.84] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92478.84] omponent.ListField$AccessibleListField@3a54fc73
+[92478.85] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92478.86] ================= INJET FW: FieldExplorer --                         name: Twitter 0%
+[92478.87] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92478.87] cessibility.AccessibleContextFactory@e472f884
+[92478.87] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92478.87] omponent.ListField$AccessibleListField@3a54fc73
+[92478.875] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92478.91] ================= INJET FW: FieldExplorer --                         name: Voice Dialing 0%
+[92478.91] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92478.91] cessibility.AccessibleContextFactory@e55c1436
+[92478.914] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92478.914] omponent.ListField$AccessibleListField@3a54fc73
+[92478.92] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92478.92] ================= INJET FW: FieldExplorer --                         name: WhatsApp Messenger 0%
+[92478.95] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92478.95] cessibility.AccessibleContextFactory@ae32b64e
+[92478.96] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92478.96] omponent.ListField$AccessibleListField@3a54fc73
+[92478.96] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92478.97] ================= INJET FW: FieldExplorer --                         name: Windows Live Messenger 0%[92478.97] 
+[92478.97] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92478.97] cessibility.AccessibleContextFactory@e3e1ec8
+[92478.98] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92478.98] omponent.ListField$AccessibleListField@3a54fc73
+[92478.99] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92479.0] ================= INJET FW: FieldExplorer --                         name: Wireless Music Sync 0%
+[92479.0] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92479.0] cessibility.AccessibleContextFactory@25e77303
+[92479.03] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92479.03] omponent.ListField$AccessibleListField@3a54fc73
+[92479.03] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92479.03] ================= INJET FW: FieldExplorer --                         name: Yahoo Messenger 0%
+[92479.03] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92479.03] cessibility.AccessibleContextFactory@e28fe51a
+[92479.04] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92479.04] omponent.ListField$AccessibleListField@3a54fc73
+[92479.04] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92479.055] ================= INJET FW: FieldExplorer --                         name: Amazon MP3 Music Store No[92479.055] t Running
+[92479.06] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92479.06] cessibility.AccessibleContextFactory@c30fdb6d
+[92479.06] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92479.06] omponent.ListField$AccessibleListField@3a54fc73
+[92479.086] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92479.086] ================= INJET FW: FieldExplorer --                         name: BBMInjectDemo (BBMInject)[92479.086]  Not Running
+[92479.09] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92479.09] cessibility.AccessibleContextFactory@dab92fa8
+[92479.11] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92479.11] omponent.ListField$AccessibleListField@3a54fc73
+[92479.11] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92479.12] ================= INJET FW: FieldExplorer --                         name: BlackBerry Maps Not Runni[92479.12] ng
+[92479.125] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92479.125] cessibility.AccessibleContextFactory@392870a9
+[92479.13] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92479.13] omponent.ListField$AccessibleListField@3a54fc73
+[92479.13] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92479.13] ================= INJET FW: FieldExplorer --                         name: BlackBerry S/MIME Support[92479.13]  Package Not Running
+[92479.15] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92479.15] cessibility.AccessibleContextFactory@722405f5
+[92479.15] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92479.15] omponent.ListField$AccessibleListField@3a54fc73
+[92479.19] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92479.19] ================= INJET FW: FieldExplorer --                         name: BrickBreaker Not Running
+[92479.19] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92479.19] cessibility.AccessibleContextFactory@86950b3e
+[92479.21] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92479.21] omponent.ListField$AccessibleListField@3a54fc73
+[92479.21] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92479.26] ================= INJET FW: FieldExplorer --                         name: Calculator Not Running
+[92479.26] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92479.26] cessibility.AccessibleContextFactory@2a2e118c
+[92479.26] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92479.26] omponent.ListField$AccessibleListField@3a54fc73
+[92479.27] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92479.27] ================= INJET FW: FieldExplorer --                         name: Calendar Not Running
+[92479.27] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92479.27] cessibility.AccessibleContextFactory@d90c2c29
+[92479.28] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92479.28] omponent.ListField$AccessibleListField@3a54fc73
+[92479.29] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92479.29] ================= INJET FW: FieldExplorer --                         name: Clock Not Running
+[92479.3] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92479.3] cessibility.AccessibleContextFactory@e4875063
+[92479.3] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92479.3] omponent.ListField$AccessibleListField@3a54fc73
+[92479.305] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92479.31] ================= INJET FW: FieldExplorer --                         name: com_rim_samples_bbm_ticta[92479.31] ctoe (Tic-Tac-Toe) Not Running
+[92479.32] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92479.32] cessibility.AccessibleContextFactory@95019279
+[92479.33] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92479.33] omponent.ListField$AccessibleListField@3a54fc73
+[92479.35] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92479.35] ================= INJET FW: FieldExplorer --                         name: Contacts Not Running
+[92479.36] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92479.36] cessibility.AccessibleContextFactory@d7dc2486
+[92479.375] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92479.375] omponent.ListField$AccessibleListField@3a54fc73
+[92479.375] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92479.414] ================= INJET FW: FieldExplorer --                         name: Documents To Go Not Runni[92479.414] ng
+[92479.42] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92479.42] cessibility.AccessibleContextFactory@7a8c0f22
+[92479.45] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92479.45] omponent.ListField$AccessibleListField@3a54fc73
+[92479.45] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92479.47] ================= INJET FW: FieldExplorer --                         name: DOD Root Certificates Not[92479.47]  Running
+[92479.484] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92479.484] cessibility.AccessibleContextFactory@4a095f09
+[92479.484] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92479.484] omponent.ListField$AccessibleListField@3a54fc73
+[92479.51] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92479.51] ================= INJET FW: FieldExplorer --                         name: File Explorer Not Running[92479.51] 
+[92479.51] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92479.51] cessibility.AccessibleContextFactory@968cddec
+[92479.53] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92479.53] omponent.ListField$AccessibleListField@3a54fc73
+[92479.53] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92479.54] ================= INJET FW: FieldExplorer --                         name: Help Not Running
+[92479.55] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92479.55] cessibility.AccessibleContextFactory@aafde335
+[92479.555] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92479.555] omponent.ListField$AccessibleListField@3a54fc73
+[92479.59] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92479.59] ================= INJET FW: FieldExplorer --                         name: MemoPad Not Running
+[92479.63] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92479.63] cessibility.AccessibleContextFactory@67a6554c
+[92479.63] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92479.63] omponent.ListField$AccessibleListField@3a54fc73
+[92479.63] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92479.64] ================= INJET FW: FieldExplorer --                         name: Password Keeper Not Runni[92479.64] ng
+[92479.64] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92479.64] cessibility.AccessibleContextFactory@d57c1540
+[92479.65] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92479.65] omponent.ListField$AccessibleListField@3a54fc73
+[92479.65] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92479.65] ================= INJET FW: FieldExplorer --                         name: Password Lock Not Running[92479.65] 
+[92479.67] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92479.67] cessibility.AccessibleContextFactory@92248757
+[92479.68] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92479.68] omponent.ListField$AccessibleListField@3a54fc73
+[92479.69] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92479.695] ================= INJET FW: FieldExplorer --                         name: Tasks Not Running
+[92479.695] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92479.695] cessibility.AccessibleContextFactory@c983f52a
+[92479.7] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92479.7] omponent.ListField$AccessibleListField@3a54fc73
+[92479.7] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92479.75] ================= INJET FW: FieldExplorer --                         name: Wikitude Not Running
+[92479.75] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92479.75] cessibility.AccessibleContextFactory@1607740d
+[92479.76] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92479.76] omponent.ListField$AccessibleListField@3a54fc73
+[92479.766] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92479.766] ================= INJET FW: FieldExplorer --                         name: Word Mole Not Running
+[92479.766] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92479.766] cessibility.AccessibleContextFactory@83dd3401
+[92479.805] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92479.805] omponent.ListField$AccessibleListField@3a54fc73
+[92479.82] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92479.82] ================= INJET FW: FieldExplorer --                         name: YouTube Not Running
+[92479.83] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92479.83] cessibility.AccessibleContextFactory@29c56d8f
+[92479.84] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92479.84] omponent.ListField$AccessibleListField@3a54fc73
+[92479.86] ================= INJET FW: FieldExplorer --          InteractionView hist: 3
+[92479.87] ================= INJET FW: FieldExplorer --             VerticalFieldManager hist: 4
+[92479.875] ================= INJET FW: FieldExplorer --                ResourceUsageView$ResourceUsageSummaryFi[92479.875] eld hist: 5
+[92479.875] ================= INJET FW: FieldExplorer --                   AccessibleContextClass
+[92479.875] ================= INJET FW: FieldExplorer --                   name: 4m23s Used 1h54m Idle
+[92479.92] ================= INJET FW: FieldExplorer --                   parent: net.rim.device.api.ui.contain[92479.92] er.MainScreen$AccessibleMainScreen@40bea2a5
+[92479.92] ================= INJET FW: FieldExplorer --             VerticalFieldManager hist: 4
+[92479.96] ================= INJET FW: FieldExplorer --                AppMgmtView$GroupBoxListManager hist: 5
+[92479.97] ================= INJET FW: FieldExplorer --                   ResourceUsageView$ResourceUsageListFi[92479.97] eld hist: 6
+[92479.97] ================= INJET FW: FieldExplorer --                      ListField$AccessibleListField
+[92479.984] ================= INJET FW: FieldExplorer --                      parent: net.rim.device.api.ui.cont[92479.984] ainer.MainScreen$AccessibleMainScreen@40bea2a5
+[92479.99] ================= INJET FW: FieldExplorer --                      count: 44
+[92480.0] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92480.03] ================= INJET FW: FieldExplorer --                         name: Social Feeds 2m53s
+[92480.03] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92480.03] cessibility.AccessibleContextFactory@76b50c48
+[92480.03] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92480.03] omponent.ListField$AccessibleListField@484b7f84
+[92480.03] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92480.05] ================= INJET FW: FieldExplorer --                         name: Password Lock 35.3s
+[92480.05] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92480.05] cessibility.AccessibleContextFactory@54afbf70
+[92480.055] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92480.055] omponent.ListField$AccessibleListField@484b7f84
+[92480.06] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92480.06] ================= INJET FW: FieldExplorer --                         name: Home Screen 27.7s
+[92480.086] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92480.086] cessibility.AccessibleContextFactory@47ce83a8
+[92480.086] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92480.086] omponent.ListField$AccessibleListField@484b7f84
+[92480.09] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92480.1] ================= INJET FW: FieldExplorer --                         name: Windows Live Messenger 13[92480.1] .4s
+[92480.1] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92480.1] cessibility.AccessibleContextFactory@199b06cf
+[92480.11] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92480.11] omponent.ListField$AccessibleListField@484b7f84
+[92480.12] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92480.125] ================= INJET FW: FieldExplorer --                         name: Yahoo Messenger 7.0s
+[92480.16] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92480.16] cessibility.AccessibleContextFactory@15afac16
+[92480.16] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92480.16] omponent.ListField$AccessibleListField@484b7f84
+[92480.17] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92480.18] ================= INJET FW: FieldExplorer --                         name: Facebook 4.3s
+[92480.19] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92480.19] cessibility.AccessibleContextFactory@14fca04f
+[92480.19] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92480.19] omponent.ListField$AccessibleListField@484b7f84
+[92480.19] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92480.2] ================= INJET FW: FieldExplorer --                         name: Free A+ Chat for Facebook[92480.2]  with Emoticon 2.1s
+[92480.21] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92480.21] cessibility.AccessibleContextFactory@d008eaed
+[92480.25] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92480.25] omponent.ListField$AccessibleListField@484b7f84
+[92480.25] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92480.25] ================= INJET FW: FieldExplorer --                         name: Amazon MP3 Music Store No[92480.25] t Used
+[92480.26] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92480.26] cessibility.AccessibleContextFactory@cf55df26
+[92480.26] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92480.26] omponent.ListField$AccessibleListField@484b7f84
+[92480.26] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92480.29] ================= INJET FW: FieldExplorer --                         name: BBMInjectDemo (BBMInject)[92480.29]  Not Used
+[92480.3] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92480.3] cessibility.AccessibleContextFactory@11475581
+[92480.305] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92480.305] omponent.ListField$AccessibleListField@484b7f84
+[92480.32] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92480.32] ================= INJET FW: FieldExplorer --                         name: BlackBerry App World Not [92480.32] Used
+[92480.32] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92480.32] cessibility.AccessibleContextFactory@c025701e
+[92480.4] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92480.4] omponent.ListField$AccessibleListField@484b7f84
+[92480.4] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92480.41] ================= INJET FW: FieldExplorer --                         name: BlackBerry Maps Not Used
+[92480.414] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92480.414] cessibility.AccessibleContextFactory@2dfb3012
+[92480.42] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92480.42] omponent.ListField$AccessibleListField@484b7f84
+[92480.45] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92480.46] ================= INJET FW: FieldExplorer --                         name: BlackBerry Messenger Not [92480.46] Used
+[92480.46] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92480.46] cessibility.AccessibleContextFactory@37da2cd3
+[92480.48] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92480.48] omponent.ListField$AccessibleListField@484b7f84
+[92480.48] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92480.48] ================= INJET FW: FieldExplorer --                         name: BlackBerry Podcasts Not U[92480.48] sed
+[92480.49] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92480.49] cessibility.AccessibleContextFactory@6d9d732d
+[92480.49] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92480.49] omponent.ListField$AccessibleListField@484b7f84
+[92480.51] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92480.555] ================= INJET FW: FieldExplorer --                         name: BlackBerry Protect Not Us[92480.555] ed
+[92480.555] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92480.555] cessibility.AccessibleContextFactory@820e7876
+[92480.56] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92480.56] omponent.ListField$AccessibleListField@484b7f84
+[92480.57] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92480.58] ================= INJET FW: FieldExplorer --                         name: BlackBerry S/MIME Support[92480.58]  Package Not Used
+[92480.58] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92480.58] cessibility.AccessibleContextFactory@1d64a97c
+[92480.61] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92480.61] omponent.ListField$AccessibleListField@484b7f84
+[92480.61] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92480.65] ================= INJET FW: FieldExplorer --                         name: BrickBreaker Not Used
+[92480.66] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92480.66] cessibility.AccessibleContextFactory@d870f41a
+[92480.66] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92480.66] omponent.ListField$AccessibleListField@484b7f84
+[92480.664] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92480.67] ================= INJET FW: FieldExplorer --                         name: Browser Not Used
+[92480.67] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92480.67] cessibility.AccessibleContextFactory@6798f51f
+[92480.68] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92480.68] omponent.ListField$AccessibleListField@484b7f84
+[92480.68] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92480.69] ================= INJET FW: FieldExplorer --                         name: Calculator Not Used
+[92480.734] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92480.734] cessibility.AccessibleContextFactory@beae7c8a
+[92480.734] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92480.734] omponent.ListField$AccessibleListField@484b7f84
+[92480.766] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92480.77] ================= INJET FW: FieldExplorer --                         name: Calendar Not Used
+[92480.78] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92480.78] cessibility.AccessibleContextFactory@4dd67d8f
+[92480.8] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92480.8] omponent.ListField$AccessibleListField@484b7f84
+[92480.8] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92480.8] ================= INJET FW: FieldExplorer --                         name: Clock Not Used
+[92480.83] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92480.83] cessibility.AccessibleContextFactory@de9aa60d
+[92480.83] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92480.83] omponent.ListField$AccessibleListField@484b7f84
+[92480.84] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92480.85] ================= INJET FW: FieldExplorer --                         name: com_rim_samples_bbm_ticta[92480.85] ctoe (Tic-Tac-Toe) Not Used
+[92480.86] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92480.86] cessibility.AccessibleContextFactory@35b02d78
+[92480.87] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92480.87] omponent.ListField$AccessibleListField@484b7f84
+[92480.875] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92480.88] ================= INJET FW: FieldExplorer --                         name: Contacts Not Used
+[92480.88] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92480.88] cessibility.AccessibleContextFactory@f2589f8f
+[92480.9] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92480.9] omponent.ListField$AccessibleListField@484b7f84
+[92480.91] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92480.91] ================= INJET FW: FieldExplorer --                         name: Documents To Go Not Used
+[92480.93] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92480.93] cessibility.AccessibleContextFactory@c5c14a2f
+[92480.93] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92480.93] omponent.ListField$AccessibleListField@484b7f84
+[92480.97] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92480.97] ================= INJET FW: FieldExplorer --                         name: DOD Root Certificates Not[92480.97]  Used
+[92480.97] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92480.97] cessibility.AccessibleContextFactory@2905019b
+[92480.984] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92480.984] omponent.ListField$AccessibleListField@484b7f84
+[92480.99] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92480.99] ================= INJET FW: FieldExplorer --                         name: Email Setup Not Used
+[92481.03] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92481.03] cessibility.AccessibleContextFactory@81b6b07f
+[92481.04] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92481.04] omponent.ListField$AccessibleListField@484b7f84
+[92481.07] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92481.08] ================= INJET FW: FieldExplorer --                         name: File Explorer Not Used
+[92481.08] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92481.08] cessibility.AccessibleContextFactory@d8cc37ea
+[92481.08] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92481.08] omponent.ListField$AccessibleListField@484b7f84
+[92481.09] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92481.09] ================= INJET FW: FieldExplorer --                         name: Google Talk Not Used
+[92481.1] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92481.1] cessibility.AccessibleContextFactory@b6c6eb12
+[92481.1] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92481.1] omponent.ListField$AccessibleListField@484b7f84
+[92481.1] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92481.15] ================= INJET FW: FieldExplorer --                         name: Help Not Used
+[92481.15] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92481.15] cessibility.AccessibleContextFactory@478b1390
+[92481.15] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92481.15] omponent.ListField$AccessibleListField@484b7f84
+[92481.18] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92481.18] ================= INJET FW: FieldExplorer --                         name: InjectionFramework Not Us[92481.18] ed
+[92481.18] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92481.18] cessibility.AccessibleContextFactory@516a1051
+[92481.18] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92481.18] omponent.ListField$AccessibleListField@484b7f84
+[92481.19] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92481.195] ================= INJET FW: FieldExplorer --                         name: Media Not Used
+[92481.24] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92481.24] cessibility.AccessibleContextFactory@9ded8f34
+[92481.24] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92481.24] omponent.ListField$AccessibleListField@484b7f84
+[92481.25] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92481.26] ================= INJET FW: FieldExplorer --                         name: MemoPad Not Used
+[92481.266] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92481.266] cessibility.AccessibleContextFactory@7be8425c
+[92481.27] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92481.27] omponent.ListField$AccessibleListField@484b7f84
+[92481.29] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92481.29] ================= INJET FW: FieldExplorer --                         name: Messages Not Used
+[92481.336] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92481.336] cessibility.AccessibleContextFactory@b347b02f
+[92481.336] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92481.336] omponent.ListField$AccessibleListField@484b7f84
+[92481.36] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92481.36] ================= INJET FW: FieldExplorer --                         name: Options Not Used
+[92481.36] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92481.36] cessibility.AccessibleContextFactory@168b679b
+[92481.4] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92481.4] omponent.ListField$AccessibleListField@484b7f84
+[92481.4] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92481.41] ================= INJET FW: FieldExplorer --                         name: Password Keeper Not Used
+[92481.41] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92481.41] cessibility.AccessibleContextFactory@6f3d167f
+[92481.414] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92481.414] omponent.ListField$AccessibleListField@484b7f84
+[92481.42] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92481.42] ================= INJET FW: FieldExplorer --                         name: Phone Not Used
+[92481.43] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92481.43] cessibility.AccessibleContextFactory@fe651784
+[92481.43] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92481.43] omponent.ListField$AccessibleListField@484b7f84
+[92481.43] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92481.45] ================= INJET FW: FieldExplorer --                         name: Setup Not Used
+[92481.45] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92481.45] cessibility.AccessibleContextFactory@82fb1001
+[92481.484] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92481.484] omponent.ListField$AccessibleListField@484b7f84
+[92481.484] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92481.51] ================= INJET FW: FieldExplorer --                         name: Tasks Not Used
+[92481.53] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92481.53] cessibility.AccessibleContextFactory@791087e
+[92481.53] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92481.53] omponent.ListField$AccessibleListField@484b7f84
+[92481.54] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92481.54] ================= INJET FW: FieldExplorer --                         name: Twitter Not Used
+[92481.55] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92481.55] cessibility.AccessibleContextFactory@d95d8ba5
+[92481.56] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92481.56] omponent.ListField$AccessibleListField@484b7f84
+[92481.56] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92481.57] ================= INJET FW: FieldExplorer --                         name: Voice Dialing Not Used
+[92481.58] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92481.58] cessibility.AccessibleContextFactory@74b3bcab
+[92481.586] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92481.586] omponent.ListField$AccessibleListField@484b7f84
+[92481.586] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92481.586] ================= INJET FW: FieldExplorer --                         name: WhatsApp Messenger Not Us[92481.586] ed
+[92481.61] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92481.61] cessibility.AccessibleContextFactory@252dfec1
+[92481.62] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92481.62] omponent.ListField$AccessibleListField@484b7f84
+[92481.625] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92481.66] ================= INJET FW: FieldExplorer --                         name: Wikitude Not Used
+[92481.66] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92481.66] cessibility.AccessibleContextFactory@71b17da4
+[92481.66] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92481.66] omponent.ListField$AccessibleListField@484b7f84
+[92481.664] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92481.67] ================= INJET FW: FieldExplorer --                         name: Wireless Music Sync Not U[92481.67] sed
+[92481.67] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92481.67] cessibility.AccessibleContextFactory@d07aeaa
+[92481.68] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92481.68] omponent.ListField$AccessibleListField@484b7f84
+[92481.68] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92481.69] ================= INJET FW: FieldExplorer --                         name: Word Mole Not Used
+[92481.695] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92481.695] cessibility.AccessibleContextFactory@90017fae
+[92481.7] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92481.7] omponent.ListField$AccessibleListField@484b7f84
+[92481.72] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92481.72] ================= INJET FW: FieldExplorer --                         name: YouTube Not Used
+[92481.72] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92481.72] cessibility.AccessibleContextFactory@788e3b5e
+[92481.75] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92481.75] omponent.ListField$AccessibleListField@484b7f84
+[92481.76] ================= INJET FW: FieldExplorer --          MemoryView hist: 3
+[92481.766] ================= INJET FW: FieldExplorer --             VerticalFieldManager hist: 4
+[92481.77] ================= INJET FW: FieldExplorer --                ResourceUsageView$ResourceUsageSummaryFi[92481.77] eld hist: 5
+[92481.77] ================= INJET FW: FieldExplorer --                   AccessibleContextClass
+[92481.79] ================= INJET FW: FieldExplorer --                   name: 221.1 MB Used 290.8 MB Free
+[92481.85] ================= INJET FW: FieldExplorer --                   parent: net.rim.device.api.ui.contain[92481.85] er.MainScreen$AccessibleMainScreen@40bea2a5
+[92481.88] ================= INJET FW: FieldExplorer --             VerticalFieldManager hist: 4
+[92481.89] ================= INJET FW: FieldExplorer --                AppMgmtView$GroupBoxListManager hist: 5
+[92481.9] ================= INJET FW: FieldExplorer --                   ResourceUsageView$ResourceUsageListFi[92481.9] eld hist: 6
+[92481.91] ================= INJET FW: FieldExplorer --                      ListField$AccessibleListField
+[92481.914] ================= INJET FW: FieldExplorer --                      parent: net.rim.device.api.ui.cont[92481.914] ainer.MainScreen$AccessibleMainScreen@40bea2a5
+[92481.92] Signal level only changed - ONS not updated
+[92481.92] ================= INJET FW: FieldExplorer --                      count: 44
+[92481.92] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92481.93] ================= INJET FW: FieldExplorer --                         name: Browser 9.9 MB
+[92481.94] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92481.94] cessibility.AccessibleContextFactory@daa1eb27
+[92481.94] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92481.94] omponent.ListField$AccessibleListField@cd8a9f74
+[92481.97] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92481.97] ================= INJET FW: FieldExplorer --                         name: Social Feeds 8.9 MB
+[92481.98] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92481.98] cessibility.AccessibleContextFactory@c32ea6d7
+[92481.98] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92481.98] omponent.ListField$AccessibleListField@cd8a9f74
+[92481.984] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92482.0] ================= INJET FW: FieldExplorer --                         name: Home Screen 4.7 MB
+[92482.0] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92482.0] cessibility.AccessibleContextFactory@abbb6287
+[92482.03] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92482.03] omponent.ListField$AccessibleListField@cd8a9f74
+[92482.04] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92482.06] ================= INJET FW: FieldExplorer --                         name: Messages 4.5 MB
+[92482.06] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92482.06] cessibility.AccessibleContextFactory@25bf527c
+[92482.06] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92482.06] omponent.ListField$AccessibleListField@cd8a9f74
+[92482.086] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92482.086] ================= INJET FW: FieldExplorer --                         name: Options 2.2 MB
+[92482.086] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92482.086] cessibility.AccessibleContextFactory@93951270
+[92482.09] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92482.09] omponent.ListField$AccessibleListField@cd8a9f74
+[92482.09] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92482.125] ================= INJET FW: FieldExplorer --                         name: Media 1.2 MB
+[92482.125] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92482.125] cessibility.AccessibleContextFactory@ec46c154
+[92482.125] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92482.125] omponent.ListField$AccessibleListField@cd8a9f74
+[92482.14] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92482.14] ================= INJET FW: FieldExplorer --                         name: BlackBerry Messenger 826.[92482.14] 3 KB
+[92482.17] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92482.17] cessibility.AccessibleContextFactory@23a62f27
+[92482.18] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92482.18] omponent.ListField$AccessibleListField@cd8a9f74
+[92482.19] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92482.23] ================= INJET FW: FieldExplorer --                         name: Facebook 610.1 KB
+[92482.234] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92482.234] cessibility.AccessibleContextFactory@22f32360
+[92482.234] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92482.234] omponent.ListField$AccessibleListField@cd8a9f74
+[92482.24] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92482.24] ================= INJET FW: FieldExplorer --                         name: BlackBerry Protect 514.8 [92482.24] KB
+[92482.24] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92482.24] cessibility.AccessibleContextFactory@2cd22021
+[92482.26] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92482.26] omponent.ListField$AccessibleListField@cd8a9f74
+[92482.26] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92482.3] ================= INJET FW: FieldExplorer --                         name: Yahoo Messenger 506.3 KB
+[92482.3] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92482.3] cessibility.AccessibleContextFactory@accd349
+[92482.305] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92482.305] omponent.ListField$AccessibleListField@cd8a9f74
+[92482.31] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92482.34] ================= INJET FW: FieldExplorer --                         name: Windows Live Messenger 49[92482.34] 7.3 KB
+[92482.34] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92482.34] cessibility.AccessibleContextFactory@4b22222b
+[92482.34] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92482.34] omponent.ListField$AccessibleListField@cd8a9f74
+[92482.35] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92482.35] ================= INJET FW: FieldExplorer --                         name: WhatsApp Messenger 473.4 [92482.35] KB
+[92482.36] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92482.36] cessibility.AccessibleContextFactory@b8f7e21f
+[92482.37] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92482.37] omponent.ListField$AccessibleListField@cd8a9f74
+[92482.375] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92482.38] ================= INJET FW: FieldExplorer --                         name: Phone 391.0 KB
+[92482.38] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92482.38] cessibility.AccessibleContextFactory@d9971769
+[92482.414] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92482.414] omponent.ListField$AccessibleListField@cd8a9f74
+[92482.42] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92482.43] ================= INJET FW: FieldExplorer --                         name: Google Talk 342.8 KB
+[92482.44] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92482.44] cessibility.AccessibleContextFactory@b791ca91
+[92482.445] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92482.445] omponent.ListField$AccessibleListField@cd8a9f74
+[92482.54] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92482.55] ================= INJET FW: FieldExplorer --                         name: InjectionFramework 179.8 [92482.55] KB
+[92482.555] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92482.555] cessibility.AccessibleContextFactory@ea751fc
+[92482.555] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92482.555] omponent.ListField$AccessibleListField@cd8a9f74
+[92482.555] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92482.56] ================= INJET FW: FieldExplorer --                         name: Wireless Music Sync 150.5[92482.56]  KB
+[92482.57] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92482.57] cessibility.AccessibleContextFactory@5b2ad0df
+[92482.58] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92482.58] omponent.ListField$AccessibleListField@cd8a9f74
+[92482.586] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92482.586] ================= INJET FW: FieldExplorer --                         name: Setup 120.5 KB
+[92482.59] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92482.59] cessibility.AccessibleContextFactory@d52ec0d4
+[92482.59] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92482.59] omponent.ListField$AccessibleListField@cd8a9f74
+[92482.63] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92482.63] ================= INJET FW: FieldExplorer --                         name: Email Setup 101.9 KB
+[92482.64] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92482.64] cessibility.AccessibleContextFactory@234e6730
+[92482.64] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92482.64] omponent.ListField$AccessibleListField@cd8a9f74
+[92482.67] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92482.68] ================= INJET FW: FieldExplorer --                         name: Voice Dialing 91.7 KB
+[92482.68] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92482.68] cessibility.AccessibleContextFactory@91242724
+[92482.69] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92482.69] omponent.ListField$AccessibleListField@cd8a9f74
+[92482.695] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92482.695] ================= INJET FW: FieldExplorer --                         name: Free A+ Chat for Facebook[92482.695]  with Emoticon 83.3 KB
+[92482.73] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92482.73] cessibility.AccessibleContextFactory@fef9e718
+[92482.734] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92482.734] omponent.ListField$AccessibleListField@cd8a9f74
+[92482.74] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92482.74] ================= INJET FW: FieldExplorer --                         name: BlackBerry App World 50.8[92482.74]  KB
+[92482.74] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92482.74] cessibility.AccessibleContextFactory@40eb5d73
+[92482.76] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92482.76] omponent.ListField$AccessibleListField@cd8a9f74
+[92482.77] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92482.83] ================= INJET FW: FieldExplorer --                         name: BlackBerry Podcasts 43.1 [92482.83] KB
+[92482.83] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92482.83] cessibility.AccessibleContextFactory@6db8c2be
+[92482.83] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92482.83] omponent.ListField$AccessibleListField@cd8a9f74
+[92482.84] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92482.84] ================= INJET FW: FieldExplorer --                         name: Twitter 20.9 KB
+[92482.89] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92482.89] cessibility.AccessibleContextFactory@6273ae6f
+[92482.89] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92482.89] omponent.ListField$AccessibleListField@cd8a9f74
+[92482.9] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92482.91] ================= INJET FW: FieldExplorer --                         name: Amazon MP3 Music Store No[92482.91] t Running
+[92482.914] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92482.914] cessibility.AccessibleContextFactory@8312e3b9
+[92482.945] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92482.945] omponent.ListField$AccessibleListField@cd8a9f74
+[92482.945] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92482.95] ================= INJET FW: FieldExplorer --                         name: BBMInjectDemo (BBMInject)[92482.95]  Not Running
+[92482.95] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92482.95] cessibility.AccessibleContextFactory@7631a7f1
+[92482.95] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92482.95] omponent.ListField$AccessibleListField@cd8a9f74
+[92482.97] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92482.97] ================= INJET FW: FieldExplorer --                         name: BlackBerry Maps Not Runni[92482.97] ng
+[92482.984] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92482.984] cessibility.AccessibleContextFactory@559a8f6
+[92482.984] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92482.984] omponent.ListField$AccessibleListField@cd8a9f74
+[92482.99] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92483.0] ================= INJET FW: FieldExplorer --                         name: BlackBerry S/MIME Support[92483.0]  Package Not Running
+[92483.04] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92483.04] cessibility.AccessibleContextFactory@51dd27d9
+[92483.04] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92483.04] omponent.ListField$AccessibleListField@cd8a9f74
+[92483.05] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92483.07] ================= INJET FW: FieldExplorer --                         name: BrickBreaker Not Running
+[92483.07] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92483.07] cessibility.AccessibleContextFactory@f62939ee
+[92483.12] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92483.12] omponent.ListField$AccessibleListField@cd8a9f74
+[92483.125] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92483.13] ================= INJET FW: FieldExplorer --                         name: Calculator Not Running
+[92483.13] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92483.13] cessibility.AccessibleContextFactory@215a77c0
+[92483.18] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92483.18] omponent.ListField$AccessibleListField@cd8a9f74
+[92483.19] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92483.19] ================= INJET FW: FieldExplorer --                         name: Calendar Not Running
+[92483.195] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92483.195] cessibility.AccessibleContextFactory@4c8bb592
+[92483.195] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92483.195] omponent.ListField$AccessibleListField@cd8a9f74
+[92483.234] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92483.24] ================= INJET FW: FieldExplorer --                         name: Clock Not Running
+[92483.24] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92483.24] cessibility.AccessibleContextFactory@dbb3b697
+[92483.26] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92483.26] omponent.ListField$AccessibleListField@cd8a9f74
+[92483.266] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92483.305] ================= INJET FW: FieldExplorer --                         name: com_rim_samples_bbm_ticta[92483.305] ctoe (Tic-Tac-Toe) Not Running
+[92483.31] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92483.31] cessibility.AccessibleContextFactory@819bf025
+[92483.31] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92483.31] omponent.ListField$AccessibleListField@cd8a9f74
+[92483.33] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92483.33] ================= INJET FW: FieldExplorer --                         name: Contacts Not Running
+[92483.375] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92483.375] cessibility.AccessibleContextFactory@9470cdf5
+[92483.38] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92483.38] omponent.ListField$AccessibleListField@cd8a9f74
+[92483.39] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92483.4] ================= INJET FW: FieldExplorer --                         name: Documents To Go Not Runni[92483.4] ng
+[92483.41] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92483.41] cessibility.AccessibleContextFactory@3720b891
+[92483.414] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92483.414] omponent.ListField$AccessibleListField@cd8a9f74
+[92483.42] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92483.43] ================= INJET FW: FieldExplorer --                         name: DOD Root Certificates Not[92483.43]  Running
+[92483.43] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92483.43] cessibility.AccessibleContextFactory@3199365f
+[92483.44] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92483.44] omponent.ListField$AccessibleListField@cd8a9f74
+[92483.445] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92483.45] ================= INJET FW: FieldExplorer --                         name: File Explorer Not Running[92483.45] 
+[92483.484] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92483.484] cessibility.AccessibleContextFactory@1d9450ec
+[92483.484] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92483.484] omponent.ListField$AccessibleListField@cd8a9f74
+[92483.51] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92483.51] ================= INJET FW: FieldExplorer --                         name: Help Not Running
+[92483.516] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92483.516] cessibility.AccessibleContextFactory@c37c8a7a
+[92483.54] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92483.54] omponent.ListField$AccessibleListField@cd8a9f74
+[92483.54] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92483.54] ================= INJET FW: FieldExplorer --                         name: MemoPad Not Running
+[92483.555] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92483.555] cessibility.AccessibleContextFactory@9d8be2e9
+[92483.555] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92483.555] omponent.ListField$AccessibleListField@cd8a9f74
+[92483.59] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92483.59] ================= INJET FW: FieldExplorer --                         name: Password Keeper Not Runni[92483.59] ng
+[92483.59] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92483.59] cessibility.AccessibleContextFactory@43741c77
+[92483.6] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92483.6] omponent.ListField$AccessibleListField@cd8a9f74
+[92483.6] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92483.61] ================= INJET FW: FieldExplorer --                         name: Password Lock Not Running[92483.61] 
+[92483.61] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92483.61] cessibility.AccessibleContextFactory@216ecf9f
+[92483.62] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92483.62] omponent.ListField$AccessibleListField@cd8a9f74
+[92483.63] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92483.63] ================= INJET FW: FieldExplorer --                         name: Tasks Not Running
+[92483.67] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92483.67] cessibility.AccessibleContextFactory@ff6982c7
+[92483.68] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92483.68] omponent.ListField$AccessibleListField@cd8a9f74
+[92483.71] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92483.71] ================= INJET FW: FieldExplorer --                         name: Wikitude Not Running
+[92483.72] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92483.72] cessibility.AccessibleContextFactory@9487f88
+[92483.734] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92483.734] omponent.ListField$AccessibleListField@cd8a9f74
+[92483.734] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92483.74] ================= INJET FW: FieldExplorer --                         name: Word Mole Not Running
+[92483.75] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92483.75] cessibility.AccessibleContextFactory@b8269a25
+[92483.76] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92483.76] omponent.ListField$AccessibleListField@cd8a9f74
+[92483.76] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92483.76] ================= INJET FW: FieldExplorer --                         name: YouTube Not Running
+[92483.78] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92483.78] cessibility.AccessibleContextFactory@3cbc92a2
+[92483.78] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92483.78] omponent.ListField$AccessibleListField@cd8a9f74
+[92483.79] ================= INJET FW: FieldExplorer --          StorageView hist: 3
+[92483.79] ================= INJET FW: FieldExplorer --             VerticalFieldManager hist: 4
+[92483.79] ================= INJET FW: FieldExplorer --                ResourceUsageView$ResourceUsageSummaryFi[92483.79] eld hist: 5
+[92483.79] ================= INJET FW: FieldExplorer --                   AccessibleContextClass
+[92483.82] ================= INJET FW: FieldExplorer --                   name: 368.2 MB Used 111.7 MB Free
+[92483.82] ================= INJET FW: FieldExplorer --                   parent: net.rim.device.api.ui.contain[92483.82] er.MainScreen$AccessibleMainScreen@40bea2a5
+[92483.87] ================= INJET FW: FieldExplorer --             VerticalFieldManager hist: 4
+[92483.87] ================= INJET FW: FieldExplorer --                AppMgmtView$GroupBoxListManager hist: 5
+[92483.875] ================= INJET FW: FieldExplorer --                   ResourceUsageView$ResourceUsageListFi[92483.875] eld hist: 6
+[92483.9] ================= INJET FW: FieldExplorer --                      ListField$AccessibleListField
+[92483.9] ================= INJET FW: FieldExplorer --                      parent: net.rim.device.api.ui.cont[92483.9] ainer.MainScreen$AccessibleMainScreen@40bea2a5
+[92483.914] ================= INJET FW: FieldExplorer --                      count: 44
+[92483.914] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92483.914] ================= INJET FW: FieldExplorer --                         name: Help 17.4 MB
+[92483.93] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92483.93] cessibility.AccessibleContextFactory@bcea348a
+[92483.93] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92483.93] omponent.ListField$AccessibleListField@f2776af9
+[92483.94] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92483.945] ================= INJET FW: FieldExplorer --                         name: BlackBerry Messenger 4.7 [92483.945] MB
+[92483.945] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92483.945] cessibility.AccessibleContextFactory@36ee247f
+[92483.95] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92483.95] omponent.ListField$AccessibleListField@f2776af9
+[92483.95] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92483.99] ================= INJET FW: FieldExplorer --                         name: Documents To Go 4.4 MB
+[92483.99] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92483.99] cessibility.AccessibleContextFactory@8e03abea
+[92484.0] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92484.0] omponent.ListField$AccessibleListField@f2776af9
+[92484.01] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92484.016] ================= INJET FW: FieldExplorer --                         name: Email Setup 3.5 MB
+[92484.055] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92484.055] cessibility.AccessibleContextFactory@efab3bdd
+[92484.06] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92484.06] omponent.ListField$AccessibleListField@f2776af9
+[92484.12] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92484.125] ================= INJET FW: FieldExplorer --                         name: Facebook 3.1 MB
+[92484.125] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92484.125] cessibility.AccessibleContextFactory@eae49ae
+[92484.125] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92484.125] omponent.ListField$AccessibleListField@f2776af9
+[92484.14] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92484.14] ================= INJET FW: FieldExplorer --                         name: WhatsApp Messenger 3.0 MB[92484.14] 
+[92484.16] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92484.16] cessibility.AccessibleContextFactory@8716122a
+[92484.16] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92484.16] omponent.ListField$AccessibleListField@f2776af9
+[92484.195] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92484.195] ================= INJET FW: FieldExplorer --                         name: Wikitude 2.6 MB
+[92484.21] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92484.21] cessibility.AccessibleContextFactory@a0fe32e
+[92484.21] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92484.21] omponent.ListField$AccessibleListField@f2776af9
+[92484.21] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92484.26] ================= INJET FW: FieldExplorer --                         name: Social Feeds 2.6 MB
+[92484.26] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92484.26] cessibility.AccessibleContextFactory@35412100
+[92484.3] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92484.3] omponent.ListField$AccessibleListField@f2776af9
+[92484.3] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92484.3] ================= INJET FW: FieldExplorer --                         name: Yahoo Messenger 2.2 MB
+[92484.33] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92484.33] cessibility.AccessibleContextFactory@db295a8e
+[92484.336] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92484.336] omponent.ListField$AccessibleListField@f2776af9
+[92484.336] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92484.34] ================= INJET FW: FieldExplorer --                         name: BlackBerry Protect 2.1 MB[92484.34] 
+[92484.35] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92484.35] cessibility.AccessibleContextFactory@1d1ad0e9
+[92484.36] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92484.36] omponent.ListField$AccessibleListField@f2776af9
+[92484.375] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92484.375] ================= INJET FW: FieldExplorer --                         name: Windows Live Messenger 2.[92484.375] 1 MB
+[92484.38] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92484.38] cessibility.AccessibleContextFactory@49e83634
+[92484.4] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92484.4] omponent.ListField$AccessibleListField@f2776af9
+[92484.4] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92484.445] ================= INJET FW: FieldExplorer --                         name: BlackBerry App World 1.7 [92484.445] MB
+[92484.445] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92484.445] cessibility.AccessibleContextFactory@a299e518
+[92484.45] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92484.45] omponent.ListField$AccessibleListField@f2776af9
+[92484.46] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92484.46] ================= INJET FW: FieldExplorer --                         name: Google Talk 1.7 MB
+[92484.46] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92484.46] cessibility.AccessibleContextFactory@60de7ea8
+[92484.49] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92484.49] omponent.ListField$AccessibleListField@f2776af9
+[92484.49] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92484.49] ================= INJET FW: FieldExplorer --                         name: Twitter 1.7 MB
+[92484.49] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92484.49] cessibility.AccessibleContextFactory@76ebab6a
+[92484.51] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92484.51] omponent.ListField$AccessibleListField@f2776af9
+[92484.53] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92484.54] ================= INJET FW: FieldExplorer --                         name: Media 1.6 MB
+[92484.55] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92484.55] cessibility.AccessibleContextFactory@4a54560a
+[92484.55] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92484.55] omponent.ListField$AccessibleListField@f2776af9
+[92484.555] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92484.56] ================= INJET FW: FieldExplorer --                         name: Browser 1.5 MB
+[92484.56] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92484.56] cessibility.AccessibleContextFactory@61fdaa45
+[92484.56] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92484.56] omponent.ListField$AccessibleListField@f2776af9
+[92484.57] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92484.57] ================= INJET FW: FieldExplorer --                         name: Messages 1.4 MB
+[92484.57] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92484.57] cessibility.AccessibleContextFactory@8ecb0f90
+[92484.58] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92484.58] omponent.ListField$AccessibleListField@f2776af9
+[92484.586] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92484.586] ================= INJET FW: FieldExplorer --                         name: Setup 1.4 MB
+[92484.625] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92484.625] cessibility.AccessibleContextFactory@4b7381a7
+[92484.63] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92484.63] omponent.ListField$AccessibleListField@f2776af9
+[92484.63] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92484.66] ================= INJET FW: FieldExplorer --                         name: BlackBerry Podcasts 1.3 M[92484.66] B
+[92484.66] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92484.66] cessibility.AccessibleContextFactory@d1a5a19d
+[92484.664] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92484.664] omponent.ListField$AccessibleListField@f2776af9
+[92484.67] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92484.68] ================= INJET FW: FieldExplorer --                         name: Word Mole 1.2 MB
+[92484.68] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92484.68] cessibility.AccessibleContextFactory@e94ef5d8
+[92484.71] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92484.71] omponent.ListField$AccessibleListField@f2776af9
+[92484.71] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92484.72] ================= INJET FW: FieldExplorer --                         name: Amazon MP3 Music Store 1.[92484.72] 1 MB
+[92484.734] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92484.734] cessibility.AccessibleContextFactory@ff5c229a
+[92484.734] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92484.734] omponent.ListField$AccessibleListField@f2776af9
+[92484.734] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92484.75] ================= INJET FW: FieldExplorer --                         name: Wireless Music Sync 758.8[92484.75]  KB
+[92484.76] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92484.76] cessibility.AccessibleContextFactory@36bb906d
+[92484.76] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92484.76] omponent.ListField$AccessibleListField@f2776af9
+[92484.77] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92484.77] ================= INJET FW: FieldExplorer --                         name: Phone 747.2 KB
+[92484.83] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92484.83] cessibility.AccessibleContextFactory@6fb725b9
+[92484.83] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92484.83] omponent.ListField$AccessibleListField@f2776af9
+[92484.83] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92484.88] ================= INJET FW: FieldExplorer --                         name: Contacts 726.1 KB
+[92484.88] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92484.88] cessibility.AccessibleContextFactory@85c4527b
+[92484.92] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92484.92] omponent.ListField$AccessibleListField@f2776af9
+[92484.92] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92484.92] ================= INJET FW: FieldExplorer --                         name: Home Screen 692.4 KB
+[92484.93] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92484.93] cessibility.AccessibleContextFactory@a7ffaf3e
+[92484.94] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92484.94] omponent.ListField$AccessibleListField@f2776af9
+[92484.94] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92484.945] ================= INJET FW: FieldExplorer --                         name: YouTube 490.7 KB
+[92484.945] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92484.945] cessibility.AccessibleContextFactory@44f207bd
+[92484.95] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92484.95] omponent.ListField$AccessibleListField@f2776af9
+[92484.96] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92484.97] ================= INJET FW: FieldExplorer --                         name: BlackBerry Maps 466.5 KB
+[92484.97] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92484.97] cessibility.AccessibleContextFactory@9f3fde1a
+[92484.984] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92484.984] omponent.ListField$AccessibleListField@f2776af9
+[92484.984] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92485.016] ================= INJET FW: FieldExplorer --                         name: Calendar 458.9 KB
+[92485.016] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92485.016] cessibility.AccessibleContextFactory@5d8477aa
+[92485.016] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92485.016] omponent.ListField$AccessibleListField@f2776af9
+[92485.08] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92485.086] ================= INJET FW: FieldExplorer --                         name: Free A+ Chat for Facebook[92485.086]  with Emoticon 441.7 KB
+[92485.12] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92485.12] cessibility.AccessibleContextFactory@53db8ad4
+[92485.12] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92485.12] omponent.ListField$AccessibleListField@f2776af9
+[92485.13] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92485.13] ================= INJET FW: FieldExplorer --                         name: Options 428.0 KB
+[92485.15] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92485.15] cessibility.AccessibleContextFactory@ae296131
+[92485.15] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92485.15] omponent.ListField$AccessibleListField@f2776af9
+[92485.17] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92485.21] ================= INJET FW: FieldExplorer --                         name: Clock 292.9 KB
+[92485.21] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92485.21] cessibility.AccessibleContextFactory@a480745b
+[92485.21] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92485.21] omponent.ListField$AccessibleListField@f2776af9
+[92485.23] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92485.23] ================= INJET FW: FieldExplorer --                         name: BrickBreaker 275.8 KB
+[92485.27] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92485.27] cessibility.AccessibleContextFactory@da43bab5
+[92485.27] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92485.27] omponent.ListField$AccessibleListField@f2776af9
+[92485.28] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92485.29] ================= INJET FW: FieldExplorer --                         name: Password Keeper 95.6 KB
+[92485.29] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92485.29] cessibility.AccessibleContextFactory@81c81bbc
+[92485.29] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92485.29] omponent.ListField$AccessibleListField@f2776af9
+[92485.3] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92485.3] ================= INJET FW: FieldExplorer --                         name: DOD Root Certificates 72.[92485.3] 0 KB
+[92485.305] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92485.305] cessibility.AccessibleContextFactory@4a9ebdd4
+[92485.31] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92485.31] omponent.ListField$AccessibleListField@f2776af9
+[92485.32] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92485.37] ================= INJET FW: FieldExplorer --                         name: Tasks 53.6 KB
+[92485.37] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92485.37] cessibility.AccessibleContextFactory@81fe2ba7
+[92485.375] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92485.375] omponent.ListField$AccessibleListField@f2776af9
+[92485.38] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92485.38] ================= INJET FW: FieldExplorer --                         name: Voice Dialing 51.0 KB
+[92485.43] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92485.43] cessibility.AccessibleContextFactory@6c270ed0
+[92485.43] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92485.43] omponent.ListField$AccessibleListField@f2776af9
+[92485.44] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92485.45] ================= INJET FW: FieldExplorer --                         name: Password Lock 43.6 KB
+[92485.45] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92485.45] cessibility.AccessibleContextFactory@a522a41c
+[92485.45] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92485.45] omponent.ListField$AccessibleListField@f2776af9
+[92485.45] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92485.45] ================= INJET FW: FieldExplorer --                         name: com_rim_samples_bbm_ticta[92485.45] ctoe (Tic-Tac-Toe) 37.2 KB
+[92485.484] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92485.484] cessibility.AccessibleContextFactory@6c5d1ebb
+[92485.484] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92485.484] omponent.ListField$AccessibleListField@f2776af9
+[92485.51] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92485.51] ================= INJET FW: FieldExplorer --                         name: Calculator 35.9 KB
+[92485.51] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92485.51] cessibility.AccessibleContextFactory@dbcf0628
+[92485.51] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92485.51] omponent.ListField$AccessibleListField@f2776af9
+[92485.516] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92485.52] ================= INJET FW: FieldExplorer --                         name: MemoPad 30.9 KB
+[92485.52] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92485.52] cessibility.AccessibleContextFactory@15b3b726
+[92485.52] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92485.52] omponent.ListField$AccessibleListField@f2776af9
+[92485.54] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92485.55] ================= INJET FW: FieldExplorer --                         name: InjectionFramework 29.3 K[92485.55] B
+[92485.586] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92485.586] cessibility.AccessibleContextFactory@89470937
+[92485.59] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92485.59] omponent.ListField$AccessibleListField@f2776af9
+[92485.6] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92485.61] ================= INJET FW: FieldExplorer --                         name: BBMInjectDemo (BBMInject)[92485.61]  27.5 KB
+[92485.62] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92485.62] cessibility.AccessibleContextFactory@736fec60
+[92485.625] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92485.625] omponent.ListField$AccessibleListField@f2776af9
+[92485.63] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92485.63] ================= INJET FW: FieldExplorer --                         name: File Explorer 4.3 KB
+[92485.63] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92485.63] cessibility.AccessibleContextFactory@668eb098
+[92485.65] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92485.65] omponent.ListField$AccessibleListField@f2776af9
+[92485.66] ================= INJET FW: FieldExplorer --                         AccessibleContextFactory
+[92485.695] ================= INJET FW: FieldExplorer --                         name: BlackBerry S/MIME Support[92485.695]  Package 1.9 KB
+[92485.7] ================= INJET FW: FieldExplorer --                         value: net.rim.device.api.ui.ac[92485.7] cessibility.AccessibleContextFactory@7e3804d3
+[92485.7] ================= INJET FW: FieldExplorer --                         parent: net.rim.device.api.ui.c[92485.7] omponent.ListField$AccessibleListField@f2776af9
+[92485.72] ================= INJET FW: SystemMenuExtractor -- run end

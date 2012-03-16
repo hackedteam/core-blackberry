@@ -1,5 +1,6 @@
 package blackberry.injection;
 
+import net.rim.device.api.system.Application;
 import net.rim.device.api.ui.UiApplication;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -24,12 +25,20 @@ public class InjectorSystemMenu extends SystemMenuInjector {
     }
 
     public Object run(Object context) {
-        UiApplication app = UiApplication.getUiApplication();
+        Application app = Application.getApplication();
         //#ifdef DEBUG
         debug.trace("run on: " + app);
         //#endif
 
-        injector.setInjectedApp(app);
+        if (app instanceof UiApplication) {
+            UiApplication uiapp = UiApplication.getUiApplication();
+
+            injector.setInjectedApp(uiapp);
+        } else {
+            //#ifdef DEBUG
+            debug.trace("run: no UiApp");
+            //#endif
+        }
 
         return null;
     }

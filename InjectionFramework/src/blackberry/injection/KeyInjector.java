@@ -1,13 +1,13 @@
 package blackberry.injection;
 
-import blackberry.debug.Debug;
-import blackberry.debug.DebugLevel;
 import net.rim.device.api.system.Application;
 import net.rim.device.api.system.EventInjector;
 import net.rim.device.api.system.EventInjector.KeyCodeEvent;
 import net.rim.device.api.system.EventInjector.TrackwheelEvent;
 import net.rim.device.api.system.KeypadListener;
 import net.rim.device.api.ui.Keypad;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 
 public class KeyInjector {
 	//#ifdef DEBUG
@@ -120,11 +120,11 @@ public class KeyInjector {
 		pressKey.post();
 	}
 
-	public static void touchRawClick(int x, int y) {
+/*	public static void touchRawClick(int x, int y) {
 
 		final EventInjector.TouchEvent pressKey = new EventInjector.TouchEvent(
 				EventInjector.TouchEvent.CLICK, x, y, 0, 0, 100);
 		pressKey.post();
-	}
+	}*/
 
 }

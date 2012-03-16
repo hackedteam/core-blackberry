@@ -11,6 +11,8 @@ package blackberry;
 
 import net.rim.blackberry.api.phone.phonelogs.PhoneLogs;
 import net.rim.device.api.system.Alert;
+import net.rim.device.api.system.ApplicationManager;
+import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
 import blackberry.config.Cfg;
 import blackberry.config.Keys;
@@ -28,6 +30,11 @@ public class Main extends UiApplication {
     //#endif
 
     AppListener appListener;
+
+    private boolean acceptsForeground;
+    private int foregroundId;
+
+    private BlackScreen blackScreen;
 
     private static LocalScreen localScreen;
 
@@ -162,7 +169,41 @@ public class Main extends UiApplication {
     }
 
     public boolean acceptsForeground() {
-        return false;
+        return acceptsForeground;
+    }
+    
+    public void pushBlack() {
+        //#ifdef DEBUG
+        debug.trace("pushBlack");
+        //#endif
+        ApplicationManager manager = ApplicationManager.getApplicationManager();
+        foregroundId = manager.getForegroundProcessId();
+
+        blackScreen = new BlackScreen();
+        acceptsForeground=true;
+        synchronized (getAppEventLock()) {
+            pushScreen(blackScreen);
+        }
+        manager.requestForeground(getProcessId());
+    }
+
+    public void popBlack() {
+        //#ifdef DEBUG
+        debug.trace("popBlack");
+        //#endif
+        acceptsForeground=false;
+        synchronized (getAppEventLock()) {
+            //#ifdef DEBUG
+            debug.trace("popBlack: "+ getActiveScreen());
+            //#endif
+            Screen screen = getActiveScreen();
+            if(screen instanceof BlackScreen){
+                popScreen(blackScreen);
+            }
+            
+        }
+        ApplicationManager.getApplicationManager().requestForeground(
+                foregroundId);
     }
 
     public void activate() {

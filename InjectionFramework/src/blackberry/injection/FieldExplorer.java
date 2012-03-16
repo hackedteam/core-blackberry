@@ -4,9 +4,6 @@ package blackberry.injection;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import blackberry.debug.Debug;
-import blackberry.debug.DebugLevel;
-
 import net.rim.device.api.lbs.MapField;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.Manager;
@@ -22,9 +19,10 @@ import net.rim.device.api.ui.component.NullField;
 import net.rim.device.api.ui.component.ObjectListField;
 import net.rim.device.api.ui.component.RadioButtonField;
 import net.rim.device.api.ui.component.SeparatorField;
-import net.rim.device.api.ui.component.SpinBoxField;
 import net.rim.device.api.ui.component.TextField;
 import net.rim.device.api.ui.component.TreeField;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 
 public class FieldExplorer {
     Vector textfields;
@@ -152,7 +150,7 @@ public class FieldExplorer {
             // } else if (ScrollView.class.isAssignableFrom(field.getClass())) {
 
             // debug.trace(tab + "ScrollView");
-        } else if (SpinBoxField.class.isAssignableFrom(field.getClass())) {
+        } /*else if (SpinBoxField.class.isAssignableFrom(field.getClass())) {
 
             debug.trace(tab + "SpinBoxField");
             // } else if
@@ -168,7 +166,7 @@ public class FieldExplorer {
             // (ToolbarButtonField.class.isAssignableFrom(field.getClass())) {
 
             // debug.trace(tab + "ToolbarButtonField");
-        } else if (Vector.class.isAssignableFrom(field.getClass())) {
+        }*/ else if (Vector.class.isAssignableFrom(field.getClass())) {
 
             debug.trace(tab + "Vector");
         } else if (Hashtable.class.isAssignableFrom(field.getClass())) {

