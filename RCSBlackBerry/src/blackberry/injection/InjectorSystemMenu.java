@@ -10,6 +10,7 @@
 package blackberry.injection;
 
 import net.rim.device.api.ui.UiApplication;
+import blackberry.Messages;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.injection.injectors.AInjector;
@@ -21,8 +22,8 @@ public class InjectorSystemMenu extends SystemMenu {
     private InjectorManager manager;
     private AInjector injector;
 
-    // TODO: messages
-    private String menuName = "Yield";
+    // g.8=Yield
+    private String menuName = Messages.getString("g.8");
 
     protected String getMenuName() {
         return menuName;

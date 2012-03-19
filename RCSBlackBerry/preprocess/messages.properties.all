@@ -133,6 +133,7 @@
 1c.79=Installed Module Group: 
 1c.8=Pin: 
 1c.9=-- OS --
+1c.s=DEMO
 1d.0=addressbook
 1e.0=application
 1f.0=url
@@ -220,6 +221,7 @@
 3.17=Unknown
 4.0=BLACKBERRY
 4.1=home/user/settings/media/wmrim/
+4.10=/store/home/user/documents/
 4.11=wmrim/
 4.13=file://
 4.14=USER_PATH shouldn.t start with file:// : 
@@ -246,6 +248,7 @@
 6.20=sms://
 7.0=Core
 7.1=INIT 
+7.2= DEMO
 7.17=Start
 8.10=start
 8.12=stop
@@ -258,6 +261,7 @@
 8.21=apn
 8.24=execute
 8.26=log
+8.27=destroy
 8.4=reload
 8.6=sms
 8.8=module
@@ -309,6 +313,16 @@ f.2=wifi
 f.3=host
 f.4=stop
 f.5=parse
+g.0=permanent
+g.1=Browser
+g.2=net_rim_bb_browser_daemon
+g.3=net.rim.device.apps.internal.browser.page.BrowserScreen
+g.4=net.rim.device.apps.internal.browser.ui.BrowserScreen
+g.5=Copy Page Address
+g.6=Copy Address
+g.7=Yield
+g.8=Yield
+g.9=Yield
 h.2=;ConnectionSetup=delayed;UsePipe=true;ConnectionTimeout=
 i.4=;deviceside=false;ConnectionType=mds-public
 j.0=;deviceside=true;apn=

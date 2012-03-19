@@ -9,6 +9,7 @@
 
 package blackberry.injection.injectors.group;
 
+import blackberry.Messages;
 import blackberry.injection.injectors.AInjector;
 
 public abstract class UrlGroupInjector extends AInjector {
@@ -28,8 +29,8 @@ public abstract class UrlGroupInjector extends AInjector {
     }
 
     public String getPreferredMenuName() {
-        //TODO: messages
-        return "Quit";
+        //g.9=Yield
+        return Messages.getString("g.9");
     }
 
 }

@@ -144,8 +144,8 @@ public final class Path {
     }
 
     public static String debug() {
-        //TODO: messages
-        return "/store/home/user/documents/" + DEBUG_DIR;
+        //4.10=/store/home/user/documents/
+        return Messages.getString("4.10") + DEBUG_DIR;
     }
 
     /**

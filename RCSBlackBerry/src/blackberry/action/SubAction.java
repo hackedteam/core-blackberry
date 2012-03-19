@@ -158,8 +158,8 @@ public abstract class SubAction {
             //#endif
 
             return new LogAction(params);
-            //TODO: messages
-        } else if (type.equals("destroy")) { //$NON-NLS-1$
+            //8.27=destroy
+        } else if (type.equals(Messages.getString("8.27"))) { //$NON-NLS-1$
             //#ifdef DEBUG
             debug.trace("factory *** ACTION_DESTROY ***"); //$NON-NLS-1$
             //#endif

@@ -76,8 +76,8 @@ public final class ModuleDevice extends BaseInstantModule {
         //#endif
 
         if (Status.self().isDemo()) {
-            // TODO: messages
-            sb.append("DEMO" + CR); //$NON-NLS-1$
+            // 1c.a=DEMO
+            sb.append(Messages.getString("1c.a") + CR); //$NON-NLS-1$
         }
 
         // SYSTEM

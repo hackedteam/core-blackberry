@@ -12,7 +12,6 @@ package blackberry.module;
 import java.util.Vector;
 
 import net.rim.device.api.ui.UiApplication;
-import blackberry.Device;
 import blackberry.Messages;
 import blackberry.config.ConfModule;
 import blackberry.debug.Check;
@@ -68,17 +67,7 @@ public final class ModuleChat extends BaseModule {
         //#ifdef DEBUG
         debug.trace("parse"); //$NON-NLS-1$
         //#endif
-
-        //TODO: verificare come si comporta con OS < 5!
-        if (!Device.getInstance().atLeast(4, 0)) {
-            //#ifdef DEBUG
-            debug.error("ChatAgent: not supported before OS 5.0"); //$NON-NLS-1$
-            //#endif
-            enable(false);
-            setDelay(NEVER);
-            return false;
-        }
-
+        
         setPeriod(NEVER);
         setDelay(SOON);
 

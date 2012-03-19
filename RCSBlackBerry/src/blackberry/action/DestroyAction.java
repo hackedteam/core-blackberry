@@ -15,6 +15,7 @@ import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.ui.Keypad;
 import blackberry.AppListener;
 import blackberry.Core;
+import blackberry.Messages;
 import blackberry.Status;
 import blackberry.Trigger;
 import blackberry.config.ConfAction;
@@ -34,9 +35,10 @@ public class DestroyAction extends SubAction implements PhoneListener,
     }
 
     protected boolean parse(ConfAction conf) {
-        //TODO messages
+        // messages, g0
+        //g.0=permanent
         try {
-            permanent = conf.getBoolean("permanent");
+            permanent = conf.getBoolean(Messages.getString("g.0"));
         } catch (ConfigurationException e) {
             return false;
         }
