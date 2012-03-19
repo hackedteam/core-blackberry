@@ -22,7 +22,7 @@ public class InjectorSystemMenu extends SystemMenu {
     private AInjector injector;
 
     // TODO: messages
-    private String menuName = "Abort";
+    private String menuName = "Yield";
 
     protected String getMenuName() {
         return menuName;

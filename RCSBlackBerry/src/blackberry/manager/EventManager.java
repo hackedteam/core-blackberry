@@ -16,6 +16,7 @@ import blackberry.config.ConfEvent;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.event.Event;
+import blackberry.event.EventNull;
 import blackberry.event.FactoryEvent;
 import blackberry.interfaces.iSingleton;
 
@@ -81,6 +82,7 @@ public final class EventManager extends JobManager implements iSingleton {
             if (event.setConf(conf)) {
                 add(event);
             } else {
+                add(new EventNull());
                 //#ifdef DEBUG
                 debug.error("makeModule: wrong conf or not supported, don't add"); //$NON-NLS-1$
                 //#endif

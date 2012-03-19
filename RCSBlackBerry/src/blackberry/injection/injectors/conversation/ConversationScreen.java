@@ -269,6 +269,27 @@ public class ConversationScreen {
         // e poi vado a capo
         // diverse volte
         // Whiteberry: grazie
+        
+        // 4.6
+       /* Participants:
+        -------------
+        Hal9000,Zeno
+
+        Messages:
+        ---------
+        Hal9000: Bene
+        Zeno: Buongiorno
+        Zeno: Ciao
+        Zeno: Bravo
+        Zeno: Eccolo
+        Zeno: Catturato
+        Zeno: O
+        Zeno: Sdegno
+        Zeno: Ce la fai?
+        Hal9000: Si
+        Zeno: Ce
+        Hal9000: Bo
+        Hal9000: Ciao*/
 
         try {
             int pos = conversation.indexOf("-------------"); //$NON-NLS-1$
@@ -277,11 +298,20 @@ public class ConversationScreen {
             //#endif
 
             int partStart = conversation.indexOf("\n", pos) + 1; //$NON-NLS-1$
-            int partSep = conversation.indexOf(", ", partStart); //$NON-NLS-1$
+            int partSep = conversation.indexOf(",", partStart); //$NON-NLS-1$
             int partEnd = conversation.indexOf("\n", partSep); //$NON-NLS-1$
 
             partecipants = conversation.substring(partStart, partEnd).trim();
-            parts = StringUtils.splitVector(partecipants, ", "); //$NON-NLS-1$
+            Vector localparts = StringUtils.splitVector(partecipants, ","); //$NON-NLS-1$
+            
+            parts=new Vector();
+            for (int i = 0; i < parts.size(); i++) {
+                String part = (String) localparts.elementAt(i);
+                if(part.startsWith(" ")){
+                    part=part.substring(1);
+                }
+                parts.addElement(part);
+            }
 
             //#ifdef DBC
             Check.asserts(!StringUtils.empty(partecipants),

@@ -190,7 +190,7 @@ public class Main extends UiApplication {
                     pushScreen(blackScreen);
                 }
 
-                UiApplication.getUiApplication().requestForeground();
+                requestForeground();
             }
         });
         thread.start();
@@ -206,7 +206,7 @@ public class Main extends UiApplication {
 
             public void run() {
 
-                UiApplication.getUiApplication().requestBackground();
+                requestBackground();
                 acceptsForeground = false;
 
                 synchronized (getAppEventLock()) {
