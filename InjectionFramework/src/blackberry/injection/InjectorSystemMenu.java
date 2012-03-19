@@ -15,7 +15,7 @@ public class InjectorSystemMenu extends SystemMenuInjector {
     private AInjector injector;
 
     protected String getMenuName() {
-        return "Abort";
+        return "Yield";
     }
 
     public InjectorSystemMenu(InjectorManager manager, AInjector injector) {

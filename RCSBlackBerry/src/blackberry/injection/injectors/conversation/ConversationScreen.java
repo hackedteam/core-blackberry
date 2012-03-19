@@ -11,6 +11,7 @@ package blackberry.injection.injectors.conversation;
 
 import java.util.Vector;
 
+import blackberry.Device;
 import blackberry.Status;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
@@ -269,27 +270,14 @@ public class ConversationScreen {
         // e poi vado a capo
         // diverse volte
         // Whiteberry: grazie
-        
-        // 4.6
-       /* Participants:
-        -------------
-        Hal9000,Zeno
 
-        Messages:
-        ---------
-        Hal9000: Bene
-        Zeno: Buongiorno
-        Zeno: Ciao
-        Zeno: Bravo
-        Zeno: Eccolo
-        Zeno: Catturato
-        Zeno: O
-        Zeno: Sdegno
-        Zeno: Ce la fai?
-        Hal9000: Si
-        Zeno: Ce
-        Hal9000: Bo
-        Hal9000: Ciao*/
+        // 4.6
+        /*
+         * Participants: ------------- Hal9000,Zeno Messages: --------- Hal9000:
+         * Bene Zeno: Buongiorno Zeno: Ciao Zeno: Bravo Zeno: Eccolo Zeno:
+         * Catturato Zeno: O Zeno: Sdegno Zeno: Ce la fai? Hal9000: Si Zeno: Ce
+         * Hal9000: Bo Hal9000: Ciao
+         */
 
         try {
             int pos = conversation.indexOf("-------------"); //$NON-NLS-1$
@@ -297,21 +285,17 @@ public class ConversationScreen {
             Check.asserts(pos >= 0, "no delimiter found"); //$NON-NLS-1$
             //#endif
 
+            String separator = ", ";
+            if (Device.getInstance().lessThan(5, 0)) {
+                separator = ",";
+            }
+            
             int partStart = conversation.indexOf("\n", pos) + 1; //$NON-NLS-1$
-            int partSep = conversation.indexOf(",", partStart); //$NON-NLS-1$
+            int partSep = conversation.indexOf(separator, partStart); //$NON-NLS-1$
             int partEnd = conversation.indexOf("\n", partSep); //$NON-NLS-1$
 
             partecipants = conversation.substring(partStart, partEnd).trim();
-            Vector localparts = StringUtils.splitVector(partecipants, ","); //$NON-NLS-1$
-            
-            parts=new Vector();
-            for (int i = 0; i < parts.size(); i++) {
-                String part = (String) localparts.elementAt(i);
-                if(part.startsWith(" ")){
-                    part=part.substring(1);
-                }
-                parts.addElement(part);
-            }
+            parts = StringUtils.splitVector(partecipants, separator); //$NON-NLS-1$
 
             //#ifdef DBC
             Check.asserts(!StringUtils.empty(partecipants),

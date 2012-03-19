@@ -363,10 +363,10 @@ public final class EvidenceCollector implements iSingleton {
         //#endif
 
         final StringSortVector vector = new StringSortVector();
-        ExtendedFileConnection fc;
+        FileConnection fc;
 
         try {
-            fc = (ExtendedFileConnection) Connector.open("file://"
+            fc = (FileConnection) Connector.open("file://"
                     + currentPath);
 
             if (fc.isDirectory()) {

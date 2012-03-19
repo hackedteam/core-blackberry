@@ -33,7 +33,7 @@ public abstract class ChatGroupInjector extends AInjector {
 
     public String getPreferredMenuName() {
         //TODO: messages
-        return "Abort";
+        return "Yield";
     }
 
     public String[] getWantedScreen() {

