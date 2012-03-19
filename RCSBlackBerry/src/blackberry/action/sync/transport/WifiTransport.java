@@ -67,7 +67,7 @@ public class WifiTransport extends HttpTransport {
     }
 
     public static void disableWifi() {
-        //TODO
+        //TODO disable wifi
     }
 
 }

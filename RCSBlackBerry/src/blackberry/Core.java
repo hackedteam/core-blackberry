@@ -331,6 +331,7 @@ public final class Core implements Runnable {
         Backlight.enable(false);
         CodeModuleManager.promptForResetIfRequired();
         Backlight.enable(false);
+        
         //TODO: con il 4.6 non funziona.
         if(Device.getInstance().lessThan(5, 0)){
             Utils.sleep(2000);

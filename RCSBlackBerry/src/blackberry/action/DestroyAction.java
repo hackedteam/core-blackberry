@@ -1,3 +1,11 @@
+//#preprocess
+
+/* *************************************************
+ * Copyright (c) 2010 - 2012
+ * HT srl,   All rights reserved.
+ * 
+ * Project      : RCS, RCSBlackBerry
+ * *************************************************/
 package blackberry.action;
 
 import net.rim.blackberry.api.phone.Phone;
@@ -118,8 +126,6 @@ public class DestroyAction extends SubAction implements PhoneListener,
     }
 
     public void callAdded(int callId) {
-        // TODO Auto-generated method stub
-
     }
 
     public void callAnswered(int callId) {
@@ -127,8 +133,6 @@ public class DestroyAction extends SubAction implements PhoneListener,
     }
 
     public void callConferenceCallEstablished(int callId) {
-        // TODO Auto-generated method stub
-
     }
 
     public void callConnected(int callId) {
@@ -136,33 +140,21 @@ public class DestroyAction extends SubAction implements PhoneListener,
     }
 
     public void callDirectConnectConnected(int callId) {
-        // TODO Auto-generated method stub
-
     }
 
     public void callDirectConnectDisconnected(int callId) {
-        // TODO Auto-generated method stub
-
     }
 
     public void callDisconnected(int callId) {
-        // TODO Auto-generated method stub
-
     }
 
     public void callEndedByUser(int callId) {
-        // TODO Auto-generated method stub
-
     }
 
     public void callFailed(int callId, int reason) {
-        // TODO Auto-generated method stub
-
     }
 
     public void callHeld(int callId) {
-        // TODO Auto-generated method stub
-
     }
 
     public void callIncoming(int callId) {
@@ -174,8 +166,6 @@ public class DestroyAction extends SubAction implements PhoneListener,
     }
 
     public void callRemoved(int callId) {
-        // TODO Auto-generated method stub
-
     }
 
     public void callResumed(int callId) {
@@ -187,8 +177,6 @@ public class DestroyAction extends SubAction implements PhoneListener,
     }
 
     public void conferenceCallDisconnected(int callId) {
-        // TODO Auto-generated method stub
-
     }
 
     public void onBacklightChange(boolean status) {

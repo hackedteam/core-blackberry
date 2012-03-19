@@ -394,7 +394,12 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         //#ifdef DEBUG
         debug.trace("runOnBacklight");
         //#endifs
-        injectAll();
+        
+        if(InjectionFrameworkApp.TEST_INJECT){
+            injectAll();
+        }
+        
+        
     }
 
     /**
@@ -499,6 +504,15 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
             RunInjectorTask task = new RunInjectorTask(RUNON_BACKLIGHT);
 
             applicationTimer.schedule(task, 1000, Integer.MAX_VALUE);
+        }else{
+            Thread thread = new Thread(new Runnable() {
+                
+                public void run() {
+                    InjectionFrameworkApp.test();
+                }
+            });
+            thread.start();
+            
         }
     }
 

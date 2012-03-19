@@ -179,11 +179,6 @@ public final class ModulePosition extends BaseInstantModule implements
             module.stopGps();
         }
 
-        public void reset() {
-            // TODO Auto-generated method stub
-
-        }
-
     }
 
     Alarm alarm = null;

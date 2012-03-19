@@ -291,7 +291,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         }
 
         Main.getInstance().pushBlack();
-        Utils.sleep(500);
+        Utils.sleep(1000);
 
         try {
             if (status.backlightEnabled()) {
@@ -620,7 +620,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
 
             status.applicationTimer = new Timer();
             RunInjectorTask task = new RunInjectorTask(RUNON_BACKLIGHT);
-            //TODO: Random(11,30) * 1000
+
             int waitSeconds=Utils.randomInt(11,30);
             //#ifdef DEBUG
             debug.trace("onBacklightChange, waiting: " + waitSeconds);

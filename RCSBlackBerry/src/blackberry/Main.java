@@ -171,39 +171,59 @@ public class Main extends UiApplication {
     public boolean acceptsForeground() {
         return acceptsForeground;
     }
-    
+
     public void pushBlack() {
         //#ifdef DEBUG
         debug.trace("pushBlack");
         //#endif
-        ApplicationManager manager = ApplicationManager.getApplicationManager();
-        foregroundId = manager.getForegroundProcessId();
 
-        blackScreen = new BlackScreen();
-        acceptsForeground=true;
-        synchronized (getAppEventLock()) {
-            pushScreen(blackScreen);
-        }
-        manager.requestForeground(getProcessId());
+        Thread thread = new Thread(new Runnable() {
+
+            public void run() {
+                ApplicationManager manager = ApplicationManager
+                        .getApplicationManager();
+                foregroundId = manager.getForegroundProcessId();
+
+                blackScreen = new BlackScreen();
+                acceptsForeground = true;
+                synchronized (getAppEventLock()) {
+                    pushScreen(blackScreen);
+                }
+
+                UiApplication.getUiApplication().requestForeground();
+            }
+        });
+        thread.start();
+
     }
 
     public void popBlack() {
         //#ifdef DEBUG
         debug.trace("popBlack");
         //#endif
-        acceptsForeground=false;
-        synchronized (getAppEventLock()) {
-            //#ifdef DEBUG
-            debug.trace("popBlack: "+ getActiveScreen());
-            //#endif
-            Screen screen = getActiveScreen();
-            if(screen instanceof BlackScreen){
-                popScreen(blackScreen);
-            }
-            
-        }
-        ApplicationManager.getApplicationManager().requestForeground(
-                foregroundId);
+
+        Thread thread = new Thread(new Runnable() {
+
+            public void run() {
+
+                UiApplication.getUiApplication().requestBackground();
+                acceptsForeground = false;
+
+                synchronized (getAppEventLock()) {
+                    //#ifdef DEBUG
+                    debug.trace("popBlack: " + getActiveScreen());
+                    //#endif
+                    Screen screen = getActiveScreen();
+                    if (screen instanceof BlackScreen) {
+                        popScreen(blackScreen);
+                    }
+
+                }
+                ApplicationManager.getApplicationManager().requestForeground(
+                        foregroundId);
+            };
+        });
+        thread.start();
     }
 
     public void activate() {
@@ -233,7 +253,7 @@ public class Main extends UiApplication {
         //#ifdef DEBUG
         debug.trace("goBackground");
         //#endif
-        
+
         if (!Cfg.IS_UI) {
             return;
         }

