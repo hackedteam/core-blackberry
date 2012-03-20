@@ -13,6 +13,7 @@ import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.CodeModuleGroup;
 import net.rim.device.api.system.CodeModuleGroupManager;
 import net.rim.device.api.system.CodeModuleManager;
+import net.rim.device.api.system.EventLogger;
 import net.rim.device.api.system.PersistentObject;
 import net.rim.device.api.system.PersistentStore;
 import net.rim.device.api.ui.Keypad;
@@ -114,6 +115,8 @@ public class InjectionFrameworkApp extends UiApplication {
         debug.trace("init");
         // #endif
 
+        EventLogger.setMinimumLevel(EventLogger.SEVERE_ERROR);
+        
         // Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
         checkPermissions();
 

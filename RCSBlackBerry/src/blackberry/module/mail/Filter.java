@@ -7,6 +7,7 @@
  * File         : Filter.java
  * Created      : 28-apr-2010
  * *************************************************/
+
 package blackberry.module.mail;
 
 import java.util.Date;
@@ -78,10 +79,13 @@ public class Filter {
             this.fromDate = from;
             doFilterFromDate = true;
         }
-        if (to != null) {
-            this.toDate = to;
-            doFilterToDate = true;
+        if (to != null && to.getTime() > 0) {
+            if (from != null && to.getTime() >= from.getTime()) {
+                this.toDate = to;
+                doFilterToDate = true;
+            }
         }
+
         this.maxMessageSize = maxMessageSize;
         this.maxMessageSizeToLog = maxMessageSizeToLog;
     }

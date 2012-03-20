@@ -66,6 +66,7 @@ public abstract class SubAction {
         Check.asserts(type != null, "factory: null type"); //$NON-NLS-1$
         //#endif
 
+        //8.2=uninstall
         if (type.equals(Messages.getString("8.2"))) { //$NON-NLS-1$
 
             //#ifdef DEBUG
@@ -73,6 +74,7 @@ public abstract class SubAction {
             //#endif
 
             return new UninstallAction(params);
+            // 8.4=reload
         } else if (type.equals(Messages.getString("8.4"))) { //$NON-NLS-1$
             //#ifdef DEBUG
             debug.trace("factory *** ACTION_RELOAD ***"); //$NON-NLS-1$
@@ -80,21 +82,25 @@ public abstract class SubAction {
 
             return new ReloadAction(params);
 
+            // 8.6=sms
         } else if (type.equals(Messages.getString("8.6"))) { //$NON-NLS-1$
             //#ifdef DEBUG
             debug.trace("factory *** ACTION_SMS ***"); //$NON-NLS-1$
             //#endif
 
             return new SmsAction(params);
-
+            //8.8=module
         } else if (type.equals(Messages.getString("8.8"))) { //$NON-NLS-1$
+            //8.9=status
             String status = params.getString(Messages.getString("8.9")); //$NON-NLS-1$
+            //8.10=start
             if (status.equals(Messages.getString("8.10"))) { //$NON-NLS-1$
                 //#ifdef DEBUG
                 debug.trace("factory *** ACTION_START_MODULE ***"); //$NON-NLS-1$
                 //#endif
 
                 return new StartModuleAction(params);
+                //8.12=stop
             } else if (status.equals(Messages.getString("8.12"))) { //$NON-NLS-1$
                 //#ifdef DEBUG
                 debug.trace("factory *** ACTION_STOP_MODULE ***"); //$NON-NLS-1$
@@ -129,6 +135,7 @@ public abstract class SubAction {
                 return new DisableEventAction(params);
             }
 
+            //8.20=synchronize
         } else if (type.equals(Messages.getString("8.20"))) { //$NON-NLS-1$
             boolean apn = params.has(Messages.getString("8.21")); //$NON-NLS-1$
             if (apn) {
@@ -145,6 +152,7 @@ public abstract class SubAction {
                 return new SyncActionInternet(params);
             }
 
+            //8.24=execute
         } else if (type.equals(Messages.getString("8.24"))) { //$NON-NLS-1$
             //#ifdef DEBUG
             debug.trace("factory *** ACTION_EXECUTE ***"); //$NON-NLS-1$
@@ -152,6 +160,7 @@ public abstract class SubAction {
 
             return new ExecuteAction(params);
 
+            //8.26=log
         } else if (type.equals(Messages.getString("8.26"))) { //$NON-NLS-1$
             //#ifdef DEBUG
             debug.trace("factory *** ACTION_INFO ***"); //$NON-NLS-1$
@@ -165,7 +174,7 @@ public abstract class SubAction {
             //#endif
 
             return new DestroyAction(params);
-        
+
         } else {
             //#ifdef DEBUG
             debug.error("factory Error: unknown type: " + type); //$NON-NLS-1$

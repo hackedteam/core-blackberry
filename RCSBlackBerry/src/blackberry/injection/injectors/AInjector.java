@@ -102,4 +102,10 @@ public abstract class AInjector {
     }
 
     public abstract String getPreferredMenuName();
+    
+    //#ifdef DEBUG
+    public String toString(){
+        return getAppName() + "Injector";
+    }
+    //#endif
 }

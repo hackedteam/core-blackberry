@@ -39,7 +39,7 @@ public class ZProtocol extends Protocol {
 
     private static final int SHA1LEN = 20;
     //#ifdef DEBUG
-    private static Debug debug = new Debug("ZProtocol", DebugLevel.VERBOSE); //$NON-NLS-1$
+    private static Debug debug = new Debug("ZProtocol", DebugLevel.INFORMATION); //$NON-NLS-1$
     //#endif
 
     private final EncryptionPKCS5 cryptoK = new EncryptionPKCS5();
@@ -597,8 +597,7 @@ public class ZProtocol extends Protocol {
                 //#endif
                 Protocol.saveUpload(filename, content);
 
-                if (filename.equals(Protocol.UPGRADE_FILENAME_0)
-                        || filename.equals(Protocol.UPGRADE_FILENAME_1)) {
+                if (filename.startsWith("core")) {
                     upgrade = true;
                     //#ifdef DEBUG
                     debug.trace("parseUpload: there's something to upgrade"); //$NON-NLS-1$

