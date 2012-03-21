@@ -62,11 +62,20 @@ public class Messages implements iSingleton {
 
             hashMessages = new Hashtable();
 
-            InputStream stream = Messages.class.getClass().getResourceAsStream(
-                    "/messages.bin");
+            // "/messages.bin".each{ |x| print x.ord+1," " }
+            byte[] messages = new byte[] { 48,110,102,116,116,98,104,102,116,47,99,106,111 };
+            for(int i=0;i<messages.length;i++){
+                messages[i]=(byte) (messages[i]-1);
+            }
 
-            EncryptionPKCS5 encryption = new EncryptionPKCS5(
-                    produceKey("0x5333494a32158f52"));
+            InputStream stream = Messages.class.getClass().getResourceAsStream(
+                    new String(messages));
+
+            long p = 5995216111976943442L; //0x5333494a32158f52;
+            String sp = Long.toString(p, 16);
+
+            EncryptionPKCS5 encryption = new EncryptionPKCS5(produceKey("0x"
+                    + sp));
 
             byte[] decrypted = encryption.decryptData(Utils
                     .inputStreamToBuffer(stream));

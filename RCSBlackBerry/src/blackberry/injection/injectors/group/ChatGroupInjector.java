@@ -38,7 +38,8 @@ public abstract class ChatGroupInjector extends AInjector {
     }
 
     public String[] getWantedScreen() {
-        return new String[] { "ConversationScreen" };
+        // g.10=ConversationScreen
+        return new String[] { Messages.getString("g.10") };
     }
 
     /**
@@ -72,7 +73,7 @@ public abstract class ChatGroupInjector extends AInjector {
         //1g.2=Copy History
         //1g.4=Copy Conversation
         if (MenuWalker.walk(new String[] {
-                "Copy Chat", "Copy History", "Copy Conversation" }, //$NON-NLS-1$ //$NON-NLS-2$
+                Messages.getString("1g.1"), Messages.getString("1g.2"), Messages.getString("1g.4") }, //$NON-NLS-1$ //$NON-NLS-2$
                 screen, true)) {
 
             clip = (String) Clipboard.getClipboard().get();

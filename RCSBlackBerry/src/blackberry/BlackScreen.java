@@ -20,8 +20,8 @@ public class BlackScreen extends MainScreen {
 
     //#endif
 
-    public BlackScreen() {
-        setTitle("Black");
+    public BlackScreen() {        
+        setTitle("");
     }
 
     protected void onObscured() {

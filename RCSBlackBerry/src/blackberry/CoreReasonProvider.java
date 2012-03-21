@@ -30,7 +30,8 @@ public final class CoreReasonProvider implements ReasonProvider {
      */
     public String getMessage(final int permissionID) {
         // General message for other permissions
-        final String message = "Reason: " + permissionID;
+        // A.3=Reason: 
+        final String message = Messages.getString("A.3") + permissionID;
         return message;
     }
 }

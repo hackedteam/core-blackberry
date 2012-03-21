@@ -12,6 +12,7 @@ package blackberry.injection.injectors.conversation;
 import java.util.Vector;
 
 import blackberry.Device;
+import blackberry.Messages;
 import blackberry.Status;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
@@ -124,8 +125,7 @@ public class ConversationScreen {
         //#endif
 
         //1g.3=Participants
-        //Messages.getString("1g.3")
-        if (lineConversation.startsWith("Participants")) { //$NON-NLS-1$
+        if (lineConversation.startsWith(Messages.getString("1g.3"))) { //$NON-NLS-1$
             full = true;
             //#ifdef DEBUG
             debug.trace("parseConversation: full"); //$NON-NLS-1$
@@ -280,7 +280,8 @@ public class ConversationScreen {
          */
 
         try {
-            int pos = conversation.indexOf("-------------"); //$NON-NLS-1$
+            // C.0=-------------
+            int pos = conversation.indexOf(Messages.getString("C.0")); //$NON-NLS-1$
             //#ifdef DBC
             Check.asserts(pos >= 0, "no delimiter found"); //$NON-NLS-1$
             //#endif

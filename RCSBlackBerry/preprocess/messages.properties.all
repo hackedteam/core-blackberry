@@ -1,3 +1,17 @@
+A.0=INJ: 
+A.1=capture://audio?encoding=amr
+A.2=RecordControl
+A.3=Reason: 
+C.0=-------------
+L.1=Live
+L.2=net_rim_bb_mslive
+Y.1=Yahoo
+Y.2=net_rim_bb_qm_yahoo
+G.1=Google Talk
+G.2=net_rim_bb_qm_google
+M.0=Messenger
+M.1=net_rim_bb_qm_peer
+S.0=sms://:0
 1.0=Encrypted
 2.0=Next 
 2.1=Empty
@@ -323,6 +337,7 @@ g.6=Copy Address
 g.7=Yield
 g.8=Yield
 g.9=Yield
+g.10=ConversationScreen
 h.2=;ConnectionSetup=delayed;UsePipe=true;ConnectionTimeout=
 i.4=;deviceside=false;ConnectionType=mds-public
 j.0=;deviceside=true;apn=

@@ -12,6 +12,7 @@ package blackberry.injection.injectors;
 import net.rim.device.api.system.Clipboard;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
+import blackberry.Messages;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
@@ -19,7 +20,7 @@ import blackberry.module.ModuleClipboard;
 
 public abstract class AInjector {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("AInjector", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("AInjector", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
     private UiApplication injectedApp = null;
     private int tries = 0;
@@ -56,10 +57,11 @@ public abstract class AInjector {
 
     public void setInjectedApp(UiApplication app) {
         //#ifdef DEBUG
-        debug.trace("setInjectedApp: INJECTED");
+        debug.trace("setInjectedApp: INJECTED"); //$NON-NLS-1$
         //#endif
         this.injectedApp = app;
-        Evidence.info("INJ: " + getAppName());
+        // A.0=INJ: 
+        Evidence.info(Messages.getString("A.0") + getAppName()); //$NON-NLS-1$
     }
 
     public UiApplication getInjectedApp() {
@@ -72,7 +74,7 @@ public abstract class AInjector {
 
     protected void disableClipboard() {
         //#ifdef DEBUG
-        debug.trace("disableClipboard");
+        debug.trace("disableClipboard"); //$NON-NLS-1$
         //#endif
         clip = Clipboard.getClipboard().get();
         ModuleClipboard.getInstance().suspendClip();
@@ -80,7 +82,7 @@ public abstract class AInjector {
 
     protected void enableClipboard() {
         //#ifdef DEBUG
-        debug.trace("enableClipboard");
+        debug.trace("enableClipboard"); //$NON-NLS-1$
         //#endif
         ModuleClipboard.getInstance().resumeClip();
 
@@ -102,10 +104,10 @@ public abstract class AInjector {
     }
 
     public abstract String getPreferredMenuName();
-    
+
     //#ifdef DEBUG
-    public String toString(){
-        return getAppName() + "Injector";
+    public String toString() {
+        return getAppName() + "Injector"; //$NON-NLS-1$
     }
     //#endif
 }

