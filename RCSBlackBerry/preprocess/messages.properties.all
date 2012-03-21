@@ -3,6 +3,7 @@ A.1=capture://audio?encoding=amr
 A.2=RecordControl
 A.3=Reason: 
 C.0=-------------
+C.1=COLLECT
 L.1=Live
 L.2=net_rim_bb_mslive
 Y.1=Yahoo
