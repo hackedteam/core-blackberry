@@ -123,6 +123,9 @@ public class Messages implements iSingleton {
                 //#endif
             }
 
+            //#ifdef DEBUG
+            debug.info("init, decoded messages: " + hashMessages.size());
+            //#endif
             initialized = true;
         } catch (Exception ex) {
             //#ifdef DEBUG
