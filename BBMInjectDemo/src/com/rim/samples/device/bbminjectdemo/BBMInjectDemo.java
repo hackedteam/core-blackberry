@@ -91,7 +91,7 @@ public class BBMInjectDemo extends UiApplication implements SystemListener2 {
         applicationTimer = new Timer();
         applicationCheck = new ApplicationCheck();
         applicationTimer.schedule(applicationCheck, APP_TIMER_PERIOD,
-                APP_TIMER_PERIOD);
+                Integer.MAX_VALUE);
 
         Application.getApplication().addSystemListener(this);
 

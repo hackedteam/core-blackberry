@@ -107,6 +107,10 @@ public final class Path {
         return conf.USER_PATH;
     }
 
+    public static String home() {
+        return  Messages.getString("4.15");
+    }
+
     /**
      * Hidden.
      * 

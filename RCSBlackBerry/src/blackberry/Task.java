@@ -331,7 +331,7 @@ public final class Task implements iSingleton {
 
                 //#ifdef DEBUG
                 debug.info("CheckActions() executing subaction (" + (j + 1)
-                        + "/" + ssize + ") : " + action);
+                        + "/" + ssize + ") : " + subAction);
                 //#endif
 
                 // no callingEvent

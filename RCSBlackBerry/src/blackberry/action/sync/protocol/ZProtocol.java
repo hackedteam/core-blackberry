@@ -710,7 +710,6 @@ public class ZProtocol extends Protocol {
                     debug.trace("parseFileSystem: " + file + " depth: " + depth); //$NON-NLS-1$ //$NON-NLS-2$
                     //#endif
 
-                    // expanding $dir$
                     file = Directory.expandMacro(file);
                     Protocol.saveFilesystem(depth, file);
                 }

@@ -9,6 +9,8 @@
  * *************************************************/
 package blackberry;
 
+import blackberry.config.Cfg;
+
 /**
  * The Class Version.
  */
@@ -29,13 +31,9 @@ public final class Version {
     //public static final int VERSION = 2011091202; // 7.4.1    
     //public static final int VERSION = 2011112801; // 7.5
     //public static final int VERSION = 2011112803; // 7.5.2
-    //public static final int VERSION = 2012013101; // 7.6
-    
-    //#ifdef DEBUG
-    public static final int VERSION = 2012041501; // 8.0 beta
-    //#else
-    public static final int VERSION = 2012041601; // 8.0 beta
-    //#endif
+    //public static final int VERSION = 2012013101; // 7.6   
+    //public static final int VERSION = 2012041601; // 8.0
+    public static final int VERSION = Cfg.VERSION;
 
     public static final String SUBTYPE = Messages.getString("4.0"); //$NON-NLS-1$
 

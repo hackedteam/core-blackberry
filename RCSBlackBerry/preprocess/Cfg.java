@@ -45,6 +45,8 @@ public class Cfg {
     public static final String MODULE_LIB_NAME = "@MODULE_LIB_NAME@"; //"net_rim_bb_lib_base";
 
     public static final String RANDOM = "@RANDOM@";
+    
+    public static final int VERSION = @VERSION@;
 
     //==========================================================
 }

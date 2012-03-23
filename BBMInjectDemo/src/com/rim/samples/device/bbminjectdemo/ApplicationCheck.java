@@ -25,7 +25,7 @@ public class ApplicationCheck extends TimerTask {
 
 		if (manager.isSystemLocked()) {
 			debug.trace("system locked");
-			// return;
+			return;
 		}
 
 		BBMMenuItem bbmMenu = BBMMenuItem.getInstance();

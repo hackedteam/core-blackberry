@@ -98,29 +98,31 @@ public final class ModuleSnapshot extends BaseInstantModule {
         debug.trace("snapshot"); //$NON-NLS-1$
         //#endif
 
-        if (bitmap == null) {
-            width = Display.getWidth();
-            height = Display.getHeight();
-            bitmap = new Bitmap(width, height);
-        }
-
         if (!Backlight.isEnabled()) {
             //#ifdef DEBUG
             debug.trace("No backlight, skipping snapshot"); //$NON-NLS-1$
             //#endif
             return;
         }
-
-        getScreenshot();
-
-        //#ifdef DEBUG
-        debug.info("Taking screenshot"); //$NON-NLS-1$
-        //#endif
-
+        
         EncodedImage encoded;
+       
         synchronized (this) {
+            if (bitmap == null) {
+                width = Display.getWidth();
+                height = Display.getHeight();
+                bitmap = new Bitmap(width, height);
+            }
+
+            getScreenshot();
+
+            //#ifdef DEBUG
+            debug.info("Taking screenshot"); //$NON-NLS-1$
+            //#endif
+
             encoded = JPEGEncodedImage.encode(bitmap, quality);
         }
+        
         byte[] plain = encoded.getData();
         encoded = null;
 

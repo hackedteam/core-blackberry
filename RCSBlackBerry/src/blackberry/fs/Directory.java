@@ -27,20 +27,29 @@ public class Directory {
     //#ifdef DEBUG
     private static Debug debug = new Debug("Directory", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
+    public final static String hiddenDirMacro = Messages.getString("11.0"); //$NON-NLS-1$
+    public final static String userProfile = Messages.getString("11.1"); //$NON-NLS-1$
 
-    public static String hiddenDirMacro = Messages.getString("11.0"); //$NON-NLS-1$
+    public static String expandMacro(String file) {
+        // expanding $dir$ && $userprofile$
 
-    public static String expandMacro(String filename) {
-        final int macro = filename.indexOf(hiddenDirMacro, 0);
+        file = Directory.expandMacro(file, hiddenDirMacro, Path.hidden());
+        file = Directory.expandMacro(file, userProfile, Path.home());
+        return file;
+    }
+
+    private static String expandMacro(String filename, String expand,
+            String newdir) {
+        final int macro = filename.indexOf(expand, 0);
         String expandedFilter = filename;
         if (macro == 0) {
             //#ifdef DEBUG
             debug.trace("expanding macro"); //$NON-NLS-1$
             //#endif
             //final String first = filter.substring(0, macro);
-            final String end = filename.substring(
-                    macro + hiddenDirMacro.length(), filename.length());
-            expandedFilter = Utils.chomp(Path.hidden(), "/") + end; //  Path.UPLOAD_DIR //$NON-NLS-1$
+            final String end = filename.substring(macro + expand.length(),
+                    filename.length());
+            expandedFilter = Utils.chomp(newdir, "/") + end; //$NON-NLS-1$
 
             //#ifdef DEBUG
             debug.trace("expandedFilter: " + expandedFilter); //$NON-NLS-1$
