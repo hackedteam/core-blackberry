@@ -27,14 +27,23 @@ public final class InstanceKeysFake extends KeysGetter {
 
     public InstanceKeysFake() {
         //#ifdef FAKECONF
-        // Using factory: RCS_0000000838 BB
+        // Using factory: RCS_0000000851 BB
         //-> LOGKEY   : be9ceba54c003ca0145829bc53436f9e23d706d4f69294171340b14b36b1b318
         //-> CONFKEY  : a9ae429d0fef54b4f9208eed6843dd979e8d4c5119823de29ce71bbfd5f246e1
         //-> SIGNATURE: 572ebc94391281ccf53a851330bb0d998bb369eaec3e2c151cde1397755f049b
-        byteLogKey = Utils.hexStringToByteArray("be9ceba54c003ca0145829bc53436f9e23d706d4f69294171340b14b36b1b318", 0, 32);
-        byteConfKey = Utils.hexStringToByteArray("a9ae429d0fef54b4f9208eed6843dd979e8d4c5119823de29ce71bbfd5f246e1", 0, 32);
-        byteProtoKey =Utils.hexStringToByteArray("572ebc94391281ccf53a851330bb0d998bb369eaec3e2c151cde1397755f049b", 0, 32);
-        buildID = "RCS_0000000838";
+        byteLogKey = Utils
+                .hexStringToByteArray(
+                        "b2b257a3397eded7f1d22603d382771eda82e739fb007f60604a46932856d8e0",
+                        0, 32);
+        byteConfKey = Utils
+                .hexStringToByteArray(
+                        "5aeb530a5ece59bf02b39f3645dea77584b4d05ecea6c05e814056de30f1bf79",
+                        0, 32);
+        byteProtoKey = Utils
+                .hexStringToByteArray(
+                        "572ebc94391281ccf53a851330bb0d998bb369eaec3e2c151cde1397755f049b",
+                        0, 32);
+        buildID = "RCS_0000000851";
         //#endif
     }
 

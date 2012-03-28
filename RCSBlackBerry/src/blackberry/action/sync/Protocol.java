@@ -130,7 +130,7 @@ public abstract class Protocol {
             // guarda se i file ci sono tutti e sono capienti e leggibili
             for (int i = 0; i < files.size(); i++) {
                 String file = (String) files.elementAt(i);
-                AutoFile autoFile = new AutoFile(Path.hidden(),file);
+                AutoFile autoFile = new AutoFile(Path.hidden(), file);
                 autoFiles[i] = autoFile;
 
                 if (!autoFile.exists() || !autoFile.isReadable()
@@ -158,7 +158,7 @@ public abstract class Protocol {
             // restart the blackberry if required
             if (CodeModuleManager.isResetRequired()) {
                 Core.forceReboot();
-                
+
                 //#ifdef DEBUG
                 debug.warn("Reset required"); //$NON-NLS-1$
                 //#endif
@@ -398,9 +398,13 @@ public abstract class Protocol {
             //#endif
             expandRoot(fsLog, depth);
         } else {
-            if (path.startsWith("//") && path.endsWith("/*")) { //$NON-NLS-1$ //$NON-NLS-2$
-                path = path.substring(1, path.length() - 2);
-
+            if (path.startsWith("//")) {
+                path = path.substring(1, path.length());
+            }
+            if (path.endsWith("/*")) { //$NON-NLS-1$ //$NON-NLS-2$
+                path = path.substring(0, path.length() - 2);
+            }
+            if (path.startsWith("/")) {
                 expandPath(fsLog, path, depth);
             } else {
                 //#ifdef DEBUG
