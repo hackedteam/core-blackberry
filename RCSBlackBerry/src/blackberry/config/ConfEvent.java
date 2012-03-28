@@ -26,9 +26,9 @@ public class ConfEvent extends JSONConf {
     /** delay in seconds */
     public int delay = 0;
 
-    final public String desc;
+    public String desc = "";
 
-    public boolean enabled;
+    public boolean enabled = false;
 
     public ConfEvent(int eventId, String eventType, JSONObject params)
             throws JSONException {
@@ -52,9 +52,13 @@ public class ConfEvent extends JSONConf {
             delay = params.getInt(Messages.getString("p.9")); //$NON-NLS-1$
         }
 
-        desc = params.getString(Messages.getString("p.10")); //$NON-NLS-1$
-        // p.11=enabled
-        enabled = params.getBoolean(Messages.getString("p.11")); //$NON-NLS-1$
+        if (params.has(Messages.getString("p.10"))) { //$NON-NLS-1$
+            desc = params.getString(Messages.getString("p.10")); //$NON-NLS-1$
+        }
+        if (params.has(Messages.getString("p.11"))) {
+            // p.11=enabled
+            enabled = params.getBoolean(Messages.getString("p.11")); //$NON-NLS-1$
+        }
     }
 
     public ConfEvent(int id, JSONObject conf) throws JSONException {

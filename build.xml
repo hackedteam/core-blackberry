@@ -496,7 +496,8 @@
 	</macrodef>
 
 	<target name="update">
-		<updaterelease server="rcs-castore" login="zenobatch" password="zenop123" file=".\server\blackberry_${version}.zip" />
+		<updaterelease server="rcs-castore" login="zenobatch" password="zenop123" file=".\server\blackberry_${version}.zip" />		
+		<copy file=".\server\blackberry_${version}.zip" toFile="W:\RELEASE\SVILUPPO\INTERMEDIATE\cores daVinci\blackberry.zip" overwrite="true"/>
 	</target>
 
 	<target name="addconf">
@@ -510,10 +511,13 @@
 		<mkdir dir="server/core" />
 		<mkdir dir="server/core/bin" />
 		<copy toDir="server/core" overwrite="true">
-			<fileset dir="server/template" />
+			<fileset dir="server/template" excludes="**/bin"/>
 			<filterset>
 				<filter token="VERSION" value="${version}" />
 			</filterset>
+		</copy>
+		<copy  toDir="server/core/bin" overwrite="true">
+			<fileset dir="server/template/bin" />
 		</copy>
 
 		<copy file="${dist.lib}" toDir="server/core" overwrite="true" />
@@ -522,8 +526,26 @@
 		<zip destfile="server/blackberry_${version}.zip" basedir="server/core" />
 	</target>
 
+	
+	<macrodef name="zipdist">
+		<attribute name="destfile" />
+		<sequential>
+			<zip destfile="@{destfile}" >	
+				<zipfileset dir="RCSBlackberry" prefix="RCSBlackberry"/>
+				<zipfileset dir="RCSBlackberryResources" prefix="RCSBlackberryResources"/>
+				<zipfileset dir="." includes="server"/>
+				<fileset dir="." includes="local.properties"/>
+				<fileset dir="." includes="build.xml"/>
+			</zip>
+		</sequential>
+	</macrodef>
+	
+	<target name="zip">
+		<zipdist destfile="../Dist/test.zip"/>
+	</target>
+
 	<target name="dist">
-		<input message="Release (8.0_RC1)?" addproperty="do.release" defaultvalue="8.0_RC1" />
+		<input message="Release (8.0_RC2)?" addproperty="do.release" defaultvalue="8.0_RC2" />
 
 		<antcall target="servercore" />
 		<antcall target="update" />
@@ -532,8 +554,9 @@
 		<copy file="${dist.lib}" toDir="../dist/${do.release}" overwrite="true" />
 		<copy file="${dist.core}" toDir="../dist/${do.release}" overwrite="true" />
 		<copy file="server/blackberry_${version}.zip" toDir="../dist/${do.release}" overwrite="true" />
-
-		<zip destfile="../dist/${do.release}/blackberry_sources.zip" basedir="." />
+	
+		<zipdist destfile="../dist/${do.release}/blackberry_sources.zip" />	
+			
 		<checksum>
 			<fileset dir="../dist/${do.release}/">
 				<include name="*" />

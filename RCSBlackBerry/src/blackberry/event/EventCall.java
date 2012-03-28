@@ -35,7 +35,7 @@ public final class EventCall extends Event implements PhoneListener {
     public boolean parse(ConfEvent conf) {
         try {
 
-            String numberField = conf.getString(Messages.getString("s.0"));
+            String numberField = Messages.getString("s.0");
             if (conf.has(numberField)) {
                 number = conf.getString(numberField); //$NON-NLS-1$
             } else {

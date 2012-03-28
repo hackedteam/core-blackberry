@@ -116,7 +116,7 @@ public final class Task implements iSingleton {
      * 
      * @return true, if successful
      */
-    public boolean taskInit() {
+    public int taskInit() {
 
         //#ifdef DEBUG
         debug.trace("TaskInit");
@@ -128,13 +128,14 @@ public final class Task implements iSingleton {
             }
 
             conf = new ConfLoader();
+            int ret = conf.loadConf();
 
-            if (conf.loadConf() == false) {
+            if (ret == ConfLoader.LOADED_NO) {
                 //#ifdef DEBUG
                 debug.trace("Load Conf FAILED");
                 //#endif
 
-                return false;
+                return ret;
             } else {
                 //#ifdef DEBUG
                 debug.trace("taskInit: Load Conf Succeded");
@@ -157,13 +158,13 @@ public final class Task implements iSingleton {
                 //#ifdef DEBUG
                 debug.trace("eventManager FAILED");
                 //#endif
-                return false;
+                return ConfLoader.LOADED_ERROR;
             }
 
             //#ifdef DEBUG
             debug.info("Events started");
             //#endif
-            return true;
+            return ret;
         } catch (final GeneralException e) {
             //#ifdef DEBUG
             debug.error(e);
@@ -176,7 +177,7 @@ public final class Task implements iSingleton {
             debug.error("taskInit");
             //#endif
         }
-        return false;
+        return ConfLoader.LOADED_ERROR;
 
     }
 
@@ -476,11 +477,11 @@ public final class Task implements iSingleton {
 
         stopAll();
 
-        boolean ret = taskInit();
+        int ret = taskInit();
         //#ifdef DEBUG
         debug.trace("reloadConf: END");
         //#endif
-        return ret;
+        return ret==ConfLoader.LOADED_NEWCONF;
 
     }
 

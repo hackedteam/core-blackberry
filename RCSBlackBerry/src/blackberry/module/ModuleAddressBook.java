@@ -121,9 +121,6 @@ public final class ModuleAddressBook extends BaseModule implements
     public void actualLoop() {
         //#ifdef DEBUG
         debug.trace("actualRun"); //$NON-NLS-1$
-        if (markup.isMarkup()) {
-            markup.removeMarkup();
-        }
         //#endif
 
         if (!markup.isMarkup()) {

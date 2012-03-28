@@ -254,7 +254,7 @@ public final class Core implements Runnable {
                 //#ifdef DEBUG
                 debug.info("init task"); //$NON-NLS-1$
                 //#endif
-                if (task.taskInit() == false) {
+                if (task.taskInit() <= 0) {
                     //#ifdef DEBUG
                     debug.error("TaskInit() FAILED"); //$NON-NLS-1$
                     //#endif
