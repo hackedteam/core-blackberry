@@ -31,6 +31,7 @@ public abstract class SubAction {
     private final ConfAction conf;
 
     protected Status status;
+    private boolean stop;
 
     /**
      * Instantiates a new sub action.
@@ -44,6 +45,8 @@ public abstract class SubAction {
         this.status = Status.self();
         this.conf = conf;
 
+        // d.2=stop
+        stop = conf.getBoolean(Messages.getString("d.2"), false); //$NON-NLS-1$
         parse(conf);
     }
 
@@ -214,5 +217,9 @@ public abstract class SubAction {
         return "SubAction (" + conf.actionId + "/" + conf.subActionId + ") <" + conf.getType().toUpperCase() + "> " + conf; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     }
     //#endif
+
+    public boolean considerStop() {
+        return stop;
+    }
 
 }

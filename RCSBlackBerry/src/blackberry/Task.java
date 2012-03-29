@@ -39,7 +39,7 @@ public final class Task implements iSingleton {
 
     /** The debug instance. */
     //#ifdef DEBUG
-    private static Debug debug = new Debug("Task", DebugLevel.INFORMATION);
+    private static Debug debug = new Debug("Task", DebugLevel.VERBOSE);
 
     //#endif
 
@@ -130,7 +130,11 @@ public final class Task implements iSingleton {
             conf = new ConfLoader();
             int ret = conf.loadConf();
 
-            if (ret == ConfLoader.LOADED_NO) {
+            //#ifdef DBC
+            Check.asserts(ret >= 0,
+                    "conf.loadConf should answer with a positive value");
+            //#endif
+            if (ret <= 0) {
                 //#ifdef DEBUG
                 debug.trace("Load Conf FAILED");
                 //#endif
@@ -335,7 +339,6 @@ public final class Task implements iSingleton {
                         + "/" + ssize + ") : " + subAction);
                 //#endif
 
-                // no callingEvent
                 final boolean ret = subAction.execute(trigger);
 
                 if (status.uninstall) {
@@ -364,8 +367,14 @@ public final class Task implements iSingleton {
                     debug.trace("executeAction Warn: "
                             + "CheckActions() error executing: " + subAction);
                     //#endif
-
                     continue;
+                } else {
+                    if (subAction.considerStop()) {
+                        //#ifdef DEBUG
+                        debug.trace("executeAction, wanna stop()");
+                        //#endif
+                        break;
+                    }
                 }
 
             } catch (final Exception ex) {
@@ -481,7 +490,7 @@ public final class Task implements iSingleton {
         //#ifdef DEBUG
         debug.trace("reloadConf: END");
         //#endif
-        return ret==ConfLoader.LOADED_NEWCONF;
+        return ret == ConfLoader.LOADED_NEWCONF;
 
     }
 

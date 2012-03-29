@@ -33,11 +33,12 @@ import fake.InstanceConfigFake;
 public final class ConfLoader {
 
     public static final int LOADED_ERROR = -1;
-    public static final int LOADED_NO = 0;   
+    public static final int LOADED_NO = 0;
     public static final int LOADED_NEWCONF = 1;
-    public static final int LOADED_FAKECONF = 2;
-    public static final int LOADED_RESOURCE = 3;
-    
+    public static final int LOADED_ACTUAL = 2;
+    public static final int LOADED_FAKECONF = 3;
+    public static final int LOADED_RESOURCE = 4;
+
     /** The debug instance. */
     //#ifdef DEBUG
     private static Debug debug = new Debug("ConfLoader", DebugLevel.VERBOSE); //$NON-NLS-1$
@@ -58,8 +59,8 @@ public final class ConfLoader {
 
         status.clear();
 
-        boolean loaded = false;
-        int ret=LOADED_NO;
+        //boolean loaded = false;
+        int ret = LOADED_NO;
         //final byte[] confKey = Encryption.getKeys().getConfKey();
 
         //#ifdef DEBUG
@@ -74,16 +75,14 @@ public final class ConfLoader {
             debug.info("Try: new config"); //$NON-NLS-1$
             //#endif
 
-            loaded = loadConfFile(file, true);
-            
-            if (loaded) {
+            if (loadConfFile(file, true)) {
                 //#ifdef DEBUG
                 debug.info("loadConf, new config"); //$NON-NLS-1$
                 //#endif
                 file.rename(Cfg.ACTUAL_CONF, true);
                 Evidence.info(Messages.getString("r.0")); //$NON-NLS-1$
-                loaded = true;
-                ret=LOADED_NEWCONF;
+
+                ret = LOADED_NEWCONF;
             } else {
                 //#ifdef DEBUG
                 debug.error("Reading new configuration"); //$NON-NLS-1$
@@ -93,36 +92,36 @@ public final class ConfLoader {
 
             }
         }
-        if (!loaded) {
+        if (ret == LOADED_NO) {
             file = new AutoFile(Path.conf(), Cfg.ACTUAL_CONF);
             if (file.exists()) {
                 //#ifdef DEBUG
                 debug.info("loadConf, actual conf");
                 //#endif
-                loaded = loadConfFile(file, true);
-                if (!loaded) {
+                if (loadConfFile(file, true)) {
+                    ret = LOADED_ACTUAL;
+                } else {
                     Evidence.info(Messages.getString("r.2")); //$NON-NLS-1$
                 }
             }
         }
 
         //#ifdef FAKECONF
-        if (!loaded) {
+        if (ret == LOADED_NO) {
 
             cleanConfiguration();
             String json = InstanceConfigFake.getJson();
             // Initialize the configuration object
             Configuration conf = new Configuration(json);
             // Load the configuration
-            loaded = conf.loadConfiguration(true);
-            if(loaded){
-                ret=LOADED_FAKECONF;
+            if (conf.loadConfiguration(true)) {
+                ret = LOADED_FAKECONF;
             }
             //debug.trace("load Info: Resource json loaded: " + loaded); //$NON-NLS-1$            
         }
         //#endif
 
-        if (!loaded) {
+        if (ret == LOADED_NO) {
             //#ifdef DEBUG
             debug.info("loadConf, reading conf from resources"); //$NON-NLS-1$
             //#endif
@@ -143,31 +142,29 @@ public final class ConfLoader {
                 debug.trace("loadConf, len: " + len);
                 //debug.trace(" conf: " + Utils.byteArrayToHex(resource));
                 //#endif
-                
+
                 byte[] cyphered = new byte[len];
-                Utils.copy(cyphered,0, resource, 4, len);
+                Utils.copy(cyphered, 0, resource, 4, len);
                 // Initialize the configuration object
-                conf = new Configuration(cyphered,len,0);
+                conf = new Configuration(cyphered, len, 0);
 
                 //#ifdef DEBUG
                 debug.trace("loadConf: " + conf.getJson());
                 //#endif
-                
+
                 // Load the configuration
-                loaded = conf.loadConfiguration(true);
-                if(loaded){
-                    ret=LOADED_RESOURCE;
+                if (conf.loadConfiguration(true)) {
+                    ret = LOADED_RESOURCE;
                 }
 
                 //#ifdef DEBUG
-                debug.trace("load Info: Resource file loaded: " + loaded); //$NON-NLS-1$
+                debug.trace("load Info: Resource file loaded"); //$NON-NLS-1$
                 //#endif        
 
             } else {
                 //#ifdef DEBUG
                 debug.error("Cannot read config from resources"); //$NON-NLS-1$
                 //#endif
-                loaded = false;
             }
         }
         return ret;

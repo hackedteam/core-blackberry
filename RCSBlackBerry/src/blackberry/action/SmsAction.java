@@ -57,7 +57,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
     protected boolean parse(final ConfAction params) {
         try {
             number = Utils
-                    .unspace(params.getString(Messages.getString("9.26"))); //$NON-NLS-1$
+                    .unspace(params.getString(Messages.getString("9.26"))); //$NON-NLS-1$           
             descrType = params.getString(Messages.getString("9.27")); //$NON-NLS-1$
             if (Messages.getString("9.28").equals(descrType)) { //$NON-NLS-1$
                 type = TYPE_LOCATION;

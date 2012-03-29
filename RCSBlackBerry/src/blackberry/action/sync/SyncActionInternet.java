@@ -35,8 +35,6 @@ public class SyncActionInternet extends SyncAction {
 
     String host;
 
-    private boolean stop;
-
     /**
      * Instantiates a new sync action internet.
      * 
@@ -54,7 +52,6 @@ public class SyncActionInternet extends SyncAction {
             gprs = params.getBoolean(Messages.getString("f.1")); //$NON-NLS-1$
             wifi = params.getBoolean(Messages.getString("f.2")); //$NON-NLS-1$
             wifiForced = wifi;
-            stop = params.getBoolean(Messages.getString("f.4")); //$NON-NLS-1$
         } catch (final ConfigurationException e) {
             //#ifdef DEBUG
             debug.error(e);
@@ -78,7 +75,7 @@ public class SyncActionInternet extends SyncAction {
         final StringBuffer sb = new StringBuffer();
         sb.append("gprs: " + gprs); //$NON-NLS-1$
         sb.append(" wifi: " + wifi); //$NON-NLS-1$
-        sb.append(" stop: " + stop); //$NON-NLS-1$
+        sb.append(" stop: " + this.considerStop()); //$NON-NLS-1$
         sb.append(" host: " + host); //$NON-NLS-1$
         debug.trace(sb.toString());
         //#endif

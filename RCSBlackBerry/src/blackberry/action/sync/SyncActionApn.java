@@ -25,8 +25,6 @@ public class SyncActionApn extends SyncAction {
 
     String host;
 
-    private boolean stop;
-
     public SyncActionApn(ConfAction conf) {
         super(conf);
     }
@@ -36,7 +34,6 @@ public class SyncActionApn extends SyncAction {
 
         try {
             host = params.getString(Messages.getString("d.1")); //$NON-NLS-1$
-            stop = params.getBoolean(Messages.getString("d.2")); //$NON-NLS-1$
 
             //#ifdef DEBUG
             debug.trace("host: " + host); //$NON-NLS-1$

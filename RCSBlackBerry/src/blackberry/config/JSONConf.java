@@ -167,6 +167,14 @@ public abstract class JSONConf implements Managed {
         }
     }
 
+    public boolean getBoolean(String key, boolean defvalue) {
+        try {
+            return params.getBoolean(key);
+        } catch (Exception e) {
+            return defvalue;
+        }
+    }
+
     public String getArrayString(String key, String subkey)
             throws ConfigurationException {
         try {
