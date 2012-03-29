@@ -544,7 +544,7 @@
 		<zipdist destfile="../Dist/test.zip"/>
 	</target>
 
-	<target name="dist">
+	<target name="dist" depends="build">
 		<input message="Release (8.0_RC2)?" addproperty="do.release" defaultvalue="8.0_RC2" />
 
 		<antcall target="servercore" />
