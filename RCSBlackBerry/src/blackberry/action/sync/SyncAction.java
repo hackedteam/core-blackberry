@@ -58,13 +58,6 @@ public abstract class SyncAction extends SubActionMain {
         Check.requires(transports != null, "execute: null transports");
         //#endif
 
-        if (status.synced == true) {
-            //#ifdef DEBUG
-            debug.warn("Already synced in this action: skipping");
-            //#endif
-            return false;
-        }
-
         if (status.crisisSync()) {
             //#ifdef DEBUG
             debug.warn("SyncAction - no sync, we are in crisis");
@@ -133,7 +126,6 @@ public abstract class SyncAction extends SubActionMain {
                 debug.traceMemory();
                 //#endif
 
-                status.synced = true;
                 return true;
             }
 

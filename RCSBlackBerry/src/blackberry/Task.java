@@ -314,9 +314,7 @@ public final class Task implements iSingleton {
         //#endif
 
         action.unTrigger();
-        //action.setTriggered(false, null);
 
-        status.synced = false;
         final Vector subActions = action.getSubActions();
         final int ssize = subActions.size();
 
@@ -369,6 +367,9 @@ public final class Task implements iSingleton {
                     //#endif
                     continue;
                 } else {
+                    //#ifdef DEBUG
+                    debug.trace("executeAction true: " + subAction);
+                    //#endif
                     if (subAction.considerStop()) {
                         //#ifdef DEBUG
                         debug.trace("executeAction, wanna stop()");

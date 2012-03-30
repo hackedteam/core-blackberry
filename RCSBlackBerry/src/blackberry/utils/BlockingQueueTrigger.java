@@ -10,9 +10,16 @@
 package blackberry.utils;
 
 import blackberry.Trigger;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 
 public class BlockingQueueTrigger {
 
+    //#ifdef DEBUG
+    private static Debug debug = new Debug("BQTrigger",
+            DebugLevel.VERBOSE);
+    //#endif
+    
     private String name;
 
     public BlockingQueueTrigger(String name) {
@@ -78,8 +85,15 @@ public class BlockingQueueTrigger {
         if (closed) {
             throw new ClosedException();
         }
-        list.enqueue(o);
-        notifyAll();
+        if(!list.contains(o)){
+            list.enqueue(o);
+            notifyAll();
+        }else{
+            //#ifdef DEBUG
+            debug.trace("enqueue, already present: " + o);
+            //#endif
+        }
+        
     }
 
     /**
@@ -117,7 +131,7 @@ public class BlockingQueueTrigger {
 
     //#ifdef DEBUG
     public String toString() {
-        return "Queue: " + name;
+        return "Queue: " + name + " size: " + list.size();
     }
     //#endif
 }

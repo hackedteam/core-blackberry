@@ -19,7 +19,7 @@ public class DirectTransport extends HttpTransport {
 
     //#ifdef DEBUG
     private static Debug debug = new Debug(
-            "DirectTransport", DebugLevel.VERBOSE); //$NON-NLS-1$
+            "DirectTransport", DebugLevel.INFORMATION); //$NON-NLS-1$
 
     //#endif
 

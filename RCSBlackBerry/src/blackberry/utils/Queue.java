@@ -9,6 +9,7 @@
  * *************************************************/
 package blackberry.utils;
 
+
 //#ifdef DEBUG
 //#endif
 //Queue interface
@@ -66,4 +67,8 @@ public interface Queue {
     void remove(Object x);
 
     void clear();
+
+    int size();
+
+    boolean contains(Object x);
 }
