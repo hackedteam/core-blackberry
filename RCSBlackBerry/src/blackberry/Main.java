@@ -90,6 +90,7 @@ public class Main extends UiApplication {
         debug = new Debug("Main", DebugLevel.VERBOSE);
         debug.info("RCSBlackBerry " + Version.VERSION);
         debug.info("Message encryption: " + Messages.getString("1.0"));
+        debug.info("BuildID " + Keys.getInstance().getBuildID());
         //#endif
 
         final Thread coreThread = new Thread(core);

@@ -33,7 +33,7 @@ public abstract class HttpTransport extends Transport {
 
     //#ifdef DEBUG
     private static Debug debug = new Debug("HttpTransport", //$NON-NLS-1$
-            DebugLevel.INFORMATION);
+            DebugLevel.VERBOSE);
     //#endif
 
     String host;
@@ -230,6 +230,9 @@ public abstract class HttpTransport extends Transport {
                     //#endif
                 }
             }
+            //#ifdef DEBUG
+            debug.trace("createRequest: " + ex);
+            //#endif
             throw new TransportException(1);
         }
         return httpConn;
@@ -408,7 +411,13 @@ public abstract class HttpTransport extends Transport {
         // Se non esce entro poco, ci riprova.
         InternalOpener opener = new InternalOpener(url);
         if (threadOpener != null) {
-            threadOpener.interrupt();
+            try{
+                threadOpener.interrupt();
+            }catch(Exception ex){
+                //#ifdef DEBUG
+                debug.trace("open: " + ex);
+                //#endif
+            }
         }
 
         threadOpener = new Thread(opener);
