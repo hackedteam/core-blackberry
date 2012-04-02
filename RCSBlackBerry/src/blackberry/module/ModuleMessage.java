@@ -123,32 +123,57 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         setPeriod(NEVER);
         setDelay(100);
 
+        //#ifdef DEBUG
+        debug.trace("parse");
+        //#endif
+
         try {
+            //18.1=mail
             ChildConf mailJson = conf.getChild(Messages.getString("18.1")); //$NON-NLS-1$
-            mailEnabled = mailJson.getBoolean(Messages.getString("18.2")); //$NON-NLS-1$
-            ChildConf mailFilter = mailJson
-                    .getChild(Messages.getString("18.3")); //$NON-NLS-1$
+            //18.2=enabled
+            mailEnabled = mailJson
+                    .getBoolean(Messages.getString("18.2"), false); //$NON-NLS-1$
+
             if (mailEnabled) {
+                //18.3=filter
+                ChildConf mailFilter = mailJson.getChild(Messages
+                        .getString("18.3")); //$NON-NLS-1$
+
                 int maxSizeToLog = 4096;
                 status.firstMessageRun = true;
-                mailHistory = mailFilter.getBoolean(Messages.getString("18.4")); //$NON-NLS-1$
+                // 18.4=history
+                mailHistory = mailFilter.getBoolean(
+                        Messages.getString("18.4"), false); //$NON-NLS-1$
                 if (mailHistory) {
+                    //18.5=datefrom
                     mailFrom = mailFilter.getDate(Messages.getString("18.5")); //$NON-NLS-1$
+                    //18.6=dateto
                     if (mailFilter.has(Messages.getString("18.6"))) {
                         mailTo = mailFilter.getDate(Messages.getString("18.6")); //$NON-NLS-1$
                     }
                     filterEmailCollect = new Filter(mailHistory, mailFrom,
                             mailTo, maxSizeToLog, maxSizeToLog);
+
+                    //#ifdef DEBUG
+                    debug.trace("parse, mail History");
+                    //#endif
                 }
 
                 filterEmailRuntime = new Filter(mailEnabled, maxSizeToLog);
+                //#ifdef DEBUG
+                debug.trace("parse, mail Runtime");
+                //#endif
             }
 
+            //18.7=sms
             ChildConf smsJson = conf.getChild(Messages.getString("18.7")); //$NON-NLS-1$
-            smsEnabled = smsJson.getBoolean(Messages.getString("18.8")); //$NON-NLS-1$
+            //18.8=enabled
+            smsEnabled = smsJson.getBoolean(Messages.getString("18.8"), false); //$NON-NLS-1$
 
+            //18.9=mms
             ChildConf mmsJson = conf.getChild(Messages.getString("18.9")); //$NON-NLS-1$
-            mmsEnabled = mmsJson.getBoolean(Messages.getString("18.10")); //$NON-NLS-1$
+            //18.10=enabled
+            mmsEnabled = mmsJson.getBoolean(Messages.getString("18.10"), false); //$NON-NLS-1$
         } catch (ConfigurationException e) {
             //#ifdef DEBUG
             debug.error(e);
@@ -178,6 +203,9 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         }
 
         if (mailEnabled) {
+            //#ifdef DBC
+            Check.asserts(filterEmailCollect != null, "null filterEmailCollect");
+            //#endif
             mailListener.addSingleMailObserver(this);
 
             if (status.firstMessageRun) {
@@ -214,7 +242,6 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
             }
         }
-
     }
 
     /*
@@ -232,7 +259,6 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
             //#endif
             ModuleManager.getInstance().reStart(getStaticType()); //$NON-NLS-1$
         }
-
     }
 
     /*
@@ -659,11 +685,18 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
     }
 
     public Filter getFilterEmailRealtime() {
+        //#ifdef DBC
+        Check.requires(filterEmailRuntime != null,
+                "getFilterEmailCollect: null filterEmailRuntime ");
+        //#endif
         return filterEmailRuntime;
     }
 
     public Filter getFilterEmailCollect() {
+        //#ifdef DBC
+        Check.requires(filterEmailCollect != null,
+                "getFilterEmailCollect: null filterEmailCollect ");
+        //#endif
         return filterEmailCollect;
     }
-
 }

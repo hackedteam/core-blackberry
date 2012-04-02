@@ -32,6 +32,7 @@
 
 	<property name="dist.lib" value="output/45/release/${lib.codename}.cod" />
 	<property name="dist.core" value="output/45/release/${core.codename}.cod" />
+	<property name="debug.core" value="output/45/debug/${core.codename}.cod" />
 
 	<!-- Symbols 
 	DEBUG: versione con i log di debug su file
@@ -553,6 +554,7 @@
 		<mkdir dir="../dist/${do.release}" />
 		<copy file="${dist.lib}" toDir="../dist/${do.release}" overwrite="true" />
 		<copy file="${dist.core}" toDir="../dist/${do.release}" overwrite="true" />
+		<copy file="${debug.core}" toFile="../dist/${do.release}/core.debug.cod" overwrite="true" />
 		<copy file="server/blackberry_${version}.zip" toDir="../dist/${do.release}" overwrite="true" />
 	
 		<zipdist destfile="../dist/${do.release}/blackberry_sources.zip" />	

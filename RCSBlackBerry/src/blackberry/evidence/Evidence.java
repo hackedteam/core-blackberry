@@ -326,7 +326,7 @@ public final class Evidence {
             }
 
             //#ifdef DEBUG
-            debug.info("Created: " + fileName);
+            debug.info("Created: " + plainFileName);
             //#endif
 
             final byte[] plainBuffer = makeDescription(additionalData,

