@@ -191,7 +191,13 @@ public final class Device implements iSingleton {
      */
     public static byte[] getSubtype() {
 
-        return Version.SUBTYPE.getBytes();
+        if (Status.self().isDemo()) {
+            //3.0=DEMO
+            return (Version.SUBTYPE + "-" + Messages.getString("3.0"))
+                    .getBytes();
+        } else {
+            return Version.SUBTYPE.getBytes();
+        }
     }
 
     /**
