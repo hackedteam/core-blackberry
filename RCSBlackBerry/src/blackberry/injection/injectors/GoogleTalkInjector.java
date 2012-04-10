@@ -18,7 +18,6 @@ public class GoogleTalkInjector extends ChatGroupInjector {
 
     //#ifdef DEBUG
     private static Debug debug = new Debug("GTalkInjector", DebugLevel.VERBOSE); //$NON-NLS-1$
-
     //#endif
 
     public String getAppName() {

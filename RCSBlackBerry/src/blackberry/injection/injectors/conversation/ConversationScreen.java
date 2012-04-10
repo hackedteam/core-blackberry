@@ -125,7 +125,7 @@ public class ConversationScreen {
         //#endif
 
         //1g.3=Participants
-        if (lineConversation.startsWith(Messages.getString("1g.3"))) { //$NON-NLS-1$
+        if (lineConversation.indexOf("--------", 0) > 0) { //$NON-NLS-1$
             full = true;
             //#ifdef DEBUG
             debug.trace("parseConversation: full"); //$NON-NLS-1$
@@ -194,7 +194,7 @@ public class ConversationScreen {
                 //}
                 numLine += 1;
 
-                int lineStart = searchPartecipantIter(currentLine);
+                int lineStart = searchParticipantIter(currentLine);
 
                 if (lineStart > 0) {
                     // c'e' un partecipante
@@ -204,11 +204,15 @@ public class ConversationScreen {
                     //#endif
                     String ll = lastLine.trim();
                     if (!StringUtils.empty(ll)) {
-                        //#ifdef DEBUG
-                        debug.trace("parseLinesConversation adding last line: " //$NON-NLS-1$
-                                + ll);
-                        //#endif
-                        lines.addElement(ll);
+                                                
+                        //Se la linea contiene il delimitatore, allora e' buona.
+                        if(searchParticipantsDelimiter(ll)>0){
+                          //#ifdef DEBUG
+                            debug.trace("parseLinesConversation adding last line: " //$NON-NLS-1$
+                                    + ll);
+                            //#endif
+                            lines.addElement(ll);
+                        }
                     } else {
                         //#ifdef DEBUG
                         debug.trace("parseLinesConversation last: empty line"); //$NON-NLS-1$
@@ -226,7 +230,7 @@ public class ConversationScreen {
             }
             //adding last line
             String ll = lastLine.trim();
-            if (!StringUtils.empty(ll)) {
+            if (!StringUtils.empty(ll) && searchParticipantsDelimiter(ll)>0) {
                 //#ifdef DEBUG
                 debug.trace("parseLinesConversation adding last line: " + ll); //$NON-NLS-1$
                 //#endif
@@ -319,7 +323,7 @@ public class ConversationScreen {
 
     // se ci sono i partecipanti, restituisce la posizione dopo il :
     // senno 0
-    private static int searchPartecipantsDelimiter(String currentLine) {
+    private static int searchParticipantsDelimiter(String currentLine) {
         int pos = 0;
 
         pos = currentLine.indexOf(": "); //$NON-NLS-1$
@@ -340,7 +344,7 @@ public class ConversationScreen {
      * @param currentLine
      * @return
      */
-    private static int searchPartecipantIter(String currentLine) {
+    private static int searchParticipantIter(String currentLine) {
         //#ifdef DBC
         Check.requires(parts != null && parts.size() > 1, "empty parts"); //$NON-NLS-1$
         //#endif

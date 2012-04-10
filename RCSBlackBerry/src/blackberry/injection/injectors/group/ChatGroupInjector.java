@@ -69,26 +69,30 @@ public abstract class ChatGroupInjector extends AInjector {
         String clip = null;
 
         disableClipboard();
-        //1g.1=Copy Chat
-        //1g.2=Copy History
-        //1g.4=Copy Conversation
-        if (MenuWalker.walk(new String[] {
-                Messages.getString("1g.1"), Messages.getString("1g.2"), Messages.getString("1g.4") }, //$NON-NLS-1$ //$NON-NLS-2$
-                screen, true)) {
+        try {
+            //1g.1=Copy Chat
+            //1g.2=Copy History
+            //1g.4=Copy Conversation
+            if (MenuWalker
+                    .walk(new String[] {
+                            Messages.getString("1g.1"), Messages.getString("1g.2"), Messages.getString("1g.4") }, //$NON-NLS-1$ //$NON-NLS-2$
+                    screen, true)) {
 
-            clip = (String) Clipboard.getClipboard().get();
-            //#ifdef DEBUG
-            debug.trace("extractConversation: " + clip.length());
-            //#endif
+                clip = (String) Clipboard.getClipboard().get();
+                //#ifdef DEBUG
+                debug.trace("extractConversation: " + clip.length());
+                //#endif
 
-            setClipboard(clip);
+                setClipboard(clip);
 
-        } else {
-            //#ifdef DEBUG
-            debug.info("NO Conversation screen!"); //$NON-NLS-1$
-            //#endif
+            } else {
+                //#ifdef DEBUG
+                debug.info("NO Conversation screen!"); //$NON-NLS-1$
+                //#endif
+            }
+        } finally {
+            enableClipboard();
         }
-        enableClipboard();
         return clip;
     }
 

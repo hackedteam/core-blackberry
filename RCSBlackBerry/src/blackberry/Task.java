@@ -198,8 +198,16 @@ public final class Task implements iSingleton {
         checkActionFast = new CheckActionFast(status.getTriggeredQueueFast());
 
         fastQueueThread = new Thread(checkActionFast);
+        fastQueueThread.setPriority(Thread.MIN_PRIORITY);
         fastQueueThread.start();
+        Thread.currentThread().setPriority(Thread.MIN_PRIORITY+1);
 
+        int priority=Thread.currentThread().getPriority();
+        //#ifdef DEBUG
+        debug.trace("checkActions, priority: " + priority +"/10");
+        //#endif
+        
+        
         boolean exit = checkActions(status.getTriggeredQueueMain());
         //#ifdef DEBUG
         debug.trace("checkActions, main finished, stopping fast.");
