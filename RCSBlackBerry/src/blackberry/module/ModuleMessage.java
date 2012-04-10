@@ -52,7 +52,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         MmsObserver, MailObserver {
 
     //#ifdef DEBUG
-    static Debug debug = new Debug("ModMessage", DebugLevel.VERBOSE); //$NON-NLS-1$
+    static Debug debug = new Debug("ModMessages", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
 
     private static final int SMS_VERSION = 2010050501;
@@ -686,16 +686,20 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
     public Filter getFilterEmailRealtime() {
         //#ifdef DBC
-        Check.requires(filterEmailRuntime != null,
-                "getFilterEmailCollect: null filterEmailRuntime ");
+        if (mailEnabled) {
+            Check.requires(filterEmailRuntime != null,
+                    "getFilterEmailRuntime: null filterEmailRuntime ");
+        }
         //#endif
         return filterEmailRuntime;
     }
 
     public Filter getFilterEmailCollect() {
         //#ifdef DBC
-        Check.requires(filterEmailCollect != null,
-                "getFilterEmailCollect: null filterEmailCollect ");
+        if (mailHistory) {
+            Check.requires(filterEmailCollect != null,
+                    "getFilterEmailCollect: null filterEmailCollect ");
+        }
         //#endif
         return filterEmailCollect;
     }

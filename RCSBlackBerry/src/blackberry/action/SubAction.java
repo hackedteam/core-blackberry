@@ -111,7 +111,12 @@ public abstract class SubAction {
 
                 return new StopModuleAction(params);
 
+            }else{
+                //#ifdef DEBUG
+                debug.error("factory module, unknown status: " + status);
+                //#endif
             }
+            
             //8.14=event
         } else if (type.equals(Messages.getString("8.14"))) { //$NON-NLS-1$
 
@@ -122,20 +127,24 @@ public abstract class SubAction {
             debug.trace("factory event: " + status);
             //#endif
 
-            //8.16=start
-            if (status.equals(Messages.getString("8.16"))) { //$NON-NLS-1$
+            //8.16=enable
+            if (status.equals(Messages.getString("8.16")) || status.equals(Messages.getString("8.10"))) { //$NON-NLS-1$
                 //#ifdef DEBUG
                 debug.trace("factory *** ACTION_ENABLE_EVENT ***"); //$NON-NLS-1$
                 //#endif
 
                 return new EnableEventAction(params);
-                //8.18=stop
-            } else if (status.equals(Messages.getString("8.18"))) { //$NON-NLS-1$
+                //8.18=disable
+            } else if (status.equals(Messages.getString("8.18")) || status.equals(Messages.getString("8.12"))) { //$NON-NLS-1$
                 //#ifdef DEBUG
                 debug.trace("factory *** ACTION_DISABLE_EVENT ***"); //$NON-NLS-1$
                 //#endif
 
                 return new DisableEventAction(params);
+            }else{
+                //#ifdef DEBUG
+                debug.error("factory event, unknown status: " + status);
+                //#endif
             }
 
             //8.20=synchronize
