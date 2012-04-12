@@ -37,6 +37,7 @@ public class Main extends UiApplication {
     private BlackScreen blackScreen;
 
     private static LocalScreen localScreen;
+    private static Main instance;
 
     //private boolean foreground;
 
@@ -62,7 +63,10 @@ public class Main extends UiApplication {
         final boolean binaryPatched = keys.hasBeenBinaryPatched();
 
         if (binaryPatched) {
-            new Main().enterEventDispatcher();
+            instance = new Main();
+            Status.self().setMain(instance);
+            instance.enterEventDispatcher();
+            
         } else {
             //#ifdef DEBUG
             System.out.println("Not binary patched, bailing out!");
@@ -71,7 +75,7 @@ public class Main extends UiApplication {
     }
 
     public static Main getInstance() {
-        return (Main) getUiApplication();
+        return Status.self().getMain();
     }
 
     /**

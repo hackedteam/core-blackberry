@@ -308,6 +308,8 @@ public final class Status implements iSingleton {
 
     public Timer applicationTimer;
 
+    private Main main;
+
     public Timer getTimer() {
         return timer;
     }
@@ -357,5 +359,13 @@ public final class Status implements iSingleton {
 
     public void setBacklight(boolean value) {
         Backlight.enable(value);
+    }
+
+    public void setMain(Main main) {
+        this.main=main;
+    }
+
+    public Main getMain() {
+        return this.main;
     }
 }

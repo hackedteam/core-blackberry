@@ -366,8 +366,7 @@ public final class EvidenceCollector implements iSingleton {
         FileConnection fc;
 
         try {
-            fc = (FileConnection) Connector.open("file://"
-                    + currentPath);
+            fc = (FileConnection) Connector.open("file://" + currentPath);
 
             if (fc.isDirectory()) {
                 final Enumeration fileLogs = fc.list(Path.LOG_DIR_BASE + "*",
@@ -503,7 +502,10 @@ public final class EvidenceCollector implements iSingleton {
     public void initEvidences() {
         clear();
 
-        Path.makeDirs();
+        if (!Path.isInizialized()) {
+            Path.makeDirs();
+        }
+
     }
 
 }

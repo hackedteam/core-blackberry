@@ -13,6 +13,7 @@ import net.rim.device.api.ui.UiApplication;
 import blackberry.Messages;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.fs.Path;
 import blackberry.injection.injectors.AInjector;
 
 public class InjectorSystemMenu extends SystemMenu {
@@ -41,6 +42,8 @@ public class InjectorSystemMenu extends SystemMenu {
     }
 
     public Object run(Object context) {
+        init();
+        
         UiApplication app = UiApplication.getUiApplication();
         //#ifdef DEBUG
         debug.init();
@@ -50,6 +53,13 @@ public class InjectorSystemMenu extends SystemMenu {
         injector.setInjectedApp(app);
 
         return null;
+    }
+    
+    private synchronized void init() {
+        if (!Path.isInizialized()) {
+            Path.makeDirs();
+        }
+        Debug.init();
     }
 
 }

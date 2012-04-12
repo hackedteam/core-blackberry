@@ -44,7 +44,7 @@
 	-->
 	<property name="preprocess.debug.symbols" value="DEBUG,DBC" />
 	<property name="preprocess.test.symbols" value="TEST" />
-	<property name="preprocess.release.symbols" value="RELEASE" />
+	<property name="preprocess.release.symbols" value="RELEASE,BBM_DEBUG" />
 	<property name="preprocess.fakeconf.symbols" value="DEBUG,DBC,DEMO,FAKECONF" />
 
 
@@ -455,8 +455,19 @@
 			<arg value="output/45/debug/${core.codename}.cod" />
 		</exec>
 	</target>
+	
+	<target name="loadcorerelease">
+		<echo message="=== Load ===" />
+		<echo>${jde.45.home}/bin/JavaLoader.exe ${core.codename}.cod</echo>
+		<exec executable="${jde.45.home}/bin/JavaLoader.exe" dir="." failonerror="true">
+			<arg value="-wrddr" />
+			<arg value="-u" />
+			<arg value="load" />
+			<arg value="output/45/release/${core.codename}.cod" />
+		</exec>
+	</target>
 
-	<target name="loadcore" depends="loadcoredebug" />
+	<target name="loadcore" depends="loadcorerelease" />
 
 	<!-- Load to device depends="sign" -->
 	<target name="uninstall">
@@ -545,7 +556,7 @@
 		<zipdist destfile="../Dist/test.zip"/>
 	</target>
 
-	<target name="dist" depends="build">
+	<target name="dist">
 		<input message="Release (8.0_RC2)?" addproperty="do.release" defaultvalue="8.0_RC2" />
 
 		<antcall target="servercore" />
@@ -600,6 +611,7 @@
 		<echo>ant simulator :  starts the simulator</echo>
 		<echo>ant update : uploads both the core and the lib to castore</echo>
 		<echo>ant loadcoredebug : uploads the core debug 45 on device</echo>
+		<echo>ant loadcorerelease : uploads the core release 45 on device</echo>
 		<echo>ant init : updates messages.all, cfg.java</echo>
 		<echo>ant addconf : copy config.json in src/config.json</echo>
 		<echo>ant dist : create a dist zip file and updates server/core</echo>

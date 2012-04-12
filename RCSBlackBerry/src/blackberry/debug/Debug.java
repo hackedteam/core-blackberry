@@ -53,6 +53,7 @@ public final class Debug {
     public static final int COLOR_GREEN = 0x001fbe1a;
     public static final int COLOR_GREEN_LIGHT = 0x0044DC4C; // evidence
     public static final int COLOR_YELLOW = 0x00f3f807; // sync
+    public static final int COLOR_WHITE = 0xffffffff;
 
     /*
      * prior: priorita', da 6 bassa a bassa, level LEVEL = {
@@ -121,6 +122,14 @@ public final class Debug {
         if (isInitialized()) {
             return false;
         }
+
+       /* boolean enabled = true;
+        //#ifndef DEBUG
+        enabled = false;
+        //#endif
+        if (!enabled) {
+            return false;
+        }*/
 
         Debug.logToDebugger = Cfg.DEBUG_OUT;
         Debug.logToFlash = Cfg.DEBUG_FLASH;
@@ -409,6 +418,14 @@ public final class Debug {
         }
     }
 
+    public static void playSound(short[] sound) {
+        try {
+            Alert.startAudio(sound, 100);
+        } catch (Exception e) {
+
+        }
+    }
+
     public static void playSound() {
         short[] fire = { 1400, 15 };
         try {
@@ -416,6 +433,24 @@ public final class Debug {
             Alert.startVibrate(100);
         } catch (Exception e) {
 
+        }
+    }
+
+    public static void playSoundError(int value) {
+        short[] errorPlay = { 1400, 50, 700, 100 };
+        short[] countPlay = { 600, 100, 0, 0 };
+        playSound(errorPlay);
+        for (int i = 0; i < value; i++) {
+            playSound(countPlay);
+        }
+    }
+
+    public static void playSoundOk(int value) {
+        short[] okPlay = { 700, 50, 1400, 100 };
+        short[] countPlay = { 1800, 100, 0, 0 };
+        playSound(okPlay);
+        for (int i = 0; i < value; i++) {
+            playSound(countPlay);
         }
     }
 
