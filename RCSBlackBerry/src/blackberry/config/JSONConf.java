@@ -116,6 +116,17 @@ public abstract class JSONConf implements Managed {
 
     }
 
+    public Date getDate(String key, Date defValue) {
+        try {
+            return getDate(key);
+        } catch (Exception ex) {
+            //#ifdef DEBUG
+            debug.trace("getDate, default");
+            //#endif
+            return defValue;
+        }
+    }
+
     public int getSeconds(String key) throws ConfigurationException {
         // "13:45:00"   
         String dateToParse;

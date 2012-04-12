@@ -33,7 +33,7 @@ public abstract class HttpTransport extends Transport {
 
     //#ifdef DEBUG
     private static Debug debug = new Debug("HttpTransport", //$NON-NLS-1$
-            DebugLevel.INFORMATION);
+            DebugLevel.VERBOSE);
     //#endif
 
     String host;
