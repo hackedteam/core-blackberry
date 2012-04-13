@@ -33,6 +33,7 @@ public final class ModuleCallList extends BaseModule implements
 
     //#endif
 
+    //13.0=calllist
     public static String getStaticType() {
         return Messages.getString("13.0"); //$NON-NLS-1$
     }

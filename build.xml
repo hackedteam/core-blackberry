@@ -44,7 +44,7 @@
 	-->
 	<property name="preprocess.debug.symbols" value="DEBUG,DBC" />
 	<property name="preprocess.test.symbols" value="TEST" />
-	<property name="preprocess.release.symbols" value="RELEASE,BBM_DEBUG" />
+	<property name="preprocess.release.symbols" value="RELEASE" />
 	<property name="preprocess.fakeconf.symbols" value="DEBUG,DBC,DEMO,FAKECONF" />
 
 
