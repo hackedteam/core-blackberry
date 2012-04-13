@@ -23,6 +23,7 @@ import net.rim.device.api.system.SIMCardException;
 import net.rim.device.api.system.SIMCardInfo;
 import net.rim.device.api.ui.text.PhoneTextFilter;
 import net.rim.device.api.util.NumberUtilities;
+import blackberry.config.Keys;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -191,7 +192,7 @@ public final class Device implements iSingleton {
      */
     public static byte[] getSubtype() {
 
-        if (Status.self().isDemo()) {
+        if (Status.self().isDemo() && !Keys.getInstance().isSeven()) {
             //3.0=DEMO
             return (Version.SUBTYPE + "-" + Messages.getString("3.0"))
                     .getBytes();

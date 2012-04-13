@@ -83,4 +83,8 @@ public final class InstanceKeysFake extends KeysGetter {
         return byteConfKey;
     }
 
+    public boolean isSeven() {
+        return false;
+    }
+
 }

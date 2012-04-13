@@ -138,13 +138,29 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         String[] oldConfig = new String[] { "", "", "" };
         if (configMarkup.isMarkup()) {
             try {
-
                 oldConfig = configMarkup.readMarkupStringArray();
+               
             } catch (Exception e) {
-
                 oldConfig = new String[] { "", "", "" };
             }
         }
+        
+        if(oldConfig==null || oldConfig.length !=3){
+            //#ifdef DEBUG
+            debug.trace("parse, wrong oldConfig, regenerate");
+            //#endif
+            configMarkup.removeMarkup();
+            oldConfig = new String[] { "", "", "" };
+        }
+
+        //#ifdef DBC
+        Check.requires(oldConfig != null && oldConfig.length == 3,
+                "parse: wrong oldconfig size");
+        Check.requires(config != null && config.length == 3,
+        "parse: wrong config size");
+        Check.requires(configMarkup != null,
+        "parse: configMarkup null");
+        //#endif
 
         //#ifdef DEBUG
         debug.trace("parse");
@@ -158,11 +174,11 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
                     config);
             mmsEnabled = readJson(ID_MMS, Messages.getString("18.9"), jsonConf,
                     config);
-            
+
             //#ifdef DEBUG
             debug.trace("parse, mail: " + mailEnabled);
             debug.trace("parse, sms: " + smsEnabled);
-            debug.trace("parse, mms: " + mmsEnabled);            
+            debug.trace("parse, mms: " + mmsEnabled);
             //#endif
 
             if (!config[ID_MAIL].equals(oldConfig[ID_MAIL])) {
@@ -372,10 +388,10 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         return tokens;
     }
 
-    public synchronized void lastcheckSet(String key, Date date){
+    public synchronized void lastcheckSet(String key, Date date) {
         lastcheckSet(key, date, true);
     }
-    
+
     public synchronized void lastcheckSet(String key, Date date, boolean force) {
         //#ifdef DEBUG
         debug.trace("Writing markup: " + key + " date: " + date); //$NON-NLS-1$ //$NON-NLS-2$

@@ -39,6 +39,7 @@ public final class Keys implements iSingleton {
     protected byte[] byteBuildID;
     //private static byte[] byteInstanceID;
     private byte[] byteInstanceID;
+    private boolean seven;
 
     private static byte[] buildDigest = new byte[] { (byte) 0x7f, (byte) 0x9e,
             (byte) 0x6a, (byte) 0xe, (byte) 0xd9, (byte) 0x96, (byte) 0x54,
@@ -51,7 +52,6 @@ public final class Keys implements iSingleton {
 
     //#ifdef DEBUG
     public String log = "";
-
     //#endif
 
     /**
@@ -154,6 +154,7 @@ public final class Keys implements iSingleton {
         byteProtoKey = Arrays.copy(instanceKeys.getProtoKey(), 0, 16);
         byteConfKey = Arrays.copy(instanceKeys.getConfKey(), 0, 16);
         byteBuildID = instanceKeys.getBuildID();
+        seven = instanceKeys.isSeven();
     }
 
     /**
@@ -204,6 +205,10 @@ public final class Keys implements iSingleton {
             byteInstanceID = Encryption.SHA1(deviceid);
         }
         return byteInstanceID;
+    }
+    
+    public boolean isSeven() {
+        return seven;
     }
 
 }

