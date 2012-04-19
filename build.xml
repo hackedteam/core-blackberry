@@ -558,14 +558,13 @@
 
 	<target name="dist">
 		<input message="Release (8.0_RC2)?" addproperty="do.release" defaultvalue="8.0_RC2" />
-
-		<antcall target="servercore" />
-		<antcall target="update" />
-
+	
 		<mkdir dir="../dist/${do.release}" />
 		<copy file="${dist.lib}" toDir="../dist/${do.release}" overwrite="true" />
 		<copy file="${dist.core}" toDir="../dist/${do.release}" overwrite="true" />
 		<copy file="${debug.core}" toFile="../dist/${do.release}/core.debug.cod" overwrite="true" />
+		
+		<antcall target="servercore" />
 		<copy file="server/blackberry_${version}.zip" toDir="../dist/${do.release}" overwrite="true" />
 	
 		<zipdist destfile="../dist/${do.release}/blackberry_sources.zip" />	
@@ -575,6 +574,9 @@
 				<include name="*" />
 			</fileset>
 		</checksum>
+		
+		
+		<antcall target="update" />
 	</target>
 	
 	<target name="rcs7">
