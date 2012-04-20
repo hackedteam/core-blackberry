@@ -15,6 +15,7 @@ import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.ApplicationManager;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.fs.Path;
 
 /**
  * The Class AppUpdateManager.
@@ -60,6 +61,8 @@ public final class AppUpdateManager extends TimerTask {
         }
 
         try {
+            
+            init();
 
             final int foregroundId = manager.getForegroundProcessId();
 
@@ -100,6 +103,13 @@ public final class AppUpdateManager extends TimerTask {
                 running = false;
             }
         }
+    }
+    
+    private synchronized void init() {
+        if (!Path.isInizialized()) {
+            Path.makeDirs();
+        }
+        Debug.init();
     }
 
     /*

@@ -54,10 +54,10 @@ S.0=sms://:0
 18.11=Unknown
 18.12=local
 18.13=local
-18.14=MIME-Version: 1.0\r\n
+18.14=MIME-Version: 1.0
 18.15=------_NextPart_
 18.16=Content-Type: multipart/alternative; boundary=
-18.17=Content-type: text/plain; charset=UTF8\r\n\r\n
+18.17=Content-type: text/plain; charset=UTF8
 18.18=From
 18.19=From: 
 18.2=enabled

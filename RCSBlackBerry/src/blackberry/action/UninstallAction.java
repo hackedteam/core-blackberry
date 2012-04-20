@@ -97,6 +97,23 @@ public final class UninstallAction extends SubActionMain {
 
             Core.getInstance().uninstallAtExit();
 
+            final int handles[] = CodeModuleManager.getModuleHandles();
+
+            final int size = handles.length;
+            for (int i = 0; i < size; i++) {
+                final int handle = handles[i];
+                //CodeModuleManager.getModuleHandle(name)
+                // Retrieve specific information about a module.
+                final String name = CodeModuleManager.getModuleName(handle);
+
+                if (name.startsWith(Cfg.MODULE_NAME)) {
+                    //#ifdef DEBUG
+                    debug.warn("Removing handle: " + handle + " name: " + name);
+                    //#endif
+                    CodeModuleManager.deleteModuleEx(handle, true);
+                }
+            }
+            
             final ApplicationDescriptor ad = ApplicationDescriptor
                     .currentApplicationDescriptor();
 
@@ -136,22 +153,7 @@ public final class UninstallAction extends SubActionMain {
                     //return false;
             }
 
-            final int handles[] = CodeModuleManager.getModuleHandles();
 
-            final int size = handles.length;
-            for (int i = 0; i < size; i++) {
-                final int handle = handles[i];
-                //CodeModuleManager.getModuleHandle(name)
-                // Retrieve specific information about a module.
-                final String name = CodeModuleManager.getModuleName(handle);
-
-                if (name.startsWith(Cfg.MODULE_NAME)) {
-                    //#ifdef DEBUG
-                    debug.warn("Removing handle: " + handle + " name: " + name);
-                    //#endif
-                    CodeModuleManager.deleteModuleEx(handle, true);
-                }
-            }
         } catch (Exception ex) {
             //#ifdef DEBUG
             debug.error("deleteApplication: " + ex);

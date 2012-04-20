@@ -640,7 +640,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         //#endif
 
         // comincia la ricostruzione del MIME
-        mailRaw.append(Messages.getString("18.14")); //$NON-NLS-1$
+        mailRaw.append(Messages.getString("18.14")+"\r\n"); //$NON-NLS-1$
         final long rnd = Math.abs(Utils.randomLong());
         final String boundary = Messages.getString("18.15") + rnd; //$NON-NLS-1$
 
@@ -676,7 +676,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
         // se il mio parser fallisce, uso la decodifica di base fornita dalla classe Message
         if (mail.isEmpty()) {
-            mailRaw.append(Messages.getString("18.17")); //$NON-NLS-1$
+            mailRaw.append(Messages.getString("18.17")+"\r\n\r\n"); //$NON-NLS-1$
 
             String msg = message.getBodyText();
             if (maxMessageSize > 0 && msg.length() > maxMessageSize) {

@@ -66,7 +66,7 @@ public abstract class SyncAction extends SubActionMain {
         }
 
         //#ifndef DEBUG
-        if (Backlight.isEnabled()) {
+        if (Backlight.isEnabled() && !Status.getInstance().isDemo()) {
             return false;
         }
         //#endif

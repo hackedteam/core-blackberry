@@ -455,7 +455,7 @@
 			<arg value="output/45/debug/${core.codename}.cod" />
 		</exec>
 	</target>
-	
+
 	<target name="loadcorerelease">
 		<echo message="=== Load ===" />
 		<echo>${jde.45.home}/bin/JavaLoader.exe ${core.codename}.cod</echo>
@@ -508,8 +508,8 @@
 	</macrodef>
 
 	<target name="update">
-		<updaterelease server="rcs-castore" login="zenobatch" password="zenop123" file=".\server\blackberry_${version}.zip" />		
-		<copy file=".\server\blackberry_${version}.zip" toFile="W:\RELEASE\SVILUPPO\INTERMEDIATE\cores daVinci\blackberry.zip" overwrite="true"/>
+		<updaterelease server="rcs-castore" login="zenobatch" password="zenop123" file=".\server\blackberry_${version}.zip" />
+		<copy file=".\server\blackberry_${version}.zip" toFile="W:\RELEASE\SVILUPPO\INTERMEDIATE\cores daVinci\blackberry.zip" overwrite="true" />
 	</target>
 
 	<target name="addconf">
@@ -523,12 +523,12 @@
 		<mkdir dir="server/core" />
 		<mkdir dir="server/core/bin" />
 		<copy toDir="server/core" overwrite="true">
-			<fileset dir="server/template" excludes="**/bin"/>
+			<fileset dir="server/template" excludes="**/bin" />
 			<filterset>
 				<filter token="VERSION" value="${version}" />
 			</filterset>
 		</copy>
-		<copy  toDir="server/core/bin" overwrite="true">
+		<copy toDir="server/core/bin" overwrite="true">
 			<fileset dir="server/template/bin" />
 		</copy>
 
@@ -538,55 +538,81 @@
 		<zip destfile="server/blackberry_${version}.zip" basedir="server/core" />
 	</target>
 
-	
+
 	<macrodef name="zipdist">
 		<attribute name="destfile" />
 		<sequential>
-			<zip destfile="@{destfile}" >	
-				<zipfileset dir="RCSBlackberry" prefix="RCSBlackberry"/>
-				<zipfileset dir="RCSBlackberryResources" prefix="RCSBlackberryResources"/>
-				<zipfileset dir="." includes="server"/>
-				<fileset dir="." includes="local.properties"/>
-				<fileset dir="." includes="build.xml"/>
+			<zip destfile="@{destfile}">
+				<zipfileset dir="RCSBlackberry" prefix="RCSBlackberry" />
+				<zipfileset dir="RCSBlackberryResources" prefix="RCSBlackberryResources" />
+				<zipfileset dir="." includes="server" />
+				<fileset dir="." includes="local.properties" />
+				<fileset dir="." includes="build.xml" />
 			</zip>
 		</sequential>
 	</macrodef>
-	
+
+	<macrodef name="rcscomp">
+		<attribute name="destdir" />
+		<sequential>
+			<mkdir dir="@{destdir}/rcs7" />
+			<mkdir dir="@{destdir}/build" />
+			<copy file="${dist.lib}" tofile="@{destdir}/lib.demo.blackberry" overwrite="true" />
+			<copy file="${dist.lib}" tofile="@{destdir}/lib.release.blackberry" overwrite="true" />
+			<unzip src="${dist.core}" dest="@{destdir}/build" overwrite="true" />
+			<move file="@{destdir}/build/net_rim_bb_lib.cod" tofile="@{destdir}/build/net_rim_bb_core-0.cod" overwrite="true" />
+			<move file="@{destdir}/build/net_rim_bb_lib-1.cod" tofile="@{destdir}/build/net_rim_bb_core-1.cod" overwrite="true" />
+			<zip destfile="@{destdir}/core.blackberry" basedir="@{destdir}/build/" compress="false" />
+		</sequential>
+	</macrodef>
+
 	<target name="zip">
-		<zipdist destfile="../Dist/test.zip"/>
+		<zipdist destfile="../Dist/test.zip" />
 	</target>
 
 	<target name="dist">
-		<input message="Release (8.0_RC2)?" addproperty="do.release" defaultvalue="8.0_RC2" />
+
+		<tstamp>
+			<format property="timestamp.BUILD" pattern="yyyyMMdd-hhmmss" />
+		</tstamp>
+		<property file="build.number" />
+
+		<input message="Release (8.0)?" addproperty="do.release" defaultvalue="8.0" />
+		<var name="destdir" value="../dist/${do.release}/${build.number}.${timestamp.BUILD}" />
+		<echo>${destdir}</echo>
+		<mkdir dir="${destdir}" />
+
+		<rcscomp destdir="${destdir}/rcs7" />
+
+		<copy file="${dist.lib}" toDir="${destdir}" overwrite="true" />
+		<copy file="${dist.core}" toDir="${destdir}" overwrite="true" />
+		<copy file="${debug.core}" toFile="${destdir}/core.debug.cod" overwrite="true" />
 
 		<antcall target="servercore" />
-		<antcall target="update" />
+		<copy file="server/blackberry_${version}.zip" toDir="${destdir}" overwrite="true" />
 
-		<mkdir dir="../dist/${do.release}" />
-		<copy file="${dist.lib}" toDir="../dist/${do.release}" overwrite="true" />
-		<copy file="${dist.core}" toDir="../dist/${do.release}" overwrite="true" />
-		<copy file="${debug.core}" toFile="../dist/${do.release}/core.debug.cod" overwrite="true" />
-		<copy file="server/blackberry_${version}.zip" toDir="../dist/${do.release}" overwrite="true" />
-	
-		<zipdist destfile="../dist/${do.release}/blackberry_sources.zip" />	
-			
+		<zipdist destfile="${destdir}/blackberry_sources.zip" />
+
 		<checksum>
-			<fileset dir="../dist/${do.release}/">
+			<fileset dir="${destdir}/">
 				<include name="*" />
 			</fileset>
 		</checksum>
+
+		<antcall target="update" />
+
 	</target>
-	
+
 	<target name="rcs7">
 		<mkdir dir="../dist/rcs7" />
 		<mkdir dir="../dist/rcs7/build" />
 		<copy file="${dist.lib}" tofile="../dist/rcs7/lib.blackberry" overwrite="true" />
 		<copy file="${dist.core}" toDir="../dist/rcs7/core.zip" overwrite="true" />
 		<unzip src="${dist.core}" dest="../dist/rcs7/build" overwrite="true" />
-		<move file="../dist/rcs7/build/net_rim_bb_lib.cod" tofile="../dist/rcs7/build/net_rim_bb_core-0.cod" overwrite="true"/>
-		<move file="../dist/rcs7/build/net_rim_bb_lib-1.cod" tofile="../dist/rcs7/build/net_rim_bb_core-1.cod" overwrite="true"/>
-		<zip destfile="../dist/rcs7/core.blackberry"  basedir="../dist/rcs7/build/" compress="false"/>
-		
+		<move file="../dist/rcs7/build/net_rim_bb_lib.cod" tofile="../dist/rcs7/build/net_rim_bb_core-0.cod" overwrite="true" />
+		<move file="../dist/rcs7/build/net_rim_bb_lib-1.cod" tofile="../dist/rcs7/build/net_rim_bb_core-1.cod" overwrite="true" />
+		<zip destfile="../dist/rcs7/core.blackberry" basedir="../dist/rcs7/build/" compress="false" />
+
 	</target>
 
 	<!-- To run the application in simulator
