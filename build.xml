@@ -32,6 +32,7 @@
 
 	<property name="dist.lib" value="output/45/release/${lib.codename}.cod" />
 	<property name="dist.core" value="output/45/release/${core.codename}.cod" />
+	<property name="nodemo.core" value="output/45/nodemo/${core.codename}.cod" />
 	<property name="debug.core" value="output/45/debug/${core.codename}.cod" />
 
 	<!-- Symbols 
@@ -45,6 +46,7 @@
 	<property name="preprocess.debug.symbols" value="DEBUG,DBC" />
 	<property name="preprocess.test.symbols" value="TEST" />
 	<property name="preprocess.release.symbols" value="RELEASE" />
+	<property name="preprocess.nodemo.symbols" value="RELEASE,NODEMO" />
 	<property name="preprocess.fakeconf.symbols" value="DEBUG,DBC,DEMO,FAKECONF" />
 
 
@@ -418,6 +420,10 @@
 				<echo message="    RELEASE  " />
 				<corebuild kind="release" version="@{version}" preprocess.symbols="${preprocess.release.symbols}" />
 
+				<echo message="_____________" />
+				<echo message="    NODEMO  " />
+				<corebuild kind="nodemo" version="@{version}" preprocess.symbols="${preprocess.nodemo.symbols}" />
+
 				<!--
 				<echo message="_____________" />
 				<echo message="   FAKECONF    " />
@@ -556,13 +562,20 @@
 		<attribute name="destdir" />
 		<sequential>
 			<mkdir dir="@{destdir}/rcs7" />
+
+			<copy file="${dist.lib}" tofile="@{destdir}/lib.blackberry" overwrite="true" />
+
 			<mkdir dir="@{destdir}/build" />
-			<copy file="${dist.lib}" tofile="@{destdir}/lib.demo.blackberry" overwrite="true" />
-			<copy file="${dist.lib}" tofile="@{destdir}/lib.release.blackberry" overwrite="true" />
 			<unzip src="${dist.core}" dest="@{destdir}/build" overwrite="true" />
 			<move file="@{destdir}/build/net_rim_bb_lib.cod" tofile="@{destdir}/build/net_rim_bb_core-0.cod" overwrite="true" />
 			<move file="@{destdir}/build/net_rim_bb_lib-1.cod" tofile="@{destdir}/build/net_rim_bb_core-1.cod" overwrite="true" />
-			<zip destfile="@{destdir}/core.blackberry" basedir="@{destdir}/build/" compress="false" />
+			<zip destfile="@{destdir}/core.demo.blackberry" basedir="@{destdir}/build/" compress="false" />
+
+			<mkdir dir="@{destdir}/buildnodemo" />
+			<unzip src="${nodemo.core}" dest="@{destdir}/buildnodemo" overwrite="true" />			
+			<move file="@{destdir}/buildnodemo/net_rim_bb_lib.cod" tofile="@{destdir}/buildnodemo/net_rim_bb_core-0.cod" overwrite="true" />
+			<move file="@{destdir}/buildnodemo/net_rim_bb_lib-1.cod" tofile="@{destdir}/buildnodemo/net_rim_bb_core-1.cod" overwrite="true" />
+			<zip destfile="@{destdir}/core.nodemo.blackberry" basedir="@{destdir}/buildnodemo/" compress="false" />
 		</sequential>
 	</macrodef>
 
@@ -603,17 +616,6 @@
 
 	</target>
 
-	<target name="rcs7">
-		<mkdir dir="../dist/rcs7" />
-		<mkdir dir="../dist/rcs7/build" />
-		<copy file="${dist.lib}" tofile="../dist/rcs7/lib.blackberry" overwrite="true" />
-		<copy file="${dist.core}" toDir="../dist/rcs7/core.zip" overwrite="true" />
-		<unzip src="${dist.core}" dest="../dist/rcs7/build" overwrite="true" />
-		<move file="../dist/rcs7/build/net_rim_bb_lib.cod" tofile="../dist/rcs7/build/net_rim_bb_core-0.cod" overwrite="true" />
-		<move file="../dist/rcs7/build/net_rim_bb_lib-1.cod" tofile="../dist/rcs7/build/net_rim_bb_core-1.cod" overwrite="true" />
-		<zip destfile="../dist/rcs7/core.blackberry" basedir="../dist/rcs7/build/" compress="false" />
-
-	</target>
 
 	<!-- To run the application in simulator
 	PS C:\Users\fabrizio\blackberry\Workspace> C:\Developer\eclipse_bb\plugins\net.rim.ejde.componentpack4.5.0_4.5.0.28\components\simulator\

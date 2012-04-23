@@ -305,9 +305,8 @@ public final class Evidence {
         fileName = dir + encName;
         //#ifdef DBC
         Check.asserts(fileName != null, "null fileName");
-        Check.asserts(!fileName.endsWith(EvidenceCollector.LOG_EXTENSION),
+        Check.asserts(!fileName.endsWith(EvidenceCollector.LOG_EXTENSION.toUpperCase()),
                 "file not scrambled");
-        Check.asserts(!fileName.endsWith("MOB"), "file not scrambled");
         //#endif
 
         //#ifdef DEBUG
