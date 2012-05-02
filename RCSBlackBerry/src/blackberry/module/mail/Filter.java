@@ -7,9 +7,9 @@
  * File         : Filter.java
  * Created      : 28-apr-2010
  * *************************************************/
+
 package blackberry.module.mail;
 
-import java.io.EOFException;
 import java.util.Date;
 import java.util.Vector;
 
@@ -17,12 +17,9 @@ import net.rim.blackberry.api.mail.Address;
 import net.rim.blackberry.api.mail.Folder;
 import net.rim.blackberry.api.mail.Message;
 import net.rim.blackberry.api.mail.MessagingException;
-import net.rim.device.api.util.DataBuffer;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
-import blackberry.utils.DateTime;
-import blackberry.utils.WChar;
 
 /**
  * The Class Filter.
@@ -82,142 +79,15 @@ public class Filter {
             this.fromDate = from;
             doFilterFromDate = true;
         }
-        if (to != null) {
-            this.toDate = to;
-            doFilterToDate = true;
+        if (to != null && to.getTime() > 0) {
+            if (from != null && to.getTime() >= from.getTime()) {
+                this.toDate = to;
+                doFilterToDate = true;
+            }
         }
+
         this.maxMessageSize = maxMessageSize;
         this.maxMessageSizeToLog = maxMessageSizeToLog;
-    }
-
-    /**
-     * Instantiates a new filter.
-     * 
-     * @param conf
-     *            the conf
-     * @param offset
-     *            the offset
-     * @param length
-     *            the length
-     */
-    public Filter(final byte[] conf, final int offset, final int length) {
-
-        final int headerSize = 116;
-        final int classNameLen = 64;
-        final int confSize = conf.length - offset;
-        //#ifdef DBC
-        Check.requires(confSize >= headerSize, "conf smaller than needed");
-        //#endif
-
-        final Prefix headerPrefix = new Prefix(conf, offset);
-
-        if (!headerPrefix.isValid()) {
-            return;
-        }
-
-        final DataBuffer databuffer = new DataBuffer(conf,
-                headerPrefix.payloadStart, headerPrefix.length, false);
-
-        //#ifdef DBC
-        Check.asserts(headerPrefix.type == Prefix.TYPE_HEADER,
-                "Wrong prefix type");
-        Check.asserts(headerSize == headerPrefix.length, "Wrong prefix length");
-        //#endif
-
-        // LETTURA del HEADER
-        try {
-
-            size = databuffer.readInt();
-            version = databuffer.readInt();
-            type = databuffer.readInt();
-
-            classname = new byte[classNameLen];
-            databuffer.read(classname);
-
-            final String classString = WChar.getString(classname, true);
-            if (classString.equals("IPM.SMSText*")) {
-                classtype = Filter.CLASS_SMS;
-            } else if (classString.equals("IPM.Note*")) {
-                classtype = Filter.CLASS_EMAIL;
-            } else if (classString.equals("IPM.MMS*")) {
-                classtype = Filter.CLASS_MMS;
-            } else {
-                classtype = Filter.CLASS_UNKNOWN;
-                //#ifdef DEBUG
-                debug.error("classtype unknown: " + classString);
-                //#endif
-            }
-
-            //#ifdef DEBUG
-            debug.trace("classname: " + classString);
-            //#endif
-
-            enabled = databuffer.readInt() == 1;
-            all = databuffer.readInt() == 1;
-            doFilterFromDate = databuffer.readInt() == 1;
-            final long filetimeFromDate = databuffer.readLong();
-            doFilterToDate = databuffer.readInt() == 1;
-            final long filetimeToDate = databuffer.readLong();
-            maxMessageSize = databuffer.readInt();
-            maxMessageSizeToLog = databuffer.readInt();
-
-            if (doFilterFromDate) {
-                final DateTime dt = new DateTime(filetimeFromDate);
-                fromDate = dt.getDate();
-                //#ifdef DEBUG
-                debug.trace("from: " + fromDate.toString());
-                //#endif
-            } else {
-                fromDate = new Date(0);
-            }
-            if (doFilterToDate) {
-                final DateTime dt = new DateTime(filetimeToDate);
-                toDate = dt.getDate();
-                //#ifdef DEBUG
-                debug.trace("to: " + toDate.toString());
-                //#endif
-            } else {
-                toDate = new Date(Integer.MAX_VALUE);
-            }
-            //#ifdef DEBUG
-            debug.trace("maxMessageSize: " + maxMessageSize);
-            debug.trace("maxMessageSizeToLog: " + maxMessageSizeToLog);
-            //#endif
-
-            payloadStart = (headerPrefix.payloadStart + size);
-
-            valid = true;
-        } catch (final EOFException e) {
-            valid = false;
-            //#ifdef DEBUG
-            debug.error("filter:" + e);
-            //#endif
-        }
-
-        // Lettura delle KEYWORDS
-        if (length > headerPrefix.length) {
-            // ogni keyword ha il suo prefix
-            final int endOffset = offset + length;
-            int keywordOffset = offset + headerSize + Prefix.LEN;
-
-            while (keywordOffset < endOffset) {
-                final Prefix keywordPrefix = new Prefix(conf, keywordOffset);
-
-                //#ifdef DBC
-                Check.asserts(keywordPrefix.type == Prefix.TYPE_KEYWORD,
-                        "Wrong prefix type");
-                //#endif
-
-                final String keyword = WChar.getString(conf, keywordOffset,
-                        keywordPrefix.length, false);
-                keywordOffset += keywordPrefix.length + Prefix.LEN;
-
-                //#ifdef DEBUG
-                debug.info("Keyword: " + keyword);
-                //#endif
-                keywords.addElement(keyword);
-            }
-        }
     }
 
     public Filter(boolean mailEnabled, int maxSizeToLog) {

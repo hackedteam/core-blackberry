@@ -9,7 +9,6 @@
  * *************************************************/
 package blackberry.interfaces;
 
-
 /**
  * An asynchronous update interface for receiving notifications about
  * BatteryStatus information as the BatteryStatus is constructed.

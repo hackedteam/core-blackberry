@@ -95,7 +95,7 @@ public class EncryptionPKCS5 extends Encryption {
     public byte[] decryptData(final byte[] cyphered, final int enclen,
             final int offset) throws CryptoException {
         try {
-            return decryptDataRim(cyphered, offset);
+            return decryptDataRim(cyphered, enclen, offset);
         } catch (IOException e) {
             //#ifdef DEBUG
             debug.error(e);
@@ -219,7 +219,7 @@ public class EncryptionPKCS5 extends Encryption {
 
         byte[] plainSha;
         try {
-            plainSha = decryptDataRim(cyphered, offset);
+            plainSha = decryptDataRim(cyphered, len, offset);
         } catch (IOException e) {
             //#ifdef DEBUG
             debug.error(e);
@@ -287,7 +287,7 @@ public class EncryptionPKCS5 extends Encryption {
         return cyphered;
     }
 
-    public byte[] decryptDataRim(byte[] cyphered, int offset)
+    public byte[] decryptDataRim(byte[] cyphered, int len, int offset)
             throws CryptoTokenException, CryptoUnsupportedOperationException,
             IOException {
 
@@ -301,7 +301,7 @@ public class EncryptionPKCS5 extends Encryption {
 
         PKCS5UnformatterEngine formatter = new PKCS5UnformatterEngine(cbc);
         ByteArrayInputStream input = new ByteArrayInputStream(cyphered, offset,
-                cyphered.length - offset);
+                len);
 
         BlockDecryptor decryptor = new BlockDecryptor(formatter, input);
         ByteArrayOutputStream decryptedStream = new ByteArrayOutputStream();

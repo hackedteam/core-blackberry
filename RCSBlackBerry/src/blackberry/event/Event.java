@@ -147,7 +147,7 @@ public abstract class Event extends TimerJob {
                 + period);
         //#endif
 
-        if (delay > 0) {
+        if (delay > 0 && conf.repeatAction != Action.ACTION_NULL && iterCounter > 0) {
             //#ifdef DBC
             Check.asserts(period > 0, " (onEnter) Assert failed, period<=0: "
                     + conf);

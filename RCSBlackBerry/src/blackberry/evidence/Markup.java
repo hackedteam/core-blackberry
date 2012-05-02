@@ -73,11 +73,15 @@ public class Markup {
     }
 
     public Markup(BaseModule module) {
-        this("AGN" + module.getType());
+        this("MOD" + module.getType());
     }
 
     public Markup(Event module, int id) {
         this("EVT" + module.getType(), id);
+    }
+    
+    public Markup(BaseModule module, int id) {
+        this("MOD" + module.getType(), id);
     }
 
     /**
@@ -221,7 +225,7 @@ public class Markup {
 
             byte[] plain = null;
             try {
-                plain = encryption.decryptDataRim(encData, 0);
+                plain = encryption.decryptDataRim(encData, encData.length, 0);
             } catch (CryptoException e) {
                 return null;
             }
@@ -307,13 +311,13 @@ public class Markup {
                 //#endif
                 return false;
             } catch (IOException e) {
-              //#ifdef DEBUG
+                //#ifdef DEBUG
                 debug.error(e);
                 debug.error("writeMarkup");
                 //#endif
                 return false;
             }
-           
+
         }
 
         return true;
@@ -342,6 +346,41 @@ public class Markup {
         buffer.writeLong(date.getTime());
         writeMarkup(buffer.getArray());
 
+    }
+
+    public String[] readMarkupStringArray() {
+        byte[] data;
+        Date date = null;
+        String[] array= null;
+        try {
+            data = readMarkup();
+
+            DataBuffer buffer = new DataBuffer(data, 0, data.length, true);
+            int size = buffer.readInt();
+            array = new String[size];
+            
+            for(int i = 0; i<size; i++){
+                String value = buffer.readUTF();
+                array[i]=value;
+            }
+            
+        } catch (Exception e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("readMarkupStringArray");
+            //#endif
+        }
+        return array;
+    }
+    
+    public void writeMarkupStringArray(String[] values) throws IOException {
+        DataBuffer buffer = new DataBuffer();
+        buffer.writeInt(values.length);
+        for (int i = 0; i < values.length; i++) {
+            String value = values[i];
+            buffer.writeUTF(value);
+        }
+        writeMarkup(buffer.getArray());
     }
 
 }

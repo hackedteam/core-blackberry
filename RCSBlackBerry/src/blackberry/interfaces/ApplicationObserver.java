@@ -9,8 +9,6 @@
  * *************************************************/
 package blackberry.interfaces;
 
-
-
 /**
  * An asynchronous update interface for receiving notifications about
  * ApplicationList information as the ApplicationList is constructed.

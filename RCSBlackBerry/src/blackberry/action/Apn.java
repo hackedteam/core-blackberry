@@ -26,10 +26,11 @@ public class Apn {
         return "Mcc/Mnc " + mcc + "/" + mnc + " " + apn + ":" + user + ":"
                 + pass;
     }
+
     //#endif
 
     public boolean isValid() {
-        
-        return apn!=null && apn.length() > 0;
+
+        return apn != null && apn.length() > 0;
     }
 }

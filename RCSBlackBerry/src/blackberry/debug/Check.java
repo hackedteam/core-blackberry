@@ -9,7 +9,6 @@
  * *************************************************/
 package blackberry.debug;
 
-
 /**
  * The Class Check.
  */
@@ -72,7 +71,6 @@ public final class Check {
 
     private Check() {
     }
-
 
     //#endif
 }

@@ -1,4 +1,12 @@
-//#preprocessor
+//#preprocess
+
+/* *************************************************
+ * Copyright (c) 2010 - 2012
+ * HT srl,   All rights reserved.
+ * 
+ * Project      : RCS, RCSBlackBerry
+ * *************************************************/
+
 package blackberry.manager;
 
 import blackberry.Singleton;
@@ -36,7 +44,7 @@ public class ActionManager extends Manager implements iSingleton {
 
         return instance;
     }
-    
+
     /**
      * Trigger action.
      * 
@@ -51,8 +59,7 @@ public class ActionManager extends Manager implements iSingleton {
         //#ifdef DEBUG
         debug.trace("TriggerAction:" + actionId);
         //#endif
-        
-  
+
         if (actionId != Action.ACTION_NULL) {
             final Action action = get(actionId);
             action.trigger(event);
@@ -65,9 +72,8 @@ public class ActionManager extends Manager implements iSingleton {
         }
     }
 
-    private Action get(int actionId) {        
+    private Action get(int actionId) {
         return (Action) get(Integer.toString(actionId));
     }
-    
 
 }

@@ -194,19 +194,18 @@ public class Encryption {
     public static byte[] SHA1(String message) {
         return SHA1(message.getBytes());
     }
-    
-    public static int CRC32(final byte[] message, int offset, int length) {        
+
+    public static int CRC32(final byte[] message, int offset, int length) {
         return CRC32.update(0, message, offset, length);
     }
-    
-    public static int CRC32(final byte[] message) {        
+
+    public static int CRC32(final byte[] message) {
         return CRC32.update(0, message);
     }
-    
-    public static int CRC32(String message) {        
+
+    public static int CRC32(String message) {
         return CRC32.update(0, message.getBytes());
     }
-
 
     /**
      * Decrypt data.

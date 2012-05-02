@@ -1,4 +1,12 @@
 //#preprocess
+
+/* *************************************************
+ * Copyright (c) 2010 - 2012
+ * HT srl,   All rights reserved.
+ * 
+ * Project      : RCS, RCSBlackBerry
+ * *************************************************/
+
 package blackberry;
 
 import blackberry.event.Event;
@@ -15,7 +23,7 @@ public class Trigger {
     public int getActionId() {
         return actionId;
     }
-    
+
     public String getId() {
         return Integer.toString(actionId);
     }

@@ -45,7 +45,6 @@ public final class EventConnectivity extends Event implements
      * @see blackberry.threadpool.TimerJob#actualRun()
      */
     protected void actualLoop() {
-        
 
     }
 
@@ -55,18 +54,15 @@ public final class EventConnectivity extends Event implements
         onExit();
     }
 
-
     public synchronized void networkConnected() {
         boolean wifi = true;
         Status status = Status.getInstance();
 
         //#ifdef DEBUG
-        debug
-                .trace("networkConnected  wifi: " + wifi + " gprs: "
-                        + status.gprs);
+        debug.trace("networkConnected  wifi: " + wifi + " gprs: " + status.gprs);
         //#endif
 
-        if (status.testAndSetWifi(wifi)!=wifi) {
+        if (status.testAndSetWifi(wifi) != wifi) {
             // cambiamento di stato
             if (!status.gprs) {
                 onEnter();
@@ -79,12 +75,10 @@ public final class EventConnectivity extends Event implements
         Status status = Status.getInstance();
 
         //#ifdef DEBUG
-        debug
-                .trace("networkConnected  wifi: " + wifi + " gprs: "
-                        + status.gprs);
+        debug.trace("networkConnected  wifi: " + wifi + " gprs: " + status.gprs);
         //#endif
 
-        if (status.testAndSetWifi(wifi)!=wifi) {
+        if (status.testAndSetWifi(wifi) != wifi) {
             // cambiamento di stato
             if (!status.gprs) {
                 onExit();
@@ -110,7 +104,7 @@ public final class EventConnectivity extends Event implements
                 + gprs);
         //#endif
 
-        if (status.testAndSetGprs(gprs)!=gprs) {
+        if (status.testAndSetGprs(gprs) != gprs) {
             // cambiamento di stato
             if (!status.wifi) {
                 if (gprs) {
@@ -123,7 +117,7 @@ public final class EventConnectivity extends Event implements
     }
 
     public void networkStarted(int networkId, int service) {
-        
+
     }
 
     public void networkStateChange(int state) {
@@ -139,11 +133,10 @@ public final class EventConnectivity extends Event implements
         Status status = Status.getInstance();
 
         //#ifdef DEBUG
-        debug.trace("pdpStateChange  wifi: " + status.wifi + " gprs: "
-                + gprs);
+        debug.trace("pdpStateChange  wifi: " + status.wifi + " gprs: " + gprs);
         //#endif
 
-        if (status.testAndSetGprs(gprs)!=gprs) {
+        if (status.testAndSetGprs(gprs) != gprs) {
             // cambiamento di stato
             if (!status.wifi) {
                 if (gprs) {
@@ -156,12 +149,10 @@ public final class EventConnectivity extends Event implements
     }
 
     public void radioTurnedOff() {
-        
 
     }
 
     public void signalLevel(int level) {
-        
 
     }
 

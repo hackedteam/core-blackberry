@@ -17,6 +17,7 @@ import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 import javax.microedition.io.file.FileSystemRegistry;
 
+import blackberry.Messages;
 import blackberry.Singleton;
 import blackberry.config.Cfg;
 import blackberry.debug.Check;
@@ -29,33 +30,33 @@ import blackberry.interfaces.iSingleton;
  */
 public final class Path {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("Path", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("Path", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
 
     public static final int SD = 0;
     public static final int USER = 1;
 
     public static final String[] USER_EXT_PATHS = {
-            "home/user/settings/media/wmrim/", "home/user/settings/wmrim/",
-            "home/user/wmrim/" };
+            Messages.getString("4.1"), Messages.getString("4.2"), //$NON-NLS-1$ //$NON-NLS-2$
+            Messages.getString("4.3") }; //$NON-NLS-1$
 
-    public static final String USER_BASE_PATH = "/store/";
+    public static final String USER_BASE_PATH = Messages.getString("4.4"); //$NON-NLS-1$
 
-    private static final String SD_BASE_PATH = "/SDCard/Blackberry/";
+    private static final String SD_BASE_PATH = Messages.getString("4.5"); //$NON-NLS-1$
 
     /** The Constant LOG_DIR_BASE. */
-    public static final String LOG_DIR_BASE = "ld";
+    public static final String LOG_DIR_BASE = Messages.getString("4.6"); //$NON-NLS-1$
 
     /** The Constant CONF_DIR. */
-    public static final String CONF_DIR = "cdd/";
+    public static final String CONF_DIR = Messages.getString("4.7"); //$NON-NLS-1$
 
-    public static final String DEBUG_DIR = "dwm/";
-
-    /** The Constant MARKUP_DIR. */
-    public static final String MARKUP_DIR = "msdd/";
+    public static final String DEBUG_DIR = Messages.getString("4.8"); //$NON-NLS-1$
 
     /** The Constant MARKUP_DIR. */
-    public static final String UPLOAD_DIR = "";
+    public static final String MARKUP_DIR = Messages.getString("4.9"); //$NON-NLS-1$
+
+    /** The Constant MARKUP_DIR. */
+    public static final String UPLOAD_DIR = ""; //$NON-NLS-1$
 
     //public static final String LOG_PATH = SD_PATH;
     //#ifdef DEBUG
@@ -70,7 +71,7 @@ public final class Path {
         boolean init;
 
         /** The Constant USER_PATH. */
-        public String USER_PATH = USER_BASE_PATH + "wmrim/";
+        public String USER_PATH = USER_BASE_PATH + Messages.getString("4.11"); //$NON-NLS-1$
 
         static PathConf instance;
 
@@ -94,16 +95,20 @@ public final class Path {
     private static String USER() {
         if (!isInizialized()) {
             //#ifdef DEBUG
-            debug.warn("USER not initialized");
+            debug.warn("USER not initialized"); //$NON-NLS-1$
             //#endif
             init();
         }
 
         //#ifdef DBC
-        Check.ensures(!conf.USER_PATH.startsWith("file://"),
-                "USER_PATH shouldn.t start with file:// : " + conf.USER_PATH);
+        Check.ensures(!conf.USER_PATH.startsWith(Messages.getString("4.13")), //$NON-NLS-1$
+                Messages.getString("4.14") + conf.USER_PATH); //$NON-NLS-1$
         //#endif
         return conf.USER_PATH;
+    }
+
+    public static String home() {
+        return  Messages.getString("4.15");
     }
 
     /**
@@ -143,7 +148,8 @@ public final class Path {
     }
 
     public static String debug() {
-        return hidden() + DEBUG_DIR;
+        //4.10=/store/home/user/documents/
+        return Messages.getString("4.10") + DEBUG_DIR;
     }
 
     /**
@@ -154,25 +160,25 @@ public final class Path {
      *            nome della directory, deve finire con /
      * @return true, if successful
      */
-    public static synchronized boolean createDirectory(final String dirName) {
+    public static synchronized boolean createDirectory(final String dirName, boolean hidden) {
 
         if (conf == null) {
             //#ifdef DEBUG
-            debug.error("createDirectory, Not init: " + dirName);
+            debug.error("createDirectory, Not init: " + dirName); //$NON-NLS-1$
             //#endif
             return false;
         }
 
         //#ifdef DBC
-        Check.ensures(!dirName.startsWith("file://"),
-                "dirName shouldn.t start with file:// : " + dirName);
-        Check.ensures(dirName.endsWith("/"), "directory should end with /");
+        Check.ensures(!dirName.startsWith("file://"), //$NON-NLS-1$
+                "dirName shouldn.t start with file:// : " + dirName); //$NON-NLS-1$
+        Check.ensures(dirName.endsWith("/"), "directory should end with /"); //$NON-NLS-1$ //$NON-NLS-2$
         //#endif
 
         FileConnection fconn = null;
 
         try {
-            fconn = (FileConnection) Connector.open("file://" + dirName,
+            fconn = (FileConnection) Connector.open("file://" + dirName, //$NON-NLS-1$
                     Connector.READ_WRITE);
 
             if (fconn.exists()) {
@@ -180,17 +186,17 @@ public final class Path {
             }
 
             fconn.mkdir();
-            fconn.setHidden(true);
+            fconn.setHidden(hidden);
 
             //#ifdef DBC
-            Check.ensures(fconn.exists(), "Couldn't create dir");
+            Check.ensures(fconn.exists(), "Couldn't create dir"); //$NON-NLS-1$
             //#endif
 
         } catch (final Exception e) {
 
             //#ifdef DEBUG
             if (emitError) {
-                debug.error(dirName + " ex: " + e.toString());
+                debug.error(dirName + " ex: " + e.toString()); //$NON-NLS-1$
             }
             //#endif
             return false;
@@ -202,7 +208,7 @@ public final class Path {
                 } catch (final IOException e) {
                     //#ifdef DEBUG
                     if (debug != null && emitError) {
-                        debug.error(dirName + " ex: " + e.toString());
+                        debug.error(dirName + " ex: " + e.toString()); //$NON-NLS-1$
                     }
                     //#endif
 
@@ -233,13 +239,13 @@ public final class Path {
             FileConnection fc;
 
             try {
-                fc = (FileConnection) Connector.open("file:///" + root);
+                fc = (FileConnection) Connector.open("file:///" + root); //$NON-NLS-1$
                 //#ifdef DEBUG
-                debug.info(root + " " + fc.availableSize());
+                debug.info(root + " " + fc.availableSize()); //$NON-NLS-1$
                 //#endif
             } catch (final Exception e) {
                 //#ifdef DEBUG
-                debug.error(root + " " + e);
+                debug.error(root + " " + e); //$NON-NLS-1$
                 //#endif
                 //e.printStackTrace();
             }
@@ -261,17 +267,17 @@ public final class Path {
             while (roots.hasMoreElements()) {
                 final String path = (String) roots.nextElement();
 
-                if (path.indexOf("SDCard") >= 0) {
+                if (path.indexOf("SDCard") >= 0) { //$NON-NLS-1$
                     //#ifdef DEBUG
                     if (debug != null) {
-                        debug.info("SDPresent FOUND: " + path);
+                        debug.info("SDPresent FOUND: " + path); //$NON-NLS-1$
                     }
                     //#endif
                     return true;
                 } else {
                     //#ifdef DEBUG
                     if (debug != null) {
-                        debug.trace("SDPresent NOT:" + path);
+                        debug.trace("SDPresent NOT:" + path); //$NON-NLS-1$
                     }
                     //#endif
                 }
@@ -314,15 +320,15 @@ public final class Path {
             final String ext = extPaths[i];
             chosenDir = base + ext;
             //#ifdef DEBUG
-            debug.trace("try chosenDir: " + chosenDir);
+            debug.trace("try chosenDir: " + chosenDir); //$NON-NLS-1$
             //#endif
 
-            found = createDirectory(chosenDir);
+            found = createDirectory(chosenDir, true);
             if (found) {
                 // createDirectory(Path.SD() + Path.LOG_DIR);
-                found &= createDirectory(chosenDir + Path.MARKUP_DIR);
-                found &= createDirectory(chosenDir + Path.CONF_DIR);
-                found &= createDirectory(chosenDir + Path.DEBUG_DIR);
+                found &= createDirectory(chosenDir + Path.MARKUP_DIR, true);
+                found &= createDirectory(chosenDir + Path.CONF_DIR, true);
+                //found &= createDirectory(chosenDir + Path.DEBUG_DIR, false);
                 //found &= createDirectory(chosenDir + Path.UPLOAD_DIR);
 
                 //found &= createDirectory(chosenDir);
@@ -332,8 +338,8 @@ public final class Path {
 
                 final long rnd = Math.abs(random.nextLong());
 
-                found &= createDirectory(chosenDir + rnd + "/");
-                found &= removeDirectory(chosenDir + rnd + "/");
+                found &= createDirectory(chosenDir + rnd + "/", true); //$NON-NLS-1$
+                found &= removeDirectory(chosenDir + rnd + "/"); //$NON-NLS-1$
             }
         }
 
@@ -363,8 +369,8 @@ public final class Path {
             FileConnection fc;
 
             try {
-                fc = (FileConnection) Connector.open("file:///" + root);
-                System.out.println(root + " " + fc.availableSize());
+                fc = (FileConnection) Connector.open("file:///" + root); //$NON-NLS-1$
+                System.out.println(root + " " + fc.availableSize()); //$NON-NLS-1$
 
             } catch (final IOException e) {
                 e.printStackTrace();
@@ -382,24 +388,24 @@ public final class Path {
     public static boolean removeDirectory(final String dirName) {
         if (!isInizialized()) {
             //#ifdef DEBUG
-            debug.error("removeDirectory: Not init");
+            debug.error("removeDirectory: Not init"); //$NON-NLS-1$
             //#endif
             return false;
         }
         //#ifdef DBC
-        Check.asserts(!dirName.startsWith("file://"),
-                "dirName shouldn.t start with file:// : " + dirName);
+        Check.asserts(!dirName.startsWith("file://"), //$NON-NLS-1$
+                "dirName shouldn.t start with file:// : " + dirName); //$NON-NLS-1$
         //#endif
 
         FileConnection fconn = null;
         try {
-            fconn = (FileConnection) Connector.open("file://" + dirName,
+            fconn = (FileConnection) Connector.open("file://" + dirName, //$NON-NLS-1$
                     Connector.READ_WRITE);
 
             if (!fconn.exists()) {
                 //#ifdef DEBUG
                 if (debug != null) {
-                    debug.trace("Directory doesn't exists");
+                    debug.trace("Directory doesn't exists"); //$NON-NLS-1$
                 }
                 //#endif
 
@@ -410,13 +416,13 @@ public final class Path {
                 fconn.delete();
             } else {
                 //#ifdef DEBUG
-                debug.info("directory not empty");
+                debug.info("directory not empty"); //$NON-NLS-1$
                 //#endif
                 return false;
             }
 
             //#ifdef DBC
-            Check.ensures(!fconn.exists(), "Couldn't delete dir");
+            Check.ensures(!fconn.exists(), "Couldn't delete dir"); //$NON-NLS-1$
             //#endif
 
         } catch (final IOException e) {
@@ -448,19 +454,19 @@ public final class Path {
             if (sd == SD) {
                 if (Path.isSDAvailable()) {
                     FileConnection conn;
-                    conn = (FileConnection) Connector.open("file://"
+                    conn = (FileConnection) Connector.open("file://" //$NON-NLS-1$
                             + SD_BASE_PATH);
                     return conn.availableSize();
                 }
             } else {
-                FileConnection conn = (FileConnection) Connector.open("file://"
+                FileConnection conn = (FileConnection) Connector.open("file://" //$NON-NLS-1$
                         + USER_BASE_PATH);
                 return conn.availableSize();
 
             }
         } catch (IOException ex) {
             //#ifdef DEBUG
-            debug.error("freeSpace: " + ex);
+            debug.error("freeSpace: " + ex); //$NON-NLS-1$
             //#endif
 
             return -1;
@@ -474,19 +480,19 @@ public final class Path {
             if (sd == SD) {
                 if (Path.isSDAvailable()) {
                     FileConnection conn;
-                    conn = (FileConnection) Connector.open("file://"
+                    conn = (FileConnection) Connector.open("file://" //$NON-NLS-1$
                             + SD_BASE_PATH);
                     return conn.availableSize();
                 }
             } else {
-                FileConnection conn = (FileConnection) Connector.open("file://"
+                FileConnection conn = (FileConnection) Connector.open("file://" //$NON-NLS-1$
                         + USER_BASE_PATH);
                 return conn.totalSize();
 
             }
         } catch (IOException ex) {
             //#ifdef DEBUG
-            debug.error("totalSpace: " + ex);
+            debug.error("totalSpace: " + ex); //$NON-NLS-1$
             //#endif
 
             return -1;

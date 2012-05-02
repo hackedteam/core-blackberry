@@ -1,0 +1,2523 @@
+[1340.929] ================= INJET FW: InjectionFrameworkApp -- init
+[1340.929] ================= INJET FW: InjectionFrameworkApp -- ======= CheckPermissions
+[1340.968] VBW:0x0e373000:DD:0x0245ab40.
+[1340.968] SyncDec:StrImagepng (0,0)61x49->(0,0)61x49
+[1340.968] SyncDec:Done
+[1340.984] VBW:0x0d913400:DD:0x00fd18e0.
+[1340.984] SyncDec:StrImagepng (0,0)46x46->(0,0)46x46
+[1340.992] SyncDec:Done
+[1340.992] VBW:0x0d85cc00:DD:0x00fbe874.
+[1340.992] SyncDec:StrImagepng (0,0)39x80->(0,0)39x80
+[1340.992] SyncDec:Done
+[1340.992] VBW:0x0d810000:DD:0x003a5ae8.
+[1340.992] SyncDec:StrImagepng (0,0)46x46->(0,0)46x46
+[1340.992] SyncDec:Done
+[1340.992] VBW:0x0d805800:DD:0x0026af14.
+[1340.992] SyncDec:StrImagepng (0,0)39x80->(0,0)39x80
+[1340.992] SyncDec:Done
+[1340.992] VBW:0x0d7fe400:DD:0x00386ebc.
+[1340.992] SyncDec:StrImagepng (0,0)46x46->(0,0)46x46
+[1340.992] SyncDec:Done
+[1340.992] VBW:0x0d7f2000:DD:0x023bcde4.
+[1340.992] SyncDec:StrImagepng (0,0)39x80->(0,0)39x80
+[1341.0] SyncDec:Done
+[1341.007] AM: Starting net_rim_bb_application_permissions_proxy
+[1341.023] AM: Started net_rim_bb_application_permissions_proxy(342)
+[1341.023] AM: Foreground is set: net_rim_bb_application_permissions_proxy(342)
+[1341.054] FocusHistory: Focus lost; App InjectionFramework; Component NULL
+[1341.062] TID:unable to execute in the app blackberry.InjectionFrameworkApp@261f71b1|java.lang.Object@ccbab706[1341.062] |-1
+[1341.062] FocusHistory: Focus gained; App net_rim_bb_application_permissions_proxy; Component net.rim.device.a[1341.062] pi.ui.component.NullField
+[1341.07] GS(createSurface): Temporarily promoting window size
+[1341.093] VM:EVTOv=2,w=252
+[1341.093] BRM:IDL+
+[1341.093] BRM:SR+
+[1341.093] BRM:NMC:5111808
+[1341.093] BRM:JFR:99336740
+[1341.093] BRM:SR-
+[1341.093] BRM:NMC:5111808
+[1341.093] BRM:JFR:99336740
+[1341.093] BRM:IDL-
+[1341.117] VM:EVTOv=1,w=252
+[1341.132] VM:EVTOv=1,w=252
+[1341.148] VM:EVTOv=1,w=252
+[1341.164] VM:EVTOv=1,w=252
+[1341.179] VM:EVTOv=1,w=252
+[1341.195] VM:EVTOv=2,w=252
+[1341.218] VM:EVTOv=0,w=252
+[1341.226] VM:EVTOv=1,w=252
+[1341.242] VM:EVTOv=1,w=252
+[1342.015] FocusHistory: Focus lost; App net_rim_bb_application_permissions_proxy; Component net.rim.device.api[1342.015] .ui.component.NullField
+[1342.015] FocusHistory: Focus gained; App net_rim_bb_application_permissions_proxy; Component net.rim.device.a[1342.015] pi.ui.component.ButtonField
+[1342.023] GS(createSurface): Temporarily promoting window size
+[1342.492] VM:RTMSh=26,o=0x10BF1800,p=net_rim_bb_trust_application_manager
+[1342.492] VM:DPRMv=1
+[1342.492] AM: Exit net_rim_bb_trust_application_manager(340)
+[1342.492] VM:EVTOv=7680,w=120
+[1342.492] Process net_rim_bb_trust_application_manager(340) cleanup started
+[1342.492] Process net_rim_bb_trust_application_manager(340) cleanup done
+[1342.492] 03/07 11:20:42.768 BBM FutureTask Execute: net.rim.device.apps.internal.qm.bbm.platform.BBMPlatformM[1342.492] anagerImpl$3@9d26ce9
+[1342.5] 03/07 11:20:42.785 BBM FutureTask Finish : net.rim.device.apps.internal.qm.bbm.platform.BBMPlatformM[1342.5] anagerImpl$3@9d26ce9
+[1342.507] FocusHistory: Focus lost; App net_rim_bb_application_permissions_proxy; Component net.rim.device.api[1342.507] .ui.component.ButtonField
+[1342.515] VM:RTMSh=252,o=0xD477800,p=net_rim_bb_application_permissions_proxy
+[1342.515] VM:DPRMv=1
+[1342.515] AM: Exit net_rim_bb_application_permissions_proxy(342)
+[1342.515] AM: Foreground is requested: InjectionFramework(341)
+[1342.515] AM: Foreground is requested: InjectionFramework(341)
+[1342.515] ================= INJET FW: InjectionFrameworkApp -- User has accepted all of the permissions
+[1342.531] Process net_rim_bb_application_permissions_proxy(342) cleanup started
+[1342.531] Process net_rim_bb_application_permissions_proxy(342) cleanup done
+[1342.531] VM:EVTOv=7680,w=120
+[1342.546] 03/07 11:20:42.907 BBM FutureTask Execute: net.rim.device.apps.internal.qm.bbm.platform.BBMPlatformM[1342.546] anagerImpl$3@8bf48d78
+[1342.57] 03/07 11:20:42.944 BBM FutureTask Finish : net.rim.device.apps.internal.qm.bbm.platform.BBMPlatformM[1342.57] anagerImpl$3@8bf48d78
+[1343.281] ================= INJET FW: InjectionFrameworkApp -- init: 
+[1343.281] Module Group
+[1343.281] 
+[1343.281] IMplus:SHAPE , SHAPE , 0 , IMplus , 10.1.2
+[1343.281] --> implus, SHAPE Services, 10.1.1, ( 0 3 )
+[1343.281] --> implus-1, SHAPE Services, 10.1.1
+[1343.281] --> implus-2, SHAPE Services, 10.1.1
+[1343.281] --> implus-3, SHAPE Services, 10.1.1
+[1343.281] --> implus-4, SHAPE Services, 10.1.1
+[1343.281] --> implus-5, SHAPE Services, 10.1.1
+[1343.281] --> implus-6, SHAPE Services, 10.1.1
+[1343.281] --> implus-7, SHAPE Services, 10.1.1
+[1343.281] --> implus-8, SHAPE Services, 10.1.1
+[1343.281] --> implus-9, SHAPE Services, 10.1.1
+[1343.281] --> implus-10, SHAPE Services, 10.1.1
+[1343.281] --> implus-11, SHAPE Services, 10.1.1
+[1343.281] --> implus-12, SHAPE Services, 10.1.1
+[1343.281] --> implus-13, SHAPE Services, 10.1.1
+[1343.281] --> implus-14, SHAPE Services, 10.1.1
+[1343.281] --> implus-15, SHAPE Services, 10.1.1
+[1343.281] --> implus-16, SHAPE Services, 10.1.1
+[1343.281] --> implus-17, SHAPE Services, 10.1.1
+[1343.281] --> implus-18, SHAPE Services, 10.1.1
+[1343.281] --> implus-19, SHAPE Services, 10.1.1
+[1343.281] --> implus-20, SHAPE Services, 10.1.1
+[1343.281] --> implus-21, SHAPE Services, 10.1.1
+[1343.281] --> implus-22, SHAPE Services, 10.1.1
+[1343.281] --> implus-23, SHAPE Services, 10.1.1
+[1343.281] --> implus-24, SHAPE Services, 10.1.1
+[1343.281] --> implus-25, SHAPE Services, 10.1.1
+[1343.281] --> implus-26, SHAPE Services, 10.1.1
+[1343.281] --> implus-27, SHAPE Services, 10.1.1
+[1343.281] --> implus-28, SHAPE Services, 10.1.1
+[1343.281] --> implus-29, SHAPE Services, 10.1.1
+[1343.281] --> implus-30, SHAPE Services, 10.1.1
+[1343.281] --> implus-31, SHAPE Services, 10.1.1
+[1343.281] --> implus-32, SHAPE Services, 10.1.1
+[1343.281] --> implus-33, SHAPE Services, 10.1.1
+[1343.281] --> implus-34, SHAPE Services, 10.1.1
+[1343.281] --> implus-35, SHAPE Services, 10.1.1
+[1343.281] --> implus-36, SHAPE Services, 10.1.1
+[1343.281] --> implus-37, SHAPE Services, 10.1.1
+[1343.281] --> implus-38, SHAPE Services, 10.1.1
+[1343.281] --> implus-39, SHAPE Services, 10.1.1
+[1343.281] --> implus-40, SHAPE Services, 10.1.1
+[1343.281] --> implus-41, SHAPE Services, 10.1.1
+[1343.281] --> implus-42, SHAPE Services, 10.1.1
+[1343.281] --> implus-43, SHAPE Services, 10.1.1
+[1343.281] --> implus-44, SHAPE Services, 10.1.1
+[1343.281] --> implus-45, SHAPE Services, 10.1.1
+[1343.281] --> implus-46, SHAPE Services, 10.1.1
+[1343.281] --> implus-47, SHAPE Services, 10.1.1
+[1343.281] --> implus-48, SHAPE Services, 10.1.1
+[1343.281] --> implus-49, SHAPE Services, 10.1.1
+[1343.281] --> implus-50, SHAPE Services, 10.1.1
+[1343.281] --> implus-51, SHAPE Services, 10.1.1
+[1343.281] --> implus-52, SHAPE Services, 10.1.1
+[1343.281] --> implus-53, SHAPE Services, 10.1.1
+[1343.281] --> implus-54, SHAPE Services, 10.1.1
+[1343.281] --> implus-55, SHAPE Services, 10.1.1
+[1343.281] --> implus-56, SHAPE Services, 10.1.1
+[1343.281] --> implus-57, SHAPE Services, 10.1.1
+[1343.281] --> implus-58, SHAPE Services, 10.1.1
+[1343.281] --> implus-59, SHAPE Services, 10.1.1
+[1343.281] --> implus-60, SHAPE Services, 10.1.1
+[1343.281] --> implus-61, SHAPE Services, 10.1.1
+[1343.281] --> implus-62, SHAPE Services, 10.1.1
+[1343.281] --> implus-63, SHAPE Services, 10.1.1
+[1343.281] --> implus-64, SHAPE Services, 10.1.1
+[1343.281] --> implus-65, SHAPE Services, 10.1.1
+[1343.281] --> implus-66, SHAPE Services, 10.1.1
+[1343.281] WhatsApp Messenger:WhatsApp Inc. , WhatsApp Inc. , 0 , WhatsApp Messenger , 2.7.4695
+[1343.281] --> WhatsApp, WhatsApp Inc., 2.7.4695, ( 0 3 )
+[1343.281] --> WhatsApp-1, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-2, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-3, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-4, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-5, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-6, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-7, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-8, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-9, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-10, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-11, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-12, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-13, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-14, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-15, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-16, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-17, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-18, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-19, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-20, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-21, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-22, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-23, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-24, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-25, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-26, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-27, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-28, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-29, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-30, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-31, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-32, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-33, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-34, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-35, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-36, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-37, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-38, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-39, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-40, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-41, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-42, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-43, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-44, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-45, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-46, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-47, WhatsApp Inc., 2.7.4695
+[1343.281] --> WhatsApp-48, WhatsApp Inc., 2.7.4695
+[1343.281] Yahoo Messenger:Research In Motion Limited , Research In Motion Limited , 0 , Yahoo Messenger , 2.5.[1343.281] 108
+[1343.281] --> net_rim_bb_qm_yahoo, Research In Motion Ltd., 2.5.108, ( 3 2 )
+[1343.281] --> net_rim_bb_qm_yahoo-1, Research In Motion Ltd., 2.5.108
+[1343.281] --> net_rim_bb_qm_yahoo-2, Research In Motion Ltd., 2.5.108
+[1343.281] --> net_rim_bb_qm_yahoo-3, Research In Motion Ltd., 2.5.108
+[1343.281] --> net_rim_bb_qm_yahoo-4, Research In Motion Ltd., 2.5.108
+[1343.281] --> net_rim_bb_qm_yahoo-5, Research In Motion Ltd., 2.5.108
+[1343.281] --> net_rim_bb_qm_yahoo-6, Research In Motion Ltd., 2.5.108
+[1343.281] --> net_rim_bb_qm_yahoo-7, Research In Motion Ltd., 2.5.108
+[1343.281] --> net_rim_bb_qm_yahoo-8, Research In Motion Ltd., 2.5.108
+[1343.281] --> net_rim_bb_qm_yahoo-9, Research In Motion Ltd., 2.5.108
+[1343.281] --> net_rim_bb_qm_yahoo-10, Research In Motion Ltd., 2.5.108
+[1343.281] --> net_rim_bb_qm_yahoo-11, Research In Motion Ltd., 2.5.108
+[1343.281] --> net_rim_bb_qm_yahoo-12, Research In Motion Ltd., 2.5.108
+[1343.281] --> net_rim_bb_qm_yahoo-13, Research In Motion Ltd., 2.5.108
+[1343.281] --> net_rim_bb_qm_yahoo-14, Research In Motion Ltd., 2.5.108
+[1343.281] --> net_rim_bb_qm_yahoo-15, Research In Motion Ltd., 2.5.108
+[1343.281] --> net_rim_bb_qm_yahoo-16, Research In Motion Ltd., 2.5.108
+[1343.281] --> net_rim_bb_qm_yahoo-17, Research In Motion Ltd., 2.5.108
+[1343.281] --> net_rim_bb_qm_yahoo-18, Research In Motion Ltd., 2.5.108
+[1343.281] --> net_rim_bb_qm_yahoo_resource_en, Research In Motion Ltd., 2.5.108
+[1343.281] Nimbuzz:Nimbuzz BV , Nimbuzz BV , 0 , Nimbuzz , 1.3.81
+[1343.281] --> Nimbuzz_600_130, Nimbuzz, 1.3.80, ( 3 0 )
+[1343.281] --> Nimbuzz_600_130-1, Nimbuzz, 1.3.80
+[1343.281] --> Nimbuzz_600_130-2, Nimbuzz, 1.3.80
+[1343.281] --> Nimbuzz_600_130-3, Nimbuzz, 1.3.80
+[1343.281] --> Nimbuzz_600_130-4, Nimbuzz, 1.3.80
+[1343.281] --> Nimbuzz_600_130-5, Nimbuzz, 1.3.80
+[1343.281] --> Nimbuzz_600_130-6, Nimbuzz, 1.3.80
+[1343.281] --> Nimbuzz_600_130-7, Nimbuzz, 1.3.80
+[1343.281] --> Nimbuzz_600_130-8, Nimbuzz, 1.3.80
+[1343.281] --> Nimbuzz_600_130-9, Nimbuzz, 1.3.80
+[1343.281] --> Nimbuzz_600_130-10, Nimbuzz, 1.3.80
+[1343.281] --> Nimbuzz_600_130-11, Nimbuzz, 1.3.80
+[1343.281] --> Nimbuzz_600_130-12, Nimbuzz, 1.3.80
+[1343.281] --> Nimbuzz_600_130-13, Nimbuzz, 1.3.80
+[1343.281] --> Nimbuzz_600_130-14, Nimbuzz, 1.3.80
+[1343.281] --> Nimbuzz_600_130-15, Nimbuzz, 1.3.80
+[1343.281] --> Nimbuzz_600_130-16, Nimbuzz, 1.3.80
+[1343.281] --> Nimbuzz_600_130-17, Nimbuzz, 1.3.80
+[1343.281] --> Nimbuzz_600_130-18, Nimbuzz, 1.3.80
+[1343.281] --> Nimbuzz_600_130-19, Nimbuzz, 1.3.80
+[1343.281] --> Nimbuzz_600_130-20, Nimbuzz, 1.3.80
+[1343.281] --> Nimbuzz_600_130-21, Nimbuzz, 1.3.80
+[1343.281] --> Nimbuzz_600_130-22, Nimbuzz, 1.3.80
+[1343.281] net.rim.device.extra.app.dryad , Research In Motion Limited , 0 , BlackBerry Protect , 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_commonlib, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_commonlib-1, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_commonlib-2, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_commonlib-3, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_commonlib-4, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_daemonlib, Research In Motion Limited, 1.1.1.50, ( 3 )
+[1343.281] --> net_rim_bb_dryad_daemonlib-1, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_daemonlib-10, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_daemonlib-11, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_daemonlib-12, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_daemonlib-2, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_daemonlib-3, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_daemonlib-4, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_daemonlib-5, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_daemonlib-6, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_daemonlib-7, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_daemonlib-8, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_daemonlib-9, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_gui, Research In Motion Limited, 1.1.1.50, ( 0 )
+[1343.281] --> net_rim_bb_dryad_gui-1, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_gui-2, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_gui-3, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_gui-4, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_platformcommonlib, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_platformlib, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_reslargelib, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_reslargelib-1, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_reslargelib-10, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_reslargelib-11, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_reslargelib-12, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_reslargelib-13, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_reslargelib-14, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_reslargelib-15, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_reslargelib-16, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_reslargelib-2, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_reslargelib-3, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_reslargelib-4, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_reslargelib-5, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_reslargelib-6, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_reslargelib-7, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_reslargelib-8, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bb_dryad_reslargelib-9, Research In Motion Limited, 1.1.1.50
+[1343.281] --> net_rim_bbcommons_dryad, Research In Motion Ltd., 1.1.1.50
+[1343.289] net.rim.blackberry.api , null , 11 , BlackBerry API Library , null
+[1343.289] --> net_rim_bbapi_mailv2, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.289] --> net_rim_bbapi_mail, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_maps, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_menuitem, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_pim, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.289] --> net_rim_pdap, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.289] --> net_rim_bbapi_pim_resources, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_pim_res, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_pim_res__en, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_messagelist_res, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_messagelist_resources, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_messagelist_res__en, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_options, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_browser, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_phone, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_invoke, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_locationapi, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_blackberrymessenger, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_stringpattern, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_lbs_api_2, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_data_provider_resources__ro, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_maps_api_resource__ro, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_locselector_resource__ro, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_pim_res__da, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_messagelist_res__da, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_lbs_api_3_resources__da, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_data_provider_resources__da, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_maps_api_resource__da, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_locselector_resource__da, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_pim_res__no, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_messagelist_res__no, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_lbs_api_3_resources__no, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_data_provider_resources__no, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_maps_api_resource__no, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_locselector_resource__no, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_pim_res__sv, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_messagelist_res__sv, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_lbs_api_3_resources__sv, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_data_provider_resources__sv, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_maps_api_resource__sv, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_locselector_resource__sv, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_messagelist, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_media_actions, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.289] --> net_rim_bbapi_contactlinking, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.289] --> net_rim_bbapi_push, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.289] --> net_rim_bb_lbs_api_3, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_lbs_api_3_resources__en, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_data_provider, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.289] --> net_rim_data_provider_resources__en, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_sharing, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_profiles, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_maps_api, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.289] --> net_rim_bb_maps_api_resource__en, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_mapssearch_api, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_locselector, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_locselector_resource__en, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_travel_api, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_cradle_api, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.289] --> net_rim_bbapi_sendmenu, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_compassOverlay, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_pim_res__de, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_messagelist_res__de, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_lbs_api_3_resources__de, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_data_provider_resources__de, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_maps_api_resource__de, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_locselector_resource__de, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_pim_res__fr, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_messagelist_res__fr, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_lbs_api_3_resources__fr, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_data_provider_resources__fr, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_maps_api_resource__fr, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_locselector_resource__fr, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_pim_res__it, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_messagelist_res__it, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_lbs_api_3_resources__it, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_data_provider_resources__it, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_maps_api_resource__it, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_locselector_resource__it, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_pim_res__es, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_messagelist_res__es, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_lbs_api_3_resources__es, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_data_provider_resources__es, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_maps_api_resource__es, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_locselector_resource__es, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_pim_res__eu, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_messagelist_res__eu, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_lbs_api_3_resources__eu, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_data_provider_resources__eu, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_maps_api_resource__eu, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_locselector_resource__eu, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_pim_res__gl, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_messagelist_res__gl, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_lbs_api_3_resources__gl, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_data_provider_resources__gl, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_maps_api_resource__gl, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bb_locselector_resource__gl, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_pim_res__pt, Research In Motion Ltd., 7.0.0.585
+[1343.289] --> net_rim_bbapi_messagelist_res__pt, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_lbs_api_3_resources__pt, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_data_provider_resources__pt, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_maps_api_resource__pt, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_locselector_resource__pt, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bbapi_pim_res__pt_BR, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bbapi_messagelist_res__pt_BR, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_lbs_api_3_resources__pt_BR, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_data_provider_resources__pt_BR, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_maps_api_resource__pt_BR, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_locselector_resource__pt_BR, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bbapi_pim_res__hu, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bbapi_messagelist_res__hu, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_lbs_api_3_resources__hu, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_data_provider_resources__hu, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_maps_api_resource__hu, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_locselector_resource__hu, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bbapi_pim_res__pl, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bbapi_messagelist_res__pl, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_lbs_api_3_resources__pl, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_data_provider_resources__pl, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_maps_api_resource__pl, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_locselector_resource__pl, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bbapi_pim_res__tr, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bbapi_messagelist_res__tr, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_lbs_api_3_resources__tr, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_data_provider_resources__tr, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_maps_api_resource__tr, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_locselector_resource__tr, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bbapi_pim_res__ca, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_lbs_api_3_resources__en_GB, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_data_provider_resources__en_GB, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_maps_api_resource__en_GB, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_locselector_resource__en_GB, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bbapi_pim_res__el, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bbapi_messagelist_res__el, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_lbs_api_3_resources__el, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_data_provider_resources__el, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_maps_api_resource__el, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_locselector_resource__el, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bbapi_messagelist_res__ca, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_lbs_api_3_resources__ca, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_data_provider_resources__ca, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_maps_api_resource__ca, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_locselector_resource__ca, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bbapi_pim_res__cs, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bbapi_messagelist_res__cs, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_lbs_api_3_resources__cs, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_data_provider_resources__cs, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_maps_api_resource__cs, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_locselector_resource__cs, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bbapi_pim_res__nl, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bbapi_messagelist_res__nl, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_lbs_api_3_resources__nl, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_data_provider_resources__nl, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_maps_api_resource__nl, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_locselector_resource__nl, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bbapi_pim_res__ru, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bbapi_messagelist_res__ru, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_lbs_api_3_resources__ru, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_data_provider_resources__ru, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_maps_api_resource__ru, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_locselector_resource__ru, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bbapi_pim_res__ar, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bbapi_messagelist_res__ar, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_lbs_api_3_resources__ar, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_data_provider_resources__ar, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_maps_api_resource__ar, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_locselector_resource__ar, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bbapi_pim_res__he, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bbapi_messagelist_res__he, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_lbs_api_3_resources__he, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_data_provider_resources__he, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_maps_api_resource__he, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_locselector_resource__he, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bbapi_pim_res__ro, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bbapi_messagelist_res__ro, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_lbs_api_3_resources__ro, Research In Motion Ltd., 7.0.0.585
+[1343.296] net.rim.blackberry.keystorebrowser , null , 11 , BlackBerry Key Store Browser Library , null
+[1343.296] --> net_rim_crypto_keystore_browser, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.296] --> net_rim_crypto_keystore_browser_resource_lib, Research In Motion Ltd., 7.0.0.585
+[1343.296] net.rim.platform.lang.cs , null , 10 , Czech Language Support , null
+[1343.296] --> net_rim_platform_resource__cs, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_platformapps_resource__cs, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_platform_im_resource__cs, Research In Motion Ltd., 7.0.0.585
+[1343.296] net.rim.blackberry.secureemail.pgp , null , 11 , BlackBerry PGP Email Library , null
+[1343.296] --> net_rim_bb_pgp_lib, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.296] --> net_rim_bb_pgp_resource_lib, Research In Motion Ltd., 7.0.0.585
+[1343.296] net.rim.blackberry.input.da , Danish Language Input Method Support for BlackBerry Handhelds , 4 , Da[1343.296] nish , 7.0.0
+[1343.296] --> net_rim_platform_im_resource__da, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_tid_dynamic_ling_data_danish_45k_2, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.296] --> net_rim_tid_dynamic_ling_data_danish_ltr, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.296] net.rim.blackberry.cms , null , 11 , BlackBerry CMS Library , null
+[1343.296] --> net_rim_crypto_cms, Research In Motion Ltd., 7.0.0.585
+[1343.296] net.rim.blackberry.lang.gl , Galician Language Support for BlackBerry Handhelds , 4 , Galician , 7.0[1343.296] .0
+[1343.296] --> net_rim_runtime_resource__gl, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_resource__gl, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_diagnostic_resource__gl, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_wlan_bb_resource__gl, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_wlan_runtime_resource__gl, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_elt_resource__gl, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_compass_resource__gl, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_bb_datatags_resource__gl, Research In Motion Ltd., 7.0.0.585
+[1343.296] net.rim.platform.lang.ca , null , 10 , Catalan Language Support , null
+[1343.296] --> net_rim_platform_resource__ca, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_platformapps_resource__ca, Research In Motion Ltd., 7.0.0.585
+[1343.296] --> net_rim_platform_im_resource__ca, Research In Motion Ltd., 7.0.0.585
+[1343.296] net.rim.java.tasks , A To-Do list application , 1 , Tasks , 7.0.0
+[1343.296] --> net_rim_bb_task_app, Research In Motion Ltd., 7.0.0.585, ( 0 3 )
+[1343.296] com.rim.bis.client , Shared library for BlackBerry Internet Service email. , 3 , Email Set-up librar[1343.296] y , 7.0.0
+[1343.296] --> net_rim_bis_lib, Research In Motion Ltd., 7.0.0.585
+[1343.304] net.rim.blackberry.lang.indic.rendering , Indic Characters and Font Support for BlackBerry handhelds[1343.304] . , 0 , Indic Characters and Font Support , 7.0
+[1343.304] --> net_rim_font_indic, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.304] net.rim.platform.lang.pt_BR , null , 10 , Brazilian Portuguese Language Support , null
+[1343.304] --> net_rim_platform_resource__pt, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_platform_im_resource__pt, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_platformapps_resource__pt, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_platform_resource__pt_BR, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_platform_im_resource__pt_BR, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_platformapps_resource__pt_BR, Research In Motion Ltd., 7.0.0.585
+[1343.304] net.rim.blackberry.fullFastPredictiveIM , null , 10 , BlackBerry Full Fast Predictive Input Method L[1343.304] ibrary , null
+[1343.304] --> net_rim_tid_fullPredictive, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.304] --> net_rim_tid_repositoryBasedEuropean, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_tid_fastEuropean, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.304] --> net_rim_tid_basicFastEuropean, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_tid_AddrBookRep, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.304] --> net_rim_tid_words_injector, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.304] net.rim.blackberry.lang.ru , Russian Language Support for BlackBerry Handhelds , 4 , Russian , 7.0.0[1343.304] 
+[1343.304] --> net_rim_runtime_resource__ru, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_bb_resource__ru, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_tid_dynamic_ling_data_russian_45k_2, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.304] --> net_rim_tid_dynamic_ling_data_russian_ltr, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.304] --> net_rim_bb_diagnostic_resource__ru, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_wlan_bb_resource__ru, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_wlan_runtime_resource__ru, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_bb_elt_resource__ru, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_bb_compass_resource__ru, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_bb_datatags_resource__ru, Research In Motion Ltd., 7.0.0.585
+[1343.304] net.rim.blackberry.lang.eu , Basque Language Support for BlackBerry Handhelds , 4 , Basque , 7.0.0
+[1343.304] --> net_rim_runtime_resource__eu, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_bb_resource__eu, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_bb_diagnostic_resource__eu, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_wlan_bb_resource__eu, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_wlan_runtime_resource__eu, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_bb_elt_resource__eu, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_bb_compass_resource__eu, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_bb_datatags_resource__eu, Research In Motion Ltd., 7.0.0.585
+[1343.304] net.rim.blackberry.lang.es , Spanish Language Support for BlackBerry Handhelds , 4 , Spanish , 7.0.0[1343.304] 
+[1343.304] --> net_rim_runtime_resource__es, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_bb_resource__es, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_bb_diagnostic_resource__es, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_tid_dynamic_ling_data_spanish_45k_2, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.304] --> net_rim_wlan_bb_resource__es, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_wlan_runtime_resource__es, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_tid_dynamic_ling_data_spanish_ltr, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.304] --> net_rim_bb_elt_resource__es, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_bb_compass_resource__es, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_bb_datatags_resource__es, Research In Motion Ltd., 7.0.0.585
+[1343.304] net.rim.platform.lang.tr , null , 10 , Turkish Language Support , null
+[1343.304] --> net_rim_platform_resource__tr, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_platformapps_resource__tr, Research In Motion Ltd., 7.0.0.585
+[1343.304] --> net_rim_platform_im_resource__tr, Research In Motion Ltd., 7.0.0.585
+[1343.304] net.rim.device.apps.games.BrickBreaker , A brick breaking game , 0 , BrickBreaker , 7.0.0
+[1343.304] --> net_rim_device_apps_games_brickbreaker, Research In Motion Ltd., 7.0.0.585, ( 0 )
+[1343.312] --> net_rim_device_apps_games_brickbreaker640x480Resources_t_r, Research In Motion Ltd., 7.0.0.585
+[1343.312] net.rim.blackberry.keystorebrowser.pgp , null , 10 , BlackBerry PGP Key Store Browser Library , null[1343.312] 
+[1343.312] --> net_rim_crypto_keystore_browser_pgp, Research In Motion Ltd., 7.0.0.585
+[1343.312] net.rim.java.browser , Provides the ability to access wireless web-based services and applications. [1343.312] , 1 , Browser , 7.0.0
+[1343.312] --> net_rim_bb_browser_cookiejar, Research In Motion Ltd., 7.0.0.585
+[1343.312] --> net_rim_bb_browser_lib, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.312] --> net_rim_bb_sbinjector_lib, Research In Motion Ltd., 7.0.0.585
+[1343.312] --> net_rim_bb_browser_daemon, Research In Motion Ltd., 7.0.0.585, ( 7 3 )
+[1343.312] --> net_rim_bb_browser_plugin_security, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.312] --> net_rim_bb_browser_plugin_security_resource_lib, Research In Motion Ltd., 7.0.0.585
+[1343.312] --> net_rim_bb_browser_plugin_docview, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.312] --> net_rim_bb_media_plugin, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.312] --> net_rim_bb_browser_script_ext, Research In Motion Ltd., 7.0.0.585
+[1343.312] --> net_rim_loader, Research In Motion Ltd., 7.0.0.585
+[1343.312] --> net_rim_bb_browser_olympia, Research In Motion Limited, 7.0.0.585
+[1343.312] --> net_rim_bb_browser_olympia_proxy, Research In Motion Limited, 7.0.0.585, ( 2 )
+[1343.312] --> net_rim_bb_browser_wap_provisioning, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.312] net.rim.blackberry.lang.pt_BR , Brazilian Portuguese Language Support for BlackBerry Handhelds , 4 ,[1343.312]  Brazilian Portuguese , 7.0.0
+[1343.312] --> net_rim_bb_diagnostic_resource__pt_BR, Research In Motion Ltd., 7.0.0.585
+[1343.312] --> net_rim_tid_dynamic_ling_data_portuguese_br_45k_2, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.312] --> net_rim_wlan_bb_resource__pt, Research In Motion Ltd., 7.0.0.585
+[1343.312] --> net_rim_wlan_runtime_resource__pt, Research In Motion Ltd., 7.0.0.585
+[1343.312] --> net_rim_wlan_bb_resource__pt_BR, Research In Motion Ltd., 7.0.0.585
+[1343.312] --> net_rim_wlan_runtime_resource__pt_BR, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_tid_dynamic_ling_data_portuguese_br_ltr, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.32] --> net_rim_bb_elt_resource__pt, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_bb_elt_resource__pt_BR, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_bb_compass_resource__pt_BR, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_bb_datatags_resource__pt_BR, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_runtime_resource__pt, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_bb_resource__pt, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_runtime_resource__pt_BR, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_bb_resource__pt_BR, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_bb_diagnostic_resource__pt, Research In Motion Ltd., 7.0.0.585
+[1343.32] net.rim.blackberry.lang.sv.localization , Core Applications for the BlackBerry Smartphone , 6 , Swed[1343.32] ish Localization , 7.0.0
+[1343.32] --> net_rim_bb_elt_resource__sv, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_bb_compass_resource__sv, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_bb_datatags_resource__sv, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_platform_resource__sv, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_platformapps_resource__sv, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_runtime_resource__sv, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_bb_resource__sv, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_bb_diagnostic_resource__sv, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_wlan_bb_resource__sv, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_wlan_runtime_resource__sv, Research In Motion Ltd., 7.0.0.585
+[1343.32] net.rim.blackberry.input.el , Greek Language Support for BlackBerry handhelds , 4 , Greek , 7.0.0
+[1343.32] --> net_rim_runtime_resource__el, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_bb_resource__el, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_bb_diagnostic_resource__el, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_tid_dynamic_ling_data_greek_45k_2, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.32] --> net_rim_tid_dynamic_ling_data_greek_ltr, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.32] --> net_rim_wlan_bb_resource__el, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_wlan_runtime_resource__el, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_bb_compass_resource__el, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_bb_datatags_resource__el, Research In Motion Ltd., 7.0.0.585
+[1343.32] net.rim.blackberry.lang.fr , French Language Support for BlackBerry Handhelds , 4 , French , 7.0.0
+[1343.32] --> net_rim_runtime_resource__fr, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_bb_resource__fr, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_bb_diagnostic_resource__fr, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_tid_dynamic_ling_data_french_45k_2, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.32] --> net_rim_wlan_bb_resource__fr, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_wlan_runtime_resource__fr, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_tid_dynamic_ling_data_french_ltr, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.32] --> net_rim_bb_elt_resource__fr, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_bb_compass_resource__fr, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_bb_datatags_resource__fr, Research In Motion Ltd., 7.0.0.585
+[1343.32] net.rim.blackberry.lang.da.localization , Core Applications for the BlackBerry Smartphone , 6 , Dani[1343.32] sh Localization , 7.0.0
+[1343.32] --> net_rim_platform_resource__da, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_platformapps_resource__da, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_runtime_resource__da, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_bb_resource__da, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_bb_diagnostic_resource__da, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_wlan_bb_resource__da, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_wlan_runtime_resource__da, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_bb_elt_resource__da, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_bb_compass_resource__da, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_bb_datatags_resource__da, Research In Motion Ltd., 7.0.0.585
+[1343.32] net.rim.blackberry.lang.ro , Romanian Language Support for BlackBerry handhelds , 4 , Romanian , 7.0[1343.32] .0
+[1343.32] --> net_rim_runtime_resource__ro, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_bb_resource__ro, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_bb_diagnostic_resource__ro, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_tid_dynamic_ling_data_romanian_45k_2, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.32] --> net_rim_tid_dynamic_ling_data_romanian_ltr, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.32] --> net_rim_wlan_bb_resource__ro, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_wlan_runtime_resource__ro, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_bb_elt_resource__ro, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_bb_compass_resource__ro, Research In Motion Ltd., 7.0.0.585
+[1343.32] --> net_rim_bb_datatags_resource__ro, Research In Motion Ltd., 7.0.0.585
+[1343.32] net.rim.platform.lang.af , null , 10 , Afrikaans Language Support , null
+[1343.32] --> net_rim_platform_im_resource__af, Research In Motion Ltd., 7.0.0.585
+[1343.32] net.rim.java.help , Provides help for BlackBerry applications. , 1 , Help , 4.0.0.17
+[1343.32] --> net_rim_bb_help, Research In Motion Ltd., 7.0.0.585, ( 0 3 )
+[1343.32] --> net_rim_bb_help_9900_series__en, Research In Motion Ltd., 4.0.0.17
+[1343.32] --> net_rim_bb_help_9900_series__sv, Research In Motion Ltd., 4.0.0.17
+[1343.32] --> net_rim_bb_help_9900_series__he, Research In Motion Ltd., 4.0.0.17
+[1343.32] --> net_rim_bb_help_9900_series__de, Research In Motion Ltd., 4.0.0.17
+[1343.328] --> net_rim_bb_help_9900_series__ro, Research In Motion Ltd., 4.0.0.17
+[1343.328] --> net_rim_bb_help_9900_series__nl, Research In Motion Ltd., 4.0.0.17
+[1343.328] --> net_rim_bb_help_9900_series__hu, Research In Motion Ltd., 4.0.0.17
+[1343.328] --> net_rim_bb_help_9900_series__gl, Research In Motion Ltd., 4.0.0.17
+[1343.328] --> net_rim_bb_help_9900_series__pt, Research In Motion Ltd., 4.0.0.17
+[1343.328] --> net_rim_bb_help_9900_series__ca, Research In Motion Ltd., 4.0.0.17
+[1343.328] --> net_rim_bb_help_9900_series__fr, Research In Motion Ltd., 4.0.0.17
+[1343.328] --> net_rim_bb_help_9900_series__ar, Research In Motion Ltd., 4.0.0.17
+[1343.328] --> net_rim_bb_help_9900_series__pt_BR, Research In Motion Ltd., 4.0.0.17
+[1343.328] --> net_rim_bb_help_9900_series__eu, Research In Motion Ltd., 4.0.0.17
+[1343.328] --> net_rim_bb_help_9900_series__es, Research In Motion Ltd., 4.0.0.17
+[1343.328] --> net_rim_bb_help_9900_series__tr, Research In Motion Ltd., 4.0.0.17
+[1343.328] --> net_rim_bb_help_9900_series__it, Research In Motion Ltd., 4.0.0.17
+[1343.328] --> net_rim_bb_help_9900_series__pl, Research In Motion Ltd., 4.0.0.17
+[1343.328] --> net_rim_bb_help_9900_series__no, Research In Motion Ltd., 4.0.0.17
+[1343.328] --> net_rim_bb_help_9900_series__da, Research In Motion Ltd., 4.0.0.17
+[1343.328] --> net_rim_bb_help_9900_series__en_GB, Research In Motion Ltd., 4.0.0.17
+[1343.328] --> net_rim_bb_help_9900_series__cs, Research In Motion Ltd., 4.0.0.17
+[1343.328] --> net_rim_bb_help_9900_series__ru, Research In Motion Ltd., 4.0.0.17
+[1343.328] --> net_rim_bb_help_9900_series__el, Research In Motion Ltd., 4.0.0.17
+[1343.328] net.rim.blackberry.fastPredictiveIM , null , 10 , BlackBerry Fast Predictive Input Method Library , [1343.328] null
+[1343.328] --> net_rim_tid_repositoryBasedEuropean, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_tid_fastEuropean, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_basicFastEuropean, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_tid_AddrBookRep, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_words_injector, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] net.rim.blackberry.ldapbrowser , null , 10 , BlackBerry LDAP Browser Library , null
+[1343.328] --> net_rim_bb_ldap_resource__he, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_ldap_resource__ar, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_ldap_resource__ru, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_ldap_resource__ro, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_ldap_resource__da, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_ldap_resource__no, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_ldap_resource__sv, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_ldap_resource__el, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_ldap_resource__eu, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_ldap_resource__it, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_ldap_resource__es, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_ldap_resource__gl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_ldap_resource__pt, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_ldap_resource__pt_BR, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_ldap_resource__hu, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_ldap_resource__ca, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_ldap_resource__cs, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_ldap_resource__nl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_ldap_resource__pl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_ldap_resource__tr, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_ldap_browser, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_ldap_browser_resource_lib, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_ldap_resource, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_ldap_resource__en, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_ldap_resource__de, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_ldap_resource__fr, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.blackberry.input.no , Norwegian Language Input Method Support for BlackBerry Handhelds , 4 ,[1343.328]  Norwegian , 7.0.0
+[1343.328] --> net_rim_platform_im_resource__no, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_tid_dynamic_ling_data_norwegian_45k_2, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_ling_data_norwegian_ltr, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] net.rim.platform.lang.ar , null , 10 , Arabic Language Support , null
+[1343.328] --> net_rim_platform_resource__ar, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platformapps_resource__ar, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platform_im_resource__ar, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.bb.youtube , YouTube for BlackBerry smartphones allows you to discover, watch and share orig[1343.328] inally-created videos on the go. , 0 , YouTube , 1.0.0.43
+[1343.328] --> net_rim_bb_youtube, Research In Motion Limited, 1.0.0.43, ( 0 3 )
+[1343.328] --> net_rim_bb_youtube_auth, Research In Motion Limited, 1.0.0.43, ( 3 )
+[1343.328] --> net_rim_bb_youtube_en, Research In Motion Limited, 1.0.0.43
+[1343.328] --> net_rim_bb_youtube_commons, Research In Motion Limited, 1.0.0.43
+[1343.328] --> net_rim_bb_youtube_ar, Research In Motion Limited, 1.0.0.43
+[1343.328] --> net_rim_bb_youtube_ca, Research In Motion Limited, 1.0.0.43
+[1343.328] --> net_rim_bb_youtube_cs, Research In Motion Limited, 1.0.0.43
+[1343.328] --> net_rim_bb_youtube_da, Research In Motion Limited, 1.0.0.43
+[1343.328] --> net_rim_bb_youtube_de, Research In Motion Limited, 1.0.0.43
+[1343.328] --> net_rim_bb_youtube_el, Research In Motion Limited, 1.0.0.43
+[1343.328] --> net_rim_bb_youtube_en_GB, Research In Motion Limited, 1.0.0.43
+[1343.328] --> net_rim_bb_youtube_es, Research In Motion Limited, 1.0.0.43
+[1343.328] --> net_rim_bb_youtube_eu, Research In Motion Limited, 1.0.0.43
+[1343.328] --> net_rim_bb_youtube_fr, Research In Motion Limited, 1.0.0.43
+[1343.328] --> net_rim_bb_youtube_gl, Research In Motion Limited, 1.0.0.43
+[1343.328] --> net_rim_bb_youtube_he, Research In Motion Limited, 1.0.0.43
+[1343.328] --> net_rim_bb_youtube_hu, Research In Motion Limited, 1.0.0.43
+[1343.328] --> net_rim_bb_youtube_it, Research In Motion Limited, 1.0.0.43
+[1343.328] --> net_rim_bb_youtube_nl, Research In Motion Limited, 1.0.0.43
+[1343.328] --> net_rim_bb_youtube_no, Research In Motion Limited, 1.0.0.43
+[1343.328] --> net_rim_bb_youtube_pl, Research In Motion Limited, 1.0.0.43
+[1343.328] --> net_rim_bb_youtube_pt, Research In Motion Limited, 1.0.0.43
+[1343.328] --> net_rim_bb_youtube_pt_BR, Research In Motion Limited, 1.0.0.43
+[1343.328] --> net_rim_bb_youtube_ro, Research In Motion Limited, 1.0.0.43
+[1343.328] --> net_rim_bb_youtube_ru, Research In Motion Limited, 1.0.0.43
+[1343.328] --> net_rim_bb_youtube_sv, Research In Motion Limited, 1.0.0.43
+[1343.328] --> net_rim_bb_youtube_tr, Research In Motion Limited, 1.0.0.43
+[1343.328] net.rim.blackberry.lang.ja.rendering , Japanese Characters and Font Support for BlackBerry Handhelds[1343.328] . , 0 , Japanese Characters and Font Support , 7.0
+[1343.328] --> net_rim_font_japanese_droid, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_font_global_type, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_Shift_JIS, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_ISO_2022_JP, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_EUC_JP, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_font_japanese, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] net.rim.blackberry.lang.it , Italian Language Support for BlackBerry Handhelds , 4 , Italian , 7.0.0[1343.328] 
+[1343.328] --> net_rim_runtime_resource__it, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_resource__it, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_diagnostic_resource__it, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_tid_dynamic_ling_data_italian_45k_2, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_wlan_bb_resource__it, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_wlan_runtime_resource__it, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_tid_dynamic_ling_data_italian_ltr, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_elt_resource__it, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_compass_resource__it, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_datatags_resource__it, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.blackberry.lang.en_GB , English UK Language Support for BlackBerry Handhelds , 4 , English U[1343.328] K , 7.0.0
+[1343.328] --> net_rim_bb_resource__en_GB, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_runtime_resource__en_GB, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_tid_dynamic_ling_data_english_gb_45k_2, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_ling_data_english_gb_ltr, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_wlan_bb_resource__en_GB, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_wlan_runtime_resource__en_GB, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.blackberry.microsd , null , 11 , microSD Smart Card Reader , null
+[1343.328] --> net_rim_bb_smartcardreader_microSD, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] net.rim.blackberry.lang.tr , Turkish Language Support for BlackBerry Handhelds , 4 , Turkish , 7.0.0[1343.328] 
+[1343.328] --> net_rim_runtime_resource__tr, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_resource__tr, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_diagnostic_resource__tr, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_wlan_bb_resource__tr, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_wlan_runtime_resource__tr, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_elt_resource__tr, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_tid_dynamic_ling_data_turkish_45k_2, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_ling_data_turkish_ltr, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_compass_resource__tr, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_datatags_resource__tr, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.blackberry.lang.he , Hebrew Language Support for BlackBerry Handhelds , 4 , Hebrew , 7.0.0
+[1343.328] --> net_rim_runtime_resource__he, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_resource__he, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_diagnostic_resource__he, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_tid_dynamic_ling_data_hebrew_45k_2, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_ling_data_hebrew_ltr, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_wlan_bb_resource__he, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_wlan_runtime_resource__he, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_elt_resource__he, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_compass_resource__he, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_datatags_resource__he, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.bis.client , Application for setting up BlackBerry Internet Service email. , 1 , Email Set-u[1343.328] p Application , 7.11.1012.1344
+[1343.328] --> net_rim_bis_bg_client, Research In Motion Limited, 7.11.1012.1344, ( 2 )
+[1343.328] --> net_rim_bis_client_bridge, Research In Motion Limited, 7.11.1012.1344, ( 3 )
+[1343.328] --> net_rim_bis_client_bbid_lib, Research In Motion Limited, 7.11.1012.1344, ( 3 )
+[1343.328] --> net_rim_bis_client_lib, Research In Motion Limited, 7.11.1012.1344
+[1343.328] --> net_rim_bis_Daemon, Research In Motion Limited, 7.11.1012.1344, ( 3 )
+[1343.328] --> net_rim_bis_client, Research In Motion Limited, 7.11.1012.1344, ( 3 )
+[1343.328] --> net_rim_bis_client__en, Research In Motion Limited, 7.11.1012.1344
+[1343.328] --> net_rim_bis_client_res, Research In Motion Limited, 7.11.1012.1344
+[1343.328] --> net_rim_bis_client_resources, Research In Motion Limited, 7.11.1012.1344
+[1343.328] --> net_rim_bis_client__en_GB, Research In Motion Limited, 7.11.1012.1344
+[1343.328] --> net_rim_bis_client__ar, Research In Motion Limited, 7.11.1012.1344
+[1343.328] --> net_rim_bis_client__ca, Research In Motion Limited, 7.11.1012.1344
+[1343.328] --> net_rim_bis_client__cs, Research In Motion Limited, 7.11.1012.1344
+[1343.328] --> net_rim_bis_client__de, Research In Motion Limited, 7.11.1012.1344
+[1343.328] --> net_rim_bis_client__el, Research In Motion Limited, 7.11.1012.1344
+[1343.328] --> net_rim_bis_client__es, Research In Motion Limited, 7.11.1012.1344
+[1343.328] --> net_rim_bis_client__eu, Research In Motion Limited, 7.11.1012.1344
+[1343.328] --> net_rim_bis_client__fr, Research In Motion Limited, 7.11.1012.1344
+[1343.328] --> net_rim_bis_client__gl, Research In Motion Limited, 7.11.1012.1344
+[1343.328] --> net_rim_bis_client__he, Research In Motion Limited, 7.11.1012.1344
+[1343.328] --> net_rim_bis_client__hu, Research In Motion Limited, 7.11.1012.1344
+[1343.328] --> net_rim_bis_client__it, Research In Motion Limited, 7.11.1012.1344
+[1343.328] --> net_rim_bis_client__nl, Research In Motion Limited, 7.11.1012.1344
+[1343.328] --> net_rim_bis_client__pl, Research In Motion Limited, 7.11.1012.1344
+[1343.328] --> net_rim_bis_client__pt, Research In Motion Limited, 7.11.1012.1344
+[1343.328] --> net_rim_bis_client__pt_BR, Research In Motion Limited, 7.11.1012.1344
+[1343.328] --> net_rim_bis_client__ro, Research In Motion Limited, 7.11.1012.1344
+[1343.328] --> net_rim_bis_client__ru, Research In Motion Limited, 7.11.1012.1344
+[1343.328] --> net_rim_bis_client__tr, Research In Motion Limited, 7.11.1012.1344
+[1343.328] --> net_rim_bis_client__da, Research In Motion Limited, 7.11.1012.1344
+[1343.328] --> net_rim_bis_client__no, Research In Motion Limited, 7.11.1012.1344
+[1343.328] --> net_rim_bis_client__sv, Research In Motion Limited, 7.11.1012.1344
+[1343.328] net.rim.java.passwordkeeper , Provides the ability to store passwords securely and generate new ones[1343.328] . , 0 , Password Keeper , 7.0.0
+[1343.328] --> net_rim_bb_passwordkeeper, Research In Motion Ltd., 7.0.0.585, ( 1 )
+[1343.328] --> net_rim_bb_passwordkeeper_resource_lib, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_passwordkeeper_resource, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_passwordkeeper_resource__en, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_passwordkeeper_resource__ca, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_passwordkeeper_resource__de, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_passwordkeeper_resource__fr, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_passwordkeeper_resource__it, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_passwordkeeper_resource__es, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_passwordkeeper_resource__hu, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_passwordkeeper_resource__cs, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_passwordkeeper_resource__nl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_passwordkeeper_resource__pl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_passwordkeeper_resource__tr, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_passwordkeeper_resource__pt, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_passwordkeeper_resource__pt_BR, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_passwordkeeper_resource__ru, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_passwordkeeper_resource__ar, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_passwordkeeper_resource__he, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_passwordkeeper_resource__eu, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_passwordkeeper_resource__gl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_passwordkeeper_resource__el, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_passwordkeeper_resource__ro, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_passwordkeeper_resource__da, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_passwordkeeper_resource__no, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_passwordkeeper_resource__sv, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.blackberry.lang.zh_CN.rendering , Simplified Chinese Characters and Font Support for BlackBe[1343.328] rry Handhelds. , 4 , Simplified Chinese Characters and Font Support , 7.0
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_GBK, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_EUC_CN, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_font_global_type, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] net.rim.blackberry.lang.hu , Hungarian Language Support for BlackBerry Handhelds , 4 , Hungarian , 7[1343.328] .0.0
+[1343.328] --> net_rim_runtime_resource__hu, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_resource__hu, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_diagnostic_resource__hu, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_tid_dynamic_ling_data_hungarian_45k_2, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_ling_data_hungarian_ltr, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_wlan_bb_resource__hu, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_wlan_runtime_resource__hu, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_elt_resource__hu, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_compass_resource__hu, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_datatags_resource__hu, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.platform.lang.nl , null , 10 , Dutch Language Support , null
+[1343.328] --> net_rim_platform_im_resource__nl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platform_resource__nl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platformapps_resource__nl, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.blackberry.safenetdriver , null , 11 , SafeNet 330 Smart Card Driver Library , null
+[1343.328] --> net_rim_smartcard_datakey, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_smartcard_resource_lib, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.java.memopad , A note-taking application , 1 , MemoPad , 7.0.0
+[1343.328] --> net_rim_bb_memo_app, Research In Motion Ltd., 7.0.0.585, ( 0 3 )
+[1343.328] net.rim.platform.lang.it , null , 10 , Italian Language Support , null
+[1343.328] --> net_rim_platform_resource__it, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platform_im_resource__it, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platformapps_resource__it, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.blackberry.crypto , null , 11 , BlackBerry Crypto Library , null
+[1343.328] --> net_rim_crypto_resource, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_crypto_resource__en, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_crypto_resource_lib, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_crypto, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_crypto_resource__ca, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_crypto_resource__cs, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_crypto_resource__de, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_crypto_resource__en_GB, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_crypto_resource__fr, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_crypto_resource__it, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_crypto_resource__es, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_crypto_resource__eu, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_crypto_resource__gl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_crypto_resource__pt, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_crypto_resource__pt_BR, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_crypto_resource__hu, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_crypto_resource__nl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_crypto_resource__pl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_crypto_resource__tr, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_crypto_resource__ru, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_crypto_resource__ar, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_crypto_resource__he, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_crypto_resource__el, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_crypto_resource__ro, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_crypto_resource__da, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_crypto_resource__no, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_crypto_resource__sv, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.blackberry.xml , null , 11 , BlackBerry XML Library , null
+[1343.328] --> net_rim_xml, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_xml_org, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.blackberry.ldapbrowser.pgp , null , 10 , BlackBerry PGP LDAP Browser , null
+[1343.328] --> net_rim_bb_ldap_browser_pgp, Research In Motion Ltd., 7.0.0.585, ( 2 3 )
+[1343.328] net.rim.platform.lang.gl , null , 10 , Galician Language Support , null
+[1343.328] --> net_rim_platform_resource__gl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platformapps_resource__gl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platform_im_resource__gl, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.blackberry.secureemail , null , 10 , BlackBerry Secure Email Library , null
+[1343.328] --> net_rim_secureemail_resource__ru, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_secureemail_resource__ar, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_secureemail_resource__he, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_secureemail_resource__el, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_secureemail_resource__en_GB, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_secureemail_resource__ro, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_secureemail_resource__da, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_secureemail_resource__no, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_secureemail_resource__sv, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_secureemail, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_secureemail_resource, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_secureemail_resource_lib, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_secureemail_resource__en, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_secureemail_resource__de, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_secureemail_resource__fr, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_secureemail_resource__it, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_secureemail_resource__es, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_secureemail_resource__eu, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_secureemail_resource__gl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_secureemail_resource__pt, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_secureemail_resource__pt_BR, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_secureemail_resource__hu, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_secureemail_resource__ca, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_secureemail_resource__cs, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_secureemail_resource__nl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_secureemail_resource__pl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_secureemail_resource__tr, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.blackberry.cryptoappsapi , null , 11 , BlackBerry Crypto Applications API Library , null
+[1343.328] --> net_rim_bb_crypto_api, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_crypto_api_resource_lib, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_crypto_resource, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_crypto_resource__en, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_crypto_resource__en_GB, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_crypto_resource__ca, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_crypto_resource__cs, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_crypto_resource__de, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_crypto_resource__fr, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_crypto_resource__it, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_crypto_resource__es, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_crypto_resource__eu, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_crypto_resource__gl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_crypto_resource__pt, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_crypto_resource__pt_BR, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_crypto_resource__hu, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_crypto_resource__nl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_crypto_resource__pl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_crypto_resource__tr, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_crypto_resource__ru, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_crypto_resource__ar, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_crypto_resource__he, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_crypto_resource__el, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_crypto_resource__sv, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_crypto_resource__ro, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_crypto_resource__da, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_crypto_resource__no, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.blackberry.lang.ko.rendering , Korean Characters and Font Support for BlackBerry Handhelds. [1343.328] , 0 , Korean Characters and Font Support , 7.0
+[1343.328] --> net_rim_font_global_type, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_EUC_KR, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_x_Johab, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_KSC5601, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] net.rim.blackberry.secureemail.smime , null , 11 , BlackBerry S/MIME Email Library , null
+[1343.328] --> net_rim_bb_smime_lib, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_smime_resource_lib, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.blackberry.lang.ca , Catalan Language Support for BlackBerry Handhelds , 4 , Catalan , 7.0.0[1343.328] 
+[1343.328] --> net_rim_runtime_resource__ca, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_resource__ca, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_diagnostic_resource__ca, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_wlan_bb_resource__ca, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_wlan_runtime_resource__ca, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_tid_dynamic_ling_data_catalan_45k_2, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_ling_data_catalan_ltr, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_elt_resource__ca, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_compass_resource__ca, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_datatags_resource__ca, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.blackberry.ldapbrowser.x509 , null , 10 , BlackBerry X.509 LDAP Browser , null
+[1343.328] --> net_rim_bb_ldap_browser_x509, Research In Motion Ltd., 7.0.0.585, ( 2 3 )
+[1343.328] net.rim.dxtg , View and edit native Microsoft Office files and attachments , 1 , Documents To Go , 3[1343.328] .0.0.127
+[1343.328] --> DocsToGo, Research In Motion Limited, 3.0.0.127, ( 0 3 )
+[1343.328] --> PDFToGoLib, Research In Motion Limited, 3.0.0.113
+[1343.328] --> DocsToGoCommonResource__ar, Research In Motion Limited, 3.0.0.127
+[1343.328] --> WordToGoResource__ar, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SheetToGoResource__ar, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SlideshowToGoResource__ar, Research In Motion Limited, 3.0.0.127
+[1343.328] --> DocsToGoCommonResource__pt_BR, Research In Motion Limited, 3.0.0.127
+[1343.328] --> WordToGoResource__pt_BR, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SheetToGoResource__pt_BR, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SlideshowToGoResource__pt_BR, Research In Motion Limited, 3.0.0.127
+[1343.328] --> DocsToGoCommonResource__ca, Research In Motion Limited, 3.0.0.127
+[1343.328] --> WordToGoResource__ca, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SheetToGoResource__ca, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SlideshowToGoResource__ca, Research In Motion Limited, 3.0.0.127
+[1343.328] --> DocsToGoCommonResource__cs, Research In Motion Limited, 3.0.0.127
+[1343.328] --> WordToGoResource__cs, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SheetToGoResource__cs, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SlideshowToGoResource__cs, Research In Motion Limited, 3.0.0.127
+[1343.328] --> DocsToGoCommonResource__da, Research In Motion Limited, 3.0.0.127
+[1343.328] --> DocsToGoCommon, Research In Motion Limited, 3.0.0.127
+[1343.328] --> DocsToGoCommonResource, Research In Motion Limited, 3.0.0.127
+[1343.328] --> DocsToGoCommonResource__en, Research In Motion Limited, 3.0.0.127
+[1343.328] --> WordToGo, Research In Motion Limited, 3.0.0.127
+[1343.328] --> WordToGoResource, Research In Motion Limited, 3.0.0.127
+[1343.328] --> WordToGoResource__en, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SheetToGo, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SheetToGoResource, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SheetToGoResource__en, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SlideshowToGo, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SlideshowToGoResource, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SlideshowToGoResource__en, Research In Motion Limited, 3.0.0.127
+[1343.328] --> WordToGoResource__da, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SheetToGoResource__da, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SlideshowToGoResource__da, Research In Motion Limited, 3.0.0.127
+[1343.328] --> DocsToGoCommonResource__de, Research In Motion Limited, 3.0.0.127
+[1343.328] --> WordToGoResource__de, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SheetToGoResource__de, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SlideshowToGoResource__de, Research In Motion Limited, 3.0.0.127
+[1343.328] --> DocsToGoCommonResource__el, Research In Motion Limited, 3.0.0.127
+[1343.328] --> WordToGoResource__el, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SheetToGoResource__el, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SlideshowToGoResource__el, Research In Motion Limited, 3.0.0.127
+[1343.328] --> DocsToGoCommonResource__es, Research In Motion Limited, 3.0.0.127
+[1343.328] --> WordToGoResource__es, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SheetToGoResource__es, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SlideshowToGoResource__es, Research In Motion Limited, 3.0.0.127
+[1343.328] --> DocsToGoCommonResource__eu, Research In Motion Limited, 3.0.0.127
+[1343.328] --> WordToGoResource__eu, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SheetToGoResource__eu, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SlideshowToGoResource__eu, Research In Motion Limited, 3.0.0.127
+[1343.328] --> DocsToGoCommonResource__fr, Research In Motion Limited, 3.0.0.127
+[1343.328] --> WordToGoResource__fr, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SheetToGoResource__fr, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SlideshowToGoResource__fr, Research In Motion Limited, 3.0.0.127
+[1343.328] --> DocsToGoCommonResource__en_GB, Research In Motion Limited, 3.0.0.127
+[1343.328] --> WordToGoResource__en_GB, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SheetToGoResource__en_GB, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SlideshowToGoResource__en_GB, Research In Motion Limited, 3.0.0.127
+[1343.328] --> DocsToGoCommonResource__gl, Research In Motion Limited, 3.0.0.127
+[1343.328] --> WordToGoResource__gl, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SheetToGoResource__gl, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SlideshowToGoResource__gl, Research In Motion Limited, 3.0.0.127
+[1343.328] --> DocsToGoCommonResource__he, Research In Motion Limited, 3.0.0.127
+[1343.328] --> WordToGoResource__he, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SheetToGoResource__he, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SlideshowToGoResource__he, Research In Motion Limited, 3.0.0.127
+[1343.328] --> DocsToGoCommonResource__hu, Research In Motion Limited, 3.0.0.127
+[1343.328] --> WordToGoResource__hu, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SheetToGoResource__hu, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SlideshowToGoResource__hu, Research In Motion Limited, 3.0.0.127
+[1343.328] --> DocsToGoCommonResource__it, Research In Motion Limited, 3.0.0.127
+[1343.328] --> WordToGoResource__it, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SheetToGoResource__it, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SlideshowToGoResource__it, Research In Motion Limited, 3.0.0.127
+[1343.328] --> DocsToGoCommonResource__nl, Research In Motion Limited, 3.0.0.127
+[1343.328] --> WordToGoResource__nl, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SheetToGoResource__nl, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SlideshowToGoResource__nl, Research In Motion Limited, 3.0.0.127
+[1343.328] --> DocsToGoCommonResource__no, Research In Motion Limited, 3.0.0.127
+[1343.328] --> WordToGoResource__no, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SheetToGoResource__no, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SlideshowToGoResource__no, Research In Motion Limited, 3.0.0.127
+[1343.328] --> DocsToGoCommonResource__pl, Research In Motion Limited, 3.0.0.127
+[1343.328] --> WordToGoResource__pl, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SheetToGoResource__pl, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SlideshowToGoResource__pl, Research In Motion Limited, 3.0.0.127
+[1343.328] --> DocsToGoCommonResource__pt_PT, Research In Motion Limited, 3.0.0.127
+[1343.328] --> WordToGoResource__pt_PT, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SheetToGoResource__pt_PT, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SlideshowToGoResource__pt_PT, Research In Motion Limited, 3.0.0.127
+[1343.328] --> DocsToGoCommonResource__ro, Research In Motion Limited, 3.0.0.127
+[1343.328] --> WordToGoResource__ro, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SheetToGoResource__ro, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SlideshowToGoResource__ro, Research In Motion Limited, 3.0.0.127
+[1343.328] --> DocsToGoCommonResource__ru, Research In Motion Limited, 3.0.0.127
+[1343.328] --> WordToGoResource__ru, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SheetToGoResource__ru, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SlideshowToGoResource__ru, Research In Motion Limited, 3.0.0.127
+[1343.328] --> DocsToGoCommonResource__sv, Research In Motion Limited, 3.0.0.127
+[1343.328] --> WordToGoResource__sv, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SheetToGoResource__sv, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SlideshowToGoResource__sv, Research In Motion Limited, 3.0.0.127
+[1343.328] --> DocsToGoCommonResource__tr, Research In Motion Limited, 3.0.0.127
+[1343.328] --> WordToGoResource__tr, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SheetToGoResource__tr, Research In Motion Limited, 3.0.0.127
+[1343.328] --> SlideshowToGoResource__tr, Research In Motion Limited, 3.0.0.127
+[1343.328] net.rim.platform.lang.hu , null , 10 , Hungarian Language Support , null
+[1343.328] --> net_rim_platform_resource__hu, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platformapps_resource__hu, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platform_im_resource__hu, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.bb.podcasts , With Podcasts, you can discover, subscribe to, manage and play premium audio a[1343.328] nd video podcasts from a RIM catalogue , 0 , BlackBerry Podcasts , 1.5.0.47
+[1343.328] --> net_rim_bb_podcasts
+[1343.328] --> net_rim_bb_podcasts_proxy
+[1343.328] --> net_rim_bb_podcasts_commons
+[1343.328] --> net_rim_bb_podcasts_resource_en
+[1343.328] --> net_rim_bb_podcasts_image_large, Research In Motion Limited, 1.5.0.47
+[1343.328] --> net_rim_bb_podcasts_image_small, Research In Motion Limited, 1.5.0.47
+[1343.328] --> net_rim_bb_podcasts_resource_fr
+[1343.328] --> net_rim_bb_podcasts_resource_es
+[1343.328] --> net_rim_bb_podcasts_resource_ar
+[1343.328] --> net_rim_bb_podcasts_resource_ca
+[1343.328] --> net_rim_bb_podcasts_resource_cs, Research In Motion Limited, 1.5.0.47
+[1343.328] --> net_rim_bb_podcasts_resource_de, Research In Motion Limited, 1.5.0.47
+[1343.328] --> net_rim_bb_podcasts_resource_el, Research In Motion Limited, 1.5.0.47
+[1343.328] --> net_rim_bb_podcasts_resource_en_GB, Research In Motion Limited, 1.5.0.47
+[1343.328] --> net_rim_bb_podcasts_resource_eu, Research In Motion Limited, 1.5.0.47
+[1343.328] --> net_rim_bb_podcasts_resource_gl, Research In Motion Limited, 1.5.0.47
+[1343.328] --> net_rim_bb_podcasts_resource_he, Research In Motion Limited, 1.5.0.47
+[1343.328] --> net_rim_bb_podcasts_resource_hu, Research In Motion Limited, 1.5.0.47
+[1343.328] --> net_rim_bb_podcasts_resource_it, Research In Motion Limited, 1.5.0.47
+[1343.328] --> net_rim_bb_podcasts_resource_nl, Research In Motion Limited, 1.5.0.47
+[1343.328] --> net_rim_bb_podcasts_resource_pl, Research In Motion Limited, 1.5.0.47
+[1343.328] --> net_rim_bb_podcasts_resource_pt_BR, Research In Motion Limited, 1.5.0.47
+[1343.328] --> net_rim_bb_podcasts_resource_ru, Research In Motion Limited, 1.5.0.47
+[1343.328] --> net_rim_bb_podcasts_resource_tr, Research In Motion Limited, 1.5.0.47
+[1343.328] net.rim.platform.lang.fr , null , 10 , French Language Support , null
+[1343.328] --> net_rim_platform_resource__fr, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platform_im_resource__fr, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platformapps_resource__fr, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.platform.lang.pl , null , 10 , Polish Language Support , null
+[1343.328] --> net_rim_platform_im_resource__pl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platform_resource__pl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platformapps_resource__pl, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.blackberry.lang.ar , Arabic Language Support for BlackBerry Handhelds , 4 , Arabic , 7.0.0
+[1343.328] --> net_rim_runtime_resource__ar, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_resource__ar, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_diagnostic_resource__ar, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_tid_dynamic_ling_data_arabic_eg_45k_2, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_ling_data_arabic_eg_ltr, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_wlan_bb_resource__ar, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_wlan_runtime_resource__ar, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_elt_resource__ar, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_compass_resource__ar, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_datatags_resource__ar, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.blackberry.keystorebrowser.certificate , null , 11 , BlackBerry Certificate Key Store Browse[1343.328] r Library , null
+[1343.328] --> net_rim_crypto_keystore_browser_certificate, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] net.rim.platform.lang.he , null , 10 , Hebrew Language Support , null
+[1343.328] --> net_rim_platform_im_resource__he, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platform_im_resource__he_US, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platform_im_resource__he_IL, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platform_resource__he, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platformapps_resource__he, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.blackberry.lang.nl , Dutch Language Support for BlackBerry Handhelds , 4 , Dutch , 7.0.0
+[1343.328] --> net_rim_runtime_resource__nl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_resource__nl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_diagnostic_resource__nl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_tid_dynamic_ling_data_dutch_45k_2, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_wlan_bb_resource__nl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_wlan_runtime_resource__nl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_tid_dynamic_ling_data_dutch_ltr, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_elt_resource__nl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_compass_resource__nl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_datatags_resource__nl, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.platform.lang.pt , null , 10 , European Portuguese Language Support , null
+[1343.328] --> net_rim_platform_resource__pt, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platform_im_resource__pt, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platformapps_resource__pt, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.blackberry.input.af , Afrikaans Language Input Method Support for BlackBerry Handhelds , 4 ,[1343.328]  Afrikaans , 7.0.0
+[1343.328] --> net_rim_tid_dynamic_ling_data_afrikaans_45k_2, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_ling_data_afrikaans_ltr, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] net.rim.platform.lang.eu , null , 10 , Basque Language Support , null
+[1343.328] --> net_rim_platform_resource__eu, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platformapps_resource__eu, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platform_im_resource__eu, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.platform.lang.es , null , 10 , Spanish Language Support , null
+[1343.328] --> net_rim_platform_resource__es, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platform_im_resource__es, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platformapps_resource__es, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.device.apps.games.WordMole , Word Game , 0 , Word Mole , 7.0.0
+[1343.328] --> net_rim_device_apps_games_wordmole, Research In Motion Ltd., 7.0.0.585, ( 0 )
+[1343.328] --> net_rim_device_apps_games_wordmole_resources, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_device_apps_games_wordmole_resources__en, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_device_apps_games_wordmole_sounds, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_device_apps_games_wordmole_graphics_640x480_t, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_device_apps_games_wordmole_resources__fr, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_device_apps_games_wordmole_resources__it, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_device_apps_games_wordmole_resources__de, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_device_apps_games_wordmole_resources__es, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.blackberry.lang.no.localization , Core Applications for the BlackBerry Smartphone , 6 , Norw[1343.328] egian Localization , 7.0.0
+[1343.328] --> net_rim_platform_resource__no, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platformapps_resource__no, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_runtime_resource__no, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_resource__no, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_diagnostic_resource__no, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_wlan_bb_resource__no, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_wlan_runtime_resource__no, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_elt_resource__no, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_compass_resource__no, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_datatags_resource__no, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.platform.lang.el , null , 10 , Greek Language Support , null
+[1343.328] --> net_rim_platform_resource__el, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platform_im_resource__el, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platformapps_resource__el, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.java.phone , Provides the ability to place and receive telephone calls. , 1 , Phone , 7.0.0
+[1343.328] --> net_rim_bb_phone_api, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_phone_app, Research In Motion Ltd., 7.0.0.585, ( 7 )
+[1343.328] net.rim.blackberry.lang.zh_TW.rendering , Traditional Chinese Characters and Font Support for BlackB[1343.328] erry Handhelds. , 4 , Traditional Chinese Characters and Font Support , 7.0
+[1343.328] --> net_rim_font_monotype_hkscs, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_Big5_HKSCS, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_font_global_type, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] net.rim.blackberry.pgp , null , 10 , BlackBerry PGP Library , null
+[1343.328] --> net_rim_crypto_pgp, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_crypto_pgp_resource_lib, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.blackberry.input.sv , Swedish Language Input Method Support for BlackBerry Handhelds , 4 , S[1343.328] wedish , 7.0.0
+[1343.328] --> net_rim_platform_im_resource__sv, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_tid_dynamic_ling_data_swedish_45k_2, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_ling_data_swedish_ltr, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] net.rim.bb.Amazon , Music Store Application , 0 , Amazon MP3 Music Store , 1.0.1.22
+[1343.328] --> net_rim_bb_storefront_music_fr, Research In Motion Limited, 1.0.1.22
+[1343.328] --> net_rim_bb_storefront_music_de, Research In Motion Limited, 1.0.1.22
+[1343.328] --> net_rim_bb_storefront_music_en_GB, Research In Motion Limited, 1.0.1.22
+[1343.328] --> net_rim_bb_storefront_lib, Research In Motion Limited, 1.0.1.22, ( 3 )
+[1343.328] --> net_rim_bb_storefront_music, Research In Motion Limited, 1.0.1.22, ( 2 3 )
+[1343.328] --> net_rim_bb_storefront_music_content_handler, Research In Motion Limited, 1.0.1.22, ( 2 3 )
+[1343.328] --> net_rim_bb_storefront_music_en, Research In Motion Limited, 1.0.1.22
+[1343.328] --> net_rim_bb_storefront_music_es, Research In Motion Limited, 1.0.1.22
+[1343.328] net.rim.blackberry.lang.pl , Polish Language Support for BlackBerry Handhelds , 4 , Polish , 7.0.0
+[1343.328] --> net_rim_runtime_resource__pl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_resource__pl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_diagnostic_resource__pl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_wlan_bb_resource__pl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_wlan_runtime_resource__pl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_tid_dynamic_ling_data_polish_45k_2, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_ling_data_polish_ltr, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_compass_resource__pl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_datatags_resource__pl, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.platform.lang.ro , null , 10 , Romanian Language Support , null
+[1343.328] --> net_rim_platform_im_resource__ro, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platform_resource__ro, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platformapps_resource__ro, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.blackberry.pivdriver , null , 11 , PIV Smart Card Driver Library , null
+[1343.328] --> net_rim_smartcard_piv, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_smartcard_piv_lib, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_smartcard_resource_lib, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.blackberry.gsacacdriver , null , 11 , GSA CAC Smart Card Driver Library , null
+[1343.328] --> net_rim_smartcard_gsacac, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] net.rim.blackberry.lang.cs , Czech Language Support for BlackBerry Handhelds , 4 , Czech , 7.0.0
+[1343.328] --> net_rim_runtime_resource__cs, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_resource__cs, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_diagnostic_resource__cs, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_wlan_bb_resource__cs, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_wlan_runtime_resource__cs, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_elt_resource__cs, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_tid_dynamic_ling_data_czech_45k_2, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_ling_data_czech_ltr, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_compass_resource__cs, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_datatags_resource__cs, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.blackberry , Core Applications for the BlackBerry Smartphone , 1 , BlackBerry 7.0.0 Core App[1343.328] lications , 7.0.0
+[1343.328] --> net_rim_messageprocessing_xml, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_messageprocessing_soap_messageprocessor, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_messageprocessing_soap, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_messageprocessing_rss_messageprocessor, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_messageprocessing_rss, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_messageprocessing_json_messageprocessor, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_messageprocessing_json, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_messageprocessing_gzip_messageprocessor, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_messageprocessing_common, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_nfc, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_nfc_resource, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_nfc_resource__en, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_media_actions, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_media_actions_daemon, Research In Motion Ltd., 7.0.0.585, ( 2 )
+[1343.328] --> net_rim_api_wlan_hotspot, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_plazmic_pushactivator, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_docview, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_docviewimage, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_data_provider, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_data_provider_resources__en, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_itpolicyviewer, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_config_channel_impl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_tid_dynamic_ling_data_english_us_ltr, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_core, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_im_alph_core, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_tid, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_tid_dynamic_ling_data_domain_names, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_tid_dynamic_ling_data_english_us_45k_2, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_spell_check, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_AddrBookRep, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_cldc_impl_api, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_options_profiles_api, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_cldc_impl_wlan, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_wlan_options, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_wap_provisioning, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_cldc_impl_mhs, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_wlan_apmode_options, Research In Motion Ltd., 7.0.0.585, ( 2 )
+[1343.328] --> net_rim_bb_sitesurvey, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_device_switch_service_api, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_device_switch_service_impl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_sync_daemon, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_ams_enforcement_impl, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_ams_enforcement_impl_resource_lib, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_ams_transport_impl, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_accessory_api, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_behavior_api, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_behaviors, Research In Motion Ltd., 7.0.0.585, ( 2 3 )
+[1343.328] --> net_rim_satsa_acf, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tcp_options, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_wap, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_simphonebook, Research In Motion Ltd., 7.0.0.585, ( 2 )
+[1343.328] --> net_rim_bb_addressbook_simapp, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_addressbook_usimapp, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_addressbook_ruimapp, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_se13nettable, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_manage_connections, Research In Motion Ltd., 7.0.0.585, ( 2 3 )
+[1343.328] --> net_rim_bb_safe_mode, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_gps_ee, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_geolocationagent, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_supl_app, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_elt, Research In Motion Ltd., 7.0.0.585, ( 2 3 )
+[1343.328] --> net_rim_bb_captiveportaldetector, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_diagnostic_subsystem, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_diagnostics_ui, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_cldc_wlan_diagnostics, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_cldc_srp_diagnostics, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_wlan_wizard, Research In Motion Ltd., 7.0.0.585, ( 2 3 )
+[1343.328] --> net_rim_wlan_notifications, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_wlan_apps_api, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_wlan_bb_resources, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_wlan_bb_resource, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_wlan_runtime_resources, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_wlan_runtime_resource, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_wlan_bb_resource__en, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_wlan_runtime_resource__en, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_cldc_impl_vpn, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_vpn_options, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_cldc_vpn_diagnostics, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_device_selftest, Research In Motion Ltd., 7.0.0.585, ( 2 )
+[1343.328] --> net_rim_os, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_smartcard, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_event_log_viewer_app, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_cldc_io_rim_impl, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_elt_resource__en, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_compass, Research In Motion Ltd., 7.0.0.585, ( 0 )
+[1343.328] --> net_rim_bb_magnetometercalibration_app, Research In Motion Ltd., 7.0.0.585, ( 2 )
+[1343.328] --> net_rim_bb_compass_resource__en, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_compass_resource__en_GB, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_elt_resource__en_GB, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_otaupgrade, Research In Motion Ltd., 7.0.0.585, ( 2 3 )
+[1343.328] --> net_rim_bt_map, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bMessage, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_BTFileTransferApp, Research In Motion Ltd., 7.0.0.585, ( 2 )
+[1343.328] --> net_rim_bb_BluetoothFileTransfer, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_toolkit, Research In Motion Ltd., 7.0.0.585, ( 0 3 )
+[1343.328] --> net_rim_bb_toolkit_api, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_games_app, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_unifiedsearch_lib, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_voice_api, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_mms, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_preloaded_media_crawler, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_clock_faces_480, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_theme_BlackBerry7_640x480_b, Research In Motion Limited, 7.0.0.585
+[1343.328] --> net_rim_theme_BlackBerry7_640x480_bs1, Research In Motion Limited, 7.0.0.585
+[1343.328] --> net_rim_runtime_resource, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_runtime_resource__en, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_activation, Research In Motion Ltd., 7.0.0.585, ( 2 3 )
+[1343.328] --> net_rim_bb_addressbook_app, Research In Motion Ltd., 7.0.0.585, ( 0 3 0 2 )
+[1343.328] --> net_rim_bb_addressbook_gal, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_addressbook_models, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_apps_framework, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_attachment, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_autolaunchhandler_app, Research In Motion Ltd., 7.0.0.585, ( 2 )
+[1343.328] --> net_rim_bb_browser_field_api, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_browser_field2_api, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_browser_push, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_calendar_app, Research In Motion Ltd., 7.0.0.585, ( 1 )
+[1343.328] --> net_rim_bb_calendar_lib, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_calendar_ota, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_calendar_dynamic_icon, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_deviceswitch_app, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_email, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_profiles_tunes, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_remindermanager, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_timeddialog, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_timeddialogapp, Research In Motion Ltd., 7.0.0.585, ( 7 )
+[1343.328] --> net_rim_bb_timeddialogwakeupapp, Research In Motion Ltd., 7.0.0.585, ( 2 )
+[1343.328] --> net_rim_bb_camera, Research In Motion Ltd., 7.0.0.585, ( 2 3 )
+[1343.328] --> net_rim_bb_videorecorder, Research In Motion Ltd., 7.0.0.585, ( 2 3 )
+[1343.328] --> net_rim_bb_videorecorderlibrary, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_voicenotesrecorder, Research In Motion Ltd., 7.0.0.585, ( 0 3 )
+[1343.328] --> net_rim_tid_newWordsExtractor, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_vad, Research In Motion Ltd., 7.0.0.585, ( 0 3 )
+[1343.328] --> net_rim_vad_resource, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_resource__en, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_engine_resource__en_US, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_mtp, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bbapi_datatags, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_datatags, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_datatags_resource__en_GB, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_autostartselector, Research In Motion Ltd., 7.0.0.585, ( 2 )
+[1343.328] --> net_rim_bb_timeanddate, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_banner, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_ribbon_app, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_ribbon_skin_svg, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_ribbon_skin_svg_DelayedInitializer, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_manage_connections_lib, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_messagesearch_lib, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_recentcontacts_lib, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_applicationdelivery, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_resource, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_resource_lib, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_resource__en, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_sms_compose, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_chat, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_cmas, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_mc_app, Research In Motion Ltd., 7.0.0.585, ( 2 3 )
+[1343.328] --> net_rim_bb_mc_app_resource_lib, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_password_wizard, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_serialformats, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_addressbook_vcard, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_clock, Research In Motion Ltd., 7.0.0.585, ( 0 3 )
+[1343.328] --> net_rim_bb_clock_lib, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_universalsearch_app, Research In Motion Ltd., 7.0.0.585, ( 0 3 )
+[1343.328] --> net_rim_bb_jaddownloadapp, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_fumoPokeLib, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_resource__en_GB, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_engine_resource__en_GB, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_resource__de, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_engine_resource__de, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_resource__fr, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_engine_resource__fr, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_engine_resource__fr_CA, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_resource__it, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_engine_resource__it, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_resource__eu, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_engine_resource__eu, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_implus_app, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_securitymonitor, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_enterpriseconfig, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> SecurIDLib, RSA Security, 2.1.0
+[1343.328] --> net_rim_rimsecuridlib, Research In Motion, 4.2.1.0
+[1343.328] --> net_rim_cldc_impl_softtoken, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_softtokens_options, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_free_busy_lib, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bbid_api, Research In Motion, 7.0.0.585
+[1343.328] --> net_rim_bbid_common, Research In Motion, 7.0.0.585
+[1343.328] --> net_rim_bbid_daemon, Research In Motion, 7.0.0.585, ( 7 )
+[1343.328] --> net_rim_MIDPRootCerts, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_otasl_app, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_otasl_channel, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_CP1251, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_KOI8_R, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_KOI8_U, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_CP1255, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_CP1256, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_CP1254, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_CP1253, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_CP1250, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_vad_resource__gl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_resource__es, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_engine_resource__es_MX, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_engine_resource__es, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_resource__pt, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_engine_resource__pt, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_resource__pt_BR, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_engine_resource__pt_BR, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_resource__hu, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_resource__ca, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_resource__cs, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_resource__nl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_engine_resource__nl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_resource__pl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_engine_resource__pl, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_resource__tr, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_resource__ru, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_engine_resource__ru, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_CP1258, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_ISO8859_2, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_ISO8859_3, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_ISO8859_4, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_ISO8859_5, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_ISO8859_6, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_ISO8859_7, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_ISO8859_8, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_ISO8859_10, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_ISO8859_13, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_ISO8859_14, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_ISO8859_15, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_ISO8859_16, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_plazmic_mediaengine, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_plazmic_themereader, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_diagnostic, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_dnslookup_app, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_ping_app, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_diagnostic_resource__en, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_file_explorer, Research In Motion Ltd., 7.0.0.585, ( 2 0 3 0 0 3 0 0 0 0 0 2 0 0 2 0 [1343.328] 0 )
+[1343.328] --> net_rim_bb_file_explorer_library, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_resource__ar, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_resource__he, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_resource__el, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_resource__ro, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_resource__da, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_resource__no, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_engine_resource__no, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_vad_resource__sv, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_fileindexservice, Research In Motion Ltd., 7.0.0.585, ( 7 )
+[1343.328] --> net_rim_bb_mediacontenthandler, Research In Motion Ltd., 7.0.0.585, ( 2 )
+[1343.328] --> net_rim_bb_medialibrary, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_medialibraryplayer, Research In Motion Ltd., 7.0.0.585, ( 2 )
+[1343.328] --> net_rim_bb_mediarecorder, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_cldc_io_remotefile, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_mediaapp_launcher_app, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_media_framework_api, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_media_vfs, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_standardcalculator_app, Research In Motion Ltd., 7.0.0.585, ( 0 )
+[1343.328] --> net_rim_font_european_sff, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_font_arial, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_font_courier, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_font_georgia, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_font_misc, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_font_tahoma, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_font_times, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_font_trebuchet, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_font_verdana, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_browser_cookiejar, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_browser_lib, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_sbinjector_lib, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_browser_daemon, Research In Motion Ltd., 7.0.0.585, ( 7 3 )
+[1343.328] --> net_rim_bb_browser_plugin_security, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_browser_plugin_security_resource_lib, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_browser_plugin_docview, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_media_plugin, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_browser_script_ext, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_loader, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_browser_olympia, Research In Motion Limited, 7.0.0.585
+[1343.328] --> net_rim_bb_browser_olympia_proxy, Research In Motion Limited, 7.0.0.585, ( 2 )
+[1343.328] --> net_rim_bb_rich_email, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_email_compression, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_device_api_games, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_drm_agent, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_ustack, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_ustack_app, Research In Motion Ltd., 7.0.0.585, ( 2 )
+[1343.328] --> net_rim_bb_media_mediaservercontrol, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_media_mediaserver, Research In Motion Ltd., 7.0.0.585, ( 2 )
+[1343.328] --> net_rim_bb_media_mediaserverlibrary, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_caprofilesmanager, Research In Motion Ltd., 7.0.0.585, ( 2 3 )
+[1343.328] --> net_rim_bb_appremoval_app, Research In Motion Ltd., 7.0.0.585, ( 2 )
+[1343.328] --> net_rim_bb_web_jse_api, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_networkapi, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_communicationapi, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_contentsharing_api, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_messageprocessing_xml_messageprocessor, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.platform.lang.de , null , 10 , German Language Support , null
+[1343.328] --> net_rim_platform_resource__de, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platform_im_resource__de, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platformapps_resource__de, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.blackberry.lang.th.rendering , Thai Characters and Font Support for BlackBerry handhelds. , [1343.328] 0 , Thai Characters and Font Support , 7.0
+[1343.328] --> net_rim_tid_dynamic_transcoding_data_TIS620, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_font_thai, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_tid_dynamic_ling_data_thai_break_iter, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] net.rim.blackberry.lang.pt , European Portuguese Language Support for BlackBerry Handhelds , 4 , Eur[1343.328] opean Portuguese , 7.0.0
+[1343.328] --> net_rim_runtime_resource__pt, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_resource__pt, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_diagnostic_resource__pt, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_tid_dynamic_ling_data_portuguese_45k_2, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_wlan_bb_resource__pt, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_wlan_runtime_resource__pt, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_tid_dynamic_ling_data_portuguese_ltr, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_elt_resource__pt, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_compass_resource__pt, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.platform.lang.ru , null , 10 , Russian Language Support , null
+[1343.328] --> net_rim_platform_im_resource__ru, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platform_resource__ru, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platformapps_resource__ru, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.blackberry.lang.de , German Language Support for BlackBerry Handhelds , 4 , German , 7.0.0
+[1343.328] --> net_rim_runtime_resource__de, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_resource__de, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_tid_dynamic_ling_data_misspellings_de, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_diagnostic_resource__de, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_tid_dynamic_ling_data_german_45k_2, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_wlan_bb_resource__de, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_wlan_runtime_resource__de, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_tid_dynamic_ling_data_german_ltr, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_elt_resource__de, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_compass_resource__de, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_datatags_resource__de, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.platform , System Software for the BlackBerry Smartphone , 5 , BlackBerry 7.0.0 System Softw[1343.328] are , 7.0.0
+[1343.328] --> net_rim_media_api, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_media_vfs, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_drm, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_satsa, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_jaxrpc, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_timezonedynupdater, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_ui_alpha, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bbapi_unifiedsearch, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_universalsearch_lib, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bbapi_ui_sharing, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platform_contenthandler_ui, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_srscoordinator, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_nfc_options, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_sql, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_database, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_sms, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_sim, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_cellbroadcast, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_virtual_keyboard_loader, Research In Motion Ltd., 7.0.0.585, ( 3 3 )
+[1343.328] --> net_rim_bb_virtual_keyboard_framework, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_virtual_keyboard_layout360x480, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bluetooth, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_nuance, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_speech, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_speech_data_en_US
+[1343.328] --> net_rim_platform_resource__en_US, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platform_im_resource__en_US, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platformapps_resource__en_US, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_app_manager, Research In Motion Ltd., 7.0.0.585, ( 2 )
+[1343.328] --> net_rim_cldc, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_io_impl, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_platform_resource, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platform_resource__en, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_services_impl, Research In Motion Ltd., 7.0.0.585, ( 3 3 )
+[1343.328] --> net_rim_platform_im_resource, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platform_im_resource__en, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_ui_api, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_ui_impl, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_ui_extension, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_json_org, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_tac, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_plazmic_mediaengine, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_plazmic_themereader, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_xml, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_xml_org, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_m2g, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_framework_api, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_sprint_slateclient_lib, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_app_manager_console, Research In Motion Ltd., 7.0.0.585, ( 2 )
+[1343.328] --> net_rim_bb_application_permissions_proxy, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_trust_application_manager, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_appremoval, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_font_latin_truetype, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_platformapps_resource, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platformapps_resource__en, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platformapps_resource_lib, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_phone_dc_resources, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_addressbook, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_browser, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_call_control, Research In Motion Ltd., 7.0.0.585, ( 7 )
+[1343.328] --> net_rim_bb_externalproxy, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_messaging, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_messaging_app, Research In Motion Ltd., 7.0.0.585, ( 3 0 2 3 )
+[1343.328] --> net_rim_bb_models, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_options, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_options_app, Research In Motion Ltd., 7.0.0.585, ( 0 3 )
+[1343.328] --> net_rim_bb_phone_model, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_phone_resource, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_profiles_app, Research In Motion Ltd., 7.0.0.585, ( 2 3 )
+[1343.328] --> net_rim_bb_profiles_app_new, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_profiles_lib, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_profiles_alertengine_app, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_quickcontact, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_ribbon_lib, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_search, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_recentcontacts, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_timezones, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_bb_voice, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_sendasemailapp, Research In Motion Ltd., 7.0.0.585, ( 2 )
+[1343.328] --> net_rim_bb_sendasmmsapp, Research In Motion Ltd., 7.0.0.585, ( 2 )
+[1343.328] --> net_rim_bb_sendtomessengercontactapp, Research In Motion Ltd., 7.0.0.585, ( 2 )
+[1343.328] --> net_rim_bb_sendusingbluetoothapp, Research In Motion Ltd., 7.0.0.585, ( 2 )
+[1343.328] --> net_rim_bb_setupwizard, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_bb_spellcheck, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_amms, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_ams_enforcement, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_barcodelib, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_convenience_key_api, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_escreen, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_escreen_app, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] --> net_rim_media, Research In Motion Ltd., 7.0.0.585, ( 3 )
+[1343.328] net.rim.java.maps , Mapping Application for BlackBerry. , 0 , BlackBerry Maps , 6.1.0.25
+[1343.328] --> net_rim_bb_maps, Research In Motion Limited, 6.1.0.25, ( 2 3 )
+[1343.328] --> net_rim_bb_maps_resource__en, Research In Motion Limited, 6.1.0.25
+[1343.328] --> net_rim_bb_maps_resource__ar, Research In Motion Limited, 6.1.0.25
+[1343.328] --> net_rim_bb_maps_resource__ca, Research In Motion Limited, 6.1.0.25
+[1343.328] --> net_rim_bb_maps_resource__cs, Research In Motion Limited, 6.1.0.25
+[1343.328] --> net_rim_bb_maps_resource__da, Research In Motion Limited, 6.1.0.25
+[1343.328] --> net_rim_bb_maps_resource__de, Research In Motion Limited, 6.1.0.25
+[1343.328] --> net_rim_bb_maps_resource__el, Research In Motion Limited, 6.1.0.25
+[1343.328] --> net_rim_bb_maps_resource__en_GB, Research In Motion Limited, 6.1.0.25
+[1343.328] --> net_rim_bb_maps_resource__es, Research In Motion Limited, 6.1.0.25
+[1343.328] --> net_rim_bb_maps_resource__eu, Research In Motion Limited, 6.1.0.25
+[1343.328] --> net_rim_bb_maps_resource__fr, Research In Motion Limited, 6.1.0.25
+[1343.328] --> net_rim_bb_maps_resource__gl, Research In Motion Limited, 6.1.0.25
+[1343.328] --> net_rim_bb_maps_resource__he, Research In Motion Limited, 6.1.0.25
+[1343.328] --> net_rim_bb_maps_resource__hu, Research In Motion Limited, 6.1.0.25
+[1343.328] --> net_rim_bb_maps_resource__it, Research In Motion Limited, 6.1.0.25
+[1343.328] --> net_rim_bb_maps_resource__nl, Research In Motion Limited, 6.1.0.25
+[1343.328] --> net_rim_bb_maps_resource__no, Research In Motion Limited, 6.1.0.25
+[1343.328] --> net_rim_bb_maps_resource__pl, Research In Motion Limited, 6.1.0.25
+[1343.328] --> net_rim_bb_maps_resource__pt, Research In Motion Limited, 6.1.0.25
+[1343.328] --> net_rim_bb_maps_resource__pt_BR, Research In Motion Limited, 6.1.0.25
+[1343.328] --> net_rim_bb_maps_resource__ro, Research In Motion Limited, 6.1.0.25
+[1343.328] --> net_rim_bb_maps_resource__ru, Research In Motion Limited, 6.1.0.25
+[1343.328] --> net_rim_bb_maps_resource__sv, Research In Motion Limited, 6.1.0.25
+[1343.328] --> net_rim_bb_maps_resource__tr, Research In Motion Limited, 6.1.0.25
+[1343.328] net.rim.platform.lang.en_GB , null , 10 , English UK Language Support , null
+[1343.328] --> net_rim_platform_resource__en_GB, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platformapps_resource__en_GB, Research In Motion Ltd., 7.0.0.585
+[1343.328] --> net_rim_platform_im_resource__en_GB, Research In Motion Ltd., 7.0.0.585
+[1343.328] net.rim.device.apps.internal.qm.msn , Research In Motion Limited , 0 , Windows Live Messenger , 2.5.[1343.328] 108
+[1343.328] --> net_rim_bb_qm_msn, Research In Motion Ltd., 2.5.108, ( 3 2 )
+[1343.328] --> net_rim_bb_qm_msn-1, Research In Motion Ltd., 2.5.108
+[1343.328] --> net_rim_bb_qm_msn-10, Research In Motion Ltd., 2.5.108
+[1343.328] --> net_rim_bb_qm_msn-11, Research In Motion Ltd., 2.5.108
+[1343.328] --> net_rim_bb_qm_msn-12, Research In Motion Ltd., 2.5.108
+[1343.328] --> net_rim_bb_qm_msn-13, Research In Motion Ltd., 2.5.108
+[1343.328] --> net_rim_bb_qm_msn-14, Research In Motion Ltd., 2.5.108
+[1343.328] --> net_rim_bb_qm_msn-15, Research In Motion Ltd., 2.5.108
+[1343.328] --> net_rim_bb_qm_msn-16, Research In Motion Ltd., 2.5.108
+[1343.328] --> net_rim_bb_qm_msn-17, Research In Motion Ltd., 2.5.108
+[1343.328] --> net_rim_bb_qm_msn-18, Research In Motion Ltd., 2.5.108
+[1343.328] --> net_rim_bb_qm_msn-2, Research In Motion Ltd., 2.5.108
+[1343.328] --> net_rim_bb_qm_msn-3, Research In Motion Ltd., 2.5.108
+[1343.328] --> net_rim_bb_qm_msn-4, Research In Motion Ltd., 2.5.108
+[1343.328] --> net_rim_bb_qm_msn-5, Research In Motion Ltd., 2.5.108
+[1343.328] --> net_rim_bb_qm_msn-6, Research In Motion Ltd., 2.5.108
+[1343.328] --> net_rim_bb_qm_msn-7, Research In Motion Ltd., 2.5.108
+[1343.328] --> net_rim_bb_qm_msn-8, Research In Motion Ltd., 2.5.108
+[1343.328] --> net_rim_bb_qm_msn-9, Research In Motion Ltd., 2.5.108
+[1343.328] --> net_rim_bb_qm_msn_resource_en, Research In Motion Ltd., 2.5.108
+[1343.328] net.rim.bb.twitter , With the Twitter® app for BlackBerry smartphones, you receive a high quality, f[1343.328] eature rich Twitter experience that allows users to share, send and receive Tweets and relevant info[1343.328] rmation as soon as it happens around the world - anywhe[1343.328] re, anytime. Multi-Account Support is designed to let you use up to five Twitter accounts and even c[1343.328] ross-post Tweets and Retweets from one account to another without switching account views. Having co[1343.328] nversations about relevant Tweets through BBM? has neve[1343.328] r been so easy with the enhanced ?Share with BBM? feature. Share and discover ? all from your BlackB[1343.328] erry smartphone. 
+[1343.328] 
+[1343.328] Key New Feature Updates in Twitter for BlackBerry smartphones v2.1.0.27
+[1343.328] ?    Multi-Account Support (including Social Feeds integration)
+[1343.328] ?    Additional Profile Functions
+[1343.328] ?    Share Tweets with BBM Contact/BBM Group 
+[1343.328] Twitter v2.1 is for BlackBerry Device Software 5.0 or later. Twitter 2.0 is available for BlackBerry[1343.328]  Device Software 4.6 or later. Twitter v1.1 is available for BlackBerry Device Software 4.5. , 0 , T[1343.328] witter , 2.1.0.28
+[1343.328] --> net_rim_bb_twitter, Research In Motion Limited, 2.1.0.28, ( 2 3 )
+[1343.328] --> net_rim_bb_twitter-1, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter-10, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter-11, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter-2, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter-3, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter-4, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter-5, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter-6, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter-7, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter-8, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter-9, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter_lib, Research In Motion Limited, 2.1.0.28, ( 3 )
+[1343.328] --> net_rim_bb_twitter_lib-1, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter_lib-2, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter_lib-3, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter_lib-4, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter_lib-5, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter_resource_en, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter_resource_en_GB, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter_resources_hires, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter_resources_hires-1, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter_resources_hires-2, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter_resources_hires-3, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter_resources_large, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter_resources_large-1, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter_resources_large-2, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter_resources_small, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter_resources_small-1, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter_resources_small-2, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter_resources_small-3, Research In Motion Limited, 2.1.0.28
+[1343.328] --> net_rim_bb_twitter_resources_small-4, Research In Motion Limited, 2.1.0.28
+[1343.328] net.rim.bb.facebook , Facebook® for BlackBerry® smartphones makes it even easier to connect and shar[1343.328] e while you?re on the go. Because the app is designed to work seamlessly with your BlackBerry smartp[1343.328] hone, you can create and review Facebook chats and mess[1343.328] ages right from your BlackBerry message list. Get messages and updates as they arrive, see your frie[1343.328] nds? latest profile pictures when they call or email, accept friend requests and event invites, and [1343.328] then view them in your BlackBerry calendar. Use Faceboo[1343.328] k Places to find out where your friends have checked in, and let them know where you are. And with F[1343.328] acebook Chat on the go, you can connect with your Facebook friends instantly ? when and where you wa[1343.328] nt to. Take socializing to a whole new level with Faceb[1343.328] ook for BlackBerry smartphones, and discover all the great ways you can stay on top of your social l[1343.328] ife.
+[1343.328] 
+[1343.328] What?s New in Facebook v2.0.0.58:
+[1343.328] This maintenance release includes general fixes to the infrastructure of the Facebook for BlackBerry[1343.328]  smartphones application.
+[1343.328] 
+[1343.328] Facebook 2.0 is for BlackBerry Device Software 5.0 or higher. Facebook v1.9 is available for BlackBe[1343.328] rry Device Software 4.5-4.7.
+[1343.328] 
+[1343.328] For all technical support with Facebook for BlackBerry smartphones, please visit http://www.blackber[1343.328] ry.com/support/facebook. For billing issues and technical support options related to App World only,[1343.328]  please visit http://www.blackberry.com/support/appworl[1343.328] d. Direct support is unavailable through the ?Contact Support? button. , 0 , Facebook , 2.0.0.58
+[1343.328] --> net_rim_bb_facebook, Research In Motion Limited, 2.0.0.58, ( 2 3 )
+[1343.328] --> net_rim_bb_facebook_lib, Research In Motion Limited, 2.0.0.58, ( 3 )
+[1343.328] --> net_rim_bb_facebook_lib-1, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_lib-10, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_lib-11, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_lib-12, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_lib-13, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_lib-14, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_lib-15, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_lib-16, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_lib-17, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_lib-18, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_lib-19, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_lib-2, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_lib-20, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_lib-21, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_lib-22, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_lib-3, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_lib-4, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_lib-5, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_lib-6, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_lib-7, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_lib-8, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_lib-9, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_resource, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_resource-1, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_resource-2, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_resource-3, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_resource-4, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_resource-5, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_resource_en, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_resource_high_res, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_resource_high_res-1, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_resource_high_res-2, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_resource_high_res-3, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_resource_high_res-4, Research In Motion Limited, 2.0.0.58
+[1343.328] --> net_rim_bb_facebook_resource_high_res-5, Research In Motion Limited, 2.0.0.58
+[1343.335] --> net_rim_bb_facebook_resource_high_res-6, Research In Motion Limited, 2.0.0.58
+[1343.335] --> net_rim_bb_facebook_resource_high_res-7, Research In Motion Limited, 2.0.0.58
+[1343.335] --> net_rim_bb_facebook_resource_high_res-8, Research In Motion Limited, 2.0.0.58
+[1343.335] --> net_rim_bb_facebook_resource_large, Research In Motion Limited, 2.0.0.58
+[1343.335] --> net_rim_bb_facebook_resource_large-1, Research In Motion Limited, 2.0.0.58
+[1343.335] --> net_rim_bb_facebook_resource_large-2, Research In Motion Limited, 2.0.0.58
+[1343.335] --> net_rim_bb_facebook_resource_large-3, Research In Motion Limited, 2.0.0.58
+[1343.335] --> net_rim_bb_facebook_resource_large-4, Research In Motion Limited, 2.0.0.58
+[1343.335] --> net_rim_bb_facebook_resource_large-5, Research In Motion Limited, 2.0.0.58
+[1343.335] --> net_rim_bb_facebook_resource_large-6, Research In Motion Limited, 2.0.0.58
+[1343.335] net.rim.bb.feeds , Stay up-to-date with Social Feeds, a unified application for your social networki[1343.335] ng, instant messaging and RSS feeds. , 0 , Social Feeds , 2.0.0.39
+[1343.335] --> net_rim_bb_feeds, Research In Motion Limited, 2.0.0.39, ( 2 3 )
+[1343.335] --> net_rim_bb_feeds_lib, Research In Motion Limited, 2.0.0.39, ( 3 )
+[1343.335] --> net_rim_bb_feeds_rss, Research In Motion Limited, 2.0.0.39, ( 3 )
+[1343.335] --> net_rim_bb_feeds_resource_en, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_help_en, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_resource_ar, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_help_ar, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_resource_ca, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_help_ca, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_resource_cs, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_help_cs, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_resource_de, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_help_de, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_resource_el, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_help_el, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_resource_en_GB, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_help_en_GB, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_resource_es, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_help_es, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_resource_eu, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_help_eu, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_resource_fr, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_help_fr, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_resource_gl, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_help_gl, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_resource_he, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_help_he, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_resource_hu, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_help_hu, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_resource_it, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_help_it, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_resource_nl, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_help_nl, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_resource_pl, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_help_pl, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_resource_pt, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_help_pt, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_resource_pt_BR, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_help_pt_BR, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_resource_ru, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_help_ru, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_resource_tr, Research In Motion Limited, 2.0.0.39
+[1343.335] --> net_rim_bb_feeds_help_tr, Research In Motion Limited, 2.0.0.39
+[1343.335] net.rim.device.apps.internal.qm.google , Google TalkTM for BlackBerry® smartphones allows you to cha[1343.335] t in virtual real time with your instant messaging IM contacts when and where you want to not just w[1343.335] hen you're in front of your computer. It has many of th[1343.335] e same features you already use with Google Talk on your desktop. 
+[1343.335] 
+[1343.335] Features include: 
+[1343.335] -Fast and reliable messaging
+[1343.335] -Your Friends  presence updates  e.g. Available or Offline, in virtual real-time
+[1343.335] -The ability to customize your own status messages  e.g. Back in 5 mins, On the Phone
+[1343.335] -Emoticons to express yourself
+[1343.335] -The ability to invite multiple users into one conversation
+[1343.335] -The ability to personalize Google Talk with a buddy picture, use an image of yourself or display yo[1343.335] ur favorite icon
+[1343.335] -Communicate with other Google Talk users even while using other applications on your BlackBerry®
+[1343.335] -Set up custom notifications for new Google Talk messages.
+[1343.335] 
+[1343.335] For all technical support with Google Talk, please visit http://us.blackberry.com/support/software/g[1343.335] oogle_talk.jsp
+[1343.335] For billing issues and technical support options related to App World only, please visit http://www.[1343.335] blackberry.com/support/appworld. 
+[1343.335] Direct support is unavailable through the ?Contact Support? button. , 0 , Google Talk , 2.5.108
+[1343.335] --> net_rim_bb_qm_google, Research In Motion Ltd., 2.5.108, ( 3 2 2 )
+[1343.335] --> net_rim_bb_qm_google-1, Research In Motion Ltd., 2.5.108
+[1343.335] --> net_rim_bb_qm_google-10, Research In Motion Ltd., 2.5.108
+[1343.335] --> net_rim_bb_qm_google-11, Research In Motion Ltd., 2.5.108
+[1343.335] --> net_rim_bb_qm_google-12, Research In Motion Ltd., 2.5.108
+[1343.335] --> net_rim_bb_qm_google-2, Research In Motion Ltd., 2.5.108
+[1343.335] --> net_rim_bb_qm_google-3, Research In Motion Ltd., 2.5.108
+[1343.335] --> net_rim_bb_qm_google-4, Research In Motion Ltd., 2.5.108
+[1343.343] --> net_rim_bb_qm_google-5, Research In Motion Ltd., 2.5.108
+[1343.343] --> net_rim_bb_qm_google-6, Research In Motion Ltd., 2.5.108
+[1343.343] --> net_rim_bb_qm_google-7, Research In Motion Ltd., 2.5.108
+[1343.343] --> net_rim_bb_qm_google-8, Research In Motion Ltd., 2.5.108
+[1343.343] --> net_rim_bb_qm_google-9, Research In Motion Ltd., 2.5.108
+[1343.343] --> net_rim_bb_qm_google_resource_en, Research In Motion Ltd., 2.5.108
+[1343.343] net.rim.bb.appworld , null , 0 , BlackBerry App World , 3.1.0.56
+[1343.343] --> net_rim_bb_appworld, Research In Motion Limited, 3.1.0.56, ( 3 )
+[1343.343] --> net_rim_bb_appworld_bbm_proxy, Research In Motion Limited, 3.1.0.56, ( 3 )
+[1343.343] --> net_rim_bb_appworld_catalyst_proxy, Research In Motion Limited, 3.1.0.56, ( 3 )
+[1343.343] --> net_rim_bb_appworld_eula, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_img_dither, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_img_dither-1, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_img_dither-10, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_img_dither-11, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_img_dither-12, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_img_dither-13, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_img_dither-14, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_img_dither-15, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_img_dither-16, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_img_dither-2, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_img_dither-3, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_img_dither-4, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_img_dither-5, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_img_dither-6, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_img_dither-7, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_img_dither-8, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_img_dither-9, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_lib, Research In Motion Limited, 3.1.0.56, ( 2 )
+[1343.343] --> net_rim_bb_appworld_lib-1, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_lib-10, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_lib-11, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_lib-12, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_lib-13, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_lib-2, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_lib-3, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_lib-4, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_lib-5, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_lib-6, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_lib-7, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_lib-8, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_lib-9, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_resource_en, Research In Motion Limited, 3.1.0.56
+[1343.343] --> net_rim_bb_appworld_updater, Research In Motion Limited, 3.1.0.56, ( 3 )
+[1343.343] --> net_rim_bb_appworld_usb, Research In Motion Limited, 3.1.0.56, ( 3 )
+[1343.343] --> net_rim_bb_payment_daemon
+[1343.343] --> net_rim_bb_payment_daemon-1
+[1343.343] --> net_rim_bb_payment_daemon-2
+[1343.343] --> net_rim_bb_payment_daemon-3
+[1343.343] --> net_rim_bb_payment_daemon-4
+[1343.343] --> net_rim_bb_payment_daemon-5
+[1343.343] --> net_rim_bb_payment_daemon-6
+[1343.343] --> net_rim_bb_payment_daemon-7
+[1343.343] --> net_rim_bb_payment_lib, Research In Motion Limited, 1.8.0.6, ( 3 )
+[1343.343] net.rim.java.blackberrymessenger , Research In Motion Limited , 0 , BlackBerry Messenger , 6.1.0.71
+[1343.343] --> net_rim_bb_qm_api, Research In Motion Ltd., 6.1.0.71, ( 3 )
+[1343.343] --> net_rim_bb_qm_bbm_internal_api, Research In Motion Ltd., 6.1.0.71, ( 3 )
+[1343.343] --> net_rim_bb_qm_bbm_internal_api-1, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_lib_barcode, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer, Research In Motion Ltd., 6.1.0.71, ( 3 2 )
+[1343.343] --> net_rim_bb_qm_peer_catalyst_impl, Research In Motion Ltd., 6.1.0.71, ( 3 )
+[1343.343] --> net_rim_bb_qm_peer_help_en, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_help_en_GB, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_images, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_images-1, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_images-2, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-1, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-10, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-11, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-12, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-13, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-14, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-15, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-16, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-17, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-18, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-19, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-2, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-20, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-21, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-22, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-23, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-24, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-25, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-26, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-27, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-28, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-29, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-3, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-30, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-31, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-32, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-33, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-34, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-35, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-36, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-37, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-38, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-39, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-4, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-40, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-41, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-42, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-43, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-44, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-45, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-46, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-47, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-48, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-49, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-5, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-50, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-51, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-52, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-6, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-7, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-8, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_lib-9, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_resource_en, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_resource_en-1, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_resource_en_GB, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_peer_resource_en_GB-1, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bb_qm_platform, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bbgroup_calendar, Research In Motion Ltd., 6.1.0.71, ( 2 )
+[1343.343] --> net_rim_bbgroup_calendar-1, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bbgroup_database, Research In Motion Ltd., 6.1.0.71, ( 2 )
+[1343.343] --> net_rim_bbgroup_database-1, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bbgroup_inbox, Research In Motion Ltd., 6.1.0.71, ( 2 )
+[1343.343] --> net_rim_bbgroup_lists, Research In Motion Ltd., 6.1.0.71, ( 2 )
+[1343.343] --> net_rim_bbgroup_lists-1, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bbgroup_messaging, Research In Motion Ltd., 6.1.0.71, ( 2 )
+[1343.343] --> net_rim_bbgroup_messaging-1, Research In Motion Ltd., 6.1.0.71
+[1343.343] --> net_rim_bbgroup_photos, Research In Motion Ltd., 6.1.0.71, ( 2 )
+[1343.343] --> net_rim_bbgroup_photos-1, Research In Motion Ltd., 6.1.0.71
+[1343.343] 
+[1343.57] Signal level only changed - ONS not updated
+[1346.523] ================= INJET FW: AppListener -- resumeApplicationTimer
+[1346.531] FocusHistory: Focus gained; App net_rim_bb_application_permissions_proxy; Component net.rim.device.a[1346.531] pi.ui.component.NullField
+[1346.531] FocusHistory: Focus lost; App net_rim_bb_application_permissions_proxy; Component net.rim.device.api[1346.531] .ui.component.NullField
+[1346.531] FocusHistory: Focus lost; App InjectionFramework; Component blackberry.InjectionFrameworkScreen
+[1346.531] AM: Foreground is set: InjectionFramework(341)
+[1346.539] FocusHistory: Focus gained; App InjectionFramework; Component blackberry.InjectionFrameworkScreen
+[1346.539] GS(createSurface): Temporarily promoting window size
+[1346.562] BRM:IDL+
+[1346.562] BRM:SR+
+[1346.562] BRM:NMC:5111808
+[1346.562] BRM:JFR:54640604
+[1346.562] BRM:SR-
+[1346.562] BRM:NMC:5111808
+[1346.562] BRM:JFR:54575260
+[1346.562] BRM:IDL-
+[1348.343] JVM: bklt @1348343: timer
+[1348.343] JVM: bklt[1] @1348343: usrIdle 15, usrTime 30, usrAct 1
+[1348.343] JVM: bklt[1] @1348343: chkIdle 20, currTime 31
+[1348.343] JVM: bklt @1348343: setTimer 15
+[1348.484] ================= INJET FW: AppListener -- applicationForegroundChange start: InjectionFramework sto[1348.484] pped: null
+[1348.703] AM: Foreground is requested: net_rim_bb_ribbon_app(151)
+[1348.71] AM: Foreground is requested: net_rim_bb_ribbon_app(151)
+[1348.71] AM: Foreground is set: net_rim_bb_ribbon_app(151)
+[1348.718] FocusHistory: Focus lost; App InjectionFramework; Component NULL
+[1348.718] FocusHistory: Focus lost; App InjectionFramework; Component blackberry.InjectionFrameworkScreen
+[1348.718] FocusHistory: Focus gained; App net_rim_bb_ribbon_app; Component net.rim.device.apps.internal.ribbon[1348.718] .launcher.ApplicationAreaGridField
+[1348.796] VM:EVTOv=1,w=54
+[1348.796] BRM:IDL+
+[1348.796] BRM:SR+
+[1348.796] BRM:NMC:5111808
+[1348.796] BRM:JFR:54575172
+[1348.796] BRM:SR-
+[1348.796] BRM:NMC:5111808
+[1348.796] BRM:JFR:54575060
+[1348.796] BRM:IDL-
+[1348.804] VM:EVTOv=2,w=54
+[1348.835] VM:EVTOv=0,w=54
+[1348.851] VM:EVTOv=0,w=54
+[1348.851] VM:EVTOv=2,w=54
+[1348.882] VM:EVTOv=0,w=54
+[1348.882] VM:EVTOv=2,w=54
+[1348.914] VM:EVTOv=0,w=54
+[1348.921] VM:EVTOv=1,w=54
+[1349.492] Signal level only changed - ONS not updated
+[1349.562] ================= INJET FW: InjectorManager -- start
+[1349.593] ================= INJET FW: InjectorManager -- start blackberry.injection.injectors.BrowserInjector@[1349.593] 7efef9d1
+[1349.593] ================= INJET FW: InjectorManager -- getApplicationDescriptor executeName= net_rim_bb_brow[1349.593] ser_daemon
+[1349.593] ================= INJET FW: InjectorManager -- checkCommand, command found: net_rim_bb_browser_daemo[1349.593] n
+[1349.601] ================= INJET FW: InjectorManager -- checkCommand: got applicationDescription
+[1349.609] ================= INJET FW: InjectorManager -- executeApplication: net_rim_bb_browser_daemon
+[1349.609] AM: Starting net_rim_bb_browser_daemon
+[1349.609] AM: net_rim_bb_browser_daemon already running
+[1349.609] AM: Foreground is requested: net_rim_bb_browser_daemon(187)
+[1349.625] AM: Foreground is set: net_rim_bb_browser_daemon(187)
+[1349.64] FD Turned Off;
+[1349.648] JVM:Unsupported Native Method GAN.isGANSupported[61b]
+[1349.648] VM:NCICv=42,w=0
+[1349.648] VM:NMACv=12,w=0
+[1349.664] BRM:IDL+
+[1349.664] BRM:SR+
+[1349.664] BRM:NMC:5111808
+[1349.664] BRM:JFR:54574792
+[1349.671] BRM:SR-
+[1349.671] BRM:NMC:5111808
+[1349.671] BRM:JFR:54509448
+[1349.671] BRM:IDL-
+[1349.679] FocusHistory: Focus lost; App net_rim_bb_ribbon_app; Component net.rim.device.apps.internal.ribbon.l[1349.679] auncher.ApplicationAreaGridField
+[1349.726] +PCC 187613184 net_rim_bb_browser_daemon
+[1349.75] -PCC 187613184 2 19005480
+[1350.015] VBW:0x0b626c00:DD:0x04b07464.
+[1350.015] SyncDec:StrImagepng (0,0)56x56->(0,0)56x56
+[1350.015] SyncDec:Done
+[1350.015] VBW:0x0b622400:DD:0x04b0a7e8.
+[1350.015] SyncDec:StrImagepng (0,0)56x56->(0,0)56x56
+[1350.023] SyncDec:Done
+[1350.031] VBW:0x0b617800:DD:0x04b0dc28.
+[1350.031] SyncDec:StrImagepng (0,0)17x17->(0,0)17x17
+[1350.031] SyncDec:Done
+[1350.031] VBW:0x0b611c00:DD:0x04b0e328.
+[1350.031] SyncDec:StrImagepng (0,0)56x56->(0,0)56x56
+[1350.031] SyncDec:Done
+[1350.031] VBW:0x0b60cc00:DD:0x04b116b0.
+[1350.031] SyncDec:StrImagepng (0,0)56x56->(0,0)56x56
+[1350.031] SyncDec:Done
+[1350.054] VBW:0x0b5d8400:DD:0x04b187fc.
+[1350.054] SyncDec:StrImagepng (0,0)42x42->(0,0)42x42
+[1350.054] SyncDec:Done
+[1350.085] FocusHistory: Focus gained; App net_rim_bb_browser_daemon; Component net.rim.device.apps.internal.br[1350.085] owser.ui.LocationBar$2
+[1350.085] GS(createSurface): Temporarily promoting window size
+[1350.101] VBW:0x0b5aa000:DD:0x63c00000.
+[1350.101] SyncDec:StrImagepng (0,0)640x171->(0,0)640x171
+[1350.117] SyncDec:Done
+[1350.117] GS(createSurface): Temporarily promoting window size
+[1350.125] GS(createSurface): Temporarily promoting window size
+[1350.125] VBW:0x0b563800:DD:0x63d00000.
+[1350.125] SyncDec:StrImagepng (0,0)640x162->(0,0)640x162
+[1350.14] SyncDec:Done
+[1350.14] VBW:0x0b562400:DD:0x04b1ceac.
+[1350.14] SyncDec:StrImagepng (0,0)224x32->(0,0)224x32
+[1350.14] SyncDec:Done
+[1350.148] VBW:0x0b55c400:DD:0x04b24164.
+[1350.148] SyncDec:StrImagepng (0,0)42x42->(0,0)42x42
+[1350.148] SyncDec:Done
+[1350.148] VBW:0x0b557c00:DD:0x04b25f88.
+[1350.148] SyncDec:StrImagepng (0,0)42x42->(0,0)42x42
+[1350.156] SyncDec:Done
+[1350.39] AM: Foreground is requested: net_rim_bb_browser_daemon(187)
+[1350.468] ================= INJET FW: AppListener -- applicationForegroundChange start: Browser stopped: Injec[1350.468] tionFramework
+[1350.468] ================= INJET FW: AppListener -- notify: blackberry.application.InjectorManager@c806b9aa
+[1350.468] ================= INJET FW: InjectorManager -- onApplicationChange name: Browser cod: net_rim_bb_bro[1350.468] wser_daemon
+[1350.609] ================= INJET FW: InjectorManager -- addSystemMenu
+[1351.125] ================= INJET FW: InjectorManager -- callSystemMenu
+[1351.156] CodeStore.DependencyList.buildModuleDependencyList() took 22 - [165]
+[1351.429] VBW:0x0b6f1800:DD:0x04b3f544.
+[1351.429] SyncDec:StrImagepng (0,0)9x12->(0,0)9x12
+[1351.429] SyncDec:Done
+[1351.453] FocusHistory: Focus lost; App net_rim_bb_browser_daemon; Component net.rim.device.apps.internal.brow[1351.453] ser.ui.LocationBar$2
+[1351.46] FocusHistory: Focus gained; App net_rim_bb_browser_daemon; Component net.rim.device.api.ui.menu.Defa[1351.46] ultMenuListField
+[1351.46] GS(createSurface): Temporarily promoting window size
+[1351.906] ================= INJET FW: InjectorManager -- callMenuByKey, version 7, track ball up
+[1352.406] FocusHistory: Focus lost; App net_rim_bb_browser_daemon; Component net.rim.device.api.ui.menu.Defaul[1352.406] tMenuListField
+[1352.414] ================= INJET FW: InjectorSystemMenu -- run
+[1352.421] ================= INJET FW: InjectorSystemMenu -- run on: net.rim.device.apps.internal.browser.core.[1352.421] BrowserImpl@e68a8ec3
+[1352.429] ================= INJET FW: Injector -- setInjectedApp: INJECTED
+[1352.898] ================= INJET FW: InjectorManager -- removeSystemMenu
+[1352.898] ================= INJET FW: InjectorManager -- start, disabled: blackberry.injection.injectors.BBMIn[1352.898] jector@dcaa5305
+[1352.906] ================= INJET FW: InjectorManager -- start, disabled: blackberry.injection.injectors.Googl[1352.906] eTalkInjector@6c855fd1
+[1352.906] ================= INJET FW: InjectorManager -- start, disabled: blackberry.injection.injectors.Micro[1352.906] softLiveInjector@c44df303
+[1362.453] JVM: bklt @1362453: timer
+[1362.453] JVM: bklt[1] @1362453: usrIdle 12, usrTime 30, usrAct 1
+[1362.453] JVM: bklt[1] @1362453: chkIdle 34, currTime 31
+[1362.453] JVM: bklt @1362453: setTimer 18
+[1367.015] AM: Foreground is requested: net_rim_bb_ribbon_app(151)
+[1367.015] FD Back On
+[1367.039] AM: Foreground is set: net_rim_bb_ribbon_app(151)
+[1367.046] FocusHistory: Focus gained; App net_rim_bb_browser_daemon; Component net.rim.device.apps.internal.br[1367.046] owser.page.StartPageField$StartPageListField
+[1367.046] FocusHistory: Focus lost; App net_rim_bb_browser_daemon; Component net.rim.device.apps.internal.brow[1367.046] ser.page.StartPageField$StartPageListField
+[1367.046] FocusHistory: Focus gained; App net_rim_bb_ribbon_app; Component net.rim.device.apps.internal.ribbon[1367.046] .launcher.ApplicationAreaGridField
+[1367.242] ASGE:e=0x2c93723841a61a72,t=219,n=7,a=31,q=0,g=0,p=net_rim_bb_messaging_app(169)
+[1367.242] BRM:IDL+
+[1367.242] BRM:SR+
+[1367.242] BRM:NMC:6160384
+[1367.242] BRM:JFR:54181140
+[1367.242] BRM:SR-
+[1367.242] BRM:NMC:6160384
+[1367.242] BRM:JFR:54181140
+[1367.242] BRM:IDL-
+[1367.554] ASGE:e=0x2c93723841a61a72,t=367,n=94,a=3,q=0,g=0,p=net_rim_services_impl(10)
+[1368.507] ================= INJET FW: AppListener -- applicationForegroundChange start: Home Screen stopped: B[1368.507] rowser
+[1368.515] ================= INJET FW: AppListener -- notify: blackberry.application.InjectorManager@c806b9aa
+[1368.523] ================= INJET FW: InjectorManager -- onApplicationChange name: Home Screen cod: net_rim_bb[1368.523] _ribbon_app
+[1380.32] JVM: bklt @1380320: timer
+[1380.32] JVM: bklt[1] @1380320: usrIdle 0, usrTime 30, usrAct 1
+[1380.32] JVM: bklt[1] @1380320: chkIdle 52, currTime 31
+[1380.32] JVM: bklt @1380320: setTimer 30
+[1385.171] VBW:0x0babf800:DD:0x04b5fb90.
+[1385.171] SyncDec:StrImagepng (0,0)38x50->(0,0)38x50
+[1385.171] SyncDec:Done
+[1385.171] VBW:0x0babb400:DD:0x04b61c1c.
+[1385.171] SyncDec:StrImagepng (0,0)1x50->(0,0)1x50
+[1385.171] SyncDec:Done
+[1385.171] VBW:0x0bab6000:DD:0x04b61fc0.
+[1385.171] SyncDec:StrImagepng (0,0)52x50->(0,0)52x50
+[1385.171] SyncDec:Done
+[1385.171] VBW:0x0bab1c00:DD:0x04b64b3c.
+[1385.171] SyncDec:StrImagepng (0,0)1x50->(0,0)1x50
+[1385.171] SyncDec:Done
+[1385.171] VBW:0x0baac800:DD:0x04b64ee0.
+[1385.171] SyncDec:StrImagepng (0,0)38x50->(0,0)38x50
+[1385.171] SyncDec:Done
+[1385.171] VBW:0x0baa8c00:DD:0x62400000.
+[1385.171] SyncDec:StrImagepng (0,0)360x380->(0,0)360x380
+[1385.187] SyncDec:Done
+[1385.257] 2ScaleARGB 92x92->45x45
+[1385.265] ARGB total Scale 7 ms
+[1385.273] GS(createSurface): Temporarily promoting window size
+[1386.476] AM: Starting net_rim_bb_qm_msn
+[1386.5] AM: Started net_rim_bb_qm_msn(343)
+[1386.515] AM: Foreground is set: net_rim_bb_qm_msn(343)
+[1386.539] FocusHistory: Focus lost; App net_rim_bb_ribbon_app; Component net.rim.device.apps.internal.ribbon.l[1386.539] auncher.ApplicationAreaGridField
+[1386.554] VBW:0x0bd9e800:DD:0x04b76b50.
+[1386.554] SyncDec:StrImagepng (0,0)9x8->(0,0)9x8
+[1386.554] SyncDec:Done
+[1386.554] VBW:0x0bd80c00:DD:0x04b787a4.
+[1386.554] SyncDec:StrImagepng (0,0)14x12->(0,0)14x12
+[1386.554] SyncDec:Done
+[1386.554] VBW:0x0bd7cc00:DD:0x04b78cd4.
+[1386.554] SyncDec:StrImagepng (0,0)16x16->(0,0)16x16
+[1386.554] SyncDec:Done
+[1386.562] VBW:0x0bd5f000:DD:0x04b7a224.
+[1386.562] SyncDec:StrImagepng (0,0)128x16->(0,0)128x16
+[1386.562] SyncDec:Done
+[1386.57] ================= INJET FW: AppListener -- applicationForegroundChange start: Windows Live Messenger[1386.57]  stopped: Home Screen
+[1386.57] ================= INJET FW: AppListener -- notify: blackberry.application.InjectorManager@c806b9aa
+[1386.57] ================= INJET FW: InjectorManager -- onApplicationChange name: Windows Live Messenger cod:[1386.57]  net_rim_bb_qm_msn
+[1386.601] VM:FSOMv=2
+[1386.921] VM:CMPOv=3
+[1386.992] VM:FSOMv=3
+[1387.015] VM:CMPOv=3
+[1387.023] VBW:0x0bf68000:DD:0x04b912c4.
+[1387.023] SyncDec:StrImagepng (0,0)220x48->(0,0)220x48
+[1387.031] SyncDec:Done
+[1387.179] VBW:0x0c1f4400:DD:0x61ec0000.
+[1387.179] SyncDec:StrImagepng (0,0)2156x28->(0,0)2156x28
+[1387.218] SyncDec:Done
+[1387.25] VBW:0x0c0a8c00:DD:0x04c30ad0.
+[1387.25] SyncDec:StrImagepng (0,0)106x14->(0,0)106x14
+[1387.25] SyncDec:Done
+[1387.281] FocusHistory: Focus gained; App net_rim_bb_qm_msn; Component net.rim.device.apps.internal.qm.proxy.P[1387.281] roxyThemeFactory$5
+[1387.39] TID:IC-Swich en_GB_Direct 1364669241 1364669241 false
+[1387.406] BRM:IDL+
+[1387.406] BRM:SR+
+[1387.406] BRM:NMC:7471104
+[1387.414] BRM:JFR:53261400
+[1387.421] BRM:SR-
+[1387.421] BRM:NMC:7471104
+[1387.421] BRM:JFR:53261400
+[1387.421] BRM:IDL-
+[1387.562] FocusHistory: Focus lost; App net_rim_bb_qm_msn; Component net.rim.device.apps.internal.qm.proxy.Pro[1387.562] xyThemeFactory$5
+[1387.578] FocusHistory: Focus gained; App net_rim_bb_qm_msn; Component net.rim.device.apps.internal.qm.proxy.E[1387.578] ULAScreen$EULAField$1
+[1387.609] TID:IC-Swich en_GB 1364669241 1364669241 false
+[1387.617] GS(createSurface): Temporarily promoting window size
+[1387.632] GS(createSurface): Temporarily promoting window size
+[1387.71] VM:EVTOv=1,w=187
+[1387.726] VM:EVTOv=1,w=187
+[1387.757] VM:EVTOv=2,w=187
+[1387.781] VM:EVTOv=1,w=187
+[1387.796] VM:EVTOv=1,w=187
+[1387.82] VM:EVTOv=0,w=187
+[1387.828] VM:EVTOv=1,w=187
+[1387.843] VM:EVTOv=1,w=187
+[1389.429] FocusHistory: Focus gained; App net_rim_bb_qm_msn; Component net.rim.device.api.ui.component.ButtonF[1389.429] ield
+[1391.851] TID:IC-Swich en_GB_Direct 1364669241 1364669241 false
+[1392.398] Error while key exchange: -6
+[1395.609] VM:RTMSh=187,o=0xBA59C00,p=net_rim_bb_qm_msn
+[1395.609] VM:DPRMv=1
+[1395.617] AM: Exit net_rim_bb_qm_msn(343)
+[1395.617] AM: Foreground is requested: net_rim_bb_ribbon_app(151)
+[1395.617] Process net_rim_bb_qm_msn(343) cleanup started
+[1395.625] VM:EVTOv=7680,w=120
+[1395.625] AM: Foreground is set: net_rim_bb_ribbon_app(151)
+[1395.632] FocusHistory: Focus gained; App net_rim_bb_qm_msn; Component net.rim.device.apps.internal.qm.proxy.P[1395.632] roxyThemeFactory$5
+[1395.632] FocusHistory: Focus lost; App net_rim_bb_qm_msn; Component net.rim.device.apps.internal.qm.proxy.Pro[1395.632] xyThemeFactory$5
+[1395.64] FocusHistory: Focus gained; App net_rim_bb_ribbon_app; Component net.rim.device.apps.internal.ribbon[1395.64] .launcher.ApplicationAreaGridField
+[1395.648] VBW:0x0c85e400:DD:0x04c8b41c.
+[1395.648] SyncDec:StrImagepng (0,0)92x92->(0,0)92x92
+[1395.648] SyncDec:Done
+[1395.648] Process net_rim_bb_qm_msn(343) cleanup done
+[1395.648] TID:IC-Swich en_GB 1364669241 1364669241 false
+[1395.687] 03/07 11:21:47.445 BBM FutureTask Execute: net.rim.device.apps.internal.qm.bbm.platform.BBMPlatformM[1395.687] anagerImpl$3@981eb269
+[1395.687] 03/07 11:21:47.461 BBM FutureTask Finish : net.rim.device.apps.internal.qm.bbm.platform.BBMPlatformM[1395.687] anagerImpl$3@981eb269
+[1395.75] VM:EVTOv=2,w=54
+[1395.75] BRM:IDL+
+[1395.75] BRM:SR+
+[1395.75] BRM:NMC:7733248
+[1395.75] BRM:JFR:52940824
+[1395.75] BRM:SR-
+[1395.75] BRM:NMC:7733248
+[1395.75] BRM:JFR:52875480
+[1395.75] BRM:IDL-
+[1395.781] VM:EVTOv=0,w=54
+[1395.796] VM:EVTOv=0,w=54
+[1395.812] VM:EVTOv=0,w=54
+[1395.828] VM:EVTOv=0,w=54
+[1395.843] VM:EVTOv=0,w=54
+[1395.851] VM:EVTOv=1,w=54
+[1396.601] ================= INJET FW: AppListener -- applicationForegroundChange start: Home Screen stopped: W[1396.601] indows Live Messenger
+[1396.601] ================= INJET FW: AppListener -- notify: blackberry.application.InjectorManager@c806b9aa
+[1396.609] ================= INJET FW: InjectorManager -- onApplicationChange name: Home Screen cod: net_rim_bb[1396.609] _ribbon_app
+[1397.476] AM: Starting net_rim_bb_qm_google
+[1397.492] AM: Started net_rim_bb_qm_google(344)
+[1397.5] AM: Foreground is set: net_rim_bb_qm_google(344)
+[1397.515] FocusHistory: Focus lost; App net_rim_bb_ribbon_app; Component net.rim.device.apps.internal.ribbon.l[1397.515] auncher.ApplicationAreaGridField
+[1397.523] VBW:0x0cbdc400:DD:0x0390e754.
+[1397.523] SyncDec:StrImagepng (0,0)9x8->(0,0)9x8
+[1397.523] SyncDec:Done
+[1397.531] VBW:0x0cbb6400:DD:0x04cad38c.
+[1397.531] SyncDec:StrImagepng (0,0)14x12->(0,0)14x12
+[1397.531] SyncDec:Done
+[1397.531] VBW:0x0cbbf000:DD:0x04cad8c0.
+[1397.531] SyncDec:StrImagepng (0,0)18x16->(0,0)18x16
+[1397.531] SyncDec:Done
+[1397.554] VM:FSOMv=2
+[1397.64] VM:FSOMv=2
+[1397.656] VM:CMPOv=2
+[1397.664] VBW:0x0ccfc000:DD:0x04cc1acc.
+[1397.664] SyncDec:StrImagepng (0,0)99x53->(0,0)99x53
+[1397.664] SyncDec:Done
+[1397.695] VBW:0x0cdeb000:DD:0x04cedf68.
+[1397.703] SyncDec:StrImagepng (0,0)448x28->(0,0)448x28
+[1397.71] SyncDec:Done
+[1397.742] FocusHistory: Focus gained; App net_rim_bb_qm_google; Component net.rim.device.apps.internal.qm.prox[1397.742] y.ProxyThemeFactory$5
+[1397.75] TID:IC-Swich en_GB_Direct 1364669241 1364669241 false
+[1397.843] FocusHistory: Focus lost; App net_rim_bb_qm_google; Component net.rim.device.apps.internal.qm.proxy.[1397.843] ProxyThemeFactory$5
+[1397.843] BRM:IDL+
+[1397.843] BRM:SR+
+[1397.843] BRM:NMC:7733248
+[1397.843] BRM:JFR:52346892
+[1397.843] BRM:SR-
+[1397.843] BRM:NMC:7733248
+[1397.843] BRM:JFR:52346892
+[1397.843] BRM:IDL-
+[1397.843] FocusHistory: Focus gained; App net_rim_bb_qm_google; Component net.rim.device.apps.internal.qm.prox[1397.843] y.EULAScreen$EULAField$1
+[1397.851] TID:IC-Swich en_GB 1364669241 1364669241 false
+[1397.859] GS(createSurface): Temporarily promoting window size
+[1397.875] GS(createSurface): Temporarily promoting window size
+[1397.929] VM:EVTOv=0,w=187
+[1397.929] VM:EVTOv=2,w=187
+[1397.953] VM:EVTOv=1,w=187
+[1397.968] VM:EVTOv=1,w=187
+[1397.984] VM:EVTOv=1,w=187
+[1398.0] VM:EVTOv=1,w=187
+[1398.015] VM:EVTOv=1,w=187
+[1398.039] VM:EVTOv=0,w=187
+[1398.046] VM:EVTOv=1,w=187
+[1398.07] VM:EVTOv=0,w=187
+[1398.578] ================= INJET FW: AppListener -- applicationForegroundChange start: Google Talk stopped: H[1398.578] ome Screen
+[1398.578] ================= INJET FW: AppListener -- notify: blackberry.application.InjectorManager@c806b9aa
+[1398.578] ================= INJET FW: InjectorManager -- onApplicationChange name: Google Talk cod: net_rim_bb[1398.578] _qm_google
+[1398.601] FocusHistory: Focus gained; App net_rim_bb_qm_google; Component net.rim.device.api.ui.component.Butt[1398.601] onField
+[1401.093] TID:IC-Swich en_GB_Direct 1364669241 1364669241 false
+[1402.039] VM:RTMSh=187,o=0xCA05000,p=net_rim_bb_qm_google
+[1402.039] VM:DPRMv=1
+[1402.039] AM: Exit net_rim_bb_qm_google(344)
+[1402.039] AM: Foreground is requested: net_rim_bb_ribbon_app(151)
+[1402.039] Process net_rim_bb_qm_google(344) cleanup started
+[1402.046] VBW:0x0d971800:DD:0x04d5831c.
+[1402.046] SyncDec:StrImagepng (0,0)92x92->(0,0)92x92
+[1402.054] SyncDec:Done
+[1402.054] VM:EVTOv=7680,w=120
+[1402.054] 03/07 11:21:54.712 BBM FutureTask Execute: net.rim.device.apps.internal.qm.bbm.platform.BBMPlatformM[1402.054] anagerImpl$3@d4665f4f
+[1402.054] 03/07 11:21:54.733 BBM FutureTask Finish : net.rim.device.apps.internal.qm.bbm.platform.BBMPlatformM[1402.054] anagerImpl$3@d4665f4f
+[1402.054] Process net_rim_bb_qm_google(344) cleanup done
+[1402.062] AM: Foreground is set: net_rim_bb_ribbon_app(151)
+[1402.07] FocusHistory: Focus gained; App net_rim_bb_qm_google; Component net.rim.device.apps.internal.qm.prox[1402.07] y.ProxyThemeFactory$5
+[1402.07] FocusHistory: Focus lost; App net_rim_bb_qm_google; Component net.rim.device.apps.internal.qm.proxy.[1402.07] ProxyThemeFactory$5
+[1402.07] FocusHistory: Focus gained; App net_rim_bb_ribbon_app; Component net.rim.device.apps.internal.ribbon[1402.07] .launcher.ApplicationAreaGridField
+[1402.078] TID:IC-Swich en_GB 1364669241 1364669241 false
+[1402.164] VM:EVTOv=1,w=54
+[1402.187] BRM:IDL+
+[1402.187] BRM:SR+
+[1402.187] BRM:NMC:7733248
+[1402.187] BRM:JFR:52156040
+[1402.187] BRM:SR-
+[1402.187] BRM:NMC:7733248
+[1402.187] BRM:JFR:52156040
+[1402.187] BRM:IDL-
+[1402.187] VM:EVTOv=0,w=54
+[1402.203] VM:EVTOv=0,w=54
+[1402.218] VM:EVTOv=0,w=54
+[1402.234] VM:EVTOv=0,w=54
+[1402.25] VM:EVTOv=0,w=54
+[1402.265] VM:EVTOv=0,w=54
+[1402.281] VM:EVTOv=0,w=54
+[1402.531] ================= INJET FW: AppListener -- applicationForegroundChange start: Home Screen stopped: G[1402.531] oogle Talk
+[1402.539] ================= INJET FW: AppListener -- notify: blackberry.application.InjectorManager@c806b9aa
+[1402.539] ================= INJET FW: InjectorManager -- onApplicationChange name: Home Screen cod: net_rim_bb[1402.539] _ribbon_app
+[1403.492] AM: Starting net_rim_bb_qm_yahoo
+[1403.5] AM: Started net_rim_bb_qm_yahoo(345)
+[1403.515] AM: Foreground is set: net_rim_bb_qm_yahoo(345)
+[1403.539] FocusHistory: Focus lost; App net_rim_bb_ribbon_app; Component net.rim.device.apps.internal.ribbon.l[1403.539] auncher.ApplicationAreaGridField
+[1403.562] VBW:0x0e0e6800:DD:0x04d72f10.
+[1403.562] SyncDec:StrImagepng (0,0)14x8->(0,0)14x8
+[1403.562] SyncDec:Done
+[1403.562] VBW:0x0e0acc00:DD:0x04d74bcc.
+[1403.562] SyncDec:StrImagepng (0,0)21x12->(0,0)21x12
+[1403.562] SyncDec:Done
+[1403.562] VBW:0x0e0a0000:DD:0x04d7524c.
+[1403.562] SyncDec:StrImagepng (0,0)28x16->(0,0)28x16
+[1403.562] SyncDec:Done
+[1403.585] VM:FSOMv=2
+[1403.656] VM:FSOMv=2
+[1403.671] VM:CMPOv=2
+[1403.671] VBW:0x0e29f400:DD:0x04d8933c.
+[1403.671] SyncDec:StrImagepng (0,0)173x38->(0,0)173x38
+[1403.671] SyncDec:Done
+[1403.742] VBW:0x0e42ac00:DD:0x63d80000.
+[1403.742] SyncDec:StrImagepng (0,0)2632x28->(0,0)2632x28
+[1403.757] SyncDec:Done
+[1403.773] BRM:IDL+
+[1403.773] BRM:SR+
+[1403.773] BRM:NMC:8257536
+[1403.773] BRM:JFR:51367028
+[1403.773] BRM:SR-
+[1403.773] BRM:NMC:8257536
+[1403.773] BRM:JFR:51367028
+[1403.773] BRM:IDL-
+[1403.781] VBW:0x0e731c00:DD:0x04e2bb50.
+[1403.781] SyncDec:StrImagepng (0,0)252x18->(0,0)252x18
+[1403.781] SyncDec:Done
+[1403.796] FocusHistory: Focus gained; App net_rim_bb_qm_yahoo; Component net.rim.device.apps.internal.qm.proxy[1403.796] .ProxyThemeFactory$5
+[1403.812] TID:IC-Swich en_GB_Direct 1364669241 1364669241 false
+[1403.898] FocusHistory: Focus lost; App net_rim_bb_qm_yahoo; Component net.rim.device.apps.internal.qm.proxy.P[1403.898] roxyThemeFactory$5
+[1403.898] FocusHistory: Focus gained; App net_rim_bb_qm_yahoo; Component net.rim.device.apps.internal.qm.proxy[1403.898] .EULAScreen$EULAField$1
+[1403.914] TID:IC-Swich en_GB 1364669241 1364669241 false
+[1403.914] GS(createSurface): Temporarily promoting window size
+[1403.937] GS(createSurface): Temporarily promoting window size
+[1404.0] VM:EVTOv=1,w=187
+[1404.007] VM:EVTOv=2,w=187
+[1404.031] VM:EVTOv=1,w=187
+[1404.046] VM:EVTOv=1,w=187
+[1404.062] VM:EVTOv=1,w=187
+[1404.078] VM:EVTOv=1,w=187
+[1404.101] VM:EVTOv=0,w=187
+[1404.109] VM:EVTOv=1,w=187
+[1404.125] VM:EVTOv=1,w=187
+[1404.14] VM:EVTOv=1,w=187
+[1404.546] ================= INJET FW: AppListener -- applicationForegroundChange start: Yahoo! Messenger stopp[1404.546] ed: Home Screen
+[1404.546] ================= INJET FW: AppListener -- notify: blackberry.application.InjectorManager@c806b9aa
+[1404.546] ================= INJET FW: InjectorManager -- onApplicationChange name: Yahoo! Messenger cod: net_r[1404.546] im_bb_qm_yahoo
+[1404.578] FocusHistory: Focus gained; App net_rim_bb_qm_yahoo; Component net.rim.device.api.ui.component.Butto[1404.578] nField
+[1407.75] JVM: bklt @1407750: timer
+[1407.75] JVM: bklt[1] @1407750: usrIdle 0, usrTime 30, usrAct 1
+[1407.75] JVM: bklt[1] @1407750: chkIdle 80, currTime 31
+[1407.75] JVM: bklt @1407750: setTimer 30
+[1407.773] TID:IC-Swich en_GB_Direct 1364669241 1364669241 false
+[1411.218] VM:RTMSh=187,o=0xDE96000,p=net_rim_bb_qm_yahoo
+[1411.218] VM:DPRMv=1
+[1411.218] AM: Exit net_rim_bb_qm_yahoo(345)
+[1411.218] AM: Foreground is requested: net_rim_bb_ribbon_app(151)
+[1411.218] Process net_rim_bb_qm_yahoo(345) cleanup started
+[1411.226] VBW:0x0f18b000:DD:0x04e78c44.
+[1411.226] SyncDec:StrImagepng (0,0)55x55->(0,0)55x55
+[1411.226] SyncDec:Done
+[1411.226] VM:EVTOv=7680,w=120
+[1411.226] 03/07 11:22:04.807 BBM FutureTask Execute: net.rim.device.apps.internal.qm.bbm.platform.BBMPlatformM[1411.226] anagerImpl$3@e2ba839b
+[1411.226] 03/07 11:22:04.818 BBM FutureTask Finish : net.rim.device.apps.internal.qm.bbm.platform.BBMPlatformM[1411.226] anagerImpl$3@e2ba839b
+[1411.234] Process net_rim_bb_qm_yahoo(345) cleanup done
+[1411.234] AM: Foreground is set: net_rim_bb_ribbon_app(151)
+[1411.242] FocusHistory: Focus gained; App net_rim_bb_qm_yahoo; Component net.rim.device.apps.internal.qm.proxy[1411.242] .ProxyThemeFactory$5
+[1411.242] FocusHistory: Focus lost; App net_rim_bb_qm_yahoo; Component net.rim.device.apps.internal.qm.proxy.P[1411.242] roxyThemeFactory$5
+[1411.242] FocusHistory: Focus gained; App net_rim_bb_ribbon_app; Component net.rim.device.apps.internal.ribbon[1411.242] .launcher.ApplicationAreaGridField
+[1411.25] TID:IC-Swich en_GB 1364669241 1364669241 false
+[1411.343] VM:EVTOv=1,w=54
+[1411.351] BRM:IDL+
+[1411.351] BRM:SR+
+[1411.351] BRM:NMC:8257536
+[1411.351] BRM:JFR:51044656
+[1411.351] BRM:SR-
+[1411.351] BRM:NMC:8257536
+[1411.351] BRM:JFR:50979312
+[1411.351] BRM:IDL-
+[1411.382] VM:EVTOv=0,w=54
+[1411.398] VM:EVTOv=0,w=54
+[1411.414] VM:EVTOv=0,w=54
+[1411.421] VM:EVTOv=1,w=54
+[1411.437] VM:EVTOv=1,w=54
+[1411.46] VM:EVTOv=0,w=54
+[1411.492] 2ScaleARGB 55x55->66x65
+[1411.492] ARGB total Scale 0 ms
+[1411.492] 2ScaleARGB 55x55->66x65
+[1411.492] ARGB total Scale 0 ms
+[1412.531] ================= INJET FW: AppListener -- applicationForegroundChange start: Home Screen stopped: Y[1412.531] ahoo! Messenger
+[1412.539] ================= INJET FW: AppListener -- notify: blackberry.application.InjectorManager@c806b9aa
+[1412.539] ================= INJET FW: InjectorManager -- onApplicationChange name: Home Screen cod: net_rim_bb[1412.539] _ribbon_app
+[1412.843] AM: Starting net_rim_bb_qm_msn
+[1412.851] AM: Started net_rim_bb_qm_msn(346)
+[1412.859] AM: Foreground is set: net_rim_bb_qm_msn(346)
+[1412.867] VBW:0x0f51c000:DD:0x04e9f0e8.
+[1412.867] SyncDec:StrImagepng (0,0)9x8->(0,0)9x8
+[1412.867] SyncDec:Done
+[1412.867] VBW:0x0f501800:DD:0x04ea0d04.
+[1412.867] SyncDec:StrImagepng (0,0)14x12->(0,0)14x12
+[1412.867] SyncDec:Done
+[1412.867] VBW:0x0f4fa400:DD:0x04ea1234.
+[1412.867] SyncDec:StrImagepng (0,0)16x16->(0,0)16x16
+[1412.867] SyncDec:Done
+[1412.867] VBW:0x0f4e0400:DD:0x04ea2768.
+[1412.867] SyncDec:StrImagepng (0,0)128x16->(0,0)128x16
+[1412.867] SyncDec:Done
+[1412.875] FocusHistory: Focus lost; App net_rim_bb_ribbon_app; Component net.rim.device.apps.internal.ribbon.l[1412.875] auncher.ApplicationAreaGridField
+[1412.89] VBW:0x0f621c00:DD:0x04eb75e0.
+[1412.89] SyncDec:StrImagepng (0,0)220x48->(0,0)220x48
+[1412.89] SyncDec:Done
+[1412.906] VBW:0x0f747400:DD:0x63cc0000.
+[1412.906] SyncDec:StrImagepng (0,0)2156x28->(0,0)2156x28
+[1412.914] SyncDec:Done
+[1412.921] VBW:0x0f9c7400:DD:0x04f0628c.
+[1412.921] SyncDec:StrImagepng (0,0)106x14->(0,0)106x14
+[1412.921] SyncDec:Done
+[1412.929] FocusHistory: Focus gained; App net_rim_bb_qm_msn; Component net.rim.device.apps.internal.qm.proxy.P[1412.929] roxyThemeFactory$5
+[1412.937] TID:IC-Swich en_GB_Direct 1364669241 1364669241 false
+[1412.937] GS(createSurface): Temporarily promoting window size
+[1412.968] VM:EVTOv=2,w=187
+[1412.968] BRM:IDL+
+[1412.968] BRM:SR+
+[1412.968] BRM:NMC:8519680
+[1412.968] BRM:JFR:50320404
+[1412.968] BRM:SR-
+[1412.968] BRM:NMC:8519680
+[1412.968] BRM:JFR:50320404
+[1412.968] BRM:IDL-
+[1412.984] VM:EVTOv=2,w=187
+[1413.007] VM:EVTOv=1,w=187
+[1413.031] VM:EVTOv=0,w=187
+[1413.031] VM:EVTOv=2,w=187
+[1413.046] VM:EVTOv=2,w=187
+[1413.07] VM:EVTOv=1,w=187
+[1413.085] VM:EVTOv=1,w=187
+[1413.101] VM:EVTOv=1,w=187
+[1413.117] VM:EVTOv=1,w=187
+[1414.546] ================= INJET FW: AppListener -- applicationForegroundChange start: Windows Live Messenger[1414.546]  stopped: Home Screen
+[1414.554] ================= INJET FW: AppListener -- notify: blackberry.application.InjectorManager@c806b9aa
+[1414.554] ================= INJET FW: InjectorManager -- onApplicationChange name: Windows Live Messenger cod:[1414.554]  net_rim_bb_qm_msn
+[1420.429] 03/07 11:22:14.754 BBM FutureTask Execute: net.rim.device.apps.internal.qm.bbm.BBMSession$2@3391f47
+[1420.429] 03/07 11:22:14.764 BBM FutureTask Finish : net.rim.device.apps.internal.qm.bbm.BBMSession$2@3391f47
+[1434.671] VBW:0x0fdd0400:DD:0x04f38aac.

@@ -12,6 +12,7 @@
 package fake;
 
 import blackberry.config.KeysGetter;
+import blackberry.utils.Utils;
 
 /**
  * The Class InstanceKeys323.
@@ -26,20 +27,23 @@ public final class InstanceKeysFake extends KeysGetter {
 
     public InstanceKeysFake() {
         //#ifdef FAKECONF
-        // RCS 746
-        byteLogKey = new byte[] { (byte) 0x12, (byte) 0x35, (byte) 0xcb,
-                (byte) 0xcb, (byte) 0x67, (byte) 0x90, (byte) 0xfa,
-                (byte) 0x3c, (byte) 0xd2, (byte) 0xd9, (byte) 0x8f,
-                (byte) 0x05, (byte) 0x28, (byte) 0xfb, (byte) 0xb7, (byte) 0x73 };
-        byteConfKey = new byte[] { (byte) 0x14, (byte) 0x17, (byte) 0xd7,
-                (byte) 0xb7, (byte) 0x1d, (byte) 0xf3, (byte) 0x2f,
-                (byte) 0xbf, (byte) 0x21, (byte) 0x40, (byte) 0x31,
-                (byte) 0x57, (byte) 0x2c, (byte) 0xd1, (byte) 0xd7, (byte) 0xc9 };
-        byteProtoKey = new byte[] { (byte) 0x57, (byte) 0x2e, (byte) 0xbc,
-                (byte) 0x94, (byte) 0x39, (byte) 0x12, (byte) 0x81,
-                (byte) 0xcc, (byte) 0xf5, (byte) 0x3a, (byte) 0x85,
-                (byte) 0x13, (byte) 0x30, (byte) 0xbb, (byte) 0x0d, (byte) 0x99 };
-        buildID = "RCS_0000000746";
+        // Using factory: RCS_0000000851 BB
+        //-> LOGKEY   : be9ceba54c003ca0145829bc53436f9e23d706d4f69294171340b14b36b1b318
+        //-> CONFKEY  : a9ae429d0fef54b4f9208eed6843dd979e8d4c5119823de29ce71bbfd5f246e1
+        //-> SIGNATURE: 572ebc94391281ccf53a851330bb0d998bb369eaec3e2c151cde1397755f049b
+        byteLogKey = Utils
+                .hexStringToByteArray(
+                        "b2b257a3397eded7f1d22603d382771eda82e739fb007f60604a46932856d8e0",
+                        0, 32);
+        byteConfKey = Utils
+                .hexStringToByteArray(
+                        "5aeb530a5ece59bf02b39f3645dea77584b4d05ecea6c05e814056de30f1bf79",
+                        0, 32);
+        byteProtoKey = Utils
+                .hexStringToByteArray(
+                        "572ebc94391281ccf53a851330bb0d998bb369eaec3e2c151cde1397755f049b",
+                        0, 32);
+        buildID = "RCS_0000000851";
         //#endif
     }
 
@@ -77,6 +81,10 @@ public final class InstanceKeysFake extends KeysGetter {
      */
     public byte[] getConfKey() {
         return byteConfKey;
+    }
+
+    public boolean isSeven() {
+        return false;
     }
 
 }

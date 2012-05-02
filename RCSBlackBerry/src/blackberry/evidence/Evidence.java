@@ -293,7 +293,7 @@ public final class Evidence {
         final String plainFileName = (String) tuple.elementAt(4);
 
         final String dir = basePath + blockDir + "/";
-        final boolean ret = Path.createDirectory(dir);
+        final boolean ret = Path.createDirectory(dir, true);
 
         if (!ret) {
             //#ifdef DEBUG
@@ -305,9 +305,8 @@ public final class Evidence {
         fileName = dir + encName;
         //#ifdef DBC
         Check.asserts(fileName != null, "null fileName");
-        Check.asserts(!fileName.endsWith(EvidenceCollector.LOG_EXTENSION),
+        Check.asserts(!fileName.endsWith(EvidenceCollector.LOG_EXTENSION.toUpperCase()),
                 "file not scrambled");
-        Check.asserts(!fileName.endsWith("MOB"), "file not scrambled");
         //#endif
 
         //#ifdef DEBUG
@@ -326,7 +325,7 @@ public final class Evidence {
             }
 
             //#ifdef DEBUG
-            debug.info("Created: " + fileName);
+            debug.info("Created: " + plainFileName);
             //#endif
 
             final byte[] plainBuffer = makeDescription(additionalData,

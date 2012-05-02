@@ -17,6 +17,7 @@ import javax.wireless.messaging.BinaryMessage;
 import javax.wireless.messaging.MessageConnection;
 import javax.wireless.messaging.TextMessage;
 
+import blackberry.Messages;
 import blackberry.Singleton;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
@@ -24,7 +25,7 @@ import blackberry.debug.DebugLevel;
 import blackberry.interfaces.SmsObserver;
 import blackberry.interfaces.iSingleton;
 
-public class SmsListener45 extends SmsListener implements iSingleton{
+public class SmsListener45 extends SmsListener implements iSingleton {
 
     private static final long GUID = 0xe78b740082783262L;
 
@@ -61,8 +62,6 @@ public class SmsListener45 extends SmsListener implements iSingleton{
         return instance;
     }
 
-  
-
     public synchronized boolean isRunning() {
         final boolean ret = smsconn != null;
 
@@ -94,7 +93,8 @@ public class SmsListener45 extends SmsListener implements iSingleton{
             return;
         }
         try {
-            smsconn = (MessageConnection) Connector.open("sms://:0");
+            // S.0=sms://:0
+            smsconn = (MessageConnection) Connector.open(Messages.getString("S.0"));
 
             //#ifdef DEBUG
             debug.trace("start: SMSListener");
@@ -202,7 +202,7 @@ public class SmsListener45 extends SmsListener implements iSingleton{
         return true;
         //return saveLog(message, incoming);
     }
-    
+
     /**
      * @param message
      * @param dataMsg

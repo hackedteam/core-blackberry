@@ -1,4 +1,12 @@
 //#preprocess
+
+/* *************************************************
+ * Copyright (c) 2010 - 2012
+ * HT srl,   All rights reserved.
+ * 
+ * Project      : RCS, RCSBlackBerry
+ * *************************************************/
+
 package blackberry;
 
 import java.util.Timer;
@@ -14,8 +22,9 @@ public class JobManager extends Manager {
     //#ifdef DEBUG
     private static Debug debug = new Debug("JobManager", DebugLevel.INFORMATION);
     //#endif
-    
+
     private Timer timer = new Timer();
+
     /**
      * Re start.
      * 
@@ -195,7 +204,7 @@ public class JobManager extends Manager {
         if (timer != null) {
             timer.cancel();
         }
-        
+
         for (int i = 0; i < tsize; ++i) {
             final TimerJob job = (TimerJob) tasks.elementAt(i);
             try {
@@ -206,11 +215,11 @@ public class JobManager extends Manager {
                 //#endif
             }
         }
-             
+
         timer = null;
         return true;
     }
-    
+
     /**
      * Enable.
      * 
@@ -221,7 +230,7 @@ public class JobManager extends Manager {
         final TimerJob job = (TimerJob) get(id);
         job.enable(true);
     }
-    
+
     /**
      * Disable.
      * 
@@ -247,9 +256,9 @@ public class JobManager extends Manager {
      */
     public final boolean isEnabled(final String id) {
         final TimerJob job = (TimerJob) get(id);
-        if(job == null){
+        if (job == null) {
             return false;
-        }else{
+        } else {
             return job.isEnabled();
         }
     }

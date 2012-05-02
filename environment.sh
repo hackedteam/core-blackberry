@@ -235,14 +235,14 @@ function addHeader(){
 	rm noheader
 	for f in `find . -name \*.java`
 	do
-		cat $f | grep ' * HT srl'>/dev/null || echo $f >>! noheader
+		head $f | grep '/\* \*\*'>/dev/null || echo $f >> noheader
 	done
 	
 	cat << EOF > header
 //#preprocess
 
 /* *************************************************
- * Copyright (c) 2010 - 2011
+ * Copyright (c) 2010 - 2012
  * HT srl,   All rights reserved.
  * 
  * Project      : RCS, RCSBlackBerry
@@ -252,9 +252,12 @@ EOF
 	
 	for f in `cat noheader`
 	do
+		rm tmpjava
 		echo $f
-		cat $f | grep -v "//#preprocess" >! tmpjava
-		cat header tmpjava  >! $f
+		cat $f | grep -v "//#preprocess" > tmpjava
+		rm $f
+		cat header tmpjava  > $f
+		#cat header tmpjava 
 	done
 	
 	rm tmpjava header noheader

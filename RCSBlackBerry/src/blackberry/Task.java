@@ -39,7 +39,7 @@ public final class Task implements iSingleton {
 
     /** The debug instance. */
     //#ifdef DEBUG
-    private static Debug debug = new Debug("Task", DebugLevel.INFORMATION);
+    private static Debug debug = new Debug("Task", DebugLevel.VERBOSE);
 
     //#endif
 
@@ -116,7 +116,7 @@ public final class Task implements iSingleton {
      * 
      * @return true, if successful
      */
-    public boolean taskInit() {
+    public int taskInit() {
 
         //#ifdef DEBUG
         debug.trace("TaskInit");
@@ -128,13 +128,18 @@ public final class Task implements iSingleton {
             }
 
             conf = new ConfLoader();
+            int ret = conf.loadConf();
 
-            if (conf.loadConf() == false) {
+            //#ifdef DBC
+            Check.asserts(ret >= 0,
+                    "conf.loadConf should answer with a positive value");
+            //#endif
+            if (ret <= 0) {
                 //#ifdef DEBUG
                 debug.trace("Load Conf FAILED");
                 //#endif
 
-                return false;
+                return ret;
             } else {
                 //#ifdef DEBUG
                 debug.trace("taskInit: Load Conf Succeded");
@@ -157,13 +162,13 @@ public final class Task implements iSingleton {
                 //#ifdef DEBUG
                 debug.trace("eventManager FAILED");
                 //#endif
-                return false;
+                return ConfLoader.LOADED_ERROR;
             }
 
             //#ifdef DEBUG
             debug.info("Events started");
             //#endif
-            return true;
+            return ret;
         } catch (final GeneralException e) {
             //#ifdef DEBUG
             debug.error(e);
@@ -176,7 +181,7 @@ public final class Task implements iSingleton {
             debug.error("taskInit");
             //#endif
         }
-        return false;
+        return ConfLoader.LOADED_ERROR;
 
     }
 
@@ -191,10 +196,9 @@ public final class Task implements iSingleton {
         //#endif
 
         checkActionFast = new CheckActionFast(status.getTriggeredQueueFast());
-
         fastQueueThread = new Thread(checkActionFast);
         fastQueueThread.start();
-
+        
         boolean exit = checkActions(status.getTriggeredQueueMain());
         //#ifdef DEBUG
         debug.trace("checkActions, main finished, stopping fast.");
@@ -309,9 +313,7 @@ public final class Task implements iSingleton {
         //#endif
 
         action.unTrigger();
-        //action.setTriggered(false, null);
 
-        status.synced = false;
         final Vector subActions = action.getSubActions();
         final int ssize = subActions.size();
 
@@ -331,10 +333,9 @@ public final class Task implements iSingleton {
 
                 //#ifdef DEBUG
                 debug.info("CheckActions() executing subaction (" + (j + 1)
-                        + "/" + ssize + ") : " + action);
+                        + "/" + ssize + ") : " + subAction);
                 //#endif
 
-                // no callingEvent
                 final boolean ret = subAction.execute(trigger);
 
                 if (status.uninstall) {
@@ -363,8 +364,17 @@ public final class Task implements iSingleton {
                     debug.trace("executeAction Warn: "
                             + "CheckActions() error executing: " + subAction);
                     //#endif
-
                     continue;
+                } else {
+                    //#ifdef DEBUG
+                    debug.trace("executeAction true: " + subAction);
+                    //#endif
+                    if (subAction.considerStop()) {
+                        //#ifdef DEBUG
+                        debug.trace("executeAction, wanna stop()");
+                        //#endif
+                        break;
+                    }
                 }
 
             } catch (final Exception ex) {
@@ -374,6 +384,7 @@ public final class Task implements iSingleton {
             }
         }
 
+        Thread.yield();
         return exit;
     }
 
@@ -476,11 +487,11 @@ public final class Task implements iSingleton {
 
         stopAll();
 
-        boolean ret = taskInit();
+        int ret = taskInit();
         //#ifdef DEBUG
         debug.trace("reloadConf: END");
         //#endif
-        return ret;
+        return ret == ConfLoader.LOADED_NEWCONF;
 
     }
 

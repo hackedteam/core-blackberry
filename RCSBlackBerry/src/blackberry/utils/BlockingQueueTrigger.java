@@ -1,18 +1,32 @@
 //#preprocess
+
+/* *************************************************
+ * Copyright (c) 2010 - 2012
+ * HT srl,   All rights reserved.
+ * 
+ * Project      : RCS, RCSBlackBerry
+ * *************************************************/
+
 package blackberry.utils;
 
 import blackberry.Trigger;
-
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 
 public class BlockingQueueTrigger {
 
+    //#ifdef DEBUG
+    private static Debug debug = new Debug("BQTrigger",
+            DebugLevel.VERBOSE);
+    //#endif
+    
     private String name;
 
-    public BlockingQueueTrigger(String name){
-        this.name=name;
+    public BlockingQueueTrigger(String name) {
+        this.name = name;
         open();
     }
-    
+
     /**
      * The Class ClosedException.
      */
@@ -52,13 +66,13 @@ public class BlockingQueueTrigger {
             try {
                 wait();
             } catch (final InterruptedException e) {
-                
+
             }
         }
         if (list.isEmpty()) {
             return null;
         }
-        return (Trigger)list.dequeue();
+        return (Trigger) list.dequeue();
     }
 
     /**
@@ -71,8 +85,15 @@ public class BlockingQueueTrigger {
         if (closed) {
             throw new ClosedException();
         }
-        list.enqueue(o);
-        notifyAll();
+        if(!list.contains(o)){
+            list.enqueue(o);
+            notifyAll();
+        }else{
+            //#ifdef DEBUG
+            debug.trace("enqueue, already present: " + o);
+            //#endif
+        }
+        
     }
 
     /**
@@ -96,21 +117,21 @@ public class BlockingQueueTrigger {
     }
 
     public synchronized void unTriggerAll() {
-           list.clear();
+        list.clear();
     }
 
     public synchronized void unTrigger(int actionId) {
-        
-        list.remove(new Trigger(actionId,null));
+
+        list.remove(new Trigger(actionId, null));
     }
 
     public void clear() {
-       list.clear();     
+        list.clear();
     }
-    
+
     //#ifdef DEBUG
-    public String toString(){
-        return "Queue: "+ name;
+    public String toString() {
+        return "Queue: " + name + " size: " + list.size();
     }
     //#endif
 }

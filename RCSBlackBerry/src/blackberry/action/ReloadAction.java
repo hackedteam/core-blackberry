@@ -13,13 +13,13 @@ import blackberry.config.ConfAction;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-
 /**
  * The Class ReloadAction.
  */
 public final class ReloadAction extends SubAction {
     //#ifdef DEBUG
     static Debug debug = new Debug("ReloadAction", DebugLevel.VERBOSE);
+
     //#endif
     /**
      * Instantiates a new reload action.
@@ -33,7 +33,6 @@ public final class ReloadAction extends SubAction {
 
     /*
      * (non-Javadoc)
-     * 
      * @see com.ht.AndroidServiceGUI.action.SubAction#execute()
      */
 
@@ -41,7 +40,6 @@ public final class ReloadAction extends SubAction {
         //status.reload=true;
         return false;
     }
-
 
     protected boolean parse(ConfAction params) {
         return true;

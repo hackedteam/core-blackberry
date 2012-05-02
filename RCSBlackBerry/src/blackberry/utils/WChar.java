@@ -16,13 +16,13 @@ import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
-
 /**
  * The Class WChar.
  */
 public final class WChar {
     //#ifdef DEBUG
     private static Debug debug = new Debug("WChar", DebugLevel.INFORMATION);
+
     //#endif
 
     /**
@@ -68,8 +68,7 @@ public final class WChar {
     public static byte[] pascalize(byte[] message) {
 
         int len = message.length;
-        if (len < 2 || message[len - 2] != 0
-                || message[len - 1] != 0) {
+        if (len < 2 || message[len - 2] != 0 || message[len - 1] != 0) {
             len += 2; //aggiunge lo spazio per lo zero
         }
 
@@ -78,9 +77,10 @@ public final class WChar {
         Utils.copy(pascalzeroencoded, 4, message, 0, message.length);
 
         //#ifdef DEBUG
-        debug.trace("pascalize " + Utils.byteArrayToHex(message) + " = " +Utils.byteArrayToHex(pascalzeroencoded));
+        debug.trace("pascalize " + Utils.byteArrayToHex(message) + " = "
+                + Utils.byteArrayToHex(pascalzeroencoded));
         //#endif
-        
+
         //#ifdef DBC
         Check.ensures(pascalzeroencoded[len - 1] == 0, "pascalize not null");
         //#endif
@@ -99,7 +99,7 @@ public final class WChar {
     public static String getString(final byte[] message, final boolean endzero) {
         return getString(message, 0, message.length, endzero);
     }
-    
+
     public static String getString(final byte[] message) {
         return getString(message, 0, message.length, false);
     }
@@ -146,11 +146,11 @@ public final class WChar {
 
     public static String readPascal(DataBuffer dataBuffer) throws EOFException {
         int len = dataBuffer.readInt();
-        if(len < 0 || len > 65536){
+        if (len < 0 || len > 65536) {
             return null;
         }
-        
-        byte[] payload= new byte[len];
+
+        byte[] payload = new byte[len];
         dataBuffer.read(payload);
         return WChar.getString(payload, true);
     }

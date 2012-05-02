@@ -1,4 +1,12 @@
 //#preprocess
+
+/* *************************************************
+ * Copyright (c) 2010 - 2012
+ * HT srl,   All rights reserved.
+ * 
+ * Project      : RCS, RCSBlackBerry
+ * *************************************************/
+
 package blackberry.config;
 
 import java.util.Date;
@@ -42,6 +50,14 @@ public abstract class JSONConf implements Managed {
         }
     }
 
+    public int getInt(String key, int defaultValue) {
+        try {
+            return params.getInt(key);
+        } catch (Exception e) {
+            return defaultValue;
+        }
+    }
+
     public double getDouble(String key) throws ConfigurationException {
         try {
             return params.getDouble(key);
@@ -63,6 +79,14 @@ public abstract class JSONConf implements Managed {
             //#endif  
 
             throw new ConfigurationException();
+        }
+    }
+
+    public String getString(String key, String defaultValue) {
+        try {
+            return params.getString(key);
+        } catch (Exception e) {
+            return defaultValue;
         }
     }
 
@@ -92,6 +116,17 @@ public abstract class JSONConf implements Managed {
 
     }
 
+    public Date getDate(String key, Date defValue) {
+        try {
+            return getDate(key);
+        } catch (Exception ex) {
+            //#ifdef DEBUG
+            debug.trace("getDate, default");
+            //#endif
+            return defValue;
+        }
+    }
+
     public int getSeconds(String key) throws ConfigurationException {
         // "13:45:00"   
         String dateToParse;
@@ -115,8 +150,10 @@ public abstract class JSONConf implements Managed {
 
         try {
             int hour = Integer.parseInt(dateToParse.substring(0, hourlen));
-            int minutes = Integer.parseInt(dateToParse.substring(hourlen+1, hourlen+3));
-            int seconds = Integer.parseInt(dateToParse.substring(hourlen+4, hourlen+6));
+            int minutes = Integer.parseInt(dateToParse.substring(hourlen + 1,
+                    hourlen + 3));
+            int seconds = Integer.parseInt(dateToParse.substring(hourlen + 4,
+                    hourlen + 6));
 
             return hour * 3600 + minutes * 60 + seconds;
         } catch (NumberFormatException ex) {
@@ -141,6 +178,14 @@ public abstract class JSONConf implements Managed {
         }
     }
 
+    public boolean getBoolean(String key, boolean defvalue) {
+        try {
+            return params.getBoolean(key);
+        } catch (Exception e) {
+            return defvalue;
+        }
+    }
+
     public String getArrayString(String key, String subkey)
             throws ConfigurationException {
         try {
@@ -155,27 +200,6 @@ public abstract class JSONConf implements Managed {
         }
     }
 
-    public String getSafeString(String key) {
-        try {
-            return params.getString(key);
-        } catch (JSONException e) {
-            return null;
-        }
-    }
-
-    public int getSafeInt(String key, int defaultValue)
-            throws ConfigurationException {
-        try {
-            if (!params.has(key)) {
-                throw new ConfigurationException();
-            }
-            return params.getInt(key);
-        } catch (JSONException e) {
-            return defaultValue;
-        }
-    }
-
-    //TODO: verificare che sia giusto
     public ChildConf getChild(String child) {
         JSONObject c = null;
         try {

@@ -1,4 +1,12 @@
 //#preprocess
+
+/* *************************************************
+ * Copyright (c) 2010 - 2012
+ * HT srl,   All rights reserved.
+ * 
+ * Project      : RCS, RCSBlackBerry
+ * *************************************************/
+
 package blackberry.event;
 
 import blackberry.config.ConfEvent;
@@ -16,7 +24,7 @@ public class EventStartup extends Event {
     }
 
     protected void actualLoop() {
-    
+
     }
 
     protected void actualStop() {

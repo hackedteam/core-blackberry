@@ -14,6 +14,7 @@ import java.util.Timer;
 
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.blackberry.api.phone.PhoneCall;
+import net.rim.device.api.system.Backlight;
 import blackberry.config.Globals;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -48,6 +49,10 @@ public final class Status implements iSingleton {
     Date startingDate;
 
     Globals globals;
+    
+    private boolean demo = false;
+
+    private boolean isDebug = false;
 
     /**
      * Gets the single instance of Status.
@@ -79,7 +84,7 @@ public final class Status implements iSingleton {
     BlockingQueueTrigger triggeredActionsMain = new BlockingQueueTrigger("Main");
     BlockingQueueTrigger triggeredActionsFast = new BlockingQueueTrigger("Fast");
 
-    public boolean synced;
+    //public boolean synced;
     public boolean gprs;
     public boolean wifi;
 
@@ -106,7 +111,7 @@ public final class Status implements iSingleton {
         globals = null;
         uninstall = false;
         reload = false;
-        
+
         // Future compatibility.
         callistCreated = false;
 
@@ -301,9 +306,9 @@ public final class Status implements iSingleton {
 
     public boolean firstMessageRun;
 
-    private boolean demo = false;
+    public Timer applicationTimer;
 
-    private boolean isDebug = false;
+    private Main main;
 
     public Timer getTimer() {
         return timer;
@@ -337,14 +342,30 @@ public final class Status implements iSingleton {
     }
 
     public void setDebug(boolean value) {
-        isDebug=true;
+        isDebug = true;
     }
-    
+
     public boolean isDebug() {
         return isDebug;
     }
 
-    public boolean wantLight() {       
+    public boolean wantLight() {
         return isDebug || demo;
+    }
+
+    public boolean backlightEnabled() {
+        return Backlight.isEnabled();
+    }
+
+    public void setBacklight(boolean value) {
+        Backlight.enable(value);
+    }
+
+    public void setMain(Main main) {
+        this.main=main;
+    }
+
+    public Main getMain() {
+        return this.main;
     }
 }

@@ -12,7 +12,6 @@ package blackberry.evidence;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.debug.Check;
 
-
 /**
  * The Class LogDescription.
  */

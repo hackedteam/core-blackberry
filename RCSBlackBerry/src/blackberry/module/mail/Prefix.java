@@ -16,7 +16,6 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.utils.Utils;
 
-
 /**
  * The Class Prefix.
  */

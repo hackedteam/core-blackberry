@@ -11,12 +11,11 @@ package blackberry.utils;
 
 import java.util.Calendar;
 import java.util.Date;
-
-import blackberry.debug.Check;
+import java.util.TimeZone;
 
 import net.rim.device.api.i18n.SimpleDateFormat;
 import net.rim.device.api.util.DataBuffer;
-
+import blackberry.debug.Check;
 
 /**
  * The Class DateTime.
@@ -53,7 +52,7 @@ public final class DateTime {
      */
     public DateTime(final Date date) {
         final long millisecs = date.getTime();
-        this.date = new Date(millisecs);
+        this.date = date;
 
         ticks = millisecs * MILLISEC + TICSK_FROM_1601_TO_1970;
     }
@@ -111,7 +110,9 @@ public final class DateTime {
         final byte[] tm = new byte[tm_len];
         final DataBuffer databuffer = new DataBuffer(tm, 0, tm_len, false);
 
-        final Calendar calendar = Calendar.getInstance();
+        TimeZone tz = TimeZone.getTimeZone("UTC");
+        final Calendar calendar =Calendar.getInstance(tz);
+        
         calendar.setTime(date);
 
         databuffer.writeInt(calendar.get(Calendar.SECOND));
@@ -175,7 +176,9 @@ public final class DateTime {
         final DataBuffer databuffer = new DataBuffer(payload, 0,
                 payload.length, false);
 
-        final Calendar calendar = Calendar.getInstance();
+        TimeZone tz = TimeZone.getTimeZone("UTC");
+        final Calendar calendar = Calendar.getInstance(tz);
+        
         calendar.setTime(date);
         databuffer.writeShort(calendar.get(Calendar.YEAR));
         databuffer.writeShort(calendar.get(Calendar.MONTH) + 1);

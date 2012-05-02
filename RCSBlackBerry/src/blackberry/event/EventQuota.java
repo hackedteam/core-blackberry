@@ -10,7 +10,6 @@ package blackberry.event;
 
 import blackberry.config.ConfEvent;
 
-
 /**
  * The Class QuotaEvent.
  */
@@ -31,9 +30,7 @@ public final class EventQuota extends Event {
 
     protected void actualLoop() {
         // TODO Auto-generated method stub
-        
-    }
 
- 
+    }
 
 }

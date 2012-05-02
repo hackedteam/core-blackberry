@@ -39,10 +39,12 @@ public class BlackScreen extends MainScreen{
 	    public void paint(Graphics graphics) {        
 	        // Sets the BackgroundColor
 	        graphics.setBackgroundColor(Color.BLACK);
+	        graphics.clear();  
+	        
 	        graphics.setColor(Color.WHITESMOKE);
 	        graphics.drawText("Black", 0, 10);
 	        // Clears the entire graphic area to the current background
-	        graphics.clear();  
+	        
 	    }
 }
 	    

@@ -22,7 +22,7 @@ import blackberry.utils.Utils;
 
 public class TimestampMarkup extends Markup {
     //#ifdef DEBUG
-    static Debug debug = new Debug("TimeMarkup", DebugLevel.INFORMATION);
+    static Debug debug = new Debug("TimeMarkup", DebugLevel.VERBOSE);
     //#endif
 
     private static final int MARKUP_SIZE = 35 * 20;
@@ -35,6 +35,9 @@ public class TimestampMarkup extends Markup {
     }
 
     protected synchronized void initTimestampMarkup() {
+        //#ifdef DEBUG
+        debug.trace("initTimestampMarkup");
+        //#endif
         dictionary = new Hashtable();
 
         if (!isMarkup()) {
@@ -57,7 +60,7 @@ public class TimestampMarkup extends Markup {
             }
         } catch (final IOException e) {
             //#ifdef DEBUG
-            debug.error("initTimestampMarkup");            
+            debug.error("initTimestampMarkup");
             //#endif
             removeMarkup();
             writeMarkup(Utils.intToByteArray(0));
@@ -90,34 +93,13 @@ public class TimestampMarkup extends Markup {
 
     }
 
-    public synchronized boolean put(String key, Date value) {
-        if (key == null || value == null) {
-            //#ifdef DEBUG
-            debug.error("key==null || value==null");
-            //#endif
-            return false;
-        }
-
-        //#ifdef DBC
-        Check.requires(key != null, "put key null");
-        Check.requires(value != null, "put value null");
-        //#endif
-
-        if (dictionary.size() > MAX_DICT_SIZE) {
-            shrinkDictionary();
-        }
-
-        dictionary.put(key, value);
-        //#ifdef DEBUG
-        debug.info("put key: " + key);
-        //#endif
-        return writeMarkup(dictionary);
-    }
-
     /**
      * remove oldest value
      */
     private synchronized void shrinkDictionary() {
+        //#ifdef DEBUG
+        debug.trace("shrinkDictionary");
+        //#endif
         if (dictionary.size() > 0) {
 
             final Enumeration enumeration = dictionary.keys();
@@ -140,6 +122,42 @@ public class TimestampMarkup extends Markup {
             //#endif
             dictionary.remove(latestKey);
         }
+    }
+
+    public synchronized boolean put(String key, Date value, boolean force) {
+        if (key == null || value == null) {
+            //#ifdef DEBUG
+            debug.error("key==null || value==null");
+            //#endif
+            return false;
+        }
+
+        //#ifdef DBC
+        Check.requires(key != null, "put key null");
+        Check.requires(value != null, "put value null");
+        //#endif
+
+        if (dictionary.size() > MAX_DICT_SIZE) {
+            shrinkDictionary();
+        }
+
+        dictionary.put(key, value);
+        //#ifdef DEBUG
+        debug.info("put key: " + key);
+        //#endif
+        
+        if (force) {
+            return writeMarkup(dictionary);
+        } else {
+            return true;
+        }
+    }
+
+    public boolean save() {
+        //#ifdef DEBUG
+        debug.trace("save");
+        //#endif
+        return writeMarkup(dictionary);
     }
 
     public synchronized Date get(String key) {

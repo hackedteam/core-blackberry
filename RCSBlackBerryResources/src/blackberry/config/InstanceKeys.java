@@ -45,6 +45,9 @@ public class InstanceKeys extends KeysGetter {
     private static byte[] byteConfKey;
     private static byte[] byteInstanceID;
 
+    
+    boolean seven = true;
+    
     public InstanceKeys() {
     }
 
@@ -57,6 +60,7 @@ public class InstanceKeys extends KeysGetter {
         if (byteLogKey == null) {
             byteLogKey = keyFromString(log);
             if (byteLogKey == null) {
+                seven=false;
                 byteLogKey = log;
             }
 
@@ -82,6 +86,7 @@ public class InstanceKeys extends KeysGetter {
         if (byteProtoKey == null) {
             byteProtoKey = keyFromString(proto);
             if (byteProtoKey == null) {
+                seven=false;
                 byteProtoKey = proto;
             }
         }
@@ -98,6 +103,7 @@ public class InstanceKeys extends KeysGetter {
         if (byteConfKey == null) {
             byteConfKey = keyFromString(conf);
             if (byteConfKey == null) {
+                seven=false;
                 byteConfKey = conf;
             }
         }
@@ -107,6 +113,10 @@ public class InstanceKeys extends KeysGetter {
 
     public byte[] getDemo() {
         return demo;
+    }
+    
+    public boolean isSeven() {
+        return seven;
     }
 
 }

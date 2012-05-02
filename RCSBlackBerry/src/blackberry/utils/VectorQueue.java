@@ -1,26 +1,25 @@
 //#preprocess
+
+/* *************************************************
+ * Copyright (c) 2010 - 2012
+ * HT srl,   All rights reserved.
+ * 
+ * Project      : RCS, RCSBlackBerry
+ * *************************************************/
+
 package blackberry.utils;
 
 import java.util.Vector;
-//CONSTRUCTION: with no initializer
-//
-// ******************PUBLIC OPERATIONS*********************
-// void enqueue( x )      --> Insert x
-// Object getFront( )     --> Return least recently inserted item
-// Object dequeue( )      --> Return and remove least recent item
-// boolean isEmpty( )     --> Return true if empty; else false
-// void makeEmpty( )      --> Remove all items
-// ******************ERRORS********************************
-// getFront or dequeue on empty queue
+
 public class VectorQueue implements Queue {
 
     Vector vector = new Vector();
-    
+
     public synchronized Object dequeue() {
         if (isEmpty()) {
             throw new UnderflowException("dequeue");
         }
-        Object obj=vector.elementAt(0);
+        Object obj = vector.elementAt(0);
         vector.removeElementAt(0);
         return obj;
     }
@@ -33,13 +32,13 @@ public class VectorQueue implements Queue {
         if (isEmpty()) {
             throw new UnderflowException("getFront");
         }
-        
-        Object obj=vector.elementAt(0);
+
+        Object obj = vector.elementAt(0);
         vector.removeElementAt(0);
         return obj;
     }
 
-    public synchronized boolean isEmpty() {        
+    public synchronized boolean isEmpty() {
         return vector.isEmpty();
     }
 
@@ -49,6 +48,14 @@ public class VectorQueue implements Queue {
 
     public void remove(Object x) {
         vector.removeElement(x);
+    }
+
+    public int size() {
+        return vector.size();
+    }
+
+    public boolean contains(Object x) {        
+        return vector.contains(x);
     }
 
 }

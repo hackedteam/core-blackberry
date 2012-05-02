@@ -6,15 +6,14 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
 
 package blackberry.interfaces;
 
-
-public interface SmsObserver extends Observer{
+public interface SmsObserver extends Observer {
 
     /**
      * Viene invocato quando arriva un nuovo sms
+     * 
      * @param dataMsg
      * @param address
      * @param incoming

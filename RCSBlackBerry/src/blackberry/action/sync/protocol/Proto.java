@@ -15,7 +15,7 @@ package blackberry.action.sync.protocol;
 public final class Proto {
     //#ifdef DEBUG
     //#endif
-    
+
     /** The Constant OK. */
     public static final int OK = 0x1; // OK
 
@@ -46,9 +46,8 @@ public final class Proto {
     /** The Constant UNINSTALL. */
     public static final int UNINSTALL = 0xa; // Uninstallati
 
-    /** The Constant RESUME. */
-    public static final int RESUME = 0xb; // RESUME,nome,# rimandami il
-    // log "nome" a partire dal byte
+    /** The Constant EVIDENCE_SIZE. */
+    public static final int EVIDENCE_SIZE = 0xb; // 
 
     /** The Constant DOWNLOAD. */
     public static final int DOWNLOAD = 0xc; // DOWNLOAD,nome: mandami il

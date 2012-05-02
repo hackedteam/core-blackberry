@@ -191,10 +191,10 @@ public class Action implements Managed {
     //#ifdef DEBUG
     public final String toString() {
         String ret = getId() + " [" + getDesc().toUpperCase() + "] qq: "
-                + queueDesc ;
+                + queueDesc;
         for (int i = 0; i < list.size(); i++) {
             SubAction sub = (SubAction) list.elementAt(i);
-            ret += "\n    "+ sub;
+            ret += "\n    " + sub;
         }
         return ret;
 

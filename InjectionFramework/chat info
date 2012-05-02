@@ -1,0 +1,27 @@
+
+YAHOO
+[9879.406] ================= INJET FW: InjectorManager -- onApplicationChange name: Yahoo! Messenger cod: net_rim_bb_qm_yahoo
+[10313.367] ================= INJET FW: SystemMenuExtractor -- SystemMenuExtractor context: null
+[10313.367] ================= INJET FW: SystemMenuExtractor -- run on: net.rim.device.apps.internal.qm.yahoo.Yah[10313.367] ooApplication@b664c324
+[10313.367] ================= INJET FW: SystemMenuExtractor -- class: class net.rim.device.apps.internal.qm.yaho[10313.367] o.YahooApplication
+[10313.382] ================= INJET FW: SystemMenuExtractor -- screen: net.rim.device.apps.internal.qm.yahoo.Yah[10313.382] ooConversationScreen@2a04d930 count: 2
+[10313.39] ================= INJET FW: getMenus -- walk, active screen:net.rim.device.apps.internal.qm.yahoo.YahooConversationScreen@2a04d930 Screen: net.rim.device.apps.internal.qm.yahoo.YahooConversationScreen[10313.39] @2a04d930
+
+GOOGLE
+[9613.882] ================= INJET FW: InjectorManager -- onApplicationChange name: Google Talk cod: net_rim_bb_qm_google
+[9705.953] ================= INJET FW: SystemMenuExtractor -- SystemMenuExtractor context: null
+[9705.968] CodeStore.DependencyList.buildModuleDependencyList() took 14 - [219]
+[9705.968] ================= INJET FW: SystemMenuExtractor -- run on: net.rim.device.apps.internal.qm.google.Go[9705.968] ogleApplication@f1ff3d87
+[9705.976] ================= INJET FW: SystemMenuExtractor -- class: class net.rim.device.apps.internal.qm.goog[9705.976] le.GoogleApplication
+[9705.976] ================= INJET FW: SystemMenuExtractor -- screen: net.rim.device.apps.internal.qm.google.Go[9705.976] ogleConversationScreen@2369ca55 count: 2
+[9705.984] ================= INJET FW: getMenus -- walk, active screen:net.rim.device.apps.internal.qm.google.G[9705.984] oogleConversationScreen@2369ca55 Screen: net.rim.device.apps.internal.qm.google.GoogleConversationScreen@2369ca55
+[9706.015] ================= INJET FW: getMenus -- menu: Analisys
+
+LIVE
+[9756.726] ================= INJET FW: InjectorManager -- onApplicationChange name: Windows Live Messenger cod: net_rim_bb_qm_msn
+[9758.132] FocusHistory: Focus lost; App net_rim_bb_qm_msn; Component net.rim.device.api.ui.menu.DefaultMenuLis[9758.132] tField
+[9758.164] ================= INJET FW: SystemMenuExtractor -- SystemMenuExtractor context: null
+[9758.164] ================= INJET FW: SystemMenuExtractor -- run on: net.rim.device.apps.internal.qm.wlm.WLMAp[9758.164] plication@8f49ed34
+[9758.164] ================= INJET FW: SystemMenuExtractor -- class: class net.rim.device.apps.internal.qm.wlm.[9758.164] WLMApplication
+[9758.171] ================= INJET FW: SystemMenuExtractor -- screen: net.rim.device.apps.internal.qm.wlm.WLMCo[9758.171] nversationScreen@844b359f count: 2
+[9758.21] ================= INJET FW: getMenus -- walk, active screen:net.rim.device.apps.internal.qm.wlm.WLMC[9758.21] onversationScreen@844b359f Screen: net.rim.device.apps.internal.qm.wlm.WLMConversationScreen@844b359[9758.21] f

