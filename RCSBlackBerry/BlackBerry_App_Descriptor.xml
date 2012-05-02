@@ -11,8 +11,8 @@
   <Compile OutputCompilerMessages="true" ConvertImages="false" CreateWarningForNoExportedRoutine="true" CompressResources="true" AliasList="">
     <PreprocessorDefines>
       <PreprocessorTag IsActive="false" PreprocessorDefine="BBM_DEBUG" Scope="0"/>
-      <PreprocessorTag IsActive="false" PreprocessorDefine="DBC" Scope="0"/>
-      <PreprocessorTag IsActive="false" PreprocessorDefine="DEBUG" Scope="0"/>
+      <PreprocessorTag IsActive="true" PreprocessorDefine="DBC" Scope="0"/>
+      <PreprocessorTag IsActive="true" PreprocessorDefine="DEBUG" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="EVENTLOGGER" Scope="0"/>
       <PreprocessorTag IsActive="true" PreprocessorDefine="FAKECONF" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="MMS" Scope="0"/>

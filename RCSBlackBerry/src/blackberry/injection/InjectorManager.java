@@ -9,7 +9,6 @@
 
 package blackberry.injection;
 
-import java.util.Hashtable;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -61,7 +60,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
     private static InjectorManager instance;
 
     AInjector[] injectors;
-    Hashtable injectorMap = new Hashtable();
+    //Hashtable injectorMap = new Hashtable();
 
     ApplicationManager manager = ApplicationManager.getApplicationManager();
 
@@ -157,9 +156,9 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         if (menu != null) {
             menu.removeMenu();
         }
-        if (injectorMap != null) {
-            injectorMap.clear();
-        }
+        //if (injectorMap != null) {
+        //    injectorMap.clear();
+        //}
 
     }
 
@@ -238,7 +237,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         }
 
         String name = injector.getCodName();
-        injectorMap.put(name, injector);
+        //injectorMap.put(name, injector);
 
         status.setBacklight(false);
         manager.requestForegroundForConsole();
@@ -589,16 +588,19 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         debug.trace("runOnApp");
         //#endif
 
-        final AInjector injector = (AInjector) injectorMap.get(actualMod);
-        //#ifdef DBC
-        Check.requires(injector.enabled(), "run, injector disabled");
-        //#endif
+        //final AInjector injector = (AInjector) injectorMap.get(actualMod);
 
-        if (injector.isInjected()) {
+        final AInjector injector = (AInjector) findValidInjector(actualMod);
+
+        if (injector != null && injector.enabled() && injector.isInjected()) {
             final Screen screen = injector.getInjectedApp().getActiveScreen();
             String screenName = screen.getClass().getName();
             //#ifdef DEBUG
             debug.trace("onApplicationChange: " + screenName);
+            //#endif
+
+            //#ifdef DBC
+            Check.requires(injector.enabled(), "run, injector disabled");
             //#endif
 
             for (int i = 0; i < injector.getWantedScreen().length; i++) {
@@ -621,6 +623,34 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
                 }
             }
         }
+    }
+
+    private AInjector findValidInjector(String codName) {
+        try {
+            //#ifdef DBC
+            Check.requires(codName != null, "findInjector, null codName");
+            //#endif
+            for (int i = 0; i < injectors.length; i++) {
+                AInjector injector = injectors[i];
+                if(injector==null){
+                    //#ifdef DEBUG
+                    debug.error("findInjector, null injector");
+                    //#endif
+                    continue;
+                }
+                
+                if (codName.equals(injector.getCodName()) && injector.enabled() && injector.isInjected()) {
+                    return injector;
+                }
+            }
+        } catch (Exception ex) {
+            //#ifdef DEBUG
+            debug.error(ex);
+            debug.error("findInjector");
+            //#endif
+        }
+
+        return null;
     }
 
     class RunInjectorTask extends TimerTask {
@@ -654,21 +684,31 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
 
         //Status status=Status.self();        
 
-        if (status.applicationTimer != null) {
-            status.applicationTimer.cancel();
-            status.applicationTimer = null;
-        }
+        try {
+            if (status.applicationTimer != null) {
+                status.applicationTimer.cancel();
+                status.applicationTimer = null;
+            }
 
-        if (injectorMap.containsKey(startedMod)) {
-            foreInterestApp = true;
+            if (findValidInjector(startedMod)!=null) {
+                foreInterestApp = true;
+                //#ifdef DEBUG
+                debug.trace("onApplicationChange, starting");
+                //#endif
+                this.actualMod = startedMod;
+                this.actualName = startedName;
+                startApplicationTimer();
+            } else {
+                //#ifdef DEBUG
+                debug.trace("onApplicationChange, not interesting");
+                //#endif
+                foreInterestApp = false;
+            }
+        } catch (Exception ex) {
             //#ifdef DEBUG
-            debug.trace("onApplicationChange, starting");
+            debug.error(ex);
+            debug.error("onApplicationChange");
             //#endif
-            this.actualMod = startedMod;
-            this.actualName = startedName;
-            startApplicationTimer();
-        } else {
-            foreInterestApp = false;
         }
 
     }

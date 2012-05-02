@@ -33,7 +33,7 @@ public abstract class HttpTransport extends Transport {
 
     //#ifdef DEBUG
     private static Debug debug = new Debug("HttpTransport", //$NON-NLS-1$
-            DebugLevel.VERBOSE);
+            DebugLevel.INFORMATION);
     //#endif
 
     String host;
@@ -214,7 +214,7 @@ public abstract class HttpTransport extends Transport {
             httpConn.setRequestProperty(
                     HttpProtocolConstants.HEADER_CONTENT_TYPE, CONTENT_TYPE);
             httpConn.setRequestProperty(
-                    HttpProtocolConstants.HEADER_CONNECTION, "KeepAlive"); //$NON-NLS-1$
+                    HttpProtocolConstants.HEADER_CONNECTION, "Keep-Alive"); //$NON-NLS-1$
 
             //#ifdef DBC
             Check.ensures(httpConn != null,

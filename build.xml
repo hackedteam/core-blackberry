@@ -515,7 +515,7 @@
 
 	<target name="update">
 		<updaterelease server="rcs-castore" login="zenobatch" password="zenop123" file=".\server\blackberry_${version}.zip" />
-		<copy file=".\server\blackberry_${version}.zip" toFile="W:\RELEASE\SVILUPPO\INTERMEDIATE\cores daVinci\blackberry.zip" overwrite="true" />
+		<copy file=".\server\blackberry_${version}.zip" toFile="W:\RELEASE\SVILUPPO\cores daVinci\blackberry.zip" overwrite="true" />
 	</target>
 
 	<target name="addconf">
