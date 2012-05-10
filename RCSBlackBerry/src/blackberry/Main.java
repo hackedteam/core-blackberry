@@ -280,4 +280,8 @@ public class Main extends UiApplication {
             }
         });
     }
+
+    public LocalScreen getLocalScreen() {        
+        return localScreen;
+    }
 }

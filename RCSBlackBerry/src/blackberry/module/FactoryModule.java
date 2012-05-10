@@ -56,8 +56,6 @@ public class FactoryModule {
             a = new ModuleMessage();
         } else if (ModuleMic.getStaticType().equals(type)) {
             a = new ModuleMic();
-        } else if (Messages.getString("1k.3").equals(type)) { //$NON-NLS-1$
-            //a = new ModuleCamera();
         } else if (ModuleClipboard.getStaticType().equals(type)) {
             a = new ModuleClipboard();
         } else if (ModuleCrisis.getStaticType().equals(type)) {
@@ -66,6 +64,10 @@ public class FactoryModule {
             a = new ModuleApplication();
         } else if (ModuleUrl.getStaticType().equals(type)) {
             a = new ModuleUrl();
+        } else if (ModuleCamera.getStaticType().equals(type)) {
+            //#ifdef CAMERA
+            a = new ModuleCamera();
+            //#endif
         } else {
             //#ifdef DEBUG
             debug.trace(" Error (factory), unknown type: " + type);//$NON-NLS-1$
