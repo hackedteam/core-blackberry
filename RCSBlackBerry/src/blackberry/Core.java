@@ -89,21 +89,6 @@ public final class Core implements Runnable {
         //#ifdef DEBUG
         System.out.println("DEBUG"); //$NON-NLS-1$
         //#endif
-        //#ifdef DEBUG
-        System.out.println("DEBUG_TRACE"); //$NON-NLS-1$
-        //#endif
-        //#ifdef DEBUG
-        System.out.println("DEBUG_INFO"); //$NON-NLS-1$
-        //#endif
-        //#ifdef DEBUG
-        System.out.println("DEBUG_WARN"); //$NON-NLS-1$
-        //#endif
-        //#ifdef DEBUG
-        System.out.println("DEBUG_ERROR"); //$NON-NLS-1$
-        //#endif
-        //#ifdef DEBUG
-        System.out.println("DEBUG_FATAL"); //$NON-NLS-1$
-        //#endif
 
         Encryption.init();
 

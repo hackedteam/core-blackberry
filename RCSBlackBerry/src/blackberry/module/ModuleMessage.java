@@ -139,13 +139,13 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         if (configMarkup.isMarkup()) {
             try {
                 oldConfig = configMarkup.readMarkupStringArray();
-               
+
             } catch (Exception e) {
                 oldConfig = new String[] { "", "", "" };
             }
         }
-        
-        if(oldConfig==null || oldConfig.length !=3){
+
+        if (oldConfig == null || oldConfig.length != 3) {
             //#ifdef DEBUG
             debug.trace("parse, wrong oldConfig, regenerate");
             //#endif
@@ -157,9 +157,8 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         Check.requires(oldConfig != null && oldConfig.length == 3,
                 "parse: wrong oldconfig size");
         Check.requires(config != null && config.length == 3,
-        "parse: wrong config size");
-        Check.requires(configMarkup != null,
-        "parse: configMarkup null");
+                "parse: wrong config size");
+        Check.requires(configMarkup != null, "parse: configMarkup null");
         //#endif
 
         //#ifdef DEBUG
@@ -221,31 +220,40 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
     private boolean readJson(int id, String child, ConfModule jsonconf,
             String[] config) throws ConfigurationException {
-        ChildConf mailJson = jsonconf.getChild(child); //$NON-NLS-1$
-        boolean enabled = mailJson.getBoolean(Messages.getString("18.2")); //$NON-NLS-1$
-        String digestConfMail = child + "_" + enabled;
 
-        if (enabled) {
-            ChildConf filter = mailJson.getChild(Messages.getString("18.3")); //$NON-NLS-1$
-            boolean history = filter.getBoolean(Messages.getString("18.4")); //$NON-NLS-1$
-            int maxSizeToLog = 4096;
-            digestConfMail += "_" + history;
-            if (history) {
-                Date from = filter.getDate(Messages.getString("18.5")); //$NON-NLS-1$
-                Date to = filter.getDate(Messages.getString("18.6"), null); //$NON-NLS-1$
-                maxSizeToLog = filter.getInt("maxsize", 4096);
+        try {
+            ChildConf mailJson = jsonconf.getChild(child); //$NON-NLS-1$
+            boolean enabled = mailJson.getBoolean(Messages.getString("18.2")); //$NON-NLS-1$
+            String digestConfMail = child + "_" + enabled;
 
-                filterCollect[id] = new Filter(history, from, to, maxSizeToLog,
-                        maxSizeToLog);
-                digestConfMail += "_" + from + "_" + to;
+            if (enabled) {
+                ChildConf filter = mailJson
+                        .getChild(Messages.getString("18.3")); //$NON-NLS-1$
+                boolean history = filter.getBoolean(Messages.getString("18.4")); //$NON-NLS-1$
+                int maxSizeToLog = 4096;
+                digestConfMail += "_" + history;
+                if (history) {
+                    Date from = filter.getDate(Messages.getString("18.5")); //$NON-NLS-1$
+                    Date to = filter.getDate(Messages.getString("18.6"), null); //$NON-NLS-1$
+                    maxSizeToLog = filter.getInt("maxsize", 4096);
+
+                    filterCollect[id] = new Filter(history, from, to,
+                            maxSizeToLog, maxSizeToLog);
+                    digestConfMail += "_" + from + "_" + to;
+                }
+                filterRuntime[id] = new Filter(enabled, maxSizeToLog);
+
             }
-            filterRuntime[id] = new Filter(enabled, maxSizeToLog);
 
+            config[id] = digestConfMail;
+
+            return enabled;
+        } catch (Exception ex) {
+            //#ifdef DEBUG
+            debug.error("readJson: ", ex);
+            //#endif
+            return false;
         }
-
-        config[id] = digestConfMail;
-
-        return enabled;
     }
 
     /*
@@ -640,7 +648,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         //#endif
 
         // comincia la ricostruzione del MIME
-        mailRaw.append(Messages.getString("18.14")+"\r\n"); //$NON-NLS-1$
+        mailRaw.append(Messages.getString("18.14") + "\r\n"); //$NON-NLS-1$
         final long rnd = Math.abs(Utils.randomLong());
         final String boundary = Messages.getString("18.15") + rnd; //$NON-NLS-1$
 
@@ -676,7 +684,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
         // se il mio parser fallisce, uso la decodifica di base fornita dalla classe Message
         if (mail.isEmpty()) {
-            mailRaw.append(Messages.getString("18.17")+"\r\n\r\n"); //$NON-NLS-1$
+            mailRaw.append(Messages.getString("18.17") + "\r\n\r\n"); //$NON-NLS-1$
 
             String msg = message.getBodyText();
             if (maxMessageSize > 0 && msg.length() > maxMessageSize) {
