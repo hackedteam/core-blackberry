@@ -320,8 +320,9 @@ public final class MailListener implements FolderListener, SendListener,
     private synchronized void init() {
         if (!Path.isInizialized()) {
             Path.makeDirs();
-            Debug.init();
+            
         }
+        Debug.init();
     }
     
     /**
