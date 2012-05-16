@@ -470,4 +470,20 @@ public final class AutoFile {
             return null;
         }
     }
+
+    public long lastModified() {
+        try {
+            fconn = (ExtendedFileConnection) Connector.open(fullfilename,
+                    Connector.READ);
+            return fconn.lastModified();
+
+        } catch (IOException e) {
+            //#ifdef DEBUG
+            System.out.println(e.getMessage());
+            //#endif
+            return 0;
+        } finally {
+            close();
+        }
+    }
 }
