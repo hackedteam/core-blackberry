@@ -25,8 +25,9 @@ import blackberry.debug.DebugLevel;
 import blackberry.interfaces.iSingleton;
 import blackberry.module.ModuleMessage;
 
-
 //#ifdef MMS
+import net.rim.blackberry.api.mms.SendListener;
+import net.rim.blackberry.api.mms.MMS;
 public class MmsListener implements iSingleton, SendListener 
 //#else
     public class MmsListener implements iSingleton 

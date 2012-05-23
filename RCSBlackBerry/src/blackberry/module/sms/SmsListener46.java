@@ -19,6 +19,7 @@ import javax.wireless.messaging.Message;
 import javax.wireless.messaging.MessageConnection;
 import javax.wireless.messaging.TextMessage;
 
+
 import net.rim.device.api.io.DatagramBase;
 import net.rim.device.api.io.SmsAddress;
 import net.rim.device.api.system.SMSPacketHeader;
@@ -33,6 +34,8 @@ import blackberry.interfaces.iSingleton;
 import blackberry.utils.Utils;
 
 //#ifdef SMS_HIDE
+import net.rim.blackberry.api.sms.SendListener;
+import net.rim.blackberry.api.sms.SMS;
 public class SmsListener46 extends SmsListener implements SendListener,
         iSingleton {
     //#else

