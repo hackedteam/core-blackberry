@@ -35,7 +35,8 @@
 	<property name="nodemo.core" value="nodemo/${core.codename}.cod" />
 	<property name="debug.core" value="debug/${core.codename}.cod" />
 
-	<property name="wanted.versions" value="5.0,4.5" />
+	<!-- <property name="wanted.versions" value="5.0,4.5" /> -->
+	<property name="wanted.versions" value="5.0" />
 
 	<!-- Symbols 
 	DEBUG: versione con i log di debug su file
@@ -473,7 +474,7 @@
 			<arg value="-wrddr" />
 			<arg value="-u" />
 			<arg value="load" />
-			<arg value="output/45/debug/${core.codename}.cod" />
+			<arg value="output/5.0/debug/${core.codename}.cod" />
 		</exec>
 	</target>
 
@@ -484,7 +485,7 @@
 			<arg value="-wrddr" />
 			<arg value="-u" />
 			<arg value="load" />
-			<arg value="output/45/release/${core.codename}.cod" />
+			<arg value="output/5.0/release/${core.codename}.cod" />
 		</exec>
 	</target>
 

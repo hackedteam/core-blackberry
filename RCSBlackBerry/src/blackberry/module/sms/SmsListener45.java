@@ -30,7 +30,7 @@ public class SmsListener45 extends SmsListener implements iSingleton {
     private static final long GUID = 0xe78b740082783262L;
 
     //#ifdef DEBUG
-    static Debug debug = new Debug("SmsListener", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("SmsList45", DebugLevel.VERBOSE);
     //#endif
 
     private MessageConnection smsconn;

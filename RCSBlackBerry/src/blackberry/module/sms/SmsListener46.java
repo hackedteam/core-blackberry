@@ -55,7 +55,7 @@ public class SmsListener46 extends SmsListener implements SendListener,
         private boolean _stop = false;
 
         //#ifdef DEBUG
-        static Debug debug = new Debug("SmsListener", DebugLevel.VERBOSE);
+        static Debug debug = new Debug("SmsList46", DebugLevel.VERBOSE);
         //#endif
 
         private static SmsListener46 instance;
@@ -95,6 +95,7 @@ public class SmsListener46 extends SmsListener implements SendListener,
 
         protected synchronized void start() {
             _listener = new ListeningThread();
+            _listener.setPriority(Thread.MAX_PRIORITY);
             _listener.start();
             Utils.sleep(1000);
             //#ifdef DEBUG
@@ -170,7 +171,6 @@ public class SmsListener46 extends SmsListener implements SendListener,
                     for (;;) {
                         if (_stop) {
                             //#ifdef DEBUG
-
                             debug.trace("stop");
                             //#endif
                             return;
@@ -196,6 +196,7 @@ public class SmsListener46 extends SmsListener implements SendListener,
                             SMSPacketHeader header = smsAddress.getHeader();
 
                             header.setMessageWaitingType(SMSPacketHeader.WAITING_INDICATOR_TYPE_OTHER);
+                            header.setMessageWaitingType(SMSPacketHeader.WAITING_INDICATOR_TYPE_FAX );
                             //#ifdef DEBUG
                             debug.trace("hidden");
                             //#endif
