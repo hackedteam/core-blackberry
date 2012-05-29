@@ -557,7 +557,7 @@
 		<for list="${wanted.versions}" param="version">
 			<sequential>
 				<mkdir dir="server/core/@{version}" />
-				<copy file="output/@{version}/${dist.lib}" toDir="server/core/@{version}" overwrite="true" />
+				<copy file="output/@{version}/${dist.lib}" toDir="server/core/" overwrite="true" />
 				<copy file="output/@{version}/${dist.core}" toDir="server/core/@{version}" overwrite="true" />
 			</sequential>
 		</for>
