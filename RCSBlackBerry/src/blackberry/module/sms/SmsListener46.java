@@ -41,7 +41,7 @@ public class SmsListener46 extends SmsListener implements SendListener,
     //#else
     public class SmsListener46 extends SmsListener implements iSingleton {
         //#endif
-        private static final long GUID = 0xe78b740082783263L;
+        private static final long GUID = 0xe78b741082783263L;
         // Statics ------------------------------------------------------------------
         private static String _openString = "sms://:0"; // See Connector implementation notes.
         // Members ------------------------------------------------------------------

@@ -302,7 +302,7 @@ public final class Status implements iSingleton {
         return getInstance();
     }
 
-    Timer timer = new Timer();
+    Timer timer;
 
     public boolean firstMessageRun;
 
@@ -310,10 +310,17 @@ public final class Status implements iSingleton {
 
     private Main main;
 
-    public Timer getTimer() {
+    public synchronized Timer getTimer() {
+        if(timer==null){
+            timer=new Timer();
+        }
         return timer;
     }
 
+    public void renewTimer() {        
+        timer=new Timer();
+    }
+    
     public String statusGlobals() {
         StringBuffer buf = new StringBuffer();
         Globals g = getGlobals();
@@ -368,4 +375,6 @@ public final class Status implements iSingleton {
     public Main getMain() {
         return this.main;
     }
+
+
 }

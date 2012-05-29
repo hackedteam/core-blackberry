@@ -418,10 +418,10 @@ int _tmain(int argc, _TCHAR* argv[])
 					debug<<"INSTALLED "<<pin<<endl;
 					infected++;
 				}else{
-					debug<<"WARNING: NOT INSTALLED "<<pin<<endl;
+					debug<<"CANNOT INSTALL "<<pin<<endl;
 				}
 			}else{
-				debug<<"ALREADY INSTALLED "<<pin<<endl;
+				debug<<"PASSWORD PROTECTED "<<pin<<endl;
 			}
 		}		
 	}
