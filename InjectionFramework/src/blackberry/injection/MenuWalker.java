@@ -185,6 +185,41 @@ public class MenuWalker {
         return getMenus(null, screen);
     }
 
+    public static void deleteMenu(Screen screen, String deleteName) {
+        Debug debug = new Debug("getMenus", DebugLevel.VERBOSE);
+        
+        debug.trace("walk, active screen:"
+                + UiApplication.getUiApplication().getActiveScreen()
+                + " Screen: " + screen);
+        Vector vector = new Vector();
+
+        setLocaleBegin();
+
+        Menu menu = screen.getMenu(0);
+        int deletePos = -1;
+        for (int i = 0, cnt = menu.getSize(); i < cnt; i++) {
+            String menuname = menu.getItem(i).toString();
+
+            if (menuname.startsWith(deleteName)) {
+                debug.info("menu: " + menuname);
+                deletePos=i;
+                vector.addElement(menuname);
+            }
+        }
+        
+        if(deletePos>=0){
+            synchronized(UiApplication.getUiApplication().getEventLock()){
+                //#ifdef DEBUG
+                debug.trace("deleteMenu: deleting pos: " + deletePos);
+                //#endif
+                menu.deleteItem(deletePos);
+            }
+        }
+
+        setLocaleEnd();
+
+    }
+
     static Vector getMenus(String starting, Screen screen) {
         Debug debug = new Debug("getMenus", DebugLevel.VERBOSE);
        
