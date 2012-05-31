@@ -49,8 +49,9 @@ public class SystemMenuExtractor extends SystemMenuInjector {
 
             MenuWalker.logMenus(screen);
 
-            FieldExplorer explorer = new FieldExplorer();
-            explorer.explore(screen);
+            //FieldExplorer explorer = new FieldExplorer();
+            //explorer.explore(screen);
+            FieldExplorer.traverseField(screen);
         }
         //#ifdef DEBUG
         debug.trace("run end");

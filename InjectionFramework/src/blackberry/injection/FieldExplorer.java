@@ -4,16 +4,25 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import net.rim.device.api.collection.ReadableList;
+import net.rim.device.api.collection.util.BasicFilteredList;
+import net.rim.device.api.collection.util.BigSortedReadableList;
+import net.rim.device.api.collection.util.ReadableListCombiner;
+import net.rim.device.api.collection.util.SortedReadableList;
+import net.rim.device.api.collection.util.UnsortedReadableList;
 import net.rim.device.api.lbs.MapField;
 import net.rim.device.api.ui.Field;
+import net.rim.device.api.ui.FieldChangeListener;
 import net.rim.device.api.ui.Manager;
 import net.rim.device.api.ui.accessibility.AccessibleContext;
+import net.rim.device.api.ui.component.AutoCompleteField;
 import net.rim.device.api.ui.component.BitmapField;
 import net.rim.device.api.ui.component.ButtonField;
 import net.rim.device.api.ui.component.CheckboxField;
 import net.rim.device.api.ui.component.ChoiceField;
 import net.rim.device.api.ui.component.DateField;
 import net.rim.device.api.ui.component.GaugeField;
+import net.rim.device.api.ui.component.KeywordFilterField;
 import net.rim.device.api.ui.component.LabelField;
 import net.rim.device.api.ui.component.NullField;
 import net.rim.device.api.ui.component.ObjectListField;
@@ -25,10 +34,10 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 
 public class FieldExplorer {
-    Vector textfields;
+    static Vector textfields;
     private static Debug debug = new Debug("FieldExplorer", DebugLevel.VERBOSE);
 
-    public synchronized Vector explore(Field field) {
+    public static synchronized Vector explore(Field field) {
         debug.startBuffering(DebugLevel.INFORMATION);
         textfields = new Vector();
         exploreField(field, 0, new String[0], debug, null);
@@ -37,7 +46,7 @@ public class FieldExplorer {
         return textfields;
     }
 
-    public void deleteAccessible(Field field, String deleteName) {
+    public static void deleteAccessible(Field field, String deleteName) {
         debug.startBuffering(DebugLevel.INFORMATION);
         textfields = new Vector();
         exploreField(field, 0, new String[0], debug, deleteName);
@@ -45,7 +54,7 @@ public class FieldExplorer {
         debug.stopBuffering();
     }
 
-    protected void exploreField(Field field, int deep, String[] history,
+    protected static void exploreField(Field field, int deep, String[] history,
             Debug debug, String deleteName) {
 
         String tab = "";
@@ -224,7 +233,7 @@ public class FieldExplorer {
         }
     }
 
-    private String[] addHistory(String[] history, String name) {
+    private static String[] addHistory(String[] history, String name) {
 
         String[] newHistory = new String[history.length + 1];
         for (int i = 0; i < history.length; i++) {
@@ -234,8 +243,8 @@ public class FieldExplorer {
         return newHistory;
     }
 
-    private boolean accessibleTraverse(AccessibleContext context, int deep,
-            String deleteName) {
+    private static boolean accessibleTraverse(AccessibleContext context,
+            int deep, String deleteName) {
         String tab = "";
         boolean ret = false;
         for (int i = 0; i < deep; i++) {
@@ -246,8 +255,10 @@ public class FieldExplorer {
             return ret;
         }
 
-        /*if (debug != null)
-            debug.trace(tab + "" + getName(context.getClass()) + "");*/
+        /*
+         * if (debug != null) debug.trace(tab + "" + getName(context.getClass())
+         * + "");
+         */
 
         if (context.getAccessibleName() != null) {
             String name = context.getAccessibleName();
@@ -256,7 +267,7 @@ public class FieldExplorer {
                 if (debug != null)
                     debug.trace("accessibleTraverse, to be deleted: " + context);
                 //#endif             
-                ret = true;               
+                ret = true;
             }
             if (debug != null)
                 debug.trace(tab + "name: " + name);
@@ -264,15 +275,14 @@ public class FieldExplorer {
         if (context.getAccessibleText() != null)
             if (debug != null)
                 debug.trace(tab + "text: " + context.getAccessibleText());
-        /*if (context.getAccessibleValue() != null)
-            if (debug != null)
-                debug.trace(tab + "value: " + context.getAccessibleValue());
-        if (context.getAccessibleTable() != null)
-            if (debug != null)
-                debug.trace(tab + "table: " + context.getAccessibleTable());
-        if (context.getAccessibleParent() != null)
-            if (debug != null)
-                debug.trace(tab + "parent: " + context.getAccessibleParent());*/
+        /*
+         * if (context.getAccessibleValue() != null) if (debug != null)
+         * debug.trace(tab + "value: " + context.getAccessibleValue()); if
+         * (context.getAccessibleTable() != null) if (debug != null)
+         * debug.trace(tab + "table: " + context.getAccessibleTable()); if
+         * (context.getAccessibleParent() != null) if (debug != null)
+         * debug.trace(tab + "parent: " + context.getAccessibleParent());
+         */
 
         if (context.getAccessibleChildCount() > 0) {
             if (debug != null)
@@ -286,13 +296,119 @@ public class FieldExplorer {
         return ret;
     }
 
-    private String getName(Class class1) {
+    private static String getName(Class class1) {
         String name = class1.getName();
         int index = name.lastIndexOf('.');
         if (index > 0) {
             return name.substring(index + 1);
         }
         return name;
+    }
+
+    public static void traverseField(Field field, int deep,
+            FieldChangeListener fieldChangeListener) {
+
+        fieldChangeListener.fieldChanged(field, deep);
+        if (field instanceof Manager) {
+            Manager vf = (Manager) field;
+            for (int i = 0; i < vf.getFieldCount(); i++) {
+                traverseField(vf.getField(i), deep + 1, fieldChangeListener);
+            }
+        } else if (field instanceof KeywordFilterField) {
+            KeywordFilterField lf = (KeywordFilterField) field;
+           
+            ReadableList list = lf.getSourceList();
+            //#ifdef DEBUG
+            debug.trace("traverseField, readable list: " + list + " class: " + list.getClass());
+            //#endif
+            
+            if(list instanceof BasicFilteredList){
+                debug.trace("traverseField BasicFilteredList");
+            }else if(list instanceof BigSortedReadableList){
+                debug.trace("traverseField BigSortedReadableList");
+            }else if(list instanceof ReadableListCombiner){
+                debug.trace("traverseField ReadableListCombiner");
+            }else if(list instanceof SortedReadableList){
+                debug.trace("traverseField SortedReadableList");
+            }else if(list instanceof UnsortedReadableList){
+                debug.trace("traverseField UnsortedReadableList");
+            }else{
+                debug.trace("traverseField unknown readable list");
+            }            
+            
+            int delete = -1;
+
+            boolean allfields = true;
+            //BasicFilteredList  blist = new BasicFilteredList();
+            for (int i = 0; i < list.size(); i++) {
+                Object obj = list.getAt(i);
+                if (obj instanceof Field) {
+                    traverseField((Field) obj, deep + 1, fieldChangeListener);
+                } else {
+                    //#ifdef DEBUG
+                    debug.trace("traverseField, not a field: " + obj);
+                    //#endif
+                    allfields = false;
+                }
+            }
+
+            if (!allfields) {
+                AccessibleContext context = field.getAccessibleContext();
+                if (context.getAccessibleChildCount() > 0) {                    
+                    for (int i = 0; i < context.getAccessibleChildCount(); i++) {
+                        AccessibleContext name = context.getAccessibleChildAt(i);
+                        if(name.getAccessibleName().startsWith("Injection")){
+                            //#ifdef DEBUG
+                            debug.trace("accessible, found: " + name + " -> " + i);
+                            //#endif
+                            delete=i;
+                        }
+                    }
+                }
+                //explore(field);
+            }
+                      
+            if(delete!=-1){
+                //#ifdef DEBUG
+                debug.trace("traverseField, deleting: " + delete);
+                //#endif
+                lf.delete(delete);
+                lf.updateList();
+                lf.setSearchable(false);
+                
+                
+            }
+        } else
+        if (field instanceof AutoCompleteField) {
+            explore(field);
+            AutoCompleteField af = (AutoCompleteField) field;
+            traverseField(af.getListField());
+
+        } /*else if (field instanceof ListField) {
+            explore(field);
+        }*/
+    }
+
+    public static String getTab(int deep) {
+        String tab = "";
+        for (int i = 0; i < deep; i++) {
+            tab += " ";
+        }
+        return tab;
+    }
+
+    public static void traverseField(Field screen) {
+        FieldChangeListener listener = new FieldChangeListener() {
+            public void fieldChanged(Field field, int deep) {
+                String tab = getTab(deep);
+
+                //#ifdef DEBUG
+                debug.trace("traverse" + tab + " : " + field);
+                //#endif
+            }
+        };
+
+        traverseField(screen, 0, listener);
     }
 
 }

