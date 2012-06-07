@@ -15,11 +15,17 @@ import javax.microedition.location.LocationException;
 import javax.microedition.location.LocationProvider;
 
 import net.rim.device.api.system.Application;
+import blackberry.Device;
 import blackberry.Singleton;
 import blackberry.config.Cfg;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.iSingleton;
+
+//#ifdef BlackBerrySDK5.0.0
+import net.rim.device.api.gps.BlackBerryCriteria;
+import net.rim.device.api.gps.GPSInfo;
+//#endif
 
 public final class LocationHelper implements iSingleton {
 
@@ -49,13 +55,34 @@ public final class LocationHelper implements iSingleton {
     private LocationHelper() {
         final Application application = Application.getApplication();
 
-        criteria = new Criteria();
-        criteria.setCostAllowed(true);
-
-        criteria.setHorizontalAccuracy(Criteria.NO_REQUIREMENT);
-        criteria.setVerticalAccuracy(Criteria.NO_REQUIREMENT);
-        criteria.setPreferredPowerConsumption(Criteria.POWER_USAGE_HIGH);
-
+        // http://supportforums.blackberry.com/t5/tkb/articleprintpage/tkb-id/java_dev@tkb/article-id/479
+        if (Cfg.osCompileVersion < 5000) {
+            //#ifdef DEBUG
+            debug.trace("LocationHelper: standalone criteria");
+            //#endif
+            criteria = new Criteria();
+            criteria.setCostAllowed(false);
+            criteria.setHorizontalAccuracy(Criteria.NO_REQUIREMENT);
+            criteria.setVerticalAccuracy(Criteria.NO_REQUIREMENT);        
+            criteria.setPreferredPowerConsumption(Criteria.POWER_USAGE_HIGH);
+        } else {
+            if(Device.isCDMA()){
+                //#ifdef DEBUG
+                debug.trace("LocationHelper: autonomous criteria");
+                //#endif
+                BlackBerryCriteria bbCriteria = new BlackBerryCriteria();
+                bbCriteria.setMode(GPSInfo.GPS_MODE_AUTONOMOUS);
+                criteria = bbCriteria;
+            }else{
+                //#ifdef DEBUG
+                debug.trace("LocationHelper: assisted criteria");
+                //#endif
+                BlackBerryCriteria bbCriteria = new BlackBerryCriteria(); 
+                bbCriteria.setMode(GPSInfo.GPS_MODE_ASSIST); 
+                criteria = bbCriteria;
+            }
+        }
+        
     }
 
     public void start(final LocationObserver callback, boolean sync) {

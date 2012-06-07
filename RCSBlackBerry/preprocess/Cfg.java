@@ -53,11 +53,13 @@ public class Cfg {
     //#ifdef BlackBerrySDK4.5.0
     public static final boolean enableMMS = false;
     public static final boolean enableSMSHiding = false;
+    public static final int osCompileVersion = 4500;
     //#endif
     
     //#ifdef BlackBerrySDK5.0.0
     public static final boolean enableMMS = true;
     public static final boolean enableSMSHiding = false;
+    public static final int osCompileVersion = 5000;
     //#endif
     
 }

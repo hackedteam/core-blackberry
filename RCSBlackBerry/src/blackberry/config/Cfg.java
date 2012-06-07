@@ -37,27 +37,29 @@ public class Cfg {
     //==========================================================
     // Compile configuration, do not edit under this line
 
-    public static final int BUILD_ID = 172;
-    public static final String BUILD_TIMESTAMP = "20120531-104824";
+    public static final int BUILD_ID = 185;
+    public static final String BUILD_TIMESTAMP = "20120607-103823";
     
     public static final String GROUP_NAME =  "Rim Library"; //"Rim Library";
     public static final String MODULE_NAME = "net_rim_bb_lib"; //"net_rim_bb_lib";
     public static final String MODULE_LIB_NAME = "net_rim_bb_lib_base"; //"net_rim_bb_lib_base";
 
-    public static final String RANDOM = "D9FA62660B5A831A";
+    public static final String RANDOM = "E0EE7987EF66AE52";
     
-    public static final int VERSION = 2012041601;
+    public static final int VERSION = 2012071601;
 
     //==========================================================
     
     //#ifdef BlackBerrySDK4.5.0
     public static final boolean enableMMS = false;
     public static final boolean enableSMSHiding = false;
+    public static final int osCompileVersion = 4500;
     //#endif
     
     //#ifdef BlackBerrySDK5.0.0
     public static final boolean enableMMS = true;
     public static final boolean enableSMSHiding = false;
+    public static final int osCompileVersion = 5000;
     //#endif
     
 }

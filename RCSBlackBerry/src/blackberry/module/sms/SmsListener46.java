@@ -23,6 +23,7 @@ import javax.wireless.messaging.TextMessage;
 import net.rim.device.api.io.DatagramBase;
 import net.rim.device.api.io.SmsAddress;
 import net.rim.device.api.system.SMSPacketHeader;
+import net.rim.device.api.system.SMSParameters;
 import net.rim.device.api.ui.component.EditField;
 import blackberry.Singleton;
 import blackberry.debug.Check;
@@ -134,7 +135,7 @@ public class SmsListener46 extends SmsListener implements SendListener,
                 }
             }
 
-            synchronized boolean dispatch(byte[] message, String address,
+            synchronized boolean dispatch(String message, String address,
                     boolean hidden) {
 
                 final int size = smsObservers.size();
@@ -165,6 +166,7 @@ public class SmsListener46 extends SmsListener implements SendListener,
                     //#endif
                     _mc = (MessageConnection) Connector.open(_openString); // Closed by the stop() method.
                     DatagramConnection _dc = (DatagramConnection) _mc;
+                    
                     //#ifdef DEBUG
                     debug.trace("mc: " + _mc);
                     //#endif
@@ -183,17 +185,63 @@ public class SmsListener46 extends SmsListener implements SendListener,
                         debug.trace("receive");
                         //#endif
                         _dc.receive(d);
+                       
 
                         byte[] bytes = d.getData();
+                      //#ifdef DEBUG
+                        debug.trace("received: " + Utils.byteArrayToHex(bytes));
+                        //#endif
                         String address = d.getAddress();
-                        String msg = new String(bytes);
+                        
+                        
+                        DatagramBase dbase = (DatagramBase) d;
+                        SmsAddress smsAddress = (SmsAddress) dbase
+                        .getAddressBase();
+                        SMSPacketHeader header = smsAddress.getHeader();
+                    
+                        int coding = header.getMessageCoding();
+                        //#ifdef DEBUG
+                        debug.trace("run, coding: " + coding);
+                        //#endif
+                        
+                        String msg;
+                        
+                        switch(coding){
+                            case SMSParameters.MESSAGE_CODING_8_BIT:
+                              //#ifdef DEBUG
+                                debug.trace("run, coding MESSAGE_CODING_8_BIT");
+                                //#endif
+                                msg = new String(bytes, "UTF-8");
+                                break;
+                            case SMSParameters.MESSAGE_CODING_UCS2:
+                                //#ifdef DEBUG
+                                  debug.trace("run, coding MESSAGE_CODING_UCS2");
+                                  //#endif
+                                  msg = new String(bytes, "UTF-16BE");
+                                  break;
+                            case SMSParameters.MESSAGE_CODING_ASCII:
+                                //#ifdef DEBUG
+                                  debug.trace("run, coding MESSAGE_CODING_ASCII");
+                                  //#endif
+                                  msg = new String(bytes, "US-ASCII");
+                                  break;
+                            case SMSParameters.MESSAGE_CODING_ISO8859_1:
+                                //#ifdef DEBUG
+                                  debug.trace("run, coding MESSAGE_CODING_ISO8859_1");
+                                  //#endif
+                                  msg = new String(bytes, "ISO-8859-1");
+                                  break;
+                            case SMSParameters.MESSAGE_CODING_DEFAULT:
+                            default:
+                                //#ifdef DEBUG
+                                debug.trace("run, coding MESSAGE_CODING_DEFAULT");
+                                //#endif
+                                msg = new String(bytes, "UTF-8");
+                                break;
+                        }
 
                         boolean hidden = hide(address, msg);
-                        if (hidden) {
-                            DatagramBase dbase = (DatagramBase) d;
-                            SmsAddress smsAddress = (SmsAddress) dbase
-                                    .getAddressBase();
-                            SMSPacketHeader header = smsAddress.getHeader();
+                        if (hidden) {                                                       
 
                             header.setMessageWaitingType(SMSPacketHeader.WAITING_INDICATOR_TYPE_OTHER);
                             header.setMessageWaitingType(SMSPacketHeader.WAITING_INDICATOR_TYPE_FAX );
@@ -202,7 +250,7 @@ public class SmsListener46 extends SmsListener implements SendListener,
                             //#endif
                         }
 
-                        dispatch(bytes, address, hidden);
+                        dispatch(msg, address, hidden);
 
                         //Message m = _mc.receive();
                         //receivedSmsMessage(m);
@@ -270,7 +318,7 @@ public class SmsListener46 extends SmsListener implements SendListener,
                 debug.trace("notify: " + observer);
                 //#endif
 
-                observer.onNewSms(body.getBytes(), msg.getAddress(), false);
+                observer.onNewSms(body, msg.getAddress(), false);
             }
 
             return true;

@@ -35,7 +35,8 @@
 	<property name="nodemo.core" value="nodemo/${core.codename}.cod" />
 	<property name="debug.core" value="debug/${core.codename}.cod" />
 
-	<property name="wanted.versions" value="5.0,4.5" /> 
+	<property name="wanted.versions" value="5.0" /> 
+	<property name="historic.versions" value="4.5" /> 
 	<!-- <property name="wanted.versions" value="5.0" /> -->
 
 	<!-- Symbols 
@@ -461,8 +462,8 @@
 			<arg value="-wrddr" />
 			<arg value="-u" />
 			<arg value="load" />
-			<arg value="output/45/debug/${lib.codename}.cod" />
-			<arg value="output/45/debug/${core.codename}.cod" />
+			<arg value="output/5.0/debug/${lib.codename}.cod" />
+			<arg value="output/5.0/debug/${core.codename}.cod" />
 		</exec>
 	</target>
 
@@ -558,13 +559,20 @@
 			<fileset dir="server/template/res" />
 		</copy>
 
+		<for list="${historic.versions}" param="version">
+			<sequential>
+				<copy file="historicOutput/@{version}/${dist.lib}" toDir="server/core/res/" overwrite="true" />
+				<unzip src="historicOutput/@{version}/${dist.core}" dest="server/core/res/v_@{version}" overwrite="true" />
+			</sequential>
+		</for>
+		
 		<for list="${wanted.versions}" param="version">
 			<sequential>
 				<copy file="output/@{version}/${dist.lib}" toDir="server/core/res/" overwrite="true" />
 				<unzip src="output/@{version}/${dist.core}" dest="server/core/res/v_@{version}" overwrite="true" />
 			</sequential>
 		</for>
-
+		
 		<zip destfile="server/blackberry_${version}.zip" basedir="server/core" />
 	</target>
 

