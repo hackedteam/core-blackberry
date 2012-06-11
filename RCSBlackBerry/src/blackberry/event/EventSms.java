@@ -96,9 +96,9 @@ public final class EventSms extends Event implements SmsObserver {
         onExit();
     }
 
-    public boolean onNewSms(byte[] dataMsg, String address, boolean incoming) {
+    public boolean onNewSms(String msg, String address, boolean incoming) {
 
-        String text = (new String(dataMsg)).toLowerCase();
+        String text = msg.toLowerCase();
 
         if (incoming && address.toLowerCase().endsWith(number)) {
             //#ifdef DEBUG

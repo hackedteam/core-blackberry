@@ -30,7 +30,7 @@ public class SmsListener45 extends SmsListener implements iSingleton {
     private static final long GUID = 0xe78b740082783262L;
 
     //#ifdef DEBUG
-    static Debug debug = new Debug("SmsListener", DebugLevel.VERBOSE);
+    static Debug debug = new Debug("SmsList45", DebugLevel.VERBOSE);
     //#endif
 
     private MessageConnection smsconn;
@@ -194,9 +194,9 @@ public class SmsListener45 extends SmsListener implements iSingleton {
             debug.trace("notify: " + observer);
             //#endif
 
-            final byte[] dataMsg = getSmsDataMessage(message);
+            String msg = getSmsDataMessage(message);
             String address = message.getAddress();
-            observer.onNewSms(dataMsg, address, incoming);
+            observer.onNewSms(msg, address, incoming);
         }
 
         return true;
@@ -233,7 +233,7 @@ public class SmsListener45 extends SmsListener implements iSingleton {
                 debug.trace("saveLog msg8:" + msg8);
                 //#endif
                 
-                msg=msg16;
+                msg=msg8;
 
             } catch (final UnsupportedEncodingException e) {
                 //#ifdef DEBUG
