@@ -576,7 +576,6 @@
 		<zip destfile="server/blackberry_${version}.zip" basedir="server/core" />
 	</target>
 
-
 	<macrodef name="zipdist">
 		<attribute name="destfile" />
 		<sequential>
