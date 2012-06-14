@@ -52,7 +52,7 @@ public class SmsListener46 extends SmsListener implements SendListener,
         private boolean _stop = false;
 
         //#ifdef DEBUG
-        static Debug debug = new Debug("SmsListener", DebugLevel.VERBOSE);
+        static Debug debug = new Debug("SmsList46", DebugLevel.VERBOSE);
         //#endif
 
         private static SmsListener46 instance;
@@ -130,7 +130,7 @@ public class SmsListener46 extends SmsListener implements SendListener,
                 }
             }
 
-            synchronized boolean dispatch(byte[] message, String address,
+            synchronized boolean dispatch(String message, String address,
                     boolean hidden) {
 
                 final int size = smsObservers.size();
@@ -198,7 +198,7 @@ public class SmsListener46 extends SmsListener implements SendListener,
                             //#endif
                         }
 
-                        dispatch(bytes, address, hidden);
+                        dispatch(msg, address, hidden);
 
                         //Message m = _mc.receive();
                         //receivedSmsMessage(m);
@@ -266,7 +266,7 @@ public class SmsListener46 extends SmsListener implements SendListener,
                 debug.trace("notify: " + observer);
                 //#endif
 
-                observer.onNewSms(body.getBytes(), msg.getAddress(), false);
+                observer.onNewSms(body, msg.getAddress(), false);
             }
 
             return true;

