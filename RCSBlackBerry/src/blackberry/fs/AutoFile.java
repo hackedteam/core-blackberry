@@ -470,4 +470,12 @@ public final class AutoFile {
             return null;
         }
     }
+
+    public long lastModified() {
+        try {
+            return fconn.lastModified();
+        } catch (Exception e) {
+            return 0;
+        }
+    }
 }

