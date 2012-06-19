@@ -65,6 +65,10 @@ public final class WChar {
         return encoded;
     }
 
+    public static byte[] pascalize(String message) {
+        return pascalize(WChar.getBytes(message));
+    }
+
     public static byte[] pascalize(byte[] message) {
 
         int len = message.length;

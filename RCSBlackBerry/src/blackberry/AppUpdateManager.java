@@ -28,7 +28,7 @@ public final class AppUpdateManager extends TimerTask {
     //Hashtable appSet = new Hashtable();
     AppListener appListener = AppListener.getInstance();
 
-    boolean running;
+    volatile boolean running;
 
     boolean windowName = false;
     String lastName, lastMod;
@@ -112,40 +112,5 @@ public final class AppUpdateManager extends TimerTask {
         Debug.init();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.TimerTask#run()
-     */
-    /*
-     * public void runMulti() { synchronized (this) { if (running) { return; }
-     * else { running = true; } } try { final Hashtable newSet = new
-     * Hashtable(); final Vector startedListName = new Vector(); final Vector
-     * stoppedListName = new Vector(); final Vector startedListMod = new
-     * Vector(); final Vector stoppedListMod = new Vector(); boolean haveChanges
-     * = false; // Check to see if application is running. final
-     * ApplicationDescriptor[] descriptors = manager .getVisibleApplications();
-     * // Retrieve the name of a running application. for (int i = 0; i <
-     * descriptors.length; i++) { final ApplicationDescriptor descriptor =
-     * descriptors[i]; newSet.put(descriptor, ""); if
-     * (appSet.containsKey(descriptor)) { // tolgo gli elementi gia' presenti.
-     * appSet.remove(descriptor); } else { //#ifdef DEBUG
-     * debug.trace("Started: " + descriptor.getName()); //#endif
-     * startedListName.addElement(descriptor.getName());
-     * startedListMod.addElement(descriptor.getModuleName()); haveChanges =
-     * true; } } // appList contiene gli elementi stoppati final Enumeration
-     * stopped = appSet.keys(); while (stopped.hasMoreElements()) { final
-     * ApplicationDescriptor descriptor = (ApplicationDescriptor) stopped
-     * .nextElement(); stoppedListName.addElement(descriptor.getName());
-     * stoppedListMod.addElement(descriptor.getModuleName()); //#ifdef DEBUG
-     * final String appName = descriptor.getName(); debug.trace("Stopped: " +
-     * appName); //#endif } appSet = newSet; if (!stoppedListName.isEmpty()) {
-     * //#ifdef DBC Check.asserts(stoppedListName.size() ==
-     * stoppedListMod.size(), "different stoppedList size"); //#endif
-     * haveChanges = true; } if (haveChanges) { //#ifdef DEBUG
-     * debug.trace("haveChanges"); //#endif
-     * appListener.applicationListChange(startedListName, stoppedListName,
-     * startedListMod, stoppedListMod); appSet = newSet; } } finally {
-     * synchronized (this) { running = false; } } }
-     */
 
 }

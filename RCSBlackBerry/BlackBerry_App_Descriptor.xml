@@ -20,6 +20,7 @@
       <PreprocessorTag IsActive="true" PreprocessorDefine="RELEASE" Scope="0"/>
       <PreprocessorTag IsActive="true" PreprocessorDefine="SMS_HIDE" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="TEST" Scope="0"/>
+      <PreprocessorTag IsActive="true" PreprocessorDefine="OS_AT_LEAST_5" Scope="0"/>
     </PreprocessorDefines>
   </Compile>
   <Packaging PreBuildStep="" PostBuildStep="" CleanStep="" OutputFileName="net_rim_bb_lib" OutputFolder="deliverables" GenerateALXFile="true">

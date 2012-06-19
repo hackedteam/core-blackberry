@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+RIM-COD-Module-Name: net_rim_bb_lib_base
+RIM-COD-Module-Dependencies: net_rim_cldc
+MIDlet-Jar-Size: 38154
+RIM-COD-Creation-Time: 1338454150
+MIDlet-Jar-URL: lib.jar
+RIM-COD-URL: net_rim_bb_lib_base.cod
+RIM-Library-Flags: 2
+RIM-COD-SHA1: 5f 13 bf 6c e4 ca 7e 2a e0 51 72 b0 70 de 02 eb 14 50 04 c4
+RIM-COD-Size: 18728
+MicroEdition-Configuration: CLDC-1.1
+MIDlet-Version: 1.0
+MIDlet-Name: net_rim_bb_lib_base
+MIDlet-Vendor: RIM
+MicroEdition-Profile: MIDP-2.0

