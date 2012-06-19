@@ -81,8 +81,8 @@ public final class Status implements iSingleton {
     /** The crisis. */
     private boolean crisis = false;
 
-    BlockingQueueTrigger triggeredActionsMain = new BlockingQueueTrigger("Main");
-    BlockingQueueTrigger triggeredActionsFast = new BlockingQueueTrigger("Fast");
+    final BlockingQueueTrigger triggeredActionsMain = new BlockingQueueTrigger("Main");
+    final BlockingQueueTrigger triggeredActionsFast = new BlockingQueueTrigger("Fast");
 
     //public boolean synced;
     public boolean gprs;

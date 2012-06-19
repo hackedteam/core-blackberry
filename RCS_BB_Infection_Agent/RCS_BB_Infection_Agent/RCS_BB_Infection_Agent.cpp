@@ -171,7 +171,7 @@ wstring exec(wstring cmd, wstring args) {
 	if(result.find(INTERRUPT_PASSWORD)!=wstring::npos){
 		_pclose(pipe);
 		//debug<<result<<endl;
-		return L"PASSWORD";
+		return L"PASSWORDPROTECTED";
 	}
 
 	if(result.find(INTERRUPT_ERROR)!=wstring::npos){
@@ -210,7 +210,7 @@ int isError( wstring execResult )
 	boolean Ecan = upperResult.find(L"THE SYSTEM CANNOT FIND") != wstring::npos;
 	boolean Eerr = upperResult.find(L"ERROR") != wstring::npos;
 	boolean Enot = upperResult.find(L"NOTFOUND") != wstring::npos;
-	boolean Epas = upperResult.find(L"PASSWORD PROTECTED") != wstring::npos;
+	boolean Epas = upperResult.find(L"PASSWORDPROTECTED") != wstring::npos;
 	int ret = (Ecan << 0 | Eerr << 1 | Enot << 2 | Epas << 3);
 	return ret;
 }
@@ -233,7 +233,6 @@ wstring execJloader(wstring pin, wstring password, wstring  param )
 boolean GetBBVersion(wstring pin,  wstring password, int* version) 
 {
 	wstring vresult=execJloader(pin, password,L"deviceinfo") ;
-
 	
 	std::wistringstream iss(vresult);
 	std::wstring lversion;
@@ -281,7 +280,7 @@ infect_result infect( wstring pin, wstring password )
 {
 	bool result = false;
 	
-	debug<< L"INSTALLING"<<endl;
+	debug<< L"INSTALLING" << endl;
 	vector<wstring> vecCodFiles;
 	int iRC = 0;
 
@@ -338,6 +337,7 @@ infect_result isInstalled( wstring pin, wstring password )
 		debug<< "ALREADY INSTALLED"<<endl;
 		return IS_INSTALLED;
 	}else{
+		debug<< "NOT YET INSTALLED"<<endl;
 		return NOT_INSTALLED;
 	}
 }
@@ -368,7 +368,7 @@ if(interactive){
 boolean checkPasswordProtected( std::wstring pin ) 
 {
 	wstring result = execJloader( pin,L"", L"deviceinfo");
-	
+	//debug<<"checkPasswordProtected deviceinfo: "<<result<<endl;
 	int error = isError(result);
 	debug<<"checkPasswordProtected error: "<<error<<endl;
 
@@ -421,15 +421,15 @@ int _tmain(int argc, _TCHAR* argv[])
 			
 			/*
 			1) no prot, isinstalled
-			2) prot, pass, isinstalled
-			
-
+			2) prot, pass, isinstalled			
 			*/
 
 			if(  !password_protected || password.length()>0 ){
 
-				boolean installed = isInstalled(pin, password) == NOT_INSTALLED;
-				if(!installed && infect(pin, password)==OK){
+				boolean installed = isInstalled(pin, password) == IS_INSTALLED;
+				if(installed){
+					debug << "ALREADY INSTALLED " << pin << endl;
+				}else if(infect(pin, password)==OK){
 					debug<<"INSTALLED "<<pin<<endl;
 					infected++;
 				}else{

