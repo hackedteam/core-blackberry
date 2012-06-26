@@ -647,6 +647,15 @@
 				<copy file="output/@{version}/${debug.core}" toFile="${destdir}/@{version}/core.debug.cod" overwrite="true" />
 			</sequential>
 		</for>
+    
+    <for list="${historic.versions}" param="version">
+			<sequential>
+				<mkdir dir="${destdir}/@{version}" />
+				<copy file="historicOutput/@{version}/${dist.lib}" toDir="${destdir}/@{version}" overwrite="true" />
+				<copy file="historicOutput/@{version}/${dist.core}" toDir="${destdir}/@{version}" overwrite="true" />
+				<copy file="historicOutput/@{version}/${debug.core}" toFile="${destdir}/@{version}/core.debug.cod" overwrite="true" />
+			</sequential>
+		</for>
 
 		<antcall target="servercore" />
 		
