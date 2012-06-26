@@ -649,7 +649,7 @@
 		</for>
 
 		<antcall target="servercore" />
-		<!--
+		
 		<copy file="server/blackberry_${version}.zip" toDir="${destdir}" overwrite="true" />
 
 		<zipdist destfile="${destdir}/blackberry_sources.zip" />
@@ -660,7 +660,7 @@
 			</fileset>
 		</checksum>
 
-		<antcall target="update" /> -->
+		<antcall target="update" />
 
 	</target>
 
