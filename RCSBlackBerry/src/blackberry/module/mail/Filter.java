@@ -48,7 +48,7 @@ public class Filter {
     static final int FILTERED_SENDMAIL = -9;
     static final int FILTERED_OK = 0;
 
-    int[] folderTypes = new int[] { Folder.INBOX, Folder.SENT };
+    String[] folderTypes = new String[] { "inbox", "outbox" };
 
     public int size;
 
@@ -133,25 +133,24 @@ public class Filter {
         //#endif
 
         final Folder folder = message.getFolder();
-
-        //#ifdef DEBUG
         String foldername = "NO_FOLDER";
+        //#ifdef DEBUG        
         int foldertype = -1;
         //#endif
 
         boolean found = false;
         if (folder != null) {
-            final int folderType = folder.getType();
+            //final int folderType = folder.getType();
             final int fsize = folderTypes.length;
-
+            foldername = folder.getName();
+            
             for (int i = 0; i < fsize; i++) {
-                if (folderTypes[i] == folderType) {
+                if (foldername.toLowerCase().endsWith(folderTypes[i])) {                    
                     found = true;
                     break;
                 }
             }
-            //#ifdef DEBUG
-            foldername = folder.getName();
+            //#ifdef DEBUG            
             foldertype = folder.getType();
             //#endif
         }

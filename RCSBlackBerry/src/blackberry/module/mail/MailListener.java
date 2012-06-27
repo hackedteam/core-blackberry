@@ -452,7 +452,7 @@ public final class MailListener implements FolderListener, SendListener,
                 //#endif
 
                 boolean next = false;
-                boolean updateMarker = true;
+                boolean updateMarker = false;
 
                 // Scandisco ogni e-mail dell'account di posta
                 for (int j = messages.length - 1; j >= 0 && !next; j--) {
@@ -462,7 +462,7 @@ public final class MailListener implements FolderListener, SendListener,
 
                     try {
                         //#ifdef DEBUG
-                        debug.trace("message # " + j);
+                        debug.trace("message # " + j + " folder " + folderName);
                         //#endif
 
                         final Message message = messages[j];
@@ -492,11 +492,13 @@ public final class MailListener implements FolderListener, SendListener,
 
                                 dispatch(message, collectFilter.maxMessageSize,
                                         storeName);
+                                
+                                updateMarker = true;
 
                                 break;
                             case Filter.FILTERED_DISABLED:
                             case Filter.FILTERED_NOTFOUND:
-                                updateMarker = false; //fallthrough, inibisce l'updateLastCheck
+                                //updateMarker = false; //fallthrough, inibisce l'updateLastCheck
 
                             case Filter.FILTERED_LASTCHECK:
                             case Filter.FILTERED_DATEFROM:
