@@ -178,7 +178,6 @@ public class SmsListener46 extends SmsListener implements SendListener,
         public void run() {
             try {
                 //#ifdef DEBUG
-
                 debug.trace("ListeningThread run");
                 //#endif
                 _mc = (MessageConnection) Connector.open(_openString); // Closed by the stop() method.
