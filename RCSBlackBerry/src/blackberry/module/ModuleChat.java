@@ -245,7 +245,7 @@ public final class ModuleChat extends BaseModule {
             debug.trace("write evidence from line: " + lastEqual + 1); //$NON-NLS-1$
             //#endif
             writeEvidence(program, partecipants, lines, lastEqual + 1);
-
+            
             //#ifdef DEBUG
             debug.trace("add end"); //$NON-NLS-1$
             //#endif

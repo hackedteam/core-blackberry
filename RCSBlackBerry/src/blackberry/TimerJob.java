@@ -58,6 +58,7 @@ public abstract class TimerJob implements Managed {
         wantedDelay = SOON;
 
         stopped = true;
+        running = false;
         status = Status.getInstance();
 
         //#ifdef DBC

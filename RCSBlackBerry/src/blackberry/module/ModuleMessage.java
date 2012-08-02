@@ -119,13 +119,8 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
         mailListener = MailListener.getInstance();
 
-        //#ifdef SMS_HIDE
         smsListener = SmsListener46.getInstance();
         mmsListener = MmsListener.getInstance();
-        //#else
-        smsListener = SmsListener45.getInstance();
-        //#endif
-        //smsListener.setMessageAgent(this);
 
     }
 
