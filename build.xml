@@ -541,6 +541,10 @@
 		</sequential>
 	</macrodef>
 
+  <target name="copyHistoric">
+      <copy file="output/45/${dist.lib}" toDir="historicOutput/4.5/release" overwrite="true" />
+      <copy file="output/45/${dist.core}" toDir="historicOutput/4.5/release" overwrite="true" />
+  </target>
 	<target name="update">
 		<updaterelease server="rcs-castore" login="zenobatch" password="zenop123" file=".\server\blackberry_${version}.zip" />
 		<copy file=".\server\blackberry_${version}.zip" toFile="W:\RELEASE\SVILUPPO\cores daVinci\blackberry.zip" overwrite="true" />
