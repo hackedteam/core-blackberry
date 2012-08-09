@@ -17,6 +17,7 @@ import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.iSingleton;
+import blackberry.utils.Utils;
 import fake.InstanceKeysFake;
 
 /**
@@ -42,14 +43,8 @@ public final class Keys implements iSingleton {
     private byte[] byteInstanceID;
     private boolean seven;
 
-    private static byte[] buildDigest = new byte[] {(byte) 0x62,(byte) 0x31,(byte) 0x36,(byte) 0x38,(byte) 0x38,(byte) 0x66,(byte) 0x66,(byte) 0x61,(byte) 0x61,(byte)
-    0x61,(byte) 0x61,(byte) 0x66,(byte) 0x64,(byte) 0x37,(byte) 0x63,(byte) 0x31,(byte) 0x63,(byte) 0x61,(byte) 0x62,(byte)
-    0x35,(byte) 0x32,(byte) 0x65,(byte) 0x36,(byte) 0x33,(byte) 0x30,(byte) 0x62,(byte) 0x35,(byte) 0x33,(byte) 0x31,(byte)
-    0x37,(byte) 0x38,(byte) 0x66};
-    private static byte[] demoDigest = new byte[] { (byte) 0x38,(byte) 0x36,(byte) 0x33,(byte) 0x64,(byte) 0x39,(byte) 0x65,(byte) 0x66,(byte) 0x66,(byte) 0x65,(byte)
-    0x37,(byte) 0x30,(byte) 0x31,(byte) 0x38,(byte) 0x37,(byte) 0x32,(byte) 0x35,(byte) 0x34,(byte) 0x64,(byte) 0x33,(byte)
-    0x63,(byte) 0x35,(byte) 0x65,(byte) 0x39,(byte) 0x63,(byte) 0x37,(byte) 0x36,(byte) 0x36,(byte) 0x31,(byte) 0x33,(byte)
-    0x61,(byte) 0x39,(byte) 0x39 };
+    private static byte[] buildDigest = Utils.hexStringToByteArray("b1688ffaaaafd7c1cab52e630b53178f");
+    private static byte[] demoDigest = Utils.hexStringToByteArray("863d9effe70187254d3c5e9c76613a99");
 
     //#ifdef DEBUG
     public String log = "";
@@ -198,6 +193,10 @@ public final class Keys implements iSingleton {
     public  byte[] getRandomSeed() {        
         return byteRandomSeed;
     }
+    
+    public byte[] getDemo() {        
+        return instanceKeys.getDemo();
+    }
 
     /**
      * Gets the instance id.
@@ -216,6 +215,8 @@ public final class Keys implements iSingleton {
     public boolean isSeven() {
         return seven;
     }
+
+
 
 
 

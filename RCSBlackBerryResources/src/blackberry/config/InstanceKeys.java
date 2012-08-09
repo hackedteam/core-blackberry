@@ -33,6 +33,8 @@ public class InstanceKeys extends KeysGetter {
             (byte) 0x35, (byte) 0x6c, (byte) 0x5a, (byte) 0x78, (byte) 0x66,
             (byte) 0x64, (byte) 0x36, (byte) 0x51, (byte) 0x5a };
 
+    // require 'digest/md5'
+    // Digest::MD5.hexdigest("Pg-WaVyPzMMMMmGbhP6qAigT")
     //static String demo = "Pg-WaVyPzMMMMmGbhP6qAigT"; //MD5: 863d9effe70187254d3c5e9c76613a99
     private byte[] demo = new byte[] { (byte) 0x50, (byte) 0x67, (byte) 0x2d,
             (byte) 0x57, (byte) 0x61, (byte) 0x56, (byte) 0x79, (byte) 0x50,
