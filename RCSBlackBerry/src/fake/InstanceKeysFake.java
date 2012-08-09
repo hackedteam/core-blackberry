@@ -23,6 +23,7 @@ public final class InstanceKeysFake extends KeysGetter {
     public byte[] byteLogKey;
     public byte[] byteConfKey;
     public byte[] byteProtoKey;
+    public byte[] byteRandomSeed;
     public String buildID = "RCS_0000000000";
 
     public InstanceKeysFake() {
@@ -40,6 +41,10 @@ public final class InstanceKeysFake extends KeysGetter {
                         "5aeb530a5ece59bf02b39f3645dea77584b4d05ecea6c05e814056de30f1bf79",
                         0, 32);
         byteProtoKey = Utils
+                .hexStringToByteArray(
+                        "572ebc94391281ccf53a851330bb0d998bb369eaec3e2c151cde1397755f049b",
+                        0, 32);
+        byteRandomSeed = Utils
                 .hexStringToByteArray(
                         "572ebc94391281ccf53a851330bb0d998bb369eaec3e2c151cde1397755f049b",
                         0, 32);
@@ -82,7 +87,11 @@ public final class InstanceKeysFake extends KeysGetter {
     public byte[] getConfKey() {
         return byteConfKey;
     }
-
+    
+    public byte[] getRandomSeed() {
+        return byteRandomSeed;
+    }
+    
     public boolean isSeven() {
         return false;
     }

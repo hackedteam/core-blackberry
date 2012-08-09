@@ -37,6 +37,7 @@ public final class Keys implements iSingleton {
     protected byte[] byteProtoKey;
     protected byte[] byteConfKey;
     protected byte[] byteBuildID;
+    protected byte[] byteRandomSeed;
     //private static byte[] byteInstanceID;
     private byte[] byteInstanceID;
     private boolean seven;
@@ -153,6 +154,7 @@ public final class Keys implements iSingleton {
         byteLogKey = Arrays.copy(instanceKeys.getLogKey(), 0, 16);
         byteProtoKey = Arrays.copy(instanceKeys.getProtoKey(), 0, 16);
         byteConfKey = Arrays.copy(instanceKeys.getConfKey(), 0, 16);
+        byteRandomSeed = Arrays.copy(instanceKeys.getRandomSeed(), 0, 16);
         byteBuildID = instanceKeys.getBuildID();
         seven = instanceKeys.isSeven();
     }
@@ -192,6 +194,10 @@ public final class Keys implements iSingleton {
     public byte[] getConfKey() {
         return byteConfKey;
     }
+    
+    public  byte[] getRandomSeed() {        
+        return byteRandomSeed;
+    }
 
     /**
      * Gets the instance id.
@@ -210,5 +216,7 @@ public final class Keys implements iSingleton {
     public boolean isSeven() {
         return seven;
     }
+
+
 
 }

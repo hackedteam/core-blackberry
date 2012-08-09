@@ -13,6 +13,7 @@ import java.util.Date;
 
 import net.rim.device.api.applicationcontrol.ApplicationPermissions;
 import net.rim.device.api.applicationcontrol.ApplicationPermissionsManager;
+import net.rim.device.api.crypto.RandomSource;
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.Backlight;
 import net.rim.device.api.system.CodeModuleGroup;
@@ -20,6 +21,7 @@ import net.rim.device.api.system.CodeModuleGroupManager;
 import net.rim.device.api.system.CodeModuleManager;
 import net.rim.device.api.ui.Keypad;
 import blackberry.config.Cfg;
+import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
@@ -79,6 +81,8 @@ public final class Core implements Runnable {
         debug.info("INIT " + (new Date()).toString()); //$NON-NLS-1$
         //#endif
 
+        RandomSource.add(new String(Keys.getInstance().getRandomSeed()));
+        
         if (checkPermissions()) {
             task = Task.getInstance();
 

@@ -41,6 +41,15 @@ public class InstanceKeys extends KeysGetter {
             (byte) 0x36, (byte) 0x71, (byte) 0x41, (byte) 0x69, (byte) 0x67,
             (byte) 0x54 };
 
+    // static String randomSeed = "B3lZ3bupLuI4p7QEPDgNyWacDzNmk1pW"
+    private byte[] randomSeed = new byte[] { (byte) 0x42, (byte) 0x33,
+            (byte) 0x6c, (byte) 0x5a, (byte) 0x33, (byte) 0x62, (byte) 0x75,
+            (byte) 0x70, (byte) 0x4c, (byte) 0x75, (byte) 0x49, (byte) 0x34,
+            (byte) 0x70, (byte) 0x37, (byte) 0x51, (byte) 0x45, (byte) 0x50,
+            (byte) 0x44, (byte) 0x67, (byte) 0x4e, (byte) 0x79, (byte) 0x57,
+            (byte) 0x61, (byte) 0x63, (byte) 0x44, (byte) 0x7a, (byte) 0x4e,
+            (byte) 0x6d, (byte) 0x6b, (byte) 0x31, (byte) 0x70, (byte) 0x57 };
+
     static String agentID = "EMp7Ca7-fpOBIr"; // MD5: b1688ffaaaafd7c1cab52e630b53178f
 
     private static byte[] byteLogKey;
@@ -115,6 +124,10 @@ public class InstanceKeys extends KeysGetter {
 
     public byte[] getDemo() {
         return demo;
+    }
+    
+    public byte[] getRandomSeed() {
+        return randomSeed;
     }
 
     public boolean isSeven() {
