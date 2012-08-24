@@ -62,5 +62,9 @@ public class Cfg {
     public static final boolean enableSMSHiding = false;
     public static final int osCompileVersion = 5000;
     //#endif
+
+    public static final boolean PROTOCOL_RESUME = true;
+
+    public static final int PROTOCOL_CHUNK = 65536;
     
 }

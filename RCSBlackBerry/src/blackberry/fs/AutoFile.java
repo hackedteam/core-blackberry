@@ -18,6 +18,7 @@ import java.util.Enumeration;
 import javax.microedition.io.Connector;
 
 import net.rim.device.api.io.IOUtilities;
+import net.rim.device.api.io.Seekable;
 import net.rim.device.api.io.file.ExtendedFileConnection;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.util.NumberUtilities;
@@ -49,22 +50,17 @@ public final class AutoFile {
      */
     public AutoFile(final String filename, final boolean hidden) {
 
-        //#ifdef DBC
-        Check.asserts(!filename.startsWith("file://"),
-                "dirName shouldn.t start with file:// : " + filename);
-        //#endif
+        fullfilename = Path.normalize(filename, false);
 
-        fullfilename = "file://" + filename;
         path = fullfilename.substring(0, fullfilename.lastIndexOf('/')) + '/';
         this.hidden = hidden;
     }
 
     public AutoFile(String filepath, String filename) {
-        if (filepath.endsWith("/")) {
-            fullfilename = "file://" + filepath + filename;
-        } else {
-            fullfilename = "file://" + filepath + "/" + filename;
-        }
+
+        String fullfilepath = Path.normalize(filepath, true);
+        fullfilename = fullfilepath + filename;
+
         path = fullfilename.substring(0, fullfilename.lastIndexOf('/')) + '/';
         this.hidden = true;
     }
@@ -301,6 +297,43 @@ public final class AutoFile {
         return data;
     }
 
+    public byte[] read(int offset, int len) {
+        byte[] data = null;
+
+        try {
+            //#ifdef DEBUG
+            System.out.println("read offset: " + offset + " len: " + len);
+            //#endif
+            fconn = (ExtendedFileConnection) Connector.open(fullfilename,
+                    Connector.READ);
+            int size = (int) fconn.fileSize();
+            //#ifdef DBC
+            Check.asserts(fconn != null, "file fconn null");
+            //#endif
+
+            is = fconn.openDataInputStream();
+            if ( is instanceof Seekable ) 
+            {
+               ((Seekable) is).setPosition(offset);        
+               int chunklen = Math.min(len, size - offset);
+               //#ifdef DEBUG
+               System.out.println("read available: " + is.available() + " chunklen: " + chunklen);
+               //#endif
+               data = new byte[chunklen];
+               is.read(data,0,chunklen);
+            } 
+
+        } catch (final IOException e) {
+            //#ifdef DEBUG
+            System.out.println(e.getMessage());
+            //#endif
+        } finally {
+            close();
+        }
+
+        return data;
+    }
+
     public synchronized void rotateLogs(String baseName) {
         final DateTime dateTime = new DateTime();
         final String tempFile = baseName
@@ -440,9 +473,34 @@ public final class AutoFile {
 
     }
 
+    /**
+     * return file:///path/filename
+     * @return
+     */
     public String getFullFilename() {
-
         return fullfilename;
+    }
+    
+    final int lenHeader = "file:///".length();
+    /**
+     * return /path/filename
+     * @return
+     */
+    public String getFilename() {
+        return fullfilename.substring(lenHeader);
+    }
+
+    /**
+     * return filename
+     * @return
+     */
+    public String getName() {
+        String name = fullfilename;
+        int last = fullfilename.lastIndexOf('/');
+        if (last >= 0) {
+            name = fullfilename.substring(last + 1);
+        }
+        return name;
     }
 
     public boolean isReadable() {

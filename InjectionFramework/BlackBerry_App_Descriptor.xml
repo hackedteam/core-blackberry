@@ -8,6 +8,7 @@
       <Icon CanonicalFileName="res\img\icon.png" IsFocus="false"/>
     </Icons>
   </Resources>
+  <KeywordResources KeywordResourceBundleName="" KeywordResourceBundleRelativePath="" KeywordResourceBundleClassName="" KeywordResourceBundleKey=""/>
   <Compile OutputCompilerMessages="false" ConvertImages="true" CreateWarningForNoExportedRoutine="true" CompressResources="false" AliasList="">
     <PreprocessorDefines>
       <PreprocessorTag IsActive="true" PreprocessorDefine="DEBUG" Scope="0"/>
