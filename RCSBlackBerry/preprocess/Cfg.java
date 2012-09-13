@@ -48,6 +48,9 @@ public class Cfg {
     
     public static final int VERSION = @VERSION@;
     public static final String OSVERSION = "@OSVERSION@";
+    
+    public static final boolean PROTOCOL_RESUME = true;
+    public static final int PROTOCOL_CHUNK = 65536;
 
     //==========================================================
     

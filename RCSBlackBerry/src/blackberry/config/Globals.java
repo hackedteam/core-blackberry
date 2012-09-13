@@ -17,5 +17,8 @@ public class Globals {
     public boolean migrated;
     public int version;
     public String[] nohide;
+    public long getQuotaMin() {        
+        return quotaMin / 1024;
+    }
 
 }

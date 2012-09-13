@@ -55,7 +55,7 @@ public abstract class AInjector {
     public void resetTries() {
         tries = 0;
     }
-
+    
     public void setInjectedApp(UiApplication app) {        
         init();
         
@@ -70,14 +70,6 @@ public abstract class AInjector {
         this.injectedApp = app;
         
         final String appName = getAppName();
-       /* Main main = Main.getInstance();
-        main.invokeLater(new Runnable() {
-            public void run() {
-             // A.0=INJ: 
-                Evidence.info(Messages.getString("A.0") + appName); //$NON-NLS-1$
-            }
-        });*/
-        
         Evidence.info(Messages.getString("A.0") + appName); //$NON-NLS-1$
 
     }

