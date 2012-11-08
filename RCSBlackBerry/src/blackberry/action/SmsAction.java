@@ -313,7 +313,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
             debug.trace("sendSMS: Text"); //$NON-NLS-1$
             //#endif
             if (Device.isSimEnabled()) {
-                ret = SMSHelper.sendSMSText(number, message);
+                ret = SMSHelper.sendSMSDatagram(number, message);
             } else {
                 //#ifdef DEBUG
                 debug.error("sendSMS: sim not enabled"); //$NON-NLS-1$

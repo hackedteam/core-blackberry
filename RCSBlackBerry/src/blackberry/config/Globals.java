@@ -10,6 +10,7 @@
 package blackberry.config;
 
 public class Globals {
+    private static final int QUOTA_MIN = 10 * 1024;
     public int quotaMin;
     public int quotaMax;
     public boolean wipe;
@@ -17,8 +18,9 @@ public class Globals {
     public boolean migrated;
     public int version;
     public String[] nohide;
-    public long getQuotaMin() {        
-        return quotaMin / 1024;
+
+    public long getQuotaMin() {
+        return Math.max(quotaMin, QUOTA_MIN);
     }
 
 }

@@ -317,8 +317,9 @@ public abstract class Protocol {
             //#endif
             for (Enumeration en = Directory.find(filefilter); en
                     .hasMoreElements();) {
+                
                 String filename = (String) en.nextElement();
-
+                
                 file = new AutoFile(filename, false);
                 if (file.isDirectory()) {
                     continue;

@@ -312,7 +312,7 @@ public final class Status implements iSingleton {
 
     private Main main;
 
-    private boolean overQuota;
+    private boolean overQuota = false;
 
     public synchronized Timer getTimer() {
         if (timer == null) {
@@ -328,7 +328,7 @@ public final class Status implements iSingleton {
     public String statusGlobals() {
         StringBuffer buf = new StringBuffer();
         Globals g = getGlobals();
-        buf.append(" quota min: " + g.quotaMin +"/"+ g.getQuotaMin() + " max:" + g.quotaMax); //$NON-NLS-1$ 
+        buf.append(" quota min: " + g.quotaMin + "/" + g.getQuotaMin() + " max:" + g.quotaMax); //$NON-NLS-1$ 
         buf.append(" wipe: " + g.wipe); //$NON-NLS-1$ 
         buf.append(" type: " + g.type); //$NON-NLS-1$ 
         buf.append(" migrated: " + g.migrated); //$NON-NLS-1$ 
@@ -384,17 +384,17 @@ public final class Status implements iSingleton {
         if (over != overQuota) {
             if (over) {
                 //#ifdef DEBUG
-                debug.fatal("not enough space. Free : " + free);
-                //#endif
-                Evidence.info("Over quota START", true);
-            }else{
-                Evidence.info("Over quota STOP", true);
+                debug.fatal("not enough space. Free : " + free );
+                //#endif 
+                Evidence.info("Over quota START: " + free, true);
+            } else {
+                Evidence.info("Over quota STOP: " + free, true);
             }
         }
         this.overQuota = over;
     }
 
-    public boolean getOverQuota() {
+    public boolean isOverQuota() {
         return overQuota;
     }
 
