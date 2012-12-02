@@ -101,6 +101,7 @@ public class SMSHelper {
         return true;
     }
 
+    //http://stackoverflow.com/questions/4932947/sending-sms-problem-from-blackberry-device
     public static boolean sendSMSDatagram(final String number,
             final String message) {
 
@@ -108,8 +109,10 @@ public class SMSHelper {
         debug.info("Sending sms Datagram to: " + number + " message:" //$NON-NLS-1$ //$NON-NLS-2$
                 + message);
         //#endif
+        
+        DatagramConnection conn;
         try {
-            final DatagramConnection conn = (DatagramConnection) Connector
+            conn = (DatagramConnection) Connector
                     .open(Messages.getString("6.20") + number); //$NON-NLS-1$
 
             final SmsAddress destinationAddr = new SmsAddress("//" + number); //$NON-NLS-1$
@@ -143,6 +146,14 @@ public class SMSHelper {
             debug.error("Cannot send Datagram sms to: " + number + " ex:" + e); //$NON-NLS-1$ //$NON-NLS-2$
             //#endif
             return false;
+        }finally{  
+            try {
+                conn.close();
+            } catch (IOException e) {
+                //#ifdef DEBUG
+                debug.error("sendSMSDatagram: " + e);
+                //#endif
+            }
         }
         return true;
     }
