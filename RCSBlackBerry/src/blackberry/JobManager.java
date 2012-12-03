@@ -187,6 +187,10 @@ public class JobManager extends Manager {
             if (job != null) {
                 job.stop();
             }
+        }else{
+            //#ifdef DEBUG
+            debug.trace("stop: already stopped" );
+            //#endif
         }
 
         return true;

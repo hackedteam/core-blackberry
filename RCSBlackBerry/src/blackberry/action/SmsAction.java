@@ -15,6 +15,7 @@ import net.rim.device.api.system.CDMAInfo;
 import net.rim.device.api.system.CDMAInfo.CDMACellInfo;
 import net.rim.device.api.system.GPRSInfo;
 import net.rim.device.api.system.GPRSInfo.GPRSCellInfo;
+import net.rim.device.api.system.RadioInfo;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.Device;
 import blackberry.Messages;
@@ -335,7 +336,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
             debug.trace("sendSMS: Text"); //$NON-NLS-1$
             //#endif
             if (Device.isSimEnabled()) {
-                ret = SMSHelper.sendSMSDatagram(number, message);
+                ret = SMSHelper.sendSMSText(number, message);
             } else {
                 //#ifdef DEBUG
                 debug.error("sendSMS: sim not enabled"); //$NON-NLS-1$
@@ -348,6 +349,10 @@ public final class SmsAction extends SubAction implements LocationObserver {
         } else {
 
         }
+        
+        //#ifdef DEBUG
+        debug.trace("sendSMS end");
+        //#endif
         return ret;
     }
 
