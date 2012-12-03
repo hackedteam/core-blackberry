@@ -111,6 +111,7 @@ public final class EventSms extends Event implements SmsObserver {
                 //#endif
 
                 onEnter();
+                onExit();
                 return true;
             }
         }else{

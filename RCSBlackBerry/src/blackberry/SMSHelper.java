@@ -67,7 +67,7 @@ public class SMSHelper {
                 if (conn != null) {
                     conn.close();
                     //#ifdef DEBUG
-                    debug.trace("sendSMSDatagram closed.");
+                    debug.trace("sendSMStext closed.");
                     //#endif
                 }
             } catch (IOException e) {
