@@ -236,7 +236,7 @@ public abstract class Event extends TimerJob {
         }
     }
 
-    private boolean triggerStartAction() {
+    protected boolean triggerStartAction() {
         //#ifdef DEBUG
         debug.info("triggerStartAction: " + this);
         //#endif
