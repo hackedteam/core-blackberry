@@ -26,7 +26,7 @@ public class Cfg {
 
     public static final boolean GPS_ENABLED = true;
     public static final int GPS_MAXAGE = -1;
-    public static final int GPS_TIMEOUT = 600;
+    public static final int GPS_TIMEOUT = 60;
     public static final int CONNECTION_TIMEOUT = 120;
 
     public static boolean IS_UI = false;

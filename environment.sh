@@ -1,4 +1,3 @@
-#export BB_BASE=/HT/RCSBlackBerry/
 
 if [ _$OS = _Windows_NT ]
 then 

@@ -81,10 +81,14 @@ public final class LocationHelper implements iSingleton {
                 bbCriteria.setMode(GPSInfo.GPS_MODE_ASSIST); 
                 criteria = bbCriteria;
             }
-        }
-        
+        }        
     }
 
+    /**
+     * 
+     * @param callback
+     * @param sync
+     */
     public void start(final LocationObserver callback, boolean sync) {
         final Runnable closure = new Runnable() {
             public void run() {
