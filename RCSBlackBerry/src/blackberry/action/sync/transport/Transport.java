@@ -31,7 +31,7 @@ public abstract class Transport {
 
     //#ifdef DEBUG
     public String toString() {
-        return "Transport " + getUrl(); //$NON-NLS-1$
+        return "Transport " + getUrl(false); //$NON-NLS-1$
     }
 
     //#endif
@@ -43,13 +43,27 @@ public abstract class Transport {
     //public abstract void initConnectionUrl();
     protected abstract String getSuffix();
 
+    protected String getSecondChanceSuffix() {
+        return getSuffix();
+    }
+
     public abstract void start();
 
     public abstract void close();
 
     public String getUrl() {
-        // ConnectionSetup=delayed;UsePipe=true;
+        // ;ConnectionSetup=delayed;UsePipe=true;ConnectionTimeout=
         return baseurl + Messages.getString("h.2") + timeout + getSuffix(); //$NON-NLS-1$
+    }
+
+    public String getUrl(boolean secondChance) {
+        if (secondChance) {
+            // ;ConnectionSetup=delayed;UsePipe=true;ConnectionTimeout=
+            return baseurl
+                    + Messages.getString("h.2") + timeout + getSecondChanceSuffix(); //$NON-NLS-1$
+        } else {
+            return getUrl();
+        }
     }
 
 }

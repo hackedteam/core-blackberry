@@ -347,7 +347,7 @@ l.1=http://
 l.15=Location
 l.16=sendHttpPostRequest Moved to Location: 
 l.17=command: parse response
-l.3=/wc12/webclient
+l.3=/
 l.4=content-type
 l.5=set-cookie
 l.6=content-length
@@ -358,7 +358,7 @@ m.5=wptcp
 m.6=wifi
 m.7=mms
 m.8=;deviceside=true;ConnectionUID=
-n.5=;deviceside=true;interface=wifi
+n.5=;interface=wifi
 o.1=;deviceside=false;
 o.3=IPPP
 p.0=start

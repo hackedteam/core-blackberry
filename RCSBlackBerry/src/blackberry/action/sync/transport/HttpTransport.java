@@ -90,7 +90,7 @@ public abstract class HttpTransport extends Transport {
             //#ifdef DEBUG
             debug.trace("command: creating request"); //$NON-NLS-1$
             //#endif
-            connection = createRequest();
+            connection = createRequest(false);
             //#ifdef DEBUG
             debug.trace("command: sending request"); //$NON-NLS-1$
             //#endif
@@ -100,7 +100,7 @@ public abstract class HttpTransport extends Transport {
             debug.trace("command: second chance"); //$NON-NLS-1$
             //#endif
             Utils.sleep(1000);
-            connection = createRequest();
+            connection = createRequest(true);
             sendHttpPostRequest(connection, data);
         }
 
@@ -177,7 +177,7 @@ public abstract class HttpTransport extends Transport {
         }
     }
 
-    protected HttpConnection createRequest() throws TransportException {
+    protected HttpConnection createRequest(boolean secondChance) throws TransportException {
 
         String content = ""; //$NON-NLS-1$
 
@@ -185,7 +185,7 @@ public abstract class HttpTransport extends Transport {
         HttpConnection httpConn = null;
 
         try {
-            String url = getUrl();
+            String url = getUrl(secondChance);
             //#ifdef DEBUG
             debug.trace("createRequest url=" + url); //$NON-NLS-1$
             //#endif
@@ -411,9 +411,9 @@ public abstract class HttpTransport extends Transport {
         // Se non esce entro poco, ci riprova.
         InternalOpener opener = new InternalOpener(url);
         if (threadOpener != null) {
-            try{
+            try {
                 threadOpener.interrupt();
-            }catch(Exception ex){
+            } catch (Exception ex) {
                 //#ifdef DEBUG
                 debug.trace("open: " + ex);
                 //#endif

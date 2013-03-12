@@ -82,7 +82,7 @@ public abstract class HttpKeepAliveTransport extends HttpTransport {
                 debug.trace("sendHttpPostRequest Moved to Location: " + baseurl);
                 //#endif
 
-                connection = createRequest();
+                connection = createRequest(false);
                 sendHttpPostRequest(connection, data);
                 status = connection.getResponseCode();
             }
@@ -272,7 +272,7 @@ public abstract class HttpKeepAliveTransport extends HttpTransport {
 
     public void start() {
         try {
-            connection = createRequest();
+            connection = createRequest(false);
         } catch (TransportException e) {
             //#ifdef DEBUG
             debug.error("start: " + e);
