@@ -18,7 +18,7 @@ public abstract class Transport {
     private static Debug debug = new Debug("Transport", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
 
-    protected final int timeout = 30 * 1000;
+    protected final int timeout = 120 * 1000;
 
     protected String baseurl;
     protected String suffix;
