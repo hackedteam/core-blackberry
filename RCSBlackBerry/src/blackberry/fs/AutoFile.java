@@ -138,7 +138,7 @@ public final class AutoFile {
         return append(message.getBytes());
     }
 
-    private synchronized void close() {
+    public synchronized void close() {
         try {
             if (null != is) {
                 is.close();
@@ -251,7 +251,7 @@ public final class AutoFile {
      * 
      * @return the input stream
      */
-    public synchronized InputStream getInputStream() {
+    public synchronized DataInputStream getInputStream() {
         try {
             fconn = (ExtendedFileConnection) Connector.open(fullfilename,
                     Connector.READ);
@@ -310,6 +310,10 @@ public final class AutoFile {
             //#ifdef DBC
             Check.asserts(fconn != null, "file fconn null");
             //#endif
+            
+            if(offset > size){
+                return null;
+            }
 
             is = fconn.openDataInputStream();
             if ( is instanceof Seekable ) 

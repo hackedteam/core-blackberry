@@ -262,6 +262,33 @@ public class EncryptionPKCS5 extends Encryption {
 
         return decryptDataIntegrity(rawConf, rawConf.length, 0);
     }
+    
+    // TODO
+    public byte[] encryptPadZero(byte[] plain, int offset)
+            throws CryptoTokenException, CryptoUnsupportedOperationException,
+            IOException {
+
+        AESEncryptorEngine engine = new AESEncryptorEngine(aeskey);
+
+        byte[] iv = new byte[16];
+        Arrays.fill(iv, (byte) 0);
+        InitializationVector ivc = new InitializationVector(iv);
+
+        CBCEncryptorEngine cbc = new CBCEncryptorEngine(engine, ivc);
+        PKCS5FormatterEngine formatter = new PKCS5FormatterEngine(cbc);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        BlockEncryptor encryptor = new BlockEncryptor(formatter, output);
+
+        encryptor.write(plain, offset, plain.length - offset);
+        encryptor.close();
+
+        output.flush();
+        
+        byte[] cyphered = output.toByteArray();
+        byte[] nopad= Arrays.copy(cyphered, 0, cyphered.length -16 );
+        return nopad;
+    }
 
     public byte[] encryptDataRim(byte[] plain, int offset)
             throws CryptoTokenException, CryptoUnsupportedOperationException,
