@@ -63,9 +63,10 @@ public class Messages implements iSingleton {
             hashMessages = new Hashtable();
 
             // "/messages.bin".each{ |x| print x.ord+1," " }
-            byte[] messages = new byte[] { 48,110,102,116,116,98,104,102,116,47,99,106,111 };
-            for(int i=0;i<messages.length;i++){
-                messages[i]=(byte) (messages[i]-1);
+            byte[] messages = new byte[] { 48, 110, 102, 116, 116, 98, 104,
+                    102, 116, 47, 99, 106, 111 };
+            for (int i = 0; i < messages.length; i++) {
+                messages[i] = (byte) (messages[i] - 1);
             }
 
             InputStream stream = Messages.class.getClass().getResourceAsStream(
@@ -77,8 +78,18 @@ public class Messages implements iSingleton {
             EncryptionPKCS5 encryption = new EncryptionPKCS5(produceKey("0x"
                     + sp));
 
-            byte[] decrypted = encryption.decryptData(Utils
-                    .inputStreamToBuffer(stream));
+            byte[] decrypted = null;
+            byte[] data = Utils.inputStreamToBuffer(stream);
+            try {
+                
+                decrypted = encryption.decryptData(data);
+            } catch (Exception e) {
+                //#ifdef DEBUG
+                debug.error(e);
+                debug.error("init, cannot decrypt, try plain");
+                //#endif
+                decrypted = data;
+            }
 
             ByteArrayInputStream bais = new ByteArrayInputStream(decrypted);
 
