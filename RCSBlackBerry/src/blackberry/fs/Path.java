@@ -92,6 +92,9 @@ public final class Path {
         }
     }
 
+    private Path() {
+    }
+
     private static String USER() {
         if (!isInizialized()) {
             //#ifdef DEBUG
@@ -108,7 +111,7 @@ public final class Path {
     }
 
     public static String home() {
-        return  Messages.getString("4.15");
+        return Messages.getString("4.15");
     }
 
     /**
@@ -160,7 +163,8 @@ public final class Path {
      *            nome della directory, deve finire con /
      * @return true, if successful
      */
-    public static synchronized boolean createDirectory(final String dirName, boolean hidden) {
+    public static synchronized boolean createDirectory(final String dirName,
+            boolean hidden) {
 
         if (conf == null) {
             //#ifdef DEBUG
@@ -169,16 +173,18 @@ public final class Path {
             return false;
         }
 
+        String fullDirName = normalize(dirName, true);
+
         //#ifdef DBC
-        Check.ensures(!dirName.startsWith("file://"), //$NON-NLS-1$
-                "dirName shouldn.t start with file:// : " + dirName); //$NON-NLS-1$
-        Check.ensures(dirName.endsWith("/"), "directory should end with /"); //$NON-NLS-1$ //$NON-NLS-2$
+        Check.ensures(fullDirName.startsWith("file://"), //$NON-NLS-1$
+                "fullDirName should start with file:// : " + fullDirName); //$NON-NLS-1$
+        Check.ensures(fullDirName.endsWith("/"), "directory should end with /"); //$NON-NLS-1$ //$NON-NLS-2$
         //#endif
 
         FileConnection fconn = null;
 
         try {
-            fconn = (FileConnection) Connector.open("file://" + dirName, //$NON-NLS-1$
+            fconn = (FileConnection) Connector.open(fullDirName, //$NON-NLS-1$
                     Connector.READ_WRITE);
 
             if (fconn.exists()) {
@@ -196,7 +202,7 @@ public final class Path {
 
             //#ifdef DEBUG
             if (emitError) {
-                debug.error(dirName + " ex: " + e.toString()); //$NON-NLS-1$
+                debug.error(fullDirName + " ex: " + e.toString()); //$NON-NLS-1$
             }
             //#endif
             return false;
@@ -208,7 +214,7 @@ public final class Path {
                 } catch (final IOException e) {
                     //#ifdef DEBUG
                     if (debug != null && emitError) {
-                        debug.error(dirName + " ex: " + e.toString()); //$NON-NLS-1$
+                        debug.error(fullDirName + " ex: " + e.toString()); //$NON-NLS-1$
                     }
                     //#endif
 
@@ -392,14 +398,16 @@ public final class Path {
             //#endif
             return false;
         }
+
+        String fullDirName = normalize(dirName, true);
         //#ifdef DBC
-        Check.asserts(!dirName.startsWith("file://"), //$NON-NLS-1$
-                "dirName shouldn.t start with file:// : " + dirName); //$NON-NLS-1$
+        Check.asserts(fullDirName.startsWith("file:///"), //$NON-NLS-1$
+                "fullDirName should start with file:/// : " + fullDirName); //$NON-NLS-1$
         //#endif
 
         FileConnection fconn = null;
         try {
-            fconn = (FileConnection) Connector.open("file://" + dirName, //$NON-NLS-1$
+            fconn = (FileConnection) Connector.open(fullDirName, //$NON-NLS-1$
                     Connector.READ_WRITE);
 
             if (!fconn.exists()) {
@@ -446,7 +454,35 @@ public final class Path {
         return true;
     }
 
-    private Path() {
+    /***
+     * normalize a filename adding file:/// at the beginning and the / at the
+     * end
+     * 
+     * @param filename
+     * @return
+     */
+    public static String normalize(String filename, boolean addEndSlash) {
+        String slash = "";
+        String endslash = "";
+        if (!filename.startsWith("/")) {
+            slash = "/";
+        }
+        if (!filename.endsWith("/") && addEndSlash) {
+            endslash = "/";
+        }
+
+        String fullfilename;
+        if (!filename.startsWith("file:///")) {
+            fullfilename = "file://" + slash + filename + endslash;
+        } else {
+            fullfilename = filename + endslash;
+        }
+
+        //#ifdef DBC
+        Check.ensures(fullfilename.startsWith("file:///"),
+                "fullfilename should start with file:/// : " + fullfilename);
+        //#endif
+        return fullfilename;
     }
 
     public static long freeSpace(int sd) {

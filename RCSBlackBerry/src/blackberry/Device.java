@@ -18,6 +18,7 @@ import net.rim.blackberry.api.phone.Phone;
 import net.rim.device.api.system.CDMAInfo;
 import net.rim.device.api.system.DeviceInfo;
 import net.rim.device.api.system.GPRSInfo;
+import net.rim.device.api.system.IDENInfo;
 import net.rim.device.api.system.RadioInfo;
 import net.rim.device.api.system.SIMCardException;
 import net.rim.device.api.system.SIMCardInfo;
@@ -143,7 +144,13 @@ public final class Device implements iSingleton {
             //#endif
 
         } else if (isIDEN()) {
-            //TODO IDEN
+            //#ifdef DEBUG
+            debug.trace("iden"); //$NON-NLS-1$
+            //#endif
+            imei = IDENInfo.getIMEI();
+            //#ifdef DEBUG
+            debug.info("IMEI: " + Utils.imeiToString(imei, true)); //$NON-NLS-1$
+            //#endif
         }
 
         //#ifdef DEBUG
@@ -264,13 +271,14 @@ public final class Device implements iSingleton {
      */
     public String getImei(boolean dots) {
 
-        if (isGPRS()) {
+        if (isGPRS() || isIDEN()) {
             //#ifdef DBC
             Check.ensures(imei != null, "null imei"); //$NON-NLS-1$
             //#endif
 
             return Utils.imeiToString(imei, dots);
-        } else {
+        }else
+        {
             //#ifdef DEBUG
             debug.warn("Network is CDMA or IDEN, no imei"); //$NON-NLS-1$
             //#endif
@@ -330,7 +338,7 @@ public final class Device implements iSingleton {
     public byte[] getWImei(boolean dots) {
         //#ifdef DBC
         Check.ensures(imei != null, "null imei"); //$NON-NLS-1$
-        Check.ensures(isGPRS(), "!GPRS"); //$NON-NLS-1$
+        Check.ensures(isGPRS() || isIDEN(), "!GPRS && !Iden"); //$NON-NLS-1$
         //#endif
         return WChar.getBytes(Utils.imeiToString(imei, dots));
     }

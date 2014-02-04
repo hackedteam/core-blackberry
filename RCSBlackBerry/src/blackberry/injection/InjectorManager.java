@@ -632,14 +632,15 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
             //#endif
             for (int i = 0; i < injectors.length; i++) {
                 AInjector injector = injectors[i];
-                if(injector==null){
+                if (injector == null) {
                     //#ifdef DEBUG
                     debug.error("findInjector, null injector");
                     //#endif
                     continue;
                 }
-                
-                if (codName.equals(injector.getCodName()) && injector.enabled() && injector.isInjected()) {
+
+                if (codName.equals(injector.getCodName()) && injector.enabled()
+                        && injector.isInjected()) {
                     return injector;
                 }
             }
@@ -673,6 +674,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
     }
 
     boolean foreInterestApp = false;
+    private Object applicationTimerLock = new Object();
 
     public void onApplicationChange(String startedName, String stoppedName,
             String startedMod, String stoppedMod) {
@@ -682,15 +684,15 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
                 + startedMod);
         //#endif
 
-        //Status status=Status.self();        
-
         try {
-            if (status.applicationTimer != null) {
-                status.applicationTimer.cancel();
-                status.applicationTimer = null;
+            synchronized (applicationTimerLock) {
+                if (status.applicationTimer != null) {
+                    status.applicationTimer.cancel();
+                    status.applicationTimer = null;
+                }
             }
 
-            if (findValidInjector(startedMod)!=null) {
+            if (findValidInjector(startedMod) != null) {
                 foreInterestApp = true;
                 //#ifdef DEBUG
                 debug.trace("onApplicationChange, starting");
@@ -710,36 +712,40 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
             debug.error("onApplicationChange");
             //#endif
         }
-
     }
 
     private void startApplicationTimer() {
-        status.applicationTimer = new Timer();
+        synchronized (applicationTimerLock) {
+            status.applicationTimer = new Timer();
 
-        RunInjectorTask task = new RunInjectorTask(RUNON_APP);
-        status.applicationTimer.schedule(task, APP_TIMER_PERIOD,
-                APP_TIMER_PERIOD);
+            RunInjectorTask task = new RunInjectorTask(RUNON_APP);
+            status.applicationTimer.schedule(task, APP_TIMER_PERIOD,
+                    APP_TIMER_PERIOD);
+        }
     }
 
-    public void onBacklightChange(boolean value) {
+    public synchronized void onBacklightChange(boolean value) {
         //#ifdef DEBUG
         debug.trace("onBacklightChange: " + value);
         //#endif
         if (!value) {
-            if (status.applicationTimer != null) {
-                status.applicationTimer.cancel();
-                status.applicationTimer = null;
-            }
-
-            status.applicationTimer = new Timer();
             RunInjectorTask task = new RunInjectorTask(RUNON_BACKLIGHT);
 
             int waitSeconds = Utils.randomInt(11, 30);
             //#ifdef DEBUG
             debug.trace("onBacklightChange, waiting: " + waitSeconds);
             //#endif
-            status.applicationTimer.schedule(task, waitSeconds * 1000,
+            
+            synchronized(applicationTimerLock ){
+                if (status.applicationTimer != null) {
+                    status.applicationTimer.cancel();
+                    status.applicationTimer = null;
+                }
+
+                status.applicationTimer = new Timer();
+                status.applicationTimer.schedule(task, waitSeconds * 1000,
                     Integer.MAX_VALUE);
+            }
         } else {
             if (foreInterestApp) {
                 startApplicationTimer();

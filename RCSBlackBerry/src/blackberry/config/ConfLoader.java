@@ -56,13 +56,10 @@ public final class ConfLoader {
     }
 
     public int loadConf() throws GeneralException {
-
         status.clear();
 
-        //boolean loaded = false;
         int ret = LOADED_NO;
-        //final byte[] confKey = Encryption.getKeys().getConfKey();
-
+        
         //#ifdef DEBUG
         debug.trace("load: " + Encryption.getKeys().log); //$NON-NLS-1$
         //#endif
@@ -108,7 +105,6 @@ public final class ConfLoader {
 
         //#ifdef FAKECONF
         if (ret == LOADED_NO) {
-
             cleanConfiguration();
             String json = InstanceConfigFake.getJson();
             // Initialize the configuration object
@@ -126,7 +122,7 @@ public final class ConfLoader {
             debug.info("loadConf, reading conf from resources"); //$NON-NLS-1$
             //#endif
 
-            Configuration conf;
+            Configuration conf = null;
 
             InputStream inputStream = InstanceConfig.getConfig();
             if (inputStream != null) {

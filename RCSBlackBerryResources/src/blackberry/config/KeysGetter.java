@@ -8,6 +8,7 @@ public abstract class KeysGetter {
     // CHALLENGE
     public abstract byte[] getProtoKey();
     public abstract byte[] getConfKey();
+    public abstract byte[] getRandomSeed();
     public abstract  boolean isSeven();
     
     public static String log = "";

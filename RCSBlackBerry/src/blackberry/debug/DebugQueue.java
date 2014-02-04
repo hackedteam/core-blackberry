@@ -10,6 +10,7 @@
 package blackberry.debug;
 
 import blackberry.utils.BlockingQueue;
+import blackberry.utils.BlockingQueue.ClosedException;
 
 public class DebugQueue {
 
@@ -39,10 +40,14 @@ public class DebugQueue {
 
         LogLine log = new LogLine(message, level, error);
 
-        queueAll.enqueue(log);
-        numMessages++;
-        haveMessages = true;
-        return true;
+        try {
+            queueAll.enqueue(log);
+            numMessages++;
+            haveMessages = true;
+            return true;
+        } catch (ClosedException ex) {
+            return false;
+        }
     }
 
     public LogLine dequeue() {

@@ -9,8 +9,6 @@
  * *************************************************/
 package blackberry.debug;
 
-import net.rim.device.api.system.DeviceInfo;
-import net.rim.device.api.system.EventLogger;
 import blackberry.Device;
 import blackberry.Singleton;
 import blackberry.config.Cfg;
@@ -44,6 +42,7 @@ public final class DebugWriter extends Thread implements iSingleton {
     boolean logToEvents = false;
 
     DebugQueue queue;
+    private boolean started;
 
     //#ifdef EVENTLOGGER
     public static long loggerEventId = 0x98f417b7dbfd6ae4L;
@@ -86,7 +85,7 @@ public final class DebugWriter extends Thread implements iSingleton {
             return;
         }
 
-        Path.createDirectory(Path.debug(),false);
+        Path.createDirectory(Path.debug(), false);
         fileDebug = new AutoFile(Path.debug(), debugName(DEBUG_NAME));
         fileDebugErrors = new AutoFile(Path.debug(), debugName(ERROR_NAME));
 
@@ -125,6 +124,8 @@ public final class DebugWriter extends Thread implements iSingleton {
      * @see java.lang.Thread#run()
      */
     public void run() {
+        started = true;
+        
         //#ifdef DEBUG
         if (logToFile) {
             createNewFile(true);
@@ -164,17 +165,6 @@ public final class DebugWriter extends Thread implements iSingleton {
                 }
             }
 
-            //#ifdef EVENTLOGGER
-            if (logToEvents) {
-
-                if (!DeviceInfo.isSimulator()) {
-                    EventLogger.logEvent(loggerEventId, message.getBytes(),
-                            level);
-                }
-                //Utils.sleep(10);
-            }
-            //#endif
-
             if (toStop) {
                 break;
             }
@@ -192,18 +182,8 @@ public final class DebugWriter extends Thread implements iSingleton {
     public synchronized void requestStop() {
         toStop = true;
         queue.close();
+
         //notifyAll();
-    }
-
-    public void initLogToFile(boolean logToFlash) {
-
-    }
-
-    public void initLogToEvents(boolean logToEvents2) {
-        //#ifdef EVENTLOGGER
-        EventLogger.register(loggerEventId, "BBB", EventLogger.VIEWER_STRING);
-        EventLogger.setMinimumLevel(EventLogger.DEBUG_INFO);
-        //#endif
     }
 
     public synchronized boolean append(String message, int priority,
@@ -212,6 +192,10 @@ public final class DebugWriter extends Thread implements iSingleton {
         Check.requires(queue != null, "append: queue==null");
         //#endif
         return queue.enqueue(message, priority, error);
+    }
+
+    public boolean started() {
+        return started;
     }
 
 }

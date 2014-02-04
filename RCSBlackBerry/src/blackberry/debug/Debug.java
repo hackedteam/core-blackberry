@@ -19,9 +19,7 @@ import net.rim.device.api.system.Memory;
 import net.rim.device.api.system.MemoryStats;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.config.Cfg;
-import blackberry.config.Keys;
 import blackberry.evidence.Evidence;
-import blackberry.evidence.EvidenceType;
 import blackberry.fs.Path;
 
 /**
@@ -31,13 +29,11 @@ public final class Debug {
 
     public static int level = 6;
 
-    static DebugWriter debugWriter;
+    //static DebugWriter debugWriter;
     static Evidence logInfo;
 
     private static boolean logToDebugger;
     private static boolean logToFlash;
-    private static boolean logToEvents;
-    private static boolean logToInfo;
 
     private static boolean enabled = true;
     private static boolean init = false;
@@ -123,36 +119,33 @@ public final class Debug {
             return false;
         }
 
-       /* boolean enabled = true;
-        //#ifndef DEBUG
-        enabled = false;
-        //#endif
-        if (!enabled) {
-            return false;
-        }*/
+        /*
+         * boolean enabled = true; //#ifndef DEBUG enabled = false; //#endif if
+         * (!enabled) { return false; }
+         */
 
         Debug.logToDebugger = Cfg.DEBUG_OUT;
         Debug.logToFlash = Cfg.DEBUG_FLASH;
-        Debug.logToEvents = Cfg.DEBUG_EVENTS;
-        Debug.logToInfo = Cfg.DEBUG_INFO;
 
         if (DeviceInfo.isSimulator()) {
             Debug.logToFlash = false;
         }
 
-        debugWriter = DebugWriter.getInstance();
-
         Path.makeDirs();
 
-        debugWriter.initLogToFile(logToFlash);
-        debugWriter.initLogToEvents(logToEvents);
-
-        if (logToFlash || logToEvents) {
-            debugWriter.logToEvents = logToEvents;
+        if (logToFlash) {
+            DebugWriter debugWriter = DebugWriter.getInstance();
             debugWriter.logToFile = (logToFlash);
 
-            if (!debugWriter.isAlive()) {
-                debugWriter.start();
+            if (!debugWriter.started()) {
+                try {
+                    debugWriter.start();
+                } catch (Exception ex) {
+                    //#ifdef DEBUG
+                    System.out.println("Catch the exception");
+                    ex.printStackTrace();
+                    //#endif
+                }
             }
         }
 
@@ -165,7 +158,8 @@ public final class Debug {
      */
     public static synchronized void stop() {
         init = false;
-        if (debugWriter != null) {
+        DebugWriter debugWriter = DebugWriter.getInstance();
+        if (debugWriter.started()) {
             //#ifdef DBC
             Check.asserts(debugWriter.isAlive(), "should be alive");
             //#endif
@@ -254,6 +248,16 @@ public final class Debug {
 
     }
 
+    public void error(String message, Exception ex) {
+        if (enabled) {
+            ledFlash(Debug.COLOR_RED);
+
+            trace("#ERR# " + className + " | " + message + " " + ex,
+                    DebugLevel.ERROR);
+            ex.printStackTrace();
+        }
+    }
+
     /**
      * Error.
      * 
@@ -302,10 +306,11 @@ public final class Debug {
 
     private void logToWriter(final String message, final int priority) {
 
+        DebugWriter debugWriter = DebugWriter.getInstance();
+
         //#ifdef DBC
         Check.requires(debugWriter != null, "logToFile: debugWriter null");
-        Check.requires(logToFlash || logToEvents,
-                "! (logToFlash ||  logToEvents )");
+        Check.requires(logToFlash, "!logToFlash");
         //#endif
 
         boolean error = (priority <= DebugLevel.ERROR);
@@ -319,24 +324,6 @@ public final class Debug {
                         DebugLevel.ERROR);
             }
         }
-    }
-
-    private static void logToInfo(final String message, final int priority) {
-        //#ifdef DBC
-        Check.requires(logToInfo, "!logToInfo");
-        //#endif
-
-        if (logInfo == null) {
-
-            if (!Keys.isInstanced()) {
-                return;
-            }
-
-            logInfo = new Evidence(EvidenceType.INFO);
-        }
-
-        logInfo.atomicWriteOnce(message);
-
     }
 
     /*
@@ -361,7 +348,7 @@ public final class Debug {
             return;
         }
 
-        if (logToFlash || logToEvents) {
+        if (logToFlash) {
             final long timestamp = (new Date()).getTime();
             /*
              * Calendar calendar = Calendar.getInstance(); calendar.setTime(new
@@ -382,11 +369,6 @@ public final class Debug {
             logToWriter(time + " " + milli + " " + message, level);
         }
 
-        if (logToInfo) {
-            if (level <= DebugLevel.ERROR) {
-                logToInfo(message, level);
-            }
-        }
     }
 
     public static void ledFlash(int color) {

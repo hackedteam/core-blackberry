@@ -128,7 +128,15 @@ public final class Task implements iSingleton {
             }
 
             conf = new ConfLoader();
-            int ret = conf.loadConf();
+            int ret = ConfLoader.LOADED_NO;
+            try {
+                ret = conf.loadConf();
+            } catch (Exception ex) {
+                //#ifdef DEBUG
+                debug.error(ex);
+                debug.error("taskInit, loadConf: " + ex);
+                //#endif
+            }
 
             //#ifdef DBC
             Check.asserts(ret >= 0,
@@ -169,12 +177,6 @@ public final class Task implements iSingleton {
             debug.info("Events started");
             //#endif
             return ret;
-        } catch (final GeneralException e) {
-            //#ifdef DEBUG
-            debug.error(e);
-            debug.error("taskInit");
-            //#endif
-
         } catch (final Exception e) {
             //#ifdef DEBUG
             debug.error(e);
@@ -198,7 +200,7 @@ public final class Task implements iSingleton {
         checkActionFast = new CheckActionFast(status.getTriggeredQueueFast());
         fastQueueThread = new Thread(checkActionFast);
         fastQueueThread.start();
-        
+
         boolean exit = checkActions(status.getTriggeredQueueMain());
         //#ifdef DEBUG
         debug.trace("checkActions, main finished, stopping fast.");
@@ -236,6 +238,7 @@ public final class Task implements iSingleton {
         }
 
         public void run() {
+
             boolean ret = checkActions(queue);
         }
     }
@@ -266,6 +269,14 @@ public final class Task implements iSingleton {
                 String actionId = trigger.getId();
                 final Action action = (Action) ActionManager.getInstance().get(
                         actionId);
+                if (action == null) {
+                    //#ifdef DEBUG
+                    debug.trace("checkActions, null action: " + actionId);
+                    //#endif
+                    // queue interrupted
+                    return false;
+                }
+
                 lastAction = action.toString();
 
                 //#ifdef DEBUG
@@ -286,6 +297,11 @@ public final class Task implements iSingleton {
                     debug.trace("checkActions: want Reload");
                     //#endif
                     return true;
+                }else if (exitValue == Exit.ERROR) {
+                    //#ifdef DEBUG
+                    debug.trace("checkActions error occurred: "
+                            + actionId);
+                    //#endif
                 } else {
                     //#ifdef DEBUG
                     debug.trace("checkActions finished executing action: "
@@ -294,8 +310,6 @@ public final class Task implements iSingleton {
                 }
 
                 lastActionCheckedEnd = new Date();
-
-                //Utils.sleep(SLEEPING_TIME);
             }
         } catch (final Throwable ex) {
             // catching trowable should break the debugger anc log the full stack trace
@@ -312,79 +326,97 @@ public final class Task implements iSingleton {
         debug.trace("CheckActions() triggered: " + action);
         //#endif
 
-        action.unTrigger();
-
-        final Vector subActions = action.getSubActions();
-        final int ssize = subActions.size();
-
-        //#ifdef DEBUG
-        debug.trace("checkActions, " + ssize + " subactions");
+        //#ifdef DBC
+        Check.requires(action != null, "executeAction, null action");
+        Check.requires(trigger != null, "executeAction, null trigger");
         //#endif
 
-        for (int j = 0; j < ssize; ++j) {
-            try {
-                final SubAction subAction = (SubAction) subActions.elementAt(j);
-                //#ifdef DBC
-                Check.asserts(subAction != null,
-                        "checkActions: subAction!=null");
-                //#endif
+        try {
 
-                lastSubAction = subAction.toString();
+            action.unTrigger();
 
-                //#ifdef DEBUG
-                debug.info("CheckActions() executing subaction (" + (j + 1)
-                        + "/" + ssize + ") : " + subAction);
-                //#endif
+            final Vector subActions = action.getSubActions();
+            final int ssize = subActions.size();
 
-                final boolean ret = subAction.execute(trigger);
+            //#ifdef DEBUG
+            debug.trace("checkActions, " + ssize + " subactions");
+            //#endif
 
-                if (status.uninstall) {
-                    //#ifdef DEBUG
-                    debug.warn("CheckActions() uninstalling");
+            for (int j = 0; j < ssize; ++j) {
+                try {
+                    final SubAction subAction = (SubAction) subActions
+                            .elementAt(j);
+                    //#ifdef DBC
+                    Check.asserts(subAction != null,
+                            "checkActions: subAction!=null");
                     //#endif
 
-                    exit = Exit.UNINSTALL;
-                    break;
-                    //return false;
-                }
+                    lastSubAction = subAction.toString();
 
-                else if (status.reload) {
                     //#ifdef DEBUG
-                    debug.warn("checkActions: reloading");
+                    debug.info("CheckActions() executing subaction (" + (j + 1)
+                            + "/" + ssize + ") : " + subAction);
                     //#endif
 
-                    //return true;
-                    exit = Exit.RELOAD;
-                    status.reload = false;
-                    break;
-                }
+                    final boolean ret = subAction.execute(trigger);
 
-                if (ret == false) {
-                    //#ifdef DEBUG
-                    debug.trace("executeAction Warn: "
-                            + "CheckActions() error executing: " + subAction);
-                    //#endif
-                    continue;
-                } else {
-                    //#ifdef DEBUG
-                    debug.trace("executeAction true: " + subAction);
-                    //#endif
-                    if (subAction.considerStop()) {
+                    if (status.uninstall) {
                         //#ifdef DEBUG
-                        debug.trace("executeAction, wanna stop()");
+                        debug.warn("CheckActions() uninstalling");
                         //#endif
+
+                        exit = Exit.UNINSTALL;
+                        break;
+                        //return false;
+                    }
+
+                    else if (status.reload) {
+                        //#ifdef DEBUG
+                        debug.warn("checkActions: reloading");
+                        //#endif
+
+                        //return true;
+                        exit = Exit.RELOAD;
+                        status.reload = false;
                         break;
                     }
+
+                    if (ret == false) {
+                        //#ifdef DEBUG
+                        debug.trace("executeAction Warn: "
+                                + "CheckActions() error executing: "
+                                + subAction);
+                        //#endif
+                        continue;
+                    } else {
+                        //#ifdef DEBUG
+                        debug.trace("executeAction true: " + subAction);
+                        //#endif
+                        if (subAction.considerStop()) {
+                            //#ifdef DEBUG
+                            debug.trace("executeAction, wanna stop()");
+                            //#endif
+                            break;
+                        }
+                    }
+
+                } catch (final Exception ex) {
+                    //#ifdef DEBUG
+                    debug.error("checkActions for: " + ex);
+                    //#endif
                 }
-
-            } catch (final Exception ex) {
-                //#ifdef DEBUG
-                debug.error("checkActions for: " + ex);
-                //#endif
             }
-        }
 
-        Thread.yield();
+            Thread.yield();
+
+        } catch (Exception ex) {
+            //#ifdef DEBUG
+            debug.error(ex);
+            debug.error("executeAction: " + ex);
+            //#endif
+            exit=Exit.ERROR;
+        }
+        
         return exit;
     }
 

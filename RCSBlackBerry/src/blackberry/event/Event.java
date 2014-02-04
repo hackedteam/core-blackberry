@@ -101,7 +101,7 @@ public abstract class Event extends TimerJob {
         return conf.delay;
     }
 
-    boolean active;
+    volatile boolean active;
     //private ScheduledFuture<?> future;
 
     Future future;
@@ -153,8 +153,12 @@ public abstract class Event extends TimerJob {
                     + conf);
             //#endif
             future = new Future();
+            try{
             Status.self().getTimer()
                     .schedule(future, delay * 1000, period * 1000);
+            }catch(Exception ex){
+                Status.self().renewTimer();
+            }
         }
         active = true;
 

@@ -50,7 +50,7 @@ public abstract class HttpTransport extends Transport {
     //private String transportId;
     protected String cookie;
 
-    boolean stop;
+    volatile boolean stop;
     boolean follow_moved = true;
 
     protected final String HD_CONTENTTYPE = Messages.getString("l.4"); //$NON-NLS-1$

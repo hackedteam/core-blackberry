@@ -70,7 +70,7 @@ public final class BlockingQueue {
      * @param o
      *            the o
      */
-    public synchronized void enqueue(final Object o) {
+    public synchronized void enqueue(final Object o) throws ClosedException{
         if (closed) {
             throw new ClosedException();
         }

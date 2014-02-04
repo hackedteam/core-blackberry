@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RCS_BB_Infection_Agent", "RCS_BB_Infection_Agent\RCS_BB_Infection_Agent.vcxproj", "{58DBD08D-B192-4C3D-BE17-C0600AC6E178}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{58DBD08D-B192-4C3D-BE17-C0600AC6E178}.Debug|Win32.ActiveCfg = Debug|Win32
+		{58DBD08D-B192-4C3D-BE17-C0600AC6E178}.Debug|Win32.Build.0 = Debug|Win32
+		{58DBD08D-B192-4C3D-BE17-C0600AC6E178}.Release|Win32.ActiveCfg = Release|Win32
+		{58DBD08D-B192-4C3D-BE17-C0600AC6E178}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

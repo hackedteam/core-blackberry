@@ -13,6 +13,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import blackberry.Listener;
+import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.interfaces.SmsObserver;
@@ -56,6 +57,10 @@ public abstract class SmsListener {
             debug.trace("addSmsObserver, not running, so start");
             //#endif
             start();
+        } else {
+            //#ifdef DEBUG
+            debug.trace("addSmsObserver, already running");
+            //#endif
         }
     }
 
@@ -74,6 +79,10 @@ public abstract class SmsListener {
             debug.trace("removeSmsObserver, no observer, so stop");
             //#endif
             stop();
+            
+            //#ifdef DBC
+            Check.ensures(!isRunning(), "removeSmsObserver: Shold not be running");
+            //#endif
         }
     }
 }

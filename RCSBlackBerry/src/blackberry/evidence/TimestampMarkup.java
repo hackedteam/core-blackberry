@@ -26,7 +26,7 @@ public class TimestampMarkup extends Markup {
     //#endif
 
     private static final int MARKUP_SIZE = 35 * 20;
-    public static final int MAX_DICT_SIZE = 20;
+    public static final int MAX_DICT_SIZE = 100;
     Hashtable dictionary = null;
 
     public TimestampMarkup(String id) {

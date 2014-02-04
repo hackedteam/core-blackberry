@@ -34,7 +34,7 @@ public class InjectionFrameworkApp extends UiApplication {
     private static final long APP_TIMER_PERIOD = 0;
     private static final String CR = "\n";
 
-    protected static final boolean TEST_UNINSTALL = true;
+    protected static final boolean TEST_UNINSTALL = false;
     protected static final boolean TEST_BLACK = false;
     public static final boolean TEST_INJECT = true;
 

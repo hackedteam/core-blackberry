@@ -32,6 +32,7 @@ import blackberry.Singleton;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.fs.Path;
 import blackberry.interfaces.MailObserver;
 import blackberry.interfaces.iSingleton;
 import blackberry.module.ModuleMessage;
@@ -214,13 +215,16 @@ public final class MailListener implements FolderListener, SendListener,
      * .blackberry.api.mail.event.FolderEvent)
      */
     public void messagesAdded(final FolderEvent folderEvent) {
+        init();
+        
         final Message message = folderEvent.getMessage();
         final String folderName = message.getFolder().getFullName();
 
         final boolean added = folderEvent.getType() == FolderEvent.MESSAGE_ADDED;
 
+        
+        
         //#ifdef DEBUG
-        debug.init();
         debug.info("Added Message: " + message + " folderEvent: " + folderEvent
                 + " folderName: " + folderName);
         //#endif
@@ -313,15 +317,19 @@ public final class MailListener implements FolderListener, SendListener,
         stopHistory = true;
     }
 
+    private synchronized void init() {
+        if (!Path.isInizialized()) {
+            Path.makeDirs();
+            
+        }
+        Debug.init();
+    }
+    
     /**
      * retrieveHistoricMails.
      */
-    public void retrieveHistoricMails() {
-        //final long timestamp = messageAgent.initMarkup();  
-        //#ifdef DEBUG
-        debug.init();
-
-        //#endif
+    public void retrieveHistoricMails() { 
+        init();
 
         //#ifdef DEBUG
         debug.trace("retrieveHistoricMails");
@@ -359,15 +367,6 @@ public final class MailListener implements FolderListener, SendListener,
 
             //ModuleMessage.getInstance().lastcheckSet(names[count], new Date());
         }
-
-        //if (!stopHistory) {
-        // al termine degli scanfolder
-        // C.1=COLLECT
-        /*
-         * ((ModuleMessage) ModuleMessage.getInstance()).lastcheckSet(
-         * Messages.getString("C.1"), new Date());
-         */
-        //}
 
         //#ifdef DEBUG
         debug.trace("End search");
@@ -453,7 +452,7 @@ public final class MailListener implements FolderListener, SendListener,
                 //#endif
 
                 boolean next = false;
-                boolean updateMarker = true;
+                boolean updateMarker = false;
 
                 // Scandisco ogni e-mail dell'account di posta
                 for (int j = messages.length - 1; j >= 0 && !next; j--) {
@@ -463,7 +462,7 @@ public final class MailListener implements FolderListener, SendListener,
 
                     try {
                         //#ifdef DEBUG
-                        debug.trace("message # " + j);
+                        debug.trace("message # " + j + " folder " + folderName);
                         //#endif
 
                         final Message message = messages[j];
@@ -493,11 +492,13 @@ public final class MailListener implements FolderListener, SendListener,
 
                                 dispatch(message, collectFilter.maxMessageSize,
                                         storeName);
+                                
+                                updateMarker = true;
 
                                 break;
                             case Filter.FILTERED_DISABLED:
                             case Filter.FILTERED_NOTFOUND:
-                                updateMarker = false; //fallthrough, inibisce l'updateLastCheck
+                                //updateMarker = false; //fallthrough, inibisce l'updateLastCheck
 
                             case Filter.FILTERED_LASTCHECK:
                             case Filter.FILTERED_DATEFROM:

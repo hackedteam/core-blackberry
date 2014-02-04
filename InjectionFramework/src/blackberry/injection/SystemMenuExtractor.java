@@ -1,10 +1,10 @@
 package blackberry.injection;
 
-import blackberry.debug.Debug;
-import blackberry.debug.DebugLevel;
 import net.rim.device.api.system.Application;
 import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
+import blackberry.debug.Debug;
+import blackberry.debug.DebugLevel;
 
 public class SystemMenuExtractor extends SystemMenuInjector {
     public SystemMenuExtractor(int position) {
@@ -26,18 +26,18 @@ public class SystemMenuExtractor extends SystemMenuInjector {
         //#ifdef DEBUG
         debug.trace("run on: " + app);
         //#endif
-        
-        if(!(app instanceof UiApplication)){
+
+        if (!(app instanceof UiApplication)) {
             //#ifdef DEBUG
             debug.trace("run: no UiApplication");
             //#endif
             return null;
         }
-        
+
         Object lock = app.getAppEventLock();
         synchronized (lock) {
-            
-            UiApplication uiapp = (UiApplication)app;
+
+            UiApplication uiapp = (UiApplication) app;
             Class cl = uiapp.getClass();
 
             debug.trace("class: " + cl);
@@ -49,12 +49,13 @@ public class SystemMenuExtractor extends SystemMenuInjector {
 
             MenuWalker.logMenus(screen);
 
-            FieldExplorer explorer = new FieldExplorer();
-            explorer.explore(screen);
-            //#ifdef DEBUG
-            debug.trace("run end");
-            //#endif
+            //FieldExplorer explorer = new FieldExplorer();
+            //explorer.explore(screen);
+            FieldExplorer.traverseField(screen);
         }
+        //#ifdef DEBUG
+        debug.trace("run end");
+        //#endif
 
         return null;
     }

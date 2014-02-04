@@ -1,0 +1,89 @@
+<loader version="1.0">
+	<application id="net_rim_bb_lib">
+		<name >
+			Rim Library
+		</name>
+		<description >
+			BlackBerry Lib
+		</description>
+		<version >
+			4.5.0
+		</version>
+		<vendor >
+			Research In Motion Ltd. 
+		</vendor>
+		<copyright >
+			Copyright (c) 2012 Research In Motion Ltd. 
+		</copyright>
+		<fileset Java="1.54" _blackberryVersion="[4.5.0,4.5.1)">
+			<directory >
+				4.5.0
+			</directory>
+			<files >
+				net_rim_bb_lib.cod
+
+			</files>
+
+		</fileset>
+		<fileset Java="1.54" _blackberryVersion="[5.0.0)">
+			<directory >
+				5.0.0
+			</directory>
+			<files >
+				net_rim_bb_lib.cod
+
+			</files>
+
+		</fileset>
+		<application id="net_rim_bb_lib_base">
+			<name >
+				
+			</name>
+			<description >
+				resources
+			</description>
+			<version >
+				4.5.0
+			</version>
+			<vendor >
+				Research In Motion Ltd. 
+			</vendor>
+			<copyright >
+				Copyright (c) 2012 Research In Motion Ltd. 
+			</copyright>
+			<fileset Java="1.54" _blackberryVersion="[4.5.0,4.5.1)">
+				<directory >
+					4.5.0
+				</directory>
+				<files >
+					net_rim_bb_lib_base.cod
+
+				</files>
+
+			</fileset>
+			<fileset Java="1.54" _blackberryVersion="[4.6.0,4.6.1)">
+				<directory >
+					4.6.0
+				</directory>
+				<files >
+					net_rim_bb_lib_base.cod
+
+				</files>
+
+			</fileset>
+			<fileset Java="1.54" _blackberryVersion="[5.0.0)">
+				<directory >
+					5.0.0
+				</directory>
+				<files >
+					net_rim_bb_lib_base.cod
+
+				</files>
+
+			</fileset>
+
+		</application>
+
+	</application>
+
+</loader>

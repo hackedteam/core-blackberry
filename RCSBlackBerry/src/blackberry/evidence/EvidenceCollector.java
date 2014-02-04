@@ -458,7 +458,7 @@ public final class EvidenceCollector implements iSingleton {
                         //#endif
                         final String plainName = decryptName(file);
                         //#ifdef DEBUG
-                        debug.info("plain name: " + plainName);
+                        debug.trace("plain name: " + plainName);
                         //#endif
 
                         vector.addElement(plainName, file);

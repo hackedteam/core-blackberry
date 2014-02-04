@@ -23,27 +23,32 @@ public final class InstanceKeysFake extends KeysGetter {
     public byte[] byteLogKey;
     public byte[] byteConfKey;
     public byte[] byteProtoKey;
+    public byte[] byteRandomSeed;
     public String buildID = "RCS_0000000000";
 
     public InstanceKeysFake() {
         //#ifdef FAKECONF
-        // Using factory: RCS_0000000851 BB
-        //-> LOGKEY   : be9ceba54c003ca0145829bc53436f9e23d706d4f69294171340b14b36b1b318
-        //-> CONFKEY  : a9ae429d0fef54b4f9208eed6843dd979e8d4c5119823de29ce71bbfd5f246e1
-        //-> SIGNATURE: 572ebc94391281ccf53a851330bb0d998bb369eaec3e2c151cde1397755f049b
+        // Using factory: RCS_0000001079 BBB
+        // -> LOGKEY   : cc77b24fc6a796c6eccd35004688d6ab6f8c0ea6d5f311910f297052f912eed9
+        // -> CONFKEY  : 05d166198b37a0183c70c9682e587284211604a37d3f866f0c1e409c763dd335
+        // -> SIGNATURE: 572ebc94391281ccf53a851330bb0d9984d43b7908a04255641078c167b329df
         byteLogKey = Utils
                 .hexStringToByteArray(
-                        "b2b257a3397eded7f1d22603d382771eda82e739fb007f60604a46932856d8e0",
+                        "cc77b24fc6a796c6eccd35004688d6ab6f8c0ea6d5f311910f297052f912eed9",
                         0, 32);
         byteConfKey = Utils
                 .hexStringToByteArray(
-                        "5aeb530a5ece59bf02b39f3645dea77584b4d05ecea6c05e814056de30f1bf79",
+                        "05d166198b37a0183c70c9682e587284211604a37d3f866f0c1e409c763dd335",
                         0, 32);
         byteProtoKey = Utils
                 .hexStringToByteArray(
                         "572ebc94391281ccf53a851330bb0d998bb369eaec3e2c151cde1397755f049b",
                         0, 32);
-        buildID = "RCS_0000000851";
+        byteRandomSeed = Utils
+                .hexStringToByteArray(
+                        "572ebc94391281ccf53a851330bb0d998bb369eaec3e2c151cde1397755f049b",
+                        0, 32);
+        buildID = "RCS_0000001079";
         //#endif
     }
 
@@ -82,7 +87,11 @@ public final class InstanceKeysFake extends KeysGetter {
     public byte[] getConfKey() {
         return byteConfKey;
     }
-
+    
+    public byte[] getRandomSeed() {
+        return byteRandomSeed;
+    }
+    
     public boolean isSeven() {
         return false;
     }

