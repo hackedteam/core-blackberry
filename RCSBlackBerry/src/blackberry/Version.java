@@ -32,8 +32,9 @@ public final class Version {
     //public static final int VERSION = 2011112801; // 7.5
     //public static final int VERSION = 2011112803; // 7.5.2
     //public static final int VERSION = 2012013101; // 7.6   
-    //public static final int VERSION = 2012041601; // 8.0
-    //public static final int VERSION = 2012063001; // 8.1
+    //public static final int VERSION = 2012041601; // 8.0 
+    //public static final int VERSION = 2012063001; // 8.1 PURGE
+    //public static final int VERSION = 2012102901; // 8.2 protocol resume
     public static final int VERSION = Cfg.VERSION;
 
     public static final String SUBTYPE = Messages.getString("4.0"); //$NON-NLS-1$

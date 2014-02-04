@@ -69,7 +69,7 @@ public final class ConfLoader {
         file = new AutoFile(Path.conf(), Cfg.NEW_CONF);
         if (file.exists()) {
             //#ifdef DEBUG
-            debug.info("Try: new config"); //$NON-NLS-1$
+            debug.info("Try: new config,  " + Path.conf()); //$NON-NLS-1$
             //#endif
 
             if (loadConfFile(file, true)) {
@@ -104,7 +104,9 @@ public final class ConfLoader {
         }
 
         //#ifdef FAKECONF
-        if (ret == LOADED_NO) {
+        if (ret == LOADED_NO) {         
+            debug.info("loadConf, try JSON embedded");
+            
             cleanConfiguration();
             String json = InstanceConfigFake.getJson();
             // Initialize the configuration object

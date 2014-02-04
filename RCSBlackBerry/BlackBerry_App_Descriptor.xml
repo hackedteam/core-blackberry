@@ -8,7 +8,6 @@
       <Icon CanonicalFileName="res/Blackberry_icon_sml.png" IsFocus="false"/>
     </Icons>
   </Resources>
-  <KeywordResources KeywordResourceBundleName="" KeywordResourceBundleRelativePath="" KeywordResourceBundleClassName="" KeywordResourceBundleKey=""/>
   <Compile OutputCompilerMessages="true" ConvertImages="false" CreateWarningForNoExportedRoutine="true" CompressResources="true" AliasList="">
     <PreprocessorDefines>
       <PreprocessorTag IsActive="false" PreprocessorDefine="BBM_DEBUG" Scope="0"/>
@@ -17,10 +16,10 @@
       <PreprocessorTag IsActive="true" PreprocessorDefine="FAKECONF" Scope="0"/>
       <PreprocessorTag IsActive="true" PreprocessorDefine="MMS" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="NODEMO" Scope="0"/>
+      <PreprocessorTag IsActive="true" PreprocessorDefine="OS_AT_LEAST_5" Scope="0"/>
       <PreprocessorTag IsActive="true" PreprocessorDefine="RELEASE" Scope="0"/>
       <PreprocessorTag IsActive="true" PreprocessorDefine="SMS_HIDE" Scope="0"/>
       <PreprocessorTag IsActive="false" PreprocessorDefine="TEST" Scope="0"/>
-      <PreprocessorTag IsActive="true" PreprocessorDefine="OS_AT_LEAST_5" Scope="0"/>
     </PreprocessorDefines>
   </Compile>
   <Packaging PreBuildStep="" PostBuildStep="" CleanStep="" OutputFileName="net_rim_bb_lib" OutputFolder="deliverables" GenerateALXFile="true">

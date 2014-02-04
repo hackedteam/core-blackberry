@@ -35,7 +35,7 @@ import blackberry.utils.StringUtils;
  * 
  * @author user1
  */
-public final class EventSms extends Event implements SmsObserver {
+public final class EventSms extends InstantEvent implements SmsObserver {
     //#ifdef DEBUG
     private static Debug debug = new Debug("SmsEvent", DebugLevel.VERBOSE); //$NON-NLS-1$
     //#endif

