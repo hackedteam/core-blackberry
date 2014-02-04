@@ -8,6 +8,10 @@
  * *************************************************/
 package blackberry.crypto;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import net.rim.device.api.crypto.CryptoException;
 import net.rim.device.api.crypto.CryptoTokenException;
 import net.rim.device.api.crypto.SHA1Digest;
@@ -17,6 +21,7 @@ import blackberry.config.Keys;
 import blackberry.debug.Check;
 import blackberry.debug.Debug;
 import blackberry.debug.DebugLevel;
+import blackberry.evidence.Evidence;
 import blackberry.utils.Utils;
 import fake.InstanceKeysFake;
 
@@ -349,6 +354,52 @@ public class Encryption {
         return crypted;
     }
 
+    // encrypts is, starting from offset, for a blocksize. 
+    // Returns the last block
+    public boolean encryptData(DataInputStream is, DataOutputStream os) {
+        //#ifdef DBC
+        Check.requires(keyReady, "Key not ready");
+        //#endif
+
+        final byte[] plain = new byte[16];
+        // works also as IV
+        final byte[] crypted = new byte[16]; 
+        // IV initialized as 0
+        Arrays.fill(crypted, (byte) 0, 0, 16);
+
+        for (;;) {
+            Arrays.fill(plain, (byte) 0, 0, 16);
+            try {
+                int len = is.read(plain);
+                if (len == -1) {
+                    //#ifdef DEBUG
+                    debug.trace("encryptData: end of file");
+                    //#endif
+                    break;
+                }
+
+                xor(plain, crypted);
+                aes.encrypt(plain, crypted);
+                os.write(crypted);
+
+            } catch (final CryptoTokenException e) {
+                //#ifdef DEBUG
+                debug.error(e);
+                debug.error("error crypting data");
+                //#endif
+                return false;
+            } catch (IOException e) {
+                //#ifdef DEBUG
+                debug.error(e);
+                debug.error("error crypting data");
+                //#endif
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     /**
      * Old style Pad, PKCS5 is available in EncryptionPKCS5
      * 
@@ -397,7 +448,7 @@ public class Encryption {
     }
 
     /**
-     * Xor.
+     * pt = pt ^ iv.
      * 
      * @param pt
      *            the pt

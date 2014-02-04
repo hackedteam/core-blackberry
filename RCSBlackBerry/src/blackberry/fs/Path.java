@@ -152,7 +152,8 @@ public final class Path {
 
     public static String debug() {
         //4.10=/store/home/user/documents/
-        return Messages.getString("4.10") + DEBUG_DIR;
+        //return Messages.getString("4.10") + DEBUG_DIR;
+        return hidden() + DEBUG_DIR;
     }
 
     /**

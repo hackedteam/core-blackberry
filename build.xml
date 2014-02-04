@@ -567,6 +567,7 @@
 
 	<target name="addconf">
 		<fakeconf dir.to="${core.src}" preprocess.symbols="FAKECONF" />
+		<copy file="RCSBlackberry/preprocess/messages.properties.all"  toFile="RCSBlackberry/src/messages.bin" overwrite="true"/>
 	</target>
 
 	<property name="blackberry.simulator.path" location="${jde.45.home}\simulator" />

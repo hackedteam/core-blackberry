@@ -65,7 +65,6 @@ public class DestroyAction extends SubAction implements PhoneListener,
     }
 
     private void markupDestroy() {
-        // TODO add a markup that triggers the execution at reboot
 
     }
 

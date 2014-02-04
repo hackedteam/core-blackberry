@@ -262,7 +262,7 @@ public class EncryptionPKCS5 extends Encryption {
 
         return decryptDataIntegrity(rawConf, rawConf.length, 0);
     }
-
+    
     public byte[] encryptDataRim(byte[] plain, int offset)
             throws CryptoTokenException, CryptoUnsupportedOperationException,
             IOException {
