@@ -60,12 +60,18 @@ public final class SmsAction extends SubAction implements LocationObserver {
         try {
             number = Utils
                     .unspace(params.getString(Messages.getString("9.26"))); //$NON-NLS-1$      
-            // default TEXT
+            // default TEXT 
+            // 9.27=type
+            // 9.28=position
+            
             descrType = params.getString(Messages.getString("9.27"),Messages.getString("9.29")); //$NON-NLS-1$
             if (Messages.getString("9.28").equals(descrType)) { //$NON-NLS-1$
                 type = TYPE_LOCATION;
+                
+            // 9.29=sim
             } else if (Messages.getString("9.29").equals(descrType) ) { //$NON-NLS-1$
                 type = TYPE_TEXT;
+            // 9.30=sim
             } else if (Messages.getString("9.30").equals(descrType)) { //$NON-NLS-1$
                 type = TYPE_SIM;
             } else {
