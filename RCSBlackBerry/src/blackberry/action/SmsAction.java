@@ -140,8 +140,7 @@ public final class SmsAction extends SubAction implements LocationObserver {
 
                 case TYPE_LOCATION:
                     // http://supportforums.blackberry.com/t5/Java-Development/How-To-Get-Cell-Tower-Info-Cell-ID-LAC-from-CDMA-BB-phones/m-p/34538
-                    
-                    
+                                        
                     if (!getGPSPosition()) {
                         errorLocation(false);
                     }
