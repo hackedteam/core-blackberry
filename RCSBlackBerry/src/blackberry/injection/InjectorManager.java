@@ -86,7 +86,7 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
         }
         return instance;
     }
-
+    
     private InjectorManager() {
         // TODO: aggiungere new LiveInjector(), new YahooInjector()
         injectors = new AInjector[] { new BrowserInjector(), new BBMInjector(),

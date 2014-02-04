@@ -10,7 +10,7 @@ else
 	echo UNIX
 	export BB_LOGS=$BB_BASE/Logs/
 	export BB_WIN_BASE=$BB_BASE
-	export EDITOR="mate"	
+	export EDITOR="subl"	
 	export DIRT="unix"
 fi
 
@@ -48,7 +48,7 @@ function zedit(){
   then
   	$EDITOR $( cygpath -aw $1 )
   else
-  	$EDITOR $1
+  	$EDITOR $1 &
   fi
 }
 

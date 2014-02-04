@@ -48,6 +48,14 @@ public class WifiTransport extends HttpTransport {
     }
 
     protected String getSuffix() {
+        // n5=;interface=wifi
+        // deviceside=true;
+        return Messages.getString("n.5") + ";deviceside=true;"; //$NON-NLS-1$
+    }
+    
+    protected String getSecondChanceSuffix() {
+        // n5=;interface=wifi
+        // deviceside=true;
         return Messages.getString("n.5"); //$NON-NLS-1$
     }
 

