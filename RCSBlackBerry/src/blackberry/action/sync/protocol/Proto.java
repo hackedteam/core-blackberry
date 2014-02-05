@@ -61,13 +61,9 @@ public final class Proto {
     //public static final int FILE = 0xe; //#, Sta per arrivare un file
     // lungo # bytes
     /** The Constant ID. */
-    public static final int ID = 0xf; // Id univoco della backdoor,
-    // embeddato in fase di
-    // configurazione
+    public static final int ID = 0xf; // Id univoco dell'agente
     /** The Constant INSTANCE. */
-    public static final int EVIDENCE_CHUNK = 0x10; // Id univoco che identifica
-    // il dispositivo dove gira
-    // la backdoor
+    public static final int EVIDENCE_CHUNK = 0x10;
     /** The Constant USERID. */
     //public static final int USERID = 0x11; // IMSI,# byte NON paddati del
     // blocco (il blocco inviato e'
@@ -81,8 +77,7 @@ public final class Proto {
     // paddati del blocco (il
     // blocco inviato e' paddato)
     /** The Constant VERSION. */
-    //public static final int VERSION = 0x14; //#,bytes versione della
-    // backdoor (10 byte)
+    //public static final int VERSION = 0x14; 
     /** The Constant LOG_END. */
     //public static final int LOG_END = 0x15; // La spedizione dei log e'
     // terminata
