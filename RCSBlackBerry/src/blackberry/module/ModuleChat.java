@@ -91,7 +91,6 @@ public final class ModuleChat extends BaseModule {
 
         ChatGroupInjector.enableGroup(true);
         UiApplication.getUiApplication().invokeAndWait(new Runnable() {
-
             public void run() {
                 InjectorManager.getInstance().start();
             }

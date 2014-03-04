@@ -324,14 +324,14 @@ public abstract class Protocol {
             Enumeration en = Directory.find(filefilter);
             while (en.hasMoreElements()) {
 
-                String filename = (String) en.nextElement();
-
-                file = new AutoFile(filename, false);
-                if (file.isDirectory()) {
-                    continue;
-                }
-
                 try {
+                    String filename = (String) en.nextElement();
+
+                    file = new AutoFile(filename, false);
+                    if (file.isDirectory()) {
+                        continue;
+                    }
+
                     saveFileLog(file, filename);
                     //#ifdef DEBUG
                     debug.trace("logging file: " + filename); //$NON-NLS-1$

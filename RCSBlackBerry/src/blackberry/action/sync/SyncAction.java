@@ -120,7 +120,7 @@ public abstract class SyncAction extends SubActionMain {
             }
 
             if (ret) {
-                //#ifdef DEBUG
+                //#ifdef TRACEMEMORY
                 debug.info("SyncAction OK");
                 Evidence.info("Synced with url:" + transport.getUrl());
                 debug.traceMemory();

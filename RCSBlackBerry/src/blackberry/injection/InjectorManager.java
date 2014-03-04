@@ -210,14 +210,14 @@ public class InjectorManager implements ApplicationObserver, iSingleton,
 
         if (!injector.enabled()) {
             //#ifdef DEBUG
-            debug.trace("injectAll, disabled: " + injector);
+            debug.trace("inject, disabled: " + injector);
             //#endif
             return true;
         }
 
         if (injector.isInjected()) {
             //#ifdef DEBUG
-            debug.trace("injectAll, already infected: " + injector);
+            debug.trace("inject, already infected: " + injector);
             //#endif
             return true;
         }

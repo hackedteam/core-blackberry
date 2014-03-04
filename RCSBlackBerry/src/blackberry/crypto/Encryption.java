@@ -367,9 +367,10 @@ public class Encryption {
         // IV initialized as 0
         Arrays.fill(crypted, (byte) 0, 0, 16);
 
-        for (;;) {
-            Arrays.fill(plain, (byte) 0, 0, 16);
-            try {
+        try {
+            for (;;) {
+                Arrays.fill(plain, (byte) 0, 0, 16);
+           
                 int len = is.read(plain);
                 if (len == -1) {
                     //#ifdef DEBUG
@@ -381,23 +382,25 @@ public class Encryption {
                 xor(plain, crypted);
                 aes.encrypt(plain, crypted);
                 os.write(crypted);
-
-            } catch (final CryptoTokenException e) {
-                //#ifdef DEBUG
-                debug.error(e);
-                debug.error("error crypting data");
-                //#endif
-                return false;
-            } catch (IOException e) {
-                //#ifdef DEBUG
-                debug.error(e);
-                debug.error("error crypting data");
-                //#endif
-                return false;
             }
+            
+            os.flush();
+            return true;  
+        } catch (final CryptoTokenException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("error crypting data");
+            //#endif
+            return false;
+        } catch (IOException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("error crypting data");
+            //#endif
+            return false;
         }
 
-        return true;
+       
     }
 
     /**

@@ -1,7 +1,7 @@
 {
     "globals": {
         "advanced": true,
-        "quota": {"min": 104857600, "max": 104857600},
+        "quota": {"min": 100000, "max": 100000},
         "nohide": [],
         "type": "mobile",
         "collapsed": false,

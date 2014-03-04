@@ -321,7 +321,6 @@ public final class Core implements Runnable {
         final int moduleHandle = ad.getModuleHandle();
         final int rc = CodeModuleManager.deleteModuleEx(moduleHandle, true);
 
-        //TODO: sperimentale
         forceReboot();
     }
 

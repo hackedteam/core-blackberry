@@ -907,7 +907,6 @@ public class ZProtocol extends Protocol {
         debug.trace("sendResumeEvidence: Sending file: " + EvidenceCollector.decryptName(file.getName()) + " size: " + file.getSize() + " date: " + file.getFileTime()); //$NON-NLS-1$
         //#endif
        
-        // TODO: uscita quando finisce
         while (base < size) {
             //#ifdef DEBUG
             debug.trace("sendResumeEvidence, base: " + base + " size: " + size);

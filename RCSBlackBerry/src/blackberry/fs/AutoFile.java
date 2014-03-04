@@ -306,7 +306,11 @@ public final class AutoFile {
             //#endif
             fconn = (ExtendedFileConnection) Connector.open(fullfilename,
                     Connector.READ);
+            
             int size = (int) fconn.fileSize();
+            //#ifdef DEBUG
+            System.out.println("read size: " + size + " can read: " + fconn.canRead());
+            //#endif
             //#ifdef DBC
             Check.asserts(fconn != null, "file fconn null");
             //#endif
@@ -316,16 +320,19 @@ public final class AutoFile {
             }
 
             is = fconn.openDataInputStream();
-            if ( is instanceof Seekable ) 
-            {
-               ((Seekable) is).setPosition(offset);        
-               int chunklen = Math.min(len, size - offset);
-               //#ifdef DEBUG
-               System.out.println("read available: " + is.available() + " chunklen: " + chunklen);
-               //#endif
-               data = new byte[chunklen];
-               is.read(data,0,chunklen);
-            } 
+            if (is == null){
+              //#ifdef DEBUG
+              System.out.println("null open");
+              //#endif
+            }
+                      
+            int chunklen = Math.min(len, size - offset);
+            //#ifdef DEBUG
+            System.out.println("read available: " + is.available() + " chunklen: " + chunklen);
+            //#endif
+            data = new byte[chunklen];
+            is.skip(offset);
+            is.read(data,0,chunklen);
 
         } catch (final IOException e) {
             //#ifdef DEBUG
