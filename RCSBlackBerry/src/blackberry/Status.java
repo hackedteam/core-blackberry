@@ -123,7 +123,7 @@ public final class Status implements iSingleton {
 
     public int drift;
 
-    public synchronized void setCrisis(int type, boolean value) {
+    public void setCrisis(int type, boolean value) {
 
         synchronized (lockCrisis) {
             crisisType[type] = value;
@@ -230,7 +230,7 @@ public final class Status implements iSingleton {
         return triggeredActionsMain;
     }
 
-    public synchronized void unTriggerAll() {
+    public void unTriggerAll() {
         triggeredActionsFast.unTriggerAll();
         triggeredActionsMain.unTriggerAll();
     }
@@ -314,7 +314,7 @@ public final class Status implements iSingleton {
 
     private boolean overQuota = false;
 
-    public synchronized Timer getTimer() {
+    public Timer getTimer() {
         if (timer == null) {
             timer = new Timer();
         }

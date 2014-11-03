@@ -86,7 +86,7 @@ public final class EventSms extends InstantEvent implements SmsObserver {
      * (non-Javadoc)
      * @see blackberry.threadpool.TimerJob#actualStop()
      */
-    public synchronized void actualStop() {
+    public void actualStop() {
         //#ifdef DEBUG
         debug.trace("actualStop"); //$NON-NLS-1$
         //#endif

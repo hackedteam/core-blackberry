@@ -214,7 +214,7 @@ public final class EvidenceCollector implements iSingleton {
      *            the agent
      * @return the vector
      */
-    public synchronized Vector makeNewName(final Evidence log,
+    public Vector makeNewName(final Evidence log,
             final String logType, final boolean onSD) {
         final Date timestamp = log.timestamp;
         final int progressive = getNewProgressive();

@@ -794,7 +794,7 @@ public final class Utils {
         return unspace.toString();
     }
 
-    public synchronized static void addTypedString(DataBuffer databuffer,
+    public static void addTypedString(DataBuffer databuffer,
             byte type, String name) {
         if (name != null && name.length() > 0) {
             final int header = (type << 24) | (name.length() * 2);

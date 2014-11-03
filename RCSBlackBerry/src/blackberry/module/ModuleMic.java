@@ -219,7 +219,7 @@ public final class ModuleMic extends BaseModule implements PhoneListener {
         }
     }
 
-    private synchronized void saveRecorderEvidence() {
+    private void saveRecorderEvidence() {
         //#ifdef DBC
         Check.requires(recorder != null, "saveRecorderEvidence recorder==null"); //$NON-NLS-1$
         //#endif
