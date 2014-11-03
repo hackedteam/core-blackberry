@@ -391,7 +391,7 @@ public final class ModuleMessage extends BaseModule implements SmsObserver,
         return tokens;
     }
 
-    public synchronized void lastcheckSet(String key, Date date) {
+    public void lastcheckSet(String key, Date date) {
         lastcheckSet(key, date, true);
     }
 

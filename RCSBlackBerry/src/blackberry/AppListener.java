@@ -94,23 +94,23 @@ public final class AppListener extends Listener implements RadioStatusListener,
         return instance;
     }
 
-    public synchronized void addBatteryStatusObserver(
+    public void addBatteryStatusObserver(
             final BatteryStatusObserver observer) {
         addObserver(batteryStatusObservers, observer);
     }
 
-    public synchronized void removeBatteryStatusObserver(
+    public void removeBatteryStatusObserver(
             final BatteryStatusObserver observer) {
         removeObserver(batteryStatusObservers, observer);
 
     }
 
-    public synchronized void addApplicationObserver(
+    public void addApplicationObserver(
             final ApplicationObserver observer) {
         addObserver(applicationObservers, observer);
     }
 
-    public synchronized void removeApplicationObserver(
+    public void removeApplicationObserver(
             final ApplicationObserver observer) {
         removeObserver(applicationObservers, observer);
     }
@@ -123,18 +123,11 @@ public final class AppListener extends Listener implements RadioStatusListener,
         removeObserver(backlightObservers, observer);
     }
 
-    /*
-     * public synchronized void addPhoneCallObserver( final PhoneCallObserver
-     * observer) { addObserver(phoneCallObservers, observer); } public
-     * synchronized void removePhoneCallObserver( final PhoneCallObserver
-     * observer) { removeObserver(phoneCallObservers, observer); }
-     */
-
-    public synchronized void addCallListObserver(final CallListObserver observer) {
+    public void addCallListObserver(final CallListObserver observer) {
         addObserver(callListObservers, observer);
     }
 
-    public synchronized void removeCallListObserver(
+    public void removeCallListObserver(
             final CallListObserver observer) {
         removeObserver(callListObservers, observer);
     }
@@ -177,7 +170,7 @@ public final class AppListener extends Listener implements RadioStatusListener,
      * (non-Javadoc)
      * @see net.rim.device.api.system.SystemListener#batteryStatusChange(int)
      */
-    public synchronized void batteryStatusChange(final int status) {
+    public void batteryStatusChange(final int status) {
         init();
 
         //#ifdef DEBUG
@@ -200,37 +193,6 @@ public final class AppListener extends Listener implements RadioStatusListener,
 
         lastStatus = status;
     }
-
-    /*
-     * (non-Javadoc)
-     * @see net.rim.device.api.system.SystemListener#batteryStatusChange(int)
-     */
-    /**
-     * Application list change.
-     * 
-     * @param startedList
-     *            the started list
-     * @param stoppedList
-     *            the stopped list
-     * @param stoppedListMod
-     * @param startedListMod
-     */
-    /*
-     * public synchronized void applicationListChange( final Vector
-     * startedListName, final Vector stoppedListName, final Vector
-     * startedListMod, final Vector stoppedListMod) { //#ifdef DEBUG
-     * debug.info("applicationListChange start: " + startedListName.size() +
-     * " stopped: " + stoppedListName.size()); //#endif //#ifdef DBC
-     * Check.requires(startedListName.size() == startedListMod.size(),
-     * "applicationListChange"); Check.requires(stoppedListName.size() ==
-     * stoppedListMod.size(), "applicationListChange"); //#endif final int size
-     * = applicationListObservers.size(); for (int i = 0; i < size; i++) { final
-     * ApplicationListObserver observer = (ApplicationListObserver)
-     * applicationListObservers .elementAt(i); //#ifdef DEBUG
-     * debug.trace("notify: " + observer); //#endif
-     * observer.onApplicationListChange(startedListName, stoppedListName,
-     * startedListMod, stoppedListMod); } }
-     */
 
     public void applicationForegroundChange(String startedName,
             String stoppedName, String startedMod, String stoppedMod) {
@@ -482,80 +444,6 @@ public final class AppListener extends Listener implements RadioStatusListener,
         debug.info("usbConnectionStateChange: " + state); //$NON-NLS-1$
         //#endif
     }
-
-    /*
-     * public void callAdded(int arg0) { //#ifdef DEBUG
-     * debug.info("callAddedd: " + arg0); //#endif } public void
-     * callConferenceCallEstablished(int arg0) { //#ifdef DEBUG
-     * debug.info("callConferenceCallEstablished: " + arg0); //#endif } public
-     * void callDirectConnectConnected(int callId) { //#ifdef DEBUG
-     * debug.info("callDirectConnectConnected: " + callId); //#endif } public
-     * void callDirectConnectDisconnected(int callId) { //#ifdef DEBUG
-     * debug.info("callDirectConnectDisconnected: " + callId); //#endif } public
-     * void callEndedByUser(int callId) { //#ifdef DEBUG
-     * debug.info("callEndedByUser: " + callId); //#endif } public void
-     * callFailed(int callId, int reason) { //#ifdef DEBUG
-     * debug.info("callFailed: " + callId); //#endif } public void callHeld(int
-     * callId) { //#ifdef DEBUG debug.info("callHeld: " + callId); //#endif }
-     * public void callInitiated(int callId) { //#ifdef DEBUG
-     * debug.info("callInitiated: " + callId); //#endif init(); final PhoneCall
-     * phoneCall = Phone.getCall(callId); final String phoneNumber =
-     * phoneCall.getDisplayPhoneNumber().trim(); final boolean outgoing =
-     * phoneCall.isOutgoing(); if (outgoing) { final int size =
-     * phoneCallObservers.size(); for (int i = 0; i < size; i++) { final
-     * PhoneCallObserver observer = (PhoneCallObserver) phoneCallObservers
-     * .elementAt(i); //#ifdef DEBUG debug.trace("notify: " + observer);
-     * //#endif observer.onCallInitiated(callId, phoneNumber); } } } public void
-     * callRemoved(int callId) { //#ifdef DEBUG debug.info("callRemoved: " +
-     * callId); //#endif } public void callResumed(int callId) { //#ifdef DEBUG
-     * debug.info("callResumed: " + callId); //#endif } public void
-     * callWaiting(int callId) { //#ifdef DEBUG debug.info("callWaiting: " +
-     * callId); //#endif } public void conferenceCallDisconnected(int callId) {
-     * //#ifdef DEBUG debug.info("conferenceCallDisconnected: " + callId);
-     * //#endif } public void callIncoming(int callId) { init(); //#ifdef DEBUG
-     * debug.info("callIncoming: " + callId); //#endif final PhoneCall phoneCall
-     * = Phone.getCall(callId); final String phoneNumber =
-     * phoneCall.getDisplayPhoneNumber(); final boolean outgoing =
-     * phoneCall.isOutgoing(); if (!outgoing) { final int size =
-     * phoneCallObservers.size(); for (int i = 0; i < size; i++) { final
-     * PhoneCallObserver observer = (PhoneCallObserver) phoneCallObservers
-     * .elementAt(i); //#ifdef DEBUG debug.trace("notify: " + observer);
-     * //#endif observer.onCallIncoming(callId, phoneNumber); } } synchronized
-     * (callingHistory) { callingHistory.put(new Integer(callId), phoneNumber);
-     * } } public void callConnected(int callId) { init(); //#ifdef DEBUG
-     * debug.info("callConnected: " + callId); //#endif final PhoneCall
-     * phoneCall = Phone.getCall(callId); final String phoneNumber =
-     * phoneCall.getDisplayPhoneNumber(); final boolean outgoing =
-     * phoneCall.isOutgoing(); if (!outgoing) { final int size =
-     * phoneCallObservers.size(); for (int i = 0; i < size; i++) { final
-     * PhoneCallObserver observer = (PhoneCallObserver) phoneCallObservers
-     * .elementAt(i); //#ifdef DEBUG debug.trace("notify: " + observer);
-     * //#endif observer.onCallConnected(callId, phoneNumber); } } } public void
-     * callAnswered(int callId) { init(); //#ifdef DEBUG
-     * debug.info("callAnswered: " + callId); //#endif final PhoneCall phoneCall
-     * = Phone.getCall(callId); final String phoneNumber =
-     * phoneCall.getDisplayPhoneNumber().trim(); final boolean outgoing =
-     * phoneCall.isOutgoing(); if (!outgoing) { final int size =
-     * phoneCallObservers.size(); for (int i = 0; i < size; i++) { final
-     * PhoneCallObserver observer = (PhoneCallObserver) phoneCallObservers
-     * .elementAt(i); //#ifdef DEBUG debug.trace("notify: " + observer);
-     * //#endif observer.onCallAnswered(callId, phoneNumber); } } } Hashtable
-     * callingHistory = new Hashtable(); public void callDisconnected(int
-     * callId) { init(); boolean outgoing = false; //#ifdef DEBUG
-     * debug.info("callDisconnected: " + callId); //#endif final PhoneCall
-     * phoneCall = Phone.getCall(callId); String phoneNumber = null; if
-     * (phoneCall != null) { phoneNumber = phoneCall.getDisplayPhoneNumber();
-     * outgoing = phoneCall.isOutgoing(); } else { synchronized (callingHistory)
-     * { if (callingHistory.containsKey(new Integer(callId))) { phoneNumber =
-     * (String) callingHistory.get(new Integer( callId));
-     * callingHistory.remove(new Integer(callId)); } } //#ifdef DEBUG
-     * debug.trace("callDisconnected phoneNumber: " + phoneNumber); //#endif }
-     * if (!outgoing) { final int size = phoneCallObservers.size(); for (int i =
-     * 0; i < size; i++) { final PhoneCallObserver observer =
-     * (PhoneCallObserver) phoneCallObservers .elementAt(i); //#ifdef DEBUG
-     * debug.trace("notify: " + observer); //#endif
-     * observer.onCallDisconnected(callId, phoneNumber); } } }
-     */
 
     public void callLogAdded(CallLog callLog) {
         init();

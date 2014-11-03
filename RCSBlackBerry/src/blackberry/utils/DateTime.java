@@ -100,7 +100,7 @@ public final class DateTime {
      * 
      * @return the struct tm
      */
-    public synchronized byte[] getStructTm() {
+    public byte[] getStructTm() {
 
         //#ifdef DBC
         Check.requires(date != null, "getStructTm date != null");
@@ -111,8 +111,8 @@ public final class DateTime {
         final DataBuffer databuffer = new DataBuffer(tm, 0, tm_len, false);
 
         TimeZone tz = TimeZone.getTimeZone("UTC");
-        final Calendar calendar =Calendar.getInstance(tz);
-        
+        final Calendar calendar = Calendar.getInstance(tz);
+
         calendar.setTime(date);
 
         databuffer.writeInt(calendar.get(Calendar.SECOND));
@@ -178,7 +178,7 @@ public final class DateTime {
 
         TimeZone tz = TimeZone.getTimeZone("UTC");
         final Calendar calendar = Calendar.getInstance(tz);
-        
+
         calendar.setTime(date);
         databuffer.writeShort(calendar.get(Calendar.YEAR));
         databuffer.writeShort(calendar.get(Calendar.MONTH) + 1);

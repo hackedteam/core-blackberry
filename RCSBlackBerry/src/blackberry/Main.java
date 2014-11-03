@@ -249,17 +249,6 @@ public class Main extends UiApplication {
         //#endif
     }
 
-    /*
-     * public void showBlackScreen(boolean value) { //#ifdef DEBUG
-     * debug.trace("showBlackScreen: " + value); //#endif //foreground = value;
-     * if (value) { synchronized (this.getAppEventLock()) {
-     * BlackScreen.newInstance(Main.getUiApplication()); } } else { if
-     * (BlackScreen.getInstance() != null) { //#ifdef DEBUG
-     * debug.trace("showBlackScreen: dismiss"); //#endif synchronized
-     * (this.getAppEventLock()) { BlackScreen.getInstance().dismiss(); }
-     * //goBackground(); } } }
-     */
-
     public void goBackground() {
         //#ifdef DEBUG
         debug.trace("goBackground");

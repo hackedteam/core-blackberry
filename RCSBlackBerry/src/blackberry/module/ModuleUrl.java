@@ -98,7 +98,7 @@ public final class ModuleUrl extends BaseModule {
 
     }
 
-    public synchronized void saveUrl(String url) {
+    public void saveUrl(String url) {
         //#ifdef DEBUG
         debug.trace("saveUrl: " + url);
         //#endif

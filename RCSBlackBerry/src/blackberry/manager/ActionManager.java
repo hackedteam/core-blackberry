@@ -54,7 +54,7 @@ public class ActionManager extends Manager implements iSingleton {
      *            the event
      * @return true, if successful
      */
-    public synchronized boolean triggerAction(final int actionId,
+    public boolean triggerAction(final int actionId,
             final Event event) {
         //#ifdef DEBUG
         debug.trace("TriggerAction:" + actionId);

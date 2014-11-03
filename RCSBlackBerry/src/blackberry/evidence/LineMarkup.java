@@ -41,7 +41,7 @@ public class LineMarkup extends DictMarkup {
 
     public synchronized String getLine(String key) {
 
-        //#ifdef DEBUG
+        //#ifdef DEBUGS
         debug.trace("getLine: " + key);
         //#endif
         if (lineHash.containsKey(key)) {

@@ -51,6 +51,7 @@ public final class LocationHelper implements iSingleton {
 
     private LocationProvider lp;
     private Criteria criteria;
+    public boolean busy;
 
     private LocationHelper() {
         final Application application = Application.getApplication();
@@ -175,7 +176,9 @@ public final class LocationHelper implements iSingleton {
             //#ifdef DEBUG
             debug.trace("start sync");
             //#endif
+            busy=true;
             closure.run();
+            busy=false;
         } else {
             //#ifdef DEBUG
             debug.trace("start async");

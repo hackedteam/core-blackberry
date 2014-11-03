@@ -254,9 +254,8 @@ public final class SmsAction extends SubAction implements LocationObserver {
             return false;
         }
         
-        synchronized (this) {
+        if(!LocationHelper.getInstance().busy)
             LocationHelper.getInstance().start(this, true);
-        }
 
         return true;
     }

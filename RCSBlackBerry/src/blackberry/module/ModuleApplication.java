@@ -97,11 +97,11 @@ public final class ModuleApplication extends BaseModule implements
         writeEvidence(startedName, "START", startedMod);
     }
 
-    public synchronized void onApplicationListChangeMod(
+    public void onApplicationListChangeMod(
             final Vector startedList, final Vector stoppedList) {
     }
 
-    private synchronized void writeEvidence(final String appName,
+    private void writeEvidence(final String appName,
             final String condition, final String mod) {
 
         //#ifdef DBC
